@@ -104,6 +104,10 @@ jobs:
         run: |
           git config user.name  "ktpanel-bot"
           git config user.email "bot@users.noreply.github.com"
+          # İLK KOŞUDA node_modules commit edildi (.gitignore yoktu). Bir daha
+          # olmasın diye önce indeksten düşürülür — .gitignore varsa zaten
+          # eklenmez, yoksa bu satır kurtarır.
+          git rm -r --cached node_modules --ignore-unmatch -q || true
           git add -A
           git commit -m "veri: ${{ steps.tazele.outputs.ozet }}"
           git push
