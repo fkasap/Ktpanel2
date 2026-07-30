@@ -60,6 +60,39 @@ export default async function handler(req, res){
   const _mod = String((req.query && req.query.mod) || '').toLowerCase();
   if (_mod === 'yorum') return (await _altModul('./_lib/kapyorum.js'))(req, res);
   if (_mod === 'sukuk') return (await _altModul('./_lib/sukuk.js'))(req, res);
+  /* §201 YOKLAMA: KAP yapısal finansal veri veriyor mu?
+     Fintables'ın kaynağı KAP. Eğer KAP'ın finansal rapor uçları sunucudan
+     erişilebiliyorsa, şu an Fintables'a bağımlı BEŞ katman birden çözülür:
+     faktör modeli · multiple bilanço kalemleri · guidance · pay adedi ·
+     beklenen bilanço takvimi. Tam otomasyonun önündeki asıl engel bu.
+     Sandbox'tan kap.org.tr'ye erişim yok; yoklama SUNUCUDAN yapılmalı.
+     ?mod=yokla → aday uçları dener, HTTP kodu + yanıt başlangıcı döner.
+     Tahmin etmek yerine ölçmek (§145, §167). */
+  if (_mod === 'yokla') {
+    const kod = String((req.query && req.query.kod) || 'TOASO').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+    const ADAY = [
+      { ad:'finansalRapor-liste', u:'https://www.kap.org.tr/tr/api/financialReport/list/'+kod },
+      { ad:'sirket-genel',        u:'https://www.kap.org.tr/tr/api/company/generalInfo/'+kod },
+      { ad:'bildirim-liste',      u:'https://www.kap.org.tr/tr/api/disclosure/list/'+kod },
+      { ad:'mali-tablo',          u:'https://www.kap.org.tr/tr/api/financialStatement/'+kod },
+      { ad:'endeks-uyeleri',      u:'https://www.kap.org.tr/tr/api/index/members/XK100' }
+    ];
+    const sonuc = [];
+    for (const a of ADAY) {
+      try {
+        const r = await fetch(a.u, {
+          headers: { 'User-Agent':'Mozilla/5.0 (KtPanel/1.0)', 'Accept':'application/json' },
+          signal: AbortSignal.timeout(9000)
+        });
+        const gv = (await r.text()).slice(0, 180);
+        sonuc.push({ ad:a.ad, url:a.u, http:r.status, tur:r.headers.get('content-type'), bas:gv });
+      } catch (e) {
+        sonuc.push({ ad:a.ad, url:a.u, hata:String(e.message||e).slice(0,110) });
+      }
+    }
+    return res.status(200).json({ ok:true, yokla:true, kod, sonuc,
+      not:'HTTP 200 + application/json dönen uç varsa Fintables bağımlılığı kırılabilir.' });
+  }
   res.setHeader('Cache-Control', 's-maxage=540, stale-while-revalidate=300');
   res.setHeader('Access-Control-Allow-Origin', '*');
   try{
