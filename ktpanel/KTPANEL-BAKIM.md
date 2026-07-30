@@ -2677,6 +2677,80 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 196. NOBET ZATEN VARDI — §194 GERI ALINDI (31 Tem)
+
+Ekran goruntusu iki sey gosterdi ve ikisi de beni yanilttigimi kanitladi.
+
+### 196.1 EBU HAKLIYDI — deploy edilmemis dosya
+Panel "TOASO kart bekliyor" diyordu, kullanici "ama karti var" dedi.
+AYNI EKRANDA: "TAZELENMELI · 5 ... inceleme-ai.json 10 gun".
+Yani DEPLOY EDILMIS surum 10 gun eski; TOASO karti orada YOK. Ebu dogru
+soyluyordu. Bugun yazilan 25 kartin HICBIRI yayinda degil.
+DERS: bir uyarinin yanlis oldugunu dusunmeden once, uyarinin BAKTIGI VERININ
+guncel olup olmadigina bak. §195'te kodu "duzelttim" — oysa kod dogruydu,
+veri eskiydi. Yanlis teshis, gereksiz degisiklik.
+
+### 196.2 NOBET ZATEN VARDI — ben ikincisini yazdim
+ajan.js'te `nobetPano`, `NOBET_SON.bilanco`, "KART BEKLEYEN BILANCO"
+BASTAN BERI VARDI. §194'te aynisini app.js'e ikinci kez yazdim, VAR MI DIYE
+BAKMADAN.
+Bugun bu hatayi IKI KEZ yakalamistim (§171 globalTakvimRender cift tanim,
+§173 bistTakvimRender cift tanim) ve her ikisinde de "bir fonksiyon yazmadan
+once ayni adda var mi diye bakilir" dersini yazmistim. UCUNCUSUNU KENDIM
+YAPTIM — ve bu sefer ayni dosyada degil, KOMSU DOSYADA aradim gerekirdi.
+KURAL GENISLETILDI: yeni bir ozellik yazmadan once yalniz app.js degil
+ajan.js de taranir. Panel iki motorlu (app + ajan); ozellik ikisinden birinde
+olabilir.
+§194 GERI ALINDI: fonksiyon, cagrilar ve #bilancoNobet kutusu kaldirildi.
+
+### 196.3 GERI ALIRKEN BLOK KESME YINE FAZLA GITTI
+Kaldirma sirasinda susly parantez sayaci dizge icindekileri de saydi ve
+153 SATIR silindi — bistTakvimRender'in govdesi de gitti.
+node --check "Unexpected end of input" verdi, yakalandi.
+ONARIM: govde §172 kaynagindan yeniden yazildi. Sonra TAM DENETIM kosuldu:
+270 fonksiyon, cift tanim YOK, bes kritik fonksiyonun tanim/cagri/kutu
+uclusu dogrulandi.
+Bu, §130.3'ten beri BESINCI blok kesme hatasi. Dengeli tarama SUSLY PARANTEZ
+sayarak yapiliyor ve JS'te parantez dizge/regex icinde de gecer. Tek guvenilir
+yontem: kesilen blogun ICINDE olmasi gerekeni VE olmamasi gerekeni assert
+etmek — bu sefer "olmamasi gereken"i yazmamistim.
+
+app.js v=20260731e. DOSYALAR: app.js + index.html.
+
+## 195. NOBET YANLIS POZITIF VERDI — TOASO (31 Tem)
+
+Kullanici: "toaso bekleyen kart diyor ama toaso karti var zaten." HAKLI.
+
+### 195.1 SEBEP: BOS TARIHTE ACIGA DUSEN KOSUL
+    if(kt && t && kt >= t) return;     // ESKI
+`t` KAP bildiriminin tarihi. Okunamazsa (ts alani yok ya da cozulemiyor)
+`t` bos string olur, `t &&` kosulu DUSER, atlama gerceklesmez ve karti olan
+sirket "bekliyor" diye isaretlenir.
+TOASO'nun karti 29 Tem'de yazilmisti ve tarih_iso alani da doluydu — sorun
+kart tarafinda DEGIL, KAP tarafindaydi.
+DUZELTME:
+    if(kt && (!t || kt >= t)) return;  // YENI
+Tarih bilinmiyorsa VE kart varsa ATLA.
+
+### 195.2 NEDEN "SUPHEDE SUS"
+Bir nobet sisteminde yanlis pozitif, yanlis negatiften DAHA ZARARLIDIR:
+kacirilan bir uyari tek bir karti geciktirir; yanlis uyari ise SISTEME OLAN
+GUVENI bitirir. Iki kez "ama bunun karti var" dedirtirse kullanici uyarilara
+bakmayi birakir ve gercek uyari da kaybolur.
+KURAL: belirsizlikte ALARM VERME. Emin degilsen sus, ama SUSTUGUNU de
+gorunur kil (asagida).
+
+### 195.3 GEREKCE EKRANA TASINDI
+Satirda artik kart tarihi de yaziyor:
+    30 Tem  GARAN  Finansal Rapor · son kart 2026-07-30  [BUGUN]
+    31 Tem  ASELS  Finansal Rapor · kart yok
+Boylece "bunun karti var" itirazi ekranda ZATEN cevaplanmis olur —
+karsilastirma gorunur. Kullanicinin koda bakmasi gerekmez.
+Bu, §141'in ("panel ne bildigini degil, HANGI TARIHTEN bildigini de soylemeli")
+karar mantigina uygulanmis hali: yalniz sonucu degil GEREKCESINI de goster.
+
+app.js v=20260731c. DOSYALAR: app.js + index.html.
+
 ## 194. BILANCO NOBETI — kart bekleyeni YAKALA, kart URETME (31 Tem)
 
 Kullanici: "simdi bilanco geldiginde otomatik tarayip kart mi cikartacak?"
