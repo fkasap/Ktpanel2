@@ -2686,6 +2686,11 @@ function canliEnjekte(){
        canliEnjekte icinde cunku burasi market verisinin geldigi TEK nokta —
        sekme acik olmasa bile kayit dusuyor. "Her gun otomatik" sarti bu. */
     try{ if(typeof ayrGunKaydet==='function'){ ayrGunKaydet('XK100'); ayrGunKaydet('XKTUM'); } }catch(e){}
+    /* §193: canlı veri işlendi — bekleme durumu kalkar, damgalar normale döner.
+       Buraya konuldu çünkü canliEnjekte market verisinin işlendiği TEK nokta.
+       Daha erkene konsa "geldi" demeden kalkardı; daha geçe konsa bir hata
+       durumunda hiç kalkmazdı. */
+    try{ document.body.classList.remove('veri-bekliyor'); }catch(e){}
     const n=$('trkNote');
     if(n)n.innerHTML='Son nokta <b class="up">CANLI</b> (Yahoo · '+bugun+'): model = Σ ağırlık × (canlı fiyat / kuruluş fiyatı), endeks = canlı XKTUM / '+trN(TRK.endeks_kapanis,0)+'. Önceki noktalar: damgalı kapanışlar + panelin her gün otomatik biriktirdiği noktalar (bulutta saklanır, cihazlar ortak); sicil disiplini (kuruluşta ilan edilen '+(TRK.sepet||'sepet')+', sabit ağırlık) aynen geçerli.'+(eksik?' <span class="thin">('+eksik+' hisse canlı gelmedi → damgalı fiyat)</span>':'');
   }
@@ -5340,6 +5345,24 @@ function ayrGrafik(endeksKod){
     ' · kümülatif ayrışma <b class="'+(son.fark>=0?'up':'down')+'">'+(son.fark>=0?'+':'')+trN(son.fark,2)+' puan</b>'+
     ' <span class="thin">· günlük getiriler bileşiklenir (toplanmaz)</span></div>';
 }
+
+/* §193b CANLI HİÇ GELMEZSE. Bekleme durumu yalnız canliEnjekte içinde
+   kalkıyor; market çağrısı tamamen düşerse sayfa sonsuza kadar nabızlı kalır
+   ve kullanıcı ne olduğunu anlamaz. 20 saniye sonra durum kaldırılır AMA
+   damgalara KALICI bir uyarı basılır — "canlı veri gelmedi, ekrandakiler
+   damgalı yedek". Sessizce normale dönmek en kötüsü olurdu: eski rakam
+   güncel görünürdü (§143). */
+setTimeout(()=>{
+  if(!document.body.classList.contains('veri-bekliyor')) return;
+  document.body.classList.remove('veri-bekliyor');
+  document.body.classList.add('canli-yok');
+  document.querySelectorAll('.tag').forEach(t=>{
+    if(t.textContent.indexOf('DAMGALI')>=0) return;
+    t.style.background='var(--down)';
+    t.textContent='DAMGALI YEDEK · '+t.textContent;
+  });
+  console.warn('[KTPanel] canlı veri 20 sn içinde gelmedi — damgalı yedek gösteriliyor');
+}, 20000);
 
 /* ==== KTPanel BOOT — tek merkezi başlatma (TDZ-güvenli, hata-izole, sağlık kontrollü) ==== */
 /* ==== Bulut senkron (paylaşımlı ortak depo) ==== */

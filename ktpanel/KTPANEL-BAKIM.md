@@ -2677,6 +2677,45 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 193. DAMGALI YEDEK GECICI OLDUGUNU SOYLEMIYORDU (31 Tem)
+
+Kullanici: "sayfayi yeniledigimde herseyy once eski tarihteki veriler geliyor
+sonra guncelleniyor, mesela tarih 20 temmuz geliyor sonra 31 temmuz oluyor."
+
+### 193.1 TASARIM DOGRU, GORUNUM YANILTICI
+Panel damgali yedegi ANINDA basar (ag beklemeden, sayfa bos kalmasin diye),
+canli veri gelince degistirir. Bu desen dogru — alternatifi bos ekran.
+AMA o birkac saniyede ekranda ESKI BIR TARIH durur ve GUNCEL GORUNUR.
+Fon yoneticisi icin bu kucuk bir sey degil: 20 Tem tarihli bir rakama bakip
+bugunku sanmak, karar zincirinin en basinda hata demektir.
+DAHA KOTUSU: canli cagri DUSERSE o hal KALICI olur ve hicbir uyari cikmaz.
+§143'un ("sessiz yedek yedegin kendisinden tehlikeli") arayuz versiyonu.
+
+### 193.2 UC DURUM GORUNUR YAPILDI
+  1. ACILIS   <body class="veri-bekliyor"> — damgalar SOLUK (.45), kesikli
+              cerceveli, ⏳ ekli ve NABIZLI (1,6 sn animasyon).
+              Deger alanlari da soluk (.62). Mesaj: "henuz canli degil".
+  2. CANLI    canliEnjekte icinde sinif KALKAR, her sey normale doner.
+              Neden orada: market verisinin islendigi TEK nokta. Daha erkene
+              konsa "geldi" demeden kalkardi, daha geceye konsa bir hatada
+              hic kalkmazdi.
+  3. GELMEDI  20 sn sonra sinif kalkar AMA damgalara KALICI kirmizi uyari
+              basilir: "DAMGALI YEDEK · <eski metin>". Sessizce normale
+              donmek EN KOTUSU olurdu — eski rakam guncel gorunurdu.
+
+### 193.3 NEDEN ENDEKS TABLOSU ETKILENMEDI
+endeksRender ZATEN dogru yapiyordu: her satiri canli mi damgali mi diye
+isaretliyor (`tz` bayragi -> "canli" rozeti). Sorun DAMGA TARIHLERINDEYDI —
+kartlarin ustundeki tarih rozetleri damgali dosyanin tarihini basip canli
+gelince degistiriyordu. Cozum genel: butun .tag ogeleri kapsaniyor.
+
+### 193.4 DERS
+Gecici bir durum, KALICI GIBI GORUNMEMELI. Yukleniyor hali ile yuklenmis hali
+ayirt edilemiyorsa, kullanici her zaman yanlis olani dogru sanar — ve bu
+YALNIZCA ilk saniyelerde degil, cagri dustugunde SURESIZ boyle kalir.
+
+index.html + app.js. app.js v=20260731a.
+
 ## 192. adjclose YETMEDI — kurumsal islem suzgeci (30 Tem)
 
 §191'de POLHO'nun %325,40 vol'u icin adjclose'a gecildi. YENI KOSUDA SAYI
