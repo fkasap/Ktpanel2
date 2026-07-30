@@ -2677,6 +2677,47 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 203. isLate GUVENILMEZ · TEKRAR SORUNU COZULDU (31 Tem)
+
+mod=fr calisti: 7 gunde 2299 kayit, 280 FR bildirimi, tavan uyarisi yok.
+Ama gercek veri IKI SORUN gosterdi.
+
+### 203.1 isLate ISE YARAMIYOR — olculdu
+    ARENA  2026/1  bildirim 29 Tem  -> donem sonundan 120 GUN  · isLate=false
+    KARTN  2025/1  bildirim 30 Tem  -> 211 GUN                 · isLate=false
+    GEDIK  2024/1  bildirim 29 Tem  -> 575 GUN                 · isLate=false
+Ucu de agir gecikmis, ucu de false. isLate KAP'in KENDI IC KURALI; SPK
+bildirim suresini olcmuyor.
+§181'de ARENA'nin 120 gununu DOKUZ CEYREGIN TARIHINI TEK TEK hesaplayarak
+bulmustum. Simdi ayni hesap tek satir:
+    gecikme = bildirimTarihi − donemSonu   (1→31 Mar · 2→30 Haz · 3→30 Eyl ·
+                                            4/Yillik→31 Ara)
+ESIK 80 gun (SPK konsolide siniri ~70, tampon birakildi).
+DERS: bir kaynagin BAYRAK alani, senin sordugun soruyu cevapliyor olmayabilir.
+Ad benziyor diye anlam ayni sanma — ORNEKLE DOGRULA. Burada ARENA elimde
+bilinen bir vaka oldugu icin yakalandi; olmasaydi bayraga guvenip gecikmis
+sirketleri KACIRACAKTIM.
+
+### 203.2 AYNI DONEM, COK BILDIRIM — kokten cozuldu
+Gercek veri: TOASO 2026/2 icin 29 Tem'de UC bildirim (20:54·20:55·20:55),
+30 Tem'de BIR tane daha. QNBTR/FIN ayni id'yi paylasiyor (ana ortaklik+bagli).
+TEKILLESTIRME: (kod, yil, donem) basina TEK kayit, EN ERKEN olani.
+Ilk bildirim ASIL aciklamadir; sonrakiler TR/EN surumu, duzeltme ya da ek
+belge. Gecikme hesabi da ilkini kullanmali — sonrakini alsak ARENA'nin
+gecikmesi bir gun fazla cikardi.
+`tekrar` alani kac bildirim oldugunu tutar (gorunurluk).
+§197'deki 14 gunluk TOLERANS HILESI artik tamamen gereksiz — sorun kaynakta
+cozuldu, panelde ortulmuyor.
+
+### 203.3 SONUC
+280 ham FR -> tekillestirilmis liste. Nobet artik:
+  · donem bazli karsilastirir (yil/donem)
+  · gecikmeyi GUN olarak gosterir ("⚠ 120 GÜN GECİKMİŞ")
+  · kac bildirim yapildigini yazar
+ARENA gibi bir vaka bir daha ELLE kesfedilmeyecek.
+
+ajan.js v=20260731d. DOSYALAR: api/kap.js + ajan.js + index.html.
+
 ## 202. KAP FR LISTESI ACILDI — kalemler acilmadi (31 Tem)
 
 Yoklama v3 sonucu: LISTE ERISILEBILIR, KALEMLER DEGIL.

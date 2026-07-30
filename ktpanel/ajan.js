@@ -412,8 +412,12 @@ async function bilancoNobeti(){
         }
         const v = bekleyen[kod];
         if(!v || ts > v.ts) bekleyen[kod] = {kod, ts,
+          /* §203b: gecikme artık HESAPLANIYOR (dönem sonundan kaç gün).
+             KAP'ın isLate alanı güvenilmez — ARENA 120 gün geç açıkladı ama
+             false geliyordu. Rozet gerçek gün sayısını gösterir. */
           baslik: (it.yil ? it.yil+'/'+it.donem+(it.tur?' · '+it.tur:'') : 'Finansal Rapor')
-                  + (it.gec ? ' · GECİKMİŞ' : ''),
+                  + (it.gec ? ' · ⚠ '+it.gecikmeGun+' GÜN GECİKMİŞ' : '')
+                  + (it.tekrar>1 ? ' · '+it.tekrar+' bildirim' : ''),
           donem: it.yil ? it.yil+'/'+it.donem : null, gec:!!it.gec,
           url:it.url||null, portfoyde:!!(typeof poz!=='undefined' && poz.some(p=>p.kod && String(p.kod).toUpperCase()===kod)),
           kartVar:!!kartT};
