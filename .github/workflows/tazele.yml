@@ -18,12 +18,13 @@ on:
   schedule:
     # Hafta içi 18:10 TSİ (15:10 UTC) — BIST kapanışından ~40 dk sonra
     - cron: '10 15 * * 1-5'
-    # Cumartesi 07:00 TSİ — haftalık kalemler
+    # Cumartesi 07:00 TSİ — haftalık kalemler (risk metrikleri dahil;
+    # vol ve beta 1 yıllık pencereden hesaplanır, günlük oynaması anlamsız)
     - cron: '0 4 * * 6'
   workflow_dispatch:        # elle tetikleme (Actions sekmesinden)
     inputs:
       katman:
-        description: 'Hangi katman? (hepsi | fiyat | fon | endeks)'
+        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon)'
         required: false
         default: 'hepsi'
 
