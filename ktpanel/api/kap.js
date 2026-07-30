@@ -139,28 +139,114 @@ export default async function handler(req, res){
       }catch(e){ hatalar.push(String(e.message||e).slice(0,80)+' ('+bas+'-'+son+'g)'); }
     }
 
-    const gorulen = new Set(), fr = [];
+    /* §203 GECİKMEYİ KENDİMİZ HESAPLA — isLate GÜVENİLMEZ.
+       Ölçüldü: ARENA 1Ç26'yı dönem sonundan 120 GÜN sonra açıkladı ama
+       isLate=false geldi. Aynı şekilde KARTN 211 gün, GEDIK 575 gün — hepsi
+       false. isLate KAP'ın kendi iç kuralı; SPK bildirim süresini ölçmüyor.
+       §181'de ARENA'nın 120 gününü dokuz çeyreğin tarihini tek tek
+       hesaplayarak bulmuştum; burada aynı hesap tek satır.
+       DÖNEM SONU: 1→31 Mar · 2→30 Haz · 3→30 Eyl · 4/Yıllık→31 Ara.
+       EŞİK: SPK sınırı konsolide için ~70 gün. 80 günü aşan GECİKMİŞ sayılır
+       (tampon bırakıldı, sınır dönem tipine göre değişiyor). */
+    const DONEM_SONU = { 1:[2,31], 2:[5,30], 3:[8,30], 4:[11,31] };
+    const gecikmeHesap = (yil, donem, tur, tarih) => {
+      if(!yil || !tarih) return null;
+      const yillikMi = /yıllık|yillik/i.test(String(tur||''));
+      const [ay, gun] = yillikMi ? [11,31] : (DONEM_SONU[donem] || [11,31]);
+      const son = new Date(Date.UTC(yil, ay, gun));
+      const bil = new Date(tarih + 'T00:00:00Z');
+      return Math.round((bil - son) / 86400000);
+    };
+
+    /* TEKİLLEŞTİRME: (kod, yıl, dönem) başına TEK kayıt, EN ERKEN olanı.
+       Ölçüldü: TOASO 2026/2 için 29 Tem'de üç, 30 Tem'de bir bildirim var
+       (TR/EN sürüm, düzeltme, ek belge). İlk bildirim ASIL açıklamadır;
+       sonrakiler onun tekrarı. Nöbet ve gecikme hesabı ilkini kullanmalı.
+       §197'deki "aynı dönemin ikinci bildirimi" sorunu kökten burada çözülür. */
+    const kayit = new Map();
     ham.forEach(x => {
       if(String(x.disclosureClass||'').toUpperCase() !== 'FR') return;
       const idx = x.disclosureIndex;
-      if(gorulen.has(idx)) return; gorulen.add(idx);
-      /* stockCodes virgüllü olabilir (holding + bağlı ortaklık) — hepsi ayrı satır */
       const kodlar = String(x.stockCodes||'').split(/[,;\s]+/).filter(Boolean);
       const tarih = String(x.publishDate||'').slice(0,10).split('.').reverse().join('-');
-      kodlar.forEach(k => fr.push({
-        kod: k.toUpperCase(), tarih, saat: String(x.publishDate||'').slice(11,16),
-        yil: x.year, donem: x.period, tur: x.ruleType || null,
-        gec: !!x.isLate, id: idx, unvan: x.kapTitle || null,
-        url: idx ? 'https://www.kap.org.tr/tr/Bildirim/'+idx : null
-      }));
+      const saat = String(x.publishDate||'').slice(11,16);
+      kodlar.forEach(kRaw => {
+        const kod = kRaw.toUpperCase();
+        const anahtar = kod+'|'+x.year+'|'+x.period;
+        const yeni = { kod, tarih, saat, yil:x.year, donem:x.period, tur:x.ruleType||null,
+          gecikmeGun: gecikmeHesap(x.year, x.period, x.ruleType, tarih),
+          id: idx, unvan: x.kapTitle || null, tekrar: 1,
+          url: idx ? 'https://www.kap.org.tr/tr/Bildirim/'+idx : null };
+        yeni.gec = yeni.gecikmeGun != null && yeni.gecikmeGun > 80;
+        const eski = kayit.get(anahtar);
+        if(!eski){ kayit.set(anahtar, yeni); return; }
+        eski.tekrar++;
+        /* EN ERKEN kalır — asıl açıklama o */
+        if(yeni.tarih < eski.tarih || (yeni.tarih === eski.tarih && yeni.saat < eski.saat)){
+          yeni.tekrar = eski.tekrar; kayit.set(anahtar, yeni);
+        }
+      });
     });
-    fr.sort((a,b)=> a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : 0);
+    const fr = [...kayit.values()].sort((a,b)=>
+      a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : (a.saat < b.saat ? 1 : -1));
 
     res.setHeader('Cache-Control','s-maxage=540, stale-while-revalidate=1800');
     return res.status(200).json({ ok: fr.length>0, kaynak:'byCriteria/FR', gun:gunIst,
-      taranan: ham.length, dilim: dilimler.length, bildirim: fr.length,
-      gecikmis: fr.filter(x=>x.gec).length,
+      taranan: ham.length, dilim: dilimler.length,
+      hamBildirim: ham.filter(x=>String(x.disclosureClass||'').toUpperCase()==='FR').length,
+      bildirim: fr.length,                       // tekilleştirilmiş
+      gecikmis: fr.filter(x=>x.gec).length,      // >80 gün, HESAPLANMIŞ
+      not_isLate: 'KAP isLate alanı kullanılmıyor — ARENA 120 gün geç açıkladı ama false geliyordu',
       uyari: hatalar.length ? hatalar : null, fr });
+  }
+
+  /* §204 ?mod=kalem — BILDIRIM SAYFASINDA KALEM VAR MI?
+     Zincirin tek engeli: bilanço kalemleri. /tr/api/disclosure/<id> 404 verdi
+     ama /tr/Bildirim/<id> 200 + 162 KB HTML döndü. KAP'ın kendi görüntüleyicisi
+     tabloları orada gösteriyor; Next.js sayfası veriyi ya __NEXT_DATA__ içinde
+     ya da RSC flight yükünde taşır.
+     BU YOKLAMA: sayfayı çeker, BİLİNEN KALEM ETİKETLERİNİ arar ve nerede
+     bulduğunu söyler. Etiket bulunuyorsa ayrıştırma mümkün demektir.
+     ÖNEMLİ: sayfa yapısı değişebilir, bu yol KIRILGANDIR. Ama Fintables'a
+     alternatif tek yol bu; önce VAR MI diye bakmak gerek. */
+  if (_mod === 'kalem') {
+    const id = String((req.query && req.query.id) || '1639026').replace(/[^0-9]/g,'').slice(0,10);
+    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+    const cikti = { ok:true, mod:'kalem', id, bulgu:[] };
+    try{
+      const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
+        headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
+        signal: AbortSignal.timeout(15000) });
+      const h = await r.text();
+      cikti.http = r.status; cikti.uzunluk = h.length;
+
+      /* 1) Veri kapsayıcıları — Next.js iki biçimden birini kullanır */
+      cikti.kapsayici = {
+        nextData: h.indexOf('__NEXT_DATA__') >= 0,
+        flight: h.indexOf('self.__next_f') >= 0,
+        scriptSayisi: (h.match(/<script/g)||[]).length,
+        tabloSayisi: (h.match(/<table/g)||[]).length
+      };
+
+      /* 2) BİLİNEN KALEM ETİKETLERİ — Fintables'ta kullandıklarımın aynısı */
+      const ETIKET = ['Satış Gelirleri','Brüt Kar','Brüt Kâr','FAVÖK','Faaliyet Karı',
+        'Faaliyet Kârı','Ana Ortaklık Payları','Net Dönem Karı','Dönem Karı',
+        'Finansman Giderleri','Net Parasal Pozisyon','Toplam Varlıklar','Özkaynaklar',
+        'NET FAİZ GELİRİ','Beklenen Zarar Karşılıkları','Nakit ve Nakit Benzerleri'];
+      ETIKET.forEach(e=>{
+        const i = h.indexOf(e);
+        if(i >= 0) cikti.bulgu.push({ etiket:e, konum:i, cevre: h.slice(Math.max(0,i-60), i+140).replace(/\s+/g,' ') });
+      });
+
+      /* 3) Sayı deseni — kalem varsa yanında büyük sayılar olmalı */
+      const sayilar = h.match(/[-]?\d{1,3}(\.\d{3}){2,}/g);
+      cikti.buyukSayi = sayilar ? { adet:sayilar.length, ornek:sayilar.slice(0,6) } : null;
+
+      cikti.sonuc = cikti.bulgu.length
+        ? cikti.bulgu.length+' kalem etiketi BULUNDU — ayrıştırma mümkün görünüyor'
+        : 'kalem etiketi YOK — veri sayfada değil, ek dosyada olabilir (attachmentCount)';
+    }catch(e){ cikti.ok=false; cikti.hata = String(e.message||e).slice(0,140); }
+    return res.status(200).json(cikti);
   }
 
   if (_mod === 'yokla') {
