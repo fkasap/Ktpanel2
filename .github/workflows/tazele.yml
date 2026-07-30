@@ -68,12 +68,24 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       # Ne bulduğunu YAZ — ilk kurulumda en çok yol yapısı sorun çıkarır
+      # DİKKAT: `[ -f x ] && echo` kalıbı, dosya YOKSA 1 döner. Döngünün son
+      # turunda bu olursa adımın çıkış kodu 1 olur ve Actions işi ÖLDÜRÜR —
+      # ilk koşuda tam bu oldu, teşhis adımı teşhis edeceği işi durdurdu.
+      # `if/fi` kullanmak ve sona `exit 0` koymak sorunu kökten kapatır.
       - name: Yapıyı göster
+        continue-on-error: true
         run: |
           echo "repo kökü:"; ls -1
-          echo "---"; for d in . ktpanel panel public; do
-            [ -f "$d/index.html" ] && echo "index.html bulundu → $d"
+          echo "---"
+          for d in . ktpanel panel public; do
+            if [ -f "$d/index.html" ]; then echo "index.html bulundu → $d"; fi
           done
+          echo "---"
+          for d in . ktpanel; do
+            if [ -f "$d/xk100.json" ]; then echo "xk100.json bulundu → $d"; fi
+            if [ -f "$d/multiple.json" ]; then echo "multiple.json bulundu → $d"; fi
+          done
+          exit 0
 
       - name: Tazele
         id: tazele
