@@ -304,9 +304,34 @@ async function tazelikNobeti(){
     const sezonLimit = plan.sezon_limit_gun || 10;
     const sezonda = sezonAylar.indexOf(new Date().getMonth()+1) >= 0;
     const bayat = [];
+    /* §198 TEK KAYNAK: dosyanın KENDİ tarihi, plandakinden ÖNCELİKLİ.
+       Sorun: plan `son` alanı ELLE tutuluyordu. inceleme-ai.json 30 Tem'de
+       tazelendi ama plan 21 Tem'de kaldı ve Ebu "10 gün bayat" dedi — dosya
+       taze, damga eski. §157.2'de yazdığım kuralın ("veri tazelenince damga
+       da tazelenir") ihlali; kural yazmak yetmiyor, MEKANİZMA gerekiyor.
+       ÇÖZÜM: JSON katmanlarında dosyanın içindeki `guncelleme`/`tarih` alanı
+       okunur ve plandakinden YENİYSE o kullanılır. Plan artık yalnız YEDEK.
+       Böylece elle senkron tutma zorunluluğu kalkar (§112 tek kaynak). */
+    const dosyaTarihleri = {};
+    await Promise.all((plan.katmanlar||[]).map(async k=>{
+      const f = String(k.dosya||'');
+      if(!f.endsWith('.json') || f.indexOf('/')>=0) return;
+      try{
+        const r = await fetch('/'+f, {cache:'no-store'});
+        if(!r.ok) return;
+        const j = await r.json();
+        const t = j.guncelleme || j.tarih || j.fiyat_tarihi || null;
+        if(t) dosyaTarihleri[f] = t;
+      }catch(e){}
+    }));
     (plan.katmanlar||[]).forEach(k=>{
       if(k.siklik==='canli' || k.son==='otomatik') return;
-      const d = nobTarih(k.son); if(!d) return;
+      const dosyaT = dosyaTarihleri[String(k.dosya||'')];
+      const planD = nobTarih(k.son), dosyaD = nobTarih(dosyaT);
+      /* Hangisi YENİYSE o geçerli — plan geride kalmış olabilir (elle tutuluyor),
+         dosya geride kalmış olabilir (guncelleme alanı yazılmamış olabilir). */
+      const d = (dosyaD && (!planD || dosyaD > planD)) ? dosyaD : planD;
+      if(!d) return;
       const gun = nobGun(d);
       let limit = sg[k.siklik] || 7, sez = false;
       if(k.sezon && sezonda && limit > sezonLimit){ limit = sezonLimit; sez = true; }

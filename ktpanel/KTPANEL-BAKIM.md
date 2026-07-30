@@ -2677,6 +2677,38 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 198. TAZELIK NOBETI PLANI OKUYORDU, DOSYAYI DEGIL (31 Tem)
+
+Ebu "inceleme-ai.json 10 gun bayat" diyordu. Oysa dosya 30 Tem'de tazelenmisti.
+SEBEP: nobet `guncelleme-plani.json`'daki `son` alanini okuyor — dosyanin
+KENDISINI degil. Kart ekledim, planin `son` alanini guncellemedim.
+
+### 198.1 KENDI KURALIMI IHLAL ETTIM
+§157.2'de tam bunu yazmistim: "veri tazelenince DAMGA da tazelenir; ikisi tek
+islemdir." Katfon.json'da yasanmisti, kural yazildi, iki gun sonra
+inceleme-ai.json'da TEKRARLANDI.
+DERS: KURAL YAZMAK YETMIYOR. Elle senkron tutulmasi gereken iki alan varsa,
+er gec ayrisirlar — insan hatasi degil, TASARIM hatasi. Mekanizma gerekir.
+
+### 198.2 COZUM: TEK KAYNAK (§112)
+Nobet artik JSON katmanlarinda DOSYANIN KENDI tarihini okuyor
+(`guncelleme` / `tarih` / `fiyat_tarihi` alanlari) ve plandakinden YENIYSE
+onu kullaniyor. Plan artik YEDEK.
+Boylece elle senkron zorunlulugu KALKTI: dosyayi tazeleyen kisi planı
+guncellemeyi unutsa bile nobet dogru sonuc verir.
+SECIM KURALI: hangisi YENIYSE o. Cunku iki yonde de geride kalma olabilir —
+plan elle tutuldugu icin geride kalir, dosyada `guncelleme` alani hic
+yazilmamis olabilir.
+TEST: bes senaryo (plan geride · dosya geride · dosyada tarih yok · planda
+tarih yok · ikisi ayni) dogru sonuc veriyor.
+
+### 198.3 KALAN DORT UYARI GERCEK
+fm.json 17g · rezerv.json 14g · guidance.json 14g · hazine-takvim.json 10g
+Bunlar GERCEKTEN bayat. Ilk ucu bilanco verisi ister (Agustos dalgasi),
+hazine takvimi ayda bir elle. Nobet dogru calisiyor.
+
+ajan.js v=20260731b. DOSYALAR: ajan.js + guncelleme-plani.json + index.html.
+
 ## 197. TOASO YANLIS POZITIFI — ayni donem, iki bildirim (31 Tem)
 
 Kullanici karti deploy etti, Ebu HALA "TOASO kart bekliyor" diyordu.
