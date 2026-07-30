@@ -8,11 +8,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-07-29
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
-### XKTUM ağırlıkları — ✗ KALDI
+### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-07-29
-- ✗ **toplam**: 61.98 (hedef 96.5 ±3)
-  - sapma 34.52 — normalize hatası olabilir
+- ✓ **toplam**: 96.50 (hedef 96.5 ±3)
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 34/34 (%100)
@@ -31,6 +30,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (137 fiyat)
-
-⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
+**Sonuç:** XKTUM ağırlıkları
