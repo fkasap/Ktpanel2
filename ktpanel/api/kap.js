@@ -259,12 +259,30 @@ export default async function handler(req, res){
 
       /* Bir etiketin ARDINDAN gelen sayıları topla. Etiket hücresinden sonra
          gelen ilk iki sayısal hücre = cari ve önceki dönem. */
+      /* §205b DİPNOT REFERANSI TUZAĞI — çapraz denetimle yakalandı.
+         İlk sürümde TOASO cirosu 4,17 çıktı, gerçek değer 201.797.108'di.
+         SEBEP: KAP tablosunda kalem ile değer arasında DİPNOT REFERANSI sütunu
+         var:  | Hasılat | 4.17 | 201.797.108 | 125.633.352 |
+         Ayrıştırıcı ilk sayıyı alıyordu, o da dipnot numarasıydı ve TÜM
+         SÜTUNLAR BİR KAYIYORDU — cari değer "önceki" alanına düşüyordu.
+         NEDEN YALNIZ CİRODA: ara toplamların (BRÜT KAR, ESAS FAALİYET KARI)
+         dipnotu YOK, kalem satırlarının VAR. Yani hata KALEME GÖRE değişiyordu
+         — en sinsi türü.
+         ÇÖZÜM: bin ayracı biçimi ZORUNLU. Değerler "201.797.108" gibi, her
+         noktadan sonra TAM ÜÇ HANE. "4.17" bu kalıba uymaz (17 iki hane).
+         YAKALAYAN: Fintables'tan bilinen TOASO rakamlarıyla karşılaştırma.
+         Bilinen bir vaka olmasaydı 4,17'yi ciro sanıp kart yazacaktık. */
+      const BIN_KALIP = /^-?\(?\d{1,3}(\.\d{3})*\)?$/;
       const sayiCoz = (t) => {
-        const temiz = String(t).trim().replace(/\./g,'').replace(/,/g,'.');
-        if(!/^-?\(?\d/.test(temiz)) return null;
-        const eksi = /^\(|\)$/.test(String(t).trim());
-        const n = parseFloat(temiz.replace(/[()]/g,''));
-        return isFinite(n) ? (eksi ? -n : n) : null;
+        const ham = String(t).trim();
+        if(!BIN_KALIP.test(ham)) return null;              // dipnot ref elenir
+        const eksi = /^\(/.test(ham) || /^-/.test(ham);
+        const n = parseFloat(ham.replace(/[()\-]/g,'').replace(/\./g,''));
+        if(!isFinite(n)) return null;
+        /* Noktasız tek/çift haneli sayı da dipnot olabilir (örn. "5").
+           Değerler BİN TL olduğu için gerçek kalem 1000'in altında olmaz. */
+        if(ham.indexOf('.') < 0 && n < 1000) return null;
+        return eksi ? -n : n;
       };
       const kalemBul = (etiketler) => {
         for(const e of etiketler){
