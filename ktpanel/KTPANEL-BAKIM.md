@@ -2677,6 +2677,55 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 199. SUKUK AKISI: IKI AYRI ARIZA, IKISI DE SESSIZ (31 Tem)
+
+Kullanici: "bu otomatik geliyordu simdi bos geliyor."
+§185'te eklenen teshis satiri sebebi ELE VERDI:
+    canli 0 / arsiv 0 · pencerede (? gun)
+Ikisi de sifir AMA ekranda 6 kayit var — demek ki yanit /api/kap?mod=sukuk'tan
+HIC GELMEDI, panel dogrudan statik dosyaya dustu. `pencereGun` tanimsiz
+olmasi da bunu dogruluyor (o alan yalniz canli uctan gelir).
+
+### 199.1 ARIZA 1: KENDI KENDINE ISTEK MIDDLEWARE'E TAKILIYOR
+middleware.js `matcher: '/:path*'` ile TUM yollari koruyor.
+sukuk.js sunucu icinden kendi sitesine istek atiyor:
+    fetch(kok + '/sukuk-ihrac.json')   -> 401 giris sayfasi HTML -> JSON.parse patlar
+    fetch(kok + '/api/kap')            -> 401 {ok:false,'giris gerekli'} -> items yok
+Ikisi de catch icinde yutuluyordu. birlesik bos -> ok:false -> panel statige duser.
+NEDEN ESKIDEN CALISIYORDU: cok kullanicili koruma (§140) acilmadan once
+PANEL_USERS tanimsizdi ve middleware ilk satirda `return` ediyordu. Yani
+28 Tem'deki cok kullanici degisikligi, 20 Tem'den beri sessizce sukuk akisini
+kirmis. UC GUNDUR bozuk ve kimse fark etmemis — cunku statik yedek doluydu.
+COZUM: middleware'in ZATEN tanidigi cron muafiyetini kullan —
+`Authorization: Bearer CRON_SECRET`. Yeni kapi acmiyor, var olani kullaniyor.
+CRON_SECRET yoksa baslik gonderilmez, davranis degismez.
+
+### 199.2 ARIZA 2: ESM ICINDE require()
+api/kap.js `export default` (ESM) kullaniyor AMA alt modulleri `require()`
+ile aliyordu. ESM'de `require` TANIMLI DEGILDIR — modul yuklenirken
+ReferenceError atar ve /api/kap TUM MODLARIYLA olur.
+node --check bunu ancak dosya .mjs olarak denenince gosterdi; package.json
+"type":"commonjs" oldugu icin varsayilan denetim yaniltici hata veriyordu
+(§'de once yanlis alarm sanmistim, dogru alarmmis).
+COZUM: dinamik `import()` — ESM'de calisir, CommonJS modulunu `.default`
+altinda verir. Yan fayda: TEMBEL yukleme, yalniz o mod istendiginde yuklenir.
+
+### 199.3 IKI ARIZA UST USTE, IKISI DE SESSIZ
+Bu ikisi ayni anda vardi ve BIRBIRINI MASKELIYORDU: require hatasi olsa bile
+middleware zaten 401 donduruyordu; middleware duzeltilse require patlayacakti.
+Teshis satiri olmasaydi hicbiri gorunmezdi — panel "6 bildirim" gosteriyor,
+tarih eski ama makul, kimse sorgulamaz.
+§185'te "gecici durum kalici gibi gorunmemeli" diye eklenen tek satir, UC
+GUNDUR bozuk olan bir akisi ortaya cikardi.
+
+### 199.4 DOSYALAR CIKTIYA ALINDI
+api/kap.js · api/_lib/sukuk.js · api/_lib/kapyorum.js — bunlar bugune kadar
+cikti dizininde YOKTU (degismedikleri icin). Artik degistiler, deploy listesine
+girdiler. api/_lib/ ALT KLASOR — yuklerken yapisi korunmali.
+
+app.js v=20260731f. DOSYALAR: api/kap.js + api/_lib/sukuk.js +
+api/_lib/kapyorum.js + index.html.
+
 ## 198. TAZELIK NOBETI PLANI OKUYORDU, DOSYAYI DEGIL (31 Tem)
 
 Ebu "inceleme-ai.json 10 gun bayat" diyordu. Oysa dosya 30 Tem'de tazelenmisti.
