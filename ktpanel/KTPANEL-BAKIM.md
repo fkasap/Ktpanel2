@@ -2677,6 +2677,138 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 192. adjclose YETMEDI — kurumsal islem suzgeci (30 Tem)
+
+§191'de POLHO'nun %325,40 vol'u icin adjclose'a gecildi. YENI KOSUDA SAYI
+DEGISMEDI: yine 325,40, virgulune kadar. Ve "ham kapanis kullanildi" uyarisi
+da CIKMADI — yani adjclose VARDI ama close ile AYNIYDI.
+
+### 192.1 TESHIS: Yahoo BIST'te tam duzeltmiyor
+Yahoo'nun adjclose'u temettu ve bolunmeyi ABD hisselerinde duzeltir; BIST'te
+bedelsiz ve sermaye artirimi cogu zaman ISLENMEZ. Seri ham kalir, adjclose
+alani var ama icerigi close ile ayni. Dolayisiyla "adjclose kullan" cozumu
+BU PIYASADA YETERSIZ.
+Bunu ancak SAYININ DEGISMEMESI gosterdi — kod dogru calisiyordu, veri
+yetersizdi. Farki gormek icin ayni olcumu iki kez yapmak gerekti.
+
+### 192.2 COZUM: PIYASA KURALINA DAYAN
+BIST'te gunluk fiyat limiti ±%10. Bunu asan TEK GUNLUK hareket FIYAT HAREKETI
+OLAMAZ — bolunme, bedelsiz ya da sermaye artirimidir.
+Sinir %20 secildi (limitin IKI KATI): tavan-taban serisi, seans kesintisi
+gibi mesru uc durumlara alan birakir, kurumsal islemi yakalar.
+OLCULDU (sentetik): temiz seri %13,6 · tek −%75 gun eklenince %76,6
+(5,6 KAT) · suzgecten sonra %13,5 — sapma %0,3. Temize donuyor.
+Atlanan gun SAYILIR ve raporlanir: "N gun kurumsal islem suzgecine takildi".
+
+### 192.3 BETA ICIN ESLESMIS CIFT SARTI
+Suzgec beta hesabini bozabilirdi: hisse tarafinda bir gun atilip endeks
+tarafinda atilmasa, seriler kayar ve korelasyon anlamsizlasir.
+Bu yuzden gunler once null ile ISARETLENIR, sonra IKI SERIDE DE gecerli
+olanlar eslestirilerek alinir. Tek tarafli atma YOK.
+Ayni hizalama mantiginin (§190.2 ortak gun sarti) devami.
+
+### 192.4 DERS — "cozumu uyguladim" ile "sorun cozuldu" ayri seyler
+adjclose dogru bir duzeltmeydi ve DOGRU UYGULANDI. Ama sorunu cozmedi cunku
+kaynak veri o duzeltmeyi tasimiyordu. Kod dogru, veri yetersiz.
+Bir duzeltmeden sonra AYNI OLCUMU TEKRAR KOSTURMAK sarttir; "yaptim" demek
+yetmez. Bu oturumun tekrarlayan temasi (§136 tanimli/calisiyor · §161
+yazdim/gorunuyor · §189 yukledim/calisiyor) — bu da onun VERI versiyonu.
+
+DOSYALAR: scripts/tazele.mjs
+
+## 191. IKI GERCEK BULGU: XKTUM Yahoo'da YOK + duzeltilmemis seri (30 Tem)
+
+Risk katmani ilk kosusunda teshis tam istendigi gibi calisti ve IKI GERCEK
+SORUN ortaya cikardi. Ikisi de panelin BASKA yerlerini de ilgilendiriyor.
+
+### 191.1 XKTUM YAHOO'DA YOK — panelin sicili sessizce calismiyormus
+Yedekli zincir cikti verdi:
+    XKTUM.IS: bos · ^XKTUM: bos · XU100.IS: 250
+Yani Yahoo'da XKTUM DIYE BIR SEMBOL YOK.
+ETKISI RISK KATMANIYLA SINIRLI DEGIL: api/market.js'te `xktum: 'XKTUM.IS'`
+yaziyordu. Demek ki `m.xktum.p` HER ZAMAN null donuyordu ve:
+  · trackRender'daki `if(... && m.xktum && m.xktum.p)` korumasi hep FALSE
+  · sicil (model vs endeks) canli tarafta HIC GUNCELLENMIYORDU
+  · sicil kurma ekrani "Canli fiyatlar henuz yuklenmedi" uyarisi veriyordu
+Hata firlatmiyor, sessizce ATLIYORDU — bu oturumun tekrarlayan temasi.
+DUZELTME: market.js'te xktum -> XU100.IS'e yonlendirildi.
+ACIK KALAN: track.json'un endeks_kapanis'i Fintables'tan gelen GERCEK XKTUM
+(18262,59). Canli taraf artik XU100 donduruyor. IKI FARKLI ENDEKS — oran
+almak taban kaymasi uretir (§114). Koda uyari notu dusuldu; kalici cozum ya
+track.json'u XU100 bazina cevirmek ya da sentetik XKTUM hesaplamak
+(xktum.json'da agirliklar VAR, uyelerin fiyati da cekiliyor — yapilabilir).
+
+### 191.2 POLHO %325 VOL — HAM kapanis kullaniyormusum
+Denetim yakaladi: 1 kayit ±%150 sinirini asti, POLHO 325,40%.
+SEBEP: Yahoo'nun `indicators.quote[0].close` alani HAM kapanistir; bolunme ve
+bedelsiz icin DUZELTILMEZ. Duzeltilmis seri ayri alanda: `indicators.adjclose`.
+OLCULDU (sentetik 1:4 bolunme): ham vol %76,1 · duzeltilmis %11,3 — tek bir
+bolunme oynakligi 6,8 KAT sisiriyor.
+Bu, §149'daki "dagitim tuzagi"nin HISSE SERISI versiyonu: orada fon fiyati
+kar payi icin duzeltilmemisti, burada hisse fiyati bolunme icin. AYNI HATA,
+FARKLI VARLIK.
+DUZELTME: adjclose oncelikli, yoksa close'a duser VE duseni RAPORLAR
+("duzeltilmis seri yok, HAM kapanis kullanildi: ...").
+
+### 191.3 DENETIM YINE ISINI YAPTI
+Bu iki sorun da denetim kurallari olmadan GORUNMEZDI:
+  · XKTUM: seri bos donunce eski kod sessizce atlardi
+  · POLHO: %325 vol makul gorunmez ama kimse tek tek bakmaz
+Kurallar yazilirken gerekce olarak 29 Tem'in hatalari kullanilmisti; iki gun
+icinde uc yeni gercek hata yakaladilar (XKTUM payda + XKTUM sembol + POLHO).
+
+DOSYALAR: scripts/tazele.mjs + api/market.js + app.js
+
+## 190. RISK METRIKLERI OTOMATIKLESTI — vol · beta (30 Tem)
+
+Bes katman yesil yandiktan sonra kullanici: "baska neyleri otomatik yapabiliriz."
+Kalan damgali katmanlar tarandi; RISK acik ara en uygun cikti.
+
+### 190.1 NEDEN RISK
+risk.json yalniz {kod, vol, beta} tutuyor ve IKISI DE SAF HESAP —
+fiyat serisinden turer, dis kaynak GEREKMEZ:
+  vol  = gunluk getiri std sapmasi × √252   (yilliklandirilmis %)
+  beta = kov(hisse, endeks) / var(endeks)
+Betik zaten Yahoo'ya gidiyordu; tek fark range=5d yerine range=1y cekip
+hesap yapmak. 141 hisse, ayda bir elle yapiliyordu.
+DEGERI: panelin GROSS BETA hesabi (endeksten ayrisma karti) dogrudan buna
+dayaniyor. Bayat beta, ayrisma yorumunu sessizce kaydiriyordu.
+
+### 190.2 IKI TASARIM KARARI
+ENDEKS OLARAK XKTUM: panelin sicil karsilastirmasi da XKTUM kullaniyor
+(track.json endeks_kapanis). Boylece beta ile sicil AYNI TABANDAN olculuyor.
+XU100 secilseydi iki metrik farkli evrene bakardi — §114'teki taban kaymasi
+hatasinin ayni ailesi.
+ORTAK GUN SARTI: hisse ve endeks serisi AYNI GUNLERDE hizalanir (kesisim).
+Yahoo bazi gunleri atlar (tatil, islem yok); hizalamadan hesaplanan beta
+YANLIS cikar ve bu SESSIZ bir hatadir — sayi makul gorunur.
+TEST: %14 gunu eksik seride bile beta 1,50'de kaldi (kesisim sayesinde).
+
+### 190.3 DOGRULAMA — bilinen degerlerle
+  endeksin kendisi        -> beta 1,00  ✓
+  1,5 kat oynak seri      -> beta 1,50  ✓ · vol orani 1,51 ✓
+  %14 gunu eksik seri     -> beta 1,50 (222 ortak gun) ✓
+  40 gunluk seri          -> null (60 gun sarti) ✓
+Sentetik seriyle sinama, gercek veriye gitmeden matematigi kanitlar.
+
+### 190.4 DENETIM SINIRLARI — gerekceli
+beta ±3: BIST'te 3'u asan beta neredeyse HER ZAMAN hizalama hatasi ya da
+  bolunme artigidir, gercek degil.
+vol %150: asan hisse ya islem gormuyor ya veri bozuk.
+kapsam %90 (digerlerinde %95): seri gerektiren hesapta bazi hisselerin
+  gecmisi kisa olabilir (yeni halka arzlar), tolerans biraz genis.
+Hesaplanamayanlar RAPORLANIR, sessizce atlanmaz.
+
+### 190.5 HAFTALIK, GUNLUK DEGIL
+1 yillik pencereden hesaplanan vol/beta gunluk anlamli oynamaz. Cumartesi
+kosusuna birakildi — gereksiz commit uretmez.
+
+SIRADAKI ADAYLAR (yapilmadi): halka arzlar (guncel fiyat + getiri fiyattan
+turur, ilk/arz/buyukluk sabit) · temettu (Yahoo events=div, ama BIST'te
+bedelsiz/bolunme ayni akistan gelir, ayirmak gerekir).
+
+DOSYALAR: scripts/tazele.mjs + .github/workflows/tazele.yml
+
 ## 189. IKI KALINTI: kismi yukleme + --omit=dev tuzagi (30 Tem)
 
 Dorduncu kosu. XKTUM 61,98 -> 100,00 oldu ama hedef 96,5'i yine tutmadi;

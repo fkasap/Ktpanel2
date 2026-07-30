@@ -1,87 +1,123 @@
 # KTPanel — Deploy Listesi
-**29 Temmuz 2026 (akşam)** · `app.js?v=20260730v` · `ajan.js?v=20260730a`
+**30 Temmuz 2026** · `app.js?v=20260730z` · `ajan.js?v=20260730a`
 
-Tümü denetimden geçti: 8 JS sözdizimi + 11 JSON geçerli.
+28 dosyanın hepsi denetimden geçti.
 
----
-
-## ★ YENİ DOSYALAR (6) — daha önce hiç deploy edilmedi
-
-| Dosya | Konum | Hash | Ne işe yarar |
-|---|---|---|---|
-| `xk100.json` | **kök** | `3fbb55a7a925` | BIST Katılım 100 ağırlıkları (100 üye) |
-| `xktum.json` | **kök** | `608654247fad` | BIST Katılım Tüm (150/242 üye · %96,5) |
-| `xktmt.json` | **kök** | `32c24c138455` | BIST Katılım dar endeks (34 üye) |
-| `bist-takvim.json` | **kök** | `bb019b3c892e` | BIST beklenen bilanço tarihleri (40 hisse) |
-| `api/usnews.js` | **`api/`** | `1a1308d7e7a9` | Finnhub kazanç takvimi + ABD haberleri |
-| `test/kopru-testi.js` | `test/` | `b9830d4c931a` | Köprü sağlık testi (deploy şart değil) |
-
-> Eksik olurlarsa: Endeksten Ayrışma "ağırlık yok" der · BIST takviminde beklenenler görünmez · ABD kazanç takvimi boş kalır.
+> **Yapı hatırlatması** — repo iki katmanlı:
+> ```
+> Ktpanel2/
+> ├── .github/workflows/  ← OTOMASYON (repo kökü)
+> ├── scripts/            ← OTOMASYON (repo kökü)
+> ├── package.json        ← OTOMASYON (repo kökü)
+> ├── .gitignore          ← OTOMASYON (repo kökü)
+> └── ktpanel/            ← PANEL (Vercel Root Directory)
+>     ├── index.html · app.js · *.json
+>     └── api/
+> ```
 
 ---
 
-## DEĞİŞEN DOSYALAR (17)
+## ▸ ACİL — sicil karşılaştırmasını düzeltir
+
+| Dosya | Hedef | Hash |
+|---|---|---|
+| `api/market.js` | `ktpanel/api/` | `1ba3cc22e6bb` |
+| `app.js` | `ktpanel/` | `c14288d839bc` |
+
+**Neden acil:** `XKTUM.IS` Yahoo'da **yok** (Actions koşusunda kanıtlandı: `XKTUM.IS boş · ^XKTUM boş · XU100.IS 250`). Bu yüzden `m.xktum.p` hep null dönüyordu ve sicil karşılaştırması canlı tarafta **sessizce hiç çalışmıyordu**. Sembol `XU100.IS`'e yönlendirildi.
+
+---
+
+## ▸ PANEL — `ktpanel/` klasörüne
 
 ### Kod
-| Dosya | Konum | Hash |
+| Dosya | Hash | Ne değişti |
 |---|---|---|
-| `app.js` | kök | `ede69def1bde` |
-| `index.html` | kök | `10dba564e561` |
-| `ajan.js` | kök | `784245d5d56d` |
-| `middleware.js` | kök | `48033763ccb5` |
-| `vercel.json` | kök | `41090214649a` |
-| `api/market.js` | `api/` | `6563fe4993be` |
-| `api/katfon.js` | `api/` | `df1900c0c031` |
-| `api/data.js` | `api/` | `3c020d29ace9` |
+| `index.html` | `10f5a097a0b6` | Endeksten Ayrışma Portföy içine · başlıklar h2 · takvim düzeni |
+| `app.js` | `c14288d839bc` | ↑ acil listede |
+| `ajan.js` | `784245d5d56d` | §169 soğuma delmesi (olay kartları beklemez) |
+| `middleware.js` | `48033763ccb5` | — |
+| `vercel.json` | `41090214649a` | — |
+| `package.json` | `00baabb044c5` | — |
+
+### api/
+| Dosya | Hash | Ne değişti |
+|---|---|---|
+| `api/market.js` | `1ba3cc22e6bb` | ↑ acil · + `DFEDTARL/U` politika faizi · dinamik hisse listesi |
+| `api/usnews.js` | `1a1308d7e7a9` | Finnhub 5 dilime bölündü (1500 kayıt sınırı) |
+| `api/katfon.js` | `df1900c0c031` | — |
+| `api/data.js` | `3c020d29ace9` | — |
 
 ### Veri
-| Dosya | Hash | Bu turda ne değişti |
+| Dosya | Hash | Durum |
 |---|---|---|
-| `multiple.json` | `de980a0b1af2` | 141 hissenin fiyatı 29 Tem'e çekildi |
-| `katfon.json` | `e0c752adbe24` | Getiriler 27 Tem · AUM/akış 29 Tem |
-| `inceleme-ai.json` | `1790ab6a25d1` | CWENE · ARCLK · TSKB eklendi (20 kart) |
-| `guncelleme-plani.json` | `793141b22c62` | Endeks ağırlıkları + BIST takvim katmanları |
-| `sektor.json` | `1b16fe79a76a` | — |
-| `yabanci.json` | `061d11f9cba1` | — |
+| `xk100.json` | `b4a01f527a92` | ★ **YENİ** · pay adedi biçimi |
+| `xktum.json` | `191395980276` | ★ **YENİ** · pay adedi biçimi |
+| `xktmt.json` | `b7e873dab359` | ★ **YENİ** · pay adedi biçimi |
+| `bist-takvim.json` | `bb019b3c892e` | ★ **YENİ** · beklenen bilanço tarihleri |
+| `inceleme-ai.json` | `82b670663a26` | 25 kart (GARAN·TSKB·TOASO·MSFT·META·CWENE·ARCLK·ARENA) |
+| `analist.json` | `2e82237f18c7` | 51/55 tazelendi · 4 bayat işaretlendi |
+| `multiple.json` | `de980a0b1af2` | 141 fiyat 29 Tem |
+| `katfon.json` | `2e216d2c1f23` | getiri 28 Tem · AUM 29 Tem |
+| `track.json` | `478e89b4a10a` | sicil 28 Tem |
+| `guncelleme-plani.json` | `f8ae65264237` | yeni katmanlar + araştırma kayıtları |
+| `sektor.json` · `yabanci.json` | — | değişmedi |
 
 ### Belge
-| Dosya | Hash |
-|---|---|
-| `KTPANEL-BAKIM.md` | `1b942dd3978a` |
-| `KTPANEL-DAMGA.md` | `bdae0d85f989` |
+`KTPANEL-BAKIM.md` `76d0f4141aa4` · `KTPANEL-DAMGA.md` `4707be061978` · `DEPLOY.md` · `KURULUM.md` · `OTOMASYON.md`
+
+---
+
+## ▸ OTOMASYON — repo KÖKÜNE (ktpanel/ değil)
+
+| Dosya | Hash | Not |
+|---|---|---|
+| `scripts/tazele.mjs` | `34b4452c6763` | ★ risk katmanı + kurumsal işlem süzgeci |
+| `scripts/denetim.mjs` | `07ff601c64da` | ★ altı kural |
+| `.github/workflows/tazele.yml` | — | ★ zamanlayıcı |
+| `.gitignore` | `acd2ceb9bd10` | ★ node_modules |
+| `package.json` (kök) | `84c0d5464251` | ★ playwright |
+
+> `kok/package.json` dosyasını **`package.json`** adıyla repo köküne koy — `ktpanel/package.json` ile karışmaz, Vercel Root Directory `ktpanel` olduğu için köktekini görmez.
 
 ---
 
 ## DEPLOY SONRASI KONTROL
 
-**1 · Fiyat akışı** — Portföy → Endeksten Ayrışma, kartın altında:
+**1 · Sicil** — Portföy Yönetimi → Yönetim. Model vs endeks karşılaştırması artık dolmalı. "Canlı fiyatlar henüz yüklenmedi" diyorsa `api/market.js` gitmemiş.
+
+**2 · Fiyat akışı** — Portföy → Endeksten Ayrışma, kart altında:
 ```
 Fiyat akışı: ~158 sembol istendi, sunucu 158 döndürdü
 ```
-"sunucu 40 döndürdü" ya da kırmızı uyarı → `api/market.js` deploy edilmemiş.
+"40 döndürdü" ya da kırmızı uyarı → `api/market.js` eski.
 
-**2 · ABD kazanç takvimi** — Piyasa sekmesi, GLOBAL kartının içinde. 29–30 Tem'de MSFT/META/AAPL/AMZN görünmeli. Boşsa → `api/usnews.js` eksik.
+**3 · Politika faizi** — Makro/ABD sekmesinde `%3,50 – %3,75` görünmeli.
 
-**3 · BIST bilanço takvimi** — MPARK ve TUPRS **GECİKTİ** (kırmızı), TUREX/NTGAZ/ASELS **BEKLENİYOR** rozetiyle üstte. Yoksa → `bist-takvim.json` eksik.
+**4 · Bilanço takvimi** — Piyasa sekmesi. BIST kartında MPARK/TUPRS **GECİKTİ** (kırmızı), TUREX/NTGAZ/ASELS **BEKLENİYOR**. GLOBAL kartında MSFT/META/AAPL/AMZN.
 
-**4 · Endeks seçici** — XKTUM · XK100 · XKTMT. Biri "ağırlık yok" derse o JSON eksik.
+**5 · Earnings AI** — 25 kart, en üstte GARAN · TSKB · TOASO · MSFT · META.
 
-**5 · ABD kartı** — politika faizi görünmeli:
-```
-Politika faizi — hedef aralık    %3,50 – %3,75
-· efektif (DFF) — aralığın neresinde
-```
-Yoksa → `api/market.js` eski (`DFEDTARL/DFEDTARU` orada).
+**6 · Endeks seçici** — XKTUM · XK100 · XKTMT. Biri "ağırlık yok" derse o JSON gitmemiş.
 
-**6 · Ebu notu** — BIST takvim kartının altındaki not hâlâ "bu hafta bilanço sakin" diyorsa §169 soğuma delmesi çalışmamış; söyle, not motorunun kart keşfine bakarız.
+---
+
+## OTOMATİK OLANLAR — artık elle yapılmıyor
+
+Altı katman GitHub Actions'ta dönüyor (hafta içi 18:10, cumartesi 07:00):
+**XK100 · XKTUM · XKTMT ağırlıkları · Multiple fiyatları · Model sicili · Risk metrikleri**
+
+Denetimden geçmeyen katman **yazılmaz**, iş kırmızı yanar, bildirim gider.
 
 ---
 
 ## AÇIK KALEMLER
 
-- **Ağustos dalgası (~10–29 Ağu):** faktör modeli · guidance · analist · multiple bilanço kalemleri **birlikte** tazelenmeli — aynı dönem verisiyle, yoksa faktör skorları karışık dönemden oluşur.
-- **Haftalık:** endeks ağırlıkları (XKTUM/XK100/XKTMT). Kart 14 günü aşarsa kırmızı uyarır.
-- **Swap stoku** (`rezerv.json`) 12 gün gecikmiş — EVDS'den, ayrı iş.
-- **`parite_gecmis_v1`** buluta bağlanmadı; tarayıcı değişince geçmiş sıfırlanıyor.
-- **`oranlar.json`** önerisi açık — Fintables'ın 22 finansal oranı (ROE, ROIC, marj katmanları, kaldıraç). Onay bekliyor.
-- **TEFAS canlı çekim** kapalı (bot koruması); köprü ritüeli çalışıyor.
+- **Sentetik XKTUM** — `track.json` gerçek XKTUM bazlı (18.262,59), canlı taraf artık XU100. İki farklı endeks; oran taban kayması üretir. `xktum.json`'daki ağırlıklarla sentetik endeks hesaplanabilir.
+- **Fon katmanı** — TEFAS/Playwright henüz doğrulanmadı.
+- **Ağustos dalgası (~10–29 Ağu)** — faktör modeli · guidance · multiple bilanço kalemleri **birlikte** tazelenmeli.
+- **Çeyreklik** — pay adedi, bilanço kalemleri, beklenen bilanço takvimi (Fintables).
+- **Aylık** — analist konsensüsü.
+- **`parite_gecmis_v1`** buluta bağlanmadı.
+- **`oranlar.json`** önerisi açık (Fintables 22 finansal oran).
+- **Bu akşam** — QCOM · AAPL · AMZN kartları.
