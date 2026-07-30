@@ -17,7 +17,18 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { KURALLAR, denetle } from './denetim.mjs';
 
-const KOK = process.cwd();
+/* VERİ DİZİNİ — otomatik bulunur.
+   Repo yapısı iki türlü olabilir:
+     Ktpanel2/index.html              → veri kökte
+     Ktpanel2/ktpanel/index.html      → veri alt klasörde (Vercel Root Directory
+                                        ayarı bu duruma göre yapılmış)
+   İş akışı HER ZAMAN repo kökünden koşar (.github/workflows orada olmak
+   zorunda), o yüzden veri dizini aranarak bulunur. Ayar dosyası tutmak yerine
+   arama yapmak daha sağlam: klasör adı değişirse de çalışır. */
+import { existsSync } from 'node:fs';
+const ADAYLAR = [process.cwd(), path.join(process.cwd(), 'ktpanel'),
+                 path.join(process.cwd(), 'panel'), path.join(process.cwd(), 'public')];
+const KOK = ADAYLAR.find(d => existsSync(path.join(d, 'index.html'))) || process.cwd();
 const bugun = new Date().toISOString().slice(0, 10);
 const arg = k => (process.argv.find(a => a.startsWith(`--${k}=`)) || '').split('=')[1] || '';
 const KATMAN = arg('katman') || 'hepsi';
@@ -90,10 +101,19 @@ async function endeksTazele(dosya, ad) {
   let toplamSD = 0;
   kapsanan.forEach(k => { const v = pa[k] * f[k].fiyat; sd[k] = v; toplamSD += v; });
 
-  /* Toplam SD, TÜM üyeler üzerinden olmalı. Dosya kısmi liste tutuyorsa
-     (XKTUM'da 242'nin 150'si) `toplam_uye_sd` alanı payda olarak kullanılır —
-     böylece ağırlıklar 100'e normalize EDİLMEZ ve gerçek endeks ağırlığı korunur. */
-  const payda = d.toplam_uye_sd ? (toplamSD / kapsanan.length) * d.toplam_uye : toplamSD;
+  /* PAYDA — tüm üyelerin serbest dolaşım PD'si olmalı, yalnız kapsananların
+     değil. Aksi halde ağırlıklar 100'e normalize olur ve gerçek endeks ağırlığı
+     kaybolur (XKTUM'da 242 üyenin 150'si yazılı, toplam ~96,5 olmalı).
+
+     İLK DENEME YANLIŞTI: payda = (toplamSD / kapsanan) × toplam_uye
+     Bu, "eksik üyelerin ortalama büyüklüğü kapsananlarınkine eşit" varsayar.
+     DEĞİL — kapsananlar EN BÜYÜKLER, eksikler ince kuyruk. XKTUM'da payda
+     1,61 kat şişti ve toplam 96,5 yerine 61,98 çıktı. Denetim yakaladı.
+
+     DOĞRUSU: kapsama oranı zaten biliniyor (kapsanan_agirlik_hedef = 96,5).
+     payda = toplamSD / (hedef/100). Kendi kendine tutarlı, varsayım yok. */
+  const hedefOran = (d.kapsanan_agirlik_hedef ?? 100) / 100;
+  const payda = toplamSD / hedefOran;
   const uyeler = {};
   kapsanan.forEach(k => { uyeler[k] = +(sd[k] / payda * 100).toFixed(4); });
   const toplamAgirlik = Object.values(uyeler).reduce((a, b) => a + b, 0);
@@ -238,7 +258,11 @@ async function fonTazele() {
 
 /* ── ANA AKIŞ ───────────────────────────────────────────────────────────── */
 (async () => {
-  raporlar.push(`# Tazeleme — ${bugun}\n\nKatman: \`${KATMAN}\`\n`);
+  const goreliDizin = path.relative(process.cwd(), KOK) || '.';
+  raporlar.push(`# Tazeleme — ${bugun}\n\nKatman: \`${KATMAN}\` · Veri dizini: \`${goreliDizin}\`\n`);
+  if (!existsSync(path.join(KOK, 'index.html'))) {
+    raporlar.push('⚠ **index.html hiçbir aday dizinde bulunamadı.** Veri dosyaları okunamayabilir.');
+  }
 
   if (ister('endeks')) {
     await endeksTazele('xk100.json', 'XK100 ağırlıkları');
@@ -258,8 +282,10 @@ async function fonTazele() {
     (denetimDustu ? '\n\n⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**' : '')
   );
 
-  await fs.mkdir(path.join(KOK, 'rapor'), { recursive: true });
-  await fs.writeFile(path.join(KOK, 'rapor/son-tazeleme.md'), raporlar.join('\n\n'), 'utf8');
+  /* Rapor REPO kökünde — iş akışı onu okuyup özete basıyor. Veri dizini
+     alt klasörde olsa bile rapor yeri değişmez. */
+  await fs.mkdir(path.join(process.cwd(), 'rapor'), { recursive: true });
+  await fs.writeFile(path.join(process.cwd(), 'rapor/son-tazeleme.md'), raporlar.join('\n\n'), 'utf8');
 
   const cikti = process.env.GITHUB_OUTPUT;
   if (cikti) {
