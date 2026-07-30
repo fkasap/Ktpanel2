@@ -1,0 +1,109 @@
+# KTPanel — otomatik veri tazeleme
+#
+# NE YAPAR: kaynaklardan çeker → DENETİMDEN GEÇİRİR → değiştiyse commit eder.
+# Commit Vercel'i tetikler, deploy kendiliğinden olur.
+#
+# NEDEN GITHUB ACTIONS: Playwright (TEFAS için) Vercel serverless'ta koşmaz —
+# §148'de ölçüldü. Actions'ta koşar. Ayrıca kullanıcının makinesi açık olmak
+# zorunda kalmaz.
+#
+# KRİTİK: denetimden geçmeyen veri COMMIT EDİLMEZ. Sessizce bozuk veri
+# yayınlamaktansa eski veriyle kalmak yeğdir — 29 Tem'de üç sessiz hata
+# yakalandı (11 hisse eski fiyatta · 4 bayat analist hedefi · eksik çeyrek),
+# üçü de "veri geldi" diyordu.
+
+name: Veri Tazele
+
+on:
+  schedule:
+    # Hafta içi 18:10 TSİ (15:10 UTC) — BIST kapanışından ~40 dk sonra
+    - cron: '10 15 * * 1-5'
+    # Cumartesi 07:00 TSİ — haftalık kalemler
+    - cron: '0 4 * * 6'
+  workflow_dispatch:        # elle tetikleme (Actions sekmesinden)
+    inputs:
+      katman:
+        description: 'Hangi katman? (hepsi | fiyat | fon | endeks)'
+        required: false
+        default: 'hepsi'
+
+permissions:
+  contents: write           # commit atabilmek için
+
+concurrency:
+  group: tazele
+  cancel-in-progress: false # yarım kalmış tazeleme üstüne yenisi binmesin
+
+jobs:
+  tazele:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # npm ci LOCK DOSYASI ister; yoksa düşer. İlk kurulumda lock yok.
+      # continue-on-error: bağımlılık kurulmasa bile FİYAT ve ENDEKS katmanları
+      # çalışır (onlar düz fetch kullanır, paket gerektirmez). Yalnız FON
+      # katmanı Playwright'a bağlıdır ve o zaten kendi kontrolünü yapıyor.
+      - name: Bağımlılıklar
+        continue-on-error: true
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --omit=dev || npm install --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      # Playwright yalnız FON katmanı için gerekli (TEFAS bot koruması).
+      # Diğer katmanlar düz fetch ile çalışır; boşuna kurmayalım.
+      # Playwright kurulumu düşerse diğer katmanlar yine koşsun.
+      - name: Playwright (yalnız fon katmanı)
+        if: github.event.inputs.katman == 'fon' || github.event.inputs.katman == 'hepsi' || github.event.inputs.katman == ''
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium
+
+      # Ne bulduğunu YAZ — ilk kurulumda en çok yol yapısı sorun çıkarır
+      - name: Yapıyı göster
+        run: |
+          echo "repo kökü:"; ls -1
+          echo "---"; for d in . ktpanel panel public; do
+            [ -f "$d/index.html" ] && echo "index.html bulundu → $d"
+          done
+
+      - name: Tazele
+        id: tazele
+        continue-on-error: true
+        run: node scripts/tazele.mjs --katman="${{ github.event.inputs.katman || 'hepsi' }}"
+        env:
+          TZ: Europe/Istanbul
+
+      # Denetim raporu her koşuda görünsün — geçse de kalsa da
+      - name: Denetim raporu
+        if: always()
+        run: cat rapor/son-tazeleme.md >> $GITHUB_STEP_SUMMARY || echo "rapor yok"
+
+      - name: Commit ve deploy
+        if: steps.tazele.outputs.degisti == '1'
+        run: |
+          git config user.name  "ktpanel-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -m "veri: ${{ steps.tazele.outputs.ozet }}"
+          git push
+          echo "✓ commit atıldı — Vercel deploy'u tetiklendi"
+
+      - name: Değişiklik yok
+        if: steps.tazele.outputs.degisti != '1'
+        run: echo "Veri aynı ya da denetimden geçmedi — commit atılmadı."
+
+      # Denetim düşerse iş KIRMIZI yansın ki bildirim gelsin
+      - name: Denetim sonucu
+        if: steps.tazele.outputs.denetim == 'basarisiz'
+        run: |
+          echo "::error::Denetim başarısız — veri yazılmadı. rapor/son-tazeleme.md'ye bak."
+          exit 1
