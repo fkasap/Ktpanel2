@@ -2677,6 +2677,42 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 197. TOASO YANLIS POZITIFI — ayni donem, iki bildirim (31 Tem)
+
+Kullanici karti deploy etti, Ebu HALA "TOASO kart bekliyor" diyordu.
+§196'da "veri eskiydi" demistim — o dogruydu ama TEK sebep degilmis.
+
+### 197.1 SEBEP: AYNI DONEMIN IKINCI BILDIRIMI
+Ebu'nun karsilastirmasi GUN BAZINDA:
+    if(kartT && nobGunAnahtar(kartT) >= nobGunAnahtar(ts)) return;
+TOASO 29 Tem'de acikladi, kart 29 Tem yazildi. AMA KAP'ta 30 Tem'de IKINCI
+bir FR bildirimi var. Sirketler ayni raporu birden fazla kez bildirir:
+TR/EN surum, duzeltme, ek belge, bagimsiz denetim raporu.
+Kart bir gun eski gorundu -> "yeni donem" sanildi.
+
+### 197.2 COZUM: OLCEK FARKINA DAYAN
+Ceyrekler arasi ~90 GUN. Ayni donemin tekrar bildirimi BIRKAC GUN icinde.
+Aradaki buyukluk farki kurali kendiliginden veriyor: 14 gunluk tolerans
+ikisini KESIN ayirir.
+  0g  · ayni gun            -> atla
+  1g  · TOASO ikinci bildirim -> atla ✓ (sorun buydu)
+ 12g  · iki hafta ici ek belge -> atla
+ 17g  · sinirin disi        -> uyar
+ 91g  · 3C26 gercek yeni donem -> uyar ✓
+14 secildi cunku bilanco + faaliyet raporu + denetim bildirimleri bazen iki
+haftaya yayilir.
+
+### 197.3 BIR TUZAK DAHA: nobGunAnahtar SAYI DONDURUYOR
+Ilk yazimda `(nobGunAnahtar(ts) - nobGunAnahtar(kartT)) / 86400000` yazdim.
+nobGunAnahtar YYYYMMDD SAYISI dondurur (20260729), zaman damgasi DEGIL.
+Fark 1 gun icin 1 verir, 86400000'e bolununce 0,0000000116 cikardi — tolerans
+hep saglanir, nobet HIC uyarmazdi. Tam ters yonde bir hata.
+Fonksiyonun ADINDAN ne dondurdugu anlasilmiyor; tanimina bakmak gerekti.
+DERS: bir yardimci fonksiyonu kullanmadan once NE DONDURDUGUNE bak, adina
+guvenme. "Anahtar" kelimesi hem zaman damgasi hem sirali sayi olabilir.
+
+ajan.js v=20260731a. DOSYALAR: ajan.js + index.html.
+
 ## 196. NOBET ZATEN VARDI — §194 GERI ALINDI (31 Tem)
 
 Ekran goruntusu iki sey gosterdi ve ikisi de beni yanilttigimi kanitladi.

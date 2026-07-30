@@ -356,7 +356,23 @@ async function bilancoNobeti(){
         const kod = String(k).toUpperCase();
         if(!evren.has(kod)) return;
         const kartT = kartlar[kod];
-        if(kartT && nobGunAnahtar(kartT) >= nobGunAnahtar(ts)) return;   // kart zaten güncel (GÜN bazında)
+        /* §197 AYNI DÖNEM TOLERANSI. Gün bazında karşılaştırma yanlış pozitif
+           üretiyordu: TOASO 29 Tem'de açıkladı, kartı 29 Tem yazıldı, ama KAP'ta
+           30 Tem'de İKİNCİ bir FR bildirimi var (şirketler aynı raporu birden
+           fazla kez bildirir — TR/EN sürüm, düzeltme, ek belge). Kart bir gün
+           eski göründü ve "yeni dönem" sanıldı.
+           ÖLÇEK FARKI KURALI VERİYOR: çeyrekler arası ~90 gün, aynı dönemin
+           tekrar bildirimi birkaç gün içinde. 14 günlük tolerans ikisini
+           kesin ayırır — ne yanlış pozitif üretir ne gerçek yeni dönemi kaçırır.
+           (14 gün seçildi: bilanço + faaliyet raporu + bağımsız denetim
+           bildirimleri bazen iki haftaya yayılır.) */
+        const TOLERANS_GUN = 14;
+        if(kartT){
+          /* DİKKAT: nobGunAnahtar YYYYMMDD sayısı döndürür (20260729), zaman
+             damgası değil — fark almak için Date nesnelerinin kendisi kullanılır. */
+          const fark = (ts.getTime() - kartT.getTime()) / 86400000;
+          if(fark <= TOLERANS_GUN) return;    // aynı dönem — kart güncel sayılır
+        }
         const v = bekleyen[kod];
         if(!v || ts > v.ts) bekleyen[kod] = {kod, ts, baslik:String(it.b||'').slice(0,90),
           url:it.url||null, portfoyde:!!(typeof poz!=='undefined' && poz.some(p=>p.kod && String(p.kod).toUpperCase()===kod)),
