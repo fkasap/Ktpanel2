@@ -1,0 +1,106 @@
+{
+ "guncelleme": "2026-07-17",
+ "yil": 2026,
+ "sirketler": [
+  {
+   "k": "AEFES",
+   "ad": "Anadolu Efes",
+   "g": "| Beklenti | 2026 |\n| Konsolide Satış Hacmi | Orta-tek hane büyüme |\n| Bira Grubu Satış Hacmi | Düşük tek hane |\n| Meşrubat Grubu Satış Hacmi | Orta tek hane |\n| Konsolide FAVÖK Marjı | Yatay |\n| Yatırım/Satış Geliri | Yüksek tek hane |"
+  },
+  {
+   "k": "AKBNK",
+   "ad": "Akbank",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| TL Kredi Büyümesi | >%30 | %41,8 | >%30 |\n| Net Faiz Marjı (swap düzl.) | %5 | %2,5 | ~%4 |\n| Net Ücret/Komisyon Artışı | ~%40 | %64,1 | >%30 |\n| Operasyonel Gider Artışı | Orta %40 | %33,1 | Düşük %30 |\n| Takipteki Kredi Oranı | ~%3,5 | %3,4 | ~%3,5 |\n| Özsermaye Karlılığı | >%30 | %21,5 | Yüksek %20 |"
+  },
+  {
+   "k": "ARCLK",
+   "ad": "Arçelik",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Ciro Büyümesi (TR-TL) | Yatay | -%6,6 | Yatay |\n| Ciro Büyümesi (Uluslararası-YP) | %15 | -%0,1 | yatay |\n| FAVÖK Marjı | %6,5 | %5,9 | %6,25-6,50 |\n| Yatırım Harcamaları | ~300 mn€ | 205 mn€ | 250 mn€ |"
+  },
+  {
+   "k": "ASELS",
+   "ad": "Aselsan",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Net Satış Büyümesi (%) | >10 | 15 | >10 |\n| FAVÖK Marjı (%) | >23 | 26 | >24 |\n| Yatırım Harc. (Milyar TL) | 20 | 38,9 | 50 |"
+  },
+  {
+   "k": "ASTOR",
+   "ad": "Astor Enerji",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Ciro (mn$) | 940 | 824 | 1.094 |\n| Yurt içi Satışlar (mn$) | 490 | 496 | 527 |\n| Yurt dışı Satışlar (mn$) | 450 | 328 | 567 |\n| İhracat Payı | %48 | %40 | %52 |"
+  },
+  {
+   "k": "BIMAS",
+   "ad": "BİM",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Satış Büyümesi | %8 (±2) | %6,0 | %6,0 (±2) |\n| FAVÖK Marjı | %5,0 (±0,5) | %6,0 | %6,5 (±0,5) |\n| Yatırım/Satışlar | %3,5-4,0 | %2,9 | %3,0-3,5 |"
+  },
+  {
+   "k": "CCOLA",
+   "ad": "Coca-Cola İçecek",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Satış Hacmi | Orta-tek hane | %8 | Orta-tek hane |\n| FVÖK Marjı | yatay | -3bps | Yatay |\n| Türkiye Satış Hacmi | Düşük-orta tek hane | -%1 | Düşük-orta tek hane |\n| Uluslararası Satış Hacmi | Orta-yüksek tek hane | %13,5 | Yüksek tek hane |"
+  },
+  {
+   "k": "DOAS",
+   "ad": "Doğuş Otomotiv",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Toplam Otomotiv Pazarı (bin) | 1.300 | 1.375,9 | 1.200 |\n| Doğuş Satış Adedi (bin) | 150 | 162,8 | 117 |\n| Yatırım Harcaması (mia TL) | 5,0 | 4,6 | 5,2 |"
+  },
+  {
+   "k": "FROTO",
+   "ad": "Ford Otosan",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Toplam Otomotiv Pazarı | 950-1.050 bin | 1.408 bin | 1.300-1.400 bin |\n| Toplam Satış Adedi | 700-760 bin | 725 bin | 670-730 bin |\n| Yatırım Harcaması | 750-850 mn€ | 410 mn€ | 300-400 mn€ |\n| Satış Geliri Büyümesi | Yüksek Tek Hane | %7 | Yatay |\n| Düzeltilmiş FAVÖK Marjı | %7-8 | %8 | %7-8 |"
+  },
+  {
+   "k": "GARAN",
+   "ad": "Garanti BBVA",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| TL Kredi Büyümesi | >Ort. TÜFE | %45 | %30-35 |\n| Net Kredi Riski Maliyeti | <%2 | %1,5 | %2-2,5 |\n| Net Faiz Marjı (Δ) | +%1,5-2 | +%1,2 | ~75bp genişleme |\n| Operasyonel Gider Büyümesi | ~%90-95 | %67 | %45-50 |\n| Ort. Özkaynak Karlılığı | %30-33 | %29 | Orta tek hane reel |"
+  },
+  {
+   "k": "ISCTR",
+   "ad": "İş Bankası",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| TL Kredi Büyümesi | ~%35 | %43 | Orta %30 |\n| Net Faiz Marjı (swap ayarlı) | ~350bp | 285bp (%2,3) | ~%5 |\n| Ücret/Komisyon Artışı | ~%50 | %47 | ~%40 |\n| Takipteki Kredi Oranı | ~%3 | %3,2 | ~%4 |\n| Özkaynak Karlılığı | ~%25 | %19 | TÜFE üzeri reel |"
+  },
+  {
+   "k": "MGROS",
+   "ad": "Migros",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Satış Büyümesi | %8-10 | %7,3 | %5-7 |\n| FAVÖK Marjı | %6 | %6,6 | %6-7 |\n| Mağaza hedefi | +250 | 259 | 180-200 |\n| Yatırım/Satışlar | %2,5-3,0 | %3,3 | %2,5-3,0 |"
+  },
+  {
+   "k": "SOKM",
+   "ad": "Şok Marketler",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Net Satışlar | %6 (±2) | %5,4 | %5 (±1) |\n| FAVÖK Marjı | %2 (±0,5) | %2,8 | %3 (±0,5) |\n| Yatırım Harcamaları | Ciro %2,5 | %1,9 | ~ciro %2 |"
+  },
+  {
+   "k": "TAVHL",
+   "ad": "TAV Havalimanları",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Ciro (€m) | 1750-1850 | 1823 | 1880-1890 |\n| Toplam Yolcu (m) | 110-120 | 113 | 116-123 |\n| FAVÖK (€m) | 520-590 | 560 | 590-650 |\n| Yatırım Harcamaları (€m) | 140-160 | 201 | <330 |"
+  },
+  {
+   "k": "TCELL",
+   "ad": "Turkcell",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Grup Gelir Büyümesi | %7-9 | %10,7 | %5-7 |\n| FAVÖK Marjı | %41-42 | %43,1 | %40-42 |\n| Yatırım Harc./Gelir | ~%24 | ~%22,6 | ~%25 |\n| Veri Merkezi&Bulut Büyüme | %32-34 | %32 | %18-20 |"
+  },
+  {
+   "k": "TOASO",
+   "ad": "Tofaş",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Yurtiçi Hafif Araç Pazarı | 0,9-1,1 mn | 1,37 mn | 1,2-1,3 mn |\n| Tofaş Yurtiçi Satış | 110-130 bin | 360 bin | 320-350 bin |\n| İhracat | 70-90 bin | 47 bin | 70-80 bin |\n| Yatırımlar (mn€) | 150 | 154 | 250 |\n| Vergi Öncesi Kar Marjı | – | %4,1 | %3-4 |"
+  },
+  {
+   "k": "TTKOM",
+   "ad": "Türk Telekom",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Gelir Büyümesi (UFRYK) | %8-9 | %11,5 | %8-9 |\n| FAVÖK Marjı | %38-40 | %41 | %41-42 |\n| Yatırım Harc./Satışlar | %28-29 | %29 | %33-34 |"
+  },
+  {
+   "k": "TUPRS",
+   "ad": "Tüpraş",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Net Rafineri Marjı | 6-6,5 $/v | 7,0 $/v | 6-7 $/v |\n| Kapasite Kullanımı | %90-95 | %93,6 | %95-100 |\n| Toplam Üretim | ~26 mn ton | 26,8 mn ton | ~29 mn ton |\n| Toplam Yatırımlar | ~480 mn$ | 476 mn$ | ~700 mn$ |"
+  },
+  {
+   "k": "ULKER",
+   "ad": "Ülker",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| Ciro Büyümesi | %3 (±1) | %1,7 | yatay |\n| FAVÖK Marjı | %17,5 (±0,5) | %16,5 | %13,5 (±1,5) |"
+  },
+  {
+   "k": "YKBNK",
+   "ad": "Yapı Kredi",
+   "g": "| Beklenti | 2025 Bek. | 2025 Gerç. | 2026 Bek. |\n| TL Kredi Büyümesi | <Ort. Enf. | %43 | +%30 |\n| Net Faiz Marjı | 200-225bp | +151bp | ≥100bp iyileşme |\n| Komisyon Büyümesi | ≥%40 | %50 | ~Enflasyon |\n| Gider Artışı | <%50 | %53 | ≤%35 |\n| Özsermaye Karlılığı | Orta %20 | %21,4 | Yüksek-Orta %20 |"
+  }
+ ]
+}

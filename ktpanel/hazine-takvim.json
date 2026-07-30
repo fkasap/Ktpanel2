@@ -1,0 +1,31 @@
+{
+ "kaynak": "HMB İç Borçlanma Stratejisi (26 May 2026)",
+ "donem": "Haziran–Ağustos 2026",
+ "guncelleme": "2026-07-21",
+ "sonraki_aciklama": "~25 Ağustos (Eyl–Kas stratejisi)",
+ "finansman": [
+  {"ay": "Temmuz", "itfa": 616.3, "borclanma": 708.7},
+  {"ay": "Ağustos", "itfa": 595.8, "borclanma": 595.8}
+ ],
+ "ihraclar": [
+  {"t": "2026-07-02", "itfa": "2028-06-30", "ad": "Altın Tahvili", "vade": "2 Yıl", "yontem": "Doğrudan Satış", "katilim": false},
+  {"t": "2026-07-02", "itfa": "2028-06-30", "ad": "Altına Dayalı Kira Sertifikası", "vade": "2 Yıl", "yontem": "Doğrudan Satış", "katilim": true},
+  {"t": "2026-07-06", "itfa": "2028-03-15", "ad": "Sabit Kuponlu DT", "vade": "2 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-07-07", "itfa": "2031-04-16", "ad": "Sabit Kuponlu DT", "vade": "5 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-07-20", "itfa": "2027-02-10", "ad": "Hazine Bonosu", "vade": "7 Ay", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-07-20", "itfa": "2031-07-16", "ad": "Kira Sertifikası", "vade": "5 Yıl", "yontem": "Doğrudan Satış", "katilim": true},
+  {"t": "2026-07-21", "itfa": "2028-07-19", "ad": "USD Cinsi Devlet Tahvili", "vade": "2 Yıl", "yontem": "Doğrudan Satış", "katilim": false},
+  {"t": "2026-07-21", "itfa": "2028-07-19", "ad": "USD Cinsi Kira Sertifikası", "vade": "2 Yıl", "yontem": "Doğrudan Satış", "katilim": true},
+  {"t": "2026-07-21", "itfa": "2030-07-17", "ad": "TLREF'e Endeksli DT", "vade": "4 Yıl", "yontem": "İhale / İLK ihraç", "katilim": false},
+  {"t": "2026-08-10", "itfa": "2027-02-10", "ad": "Hazine Bonosu", "vade": "6 Ay", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-08-10", "itfa": "2028-08-09", "ad": "Sabit Kuponlu DT", "vade": "2 Yıl", "yontem": "İhale / İLK ihraç", "katilim": false},
+  {"t": "2026-08-11", "itfa": "2028-08-09", "ad": "Kira Sertifikası", "vade": "2 Yıl", "yontem": "Doğrudan Satış", "katilim": true},
+  {"t": "2026-08-11", "itfa": "2031-04-16", "ad": "Sabit Kuponlu DT", "vade": "5 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-08-17", "itfa": "2030-01-02", "ad": "Değişken Faizli DT", "vade": "3 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-08-17", "itfa": "2030-07-17", "ad": "TLREF'e Endeksli DT", "vade": "4 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-08-18", "itfa": "2030-05-08", "ad": "TÜFE'ye Endeksli DT", "vade": "4 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-08-18", "itfa": "2035-09-05", "ad": "Sabit Kuponlu DT", "vade": "9 Yıl", "yontem": "İhale / Yeniden", "katilim": false},
+  {"t": "2026-08-20", "itfa": "2027-08-20", "ad": "USD Cinsi Devlet Tahvili", "vade": "1 Yıl", "yontem": "Doğrudan Satış", "katilim": false},
+  {"t": "2026-08-20", "itfa": "2027-08-20", "ad": "USD Cinsi Kira Sertifikası", "vade": "1 Yıl", "yontem": "Doğrudan Satış", "katilim": true}
+ ]
+}

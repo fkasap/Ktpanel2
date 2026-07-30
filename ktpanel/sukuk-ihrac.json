@@ -1,0 +1,12 @@
+{
+  "guncelleme": "2026-07-20",
+  "kaynak": "KAP · Fintables",
+  "ihraclar": [
+    {"tarih": "2026-07-20", "kod": "NURVK", "ihracci": "Nurol Yatırım Kira Sertifikası", "tip": "Tertip İhraç Belgesi", "not": "HSTAS kaynak kuruluş · SPK onaylı ihraç"},
+    {"tarih": "2026-07-20", "kod": "TFNVK", "ihracci": "TF Varlık Kiralama", "tip": "Tertip İhraç Belgesi", "not": "16.07.2026 başvurusu onaylandı"},
+    {"tarih": "2026-07-20", "kod": "KATVK", "ihracci": "Katılım Varlık Kiralama", "tip": "Tertip İhraç Belgesi", "not": "AKCVR · yönetim sözleşmesine dayalı"},
+    {"tarih": "2026-07-17", "kod": "EKTVK", "ihracci": "EKT Varlık Kiralama", "tip": "Yeşil/Sürdürülebilir Kira Sertifikası", "not": "Sürdürülebilir tema · ihraç tavanı onayı"},
+    {"tarih": "2026-07-17", "kod": "HLVKS", "ihracci": "Halk Varlık Kiralama", "tip": "Dönemsel Kâr Payı Ödemesi", "not": "TRDHVKAE2611 · 3. dönem ödemesi"},
+    {"tarih": "2026-07-17", "kod": "EKTVK", "ihracci": "EKT Varlık Kiralama", "tip": "Nitelikli Yatırımcıya Satış", "not": "TRDEVKSE2671 · satış tamamlandı"}
+  ]
+}

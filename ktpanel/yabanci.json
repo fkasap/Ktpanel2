@@ -1,0 +1,91 @@
+{
+ "guncelleme": "2026-07-28",
+ "kaynak": "TCMB Ödemeler Dengesi (aylık portföy) + Haftalık Menkul Kıymet İst. + swap hariç net rezerv",
+ "aylik": [
+  {
+   "ay": "Oca",
+   "portfoy": 1.4,
+   "kesin": false
+  },
+  {
+   "ay": "Şub",
+   "portfoy": 0.9,
+   "kesin": false
+  },
+  {
+   "ay": "Mar",
+   "portfoy": -4.2,
+   "kesin": false
+  },
+  {
+   "ay": "Nis",
+   "portfoy": 4.05,
+   "kesin": true
+  },
+  {
+   "ay": "May",
+   "portfoy": -3.07,
+   "kesin": true
+  },
+  {
+   "ay": "Haz",
+   "portfoy": 1.5,
+   "kesin": false
+  },
+  {
+   "ay": "Tem",
+   "portfoy": 1.2,
+   "kesin": false,
+   "kismi": true
+  }
+ ],
+ "hafta_son": {
+  "etiket": "17 Tem (son yayın 23 Tem · sıradaki 30 Tem)",
+  "hisse": 37.5,
+  "tahvil": 196.6,
+  "ost": 43.8,
+  "toplam": 277.9,
+  "not": "hisse iştahı durgun, akış saf carry"
+ },
+ "hafta_seri": [
+  {
+   "h": "19 Haz",
+   "hisse": 465.7,
+   "tahvil": 343.0
+  },
+  {
+   "h": "26 Haz",
+   "hisse": 203.3,
+   "tahvil": 448.3
+  },
+  {
+   "h": "3 Tem",
+   "hisse": 11.5,
+   "tahvil": 572.0
+  },
+  {
+   "h": "10 Tem",
+   "hisse": 33.5,
+   "tahvil": 1225.5,
+   "ost": 1336.6
+  },
+  {
+   "h": "17 Tem",
+   "hisse": 37.5,
+   "tahvil": 196.6,
+   "ost": 43.8
+  }
+ ],
+ "hafta_not": "Hisse: Haz'da güçlü (466→203mn) → Tem'de DURDU (11→33→38mn). Tahvil: 6 haftadır kesintisiz alım; 10 Tem REKOR haftası — DİBS 1,23 mlr + ÖST 1,34 mlr = tek haftada ~2,5 mlr $ carry girişi (13 Şub'dan beri en yüksek), 17 Tem'de normalleşme.",
+ "rezerv": {
+  "guncel": 37.7,
+  "dip": 28,
+  "zirve": 85.7,
+  "trend": "toparlanma duraksadı",
+  "not": "Swap hariç net. Ocak zirvesi 85,7 mlr $ → Haziran dibi 28 (İran şoku) → 10 Tem 42,5 (Mart'tan beri zirve) → 17 Tem 37,7. Son haftada geri çekilme var; 30 Tem yayını teyit edecek. TEK DOĞRU KAYNAK rezerv.json'dur (web doğrulamalı) — bu alan onunla hizalanır, panelin canlı kartı ise net−swapStoku ile kendi hesaplar."
+ },
+ "carry": {
+  "not": "Damgali reel_faiz=7.9 KALDIRILDI. Yeniden uretilemiyordu ve iki ayri buyuklukle karistiriliyordu: EX-ANTE reel (politika vs BEKLENEN enflasyon, TCMB cipasi, ~%10,5) ve EX-POST reel (AOFM vs GERCEKLESEN TUFE, fonun fiilen kazandigi, Fisher ile ~%6,0). Ikisi ayri sorularin cevabidir, karistirilmamali. §112: bir buyuklugun tek sahibi olur.",
+  "sahip": "app.js — §127 window.EXANTE (ex-ante) ve §128 canli Fisher (ex-post). Bu dosya SAHIP DEGIL."
+ }
+}

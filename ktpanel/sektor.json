@@ -1,0 +1,174 @@
+{
+ "tarih": "2026-07-28",
+ "guncelleme": "2026-07-28",
+ "benchmark": {
+  "k": "XU100",
+  "ad": "BIST 100",
+  "g": [
+   -0.63,
+   -2.05,
+   -4.11,
+   -4.48
+  ]
+ },
+ "donemler": [
+  "1G",
+  "1H",
+  "1A",
+  "3A"
+ ],
+ "sektorler": [
+  {
+   "k": "XKMYA",
+   "ad": "Kimya / Petrol",
+   "g": [
+    -0.09,
+    -3.24,
+    15.38,
+    -2.76
+   ]
+  },
+  {
+   "k": "XGIDA",
+   "ad": "Gıda / İçecek",
+   "g": [
+    -0.0,
+    -1.2,
+    6.41,
+    14.79
+   ]
+  },
+  {
+   "k": "XMANA",
+   "ad": "Madencilik",
+   "g": [
+    0.46,
+    1.24,
+    2.13,
+    20.84
+   ]
+  },
+  {
+   "k": "XUSIN",
+   "ad": "Sınai",
+   "g": [
+    -0.63,
+    -2.11,
+    5.12,
+    4.99
+   ]
+  },
+  {
+   "k": "XHOLD",
+   "ad": "Holding",
+   "g": [
+    -0.18,
+    -0.79,
+    1.92,
+    3.99
+   ]
+  },
+  {
+   "k": "XELKT",
+   "ad": "Elektrik",
+   "g": [
+    -1.13,
+    -1.94,
+    4.54,
+    0.86
+   ]
+  },
+  {
+   "k": "XUHIZ",
+   "ad": "Hizmetler",
+   "g": [
+    -0.11,
+    -1.87,
+    -0.78,
+    -1.0
+   ]
+  },
+  {
+   "k": "XILTM",
+   "ad": "İletişim",
+   "g": [
+    -0.73,
+    -9.26,
+    -9.98,
+    -11.87
+   ]
+  },
+  {
+   "k": "XINSA",
+   "ad": "İnşaat",
+   "g": [
+    -0.82,
+    -0.31,
+    -1.0,
+    -3.54
+   ]
+  },
+  {
+   "k": "XUTEK",
+   "ad": "Teknoloji",
+   "g": [
+    -0.95,
+    1.68,
+    3.42,
+    0.12
+   ]
+  },
+  {
+   "k": "XSGRT",
+   "ad": "Sigorta",
+   "g": [
+    -0.89,
+    -3.61,
+    -1.4,
+    -5.03
+   ]
+  },
+  {
+   "k": "XTRZM",
+   "ad": "Turizm",
+   "g": [
+    -1.48,
+    -1.93,
+    -2.49,
+    -11.71
+   ]
+  },
+  {
+   "k": "XGMYO",
+   "ad": "GYO",
+   "g": [
+    -0.36,
+    -1.63,
+    -5.04,
+    -7.95
+   ]
+  },
+  {
+   "k": "XUMAL",
+   "ad": "Mali",
+   "g": [
+    -1.15,
+    -2.66,
+    -10.83,
+    -5.96
+   ]
+  },
+  {
+   "k": "XBANK",
+   "ad": "Banka",
+   "g": [
+    -0.62,
+    -1.8,
+    -14.45,
+    -9.96
+   ]
+  }
+ ],
+ "kaynak": "Fintables endeks_mumlar_gunluk_gh (BIST resmi kapanislari) — Claude kopru ile damgalandi",
+ "not": "Yahoo 13 BIST sektor endeksine 1H/1A/3A serisi VERMIYOR (§115: 4 varyant denendi, hicbiri >=22 bar dondurmedi). 1G canli akar; 1H/1A/3A bu damgadan gelir. Rotasyon RS hesabi taban esleştirir (§114) — sektor damgaliysa benchmark da damgali kullanilir, karisik taban olmaz."
+}

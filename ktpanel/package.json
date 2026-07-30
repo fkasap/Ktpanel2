@@ -1,0 +1,9 @@
+{
+  "name": "ktpanel",
+  "private": true,
+  "type": "commonjs",
+  "_not": "type COMMONJS KALMALI — api/*.js dosyalari require() kullaniyor. Tazeleme betikleri .mjs uzantili oldugu icin Node onlari ESM sayar, package.json'a bakmaz.",
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

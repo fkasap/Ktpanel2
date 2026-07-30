@@ -1,0 +1,62 @@
+{
+ "_aciklama": "BIST 2C26 BEKLENEN bilanco aciklama tarihleri.",
+ "_yontem": "TAHMIN — gecen yilin ayni donem KAP aciklama tarihi, ayni HAFTA GUNUNE hizalanarak 2026'ya tasindi (sirketler genelde ayin ayni haftasinda, ayni is gununde aciklar). BAGLAYICI DEGILDIR.",
+ "_neden_tahmin": "BIST/KAP makine-okunur 'beklenen bilanco tarihi' tablosu yayinlamiyor. Sirketler Finansal Takvim bildirir ama serbest metindir. Gecen yil deseni en saglam OLCULEBILIR yaklasim.",
+ "_spk_siniri": "Konsolide olmayan 45 gun (14 Agu 2026) · konsolide 60 gun (29 Agu 2026). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR demektir — ayri tutulur.",
+ "_kaynak": "Fintables hisse_finansal_tablolari.yayinlanma_tarihi_utc (2025, ay=6)",
+ "tarih": "2026-07-29",
+ "donem": "2Ç26",
+ "adet": 40,
+ "beklenen": {
+  "MPARK": "2026-07-27",
+  "TUPRS": "2026-07-28",
+  "TUREX": "2026-08-03",
+  "NTGAZ": "2026-08-04",
+  "ASELS": "2026-08-04",
+  "CIMSA": "2026-08-04",
+  "ISDMR": "2026-08-05",
+  "EREGL": "2026-08-05",
+  "PETKM": "2026-08-06",
+  "EBEBK": "2026-08-06",
+  "KRDMD": "2026-08-07",
+  "JANTS": "2026-08-07",
+  "ALBRK": "2026-08-07",
+  "ALCTL": "2026-08-10",
+  "ENJSA": "2026-08-10",
+  "KCAER": "2026-08-10",
+  "BASGZ": "2026-08-10",
+  "MERCN": "2026-08-11",
+  "KTLEV": "2026-08-11",
+  "LOGO": "2026-08-11",
+  "GENIL": "2026-08-12",
+  "ARASE": "2026-08-12",
+  "EGGUB": "2026-08-13",
+  "SUWEN": "2026-08-13",
+  "BIMAS": "2026-08-13",
+  "GLRMK": "2026-08-14",
+  "ALTNY": "2026-08-14",
+  "GUBRF": "2026-08-14",
+  "AYEN": "2026-08-14",
+  "GRSEL": "2026-08-17",
+  "EUPWR": "2026-08-17",
+  "LKMNH": "2026-08-17",
+  "FONET": "2026-08-17",
+  "PAGYO": "2026-08-17",
+  "SELEC": "2026-08-17",
+  "VAKKO": "2026-08-17",
+  "ATATP": "2026-08-17",
+  "EKGYO": "2026-08-17",
+  "SARKY": "2026-08-17",
+  "EGPRO": "2026-08-18"
+ },
+ "farkli_mali_yil": {
+  "MAVI": {
+   "tahmin": "2026-09-16",
+   "gecenYil": "2025-09-17"
+  },
+  "TKFEN": {
+   "tahmin": "2026-11-13",
+   "gecenYil": "2025-11-14"
+  }
+ }
+}

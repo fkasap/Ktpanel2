@@ -1,0 +1,82 @@
+{
+ "guncelleme": "2026-07-17",
+ "kaynak": "Fintables nakit akış · Ödenen Temettüler (son 12 ay)",
+ "hisseler": [
+  {
+   "k": "BIMAS",
+   "temettu": 8960
+  },
+  {
+   "k": "BORSK",
+   "temettu": 221
+  },
+  {
+   "k": "BRISA",
+   "temettu": 161
+  },
+  {
+   "k": "CEMTS",
+   "temettu": 150
+  },
+  {
+   "k": "EBEBK",
+   "temettu": 177
+  },
+  {
+   "k": "EGPRO",
+   "temettu": 643
+  },
+  {
+   "k": "ENJSA",
+   "temettu": 4435
+  },
+  {
+   "k": "EREGL",
+   "temettu": 1717
+  },
+  {
+   "k": "GRSEL",
+   "temettu": 100
+  },
+  {
+   "k": "ISDMR",
+   "temettu": 724
+  },
+  {
+   "k": "KCHOL",
+   "temettu": 52255
+  },
+  {
+   "k": "MPARK",
+   "temettu": 378
+  },
+  {
+   "k": "SAHOL",
+   "temettu": 8770
+  },
+  {
+   "k": "SELEC",
+   "temettu": 315
+  },
+  {
+   "k": "SISE",
+   "temettu": 2758
+  },
+  {
+   "k": "TCELL",
+   "temettu": 9888
+  },
+  {
+   "k": "TOASO",
+   "temettu": 17852
+  },
+  {
+   "k": "TUPRS",
+   "temettu": 47913
+  },
+  {
+   "k": "VAKKO",
+   "temettu": 813
+  }
+ ]
+}

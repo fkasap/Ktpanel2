@@ -1,0 +1,341 @@
+{
+ "guncelleme": "2026-07-29",
+ "kaynak": "Fintables aracı kurum hedef fiyatları (son 1 yıl, kurum başına en güncel)",
+ "hisseler": [
+  {
+   "k": "AKFYE",
+   "kurum": 2,
+   "hedef": 27.5,
+   "son": "2026-05-08"
+  },
+  {
+   "k": "ALKIM",
+   "kurum": 1,
+   "hedef": 23.0,
+   "son": "2026-07-03"
+  },
+  {
+   "k": "ALKLC",
+   "kurum": 1,
+   "hedef": 155.13,
+   "bayat": true,
+   "son": "?"
+  },
+  {
+   "k": "ASELS",
+   "kurum": 20,
+   "hedef": 439.55,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "ATAKP",
+   "kurum": 1,
+   "hedef": 69.05,
+   "son": "2026-04-24"
+  },
+  {
+   "k": "AVPGY",
+   "kurum": 5,
+   "hedef": 93.32,
+   "son": "2026-06-25"
+  },
+  {
+   "k": "BIMAS",
+   "kurum": 21,
+   "hedef": 570.07,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "BORSK",
+   "kurum": 2,
+   "hedef": 9.99,
+   "son": "2026-06-09"
+  },
+  {
+   "k": "BRISA",
+   "kurum": 2,
+   "hedef": 110.2,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "CIMSA",
+   "kurum": 16,
+   "hedef": 72.61,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "CWENE",
+   "kurum": 1,
+   "hedef": 44.85,
+   "bayat": true,
+   "son": "?"
+  },
+  {
+   "k": "EBEBK",
+   "kurum": 4,
+   "hedef": 101.57,
+   "son": "2026-05-04"
+  },
+  {
+   "k": "EKGYO",
+   "kurum": 11,
+   "hedef": 32.76,
+   "son": "2026-07-29"
+  },
+  {
+   "k": "ENJSA",
+   "kurum": 8,
+   "hedef": 149.26,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "EREGL",
+   "kurum": 21,
+   "hedef": 41.96,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "EUPWR",
+   "kurum": 2,
+   "hedef": 120.55,
+   "son": "2026-06-10"
+  },
+  {
+   "k": "GESAN",
+   "kurum": 1,
+   "hedef": 162.0,
+   "son": "2026-06-10"
+  },
+  {
+   "k": "GLRMK",
+   "kurum": 4,
+   "hedef": 283.76,
+   "son": "2026-06-23"
+  },
+  {
+   "k": "GOKNR",
+   "kurum": 1,
+   "hedef": 36.11,
+   "bayat": true,
+   "son": "?"
+  },
+  {
+   "k": "GOODY",
+   "kurum": 1,
+   "hedef": 3.93,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "GRSEL",
+   "kurum": 1,
+   "hedef": 422.0,
+   "son": "2026-07-13"
+  },
+  {
+   "k": "GRTHO",
+   "kurum": 1,
+   "hedef": 359.5,
+   "son": "2026-06-17"
+  },
+  {
+   "k": "HOROZ",
+   "kurum": 1,
+   "hedef": 87.92,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "HRKET",
+   "kurum": 1,
+   "hedef": 142.7,
+   "son": "2026-05-26"
+  },
+  {
+   "k": "ISDMR",
+   "kurum": 1,
+   "hedef": 66.6,
+   "son": "2026-04-30"
+  },
+  {
+   "k": "KARSN",
+   "kurum": 1,
+   "hedef": 18.53,
+   "son": "2026-05-13"
+  },
+  {
+   "k": "KBORU",
+   "kurum": 1,
+   "hedef": 48.86,
+   "son": "2026-06-25"
+  },
+  {
+   "k": "KCAER",
+   "kurum": 5,
+   "hedef": 21.07,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "KCHOL",
+   "kurum": 17,
+   "hedef": 321.24,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "KOTON",
+   "kurum": 5,
+   "hedef": 25.5,
+   "son": "2026-07-01"
+  },
+  {
+   "k": "KRDMD",
+   "kurum": 13,
+   "hedef": 46.94,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "LKMNH",
+   "kurum": 4,
+   "hedef": 27.57,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "LMKDC",
+   "kurum": 2,
+   "hedef": 46.74,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "MAVI",
+   "kurum": 18,
+   "hedef": 63.29,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "MEDTR",
+   "kurum": 1,
+   "hedef": 45.5,
+   "son": "2026-05-11"
+  },
+  {
+   "k": "MGROS",
+   "kurum": 24,
+   "hedef": 937.23,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "MPARK",
+   "kurum": 14,
+   "hedef": 634.41,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "NTGAZ",
+   "kurum": 1,
+   "hedef": 16.58,
+   "son": "2026-04-07"
+  },
+  {
+   "k": "ONCSM",
+   "kurum": 1,
+   "hedef": 379.6,
+   "son": "2026-02-27"
+  },
+  {
+   "k": "ORGE",
+   "kurum": 1,
+   "hedef": 198.9,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "PGSUS",
+   "kurum": 20,
+   "hedef": 267.57,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "RGYAS",
+   "kurum": 5,
+   "hedef": 310.56,
+   "son": "2026-07-27"
+  },
+  {
+   "k": "SAHOL",
+   "kurum": 13,
+   "hedef": 160.73,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "SELEC",
+   "kurum": 8,
+   "hedef": 130.12,
+   "son": "2026-07-01"
+  },
+  {
+   "k": "SISE",
+   "kurum": 13,
+   "hedef": 65.18,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "SNGYO",
+   "kurum": 1,
+   "hedef": 10.51,
+   "bayat": true,
+   "son": "?"
+  },
+  {
+   "k": "SUNTK",
+   "kurum": 1,
+   "hedef": 45.0,
+   "son": "2026-02-02"
+  },
+  {
+   "k": "TCELL",
+   "kurum": 25,
+   "hedef": 160.07,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "THYAO",
+   "kurum": 24,
+   "hedef": 455.29,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "TKNSA",
+   "kurum": 3,
+   "hedef": 37.91,
+   "son": "2026-07-01"
+  },
+  {
+   "k": "TOASO",
+   "kurum": 21,
+   "hedef": 439.63,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "TUPRS",
+   "kurum": 21,
+   "hedef": 335.08,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "ULKER",
+   "kurum": 13,
+   "hedef": 179.21,
+   "son": "2026-07-28"
+  },
+  {
+   "k": "YATAS",
+   "kurum": 5,
+   "hedef": 64.34,
+   "son": "2026-06-25"
+  },
+  {
+   "k": "YEOTK",
+   "kurum": 1,
+   "hedef": 173.5,
+   "son": "2026-05-14"
+  }
+ ],
+ "not": "Aracı kurum hedef fiyatlarının 6 aylık ortalaması (Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, yayın tarihi >= 29 Oca 2026). kurum = farklı aracı kurum sayısı, son = en güncel rapor tarihi. Tek kurumlu isimlerde konsensüs zayıftır. BAYAT İŞARETİ: son 6 ayda aracı kurum raporu bulunmayan hisseler \"bayat\":true taşır — hedef fiyatları ESKİ, güncel fiyatla kıyaslanınca yanıltıcı potansiyel üretirler (örn. SNGYO +%238 gerçek değil, eski hedefin artefaktı). Panel bunları ayrı göstermeli ya da hiç göstermemeli."
+}

@@ -1,0 +1,43 @@
+{
+ "functions": {
+  "api/evds2.js": {
+   "maxDuration": 60
+  },
+  "api/bddk.js": {
+   "maxDuration": 45
+  },
+  "api/market.js": {
+   "maxDuration": 45
+  },
+  "api/kap.js": {
+   "maxDuration": 60
+  },
+  "api/katfon.js": {
+   "maxDuration": 20
+  },
+  "api/usnews.js": {
+   "maxDuration": 20
+  },
+  "api/ajanktp.js": {
+   "maxDuration": 45
+  }
+ },
+ "crons": [
+  {
+   "path": "/api/data?mod=mail&cron=1&gun=2",
+   "schedule": "0 5 * * 1-5"
+  },
+  {
+   "path": "/api/data?mod=mail&cron=1&tip=haftalik",
+   "schedule": "30 5 * * 1"
+  },
+  {
+   "path": "/api/data?mod=mail&cron=1&tip=parite&esik=0.25",
+   "schedule": "15 5 * * 1-5"
+  },
+  {
+   "path": "/api/ajanktp?mod=cron",
+   "schedule": "0 6 * * *"
+  }
+ ]
+}
