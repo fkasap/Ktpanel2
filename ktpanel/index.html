@@ -55,7 +55,8 @@ h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--li
    (ağ beklemeden), canlı gelince değiştirir. Arada eski rakam ekranda durur
    ve GÜNCEL GÖRÜNÜR — 20 Tem tarihi bugünkü sanılabilir. Daha kötüsü: canlı
    çağrı düşerse o hâlde KALIR ve hiç uyarı çıkmaz.
-   Çözüm: <body class="veri-bekliyor"> boot'ta `veri-bekliyor` taşır, damgalar soluk+nabızlı olur.
+   Çözüm: <body class="veri-bekliyor">
+<div id="bulutUyari" class="note" style="display:none;margin:8px 12px 0;border-left:3px solid var(--down)"></div> boot'ta `veri-bekliyor` taşır, damgalar soluk+nabızlı olur.
    Kural: geçici bir durum, kalıcı gibi GÖRÜNMEMELİ. */
 body.veri-bekliyor .tag{opacity:.45;border:1px dashed rgba(255,255,255,.5);animation:ktNabiz 1.6s ease-in-out infinite}
 body.veri-bekliyor .tag::after{content:' ⏳'}
@@ -1489,7 +1490,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260731f"></script>
+<script src="/app.js?v=20260731g"></script>
 <script src="/ajan.js?v=20260731b"></script>
 </body>
 </html>

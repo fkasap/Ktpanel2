@@ -5366,7 +5366,16 @@ setTimeout(()=>{
 
 /* ==== KTPanel BOOT — tek merkezi başlatma (TDZ-güvenli, hata-izole, sağlık kontrollü) ==== */
 /* ==== Bulut senkron (paylaşımlı ortak depo) ==== */
-const CLOUD_KEYS=['poz_v1','journal_v1','guidance_v1','ktp_sukuk_kayit_v1','trk_seri_v1','ktp_arz_kayit_v1','rb_ayar_v1','trk_baz_v1','fm_agirlik_v1','tk_cizgi_v1','ppk_olasilik_v1','ktp_portfoyler_v1','ayr_seri_v1'];   // sukuk + model sicili de buluta
+const CLOUD_KEYS=['poz_v1','journal_v1','guidance_v1','ktp_sukuk_kayit_v1','trk_seri_v1','ktp_arz_kayit_v1','rb_ayar_v1','trk_baz_v1','fm_agirlik_v1','tk_cizgi_v1','ppk_olasilik_v1','ktp_portfoyler_v1','ayr_seri_v1',
+  /* §200: parite geçmişi buluta bağlandı. Günlük snapshot biriktiriyor ve
+     120 kayıtla sınırlı (~4 ay); tarayıcı değişince SIFIRLANIYORDU ve o
+     geçmiş bir daha kurulamıyordu — geriye dönük hesaplanamaz, yalnız
+     günü gününe birikir. Yük: kayıt başına ~45 B, 120 kayıt ≈ 5 KB;
+     900 KB sınırının binde biri.
+     ktp_mail_to da eklendi (tercih, gizli değil).
+     ktp_cron_k EKLENMEDİ: o bir ANAHTAR. Sırlar cihazdan cihaza dolaşmaz;
+     kaybolursa yeniden üretilir, sızarsa geri alınamaz. */
+  'parite_gecmis_v1','ktp_mail_to'];   // sukuk + model sicili de buluta
 const _origSet=localStorage.setItem.bind(localStorage);
 const _origGet=localStorage.getItem.bind(localStorage);
 let _cloudTimer;
@@ -5377,6 +5386,24 @@ async function cloudLoad(){
   try{
     const r=await fetch('/api/data',{cache:'no-store'});
     const d=await r.json();
+    /* §200b BULUT KAPALIYSA SÖYLE.
+       api/data.js, Upstash/KV env'i yoksa 503 + açık mesaj dönüyor:
+       "Depo yapılandırılmamış — KV_REST_API_URL/TOKEN eksik".
+       Panel bunu yutuyordu: kayıtlar yalnız tarayıcıda kalıyor, kullanıcı
+       senkron sanıyor. Cihaz değiştirince veri "kayboluyor" gibi görünür —
+       oysa hiç gitmemiştir.
+       Artık pencere üstünde kalıcı uyarı çıkar. Sessiz kalmak, veri kaybının
+       fark edilmediği tek durumdur. */
+    if(d && d.error){
+      window.__bulutDurum={acik:false, sebep:String(d.error).slice(0,120)};
+      try{ const u=$('bulutUyari');
+        if(u){ u.style.display='block';
+          u.innerHTML='<b>⚠ Bulut deposu kapalı.</b> Kayıtların YALNIZ bu tarayıcıda tutuluyor — '+
+            'cihaz değiştirirsen gitmiş görünür. <span class="thin">'+esc(String(d.error).slice(0,110))+'</span>'; }
+      }catch(e){}
+      return;
+    }
+    window.__bulutDurum={acik:true};
     if(d&&typeof d==='object'&&!d.error){
       /* §140 KULLANICI SIZINTISI DÜZELTMESİ.
          localStorage ORIGIN başınadır, OTURUM başına değil. Aynı tarayıcıda

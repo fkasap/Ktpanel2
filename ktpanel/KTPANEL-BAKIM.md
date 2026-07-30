@@ -2677,6 +2677,47 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 200. UPSTASH KULLANILMIYOR — sessiz kapalilik (31 Tem)
+
+Kullanici: "site upstashi hic kullanmiyor, biraz oraya dosya upload etsin ya."
+
+### 200.1 TESHIS: PANEL DESTEKLIYOR, ENV YOK
+api/data.js hem KV_REST_API_URL/TOKEN hem UPSTASH_REDIS_REST_URL/TOKEN
+okuyor. Ikisi de yoksa 503 ve ACIK MESAJ donuyor:
+  "Depo yapilandirilmamis — Vercel'de Upstash/KV baglanmali"
+API DOGRU DAVRANIYOR. Panel bunu YUTUYORDU: cloudLoad'daki try/catch hatayi
+sessizce gecistiriyordu.
+SONUC: kayitlar yalniz tarayicida kaliyor, kullanici senkron saniyor. Cihaz
+degistirince veri "kayboldu" gorunur — oysa HIC GITMEMISTIR. En kotu hata
+tipi: kayip, kaybedildigi anda degil, cok sonra fark edilir.
+DUZELTME: pencere ustunde kalici uyari. `window.__bulutDurum` da isaretlenir.
+
+### 200.2 IKI ANAHTAR BULUTA EKLENDI
+parite_gecmis_v1 — gunluk snapshot biriktirir, 120 kayitla sinirli (~4 ay).
+  Tarayici degisince SIFIRLANIYORDU ve geri kurulamiyordu: geriye donuk
+  hesaplanamaz, yalniz gunu gunune birikir. Oturum ozetinde acik kalemdi.
+  YUK OLCULDU: kayit basina 55 B, 120 kayit 6,4 KB — 900 KB sinirinin %0,7'si.
+ktp_mail_to — tercih, gizli degil, eklendi.
+ktp_cron_k EKLENMEDI ve eklenmeyecek: o bir ANAHTAR. Sirlar cihazdan cihaza
+  dolasmaz — kaybolursa yeniden uretilir, sizarsa geri alinamaz. Asimetri
+  aciktir: kolayligi az, riski buyuk.
+
+### 200.3 "DOSYA UPLOAD ETSIN" — NE UPSTASH'E GIRER, NE GIRMEZ
+UPSTASH'E: kullaniciya ozel ve sik degisen veri — pozisyon, journal, sicil,
+  parite gecmisi, ajan notlari. Bunlar git'e girmemeli (her kaydetme bir
+  commit olurdu) ve CDN'den servis edilemez (kisiye ozel).
+GIT'E: referans verisi — endeks agirliklari, carpanlar, kartlar. Statik,
+  herkese ayni, CDN'den ANINDA gelir. KV'ye tasinsa her acilista bir API
+  cagrisi eklenir ve panel yavaslar.
+Yani Upstash'in "bos" durmasi bir eksiklik degil, ROL AYRIMI — ama env
+tanimli degilse kullanici verisi hic gitmiyor demektir ve ASIL SORUN BUDUR.
+
+YAPILACAK (kullanici tarafinda): Vercel projesinde Upstash entegrasyonu
+baglanmali. Baglaninca KV_REST_API_URL/TOKEN kendiliginden enjekte edilir;
+kod degisikligi GEREKMEZ. Uyari da kendiliginden kalkar.
+
+app.js v=20260731g. DOSYALAR: app.js + index.html.
+
 ## 199. SUKUK AKISI: IKI AYRI ARIZA, IKISI DE SESSIZ (31 Tem)
 
 Kullanici: "bu otomatik geliyordu simdi bos geliyor."
