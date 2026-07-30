@@ -88,6 +88,81 @@ export default async function handler(req, res){
      uygula. Sunucuya yeni bir alan gönderme.
      Bu, bugünkü "çalışandan yürü" dersinin üçüncü uygulaması — ilk ikisinde
      yine tahmin etmişim. */
+  /* §202 ?mod=fr — FINANSAL RAPOR BILDIRIMLERI, DONEM BILGISIYLE.
+     Yoklama v3 kanıtladı: byCriteria FR bildirimlerini TAM METADATA ile
+     veriyor. Kullanılan alanlar:
+       disclosureClass 'FR'  → başlık metni tahmin etmeye gerek yok
+       stockCodes            → hisse kodu (virgüllü olabilir)
+       year + period         → DÖNEM. Nöbet artık tarih toleransıyla değil
+                               DÖNEMLE karşılaştırır (§197'deki 14 günlük hile
+                               kalkar; aynı dönemin ikinci bildirimi zaten aynı
+                               year/period taşır)
+       isLate                → KAP'ın kendi gecikme bayrağı. ARENA'da (§181)
+                               elle keşfettiğim 120 günlük deseni doğrudan verir
+       disclosureIndex       → kimlik, KAP bağlantısı için
+     PENCERE: varsayılan 7 gün. KAP'ın 2000 kayıt tavanı var; 7 günde 1978
+     kayıt geldi, yani tavan ZORLANIYOR. gun>10 istenirse iki dilime bölünür. */
+  if (_mod === 'fr') {
+    const gunIst = Math.min(Math.max(parseInt(req.query && req.query.gun) || 7, 1), 40);
+    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+    let cookie = '';
+    try{
+      const w = await fetch('https://www.kap.org.tr/tr/bildirim-sorgu', { headers:{ 'user-agent':UA }, signal:AbortSignal.timeout(8000) });
+      const sc = w.headers.get('set-cookie');
+      if(sc) cookie = sc.split(',').map(x=>x.split(';')[0]).join('; ');
+    }catch(e){}
+
+    const GUN = 86400000, simdi = Date.now();
+    const iso = t => new Date(t).toISOString().slice(0,10);
+    /* DİLİMLEME: 7 günde 1978 kayıt geldi, tavan 2000. Daha geniş pencere
+       istenirse 5 günlük dilimlere bölünür — §168'deki Finnhub dersinin aynısı:
+       "veri gelmiyor" demeden önce SINIRA çarpıp çarpmadığına bak. */
+    const dilimler = [];
+    for(let b = gunIst; b > 0; b -= 5) dilimler.push([Math.max(b-5,0), b]);
+    const ham = [], hatalar = [];
+    for(const [bas, son] of dilimler){
+      try{
+        const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
+          method:'POST',
+          headers:{ 'content-type':'application/json', 'accept':'application/json',
+                    'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent':UA,
+                    ...(cookie ? { 'cookie': cookie } : {}) },
+          body: JSON.stringify({ fromDate: iso(simdi - son*GUN), toDate: iso(simdi - bas*GUN),
+                                 mkkMemberOidList: [], subjectList: [] }),
+          signal: AbortSignal.timeout(12000)
+        });
+        if(!r.ok){ hatalar.push('HTTP '+r.status+' ('+bas+'-'+son+'g)'); continue; }
+        const j = await r.json();
+        const d = Array.isArray(j) ? j : (j.items || j.data || []);
+        ham.push(...d);
+        if(d.length >= 1990) hatalar.push('dilim '+bas+'-'+son+'g TAVANA ÇARPTI ('+d.length+') — kayıt eksik olabilir');
+      }catch(e){ hatalar.push(String(e.message||e).slice(0,80)+' ('+bas+'-'+son+'g)'); }
+    }
+
+    const gorulen = new Set(), fr = [];
+    ham.forEach(x => {
+      if(String(x.disclosureClass||'').toUpperCase() !== 'FR') return;
+      const idx = x.disclosureIndex;
+      if(gorulen.has(idx)) return; gorulen.add(idx);
+      /* stockCodes virgüllü olabilir (holding + bağlı ortaklık) — hepsi ayrı satır */
+      const kodlar = String(x.stockCodes||'').split(/[,;\s]+/).filter(Boolean);
+      const tarih = String(x.publishDate||'').slice(0,10).split('.').reverse().join('-');
+      kodlar.forEach(k => fr.push({
+        kod: k.toUpperCase(), tarih, saat: String(x.publishDate||'').slice(11,16),
+        yil: x.year, donem: x.period, tur: x.ruleType || null,
+        gec: !!x.isLate, id: idx, unvan: x.kapTitle || null,
+        url: idx ? 'https://www.kap.org.tr/tr/Bildirim/'+idx : null
+      }));
+    });
+    fr.sort((a,b)=> a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : 0);
+
+    res.setHeader('Cache-Control','s-maxage=540, stale-while-revalidate=1800');
+    return res.status(200).json({ ok: fr.length>0, kaynak:'byCriteria/FR', gun:gunIst,
+      taranan: ham.length, dilim: dilimler.length, bildirim: fr.length,
+      gecikmis: fr.filter(x=>x.gec).length,
+      uyari: hatalar.length ? hatalar : null, fr });
+  }
+
   if (_mod === 'yokla') {
     const kod = String((req.query && req.query.kod) || 'TOASO').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
     const gunSayi = Math.min(Math.max(parseInt(req.query && req.query.gun) || 7, 1), 30);
