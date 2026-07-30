@@ -43,13 +43,23 @@ function normalize(b){
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
 
 // Vercel Hobby 12-fonksiyon sınırı: yorumlu akış buradan yönlendirilir → ?mod=yorum
-const _kapyorum = require('./_lib/kapyorum.js');
 // ?mod=sukuk → api/_lib/sukuk.js (özel sektör kira sertifikası akışı)
-const _sukuk = require('./_lib/sukuk.js');
+//
+// §199b MODÜL KARIŞIKLIĞI. Bu dosya ESM (`export default`) ama alt modülleri
+// `require()` ile alıyordu. ESM'de `require` TANIMLI DEĞİLDİR — modül yüklenirken
+// ReferenceError atar ve /api/kap TÜM modlarıyla birlikte ölür. Alt modüller
+// CommonJS (`module.exports`), bu yüzden dinamik `import()` kullanılır: ESM'de
+// çalışır ve CommonJS modülünü `.default` altında verir.
+// TEMBEL YÜKLEME yan faydası: yalnız o mod istendiğinde yüklenir, soğuk başlangıç
+// diğer modlarda daha hızlı.
+async function _altModul(yol){
+  const m = await import(yol);
+  return m.default || m;
+}
 export default async function handler(req, res){
   const _mod = String((req.query && req.query.mod) || '').toLowerCase();
-  if (_mod === 'yorum') return _kapyorum(req, res);
-  if (_mod === 'sukuk') return _sukuk(req, res);
+  if (_mod === 'yorum') return (await _altModul('./_lib/kapyorum.js'))(req, res);
+  if (_mod === 'sukuk') return (await _altModul('./_lib/sukuk.js'))(req, res);
   res.setHeader('Cache-Control', 's-maxage=540, stale-while-revalidate=300');
   res.setHeader('Access-Control-Allow-Origin', '*');
   try{
