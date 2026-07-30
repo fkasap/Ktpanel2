@@ -2677,6 +2677,93 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 202. KAP FR LISTESI ACILDI — kalemler acilmadi (31 Tem)
+
+Yoklama v3 sonucu: LISTE ERISILEBILIR, KALEMLER DEGIL.
+
+### 202.1 v1→v3: UC KEZ TAHMIN, BIR KEZ OLCUM
+v1 bes yol tahmin -> besi de 404
+v2 govdeyi tahmin -> 500 (tarih bicimi DD.MM.YYYY yazmisim, calisan kod
+   YYYY-MM-DD; ustelik fazladan alan eklemisim ve pencereyi 120 gun yapmisim
+   — calisan kodun YORUMU "2 gunluk pencere, 2000 tavanina uzak" diye
+   uyariyordu, okumamisim)
+v3 calisan istegi BIREBIR kopyala -> 200, 1978 kayit
+UC TUR AYNI HATA: elde calisan ornek varken tahmin etmek. Her seferinde
+"bu sefer dogru tahmin ederim" diye dusundum. Ucuncude kopyaladim, calisti.
+
+### 202.2 GELEN ALANLAR — degerli olanlar
+  disclosureClass 'FR'   -> baslik metni suzmeye gerek YOK
+  stockCodes             -> hisse kodu (virgullu olabilir: holding + bagli ort.)
+  year + period + ruleType -> DONEM ("2026 / 2 / 6 Aylik")
+  isLate                 -> KAP'IN KENDI GECIKME BAYRAGI
+  disclosureIndex        -> kimlik + /tr/Bildirim/<id> baglantisi
+  publishDate            -> "30.07.2026 23:56:49"
+
+### 202.3 IKI SORUN BUNUNLA KAPANDI
+(a) NOBET ARTIK DONEM BAZLI. §197'de "ayni donemin ikinci bildirimi" sorununu
+    14 gunluk TOLERANS HILESIYLE ortmustum. Artik gerek yok: ayni donemin her
+    bildirimi AYNI year/period tasir. Hile yedege dustu (eski uc icin).
+(b) GECIKME TESPITI BEDAVA GELDI. ARENA'da (§181) 120 gunluk deseni ELLE
+    kesfetmistim — dokuz ceyregin tarihini tek tek hesaplayarak. isLate bayragi
+    bunu dogrudan veriyor. Kartta "GECIKMIS" rozeti otomatik cikacak.
+
+### 202.4 KALEMLER ACILMADI
+/tr/api/disclosure/<id> -> 404 · /tr/Bildirim/<id> -> 200 ama HTML (162 KB).
+Bilanco KALEMLERI bu yollardan JSON gelmiyor. `attachmentCount:1` var — rapor
+EK DOSYA olarak duruyor. Ek dosya ucu ayrica yoklanmali.
+DOLAYISIYLA: faktor modeli · multiple bilanco kalemleri · guidance · pay adedi
+hala Fintables'a bagli. AMA "beklenen bilanco takvimi" katmani ARTIK KAP'TAN
+uretilebilir (gecmis publishDate + year/period ile).
+
+### 202.5 TAVAN UYARISI
+7 gunde 1978 kayit geldi, KAP tavani 2000. TAVANA CARPIYORUZ.
+mod=fr 5 gunluk DILIMLERE boluyor ve bir dilim 1990'i asarsa uyari basiyor.
+§168'deki Finnhub dersinin aynisi: "veri gelmiyor" demeden once SINIRA carpip
+carpmadigina bak.
+
+DOSYALAR: api/kap.js (mod=fr) + ajan.js + index.html. ajan.js v=20260731c.
+
+## 201. KAP YOKLAMASI — v1 tahmindi, v2 calisandan yuruyor (31 Tem)
+
+Tam otomasyonun onundeki tek buyuk dugum: alti engelli katmanin BESI bilanco
+kalemi istiyor ve su an Fintables'tan geliyor. AMA Fintables'in kaynagi KAP.
+KAP'a sunucudan erisilebiliyorsa bes katman birden cozulur.
+
+### 201.1 v1 SONUCU: BESI DE 404 — ama ONEMLI bir bilgiyle
+Bes yol TAHMIN ettim (financialReport/list, company/generalInfo, ...), besi de
+404 dondu. Yanit `__next_error__` icerikli HTML — KAP bir Next.js uygulamasi.
+KOTU HABER DEGIL: 404 demek sunucu KAP'A ULASIYOR. 403 ya da timeout olsaydi
+bot korumasi/ag engeli olurdu ve yol tamamen kapanirdi. Erisim VAR, yollar
+yanlisti.
+
+### 201.2 HATA BENDEYDI: ELIMDE CALISAN UC VARDI
+kap.js zaten su ucu kullaniyor ve HABER AKISI CALISIYOR:
+    POST /tr/api/disclosure/members/byCriteria
+    headers: content-type, accept, REFERER (zorunlu), user-agent, cookie
+Yani API tabani biliniyordu. Ben yine de yol TAHMIN ETTIM.
+DERS: elde calisan bir ornek varken tahmin etmek israftir. Once calisani
+incele, ondan yuru. Bu, bugun defalarca tekrarlanan "olcmeden karar verme"
+dersinin kaynak kesfi versiyonu.
+
+### 201.3 v2 TASARIMI: IKI ADIM, KIMLIKTEN YURU
+  ADIM 1 — calisan ucla (byCriteria, disclosureClass:'FR') son 120 gunun
+    finansal rapor bildirimlerini cek. Kod eslesenleri sus.
+    RAPORLA: HTTP, kayit sayisi, kod eslesen sayisi, ILK KAYDIN ALAN ADLARI.
+    Alan adlari kritik: bildirim kimliginin hangi alanda oldugunu ogrenmek
+    icin tahmin degil GOZLEM gerekiyor.
+  ADIM 2 — bulunan kimlikle dort detay ucu dene. Kimlik elde olunca yol
+    tahmini azalir; bildirimin kendisi ne dondurdugunu soyler.
+Her adim HTTP + icerik tipi + uzunluk + JSON mu + ilk 150 karakter dondurur.
+
+### 201.4 OKUMA KILAVUZU
+  1. adim kayit>0 ve alan adlari geldi -> FR listesi ERISILEBILIR (buyuk adim:
+     beklenen bilanco takvimi ve "kart bekleyen" nobeti bundan beslenebilir)
+  2. adimda JSON donen uc -> bilanco kalemleri gelebilir -> BES KATMAN cozulur
+  Hicbiri JSON dondurmezse -> KAP yalniz LISTE veriyor, KALEM vermiyor;
+     Fintables bagimliligi kalir ama elle is yine de yilda ~32.
+
+DOSYALAR: api/kap.js
+
 ## 200. UPSTASH KULLANILMIYOR — sessiz kapalilik (31 Tem)
 
 Kullanici: "site upstashi hic kullanmiyor, biraz oraya dosya upload etsin ya."

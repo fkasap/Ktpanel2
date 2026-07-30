@@ -355,8 +355,15 @@ async function tazelikNobeti(){
    kullanıcı fark etti, sistem değil. Bu nöbet tam o boşluğu kapatır. */
 async function bilancoNobeti(){
   try{
+    /* §202b DÖNEM BİLGİSİYLE NÖBET. Artık /api/kap?mod=fr kullanılıyor:
+       KAP'ın kendi disclosureClass='FR' süzgeci + year/period alanları geliyor.
+       ÖNCEKİ SORUN: bildirim tarihiyle kart tarihi karşılaştırılıyordu ve aynı
+       dönemin ikinci bildirimi (TR/EN sürüm, ek belge) yeni dönem sanılıyordu.
+       §197'de 14 günlük tolerans hilesiyle örtülmüştü — artık gereksiz, çünkü
+       aynı dönemin her bildirimi AYNI year/period taşır.
+       Eski uca düşer (mod=fr yoksa) — geriye uyum. */
     const [kr, ir] = await Promise.all([
-      fetch('/api/kap', {cache:'no-store'}),
+      fetch('/api/kap?mod=fr&gun=10', {cache:'no-store'}),
       fetch('/inceleme-ai.json', {cache:'no-store'})
     ]);
     if(!kr.ok || !ir.ok) return null;
@@ -374,11 +381,17 @@ async function bilancoNobeti(){
     if(typeof TOP40!=='undefined' && Array.isArray(TOP40)) TOP40.forEach(k=>evren.add(String(k).toUpperCase()));
 
     const bekleyen = {};
-    (kap.items||[]).forEach(it=>{
-      if(String(it.t||'').toUpperCase()!=='FR') return;
-      const ts = it.ts ? new Date(it.ts) : null; if(!ts || isNaN(ts)) return;
-      (it.k||[]).forEach(k=>{
-        const kod = String(k).toUpperCase();
+    /* mod=fr `fr` dizisi döndürür (kod/tarih/yil/donem/gec); eski uç `items`.
+       İkisi de desteklenir — deploy sırası fark etmesin. */
+    const kayitlar = Array.isArray(kap.fr) ? kap.fr
+      : (kap.items||[]).filter(it=>String(it.t||'').toUpperCase()==='FR')
+          .flatMap(it=>(it.k||[]).map(k=>({kod:String(k).toUpperCase(),
+            tarih: it.ts ? new Date(it.ts).toISOString().slice(0,10) : null,
+            yil:null, donem:null, gec:false, url:it.url||null, unvan:null})));
+    kayitlar.forEach(it=>{
+      {
+        const kod = String(it.kod||'').toUpperCase();
+        const ts = it.tarih ? new Date(it.tarih) : null; if(!ts || isNaN(ts)) return;
         if(!evren.has(kod)) return;
         const kartT = kartlar[kod];
         /* §197 AYNI DÖNEM TOLERANSI. Gün bazında karşılaştırma yanlış pozitif
@@ -391,18 +404,20 @@ async function bilancoNobeti(){
            kesin ayırır — ne yanlış pozitif üretir ne gerçek yeni dönemi kaçırır.
            (14 gün seçildi: bilanço + faaliyet raporu + bağımsız denetim
            bildirimleri bazen iki haftaya yayılır.) */
-        const TOLERANS_GUN = 14;
+        /* §202b: dönem bilgisi VARSA onunla karşılaştır — kesin.
+           Yoksa (eski uç) 14 günlük toleransa düş. */
         if(kartT){
-          /* DİKKAT: nobGunAnahtar YYYYMMDD sayısı döndürür (20260729), zaman
-             damgası değil — fark almak için Date nesnelerinin kendisi kullanılır. */
           const fark = (ts.getTime() - kartT.getTime()) / 86400000;
-          if(fark <= TOLERANS_GUN) return;    // aynı dönem — kart güncel sayılır
+          if(fark <= 14) return;              // yedek: aynı dönem sayılır
         }
         const v = bekleyen[kod];
-        if(!v || ts > v.ts) bekleyen[kod] = {kod, ts, baslik:String(it.b||'').slice(0,90),
+        if(!v || ts > v.ts) bekleyen[kod] = {kod, ts,
+          baslik: (it.yil ? it.yil+'/'+it.donem+(it.tur?' · '+it.tur:'') : 'Finansal Rapor')
+                  + (it.gec ? ' · GECİKMİŞ' : ''),
+          donem: it.yil ? it.yil+'/'+it.donem : null, gec:!!it.gec,
           url:it.url||null, portfoyde:!!(typeof poz!=='undefined' && poz.some(p=>p.kod && String(p.kod).toUpperCase()===kod)),
           kartVar:!!kartT};
-      });
+      }
     });
     const liste = Object.keys(bekleyen).map(k=>bekleyen[k])
       .sort((a,b)=> (b.portfoyde?1:0)-(a.portfoyde?1:0) || b.ts-a.ts);
