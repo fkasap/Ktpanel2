@@ -1,0 +1,10 @@
+{
+  "name": "ktpanel-otomasyon",
+  "private": true,
+  "version": "1.0.0",
+  "type": "commonjs",
+  "_not": "REPO KOKUNDE durur, YALNIZ GitHub Actions icindir. Vercel Root Directory=ktpanel oldugu icin bu dosyayi GORMEZ. Panelin kendi package.json dosyasi ktpanel/ altindadir ve ayridir.",
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}
