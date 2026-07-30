@@ -1,0 +1,21 @@
+# Bağımlılıklar — her koşuda yeniden kurulur, repo'da durmamalı.
+# 30 Tem ilk koşuda bunlar commit edildi (binlerce dosya) çünkü .gitignore yoktu.
+node_modules/
+.npm/
+
+# Playwright tarayıcı önbelleği
+.cache/
+ms-playwright/
+
+# Tazeleme raporu — her koşuda yeniden yazılır.
+# İSTERSEN TUT: geçmiş raporları görmek için bu satırı sil.
+# Şu an tutuluyor (yorumda) çünkü hata ayıklarken repo'dan okumak pratik.
+# rapor/
+
+# Vercel
+.vercel/
+
+# İşletim sistemi
+.DS_Store
+Thumbs.db
+*.swp
