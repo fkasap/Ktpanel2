@@ -49,13 +49,28 @@ function tipBul(baslik){
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin','*');
   const kok = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host);
+  /* §199 KENDİ KENDİNE İSTEK, MIDDLEWARE'E TAKILIYOR.
+     middleware.js `matcher: '/:path*'` ile TÜM yolları koruyor. Bu fonksiyon
+     sunucu içinden kendi sitesine istek atıyor (/sukuk-ihrac.json ve /api/kap)
+     ama o isteklerde OTURUM ÇEREZİ YOK → 401 döner:
+       · /sukuk-ihrac.json → giriş sayfası HTML → JSON.parse patlar → catch yutar
+       · /api/kap          → {ok:false, err:'giriş gerekli'} → items yok
+     İkisi de boşalınca ok:false dönüyor ve panel statik dosyaya düşüyor.
+     "canlı 0 / arşiv 0" çıktısı tam bunu söylüyordu.
+     NEDEN ESKİDEN ÇALIŞIYORDU: çok kullanıcılı koruma (§140) açılmadan önce
+     PANEL_USERS tanımsızdı, middleware ilk satırda `return` ediyordu.
+     ÇÖZÜM: middleware'in ZATEN tanıdığı cron muafiyetini kullan —
+     Authorization: Bearer CRON_SECRET. Yeni bir kapı açmıyor, var olanı
+     kullanıyor; CRON_SECRET yoksa başlık gönderilmez ve davranış değişmez. */
+  const ICBASLIK = process.env.CRON_SECRET
+    ? { 'Authorization': 'Bearer ' + process.env.CRON_SECRET } : {};
   const gun = Math.max(parseInt(req.query && req.query.gun) || 30, 1);
   const limit = Math.min(Math.max(parseInt(req.query && req.query.limit) || 25, 1), 100);
 
   // 1) STATİK ARŞİV — canlı akış boşsa da liste dolu kalsın (damgalı yedek deseni)
   let statik = [], statikGun = null, statikKaynak = null;
   try{
-    const r = await fetch(kok + '/sukuk-ihrac.json', { signal: AbortSignal.timeout(8000) });
+    const r = await fetch(kok + '/sukuk-ihrac.json', { headers: ICBASLIK, signal: AbortSignal.timeout(8000) });
     const d = await r.json();
     // Ünvanı haritadan normalize et: aynı kod canlı ve arşivde farklı isimle görünmesin
     statik = (d.ihraclar || []).map(x => Object.assign({}, x, {
@@ -69,7 +84,7 @@ module.exports = async (req, res) => {
   let canli = [], kapHata = null;
   const bilinmeyen = new Set();
   try{
-    const r = await fetch(kok + '/api/kap', { signal: AbortSignal.timeout(15000) });
+    const r = await fetch(kok + '/api/kap', { headers: ICBASLIK, signal: AbortSignal.timeout(15000) });
     const d = await r.json();
     const items = (d && d.items) || [];
     const sinir = new Date(Date.now() - gun*86400000);
@@ -114,6 +129,7 @@ module.exports = async (req, res) => {
     pencereGun: gun,
     bilinmeyenKodlar: Array.from(bilinmeyen),   // haritaya eklenmesi gerekenler
     kapHata,                                    // canlı akış düştüyse sebep (arşiv yine görünür)
+    icKimlik: !!process.env.CRON_SECRET,         // §199: iç isteklere kimlik eklendi mi
     ihraclar: birlesik.slice(0, limit)
   });
 };
