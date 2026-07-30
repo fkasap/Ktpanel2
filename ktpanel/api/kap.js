@@ -209,6 +209,97 @@ export default async function handler(req, res){
      bulduğunu söyler. Etiket bulunuyorsa ayrıştırma mümkün demektir.
      ÖNEMLİ: sayfa yapısı değişebilir, bu yol KIRILGANDIR. Ama Fintables'a
      alternatif tek yol bu; önce VAR MI diye bakmak gerek. */
+  /* §205 ?mod=bilanco — KALEMLERİ AYRIŞTIR. Zincirin son engeli.
+     YOKLAMA SONUCU (mod=kalem, TOASO 1639026): 7 kalem etiketi bulundu,
+     736 tablo, 580 bin-ayraçlı sayı, Next.js RSC flight yükü (5 MB).
+     YAPI: KAP'ın finansal rapor görüntüleyicisi GWT tabanlı ve flight yükünün
+     içinde KAÇIRILMIŞ HTML olarak duruyor:
+       <div class="...content-tr">ETİKET</div></td><td...><div>DEĞER</div></td>
+     AYRIŞTIRMA: kaçışları çöz → etiketi bul → sonraki hücrelerdeki sayıları al.
+     Genelde iki sütun var: CARİ dönem ve ÖNCEKİ dönem.
+     KIRILGANLIK: sayfa yapısı değişirse kırılır. Bu yüzden her kalem için
+     BULUNDU/BULUNAMADI raporlanır ve eksik kalem SESSİZCE atlanmaz —
+     yarım bilanço, yanlış bilançodan iyidir ama ancak EKSİĞİ SÖYLERSE. */
+  if (_mod === 'bilanco') {
+    const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
+    if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
+    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+
+    /* Aranacak kalemler. SANAYİ ve BANKA şablonları farklı; ikisi de denenir,
+       hangisi dolarsa o şablon kabul edilir. Sıra önemli: uzun etiket önce,
+       yoksa "Dönem Karı" kısa etiketi "Dönem Karı Vergi Yükümlülüğü"nü yakalar
+       (yoklamada tam bu oldu — konum 607977 vergi satırıydı). */
+    const SANAYI = [
+      ['ciro',        ['Hasılat','Satış Gelirleri']],
+      ['brutKar',     ['Brüt Kar (Zarar)','Brüt Kâr (Zarar)','BRÜT KAR (ZARAR)']],
+      ['faaliyetKar', ['Esas Faaliyet Karı (Zararı)','Faaliyet Karı (Zararı)','ESAS FAALİYET KARI (ZARARI)']],
+      ['finansGider', ['Finansman Giderleri']],
+      ['parasal',     ['Net Parasal Pozisyon Kazançları (Kayıpları)']],
+      ['netKar',      ['Ana Ortaklık Payları']],
+      ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar']],
+      ['nakit',       ['Nakit ve Nakit Benzerleri']]
+    ];
+    const BANKA = [
+      ['netFaiz',     ['NET FAİZ GELİRİ VEYA GİDERİ','NET FAİZ GELİRİ']],
+      ['komisyon',    ['NET ÜCRET VE KOMİSYON GELİRLERİ VEYA GİDERLERİ']],
+      ['karsilik',    ['Beklenen Zarar Karşılıkları (-)','Beklenen Zarar Karşılıkları']],
+      ['faalKar',     ['NET FAALİYET KARI (ZARARI)']],
+      ['netKar',      ['Grubun Karı (Zararı)','Ana Ortaklık Payları']],
+      ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar','ÖZKAYNAKLAR']]
+    ];
+
+    try{
+      const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
+        headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
+        signal: AbortSignal.timeout(20000) });
+      if(!r.ok) return res.status(200).json({ ok:false, id, http:r.status, err:'sayfa alınamadı' });
+      let h = await r.text();
+      /* Flight yükündeki kaçışları çöz — \u003c gibi diziler literal olarak duruyor */
+      h = h.replace(/\\u003c/g,'<').replace(/\\u003e/g,'>').replace(/\\"/g,'"').replace(/\\n/g,' ');
+
+      /* Bir etiketin ARDINDAN gelen sayıları topla. Etiket hücresinden sonra
+         gelen ilk iki sayısal hücre = cari ve önceki dönem. */
+      const sayiCoz = (t) => {
+        const temiz = String(t).trim().replace(/\./g,'').replace(/,/g,'.');
+        if(!/^-?\(?\d/.test(temiz)) return null;
+        const eksi = /^\(|\)$/.test(String(t).trim());
+        const n = parseFloat(temiz.replace(/[()]/g,''));
+        return isFinite(n) ? (eksi ? -n : n) : null;
+      };
+      const kalemBul = (etiketler) => {
+        for(const e of etiketler){
+          /* Etiketi tam hücre içeriği olarak ara — kısmi eşleşme yanlış satır verir */
+          const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
+          let m;
+          while((m = kalip.exec(h)) !== null){
+            const dilim = h.slice(m.index, m.index + 3000);
+            const hucreler = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>sayiCoz(x[1])).filter(v=>v!==null);
+            if(hucreler.length >= 1) return { deger:hucreler[0], onceki:hucreler[1] ?? null, etiket:e };
+          }
+        }
+        return null;
+      };
+
+      const dene = (liste) => {
+        const c = {}; let dolu = 0;
+        liste.forEach(([ad, et])=>{ const v = kalemBul(et); c[ad] = v; if(v) dolu++; });
+        return { c, dolu };
+      };
+      const sanayi = dene(SANAYI), banka = dene(BANKA);
+      const sablon = banka.dolu > sanayi.dolu ? 'banka' : 'sanayi';
+      const secili = sablon === 'banka' ? banka : sanayi;
+      const liste  = sablon === 'banka' ? BANKA : SANAYI;
+
+      const eksik = liste.filter(([ad])=>!secili.c[ad]).map(([ad])=>ad);
+      res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
+      return res.status(200).json({ ok: secili.dolu > 0, id, sablon,
+        bulunan: secili.dolu, toplam: liste.length, eksik,
+        kalemler: secili.c,
+        uyari: eksik.length ? eksik.length+' kalem bulunamadı — sayfa yapısı değişmiş olabilir' : null,
+        not: 'deger = cari dönem · onceki = karşılaştırma dönemi. Sayılar BİN TL cinsindendir (KAP standardı).' });
+    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+  }
+
   if (_mod === 'kalem') {
     const id = String((req.query && req.query.id) || '1639026').replace(/[^0-9]/g,'').slice(0,10);
     const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
