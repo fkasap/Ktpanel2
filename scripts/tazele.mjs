@@ -225,11 +225,29 @@ async function riskTazele() {
   if (!liste.length) return null;
   const kodlar = liste.map(x => x.k).filter(Boolean);
 
-  /* Endeks serisi önce — hisse hesapları buna dayanacak */
-  const endeksHarita = await yahooSeri(['XKTUM'], '.IS');
-  const eSeri = endeksHarita['XKTUM'];
+  /* ENDEKS SERİSİ — YEDEKLİ ZİNCİR.
+     İlk denemede XKTUM.IS boş döndü. Yahoo'nun BIST endeks sembolleri
+     tutarsız: bazıları `.IS` ekiyle, bazıları `^` önekiyle, bazıları hiç yok.
+     Hisse serileri sorunsuz geldiğine göre sorun Yahoo erişiminde değil,
+     SEMBOLDE. Sırayla denenir ve HANGİSİNİN tuttuğu raporlanır.
+     XKTUM tercih edilir (panelin sicili de onu kullanıyor, aynı taban);
+     bulunamazsa XU100'e düşülür ve bu kartta AÇIKÇA yazılır — beta hangi
+     endekse göre ölçüldüğü bilinmeden okunamaz. */
+  const ENDEKS_ADAY = [
+    { kod: 'XKTUM', ekle: '.IS' }, { kod: '^XKTUM', ekle: '' },
+    { kod: 'XU100', ekle: '.IS' }, { kod: '^XU100', ekle: '' }
+  ];
+  let eSeri = null, eKod = null, denemeler = [];
+  for (const a of ENDEKS_ADAY) {
+    const h = await yahooSeri([a.kod], a.ekle);
+    const boy = h[a.kod] ? h[a.kod].size : 0;
+    denemeler.push(`${a.kod}${a.ekle}: ${boy || 'boş'}`);
+    if (h[a.kod]) { eSeri = h[a.kod]; eKod = a.kod + a.ekle; break; }
+  }
   if (!eSeri) {
-    raporlar.push('### Risk metrikleri — ✗ XKTUM serisi alınamadı\n- Beta hesaplanamaz, katman atlandı.');
+    raporlar.push('### Risk metrikleri — ✗ ENDEKS SERİSİ ALINAMADI\n' +
+      '- Denenen semboller: ' + denemeler.join(' · ') + '\n' +
+      '- Beta hesaplanamaz, katman atlandı. Hisse serileri çalışıyorsa sorun SEMBOLDEDİR.');
     denetimDustu = true; return null;
   }
   const hSerileri = await yahooSeri(kodlar);
@@ -279,6 +297,9 @@ async function riskTazele() {
   ];
   const s = denetle('Risk metrikleri', kontrol);
   raporlar.push(s.rapor() +
+    `\n- ℹ **beta referansı: ${eKod}** (${eSeri.size} gün)` +
+    (eKod.indexOf('XKTUM') < 0 ? ' — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir' : '') +
+    (denemeler.length > 1 ? `\n- denenen: ${denemeler.join(' · ')}` : '') +
     (hesaplanamayan.length ? `\n- ⚠ seri kısa, hesaplanamadı: ${hesaplanamayan.slice(0, 10).join(', ')}` : ''));
   if (!s.gecti) { denetimDustu = true; return null; }
 
@@ -290,7 +311,7 @@ async function riskTazele() {
   });
   const ortGun = Math.round(ortalama(basarili.map(k => yeni[k].gun)));
   d.guncelleme = bugun;
-  d.yontem = `vol = günlük getiri std × √252 · beta = kov(hisse, XKTUM) / var(XKTUM) · ortalama ${ortGun} ortak işlem günü · kaynak Yahoo 1y`;
+  d.yontem = `vol = günlük getiri std × √252 · beta = kov(hisse, ${eKod}) / var(${eKod}) · ortalama ${ortGun} ortak işlem günü · kaynak Yahoo 1y`;
   await yaz(dosya, d);
   if (n) degisenler.push(`risk metrikleri (${n})`);
   return n;
