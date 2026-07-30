@@ -173,6 +173,129 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
   return n;
 }
 
+/* ── RİSK METRİKLERİ (vol · beta) ────────────────────────────────────────────
+   Saf hesap — dış kaynak GEREKMEZ, yalnız fiyat serisi.
+     vol  = günlük getirilerin std sapması × √252   (yıllıklandırılmış, %)
+     beta = kov(hisse, endeks) / var(endeks)
+   Endeks olarak XKTUM kullanılıyor: panelin sicil karşılaştırması da onu
+   kullanıyor (track.json endeks_kapanis), böylece beta ile sicil AYNI TABANDAN
+   ölçülüyor. XU100 kullanılsaydı iki metrik farklı evrene bakardı (§114 dersi).
+
+   ORTAK GÜN ŞARTI: hisse ve endeks serisi AYNI GÜNLERDE hizalanır. Yahoo bazı
+   günleri atlayabilir (tatil, işlem yok); hizalamadan hesaplanan beta yanlış
+   çıkar ve bu SESSİZ bir hatadır — sayı makul görünür. */
+async function yahooSeri(kodlar, ekle = '.IS', aralik = '1y') {
+  const havuz = async (items, fn, n) => {
+    const out = new Array(items.length); let i = 0;
+    const isci = async () => { while (i < items.length) { const k = i++; out[k] = await fn(items[k]); } };
+    await Promise.all(Array.from({ length: Math.min(n, items.length) }, isci));
+    return out;
+  };
+  const tek = async kod => {
+    try {
+      const u = 'https://query1.finance.yahoo.com/v8/finance/chart/' +
+        encodeURIComponent(kod + ekle) + '?interval=1d&range=' + aralik;
+      const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' },
+        signal: AbortSignal.timeout(15000) });
+      if (!r.ok) return null;
+      const j = await r.json();
+      const d = j?.chart?.result?.[0];
+      const c = d?.indicators?.quote?.[0]?.close || [];
+      const t = d?.timestamp || [];
+      const seri = new Map();
+      for (let i = 0; i < c.length; i++) {
+        if (typeof c[i] === 'number' && isFinite(c[i]) && c[i] > 0) {
+          seri.set(new Date(t[i] * 1000).toISOString().slice(0, 10), c[i]);
+        }
+      }
+      return seri.size > 30 ? { kod, seri } : null;
+    } catch { return null; }
+  };
+  const sonuc = await havuz(kodlar, tek, 10);
+  const harita = {};
+  sonuc.filter(Boolean).forEach(x => { harita[x.kod] = x.seri; });
+  return harita;
+}
+
+async function riskTazele() {
+  const dosya = 'risk.json';
+  if (!(await varMi(dosya))) return null;
+  const d = await oku(dosya);
+  const liste = d.hisseler || [];
+  if (!liste.length) return null;
+  const kodlar = liste.map(x => x.k).filter(Boolean);
+
+  /* Endeks serisi önce — hisse hesapları buna dayanacak */
+  const endeksHarita = await yahooSeri(['XKTUM'], '.IS');
+  const eSeri = endeksHarita['XKTUM'];
+  if (!eSeri) {
+    raporlar.push('### Risk metrikleri — ✗ XKTUM serisi alınamadı\n- Beta hesaplanamaz, katman atlandı.');
+    denetimDustu = true; return null;
+  }
+  const hSerileri = await yahooSeri(kodlar);
+  const kapsanan = kodlar.filter(k => hSerileri[k]);
+
+  const getiriler = (seri, gunler) => {
+    const g = [];
+    for (let i = 1; i < gunler.length; i++) {
+      const a = seri.get(gunler[i - 1]), b = seri.get(gunler[i]);
+      if (a > 0 && b > 0) g.push(b / a - 1);
+    }
+    return g;
+  };
+  const ortalama = a => a.reduce((s, x) => s + x, 0) / a.length;
+  const hesapla = (hSeri) => {
+    /* ORTAK GÜNLER — iki serinin kesişimi, tarih sırasına göre */
+    const ortak = [...hSeri.keys()].filter(g => eSeri.has(g)).sort();
+    if (ortak.length < 60) return null;                 // en az ~3 ay
+    const gh = getiriler(hSeri, ortak), ge = getiriler(eSeri, ortak);
+    if (gh.length < 50 || gh.length !== ge.length) return null;
+    const mh = ortalama(gh), me = ortalama(ge);
+    let kov = 0, varE = 0, varH = 0;
+    for (let i = 0; i < gh.length; i++) {
+      kov  += (gh[i] - mh) * (ge[i] - me);
+      varE += (ge[i] - me) ** 2;
+      varH += (gh[i] - mh) ** 2;
+    }
+    const n = gh.length - 1;
+    return {
+      vol:  +(Math.sqrt(varH / n) * Math.sqrt(252) * 100).toFixed(1),
+      beta: varE > 0 ? +((kov / n) / (varE / n)).toFixed(2) : null,
+      gun:  ortak.length
+    };
+  };
+
+  const yeni = {}, hesaplanamayan = [];
+  kapsanan.forEach(k => { const r = hesapla(hSerileri[k]); if (r) yeni[k] = r; else hesaplanamayan.push(k); });
+  const basarili = Object.keys(yeni);
+
+  /* DENETİM. Beta sınırı ±3: BIST'te 3'ü aşan beta neredeyse her zaman
+     hizalama hatası ya da bölünme artığıdır, gerçek değil.
+     Vol sınırı %150: onu aşan hisse ya işlem görmüyor ya da veri bozuk. */
+  const kontrol = [
+    KURALLAR.kapsam(basarili.length, kodlar.length, 0.90),
+    KURALLAR.aykiri(basarili.map(k => ({ kod: k, b: yeni[k].beta })), 'b', 3),
+    KURALLAR.aykiri(basarili.map(k => ({ kod: k, v: yeni[k].vol })), 'v', 150)
+  ];
+  const s = denetle('Risk metrikleri', kontrol);
+  raporlar.push(s.rapor() +
+    (hesaplanamayan.length ? `\n- ⚠ seri kısa, hesaplanamadı: ${hesaplanamayan.slice(0, 10).join(', ')}` : ''));
+  if (!s.gecti) { denetimDustu = true; return null; }
+
+  let n = 0;
+  liste.forEach(x => {
+    const r = yeni[x.k]; if (!r) return;
+    if (x.vol !== r.vol || x.beta !== r.beta) n++;
+    x.vol = r.vol; x.beta = r.beta;
+  });
+  const ortGun = Math.round(ortalama(basarili.map(k => yeni[k].gun)));
+  d.guncelleme = bugun;
+  d.yontem = `vol = günlük getiri std × √252 · beta = kov(hisse, XKTUM) / var(XKTUM) · ortalama ${ortGun} ortak işlem günü · kaynak Yahoo 1y`;
+  await yaz(dosya, d);
+  if (n) degisenler.push(`risk metrikleri (${n})`);
+  return n;
+}
+
 /* ── KATILIM FONLARI (TEFAS · Playwright) ───────────────────────────────────
    TEFAS bot koruması sunucudan düz fetch'e izin vermiyor (§145-148'de ölçüldü:
    BindHistoryInfo 404, fonGnlBlgSiraliGetir zaman aşımı, JS challenge).
@@ -272,6 +395,9 @@ async function fonTazele() {
   if (ister('fiyat')) {
     await fiyatTazele('multiple.json', 'Multiple fiyatları', 'k', 'fiyat', 'hisseler');
     await fiyatTazele('track.json', 'Model sicili', 't', 'p', 'holdings');
+  }
+  if (ister('risk')) {
+    await riskTazele();
   }
   if (ister('fon')) {
     await fonTazele();
