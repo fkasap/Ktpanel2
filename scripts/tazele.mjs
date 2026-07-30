@@ -266,11 +266,24 @@ async function riskTazele() {
   const hamKalan = hSerileri.__hamKalan || [];
   const kapsanan = kodlar.filter(k => hSerileri[k]);
 
+  /* KURUMSAL İŞLEM SÜZGECİ — BIST fiyat limiti ±%10.
+     Bunu aşan tek günlük hareket FİYAT HAREKETİ OLAMAZ; bölünme, bedelsiz ya
+     da sermaye artırımıdır. Yahoo'nun adjclose'u BIST'te bunları tam
+     düzeltmiyor — POLHO %325,40 vol verdi ve adjclose'a geçmek DEĞİŞTİRMEDİ.
+     Sınır %20 tutuldu (limitin iki katı): tavan-taban serisi ya da seans
+     kesintisi gibi meşru uç durumlara alan bırakır, kurumsal işlemi yakalar.
+     Atılan gün SAYILIR ve raporlanır — sessizce yutulmaz.
+     §149'un aynı mantığı: orada fon dağıtımı, burada hisse bölünmesi. */
+  const LIMIT = 0.20;
+  let atlananGun = 0;
   const getiriler = (seri, gunler) => {
     const g = [];
     for (let i = 1; i < gunler.length; i++) {
       const a = seri.get(gunler[i - 1]), b = seri.get(gunler[i]);
-      if (a > 0 && b > 0) g.push(b / a - 1);
+      if (!(a > 0 && b > 0)) continue;
+      const r = b / a - 1;
+      if (Math.abs(r) > LIMIT) { atlananGun++; g.push(null); continue; }  // yer korunur
+      g.push(r);
     }
     return g;
   };
@@ -279,8 +292,16 @@ async function riskTazele() {
     /* ORTAK GÜNLER — iki serinin kesişimi, tarih sırasına göre */
     const ortak = [...hSeri.keys()].filter(g => eSeri.has(g)).sort();
     if (ortak.length < 60) return null;                 // en az ~3 ay
-    const gh = getiriler(hSeri, ortak), ge = getiriler(eSeri, ortak);
-    if (gh.length < 50 || gh.length !== ge.length) return null;
+    const ghH = getiriler(hSeri, ortak), geH = getiriler(eSeri, ortak);
+    if (ghH.length !== geH.length) return null;
+    /* Süzgeçten geçen gün her İKİ seride de geçerliyse kullanılır — beta
+       hesabı eşleşmiş çift ister, tek taraflı atma korelasyonu bozar. */
+    const gh = [], ge = [];
+    for (let i = 0; i < ghH.length; i++) {
+      if (ghH[i] == null || geH[i] == null) continue;
+      gh.push(ghH[i]); ge.push(geH[i]);
+    }
+    if (gh.length < 50) return null;
     const mh = ortalama(gh), me = ortalama(ge);
     let kov = 0, varE = 0, varH = 0;
     for (let i = 0; i < gh.length; i++) {
@@ -292,7 +313,7 @@ async function riskTazele() {
     return {
       vol:  +(Math.sqrt(varH / n) * Math.sqrt(252) * 100).toFixed(1),
       beta: varE > 0 ? +((kov / n) / (varE / n)).toFixed(2) : null,
-      gun:  ortak.length
+      gun:  gh.length
     };
   };
 
@@ -311,6 +332,7 @@ async function riskTazele() {
   const s = denetle('Risk metrikleri', kontrol);
   raporlar.push(s.rapor() +
     `\n- ℹ **beta referansı: ${eKod}** (${eSeri.size} gün)` +
+    (atlananGun ? `\n- ℹ ${atlananGun} gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)` : '') +
     (hamKalan.length ? `\n- ⚠ düzeltilmiş seri yok, HAM kapanış kullanıldı: ${hamKalan.slice(0, 8).join(', ')}${hamKalan.length > 8 ? ' +' + (hamKalan.length - 8) : ''} — bölünme varsa vol şişer` : '') +
     (eKod.indexOf('XKTUM') < 0 ? ' — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir' : '') +
     (denemeler.length > 1 ? `\n- denenen: ${denemeler.join(' · ')}` : '') +
