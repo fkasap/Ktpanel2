@@ -68,30 +68,65 @@ export default async function handler(req, res){
      Sandbox'tan kap.org.tr'ye erişim yok; yoklama SUNUCUDAN yapılmalı.
      ?mod=yokla → aday uçları dener, HTTP kodu + yanıt başlangıcı döner.
      Tahmin etmek yerine ölçmek (§145, §167). */
+  /* §201b YOKLAMA v2 — ÇALIŞAN UÇTAN YÜRÜ.
+     v1'de beş yol TAHMİN ettim, beşi de 404 döndü. Ama 404 iyi haberdi:
+     sunucu KAP'a ULAŞIYOR (403/timeout değil), yalnız yollar yanlıştı.
+     KAP bir Next.js uygulaması ve elimizde ZATEN ÇALIŞAN bir uç var:
+       POST /tr/api/disclosure/members/byCriteria  (haber akışı bunu kullanıyor)
+     Doğru yöntem: tahmin etmeyi bırak, çalışandan yürü. Önce o uçla TOASO'nun
+     son FR bildirimini bul, sonra o bildirimin KİMLİĞİYLE detay uçlarını dene.
+     Kimlik elde olunca yol tahmini gerekmiyor — bildirimin kendisi ne
+     döndürdüğünü söyler. */
   if (_mod === 'yokla') {
     const kod = String((req.query && req.query.kod) || 'TOASO').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
-    const ADAY = [
-      { ad:'finansalRapor-liste', u:'https://www.kap.org.tr/tr/api/financialReport/list/'+kod },
-      { ad:'sirket-genel',        u:'https://www.kap.org.tr/tr/api/company/generalInfo/'+kod },
-      { ad:'bildirim-liste',      u:'https://www.kap.org.tr/tr/api/disclosure/list/'+kod },
-      { ad:'mali-tablo',          u:'https://www.kap.org.tr/tr/api/financialStatement/'+kod },
-      { ad:'endeks-uyeleri',      u:'https://www.kap.org.tr/tr/api/index/members/XK100' }
-    ];
-    const sonuc = [];
-    for (const a of ADAY) {
-      try {
-        const r = await fetch(a.u, {
-          headers: { 'User-Agent':'Mozilla/5.0 (KtPanel/1.0)', 'Accept':'application/json' },
-          signal: AbortSignal.timeout(9000)
-        });
-        const gv = (await r.text()).slice(0, 180);
-        sonuc.push({ ad:a.ad, url:a.u, http:r.status, tur:r.headers.get('content-type'), bas:gv });
-      } catch (e) {
-        sonuc.push({ ad:a.ad, url:a.u, hata:String(e.message||e).slice(0,110) });
+    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+    const BAS = { 'content-type':'application/json', 'accept':'application/json',
+                  'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent':UA };
+    const cikti = { ok:true, yokla:'v2', kod, adim:[] };
+
+    // 1) Çalışan uçla FR bildirimlerini bul
+    let bildirim = null;
+    try{
+      const bugun = new Date(), onceki = new Date(Date.now()-120*86400000);
+      const f = d => d.toISOString().slice(0,10).split('-').reverse().join('.');
+      const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
+        method:'POST', headers:BAS, signal:AbortSignal.timeout(12000),
+        body: JSON.stringify({ fromDate:f(onceki), toDate:f(bugun), disclosureClass:'FR',
+                               mkkMemberOidList:[], subjectList:[], year:'', prd:'', term:'' })
+      });
+      const t = await r.text();
+      let j = null; try{ j = JSON.parse(t); }catch(e){}
+      const dizi = Array.isArray(j) ? j : (j && (j.items||j.data)) || [];
+      const bizim = dizi.filter(x => JSON.stringify(x).toUpperCase().indexOf(kod) >= 0);
+      cikti.adim.push({ ad:'1-FR-listesi', http:r.status, kayit:dizi.length,
+        kodEslesen:bizim.length, ornekAlanlar: dizi[0] ? Object.keys(dizi[0]).slice(0,18) : null,
+        bas: j ? null : t.slice(0,160) });
+      bildirim = bizim[0] || dizi[0] || null;
+      if(bildirim) cikti.bildirim = { alanlar:Object.keys(bildirim), ornek:JSON.stringify(bildirim).slice(0,400) };
+    }catch(e){ cikti.adim.push({ ad:'1-FR-listesi', hata:String(e.message||e).slice(0,120) }); }
+
+    // 2) Bildirim kimliğiyle detay uçlarını dene
+    const kimlik = bildirim && (bildirim.disclosureIndex || bildirim.id || bildirim.index || bildirim.oid);
+    if(kimlik){
+      const ADAY = [
+        'https://www.kap.org.tr/tr/api/disclosure/'+kimlik,
+        'https://www.kap.org.tr/tr/api/disclosure/detail/'+kimlik,
+        'https://www.kap.org.tr/tr/api/financialReport/'+kimlik,
+        'https://www.kap.org.tr/tr/Bildirim/'+kimlik
+      ];
+      for(const u of ADAY){
+        try{
+          const r = await fetch(u, { headers:{ ...BAS, 'accept':'application/json, text/html' }, signal:AbortSignal.timeout(9000) });
+          const t = await r.text();
+          cikti.adim.push({ ad:'2-detay', url:u, http:r.status, tur:r.headers.get('content-type'),
+            uzunluk:t.length, json:(t.trim()[0]==='{'||t.trim()[0]==='['), bas:t.slice(0,150) });
+        }catch(e){ cikti.adim.push({ ad:'2-detay', url:u, hata:String(e.message||e).slice(0,90) }); }
       }
+    } else {
+      cikti.adim.push({ ad:'2-detay', atlandi:'bildirim kimliği bulunamadı — 1. adımın alan adlarına bak' });
     }
-    return res.status(200).json({ ok:true, yokla:true, kod, sonuc,
-      not:'HTTP 200 + application/json dönen uç varsa Fintables bağımlılığı kırılabilir.' });
+    cikti.not = 'JSON dönen ve içinde bilanço kalemi geçen uç varsa Fintables bağımlılığı kırılır.';
+    return res.status(200).json(cikti);
   }
   res.setHeader('Cache-Control', 's-maxage=540, stale-while-revalidate=300');
   res.setHeader('Access-Control-Allow-Origin', '*');
