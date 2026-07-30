@@ -2677,6 +2677,46 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 194. BILANCO NOBETI — kart bekleyeni YAKALA, kart URETME (31 Tem)
+
+Kullanici: "simdi bilanco geldiginde otomatik tarayip kart mi cikartacak?"
+CEVAP: HAYIR — ve olmamali. Ama TESPIT otomatiklesebilir.
+
+### 194.1 AYRIM: TESPIT vs YARGI
+Kart yazmak yargi isidir. Bugunku kartlarin degeri rakamlarda DEGILDI:
+  ARENA  120 gunluk gecikme deseni (9 ceyrek 36-42 gun, sonra 4'u birden 120+)
+  TOASO  FAVOK duserken faaliyet karinin ARTMASI — sebep amortismanin −%63'u
+  TSKB   karsilik 11,8 kat sicradi AMA 6 aylik bazda gecen yilin ALTINDA
+  META   FCF 784 mn$ — mansette hic gorunmuyor
+Bir betik rakami tabloya dizer, hangisinin TUZAK oldugunu soyleyemez.
+AMA "X sirketi FR bildirimi yapti, karti yok" demek TAMAMEN mekanik.
+Nobet bunu yapar: KART URETMEZ, EKSIGI SOYLER.
+
+### 194.2 KAPSAM SUZGECI SART
+30 Tem'de 11 sirket acikladi, yalnizca 1'i panel kapsamindaydi. Kapsam disi
+isimler icin uyari basmak GERCEK UYARIYI GURULTUDE BOGAR.
+Kapsam = XK100 ∪ XKTUM ∪ XKTMT ∪ portfoy ∪ multiple.json ∪ DAHA ONCE KART
+YAZILANLAR. Sonuncusu onemli: TSKB/GARAN katilim evreni disinda ama izlenen
+isimler; bir kez kart yazildiysa o sirket ilgi alanindadir.
+
+### 194.3 ILK SURUM KUSURLUYDU — SIRKET degil DONEM duzeyi
+Ilk yazim `kartli.has(kod)` diyordu: GARAN'in 2C26 karti varsa 3C26
+acikladiginda SESSIZ kalirdi. Sirket duzeyinde calisiyor, donem duzeyinde
+degil.
+DUZELTME: sirket basina EN YENI kart tarihi tutulur; bildirim ondan sonraysa
+yeni donem demektir, uyari verilir.
+TEST: GARAN 2C26 (kart 30 Tem) -> atlanir · GARAN 3C26 (28 Eki) -> YAKALANIR.
+Bu, §161'deki "yazdim ama gorunmuyor" ailesinin akrabasi: kural DOGRU
+gorunuyordu ama BIR BOYUT eksikti.
+
+### 194.4 KAYNAK: mevcut KAP akisi
+Ayri cagri yapilmadi — kapCek() zaten /api/kap'i cekiyor, yanit
+window.__kapAkis'e saklanip nobet tetikleniyor. FR suzgeci: bildirim tipi FR
+ya da baslikta "finansal rapor|finansal tablo|bagimsiz denetim".
+Test: "Pay Alim Satim Bildirimi" dogru sekilde ATLANDI.
+
+app.js v=20260731b. DOSYALAR: app.js + index.html.
+
 ## 193. DAMGALI YEDEK GECICI OLDUGUNU SOYLEMIYORDU (31 Tem)
 
 Kullanici: "sayfayi yeniledigimde herseyy once eski tarihteki veriler geliyor

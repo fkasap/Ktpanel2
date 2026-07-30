@@ -1533,6 +1533,9 @@ function kapRender(){
 async function kapCek(){
   try{
     const r=await fetch('/api/kap');KAP=await r.json();
+    /* §194: KAP akışı bilanço nöbetine de lazım — burada saklanır ve nöbet
+       tetiklenir. Ayrı çağrı yapmak gereksiz yük olurdu, akış zaten geliyor. */
+    try{ window.__kapAkis=KAP; if(typeof bilancoNobeti==='function') bilancoNobeti(); }catch(e){}
     $('kapDurum').textContent=(KAP.ok?'canlı · ':'kaynak yanıt vermiyor · ')+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
   }catch(e){$('kapDurum').textContent='bağlantı hatası';KAP=KAP||{items:[]};}
   kapRender();
@@ -2989,6 +2992,7 @@ async function incelemeInit(){
     /* §166: kart listesi yüklendiğinde BIST takvimi de tazelenir — takvim
        kartlardan türediği için ikisi TEK kaynaktan beslenir, ayrışamazlar. */
     try{ if(typeof bistTakvimYukle==='function') bistTakvimYukle().then(()=>bistTakvimRender()); }catch(e){}
+    try{ if(typeof bilancoNobeti==='function') bilancoNobeti(); }catch(e){}
     try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
     try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
     if(!kartlar.length){el.innerHTML='<div class="sub">Henüz kart yok — ilk bilanço incelemesini iste.</div>';return;}
@@ -6503,6 +6507,100 @@ function bistTakvimRender(){
        POZİTİF/KARIŞIK/NÖTR — BIST'teki sayısal skordan farklı, ikisi de desteklenir)
      · BEKLENENLER  → Finnhub (§168'de pencere bölününce mega-cap'ler gelmeye başladı)
    İkisi tek listede, tarihe göre; hangisinin ne olduğu rozetle ayrılır. */
+
+/* §194 BİLANÇO NÖBETİ — kart bekleyen bilançoyu YAKALA.
+   Kart yazmak otomatikleşemez (yargı işi) ama TESPİT edilebilir. Bugün
+   on bir şirket açıkladı; kullanıcı fark edip söyledi, ben yazdım. Bu adımı
+   panel üstlenir: KAP akışında FR bildirimi görünce, o şirketin kartı VAR MI
+   diye bakar, yoksa kırmızı uyarı basar.
+   KAPSAM SÜZGECİ ŞART: bugün açıklayan on bir şirketin yalnız biri panel
+   kapsamındaydı. Kapsam dışı isimler için uyarı basmak, gerçek uyarıyı
+   gürültüde boğar. Süzgeç: XK100 ∪ XKTUM ∪ XKTMT ∪ portföy ∪ multiple.json.
+   NE YAPMAZ: kart üretmez. Rakamı tabloya dizmek kolay; hangisinin tuzak
+   olduğunu söylemek değil (ARENA'da 120 günlük gecikme deseni, TOASO'da
+   amortisman, TSKB'de çeyreklik/yıllık karşılık çelişkisi). */
+function bilancoNobeti(){
+  const el = $('bilancoNobet'); if(!el) return;
+  const K = (typeof INC_KARTLAR!=='undefined' && INC_KARTLAR) ? INC_KARTLAR : [];
+  /* KART TARİHİ — şirket düzeyinde değil DÖNEM düzeyinde bak.
+     İlk sürüm `kartli.has(kod)` diyordu: GARAN'ın 2Ç26 kartı varsa 3Ç26
+     açıkladığında sessiz kalırdı. Şirket başına EN YENİ kart tarihi tutulur;
+     bildirim ondan sonraysa yeni dönem demektir, uyarı verilir. */
+  const sonKart = {};
+  K.forEach(k=>{
+    const kod = String(k.kod||'').toUpperCase(); if(!kod) return;
+    const t = k.tarih_iso || '';
+    if(!sonKart[kod] || t > sonKart[kod]) sonKart[kod] = t;
+  });
+
+  /* Panel kapsamı — bu kümenin dışındaki bildirim UYARI ÜRETMEZ */
+  const kapsam = new Set();
+  try{ if(typeof ENDAG!=='undefined' && ENDAG) Object.keys(ENDAG).forEach(e=>{
+    const u = ENDAG[e] && ENDAG[e].uyeler; if(u) Object.keys(u).forEach(k=>kapsam.add(k)); }); }catch(e){}
+  try{ (typeof poz!=='undefined'?poz:[]).forEach(x=>{
+    if(x&&x.tip==='hisse'&&x.kod) kapsam.add(String(x.kod).toUpperCase()); }); }catch(e){}
+  try{ if(typeof MFIYAT!=='undefined') Object.keys(MFIYAT).forEach(k=>kapsam.add(k)); }catch(e){}
+
+  const kaynak = (window.__kapAkis && window.__kapAkis.items) || [];
+  if(!kaynak.length){
+    el.innerHTML = '<div class="sub" style="font-size:10.5px">KAP akışı henüz gelmedi — nöbet bekliyor.</div>';
+    return;
+  }
+  /* FR = finansal rapor. KAP başlığında "finansal rapor" ya da dönem ifadesi
+     geçer; bildirim tipi alanı varsa o tercih edilir. */
+  const frMi = (it)=>{
+    const b = String(it.b||'').toLowerCase();
+    if(String(it.tip||'').toUpperCase()==='FR') return true;
+    return /finansal rapor|finansal tablo|bağımsız denetim/.test(b);
+  };
+  const bugun = new Date().toISOString().slice(0,10);
+  const bekleyen = [], kapsamDisi = [];
+  const gorulen = new Set();
+  kaynak.forEach(it=>{
+    if(!frMi(it)) return;
+    const kodlar = (it.k||[]).map(x=>String(x).toUpperCase());
+    kodlar.forEach(kod=>{
+      if(gorulen.has(kod)) return; gorulen.add(kod);
+      const t = it.ts ? new Date(it.ts).toISOString().slice(0,10) : '';
+      const kayit = {kod, tarih:t, baslik:String(it.b||'').slice(0,70), url:it.url||null};
+      /* Kapsam: endeks ∪ portföy ∪ multiple ∪ DAHA ÖNCE KART YAZILANLAR.
+         Sonuncusu önemli: TSKB/GARAN gibi katılım evreni dışı ama izlenen
+         isimler kapsam süzgecine takılıp kaybolmasın. Bir kez kart yazdıysam
+         o şirket ilgi alanındadır. */
+      if(!kapsam.has(kod) && !(kod in sonKart)){ kapsamDisi.push(kayit); return; }
+      /* DÖNEM KONTROLÜ: kart bildirimden YENİ ya da aynı günse atla.
+         Eskiyse yeni dönem açıklanmış demektir. */
+      const kt = sonKart[kod];
+      if(kt && t && kt >= t) return;
+      bekleyen.push(kayit);
+    });
+  });
+  bekleyen.sort((a,b)=>a.tarih<b.tarih?1:-1);
+
+  if(!bekleyen.length){
+    el.innerHTML = '<div class="note"><b>✓ Kart bekleyen bilanço yok.</b> '+
+      'KAP akışındaki finansal rapor bildirimleri tarandı; panel kapsamındaki '+
+      'şirketlerin hepsinin kartı var.'+
+      (kapsamDisi.length?' <span class="thin">('+kapsamDisi.length+' bildirim kapsam dışı — endeks/portföy/multiple evreninde değil, uyarı üretmez.)</span>':'')+
+      '</div>';
+    return;
+  }
+  el.innerHTML =
+    '<div class="note" style="border-left:3px solid var(--down)"><b>⚠ '+bekleyen.length+
+    ' bilanço kart bekliyor.</b> Panel kapsamındaki şu şirketler finansal rapor '+
+    'açıkladı ama Earnings AI\'da kartları yok:</div>'+
+    '<table><tbody>'+bekleyen.slice(0,12).map(x=>
+      '<tr'+(x.tarih===bugun?' style="background:var(--bg2)"':'')+'>'+
+      '<td style="white-space:nowrap'+(x.tarih===bugun?';color:var(--mm2);font-weight:700':'')+'">'+esc(x.tarih||'—')+'</td>'+
+      '<td><b>'+esc(x.kod)+'</b></td>'+
+      '<td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+
+        (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener" style="color:inherit">'+esc(x.baslik)+'</a>':esc(x.baslik))+
+        (x.tarih===bugun?' <span class="tag">BUGÜN</span>':'')+'</td></tr>').join('')+
+    '</tbody></table>'+
+    '<div class="sub" style="font-size:10px;margin-top:5px">Kapsam: endeks üyeleri ∪ portföy ∪ multiple.json. '+
+    'Kapsam dışı '+kapsamDisi.length+' bildirim gösterilmedi — gürültü yapmasın. '+
+    '<b>Nöbet kart ÜRETMEZ</b>, yalnız eksiği söyler.</div>';
+}
 
 /* §166 BIST BİLANÇO TAKVİMİ — CANLI.
    TEŞHİS: "08 Bilanço Takvimi" başlığı "Ebu günlük bakımında" diyordu ve Ebu'nun
