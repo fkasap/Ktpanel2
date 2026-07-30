@@ -77,55 +77,80 @@ export default async function handler(req, res){
      son FR bildirimini bul, sonra o bildirimin KİMLİĞİYLE detay uçlarını dene.
      Kimlik elde olunca yol tahmini gerekmiyor — bildirimin kendisi ne
      döndürdüğünü söyler. */
+  /* §201c YOKLAMA v3 — CALISAN ISTEGI BIREBIR KOPYALA.
+     v2'de gövdeyi yine TAHMIN ettim ve 500 aldım. İki hata vardı:
+       · tarih biçimi DD.MM.YYYY yazmışım — çalışan kod YYYY-MM-DD kullanıyor
+       · fazladan alan eklemişim (disclosureClass, year, prd, term)
+       · pencereyi 120 gün yapmışım — çalışan kodun yorumu uyarıyordu:
+         "son 2 günlük pencere (2000 tavanına uzak)"
+     v3 kuralı: çalışan isteğin GÖVDESİNİ, BAŞLIKLARINI ve ÇEREZ ISINMASINI
+     birebir al; yalnız PENCEREYİ genişlet ve FR süzgecini İSTEMCİ tarafında
+     uygula. Sunucuya yeni bir alan gönderme.
+     Bu, bugünkü "çalışandan yürü" dersinin üçüncü uygulaması — ilk ikisinde
+     yine tahmin etmişim. */
   if (_mod === 'yokla') {
     const kod = String((req.query && req.query.kod) || 'TOASO').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+    const gunSayi = Math.min(Math.max(parseInt(req.query && req.query.gun) || 7, 1), 30);
     const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
-    const BAS = { 'content-type':'application/json', 'accept':'application/json',
-                  'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent':UA };
-    const cikti = { ok:true, yokla:'v2', kod, adim:[] };
+    const cikti = { ok:true, yokla:'v3', kod, gun:gunSayi, adim:[] };
 
-    // 1) Çalışan uçla FR bildirimlerini bul
-    let bildirim = null;
+    // 0) Çerez ısınması — çalışan kod bunu yapıyor, WAF'ı yumuşatıyor
+    let cookie = '';
     try{
-      const bugun = new Date(), onceki = new Date(Date.now()-120*86400000);
-      const f = d => d.toISOString().slice(0,10).split('-').reverse().join('.');
+      const w = await fetch('https://www.kap.org.tr/tr/bildirim-sorgu', {
+        headers:{ 'user-agent':UA }, signal:AbortSignal.timeout(8000) });
+      const sc = w.headers.get('set-cookie');
+      if(sc) cookie = sc.split(',').map(x=>x.split(';')[0]).join('; ');
+      cikti.adim.push({ ad:'0-isinma', http:w.status, cerez: cookie ? 'alindi' : 'yok' });
+    }catch(e){ cikti.adim.push({ ad:'0-isinma', hata:String(e.message||e).slice(0,90) }); }
+
+    // 1) byCriteria — ÇALIŞAN gövdenin AYNISI, yalnız pencere geniş
+    let dizi = [];
+    try{
+      const gun = 86400000, simdi = new Date();
+      const tarih = d => d.toISOString().slice(0,10);          // YYYY-MM-DD — çalışan biçim
+      const govde = { fromDate: tarih(new Date(simdi - gunSayi*gun)), toDate: tarih(simdi),
+                      mkkMemberOidList: [], subjectList: [] }; // FAZLADAN ALAN YOK
       const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
-        method:'POST', headers:BAS, signal:AbortSignal.timeout(12000),
-        body: JSON.stringify({ fromDate:f(onceki), toDate:f(bugun), disclosureClass:'FR',
-                               mkkMemberOidList:[], subjectList:[], year:'', prd:'', term:'' })
+        method:'POST',
+        headers:{ 'content-type':'application/json', 'accept':'application/json',
+                  'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent':UA,
+                  ...(cookie ? { 'cookie': cookie } : {}) },
+        body: JSON.stringify(govde), signal: AbortSignal.timeout(12000)
       });
       const t = await r.text();
-      let j = null; try{ j = JSON.parse(t); }catch(e){}
-      const dizi = Array.isArray(j) ? j : (j && (j.items||j.data)) || [];
-      const bizim = dizi.filter(x => JSON.stringify(x).toUpperCase().indexOf(kod) >= 0);
-      cikti.adim.push({ ad:'1-FR-listesi', http:r.status, kayit:dizi.length,
-        kodEslesen:bizim.length, ornekAlanlar: dizi[0] ? Object.keys(dizi[0]).slice(0,18) : null,
-        bas: j ? null : t.slice(0,160) });
-      bildirim = bizim[0] || dizi[0] || null;
-      if(bildirim) cikti.bildirim = { alanlar:Object.keys(bildirim), ornek:JSON.stringify(bildirim).slice(0,400) };
-    }catch(e){ cikti.adim.push({ ad:'1-FR-listesi', hata:String(e.message||e).slice(0,120) }); }
+      let j=null; try{ j=JSON.parse(t); }catch(e){}
+      dizi = Array.isArray(j) ? j : (j && (j.items||j.data)) || [];
+      cikti.adim.push({ ad:'1-liste', http:r.status, kayit:dizi.length,
+        alanlar: dizi[0] ? Object.keys(dizi[0]) : null,
+        bas: j ? null : t.slice(0,200) });
+    }catch(e){ cikti.adim.push({ ad:'1-liste', hata:String(e.message||e).slice(0,120) }); }
 
-    // 2) Bildirim kimliğiyle detay uçlarını dene
-    const kimlik = bildirim && (bildirim.disclosureIndex || bildirim.id || bildirim.index || bildirim.oid);
+    // 2) FR ve kod süzgeci — İSTEMCİ tarafında
+    const metin = x => JSON.stringify(x).toUpperCase();
+    const frler = dizi.filter(x => /FINANSAL RAPOR|FINANSAL TABLO|"FR"/.test(metin(x)));
+    const bizim = frler.filter(x => metin(x).indexOf(kod) >= 0);
+    cikti.adim.push({ ad:'2-suzgec', toplam:dizi.length, frSayisi:frler.length, kodEslesen:bizim.length,
+      ornekFR: frler[0] ? JSON.stringify(frler[0]).slice(0,400) : null });
+
+    // 3) Kimlikle detay
+    const b = bizim[0] || frler[0];
+    const kimlik = b && (b.disclosureIndex || b.id || b.index || b.oid || b.disclosureId);
     if(kimlik){
-      const ADAY = [
-        'https://www.kap.org.tr/tr/api/disclosure/'+kimlik,
-        'https://www.kap.org.tr/tr/api/disclosure/detail/'+kimlik,
-        'https://www.kap.org.tr/tr/api/financialReport/'+kimlik,
-        'https://www.kap.org.tr/tr/Bildirim/'+kimlik
-      ];
-      for(const u of ADAY){
+      for(const u of ['https://www.kap.org.tr/tr/api/disclosure/'+kimlik,
+                      'https://www.kap.org.tr/tr/Bildirim/'+kimlik]){
         try{
-          const r = await fetch(u, { headers:{ ...BAS, 'accept':'application/json, text/html' }, signal:AbortSignal.timeout(9000) });
+          const r = await fetch(u, { headers:{ 'accept':'application/json, text/html', 'user-agent':UA,
+            'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', ...(cookie?{cookie}:{}) },
+            signal:AbortSignal.timeout(9000) });
           const t = await r.text();
-          cikti.adim.push({ ad:'2-detay', url:u, http:r.status, tur:r.headers.get('content-type'),
-            uzunluk:t.length, json:(t.trim()[0]==='{'||t.trim()[0]==='['), bas:t.slice(0,150) });
-        }catch(e){ cikti.adim.push({ ad:'2-detay', url:u, hata:String(e.message||e).slice(0,90) }); }
+          cikti.adim.push({ ad:'3-detay', url:u, http:r.status, uzunluk:t.length,
+            json:(t.trim()[0]==='{'||t.trim()[0]==='['), bas:t.slice(0,180) });
+        }catch(e){ cikti.adim.push({ ad:'3-detay', url:u, hata:String(e.message||e).slice(0,90) }); }
       }
-    } else {
-      cikti.adim.push({ ad:'2-detay', atlandi:'bildirim kimliği bulunamadı — 1. adımın alan adlarına bak' });
-    }
-    cikti.not = 'JSON dönen ve içinde bilanço kalemi geçen uç varsa Fintables bağımlılığı kırılır.';
+    } else cikti.adim.push({ ad:'3-detay', atlandi:'kimlik yok — 2. adımın ornekFR alanına bak' });
+
+    cikti.not = '1-liste kayit>0 ise FR listesi erisilebilir. 3-detay json:true ise bilanco kalemi gelebilir.';
     return res.status(200).json(cikti);
   }
   res.setHeader('Cache-Control', 's-maxage=540, stale-while-revalidate=300');
