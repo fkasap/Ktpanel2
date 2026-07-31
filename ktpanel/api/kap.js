@@ -373,6 +373,90 @@ export default async function handler(req, res){
      ayrıştırma YEREL fonksiyonla yapılır. Tek ağ işi iki KAP sayfası.
      Kullanım:  ?mod=ceyrek&id=<cari>&onceki=<bir önceki dönem>
      `onceki` verilmezse yalnız kümülatif döner — 1. dönem için doğrudur. */
+  /* §214 ?mod=kart — METRİK SETİ. Zincirin son mekanik adımı.
+     mod=ceyrek ham kalem veriyor; kart için METRİK gerekir. §183'te tanımlanan
+     standart: ciro · brüt marj · faaliyet kârı+marj · net kâr+marj · y/y · ç/ç.
+     BU UÇ YORUM YAZMAZ. Rakamı ve değişimi hesaplar, DİKKAT ÇEKEN DESENLERİ
+     işaretler. Yorum ve skor kullanıcıda kalır (§204 taslak+onay kurgusu).
+     İŞARETLENEN DESENLER — bugün elle bulduklarım:
+       · marj makası: FAVÖK/faaliyet ters yönde (TOASO, CWENE)
+       · alt satır dışsal: net kâr artarken faaliyet düşüyorsa finansman/parasal
+       · ç/ç ile y/y çelişkisi (TSKB karşılık vakası)
+     Bunlar YORUM DEĞİL, BAKILACAK YER işaretidir. */
+  if (_mod === 'kart') {
+    const id  = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
+    if(!id) return res.status(400).json({ ok:false, err:'id gerekli' });
+    try{
+      const b = await _bilancoAyristir(id);
+      if(!b || !b.ok) return res.status(200).json({ ok:false, id, err:'bilanço ayrıştırılamadı', detay:b });
+
+      const K = b.kalemler;
+      const al = (ad, alan) => (K[ad] && K[ad][alan] != null) ? K[ad][alan] : null;
+      const yuzde = (a, b0) => (a==null || b0==null || b0===0) ? null : +(((a/b0)-1)*100).toFixed(1);
+      const marj  = (a, c) => (a==null || !c) ? null : +((a/c)*100).toFixed(2);
+      const puan  = (a, b0) => (a==null || b0==null) ? null : +(a-b0).toFixed(2);
+
+      /* ÇEYREKLİK öncelikli — rapor sütunu varsa o, yoksa kümülatif */
+      const ceyrekVar = K.ciro && K.ciro.ceyrek != null;
+      const c  = (ad) => ceyrekVar ? al(ad,'ceyrek') : al(ad,'deger');
+      const c0 = (ad) => ceyrekVar ? al(ad,'ceyrekOnceki') : al(ad,'onceki');
+
+      const m = {};
+      if(b.sablon === 'sanayi'){
+        const ciro=c('ciro'), ciro0=c0('ciro');
+        const brut=c('brutKar'), brut0=c0('brutKar');
+        const faal=c('faaliyetKar'), faal0=c0('faaliyetKar');
+        const net=c('netKar'), net0=c0('netKar');
+        m.ciro        = { deger:ciro, yoy:yuzde(ciro,ciro0) };
+        m.brutMarj    = { deger:marj(brut,ciro), oncekiMarj:marj(brut0,ciro0),
+                          puanFark:puan(marj(brut,ciro), marj(brut0,ciro0)), tutar:brut, yoy:yuzde(brut,brut0) };
+        m.faaliyetKar = { deger:faal, marj:marj(faal,ciro), oncekiMarj:marj(faal0,ciro0),
+                          puanFark:puan(marj(faal,ciro), marj(faal0,ciro0)), yoy:yuzde(faal,faal0) };
+        m.netKar      = { deger:net, marj:marj(net,ciro), oncekiMarj:marj(net0,ciro0),
+                          puanFark:puan(marj(net,ciro), marj(net0,ciro0)), yoy:yuzde(net,net0) };
+        m.finansGider = { deger:c('finansGider'), yoy:yuzde(Math.abs(c('finansGider')||0), Math.abs(c0('finansGider')||0)) };
+        m.parasal     = { deger:c('parasal'), onceki:c0('parasal') };
+        m.ozkaynak    = { deger:al('ozkaynak','deger'), onceki:al('ozkaynak','onceki') };
+        m.nakit       = { deger:al('nakit','deger'), onceki:al('nakit','onceki') };
+      } else {
+        const nf=c('netFaiz'), nf0=c0('netFaiz');
+        m.netFaiz  = { deger:nf, yoy:yuzde(nf,nf0) };
+        m.komisyon = { deger:c('komisyon'), yoy:yuzde(c('komisyon'),c0('komisyon')) };
+        m.karsilik = { deger:c('karsilik'), yoy:yuzde(Math.abs(c('karsilik')||0), Math.abs(c0('karsilik')||0)) };
+        m.faalKar  = { deger:c('faalKar'), yoy:yuzde(c('faalKar'),c0('faalKar')) };
+        m.netKar   = { deger:c('netKar'), yoy:yuzde(c('netKar'),c0('netKar')) };
+        m.ozkaynak = { deger:al('ozkaynak','deger'), onceki:al('ozkaynak','onceki') };
+      }
+
+      /* DESEN İŞARETLERİ — yorum değil, BAKILACAK YER */
+      const isaret = [];
+      if(b.sablon === 'sanayi'){
+        const fy = m.faaliyetKar.yoy, ny = m.netKar.yoy;
+        if(fy != null && ny != null && fy < 0 && ny > 0)
+          isaret.push({ tip:'alt satır dışsal', not:'faaliyet kârı y/y '+fy+'% düşerken net kâr '+ny+'% arttı — farkı finansman gideri ve/veya parasal pozisyon taşıyor olabilir. Operasyonel iyileşme DEĞİL.' });
+        if(m.brutMarj.puanFark != null && m.brutMarj.puanFark < -0.5)
+          isaret.push({ tip:'brüt marj erozyonu', not:'brüt marj '+m.brutMarj.puanFark+' puan geriledi ('+m.brutMarj.oncekiMarj+'% → '+m.brutMarj.deger+'%)' });
+        if(m.faaliyetKar.puanFark != null && m.brutMarj.puanFark != null &&
+           Math.abs(m.faaliyetKar.puanFark) > Math.abs(m.brutMarj.puanFark) * 1.5)
+          isaret.push({ tip:'faaliyet gideri baskısı', not:'faaliyet marjı, brüt marjdan daha çok oynadı — sorun yalnız üretim maliyetinde değil, faaliyet giderlerinde de olabilir' });
+        if(m.parasal.deger != null && m.netKar.deger && Math.abs(m.parasal.deger) > Math.abs(m.netKar.deger)*0.3)
+          isaret.push({ tip:'parasal pozisyon ağır', not:'parasal pozisyon net kârın %'+Math.round(Math.abs(m.parasal.deger)/Math.abs(m.netKar.deger)*100)+'\'i kadar — enflasyon muhasebesi alt satırı belirgin etkiliyor' });
+      } else {
+        if(m.karsilik.yoy != null && m.karsilik.yoy > 50)
+          isaret.push({ tip:'karşılık sıçraması', not:'karşılıklar y/y %'+m.karsilik.yoy+' arttı — ÇEYREKLİK ve YILLIK bazda AYRI AYRI bakılmalı, ikisi ters yön gösterebilir' });
+        if(m.netFaiz.yoy != null && m.netFaiz.yoy > 40)
+          isaret.push({ tip:'net faiz baz etkisi', not:'net faiz y/y %'+m.netFaiz.yoy+' — geçen yılın düşük bazından geliyor olabilir, ÇEYREKLİK seyre bakılmalı' });
+      }
+
+      res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
+      return res.status(200).json({ ok:true, id, sablon:b.sablon,
+        temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif (çeyrek sütunu yok)',
+        bulunan:b.bulunan, toplam:b.toplam, eksik:b.eksik,
+        metrikler:m, isaretler:isaret,
+        not:'Bu uç YORUM YAZMAZ ve SKOR VERMEZ. Rakamı, değişimi ve dikkat çeken deseni verir; kart metni ve skor insana aittir. Birim BİN TL, marjlar %.' });
+    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+  }
+
   if (_mod === 'ceyrek') {
     const id  = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
     /* §211c VİRGÜL KORUNMALI. §211'de `onceki` parametresine virgüllü liste
