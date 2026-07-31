@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-w';
+const KTP_SURUM = '20260731-x';
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1343,7 +1343,7 @@ function pfInit(){
    degil SESSIZLESTIRICIDIR. Ilk surumde bunu tekrarlamisim. Artik bulunamayan
    gorev console.error ile RAPORLANIR — sessizce atlanmaz. */
 const POZ_GOREV=['renderPoz','anaRender','atifRender','riskMetRender',
-                 'likiditeRender','temettuRender','reelAtifRender','riskButceRender'];
+                 'likiditeRender','reelAtifRender','riskButceRender'];
 function pozCiz(){
   const eksik=[];
   POZ_GOREV.forEach(ad=>{
@@ -1505,39 +1505,9 @@ function stresTest(){
   el.innerHTML='<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px"><span class="lbl" style="margin:0">TAHMİNİ PORTFÖY ETKİSİ</span><span class="val '+cls+'" style="font-size:22px">'+(portEtki>=0?'+':'')+portEtki.toFixed(2)+'%</span></div><div class="kv"><span class="k">En olumsuz</span><span>'+enKotu.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div><div class="kv"><span class="k">En olumlu</span><span>'+enIyi.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div>'+(disi.length?'<div class="kv"><span class="k">Kapsam dışı</span><span>'+disi.join(', ')+'</span></div>':'');
 }
 /* ---- Yield Curve Laboratuvarı ---- */
-function ycY(tau,S,L,C){const l1=2.0,l2=3.0;return L+(S-L)*Math.exp(-tau/l1)+C*(tau/l2)*Math.exp(-tau/l2);}
-const YC_PRESET={normal:[3,5,1],dik:[2,6.5,0.5],duz:[4,4,0],ters:[6,3,0],kambur:[3,4.5,8],tr:[41.3,33.4,6]};
-function ycLabDraw(){
-  const S=+$('ycS').value,L=+$('ycL').value,C=+$('ycC').value;
-  $('ycSV').textContent='%'+S.toFixed(1).replace('.',',');$('ycLV').textContent='%'+L.toFixed(1).replace('.',',');$('ycCV').textContent=(C>=0?'+':'')+C.toFixed(1).replace('.',',');
-  const taus=[0.25,0.5,1,2,3,5,7,10,20,30],lbl={0.25:'3A',2:'2Y',5:'5Y',10:'10Y',30:'30Y'};
-  const ys=taus.map(t=>ycY(t,S,L,C));
-  const mn=Math.min.apply(null,ys),mx=Math.max.apply(null,ys),rng=(mx-mn)||1;
-  const X=i=>28+(i/(taus.length-1))*360,Y=v=>135-((v-mn)/rng)*115;
-  const pts=taus.map((t,i)=>X(i).toFixed(1)+','+Y(ys[i]).toFixed(1)).join(' ');
-  const egim=L-S;
-  let sekil,renk;
-  if(egim>3){sekil='DİK NORMAL';renk='#0FA26B';}
-  else if(egim>0.5){sekil='NORMAL';renk='#128A66';}
-  else if(egim>=-0.5){sekil='DÜZ';renk='#E8933B';}
-  else{sekil='TERS';renk='#DE4B5E';}
-  if(Math.abs(C)>=6)sekil+=' · KAMBURLU';
-  let svg='<line x1="26" y1="135" x2="392" y2="135" stroke="#E2EBE6" stroke-width="1"/>';
-  [0.25,2,5,10,30].forEach(t=>{const i=taus.indexOf(t);if(i>=0)svg+='<text x="'+X(i).toFixed(1)+'" y="152" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">'+lbl[t]+'</text>';});
-  svg+='<text x="26" y="13" font-family="IBM Plex Mono" font-size="9" fill="#63756C">%'+mx.toFixed(1).replace('.',',')+'</text>';
-  svg+='<text x="26" y="131" font-family="IBM Plex Mono" font-size="9" fill="#63756C">%'+mn.toFixed(1).replace('.',',')+'</text>';
-  svg+='<polyline points="'+pts+'" fill="none" stroke="'+renk+'" stroke-width="2.5" stroke-linejoin="round"/>';
-  svg+='<circle cx="'+X(3).toFixed(1)+'" cy="'+Y(ys[3]).toFixed(1)+'" r="3" fill="'+renk+'"/>';
-  $('ycLabChart').innerHTML=svg;
-  $('ycLabShape').innerHTML='<span style="color:'+renk+'">'+sekil+'</span> <span style="color:var(--muted);font-weight:400;font-size:10px">(eğim '+(egim>=0?'+':'')+egim.toFixed(1).replace('.',',')+' puan)</span>';
-  let yorum;
-  if(egim>3)yorum='<em>Dik normal eğri:</em> uzun vade kısadan çok yüksek. Piyasa güçlü büyüme ve/veya kalıcı enflasyon bekliyor; yatırımcı uzun vadeli tahvili tutmak için yüksek <em>vade primi</em> istiyor. Canlanma sinyali — bankacılık için olumlu (ucuza kısa borçlan, pahalıya uzun ver).';
-  else if(egim>0.5)yorum='<em>Normal eğri:</em> uzun vade kısadan biraz yüksek — sağlıklı, dengeli ekonomi. Merkez bankası nötr, büyüme ılımlı.';
-  else if(egim>=-0.5)yorum='<em>Düz eğri:</em> kısa ve uzun vade neredeyse eşit — belirsizlik veya rejim geçişi. Genelde merkez bankasının duraklama noktası; sonraki hamlenin (indirim mi artırım mı) belirsiz olduğu an.';
-  else yorum='<em>Ters eğri:</em> kısa vade uzun vadeyi aşıyor — merkez bankası bugün sıkı, ama piyasa gelecekte faizlerin düşeceğini fiyatlıyor. Gelişmiş ülkelerde tarihsel <em>resesyon</em> habercisi; Türkiye gibi yüksek-enflasyon ülkelerinde <em>dezenflasyon</em> beklentisidir (bugünkü TR eğrisi tam böyle: %41 kısa, %33 uzun).';
-  if(Math.abs(C)>=6)yorum+=' <em>Kambur:</em> orta vadede belirgin tümsek — piyasa yakın vadede geçici bir faiz hareketi (birkaç yıl sıkı kalıp sonra gevşeme gibi) bekliyor.';
-  $('ycLabNote').innerHTML=yorum;
-}
+
+
+
 function renderPoz(){
   const tb=document.querySelector('#ptab tbody');
   const toplam=poz.reduce((s,p)=>s+p.adet*p.fiyat,0);
@@ -1575,9 +1545,9 @@ function renderPoz(){
   else{w.className='note';w.innerHTML='Dağılım dengeli görünüyor. Hisse fiyatları panel her açılışında ve bu sekmeye her girişte Yahoo\u0027dan otomatik tazelenir'+(POZ_FIYAT_SAAT?' (son: '+POZ_FIYAT_SAAT+')':'')+'; fonlarda ↻ TEFAS\u0027tan çeker.';}
   riskStresGuncelle();
 }
-['ycS','ycL','ycC'].forEach(id=>$(id).addEventListener('input',ycLabDraw));
-document.querySelectorAll('button[data-yc]').forEach(b=>b.addEventListener('click',()=>{const P=YC_PRESET[b.dataset.yc];$('ycS').value=P[0];$('ycL').value=P[1];$('ycC').value=P[2];ycLabDraw();}));
-ycLabDraw();
+
+
+
 ['stresKur','stresFaiz','stresPet'].forEach(id=>$(id).addEventListener('input',stresTest));
 document.querySelectorAll('button[data-preset]').forEach(b=>b.addEventListener('click',()=>{const P={iran:[15,300,25],dezenf:[-3,-500,-10],yumusak:[5,-200,0],sifir:[0,0,0]}[b.dataset.preset];$('stresKur').value=P[0];$('stresFaiz').value=P[1];$('stresPet').value=P[2];stresTest();}));
 $('pozEkle').addEventListener('click',async()=>{
@@ -6400,15 +6370,21 @@ async function planInit(){
 }
 
 /* ---- Portföy Yönetimi ---- */
-let ANALIST=null, MFIYAT={}, MHACIM={}, MADET={}, MULTIPLE_TARIH='', TEMETTU={}, TEMETTU_TARIH='', MRISK={};
+let ANALIST=null, MFIYAT={}, MHACIM={}, MADET={}, MULTIPLE_TARIH='', MRISK={};
 async function pyInit(){
   try{ANALIST=await (await fetch('/analist.json',{cache:'no-store'})).json();}catch(e){}
   let MJSON=null;
   try{MJSON=await (await fetch('/multiple.json',{cache:'no-store'})).json();MULTIPLE_TARIH=MJSON.fiyat_tarihi;MJSON.hisseler.forEach(h=>{MFIYAT[h.k]=h.fiyat;MHACIM[h.k]=h.hacim;MADET[h.k]=h.adet;});}catch(e){}
-  try{const t=await (await fetch('/temettu.json',{cache:'no-store'})).json();TEMETTU_TARIH=t.guncelleme;t.hisseler.forEach(h=>TEMETTU[h.k]=h.temettu);}catch(e){}
+  /* §244 TEMETTÜ KARTI KALDIRILDI — veri çekimi de kalktı.
+     Kart iki bilgi veriyordu: portföyün ağırlıklı temettü verimi ve en yüksek
+     verimli 19 hisse. İkisi de panelin karar akışına girmiyordu:
+     katılım evreninde temettü bir seçim ölçütü değil, sonuç.
+     Kullanılmayan bir kartı beslemek için her açılışta bir dosya çekmek,
+     hem gereksiz istek hem de bakım yükü (§240'ta 22 çekimi tek tek elden
+     geçirmiştik — biri buydu). */
   try{const rr=await (await fetch('/risk.json',{cache:'no-store'})).json();rr.hisseler.forEach(h=>MRISK[h.k]={vol:h.vol,beta:h.beta});}catch(e){}
   const ara=$('anaAra');if(ara)ara.addEventListener('input',anaRender);
-  anaRender();atifRender();riskMetRender();likiditeRender();temettuRender();
+  anaRender();atifRender();riskMetRender();likiditeRender();
   try{ if(typeof omurgaInit==='function') omurgaInit(); }catch(e){}
   // Canlı fiyat: 141 hisseyi Yahoo'dan toplu çek, snapshot fiyatlarının üzerine yaz
   try{
@@ -6547,27 +6523,7 @@ function likiditeRender(){
     (yok.length?'<div class="note">Hacim verisi yok: '+yok.join(', ')+'.</div>':'')+
     '<div class="note">Çıkış süresi = pozisyon / (günlük hacim × %20) — günde hacmin en fazla %20\'sini satabildiğin varsayımıyla. '+(enYavas&&enYavas.gun>5?'<b>'+enYavas.kod+'</b> en yavaş ('+trN(enYavas.gun,1)+' gün); kriz anında kapana kısılma riski. ':'')+'>5 gün yavaş (kırmızı), 2-5 orta, <2 hızlı. Pozisyon = adet × maliyet.</div>';
 }
-function temettuRender(){
-  if(!$('temettuBody'))return;
-  const genel=Object.keys(TEMETTU).map(k=>{const mcap=MFIYAT[k]*MADET[k];return {k,tem:TEMETTU[k],ver:mcap?TEMETTU[k]/mcap*100:0};}).filter(x=>x.ver>0).sort((a,b)=>b.ver-a.ver);
-  const hisseler=poz.filter(p=>p.tip!=='nakit'&&p.kod);
-  let pozBolum='';
-  if(hisseler.length){
-    const toplam=hisseler.reduce((s,p)=>s+p.adet*p.fiyat,0);
-    let portTem=0;
-    const satir=hisseler.map(p=>{const kod=p.kod.toUpperCase(),tem=TEMETTU[kod],mcap=MFIYAT[kod]*MADET[kod],ver=tem&&mcap?tem/mcap*100:null,deger=p.adet*p.fiyat,w=toplam?deger/toplam:0;if(ver!=null)portTem+=w*ver;return {kod,ver,w};});
-    const varTem=satir.filter(r=>r.ver!=null);
-    pozBolum='<div class="card"><div class="lbl">PORTFÖYÜNÜN TEMETTÜ GETİRİSİ</div>'+
-      '<div class="kv"><span class="k">Ağırlıklı temettü verimi</span><span class="'+(portTem>0?'up':'')+'" style="font-weight:600">%'+trN(portTem,2)+'</span></div>'+
-      (varTem.length?varTem.map(r=>'<div class="kv"><span class="k">'+r.kod+' <span class="sub">(%'+trN(r.w*100,0)+' ağırlık)</span></span><span>%'+trN(r.ver,1)+' verim</span></div>').join(''):'<div class="sub">Pozisyonlarında temettü ödeyen hisse yok — hepsi kârını büyümeye yatırıyor.</div>')+
-      '</div>';
-  }
-  const genelSatir=genel.slice(0,12).map(x=>'<tr><td><b>'+x.k+'</b></td><td class="num up" style="font-weight:600">%'+trN(x.ver,1)+'</td><td class="num">'+trN(x.tem/1000,1)+'</td></tr>').join('');
-  $('temettuBody').innerHTML=pozBolum+
-    '<div class="lbl" style="margin-top:12px">EN YÜKSEK TEMETTÜ VERİMİ <span class="thin">(temettü ödeyen 19 hisse)</span></div>'+
-    '<table style="margin-top:4px"><tr><th>Hisse</th><th class="num">Verim</th><th class="num">Temettü (mlr₺)</th></tr>'+genelSatir+'</table>'+
-    '<div class="note">Temettü verimi = son 12 ay ödenen temettü / piyasa değeri. Katılım/nakit-akışı ekseninde yüksek-verimli istikrarlı hisseler ayrı kategori — <em>toplam getiri (fiyat + temettü)</em> ve nakit akışı planlaması için. Kapsamdaki 141 hisseden yalnızca 19\'u temettü dağıttı; diğerleri kârını büyümeye yatırdı (Aselsan gibi). Kaynak: Fintables nakit akış, '+TEMETTU_TARIH+' (yıllık, çeyreklik tazelenir).</div>';
-}
+
 /* §170 GLOBAL BİLANÇO TAKVİMİ — CANLI.
    Kullanıcı sordu: "global kartı finnhub'dan mı çekiyor artık?" HAYIR — §166'da
    yalnız BİST tarafını canlıya çevirmiştim, GLOBAL kartı elle yazılmış HTML

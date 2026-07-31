@@ -2715,6 +2715,40 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 244. TEMETTU KARTI VE YIELD CURVE LAB KALDIRILDI (31 Tem)
+
+Kullanici: "bu iki temettü ile ilgili kısmı ve yield curve laboratuvarını
+kaldır, gereksiz onlar." HAKLI — ikisi de karar akisina girmiyordu.
+
+### 244.1 NEDEN GEREKSIZDILER
+TEMETTU KARTI: portfoyun agirlikli temettu verimi + en yuksek verimli 19 hisse.
+Katilim evreninde temettu bir SECIM OLCUTU degil, SONUC. Panelin hicbir tezi
+"yuksek temettu" uzerine kurulu degil; kart bilgi veriyordu ama karar
+degistirmiyordu.
+YIELD CURVE LAB: uc kaydiraciyla (S·L·C) Nelson-Siegel egrisi cizdiren
+OGRETICI bir arac. Kavrami anlatiyordu ama panelde ZATEN GERCEK egri var
+(§ Faiz Egrisi karti, EVDS canli, sukuk+DIBS iki egri, parite tablosu).
+Simulasyon, gercegin yaninda duruyorsa gereksizdir.
+
+### 244.2 TAM TEMIZLIK — yarim silme yapilmadi
+Bu oturumda ONIKI kez "bir yeri degistirip digerini birakma" hatasi yaptik.
+Silerken de ayni risk var: HTML kalir JS gider, ya da fonksiyon gider cagri kalir.
+KALDIRILANLAR:
+  index.html : Temettu h2 + #temettuBody · YIELD CURVE LAB karti (1.683 kr)
+               ayrica sekme aciklamasindaki "Temettu (verim)" ifadesi
+  app.js     : temettuRender() · ycY() · ycLabDraw() · YC_PRESET
+               olay baglari (3) · POZ_GOREV listesinden temettuRender
+               temettu.json CEKIMI ve TEMETTU/TEMETTU_TARIH degiskenleri
+DENETIM: kalan iz SIFIR (temettuRender·ycLab·YC_PRESET·TEMETTU·temettu.json),
+cift tanim yok, yetim cagri yok.
+
+### 244.3 YAN KAZANC — bir cekim daha eksildi
+§240'ta 22 JSON cekimini tek tek elden gecirmistik; temettu.json onlardan
+biriydi. Kullanilmayan bir karti beslemek icin her acilista dosya cekmek
+hem gereksiz istek hem bakim yuku. Artik 21.
+
+app.js v=20260731x. DOSYALAR: app.js + index.html
+
 ## 243. KURAL VARDI, YAPTIRIM YOKTU (31 Tem)
 
 Kullanici Ebu gunlugunu gosterdi:
