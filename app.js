@@ -1660,10 +1660,22 @@ function haberInit(){
 /* ---- Analist notları: KAP'tan otomatik (yorumlu) ---- */
 let HABER_CANLI=null;
 async function haberCanliCek(){
+  /* §245d SESSİZ YEDEĞE DÜŞME. Eski hali: `catch(e){}` — hiçbir şey. Ve
+     `if(j&&j.ok&&...)` koşulu ok:false gelince de sessizce geçiyordu.
+     Sonuç: /api/kap?mod=yorum 500 dönerken panel statik HABERLER dizisini
+     gösteriyor, damga eski haliyle duruyor, kullanıcı canlı akışın ÖLDÜĞÜNÜ
+     bilmiyor. 31 Tem konsolunda 500 vardı, ekranda hiçbir iz yoktu.
+     §60'ın TEFAS vakası birebir: damga "canlı" der, akan veri yoktur.
+     Artık düşüş GÖRÜNÜR — damgaya "DAMGALI YEDEK" düşer ve sebebi yazar.
+     Yedeğe düşmek kusur değil; SESSİZCE düşmek kusurdur. */
+  const damgaUyar=(neden)=>{ const d=$('haberDamga'); if(!d) return;
+    d.innerHTML='<span style="color:var(--down);font-weight:600">\u26a0 DAMGALI YEDEK</span>'+
+      ' <span class="thin">\u00b7 KAP canlı akışı alınamadı ('+esc(String(neden).slice(0,60))+')</span>'; };
   try{
     const kodlar=(typeof TOP40!=='undefined'?TOP40:[]).join(',');
     const port=(()=>{ try{ return (poz||[]).filter(x=>x.tip==='hisse').map(x=>x.kod).join(','); }catch(e){ return ''; } })();
     const r=await fetch('/api/kap?mod=yorum&kodlar='+encodeURIComponent(kodlar)+'&portfoy='+encodeURIComponent(port)+'&gun=4&limit=18');
+    if(!r.ok){ damgaUyar('HTTP '+r.status); console.warn('[KTPanel] KAP yorum akışı HTTP',r.status,'— statik yedek gösteriliyor'); return; }
     const j=await r.json();
     if(j&&j.ok&&j.items&&j.items.length){
       HABER_CANLI=j;
@@ -1671,8 +1683,11 @@ async function haberCanliCek(){
       const d=$('haberDamga');
       if(d)d.textContent='KAP canlı · '+j.items.length+' bildirim · yorum: '+(j.yorumKatmani==='claude'?'AI':'kural')+
         ' · '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    } else {
+      damgaUyar((j&&(j.err||j.mesaj))||'bildirim gelmedi');
+      console.warn('[KTPanel] KAP yorum akışı boş/hatalı:', (j&&(j.err||j.mesaj))||j);
     }
-  }catch(e){}
+  }catch(e){ damgaUyar((e&&e.message)||'ağ hatası'); console.warn('[KTPanel] KAP yorum akışı düştü:',(e&&e.message)||e); }
 }
 function haberRender(){
   const port=new Set(TOP40);
@@ -5737,26 +5752,38 @@ async function boot(){
      çevirir: damga "canlı" der, akan veri yoktur.
      KAPSAM da dardı: boot 30 modül koşarken 8 kap izleniyordu (%27). Karar
      omurgasının gövdeleri eklendi → 15 kap. Tamamı değil ama atıf · risk ·
-     ayrışma · sicil artık izlemede. */
+     ayrışma · sicil artık izlemede.
+     §245b TEMBEL KAP (3. eleman = true). İlk sürümde kapsamı genişletirken
+     DOLMA ZAMANINA bakmamıştım: #ayrBody'yi dolduran ayrismaInit() boot'ta
+     DEĞİL, t3 sekmesi tıklanınca çağrılıyor (§154'te portföy sekmesinin içine
+     taşınmıştı). Sonuç: ilk deploy'da "Boş/eksik bölümler: Endeksten ayrışma"
+     yanlış alarmı — kap boştu ama boş OLMASI GEREKİYORDU.
+     Tembel kapta VARLIK denetlenir, DOLULUK denetlenmez. Varlık denetimi asıl
+     kazanımdı zaten (silinen kabı yakalamak); doluluğu boot anında ölçmek
+     kategori hatası. Ders: bir denetime kap eklerken "bu ne zaman dolar"
+     sorusu, "bu var mı" sorusundan önce gelir. */
   const kontrol=[
     ['Küresel endeksler','kuresel1'],['Sektör ısı haritası','heatBody'],['Sektör rotasyon','rotBody'],
     ['Yabancı akış','yabanciBody'],['Risk iştahı','riskBaroSkor'],['Halka arz','halkaarzBody'],
     ['Guidance','guidanceListe'],['Katılım fon','katfonBody'],
-    ['Endeksten ayrışma','ayrBody'],['Risk bütçesi','rbBody'],['Reel getiri','reelAtifBody'],
+    ['Risk bütçesi','rbBody'],['Reel getiri','reelAtifBody'],
     ['Getiri atfı','atifBody'],['Risk metrikleri','riskMetBody'],['Likidite','likiditeBody'],
-    ['Model karnesi','fmKarneBody']
+    ['Model karnesi','fmKarneBody'],
+    ['Endeksten ayrışma','ayrBody', true]        /* ← TEMBEL: t3 açılınca dolar */
   ];
-  const kayip=[], bos=[];
-  kontrol.forEach(([ad,id])=>{
+  const kayip=[], bos=[], tembel=[];
+  kontrol.forEach(([ad,id,gec])=>{
     const el=document.getElementById(id);
     if(!el){ kayip.push(ad+' (#'+id+')'); return; }   /* ← KAP YOK: artık raporlanır */
+    if(gec){ tembel.push(ad); return; }               /* ← kap VAR; doluluk sekmede ölçülür */
     const h=el.innerHTML.trim();
     if(!h || h.indexOf('yükleniyor')>=0) bos.push(ad);
   });
   if(kayip.length) console.error('[KTPanel] \u2717 KAYIP KAP:', kayip.join(', '),
     '\u2014 HTML\u0027den silinmiş ya da adı değişmiş. Modül çalışıyor sanılır, hiçbir şey yazmaz.');
   if(bos.length) console.warn('[KTPanel] \u26a0 Boş/eksik bölümler:', bos.join(', '), '\u2014 ilgili .json dosyası klasörde mi kontrol et.');
-  if(!kayip.length && !bos.length) console.log('[KTPanel] \u2713 Tüm veri modülleri yüklendi.');
+  if(!kayip.length && !bos.length) console.log('[KTPanel] \u2713 Tüm veri modülleri yüklendi.'+
+    (tembel.length ? ' (tembel, sekme açılınca dolar: '+tembel.join(', ')+')' : ''));
 }
 boot();
 
