@@ -1,0 +1,297 @@
+{
+  "aciklama": "Panelin veri katmanları ve güncelleme sıklıkları. 'otomatik' olanlar kaynaktan kendi kendine tazelenir; tarihli olanlar elle güncellenir. NOT: bu dosya panelin veri haritasıdır; yeni katman eklenince ya da kaynak ucu değişince BURAYA da işlenir (28 Tem: TEFAS yeni API ve sicil tabanı işlendi). KÖR NOKTA KAPATILDI (28 Tem): fm/risk/analist/temettu/rezerv/sukuk-ihrac kayıtta yoktu, yani Veri Durumu çekmecesi yaşlandıklarını SÖYLEMİYORDU. Panele veri besleyen HER dosya burada olmalı — yoksa sessizce eskir.",
+  "siklik_gun": {
+    "canli": 0,
+    "gunluk": 1,
+    "haftalik": 7,
+    "aylik": 30,
+    "ceyreklik": 90,
+    "olay": 999
+  },
+  "katmanlar": [
+    {
+      "ad": "Kur çipleri",
+      "dosya": "api/market.js",
+      "siklik": "canli",
+      "son": "otomatik",
+      "kaynak": "Yahoo Finance köprüsü"
+    },
+    {
+      "ad": "Küresel endeksler",
+      "dosya": "api/market.js",
+      "siklik": "canli",
+      "son": "otomatik",
+      "kaynak": "Yahoo Finance köprüsü"
+    },
+    {
+      "ad": "VIX / DXY / Brent (risk barometresi)",
+      "dosya": "api/market.js",
+      "siklik": "canli",
+      "son": "otomatik",
+      "kaynak": "Yahoo Finance köprüsü"
+    },
+    {
+      "ad": "BIST endeksleri",
+      "dosya": "app.js",
+      "siklik": "canlı (Yahoo)",
+      "son": "otomatik",
+      "kaynak": "Yahoo → /api/market (15 endeks)"
+    },
+    {
+      "ad": "Sicil (model vs endeks)",
+      "dosya": "track.json",
+      "siklik": "canlı (Yahoo)",
+      "son": "2026-07-29",
+      "kaynak": "Fintables mumlar + XKTUM → Yahoo canlı · sıfırlanabilir taban (trk_baz_v1)"
+    },
+    {
+      "ad": "Sektör ısı haritası + rotasyon",
+      "dosya": "sektor.json",
+      "siklik": "haftalik",
+      "son": "2026-07-28",
+      "kaynak": "Yahoo → /api/market",
+      "_245": "DAMGA §B2: otomasyon YOK, Fintables köprüsü ZORUNLU (komut: \"sektorleri tazele\"). son=\"otomatik\" idi → nöbetten muaftı. Oysa bu dosya eskidikçe RS ufukları da eskir."
+    },
+    {
+      "ad": "KAP haber akışı",
+      "dosya": "app.js",
+      "siklik": "canlı (KAP)",
+      "son": "otomatik",
+      "kaynak": "KAP byCriteria → /api/kap · yorum katmanı kural bazlı"
+    },
+    {
+      "ad": "Katılım fonları",
+      "dosya": "katfon.json",
+      "siklik": "canlı (TEFAS)",
+      "son": "2026-07-29",
+      "kaynak": "TEFAS fonGnlBlgSiraliGetir (YENİ API) → /api/katfon · 1G+fiyat+AUM canlı · dönem getirileri damgalı taban"
+    },
+    {
+      "ad": "Yabancı para akışı + carry",
+      "dosya": "yabanci.json",
+      "siklik": "haftalik",
+      "son": "2026-07-17",
+      "kaynak": "TCMB menkul kıymet ist. + ödemeler dengesi + web",
+      "_245": "DAMGA §B: Perşembe ritüeli, ELLE (hafta_seri'ye ekleme). siklik=\"canli\" idi → muaftı."
+    },
+    {
+      "ad": "Net rezerv (Rezerv Karnesi)",
+      "dosya": "index.html",
+      "siklik": "haftalik",
+      "son": "2026-07-16",
+      "kaynak": "TCMB haftalık rezerv (Perşembe) + web",
+      "_245": "DAMGA §B: TCMB Perşembe yayını, ELLE işlenir. siklik=\"canli\" idi → muaftı. dosya index.html olduğu için tarih plandan okunur; tazeleyince \"son\" ELLE güncellenmeli."
+    },
+    {
+      "ad": "TCMB faizi / para politikası",
+      "dosya": "index.html",
+      "siklik": "canli",
+      "son": "otomatik",
+      "kaynak": "EVDS aday zinciri (§122) — canliya baglandi, gomulu 37 sabiti kaldirildi. Zincir tutmazsa EKRANDA uyari cikar ve damgaliya duser."
+    },
+    {
+      "ad": "Ülke kredi notu (Fitch/Moody's/S&P)",
+      "dosya": "index.html",
+      "siklik": "olay",
+      "son": "2026-07-17",
+      "kaynak": "Fitch/Moody's/S&P rating kararları (web) — sonraki Fitch ~Ocak 2027"
+    },
+    {
+      "ad": "Sanayi üretimi / makro",
+      "dosya": "index.html",
+      "siklik": "canlı (EVDS)",
+      "son": "otomatik",
+      "kaynak": "TCMB EVDS → /api/evds2 (8 makro kartı + özel kapsamlı TÜFE)"
+    },
+    {
+      "ad": "Halka arzlar",
+      "dosya": "halkaarz.json",
+      "siklik": "olay",
+      "son": "2026-07-17",
+      "kaynak": "Fintables halka_arzlar"
+    },
+    {
+      "ad": "Guidance",
+      "dosya": "guidance.json",
+      "siklik": "ceyreklik",
+      "son": "2026-07-17",
+      "kaynak": "Fintables guidance",
+      "sezon": true
+    },
+    {
+      "ad": "Multiple snapshot (EV/EBITDA)",
+      "dosya": "multiple.json",
+      "siklik": "ceyreklik",
+      "son": "2026-07-29",
+      "kaynak": "Fintables finansal_tablolar (bilanço dönemi) | 29 Tem: FIYAT tazelendi (Fintables mumlar_gunluk_gh, 141/141). Bilanco kalemleri 1C26 — 2C26 aciklanmadi.",
+      "sezon": true
+    },
+    {
+      "ad": "Hazine ihraç takvimi",
+      "dosya": "hazine-takvim.json",
+      "siklik": "aylık (~25'i)",
+      "son": "2026-07-21",
+      "kaynak": "HMB İç Borçlanma Stratejisi PDF"
+    },
+    {
+      "ad": "İnceleme AI bilanço kartları",
+      "dosya": "inceleme-ai.json",
+      "siklik": "olay bazlı (FR)",
+      "son": "2026-07-30",
+      "kaynak": "Claude + Fintables"
+    },
+    {
+      "ad": "Getiri eğrisi (DİBS)",
+      "dosya": "api/_lib/egri.js",
+      "siklik": "canlı (EVDS)",
+      "son": "otomatik",
+      "kaynak": "EVDS bie_pydibs → fiyat→IRR · /api/evds2?mod=egri"
+    },
+    {
+      "ad": "ABD haber akışı",
+      "dosya": "api/usnews.js",
+      "siklik": "canlı (AV)",
+      "son": "otomatik",
+      "kaynak": "Alpha Vantage NEWS_SENTIMENT · 50 sembol"
+    },
+    {
+      "ad": "Bankacılık sektörü (BDDK)",
+      "dosya": "api/bddk.js",
+      "siklik": "aylik",
+      "son": "otomatik",
+      "kaynak": "BDDK Aylık Bülten → /api/bddk?panel=1 (grup) + /api/bddk?sahiplik=1 (kamu·yerli özel·yabancı)"
+    },
+    {
+      "ad": "TLREF serisi",
+      "dosya": "api/_lib/tlref.js",
+      "siklik": "canlı (EVDS)",
+      "son": "otomatik",
+      "kaynak": "EVDS TP.BISTTLREF → /api/evds2?mod=tlref"
+    },
+    {
+      "ad": "Kart harcamaları (sektörel)",
+      "dosya": "api/_lib/kart.js",
+      "siklik": "canlı (EVDS)",
+      "son": "otomatik",
+      "kaynak": "TCMB EVDS bie_kkhartut haftalık akım → aylık · TÜFE ile reelleştirilmiş · /api/evds2?mod=kart"
+    },
+    {
+      "ad": "Özel sektör sukuk ihraçları",
+      "dosya": "api/_lib/sukuk.js",
+      "siklik": "canlı (KAP)",
+      "son": "otomatik",
+      "kaynak": "KAP \"(Faizsiz)\" bildirimleri → /api/kap?mod=sukuk · sukuk-ihrac.json damgalı yedek"
+    },
+    {
+      "ad": "Köprü sağlık testi",
+      "dosya": "test/kopru-testi.js",
+      "siklik": "olay",
+      "son": "2026-07-29",
+      "kaynak": "23 uç şema doğrulaması — KTP_CRON_SECRET=xxx node test/kopru-testi.js"
+    },
+    {
+      "ad": "Faktör modeli (5 faktör z-skor)",
+      "dosya": "fm.json",
+      "siklik": "ceyreklik",
+      "son": "2026-07-14",
+      "kaynak": "Fintables 29 metrik → rank-normal standardizasyon · sektör içi VALUE/GROWTH/QUALITY",
+      "sezon": true
+    },
+    {
+      "ad": "Risk metrikleri (vol · beta)",
+      "dosya": "risk.json",
+      "siklik": "aylik",
+      "son": "2026-07-16",
+      "kaynak": "Fintables günlük getiri · vol=yıllık std, beta=XKTUM'a karşı · risk bütçesi kartının tabanı"
+    },
+    {
+      "ad": "Analist konsensüsü (hedef fiyat)",
+      "dosya": "analist.json",
+      "siklik": "aylik",
+      "son": "2026-07-29",
+      "kaynak": "analist.json — Fintables hisse_senedi_araci_kurum_hedef_fiyatlari. Son 6 ayin hedef fiyat ORTALAMASI (yayin_tarihi >= bugun-180g). Sorgu: GROUP BY hisse, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat). Son 6 ayda raporu olmayan hisse \"bayat\":true isaretlenir — hedefi eskidir, guncel fiyatla kiyaslanmamalidir.",
+      "sezon": true
+    },
+    {
+      "ad": "Swap stoku (rezerv bileşeni)",
+      "dosya": "rezerv.json",
+      "siklik": "haftalik",
+      "son": "2026-07-17",
+      "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır)"
+    },
+    {
+      "ad": "Sukuk ihraç arşivi (yedek)",
+      "dosya": "sukuk-ihrac.json",
+      "siklik": "canli",
+      "son": "otomatik",
+      "kaynak": "KAP canlı akıyor (/api/kap?mod=sukuk); bu dosya yalnız damgalı yedek"
+    },
+    {
+      "ad": "Endeks agirliklari (XKTUM + XK100 + XKTMT)",
+      "siklik": "haftalik",
+      "son": "2026-07-29",
+      "sezon": false,
+      "kaynak": "xk100.json — Fintables hisse_senetleri. IKI RITIM: uyelik UC AYDA BIR degisir (BIST revizyonu, 1 May-31 Eki / 1 Kas-30 Nis), AGIRLIK ise HER GUN kayar cunku serbest dolasim piyasa degerinden turer (fiyat hareketiyle birlikte). Ayni sorgu ikisini de yakalar. HAFTALIK tazeleme yeterli: bir haftada agirlik kaymasi tipik olarak 10-30 bps, aktif agirlik yorumunu bozmaz. | §159: XKTUM da eklendi (242 uye, ilk 150 = %96,5). Sorgu ayni, yalniz 'XK100' -> 'XKTUM'. | §164: XKTMT (34 uye) eklendi. XK050 diye endeks YOK.",
+      "sorgu": "SELECT hisse_senedi_kodu, fiili_dolasim_pay_adedi, son_fiyat FROM hisse_senetleri WHERE 'XK100' = ANY(endeksler) ORDER BY fiili_dolasim_pay_adedi * son_fiyat DESC  [LIMIT 50 + OFFSET 50]",
+      "hesap": "agirlik_i = (sd_adet_i x fiyat_i) / toplam x 100"
+    },
+    {
+      "ad": "BIST beklenen bilanco takvimi",
+      "siklik": "ceyreklik",
+      "son": "2026-07-29",
+      "sezon": true,
+      "kaynak": "bist-takvim.json — TAHMIN. Gecen yilin ayni donem KAP aciklama tarihi, ayni hafta gunune hizalanarak tasinir. Her CEYREK BASINDA yenilenir (yeni donemin tahminleri). Sorgu: SELECT hisse_senedi_kodu, yayinlanma_tarihi_utc FROM hisse_finansal_tablolari WHERE yil=<oncekiYil> AND ay=<donem>. SPK sinirini asan tahminler 'farkli_mali_yil' altina ayrilir (MAVI, TKFEN gibi)."
+    },
+    {
+      "ad": "BIST bilanço takvimi",
+      "dosya": "bist-takvim.json",
+      "siklik": "haftalik",
+      "son": "2026-07-29",
+      "kaynak": "KAP beklenen bildirimler + Fintables",
+      "_245": "§F0 ihlali: panele veri besliyordu ama kayıtta YOKTU → sessizce eskiyordu."
+    }
+  ],
+  "bilanco_sezonu_aylar": [
+    2,
+    3,
+    4,
+    5,
+    7,
+    8,
+    10,
+    11
+  ],
+  "sezon_limit_gun": 10,
+  "sezon_aciklama": "Bilanco sezonunda (yukaridaki aylar) sirketler guidance revize eder, carpanlar ve faktor tabani degisir. 'sezon:true' isaretli katmanlarda limit sezon_limit_gun'e DUSER — ceyreklik nominal periyot (90 gun) sezon icinde yaniltir.",
+  "kapali_aramalar": [
+    {
+      "konu": "TLREF OIS egrisi — EVDS taramasi (IP ACIK, §134)",
+      "tarih": "2026-07-29",
+      "arama": "/api/evds2?ara=swap",
+      "sonuc": "YOK — tek grup bie_swaptektarf (TCMB swap islem hacmi, faiz egrisi degil)",
+      "hukum": "YALNIZCA EVDS icin gecerli. §134: enstruman VAR ve uluslararasi standart — ISDA/FpML \"TRY-TLREF-OIS Compound (2021)\". Fixing BGC Cantor 11:15 ve Tradition, Refinitiv/Bloomberg uzerinden LISANSLI. Ucretsiz alternatif: VIOP F_TLREF1M vadelileri (likidite olculmeli).",
+      "tekrar_arama": "EVDS icin gereksiz. VIOP bulteni ve lisansli terminal secenekleri ACIK."
+    },
+    {
+      "konu": "TEFAS canlı fon verisi — sunucu tarafından",
+      "tarih": "2026-07-29",
+      "arama": "/api/funds/fonGnlBlgSiraliGetir (JSON) + /api/DB/BindHistoryInfo (form) + çerez ısındırma",
+      "sonuc": "ana sayfa GET calisiyor (4 cerez doner, widcbb… bot yonetimi) · /api/DB → HTTP 404 (kapatilmis) · /api/funds → zaman asimi",
+      "hukum": "Sunucu tarafindan ERISILEMEZ. Alinan cerez ON-CEREZ; gercek erisim sayfadaki JavaScript kosunca veriliyor. Vercel'de tarayici yok.",
+      "kanit": "eneshenderson/Tefas-API kutuphanesi CALISIYOR ama PLAYWRIGHT ile — chromium.launch + goto + page.evaluate(fetch). Sayfanin ICINDEN cagiriyor.",
+      "tekrar_arama": "Sunucu tarafi icin GEREKSIZ. Acik yollar: (a) yerel betik -> KV, (b) kopru rituali (Fintables, su an calisiyor).",
+      "devre_kesici": "KATFON_CANLI=1 ortam degiskeni ile acilir; ?zorla=1 tek seferlik dener."
+    }
+  ],
+  "arastirmalar": [
+    {
+      "tarih": "2026-07-29",
+      "konu": "borsa-api (github.com/ibidi/borsa-api)",
+      "sonuc": "YENI VERI YOK — devam edilmedi",
+      "bulgu": "Kutuphane tamamen yahoo-finance2 sarmalayicisi (data-provider.ts: require(\"yahoo-finance2\")). Panel Yahoo'yu ZATEN dogrudan kullaniyor. CLI/watchlist/compare ozellikleri panelde zaten var.",
+      "yan_bulgu": "Kutuphane quoteSummary (/v10) cagiriyor, panel ise chart (/v8). quoteSummary needsCrumb:true — cerez+crumb dansi gerekir. Karsiliginda marketCap, trailingPE, forwardPE, priceToBook, enterpriseToEbitda, dividendYield, returnOnEquity, debtToEquity, freeCashflow, pegRatio veriyor. AYRI BIR IS olarak degerlendirilebilir; borsa-api'ye gerek yok, yahoo-finance2 dogrudan kullanilir.",
+      "karar": "EKLENMEDI — kullanici 29 Tem karari. Gerekce: (1) quoteSummary crumb dansi gerektirir, panelin /v8/chart yolu gerektirmiyor — saglam yola kirilgan bagimlilik eklemek kotu takas. (2) Alanlarin cogunun Fintables hisse_finansal_tablolari_finansal_oranlari tablosunda DAHA IYISI var (22 oran: ROE, ROIC, uc marj katmani, kaldirac, cari/likidite/nakit oranlari) — gercek bilancodan, TL bazinda. (3) Yahoo hazir carpan verir, BILESENINI gostermez; panelin \"her rakam nereden geldi\" ilkesine aykiri.",
+      "acik_kalan": "oranlar.json onerildi (Fintables 22 orani, 141 hisse, ceyreklik damgali). Kullanici HENUZ ONAYLAMADI. Yapilirsa Degerleme sekmesine karlilik kalitesi (ROE/ROIC/marj katmanlari) ve bilanco saglamligi (kaldirac/cari oran) sutunlari eklenir; faktor modelinin dar kalan KALITE ekseni de beslenir."
+    }
+  ]
+}
