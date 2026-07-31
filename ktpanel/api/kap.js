@@ -391,9 +391,13 @@ export default async function handler(req, res){
          hangi adımda düştüğü belli. */
       const b1 = await _bilancoAyristir(id);
       if(!b1 || !b1.ok) return res.status(200).json({ ok:false, id, err:'cari bilanço ayrıştırılamadı', detay:b1 });
-      /* §211b BİRDEN FAZLA KİMLİK DENE. `onceki` virgülle ayrık liste alabilir
-         (mod=fr çıktısındaki `idler`). İlk ayrışan kullanılır. En erken bildirim
-         çoğu zaman faaliyet raporudur; finansal tablo genelde sonrakilerdedir. */
+      /* §212c `onceki` ARTIK GEREKSİZ — yalnız YEDEK.
+         Rapor kendi çeyrek sütununu taşıyor (§212), dolayısıyla tek bildirim
+         yetiyor. DOĞRULANDI: TOASO 2Ç26'nın ON İKİ değeri de Fintables ile
+         BİREBİR (altı kalem × cari/önceki).
+         `onceki` yalnız çeyrek sütunu BULUNAMAYAN raporlar için duruyor —
+         o zaman çıkarmaya düşer ve "⚠ enflasyon sapması" etiketi basar.
+         Yani parametre artık istisna yolu, ana yol değil. */
       let b0 = null, b0Hata = null, b0Kullanilan = null;
       const oncListe = onc.split(',').map(x=>x.replace(/[^0-9]/g,'')).filter(Boolean).slice(0,6);
       const denemeler = [];
@@ -436,7 +440,7 @@ export default async function handler(req, res){
           ? { ok:true, kullanilan:b0Kullanilan, bulunan:b0.bulunan, sablon:b0.sablon, denemeler }
           : { ok:false, sebep:b0Hata || 'bilinmiyor', denemeler }) : null,
         uyari: (onc && (!b0 || !b0.ok)) ? ('önceki dönem ayrıştırılamadı ('+(b0Hata||'sebep bilinmiyor')+') — çeyreklik yok, kümülatif var') : b1.uyari,
-        not: 'kumulatif = KAP dönemsel · ceyreklik = cari − önceki. STOK kalemleri (özkaynak, nakit) çıkarılmaz. Birim BİN TL.' });
+        not: 'kumulatif = raporun dönemsel sütunu (yılbaşından bugüne) · ceyreklik = raporun ÇEYREK sütunu (çıkarma yok, enflasyon sapması yok). onceki parametresi yalnız çeyrek sütunu olmayan raporlar için yedektir. STOK kalemleri (özkaynak, nakit) dönem sonu değeridir. Birim BİN TL.' });
     }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
