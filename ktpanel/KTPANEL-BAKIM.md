@@ -2677,6 +2677,93 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 213. DOGRULANDI: 12/12 BIREBIR — zincirin 2. ve 3. adimi KAPANDI (31 Tem)
+
+Rapor sutunu okumasi TOASO 2C26'da tam sonuc verdi:
+    KALEM          KAP 2C26      FINTABLES     KAP 2C25      FINTABLES
+    ciro        100.016.179  = 100.016.179   91.737.074  =  91.737.074
+    brutKar       6.651.584  =   6.651.584    6.711.191  =   6.711.191
+    faaliyetKar   1.082.468  =   1.082.468      345.257  =     345.257
+    finansGider    −807.686  =    −807.686   −2.984.100  =  −2.984.100
+    parasal       1.174.771  =   1.174.771      203.459  =     203.459
+    netKar        3.092.347  =   3.092.347    2.313.313  =   2.313.313
+ON IKI DEGERIN HEPSI BIREBIR.
+
+### 213.1 NE KAZANILDI
+  · cikarma GEREKMIYOR — enflasyon sapmasi ortadan kalkti
+  · onceki donem kimligi GEREKMIYOR — tek bildirim yetiyor
+  · y/y karsilastirma HAZIR geliyor (2C25 sutunu ayni raporda)
+  · tek KAP sayfasi = tam ceyreklik tablo
+`onceki` parametresi YEDEGE dustu: yalniz ceyrek sutunu bulunamayan
+raporlarda cikarmaya duser ve "⚠ enflasyon sapmasi" etiketi basar.
+
+### 213.2 SEKIZ TURDA SEKIZ HATA — hepsi olcumle bulundu
+  §201  bes yol tahmin        -> 404
+  §202  govde tahmin          -> 500 (tarih bicimi + fazladan alan + pencere)
+  §206  ilk sayiyi al         -> dipnot referansi (ciro 4,17 cikti)
+  §208  ic HTTP istegi        -> middleware 401 (ayni tuzaga ikinci kez)
+  §210  paralel + 4x replace  -> bellek, sessiz dusme
+  §211  en erken kimlik       -> faaliyet raporu, 0/8 kalem
+  §211c virgul temizlendi     -> "1601476160" var olmayan kimlik
+  §212  cikarma yontemi       -> enflasyon sapmasi, +6,7 mlr
+Sekizinin de ortak yani: MAKUL GORUNEN BIR VARSAYIM. Ve sekizi de ancak
+OLCUMLE ortaya cikti — dordu dis referansla (Fintables), dordu teshis
+alaniyla.
+
+### 213.3 ZINCIRIN DURUMU
+  1 bildirimi yakala   ✓ mod=fr      donem · gecikme · tum kimlikler
+  2 kalemleri al       ✓ mod=bilanco 8/8 · capraz denetlenmis
+  3 ceyreklige cevir   ✓ mod=ceyrek  12/12 birebir · rapor sutunu
+  4 yorumu yaz           TASLAK+ONAY — yargi kullanicida kalir
+  5 karta ekle           Actions zaten yapiyor
+Mekanik adimlarin HEPSI kapandi. Fintables bagimliligi bilanco kalemleri
+icin TAMAMEN kirildi.
+
+DOSYALAR: api/kap.js
+
+## 212. CIKARMA YONTEMI ENFLASYON ALTINDA YANLIS (31 Tem)
+
+Coklu kimlik denemesi calisti (1601474 -> 8/8) ve ceyreklik HESAPLANDI.
+Ama Fintables ile karsilastirinca RAKAMLAR TUTMADI:
+    ciro         cikarma 106.687.189  ·  gercek 100.016.179  fark +6.671.010
+    faaliyetKar  cikarma   1.200.570  ·  gercek   1.082.468  fark   +118.102
+    netKar       cikarma   3.301.965  ·  gercek   3.092.347  fark   +209.618
+Hepsi AYNI YONDE sapiyor — sistematik hata.
+
+### 212.1 SEBEP: TMS-29 ENFLASYON MUHASEBESI
+Cikarmanin ima ettigi 1C26 cirosu 95.109.919; Fintables 1C26 = 101.780.929.
+Fark −6,7 mlr.
+SEBEP: 1C26 raporu 1C26 SATIN ALMA GUCUNDE yazilir. 2C26 raporu ayni donemi
+2C26 gucune GUNCELLEYEREK gosterir. Iki rapor FARKLI FIYAT SEVIYESINDEDIR;
+aralarinda cikarma yapmak elmayla armut cikarmaktir.
+Yuksek enflasyon rejiminde bu fark buyuk ve SISTEMATIK — her kalemde ayni
+yonde. Fark etmemek, her ceyregi oldugundan buyuk gostermek demekti.
+
+### 212.2 COZUM: RAPORUN KENDI CEYREK SUTUNU
+Turk ara donem raporlari DORT sutun tasir:
+    1 Oca-30 Haz 2026 | 1 Oca-30 Haz 2025 | 1 Nis-30 Haz 2026 | 1 Nis-30 Haz 2025
+Yani KUMULATIF ikisi, CEYREKLIK ikisi. Ayristirici yalniz ILK IKISINI
+aliyordu; ucuncu ve dorduncu ZATEN CEYREKLIK.
+Cikarma GEREKMIYOR. Ayni rapor, ayni fiyat seviyesi, enflasyon sorunu YOK.
+
+### 212.3 ONCELIK SIRASI
+  1. rapor sutunu   — en dogru
+  2. cikarma        — yalniz 1. yoksa, "⚠ enflasyon sapmasi tasir" etiketiyle
+  3. kumulatif      — 1. donemde zaten ceyrekliktir
+`hepsi` alani ilk alti hucreyi dondurur: sutun yapisi GORUNUR olur, bir daha
+tahmin edilmez.
+
+### 212.4 DERS — TUTARLI GORUNEN SONUC DOGRU DEMEK DEGIL
+Cikarma yontemi CALISIYORDU: sayilar makul, isaretler dogru, buyukluk
+mertebesi yerinde. Hicbir denetim kurali bunu yakalamazdi — ne aykiri deger,
+ne tutarlilik, ne kapsam.
+Yakalayan yine DIS REFERANS oldu (Fintables). Bu oturumda dorduncu kez:
+§184 AV eksik ceyrek · §203 isLate · §206 dipnot · §212 enflasyon.
+KURAL: yeni bir hesap yolu kurulunca, BILINEN BIR VAKAYLA sayisal karsilastirma
+SART. "Makul gorunuyor" kabul olcutü degildir.
+
+DOSYALAR: api/kap.js
+
 ## 211c. VIRGUL TEMIZLEYICIDE SILINIYORDU (31 Tem)
 
 §211'de `onceki` parametresine virgullu liste destegi ekledim. Ama parametreyi
