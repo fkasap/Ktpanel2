@@ -105,7 +105,12 @@ async function _bilancoAyristir(id){
     signal: AbortSignal.timeout(22000) });
   if(!r.ok) return { ok:false, id, http:r.status, err:'sayfa alınamadı' };
   let h = await r.text();
-  h = h.replace(/\\u003c/g,'<').replace(/\\u003e/g,'>').replace(/\\"/g,'"').replace(/\\n/g,' ');
+  /* §210 TEK GEÇİŞ. Dört zincirli replace, 5 MB dizgenin DÖRT KOPYASINI
+     üretiyordu (20 MB churn). İki sayfa paralel çekilince 40 MB+ oluyor ve
+     serverless bellek/süre sınırında ikinci ayrıştırma sessizce düşüyordu.
+     Tek regex + eşleme tablosu ile bir kopya yeter. */
+  const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
+  h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
   const kalemBul = (etiketler) => {
     for(const e of etiketler){
       const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
@@ -201,12 +206,15 @@ export default async function handler(req, res){
        istenirse 5 günlük dilimlere bölünür — §168'deki Finnhub dersinin aynısı:
        "veri gelmiyor" demeden önce SINIRA çarpıp çarpmadığına bak. */
     const dilimler = [];
+    /* DİLİM BOYU: varsayılan 5 gün. Ölçüldü — nisan-mayıs bilanço sezonunda
+       5 günlük dilimler 2000 tavanına ÇARPIYOR (üç dilim birden). Yoğun
+       dönemde ?dilim=2 ile daraltılabilir. */
+    const dilimGun = Math.min(Math.max(parseInt(req.query && req.query.dilim) || 5, 1), 10);
     if(ARALIK){
-      /* Aralık modu: mutlak tarihlerle 5 günlük dilimler */
       const b0 = new Date(basIst+'T00:00:00Z').getTime(), s0 = new Date(sonIst+'T00:00:00Z').getTime();
-      for(let t = s0; t > b0; t -= 5*GUN) dilimler.push([Math.max(t-5*GUN, b0), t]);
+      for(let t = s0; t > b0; t -= dilimGun*GUN) dilimler.push([Math.max(t-dilimGun*GUN, b0), t]);
     } else {
-      for(let b = gunIst; b > 0; b -= 5) dilimler.push([Math.max(b-5,0), b]);
+      for(let b = gunIst; b > 0; b -= dilimGun) dilimler.push([Math.max(b-dilimGun,0), b]);
     }
     const ham = [], hatalar = [];
     for(const [bas, son] of dilimler){
@@ -226,7 +234,11 @@ export default async function handler(req, res){
         const j = await r.json();
         const d = Array.isArray(j) ? j : (j.items || j.data || []);
         ham.push(...d);
-        if(d.length >= 1990) hatalar.push('dilim '+bas+'-'+son+'g TAVANA ÇARPTI ('+d.length+') — kayıt eksik olabilir');
+        /* §210c UYARIYI OKUNUR YAP. Aralık modunda bas/son ZAMAN DAMGASI;
+           ham basılınca "1778457600000-1778889600000g" gibi anlamsız çıkıyordu.
+           Bir uyarı okunamıyorsa yok sayılır. */
+        const etiket = ARALIK ? (iso(bas)+' → '+iso(son)) : (bas+'-'+son+' gün önce');
+        if(d.length >= 1990) hatalar.push('['+etiket+'] TAVANA ÇARPTI ('+d.length+' kayıt) — bu aralıkta bildirim eksik olabilir, daha dar pencere dene');
       }catch(e){ hatalar.push(String(e.message||e).slice(0,80)+' ('+bas+'-'+son+'g)'); }
     }
 
@@ -340,9 +352,18 @@ export default async function handler(req, res){
     const onc = String((req.query && req.query.onceki) || '').replace(/[^0-9]/g,'').slice(0,10);
     if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr çıktısındaki id' });
     try{
-      const [b1, b0] = await Promise.all([ _bilancoAyristir(id),
-        onc ? _bilancoAyristir(onc) : Promise.resolve(null) ]);
+      /* §210b SIRAYLA, PARALEL DEĞİL. İki 5 MB sayfayı aynı anda işlemek
+         belleği zorluyordu; ikinci ayrıştırma SESSİZCE düşüyor ve yalnız
+         "ayrıştırılamadı" diyordu — sebep yok. Sıralı çekim hem hafif hem
+         hangi adımda düştüğü belli. */
+      const b1 = await _bilancoAyristir(id);
       if(!b1 || !b1.ok) return res.status(200).json({ ok:false, id, err:'cari bilanço ayrıştırılamadı', detay:b1 });
+      let b0 = null, b0Hata = null;
+      if(onc){
+        try{ b0 = await _bilancoAyristir(onc); }
+        catch(e){ b0Hata = String(e.message||e).slice(0,120); }
+        if(b0 && !b0.ok) b0Hata = b0.err || ('bulunan '+b0.bulunan+'/'+b0.toplam);
+      }
 
       const cikar = (a,b) => (a==null) ? null : (b==null ? a : a-b);
       const kumulatif = {}, ceyreklik = {};
@@ -360,7 +381,10 @@ export default async function handler(req, res){
       return res.status(200).json({ ok:true, id, oncekiId:onc||null, sablon:b1.sablon,
         bulunan:b1.bulunan, toplam:b1.toplam, eksik:b1.eksik,
         kumulatif, ceyreklik,
-        uyari: (onc && (!b0 || !b0.ok)) ? 'önceki dönem ayrıştırılamadı — çeyreklik yok, kümülatif var' : b1.uyari,
+        /* SEBEBİ SÖYLE — "ayrıştırılamadı" tek başına işe yaramaz (§145) */
+        oncekiDurum: onc ? (b0 && b0.ok ? { ok:true, bulunan:b0.bulunan, sablon:b0.sablon }
+                                        : { ok:false, sebep:b0Hata || 'bilinmiyor', http:(b0&&b0.http)||null }) : null,
+        uyari: (onc && (!b0 || !b0.ok)) ? ('önceki dönem ayrıştırılamadı ('+(b0Hata||'sebep bilinmiyor')+') — çeyreklik yok, kümülatif var') : b1.uyari,
         not: 'kumulatif = KAP dönemsel · ceyreklik = cari − önceki. STOK kalemleri (özkaynak, nakit) çıkarılmaz. Birim BİN TL.' });
     }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
