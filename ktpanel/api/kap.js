@@ -76,14 +76,21 @@ const _sayiCoz = (t) => {
   if(ham.indexOf('.') < 0 && n < 1000) return null;
   return eksi ? -n : n;
 };
+/* §220 SOLO (KONSOLİDE OLMAYAN) YEDEK ETİKETLER.
+   İlk liste KONSOLİDE rapor içindi: "Ana Ortaklık Payları" ve "Ana Ortaklığa
+   Ait Özkaynaklar" yalnız konsolide tablolarda bulunur. Küçük şirketler SOLO
+   rapor verir; orada bu satırlar YOK, doğrudan "DÖNEM KARI (ZARARI)" ve
+   "Özkaynaklar" yazar.
+   ÖLÇÜLDÜ: nöbet CANTE ve GENIL'i yakaladı, ikisinde de 0 kalem çıktı.
+   Etiketler sırayla denenir; konsolide önce, solo yedekte. */
 const _SANAYI = [
-  ['ciro',        ['Hasılat','Satış Gelirleri']],
-  ['brutKar',     ['Brüt Kar (Zarar)','Brüt Kâr (Zarar)','BRÜT KAR (ZARAR)']],
-  ['faaliyetKar', ['Esas Faaliyet Karı (Zararı)','Faaliyet Karı (Zararı)','ESAS FAALİYET KARI (ZARARI)']],
-  ['finansGider', ['Finansman Giderleri']],
-  ['parasal',     ['Net Parasal Pozisyon Kazançları (Kayıpları)']],
-  ['netKar',      ['Ana Ortaklık Payları']],
-  ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar']],
+  ['ciro',        ['Hasılat','Satış Gelirleri','HASILAT']],
+  ['brutKar',     ['BRÜT KAR (ZARAR)','Brüt Kar (Zarar)','Brüt Kâr (Zarar)','BRÜT KAR']],
+  ['faaliyetKar', ['ESAS FAALİYET KARI (ZARARI)','Esas Faaliyet Karı (Zararı)','Faaliyet Karı (Zararı)','ESAS FAALİYET KARI']],
+  ['finansGider', ['Finansman Giderleri (-)','Finansman Giderleri']],
+  ['parasal',     ['Net Parasal Pozisyon Kazançları (Kayıpları)','Net Parasal Pozisyon Kazançları/Kayıpları']],
+  ['netKar',      ['Ana Ortaklık Payları','DÖNEM KARI (ZARARI)','Dönem Karı (Zararı)','SÜRDÜRÜLEN FAALİYETLER DÖNEM KARI (ZARARI)']],
+  ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar','ÖZKAYNAKLAR','Özkaynaklar']],
   ['nakit',       ['Nakit ve Nakit Benzerleri']]
 ];
 const _BANKA = [
@@ -117,7 +124,7 @@ const _BILANCO_SANAYI = [
   ['kvFinansBorc',  ['Kısa Vadeli Borçlanmalar'], 1],
   ['uzunVadeli',    ['Uzun Vadeli Yükümlülükler','UZUN VADELİ YÜKÜMLÜLÜKLER'], 0],
   ['uvFinansBorc',  ['Uzun Vadeli Borçlanmalar'], 1],
-  ['ozkaynak',      ['Ana Ortaklığa Ait Özkaynaklar'], 0],
+  ['ozkaynak',      ['Ana Ortaklığa Ait Özkaynaklar','ÖZKAYNAKLAR','Özkaynaklar'], 0],
   ['odenmisSermaye',['Ödenmiş Sermaye'], 1],
   ['toplamKaynak',  ['TOPLAM KAYNAKLAR','Toplam Kaynaklar'], 0]
 ];
@@ -138,8 +145,11 @@ const _GELIR_SANAYI = [
   ['parasal',       ['Net Parasal Pozisyon Kazançları (Kayıpları)'], 1],
   ['vergiOncesi',   ['SÜRDÜRÜLEN FAALİYETLER VERGİ ÖNCESİ KARI (ZARARI)'], 0],
   ['vergi',         ['Sürdürülen Faaliyetler Vergi Gideri (-)','Dönem Vergi Gideri (-)'], 1],
-  ['donemKar',      ['DÖNEM KARI (ZARARI)','SÜRDÜRÜLEN FAALİYETLER DÖNEM KARI (ZARARI)'], 0],
-  ['netKar',        ['Ana Ortaklık Payları'], 1]
+  ['donemKar',      ['DÖNEM KARI (ZARARI)','SÜRDÜRÜLEN FAALİYETLER DÖNEM KARI (ZARARI)','Dönem Karı (Zararı)'], 0],
+  /* SOLO raporda "Ana Ortaklık Payları" YOKTUR — dönem kârının kendisi net
+     kârdır. Yedek olarak aynı etiketler verildi; ikisi de bulunursa
+     konsolide, yalnız ikincisi bulunursa solo demektir. */
+  ['netKar',        ['Ana Ortaklık Payları','DÖNEM KARI (ZARARI)','Dönem Karı (Zararı)'], 1]
 ];
 const _BILANCO_BANKA = [
   ['nakit',         ['Nakit Değerler ve Merkez Bankası','NAKİT DEĞERLER VE MERKEZ BANKASI'], 0],
