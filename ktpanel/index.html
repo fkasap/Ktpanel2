@@ -851,17 +851,30 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 
 
-<h2 style="margin-top:0">Endeksten Ayrışma <span class="thin">(performans atıfı · hangi kağıt dövdü, hangisi götürdü)</span></h2>
-<div class="card" style="padding:9px 12px;margin-bottom:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<!-- §201: Ayrışma bölümü açılır-kapanır. Reel Getiri / Risk Bütçesi ile AYNI
+     desen (details.sektorWrap) — panelde tek bir katlama dili olsun diye.
+     GÜVENLİ: ayrGrafik sabit viewBox'lı SVG üretiyor (0 0 680 150, width:100%),
+     yani kapalı kapsayıcıda çizilse bile ölçü almıyor. clientWidth'e dayanan
+     bir grafik olsaydı kapalıyken sıfır genişlik ölçer, açınca bozuk çıkardı.
+     ayrismaInit() sekme açılışında koşmaya devam ediyor — details durumundan
+     bağımsız; yani kapalı bırakıp açtığında veri HAZIR gelir, yeniden
+     hesaplanmaz. -->
+<details class="sektorWrap" style="margin-top:0" open>
+  <summary>ENDEKSTEN AYRIŞMA <span class="thin">(performans atıfı · hangi kağıt dövdü, hangisi götürdü)</span></summary>
+<div class="card" style="padding:9px 12px;margin:8px 0 10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
   <label class="arzLb" style="margin:0">ENDEKS</label>
   <select id="ayrEndeks" class="arzIn" style="width:auto;min-width:180px"></select>
   <label class="arzLb" style="margin:0">DÖNEM</label>
   <select id="ayrDonem" class="arzIn" style="width:auto"></select>
 </div>
 <div id="ayrBody"></div>
-<h2>Kümülatif Ayrışma <span class="thin">(her gün otomatik birikir · buluta senkron)</span></h2>
-<div class="card" style="padding:10px 12px"><div id="ayrGrafik"></div></div>
 <div class="note" style="margin-top:10px">Bu ekran <b>her pozisyonu ENDEKSTEKİ AĞIRLIĞIYLA</b> karşılaştırır. Kimlik: r<sub>p</sub> − r<sub>b</sub> = Σ (w<sub>i</sub> − wb<sub>i</sub>)·(r<sub>i</sub> − r<sub>b</sub>). Örnek: <em>TUPRS endekste %13, sende %10 → aktif ağırlık −300 bps. TUPRS endeksi 4 puan döverse bu karar sana −0,12 puan kaybettirir.</em> Endeks ağırlığında tuttuğun hisse <b>sıfır katkı</b> yapar — orada aktif karar yoktur. <b>Hiç tutmadığın endeks üyeleri de listede</b>: almamak da bir karardır ve bedeli vardır. Endeks ağırlıkları serbest dolaşım piyasa değerinden türetilir (BIST yöntemi); XK100 üye listesi üç ayda bir revize edilir. <b>Günlük birikim</b> panel her açıldığında düşer; getiriler bileşiklenir, toplanmaz.</div>
+</details>
+
+<details class="sektorWrap" open>
+  <summary>KÜMÜLATİF AYRIŞMA <span class="thin">(her gün otomatik birikir · buluta senkron)</span></summary>
+  <div id="ayrGrafik" style="margin-top:8px"></div>
+</details>
 </div><div class="tab" id="t4"><!-- ==== 01 Journal ==== -->
 <h2>01 Investment Journal <span class="thin">(tez yaz → disiplin kazan)</span></h2>
 <div class="card">
@@ -1123,14 +1136,6 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="anaKart" style="margin-top:10px"></div>
 <h2 style="margin-top:22px">Portföy Performansı &amp; Getiri Atfı</h2>
 <div id="atifBody"></div>
-<details class="sektorWrap" style="margin-top:12px" open>
-<summary>DEĞERLEME KONUMU <span class="thin">(PD/DD z-skoru · kendi tarihine ve sektörüne göre)</span></summary>
-<div id="degerlemeBody" style="margin-top:8px"><div class="sub">değerleme yükleniyor…</div></div>
-<div class="note" style="font-size:10px"><b>Neden PD/DD?</b> Enflasyon muhasebesinde (TMS-29) F/K yanıltır: nominal kâr şişer, çarpan yapay olarak ucuz görünür. Özkaynak da enflasyon düzeltmesi gördüğü için <b>PD/DD en az sapan çarpandır</b>. Bant 2023Ç1 sonrası çeyreklik kapanışlardan kurulur — öncesi farklı muhasebe rejimidir, karıştırılmaz.<br><br>
-<b>İki çıpa birlikte okunur.</b> <em>Kendi tarihi</em> tek başına yetmez: tüm sektör pahalıysa hisse kendine göre ucuz görünebilir. <em>Sektör</em> de tek başına yetmez: sektör ucuzsa herkes ucuz görünür. İkisi aynı yönü gösteriyorsa sinyal güçlüdür.<br><br>
-<b>GÜVEN sütunu kritik.</b> Bandı geniş olan hissede (değişim katsayısı yüksek) z-skor ayırt edici değildir — "ucuz" demek istatistiksel gürültü olabilir. Düşük güvenli satırda karar verirken çarpan tek başına yeterli değildir.<br><br>
-<b>Ucuz olmak iyi değildir.</b> Hisse hak ettiği için ucuz olabilir — bilanço bozuluyorsa çarpanın düşmesi uyarıdır, fırsat değil. Bu kart <em>konum</em> söyler, <em>karar</em> vermez.</div>
-</details>
 <details class="sektorWrap" style="margin-top:10px" open>
   <summary>REEL GETİRİ <span class="thin">(TÜFE arındırılmış · satın alma gücü)</span></summary>
   <div style="margin:8px 0 4px"><label class="arzLb" for="reelPencere" style="display:inline-block;margin:0 8px 0 0">Tarihsiz pozisyonlar için pencere</label>
@@ -1500,7 +1505,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260731y"></script>
+<script src="/app.js?v=20260731x"></script>
 <script src="/ajan.js?v=20260731m"></script>
 </body>
 </html>
