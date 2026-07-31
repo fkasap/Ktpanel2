@@ -92,6 +92,71 @@ module.exports = async (req, res) => {
   }
 
   // ── TEST: KV sağlık kontrolü (küçük SET+GET, ham yanıtlar) ──
+  /* §215 ?mod=bilanco — METRİKTEN KART TASLAĞI.
+     Panel önce /api/kap?mod=kart ile metrikleri alır, sonra buraya POST eder.
+     NEDEN SUNUCU SUNUCUYA ÇAĞIRMIYOR: §208'de ölçüldü — kendi sitesine HTTP
+     isteği middleware'e takılıyor ve gecikme ekliyor. Tarayıcı iki ucu da
+     çağırabiliyor, orkestrasyon orada.
+     TASLAK ÜRETİR, KART YAYINLAMAZ. Skor vermez. Kullanıcı okur, düzeltir,
+     onaylar. §204'te kararlaştırıldı: yazma emeği kalkar, yargı insanda kalır. */
+  if (mod === 'bilanco') {
+    if (req.method !== 'POST') return res.status(405).json({ ok:false, err:'POST gerekli' });
+    let g = req.body;
+    if (typeof g === 'string') { try{ g = JSON.parse(g); }catch(e){ g = null; } }
+    if (!g || !g.metrikler) return res.status(400).json({ ok:false, err:'metrikler gerekli — /api/kap?mod=kart çıktısını gönder' });
+
+    const kod   = String(g.kod || '?').toUpperCase().slice(0,8);
+    const unvan = String(g.unvan || '').slice(0,80);
+    const donem = String(g.donem || '').slice(0,20);
+    const temel = String(g.temel || '').slice(0,40);
+
+    /* İSTEM — bugün elle yazılan kartlardan türedi. Her kural bir VAKAYA
+       dayanıyor; soyut "iyi analiz yap" demiyor, NEYE BAKILACAĞINI söylüyor. */
+    const istem =
+`Sen bir katılım finans fon yöneticisinin analistisin. Aşağıdaki bilanço metriklerinden bir TASLAK kart yaz.
+
+ŞİRKET: ${kod}${unvan ? ' — '+unvan : ''}
+DÖNEM: ${donem}
+TEMEL: ${temel}
+Birim: BİN TL. Marjlar yüzde. y/y = geçen yılın aynı çeyreği.
+
+METRİKLER:
+${JSON.stringify(g.metrikler, null, 1)}
+
+OTOMATİK İŞARETLER (bakılacak yerler, yorum değil):
+${(g.isaretler||[]).map(x=>'- '+x.tip+': '+x.not).join('\n') || '- yok'}
+
+NASIL YAZACAKSIN:
+
+1) MANŞETE DEĞİL ALTINA BAK. En sık tuzak: bir kalem iyi görünürken altındaki bozuk olması.
+   - Net kâr artarken faaliyet kârı düşüyorsa, farkı finansman gideri ya da parasal pozisyon taşıyordur. Bu operasyonel iyileşme DEĞİLDİR ve açıkça söylenmelidir.
+   - Faaliyet kârı artarken FAVÖK düşüyorsa sebep amortisman değişimidir; muhasebesel, operasyonel değil.
+   - Bankada karşılık çeyreklik sıçrarken yıllık bazda azalmış olabilir. İkisini AYRI söyle; yalnız birine bakan yanılır.
+
+2) BÜYÜK YÜZDELERE DİKKAT. %200 artış çoğu zaman düşük bazdan gelir. Mutlak tutarı da yaz ki okuyan ölçeği görsün.
+
+3) MARJ KATMANLARINI YAN YANA OKU: brüt → faaliyet → net. Hangi katmanda kayıp olduğu, sorunun NEREDE olduğunu söyler. Brüt marj korunup faaliyet marjı düşüyorsa sorun üretimde değil faaliyet giderlerinde.
+
+4) SKOR VERME. Yatırım tavsiyesi verme. "Al", "sat", "cazip" gibi kelimeler kullanma.
+
+5) EMİN OLMADIĞINI SÖYLE. Bir kalem eksikse ya da çelişkili görünüyorsa bunu yaz, doldurma.
+
+BİÇİM (sade metin, başlık yok):
+ÖZET: 2-3 cümle. Manşet ne diyor, altında ne var.
+DİKKAT: 2-3 madde. Her madde bir tespit ve NEDEN önemli olduğu.
+İZLENECEK: 1-2 madde. Gelecek çeyrekte hangi eşiğe bakılmalı.
+
+Türkçe yaz. Kısa cümle kur. Rakamları binlik ayraçla yaz (100.016.179).`;
+
+    const metin = await aiUret(istem, 900);
+    if (!metin) return res.status(200).json({ ok:false, kod,
+      err:'AI yanıt vermedi — ANTHROPIC_API_KEY tanımlı mı?' });
+
+    return res.status(200).json({ ok:true, kod, donem, taslak:metin,
+      uyari:'TASLAK. Skor ve yayın kararı insana aittir; okunmadan karta işlenmemelidir.',
+      uretim:new Date().toISOString() });
+  }
+
   if(mod === 'test'){
     const urlVar = !!process.env.UPSTASH_REDIS_REST_URL, tokVar = !!process.env.UPSTASH_REDIS_REST_TOKEN;
     const setR = await kvKomut(['SET','ktpanel_ping','pong-'+Date.now()]);

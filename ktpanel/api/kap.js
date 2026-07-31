@@ -98,6 +98,73 @@ const _BANKA = [
    ÇIKARILMAZ. Akış kalemleri (gelir tablosu) birikir, çıkarılır (§207.3). */
 const _STOK = new Set(['ozkaynak','nakit']);
 
+/* §216 TAM TABLO ŞABLONLARI — Finansal Tablolar sekmesi için.
+   mod=kart sekiz kalemle yetiniyordu; tam bilanço ve gelir tablosu için
+   çok daha fazlası gerekiyor.
+   SIRA ÖNEMLİ: uzun etiket önce. "Dönem Karı" kısa etiketi
+   "Dönem Karı Vergi Yükümlülüğü" satırını yakalıyordu (§206'da ölçüldü).
+   Her kalem [anahtar, [etiketler], girinti] — girinti tabloda hiyerarşi için. */
+const _BILANCO_SANAYI = [
+  ['donenVarlik',   ['Dönen Varlıklar','DÖNEN VARLIKLAR'], 0],
+  ['nakit',         ['Nakit ve Nakit Benzerleri'], 1],
+  ['ticariAlacak',  ['Ticari Alacaklar'], 1],
+  ['stoklar',       ['Stoklar'], 1],
+  ['duranVarlik',   ['Duran Varlıklar','DURAN VARLIKLAR'], 0],
+  ['maddiDuran',    ['Maddi Duran Varlıklar'], 1],
+  ['toplamVarlik',  ['TOPLAM VARLIKLAR','Toplam Varlıklar'], 0],
+  ['kisaVadeli',    ['Kısa Vadeli Yükümlülükler','KISA VADELİ YÜKÜMLÜLÜKLER'], 0],
+  ['ticariBorc',    ['Ticari Borçlar'], 1],
+  ['kvFinansBorc',  ['Kısa Vadeli Borçlanmalar'], 1],
+  ['uzunVadeli',    ['Uzun Vadeli Yükümlülükler','UZUN VADELİ YÜKÜMLÜLÜKLER'], 0],
+  ['uvFinansBorc',  ['Uzun Vadeli Borçlanmalar'], 1],
+  ['ozkaynak',      ['Ana Ortaklığa Ait Özkaynaklar'], 0],
+  ['odenmisSermaye',['Ödenmiş Sermaye'], 1],
+  ['toplamKaynak',  ['TOPLAM KAYNAKLAR','Toplam Kaynaklar'], 0]
+];
+const _GELIR_SANAYI = [
+  ['ciro',          ['Hasılat','Satış Gelirleri'], 0],
+  ['satisMaliyet',  ['Satışların Maliyeti (-)','Satışların Maliyeti'], 1],
+  ['brutKar',       ['BRÜT KAR (ZARAR)','Brüt Kar (Zarar)','Brüt Kâr (Zarar)'], 0],
+  ['pazarlama',     ['Pazarlama, Satış ve Dağıtım Giderleri (-)','Pazarlama Giderleri (-)'], 1],
+  ['genelYonetim',  ['Genel Yönetim Giderleri (-)'], 1],
+  ['arge',          ['Araştırma ve Geliştirme Giderleri (-)'], 1],
+  ['digerGelir',    ['Esas Faaliyetlerden Diğer Gelirler'], 1],
+  ['digerGider',    ['Esas Faaliyetlerden Diğer Giderler (-)'], 1],
+  ['faaliyetKar',   ['ESAS FAALİYET KARI (ZARARI)','Esas Faaliyet Karı (Zararı)'], 0],
+  ['yatirimGelir',  ['Yatırım Faaliyetlerinden Gelirler'], 1],
+  ['fgoFaaliyet',   ['FİNANSMAN GİDERİ ÖNCESİ FAALİYET KARI (ZARARI)'], 0],
+  ['finansGelir',   ['Finansman Gelirleri'], 1],
+  ['finansGider',   ['Finansman Giderleri (-)','Finansman Giderleri'], 1],
+  ['parasal',       ['Net Parasal Pozisyon Kazançları (Kayıpları)'], 1],
+  ['vergiOncesi',   ['SÜRDÜRÜLEN FAALİYETLER VERGİ ÖNCESİ KARI (ZARARI)'], 0],
+  ['vergi',         ['Sürdürülen Faaliyetler Vergi Gideri (-)','Dönem Vergi Gideri (-)'], 1],
+  ['donemKar',      ['DÖNEM KARI (ZARARI)','SÜRDÜRÜLEN FAALİYETLER DÖNEM KARI (ZARARI)'], 0],
+  ['netKar',        ['Ana Ortaklık Payları'], 1]
+];
+const _BILANCO_BANKA = [
+  ['nakit',         ['Nakit Değerler ve Merkez Bankası','NAKİT DEĞERLER VE MERKEZ BANKASI'], 0],
+  ['krediler',      ['KREDİLER','Krediler'], 0],
+  ['menkulDeger',   ['Menkul Değerler'], 0],
+  ['toplamVarlik',  ['TOPLAM VARLIKLAR','VARLIKLAR TOPLAMI'], 0],
+  ['mevduat',       ['MEVDUAT','Mevduat'], 0],
+  ['alinanKredi',   ['ALINAN KREDİLER','Alınan Krediler'], 0],
+  ['ozkaynak',      ['ÖZKAYNAKLAR','Ana Ortaklığa Ait Özkaynaklar'], 0],
+  ['toplamKaynak',  ['YÜKÜMLÜLÜKLER TOPLAMI','TOPLAM YÜKÜMLÜLÜKLER'], 0]
+];
+const _GELIR_BANKA = [
+  ['faizGelir',     ['FAİZ GELİRLERİ'], 0],
+  ['faizGider',     ['FAİZ GİDERLERİ (-)','FAİZ GİDERLERİ'], 0],
+  ['netFaiz',       ['NET FAİZ GELİRİ VEYA GİDERİ','NET FAİZ GELİRİ'], 0],
+  ['komisyon',      ['NET ÜCRET VE KOMİSYON GELİRLERİ VEYA GİDERLERİ'], 0],
+  ['ticariKar',     ['TİCARİ KAR VEYA ZARAR (Net)'], 1],
+  ['faaliyetBrut',  ['FAALİYET BRÜT KÂRI','FAALİYET BRÜT KARI'], 0],
+  ['karsilik',      ['Beklenen Zarar Karşılıkları (-)','Beklenen Zarar Karşılıkları'], 1],
+  ['personel',      ['PERSONEL GİDERLERİ (-)','Personel Giderleri (-)'], 1],
+  ['netFaalKar',    ['NET FAALİYET KARI (ZARARI)'], 0],
+  ['vergi',         ['Vergi Karşılığı (-)','Sürdürülen Faaliyetler Vergi Karşılığı (-)'], 1],
+  ['netKar',        ['Grubun Karı (Zararı)','Ana Ortaklık Payları'], 0]
+];
+
 async function _bilancoAyristir(id){
   const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
   const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
@@ -383,6 +450,90 @@ export default async function handler(req, res){
        · alt satır dışsal: net kâr artarken faaliyet düşüyorsa finansman/parasal
        · ç/ç ile y/y çelişkisi (TSKB karşılık vakası)
      Bunlar YORUM DEĞİL, BAKILACAK YER işaretidir. */
+  /* §217 ?mod=tablo — TAM BİLANÇO + GELİR TABLOSU, analiz kolonlarıyla.
+     YATAY ANALİZ (bilanço): kalem kaleme cari vs önceki, TUTAR FARKI ve
+       YÜZDE DEĞİŞİM. Bilanço STOK olduğu için iki tarihin karşılaştırması
+       anlamlıdır — "ne birikmiş" değil "ne değişmiş" sorusu.
+     DİKEY ANALİZ (gelir tablosu): her kalem / HASILAT × 100. Yapıyı gösterir:
+       maliyet cironun kaçta kaçı, faaliyet gideri ne kadar yiyor.
+       Bankada payda hasılat değil FAİZ GELİRLERİ.
+     NEDEN BU EŞLEŞME: bilanço iki andı karşılaştırır (yatay), gelir tablosu
+     bir dönemin İÇ YAPISINI gösterir (dikey). Tersini yapmak — bilançoda
+     dikey, gelir tablosunda yatay — bilgi vermez değil ama SORUYU KAÇIRIR. */
+  if (_mod === 'tablo') {
+    const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
+    if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
+    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+    try{
+      const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
+        headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
+        signal: AbortSignal.timeout(22000) });
+      if(!r.ok) return res.status(200).json({ ok:false, id, http:r.status, err:'sayfa alınamadı' });
+      let h = await r.text();
+      const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
+      h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
+
+      const bul = (etiketler) => {
+        for(const e of etiketler){
+          const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
+          let m;
+          while((m = kalip.exec(h)) !== null){
+            const dilim = h.slice(m.index, m.index + 3000);
+            const hc = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
+            if(hc.length >= 1) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
+          }
+        }
+        return null;
+      };
+      const cikar = (liste) => {
+        const c = {}; let dolu = 0;
+        liste.forEach(([ad, et, gir])=>{ const v = bul(et); if(v){ v.girinti = gir; dolu++; } c[ad] = v; });
+        return { c, dolu };
+      };
+
+      /* Şablon TAHMİN edilmez, ÖLÇÜLÜR — hangisi daha çok dolarsa o (§205.3) */
+      const bs = cikar(_BILANCO_SANAYI), bb = cikar(_BILANCO_BANKA);
+      const sablon = bb.dolu > bs.dolu ? 'banka' : 'sanayi';
+      const bil = sablon==='banka' ? bb : bs;
+      const gel = cikar(sablon==='banka' ? _GELIR_BANKA : _GELIR_SANAYI);
+      const bilListe = sablon==='banka' ? _BILANCO_BANKA : _BILANCO_SANAYI;
+      const gelListe = sablon==='banka' ? _GELIR_BANKA : _GELIR_SANAYI;
+
+      /* YATAY — bilanço: fark ve % değişim */
+      const yatay = bilListe.map(([ad, et, gir])=>{
+        const v = bil.c[ad];
+        if(!v) return { ad, etiket:et[0], girinti:gir, yok:true };
+        const f = (v.deger!=null && v.onceki!=null) ? v.deger - v.onceki : null;
+        return { ad, etiket:v.etiket, girinti:gir, cari:v.deger, onceki:v.onceki,
+          fark:f, degisim: (f!=null && v.onceki) ? +((f/Math.abs(v.onceki))*100).toFixed(1) : null };
+      });
+
+      /* DİKEY — gelir tablosu: hasılatın yüzdesi. Çeyrek sütunu varsa ONA göre. */
+      const payAd = sablon==='banka' ? 'faizGelir' : 'ciro';
+      const pv = gel.c[payAd];
+      const ceyrekVar = !!(pv && pv.ceyrek != null);
+      const payda  = pv ? (ceyrekVar ? pv.ceyrek : pv.deger) : null;
+      const payda0 = pv ? (ceyrekVar ? pv.ceyrekOnceki : pv.onceki) : null;
+      const dikey = gelListe.map(([ad, et, gir])=>{
+        const v = gel.c[ad];
+        if(!v) return { ad, etiket:et[0], girinti:gir, yok:true };
+        const c  = ceyrekVar ? v.ceyrek : v.deger;
+        const c0 = ceyrekVar ? v.ceyrekOnceki : v.onceki;
+        const p  = (c!=null && payda)  ? +((c/payda)*100).toFixed(2)  : null;
+        const p0 = (c0!=null && payda0)? +((c0/payda0)*100).toFixed(2): null;
+        return { ad, etiket:v.etiket, girinti:gir, cari:c, onceki:c0,
+          pay:p, oncekiPay:p0, puanFark: (p!=null && p0!=null) ? +(p-p0).toFixed(2) : null };
+      });
+
+      res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
+      return res.status(200).json({ ok:(bil.dolu+gel.dolu)>0, id, sablon,
+        temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif',
+        bilanco: { bulunan:bil.dolu, toplam:bilListe.length, kalemler:yatay },
+        gelir:   { bulunan:gel.dolu, toplam:gelListe.length, kalemler:dikey, payda, payda0 },
+        not:'YATAY (bilanço): fark = cari − önceki, değişim %. DİKEY (gelir tablosu): pay = kalem / '+(sablon==='banka'?'faiz gelirleri':'hasılat')+' × 100, puanFark = cari pay − önceki pay. Birim BİN TL. Bulunamayan kalem "yok:true" taşır — sessizce atlanmaz.' });
+    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+  }
+
   if (_mod === 'kart') {
     const id  = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
     if(!id) return res.status(400).json({ ok:false, err:'id gerekli' });
