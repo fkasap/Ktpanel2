@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-u';
+const KTP_SURUM = '20260731-w';
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -254,9 +254,22 @@ async function ecbTarayiciCek(){
   const hicp = async (item)=>{                       // DOĞRU akış adı: ICP (HICP diye bir dataflow yok → 404)
     const y=await cek('ICP','M.U2.N.'+item+'.4.ANR',3);
     return y?{...sonFark(y), akis:'ICP'}:null; };
-  const [dfr,bilanco,manset,cekirdek,enerji,bund,btp,oat]=await Promise.all([
+  /* §242 ENFLASYON KIRILIMI. Önce üç seri vardı (manşet·çekirdek·enerji) ve
+     ECB faiz kartının İÇİNE sıkıştırılmıştı. Enflasyon ECB'nin tek görevi;
+     kendi kartını hak ediyor ve kırılım olmadan okunmuyor.
+     EKLENENLER:
+       · GIDA + HİZMET + SANAYİ MALI — ECB'nin baktığı asıl ayrım
+         Hizmet ücretlere bağlı, EN YAPIŞKAN kalem: manşet hedefe inse bile
+         hizmet %3'ün üstündeyse indirim gecikir.
+       · DÖRT ÜLKE (DE·FR·IT·ES) — parçalanma riski
+         Tek para politikası, enflasyonlar ayrıştıkça herkese aynı gelmez.
+     ICP akışında ülke kodu U2 yerine ISO2 ile değişiyor: M.<ülke>.N.<kalem>.4.ANR */
+  const ulke = async (k)=>{ const y=await cek('ICP','M.'+k+'.N.000000.4.ANR',3); return y?sonFark(y):null; };
+  const [dfr,bilanco,manset,cekirdek,enerji,gida,hizmet,sanayi,de,fr,it,es,bund,btp,oat]=await Promise.all([
     cek('FM','B.U2.EUR.4F.KR.DFR.LEV',3), cek('ILM','W.U2.C.T000000.Z5.Z01',6),
     hicp('000000'), hicp('XEF000'), hicp('NRGY00'),
+    hicp('FOOD00'), hicp('SERV00'), hicp('IGXE00'),
+    ulke('DE'), ulke('FR'), ulke('IT'), ulke('ES'),
     cek('IRS','M.DE.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.IT.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)
   ]);
   const S={};
@@ -266,6 +279,12 @@ async function ecbTarayiciCek(){
   if(manset) S.hicpManset=manset;
   if(cekirdek) S.hicpCekirdek=cekirdek;
   if(enerji) S.hicpEnerji=enerji;
+  if(gida)   S.hicpGida=gida;
+  if(hizmet) S.hicpHizmet=hizmet;
+  if(sanayi) S.hicpSanayi=sanayi;
+  S.ulkeler={};
+  if(de) S.ulkeler.DE=de; if(fr) S.ulkeler.FR=fr;
+  if(it) S.ulkeler.IT=it; if(es) S.ulkeler.ES=es;
   const t10=(seri)=>{ const x=sonFark(seri); return x||null; };
   if(bund) S.bund10=t10(bund);
   if(btp)  S.btp10 =t10(btp);
@@ -358,6 +377,67 @@ async function avrupaSekme(){
         bh+='<div class="kv"><span class="k">Zirveden bugüne (toplam QT)</span><span class="up" style="font-weight:600">−'+trN(b.qtMlr,0)+' mlr € <span style="color:var(--muted);font-size:9px">zirve ≈8.836 · Haz 2022</span></span></div>';
         bh+='<div class="kv"><span class="k">Küçülme oranı</span><span>%'+trN(b.qtMlr/8836*100,0)+' — zirvenin üçte biri eridi</span></div>';
         $('avBilancoBody').innerHTML=bh;
+      }
+    }
+    /* §242b ENFLASYON KARTI — kendi kutusunda, kırılımlı.
+       ECB'nin tek yasal görevi fiyat istikrarı; enflasyon üç satırla faiz
+       kartının içine sıkışamaz.
+       SIRA ÖNEMLİ: manşet → çekirdek → hizmet. ECB toplantı metinlerinde
+       bu sırayla okur; hizmet en yapışkan olduğu için son sözü o söyler. */
+    if($('avEnfBody')){
+      if(!S || !S.hicpManset){
+        $('avEnfBody').innerHTML='<div class="sub">HICP serisi alınamadı'+
+          (d2&&d2.err?' — '+esc(String(d2.err)):'')+'. ECB Data Portal yanıt vermiyor olabilir.</div>';
+      } else {
+        const HEDEF=2.0;
+        const sat=(v,ad,not_,vurgu)=>{
+          if(!v) return '<div class="kv"><span class="k">'+ad+'</span><span class="thin">—</span></div>';
+          const f=v.fark, ivmeCls=f==null?'':(f>0?'down':'up');
+          const uzak=v.deger-HEDEF;
+          const dCls=uzak>1?'down':(uzak<-0.5?'up':'');
+          return '<div class="kv"><span class="k">'+ad+
+            (not_?' <span class="thin" style="font-size:9px">'+not_+'</span>':'')+'</span>'+
+            '<span'+(vurgu?' style="font-weight:600"':'')+'>%'+trN(v.deger,1)+
+            ' <span class="'+dCls+'" style="font-size:10px">('+(uzak>=0?'+':'')+trN(uzak,1)+' hedefe)</span>'+
+            (f!=null?' <span class="'+ivmeCls+'" style="font-size:10px">ivme '+(f>=0?'+':'')+trN(f,2)+'</span>':'')+
+            ' <span style="color:var(--muted);font-size:9px">'+esc(v.tarih||'')+'</span></span></div>';
+        };
+        let eh='';
+        eh+=sat(S.hicpManset,'<b>Manşet</b>','ECB hedefi %2',true);
+        eh+=sat(S.hicpCekirdek,'<b>Çekirdek</b>','enerji+gıda hariç · ECB\'nin kontrol alanı',true);
+        eh+=sat(S.hicpHizmet,'<b>Hizmet</b>','ücretlere bağlı · EN YAPIŞKAN',true);
+        eh+='<div style="height:6px"></div>';
+        eh+=sat(S.hicpEnerji,'Enerji','Brent geçişkenliği',false);
+        eh+=sat(S.hicpGida,'Gıda','işlenmiş+işlenmemiş',false);
+        eh+=sat(S.hicpSanayi,'Sanayi malı','enerji dışı · küresel arz zinciri',false);
+        /* ÜLKE KIRILIMI — parçalanma termometresi */
+        const U=S.ulkeler||{};
+        const varOlan=Object.keys(U);
+        if(varOlan.length>=2){
+          const AD={DE:'Almanya',FR:'Fransa',IT:'İtalya',ES:'İspanya'};
+          const degerler=varOlan.map(k=>U[k].deger);
+          const makas=Math.max.apply(null,degerler)-Math.min.apply(null,degerler);
+          eh+='<div style="height:8px"></div><div class="lbl" style="font-size:9px;margin-bottom:3px">ÜLKE KIRILIMI</div>';
+          eh+=varOlan.sort((a,b)=>U[b].deger-U[a].deger).map(k=>{
+            const v=U[k], uzak=v.deger-HEDEF;
+            return '<div class="kv"><span class="k">'+AD[k]+'</span><span>%'+trN(v.deger,1)+
+              ' <span class="'+(uzak>1?'down':(uzak<-0.5?'up':''))+'" style="font-size:10px">('+(uzak>=0?'+':'')+trN(uzak,1)+')</span></span></div>';
+          }).join('');
+          eh+='<div class="kv"><span class="k"><b>Ülkeler arası makas</b></span><span class="'+
+            (makas>1.5?'down':'')+'" style="font-weight:600">'+trN(makas,1)+' puan '+
+            '<span class="thin" style="font-size:9px">'+(makas>1.5?'· ayrışma belirgin':'· dengeli')+'</span></span></div>';
+        }
+        /* OKUMA — kural tabanlı, tek cümle */
+        const M=S.hicpManset, C=S.hicpCekirdek, H=S.hicpHizmet;
+        const oku=[];
+        if(M&&C&&M.deger<C.deger)
+          oku.push('Manşet çekirdeğin ALTINDA — düşüşü enerji/gıda taşıyor, <b>kalıcı değil</b>. Baz etkisi tersine dönerse manşet geri yükselir.');
+        if(H&&H.deger>3)
+          oku.push('Hizmet %'+trN(H.deger,1)+' ile hâlâ yüksek — ücret baskısı sürüyor, <b>indirim alanı dar</b>.');
+        if(C&&Math.abs(C.deger-HEDEF)<0.4)
+          oku.push('Çekirdek hedefe yapışmış — ECB için <b>rahatlama sinyali</b>.');
+        if(oku.length) eh+='<div class="note" style="margin-top:8px;font-size:10.5px">'+oku.join(' ')+'</div>';
+        $('avEnfBody').innerHTML=eh;
       }
     }
     if($('avTahvilBody')){
@@ -1736,7 +1816,7 @@ function katfonRender(){
      geçerli — ve deploy yükünü yarıya indiriyor. */
   try{
     const _b = document.querySelector('#t5 h2 .thin');
-    if(_b) _b.textContent = '(46 fon · 6 kategori · getiri · AUM · akış hepsi Fintables, tek tarih)';
+    if(_b) _b.textContent = '(46 fon · 6 kategori · Fintables)';
   }catch(e){}
 
   if(!KATFON)return;

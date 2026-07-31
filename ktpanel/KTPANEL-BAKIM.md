@@ -2715,6 +2715,78 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 242. AVRUPA ENFLASYON KARTI — ECB'den kirilimli (31 Tem)
+
+Kullanici: "Avrupa kartinda enflasyon kartı yok, ECB apisinden ceker misin?"
+YARIM DOGRU: HICP zaten cekiliyordu AMA "ECB FAİZ & ENFLASYON" kartinin
+ICINE sikistirilmisti, uc satirla (manset·cekirdek·enerji).
+ECB'nin TEK YASAL GOREVI fiyat istikrari; enflasyon faiz kartinin alt satiri
+olamaz. Kendi kartina cikarildi ve kirilim eklendi.
+
+### 242.1 EKLENEN SERILER (ICP akisi)
+  FOOD00  gida · SERV00 HIZMET · IGXE00 sanayi mali (enerji disi)
+  ULKE: M.<DE|FR|IT|ES>.N.000000.4.ANR
+ICP akisinda ulke kodu U2 yerine ISO2 ile degisiyor — ayni desen.
+
+### 242.2 SIRA: manset → cekirdek → HIZMET
+ECB toplanti metinlerinde bu sirayla okur. HIZMET en yapiskan kalem cunku
+ucretlere bagli: manset hedefe inse bile hizmet %3'un ustundeyse indirim
+GECIKIR. Ayri vurguyla gosteriliyor.
+Her satirda UC bilgi: seviye · hedefe uzaklik (%2) · ivme (onceki aya gore).
+Seviye tek basina yon soylemez; ivme soyler.
+
+### 242.3 ULKE MAKASI — parcalanma termometresi
+Dort ulkenin yillik HICP'si ve aralarindaki MAKAS. Tek para politikasi,
+enflasyonlar ayristikca herkese ayni gelmez: Almanya %1,8 iken Ispanya %3,5
+ise ayni faiz birine gevsek digerine siki olur. 1,5 puan uzeri "ayrisma
+belirgin" diye isaretleniyor.
+Bu, BTP-Bund spread'inin (mevcut tahvil karti) enflasyon tarafindaki karsiligi.
+
+### 242.4 OKUMA — kural tabanli, AI YOK
+Uc kural, hepsi olculebilir:
+  · manset < cekirdek -> dusus enerji/gidadan, KALICI DEGIL
+  · hizmet > %3       -> ucret baskisi surüyor, indirim alani dar
+  · |cekirdek − 2| < 0,4 -> ECB icin rahatlama sinyali
+Kart tahmin etmiyor, gozlemi soyluyor.
+
+app.js v=20260731w. DOSYALAR: app.js + index.html
+
+## 241. UC TUR AYNI SATIRI DUZELTEMEDIM — sebep IKI DOSYA BAGIMLILIGI (31 Tem)
+
+Kullanici hakli olarak patladi: "ulan bir 24 temmuzu duzeltemedin."
+UC TUR boyunca ayni metin ekranda kaldi. Sebep tek: METIN IKI DOSYADAYDI.
+
+### 241.1 NEDEN TAKILDI
+  index.html -> baslik metni STATIK: "...akış 24 Tem Fintables"
+  app.js     -> ozet kutusu metni: "köprü ritüeli · TEFAS kapalı..."
+Her duzeltmede IKISI de degisiyor. Ustelik surum etiketi (?v=) index.html'de,
+duzeltme app.js'te — yani:
+  · yalniz app.js yuklenirse -> tarayici eski app.js'i onbellekten verir
+    (cunku index.html hala eski ?v= istiyor)
+  · yalniz index.html yuklenirse -> yeni ?v= ister ama app.js eski
+Konsol bunu ELE VERDI: `app.js?v=20260731r` yaziyordu, benim son surumum
+`t` idi. Yani kullanici r'yi yuklemis, ben s ve t uretmisim.
+BENIM HATAM: her kucuk duzeltmede surumu ziplattim ve her seferinde IKI
+DOSYA istedim. Uc tur boyunca en az biri eksik kaldi.
+
+### 241.2 COZUM: BASLIGI DA app.js YAZSIN
+katfonRender basinda:
+    document.querySelector('#t5 h2 .thin').textContent = '...'
+Sekme her cizildiginde calisir. index.html'de ne yazdigi ARTIK ONEMSIZ.
+SONUC: bu metin icin TEK DOSYA yuklemek yeter.
+
+### 241.3 DERS — TEK KAYNAK ARAYUZ METNI ICIN DE GECERLI
+§112'de "tek kaynak" kurali VERI icin konulmustu. Ayni sey ARAYUZ METNI icin
+de gecerliymis: ayni cumle iki dosyada duruyorsa, degistiginde IKI DOSYAYI DA
+yuklemek gerekir ve biri mutlaka unutulur.
+Bu, §235'teki "iki kopya" dersinin arayuz versiyonu — orada kod kopyasiydi,
+burada METIN kopyasi. Ikisi de ayni sonucu verdi: duzeltme birine uygulandi,
+digeri eski kaldi, saatler kayboldu.
+KURAL: bir metin/mantik ikinci kez yaziliyorsa DUR. Tek yerde tut, digeri
+oradan okusun.
+
+app.js v=20260731u. DOSYA: YALNIZ app.js
+
 ## 240b. KATFON DOGRULANDI + BAYAT METINLER TEMIZLENDI (31 Tem)
 
 Ekran kontrolu: alti fon satiri ve sekiz ozet kutusu DOSYAYLA BIREBIR.
