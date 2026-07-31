@@ -220,6 +220,77 @@ export default async function handler(req, res){
      KIRILGANLIK: sayfa yapısı değişirse kırılır. Bu yüzden her kalem için
      BULUNDU/BULUNAMADI raporlanır ve eksik kalem SESSİZCE atlanmaz —
      yarım bilanço, yanlış bilançodan iyidir ama ancak EKSİĞİ SÖYLERSE. */
+  /* §207 ?mod=ceyrek — DÖNEMSELİ ÇEYREKLİĞE ÇEVİR.
+     ÇAPRAZ DENETİM SONUCU (TOASO 1639026): sekiz kalemin hepsi Fintables ile
+     BİREBİR tuttu. Üç kalem toplam yoluyla da doğrulandı:
+       1Ç26 101.780.929 + 2Ç26 100.016.179 = 201.797.108 = KAP ✓
+     AMA KAP DÖNEMSEL (kümülatif) veriyor: "6 Aylık" satırı iki çeyreğin
+     toplamıdır. Kart için ÇEYREKLİK gerekir — TOASO'nun 2Ç cirosu 100 mlr,
+     201,8 değil.
+     ÇEYREKLİK = bu dönemin kümülatifi − önceki dönemin kümülatifi.
+     Bu yüzden İKİ bildirim çekilir: cari (2026/2) ve bir önceki (2026/1).
+     1. dönem zaten çeyrekliktir, çıkarma yapılmaz.
+     4. dönem/Yıllık için önceki 3. dönemdir.
+     KARŞILAŞTIRMA DÖNEMİ: her bildirimin `onceki` alanı geçen yılın aynı
+     kümülatifidir; aynı çıkarma onda da yapılır, y/y çeyreklik çıkar. */
+  if (_mod === 'ceyrek') {
+    const kod = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+    const yil = parseInt(req.query && req.query.yil) || new Date().getFullYear();
+    const donem = parseInt(req.query && req.query.donem) || 2;
+    if(!kod) return res.status(400).json({ ok:false, err:'kod gerekli' });
+
+    const kok = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host);
+    const ICBASLIK = process.env.CRON_SECRET ? { 'Authorization':'Bearer '+process.env.CRON_SECRET } : {};
+    const bilancoCek = async (id) => {
+      const r = await fetch(kok+'/api/kap?mod=bilanco&id='+id, { headers:ICBASLIK, signal:AbortSignal.timeout(25000) });
+      return r.ok ? r.json() : null;
+    };
+    /* Bildirim kimliklerini mod=fr'den bul — 120 günlük pencere iki çeyreği kapsar */
+    const frCek = async () => {
+      const r = await fetch(kok+'/api/kap?mod=fr&gun=120', { headers:ICBASLIK, signal:AbortSignal.timeout(30000) });
+      const j = r.ok ? await r.json() : null;
+      return (j && j.fr) || [];
+    };
+
+    try{
+      const fr = await frCek();
+      const bul = (y,d) => fr.find(x => x.kod===kod && x.yil===y && x.donem===d);
+      const cari = bul(yil, donem);
+      if(!cari) return res.status(200).json({ ok:false, kod, yil, donem,
+        err:'bildirim bulunamadı — 120 günlük pencerede yok. mod=fr ile kontrol et' });
+
+      const oncekiDonem = donem > 1 ? bul(yil, donem-1) : null;
+      const [b1, b0] = await Promise.all([ bilancoCek(cari.id),
+        oncekiDonem ? bilancoCek(oncekiDonem.id) : Promise.resolve(null) ]);
+      if(!b1 || !b1.ok) return res.status(200).json({ ok:false, kod, err:'cari bilanço alınamadı' });
+
+      const cikar = (a, b) => (a==null) ? null : (b==null ? a : a-b);
+      const ceyreklik = {}, kumulatif = {};
+      Object.keys(b1.kalemler||{}).forEach(k=>{
+        const c = b1.kalemler[k]; if(!c) return;
+        kumulatif[k] = { deger:c.deger, onceki:c.onceki };
+        /* BİLANÇO kalemleri (özkaynak, nakit) STOK'tur — çıkarma YAPILMAZ.
+           Gelir tablosu kalemleri AKIŞ'tır — çıkarılır. */
+        const stok = (k==='ozkaynak' || k==='nakit');
+        if(stok || donem===1 || !b0 || !b0.ok || !b0.kalemler[k]){
+          ceyreklik[k] = stok ? { deger:c.deger, onceki:c.onceki, tur:'stok' }
+                              : (donem===1 ? { deger:c.deger, onceki:c.onceki, tur:'ceyreklik' }
+                                           : { deger:null, onceki:null, tur:'hesaplanamadı' });
+          return;
+        }
+        const p = b0.kalemler[k];
+        ceyreklik[k] = { deger: cikar(c.deger, p.deger), onceki: cikar(c.onceki, p.onceki), tur:'ceyreklik' };
+      });
+
+      return res.status(200).json({ ok:true, kod, yil, donem, sablon:b1.sablon,
+        cariBildirim: { id:cari.id, tarih:cari.tarih, gecikmeGun:cari.gecikmeGun, url:cari.url },
+        oncekiBildirim: oncekiDonem ? { id:oncekiDonem.id, tarih:oncekiDonem.tarih } : null,
+        kumulatif, ceyreklik,
+        uyari: (donem>1 && (!b0 || !b0.ok)) ? 'önceki dönem bildirimi alınamadı — çeyreklik hesaplanamadı, yalnız kümülatif var' : null,
+        not: 'kumulatif = KAP\'ın verdiği dönemsel · ceyreklik = bu dönem − önceki dönem. Özkaynak ve nakit STOK kalemidir, çıkarılmaz. Birim BİN TL.' });
+    }catch(e){ return res.status(200).json({ ok:false, kod, hata:String(e.message||e).slice(0,140) }); }
+  }
+
   if (_mod === 'bilanco') {
     const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
     if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
