@@ -2715,6 +2715,42 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 240. "YUKLEDIM AMA GORUNMUYOR" — 21 dosyada onbellek acikti (31 Tem)
+
+Kullanici katfon.json'u yukledi, panel ESKISINI gosterdi. Dosyayi actik:
+`guncelleme: 2026-07-31` — DOSYA DOGRUYDU. Sorun TARAYICI ONBELLEGI.
+
+### 240.1 OLCUM
+    22 JSON cekiminden YALNIZ 1'inde {cache:'no-store'} vardi
+    (bist-takvim.json — o da §166'da elle eklenmisti)
+Diger 21 dosya tarayici onbellegi ile servis ediliyordu.
+JS ve CSS dosyalari ?v= etiketi tasiyor, degistiginde URL degisiyor ve
+tarayici yeniden cekiyor. JSON VERI dosyalarinda boyle bir mekanizma YOK —
+URL sabit, icerik degisiyor, tarayici fark etmiyor.
+
+### 240.2 BU SORUN BUGUN KAC KEZ ZAMAN KAYBETTIRDI
+Deploy sonrasi "calismadi" diye teshis kurdugumuz her tur bu ihtimali
+tasiyordu. §228'de API'ye surum damgasi, §231'de panele surum rozeti
+ekledim — IKISI DE DOGRUYDU ama KOK SEBEBI cozmuyordu:
+kod dosyalari icin ?v= vardi, VERI dosyalari icin hicbir sey yoktu.
+Rozet "panel yeni" der, veri eski gelir, teshis yine yaniltir.
+
+### 240.3 COZUM VE GEREKCESI
+21 cekime {cache:'no-store'} eklendi.
+NEDEN GUVENLI: bir veri dosyasi TAZELENMEK icin vardir; onbellege alinmasi
+amacina aykiridir. Vercel CDN'i zaten s-maxage ile yonetiyor — istemci
+onbellegi ustune bir katman daha ekliyor ve o katman KONTROLSUZ.
+Maliyet: her acilista tekrar indirme. Dosyalar kucuk (en buyugu ~200 KB),
+CDN'den geliyor, fark hissedilmez.
+
+### 240.4 DERS — MEKANIZMA VARSA HER TURU KAPSAMALI
+JS icin surum etiketi kurulmustu ve ISLIYORDU. Veri dosyalari AYNI SORUNU
+yasiyordu ama mekanizmanin disinda kalmisti.
+Bir cozum bir DOSYA TURU icin kurulduysa, "digerleri de ayni sorunu yasar mi"
+diye sorulmali. Burada cevap EVETTI ve alti ay boyunca sorulmadi.
+
+DOSYALAR: app.js (v=20260731r) + katfon.json + index.html
+
 ## 239. KATFON TAZELENDI — tek oturumda, tek tarihte (31 Tem)
 
 Onceki hali: getiriler 28 Tem, AUM/akis 29 Tem — IKI FARKLI TARIH ve ikisi de

@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-p';
+const KTP_SURUM = '20260731-r';
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -278,6 +278,13 @@ async function ecbTarayiciCek(){
 async function avrupaSekme(){
   const el=$('avEndeksBody'); if(!el)return;
   try{
+    /* §240 VERİ DOSYALARINDA ÖNBELLEK KAPALI.
+       "Dosyayı yükledim ama panel eskiyi gösteriyor" bugün DEFALARCA yaşandı.
+       Sebep: JSON veri dosyaları ?v= etiketi taşımıyor (js/css gibi) ve
+       tarayıcı eskisini saklıyordu. 22 çekimden YALNIZ BİRİNDE no-store vardı.
+       Bir veri dosyası TAZELENMEK için var; önbelleğe alınması amacına aykırı.
+       Vercel CDN'i zaten s-maxage ile yönetiyor, istemci önbelleği gereksiz.
+       ARTIK HEPSİNDE {cache:'no-store'} — deploy eder etmez görünür. */
     const r=await fetch('/api/market');
     if(!r.ok){el.innerHTML='<div class="sub">Endeks verisi alınamadı.</div>';return;}
     const j=await r.json();
@@ -970,7 +977,7 @@ function fmwGeriYukle(){
   return n>0;
 }
 async function fmInit(){
-  try{FM=await (await fetch('/fm.json')).json();}
+  try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}
   catch(e){$('fmBody').innerHTML='<tr><td colspan="10" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
   $('fmUni').textContent=FM.meta.uni;$('fmRanked').textContent=FM.meta.ranked;$('fmTopN').textContent='Top '+FM.meta.topn;
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
@@ -980,7 +987,7 @@ async function fmInit(){
     fmRender();});
   fmRender();
   setTimeout(fmKarne,1200);
-  try{TRK=await (await fetch('/track.json')).json();trkBazUygula();trackRender();const sb=$('trkSifirla');if(sb&&!sb.dataset.bagli){sb.dataset.bagli='1';sb.addEventListener('click',trkSifirla);}if(window.__market)canliEnjekte();}
+  try{TRK=await (await fetch('/track.json',{cache:'no-store'})).json();trkBazUygula();trackRender();const sb=$('trkSifirla');if(sb&&!sb.dataset.bagli){sb.dataset.bagli='1';sb.addEventListener('click',trkSifirla);}if(window.__market)canliEnjekte();}
   catch(e){$('trkNote').textContent='track.json yüklenemedi.';}
 }
 /* ── SİCİL TABANI ── sicili istenen tarihten yeniden başlatma (§108) ──
@@ -1363,7 +1370,7 @@ function pozHisse(){
   return {kapsanan,disi,kapT};
 }
 async function riskStresGuncelle(){
-  if(!FM){try{FM=await (await fetch('/fm.json')).json();}catch(e){return;}}
+  if(!FM){try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}catch(e){return;}}
   riskLens();korLens();stresTest();
 }
 function riskLens(){
@@ -1583,7 +1590,7 @@ async function usCek(){
 function usInit(){ if(!$('usAkis'))return; usCek(); setInterval(usCek,1800000); }
 async function kapInit(){
   if(!$('kapAkis'))return;
-  try{const f=FM||await (await fetch('/fm.json')).json();kapEvren=new Set(f.data.map(r=>r.t));}catch(e){kapEvren=new Set();}
+  try{const f=FM||await (await fetch('/fm.json',{cache:'no-store'})).json();kapEvren=new Set(f.data.map(r=>r.t));}catch(e){kapEvren=new Set();}
   document.querySelectorAll('.kfilt').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.kfilt').forEach(x=>x.classList.remove('act'));b.classList.add('act');
     kapFiltre=b.dataset.f;kapRender();
@@ -1637,7 +1644,7 @@ function haberRender(){
 /* ---- Katılım Fon Dünyası ---- */
 let KATFON=null,katfonSort='ytd';
 async function katfonInit(){
-  try{KATFON=await (await fetch('/katfon.json')).json();}catch(e){$('katfonBody').innerHTML='<div class="note">katfon.json yüklenemedi.</div>';return;}
+  try{KATFON=await (await fetch('/katfon.json',{cache:'no-store'})).json();}catch(e){$('katfonBody').innerHTML='<div class="note">katfon.json yüklenemedi.</div>';return;}
   const sel=$('katfonSort');if(sel)sel.addEventListener('change',()=>{katfonSort=sel.value;katfonRender();});
   katfonRender();
   katfonCanli();
@@ -1747,7 +1754,7 @@ function katfonRender(){
 /* ---- Yabancı Para Akışı (portföy + carry) ---- */
 let YABANCI=null;
 async function yabanciInit(){
-  try{YABANCI=await (await fetch('/yabanci.json')).json();}catch(e){return;}
+  try{YABANCI=await (await fetch('/yabanci.json',{cache:'no-store'})).json();}catch(e){return;}
   yabanciRender();
 }
 function yabanciRender(){
@@ -2988,7 +2995,7 @@ function incPaylasInit(){
 async function incelemeInit(){
   const el=$('incelemeBody'); if(!el)return;
   try{
-    const d=await (await fetch('/inceleme-ai.json')).json();
+    const d=await (await fetch('/inceleme-ai.json',{cache:'no-store'})).json();
     /* §161: panel DOSYA SIRASIYLA basıyordu, sıralama yapmıyordu. Yeni kart
        dosyanın SONUNA eklenince listenin DİBİNE düşüyor ve kullanıcı görmüyor
        (29 Tem'de tam bu oldu — üç kart yazıldı, 18-20. sıradaydı).
@@ -3075,7 +3082,7 @@ el.innerHTML=birlesik.map(k=>{
 
 let SEKTOR=null;
 async function sektorInit(){
-  try{SEKTOR=await (await fetch('/sektor.json')).json();}catch(e){return;}
+  try{SEKTOR=await (await fetch('/sektor.json',{cache:'no-store'})).json();}catch(e){return;}
   renderHeatmap();renderRotasyon();
   if(window.__market)canliEnjekte();
 }
@@ -3178,7 +3185,7 @@ $('btnYenile').addEventListener('click',async()=>{
 
 /* ---- Halka Arzlar ---- */
 let HALKAARZ=null;
-async function halkaarzInit(){try{HALKAARZ=await (await fetch('/halkaarz.json')).json();}catch(e){return;}halkaarzRender();}
+async function halkaarzInit(){try{HALKAARZ=await (await fetch('/halkaarz.json',{cache:'no-store'})).json();}catch(e){return;}halkaarzRender();}
 function halkaarzRender(){
   if(!HALKAARZ||!$('halkaarzBody'))return;
   const arr=HALKAARZ.arzlar, gec=arr.filter(a=>a.getiri!=null);
@@ -3201,7 +3208,7 @@ function halkaarzRender(){
 /* ---- Guidance ---- */
 let GUIDANCE=null, guidanceManuel=JSON.parse(localStorage.getItem('guidance_v1')||'[]');
 async function guidanceInit(){
-  try{GUIDANCE=await (await fetch('/guidance.json')).json();}catch(e){}
+  try{GUIDANCE=await (await fetch('/guidance.json',{cache:'no-store'})).json();}catch(e){}
   const ara=$('guidanceAra'); if(ara)ara.addEventListener('input',guidanceRender);
   const ek=$('gmEkle'); if(ek)ek.addEventListener('click',guidanceEkle);
   guidanceRender();
@@ -5656,7 +5663,7 @@ boot();
 async function hazineRender(){
   const el=$('hazBody'); if(!el)return;
   try{
-    const d=await (await fetch('/hazine-takvim.json')).json();
+    const d=await (await fetch('/hazine-takvim.json',{cache:'no-store'})).json();
     const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
     const trh=(s)=>{const p=s.split('-');return p[2]+' '+ay[parseInt(p[1])-1]+' '+p[0].slice(2);};
     const bugun=new Date().toISOString().slice(0,10);
@@ -5689,7 +5696,7 @@ async function ihracRender(){
     // Düşerse statik dosyaya döner (damgalı yedek deseni). Hazine bloğu bundan bağımsızdır.
     let d=null;
     try{ const r=await fetch('/api/kap?mod=sukuk'); const j=await r.json(); if(j&&j.ok)d=j; }catch(e){}
-    if(!d) d=await (await fetch('/sukuk-ihrac.json')).json();
+    if(!d) d=await (await fetch('/sukuk-ihrac.json',{cache:'no-store'})).json();
     const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
     const trh=(s)=>{const p=s.split('-');return p[2]+' '+ay[parseInt(p[1])-1]+' '+p[0].slice(2);};
     const tipRenk=(t)=>/Yeşil|Sürdürülebilir/.test(t)?'#0FA26B':/Dönemsel|Ödeme/.test(t)?'#5B8DEF':'#8896A5';
@@ -5890,7 +5897,7 @@ function dcfInit(){
 /* ---- EV/EBITDA Multiple ---- */
 let MULTIPLE=null, CANLI_FIYAT={};
 async function multipleInit(){
-  try{MULTIPLE=await (await fetch('/multiple.json')).json();}catch(e){return;}
+  try{MULTIPLE=await (await fetch('/multiple.json',{cache:'no-store'})).json();}catch(e){return;}
   // canlı fiyat daha önce geldiyse uygula
   if(MULTIPLE.hisseler)MULTIPLE.hisseler.forEach(h=>{ if(CANLI_FIYAT[h.k]!=null)h.fiyat=CANLI_FIYAT[h.k]; });
   const sel=$('mulTicker');
@@ -6234,7 +6241,7 @@ function treInit(){
 async function aiInit(){
   const el=$('aiKartlar'); if(!el)return;
   try{
-    const d=await (await fetch('/inceleme-ai.json')).json();
+    const d=await (await fetch('/inceleme-ai.json',{cache:'no-store'})).json();
     const skorRenk=(s)=>s==='POZİTİF'?'var(--mm2)':s==='NEGATİF'?'#DE4B5E':'var(--muted)';
     el.innerHTML=(d.kartlar||[]).map(k=>
       '<div class="card" style="margin-top:10px">'+
@@ -6256,7 +6263,7 @@ async function aiInit(){
 /* ---- Veri Tazeliği (guncelleme-plani.json) ---- */
 async function planInit(){
   let plan;
-  try{plan=await (await fetch('/guncelleme-plani.json')).json();}catch(e){return;}
+  try{plan=await (await fetch('/guncelleme-plani.json',{cache:'no-store'})).json();}catch(e){return;}
   if(!$('planBody'))return;
   const bugun=new Date(), sg=plan.siklik_gun;
   const ayKisa=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
@@ -6285,11 +6292,11 @@ async function planInit(){
 /* ---- Portföy Yönetimi ---- */
 let ANALIST=null, MFIYAT={}, MHACIM={}, MADET={}, MULTIPLE_TARIH='', TEMETTU={}, TEMETTU_TARIH='', MRISK={};
 async function pyInit(){
-  try{ANALIST=await (await fetch('/analist.json')).json();}catch(e){}
+  try{ANALIST=await (await fetch('/analist.json',{cache:'no-store'})).json();}catch(e){}
   let MJSON=null;
-  try{MJSON=await (await fetch('/multiple.json')).json();MULTIPLE_TARIH=MJSON.fiyat_tarihi;MJSON.hisseler.forEach(h=>{MFIYAT[h.k]=h.fiyat;MHACIM[h.k]=h.hacim;MADET[h.k]=h.adet;});}catch(e){}
-  try{const t=await (await fetch('/temettu.json')).json();TEMETTU_TARIH=t.guncelleme;t.hisseler.forEach(h=>TEMETTU[h.k]=h.temettu);}catch(e){}
-  try{const rr=await (await fetch('/risk.json')).json();rr.hisseler.forEach(h=>MRISK[h.k]={vol:h.vol,beta:h.beta});}catch(e){}
+  try{MJSON=await (await fetch('/multiple.json',{cache:'no-store'})).json();MULTIPLE_TARIH=MJSON.fiyat_tarihi;MJSON.hisseler.forEach(h=>{MFIYAT[h.k]=h.fiyat;MHACIM[h.k]=h.hacim;MADET[h.k]=h.adet;});}catch(e){}
+  try{const t=await (await fetch('/temettu.json',{cache:'no-store'})).json();TEMETTU_TARIH=t.guncelleme;t.hisseler.forEach(h=>TEMETTU[h.k]=h.temettu);}catch(e){}
+  try{const rr=await (await fetch('/risk.json',{cache:'no-store'})).json();rr.hisseler.forEach(h=>MRISK[h.k]={vol:h.vol,beta:h.beta});}catch(e){}
   const ara=$('anaAra');if(ara)ara.addEventListener('input',anaRender);
   anaRender();atifRender();riskMetRender();likiditeRender();temettuRender();
   try{ if(typeof omurgaInit==='function') omurgaInit(); }catch(e){}
@@ -6787,7 +6794,7 @@ async function loadYabanciCanli(){
     if($('yabRezervVal')){
       const [rr,rj]=await Promise.all([
         fetch('/api/evds2?mod=rezerv').then(r=>r.json()),
-        fetch('/rezerv.json').then(r=>r.json())
+        fetch('/rezerv.json',{cache:'no-store'}).then(r=>r.json())
       ]);
       if(rr&&rr.ok&&rr.net&&rr.net.degerUSD!=null&&rj&&rj.swapStoku!=null){
         const shNet=+(rr.net.degerUSD-rj.swapStoku).toFixed(1);
@@ -6826,7 +6833,7 @@ async function karneRezervCanli(){
     // Net canlı olduğu için swap hariç net de her gün canlı hareket eder.
     if(j.net && j.net.degerUSD!=null && $('karneSwapHaric')){
       try{
-        const rj=await (await fetch('/rezerv.json')).json();
+        const rj=await (await fetch('/rezerv.json',{cache:'no-store'})).json();
         const swapStoku=rj.swapStoku||0;
         const shNet=+(j.net.degerUSD - swapStoku).toFixed(1);
         const gun=rj.guncelleme||'';
@@ -6988,17 +6995,28 @@ async function ftGetir(){
     const idler = (kayit.idler && kayit.idler.length) ? kayit.idler : [kayit.id];
 
     d.textContent = 'tablo çıkarılıyor… ('+idler.length+' bildirim)';
-    let t = null, kullanilan = null;
+    let enIyi = null, enIyiId = null, enIyiSkor = 0; const denemeler = [];
     for(const id of idler.slice(0,6)){
       const rr = await fetch('/api/kap?mod=tablo&id='+id, {cache:'no-store'});
       const jj = await rr.json();
-      if(jj && jj.ok && (jj.bilanco.bulunan + jj.gelir.bulunan) > 3){ t = jj; kullanilan = id; break; }
+      /* §233 KISMİ TABLO DA GÖSTERİLİR. Eşik ">3 kalem" idi; genişletilmiş
+         şablonun (15+18 kalem) etiketleri hiç doğrulanmamıştı, az kalem
+         bulunca TAMAMEN başarısız sayılıyordu.
+         Kısmi tablo hiç tablodan iyidir — eksik kalemler zaten SOLUK ve
+         "bulunamadı" notuyla görünüyor (§218.3), yani yanıltmıyor.
+         En çok kalem bulan kimlik seçilir, ilk yeterli olan değil. */
+      const skor = (jj && jj.ok) ? (jj.bilanco.bulunan + jj.gelir.bulunan) : 0;
+      denemeler.push({ id, kalem:skor });
+      if(skor > enIyiSkor){ enIyi = jj; enIyiId = id; enIyiSkor = skor; }
+      if(skor >= 12) break;                    // yeterince dolu, aramayı bitir
     }
-    if(!t){
+    const t = enIyi, kullanilan = enIyiId;
+    if(!t || enIyiSkor === 0){
       d.textContent = 'ayrıştırılamadı';
-      N.innerHTML = '<div class="note" style="border-left:3px solid var(--down)"><b>Tablo çıkarılamadı.</b> '+
-        idler.length+' bildirim denendi, hiçbirinde yeterli kalem bulunamadı. '+
-        'En erken bildirim genelde faaliyet raporudur; finansal tablo taşıyan bildirim bulunamamış olabilir.</div>';
+      /* Hangi kimlik kaç kalem verdi — tahmin ettirme, göster (§145) */
+      N.innerHTML = '<div class="note" style="border-left:3px solid var(--down)"><b>Tablo çıkarılamadı.</b><br>'+
+        denemeler.map(x=>'· KAP '+esc(String(x.id))+' → '+x.kalem+' kalem').join('<br>')+
+        '<br><span class="thin">Teşhis için: <code>/api/kap?mod=teshis&kod='+esc(kod)+'&gun=20</code> — hangi etiketin ne bulduğunu, birimi ve kısıt sebeplerini döndürür.</span></div>';
       return;
     }
     d.textContent = '';

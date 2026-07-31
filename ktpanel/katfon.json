@@ -1,7 +1,7 @@
 {
  "fiyat_tarihi": "2026-07-31",
  "guncelleme": "2026-07-31 — getiri · AUM · akış hepsi 31 Tem (Fintables MCP, tek oturumda)",
- "kaynak": "Fintables (getiriler) · TEFAS (ünvan/ücret)",
+ "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
    "ad": "Para Piyasası Fonları",
@@ -842,7 +842,7 @@
  ],
  "getiri_kaynak": "Fintables — mumlar_gunluk_gh kapanış serisi. 1G önceki işlem günü · 1A 30 Haz · 3A 30 Nis · YTD 31 Ara 2025 · 1Y 31 Tem 2025 · 3Y 31 Tem 2023 referanslı.",
  "getiri_guncelleme": "2026-07-31",
- "not_dagitim": "Fintables fiyat serisi dagitim icin duzeltilmemistir. Tek gunde %0,2 uzerinde dusen fon dagitim yapmis sayilir ve donem getirileri duzeltilir. 29 Tem taramasinda yalniz MPE (26 Tem) bulundu.",
+ "not_dagitim": "Fintables fiyat serisi dağıtım için düzeltilmemiştir. Tek günde %0,2 üzerinde düşen fon dağıtım yapmış sayılır ve dönem getirileri düzeltilir. 31 Tem taramasında 1G aykırı değer BULUNMADI (eşik |%1,5|); MPE'nin 26 Tem dağıtımı 1A ve öncesi dönemleri hâlâ etkiliyor.",
  "aum_kaynak": "Fintables — gunluk_fon_degerleri (fon_buyuklugu · yatirimci_sayisi · gunluk_nakit_giris_cikisi), 31 Tem 2026.",
- "not_akis": "AUM/akis/yatirimci Fintables gunluk_fon_degerleri (29 Tem). KPR kurumsal serbest fon: 1.275 yatirimci, 79 mlr -> ortalama 62 mn TL. Haftada iki kez ~8,3 mlr cikis gozlendi (22 ve 29 Tem); tek kurumun periyodik nakit yonetimi, veri hatasi degil."
+ "not_akis": "AUM · akış · yatırımcı sayısı Fintables gunluk_fon_degerleri, 31 Tem 2026. KPR kurumsal serbest fon: 1.294 yatırımcı, 77,4 mlr ₺ → ortalama 60 mn ₺. Büyük çıkışlar tek kurumun periyodik nakit yönetiminden; veri hatası değil."
 }
