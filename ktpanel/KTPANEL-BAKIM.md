@@ -2677,6 +2677,51 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 232. CANTE COZULDU — AYRISTIRACAK BILANCO YOKMUS (31 Tem)
+
+Teshis tek bakista bitirdi:
+    "secilen": { "id":1635828, "baslik":"TSRS Uyumlu Sürdürülebilirlik Raporu" }
+    "sayfadakiDigerBasliklar": ["İç karbon fiyatı (TL)", ...]
+CANTE'nin nobette yakalanan bildirimi SURDURULEBILIRLIK RAPORU. Icinde
+bilanco YOK, olmasi da beklenmez.
+AYRISTIRICI BOZUK DEGILDI — AYRISTIRACAK BILANCO YOKTU.
+
+### 232.1 KOK SEBEP: SINIFA BAKTIM, BASLIGA DEGIL
+KAP `disclosureClass:'FR'` altinda DORT ayri sey veriyor:
+    Finansal Rapor · Faaliyet Raporu · Sorumluluk Beyani ·
+    TSRS Uyumlu Surdurulebilirlik Raporu
+Yalniz BIRINCISINDE tablo var.
+§227'de bunu KESFETTIM ve `tip` alanini hesapladim. AMA NOBETI ONA
+BAGLAMADIM — nobet sinifa bakmaya devam etti.
+BIR AYRIMI HESAPLAYIP KULLANMAMAK, HIC HESAPLAMAMAKLA AYNI.
+Bu oturumun DOKUZUNCU "bir yeri degistirip digerini birakma" vakasi.
+
+### 232.2 TESHIS ARACININ KENDISI YANILTICIYDI
+mod=teshis'te su vardi:
+    secilen = tablolu[0] || bulunan[0] || null;
+Tablo tasiyan yoksa SESSIZCE listedeki ilkine dusuyordu — CANTE'de
+surdurulebilirlik raporuna dusup "0 kalem" raporladi. Yani teshis, "sablon
+uyusmuyor" izlenimi verdi; oysa dogru cevap "bu bildirimde bilanco yok"tu.
+Bir teshis araci YANLIS YERE BAKARSA, aradigi seyi bulamamasi TESHIS DEGIL
+GURULTUDUR.
+ARTIK: tablo tasiyan yoksa acikca soyluyor ve ne buldugunu LISTELIYOR.
+
+### 232.3 DUZELTME
+mod=fr artik tablo tasimayan bildirimleri SUZUYOR (?tumu=1 ile kapatilabilir).
+Yanitta `suzgec` ve `suzulen` alanlari var — kac bildirimin elendigi gorunur.
+SONUC: CANTE ve GENIL nobet listesinden DUSECEK. Ikisi de finansal rapor
+vermemis; nobet onlari yanlislikla isaretliyordu.
+
+### 232.4 DERS — "BULUNAMADI" UC AYRI SEY DEMEK OLABILIR
+  (a) veri var, ayristirici bulamiyor      -> sablon eksigi
+  (b) veri var, kisit reddediyor            -> kisit yanlis (§230)
+  (c) VERI YOK                              -> aranacak sey yok  <- CANTE
+Ucu de ayni mesaji veriyordu: "ayristirilamadi". Uc tur (a) ve (b) sandim,
+(c) cikti. Teshis alani olmasa hala saniyordum.
+Bir hata mesaji, HANGI TURDEN oldugunu ayirt etmiyorsa yol gostermez.
+
+surum kap-2026-07-31-g. DOSYALAR: api/kap.js
+
 ## 230. KENDI KISITIMI GECERLI VERIYI REDDEDER HALE GETIRDIM (31 Tem)
 
 BORSK ONCE CALISIYORDU — kart uretildi, Earnings AI'a dustu. Sonra uc
