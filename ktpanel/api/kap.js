@@ -360,7 +360,14 @@ export default async function handler(req, res){
      `onceki` verilmezse yalnız kümülatif döner — 1. dönem için doğrudur. */
   if (_mod === 'ceyrek') {
     const id  = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
-    const onc = String((req.query && req.query.onceki) || '').replace(/[^0-9]/g,'').slice(0,10);
+    /* §211c VİRGÜL KORUNMALI. §211'de `onceki` parametresine virgüllü liste
+       desteği ekledim ama BURADAKİ temizleyiciyi düzeltmeyi unuttum:
+       [^0-9] virgülü de siliyordu ve "1601476,1601475,1601474" önce
+       "160147616014751601474" oluyor, sonra slice(0,10) ile "1601476160"
+       kalıyordu — var olmayan bir kimlik.
+       Bir yeri değiştirip diğerini bırakmak: bu oturumun en sık hatası
+       (§129 alan silme · §189 kısmi yükleme · şimdi bu). */
+    const onc = String((req.query && req.query.onceki) || '').replace(/[^0-9,]/g,'').slice(0,80);
     if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr çıktısındaki id' });
     try{
       /* §210b SIRAYLA, PARALEL DEĞİL. İki 5 MB sayfayı aynı anda işlemek
