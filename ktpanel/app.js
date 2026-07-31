@@ -29,6 +29,9 @@ const HABER_TARIH="2026-07-14";
    eklemeyi unutmuştum; sekme açılıyordu ama alt çubuk kayboluyordu.
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
+/* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
+const KTP_SURUM = '20260731-p';
+
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
@@ -69,6 +72,9 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
         const y = $('ftYil'), bu = new Date().getFullYear();
         for(let k=bu; k>=bu-5; k--) y.innerHTML += '<option value="'+k+'">'+k+'</option>';
         const g = $('ftGetir'); if(g) g.onclick = ftGetir;
+        /* §231 Rozete PANEL sürümü — API sürümü ilk çağrıda eklenir.
+           İkisi ayrı deploy edilebiliyor ve tutarsız kalabiliyorlar. */
+        try{ const tg=$('ftTag'); if(tg) tg.textContent = 'panel '+KTP_SURUM; }catch(e){}
         const kd = $('ftKod'); if(kd) kd.addEventListener('keydown', ev=>{ if(ev.key==='Enter') ftGetir(); });
       }catch(e){ console.warn('[KTPanel] t23 kurulum:', e); }
     }
@@ -6958,6 +6964,9 @@ async function ftGetir(){
     const u = '/api/kap?mod=fr&kod='+kod+'&bas='+py+b1+'&son='+py+b2+'&dilim=3';
     const r = await fetch(u, {cache:'no-store'});
     const j = await r.json();
+    /* API sürümünü rozete yaz — panel ve API AYRI deploy edilebiliyor,
+       hangisinin eski kaldığı tek bakışta görünmeli (§228). */
+    try{ const tg=$('ftTag'); if(tg) tg.textContent='panel '+KTP_SURUM+' · api '+((j&&j.surum)||'?'); }catch(e){}
     const aday = (j.fr||[]).filter(x => x.yil===yil && x.donem===don);
     /* §223c HANGİ DÖNEMLER VAR — sorulan yoksa bulunanları göster.
        BORSK vakası: kullanıcı 2Ç26 aradı, şirket 1Ç26 açıklamıştı (121 gün
