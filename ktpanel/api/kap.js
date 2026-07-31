@@ -314,7 +314,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-f';
+const _SURUM = 'kap-2026-07-31-g';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -518,11 +518,27 @@ export default async function handler(req, res){
         v.idler = v.tabloIdler.concat(digerleri);
       }
     });
-    const fr = [...kayit.values()].sort((a,b)=>
+    /* §232 TABLO TAŞIMAYANI SÜZ — nöbetin CANTE'yi yakalama sebebi buydu.
+       KAP `disclosureClass:'FR'` altında DÖRT ayrı şey veriyor:
+         Finansal Rapor · Faaliyet Raporu · Sorumluluk Beyanı ·
+         TSRS Uyumlu SÜRDÜRÜLEBİLİRLİK RAPORU
+       ÖLÇÜLDÜ (CANTE 1635828): başlığı sürdürülebilirlik raporu, içinde
+       karbon fiyatı tablosu var, BİLANÇO YOK.
+       Ayrıştırıcı bozuk değildi — AYRIŞTIRACAK BİLANÇO YOKTU.
+       §227'de `tip` alanını hesapladım ama nöbeti ona BAĞLAMADIM.
+       Bir ayrımı hesaplayıp KULLANMAMAK, hiç hesaplamamakla aynı.
+       ?tumu=1 ile süzgeç kapanır (takvim tüm bildirimleri isteyebilir). */
+    const tumuIst = String((req.query && req.query.tumu) || '') === '1';
+    const _hepsi = [...kayit.values()];
+    const fr = (tumuIst ? _hepsi
+        : _hepsi.filter(v => (v.tabloIdler && v.tabloIdler.length) || v.tip === 'tablo')
+      ).sort((a,b)=>
       a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : (a.saat < b.saat ? 1 : -1));
 
     res.setHeader('Cache-Control','s-maxage=540, stale-while-revalidate=1800');
     return res.status(200).json({ surum:_SURUM,  ok: fr.length>0, kaynak:'byCriteria/FR',
+      suzgec: tumuIst ? 'yok (tumu=1)' : 'yalnız "Finansal Rapor" başlıklılar',
+      suzulen: _hepsi.length - fr.length,
       pencere: ARALIK ? (basIst+' → '+sonIst) : (gunIst+' gün'),
       kodSuzgeci: kodSuz || null, gun:gunIst,
       taranan: ham.length, dilim: dilimler.length,
@@ -635,7 +651,17 @@ export default async function handler(req, res){
         }catch(e){}
       }
       const tablolu = bulunan.filter(x=>/^Finansal Rapor/i.test(String(x.baslik||'')));
-      secilen = tablolu[0] || bulunan[0] || null;
+      /* §232b SESSİZCE BAŞKASINA DÜŞME. Önce tablo taşıyan yoksa listedeki
+         ilkine düşüyordu — CANTE'de sürdürülebilirlik raporuna düşüp
+         "0 kalem" raporladı. Teşhis aracının KENDİSİ yanıltıcı olmuş.
+         Artık tablo yoksa AÇIKÇA söylenir ve ne bulunduğu listelenir. */
+      if(!tablolu.length){
+        return res.status(200).json({ surum:_SURUM, ok:false, kod:kodI,
+          err:'Bu pencerede FİNANSAL TABLO içeren bildirim YOK',
+          bulunanlar: bulunan.map(x=>({ id:x.id, baslik:x.baslik, tarih:x.tarih, yil:x.yil, donem:x.donem })),
+          not:'KAP disclosureClass=FR altında sürdürülebilirlik raporu, faaliyet raporu ve sorumluluk beyanı da geliyor — bunların içinde BİLANÇO YOKTUR. Şirket bu pencerede finansal rapor vermemiş olabilir; daha geniş ?gun= dene.' });
+      }
+      secilen = tablolu[0];
       if(!secilen) return res.status(200).json({ surum:_SURUM, ok:false, kod:kodI,
         err:'FR bildirimi bulunamadı ('+gunI+' gün penceresinde)', bulunanlar:bulunan });
       id = String(secilen.id);
