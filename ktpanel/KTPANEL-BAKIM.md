@@ -2677,6 +2677,53 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 218. FINANSAL TABLOLAR SEKMESI (t23) — yatay + dikey analiz (31 Tem)
+
+Kullanici: "portfoy yonetimi altina Finansal Tablolar sekmesi, tickerini
+girdigimiz sirketin bilancosu ve gelir tablosu gelsin. Bilancoda YATAY,
+gelir tablosunda DIKEY analiz."
+
+### 218.1 NEDEN BU ESLESME DOGRU
+BILANCO = STOK. Belirli bir ANDAKI durumu gosterir. Iki tarihi
+karsilastirmak (YATAY) anlamlidir: "ne birikmis" degil "ne DEGISMIS".
+GELIR TABLOSU = AKIS. Bir donemin ICINI gosterir. Her kalemi hasilatin
+yuzdesi yapmak (DIKEY) yapiyi acar: maliyet ciroyu ne kadar yiyor,
+faaliyet gideri nerede.
+Tersini yapmak bilgi vermez degil ama SORUYU KACIRIR.
+Bankada dikey analizin paydasi hasilat degil FAIZ GELIRLERI.
+
+### 218.2 SABLONLAR GENISLETILDI (§216)
+mod=kart sekiz kalemle yetiniyordu. Tam tablo icin:
+  _BILANCO_SANAYI 15 kalem · _GELIR_SANAYI 18 kalem
+  _BILANCO_BANKA   8 kalem · _GELIR_BANKA  11 kalem
+Her kalem [anahtar, etiketler, GIRINTI] tasiyor — tabloda hiyerarsi gorunuyor
+(ana kalem kalin ve gri zeminli, alt kalem girintili).
+SIRA YINE ONEMLI: uzun etiket once (§206 dipnot dersi).
+
+### 218.3 EKSIK KALEM SESSIZCE ATLANMIYOR
+Bulunamayan kalem `yok:true` tasiyor ve tabloda SOLUK, "— bulunamadi"
+notuyla gosteriliyor. Toplam da yaziliyor: "12/15 kalem".
+KAP sayfa yapisi degisirse hangi kalemin dustugu ANINDA gorunur.
+Bu oturumun en cok tekrarlanan dersi (§143 · §185 · §199 · §210):
+BASARISIZLIK GORUNUR OLMALI.
+
+### 218.4 OKUMA NOTU — kural tabanli, AI degil
+Tablonun altinda uc desen otomatik isaretleniyor:
+  · faaliyet marji brutten cok oynadiysa -> hareket faaliyet giderlerinde
+  · faaliyet marji duserken net marj arttiysa -> finansman/parasal tasiyor
+  · ozkaynak %5'ten fazla gerilediyse -> temettu/zarar/enflasyon duzeltmesi
+Bunlar bugun ELLE bulunan desenler (TOASO · ARCLK · CWENE). Kural tabanli,
+AI cagirmadan calisiyor — hizli ve deterministik.
+
+### 218.5 DONEM PENCERESI
+Sirket + yil + donem secilir; panel o donemin bildirimini KAP'ta arar.
+Pencereler: 1C 15 Nis-15 Haz · 2C 15 Tem-15 Eyl · 3C 15 Eki-15 Ara ·
+4C (yillik) ERTESI YIL 15 Sub-30 Nis.
+Bulunamazsa neden bulunamadigi yaziliyor (gec aciklama ihtimali dahil).
+Aynı donemin birden fazla bildirimi icin `idler` sirayla deneniyor (§211).
+
+app.js v=20260731h. DOSYALAR: api/kap.js (mod=tablo) + app.js + index.html.
+
 ## 215. EBU KART TASLAGI YAZIYOR — zincir baglandi (31 Tem)
 
 Kullanici: "ebu yorumlasin karti oyle bana cikartsin."

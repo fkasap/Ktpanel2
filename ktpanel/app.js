@@ -54,6 +54,18 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
        CAGIRANI KALMADI (eskiden takvimRender icinden cagriliyordu, o silindi).
        Kutu Piyasa sekmesinde olduguna gore tetikleyicisi de orada olmali.
        Tembel: sekme acilinca bir kez. */
+    /* §218b t23 KURULUMU — sekme açılınca BİR KEZ. Yıl seçenekleri ve düğme
+       bağlantısı burada kurulur. §163 dersi: varsayılan açık olmayan sekmede
+       tembel kurulum sorunsuz, ama bir kereliğine yapıldığından emin ol. */
+    if(b.dataset.tab==='t23' && !window.__ftKuruldu){
+      window.__ftKuruldu = true;
+      try{
+        const y = $('ftYil'), bu = new Date().getFullYear();
+        for(let k=bu; k>=bu-5; k--) y.innerHTML += '<option value="'+k+'">'+k+'</option>';
+        const g = $('ftGetir'); if(g) g.onclick = ftGetir;
+        const kd = $('ftKod'); if(kd) kd.addEventListener('keydown', ev=>{ if(ev.key==='Enter') ftGetir(); });
+      }catch(e){ console.warn('[KTPanel] t23 kurulum:', e); }
+    }
     if(b.dataset.tab==='t1'&&!kazancYuklendi){kazancYuklendi=true;
       if(typeof kazancTakvimCanli==='function')kazancTakvimCanli();}
     if(b.dataset.tab==='t1'){ try{ if(typeof bistTakvimRender==='function')bistTakvimRender();
@@ -6870,3 +6882,131 @@ function yorumPano(){
 
 /* ABD sekmesi: sayfa açılışında da bir kez dene (sekme açıksa/yenilendiyse) */
 setTimeout(function(){ try{ if(document.getElementById('usEndeksBody')) abdSekme(); }catch(e){console.error('[KTPanel] usRender başlangıç:',e);} }, 2500);
+
+
+/* ── §218 FİNANSAL TABLOLAR (t23) ─────────────────────────────────────────────
+   Ticker + dönem gir, KAP'tan tam bilanço ve gelir tablosu gelsin.
+   BİLANÇO → YATAY: iki tarihin karşılaştırması. Bilanço STOK'tur; "ne
+     birikmiş" değil "ne DEĞİŞMİŞ" sorusu anlamlıdır.
+   GELİR TABLOSU → DİKEY: her kalem hasılatın yüzdesi. Dönemin İÇ YAPISINI
+     gösterir: maliyet ne kadar yiyor, faaliyet gideri nerede.
+   Tersini yapmak bilgi vermez değil ama SORUYU KAÇIRIR.
+   İKİ ADIM: mod=fr ile bildirimi bul (dönem penceresi daraltılmış),
+   sonra mod=tablo ile tabloyu çıkar. Aynı dönemin birden fazla bildirimi
+   olduğu için `idler` sırayla denenir (§211). */
+const FT_PENCERE = { 1:['-04-15','-06-15'], 2:['-07-15','-09-15'], 3:['-10-15','-12-15'], 4:['-02-15','-04-30'] };
+
+function ftSayi(n){ return (n==null) ? '—' : trN(n, 0); }
+function ftYuzde(n, basamak){ return (n==null) ? '—' : trN(n, basamak==null?1:basamak)+'%'; }
+function ftRenk(n, tersMi){
+  if(n==null) return 'var(--muted)';
+  const p = tersMi ? -n : n;
+  return p > 0.05 ? 'var(--up)' : p < -0.05 ? 'var(--down)' : 'var(--ink)';
+}
+
+async function ftGetir(){
+  const kod = ($('ftKod').value||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+  const yil = parseInt($('ftYil').value)||new Date().getFullYear();
+  const don = parseInt($('ftDonem').value)||2;
+  const d = $('ftDurum'), B = $('ftBilanco'), G = $('ftGelir'), N = $('ftNot');
+  if(!kod){ d.textContent='ticker gir'; return; }
+  B.innerHTML=''; G.innerHTML=''; N.innerHTML='';
+  d.textContent = 'bildirim aranıyor…';
+  try{
+    /* 4. dönem (yıllık) ERTESİ yıl açıklanır — pencere ona göre kayar */
+    const py = (don===4) ? yil+1 : yil;
+    const [b1, b2] = FT_PENCERE[don];
+    const u = '/api/kap?mod=fr&kod='+kod+'&bas='+py+b1+'&son='+py+b2+'&dilim=3';
+    const r = await fetch(u, {cache:'no-store'});
+    const j = await r.json();
+    const aday = (j.fr||[]).filter(x => x.yil===yil && x.donem===don);
+    if(!aday.length){
+      d.textContent = 'bulunamadı';
+      N.innerHTML = '<div class="note" style="border-left:3px solid var(--down)"><b>Bildirim bulunamadı.</b> '+
+        esc(kod)+' için '+yil+'/'+don+' dönemi, '+esc(py+b1)+' – '+esc(py+b2)+' penceresinde yok. '+
+        'Şirket geç açıklamış olabilir (bazıları 120+ gün gecikiyor) ya da o dönem finansal rapor vermemiş olabilir.'+
+        (j.uyari ? '<br><span class="thin">'+esc(String(j.uyari))+'</span>' : '')+'</div>';
+      return;
+    }
+    const kayit = aday[0];
+    const idler = (kayit.idler && kayit.idler.length) ? kayit.idler : [kayit.id];
+
+    d.textContent = 'tablo çıkarılıyor… ('+idler.length+' bildirim)';
+    let t = null, kullanilan = null;
+    for(const id of idler.slice(0,6)){
+      const rr = await fetch('/api/kap?mod=tablo&id='+id, {cache:'no-store'});
+      const jj = await rr.json();
+      if(jj && jj.ok && (jj.bilanco.bulunan + jj.gelir.bulunan) > 3){ t = jj; kullanilan = id; break; }
+    }
+    if(!t){
+      d.textContent = 'ayrıştırılamadı';
+      N.innerHTML = '<div class="note" style="border-left:3px solid var(--down)"><b>Tablo çıkarılamadı.</b> '+
+        idler.length+' bildirim denendi, hiçbirinde yeterli kalem bulunamadı. '+
+        'En erken bildirim genelde faaliyet raporudur; finansal tablo taşıyan bildirim bulunamamış olabilir.</div>';
+      return;
+    }
+    d.textContent = '';
+    ftCiz(t, kod, yil, don, kullanilan, kayit);
+  }catch(e){ d.textContent = 'hata'; N.innerHTML = '<div class="note">'+esc(String((e&&e.message)||e).slice(0,160))+'</div>'; }
+}
+
+function ftCiz(t, kod, yil, don, id, kayit){
+  const DON = {1:'1Ç (3 Aylık)',2:'2Ç (6 Aylık)',3:'3Ç (9 Aylık)',4:'4Ç (Yıllık)'};
+  /* ── BİLANÇO · YATAY ── */
+  const bl = t.bilanco.kalemler.map(x=>{
+    if(x.yok) return '<tr style="opacity:.42"><td colspan="5" style="font-size:10px;padding-left:'+(x.girinti*14)+'px">'+esc(x.etiket)+' <span class="thin">— bulunamadı</span></td></tr>';
+    const kalin = x.girinti===0;
+    return '<tr'+(kalin?' style="font-weight:700;background:var(--bg2)"':'')+'>'+
+      '<td style="padding-left:'+(x.girinti*14)+'px">'+esc(x.etiket)+'</td>'+
+      '<td class="num">'+ftSayi(x.cari)+'</td>'+
+      '<td class="num">'+ftSayi(x.onceki)+'</td>'+
+      '<td class="num" style="color:'+ftRenk(x.fark)+'">'+ftSayi(x.fark)+'</td>'+
+      '<td class="num" style="color:'+ftRenk(x.degisim)+'">'+ftYuzde(x.degisim)+'</td></tr>';
+  }).join('');
+  $('ftBilanco').innerHTML =
+    '<div class="kart-bas"><span class="lbl">BİLANÇO · YATAY ANALİZ</span>'+
+    '<span class="tag">'+esc(kod)+' '+yil+'/'+don+'</span></div>'+
+    '<table><thead><tr><th>Kalem</th><th class="num">Cari</th><th class="num">Önceki</th>'+
+    '<th class="num">Fark</th><th class="num">Değişim</th></tr></thead><tbody>'+bl+'</tbody></table>'+
+    '<div class="sub" style="font-size:10px;margin-top:4px">'+t.bilanco.bulunan+'/'+t.bilanco.toplam+' kalem · '+
+    'Yatay analiz iki TARİHİ karşılaştırır: bilanço stok kalemidir, "ne değişmiş" sorusu anlamlıdır. Birim bin TL.</div>';
+
+  /* ── GELİR TABLOSU · DİKEY ── */
+  const paydaAd = t.sablon==='banka' ? 'faiz gelirleri' : 'hasılat';
+  const gl = t.gelir.kalemler.map(x=>{
+    if(x.yok) return '<tr style="opacity:.42"><td colspan="5" style="font-size:10px;padding-left:'+(x.girinti*14)+'px">'+esc(x.etiket)+' <span class="thin">— bulunamadı</span></td></tr>';
+    const kalin = x.girinti===0;
+    return '<tr'+(kalin?' style="font-weight:700;background:var(--bg2)"':'')+'>'+
+      '<td style="padding-left:'+(x.girinti*14)+'px">'+esc(x.etiket)+'</td>'+
+      '<td class="num">'+ftSayi(x.cari)+'</td>'+
+      '<td class="num"><b>'+ftYuzde(x.pay,2)+'</b></td>'+
+      '<td class="num" style="color:var(--muted)">'+ftYuzde(x.oncekiPay,2)+'</td>'+
+      '<td class="num" style="color:'+ftRenk(x.puanFark)+'">'+(x.puanFark==null?'—':(x.puanFark>0?'+':'')+trN(x.puanFark,2)+' p')+'</td></tr>';
+  }).join('');
+  $('ftGelir').innerHTML =
+    '<div class="kart-bas"><span class="lbl">GELİR TABLOSU · DİKEY ANALİZ</span>'+
+    '<span class="tag">'+esc(t.temel)+'</span></div>'+
+    '<table><thead><tr><th>Kalem</th><th class="num">Tutar</th><th class="num">Pay</th>'+
+    '<th class="num">Önceki pay</th><th class="num">Puan farkı</th></tr></thead><tbody>'+gl+'</tbody></table>'+
+    '<div class="sub" style="font-size:10px;margin-top:4px">'+t.gelir.bulunan+'/'+t.gelir.toplam+' kalem · '+
+    'Dikey analiz her kalemi '+paydaAd+'ın yüzdesi olarak gösterir — dönemin İÇ YAPISI. '+
+    'Puan farkı, geçen yılın aynı dönemine göre yapının nasıl kaydığını söyler.</div>';
+
+  /* ── OKUMA NOTU ── */
+  const bul = a => (t.gelir.kalemler.find(x=>x.ad===a)||{});
+  const brut = bul('brutKar'), faal = bul('faaliyetKar'), net = bul('netKar');
+  const notlar = [];
+  if(brut.puanFark!=null && faal.puanFark!=null && Math.abs(faal.puanFark) > Math.abs(brut.puanFark)*1.5)
+    notlar.push('Faaliyet marjı ('+(faal.puanFark>0?'+':'')+trN(faal.puanFark,2)+' p) brüt marjdan ('+(brut.puanFark>0?'+':'')+trN(brut.puanFark,2)+' p) daha çok oynadı — hareket üretim maliyetinde değil <b>faaliyet giderlerinde</b>.');
+  if(faal.puanFark!=null && net.puanFark!=null && faal.puanFark<0 && net.puanFark>0)
+    notlar.push('Faaliyet marjı düşerken net marj arttı — farkı <b>finansman gideri ve/veya parasal pozisyon</b> taşıyor. Operasyonel iyileşme değil.');
+  const oz = t.bilanco.kalemler.find(x=>x.ad==='ozkaynak');
+  if(oz && oz.degisim!=null && oz.degisim < -5)
+    notlar.push('Özkaynak %'+trN(Math.abs(oz.degisim),1)+' geriledi — temettü, zarar ya da enflasyon muhasebesi düzeltmesi olabilir; dipnota bakılmalı.');
+  $('ftNot').innerHTML =
+    (notlar.length ? '<div class="note"><b>Okuma notu.</b> '+notlar.join(' ')+'</div>' : '')+
+    '<div class="sub" style="font-size:10px;margin-top:5px">Kaynak: <a href="https://www.kap.org.tr/tr/Bildirim/'+esc(id)+'" target="_blank" rel="noopener">KAP '+esc(id)+'</a> · '+
+    esc(kayit.tarih)+' · dönem sonundan '+(kayit.gecikmeGun!=null?kayit.gecikmeGun+' gün sonra':'—')+
+    (kayit.gec?' <b style="color:var(--down)">(GECİKMİŞ)</b>':'')+
+    ' · şablon: '+esc(t.sablon)+' · '+esc(DON[don])+'</div>';
+}
