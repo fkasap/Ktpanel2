@@ -1032,13 +1032,28 @@ async function bilancoTaslak(btn, kod, idler, donem){
   btn.parentNode.appendChild(kutu);
   kutu.textContent = 'metrikler alınıyor…';
   try{
-    let met = null, kullanilan = null;
+    let met = null, kullanilan = null; const denemeKaydi = [];
     for(const id of String(idler).split(',').filter(Boolean).slice(0,6)){
-      const r = await fetch('/api/kap?mod=kart&id='+id, {cache:'no-store'});
-      const j = await r.json();
-      if(j && j.ok && j.metrikler){ met = j; kullanilan = id; break; }
+      try{
+        const r = await fetch('/api/kap?mod=kart&id='+id, {cache:'no-store'});
+        const j = await r.json();
+        denemeKaydi.push({ id, bulunan:(j&&j.bulunan)||0, toplam:(j&&j.toplam)||8, hata:(j&&!j.ok)?(j.err||null):null });
+        if(j && j.ok && j.metrikler){ met = j; kullanilan = id; break; }
+      }catch(e){ denemeKaydi.push({ id, hata:String((e&&e.message)||e).slice(0,60) }); }
     }
-    if(!met){ kutu.textContent = 'Bilanço ayrıştırılamadı — denenen kimliklerin hiçbirinde kalem bulunamadı. KAP sayfası yapısı değişmiş olabilir.'; btn.disabled=false; btn.textContent=eski; return; }
+    /* §220b BAŞARISIZLIK SEBEBİ AYRINTILI. Önce tek cümle diyordu: "KAP sayfası
+       yapısı değişmiş olabilir" — bu bir tahmindi ve çoğu zaman YANLIŞTI.
+       Gerçek sebep genelde ŞABLON UYUMSUZLUĞU: solo (konsolide olmayan) rapor,
+       farklı sektör şablonu, ya da bildirimin finansal tablo değil ek belge
+       olması. Artık her kimliğin kaç kalem verdiği YAZILIYOR. */
+    if(!met){
+      kutu.innerHTML = '<b>Bilanço ayrıştırılamadı.</b><br>'+
+        denemeKaydi.map(d=>'· KAP '+esc(d.id)+' → '+(d.hata?esc(d.hata):(d.bulunan+'/'+d.toplam+' kalem'))).join('<br>')+
+        '<br><span class="thin">Muhtemel sebepler: bildirim finansal tablo değil (faaliyet/denetim raporu) · '+
+        'solo rapor şablonu · sektöre özel tablo (GYO, sigorta, holding). '+
+        'KAP sayfasını açıp tablo başlıklarını gönderirsen şablona eklenebilir.</span>';
+      btn.disabled=false; btn.textContent=eski; return;
+    }
 
     btn.textContent = 'yorum…';
     kutu.textContent = 'metrikler alındı ('+met.bulunan+'/'+met.toplam+' kalem, '+met.temel+'). Yorum yazılıyor…';

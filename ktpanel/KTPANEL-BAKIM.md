@@ -2677,6 +2677,41 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 220. SOLO RAPOR SABLONU — nobet ise yaradi, eksigi gosterdi (31 Tem)
+
+§219'da evren genisleyince nobet UC kod yakaladi: BORSK · CANTE · GENIL.
+Ikisinde taslak dugmesi "Bilanco ayristirilamadi" dedi.
+NOBET ISE YARADI: gormeseydik bu eksigi hic fark etmeyecektik. Genis evren
+yalniz daha cok sirket izlemek degil, AYRISTIRICIYI DAHA COK SINAMAK demek.
+
+### 220.1 SEBEP: KONSOLIDE vs SOLO
+Etiket listem KONSOLIDE rapor icin yazilmisti:
+    "Ana Ortaklık Payları" · "Ana Ortaklığa Ait Özkaynaklar"
+Bunlar yalniz KONSOLIDE tablolarda bulunur. Kucuk sirketler SOLO (konsolide
+olmayan) rapor verir; orada bu satirlar YOKTUR — dogrudan
+    "DÖNEM KARI (ZARARI)" · "ÖZKAYNAKLAR"
+yazar. TOASO/GARAN gibi buyuk isimlerle test ettigim icin bu gorunmedi.
+DERS: bir ayristiriciyi yalniz BUYUK orneklerle sinamak, kucuk olcekteki
+YAPISAL FARKI gizler. Test kumesi CESITLI olmali.
+
+### 220.2 DUZELTME
+Konsolide etiketler once, SOLO yedekte:
+    netKar   : Ana Ortaklık Payları -> DÖNEM KARI (ZARARI) -> Dönem Karı (Zararı)
+    ozkaynak : Ana Ortaklığa Ait Özkaynaklar -> ÖZKAYNAKLAR -> Özkaynaklar
+    ciro/brutKar/faaliyetKar : buyuk-kucuk harf varyantlari eklendi
+Ikisi de bulunursa KONSOLIDE, yalniz ikincisi bulunursa SOLO demektir.
+
+### 220.3 HATA MESAJI TAHMIN EDIYORDU
+Onceki metin: "KAP sayfasi yapisi degismis olabilir" — bu bir TAHMINDI ve
+cogu zaman YANLISTI. Gercek sebep sablon uyumsuzlugu, bildirimin ek belge
+olmasi ya da sektore ozel tablo.
+Artik her kimligin KAC KALEM verdigi yaziliyor ve muhtemel sebepler
+siralaniyor. Kullaniciya somut bir sonraki adim veriliyor: "KAP sayfasini
+acip tablo basliklarini gonderirsen sablona eklenebilir."
+Bir hata mesaji, SEBEBI bilmiyorsa TAHMIN ETMEMELI — ne bildigini soylemeli.
+
+ajan.js v=20260731g. DOSYALAR: api/kap.js + ajan.js + index.html.
+
 ## 219b. t23'U PY_GRUP'A EKLEMEYI UNUTTUM (31 Tem)
 
 Kullanici: "finansal tablolar sekmesine tikladigimda alt sekmeler kayboluyor."
