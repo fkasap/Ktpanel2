@@ -303,7 +303,35 @@ async function tazelikNobeti(){
     const sezonAylar = plan.bilanco_sezonu_aylar || [];
     const sezonLimit = plan.sezon_limit_gun || 10;
     const sezonda = sezonAylar.indexOf(new Date().getMonth()+1) >= 0;
-    const bayat = [];
+    const bayat = [], tanimsiz = [];
+    /* §245 SIKLIK SERBEST METİNDİ, ENUM GİBİ OKUNUYORDU.
+       Eski satır: `let limit = sg[k.siklik] || 7`. Sözlükte olmayan HER değer
+       sessizce 7 güne düşüyordu. ÖLÇÜLDÜ: 32 katmanın 12'sinde `siklik`
+       sözlükle eşleşmiyor — 'canlı (Yahoo)', 'canlı (EVDS)', 'aylık (~25'i)',
+       'olay bazlı (FR)' … Sonuç: AYLIK bir katman 7 günde bayat sayılır,
+       OLAY BAZLI olan da öyle — kronik yanlış alarm. Ve yanlış alarm, §243'te
+       öğrendiğimiz gibi, bir süre sonra arka plan gürültüsüne dönüşür.
+       İKİ KATMANLI ÇÖZÜM:
+         1) NORMALİZE — parantezli ek atılır, Türkçe harf sadeleşir:
+            'canlı (Yahoo)' → canli · 'aylık (~25'i)' → aylik
+            'olay bazlı (FR)' → olaybazli → ÖN EK eşleşmesiyle 'olay'
+         2) YAPTIRIM — normalize sonrası HÂLÂ eşleşmiyorsa VARSAYMA YOK:
+            katman `tanimsiz` listesine düşer ve panoda görünür.
+       §243'ün dersi buydu: kural vardı, yaptırım yoktu. Sessiz varsayım,
+       yanlış limitten daha tehlikelidir — çünkü kimse sorgulamaz. */
+    const SIK_ANAHTAR = Object.keys(sg);
+    const sikNorm = (s) => String(s||'').toLowerCase()
+      .replace(/\(.*?\)/g,'')
+      .replace(/[ıİ]/g,'i').replace(/[şŞ]/g,'s').replace(/[çÇ]/g,'c')
+      .replace(/[ğĞ]/g,'g').replace(/[üÜ]/g,'u').replace(/[öÖ]/g,'o')
+      .replace(/[^a-z]/g,'');
+    const sikCoz = (ham) => {
+      const n = sikNorm(ham);
+      if(sg[n] != null) return {limit:sg[n], anahtar:n};
+      const p = SIK_ANAHTAR.find(a => n.indexOf(a) === 0);
+      if(p) return {limit:sg[p], anahtar:p};
+      return {limit:null, anahtar:null};
+    };
     /* §198 TEK KAYNAK: dosyanın KENDİ tarihi, plandakinden ÖNCELİKLİ.
        Sorun: plan `son` alanı ELLE tutuluyordu. inceleme-ai.json 30 Tem'de
        tazelendi ama plan 21 Tem'de kaldı ve Ebu "10 gün bayat" dedi — dosya
@@ -325,7 +353,11 @@ async function tazelikNobeti(){
       }catch(e){}
     }));
     (plan.katmanlar||[]).forEach(k=>{
-      if(k.siklik==='canli' || k.son==='otomatik') return;
+      const S = sikCoz(k.siklik);
+      /* Muafiyet artık NORMALİZE anahtardan okunuyor: 'canlı (EVDS)' de
+         'canli' sayılır. Önceden yalnız birebir 'canli' eşleşiyordu. */
+      if(S.anahtar==='canli' || k.son==='otomatik') return;
+      if(S.limit==null){ tanimsiz.push({ad:k.ad, dosya:k.dosya, siklik:k.siklik}); return; }
       const dosyaT = dosyaTarihleri[String(k.dosya||'')];
       const planD = nobTarih(k.son), dosyaD = nobTarih(dosyaT);
       /* Hangisi YENİYSE o geçerli — plan geride kalmış olabilir (elle tutuluyor),
@@ -333,12 +365,12 @@ async function tazelikNobeti(){
       const d = (dosyaD && (!planD || dosyaD > planD)) ? dosyaD : planD;
       if(!d) return;
       const gun = nobGun(d);
-      let limit = sg[k.siklik] || 7, sez = false;
+      let limit = S.limit, sez = false;
       if(k.sezon && sezonda && limit > sezonLimit){ limit = sezonLimit; sez = true; }
       if(gun > limit) bayat.push({ad:k.ad, dosya:k.dosya, gun, limit, sez, asim:gun-limit});
     });
     bayat.sort((a,b)=>b.asim-a.asim);
-    return {bayat, sezonda, toplam:(plan.katmanlar||[]).length};
+    return {bayat, tanimsiz, sezonda, toplam:(plan.katmanlar||[]).length};
   }catch(e){ return null; }
 }
 
@@ -508,6 +540,16 @@ function nobetCiz(){
           '<span class="sub" style="font-size:9px">'+x.gun+' g\u00fcn'+(x.sez?' \u00b7 \u26a1sezon':'')+'</span></div>').join('')+'</div>';
     } else if(T){
       h += '<div class="sub" style="font-size:11px">\u2713 T\u00fcm damgal\u0131 katmanlar vadesinde ('+T.toplam+' katman)</div>';
+    }
+    /* §245: TANIMSIZ SIKLIK — sessiz varsayım yerine görünür uyarı.
+       Bu satır çıkıyorsa guncelleme-plani.json'daki `siklik` değeri
+       siklik_gun sözlüğüyle eşleşmiyor demektir. O katman İZLENMİYOR;
+       "vadesinde" raporuna da girmez, bayat listesine de. Yani sessizce
+       kör noktaya düşer — bu uyarı tam olarak onu görünür kılmak için var. */
+    if(T && T.tanimsiz && T.tanimsiz.length){
+      h += '<div style="margin-top:7px"><span class="lbl" style="color:var(--down)">\u2717 SIKLIK TANIMSIZ \u00b7 '+T.tanimsiz.length+'</span>'+
+        T.tanimsiz.slice(0,6).map(x=>'<div style="font-size:11px;margin-top:3px"><b>'+esc(x.dosya||x.ad)+'</b> '+
+          '<span class="sub" style="font-size:9px">siklik=\u201c'+esc(String(x.siklik))+'\u201d \u2014 s\u00f6zl\u00fckte yok, İZLENMİYOR</span></div>').join('')+'</div>';
     }
     el.innerHTML = h || '<div class="sub" style="font-size:11px">n\u00f6bet hen\u00fcz \u00e7al\u0131\u015fmad\u0131</div>';
   }

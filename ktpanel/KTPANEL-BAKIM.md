@@ -2715,66 +2715,120 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
-## 245. DEGERLEME KONUMU KARTI — pahali mi, adil mi, ucuz mu (31 Tem)
+## 245. PANEL TARAMASI — SESSIZ SAGLIK RAPORU, ENUM SANILAN SERBEST METIN (31 Tem)
 
-Kullanici: "portfoydeki hissenin asiri degerli mi, fair value mi, cok ucuz mu
-oldugunu soylesin. Metrikleri sen olustur."
-Yeri: Portfoy Yonetimi > Yonetim, Getiri Atfi'nin ALTINDA.
+Kullanici: "iyilestirme icin siteyi bastan sona tara ama once bakim dosyalarini
+oku ogren." Bakim dosyalari once okundu; tarama onlarda TEKRAR EDEN hata
+desenleri uzerinden yapildi (cift tanim · yetim cagri · onbellek · goreli zaman).
 
-### 245.1 TASARIM — TEK CARPAN HICBIR SEY SOYLEMEZ
-"F/K 8" bir banka icin normal, teknoloji icin ucuz, indirim dongusunde holding
-icin pahali olabilir. Anlamli olan IKI CIPA:
-    z_tarih  = (guncel − kendi ortalamasi) / kendi sapmasi    %60
-    z_sektor = (guncel − sektor medyani) / sektor sapmasi     %40
-Tek cipa yetmez: tum sektor pahaliysa hisse KENDINE gore ucuz gorunur;
-sektor ucuzsa herkes ucuz gorunur. Ikisi AYRISIRSA kart bunu isaretler (⚠)
-ve "tek basina carpanla karar verme" der.
+### 245.0 ONCE KENDI HATAM — numara cakismasi
+Ayni oturumda Ayrisma katlamasina "§201" yazmistim; §201 zaten 29 Tem'de
+KAP yoklamasi icin kullanilmisti. Gunlukte 232 kayit var ve en yuksek numara
+244 — ezberden numara vermek yerine OLCULMELI. §245'e cevrildi.
+DERS: bu dosya artik ezberlenemeyecek kadar buyuk; yeni numara yazmadan once
+`grep -o "^## [0-9]*\." | sort -n | tail` calistirilir.
 
-### 245.2 NEDEN PD/DD, NEDEN F/K DEGIL
-Enflasyon muhasebesinde (TMS-29) nominal kar SISER ve F/K yapay olarak ucuz
-gorunur. Ozkaynak da TMS-29 duzeltmesi gordugu icin PD/DD EN AZ SAPAN carpandir.
-Tasarim cok carpanli (F/K · FD/FAVOK sonra eklenebilir) ama ILK SURUM TEK
-CARPANLA kuruldu — kalibrasyon gorunur olsun diye.
-BANT PENCERESI 2023C1 SONRASI: oncesi farkli muhasebe rejimi, karistirilirsa
-z-skor kayar. 13 ceyrek, istatistiksel olarak yeterli.
+### 245.1 TARAMANIN TEMIZ CIKTIKLARI (once bunlar — kapsam kaniti)
+  · 274 fonksiyonda CIFT TANIM yok        -> §173 idempotent yazim tutmus
+  · 23 JSON cekiminin 23'unde no-store    -> §240 TAM kapsanmis
+  · Vercel fonksiyon kotasi 10/12         -> §7.3 sinirinda
+  · 369 DOM cagrisindan yalniz 2'si yetim
+Tarama raporunun temiz kismi ONEMLIDIR: neyin bakildigini gosterir. Yalniz
+bulgu yazan rapor, bakilmayan yerleri gizler.
 
-### 245.3 KRITIK VERI HATASI — BEDELSIZ DUZELTMESI
-Ilk hesapta BIGTK 107 · BSOKE 142 · DITAS 39 PD/DD cikti. IMKANSIZ.
-SEBEP: fiyat serisi bedelsiz icin GERIYE DOGRU duzeltiliyor ama odenmis
-sermayeyi O DONEMKI haliyle aliyordum.
-    ALKA: sermaye 183,75 mn -> 735 mn (4 kat bedelsiz, 2024C4)
-    eski fiyat 4'e bolunmus + eski sermaye 4 kat kucuk = 16 KAT SAPMA
-DUZELTME: TUM donemlerde GUNCEL sermaye kullanilir — fiyat zaten bugunku pay
-tabanina gore duzeltilmis. Sonrasinda rakamlar makullesti:
-THYAO 0,66 · EREGL 0,76 · SAHOL 0,52 — BIST icin gercekci.
-DERS: iki seri birlestirilirken IKISININ DE hangi tabana gore duzeltildigi
-sorulmali. §114'un (sektor rotasyonunda damgali/canli taban karisimi) aynisi.
+### 245.2 BULGU A — SAGLIK KONTROLU KAYIP KABI "SAGLIKLI" SAYIYORDU
+    const bos = kontrol.filter(([ad,id])=>{
+      const el = document.getElementById(id);
+      if(!el) return false;        // <- KAP YOKSA "sorun yok"
+Kap BOSSA yakaliyordu, kap HIC YOKSA yakalamiyordu. Oysa kabin silinmesi daha
+agir arizadir: modul kosar, hicbir sey yazmaz, konsol "✓ tum moduller yuklendi"
+der. §244'te temettu karti VE #temettuBody kaldirildi — yarim silme olsaydi bu
+kontrol susardi. Sagligi olcen aracin kendisi §60'taki TEFAS vakasina donusmustu.
+COZUM: iki ayri ariza, iki ayri rapor (KAYIP KAP = console.error, BOS = warn).
+KAPSAM: 8 kap izleniyordu, boot 30 modul kosuyordu (%27). 15 kaba cikarildi —
+karar omurgasi (atif · risk · ayrisma · sicil · reel getiri) artik izlemede.
 
-### 245.4 GUVEN SUTUNU — dururust olmanin bedeli
-50 hissenin 26'sinda degisim katsayisi (sapma/ort) 0,6 USTUNDE. Yani bant o
-kadar genis ki z-skor AYIRT ETMIYOR.
-Bunu gizlemek kolaydi; kart yine "ucuz/pahali" derdi ve guvenilir gorunurdu.
-Bunun yerine UC NOKTALI guven gostergesi kondu:
-    ●●● cv<0,35 dar bant, guclu sinyal
-    ●●  cv<0,60 orta
-    ●   cv>0,60 GENIS bant — "ucuz" demek istatistiksel gurultu olabilir
-Simulasyonda gorundu: TOASO −0,62σ ile "UCUZ" ama guven ● (cv 0,74) —
-yani o sinyale tek basina guvenilmez. EREGL ve THYAO ●●● cunku bantlari dar.
+### 245.3 BULGU B — aiInit OLU KODDU VE BOOT ONU BASARI SAYIYORDU
+`['Inceleme AI', aiInit]` boot listesinde kayitliydi. Ilk satiri:
+`const el=$('aiKartlar'); if(!el) return;` — ve #aiKartlar panelde YOKTU.
+Canli halefi incelemeInit() -> #incelemeBody, ayni inceleme-ai.json'i okuyor.
+Fonksiyon her acilista cagriliyor, sessizce donuyor, HATA ATMIYOR, bu yuzden
+saglik raporuna BASARI olarak giriyordu.
+DERS: olu kod zararsiz degildir. Calismadigi halde basarili sayildigi surece
+saglik raporunu yalanci yapar — §60 deseninin yazilim tarafi.
 
-### 245.5 CANLI
-Guncel PD/DD HER CIZIMDE canli fiyattan hesaplanir; bant ve ozkaynak
-degerleme.json'dan (ceyreklik tazelenir). Yani kart FIYAT DEGISTIKCE HAREKET
-EDER — carpan zaten fiyatin fonksiyonudur.
-POZ_GOREV'e eklendi: pozisyon degisince de tazelenir.
+### 245.3b SILME SIRASINDA YAPTIGIM HATA — ve neden node --check yakalamadi
+Fonksiyonu susly parantez sayarak silen bir betik yazdim. Govde icindeki
+string'lerde gecen parantezler sayimi kaydirdi: 22 satir yerine 3531 SATIR
+silindi, 154 fonksiyon gitti (boot · ayrismaCiz · riskButceRender dahil).
+`node --check` GECTI — cunku kalan kod sozdizimsel olarak gecerliydi.
+§156'nin dersi birebir tekrar etti: "tanimli" ile "calisiyor" ayri seylerdir;
+sozdizimi denetimi OLU KODU gormez, EKSIK KODU da gormez.
+GERI ALINDI. Dogru yontem: fonksiyon sinirini SATIR DESENIYLE bul (sonraki ust
+duzey `function`/yorum blogu), sonra sinirlari assert ile DOGRULA, sonra sil.
+DOGRULAMA: silme sonrasi FONKSIYON ENVANTERI karsilastirildi —
+eski 274, yeni 274 (aiInit gitti, takvimSatirlari geldi). Satir sayisi degil
+ENVANTER karsilastirilmali; satir sayisi bu hatayi gizleyebilirdi.
 
-### 245.6 KART KARAR VERMEZ
-Okuma notu uc kural isletir: en ucuz isim · en pahali isim · ayrisan cipalar ·
-dusuk guvenli sayisi. Ama her birinde SART var:
-"Bilanco bozulmuyorsa ekleme adayi; bozuluyorsa carpanin dusmesi UYARIDIR."
-UCUZ OLMAK IYI DEGILDIR — hisse HAK ETTIGI ICIN ucuz olabilir.
+### 245.4 BULGU C — `siklik` SERBEST METINDI, ENUM GIBI OKUNUYORDU
+    let limit = sg[k.siklik] || 7;
+Sozlukte olmayan HER deger sessizce 7 gune dusuyordu. OLCULDU: 32 katmanin
+12'sinde siklik sozlukle eslesmiyor —
+  'canli (Yahoo)' · 'canli (EVDS)' · 'canli (KAP)' · 'canli (TEFAS)' ·
+  'canli (AV)' · 'aylik (~25'i)' · 'olay bazli (FR)'
+SONUC: AYLIK bir katman 7 gunde bayat sayilir (kronik yanlis alarm), OLAY BAZLI
+olan da oyle. Ve §243'te ogrendigimiz gibi surekli tekrarlanan uyari, uyari
+olmaktan cikar.
+COZUM IKI KATMANLI:
+  1) NORMALIZE — parantezli ek atilir, Turkce harf sadelesir, on ek eslestirilir
+     'aylik (~25'i)' -> aylik (30) · 'olay bazli (FR)' -> olay (999)
+  2) YAPTIRIM — normalize sonrasi hala eslesmiyorsa VARSAYIM YOK: katman
+     `tanimsiz` listesine duser ve nobet panosunda KIRMIZI gorunur.
+OLCULDU: 12 farkli siklik degerinin 8'inin limiti duzeldi, tanimsiz kalan 0.
+DERS §243'un tekrari: sessiz varsayim, yanlis limitten tehlikelidir — cunku
+yanlis limit bir gun fark edilir, sessiz varsayim edilmez.
 
-DOSYALAR: degerleme.json (YENI · 50 hisse · 19 sektor) + app.js + index.html
-app.js v=20260731y.
+### 245.5 BULGU D — UC HAFTALIK ELLE RITUEL NOBETTEN MUAFTI
+DAMGA §B "Persembe ritueli" diyor, plan `canli`/`otomatik` diyordu:
+  yabanci.json           siklik='canli'     -> muaf   (ELLE, hafta_seri ekleme)
+  Net rezerv (index.html) siklik='canli'    -> muaf   (TCMB Persembe, ELLE)
+  sektor.json            son='otomatik'     -> muaf   (DAMGA §B2: "otomasyon YOK,
+                                                       KOPRU zorunlu")
+Uc katman da nobetcinin KOR NOKTASINDAYDI. Bu, §F0'in kendi uyarisinin ikinci
+yarisi: kayitta OLMAYAN dosya gorulmez — ama kayitta YANLIS BAYRAKLA duran
+dosya da gorulmez, ve ikincisi daha sinsidir cunku listede DURUYOR.
+Ayrica bist-takvim.json kayitta hic yoktu (§F0 ihlali) — eklendi.
+IZLENEN KATMAN: 15 -> 17. Yeni alarm: Net rezerv 15 gun (limit 7) — GERCEK,
+TCMB'nin 23 ve 30 Tem yayinlari islenmemis.
+
+### 245.6 BULGU E — IKI TARIH SATIRI BAYATTI, YENI TARIH YAZILMADI
+  "Siradaki FOMC: 28-29 Tem"        -> toplanti 29 Tem'de YAPILDI (faiz sabit)
+  "Siradaki haftalik veri: 23 Tem"  -> 8 gun geride
+Damga kural 1 ihlali DEGIL (mutlak tarih yazilmis) ama daha sinsi: tarih DOGRU
+bicimde yazilmis, OLAY GECMIS. §56'nin tarih karsiligi.
+Yeni bir sabit tarih yazmak yalniz saati sifirlardi. IKISI DE HESAPLANABILIR:
+  · FOMC — resmi takvim yil onceden yayimlanir; liste tutulur, sirada olan secilir
+  · TCMB — haftalik yayin Persembe; sirada olan takvimden turer
+Artik ELLE tazelenemezler, dolayisiyla bayatlayamazlar.
+SINIR DURUMU TEST EDILDI (9 tarih): karar gunu hala "siradaki" kalir, ertesi gun
+doner; takvim tukendiginde SESSIZ kalmaz, kirmizi "takvim guncellenmeli" der.
+NOT: ayni karttaki "Eylul ARTIRIM olasiligi ≈%82" hala STATIK — piyasa fiyatli
+bir sayi ve §56 kapsaminda. Canliya baglanmali ya da rakamsizlastirilmali;
+bu turda DOKUNULMADI, siradaki ise yazildi.
+
+### 245.7 DUZELTILMEYENLER (bilerek — siradaki ise)
+  · index.html:719 "Sali AKBNK ... ilk testi" — AKBNK 28 Tem'de acikladi.
+    Haftalik yorum metni, Pazartesi ritueline ait; sonucu bilmeden yazilmaz.
+  · DAMGA BoJ satiri "SIRADAKI: 30 Tem" — bir sonraki BoJ tarihi dogrulanmadan
+    yazilmaz (§7.5: dis kaynak varsayimi OLCULEREK dogrulanir, ezberden degil).
+  · package.json "type":"commonjs" ama api/kap.js · api/usnews.js ·
+    middleware.js ESM. Vercel derleyicisi tolere ediyor (panel canli), ama
+    yerelde `node` ile kosulursa kirilir. Gizli borç, tasinma aninda patlar.
+  · XKTUM beta tabani hala XU100'e dusuyor (onceki tur bulgusu) — sentetik
+    endeks isi ayri ve buyuk.
+
+app.js v=20260731y · ajan.js v=20260731n
+DOSYALAR: app.js + ajan.js + index.html + guncelleme-plani.json
 
 ## 244. TEMETTU KARTI VE YIELD CURVE LAB KALDIRILDI (31 Tem)
 

@@ -436,7 +436,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="kv"><span class="k">Swap hariç net rezerv <span class="thin" style="font-size:8px">net − swap stoku</span></span><span class="up" style="font-weight:600" id="karneSwapHaric">42,5 — Mart'tan beri zirve</span></div>
     <div class="kv"><span class="k">Referans: Ocak zirvesi</span><span>brüt 215,5 / swap hariç 85,7</span></div>
     <div class="kv"><span class="k">Haziran dibi (26 Haz)</span><span class="down">brüt 149,2 / swap hariç 28</span></div>
-    <div class="kv"><span class="k">Sıradaki haftalık veri</span><span>23 Tem Per</span></div>
+    <div class="kv"><span class="k">Sıradaki haftalık veri</span><span id="tcmbHaftalik">—</span></div>
     <div class="note">Okuma sırası hep aynı: brüt → net → <em>swap hariç net</em>. İlk ikisi ödünç/emanet dövizle şişebilir; swap hariç kalem TCMB'nin <em>kendi</em> cephanesidir ve kur savunma kapasitesinin gerçek ölçüsüdür. İran şokunda ~55 mlr $ eridi (85,7→18); 10 Tem'de 42,5'e kadar toparlandı ama <b>17 Tem haftasında sert döndü</b>: swap hariç net 40 mlr $ eşiğinin altına indi (37,7). Brüt/net/swap hariç net üç satır da <b>canlı</b>: brüt EVDS haftalık, net analitik bilanço (A02−A10) EVDS günlük kuruyla, swap hariç net = net − swap stoku (stok yavaş değişir, ayda bir güncellenir). Kur yükseldikçe USD karşılığı erir — panel bunu anında yansıtır.</div>
   </div>
 </div>
@@ -851,7 +851,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 
 
-<!-- §201: Ayrışma bölümü açılır-kapanır. Reel Getiri / Risk Bütçesi ile AYNI
+<!-- §245: Ayrışma bölümü açılır-kapanır. Reel Getiri / Risk Bütçesi ile AYNI
      desen (details.sektorWrap) — panelde tek bir katlama dili olsun diye.
      GÜVENLİ: ayrGrafik sabit viewBox'lı SVG üretiyor (0 0 680 150, width:100%),
      yani kapalı kapsayıcıda çizilse bile ölçü almıyor. clientWidth'e dayanan
@@ -1389,7 +1389,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="grid g2" style="margin-top:10px">
   <div class="card">
     <div class="lbl">FED &amp; POLİTİKA <span class="tag snap">27 TEM · BAŞKAN: WARSH</span></div>
-    <div class="kv"><span class="k">Sıradaki FOMC</span><span style="color:var(--mm2);font-weight:600">28–29 Tem — sabit beklentisi</span></div>
+    <div class="kv"><span class="k">Sıradaki FOMC</span><span id="fomcSonraki" style="color:var(--mm2);font-weight:600">—</span></div>
     <div class="kv"><span class="k">Eylül ARTIRIM olasılığı</span><span class="down">≈%82 (bir haftada %52→%82 fırladı)</span></div>
     <div class="kv"><span class="k">Sürükleyici</span><span>Brent şoku (zirve 102$, düzeltmede ~91$) → enflasyon bekl. → artırım fiyatlaması</span></div>
     <div class="kv"><span class="k">TÜFE (Haz)</span><span>yıllık %3,5 · çekirdek %2,6</span></div>
@@ -1505,7 +1505,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260731x"></script>
-<script src="/ajan.js?v=20260731m"></script>
+<script src="/app.js?v=20260731y"></script>
+<script src="/ajan.js?v=20260731n"></script>
 </body>
 </html>

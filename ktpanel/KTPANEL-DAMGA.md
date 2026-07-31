@@ -19,15 +19,25 @@
    atlandi ama cizelgeye "islendi" yazildi). Olay basina etkilenen TUM kartlar
    bitmeden tarih islenmez.
 
+6. TARIH SATIRI HESAPLANABILIYORSA HESAPLANIR, YAZILMAZ (§245).
+   "Siradaki FOMC" ve "Siradaki haftalik veri" satirlari elle yaziliyordu ve
+   ikisi de bayatladi. Mutlak tarih yazmak KURAL 1'i saglar ama YETMEZ: tarih
+   dogru bicimde yazilir, olay yine de gecer. Takvimi bilinen her satir
+   (FOMC · TCMB Persembe · PPK) paneldeki listeden TURETILIR.
+   Kontrol: bir tarih satirini elle guncelliyorsan, hesaplanabilir mi diye sor.
+7. GUNLUGE YENI BOLUM NUMARASI VERMEDEN ONCE OLC (§245.0).
+   BAKIM.md'de 230+ kayit var; ezberden numara verince cakisiyor.
+   `grep -o "^## [0-9]*\." KTPANEL-BAKIM.md | grep -o "[0-9]*" | sort -n | tail -1`
+
 ## A) OLAY-TETIKLI — olay gerceklesince ANINDA guncellenir
 | Kart @konum | Tetikleyici | son |
 |---|---|---|
 | 07 Kritik Takvim + GORUS @t1 | takvimdeki HER olay gerceklesince satir ✓ + paragraf | 27T |
 | MB & Beklentiler tablosu @t1 | herhangi bir MB karari (TCMB/Fed/ECB/BoJ/BOK/BoE) | 27T |
-| Fed & Politika @t17 | FOMC karari/tonu — SIRADAKI: 29 Tem CAR 21:00 | 27T |
+| Fed & Politika @t17 | FOMC karari/tonu — SIRADAKI PANEL HESAPLIYOR (§245: #fomcSonraki) · 29 Tem SABIT gecti | 31T |
 | Fed Bilancosu notlari @t17 | FOMC/QT degisikligi | 27T |
 | ECB & Politika @t18 | ECB karari — siradaki 10-11 Eyl | 27T |
-| BoJ Politika @t16 | BoJ karari — SIRADAKI: 30 Tem Per + Outlook! | 27T |
+| BoJ Politika @t16 | BoJ karari — 30 Tem toplantisi GECTI; siradaki tarih DOGRULANMADI (§7.5) | ⚠ 27T |
 | BOK kartlari @t16 | BOK karari | 27T (16T artirimi islendi) |
 | HKMA kartlari @t16 | aylik bulten (~ay ortasi) | 27T (Haz bulteni) |
 | Earnings AI @t14 + GLOBAL @t1 | bilanco aciklaninca — SIRADAKI: 29T GARAN+MSFT/META, 30T AAPL/AMZN/YKBNK, 31T PCE | 28T (ANHYT·PASEU·AKBNK·TAVHL·BMSTL) |
