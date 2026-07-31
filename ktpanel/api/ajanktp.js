@@ -209,13 +209,20 @@ Türkçe yaz. Kısa cümle kur.`;
 
     /* Kart iskeletini TAMAMLA — panel yapısına birebir uysun. Skor BİLEREK
        null: kullanıcı onaylarken girecek (§204). */
+    /* §237b KART TARİHİ = BİLDİRİM TARİHİ, bugün değil.
+       Önce bugünün tarihi yazılıyordu; kart listede yanlış yere oturuyordu
+       (BORSK 30 Tem'de açıkladı ama 31 Tem yazıldığı için GARAN'ın üstüne
+       çıktı). Sıralama tarih_iso'ya göre — bildirim tarihi doğru olan.
+       Üretim zamanı ayrıca `_uretim` alanında duruyor, kaybolmuyor. */
     const bugun = new Date();
     const AY = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const tIso = /^\d{4}-\d{2}-\d{2}$/.test(String(g.tarihIso||'')) ? String(g.tarihIso) : bugun.toISOString().slice(0,10);
+    const tD = new Date(tIso+'T00:00:00Z');
     const tam = {
       kod, ad: unvan || kod,
       donem: donem || '',
-      tarih: bugun.getDate()+' '+AY[bugun.getMonth()]+' '+bugun.getFullYear(),
-      tarih_iso: bugun.toISOString().slice(0,10),
+      tarih: tD.getUTCDate()+' '+AY[tD.getUTCMonth()]+' '+tD.getUTCFullYear(),
+      tarih_iso: tIso,
       sablon: 'bist',
       skor: null,                                   // ONAYDA girilecek
       ozet: String(kart.ozet||''),
