@@ -109,6 +109,10 @@ module.exports = async (req, res) => {
     const unvan = String(g.unvan || '').slice(0,80);
     const donem = String(g.donem || '').slice(0,20);
     const temel = String(g.temel || '').slice(0,40);
+    /* §229b BİRİM MODELE SÖYLENİR. Önce istemde sabit "Birim: BİN TL" yazıyordu
+       ve model onu tekrarlıyordu — BORSK'ta rakamlar bin kat büyük göründü.
+       Birim artık RAPORDAN geliyor; belirsizse model bunu SÖYLEYECEK. */
+    const birim = (g.birim && g.birim.ad) ? String(g.birim.ad) : 'belirsiz';
 
     /* İSTEM — bugün elle yazılan kartlardan türedi. Her kural bir VAKAYA
        dayanıyor; soyut "iyi analiz yap" demiyor, NEYE BAKILACAĞINI söylüyor. */
@@ -124,7 +128,7 @@ module.exports = async (req, res) => {
 ŞİRKET: ${kod}${unvan ? ' — '+unvan : ''}
 DÖNEM: ${donem}
 TEMEL: ${temel}
-Birim: BİN TL. Marjlar yüzde. y/y = geçen yılın aynı çeyreği.
+BİRİM: ${birim}${birim==='belirsiz' ? ' — RAPORDA BELİRTİLMEMİŞ. Tutarları yazarken birim belirsizliğini ÖZET içinde SÖYLE, uydurma.' : ' (raporun kendi beyanı)'}. Marjlar yüzde. y/y = geçen yılın aynı çeyreği.
 
 METRİKLER:
 ${JSON.stringify(g.metrikler, null, 1)}

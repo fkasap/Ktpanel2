@@ -128,6 +128,25 @@ const _ISARET = {
 /* Bin TL cinsinde bir kalem 1 milyar bin TL'yi (1 katrilyon TL) aşamaz —
    BIST'te böyle bir şirket yok. Aşan değer YANLIŞ SATIRDIR. */
 const _UST_SINIR = 1e9;
+
+/* §229 BİRİM TESPİTİ — her rapor BİN TL DEĞİL.
+   ÖLÇÜLDÜ (BORSK): brüt kâr 77.668.780 çıktı ve "bin TL" diye gösterildi →
+   77,7 MİLYAR TL. Küçük bir şeker şirketi için imkânsız. Aynı sayı TL olarak
+   okununca 77,7 MİLYON TL — makul. Net zarar 282 mn, nakit 343 mn; hepsi
+   oturuyor.
+   KAP raporlarında birim ŞİRKET SEÇİMİDİR: kimi "TL", kimi "Bin TL",
+   nadiren "Milyon TL". Sayfada belirtilir.
+   HER RAPORU BİN TL VARSAYMAK, küçük şirketleri BİN KAT BÜYÜK gösteriyordu —
+   ve bu sessizdi: sayı makul biçimliydi, yalnız ölçeği yanlıştı.
+   TESPİT: sayfadaki birim ifadesi aranır; bulunamazsa 'belirsiz' döner ve
+   ÖYLE SÖYLENİR — varsayılan uydurmak, yanlış ölçeği gizlemekti. */
+function _birimBul(h){
+  const bas = h.slice(0, 400000);   // birim ifadesi tablo başlarında olur
+  if(/Bin\s*T[Ll]|BinTL|\(Bin\s*TL\)|bin\s*Türk\s*Lirası/i.test(bas)) return { ad:'bin TL', carpan:1000 };
+  if(/Milyon\s*T[Ll]|\(Milyon\s*TL\)/i.test(bas))                        return { ad:'milyon TL', carpan:1e6 };
+  if(/Tam\s*T[Ll]|tutarlar\s+Türk\s+Lirası|TL\s*olarak\s+gösteril/i.test(bas)) return { ad:'TL', carpan:1 };
+  return { ad:'belirsiz', carpan:null };
+}
 function _isaretUygun(ad, v){
   if(v == null) return false;
   if(!isFinite(v) || Math.abs(v) > _UST_SINIR) return false;
@@ -265,7 +284,8 @@ async function _bilancoAyristir(id){
   const secili = sablon==='banka' ? banka : sanayi;
   const liste  = sablon==='banka' ? _BANKA : _SANAYI;
   const eksik = liste.filter(([ad])=>!secili.c[ad]).map(([ad])=>ad);
-  return { ok: secili.dolu>0, id, sablon, bulunan:secili.dolu, toplam:liste.length,
+  const birim = _birimBul(h);
+  return { ok: secili.dolu>0, id, sablon, birim, bulunan:secili.dolu, toplam:liste.length,
     eksik, kalemler:secili.c,
     uyari: eksik.length ? eksik.length+' kalem bulunamadı — sayfa yapısı değişmiş olabilir' : null };
 }
@@ -724,11 +744,11 @@ export default async function handler(req, res){
       });
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ surum:_SURUM,  ok:(bil.dolu+gel.dolu)>0, id, sablon,
+      return res.status(200).json({ surum:_SURUM,  ok:(bil.dolu+gel.dolu)>0, id, sablon, birim:_birimBul(h),
         temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif',
         bilanco: { bulunan:bil.dolu, toplam:bilListe.length, kalemler:yatay },
         gelir:   { bulunan:gel.dolu, toplam:gelListe.length, kalemler:dikey, payda, payda0 },
-        not:'YATAY (bilanço): fark = cari − önceki, değişim %. DİKEY (gelir tablosu): pay = kalem / '+(sablon==='banka'?'faiz gelirleri':'hasılat')+' × 100, puanFark = cari pay − önceki pay. Birim BİN TL. Bulunamayan kalem "yok:true" taşır — sessizce atlanmaz.' });
+        not:'YATAY (bilanço): fark = cari − önceki, değişim %. DİKEY (gelir tablosu): pay = kalem / '+(sablon==='banka'?'faiz gelirleri':'hasılat')+' × 100, puanFark = cari pay − önceki pay. BİRİM `birim` alanında (raporun beyanı). Bulunamayan kalem "yok:true" taşır — sessizce atlanmaz.' });
     }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
@@ -798,11 +818,11 @@ export default async function handler(req, res){
       }
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ surum:_SURUM,  ok:true, id, sablon:b.sablon,
+      return res.status(200).json({ surum:_SURUM,  ok:true, id, sablon:b.sablon, birim:b.birim,
         temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif (çeyrek sütunu yok)',
         bulunan:b.bulunan, toplam:b.toplam, eksik:b.eksik,
         metrikler:m, isaretler:isaret,
-        not:'Bu uç YORUM YAZMAZ ve SKOR VERMEZ. Rakamı, değişimi ve dikkat çeken deseni verir; kart metni ve skor insana aittir. Birim BİN TL, marjlar %.' });
+        not:'Bu uç YORUM YAZMAZ ve SKOR VERMEZ. Rakamı, değişimi ve dikkat çeken deseni verir; kart metni ve skor insana aittir. BİRİM `birim` alanında — raporun kendi beyanından okundu, VARSAYILMADI. Marjlar %.' });
     }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
@@ -873,7 +893,7 @@ export default async function handler(req, res){
           ? { ok:true, kullanilan:b0Kullanilan, bulunan:b0.bulunan, sablon:b0.sablon, denemeler }
           : { ok:false, sebep:b0Hata || 'bilinmiyor', denemeler }) : null,
         uyari: (onc && (!b0 || !b0.ok)) ? ('önceki dönem ayrıştırılamadı ('+(b0Hata||'sebep bilinmiyor')+') — çeyreklik yok, kümülatif var') : b1.uyari,
-        not: 'kumulatif = raporun dönemsel sütunu (yılbaşından bugüne) · ceyreklik = raporun ÇEYREK sütunu (çıkarma yok, enflasyon sapması yok). onceki parametresi yalnız çeyrek sütunu olmayan raporlar için yedektir. STOK kalemleri (özkaynak, nakit) dönem sonu değeridir. Birim BİN TL.' });
+        not: 'kumulatif = raporun dönemsel sütunu (yılbaşından bugüne) · ceyreklik = raporun ÇEYREK sütunu (çıkarma yok, enflasyon sapması yok). onceki parametresi yalnız çeyrek sütunu olmayan raporlar için yedektir. STOK kalemleri (özkaynak, nakit) dönem sonu değeridir. Birim `birim` alanında.' });
     }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
@@ -883,7 +903,7 @@ export default async function handler(req, res){
     try{
       const c = await _bilancoAyristir(id);
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ surum:_SURUM,  ...c, not:'deger = cari dönem · onceki = karşılaştırma dönemi. Birim BİN TL.' });
+      return res.status(200).json({ surum:_SURUM,  ...c, not:'deger = cari dönem · onceki = karşılaştırma dönemi. Birim `birim` alanında.' });
     }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
