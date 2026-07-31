@@ -311,13 +311,38 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-j';
+const _SURUM = 'kap-2026-07-31-k';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
   const _mod = String((req.query && req.query.mod) || '').toLowerCase();
-  if (_mod === 'yorum') return (await _altModul('./_lib/kapyorum.js'))(req, res);
-  if (_mod === 'sukuk') return (await _altModul('./_lib/sukuk.js'))(req, res);
+  /* §245c OPAK 500 → KONUŞAN HATA.
+     31 Tem'de panel konsolunda `mod=yorum` 500 döndü. Alt modülün KENDİSİ
+     sağlam: yerelde ESM bağlamında import edilip çağrıldı, hata yolunda
+     200 + {ok:false, err:'KAP HTTP 403'} döndürdü. Yani patlama modülün
+     İÇİNDE değil, YÜKLENMESİNDE — ve `_altModul` çıplaktı: import başarısız
+     olursa istisna handler'dan dışarı sızıyor, Vercel jenerik 500 basıyor.
+     500'ün söylediği tek şey "bir şey oldu"; hangi modül, hangi hata — yok.
+     §145'in dersi buydu: teşhis aracının kendisi susuyordu.
+     Artık sarmalanıyor: yanıt yine hata ama OKUNABİLİR — modül adı, hata
+     sınıfı ve mesajı JSON'da. Bir sonraki turda tahmin etmeye gerek kalmaz.
+     NOT: 200 DEĞİL 502 dönüyor — bu gerçek bir arıza, panelin "veri yok" ile
+     "sunucu kırık" ayrımını koruması gerekir (§60: sessizce normal görünme). */
+  async function _yonlendir(yol, ad){
+    try{
+      const f = await _altModul(yol);
+      if(typeof f !== 'function') throw new Error('modül fonksiyon döndürmedi (tip: '+typeof f+')');
+      return await f(req, res);
+    }catch(e){
+      return res.status(502).json({ ok:false, mod:ad, asama:'alt-modul-yukleme',
+        hata:(e && e.constructor && e.constructor.name) || 'Error',
+        mesaj:String((e && e.message) || e).slice(0,300),
+        ipucu:'api/_lib/'+ad+'.js dağıtıma dahil edilmemiş olabilir (Vercel dinamik import izleme) '+
+              'ya da modül yüklenirken hata attı. X-KTPanel-Surum: '+_SURUM });
+    }
+  }
+  if (_mod === 'yorum') return _yonlendir('./_lib/kapyorum.js', 'kapyorum');
+  if (_mod === 'sukuk') return _yonlendir('./_lib/sukuk.js', 'sukuk');
   /* §201 YOKLAMA: KAP yapısal finansal veri veriyor mu?
      Fintables'ın kaynağı KAP. Eğer KAP'ın finansal rapor uçları sunucudan
      erişilebiliyorsa, şu an Fintables'a bağımlı BEŞ katman birden çözülür:
