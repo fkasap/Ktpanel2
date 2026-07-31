@@ -2677,6 +2677,205 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 233. SURUM ROZETI ISE YARADI · GENISLETILMIS SABLON DOGRULANMAMISTI (31 Tem)
+
+Rozet ilk kosuda gorevini yapti:
+    panel 20260731-p · api kap-2026-07-31-g
+Ikisi de dogru. Yani deploy TAMAM, sorun BASKA YERDE. Onceki alti turda bu
+ayrimi yapmak icin her seferinde bir tur harciyorduk.
+YAN NOT: kirmizi kutudaki "ARENA" mesaji benim hata ciktim degil, EBU'NUN
+04:00 damgali eski notuymus. Iki farkli sistemin ayni alana yazmasi
+karistiriyor — Ebu notlari kendi damgasini tasidigi icin ayirt edilebiliyor.
+
+### 233.1 ASIL SORUN: TAM TABLO SABLONU HIC SINANMADI
+Sekiz kalemlik `_SANAYI` seti TOASO'da 12/12 DOGRULANDI (§213).
+Ama tam tablo sablonu (_BILANCO_SANAYI 15 + _GELIR_SANAYI 18) HIC SINANMADI —
+etiketleri KAP'in gercek metniyle karsilastirmadim, TAHMINLE yazdim.
+Ustelik esik ">3 kalem" koymustum: az bulunca TAMAMEN basarisiz sayiyordu.
+Yani calisan bir sey vardi ama gorunmuyordu.
+
+### 233.2 IKI DUZELTME
+(a) KISMI TABLO GOSTERILIR. Esik kalkti; en cok kalem bulan kimlik secilir
+    (ilk yeterli olan degil). Eksik kalemler ZATEN soluk ve "bulunamadi"
+    notuyla gorunuyor (§218.3) — yaniltmiyor. Kismi tablo hic tablodan iyi.
+    Basarisizlikta her kimligin KAC KALEM verdigi yaziliyor ve teshis komutu
+    oneriliyor.
+(b) ETIKET VARYANTLARI COGALTILDI. KAP ara toplamlari BUYUK HARF yaziyor;
+    buyuk harfli bicimler ONE alindi. Ayrica "VARLIKLAR TOPLAMI",
+    "AKTIF TOPLAMI", "PASIF TOPLAMI" gibi alternatifler eklendi.
+    16 kalem / 39 varyant (bilanco) · 19 kalem / 35 varyant (gelir).
+
+### 233.3 DERS — DOGRULANMIS SETI GENISLETIRKEN DOGRULAMA TASINMIYOR
+`_SANAYI` sekiz kalem, TOASO'da birebir dogrulandi. Sonra "tam tablo" icin
+15+18 kalemlik yeni listeler yazdim ve DOGRULANMIS SAYDIM — oysa yeni
+etiketlerin hicbiri sinanmamisti.
+Bir setin dogrulanmis olmasi, ONU GENISLETEN setin dogrulandigi anlamina
+gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
+
+app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
+DOSYALAR: api/kap.js + app.js + index.html.
+
+## 236. AAPL + AMZN KARTLARI — dortlu tablo tamamlandi (31 Tem)
+
+30 Tem kapanis sonrasi ikisi de acikladi. §184 kurali islendi: once Alpha
+Vantage (YINE BOS — EARNINGS_ESTIMATES: []), sonra web. Istisna UCUNCU kez
+dogrulandi: AV aciklama gunu ve ertesi gun kullanilamiyor.
+
+### 236.1 AAPL — POZITIF, ama asil ilginc yani BASKA
+Ciro 109,40 mlr$ (bek 108,75) · EPS 2,02$ (bek 1,88, y/y +%29).
+Ikisi de asildi ama kartin degeri rakamda degil: APPLE BU SEZONUN
+KARSI ORNEGI. MSFT·META·AMZN'de soru "AI harcamasi getiri uretiyor mu"
+idi; Apple o soruyu HIC SORMUYOR — veri merkezi kurmuyor, 100 mlr$ geri
+alimla nakdi hissedara donduruyor. Belirsizlik haftasinda RISK SIGINAGI
+olarak fiyatlandi, NVIDIA'dan en degerli sirket unvanini geri aldi.
+KARTTA DENGE KURULDU: bu bir TAKAS, ustunluk degil. Varlik-hafif yaklasim
+kisa vadede marji korur, uzun vadede ekosistemi AI yeteneklerinde geride
+birakabilir — ve bugunku rakamlar takasin MALIYETINI gostermez.
+
+### 236.2 AMZN — KARISIK, ucluуnun ORTA NOKTASI
+Ciro 200,60 mlr$ (ILK 200 mlr$ ceyregi, 18 ceyregin en hizlisi).
+AWS 42,23 mlr$ +%36,7 (bek 40,54) — 2021'den beri en hizli.
+AMA FCF −7,60 mlr$ ve uzun vadeli borc y/y +%123 -> 119 mlr$.
+
+### 236.3 DORT SIRKET, AYNI SORU, DORT CEVAP — bu sezonun tablosu
+    MSFT  Azure +%43     faaliyet marji YATAY %45   -> harcama GETIRI URETIYOR
+    AMZN  AWS +%36,7     FCF −7,6 mlr$              -> getiri VAR, nakit YOK
+    META  gelir +%28     faaliyet marji %43->%31    -> harcama VAR, getiri YOK
+    AAPL  EPS +%29       veri merkezi capex'i YOK   -> soruyu hic sormuyor
+PIYASA HER BIRINI AYRI FIYATLADI: MSFT odullendirildi · META cezalandirildi ·
+AMZN affedildi (+%7) · AAPL siginak oldu.
+DERS: "sektor" diye tek bir tepki YOK. Ayrim GETIRININ GORUNURLUGUNDE.
+Bu, panelin sektor rotasyonu okumasina da uyariyor — XUTEK'in −%4,68 dustugu
+gun bu dort sirket dort ayri yone gitti.
+
+### 236.4 SUPHELI RAKAM ISARETLENDI
+Kaynakta "AWS marji %13,69 rekor" diye bir ifade var. AWS'nin tarihsel marji
+COK DAHA YUKSEK; bu rakam baska bir metrik olabilir. Karta yazildi AMA
+"DOGRULANMADAN KULLANILMAMALI" notuyla.
+§184'un ozu: kaynagin soyledigini aynen aktarmak degil, TUTARSIZ GORUNENI
+ISARETLEMEK.
+
+DOSYALAR: inceleme-ai.json (27 kart)
+
+## 235. IKI KOPYA VARDI — kok sebep buydu (31 Tem)
+
+Kullanici hakli olarak patladi: "onceden yaptigin seyi simdi niye yapamiyorsun?"
+CEVAP: ayni isi yapan IKI AYRI KOPYA vardi ve duzeltmeleri hep BIRINE uyguladim.
+
+### 235.1 KOPYALAR
+    _bilancoAyristir icindeki `kalemBul`   -> mod=bilanco · mod=kart · mod=ceyrek
+    mod=tablo icindeki `bul`               -> Finansal Tablolar sekmesi
+Ayni mantik, ayri yazim. Degisken adlari bile farkliydi (`hucreler` vs `hc`) —
+bu yuzden toplu arama-degistirme de birini atliyordu.
+§233b'deki DAR SATIR KURTARMASI yalniz `kalemBul`a eklendi. TOASO 8 kalemlik
+yolda calisti, genis tabloda calismadi.
+UC TUR bunu sablon eksigi / satir siniri / teshis araci sandim. Hepsi ORTAK
+kisimdi ve ortak kisim ZATEN calisiyordu.
+
+### 235.2 COZUM: TEK FONKSIYON
+`_hucreBul(h, etiketler, ad, sinir)` — iki cagiran da buna delege ediyor.
+Ikinci kopya YOK, dolayisiyla sapma da OLAMAZ.
+mod=teshis de ayni dar-sinir + kurtarma mantigini kullaniyor artik; yoksa
+teshis "sayi yok" derken ayristirici buluyor olabilirdi — arac yaniltir.
+
+### 235.3 DERS — AYNI ISI IKI YERDE YAZMA
+Bu oturumda ONBIRINCI "bir yeri degistirip digerini birakma" vakasi ama
+digerlerinden FARKLI: otekiler UNUTMAKTI, bu YAPISALDI.
+Iki kopya varsa, unutmak KACINILMAZDIR — mesele dikkat degil TASARIM.
+KURAL: ayni mantigi ikinci kez yazmak uzere oldugunda DUR ve ortak fonksiyona
+cikar. "Simdilik kopyalayayim" demek, gelecekteki her duzeltmeyi IKI KEZ
+yapmayi ve birini unutmayi kabul etmektir.
+Ve unutuldugunda hata KOPYADA degil, kopyanin OLMASINDA aranmali — ben uc tur
+kopyanin icinde aradim.
+
+### 235.4 BUGUNUN OZETI — KAP ZINCIRI
+On tur surdu, sekiz gercek hata cikti (§201·202·206·208·210·211·212·230·232·234)
+ve ucu BENIM ACTIGIM regresyondu (§230 kisit · §232 suzgec · §235 kopya).
+Calisan bir seyi bozup sonra baska yerde aramak, en pahali dongu.
+
+surum kap-2026-07-31-j. DOSYALAR: api/kap.js
+
+## 234. TOASO'YU BEN KIRDIM — tabloIdler tekillestirmede kayboluyordu (31 Tem)
+
+Kullanici hakli olarak kizdi: "beceremedin bu isi ya, bozdun."
+DOGRU. TOASO 2C26 mod=ceyrek ile 12/12 CALISIYOR ama Finansal Tablolar'da
+"ayristirilamadi" diyordu. Sebep §232'de actigim kirik.
+
+### 234.1 KIRIK
+Tekillestirmede daha erken bir bildirim kaydin yerine gecerken:
+    yeni.tekrar = eski.tekrar;
+    yeni.idler  = eski.idler;     // tasiniyor
+    // yeni.tabloIdler            <- TASINMIYOR
+TOASO'nun EN ERKEN bildirimi "Sorumluluk Beyanı" (20:54). O kaydin
+tabloIdler'i BOS. Yerine gecince Finansal Rapor kimligi (1639026) KAYBOLDU.
+Sonra §232 suzgeci "tabloIdler bos" diye kaydi TAMAMEN ELEDI ->
+"bildirim bulunamadi".
+Finansal Rapor ORADA DURUYORDU; kayit suzgece takiliyordu.
+
+### 234.2 ONUNCU TEKRAR — ve en pahaliisi
+  §129 · §189 · §194 · §208 · §211c · §219b · §224 · §230 · §232 · §234
+Hepsi: BIR YERI DEGISTIRIP DIGERINI BIRAKMAK.
+Bu sefer ozellikle kotu cunku:
+  (a) §232'de suzgeci eklerken tekillestirmenin O DALINA bakmadim
+  (b) uc tur boyunca YANLIS YERDE aradim (sablon, satir siniri, teshis araci)
+  (c) her turda "duzelttim" deyip kullaniciyi tekrar denemeye gonderdim
+CALISAN bir seyi bozup sonra baska yerde arama — en pahali hata dongusu.
+
+### 234.3 NE YAPMALIYDIM
+TOASO mod=ceyrek ile CALISIYORDU. Finansal Tablolar'da calismiyordu.
+IKI YOL ARASINDAKI FARKI ilk turda listelemeliydim:
+    mod=ceyrek : id DISARIDAN gelir, mod=fr KULLANMAZ
+    mod=tablo  : id'yi mod=fr'den ALIR
+Fark mod=fr'deydi ve mod=fr'yi §232'de DEGISTIRMISTIM. Uc tur once
+bulunabilirdi.
+KURAL: bir sey BIR YERDE calisip DIGERINDE calismiyorsa, once IKI YOLUN
+FARKINI listele. Ortak kismi sucla degil.
+
+### 234.4 TARAMA
+Devralma noktasindaki tum alanlar kontrol edildi: idler · tabloIdler · solo
+artik tasiniyor. Baska kayip alan yok.
+
+surum kap-2026-07-31-i. DOSYALAR: api/kap.js
+
+## 233. TESHIS ARACI YANLIS SABLONA BAKIYORDU (31 Tem)
+
+Rozet dogru: panel 20260731-p · api kap-2026-07-31-g. IKISI DE YENI.
+Ama TOASO 2C26 Finansal Tablolar'da "ayristirilamadi" diyor — oysa
+mod=ceyrek ile 12/12 CALISIYOR.
+
+### 233.1 IKI AYRI SABLON VAR, TESHIS BIRINE BAKIYORDU
+  mod=kart / mod=ceyrek -> _SANAYI (8 kalem) · _BANKA (6 kalem)
+  mod=tablo             -> _BILANCO_SANAYI (15) · _GELIR_SANAYI (18) ·
+                           _BILANCO_BANKA (8) · _GELIR_BANKA (11)
+Finansal Tablolar sekmesi mod=tablo kullaniyor. Teshis ise yalniz KART
+sablonunu tariyordu. Yani mod=tablo'nun sorunu TESHIS EDILEMIYORDU —
+arac yanlis yere bakiyordu.
+Bir teshis araci, TESHIS ETTIGI SISTEMLE AYNI SABLONA bakmali. Yoksa
+"bulunamadi" cevabi sistemin degil ARACIN eksigini olcer.
+ARTIK: 66 kalem taraniyor ve her biri `kaynak` alani tasiyor
+(kart/sanayi · tablo/gelir-sanayi ...). `sablonOzeti` hangi listenin kac
+kalem buldugunu ozetliyor.
+
+### 233.2 DAR SATIR SINIRI KURTARMASI
+§225'te satir siniri eklendi ve DOGRUYDU — 3000 karakterlik dilim alttaki
+satira tasiyordu. AMA bazi tablolarda </tr> beklenenden ERKEN geliyor
+(ic ice tablo, hucre ici div sarmali) ve deger hucreleri disarida kaliyor.
+O zaman hic sayi bulunamiyor, kalem "yok" sayiliyor.
+COZUM: once DAR sinirla dene; sayi cikmazsa 2200 karakterlik pencereyle
+BIR KEZ DAHA dene. Dar sinir oncelikli — dogru olan o; genis pencere yalniz
+kurtarma.
+Yedek pencere de 900'den 2200'e cikarildi; 900 bazi tablolarda deger
+hucrelerine ulasmiyordu.
+
+### 233.3 DERS — DUZELTMENIN YAN ETKISINI OLC
+§225 gercek bir kusuru duzeltti ama YENI bir kusur acti: cok dar sinir.
+§223 (isaret kisiti) da oyleydi — dogru fikirdi, gecerli veriyi reddetti (§230).
+Bir kisit eklerken "neyi engelliyorum" kadar "neyi ENGELLEMEMELIYIM" de
+sorulmali. Ikisi de bu oturumda ayni sekilde kacti: kisit yazildi, ETKI ALANI
+olculmedi.
+
+surum kap-2026-07-31-h. DOSYALAR: api/kap.js
+
 ## 232. CANTE COZULDU — AYRISTIRACAK BILANCO YOKMUS (31 Tem)
 
 Teshis tek bakista bitirdi:

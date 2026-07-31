@@ -52,6 +52,106 @@
    "tez": "GARAN katılım evreninde DEĞİL — konvansiyonel banka, XK100/XKTUM/XKTMT üyesi değil. multiple.json, model portföy ve analist takibinde de yok. Panel açısından KAPSAM DIŞI; Earnings AI dışında hiçbir ekranda görünmez. Yine de yazıldı çünkü BANKACILIK SEKTÖRÜNÜN termometresi: net faiz marjının indirim döngüsündeki seyri, panelin PPK patikası ve TL/Sabit Getirili tezleriyle doğrudan bağlantılı. AKBNK (§160, skor 6,5) ile birlikte okunmalı."
   },
   {
+   "kod": "AMZN",
+   "ad": "Amazon",
+   "donem": "2Ç26",
+   "tarih": "30 Tem 2026",
+   "tarih_iso": "2026-07-30",
+   "sablon": "abd",
+   "skor": "KARIŞIK",
+   "ozet": "Rekor üstüne rekor ama nakit eksi. Ciro 200,60 mlr$ — İLK 200 milyar dolarlık çeyrek ve 18 çeyreğin en hızlı büyümesi. AWS 42,23 mlr$ (+%36,7, beklenti 40,54), 2021'den beri en hızlı ivme. Buna karşılık serbest nakit akışı −7,60 mlr$. Hisse kapanış sonrası +%7 — piyasa şimdilik büyümeyi nakde tercih etti. 2026 capex rehberliği 200 mlr$ ve yükseltilmesi bekleniyordu.",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "200,60 mlr $",
+     "cc": "İLK 200 mlr$ çeyreği",
+     "yoy": "18 çeyreğin en hızlı büyümesi"
+    },
+    {
+     "ad": "AWS",
+     "deger": "42,23 mlr $",
+     "cc": "beklenti 40,54 → +1,7 mlr aşıldı",
+     "yoy": "+%36,7 · 2021'den beri en hızlı · cironun %21,1'i"
+    },
+    {
+     "ad": "FCF",
+     "deger": "−7,60 mlr $",
+     "cc": "NEGATİF",
+     "yoy": "1Ç'de de negatifti · uzun vadeli borç y/y +%123 → 119 mlr$"
+    },
+    {
+     "ad": "Capex (2026)",
+     "deger": "~200 mlr $",
+     "cc": "yükseltilmesi bekleniyordu",
+     "yoy": "GOOGL capex artışı geçen hafta %7 satış getirmişti"
+    },
+    {
+     "ad": "Reklam",
+     "deger": "açıklanmadı",
+     "cc": "büyüme +%38 olarak aktarıldı",
+     "yoy": "AWS'den sonra ikinci hızlı kalem"
+    }
+   ],
+   "onemli": [
+    "ÜÇLÜNÜN ORTA NOKTASI: MSFT'de Azure +%43 ve faaliyet marjı YATAY — harcama getiri üretiyor. META'da gelir +%28 ama faaliyet marjı %43'ten %31'e — harcama var getiri yok. AMZN ikisinin ARASINDA: getiri VAR (AWS +%36,7) ama NAKİT YOK (FCF −7,6 mlr$). Aynı soru, üç farklı cevap.",
+    "FCF NEGATİF VE BORÇ ARTIYOR: uzun vadeli borç y/y +%123 ile 119 mlr$'a çıkmış. 200 milyarlık çeyrekte 7,6 milyarlık nakit açığı yönetilebilir görünüyor — ama capex 200 mlr$ seviyesindeyken bu denge şirketin BÜYÜME HIZINA bağımlı hale geliyor. AWS ivmesi yavaşlarsa açık hızla sorun olur.",
+    "PİYASA TEPKİSİ İKİ YÖNLÜ OKUNABİLİR: hisse +%7 çıktı, yani AWS ivmesi capex faturasını affettirdi. Ama geçen hafta GOOGL capex'i yükseltince %7 SATIŞ gelmişti ve META dün gelir rehberliği zayıf gelince düştü. Aynı sektörde üç farklı tepki — piyasa harcamayı değil, HARCAMANIN KARŞILIĞINI fiyatlıyor."
+   ],
+   "guidance": "2026 capex ~200 mlr$ ve yükseltilme beklentisi vardı; kesinleşen rakam bülten kontrolü ister. İzlenecek üç eşik: (1) AWS büyümesi %33'ün üstünde kalıyor mu — altına inerse capex savunulamaz; (2) FCF ne zaman pozitife döner; (3) AWS marjı capex amortismanı devreye girdikçe nasıl seyreder.",
+   "kaynak": "Zacks/TradingView + GuruFocus. Alpha Vantage aynı gün boş döndü. AWS marjı, faaliyet kârı ve segment kırılımı bu kaynaklarda TAM DEĞİL — şirket bülteninden tamamlanmalı. 'AWS marjı %13,69 rekor' ifadesi kaynakta belirsiz aktarılmış; AWS'nin tarihsel marjı çok daha yüksektir, bu rakam BAŞKA bir metrik olabilir, DOĞRULANMADAN kullanılmamalı.",
+   "tez": "Panel kapsamında DEĞİL. AI capex rejimi teması için. PANEL AÇISINDAN DERS: bu sezon dört büyük şirket aynı soruyu farklı cevapladı ve piyasa her birini AYRI fiyatladı — MSFT ödüllendirildi, META cezalandırıldı, AMZN affedildi, AAPL sığınak oldu. 'Sektör' diye tek bir tepki yok; ayrım GETİRİNİN GÖRÜNÜRLÜĞÜNDE."
+  },
+  {
+   "kod": "AAPL",
+   "ad": "Apple",
+   "donem": "FY26 3Ç (Haziran)",
+   "tarih": "30 Tem 2026",
+   "tarih_iso": "2026-07-30",
+   "sablon": "abd",
+   "skor": "POZİTİF",
+   "ozet": "İkisi de aşıldı ve sessiz sedasız. Ciro 109,40 mlr$ (beklenti 108,75), EPS 2,02$ (beklenti 1,88) — EPS y/y +%29. Bir önceki çeyrek 111,18 mlr$'dı; Haziran çeyreğinin Mart'tan küçük olması mevsimsel, ç/ç −%1,6 anormal değil. Apple bu sezon AI capex tartışmasının DIŞINDA kaldı: veri merkezi kurmuyor, 100 mlr$ geri alım ve temettüyle nakit döndürüyor. Piyasa bunu 'kesinlik primi' olarak fiyatladı — NVIDIA'dan dünyanın en değerli şirketi unvanını geri aldı.",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "109,40 mlr $",
+     "cc": "beklenti 108,75 → +0,65 mlr aşıldı",
+     "yoy": "önceki çeyrek 111,18 · ç/ç −%1,6 (mevsimsel)"
+    },
+    {
+     "ad": "EPS",
+     "deger": "2,02 $",
+     "cc": "beklenti 1,88 → aşıldı",
+     "yoy": "+%29 · sekizinci üst üste beat"
+    },
+    {
+     "ad": "Brüt marj",
+     "deger": "açıklanmadı",
+     "cc": "şirket rehberliği %47,5–48,5 idi",
+     "yoy": "bellek darlığı ve cihaz marjı baskısı bandı test ediyordu"
+    },
+    {
+     "ad": "iPhone",
+     "deger": "açıklanmadı",
+     "cc": "kanal kontrolleri ~53,3 mlr$ (y/y ~+%20)",
+     "yoy": "2Ç'de 56,99 mlr$ idi · fiyat artırmayan tek büyük üretici"
+    },
+    {
+     "ad": "Nakit dönüşü",
+     "deger": "100 mlr $ geri alım + temettü",
+     "cc": "veri merkezi capex'i YOK",
+     "yoy": "AI harcama rejiminin dışında"
+    }
+   ],
+   "onemli": [
+    "BU SEZONUN İSTİSNASI: MSFT · META · AMZN üçünde de soru 'AI harcaması getiri üretiyor mu' idi. Apple o soruyu HİÇ SORMUYOR — veri merkezi kurmuyor, nakdi hissedara döndürüyor. Piyasa belirsizlik haftasında bunu risk sığınağı olarak fiyatladı.",
+    "AMA ASIL RİSK DE ORADA: varlık-hafif yaklaşım kısa vadede marjı korur, uzun vadede ekosistemi ciddi AI yeteneklerinde geride bırakabilir. Bu bir TAKAS, üstünlük değil. Bugünkü rakamlar takasın maliyetini göstermez.",
+    "TİM COOK'UN SON ÇEYREK ÇAĞRISI: CEO olarak son bilanço sunumu. Halefiyet, önümüzdeki çeyreklerde rakamlardan bağımsız bir belirsizlik kalemi."
+   ],
+   "guidance": "Şirket rehberliği bu özette yok; brüt marj bandı (%47,5–48,5) ve bellek maliyeti baskısı izlenecek asıl kalemler. Cook'un 'yüz yıllık sel' dediği küresel bellek darlığı Mac ve iPad fiyatlarını artırmaya zorlamıştı — o baskının marja yansıması 4Ç'de görünür.",
+   "kaynak": "Zacks/TradingView + ön izleme notları. Alpha Vantage AYNI GÜN yine boş döndü (EARNINGS_ESTIMATES: []) — §184 istisnası üçüncü kez doğrulandı. Brüt marj ve segment kırılımı bu kaynaklarda yoktu; ŞİRKET BÜLTENİNDEN tamamlanmalı.",
+   "tez": "Panel kapsamında DEĞİL. Kart, AI capex rejiminin KARŞI ÖRNEĞİ olarak tutuluyor: aynı sezonda harcamayan bir şirketin nasıl fiyatlandığını gösteriyor. Taktiksel Duruş'taki 'Yabancı Hisse ALTI' tezi ABD tahvil getirisine dayanıyordu; Apple o tezin en az etkilenen ucu — ama iskonto oranı yükselirse en pahalı çarpan da onda."
+  },
+  {
    "kod": "TSKB",
    "ad": "Türkiye Sınai Kalkınma Bankası",
    "donem": "2Ç26 (6A)",
@@ -1944,7 +2044,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "30 Tem 2026 — GARAN 2Ç26 eklendi. 29 Tem: ARENA(1Ç, gecikmiş) · MSFT · META · TOASO · TSKB · CWENE · ARCLK.",
+ "guncelleme": "31 Tem 2026 — AAPL · AMZN (30 Tem kapanış sonrası) eklendi.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
