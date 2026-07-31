@@ -2715,6 +2715,62 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245i PENCERE UYUMSUZLUGU — 30 GUN SANILIYORDU, YARIM GUN TARANIYORDU (31 Tem)
+
+Kullanici /api/kap?mod=sukuk ciktisini yapistirdi:
+    {"ok":true, "canliAdet":0, "arsivAdet":6, "pencereGun":30, "kapHata":null}
+ONCE IYI HABER: ok:true ve kapHata:null — modul YUKLENIYOR. §245g duzeltmesi
+tuttu, alt modul yukleme sorunu bu ucta yok.
+
+### Kok neden
+sukuk.js satir 87 (eski):  fetch(kok + '/api/kap')   <- PARAMETRESIZ
+kap.js varsayilan akis:    fromDate = simdi - 2 gun · .slice(0, 150)
+
+Yani sukuk modulu 30 GUNLUK suzgec uygularken kaynak 2 gun veriyordu. Ama asil
+darbogaz pencere DEGIL DILIMDI: KAP gunde ~280 bildirim uretiyor, 150 kayit
+YARIM GUN eder. Olculdu:
+    ESKI  istenen 2g · ham 560  · dilim 150  -> FIILEN 0.5 gun
+    YENI  istenen 7g · ham 1960 · dilim 2000 -> FIILEN 7.0 gun
+Suzgecin uyguladigi 30 gun, gercegin 60 KATIYDI.
+
+### Neden bos sonuctan KOTU
+Yanit `pencereGun:30` diyordu. Bu bos sonuc degil, YANLIS BILGIYDI:
+"30 gun tarandi, sukuk ihraci yok" dedirtiyordu — oysa yarim gun tarandi.
+Panelin uyari metni de ustune "10 gunu asiyorsa akis kopmustur" diyerek
+GERCEKLESMEMIS bir taramaya dayali teshis oneriyordu. §243'un ayrimi:
+eskilik gorunur kusur, CELISKI gizli yalandir. Burada celiski vardi.
+
+### Cozum
+1. kap.js varsayilan akisa gun (1-10, vars. 2) ve limit (50-2000, vars. 150)
+   parametreleri eklendi. VARSAYILANLAR DEGISMEDI — tek parametresiz cagiran
+   app.js:1616 (genel haber akisi) aynen calisiyor.
+   Zaman asimi pencereye gore olcekleniyor: <=2 gun 9sn, genis pencere 22sn.
+2. sukuk.js artik /api/kap?gun=7&limit=2000 cagiriyor. gun=7 secildi cunku
+   §''de olculmus: 7 gunde ~1978 kayit geliyor, KAP tavani 2000. En genis
+   GUVENLI pencere bu. Kendi zaman asimi 15 -> 28 sn.
+3. YANIT ARTIK DURUST — uc alan birden:
+     istenenPencereGun  suzgecin uyguladigi
+     ustPencereGun      /api/kap'in GERCEKTEN taradigi
+     hamAdet            suzulmeden onceki kayit sayisi
+     tavanaDayandi      pencere kirpildi mi
+   pencereGun eski adiyla duruyor ama artik GERCEKLESEN pencere (ikisinin
+   kucugu). "canliAdet:0" gorunce tek bakista ayirt edilir:
+     hamAdet 0      -> kaynak sustu
+     hamAdet yuksek -> kaynak akiyor, SUZGEC eliyor
+   §245h dersinin uygulamasi: AYIRT ETMEYEN TESHIS YOKTUR.
+4. Paneldeki uyari metni de duzeltildi; artik ham sayiyi gosterip ayrimi
+   okuyucuya birakiyor, "akis kopmustur" diye yanlis sonuca yonlendirmiyor.
+
+### Ders
+Bir modul BASKA bir ucun ciktisini suzuyorsa, kendi suzgec penceresi ile
+kaynagin penceresi AYRI IKI SAYIDIR ve biri otekini sessizce sinirlar.
+Kontrol: "bu suzgec N gun istiyor — kaynak N gun VERIYOR MU?"
+kapyorum.js'te ayni tuzak YOK (kendi cekimini yapiyor, dilim kirpmasi yok) —
+bakildi ve dogrulandi.
+
+app.js v=20260731ab · ajan.js v=20260731n · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + api/kap.js + api/_lib/sukuk.js
+
 ## 245. PANEL TARAMASI — SESSIZ SAGLIK RAPORU, ENUM SANILAN SERBEST METIN (31 Tem)
 
 Kullanici: "iyilestirme icin siteyi bastan sona tara ama once bakim dosyalarini

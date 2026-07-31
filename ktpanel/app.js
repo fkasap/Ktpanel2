@@ -5871,13 +5871,31 @@ async function ihracRender(){
        geliyordu ama HİÇBİR YERDE gösterilmiyordu — düştüğünü biliyorduk,
        NEDEN düştüğünü söylemiyorduk (§143).
        Artık: canlı yoksa damga KIRMIZI "ARŞİV" der, gövdede sebep yazar. */
+    /* §245i UYARI METNİ YANLIŞ SONUCA YÖNLENDİRİYORDU. Eski hali "pencerede
+       (30 gün) bulunamadı … 10 günü aşıyorsa akış kopmuştur" diyordu. Oysa
+       kaynak 30 günü hiç taramıyordu (parametresiz /api/kap = 2 gün + en yeni
+       150 kayıt ≈ yarım gün). Yani metin, gerçekleşmemiş bir taramaya dayanarak
+       "akış koptu" teşhisi öneriyordu. Doğru sayı artık sunucudan geliyor;
+       metin de HAM SAYIYI gösterip ayrımı okuyucuya bırakıyor:
+         hamAdet 0      → kaynak sustu
+         hamAdet yüksek → kaynak akıyor, süzgeç eliyor */
     const canliYok = !d.canliAdet;
     const yas = (()=>{ try{ return Math.round((Date.now()-new Date(d.guncelleme+'T00:00:00').getTime())/86400000); }catch(e){ return null; } })();
+    const pen = d.pencereGun || '?';
+    const ham = (d.hamAdet!=null) ? d.hamAdet : null;
+    const hamNot = ham==null ? ''
+      : (ham===0
+          ? 'KAP köprüsü <b>hiç kayıt döndürmedi</b> (ham 0) — sorun kaynakta, süzgeçte değil. '
+          : 'KAP köprüsü <b>'+ham+' ham kayıt</b> döndürdü ama hiçbiri sukuk ölçütünü geçmedi — sorun SÜZGEÇTE. '
+            + (d.tavanaDayandi ? '<b>Pencere tavana dayandı</b>, gerçek sayı daha yüksek olabilir. ' : ''));
     const durum = canliYok
       ? '<div class="note" style="border-left:3px solid var(--down);margin-top:8px"><b>⚠ CANLI AKIŞ BOŞ DÖNDÜ — ekrandaki kayıtlar ARŞİVDEN.</b> '+
         'Son kayıt '+trh(d.guncelleme)+(yas!=null?' ('+yas+' gün önce)':'')+'. '+
-        (d.kapHata?'KAP hatası: <b>'+esc(String(d.kapHata))+'</b>. ':'KAP akışı yanıt verdi ama pencerede ('+(d.pencereGun||'?')+' gün) sukuk bildirimi bulunamadı. ')+
-        'Bu 10 günü aşıyorsa akış gerçekten kopmuştur — /api/kap?mod=sukuk çıktısına bakılmalı.</div>'
+        (d.kapHata?'KAP hatası: <b>'+esc(String(d.kapHata))+'</b>. '
+                  :'Taranan pencere <b>'+pen+' gün</b>'+
+                   (d.istenenPencereGun && d.ustPencereGun && d.istenenPencereGun>d.ustPencereGun
+                     ? ' (süzgeç '+d.istenenPencereGun+' gün istedi, kaynak '+d.ustPencereGun+' gün verdi)' : '')+'. '+hamNot)+
+        '</div>'
       : '';
     el.innerHTML=rows+uyari+durum+'<div class="sub" style="font-size:9px;margin-top:8px">Son güncelleme: '+trh(d.guncelleme)+' · '+(d.ihraclar||[]).length+' bildirim'+kirilim+' · Kaynak: '+d.kaynak+
       ' · <b>canlı '+(d.canliAdet||0)+' / arşiv '+(d.arsivAdet||0)+'</b></div>';
