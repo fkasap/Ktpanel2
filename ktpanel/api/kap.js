@@ -105,6 +105,38 @@ const _BANKA = [
    ÇIKARILMAZ. Akış kalemleri (gelir tablosu) birikir, çıkarılır (§207.3). */
 const _STOK = new Set(['ozkaynak','nakit']);
 
+/* §223 İŞARET VE BÜYÜKLÜK KISITI — yanlış satır yakalamayı önler.
+   ÖLÇÜLDÜ (BORSK): ciro −1.383.291.932 çıktı. Hasılat NEGATİF OLAMAZ ve bu
+   büyüklük küçük bir şirket için mantıksız (1,4 katrilyon TL). Ayrıştırıcı
+   "Hasılat" etiketini bir dipnot/kırılım tablosunda yakalayıp oradaki negatif
+   sayıyı almış. Özkaynak da 7,8 katrilyon TL çıkmıştı — aynı hata.
+   ÇÖZÜM: bazı kalemlerin İŞARETİ BELLİDİR (hasılat +, gider −). Beklenene
+   uymayan eşleşme REDDEDİLİR, arama sonraki eşleşmeyle DEVAM EDER.
+   §206'daki dipnot süzgecinin kardeşi: BİÇİM yetmiyorsa ANLAM kısıtı koy. */
+const _ISARET = {
+  ciro:'+', ozkaynak:'+', nakit:'+', toplamVarlik:'+', toplamKaynak:'+',
+  donenVarlik:'+', duranVarlik:'+', kisaVadeli:'+', uzunVadeli:'+',
+  stoklar:'+', ticariAlacak:'+', maddiDuran:'+', odenmisSermaye:'+',
+  ticariBorc:'+', kvFinansBorc:'+', uvFinansBorc:'+',
+  satisMaliyet:'-', finansGider:'-', pazarlama:'-', genelYonetim:'-', arge:'-',
+  digerGider:'-', karsilik:'-', personel:'-', vergi:'-', faizGider:'-',
+  krediler:'+', mevduat:'+', menkulDeger:'+', faizGelir:'+', komisyon:'+',
+  digerGelir:'+', finansGelir:'+', yatirimGelir:'+'
+  /* brutKar · faaliyetKar · netKar · parasal · netFaiz: işaret SERBEST,
+     zarar da kâr da olabilir */
+};
+/* Bin TL cinsinde bir kalem 1 milyar bin TL'yi (1 katrilyon TL) aşamaz —
+   BIST'te böyle bir şirket yok. Aşan değer YANLIŞ SATIRDIR. */
+const _UST_SINIR = 1e9;
+function _isaretUygun(ad, v){
+  if(v == null) return false;
+  if(!isFinite(v) || Math.abs(v) > _UST_SINIR) return false;
+  const bek = _ISARET[ad];
+  if(bek === '+' && v < 0) return false;
+  if(bek === '-' && v > 0) return false;
+  return true;
+}
+
 /* §216 TAM TABLO ŞABLONLARI — Finansal Tablolar sekmesi için.
    mod=kart sekiz kalemle yetiniyordu; tam bilanço ve gelir tablosu için
    çok daha fazlası gerekiyor.
@@ -188,7 +220,7 @@ async function _bilancoAyristir(id){
      Tek regex + eşleme tablosu ile bir kopya yeter. */
   const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
   h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
-  const kalemBul = (etiketler) => {
+  const kalemBul = (etiketler, _ad) => {
     for(const e of etiketler){
       const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
       let m;
@@ -206,7 +238,8 @@ async function _bilancoAyristir(id){
            2Ç26 gücüne GÜNCELLEYEREK yazıyor. İki rapordan çıkarma yapılamaz.
            ÇÖZÜM: raporun KENDİ çeyrek sütunlarını oku. Aynı rapor, aynı fiyat
            seviyesi, çıkarma yok. */
-        if(hucreler.length >= 1) return {
+        /* §223: kısıta uymayan eşleşme REDDEDİLİR, arama DEVAM EDER */
+        if(hucreler.length >= 1 && _isaretUygun(_ad, hucreler[0])) return {
           deger: hucreler[0], onceki: hucreler[1] ?? null,          // kümülatif
           ceyrek: hucreler[2] ?? null, ceyrekOnceki: hucreler[3] ?? null,
           hepsi: hucreler.slice(0,6),                               // teşhis: sütun yapısı görünsün
@@ -216,7 +249,7 @@ async function _bilancoAyristir(id){
     return null;
   };
   const dene = (liste) => { const c={}; let dolu=0;
-    liste.forEach(([ad,et])=>{ const v=kalemBul(et); c[ad]=v; if(v)dolu++; }); return {c,dolu}; };
+    liste.forEach(([ad,et])=>{ const v=kalemBul(et, ad); c[ad]=v; if(v)dolu++; }); return {c,dolu}; };
   const sanayi = dene(_SANAYI), banka = dene(_BANKA);
   const sablon = banka.dolu > sanayi.dolu ? 'banka' : 'sanayi';
   const secili = sablon==='banka' ? banka : sanayi;
@@ -483,21 +516,21 @@ export default async function handler(req, res){
       const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
 
-      const bul = (etiketler) => {
+      const bul = (etiketler, _ad) => {
         for(const e of etiketler){
           const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
           let m;
           while((m = kalip.exec(h)) !== null){
             const dilim = h.slice(m.index, m.index + 3000);
             const hc = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
-            if(hc.length >= 1) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
+            if(hc.length >= 1 && _isaretUygun(_ad, hc[0])) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
           }
         }
         return null;
       };
       const cikar = (liste) => {
         const c = {}; let dolu = 0;
-        liste.forEach(([ad, et, gir])=>{ const v = bul(et); if(v){ v.girinti = gir; dolu++; } c[ad] = v; });
+        liste.forEach(([ad, et, gir])=>{ const v = bul(et, ad); if(v){ v.girinti = gir; dolu++; } c[ad] = v; });
         return { c, dolu };
       };
 

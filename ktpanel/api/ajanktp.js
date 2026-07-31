@@ -164,19 +164,41 @@ NASIL YAZACAKSIN:
 
 Türkçe yaz. Kısa cümle kur.`;
 
-    const metin = await aiUret(istem, 1400);
+    /* §223b TOKEN SINIRI. 1400 yetmedi — JSON "position 1510"da kesildi ve
+       ayrıştırma patladı. Kart yapısı (ozet + 6 metrik + 3 madde + guidance +
+       tez) rahat 2000 token istiyor. 2600 verildi, tampon bırakıldı.
+       Kesilme SESSİZ bir hataydı: model doğru yazıyordu, biz yeterli yer
+       vermiyorduk. */
+    const metin = await aiUret(istem, 2600);
     if (!metin) return res.status(200).json({ ok:false, kod,
       err:'AI yanıt vermedi — ANTHROPIC_API_KEY tanımlı mı?' });
 
     /* JSON AYRIŞTIRMA. Model bazen kod bloğuyla sarar ya da önüne yazı ekler;
        ilk { ile son } arası alınır. Ayrışmazsa HAM METİN döndürülür ve
        kullanıcıya söylenir — sessizce boş kart üretmek en kötüsü olurdu. */
-    let kart = null, ayrHata = null;
-    try{
-      const t = metin.replace(/```json|```/g,'').trim();
-      const b = t.indexOf('{'), so = t.lastIndexOf('}');
-      kart = JSON.parse(t.slice(b, so+1));
-    }catch(e){ ayrHata = String(e.message||e).slice(0,90); }
+    let kart = null, ayrHata = null, onarildi = false;
+    const coz = (t) => { const b=t.indexOf('{'), so=t.lastIndexOf('}'); return JSON.parse(t.slice(b, so+1)); };
+    const ham = metin.replace(/```json|```/g,'').trim();
+    try{ kart = coz(ham); }
+    catch(e){
+      ayrHata = String(e.message||e).slice(0,90);
+      /* ONARIM DENEMESİ: yanıt kesilmişse son tamamlanmamış öğeyi atıp
+         açık parantezleri kapat. Yarım kart, hiç karttan iyidir — AMA
+         onarıldığı SÖYLENİR, kullanıcı eksik olabileceğini bilsin. */
+      try{
+        let t = ham.slice(ham.indexOf('{'));
+        /* Kesilme üç yerde olabilir; hepsi ayrı ayrı temizlenir.
+           TEST EDİLDİ: dördü de doğru sonuç veriyor, TAM JSON bozulmuyor. */
+        t = t.replace(/,\s*\{[^{}]*$/,'')            // yarım kalmış son NESNE (dizi içinde)
+             .replace(/,\s*"[^"]*"\s*:\s*[^,}\]]*$/,'')  // yarım kalmış son ÖZELLİK
+             .replace(/,\s*"[^"]*$/,'')                // yarım kalmış son DİZİ ELEMANI
+             .replace(/,\s*$/,'');                     // sondaki virgül
+        const ac = (t.match(/\{/g)||[]).length, kap = (t.match(/\}/g)||[]).length;
+        const dac = (t.match(/\[/g)||[]).length, dkap = (t.match(/\]/g)||[]).length;
+        t += ']'.repeat(Math.max(0,dac-dkap)) + '}'.repeat(Math.max(0,ac-kap));
+        kart = JSON.parse(t); onarildi = true;
+      }catch(e2){}
+    }
 
     if(!kart) return res.status(200).json({ ok:false, kod, donem,
       err:'model JSON üretmedi ('+ayrHata+')', ham:metin.slice(0,900) });
@@ -199,8 +221,9 @@ Türkçe yaz. Kısa cümle kur.`;
       tez: String(kart.tez||''),
       _taslak: true, _kaynak: 'KAP + Claude taslağı', _uretim: bugun.toISOString()
     };
-    return res.status(200).json({ ok:true, kod, donem, kart:tam,
-      uyari:'TASLAK. Skor YOK — onaylarken sen gireceksin. Okunmadan yayınlanmamalı.' });
+    return res.status(200).json({ ok:true, kod, donem, kart:tam, onarildi,
+      uyari:'TASLAK. Skor YOK — onaylarken sen gireceksin. Okunmadan yayınlanmamalı.'+
+        (onarildi ? ' ⚠ Model yanıtı KESİLDİ, JSON onarıldı — son alanlar eksik olabilir.' : '') });
   }
 
   if(mod === 'test'){
