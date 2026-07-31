@@ -2677,6 +2677,31 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 219b. t23'U PY_GRUP'A EKLEMEYI UNUTTUM (31 Tem)
+
+Kullanici: "finansal tablolar sekmesine tikladigimda alt sekmeler kayboluyor."
+
+SEBEP: `PY_GRUP` dizisi Portfoy Yonetimi alt sekmelerini listeliyor. Bu
+listede OLMAYAN bir sekme acilinca `pySubnav` GIZLENIYOR.
+index.html'e dugmeyi ve bolumu ekledim, PY_GRUP'a eklemeyi UNUTTUM. Sekme
+aciliyordu ama alt cubuk kayboluyordu.
+
+BU BUGUNUN EN SIK HATASI — altinci tekrar:
+  §129  alani sildim, okuyanlari biraktim
+  §189  yeni JSON yukledim, betigi biraktim
+  §194  yeni ozellik yazdim, var mi bakmadim
+  §208  ic HTTP tuzagini cozdum, saatler sonra tekrar yaptim
+  §211c virgul destegi ekledim, temizleyiciyi biraktim
+  §219b sekme ekledim, uyelik listesini biraktim
+Hepsi: BIR YERI DEGISTIRIP DIGERINI BIRAKMAK. Ozellikle "IKI YERDE TANIMLI"
+seylerde — dugme HTML'de, uyelik JS'te.
+
+DENETIM EKLENDI: PY_GRUP ile alt nav dugmeleri KARSILASTIRILDI, ikisi de
+11 sekme, tam ortusuyor. Bu karsilastirma her yeni sekmede kosulmali —
+tek satirlik kontrol, saatlerce arama onler.
+
+app.js v=20260731i. DOSYALAR: app.js + index.html.
+
 ## 219. NOBET EVRENI DARDI — katilim endeksleri girmiyordu (31 Tem)
 
 Kullanici: "73 kod izleniyor ama tum XKTUM'u izlemesi lazim." HAKLI.

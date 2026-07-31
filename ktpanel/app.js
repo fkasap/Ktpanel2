@@ -23,7 +23,13 @@ const HABERLER=[
 ];
 const HABER_TARIH="2026-07-14";
 /* ---- Sekmeler ---- */
-const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
+/* PY_GRUP — Portföy Yönetimi alt sekmeleri. Bu listede OLMAYAN bir sekme
+   açıldığında alt gezinme çubuğu GİZLENİYOR.
+   §219b: t23 (Finansal Tablolar) eklendi. index.html'e düğmeyi koyup buraya
+   eklemeyi unutmuştum; sekme açılıyordu ama alt çubuk kayboluyordu.
+   İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
+   diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
+const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
   if(!hedef)return; // sekme paneli yoksa sessizce çık — nav'ı kilitleme
