@@ -270,7 +270,15 @@ async function _bilancoAyristir(id){
     uyari: eksik.length ? eksik.length+' kalem bulunamadı — sayfa yapısı değişmiş olabilir' : null };
 }
 
+/* §228 SÜRÜM DAMGASI. Bugün ALTI KEZ eski dosyayla uğraştık: çıktıyı okuyup
+   "şu düzeltme çalışmamış" diye teşhis kurdum, oysa dosya deploy edilmemişti.
+   Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
+   okumaya gerek yok.
+   Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
+const _SURUM = 'kap-2026-07-31-e';
+
 export default async function handler(req, res){
+  res.setHeader('X-KTPanel-Surum', _SURUM);
   const _mod = String((req.query && req.query.mod) || '').toLowerCase();
   if (_mod === 'yorum') return (await _altModul('./_lib/kapyorum.js'))(req, res);
   if (_mod === 'sukuk') return (await _altModul('./_lib/sukuk.js'))(req, res);
@@ -475,7 +483,7 @@ export default async function handler(req, res){
       a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : (a.saat < b.saat ? 1 : -1));
 
     res.setHeader('Cache-Control','s-maxage=540, stale-while-revalidate=1800');
-    return res.status(200).json({ ok: fr.length>0, kaynak:'byCriteria/FR',
+    return res.status(200).json({ surum:_SURUM,  ok: fr.length>0, kaynak:'byCriteria/FR',
       pencere: ARALIK ? (basIst+' → '+sonIst) : (gunIst+' gün'),
       kodSuzgeci: kodSuz || null, gun:gunIst,
       taranan: ham.length, dilim: dilimler.length,
@@ -556,14 +564,49 @@ export default async function handler(req, res){
      Bu, TEFAS (§145) ve Finnhub (§167) teşhislerinin aynı deseni: önce
      GÖRÜNÜR yap, sonra oku. */
   if (_mod === 'teshis') {
-    const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
-    if(!id) return res.status(400).json({ ok:false, err:'id gerekli' });
+    /* §228b KOD İLE DE ÇALIŞSIN. Kimlik bulmak için önce mod=fr koşmak
+       gerekiyordu — teşhis için fazladan adım. ?kod=CANTE&gun=15 verilirse
+       kimliği kendi bulur ve TABLO TAŞIYAN bildirimi seçer (§227). */
+    let id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
+    let secilen = null;
+    if(!id){
+      const kodI = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+      if(!kodI) return res.status(400).json({ surum:_SURUM, ok:false, err:'id ya da kod gerekli' });
+      const gunI = Math.min(Math.max(parseInt(req.query && req.query.gun) || 15, 1), 40);
+      const UA2 = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+      const G2 = 86400000, N2 = Date.now(), iso2 = t => new Date(t).toISOString().slice(0,10);
+      const bulunan = [];
+      for(let b = gunI; b > 0; b -= 5){
+        try{
+          const rr = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
+            method:'POST',
+            headers:{ 'content-type':'application/json', 'accept':'application/json',
+                      'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent':UA2 },
+            body: JSON.stringify({ fromDate: iso2(N2 - b*G2), toDate: iso2(N2 - Math.max(b-5,0)*G2),
+                                   mkkMemberOidList: [], subjectList: [] }),
+            signal: AbortSignal.timeout(12000) });
+          if(!rr.ok) continue;
+          const jj = await rr.json();
+          (Array.isArray(jj) ? jj : (jj.items||jj.data||[])).forEach(x=>{
+            if(String(x.disclosureClass||'').toUpperCase() !== 'FR') return;
+            if(String(x.stockCodes||'').toUpperCase().indexOf(kodI) < 0) return;
+            bulunan.push({ id:x.disclosureIndex, baslik:x.subject||x.kapTitle,
+              tarih:String(x.publishDate||'').slice(0,10), yil:x.year, donem:x.period });
+          });
+        }catch(e){}
+      }
+      const tablolu = bulunan.filter(x=>/^Finansal Rapor/i.test(String(x.baslik||'')));
+      secilen = tablolu[0] || bulunan[0] || null;
+      if(!secilen) return res.status(200).json({ surum:_SURUM, ok:false, kod:kodI,
+        err:'FR bildirimi bulunamadı ('+gunI+' gün penceresinde)', bulunanlar:bulunan });
+      id = String(secilen.id);
+    }
     const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
     try{
       const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
         headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
         signal: AbortSignal.timeout(22000) });
-      if(!r.ok) return res.status(200).json({ ok:false, id, http:r.status });
+      if(!r.ok) return res.status(200).json({ surum:_SURUM,  ok:false, id, http:r.status });
       let h = await r.text();
       const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
@@ -604,23 +647,23 @@ export default async function handler(req, res){
           .filter(t=>!bilinen.has(t) && /[A-ZÇĞİÖŞÜ]{2,}|Kar|Kâr|Gelir|Gider|Varlık|Yükümlülük|Özkaynak|Hasılat|Nakit/.test(t))
       )].slice(0,45);
 
-      return res.status(200).json({ ok:true, id, uzunluk:h.length,
+      return res.status(200).json({ surum:_SURUM, ok:true, id, secilen, uzunluk:h.length,
         bulunan: rapor.filter(x=>!x.hicBulunamadi && x.denenen[0] && x.denenen[0].kisitGecti).length,
         rapor,
         sayfadakiDigerBasliklar: adaylar,
         not:'hamHucreler = satırdaki ham metinler · cozulen = sayıya dönenler · kisitGecti = işaret/büyüklük kısıtı. sayfadakiDigerBasliklar = listede OLMAYAN başlıklar, şablona eklenebilir.' });
-    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+    }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
   if (_mod === 'tablo') {
     const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
-    if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
+    if(!id) return res.status(400).json({ surum:_SURUM,  ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
     const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
     try{
       const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
         headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
         signal: AbortSignal.timeout(22000) });
-      if(!r.ok) return res.status(200).json({ ok:false, id, http:r.status, err:'sayfa alınamadı' });
+      if(!r.ok) return res.status(200).json({ surum:_SURUM,  ok:false, id, http:r.status, err:'sayfa alınamadı' });
       let h = await r.text();
       const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
@@ -681,20 +724,20 @@ export default async function handler(req, res){
       });
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ ok:(bil.dolu+gel.dolu)>0, id, sablon,
+      return res.status(200).json({ surum:_SURUM,  ok:(bil.dolu+gel.dolu)>0, id, sablon,
         temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif',
         bilanco: { bulunan:bil.dolu, toplam:bilListe.length, kalemler:yatay },
         gelir:   { bulunan:gel.dolu, toplam:gelListe.length, kalemler:dikey, payda, payda0 },
         not:'YATAY (bilanço): fark = cari − önceki, değişim %. DİKEY (gelir tablosu): pay = kalem / '+(sablon==='banka'?'faiz gelirleri':'hasılat')+' × 100, puanFark = cari pay − önceki pay. Birim BİN TL. Bulunamayan kalem "yok:true" taşır — sessizce atlanmaz.' });
-    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+    }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
   if (_mod === 'kart') {
     const id  = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
-    if(!id) return res.status(400).json({ ok:false, err:'id gerekli' });
+    if(!id) return res.status(400).json({ surum:_SURUM,  ok:false, err:'id gerekli' });
     try{
       const b = await _bilancoAyristir(id);
-      if(!b || !b.ok) return res.status(200).json({ ok:false, id, err:'bilanço ayrıştırılamadı', detay:b });
+      if(!b || !b.ok) return res.status(200).json({ surum:_SURUM,  ok:false, id, err:'bilanço ayrıştırılamadı', detay:b });
 
       const K = b.kalemler;
       const al = (ad, alan) => (K[ad] && K[ad][alan] != null) ? K[ad][alan] : null;
@@ -755,12 +798,12 @@ export default async function handler(req, res){
       }
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ ok:true, id, sablon:b.sablon,
+      return res.status(200).json({ surum:_SURUM,  ok:true, id, sablon:b.sablon,
         temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif (çeyrek sütunu yok)',
         bulunan:b.bulunan, toplam:b.toplam, eksik:b.eksik,
         metrikler:m, isaretler:isaret,
         not:'Bu uç YORUM YAZMAZ ve SKOR VERMEZ. Rakamı, değişimi ve dikkat çeken deseni verir; kart metni ve skor insana aittir. Birim BİN TL, marjlar %.' });
-    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+    }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
   if (_mod === 'ceyrek') {
@@ -773,14 +816,14 @@ export default async function handler(req, res){
        Bir yeri değiştirip diğerini bırakmak: bu oturumun en sık hatası
        (§129 alan silme · §189 kısmi yükleme · şimdi bu). */
     const onc = String((req.query && req.query.onceki) || '').replace(/[^0-9,]/g,'').slice(0,80);
-    if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr çıktısındaki id' });
+    if(!id) return res.status(400).json({ surum:_SURUM,  ok:false, err:'id gerekli — /api/kap?mod=fr çıktısındaki id' });
     try{
       /* §210b SIRAYLA, PARALEL DEĞİL. İki 5 MB sayfayı aynı anda işlemek
          belleği zorluyordu; ikinci ayrıştırma SESSİZCE düşüyor ve yalnız
          "ayrıştırılamadı" diyordu — sebep yok. Sıralı çekim hem hafif hem
          hangi adımda düştüğü belli. */
       const b1 = await _bilancoAyristir(id);
-      if(!b1 || !b1.ok) return res.status(200).json({ ok:false, id, err:'cari bilanço ayrıştırılamadı', detay:b1 });
+      if(!b1 || !b1.ok) return res.status(200).json({ surum:_SURUM,  ok:false, id, err:'cari bilanço ayrıştırılamadı', detay:b1 });
       /* §212c `onceki` ARTIK GEREKSİZ — yalnız YEDEK.
          Rapor kendi çeyrek sütununu taşıyor (§212), dolayısıyla tek bildirim
          yetiyor. DOĞRULANDI: TOASO 2Ç26'nın ON İKİ değeri de Fintables ile
@@ -822,7 +865,7 @@ export default async function handler(req, res){
       });
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ ok:true, id, oncekiId:b0Kullanilan||onc||null, sablon:b1.sablon,
+      return res.status(200).json({ surum:_SURUM,  ok:true, id, oncekiId:b0Kullanilan||onc||null, sablon:b1.sablon,
         bulunan:b1.bulunan, toplam:b1.toplam, eksik:b1.eksik,
         kumulatif, ceyreklik,
         /* SEBEBİ SÖYLE — "ayrıştırılamadı" tek başına işe yaramaz (§145) */
@@ -831,17 +874,17 @@ export default async function handler(req, res){
           : { ok:false, sebep:b0Hata || 'bilinmiyor', denemeler }) : null,
         uyari: (onc && (!b0 || !b0.ok)) ? ('önceki dönem ayrıştırılamadı ('+(b0Hata||'sebep bilinmiyor')+') — çeyreklik yok, kümülatif var') : b1.uyari,
         not: 'kumulatif = raporun dönemsel sütunu (yılbaşından bugüne) · ceyreklik = raporun ÇEYREK sütunu (çıkarma yok, enflasyon sapması yok). onceki parametresi yalnız çeyrek sütunu olmayan raporlar için yedektir. STOK kalemleri (özkaynak, nakit) dönem sonu değeridir. Birim BİN TL.' });
-    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+    }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
   if (_mod === 'bilanco') {
     const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
-    if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
+    if(!id) return res.status(400).json({ surum:_SURUM,  ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
     try{
       const c = await _bilancoAyristir(id);
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ ...c, not:'deger = cari dönem · onceki = karşılaştırma dönemi. Birim BİN TL.' });
-    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+      return res.status(200).json({ surum:_SURUM,  ...c, not:'deger = cari dönem · onceki = karşılaştırma dönemi. Birim BİN TL.' });
+    }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
   if (_mod === 'kalem') {
@@ -982,10 +1025,10 @@ export default async function handler(req, res){
     const dizi = Array.isArray(j) ? j : (j.items || j.data || []);
     const items = dizi.map(normalize).filter(Boolean)
       .sort((a,b)=>b.i-a.i).slice(0, 150);
-    return res.status(200).json({ ok: items.length>0, kaynak:'byCriteria', alinma:new Date().toISOString(),
+    return res.status(200).json({ surum:_SURUM,  ok: items.length>0, kaynak:'byCriteria', alinma:new Date().toISOString(),
       pencere: govde.fromDate+'..'+govde.toDate, items,
       ...(items.length ? {} : { err:'Uç yanıt verdi ama kayıt çözülemedi (şema değişmiş olabilir)' }) });
   }catch(e){
-    return res.status(200).json({ ok:false, err:'KAP kaynağına ulaşılamadı: '+String(e.message||e).slice(0,120), alinma:new Date().toISOString(), items:[] });
+    return res.status(200).json({ surum:_SURUM,  ok:false, err:'KAP kaynağına ulaşılamadı: '+String(e.message||e).slice(0,120), alinma:new Date().toISOString(), items:[] });
   }
 }
