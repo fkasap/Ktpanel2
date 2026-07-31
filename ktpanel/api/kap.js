@@ -180,30 +180,36 @@ function _isaretUygun(ad, v, sinir){
    SIRA ÖNEMLİ: uzun etiket önce. "Dönem Karı" kısa etiketi
    "Dönem Karı Vergi Yükümlülüğü" satırını yakalıyordu (§206'da ölçüldü).
    Her kalem [anahtar, [etiketler], girinti] — girinti tabloda hiyerarşi için. */
+/* §233b GENİŞLETİLMİŞ ŞABLON DOĞRULANMAMIŞTI.
+   Sekiz kalemlik `_SANAYI` seti TOASO'da 12/12 doğrulandı (§213). Ama tam
+   tablo şablonu (15+18 kalem) hiç sınanmadı — etiketleri KAP'ın gerçek
+   metniyle karşılaştırmadım, tahminle yazdım.
+   Doğrulanmış etiketler buraya da eklendi ve varyantlar çoğaltıldı.
+   Büyük harfli biçimler önce: KAP ara toplamları BÜYÜK HARF yazıyor. */
 const _BILANCO_SANAYI = [
-  ['donenVarlik',   ['Dönen Varlıklar','DÖNEN VARLIKLAR'], 0],
-  ['nakit',         ['Nakit ve Nakit Benzerleri'], 1],
-  ['ticariAlacak',  ['Ticari Alacaklar'], 1],
-  ['stoklar',       ['Stoklar'], 1],
-  ['duranVarlik',   ['Duran Varlıklar','DURAN VARLIKLAR'], 0],
-  ['maddiDuran',    ['Maddi Duran Varlıklar'], 1],
-  ['toplamVarlik',  ['TOPLAM VARLIKLAR','Toplam Varlıklar'], 0],
-  ['kisaVadeli',    ['Kısa Vadeli Yükümlülükler','KISA VADELİ YÜKÜMLÜLÜKLER'], 0],
-  ['ticariBorc',    ['Ticari Borçlar'], 1],
-  ['kvFinansBorc',  ['Kısa Vadeli Borçlanmalar'], 1],
-  ['uzunVadeli',    ['Uzun Vadeli Yükümlülükler','UZUN VADELİ YÜKÜMLÜLÜKLER'], 0],
-  ['uvFinansBorc',  ['Uzun Vadeli Borçlanmalar'], 1],
+  ['donenVarlik',   ['DÖNEN VARLIKLAR','Dönen Varlıklar','TOPLAM DÖNEN VARLIKLAR'], 0],
+  ['nakit',         ['Nakit ve Nakit Benzerleri','NAKİT VE NAKİT BENZERLERİ'], 1],
+  ['ticariAlacak',  ['Ticari Alacaklar','TİCARİ ALACAKLAR'], 1],
+  ['stoklar',       ['Stoklar','STOKLAR'], 1],
+  ['duranVarlik',   ['DURAN VARLIKLAR','Duran Varlıklar','TOPLAM DURAN VARLIKLAR'], 0],
+  ['maddiDuran',    ['Maddi Duran Varlıklar','MADDİ DURAN VARLIKLAR'], 1],
+  ['toplamVarlik',  ['TOPLAM VARLIKLAR','Toplam Varlıklar','VARLIKLAR TOPLAMI','AKTİF TOPLAMI'], 0],
+  ['kisaVadeli',    ['KISA VADELİ YÜKÜMLÜLÜKLER','Kısa Vadeli Yükümlülükler','TOPLAM KISA VADELİ YÜKÜMLÜLÜKLER'], 0],
+  ['ticariBorc',    ['Ticari Borçlar','TİCARİ BORÇLAR'], 1],
+  ['kvFinansBorc',  ['Kısa Vadeli Borçlanmalar','KISA VADELİ BORÇLANMALAR'], 1],
+  ['uzunVadeli',    ['UZUN VADELİ YÜKÜMLÜLÜKLER','Uzun Vadeli Yükümlülükler','TOPLAM UZUN VADELİ YÜKÜMLÜLÜKLER'], 0],
+  ['uvFinansBorc',  ['Uzun Vadeli Borçlanmalar','UZUN VADELİ BORÇLANMALAR'], 1],
   ['ozkaynak',      ['Ana Ortaklığa Ait Özkaynaklar','ÖZKAYNAKLAR','Özkaynaklar'], 0],
-  ['odenmisSermaye',['Ödenmiş Sermaye'], 1],
-  ['toplamKaynak',  ['TOPLAM KAYNAKLAR','Toplam Kaynaklar'], 0]
+  ['odenmisSermaye',['Ödenmiş Sermaye','ÖDENMİŞ SERMAYE'], 1],
+  ['toplamKaynak',  ['TOPLAM KAYNAKLAR','Toplam Kaynaklar','PASİF TOPLAMI','KAYNAKLAR TOPLAMI'], 0]
 ];
 const _GELIR_SANAYI = [
   ['ciro',          ['Hasılat','Satış Gelirleri'], 0],
-  ['satisMaliyet',  ['Satışların Maliyeti (-)','Satışların Maliyeti'], 1],
+  ['satisMaliyet',  ['Satışların Maliyeti (-)','Satışların Maliyeti','SATIŞLARIN MALİYETİ (-)'], 1],
   ['brutKar',       ['BRÜT KAR (ZARAR)','Brüt Kar (Zarar)','Brüt Kâr (Zarar)'], 0],
-  ['pazarlama',     ['Pazarlama, Satış ve Dağıtım Giderleri (-)','Pazarlama Giderleri (-)'], 1],
-  ['genelYonetim',  ['Genel Yönetim Giderleri (-)'], 1],
-  ['arge',          ['Araştırma ve Geliştirme Giderleri (-)'], 1],
+  ['pazarlama',     ['Pazarlama, Satış ve Dağıtım Giderleri (-)','Pazarlama Giderleri (-)','Pazarlama Giderleri'], 1],
+  ['genelYonetim',  ['Genel Yönetim Giderleri (-)','Genel Yönetim Giderleri'], 1],
+  ['arge',          ['Araştırma ve Geliştirme Giderleri (-)','Araştırma ve Geliştirme Giderleri'], 1],
   ['digerGelir',    ['Esas Faaliyetlerden Diğer Gelirler'], 1],
   ['digerGider',    ['Esas Faaliyetlerden Diğer Giderler (-)'], 1],
   ['faaliyetKar',   ['ESAS FAALİYET KARI (ZARARI)','Esas Faaliyet Karı (Zararı)'], 0],
@@ -213,7 +219,7 @@ const _GELIR_SANAYI = [
   ['finansGider',   ['Finansman Giderleri (-)','Finansman Giderleri'], 1],
   ['parasal',       ['Net Parasal Pozisyon Kazançları (Kayıpları)'], 1],
   ['vergiOncesi',   ['SÜRDÜRÜLEN FAALİYETLER VERGİ ÖNCESİ KARI (ZARARI)'], 0],
-  ['vergi',         ['Sürdürülen Faaliyetler Vergi Gideri (-)','Dönem Vergi Gideri (-)'], 1],
+  ['vergi',         ['Sürdürülen Faaliyetler Vergi Gideri (-)','Dönem Vergi Gideri (-)','Dönem Vergi Geliri (Gideri)'], 1],
   ['donemKar',      ['DÖNEM KARI (ZARARI)','SÜRDÜRÜLEN FAALİYETLER DÖNEM KARI (ZARARI)','Dönem Karı (Zararı)'], 0],
   /* SOLO raporda "Ana Ortaklık Payları" YOKTUR — dönem kârının kendisi net
      kârdır. Yedek olarak aynı etiketler verildi; ikisi de bulunursa
@@ -272,10 +278,22 @@ async function _bilancoAyristir(id){
            CANTE'de kalemler eksik/karışık geliyordu.
            DOĞRUSU: aynı <tr> içinde kal. Etiketten sonra ilk </tr>'ye kadar
            kes; bulunamazsa dar bir pencereye (900) düş. */
+        /* §233b SATIR SINIRI ÇOK DAR ÇIKARSA GENİŞLET.
+           §225'te satır sınırı eklendi ve doğruydu — dilim alttaki satıra
+           taşıyordu. AMA bazı tablolarda </tr> beklenenden ERKEN geliyor
+           (iç içe tablo, hücre içi div sarmalı) ve değer hücreleri dışarıda
+           kalıyor. O zaman hiç sayı bulunamıyor ve kalem "yok" sayılıyor.
+           ÇÖZÜM: satır sınırıyla dene; SAYI ÇIKMAZSA daha geniş pencereyle
+           bir kez daha dene. Dar sınır önce — doğru olan o; geniş pencere
+           yalnız kurtarma. */
         const satirSon = h.indexOf('</tr>', m.index);
-        const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
-        const dilim = h.slice(m.index, sinir);
-        const hucreler = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
+        const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
+        let hucreler = [...h.slice(m.index, sinir).matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)]
+          .map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
+        if(!hucreler.length && sinir < m.index + 2200){
+          hucreler = [...h.slice(m.index, m.index + 2200).matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)]
+            .map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
+        }
         /* §212 DÖRT SÜTUN. İlk iki hücreyi almak YETMEZ.
            Türk ara dönem raporları DÖRT sütun taşır:
              1 Oca–30 Haz 2026 | 1 Oca–30 Haz 2025 | 1 Nis–30 Haz 2026 | 1 Nis–30 Haz 2025
@@ -314,7 +332,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-g';
+const _SURUM = 'kap-2026-07-31-h';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -678,15 +696,31 @@ export default async function handler(req, res){
 
       const _birimTe = _birimBul(h), _sinirTe = _ustSinir(_birimTe);
       const rapor = [];
-      [..._SANAYI, ..._BANKA].forEach(([ad, etiketler])=>{
-        const kayit = { ad, denenen:[] };
+      /* §233 TEŞHİS TÜM ŞABLONLARI TARASIN.
+         Önce yalnız _SANAYI ve _BANKA (8/6 kalemlik KART şablonu) taranıyordu.
+         Ama Finansal Tablolar sekmesi mod=tablo kullanıyor ve o GENİŞ
+         şablonlarla çalışıyor (_BILANCO_SANAYI 15 · _GELIR_SANAYI 18 · banka
+         karşılıkları). Teşhis onları taramıyordu — yani mod=tablo'nun sorunu
+         teşhis edilemiyordu.
+         Bir teşhis aracı, TEŞHİS ETTİĞİ SİSTEMLE AYNI ŞABLONA bakmalı.
+         `kaynak` alanı hangi listeden geldiğini söyler. */
+      const TUM = [
+        ..._SANAYI.map(x=>[x[0], x[1], 'kart/sanayi']),
+        ..._BANKA.map(x=>[x[0], x[1], 'kart/banka']),
+        ..._BILANCO_SANAYI.map(x=>[x[0], x[1], 'tablo/bilanço-sanayi']),
+        ..._GELIR_SANAYI.map(x=>[x[0], x[1], 'tablo/gelir-sanayi']),
+        ..._BILANCO_BANKA.map(x=>[x[0], x[1], 'tablo/bilanço-banka']),
+        ..._GELIR_BANKA.map(x=>[x[0], x[1], 'tablo/gelir-banka'])
+      ];
+      TUM.forEach(([ad, etiketler, kaynak])=>{
+        const kayit = { ad, kaynak, denenen:[] };
         for(const e of etiketler){
           const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
           let m, bulundu = 0;
           while((m = kalip.exec(h)) !== null && bulundu < 3){
             bulundu++;
             const satirSon = h.indexOf('</tr>', m.index);
-            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
+            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
             const dilim = h.slice(m.index, sinir);
             const ham = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>x[1]);
             const coz = ham.map(x=>_sayiCoz(x));
@@ -713,7 +747,16 @@ export default async function handler(req, res){
           .filter(t=>!bilinen.has(t) && /[A-ZÇĞİÖŞÜ]{2,}|Kar|Kâr|Gelir|Gider|Varlık|Yükümlülük|Özkaynak|Hasılat|Nakit/.test(t))
       )].slice(0,45);
 
-      return res.status(200).json({ surum:_SURUM, ok:true, id, secilen, uzunluk:h.length, birim:_birimTe, ustSinir:_sinirTe,
+      /* Şablon bazında özet — hangi listenin işlediği tek bakışta görünsün */
+      const ozet = {};
+      rapor.forEach(x=>{
+        const k = x.kaynak || '?';
+        if(!ozet[k]) ozet[k] = { toplam:0, bulunan:0 };
+        ozet[k].toplam++;
+        if(!x.hicBulunamadi && x.denenen[0] && x.denenen[0].kisitGecti) ozet[k].bulunan++;
+      });
+      return res.status(200).json({ surum:_SURUM, ok:true, id, secilen, uzunluk:h.length,
+        birim:_birimTe, ustSinir:_sinirTe, sablonOzeti:ozet,
         bulunan: rapor.filter(x=>!x.hicBulunamadi && x.denenen[0] && x.denenen[0].kisitGecti).length,
         rapor,
         sayfadakiDigerBasliklar: adaylar,
@@ -742,7 +785,7 @@ export default async function handler(req, res){
           while((m = kalip.exec(h)) !== null){
             /* §225: satır sınırı — mod=tablo yolunda da aynı düzeltme */
             const satirSon = h.indexOf('</tr>', m.index);
-            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
+            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
             const dilim = h.slice(m.index, sinir);
             const hc = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
             if(hc.length >= 1 && _isaretUygun(_ad, hc[0], _sinirT)) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
