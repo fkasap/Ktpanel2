@@ -225,7 +225,17 @@ async function _bilancoAyristir(id){
       const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
       let m;
       while((m = kalip.exec(h)) !== null){
-        const dilim = h.slice(m.index, m.index + 3000);
+        /* §225 SATIR SINIRI — dilim SONRAKİ SATIRA TAŞIYORDU.
+           Önce etiketten sonra 3000 karakter alınıp içindeki TÜM sayılar
+           toplanıyordu. O pencere birkaç <tr> boyunca uzayabiliyor ve bir
+           kalemin değeri diye ALTTAKİ satırın sayısı alınabiliyordu.
+           Küçük şirketlerde tablo daha sıkışık olduğu için etki daha büyük —
+           CANTE'de kalemler eksik/karışık geliyordu.
+           DOĞRUSU: aynı <tr> içinde kal. Etiketten sonra ilk </tr>'ye kadar
+           kes; bulunamazsa dar bir pencereye (900) düş. */
+        const satirSon = h.indexOf('</tr>', m.index);
+        const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
+        const dilim = h.slice(m.index, sinir);
         const hucreler = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
         /* §212 DÖRT SÜTUN. İlk iki hücreyi almak YETMEZ.
            Türk ara dönem raporları DÖRT sütun taşır:
@@ -503,6 +513,71 @@ export default async function handler(req, res){
      NEDEN BU EŞLEŞME: bilanço iki andı karşılaştırır (yatay), gelir tablosu
      bir dönemin İÇ YAPISINI gösterir (dikey). Tersini yapmak — bilançoda
      dikey, gelir tablosunda yatay — bilgi vermez değil ama SORUYU KAÇIRIR. */
+  /* §226 ?mod=teshis — HANGİ ETİKET NE BULDU, HAM HALİYLE.
+     "Kalem eksik geliyor" şikâyeti tahminle çözülmez. Bu uç her etiket için
+     şunu söyler: bulundu mu, hangi varyantla, satırın ham hâli ne, hangi
+     sayılar çıktı, kısıt neden reddetti.
+     Sayfada GEÇEN ama listemde OLMAYAN başlıkları da tarar — şablona neyin
+     eklenmesi gerektiği görünsün.
+     Bu, TEFAS (§145) ve Finnhub (§167) teşhislerinin aynı deseni: önce
+     GÖRÜNÜR yap, sonra oku. */
+  if (_mod === 'teshis') {
+    const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
+    if(!id) return res.status(400).json({ ok:false, err:'id gerekli' });
+    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+    try{
+      const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
+        headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
+        signal: AbortSignal.timeout(22000) });
+      if(!r.ok) return res.status(200).json({ ok:false, id, http:r.status });
+      let h = await r.text();
+      const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
+      h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
+
+      const rapor = [];
+      [..._SANAYI, ..._BANKA].forEach(([ad, etiketler])=>{
+        const kayit = { ad, denenen:[] };
+        for(const e of etiketler){
+          const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
+          let m, bulundu = 0;
+          while((m = kalip.exec(h)) !== null && bulundu < 3){
+            bulundu++;
+            const satirSon = h.indexOf('</tr>', m.index);
+            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
+            const dilim = h.slice(m.index, sinir);
+            const ham = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>x[1]);
+            const coz = ham.map(x=>_sayiCoz(x));
+            const gecerli = coz.filter(v=>v!==null);
+            kayit.denenen.push({ etiket:e, konum:m.index,
+              satirUzunluk: sinir - m.index,
+              hamHucreler: ham.slice(0,8),
+              cozulen: gecerli.slice(0,6),
+              kisitGecti: gecerli.length ? _isaretUygun(ad, gecerli[0]) : false,
+              redSebebi: gecerli.length && !_isaretUygun(ad, gecerli[0])
+                ? (Math.abs(gecerli[0])>_UST_SINIR ? 'büyüklük sınırı' : 'işaret uyuşmazlığı') : null });
+          }
+          if(kayit.denenen.length) break;
+        }
+        if(!kayit.denenen.length) kayit.hicBulunamadi = true;
+        rapor.push(kayit);
+      });
+
+      /* Sayfada geçen AMA listemde olmayan başlıklar — şablona eklenecekler */
+      const bilinen = new Set([..._SANAYI, ..._BANKA].flatMap(x=>x[1]));
+      const adaylar = [...new Set(
+        [...h.matchAll(/>([A-ZÇĞİÖŞÜ][A-Za-zÇĞİÖŞÜçğıöşü\s,()\-]{8,58})\s*<\/div><\/td>/g)]
+          .map(m=>m[1].trim())
+          .filter(t=>!bilinen.has(t) && /[A-ZÇĞİÖŞÜ]{2,}|Kar|Kâr|Gelir|Gider|Varlık|Yükümlülük|Özkaynak|Hasılat|Nakit/.test(t))
+      )].slice(0,45);
+
+      return res.status(200).json({ ok:true, id, uzunluk:h.length,
+        bulunan: rapor.filter(x=>!x.hicBulunamadi && x.denenen[0] && x.denenen[0].kisitGecti).length,
+        rapor,
+        sayfadakiDigerBasliklar: adaylar,
+        not:'hamHucreler = satırdaki ham metinler · cozulen = sayıya dönenler · kisitGecti = işaret/büyüklük kısıtı. sayfadakiDigerBasliklar = listede OLMAYAN başlıklar, şablona eklenebilir.' });
+    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+  }
+
   if (_mod === 'tablo') {
     const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
     if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
@@ -521,7 +596,10 @@ export default async function handler(req, res){
           const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
           let m;
           while((m = kalip.exec(h)) !== null){
-            const dilim = h.slice(m.index, m.index + 3000);
+            /* §225: satır sınırı — mod=tablo yolunda da aynı düzeltme */
+            const satirSon = h.indexOf('</tr>', m.index);
+            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
+            const dilim = h.slice(m.index, sinir);
             const hc = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
             if(hc.length >= 1 && _isaretUygun(_ad, hc[0])) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
           }
