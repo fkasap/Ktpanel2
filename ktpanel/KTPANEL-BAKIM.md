@@ -2677,6 +2677,39 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 226. AYRISTIRICIDA YAPISAL KUSUR + TESHIS UCU (31 Tem)
+
+Kullanici: "cantenin bilancosu gelmiyor, gelen kalemler de sikintili/eksik."
+
+### 226.1 KUSUR: DILIM SONRAKI SATIRA TASIYORDU (§225)
+kalemBul, etiketten sonra 3000 KARAKTERLIK dilim alip icindeki TUM sayilari
+topluyordu. O pencere birkac <tr> boyunca uzayabiliyor:
+    <tr><td>Hasılat</td><td>100.016.179</td><td>91.737.074</td></tr>
+    <tr><td>Satışların Maliyeti</td><td>(93.364.595)</td>...
+"Hasılat" icin toplanan sayilar ALTTAKI SATIRIN maliyet rakamlarini da
+iceriyordu. Boylece `ceyrek` ve `ceyrekOnceki` alanlari YANLIS doluyordu —
+cunku onlar 3. ve 4. hucreden okunuyor.
+BUYUK SIRKETLERDE gorunmedi cunku tablolari genis ve dolgulu; KUCUK
+sirketlerde satirlar sikisik, etki buyuk. CANTE'deki "eksik/karisik" tam bu.
+DUZELTME: etiketten sonra ILK </tr>'ye kadar kes. Bulunamazsa dar pencere (900).
+
+### 226.2 ?mod=teshis — TAHMIN ETMEYI BIRAK
+"Kalem eksik geliyor" sikayeti tahminle cozulmez. Yeni uc her etiket icin
+sunu doner:
+  · bulundu mu, HANGI VARYANTLA
+  · satirin uzunlugu (satir siniri calisti mi gorunur)
+  · hamHucreler — satirdaki ham metinler
+  · cozulen — sayiya donenler
+  · kisitGecti + redSebebi (buyukluk / isaret uyusmazligi)
+AYRICA: sayfada GECEN ama listemde OLMAYAN basliklari tarar
+(`sayfadakiDigerBasliklar`) — sablona neyin eklenmesi gerektigi GORUNUR olur.
+Bu, TEFAS (§145) ve Finnhub (§167) teshislerinin ayni deseni: once GORUNUR
+yap, sonra oku. Uc kez ise yaradi, dorduncude de yarayacak.
+
+KULLANIM: /api/kap?mod=teshis&id=<CANTE bildirim kimligi>
+
+DOSYALAR: api/kap.js
+
 ## 224. "EKLENDI" DEDI AMA GORUNMEDI — cizim eski listeden (31 Tem)
 
 BORSK taslagi guzel cikti, skor girildi, "✓ Earnings AI'a eklendi" yazdi.
