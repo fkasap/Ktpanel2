@@ -127,7 +127,25 @@ const _ISARET = {
 };
 /* Bin TL cinsinde bir kalem 1 milyar bin TL'yi (1 katrilyon TL) aşamaz —
    BIST'te böyle bir şirket yok. Aşan değer YANLIŞ SATIRDIR. */
-const _UST_SINIR = 1e9;
+/* §230 ÜST SINIR BİRİME BAĞLI OLMALI — kendi kısıtım geçerli veriyi reddetti.
+   §223'te 1e9 sabit sınır koydum, gerekçesi "bin TL cinsinde bir kalem
+   1 milyar bin TL'yi aşamaz" idi. Doğruydu — AMA YALNIZ BİN TL İÇİN.
+   BORSK raporunu TL cinsinden veriyor; cirosu 1.383.291.932 TL ve bu sınırı
+   AŞIYOR. Geçerli değer reddedildi, kalem sayısı 0'a düştü.
+   BORSK ÖNCE ÇALIŞIYORDU; §223'ü ekleyince KIRDIM.
+   Kısıtı yazarken hangi varsayıma dayandığını NOT ETTİM ama o varsayımı
+   DOĞRULAMADIM. §229'da birim tespitini eklerken de sınırı ona bağlamayı
+   unuttum — iki değişiklik yan yana yapıldı ve biri diğerini gerektiriyordu.
+   ŞÜPHEDE GENİŞ TUT: reddedilen veri geri gelmiyor, fazla kabul edilen veri
+   ise denetimde yakalanır. */
+const _UST_SINIR = 1e9;                       // bin TL tabanı (geriye uyum)
+function _ustSinir(birim){
+  if(!birim || !birim.carpan) return 1e13;    // belirsiz → geniş
+  if(birim.carpan === 1)    return 1e12;      // TL
+  if(birim.carpan === 1000) return 1e9;       // bin TL
+  if(birim.carpan >= 1e6)   return 1e7;       // milyon TL
+  return 1e13;
+}
 
 /* §229 BİRİM TESPİTİ — her rapor BİN TL DEĞİL.
    ÖLÇÜLDÜ (BORSK): brüt kâr 77.668.780 çıktı ve "bin TL" diye gösterildi →
@@ -147,9 +165,9 @@ function _birimBul(h){
   if(/Tam\s*T[Ll]|tutarlar\s+Türk\s+Lirası|TL\s*olarak\s+gösteril/i.test(bas)) return { ad:'TL', carpan:1 };
   return { ad:'belirsiz', carpan:null };
 }
-function _isaretUygun(ad, v){
+function _isaretUygun(ad, v, sinir){
   if(v == null) return false;
-  if(!isFinite(v) || Math.abs(v) > _UST_SINIR) return false;
+  if(!isFinite(v) || Math.abs(v) > (sinir || 1e13)) return false;
   const bek = _ISARET[ad];
   if(bek === '+' && v < 0) return false;
   if(bek === '-' && v > 0) return false;
@@ -239,6 +257,8 @@ async function _bilancoAyristir(id){
      Tek regex + eşleme tablosu ile bir kopya yeter. */
   const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
   h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
+  /* Birim ÖNCE — üst sınır ona göre ölçeklenecek (§230) */
+  const _birim = _birimBul(h), _sinir = _ustSinir(_birim);
   const kalemBul = (etiketler, _ad) => {
     for(const e of etiketler){
       const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
@@ -268,7 +288,7 @@ async function _bilancoAyristir(id){
            ÇÖZÜM: raporun KENDİ çeyrek sütunlarını oku. Aynı rapor, aynı fiyat
            seviyesi, çıkarma yok. */
         /* §223: kısıta uymayan eşleşme REDDEDİLİR, arama DEVAM EDER */
-        if(hucreler.length >= 1 && _isaretUygun(_ad, hucreler[0])) return {
+        if(hucreler.length >= 1 && _isaretUygun(_ad, hucreler[0], _sinir)) return {
           deger: hucreler[0], onceki: hucreler[1] ?? null,          // kümülatif
           ceyrek: hucreler[2] ?? null, ceyrekOnceki: hucreler[3] ?? null,
           hepsi: hucreler.slice(0,6),                               // teşhis: sütun yapısı görünsün
@@ -284,8 +304,7 @@ async function _bilancoAyristir(id){
   const secili = sablon==='banka' ? banka : sanayi;
   const liste  = sablon==='banka' ? _BANKA : _SANAYI;
   const eksik = liste.filter(([ad])=>!secili.c[ad]).map(([ad])=>ad);
-  const birim = _birimBul(h);
-  return { ok: secili.dolu>0, id, sablon, birim, bulunan:secili.dolu, toplam:liste.length,
+  return { ok: secili.dolu>0, id, sablon, birim:_birim, ustSinir:_sinir, bulunan:secili.dolu, toplam:liste.length,
     eksik, kalemler:secili.c,
     uyari: eksik.length ? eksik.length+' kalem bulunamadı — sayfa yapısı değişmiş olabilir' : null };
 }
@@ -295,7 +314,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-e';
+const _SURUM = 'kap-2026-07-31-f';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -631,6 +650,7 @@ export default async function handler(req, res){
       const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
 
+      const _birimTe = _birimBul(h), _sinirTe = _ustSinir(_birimTe);
       const rapor = [];
       [..._SANAYI, ..._BANKA].forEach(([ad, etiketler])=>{
         const kayit = { ad, denenen:[] };
@@ -649,9 +669,9 @@ export default async function handler(req, res){
               satirUzunluk: sinir - m.index,
               hamHucreler: ham.slice(0,8),
               cozulen: gecerli.slice(0,6),
-              kisitGecti: gecerli.length ? _isaretUygun(ad, gecerli[0]) : false,
-              redSebebi: gecerli.length && !_isaretUygun(ad, gecerli[0])
-                ? (Math.abs(gecerli[0])>_UST_SINIR ? 'büyüklük sınırı' : 'işaret uyuşmazlığı') : null });
+              kisitGecti: gecerli.length ? _isaretUygun(ad, gecerli[0], _sinirTe) : false,
+              redSebebi: gecerli.length && !_isaretUygun(ad, gecerli[0], _sinirTe)
+                ? (Math.abs(gecerli[0])>_sinirTe ? ('büyüklük sınırı '+_sinirTe) : 'işaret uyuşmazlığı') : null });
           }
           if(kayit.denenen.length) break;
         }
@@ -667,7 +687,7 @@ export default async function handler(req, res){
           .filter(t=>!bilinen.has(t) && /[A-ZÇĞİÖŞÜ]{2,}|Kar|Kâr|Gelir|Gider|Varlık|Yükümlülük|Özkaynak|Hasılat|Nakit/.test(t))
       )].slice(0,45);
 
-      return res.status(200).json({ surum:_SURUM, ok:true, id, secilen, uzunluk:h.length,
+      return res.status(200).json({ surum:_SURUM, ok:true, id, secilen, uzunluk:h.length, birim:_birimTe, ustSinir:_sinirTe,
         bulunan: rapor.filter(x=>!x.hicBulunamadi && x.denenen[0] && x.denenen[0].kisitGecti).length,
         rapor,
         sayfadakiDigerBasliklar: adaylar,
@@ -688,6 +708,7 @@ export default async function handler(req, res){
       const KACIS = { '\\u003c':'<', '\\u003e':'>', '\\"':'"', '\\n':' ' };
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
 
+      const _birimT = _birimBul(h), _sinirT = _ustSinir(_birimT);
       const bul = (etiketler, _ad) => {
         for(const e of etiketler){
           const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
@@ -698,7 +719,7 @@ export default async function handler(req, res){
             const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 900;
             const dilim = h.slice(m.index, sinir);
             const hc = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
-            if(hc.length >= 1 && _isaretUygun(_ad, hc[0])) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
+            if(hc.length >= 1 && _isaretUygun(_ad, hc[0], _sinirT)) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
           }
         }
         return null;
@@ -744,7 +765,7 @@ export default async function handler(req, res){
       });
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ surum:_SURUM,  ok:(bil.dolu+gel.dolu)>0, id, sablon, birim:_birimBul(h),
+      return res.status(200).json({ surum:_SURUM,  ok:(bil.dolu+gel.dolu)>0, id, sablon, birim:_birimT, ustSinir:_sinirT,
         temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif',
         bilanco: { bulunan:bil.dolu, toplam:bilListe.length, kalemler:yatay },
         gelir:   { bulunan:gel.dolu, toplam:gelListe.length, kalemler:dikey, payda, payda0 },
