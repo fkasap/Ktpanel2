@@ -2677,6 +2677,48 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 224. "EKLENDI" DEDI AMA GORUNMEDI — cizim eski listeden (31 Tem)
+
+BORSK taslagi guzel cikti, skor girildi, "✓ Earnings AI'a eklendi" yazdi.
+AMA KART GORUNMEDI.
+
+### 224.1 SEBEP: IKI DEGISKEN, BIRI GUNCELLENDI
+§222b'de birlestirme eklendi:
+    let birlesik = kartlar;  ...  INC_KARTLAR = birlesik;
+INC_KARTLAR guncellendi (nobet ve takvim onu okuyor) AMA CIZIM hala
+`kartlar`i kullaniyordu — yani YALNIZ DOSYADAN geleni:
+    if(!kartlar.length) ...
+    el.innerHTML = kartlar.map(...)
+Taslak listeye giriyordu, EKRANA GELMIYORDU.
+"Eklendi" deyip gostermemek, en kafa karistirici hata turu: kullanici
+kaydin kaybolduğunu saniyor, oysa kayit YERINDE, GOSTERIM eksik.
+
+### 224.2 BU BUGUNUN YEDINCI TEKRARI
+  §129  alan sildim, okuyanlari biraktim
+  §189  JSON yukledim, betigi biraktim
+  §194  ozellik yazdim, var mi bakmadim
+  §208  ic HTTP tuzagini cozdum, tekrar yaptim
+  §211c virgul destegi ekledim, temizleyiciyi biraktim
+  §219b sekme ekledim, uyelik listesini biraktim
+  §224  degisken birlestirdim, CIZIMI biraktim
+Desen ayni: BIR YERI DEGISTIRIP DIGERINI BIRAKMAK.
+Bu sefer ozellikle sinsi cunku IKI DEGISKEN AYNI SEYIN IKI HALIYDI —
+`kartlar` (ham) ve `birlesik` (birlesmis). Isim benzerligi, birinin
+digerinin yerine gectigini gizledi.
+KURAL: bir degiskenin TUREVI olusturuluyorsa, ORIJINALIN TUM KULLANIMLARI
+taranmali. Turev olusturmak, orijinali OTOMATIK OLARAK gecersiz kilmaz.
+
+### 224.3 ONAY ROZETI
+Onaylanan (buluttan gelen) kart artik "ONAYLI TASLAK" rozetiyle gorunuyor.
+Dosyaya islenmis kartla ayirt edilebilmeli: biri kalici, digeri henuz
+repoya girmemis. Karistirilirsa hangisinin deploy gerektirdigi bilinmez.
+
+### 224.4 YAN TEMIZLIK
+globalTakvimRender() ust uste IKI KEZ cagriliyordu. Zararsiz ama bosuna is;
+tek cagriya indirildi.
+
+app.js v=20260731m. DOSYALAR: app.js + index.html.
+
 ## 223. UC SORUN: yanlis satir · kesik JSON · yanlis donem (31 Tem)
 
 BORSK taslagi uc ayri sorun gosterdi.

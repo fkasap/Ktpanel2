@@ -3023,11 +3023,17 @@ async function incelemeInit(){
     /* §166: kart listesi yüklendiğinde BIST takvimi de tazelenir — takvim
        kartlardan türediği için ikisi TEK kaynaktan beslenir, ayrışamazlar. */
     try{ if(typeof bistTakvimYukle==='function') bistTakvimYukle().then(()=>bistTakvimRender()); }catch(e){}
+    /* Tek çağrı yeter — iki kez yazılmıştı, ikincisi boşuna iş. */
     try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
-    try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
-    if(!kartlar.length){el.innerHTML='<div class="sub">Henüz kart yok — ilk bilanço incelemesini iste.</div>';return;}
+    if(!birlesik.length){el.innerHTML='<div class="sub">Henüz kart yok — ilk bilanço incelemesini iste.</div>';return;}
     const skorRenk=(s)=>s==='POZİTİF'?'var(--mm2)':s==='NEGATİF'?'#DE4B5E':'#8896A5';
-    el.innerHTML=kartlar.map(k=>{
+    /* §224 ÇİZİM ARTIK BİRLEŞİK LİSTEDEN. Önce INC_KARTLAR birleştiriliyor ama
+   ÇİZİM hâlâ `kartlar`ı (yalnız dosyayı) kullanıyordu — onaylanan taslak
+   listeye giriyor, EKRANA GELMİYORDU. "Eklendi" diyip göstermemek, en
+   kafa karıştırıcı hata türü.
+   Ayrıca onaylanan kart ROZETLE ayrılıyor: dosyaya işlenmiş kartla
+   buluttan gelen kart görsel olarak ayırt edilebilmeli. */
+el.innerHTML=birlesik.map(k=>{
       const met=(k.metrikler||[]).map(x=>
         '<div style="display:grid;grid-template-columns:1fr auto 64px 64px;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px dashed var(--line)">'+
         '<span style="font-size:10px;color:var(--muted)">'+x.ad+'</span>'+
@@ -3038,7 +3044,13 @@ async function incelemeInit(){
       return '<div class="card" style="margin-bottom:12px">'+
         '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px">'+
         '<div style="display:flex;gap:7px;align-items:baseline"><input type="checkbox" class="incSec" data-kod="'+k.kod+'" title="Mail seçimine ekle" style="cursor:pointer;accent-color:var(--mm2);position:relative;top:2px">'+
-        '<div><b style="font-size:14px">'+k.kod+'</b> <span class="thin">'+k.ad+' · '+k.donem+' · '+k.tarih+'</span></div></div>'+
+        /* §224b ONAY ROZETİ. Buluttan gelen (onaylanmış taslak) kart, dosyaya
+           işlenmiş kartla görsel olarak AYIRT EDİLEBİLMELİ — biri kalıcı, biri
+           henüz repoya girmemiş. Karıştırılırsa hangisinin deploy gerektirdiği
+           bilinmez. */
+        '<div><b style="font-size:14px">'+k.kod+'</b>'+
+        (k._onaylanmis?' <span class="tag" style="background:var(--mm2);font-size:8px">ONAYLI TASLAK</span>':'')+
+        ' <span class="thin">'+k.ad+' · '+k.donem+' · '+k.tarih+'</span></div></div>'+
         '<div style="display:flex;gap:5px;align-items:center">'+
         '<button class="btn" data-mail="'+k.kod+'" title="Bu kartı mail at" style="font-size:9px;padding:2px 7px">✉</button>'+
         '<button class="btn" data-kopya="'+k.kod+'" title="Panoya kopyala" style="font-size:9px;padding:2px 7px">⧉</button>'+
