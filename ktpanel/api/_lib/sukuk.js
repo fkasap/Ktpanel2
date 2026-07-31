@@ -81,12 +81,24 @@ module.exports = async (req, res) => {
   }catch(e){ /* arşiv yoksa yalnız canlı ile devam */ }
 
   // 2) CANLI KAP — kendi köprümüzü çağır (WAF/oturum yönetimi orada zaten çözülü)
-  let canli = [], kapHata = null;
+  let canli = [], kapHata = null, hamAdet = null, ustPencereGun = null, tavanaDayandi = false;
   const bilinmeyen = new Set();
   try{
-    const r = await fetch(kok + '/api/kap', { headers: ICBASLIK, signal: AbortSignal.timeout(15000) });
+    /* §245i PENCERE İSTENİYOR ARTIK. Eskiden `/api/kap` PARAMETRESİZ çağrılıyordu:
+       kaynak son 2 günü, en yeni 150 kaydı veriyordu. KAP günde ~280 bildirim
+       ürettiği için 150 kayıt ≈ YARIM GÜN. Yani bu modül 30 günlük süzgeç
+       uygularken fiilen yarım günü tarıyor ve düzenli olarak canliAdet:0
+       dönüyordu — sonra da yanıtta `pencereGun:30` yazıyordu.
+       İstenen pencere gerçek pencereden 60 kat genişti ve bunu kimse görmüyordu.
+       gun=7 seçildi: §''de ölçülmüş, 7 günde ~1978 kayıt geliyor ve KAP tavanı
+       2000 — yani en geniş GÜVENLİ pencere bu. limit=2000 ile dilim kırpması
+       kaldırıldı. Zaman aşımı 15→28 sn (kaynak 22 sn'ye kadar sürebiliyor). */
+    const r = await fetch(kok + '/api/kap?gun=7&limit=2000', { headers: ICBASLIK, signal: AbortSignal.timeout(28000) });
     const d = await r.json();
     const items = (d && d.items) || [];
+    hamAdet = (d && typeof d.hamAdet === 'number') ? d.hamAdet : items.length;
+    ustPencereGun = (d && d.pencereGun) || null;
+    tavanaDayandi = !!(d && d.tavanaDayandi);
     const sinir = new Date(Date.now() - gun*86400000);
     items.forEach(it => {
       const kodlar = (it.k || []).map(x => String(x).toUpperCase());
@@ -126,7 +138,23 @@ module.exports = async (req, res) => {
     kaynak: canli.length ? ('KAP canlı' + (statik.length ? ' + arşiv' : '')) : (statikKaynak || 'arşiv'),
     guncelleme: birlesik.length ? birlesik[0].tarih : (statikGun || null),
     canliAdet: canli.length, arsivAdet: statik.length,
-    pencereGun: gun,
+    /* §245i DÜRÜST PENCERE. Eskiden burada tek başına `pencereGun: gun` vardı
+       (istenen 30) ve kaynak yalnız yarım gün veriyordu — yanıt YANLIŞ BİLGİ
+       taşıyordu. Artık üçü birden bildiriliyor:
+         istenenPencereGun — bu modülün uyguladığı süzgeç penceresi
+         ustPencereGun     — /api/kap'ın GERÇEKTEN taradığı pencere
+         hamAdet           — süzülmeden önceki ham kayıt sayısı
+       "canliAdet:0" gördüğünde artık tek bakışta ayırt edilir:
+         hamAdet 0      → kaynak sustu (KAP/köprü sorunu)
+         hamAdet yüksek → kaynak akıyor, SÜZGEÇ eliyor (ölçüt sorunu)
+         tavanaDayandi  → pencere kırpıldı, gerçek sayı daha yüksek olabilir
+       pencereGun eski adıyla korunuyor ama artık GERÇEKLEŞEN pencereyi
+       söylüyor: istenen ile üstteki pencerenin KÜÇÜĞÜ. */
+    pencereGun: (ustPencereGun ? Math.min(gun, ustPencereGun) : gun),
+    istenenPencereGun: gun,
+    ustPencereGun,
+    hamAdet,
+    tavanaDayandi,
     bilinmeyenKodlar: Array.from(bilinmeyen),   // haritaya eklenmesi gerekenler
     kapHata,                                    // canlı akış düştüyse sebep (arşiv yine görünür)
     icKimlik: !!process.env.CRON_SECRET,         // §199: iç isteklere kimlik eklendi mi
