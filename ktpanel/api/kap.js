@@ -56,6 +56,80 @@ async function _altModul(yol){
   const m = await import(yol);
   return m.default || m;
 }
+/* §208 ORTAK AYRIŞTIRICI — HTTP zincirlemesi KALDIRILDI.
+   mod=ceyrek, mod=bilanco'yu KENDİ SİTESİNE İSTEK ATARAK çağırıyordu ve
+   "cari bilanço alınamadı" veriyordu. İki sebep üst üste:
+     (a) middleware tüm yolları koruyor; iç istekte çerez yok → 401
+         (§199'daki aynı tuzak, bu sefer kendi eklediğim kodda)
+     (b) maliyet: mod=fr(120g) sekiz dilim + iki adet 5 MB sayfa = süre aşımı
+   ÇÖZÜM: ayrıştırma YEREL FONKSİYONA çıkarıldı. Artık ne middleware'e takılır,
+   ne ağ turu ekler, ne CRON_SECRET gerektirir.
+   DERS: kendi sunucusuna HTTP isteği atmak, aynı süreçte duran bir fonksiyonu
+   çağırmanın pahalı ve kırılgan yoludur. */
+const _BIN_KALIP = /^-?\(?\d{1,3}(\.\d{3})*\)?$/;
+const _sayiCoz = (t) => {
+  const ham = String(t).trim();
+  if(!_BIN_KALIP.test(ham)) return null;              // dipnot referansı elenir (§206)
+  const eksi = /^\(/.test(ham) || /^-/.test(ham);
+  const n = parseFloat(ham.replace(/[()\-]/g,'').replace(/\./g,''));
+  if(!isFinite(n)) return null;
+  if(ham.indexOf('.') < 0 && n < 1000) return null;
+  return eksi ? -n : n;
+};
+const _SANAYI = [
+  ['ciro',        ['Hasılat','Satış Gelirleri']],
+  ['brutKar',     ['Brüt Kar (Zarar)','Brüt Kâr (Zarar)','BRÜT KAR (ZARAR)']],
+  ['faaliyetKar', ['Esas Faaliyet Karı (Zararı)','Faaliyet Karı (Zararı)','ESAS FAALİYET KARI (ZARARI)']],
+  ['finansGider', ['Finansman Giderleri']],
+  ['parasal',     ['Net Parasal Pozisyon Kazançları (Kayıpları)']],
+  ['netKar',      ['Ana Ortaklık Payları']],
+  ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar']],
+  ['nakit',       ['Nakit ve Nakit Benzerleri']]
+];
+const _BANKA = [
+  ['netFaiz',     ['NET FAİZ GELİRİ VEYA GİDERİ','NET FAİZ GELİRİ']],
+  ['komisyon',    ['NET ÜCRET VE KOMİSYON GELİRLERİ VEYA GİDERLERİ']],
+  ['karsilik',    ['Beklenen Zarar Karşılıkları (-)','Beklenen Zarar Karşılıkları']],
+  ['faalKar',     ['NET FAALİYET KARI (ZARARI)']],
+  ['netKar',      ['Grubun Karı (Zararı)','Ana Ortaklık Payları']],
+  ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar','ÖZKAYNAKLAR']]
+];
+/* STOK kalemleri: bilanço anlık durumu gösterir, çeyrekliğe çevrilirken
+   ÇIKARILMAZ. Akış kalemleri (gelir tablosu) birikir, çıkarılır (§207.3). */
+const _STOK = new Set(['ozkaynak','nakit']);
+
+async function _bilancoAyristir(id){
+  const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
+  const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
+    headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
+    signal: AbortSignal.timeout(22000) });
+  if(!r.ok) return { ok:false, id, http:r.status, err:'sayfa alınamadı' };
+  let h = await r.text();
+  h = h.replace(/\\u003c/g,'<').replace(/\\u003e/g,'>').replace(/\\"/g,'"').replace(/\\n/g,' ');
+  const kalemBul = (etiketler) => {
+    for(const e of etiketler){
+      const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
+      let m;
+      while((m = kalip.exec(h)) !== null){
+        const dilim = h.slice(m.index, m.index + 3000);
+        const hucreler = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
+        if(hucreler.length >= 1) return { deger:hucreler[0], onceki:hucreler[1] ?? null, etiket:e };
+      }
+    }
+    return null;
+  };
+  const dene = (liste) => { const c={}; let dolu=0;
+    liste.forEach(([ad,et])=>{ const v=kalemBul(et); c[ad]=v; if(v)dolu++; }); return {c,dolu}; };
+  const sanayi = dene(_SANAYI), banka = dene(_BANKA);
+  const sablon = banka.dolu > sanayi.dolu ? 'banka' : 'sanayi';
+  const secili = sablon==='banka' ? banka : sanayi;
+  const liste  = sablon==='banka' ? _BANKA : _SANAYI;
+  const eksik = liste.filter(([ad])=>!secili.c[ad]).map(([ad])=>ad);
+  return { ok: secili.dolu>0, id, sablon, bulunan:secili.dolu, toplam:liste.length,
+    eksik, kalemler:secili.c,
+    uyari: eksik.length ? eksik.length+' kalem bulunamadı — sayfa yapısı değişmiş olabilir' : null };
+}
+
 export default async function handler(req, res){
   const _mod = String((req.query && req.query.mod) || '').toLowerCase();
   if (_mod === 'yorum') return (await _altModul('./_lib/kapyorum.js'))(req, res);
@@ -233,159 +307,51 @@ export default async function handler(req, res){
      4. dönem/Yıllık için önceki 3. dönemdir.
      KARŞILAŞTIRMA DÖNEMİ: her bildirimin `onceki` alanı geçen yılın aynı
      kümülatifidir; aynı çıkarma onda da yapılır, y/y çeyreklik çıkar. */
+  /* §208b ?mod=ceyrek — KİMLİKLER DIŞARIDAN GELİR.
+     İlk sürüm mod=fr'yi 120 günle çağırıp kimlikleri kendi buluyordu:
+     sekiz dilim + iki adet 5 MB sayfa = süre aşımı. Üstelik iç HTTP isteği
+     middleware'e takılıyordu.
+     ARTIK: kimlikleri çağıran verir (mod=fr çıktısında zaten var) ve
+     ayrıştırma YEREL fonksiyonla yapılır. Tek ağ işi iki KAP sayfası.
+     Kullanım:  ?mod=ceyrek&id=<cari>&onceki=<bir önceki dönem>
+     `onceki` verilmezse yalnız kümülatif döner — 1. dönem için doğrudur. */
   if (_mod === 'ceyrek') {
-    const kod = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
-    const yil = parseInt(req.query && req.query.yil) || new Date().getFullYear();
-    const donem = parseInt(req.query && req.query.donem) || 2;
-    if(!kod) return res.status(400).json({ ok:false, err:'kod gerekli' });
-
-    const kok = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host);
-    const ICBASLIK = process.env.CRON_SECRET ? { 'Authorization':'Bearer '+process.env.CRON_SECRET } : {};
-    const bilancoCek = async (id) => {
-      const r = await fetch(kok+'/api/kap?mod=bilanco&id='+id, { headers:ICBASLIK, signal:AbortSignal.timeout(25000) });
-      return r.ok ? r.json() : null;
-    };
-    /* Bildirim kimliklerini mod=fr'den bul — 120 günlük pencere iki çeyreği kapsar */
-    const frCek = async () => {
-      const r = await fetch(kok+'/api/kap?mod=fr&gun=120', { headers:ICBASLIK, signal:AbortSignal.timeout(30000) });
-      const j = r.ok ? await r.json() : null;
-      return (j && j.fr) || [];
-    };
-
+    const id  = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
+    const onc = String((req.query && req.query.onceki) || '').replace(/[^0-9]/g,'').slice(0,10);
+    if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr çıktısındaki id' });
     try{
-      const fr = await frCek();
-      const bul = (y,d) => fr.find(x => x.kod===kod && x.yil===y && x.donem===d);
-      const cari = bul(yil, donem);
-      if(!cari) return res.status(200).json({ ok:false, kod, yil, donem,
-        err:'bildirim bulunamadı — 120 günlük pencerede yok. mod=fr ile kontrol et' });
+      const [b1, b0] = await Promise.all([ _bilancoAyristir(id),
+        onc ? _bilancoAyristir(onc) : Promise.resolve(null) ]);
+      if(!b1 || !b1.ok) return res.status(200).json({ ok:false, id, err:'cari bilanço ayrıştırılamadı', detay:b1 });
 
-      const oncekiDonem = donem > 1 ? bul(yil, donem-1) : null;
-      const [b1, b0] = await Promise.all([ bilancoCek(cari.id),
-        oncekiDonem ? bilancoCek(oncekiDonem.id) : Promise.resolve(null) ]);
-      if(!b1 || !b1.ok) return res.status(200).json({ ok:false, kod, err:'cari bilanço alınamadı' });
-
-      const cikar = (a, b) => (a==null) ? null : (b==null ? a : a-b);
-      const ceyreklik = {}, kumulatif = {};
+      const cikar = (a,b) => (a==null) ? null : (b==null ? a : a-b);
+      const kumulatif = {}, ceyreklik = {};
       Object.keys(b1.kalemler||{}).forEach(k=>{
         const c = b1.kalemler[k]; if(!c) return;
         kumulatif[k] = { deger:c.deger, onceki:c.onceki };
-        /* BİLANÇO kalemleri (özkaynak, nakit) STOK'tur — çıkarma YAPILMAZ.
-           Gelir tablosu kalemleri AKIŞ'tır — çıkarılır. */
-        const stok = (k==='ozkaynak' || k==='nakit');
-        if(stok || donem===1 || !b0 || !b0.ok || !b0.kalemler[k]){
-          ceyreklik[k] = stok ? { deger:c.deger, onceki:c.onceki, tur:'stok' }
-                              : (donem===1 ? { deger:c.deger, onceki:c.onceki, tur:'ceyreklik' }
-                                           : { deger:null, onceki:null, tur:'hesaplanamadı' });
-          return;
-        }
-        const p = b0.kalemler[k];
-        ceyreklik[k] = { deger: cikar(c.deger, p.deger), onceki: cikar(c.onceki, p.onceki), tur:'ceyreklik' };
+        if(_STOK.has(k)){ ceyreklik[k] = { deger:c.deger, onceki:c.onceki, tur:'stok' }; return; }
+        if(!onc){ ceyreklik[k] = { deger:c.deger, onceki:c.onceki, tur:'kümülatif (önceki dönem verilmedi)' }; return; }
+        const p = (b0 && b0.ok && b0.kalemler[k]) || null;
+        if(!p){ ceyreklik[k] = { deger:null, onceki:null, tur:'hesaplanamadı' }; return; }
+        ceyreklik[k] = { deger: cikar(c.deger,p.deger), onceki: cikar(c.onceki,p.onceki), tur:'ceyreklik' };
       });
 
-      return res.status(200).json({ ok:true, kod, yil, donem, sablon:b1.sablon,
-        cariBildirim: { id:cari.id, tarih:cari.tarih, gecikmeGun:cari.gecikmeGun, url:cari.url },
-        oncekiBildirim: oncekiDonem ? { id:oncekiDonem.id, tarih:oncekiDonem.tarih } : null,
+      res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
+      return res.status(200).json({ ok:true, id, oncekiId:onc||null, sablon:b1.sablon,
+        bulunan:b1.bulunan, toplam:b1.toplam, eksik:b1.eksik,
         kumulatif, ceyreklik,
-        uyari: (donem>1 && (!b0 || !b0.ok)) ? 'önceki dönem bildirimi alınamadı — çeyreklik hesaplanamadı, yalnız kümülatif var' : null,
-        not: 'kumulatif = KAP\'ın verdiği dönemsel · ceyreklik = bu dönem − önceki dönem. Özkaynak ve nakit STOK kalemidir, çıkarılmaz. Birim BİN TL.' });
-    }catch(e){ return res.status(200).json({ ok:false, kod, hata:String(e.message||e).slice(0,140) }); }
+        uyari: (onc && (!b0 || !b0.ok)) ? 'önceki dönem ayrıştırılamadı — çeyreklik yok, kümülatif var' : b1.uyari,
+        not: 'kumulatif = KAP dönemsel · ceyreklik = cari − önceki. STOK kalemleri (özkaynak, nakit) çıkarılmaz. Birim BİN TL.' });
+    }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
   if (_mod === 'bilanco') {
     const id = String((req.query && req.query.id) || '').replace(/[^0-9]/g,'').slice(0,10);
     if(!id) return res.status(400).json({ ok:false, err:'id gerekli — /api/kap?mod=fr ile bul' });
-    const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
-
-    /* Aranacak kalemler. SANAYİ ve BANKA şablonları farklı; ikisi de denenir,
-       hangisi dolarsa o şablon kabul edilir. Sıra önemli: uzun etiket önce,
-       yoksa "Dönem Karı" kısa etiketi "Dönem Karı Vergi Yükümlülüğü"nü yakalar
-       (yoklamada tam bu oldu — konum 607977 vergi satırıydı). */
-    const SANAYI = [
-      ['ciro',        ['Hasılat','Satış Gelirleri']],
-      ['brutKar',     ['Brüt Kar (Zarar)','Brüt Kâr (Zarar)','BRÜT KAR (ZARAR)']],
-      ['faaliyetKar', ['Esas Faaliyet Karı (Zararı)','Faaliyet Karı (Zararı)','ESAS FAALİYET KARI (ZARARI)']],
-      ['finansGider', ['Finansman Giderleri']],
-      ['parasal',     ['Net Parasal Pozisyon Kazançları (Kayıpları)']],
-      ['netKar',      ['Ana Ortaklık Payları']],
-      ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar']],
-      ['nakit',       ['Nakit ve Nakit Benzerleri']]
-    ];
-    const BANKA = [
-      ['netFaiz',     ['NET FAİZ GELİRİ VEYA GİDERİ','NET FAİZ GELİRİ']],
-      ['komisyon',    ['NET ÜCRET VE KOMİSYON GELİRLERİ VEYA GİDERLERİ']],
-      ['karsilik',    ['Beklenen Zarar Karşılıkları (-)','Beklenen Zarar Karşılıkları']],
-      ['faalKar',     ['NET FAALİYET KARI (ZARARI)']],
-      ['netKar',      ['Grubun Karı (Zararı)','Ana Ortaklık Payları']],
-      ['ozkaynak',    ['Ana Ortaklığa Ait Özkaynaklar','ÖZKAYNAKLAR']]
-    ];
-
     try{
-      const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
-        headers:{ 'user-agent':UA, 'accept':'text/html', 'referer':'https://www.kap.org.tr/tr/bildirim-sorgu' },
-        signal: AbortSignal.timeout(20000) });
-      if(!r.ok) return res.status(200).json({ ok:false, id, http:r.status, err:'sayfa alınamadı' });
-      let h = await r.text();
-      /* Flight yükündeki kaçışları çöz — \u003c gibi diziler literal olarak duruyor */
-      h = h.replace(/\\u003c/g,'<').replace(/\\u003e/g,'>').replace(/\\"/g,'"').replace(/\\n/g,' ');
-
-      /* Bir etiketin ARDINDAN gelen sayıları topla. Etiket hücresinden sonra
-         gelen ilk iki sayısal hücre = cari ve önceki dönem. */
-      /* §205b DİPNOT REFERANSI TUZAĞI — çapraz denetimle yakalandı.
-         İlk sürümde TOASO cirosu 4,17 çıktı, gerçek değer 201.797.108'di.
-         SEBEP: KAP tablosunda kalem ile değer arasında DİPNOT REFERANSI sütunu
-         var:  | Hasılat | 4.17 | 201.797.108 | 125.633.352 |
-         Ayrıştırıcı ilk sayıyı alıyordu, o da dipnot numarasıydı ve TÜM
-         SÜTUNLAR BİR KAYIYORDU — cari değer "önceki" alanına düşüyordu.
-         NEDEN YALNIZ CİRODA: ara toplamların (BRÜT KAR, ESAS FAALİYET KARI)
-         dipnotu YOK, kalem satırlarının VAR. Yani hata KALEME GÖRE değişiyordu
-         — en sinsi türü.
-         ÇÖZÜM: bin ayracı biçimi ZORUNLU. Değerler "201.797.108" gibi, her
-         noktadan sonra TAM ÜÇ HANE. "4.17" bu kalıba uymaz (17 iki hane).
-         YAKALAYAN: Fintables'tan bilinen TOASO rakamlarıyla karşılaştırma.
-         Bilinen bir vaka olmasaydı 4,17'yi ciro sanıp kart yazacaktık. */
-      const BIN_KALIP = /^-?\(?\d{1,3}(\.\d{3})*\)?$/;
-      const sayiCoz = (t) => {
-        const ham = String(t).trim();
-        if(!BIN_KALIP.test(ham)) return null;              // dipnot ref elenir
-        const eksi = /^\(/.test(ham) || /^-/.test(ham);
-        const n = parseFloat(ham.replace(/[()\-]/g,'').replace(/\./g,''));
-        if(!isFinite(n)) return null;
-        /* Noktasız tek/çift haneli sayı da dipnot olabilir (örn. "5").
-           Değerler BİN TL olduğu için gerçek kalem 1000'in altında olmaz. */
-        if(ham.indexOf('.') < 0 && n < 1000) return null;
-        return eksi ? -n : n;
-      };
-      const kalemBul = (etiketler) => {
-        for(const e of etiketler){
-          /* Etiketi tam hücre içeriği olarak ara — kısmi eşleşme yanlış satır verir */
-          const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
-          let m;
-          while((m = kalip.exec(h)) !== null){
-            const dilim = h.slice(m.index, m.index + 3000);
-            const hucreler = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>sayiCoz(x[1])).filter(v=>v!==null);
-            if(hucreler.length >= 1) return { deger:hucreler[0], onceki:hucreler[1] ?? null, etiket:e };
-          }
-        }
-        return null;
-      };
-
-      const dene = (liste) => {
-        const c = {}; let dolu = 0;
-        liste.forEach(([ad, et])=>{ const v = kalemBul(et); c[ad] = v; if(v) dolu++; });
-        return { c, dolu };
-      };
-      const sanayi = dene(SANAYI), banka = dene(BANKA);
-      const sablon = banka.dolu > sanayi.dolu ? 'banka' : 'sanayi';
-      const secili = sablon === 'banka' ? banka : sanayi;
-      const liste  = sablon === 'banka' ? BANKA : SANAYI;
-
-      const eksik = liste.filter(([ad])=>!secili.c[ad]).map(([ad])=>ad);
+      const c = await _bilancoAyristir(id);
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ ok: secili.dolu > 0, id, sablon,
-        bulunan: secili.dolu, toplam: liste.length, eksik,
-        kalemler: secili.c,
-        uyari: eksik.length ? eksik.length+' kalem bulunamadı — sayfa yapısı değişmiş olabilir' : null,
-        not: 'deger = cari dönem · onceki = karşılaştırma dönemi. Sayılar BİN TL cinsindendir (KAP standardı).' });
+      return res.status(200).json({ ...c, not:'deger = cari dönem · onceki = karşılaştırma dönemi. Birim BİN TL.' });
     }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
   }
 
