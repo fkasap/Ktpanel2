@@ -2827,8 +2827,68 @@ bu turda DOKUNULMADI, siradaki ise yazildi.
   · XKTUM beta tabani hala XU100'e dusuyor (onceki tur bulgusu) — sentetik
     endeks isi ayri ve buyuk.
 
-app.js v=20260731y · ajan.js v=20260731n
-DOSYALAR: app.js + ajan.js + index.html + guncelleme-plani.json
+### 245b DEPLOY SONRASI: KENDI URETTIGIM YANLIS ALARM (31 Tem, ayni gun)
+Ilk deploy'da konsol:
+    [KTPanel] ⚠ Bos/eksik bolumler: Endeksten ayrisma
+Yeni saglik kontrolu ILK CALISMASINDA bir sey yakaladi — ve yakaladigi sey
+BENIM urettigim yanlis alarmdi. #ayrBody bostu, ama BOS OLMASI GEREKIYORDU:
+ayrismaInit() boot listesinde DEGIL, t3 sekmesi tiklaninca cagriliyor (§154'te
+portfoy sekmesinin icine tasinmisti).
+HATA: kapsami 8'den 15 kaba cikarirken DOLMA ZAMANINA bakmadim. "Bu kap var mi"
+sorusunu sordum, "bu kap ne zaman dolar" sorusunu sormadim.
+COZUM: kontrol listesine 3. eleman — TEMBEL bayragi. Tembel kapta VARLIK
+denetlenir, DOLULUK denetlenmez. Varlik denetimi zaten asil kazanimdi
+(silinen kabi yakalamak); dolulugu boot aninda olcmek KATEGORI HATASI.
+STATIK ANALIZ YETMEDI: hangi kaplarin tembel oldugunu koddan cikarmaya
+calistim, uc yanlis pozitif verdi (kuresel1 · riskBaroSkor · fmKarneBody —
+bunlar marketCek/ajan GOREVLER uzerinden doluyor). KONSOL YER GERCEGIDIR;
+cagri zincirini statik izlemek dolayli yollari kaciriyor.
+
+### 245c OPAK 500 → KONUSAN HATA (api/kap.js)
+Ayni konsolda: `api/kap?mod=yorum...` 500.
+OLCTUM, TAHMIN ETMEDIM: alt modul ESM baglaminda yerel olarak import edildi ve
+sahte req/res ile cagrildi -> 200 + {ok:false, err:'KAP HTTP 403'}. Yani modulun
+KENDISI saglam ve hata yolu dogru. Demek ki patlama YUKLENMEDE.
+`_altModul` CIPLAKTI: import basarisiz olursa istisna handler'dan disari sizar,
+Vercel jenerik 500 basar. 500'un soyledigi tek sey "bir sey oldu".
+Sunucu gunlugu olmadan kok neden UZAKTAN KESINLESTIRILEMEZ — o yuzden neden
+aranmadi, GORUNURLUK eklendi: yonlendirme sarmalandi, yanit 502 + {mod, asama,
+hata, mesaj, ipucu}. Bir sonraki turda tahmine gerek kalmayacak (§145, §167).
+NEDEN 200 DEGIL 502: bu gercek bir ariza. 200 donmek panelin "veri yok" ile
+"sunucu kirik" ayrimini yok ederdi.
+
+### 245d SESSIZ YEDEGE DUSME — konsolda 500, ekranda HICBIR IZ
+haberCanliCek() sonu: `catch(e){}`. Ve `if(j&&j.ok&&...)` kosulu ok:false
+gelince de sessizce geciyordu. Sonuc: canli KAP akisi olurken panel statik
+HABERLER dizisini gosteriyor, damga eski haliyle duruyor.
+KULLANICI EKRANDA HICBIR SEY GORMUYOR. Konsolda 500 vardi, ekranda iz yoktu.
+§60'in TEFAS vakasi birebir: damga "canli" der, akan veri yoktur.
+Artik dusus GORUNUR: damgaya kirmizi "⚠ DAMGALI YEDEK" duser, sebebi yazar
+(HTTP kodu ya da hata mesaji) ve konsola warn dusulur.
+YEDEGE DUSMEK KUSUR DEGIL; SESSIZCE DUSMEK KUSURDUR.
+
+### 245e KOKTE UC OLU KOPYA (§241 tuzagi)
+  kapyorum.js  <-> api/_lib/kapyorum.js   md5 AYNI, kokteki CAGRILMIYOR
+  sukuk.js     <-> api/_lib/sukuk.js      md5 AYNI, kokteki CAGRILMIYOR
+  ajanktp.js   <-> api/ajanktp.js         FARKLI, kokteki CAGRILMIYOR
+index.html yalniz app.js ve ajan.js yukluyor. Bu uc dosya deploy ediliyor ama
+hicbir yerden cagrilmiyor. §241'in tuzagi tam bu: "uc tur ayni satiri
+duzeltemedim, sebep IKI DOSYA BAGIMLILIGI". Biri kokteki kopyayi duzeltirse
+hicbir sey degismez ve sebebi bulmak turlar alir.
+BU TURDA SILINMEDI — silme ayri bir denetim ister (ajanktp.js kopyalari FARKLI,
+once hangisinin yeni oldugu belirlenmeli). Siradaki ise yazildi.
+
+### 245f TRACKING PREVENTION UYARISI — ariza DEGIL
+Konsolda dort kez: "Tracking Prevention blocked access to storage for
+unpkg.com/lightweight-charts". Bu DEPOLAMA erisimi uyarisi, betik yuklemesi
+engeli degil; kutuphane yuklenmis olabilir. Zaten ele alinmis: tkKutuphane()
+onerror'da false doner, tkYukle "grafik kutuphanesi yuklenemedi (CDN engelli
+olabilir)" diyerek durum satirina yazar. DAMGA §B3'teki teshis yolu isliyor.
+Aksiyon gerekmiyor — ama Teknik sekmesi bos acilirsa bakilacak ilk yer burasi.
+
+app.js v=20260731z · ajan.js v=20260731n · api kap-2026-07-31-k
+DOSYALAR: app.js + ajan.js + index.html + guncelleme-plani.json + api/kap.js
+
 
 ## 244. TEMETTU KARTI VE YIELD CURVE LAB KALDIRILDI (31 Tem)
 
