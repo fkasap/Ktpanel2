@@ -112,8 +112,14 @@ module.exports = async (req, res) => {
 
     /* İSTEM — bugün elle yazılan kartlardan türedi. Her kural bir VAKAYA
        dayanıyor; soyut "iyi analiz yap" demiyor, NEYE BAKILACAĞINI söylüyor. */
+    /* §221 İSTEM ARTIK KART YAPISI ÜRETİYOR — serbest metin değil.
+       Önceki sürüm ÖZET/DİKKAT/İZLENECEK biçiminde düz metin veriyordu ve
+       panelin kart yapısına uymuyordu: kod·ad·donem·skor·ozet·metrikler[]·
+       onemli[]·guidance·tez.
+       JSON isteniyor ki onaylanınca DOĞRUDAN karta dönüşebilsin.
+       SKOR yine YOK — model skor vermiyor, kullanıcı onaylarken giriyor. */
     const istem =
-`Sen bir katılım finans fon yöneticisinin analistisin. Aşağıdaki bilanço metriklerinden bir TASLAK kart yaz.
+`Sen bir katılım finans fon yöneticisinin analistisin. Aşağıdaki bilanço metriklerinden panelin KART YAPISINDA bir taslak üret.
 
 ŞİRKET: ${kod}${unvan ? ' — '+unvan : ''}
 DÖNEM: ${donem}
@@ -123,38 +129,78 @@ Birim: BİN TL. Marjlar yüzde. y/y = geçen yılın aynı çeyreği.
 METRİKLER:
 ${JSON.stringify(g.metrikler, null, 1)}
 
-OTOMATİK İŞARETLER (bakılacak yerler, yorum değil):
+OTOMATİK İŞARETLER (bakılacak yerler):
 ${(g.isaretler||[]).map(x=>'- '+x.tip+': '+x.not).join('\n') || '- yok'}
+
+YALNIZCA GEÇERLİ JSON DÖNDÜR. Başka hiçbir şey yazma, markdown kod bloğu kullanma.
+
+{
+ "ozet": "3-5 cümle. Manşet ne diyor, ALTINDA ne var. Rakamları binlik ayraçla yaz.",
+ "metrikler": [
+   {"ad":"Ciro (2Ç)","deger":"100,02 mlr ₺","cc":"çeyreklik değişim ya da bağlam","yoy":"+%9,0 (2Ç25: 91,74)"}
+ ],
+ "onemli": ["BAŞLIK BÜYÜK HARF: açıklama. Neden önemli olduğu.", "...", "..."],
+ "guidance": "Şirket guidance veriyorsa özeti; vermiyorsa İZLENECEK EŞİKLER — gelecek çeyrekte hangi rakama bakılmalı.",
+ "tez": "Bu şirket panelin hangi kapsamında? Portföyde mi, endekste mi, yalnız izlemede mi? Panel açısından anlamı ne?"
+}
+
+METRİKLER dizisi 4-6 kalem olsun. Her biri: ad · deger (birimle) · cc (çeyreklik/bağlam) · yoy (yıllık değişim).
+ONEMLI dizisi 3 madde olsun. Her madde BÜYÜK HARF başlıkla başlasın.
 
 NASIL YAZACAKSIN:
 
-1) MANŞETE DEĞİL ALTINA BAK. En sık tuzak: bir kalem iyi görünürken altındaki bozuk olması.
-   - Net kâr artarken faaliyet kârı düşüyorsa, farkı finansman gideri ya da parasal pozisyon taşıyordur. Bu operasyonel iyileşme DEĞİLDİR ve açıkça söylenmelidir.
-   - Faaliyet kârı artarken FAVÖK düşüyorsa sebep amortisman değişimidir; muhasebesel, operasyonel değil.
-   - Bankada karşılık çeyreklik sıçrarken yıllık bazda azalmış olabilir. İkisini AYRI söyle; yalnız birine bakan yanılır.
+1) MANŞETE DEĞİL ALTINA BAK.
+   - Net kâr artarken faaliyet kârı düşüyorsa, farkı finansman gideri ya da parasal pozisyon taşıyordur. Operasyonel iyileşme DEĞİLDİR, açıkça söyle.
+   - Faaliyet kârı artarken FAVÖK düşüyorsa sebep amortismandır; muhasebesel, operasyonel değil.
+   - Bankada karşılık çeyreklik sıçrarken yıllık azalmış olabilir. İKİSİNİ AYRI söyle.
 
-2) BÜYÜK YÜZDELERE DİKKAT. %200 artış çoğu zaman düşük bazdan gelir. Mutlak tutarı da yaz ki okuyan ölçeği görsün.
+2) BÜYÜK YÜZDELERE DİKKAT. %200 artış çoğu zaman düşük bazdan gelir. Mutlak tutarı da yaz.
 
-3) MARJ KATMANLARINI YAN YANA OKU: brüt → faaliyet → net. Hangi katmanda kayıp olduğu, sorunun NEREDE olduğunu söyler. Brüt marj korunup faaliyet marjı düşüyorsa sorun üretimde değil faaliyet giderlerinde.
+3) MARJ KATMANLARINI YAN YANA OKU: brüt → faaliyet → net. Hangi katmanda kayıp olduğu sorunun NEREDE olduğunu söyler.
 
-4) SKOR VERME. Yatırım tavsiyesi verme. "Al", "sat", "cazip" gibi kelimeler kullanma.
+4) EKSİK VERİYİ DOLDURMA. Bir kalem yoksa "açıklanmadı" yaz, tahmin etme. Eksik kalem varsa ozet içinde belirt.
 
-5) EMİN OLMADIĞINI SÖYLE. Bir kalem eksikse ya da çelişkili görünüyorsa bunu yaz, doldurma.
+5) SKOR VERME. "Al", "sat", "cazip", "ucuz" gibi kelimeler kullanma. Tavsiye değil TESPİT yaz.
 
-BİÇİM (sade metin, başlık yok):
-ÖZET: 2-3 cümle. Manşet ne diyor, altında ne var.
-DİKKAT: 2-3 madde. Her madde bir tespit ve NEDEN önemli olduğu.
-İZLENECEK: 1-2 madde. Gelecek çeyrekte hangi eşiğe bakılmalı.
+Türkçe yaz. Kısa cümle kur.`;
 
-Türkçe yaz. Kısa cümle kur. Rakamları binlik ayraçla yaz (100.016.179).`;
-
-    const metin = await aiUret(istem, 900);
+    const metin = await aiUret(istem, 1400);
     if (!metin) return res.status(200).json({ ok:false, kod,
       err:'AI yanıt vermedi — ANTHROPIC_API_KEY tanımlı mı?' });
 
-    return res.status(200).json({ ok:true, kod, donem, taslak:metin,
-      uyari:'TASLAK. Skor ve yayın kararı insana aittir; okunmadan karta işlenmemelidir.',
-      uretim:new Date().toISOString() });
+    /* JSON AYRIŞTIRMA. Model bazen kod bloğuyla sarar ya da önüne yazı ekler;
+       ilk { ile son } arası alınır. Ayrışmazsa HAM METİN döndürülür ve
+       kullanıcıya söylenir — sessizce boş kart üretmek en kötüsü olurdu. */
+    let kart = null, ayrHata = null;
+    try{
+      const t = metin.replace(/```json|```/g,'').trim();
+      const b = t.indexOf('{'), so = t.lastIndexOf('}');
+      kart = JSON.parse(t.slice(b, so+1));
+    }catch(e){ ayrHata = String(e.message||e).slice(0,90); }
+
+    if(!kart) return res.status(200).json({ ok:false, kod, donem,
+      err:'model JSON üretmedi ('+ayrHata+')', ham:metin.slice(0,900) });
+
+    /* Kart iskeletini TAMAMLA — panel yapısına birebir uysun. Skor BİLEREK
+       null: kullanıcı onaylarken girecek (§204). */
+    const bugun = new Date();
+    const AY = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const tam = {
+      kod, ad: unvan || kod,
+      donem: donem || '',
+      tarih: bugun.getDate()+' '+AY[bugun.getMonth()]+' '+bugun.getFullYear(),
+      tarih_iso: bugun.toISOString().slice(0,10),
+      sablon: 'bist',
+      skor: null,                                   // ONAYDA girilecek
+      ozet: String(kart.ozet||''),
+      metrikler: Array.isArray(kart.metrikler) ? kart.metrikler.slice(0,8) : [],
+      onemli: Array.isArray(kart.onemli) ? kart.onemli.slice(0,5) : [],
+      guidance: String(kart.guidance||''),
+      tez: String(kart.tez||''),
+      _taslak: true, _kaynak: 'KAP + Claude taslağı', _uretim: bugun.toISOString()
+    };
+    return res.status(200).json({ ok:true, kod, donem, kart:tam,
+      uyari:'TASLAK. Skor YOK — onaylarken sen gireceksin. Okunmadan yayınlanmamalı.' });
   }
 
   if(mod === 'test'){
