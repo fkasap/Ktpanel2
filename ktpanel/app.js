@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-r';
+const KTP_SURUM = '20260731-t';
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1663,18 +1663,26 @@ async function katfonCanli(){
       '</span> — damgalı veri gösteriliyor'); return; }
     const j=await r.json();
     if(!j.ok||!j.items){
-      /* §148: canlı çekim KAPALIYSA bu bir arıza değil, ÖLÇÜLMÜŞ bir karardır.
-         TEFAS bot koruması sunucu tarafından erişimi imkânsız kılıyor (§147).
-         Kırmızı uyarı yerine nötr bir açıklama gösterilir — kullanıcı "bozuk"
-         sanmasın, "böyle tasarlandı" bilsin. Arıza ile karar farklı şeylerdir. */
+      /* §240c TEFAS UYARISI KALDIRILDI. §147-148'de TEFAS bot koruması yüzünden
+       canlı çekim kapatılmış ve bu bir uyarı olarak gösteriliyordu. ARTIK
+       GEREKSİZ: veri Fintables MCP'den tek sorguda geliyor, TEFAS'a hiç
+       gidilmiyor. Kapanmış bir kapının önünde nöbet tutmaya devam etmek,
+       panelin diğer uyarılarının da ciddiyetini azaltır. */
       if(j && j.kapali){
         /* §150: damga İKİ TARİHİ de söylüyor. Getiriler ve AUM farklı kaynaklardan
            gelir (fiyat serisi vs günlük fon değerleri) ve aynı gün tazelenmeyebilir.
            Tek tarih göstermek, okuyucuya hepsi aynı gündenmiş izlenimi verir. */
-        damgala('köprü ritüeli · getiriler '+esc(KATFON.fiyat_tarihi||'?')+
+        /* §240b "köprü ritüeli" ARTIK YOK. Getiri, AUM ve akış tek Fintables
+       sorgusuyla ve TEK TARİHTE geliyor; elle toplama adımı kalktı.
+       Eski metin kaldırılan bir süreci anlatmaya devam ediyordu — kullanıcıya
+       var olmayan bir kısıt hatırlatmak, gerçek kısıtları da inandırıcılıktan
+       düşürür. */
+    damgala('getiriler '+esc(KATFON.fiyat_tarihi||'?')+
           ' · AUM/akış '+esc(KATFON.akis_tarihi||'?')+
-          ' <span class="thin">· TEFAS canlı çekim kapalı, bot koruması sunucudan erişime '+
-          'izin vermiyor (§147); veriler Fintables\'tan damgalanır.</span>'); return; }
+          ((KATFON.fiyat_tarihi===KATFON.akis_tarihi)
+            ? ' <span class="thin">· tek tarih, tümü Fintables</span>'
+            : ' <span class="thin" style="color:var(--down)">· TARİHLER AYRIŞIK — hangi rakamın hangi güne ait olduğuna dikkat</span>'));
+        return; }
       /* §144: önek tekrarı kesildi. Sunucu zaten "TEFAS: ..." diye gönderiyordu. */
       const ham=String(j&&j.err||'boş yanıt').replace(/^(TEFAS:\s*)+/i,'');
       damgala('<span style="color:var(--down)">⚠ TEFAS: '+esc(ham)+

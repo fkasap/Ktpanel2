@@ -2715,6 +2715,42 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 240b. KATFON DOGRULANDI + BAYAT METINLER TEMIZLENDI (31 Tem)
+
+Ekran kontrolu: alti fon satiri ve sekiz ozet kutusu DOSYAYLA BIREBIR.
+    TLV · NSA · AIS · PKT · KSK · NSP  -> YU · AUM · akis · 1G · YTD hepsi ✓
+    toplam 479,3 mlr · net akis −3,4 mlr · ort YTD %22,38 · 43 fon ✓
+    en yuksek KKL %29,32 · en dusuk KIS %9,74 ✓
+    en cok giren KTV +600 mn · en cok cikan ZP8 −1,6 mlr ✓
+Veri DOGRU. Sorun yalniz METINLERDEYDI.
+
+### 240b.1 UC BAYAT METIN
+  index.html basligi: "1G+fiyat+AUM canlı TEFAS (yeni API) · dönem getirileri
+    damgalı taban · akış 24 Tem Fintables"
+  app.js damgasi: "köprü ritüeli · ..."
+  app.js uyarisi: "TEFAS canlı çekim kapalı, bot koruması sunucudan erişime
+    izin vermiyor (§147)"
+UCU DE ARTIK GECERSIZ: veri tek Fintables sorgusuyla, tek tarihte geliyor;
+TEFAS'a hic gidilmiyor; kopru rituali diye bir surec kalmadi.
+
+### 240b.2 NEDEN ONEMLI — inandiriciligi tuketiyor
+Kapanmis bir kapinin onunde nobet tutmaya devam etmek, panelin DIGER
+uyarilarinin da ciddiyetini azaltir. Kullanici "TEFAS kapali" yazisini her
+gun gorup gormezden gelmeye alisirsa, GERCEK bir arizada da gormez.
+Bu, §185'teki "gecici durum kalici gorunmemeli" kuralinin AYNASI:
+kalkmis bir kisit da kalici gorunmemeli.
+
+### 240b.3 YENI DAMGA — tarih AYRISMASINI izliyor
+Eski metin sabit bir uyariydi. Yenisi KOSULLU:
+    fiyat_tarihi === akis_tarihi  -> "tek tarih, tümü Fintables"
+    ayrisirsa                     -> KIRMIZI "TARİHLER AYRIŞIK — hangi
+                                      rakamın hangi güne ait olduğuna dikkat"
+Yani uyari, GERCEKTEN bir sorun oldugunda cikiyor. Bugun ayrisik degil, o
+yuzden sakin metin gorunuyor. Onceki halde her gun ayni uyari vardi ve
+hicbir sey soylemiyordu.
+
+app.js v=20260731t. DOSYALAR: app.js + index.html + katfon.json
+
 ## 240. "YUKLEDIM AMA GORUNMUYOR" — 21 dosyada onbellek acikti (31 Tem)
 
 Kullanici katfon.json'u yukledi, panel ESKISINI gosterdi. Dosyayi actik:
