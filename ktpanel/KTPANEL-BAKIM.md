@@ -2677,6 +2677,101 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 215. EBU KART TASLAGI YAZIYOR — zincir baglandi (31 Tem)
+
+Kullanici: "ebu yorumlasin karti oyle bana cikartsin."
+
+### 215.1 AKIS — tarayicidan iki adim
+Nobet satirinda "taslak" dugmesi:
+  1) /api/kap?mod=kart&id=<kimlik>     -> metrikler + isaretler
+  2) POST /api/ajanktp?mod=bilanco     -> Claude taslak yazar
+SUNUCUDAN SUNUCUYA ISTEK YOK. §208'de olculdu: kendi sitesine HTTP istegi
+middleware'e takiliyor ve gecikme ekliyor. Tarayici ikisini de cagirabiliyor,
+orkestrasyon orada.
+KIMLIK DENEMESI: `idler` sirayla denenir, ilk ayrisan kullanilir (§211 —
+en erken bildirim cogu zaman faaliyet raporudur).
+
+### 215.2 ISTEM — bugunku kartlardan turedi
+Soyut "iyi analiz yap" demiyor; NEYE BAKILACAGINI soyluyor. Her kural bir
+VAKAYA dayaniyor:
+  · net kar artarken faaliyet duserse -> farki finansman/parasal tasiyor,
+    operasyonel iyilesme DEGIL            (TOASO, ARCLK)
+  · faaliyet artarken FAVOK duserse -> amortisman, muhasebesel  (TOASO/CWENE)
+  · bankada karsilik ceyreklik sicrarken yillik azalabilir, IKISINI AYRI
+    soyle                                  (TSKB)
+  · buyuk yuzdeler dusuk bazdan gelir, MUTLAK TUTARI da yaz
+  · marj katmanlarini yan yana oku: brut -> faaliyet -> net
+  · SKOR VERME, yatirim tavsiyesi verme
+  · emin olmadigini SOYLE, doldurma
+Bunlar bu oturumda ELLE bulundu; istem onlari kalicilastiriyor.
+
+### 215.3 NE YAPMIYOR — bilincli
+TASLAK URETIR, KART YAYINLAMAZ. Skor vermez. Ekranda gosterir, kullanici okur,
+duzeltir, karta kendisi isler.
+Kutunun ustunde kalici uyari: "⚠ TASLAK — skor ve yayin karari SENDE".
+§204'te kararlastirilan kurgu: yazma emegi kalkar, YARGI INSANDA KALIR.
+
+### 215.4 ZINCIR TAMAM
+  1 yakala    ✓ mod=fr
+  2 kalem     ✓ mod=bilanco
+  3 ceyreklik ✓ mod=ceyrek (rapor sutunu, 12/12 dogrulandi)
+  4 metrik    ✓ mod=kart
+  5 taslak    ✓ ajanktp mod=bilanco   <- BU TURDA
+  6 ONAY        insan
+  7 yayin       elle / Actions
+Bilanco geldiginde: nobet gorur -> "taslak" bas -> metrik + yorum gelir ->
+okursun, duzeltirsin, karta islersin.
+
+GEREKLI: Vercel'de ANTHROPIC_API_KEY tanimli olmali (ajanktp zaten kullaniyor).
+
+ajan.js v=20260731e. DOSYALAR: api/ajanktp.js + ajan.js + index.html.
+
+## 214. ?mod=kart — SON MEKANIK ADIM (31 Tem)
+
+Kullanici: "tamam simdi otomatik mi geliyor?" HAYIR — parcalar vardi ama
+BIRBIRINE BAGLI DEGILDI. Bu tur son mekanik halkayi kurdu.
+
+### 214.1 NE YAPIYOR
+id -> ayristir -> CEYREKLIK oncelikli metrik seti:
+  SANAYI: ciro+y/y · brut marj+puan farki · faaliyet kari+marj+y/y ·
+          net kar+marj+y/y · finansman gideri · parasal · ozkaynak · nakit
+  BANKA : net faiz · komisyon · karsilik · faaliyet kari · net kar
+Marjlar, y/y degisimler ve PUAN FARKLARI hesaplanmis geliyor.
+
+### 214.2 NE YAPMIYOR — bilincli
+YORUM YAZMAZ. SKOR VERMEZ. Bunlar §204'te kararlastirildi: yazma emegi
+kalkar, YARGI KULLANICIDA KALIR.
+Bunun yerine ISARETLER dondurur — "yorum" degil "BAKILACAK YER":
+  · alt satir dissal   : faaliyet duserken net kar artiyorsa
+  · brut marj erozyonu : 0,5 puandan fazla gerileme
+  · faaliyet gideri baskisi : faaliyet marji brutten cok oynadiysa
+  · parasal pozisyon agir   : net karin %30'unu asiyorsa
+  · karsilik sicramasi (banka) : %50+ artis, "ceyreklik VE yillik ayri bak" notuyla
+  · net faiz baz etkisi (banka): %40+ artis, "dusuk bazdan gelebilir" notuyla
+Bu isaretler BUGUN ELLE BULDUGUM desenlerden turedi: TOASO'da amortisman
+makasi, CWENE'de tersi, TSKB'de ceyreklik/yillik celiskisi, ARCLK'te parasal
+pozisyonun tasidigi net kar.
+
+### 214.3 DOGRULAMA
+TOASO 2C26 ile kosuldu:
+    ciro 100.016.179 (y/y +%9,0) · brut marj %6,65 (−0,67 puan)
+    faaliyet marj %1,08 (y/y +%213,5) · net marj %3,09 (y/y +%33,7)
+    ISARET: brut marj erozyonu · parasal pozisyon agir (net karin %38'i)
+§177'de ELLE yazdigim kartla AYNI TESPITLER. Hesap dogru.
+
+### 214.4 ZINCIR — mekanik kisim TAMAM
+  1 yakala      ✓ mod=fr
+  2 kalem       ✓ mod=bilanco
+  3 ceyreklik   ✓ mod=ceyrek
+  4 metrik      ✓ mod=kart      <- BU TURDA
+  5 YORUM         insan
+  6 yayin         Actions
+Geriye YALNIZ 5. adim kaldi ve orasi bilerek insanda.
+BAGLANMASI GEREKEN: panel, nobetteki "kart bekliyor" satirindan mod=kart'i
+cagirip metrikleri gostersin. O UI isi, ayri tur.
+
+DOSYALAR: api/kap.js
+
 ## 213. DOGRULANDI: 12/12 BIREBIR — zincirin 2. ve 3. adimi KAPANDI (31 Tem)
 
 Rapor sutunu okumasi TOASO 2C26'da tam sonuc verdi:

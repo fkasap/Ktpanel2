@@ -415,6 +415,8 @@ async function bilancoNobeti(){
           /* §203b: gecikme artık HESAPLANIYOR (dönem sonundan kaç gün).
              KAP'ın isLate alanı güvenilmez — ARENA 120 gün geç açıkladı ama
              false geliyordu. Rozet gerçek gün sayısını gösterir. */
+          id: it.id, idler: it.idler || (it.id?[it.id]:[]),
+          yil: it.yil, donem: it.donem,
           baslik: (it.yil ? it.yil+'/'+it.donem+(it.tur?' · '+it.tur:'') : 'Finansal Rapor')
                   + (it.gec ? ' · ⚠ '+it.gecikmeGun+' GÜN GECİKMİŞ' : '')
                   + (it.tekrar>1 ? ' · '+it.tekrar+' bildirim' : ''),
@@ -443,6 +445,11 @@ function nobetCiz(){
       h += '<div style="margin-bottom:7px"><span class="lbl" style="color:var(--down)">\u26a0 KART BEKLEYEN B\u0130LAN\u00c7O \u00b7 '+B.liste.length+'</span>'+
         B.liste.slice(0,6).map(x=>'<div style="font-size:11px;margin-top:3px">'+
           (x.portfoyde?'<b style="color:var(--mm2)">\u25cf</b> ':'') + '<b>'+esc(x.kod)+'</b> '+
+          /* §215b TASLAK DÜĞMESİ. Metrikler /api/kap?mod=kart'tan, yorum
+             /api/ajanktp?mod=bilanco'dan. Tarayıcı ikisini sırayla çağırır —
+             sunucudan sunucuya istek YOK (§208 dersi). */
+          ((x.idler&&x.idler.length)
+            ? '<button class="mini" style="font-size:9px;padding:1px 6px;margin-right:5px" onclick="bilancoTaslak(this,&quot;'+esc(x.kod)+'&quot;,&quot;'+x.idler.join(',')+'&quot;,&quot;'+((x.yil||'')+'/'+(x.donem||''))+'&quot;)">taslak</button>' : '')+
           '<span class="sub" style="font-size:9px">'+x.ts.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+
           (x.kartVar?' \u00b7 yeni d\u00f6nem':'')+'</span></div>').join('')+'</div>';
     } else if(B){
@@ -981,3 +988,50 @@ function basla(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', basla);
 else basla();
 })();
+
+
+/* ── §215c BİLANÇO TASLAĞI ────────────────────────────────────────────────────
+   İki adım, tarayıcıdan:
+     1) /api/kap?mod=kart&id=<ilk ayrışan>   → metrikler + işaretler
+     2) /api/ajanktp?mod=bilanco (POST)      → Claude taslak yazar
+   KİMLİK DENEMESİ: aynı dönemin birden fazla bildirimi olur ve hangisinin
+   finansal tablo olduğu belli değildir (§211 — en erken çoğu zaman faaliyet
+   raporudur). Sırayla denenir, ilk ayrışan kullanılır.
+   TASLAK YAYINLANMAZ: ekranda gösterilir, kopyalanır. Skor ve karar insanda. */
+async function bilancoTaslak(btn, kod, idler, donem){
+  const eski = btn.textContent; btn.disabled = true; btn.textContent = 'metrik…';
+  const kutu = document.createElement('div');
+  kutu.style.cssText = 'margin:6px 0 10px;padding:9px 11px;border-left:3px solid var(--mm2);background:var(--bg2);border-radius:0 6px 6px 0;font-size:11px;line-height:1.6;white-space:pre-wrap';
+  btn.parentNode.appendChild(kutu);
+  kutu.textContent = 'metrikler alınıyor…';
+  try{
+    let met = null, kullanilan = null;
+    for(const id of String(idler).split(',').filter(Boolean).slice(0,6)){
+      const r = await fetch('/api/kap?mod=kart&id='+id, {cache:'no-store'});
+      const j = await r.json();
+      if(j && j.ok && j.metrikler){ met = j; kullanilan = id; break; }
+    }
+    if(!met){ kutu.textContent = 'Bilanço ayrıştırılamadı — denenen kimliklerin hiçbirinde kalem bulunamadı. KAP sayfası yapısı değişmiş olabilir.'; btn.disabled=false; btn.textContent=eski; return; }
+
+    btn.textContent = 'yorum…';
+    kutu.textContent = 'metrikler alındı ('+met.bulunan+'/'+met.toplam+' kalem, '+met.temel+'). Yorum yazılıyor…';
+    const r2 = await fetch('/api/ajanktp?mod=bilanco', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ kod, donem, temel:met.temel, sablon:met.sablon,
+        metrikler:met.metrikler, isaretler:met.isaretler })
+    });
+    const j2 = await r2.json();
+    if(!j2 || !j2.ok){ kutu.textContent = 'Yorum üretilemedi: '+((j2&&j2.err)||'bilinmeyen hata')+'\n\nMetrikler yine de alındı:\n'+JSON.stringify(met.metrikler,null,1); btn.disabled=false; btn.textContent=eski; return; }
+
+    kutu.innerHTML = '<div style="font-size:9px;color:var(--muted);margin-bottom:5px">'+
+      '⚠ TASLAK · '+esc(kod)+' '+esc(donem)+' · KAP '+esc(kullanilan)+' · '+met.bulunan+'/'+met.toplam+' kalem · '+esc(met.temel)+
+      ' — skor ve yayın kararı SENDE</div>'+
+      '<div>'+esc(j2.taslak)+'</div>'+
+      (met.isaretler&&met.isaretler.length ? '<div style="font-size:9px;color:var(--muted);margin-top:6px">otomatik işaretler: '+met.isaretler.map(x=>esc(x.tip)).join(' · ')+'</div>' : '');
+    btn.textContent = 'yeniden';
+  }catch(e){
+    kutu.textContent = 'Hata: '+String((e&&e.message)||e).slice(0,150);
+    btn.textContent = eski;
+  }
+  btn.disabled = false;
+}
