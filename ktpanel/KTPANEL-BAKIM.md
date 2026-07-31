@@ -2715,6 +2715,67 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245. DEGERLEME KONUMU KARTI — pahali mi, adil mi, ucuz mu (31 Tem)
+
+Kullanici: "portfoydeki hissenin asiri degerli mi, fair value mi, cok ucuz mu
+oldugunu soylesin. Metrikleri sen olustur."
+Yeri: Portfoy Yonetimi > Yonetim, Getiri Atfi'nin ALTINDA.
+
+### 245.1 TASARIM — TEK CARPAN HICBIR SEY SOYLEMEZ
+"F/K 8" bir banka icin normal, teknoloji icin ucuz, indirim dongusunde holding
+icin pahali olabilir. Anlamli olan IKI CIPA:
+    z_tarih  = (guncel − kendi ortalamasi) / kendi sapmasi    %60
+    z_sektor = (guncel − sektor medyani) / sektor sapmasi     %40
+Tek cipa yetmez: tum sektor pahaliysa hisse KENDINE gore ucuz gorunur;
+sektor ucuzsa herkes ucuz gorunur. Ikisi AYRISIRSA kart bunu isaretler (⚠)
+ve "tek basina carpanla karar verme" der.
+
+### 245.2 NEDEN PD/DD, NEDEN F/K DEGIL
+Enflasyon muhasebesinde (TMS-29) nominal kar SISER ve F/K yapay olarak ucuz
+gorunur. Ozkaynak da TMS-29 duzeltmesi gordugu icin PD/DD EN AZ SAPAN carpandir.
+Tasarim cok carpanli (F/K · FD/FAVOK sonra eklenebilir) ama ILK SURUM TEK
+CARPANLA kuruldu — kalibrasyon gorunur olsun diye.
+BANT PENCERESI 2023C1 SONRASI: oncesi farkli muhasebe rejimi, karistirilirsa
+z-skor kayar. 13 ceyrek, istatistiksel olarak yeterli.
+
+### 245.3 KRITIK VERI HATASI — BEDELSIZ DUZELTMESI
+Ilk hesapta BIGTK 107 · BSOKE 142 · DITAS 39 PD/DD cikti. IMKANSIZ.
+SEBEP: fiyat serisi bedelsiz icin GERIYE DOGRU duzeltiliyor ama odenmis
+sermayeyi O DONEMKI haliyle aliyordum.
+    ALKA: sermaye 183,75 mn -> 735 mn (4 kat bedelsiz, 2024C4)
+    eski fiyat 4'e bolunmus + eski sermaye 4 kat kucuk = 16 KAT SAPMA
+DUZELTME: TUM donemlerde GUNCEL sermaye kullanilir — fiyat zaten bugunku pay
+tabanina gore duzeltilmis. Sonrasinda rakamlar makullesti:
+THYAO 0,66 · EREGL 0,76 · SAHOL 0,52 — BIST icin gercekci.
+DERS: iki seri birlestirilirken IKISININ DE hangi tabana gore duzeltildigi
+sorulmali. §114'un (sektor rotasyonunda damgali/canli taban karisimi) aynisi.
+
+### 245.4 GUVEN SUTUNU — dururust olmanin bedeli
+50 hissenin 26'sinda degisim katsayisi (sapma/ort) 0,6 USTUNDE. Yani bant o
+kadar genis ki z-skor AYIRT ETMIYOR.
+Bunu gizlemek kolaydi; kart yine "ucuz/pahali" derdi ve guvenilir gorunurdu.
+Bunun yerine UC NOKTALI guven gostergesi kondu:
+    ●●● cv<0,35 dar bant, guclu sinyal
+    ●●  cv<0,60 orta
+    ●   cv>0,60 GENIS bant — "ucuz" demek istatistiksel gurultu olabilir
+Simulasyonda gorundu: TOASO −0,62σ ile "UCUZ" ama guven ● (cv 0,74) —
+yani o sinyale tek basina guvenilmez. EREGL ve THYAO ●●● cunku bantlari dar.
+
+### 245.5 CANLI
+Guncel PD/DD HER CIZIMDE canli fiyattan hesaplanir; bant ve ozkaynak
+degerleme.json'dan (ceyreklik tazelenir). Yani kart FIYAT DEGISTIKCE HAREKET
+EDER — carpan zaten fiyatin fonksiyonudur.
+POZ_GOREV'e eklendi: pozisyon degisince de tazelenir.
+
+### 245.6 KART KARAR VERMEZ
+Okuma notu uc kural isletir: en ucuz isim · en pahali isim · ayrisan cipalar ·
+dusuk guvenli sayisi. Ama her birinde SART var:
+"Bilanco bozulmuyorsa ekleme adayi; bozuluyorsa carpanin dusmesi UYARIDIR."
+UCUZ OLMAK IYI DEGILDIR — hisse HAK ETTIGI ICIN ucuz olabilir.
+
+DOSYALAR: degerleme.json (YENI · 50 hisse · 19 sektor) + app.js + index.html
+app.js v=20260731y.
+
 ## 244. TEMETTU KARTI VE YIELD CURVE LAB KALDIRILDI (31 Tem)
 
 Kullanici: "bu iki temettü ile ilgili kısmı ve yield curve laboratuvarını

@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-x';
+const KTP_SURUM = '20260731-y';
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1343,7 +1343,7 @@ function pfInit(){
    degil SESSIZLESTIRICIDIR. Ilk surumde bunu tekrarlamisim. Artik bulunamayan
    gorev console.error ile RAPORLANIR — sessizce atlanmaz. */
 const POZ_GOREV=['renderPoz','anaRender','atifRender','riskMetRender',
-                 'likiditeRender','reelAtifRender','riskButceRender'];
+                 'likiditeRender','reelAtifRender','riskButceRender','degerlemeRender'];
 function pozCiz(){
   const eksik=[];
   POZ_GOREV.forEach(ad=>{
@@ -6385,6 +6385,8 @@ async function pyInit(){
   try{const rr=await (await fetch('/risk.json',{cache:'no-store'})).json();rr.hisseler.forEach(h=>MRISK[h.k]={vol:h.vol,beta:h.beta});}catch(e){}
   const ara=$('anaAra');if(ara)ara.addEventListener('input',anaRender);
   anaRender();atifRender();riskMetRender();likiditeRender();
+  /* §245: değerleme kartı — fiyatlar geldikten SONRA çizilir (canlı PD/DD için) */
+  try{ await degerlemeYukle(); degerlemeRender(); }catch(e){ console.warn('[KTPanel] değerleme:', e); }
   try{ if(typeof omurgaInit==='function') omurgaInit(); }catch(e){}
   // Canlı fiyat: 141 hisseyi Yahoo'dan toplu çek, snapshot fiyatlarının üzerine yaz
   try{
@@ -6402,6 +6404,7 @@ async function pyInit(){
             MULTIPLE_TARIH=d.tarih+' · canlı';   // artık snapshot değil canlı
             // kartları canlı fiyatla yeniden çiz
             atifRender();riskMetRender();likiditeRender();
+            try{ if(typeof degerlemeRender==='function') degerlemeRender(); }catch(e){}
             if(typeof multipleRender==='function')multipleRender();
           }
         }
@@ -7153,4 +7156,195 @@ function ftCiz(t, kod, yil, don, id, kayit){
     esc(kayit.tarih)+' · dönem sonundan '+(kayit.gecikmeGun!=null?kayit.gecikmeGun+' gün sonra':'—')+
     (kayit.gec?' <b style="color:var(--down)">(GECİKMİŞ)</b>':'')+
     ' · şablon: '+esc(t.sablon)+' · '+esc(DON[don])+'</div>';
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   §245 DEĞERLEME KONUMU — hisse pahalı mı, adil mi, ucuz mu?
+   Portföy Yönetimi > Yönetim, Getiri Atfı'nın altında.
+
+   ÇEKİRDEK: PD/DD z-skoru, İKİ ÇIPAYA göre.
+     z_tarih  = (güncel − kendi ortalaması) / kendi sapması     ağırlık %60
+     z_sektor = (güncel − sektör medyanı) / sektör sapması      ağırlık %40
+   Tek çıpa yeterli değildir: tüm sektör pahalıysa hisse kendine göre ucuz
+   görünür; sektör ucuzsa herkes ucuz görünür. İkisi aynı yönü gösteriyorsa
+   sinyal güçlü, ayrışıyorsa zayıftır — kart bunu da söyler.
+
+   NEDEN PD/DD, NEDEN F/K DEĞİL: enflasyon muhasebesinde nominal kâr şişer ve
+   F/K yapay olarak ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için
+   PD/DD en az sapan çarpandır. (F/K ve FD/FAVÖK ileride eklenebilir; tasarım
+   çok çarpanlı ama ilk sürüm tek çarpanla kuruldu — kalibrasyonu görünür olsun.)
+
+   CANLI: güncel PD/DD her çizimde canlı fiyattan hesaplanır. Bant ve özkaynak
+   degerleme.json'dan gelir (çeyreklik tazelenir), fiyat piyasadan.
+   Yani kart FİYAT DEĞİŞTİKÇE HAREKET EDER — çarpan zaten fiyatın fonksiyonudur.
+
+   GÜVEN: bandı geniş hissede z-skor ayırt etmez. Değişim katsayısı (sapma/ort)
+   0,35 altı yüksek · 0,6 altı orta · üstü DÜŞÜK güven. Düşük güvenli satırda
+   "ucuz" demek istatistiksel gürültü olabilir — kart bunu gizlemez.
+   ═══════════════════════════════════════════════════════════════════════════ */
+let DEGERLEME = null;
+
+const DG_BANT = [
+  {ust:-1.5, ad:'ÇOK UCUZ',   renk:'var(--up)',   yorum:'tarihsel bandın belirgin altında'},
+  {ust:-0.5, ad:'UCUZ',       renk:'var(--up)',   yorum:'bandın alt yarısında'},
+  {ust: 0.5, ad:'ADİL DEĞER', renk:'var(--muted)',yorum:'tarihsel ortalamasına yakın'},
+  {ust: 1.5, ad:'PAHALI',     renk:'var(--down)', yorum:'bandın üst yarısında'},
+  {ust: 99,  ad:'ÇOK PAHALI', renk:'var(--down)', yorum:'tarihsel bandın belirgin üstünde'}
+];
+const dgBant = (z) => DG_BANT.find(b => z < b.ust) || DG_BANT[DG_BANT.length-1];
+
+async function degerlemeYukle(){
+  if(DEGERLEME !== null) return DEGERLEME;
+  try{ const r = await fetch('/degerleme.json',{cache:'no-store'});
+    DEGERLEME = r.ok ? await r.json() : false; }catch(e){ DEGERLEME = false; }
+  return DEGERLEME;
+}
+
+/* Sektör medyanı ve sapması — BUGÜNKÜ değerlerden, her çizimde yeniden.
+   Medyan kullanılır çünkü tek bir aşırı hisse ortalamayı kaydırır (KONYA 11,6). */
+function dgSektorIstatistik(hepsi){
+  const grup = {};
+  hepsi.forEach(x => { if(x.guncel == null) return;
+    (grup[x.sektor] = grup[x.sektor] || []).push(x.guncel); });
+  const cikti = {};
+  Object.keys(grup).forEach(sk => {
+    const v = grup[sk].slice().sort((a,b)=>a-b), n = v.length;
+    if(n < 3) return;                       // 3 hisseden az sektörde medyan anlamsız
+    const med = n%2 ? v[(n-1)/2] : (v[n/2-1]+v[n/2])/2;
+    const ort = v.reduce((a,b)=>a+b,0)/n;
+    const sap = Math.sqrt(v.reduce((a,b)=>a+(b-ort)*(b-ort),0)/n);
+    cikti[sk] = {med, sap, n};
+  });
+  return cikti;
+}
+
+function degerlemeRender(){
+  const el = $('degerlemeBody'); if(!el) return;
+  if(!DEGERLEME || !DEGERLEME.hisseler){
+    el.innerHTML = '<div class="sub">degerleme.json yüklenemedi — dosya klasörde mi?</div>'; return; }
+
+  const canliF = (k) => (typeof CANLI_FIYAT!=='undefined' && CANLI_FIYAT[k]) ? CANLI_FIYAT[k]
+                      : ((typeof MFIYAT!=='undefined' && MFIYAT[k]) ? MFIYAT[k] : null);
+
+  /* 1) Güncel PD/DD — canlı fiyattan */
+  const hepsi = DEGERLEME.hisseler.map(x => {
+    const f = canliF(x.k);
+    const guncel = (f && x.ozk > 0) ? (f * x.srm) / x.ozk : null;
+    return Object.assign({}, x, {fiyat:f, guncel});
+  });
+  const SEK = dgSektorIstatistik(hepsi);
+
+  /* 2) İki z-skor ve birleşik */
+  hepsi.forEach(x => {
+    x.zTarih = (x.guncel != null && x.sapma > 0) ? (x.guncel - x.ort) / x.sapma : null;
+    const s = SEK[x.sektor];
+    x.zSektor = (x.guncel != null && s && s.sap > 0) ? (x.guncel - s.med) / s.sap : null;
+    x.zBirlesik = (x.zTarih == null) ? x.zSektor
+                : (x.zSektor == null) ? x.zTarih
+                : x.zTarih*0.6 + x.zSektor*0.4;
+    /* İki çıpa AYRIŞIYORSA sinyal zayıftır — işaretleri farklıysa ya da
+       aralarında 1,5 σ'dan fazla fark varsa uyarı. */
+    x.ayrisik = (x.zTarih != null && x.zSektor != null) &&
+                (Math.sign(x.zTarih) !== Math.sign(x.zSektor) || Math.abs(x.zTarih - x.zSektor) > 1.5);
+  });
+
+  /* 3) Portföydeki hisseler öne, gerisi izleme listesi */
+  const pozKod = new Set();
+  try{ (typeof poz!=='undefined'?poz:[]).forEach(p=>{
+    if(p && p.tip==='hisse' && p.kod) pozKod.add(String(p.kod).toUpperCase()); }); }catch(e){}
+  const portfoyde = hepsi.filter(x => pozKod.has(x.k) && x.zBirlesik != null)
+                         .sort((a,b) => a.zBirlesik - b.zBirlesik);
+  const digerleri = hepsi.filter(x => !pozKod.has(x.k) && x.zBirlesik != null)
+                         .sort((a,b) => a.zBirlesik - b.zBirlesik);
+
+  const F = (v,d) => (v==null||!isFinite(v)) ? '—' : trN(v, d==null?2:d);
+  const zYaz = (z) => z==null ? '<span class="thin">—</span>'
+    : '<span class="'+(z<-0.5?'up':z>0.5?'down':'')+'" style="font-weight:600">'+(z>=0?'+':'')+trN(z,2)+'σ</span>';
+  const guvenNokta = (g) => g==='yüksek' ? '<span style="color:var(--up)">●●●</span>'
+                          : g==='orta'   ? '<span style="color:var(--muted)">●●</span>'
+                          : '<span style="color:var(--down)">●</span>';
+
+  const satir = (x, portfoyMu) => {
+    const b = dgBant(x.zBirlesik);
+    /* Bant içindeki konum — dip/zirve arasında yüzde kaç */
+    const konum = (x.guncel!=null && x.zirve>x.dip)
+      ? Math.max(0, Math.min(100, (x.guncel - x.dip)/(x.zirve - x.dip)*100)) : null;
+    return '<tr'+(portfoyMu?' style="background:var(--mmL)"':'')+'>'+
+      '<td style="font-weight:700">'+esc(x.k)+(portfoyMu?' <span class="tag" style="font-size:7px;padding:0 4px">P</span>':'')+'</td>'+
+      '<td style="font-size:10px;color:var(--muted);font-family:var(--sans)">'+esc(x.sektor)+'</td>'+
+      '<td class="num">'+F(x.guncel)+'</td>'+
+      '<td class="num" style="color:var(--muted)">'+F(x.ort)+'</td>'+
+      '<td class="num" style="font-size:10px;color:var(--muted)">'+F(x.dip)+'–'+F(x.zirve)+
+        (konum!=null?' <b>('+F(konum,0)+'%)</b>':'')+'</td>'+
+      '<td class="num">'+zYaz(x.zTarih)+'</td>'+
+      '<td class="num">'+zYaz(x.zSektor)+'</td>'+
+      '<td style="font-weight:700;color:'+b.renk+';font-size:10px;white-space:nowrap">'+b.ad+
+        (x.ayrisik?' <span title="iki çıpa ayrışıyor — sinyal zayıf" style="color:var(--down)">⚠</span>':'')+'</td>'+
+      '<td class="num" title="değişim katsayısı '+F(x.cv)+' — bandın genişliği">'+guvenNokta(x.guven)+'</td></tr>';
+  };
+
+  const baslik = '<tr><th style="width:64px">HİSSE</th><th>SEKTÖR</th><th class="num">PD/DD</th>'+
+    '<th class="num">ORT</th><th class="num">BANT (konum)</th><th class="num">z TARİH</th>'+
+    '<th class="num">z SEKTÖR</th><th>DURUM</th><th class="num" title="bandın darlığı — üç nokta güçlü sinyal">GÜVEN</th></tr>';
+
+  /* 4) Portföy özeti — ağırlıklı ortalama z */
+  let ozet = '';
+  if(portfoyde.length){
+    const degerler = {}; let toplam = 0;
+    try{ (typeof poz!=='undefined'?poz:[]).forEach(p=>{
+      if(p && p.tip==='hisse' && p.kod){
+        const k=String(p.kod).toUpperCase();
+        const f=canliF(k)||p.fiyat||0, d=(p.adet||0)*f;
+        if(d>0){ degerler[k]=(degerler[k]||0)+d; toplam+=d; } } }); }catch(e){}
+    let zAg=0, wTop=0;
+    portfoyde.forEach(x=>{ const w=(degerler[x.k]||0)/(toplam||1);
+      if(w>0){ zAg += w*x.zBirlesik; wTop += w; } });
+    const zPort = wTop>0 ? zAg/wTop : null;
+    const bp = zPort!=null ? dgBant(zPort) : null;
+    const ucuz = portfoyde.filter(x=>x.zBirlesik<-0.5).length;
+    const pahali = portfoyde.filter(x=>x.zBirlesik>0.5).length;
+    ozet = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:8px;margin-bottom:10px">'+
+      '<div class="card" style="padding:7px 11px'+(bp?';border:1px solid '+bp.renk:'')+'"><div class="lbl">PORTFÖY KONUMU</div>'+
+        '<div class="val" style="font-size:15px;color:'+(bp?bp.renk:'inherit')+'">'+(bp?bp.ad:'—')+'</div>'+
+        '<div class="sub">ağırlıklı z '+(zPort!=null?((zPort>=0?'+':'')+trN(zPort,2)+'σ'):'—')+'</div></div>'+
+      '<div class="card" style="padding:7px 11px"><div class="lbl">UCUZ BÖLGEDE</div><div class="val up" style="font-size:15px">'+ucuz+'</div><div class="sub">'+portfoyde.length+' hisseden</div></div>'+
+      '<div class="card" style="padding:7px 11px"><div class="lbl">PAHALI BÖLGEDE</div><div class="val down" style="font-size:15px">'+pahali+'</div><div class="sub">z > +0,5σ</div></div>'+
+      '<div class="card" style="padding:7px 11px"><div class="lbl">KAPSAM</div><div class="val" style="font-size:15px">'+portfoyde.length+'/'+pozKod.size+'</div><div class="sub">hisse pozisyonu</div></div>'+
+      '</div>';
+  }
+
+  /* 5) Okuma notu — kural tabanlı */
+  const notlar = [];
+  const enUcuz = portfoyde[0], enPahali = portfoyde[portfoyde.length-1];
+  if(enUcuz && enUcuz.zBirlesik < -1)
+    notlar.push('<b>'+esc(enUcuz.k)+'</b> portföyün en ucuz konumundaki ismi ('+trN(enUcuz.zBirlesik,2)+'σ)'+
+      (enUcuz.guven==='düşük' ? ' — ama bandı geniş, bu sinyal <b>zayıf</b>.' :
+       '. Bilanço bozulmuyorsa ekleme adayı; bozuluyorsa çarpanın düşmesi <b>uyarıdır</b>.'));
+  if(enPahali && enPahali.zBirlesik > 1)
+    notlar.push('<b>'+esc(enPahali.k)+'</b> tarihsel bandının üst ucunda (+'+trN(enPahali.zBirlesik,2)+'σ) — '+
+      'kâr realizasyonu ya da ağırlık azaltma değerlendirilebilir.');
+  const ayrisan = portfoyde.filter(x=>x.ayrisik);
+  if(ayrisan.length)
+    notlar.push('<b>İki çıpa ayrışıyor:</b> '+ayrisan.map(x=>esc(x.k)).join(', ')+
+      ' — kendi tarihine göre söylediği ile sektörüne göre söylediği farklı. Tek başına çarpanla karar verme.');
+  const dusukGuven = portfoyde.filter(x=>x.guven==='düşük').length;
+  if(dusukGuven)
+    notlar.push('Portföydeki <b>'+dusukGuven+'</b> hissede tarihsel bant geniş — z-skor ayırt edici değil, '+
+      'çarpan tek başına yol göstermez.');
+
+  el.innerHTML = ozet +
+    (portfoyde.length
+      ? '<div class="lbl" style="margin-bottom:4px">PORTFÖYDEKİLER</div><div style="overflow-x:auto"><table class="arzTbl"><thead>'+baslik+'</thead><tbody>'+
+        portfoyde.map(x=>satir(x,true)).join('')+'</tbody></table></div>'
+      : '<div class="sub" style="font-size:11px">Portföyünde bu kapsamdaki hisselerden yok. Aşağıda izleme listesi.</div>')+
+    (notlar.length ? '<div class="note" style="margin-top:9px">'+notlar.join(' ')+'</div>' : '')+
+    '<details style="margin-top:10px"><summary class="sub" style="cursor:pointer;font-size:11px">İZLEME LİSTESİ — '+digerleri.length+' hisse (ucuzdan pahalıya)</summary>'+
+    '<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl"><thead>'+baslik+'</thead><tbody>'+
+    digerleri.map(x=>satir(x,false)).join('')+'</tbody></table></div></details>'+
+    '<div class="sub" style="font-size:10px;margin-top:6px">'+
+    'PD/DD güncel <b>canlı fiyattan</b> hesaplanır, bant '+esc(DEGERLEME.guncelleme||'')+' verisinden. '+
+    'z = (güncel − ortalama) / sapma · birleşik z = tarih %60 + sektör %40. '+
+    'Bant konumu: dip–zirve aralığında yüzde kaç. Kapsam '+DEGERLEME.hisseler.length+' hisse, '+
+    'sektör medyanı en az 3 hisseli gruplarda hesaplanır.</div>';
 }

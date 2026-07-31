@@ -238,6 +238,13 @@
    "son": "2026-07-29",
    "sezon": true,
    "kaynak": "bist-takvim.json — TAHMIN. Gecen yilin ayni donem KAP aciklama tarihi, ayni hafta gunune hizalanarak tasinir. Her CEYREK BASINDA yenilenir (yeni donemin tahminleri). Sorgu: SELECT hisse_senedi_kodu, yayinlanma_tarihi_utc FROM hisse_finansal_tablolari WHERE yil=<oncekiYil> AND ay=<donem>. SPK sinirini asan tahminler 'farkli_mali_yil' altina ayrilir (MAVI, TKFEN gibi)."
+  },
+  {
+   "ad": "Değerleme bandı (PD/DD z-skoru)",
+   "dosya": "degerleme.json",
+   "siklik": "ceyreklik",
+   "son": "2026-07-31",
+   "kaynak": "Fintables — bilanço kalemleri + çeyreklik kapanışlar (2023Ç1+)"
   }
  ],
  "bilanco_sezonu_aylar": [
