@@ -2677,6 +2677,301 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 211c. VIRGUL TEMIZLEYICIDE SILINIYORDU (31 Tem)
+
+§211'de `onceki` parametresine virgullu liste destegi ekledim. Ama parametreyi
+temizleyen satiri DUZELTMEYI UNUTTUM:
+    .replace(/[^0-9]/g,'').slice(0,10)
+Virgul de silindi -> "1601476,1601475,1601474" once "160147616014751601474"
+oldu, sonra ilk 10 hane alindi: "1601476160" — VAR OLMAYAN BIR KIMLIK.
+Yanit da bunu acikca gosterdi: denemeler:[{id:"1601476160", bulunan:0}].
+
+DUZELTME: [^0-9,] ve slice(0,80). Bolme sonrasi her parca ayrica temizleniyor,
+guvenlik korunuyor (test: "1601476,abc,<script>,1601475" -> iki gecerli kimlik).
+
+DERS — BU OTURUMUN EN SIK HATASI:
+  §129  bir alani sildim, okuyanlari birakmisim
+  §189  yeni JSON'u yukledim, betigi birakmisim
+  §194  yeni ozellik yazdim, var mi diye bakmamisim
+  §208  ic HTTP tuzagini cozdum, birkac saat sonra tekrar yaptim
+  §211c virgul destegi ekledim, temizleyiciyi birakmisim
+Hepsi ayni desen: BIR YERI DEGISTIRIP DIGERINI BIRAKMAK.
+Ortak sebep: degisikligin ETKI ALANINI taramamak. Bir parametrenin
+davranisini degistirirken O PARAMETREYE DOKUNAN TUM SATIRLAR aranmali —
+tanim, temizleme, kullanim, dogrulama.
+
+## 211. EN ERKEN BILDIRIM FINANSAL TABLO DEGIL — coklu kimlik (31 Tem)
+
+§210'daki teshis alani ise yaradi ve sebebi TEK SATIRDA verdi:
+    oncekiDurum: { ok:false, sebep:"bulunan 0/8", http:null }
+`http:null` = sayfa ALINDI. `bulunan 0/8` = ayristirma sifir kalem buldu.
+Yani indirme degil, ICERIK sorunu.
+
+### 211.1 SEBEP: TEKILLESTIRME YANLIS KIMLIGI SECIYORDU
+§203'te (kod,yil,donem) basina EN ERKEN bildirimi tutuyorduk. Gerekce
+mantikliydi: "ilk bildirim asil aciklamadir".
+AMA EN ERKEN BILDIRIM FINANSAL TABLO OLMAYABILIR. Sirketler ayni anda
+faaliyet raporu, denetim raporu, ek belge de gonderiyor; bunlarin icinde
+bilanco TABLOSU YOK.
+OLCULDU:
+  TOASO 1C26  tekrar:3  en erken 1601476 -> 0/8 kalem  (faaliyet raporu)
+  TOASO 2C26  tekrar:7  isleyen  1639026 -> 8/8 kalem  (ORTADAKI bildirim)
+Yani dogru kimlik ne ILK ne SON — denenerek bulunur.
+
+### 211.2 COZUM: TUM KIMLIKLER SAKLANIR, SIRAYLA DENENIR
+mod=fr artik her donem icin `idler` dizisi tutuyor (tekrarlarin hepsi).
+mod=ceyrek `onceki` parametresinde VIRGULLU liste kabul ediyor ve ilk
+ayrisani kullaniyor. `denemeler` alani hangisinin kac kalem verdigini
+raporluyor — bir daha tahmin yok.
+Gecikme hesabi yine EN ERKEN bildirime gore (dogru olan o: sirket o gun
+aciklamis sayilir).
+
+### 211.3 DERS — "MAKUL VARSAYIM" OLCULMEDEN KURAL OLMAZ
+"Ilk bildirim asil aciklamadir" makul bir varsayimdi ve YANLISTI. Uc turda
+ustuste kurdugum kural (§197 tolerans -> §203 tekillestirme -> §211 coklu
+kimlik) her seferinde bir varsayimin olculmesiyle duzeldi.
+Bu oturumun tekrarlayan dersi: VARSAYIM, OLCUM YERINE GECMEZ. Ve olcum
+ancak TESHIS ALANI varsa mumkun — §210'da eklenen `oncekiDurum` olmasaydi
+bu sorun "ayristirilamadi" olarak kalirdi.
+
+DOSYALAR: api/kap.js
+
+## 210. IKINCI SAYFA SESSIZCE DUSUYORDU — bellek ve TESHIS (31 Tem)
+
+mod=ceyrek dogru kimliklerle cagrildi (id=1639026, onceki=1601476) ama
+ceyreklik yine "hesaplanamadi" dedi. Yanit SEBEBI SOYLEMIYORDU — kendi
+kuralimi (§145) cignemisim.
+
+### 210.1 SEBEP: BELLEK / SURE
+_bilancoAyristir her sayfada DORT ZINCIRLI replace yapiyordu:
+    h.replace(...).replace(...).replace(...).replace(...)
+5 MB dizgede bu DORT KOPYA demek = 20 MB churn. Iki sayfa PARALEL cekilince
+40 MB+ ve serverless sinirinda ikinci ayristirma sessizce dusuyordu.
+OLCULDU: zincirli 4 replace 529 ms · tek gecis 219 ms (ayni sonuc).
+DUZELTME (a) tek regex + esleme tablosu — bir kopya yeter
+DUZELTME (b) PARALEL degil SIRALI cekim — hem hafif hem hangi adimda
+             dustugu belli
+
+### 210.2 ASIL KUSUR: SEBEP SOYLENMIYORDU
+"onceki donem ayristirilamadi" tek basina ise yaramaz. Bu oturumda defalarca
+yazdigim ders (§145 teshis · §185 sessiz yedek · §199 sessiz arizalar) ve
+yine ayni hataya dustum — hem de KENDI yazdigim yeni kodda.
+EKLENEN: `oncekiDurum` alani — ok/sebep/http/bulunan. Uyari metni de sebebi
+tasiyor artik.
+DESEN: bir kod yolunda BASARISIZLIK MUMKUNSE, o yol SEBEBINI dondurmelidir.
+Istisna yok.
+
+### 210.3 TAVAN UYARISI OKUNAMIYORDU
+Aralik modunda uyari "dilim 1778457600000-1778889600000g TAVANA CARPTI"
+diyordu — ham zaman damgasi. Bir uyari OKUNAMIYORSA YOK SAYILIR.
+Artik "[2026-05-06 → 2026-05-11] TAVANA CARPTI (2000 kayit)" yaziyor.
+Ayrica ?dilim=N eklendi: nisan-mayis bilanco sezonunda 5 gunluk dilimler
+tavani asiyor (uc dilim birden), yogun donemde 2 gune indirilebilir.
+
+DOSYALAR: api/kap.js
+
+## 209. TARIH ARALIGI + KOD SUZGECI (31 Tem)
+
+mod=ceyrek kumulatifi KUSURSUZ dondurdu (8/8, hepsi capraz denetlenmis) ama
+ceyreklik hesaplanamadi: onceki donem kimligi gecersizdi ("126").
+
+### 209.1 EKSIK: GECMISE BAKAMIYORDUK
+mod=fr yalniz BUGUNDEN GERIYE `gun` kadar tariyordu ve gun 40'la sinirliydi.
+TOASO'nun 1C26 bildirimi NISAN SONUNDA — 40 gunluk pencerede yok, dolayisiyla
+kimligi bulmak IMKANSIZDI.
+Ceyreklige cevirme icin onceki donemin kimligi SART; bu eksik, zinciri
+kullanilamaz kiliyordu.
+
+### 209.2 EKLENEN
+  ?bas=YYYY-MM-DD&son=YYYY-MM-DD   herhangi bir pencere
+  ?kod=TOASO                        yalniz o hisse
+Aralik modunda dilimleme MUTLAK tarihlerle yapilir (5 gunluk). Kod suzgeci
+sunucu tarafinda uygulanir; 2000 tavani sorun olsa bile ilgili hisse
+kaybolmaz cunku dilimler kucuk.
+
+### 209.3 KULLANIM — iki adim
+  1. onceki donem kimligini bul:
+     /api/kap?mod=fr&kod=TOASO&bas=2026-04-20&son=2026-05-31
+  2. ceyreklige cevir:
+     /api/kap?mod=ceyrek&id=1639026&onceki=<1. adimdan gelen id>
+Beklenen sonuc (Fintables ile dogrulanmis):
+     ciro 100.016.179 · faaliyetKar 1.082.468 · netKar 3.092.347
+
+### 209.4 NEDEN OTOMATIK ARAMIYOR
+mod=ceyrek onceki donemi KENDI arayabilirdi ama bu, §208'de kaldirilan ic
+HTTP zincirlemesini geri getirirdi. Kimlik bir kez bulunur ve saklanir;
+her seferinde aramak israftir. Panel tarafinda kimlikler zaten mod=fr
+ciktisinda duruyor.
+
+DOSYALAR: api/kap.js
+
+## 208. KENDI KENDINE HTTP ISTEGI — AYNI TUZAGA IKINCI KEZ DUSTUM (31 Tem)
+
+mod=ceyrek "cari bilanco alinamadi" dedi. IKI SEBEP UST USTE:
+
+### 208.1 (a) MIDDLEWARE — §199'un TEKRARI, kendi kodumda
+mod=ceyrek, mod=bilanco'yu KENDI SITESINE HTTP ISTEGI ATARAK cagiriyordu.
+middleware `matcher:'/:path*'` ile tum yollari koruyor; ic istekte cerez yok
+-> 401.
+BU TUZAGI BUGUN §199'DA COZDUM ve sukuk.js'e CRON_SECRET basligi ekledim.
+Sonra mod=ceyrek'i yazarken AYNI HATAYI TEKRAR YAPTIM — hem de birkac saat
+sonra, ayni dosyada.
+Ders yazmak yetmiyor; DESEN yanlissa tekrarlanir.
+
+### 208.2 (b) MALIYET
+mod=fr(gun=120) -> mod=fr gun'u 40'a kirpiyor -> 8 dilim -> ~16 sn
++ iki adet 5 MB KAP sayfasi -> ~20 sn
+Toplam 60 sn sinirina dayaniyordu. Basarili olsa bile kirilgan olurdu.
+
+### 208.3 COZUM: HTTP DEGIL FONKSIYON
+Ayristirma `_bilancoAyristir(id)` ortak fonksiyonuna cikarildi. Artik:
+  · middleware'e takilmaz (ag turu yok)
+  · CRON_SECRET gerektirmez
+  · gecikme eklemez
+Ayrica KIMLIKLER DISARIDAN gelir: ?mod=ceyrek&id=<cari>&onceki=<onceki>
+mod=fr ciktisinda o kimlikler ZATEN var; ikinci kez aramak israfti.
+DERS: kendi sunucusuna HTTP istegi atmak, ayni surecte duran bir fonksiyonu
+cagirmanin PAHALI ve KIRILGAN yoludur. Mikroservis refleksi tek dosyada
+anlamsizdir.
+
+### 208.4 SADELESME
+api/kap.js modlari: fr · bilanco · ceyrek · kalem · yokla · sukuk · yorum
+Ic HTTP istegi kalintisi: 0. Ortak ayristirici cagrisi: 4 yerde.
+
+DOSYALAR: api/kap.js
+
+## 207. AYRISTIRICI DOGRULANDI · CEYREKLIGE CEVIRME (31 Tem)
+
+Dipnot suzgeci sonrasi TOASO cikti tekrar alindi. TAM CAPRAZ DENETIM:
+
+### 207.1 BES KALEM BIREBIR
+    ciro        201.797.108  =  Fintables 6A26      ✓
+    ciro onceki 125.633.352  =  Fintables 6A25      ✓
+    netKar        6.290.532  =  Fintables 6A26      ✓
+    netKar onc.   2.116.615  =  Fintables 6A25      ✓
+TOPLAM YOLUYLA (1C + 2C = 6A) uc kalem daha:
+    ciro        101.780.929 + 100.016.179 = 201.797.108  = KAP  ✓
+    faaliyetKar   1.801.885 +   1.082.468 =   2.884.353  = KAP  ✓
+    netKar        3.198.185 +   3.092.347 =   6.290.532  = KAP  ✓
+Ayristirici DOGRU. Fintables bagimliligi bilanco kalemleri icin KIRILDI.
+
+### 207.2 AMA KAP DONEMSEL VERIYOR, CEYREKLIK DEGIL
+"6 Aylik" satiri IKI CEYREGIN TOPLAMIDIR. Kart icin CEYREKLIK gerekir:
+TOASO'nun 2C cirosu 100 mlr, 201,8 DEGIL. Bu ayrimi kacirmak, sirketi iki
+kat buyuk gostermek demektir — sessiz ve buyuk bir hata.
+COZUM (?mod=ceyrek): IKI bildirim cekilir, cikarilir.
+    ceyreklik = bu donem kumulatif − onceki donem kumulatif
+DOGRULANDI: uc kalemde de birebir 2C degeri cikiyor.
+1. donem zaten ceyrekliktir, cikarma yapilmaz.
+
+### 207.3 STOK vs AKIS AYRIMI — kritik
+OZKAYNAK ve NAKIT bilanco kalemidir, STOK'tur: belirli bir andaki durumu
+gosterir, donem boyunca birikmez. Bunlari cikarmak ANLAMSIZ sonuc verir
+(ornegin ozkaynak farki "bu ceyrek ozkaynak degisimi" olur, ozkaynagin
+kendisi degil).
+Gelir tablosu kalemleri (ciro, kar, gider) AKIS'tir, birikir, cikarilir.
+Ayristirici bu ikisini AYIRIYOR ve `tur` alaninda soyluyor.
+Bu ayrimi kacirmak, §114'teki taban kaymasi ailesinden bir hata olurdu.
+
+### 207.4 ZINCIR TAMAMLANDI
+  1 bildirimi yakala   ✓ mod=fr      (donem + gecikme + tekillestirme)
+  2 kalemleri al       ✓ mod=bilanco (8/8, capraz denetlendi)
+  3 ceyreklige cevir   ✓ mod=ceyrek  (stok/akis ayrimi ile)
+  4 yorumu yaz           TASLAK+ONAY kurgusu onerildi — yargi kullanicida
+  5 karta ekle           Actions zaten yapiyor
+Ucuncu adim da mekanik olarak kapandi. Geriye YALNIZ YORUM kaldi.
+
+DOSYALAR: api/kap.js
+
+## 206. DIPNOT REFERANSI TUZAGI — capraz denetim yakaladi (31 Tem)
+
+mod=bilanco ilk kosusu: 8/8 kalem BULUNDU, eksik yok, uyari yok. Basarili
+gorunuyordu. Fintables rakamlariyla karsilastirinca BIR KALEM KAYMISTI.
+
+### 206.1 OLCUM
+    KAP ayristirici   ciro.deger   = 4,17
+                      ciro.onceki  = 201.797.108
+    Fintables         6A26 ciro    = 201.797.108   <- cari donem
+                      6A25 ciro    = 125.633.352
+Yani cari deger "onceki" alanina dusmus, "deger" alanina DIPNOT NUMARASI
+gelmis. TUM SUTUNLAR BIR KAYMIS.
+netKar TAM DOGRUYDU (6.290.532 / 2.116.615 — Fintables ile birebir).
+
+### 206.2 SEBEP: DIPNOT REFERANSI SUTUNU
+KAP tablosu:  | Kalem | Dipnot Ref | Cari Donem | Onceki Donem |
+              | Hasilat |   4.17   | 201.797.108 | 125.633.352 |
+Ayristirici etiketten sonraki ILK sayiyi aliyordu; o da dipnot numarasiydi.
+NEDEN YALNIZ CIRODA: ARA TOPLAMLARIN dipnotu YOK (BRUT KAR, ESAS FAALIYET
+KARI, Ana Ortaklik Paylari), KALEM SATIRLARININ VAR (Hasilat).
+Yani hata KALEME GORE degisiyordu — en sinsi tur. 8/8 "bulundu" raporu
+dogruydu; bulunan DEGERIN yanlis oldugunu rapor SOYLEYEMEZDI.
+
+### 206.3 COZUM: BIN AYRACI BICIMI ZORUNLU
+    /^-?\\(?\\d{1,3}(\\.\\d{3})*\\)?$/
+Degerler "201.797.108" gibi: her noktadan sonra TAM UC HANE.
+"4.17" uymaz (17 iki hane) · "2.1" uymaz · noktasiz ve 1000'den kucuk sayilar
+da elenir (bin TL cinsinde gercek kalem 1000'in altina inmez).
+TEST: sekiz senaryo dogru ayriliyor.
+
+### 206.4 DERS — "BULUNDU" ILE "DOGRU" AYRI SEYLER
+Ayristirici 8/8 bildirdi, `eksik` bostu, `uyari` yoktu. Kendi denetimine gore
+KUSURSUZ calisiyordu. Hatayi yakalayan sey DIS REFERANSTI: Fintables'tan
+bilinen TOASO rakamlari.
+Bir ayristiricinin kendi kendini denetleyemedigi nokta budur — VERININ
+DOGRULUGU, ayristirmanin BASARISINDAN bagimsizdir.
+KURAL: yeni bir veri kaynagi acildiginda ILK IS, bilinen bir vakayla
+CAPRAZ DENETIM. Bu oturumda ucuncu kez ise yaradi (§184 AV eksik ceyrek,
+§203 isLate, §206 dipnot).
+
+DOSYALAR: api/kap.js
+
+## 205. BILANCO KALEMLERI ACILDI — zincirin engeli kalkti (31 Tem)
+
+?mod=kalem yoklamasi (TOASO 1639026) sonucu:
+    7 kalem etiketi BULUNDU · 736 tablo · 580 bin-ayracli sayi
+    flight:true (Next.js RSC yuku) · uzunluk 5.071.275
+Yani KAP'in finansal rapor goruntuleyicisi GWT tabanli ve HTML olarak flight
+yukunun icinde KACIRILMIS halde duruyor. Ayristirilabilir.
+
+### 205.1 YAPI
+    <div class="...content-tr">ETIKET</div></td><td...><div>DEGER</div></td>
+Etiket bir hucrede, degerler sonraki hucrelerde. Genelde IKI sutun:
+cari donem ve onceki donem.
+Kacislar: \\u003c -> < · \\u003e -> > · \\" -> "
+
+### 205.2 YOKLAMANIN GOSTERDIGI TUZAK
+"Dönem Karı" etiketi konum 607977'de bulundu AMA cevre metni
+"Dönem Karı Vergi Yükümlülüğü" idi — YANLIS SATIR.
+Kisa etiket, uzun etiketin ICINDE geciyor. Bu yuzden ayristirici:
+  · etiketi TAM HUCRE ICERIGI olarak arar: >ETIKET</div>
+  · UZUN etiketi ONCE dener (SANAYI/BANKA listelerinde sira bilincli)
+Yoklama olmasaydi bu tuzak sessizce yanlis sayi uretecekti — vergi
+yukumlulugunu net kar sanacaktik.
+
+### 205.3 IKI SABLON
+SANAYI: ciro · brutKar · faaliyetKar · finansGider · parasal · netKar ·
+        ozkaynak · nakit
+BANKA : netFaiz · komisyon · karsilik · faalKar · netKar · ozkaynak
+Ikisi de denenir, HANGISI DAHA COK DOLARSA o kabul edilir. Sablon tahmin
+edilmez, OLCULUR (§160'ta TSKB/GARAN icin elle ayirt etmistim).
+
+### 205.4 EKSIK KALEM SESSIZCE ATLANMAZ
+Her kalem icin bulundu/bulunamadi raporlanir; `eksik` dizisi ve `uyari` alani
+doner. KIRILGANLIK GERCEK: sayfa yapisi degisirse ayristirma kirilir.
+Yarim bilanco yanlis bilancodan iyidir — AMA ancak EKSIGINI SOYLERSE.
+Bu, bugun tekrarlanan "sessiz basarisizlik" dersinin ayristirici versiyonu.
+
+### 205.5 ZINCIRIN DURUMU
+  1 bildirimi yakala   ✓ mod=fr
+  2 kalemleri al       ✓ mod=bilanco  <- BU TURDA ACILDI
+  3 metrikleri hesapla   formul belli (§183 metrik standardi)
+  4 yorumu yaz           panelde Claude var; TASLAK+ONAY kurgusu onerildi
+  5 karta ekle, yayinla  Actions zaten yapiyor
+Ikinci adim acilinca 3 ve 5 mekanik. 4 icin kalite riski var ve taslak
+kuyrugu onerildi: yazma emegi kalkar, YARGI KULLANICIDA KALIR.
+
+DOSYALAR: api/kap.js (mod=kalem + mod=bilanco)
+
 ## 203. isLate GUVENILMEZ · TEKRAR SORUNU COZULDU (31 Tem)
 
 mod=fr calisti: 7 gunde 2299 kayit, 280 FR bildirimi, tavan uyarisi yok.
