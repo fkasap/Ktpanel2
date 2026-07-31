@@ -7016,7 +7016,11 @@ function ftCiz(t, kod, yil, don, id, kayit){
     '<table><thead><tr><th>Kalem</th><th class="num">Cari</th><th class="num">Önceki</th>'+
     '<th class="num">Fark</th><th class="num">Değişim</th></tr></thead><tbody>'+bl+'</tbody></table>'+
     '<div class="sub" style="font-size:10px;margin-top:4px">'+t.bilanco.bulunan+'/'+t.bilanco.toplam+' kalem · '+
-    'Yatay analiz iki TARİHİ karşılaştırır: bilanço stok kalemidir, "ne değişmiş" sorusu anlamlıdır. Birim bin TL.</div>';
+    'Yatay analiz iki TARİHİ karşılaştırır: bilanço stok kalemidir, "ne değişmiş" sorusu anlamlıdır. '+
+    /* §229c BİRİM RAPORDAN. Sabit "bin TL" yazmak, TL cinsinden rapor veren
+       şirketleri BİN KAT büyük gösteriyordu (BORSK vakası). */
+    '<b>Birim: '+esc((t.birim&&t.birim.ad)||'belirsiz')+'</b>'+
+    ((t.birim&&t.birim.ad==='belirsiz') ? ' <span style="color:var(--down)">— raporda bulunamadı, ölçek DOĞRULANMALI</span>' : ' (raporun beyanı)')+'</div>';
 
   /* ── GELİR TABLOSU · DİKEY ── */
   const paydaAd = t.sablon==='banka' ? 'faiz gelirleri' : 'hasılat';

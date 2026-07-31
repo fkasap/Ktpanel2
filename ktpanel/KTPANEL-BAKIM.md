@@ -2677,6 +2677,110 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 229. BIRIM VARSAYIMI — kucuk sirketleri BIN KAT buyuk gosteriyordu (31 Tem)
+
+BORSK karti Earnings AI'a dustu ama rakamlar sacmaydi:
+    "Brüt Kar 77.668.780 bin ₺"  = 77,7 MILYAR TL
+Kucuk bir seker sirketi icin imkansiz. Net zarar 282 milyar, nakit 343 milyar.
+AYNI SAYILAR TL OLARAK OKUNUNCA: 77,7 mn · 282 mn · 343 mn — hepsi oturuyor.
+
+### 229.1 SEBEP: HER RAPORU BIN TL VARSAYIYORDUM
+KAP raporlarinda birim SIRKET SECIMIDIR: kimi "TL", kimi "Bin TL", nadiren
+"Milyon TL". Sayfada belirtilir.
+Ben `not` alanina sabit "Birim BIN TL" yaziyordum ve istem de modele boyle
+soyluyordu. Model tekrarliyordu.
+BU SESSIZ BIR HATAYDI: sayilar makul BICIMDEYDI (binlik ayrac, dogru isaret,
+tutarli y/y), yalniz OLCEGI bin kat yanlisti. Hicbir denetim kurali
+yakalamaz — cunku her sey kendi icinde tutarli.
+Yakalayan: kullanicinin SIRKETI TANIMASI. "BORSK bu kadar buyuk olamaz."
+
+### 229.2 COZUM: RAPORDAN OKU, VARSAYMA
+`_birimBul(h)` sayfadaki birim ifadesini arar:
+    "Bin TL" / "(Bin TL)" / "bin Türk Lirası"  -> bin TL
+    "Milyon TL"                                 -> milyon TL
+    "Tam TL" / "tutarlar Türk Lirası olarak"    -> TL
+    hicbiri yoksa                               -> 'belirsiz'
+BELIRSIZSE VARSAYILAN UYDURULMAZ. 'belirsiz' doner, arayuzde KIRMIZI
+"raporda bulunamadi, olcek DOGRULANMALI" yazar, isteme de "birim belirsiz,
+ozet icinde SOYLE, uydurma" talimati gider.
+Birim artik mod=kart, mod=tablo ve taslak zincirinin HER adiminda tasiniyor.
+
+### 229.3 DERS — TUTARLI OLAN DOGRU DEMEK DEGIL (ikinci kez)
+§212'de cikarma yontemi "calisiyordu": sayilar makul, isaretler dogru,
+mertebe yerinde — ama enflasyon sapmasi tasiyordu.
+Burada ayni sey: bicim dogru, ic tutarlilik tam, OLCEK yanlis.
+Ikisini de yakalayan sey DIS BILGI oldu: orada Fintables rakamlari, burada
+kullanicinin sirket buyuklugu sezgisi.
+Bir sistem KENDI ICINDE ne kadar tutarli olursa olsun, DIS DUNYAYLA
+karsilastirilmadan dogrulanamaz.
+
+DOSYALAR: api/kap.js + api/ajanktp.js + app.js + ajan.js + index.html.
+app.js v=20260731n · ajan.js v=20260731j · kap surum kap-2026-07-31-e.
+
+## 228. SURUM DAMGASI — teshis etmeden once NE KOSTUGUNU bil (31 Tem)
+
+Bugun ALTI KEZ eski dosyayla ugrastik. Cikti okundu, "su duzeltme
+calismamis" diye teshis kuruldu, oysa dosya DEPLOY EDILMEMISTI. Her seferinde
+bir tur kaybedildi.
+
+### 228.1 COZUM
+api/kap.js her yaniti `surum:'kap-2026-07-31-e'` tasiyor (23 yanit noktasi)
+ve X-KTPanel-Surum basligi doner.
+KURAL: beklenen surumu gormuyorsan GERISINI OKUMAYA GEREK YOK.
+Bir sistemin HANGI SURUMUNUN kostugu, ciktisinin ILK SATIRINDA olmali.
+Bu, §141'in ("panel ne bildigini degil NEREDEN bildigini de soylemeli")
+kod surumune uygulanmis hali.
+
+### 228.2 TESHIS ARTIK KOD ILE CALISIYOR
+Onceden ?id= zorunluydu ve kimlik bulmak icin once mod=fr kosmak gerekiyordu.
+Simdi ?kod=CANTE&gun=15 yeter: kimligi kendi bulur ve TABLO TASIYAN bildirimi
+secer (§227 baslik ayrimi). Secilen bildirim `secilen` alaninda doner —
+hangisine bakildigi gorunur.
+Teshis aracinin KENDISI zahmetli olmamali; zahmetliyse kullanilmaz ve
+tahmine geri donulur.
+
+KULLANIM: /api/kap?mod=teshis&kod=CANTE&gun=15
+
+## 227. BASLIK ZATEN SOYLUYORMUS — deneme yanilma bitti (31 Tem)
+
+Kullanici ham KAP akisini gonderdi ve HER SEY COZULDU. Uc ayri bildirim
+AYNI SINIFTA (disclosureClass 'FR') geliyor ama BASLIKLARI farkli:
+    "Finansal Rapor"                        -> TABLOLAR BURADA
+    "Faaliyet Raporu (Konsolide)"           -> tablo YOK, duz metin
+    "Sorumluluk Beyanı (Konsolide Olmayan)" -> tablo YOK, imza sayfasi
+
+### 227.1 UC TURDUR YANLIS YOLDAN GIDIYORDUM
+§211'de "en erken bildirim finansal tablo OLMAYABILIR" diye tespit etmistim
+ve SIRAYLA DENEME cozumu koymustum. Tespit dogruydu, cozum yanlisti:
+SEBEBINI aramak yerine SONUCUNU tolere ettim.
+§220'de "solo sablon" diye ekledim — kismen dogruydu ama asil sorun bu degildi.
+§225'te satir sinirini duzelttim — gercek bir kusurdu ama CANTE'yi cozmezdi.
+UCU DE SEMPTOMA MUDAHALEYDI. Sebep BASLIKTAYDI ve baslik ILK GUNDEN BERI
+akista duruyordu (§202.2'de alan listesinde `subject` yazili).
+DERS: bir alani LISTELEMEK, OKUMAK degildir. Alan adlarini not aldim ama
+iceriklerine bakmadim; bakmis olsam uc tur once cozecektim.
+
+### 227.2 COZUM
+mod=fr artik her bildirim icin:
+    tip  : 'tablo' | 'faaliyet' | 'beyan' | 'diger'   (baslikten)
+    solo : "Konsolide Olmayan" geciyor mu             (sablon secimi icin)
+    tabloIdler : yalniz TABLO TASIYAN kimlikler
+`idler` dizisi TABLO TASIYANLAR ONDE olacak sekilde siralaniyor.
+SONUC: BORSK icin uc deneme yerine BIR. TOASO'nun faaliyet raporu ELENIYOR.
+Ustelik `solo` bayragi sayesinde hangi etiket setinin kullanilacagi ONCEDEN
+biliniyor — deneme yanilma tamamen kalkiyor.
+
+### 227.3 §225 VE §220 YINE DE GEREKLI
+Satir siniri (§225) gercek bir kusurdu: 3000 karakterlik pencere sonraki
+satira tasiyordu ve ceyrek sutunlari yanlis doluyordu. Baslik ayrimi bunu
+COZMEZ.
+Solo etiketler (§220) de gerekli: "Konsolide Olmayan" raporlarda gercekten
+farkli basliklar var.
+Yani uc duzeltme birbirini TAMAMLIYOR; ama sirasi yanlisti — once basliga
+bakmaliydim.
+
+DOSYALAR: api/kap.js
+
 ## 226. AYRISTIRICIDA YAPISAL KUSUR + TESHIS UCU (31 Tem)
 
 Kullanici: "cantenin bilancosu gelmiyor, gelen kalemler de sikintili/eksik."

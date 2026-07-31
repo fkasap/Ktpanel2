@@ -1060,7 +1060,7 @@ async function bilancoTaslak(btn, kod, idler, donem){
     const r2 = await fetch('/api/ajanktp?mod=bilanco', {
       method:'POST', headers:{'content-type':'application/json'},
       body: JSON.stringify({ kod, donem, temel:met.temel, sablon:met.sablon,
-        metrikler:met.metrikler, isaretler:met.isaretler })
+        metrikler:met.metrikler, isaretler:met.isaretler, birim:met.birim })
     });
     const j2 = await r2.json();
     if(!j2 || !j2.ok){ kutu.textContent = 'Yorum üretilemedi: '+((j2&&j2.err)||'bilinmeyen hata')+'\n\nMetrikler yine de alındı:\n'+JSON.stringify(met.metrikler,null,1); btn.disabled=false; btn.textContent=eski; return; }
@@ -1073,7 +1073,8 @@ async function bilancoTaslak(btn, kod, idler, donem){
     window.__taslakSon = { kod, donem, kart:K, kapId:kullanilan };
     kutu.innerHTML =
       '<div style="font-size:9px;color:var(--muted);margin-bottom:6px">'+
-        '⚠ TASLAK · KAP '+esc(kullanilan)+' · '+met.bulunan+'/'+met.toplam+' kalem · '+esc(met.temel)+'</div>'+
+        '⚠ TASLAK · KAP '+esc(kullanilan)+' · '+met.bulunan+'/'+met.toplam+' kalem · '+esc(met.temel)+
+        ' · birim '+esc((met.birim&&met.birim.ad)||'belirsiz')+'</div>'+
       '<div style="font-size:12px;font-weight:700;margin-bottom:3px">'+esc(K.kod)+' '+esc(K.ad||'')+' · '+esc(K.donem||donem)+'</div>'+
       '<div style="margin-bottom:7px">'+esc(K.ozet||'')+'</div>'+
       ((K.metrikler||[]).length ? '<table style="font-size:10px;margin-bottom:7px"><tbody>'+
