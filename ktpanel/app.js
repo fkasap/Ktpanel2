@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-t';
+const KTP_SURUM = '20260731-u';
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1655,6 +1655,14 @@ async function katfonCanli(){
      Sonuç: API düşse de, hiç deploy edilmemiş olsa da ekran AYNI görünüyordu
      ("fiyat: 2026-07-24" damgalı yedek). Kullanıcı hangisi olduğunu anlayamıyordu.
      Artık her hata yolu damgaya YAZIYOR — ekran kendi kendini teşhis ediyor. */
+  /* §241 BAŞLIĞI DA app.js YAZSIN — iki dosya bağımlılığı kalksın.
+     Katılım Fonları başlığı index.html'de STATİKTİ. Metin değişince HEM
+     index.html HEM app.js yüklenmesi gerekiyordu ve üç turdur biri eksik
+     kaldı: sürüm etiketi index.html'de, düzeltme app.js'te.
+     ARTIK: başlık açılışta app.js tarafından yazılır. index.html'de ne
+     yazdığı önemsiz — tek dosya yüklemek yeter.
+     DERS: aynı metnin iki dosyada olması, iki dosyayı da yüklemeye zorlar.
+     Tek kaynak (§112) yalnız veri için değil, ARAYÜZ METNİ için de geçerli. */
   const damgala=(m)=>{ KATFON.canli=m; try{ katfonRender(); }catch(e){} };
   try{
     const kodlar=[];KATFON.kategoriler.forEach(k=>k.fonlar.forEach(f=>kodlar.push(f.k)));
@@ -1717,6 +1725,20 @@ async function katfonCanli(){
   }
 }
 function katfonRender(){
+  /* §241 BAŞLIĞI app.js YAZAR — index.html bağımlılığı kalktı.
+     Metin index.html'de STATİKTİ; değişince HEM index.html HEM app.js
+     yüklenmesi gerekiyordu ve üç turdur biri eksik kaldı (sürüm etiketi
+     birinde, düzeltme diğerinde).
+     Burada, katfonRender başında: sekme her çizildiğinde çalışır, canlı
+     çekim denensin denenmesin. index.html'de ne yazdığı ARTIK ÖNEMSİZ.
+     DERS: aynı metnin iki dosyada olması, iki dosyayı da yüklemeye zorlar.
+     Tek kaynak kuralı (§112) veri için olduğu kadar ARAYÜZ METNİ için de
+     geçerli — ve deploy yükünü yarıya indiriyor. */
+  try{
+    const _b = document.querySelector('#t5 h2 .thin');
+    if(_b) _b.textContent = '(46 fon · 6 kategori · getiri · AUM · akış hepsi Fintables, tek tarih)';
+  }catch(e){}
+
   if(!KATFON)return;
   const sIdx={'1g':0,'1a':1,'3a':2,'ytd':3,'1y':4,'3y':5}[katfonSort];
   const donemLbl=['1G','1A','3A','YTD','1Y','3Y'];
