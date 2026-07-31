@@ -250,6 +250,34 @@ const _GELIR_BANKA = [
   ['netKar',        ['Grubun Karı (Zararı)','Ana Ortaklık Payları'], 0]
 ];
 
+
+/* §235 TEK HÜCRE BULUCU — iki kopya vardı, düzeltmeler birine uygulandı.
+   `kalemBul` (mod=bilanco/kart) ve `bul` (mod=tablo) AYNI İŞİ yapıyordu ama
+   ayrı yazılmıştı. §233b'deki dar-satır kurtarması yalnız birincisine eklendi;
+   TOASO 8 kalemlik yolda çalıştı, geniş tabloda çalışmadı.
+   ÜÇ TUR bunu şablon/sınır/teşhis sanıp yanlış yerde aradım.
+   Artık TEK fonksiyon. İkinci kopya yok, sapma da olamaz. */
+function _hucreBul(h, etiketler, ad, sinir){
+  for(const e of etiketler){
+    const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
+    let m;
+    while((m = kalip.exec(h)) !== null){
+      /* Önce SATIR sınırı (doğru olan o), sayı çıkmazsa geniş pencere (kurtarma) */
+      const satirSon = h.indexOf('</tr>', m.index);
+      const dar = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
+      const say = (son) => [...h.slice(m.index, son).matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)]
+        .map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
+      let hc = say(dar);
+      if(!hc.length && dar < m.index + 2200) hc = say(m.index + 2200);
+      if(hc.length >= 1 && _isaretUygun(ad, hc[0], sinir)){
+        return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null,
+                 ceyrekOnceki:hc[3] ?? null, hepsi:hc.slice(0,6), etiket:e };
+      }
+    }
+  }
+  return null;
+}
+
 async function _bilancoAyristir(id){
   const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
   const r = await fetch('https://www.kap.org.tr/tr/Bildirim/'+id, {
@@ -265,56 +293,7 @@ async function _bilancoAyristir(id){
   h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
   /* Birim ÖNCE — üst sınır ona göre ölçeklenecek (§230) */
   const _birim = _birimBul(h), _sinir = _ustSinir(_birim);
-  const kalemBul = (etiketler, _ad) => {
-    for(const e of etiketler){
-      const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
-      let m;
-      while((m = kalip.exec(h)) !== null){
-        /* §225 SATIR SINIRI — dilim SONRAKİ SATIRA TAŞIYORDU.
-           Önce etiketten sonra 3000 karakter alınıp içindeki TÜM sayılar
-           toplanıyordu. O pencere birkaç <tr> boyunca uzayabiliyor ve bir
-           kalemin değeri diye ALTTAKİ satırın sayısı alınabiliyordu.
-           Küçük şirketlerde tablo daha sıkışık olduğu için etki daha büyük —
-           CANTE'de kalemler eksik/karışık geliyordu.
-           DOĞRUSU: aynı <tr> içinde kal. Etiketten sonra ilk </tr>'ye kadar
-           kes; bulunamazsa dar bir pencereye (900) düş. */
-        /* §233b SATIR SINIRI ÇOK DAR ÇIKARSA GENİŞLET.
-           §225'te satır sınırı eklendi ve doğruydu — dilim alttaki satıra
-           taşıyordu. AMA bazı tablolarda </tr> beklenenden ERKEN geliyor
-           (iç içe tablo, hücre içi div sarmalı) ve değer hücreleri dışarıda
-           kalıyor. O zaman hiç sayı bulunamıyor ve kalem "yok" sayılıyor.
-           ÇÖZÜM: satır sınırıyla dene; SAYI ÇIKMAZSA daha geniş pencereyle
-           bir kez daha dene. Dar sınır önce — doğru olan o; geniş pencere
-           yalnız kurtarma. */
-        const satirSon = h.indexOf('</tr>', m.index);
-        const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
-        let hucreler = [...h.slice(m.index, sinir).matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)]
-          .map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
-        if(!hucreler.length && sinir < m.index + 2200){
-          hucreler = [...h.slice(m.index, m.index + 2200).matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)]
-            .map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
-        }
-        /* §212 DÖRT SÜTUN. İlk iki hücreyi almak YETMEZ.
-           Türk ara dönem raporları DÖRT sütun taşır:
-             1 Oca–30 Haz 2026 | 1 Oca–30 Haz 2025 | 1 Nis–30 Haz 2026 | 1 Nis–30 Haz 2025
-           yani KÜMÜLATİF ikisi, ÇEYREKLİK ikisi.
-           NEDEN ÖNEMLİ: çeyrekliği "6A − 3A" ile hesaplamak ENFLASYON
-           MUHASEBESİ altında YANLIŞ. Ölçüldü — TOASO 2Ç26:
-             çıkarma  106.687.189   ·   gerçek 100.016.179   fark +6,7 mlr
-           Çünkü 1Ç26 raporu 1Ç26 satın alma gücünde, 2Ç26 raporu aynı dönemi
-           2Ç26 gücüne GÜNCELLEYEREK yazıyor. İki rapordan çıkarma yapılamaz.
-           ÇÖZÜM: raporun KENDİ çeyrek sütunlarını oku. Aynı rapor, aynı fiyat
-           seviyesi, çıkarma yok. */
-        /* §223: kısıta uymayan eşleşme REDDEDİLİR, arama DEVAM EDER */
-        if(hucreler.length >= 1 && _isaretUygun(_ad, hucreler[0], _sinir)) return {
-          deger: hucreler[0], onceki: hucreler[1] ?? null,          // kümülatif
-          ceyrek: hucreler[2] ?? null, ceyrekOnceki: hucreler[3] ?? null,
-          hepsi: hucreler.slice(0,6),                               // teşhis: sütun yapısı görünsün
-          etiket: e };
-      }
-    }
-    return null;
-  };
+  const kalemBul = (etiketler, _ad) => _hucreBul(h, etiketler, _ad, _sinir);
   const dene = (liste) => { const c={}; let dolu=0;
     liste.forEach(([ad,et])=>{ const v=kalemBul(et, ad); c[ad]=v; if(v)dolu++; }); return {c,dolu}; };
   const sanayi = dene(_SANAYI), banka = dene(_BANKA);
@@ -332,7 +311,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-i';
+const _SURUM = 'kap-2026-07-31-j';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -730,14 +709,21 @@ export default async function handler(req, res){
           let m, bulundu = 0;
           while((m = kalip.exec(h)) !== null && bulundu < 3){
             bulundu++;
+            /* §235b TEŞHİS AYRIŞTIRICININ GÖRDÜĞÜNÜ GÖSTERSİN.
+               Aynı dar-sınır + kurtarma mantığı; yoksa teşhis "sayı yok" der
+               ama ayrıştırıcı bulur (ya da tersi) — arac yaniltir. */
             const satirSon = h.indexOf('</tr>', m.index);
-            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
-            const dilim = h.slice(m.index, sinir);
-            const ham = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>x[1]);
+            const dar = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
+            const cek = (son) => [...h.slice(m.index, son).matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>x[1]);
+            let ham = cek(dar), genisletildi = false;
+            if(!ham.filter(x=>_sayiCoz(x)!==null).length && dar < m.index + 2200){
+              ham = cek(m.index + 2200); genisletildi = true;
+            }
+            const sinir = genisletildi ? (m.index + 2200) : dar;
             const coz = ham.map(x=>_sayiCoz(x));
             const gecerli = coz.filter(v=>v!==null);
             kayit.denenen.push({ etiket:e, konum:m.index,
-              satirUzunluk: sinir - m.index,
+              satirUzunluk: sinir - m.index, genisletildi,
               hamHucreler: ham.slice(0,8),
               cozulen: gecerli.slice(0,6),
               kisitGecti: gecerli.length ? _isaretUygun(ad, gecerli[0], _sinirTe) : false,
@@ -789,21 +775,7 @@ export default async function handler(req, res){
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
 
       const _birimT = _birimBul(h), _sinirT = _ustSinir(_birimT);
-      const bul = (etiketler, _ad) => {
-        for(const e of etiketler){
-          const kalip = new RegExp('>'+e.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*<\\/div>', 'g');
-          let m;
-          while((m = kalip.exec(h)) !== null){
-            /* §225: satır sınırı — mod=tablo yolunda da aynı düzeltme */
-            const satirSon = h.indexOf('</tr>', m.index);
-            const sinir = (satirSon > 0 && satirSon - m.index < 4000) ? satirSon : m.index + 2200;
-            const dilim = h.slice(m.index, sinir);
-            const hc = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
-            if(hc.length >= 1 && _isaretUygun(_ad, hc[0], _sinirT)) return { deger:hc[0], onceki:hc[1] ?? null, ceyrek:hc[2] ?? null, ceyrekOnceki:hc[3] ?? null, etiket:e };
-          }
-        }
-        return null;
-      };
+      const bul = (etiketler, _ad) => _hucreBul(h, etiketler, _ad, _sinirT);
       const cikar = (liste) => {
         const c = {}; let dolu = 0;
         liste.forEach(([ad, et, gir])=>{ const v = bul(et, ad); if(v){ v.girinti = gir; dolu++; } c[ad] = v; });
