@@ -3003,7 +3003,23 @@ async function incelemeInit(){
       const x=isoCoz(a), y=isoCoz(b);
       return x===y ? String(a.kod).localeCompare(String(b.kod)) : (x<y?1:-1);
     });
-    INC_KARTLAR=kartlar;
+    /* §222b BİRLEŞTİRME: dosya + onaylanan taslaklar.
+     Aynı (kod, dönem) varsa DOSYA kazanır — dosyaya işlenmiş kart, taslağın
+     kalıcılaşmış hâlidir; taslak artık gereksizdir.
+     Taslaklar `_taslak:true` taşır ve kartta rozetle görünür. */
+  let birlesik = kartlar;
+  try{
+    const ts = JSON.parse(localStorage.getItem('ktp_taslak_kart_v1')||'[]')||[];
+    if(ts.length){
+      const varOlan = new Set(kartlar.map(k=>String(k.kod).toUpperCase()+'|'+String(k.donem||'')));
+      const ek = ts.filter(t=>!varOlan.has(String(t.kod).toUpperCase()+'|'+String(t.donem||'')));
+      birlesik = ek.concat(kartlar).sort((a,b)=>{
+        const x=isoCoz(a), y=isoCoz(b);
+        return x===y ? String(a.kod).localeCompare(String(b.kod)) : (x<y?1:-1);
+      });
+    }
+  }catch(e){ console.warn('[KTPanel] taslak birleştirme:', e); }
+  INC_KARTLAR=birlesik;
     /* §166: kart listesi yüklendiğinde BIST takvimi de tazelenir — takvim
        kartlardan türediği için ikisi TEK kaynaktan beslenir, ayrışamazlar. */
     try{ if(typeof bistTakvimYukle==='function') bistTakvimYukle().then(()=>bistTakvimRender()); }catch(e){}
@@ -5393,7 +5409,12 @@ const CLOUD_KEYS=['poz_v1','journal_v1','guidance_v1','ktp_sukuk_kayit_v1','trk_
      ktp_mail_to da eklendi (tercih, gizli değil).
      ktp_cron_k EKLENMEDİ: o bir ANAHTAR. Sırlar cihazdan cihaza dolaşmaz;
      kaybolursa yeniden üretilir, sızarsa geri alınamaz. */
-  'parite_gecmis_v1','ktp_mail_to'];   // sukuk + model sicili de buluta
+  'parite_gecmis_v1','ktp_mail_to',
+  /* §222: ONAYLANAN kart taslakları. inceleme-ai.json repo'da ve tarayıcıdan
+     yazılamaz; onaylanan kartlar buluta gider ve dosyayla BİRLEŞTİRİLİR.
+     Böylece deploy beklemeden Earnings AI'da görünür. Kalıcı hâle gelince
+     dosyaya işlenir ve buluttan silinir. */
+  'ktp_taslak_kart_v1'];   // sukuk + model sicili de buluta
 const _origSet=localStorage.setItem.bind(localStorage);
 const _origGet=localStorage.getItem.bind(localStorage);
 let _cloudTimer;

@@ -2677,6 +2677,44 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 222. TASLAK ARTIK KART YAPISINDA + ONAY AKISI (31 Tem)
+
+Kullanici: "yorum bizim kartlarla uyumlu degil, yapiya uygun olsun. Ayrica
+onaylama tusu yok. Onayladiktan sonra Earnings AI'da kart olussun."
+
+### 222.1 ISTEM KART YAPISI URETIYOR (§221)
+Onceki surum OZET/DIKKAT/IZLENECEK biciminde DUZ METIN veriyordu. Panelin
+kart yapisi ise: kod·ad·donem·tarih·tarih_iso·sablon·skor·ozet·metrikler[]·
+onemli[]·guidance·tez.
+Artik model YALNIZCA JSON donduruyor ve sunucu iskeleti tamamliyor
+(tarih, tarih_iso, sablon otomatik).
+JSON AYRISTIRMA KORUMASI: model bazen kod bloguyla sarar; ilk { ile son }
+arasi alinir. Ayrismazsa HAM METIN dondurulur ve kullaniciya soylenir —
+sessizce bos kart uretmek en kotusu olurdu.
+
+### 222.2 SKOR BILEREK YOK
+Model skor VERMIYOR. Onay kutusunda kullanici giriyor ve SKORSUZ KART
+YAYINLANMIYOR. §204'te kararlastirilan kurgunun somut hali: yazma emegi
+kalkar, YARGI TEK SATIRDA INSANDAN GELIR.
+
+### 222.3 ONAY → EARNINGS AI
+Sorun: inceleme-ai.json REPO'DA, tarayicidan yazilamaz.
+Cozum: onaylanan kart `ktp_taslak_kart_v1`e yazilir (CLOUD_KEYS'e eklendi,
+buluta senkron) ve app.js bunu dosyayla BIRLESTIRIR.
+BIRLESTIRME KURALI: ayni (kod, donem) varsa DOSYA KAZANIR — dosyaya islenmis
+kart, taslagin kalicilasmis halidir; taslak artik gereksizdir. Boylece ayni
+kart iki kez gorunmez ve elle isleme yapildiginda taslak kendiliginden duser.
+Onaydan sonra incelemeInit() tekrar cagrilir; kart ANINDA Earnings AI'da
+gorunur, deploy beklemez.
+
+### 222.4 ONIZLEME KART BICIMINDE
+Taslak artik panelin kart biciminde gosteriliyor: baslik, ozet, metrik
+tablosu, onemli maddeler, guidance, tez. Onaylamadan once NASIL GORUNECEGI
+belli oluyor. Serbest metin gosterip "onayla" demek, gorunmeden imzalatmakti.
+
+ajan.js v=20260731h · app.js v=20260731j.
+DOSYALAR: api/ajanktp.js + ajan.js + app.js + index.html.
+
 ## 220. SOLO RAPOR SABLONU — nobet ise yaradi, eksigi gosterdi (31 Tem)
 
 §219'da evren genisleyince nobet UC kod yakaladi: BORSK · CANTE · GENIL.

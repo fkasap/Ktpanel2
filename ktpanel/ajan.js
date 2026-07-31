@@ -1065,10 +1065,30 @@ async function bilancoTaslak(btn, kod, idler, donem){
     const j2 = await r2.json();
     if(!j2 || !j2.ok){ kutu.textContent = 'Yorum üretilemedi: '+((j2&&j2.err)||'bilinmeyen hata')+'\n\nMetrikler yine de alındı:\n'+JSON.stringify(met.metrikler,null,1); btn.disabled=false; btn.textContent=eski; return; }
 
-    kutu.innerHTML = '<div style="font-size:9px;color:var(--muted);margin-bottom:5px">'+
-      '⚠ TASLAK · '+esc(kod)+' '+esc(donem)+' · KAP '+esc(kullanilan)+' · '+met.bulunan+'/'+met.toplam+' kalem · '+esc(met.temel)+
-      ' — skor ve yayın kararı SENDE</div>'+
-      '<div>'+esc(j2.taslak)+'</div>'+
+    /* §222c KART ÖNİZLEME + ONAY. Artık serbest metin değil KART YAPISI
+       geliyor; panelin kartıyla aynı biçimde gösterilir ki onaylamadan önce
+       nasıl görüneceği belli olsun.
+       SKOR ONAYDA GİRİLİR — model vermiyor, kullanıcı veriyor. */
+    const K = j2.kart;
+    window.__taslakSon = { kod, donem, kart:K, kapId:kullanilan };
+    kutu.innerHTML =
+      '<div style="font-size:9px;color:var(--muted);margin-bottom:6px">'+
+        '⚠ TASLAK · KAP '+esc(kullanilan)+' · '+met.bulunan+'/'+met.toplam+' kalem · '+esc(met.temel)+'</div>'+
+      '<div style="font-size:12px;font-weight:700;margin-bottom:3px">'+esc(K.kod)+' '+esc(K.ad||'')+' · '+esc(K.donem||donem)+'</div>'+
+      '<div style="margin-bottom:7px">'+esc(K.ozet||'')+'</div>'+
+      ((K.metrikler||[]).length ? '<table style="font-size:10px;margin-bottom:7px"><tbody>'+
+        K.metrikler.map(m=>'<tr><td>'+esc(m.ad||'')+'</td><td><b>'+esc(m.deger||'')+'</b></td>'+
+        '<td class="thin">'+esc(m.cc||'')+'</td><td class="thin">'+esc(m.yoy||'')+'</td></tr>').join('')+
+        '</tbody></table>' : '')+
+      ((K.onemli||[]).map(x=>'<div style="margin-bottom:4px">• '+esc(x)+'</div>').join(''))+
+      (K.guidance ? '<div style="margin-top:6px"><b>Guidance / izlenecek:</b> '+esc(K.guidance)+'</div>' : '')+
+      (K.tez ? '<div style="margin-top:5px"><b>Tez:</b> '+esc(K.tez)+'</div>' : '')+
+      '<div style="margin-top:9px;padding-top:8px;border-top:1px solid var(--line);display:flex;gap:7px;align-items:center;flex-wrap:wrap">'+
+        '<span class="sub" style="font-size:10px">Skor:</span>'+
+        '<input id="tsSkor" type="number" step="0.5" min="0" max="10" placeholder="5,5" style="width:62px;font-size:11px;padding:2px 5px">'+
+        '<button class="mini" style="font-size:10px" onclick="taslakOnayla(this)">onayla → Earnings AI</button>'+
+        '<span class="sub" id="tsDurum" style="font-size:10px"></span>'+
+      '</div>'+
       (met.isaretler&&met.isaretler.length ? '<div style="font-size:9px;color:var(--muted);margin-top:6px">otomatik işaretler: '+met.isaretler.map(x=>esc(x.tip)).join(' · ')+'</div>' : '');
     btn.textContent = 'yeniden';
   }catch(e){
@@ -1076,4 +1096,47 @@ async function bilancoTaslak(btn, kod, idler, donem){
     btn.textContent = eski;
   }
   btn.disabled = false;
+}
+
+
+/* ── §222d TASLAK ONAYI ───────────────────────────────────────────────────────
+   Onaylanan kart `ktp_taslak_kart_v1`e yazılır; app.js bunu inceleme-ai.json
+   ile BİRLEŞTİRİR ve Earnings AI'da gösterir. Deploy beklemez.
+   NEDEN DOSYAYA YAZMIYORUZ: inceleme-ai.json repo'da, tarayıcıdan yazılamaz.
+   Kart kalıcılaşınca dosyaya işlenir ve buluttan düşer (aynı kod+dönem varsa
+   dosya kazanır — §222b).
+   SKOR ZORUNLU: skorsuz kart yayınlanmaz. Model skor vermiyor (§204); yargı
+   burada, tek satırda, insandan geliyor. */
+async function taslakOnayla(btn){
+  const d = document.getElementById('tsDurum');
+  const s = document.getElementById('tsSkor');
+  const T = window.__taslakSon;
+  if(!T || !T.kart){ if(d) d.textContent = 'taslak bulunamadı'; return; }
+  const skor = parseFloat(String((s&&s.value)||'').replace(',','.'));
+  if(!isFinite(skor) || skor<0 || skor>10){ if(d) d.textContent = 'skor gir (0–10)'; if(s) s.focus(); return; }
+  btn.disabled = true; if(d) d.textContent = 'kaydediliyor…';
+  try{
+    const kart = Object.assign({}, T.kart, { skor,
+      _kap: T.kapId, _onay: new Date().toISOString() });
+    delete kart._taslak;                       // onaylandı, artık taslak değil
+    kart._onaylanmis = true;
+    let liste = [];
+    try{ liste = JSON.parse(localStorage.getItem('ktp_taslak_kart_v1')||'[]')||[]; }catch(e){}
+    liste = liste.filter(x => !(String(x.kod)===String(kart.kod) && String(x.donem)===String(kart.donem)));
+    liste.unshift(kart);
+    localStorage.setItem('ktp_taslak_kart_v1', JSON.stringify(liste.slice(0,60)));
+    /* Buluta da yaz — cihaz değişince kaybolmasın */
+    try{ if(typeof cloudSaveDebounced==='function') cloudSaveDebounced();
+         else if(typeof cloudSave==='function') cloudSave(); }catch(e){}
+    /* Kart listesini yeniden kur ki Earnings AI'da GÖRÜNSÜN */
+    /* Kart listesini yeniden kur ki Earnings AI'da GÖRÜNSÜN.
+       Fonksiyon adı `incelemeInit` — app.js'te tanımlı, inceleme-ai.json'u
+       çekip taslaklarla birleştiriyor (§222b). */
+    try{ if(typeof incelemeInit==='function') await incelemeInit(); }catch(e){ console.warn('[Ebu] kart tazeleme:', e); }
+    if(d) d.innerHTML = '<b style="color:var(--up)">✓ Earnings AI\'a eklendi</b> — sekmeye geçip gönderebilirsin';
+    btn.textContent = 'eklendi';
+  }catch(e){
+    if(d) d.textContent = 'hata: '+String((e&&e.message)||e).slice(0,80);
+    btn.disabled = false;
+  }
 }
