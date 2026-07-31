@@ -2677,6 +2677,49 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 230. KENDI KISITIMI GECERLI VERIYI REDDEDER HALE GETIRDIM (31 Tem)
+
+BORSK ONCE CALISIYORDU — kart uretildi, Earnings AI'a dustu. Sonra uc
+kimlikte de "ayristirilamadi" demeye basladi. SEBEP BENDIM.
+
+### 230.1 §223'UN YAN ETKISI
+§223'te yanlis satir yakalamayi onlemek icin sabit ust sinir koydum:
+    const _UST_SINIR = 1e9;
+Gerekce: "bin TL cinsinde bir kalem 1 milyar bin TL'yi (1 katrilyon TL)
+asamaz — BIST'te oyle sirket yok." DOGRUYDU — AMA YALNIZ BIN TL ICIN.
+BORSK raporunu TL cinsinden veriyor. Cirosu 1.383.291.932 TL (1,4 milyar).
+Bu sinir 1e9'u ASIYOR -> gecerli deger REDDEDILDI -> 0 kalem.
+
+### 230.2 IKI DEGISIKLIK BIRBIRINI GEREKTIRIYORDU
+§229'da birim tespitini ekledim (rapor TL mi bin TL mi soyluyor).
+Ama SINIRI ona baglamayi unuttum. Iki degisiklik yan yana yapildi ve
+BIRI DIGERINI GEREKTIRIYORDU:
+  · birim tespiti -> olcek biliniyor
+  · ust sinir     -> olcege gore ayarlanmali
+Birini yapip digerini birakmak, bu oturumun SEKIZINCI tekrari.
+FARKI: bu sefer iki degisiklik AYRI TURLARDA yapildi ve aralarindaki
+bagimlilik GORUNMUYORDU. Ayni turda olsalar fark ederdim.
+
+### 230.3 KENDI YORUMUM UYARIYORDU, OKUMADIM
+§223'un yorumunda AYNEN sunu yazmisim:
+    "bin TL cinsinde bir kalem 1 milyar bin TL'yi asamaz"
+Varsayim ACIKCA yaziliydi. Yazdim ama DOGRULAMADIM — "her rapor bin TL mi?"
+diye sormadim. Alti tur sonra §229'da "her rapor bin TL DEGIL" diye
+kesfettim ve yine baglamadim.
+DERS: bir kisitin dayandigi varsayimi YAZMAK yetmiyor; o varsayim
+DEGISTIGINDE kisiti da guncellemek gerekiyor. Yorum bir HATIRLATICI degil,
+BAGLANTI olmali — kod duzeyinde.
+
+### 230.4 COZUM
+    _ustSinir(birim):  TL -> 1e12 · bin TL -> 1e9 · milyon TL -> 1e7
+                       belirsiz -> 1e13 (GENIS)
+SUPHEDE GENIS TUT: reddedilen veri geri gelmiyor; fazla kabul edilen veri
+denetimde yakalanir. Asimetri acik.
+Sinir mod=bilanco · mod=tablo · mod=teshis'te de gecirildi; teshis ciktisinda
+`ustSinir` ve red sebebi ("büyüklük sınırı 1e9") yaziyor.
+
+surum kap-2026-07-31-f. DOSYALAR: api/kap.js
+
 ## 229. BIRIM VARSAYIMI — kucuk sirketleri BIN KAT buyuk gosteriyordu (31 Tem)
 
 BORSK karti Earnings AI'a dustu ama rakamlar sacmaydi:
