@@ -52,10 +52,25 @@ const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (
 // çalışır ve CommonJS modülünü `.default` altında verir.
 // TEMBEL YÜKLEME yan faydası: yalnız o mod istendiğinde yüklenir, soğuk başlangıç
 // diğer modlarda daha hızlı.
-async function _altModul(yol){
-  const m = await import(yol);
-  return m.default || m;
-}
+/* §245g KÖK NEDEN BULUNDU — DEĞİŞKENLİ import() PAKETE GİRMİYOR.
+   Eski hali:  async function _altModul(yol){ const m = await import(yol); ... }
+   `import()` içine DEĞİŞKEN veriliyordu. Vercel'in dosya izleyicisi (@vercel/nft)
+   STATİK analiz yapar: `import('./_lib/x.js')` gibi SABİT DİZGEYİ izler ve dosyayı
+   dağıtım paketine koyar; `import(yol)` gibi değişkeni İZLEYEMEZ. Sonuç:
+   api/_lib/kapyorum.js ve sukuk.js dağıtıma HİÇ girmiyordu → çalışma anında
+   ERR_MODULE_NOT_FOUND → 500 (§245c'den sonra: teşhisli 502).
+   KANIT YAN YANA DURUYORDU: api/data.js `require('./_lib/mail.js')`,
+   api/evds2.js `require('./_lib/tlref.js')` — SABİT dizge, izleniyor, çalışıyor.
+   Değişkenli import kullanan TEK dosya kap.js'ti, bozuk olan TEK dosya da o.
+   Yerelde çalışıp üretimde patlaması da bunu söylüyordu: yerelde dosya diskte
+   duruyor, üretimde pakete alınmamış.
+   ÇÖZÜM: her modül SABİT dizgeli kendi ok fonksiyonunda. Tembel yükleme
+   korunuyor (yalnız o mod istendiğinde çağrılır) ama artık nft izleyebiliyor.
+   AYRICA vercel.json'a includeFiles eklendi — kemer + askı. */
+const _ALT_MODUL = {
+  yorum: () => import('./_lib/kapyorum.js'),
+  sukuk: () => import('./_lib/sukuk.js')
+};
 /* §208 ORTAK AYRIŞTIRICI — HTTP zincirlemesi KALDIRILDI.
    mod=ceyrek, mod=bilanco'yu KENDİ SİTESİNE İSTEK ATARAK çağırıyordu ve
    "cari bilanço alınamadı" veriyordu. İki sebep üst üste:
@@ -311,7 +326,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-k';
+const _SURUM = 'kap-2026-07-31-m';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -328,9 +343,12 @@ export default async function handler(req, res){
      sınıfı ve mesajı JSON'da. Bir sonraki turda tahmin etmeye gerek kalmaz.
      NOT: 200 DEĞİL 502 dönüyor — bu gerçek bir arıza, panelin "veri yok" ile
      "sunucu kırık" ayrımını koruması gerekir (§60: sessizce normal görünme). */
-  async function _yonlendir(yol, ad){
+  async function _yonlendir(ad){
     try{
-      const f = await _altModul(yol);
+      const yukle = _ALT_MODUL[ad];
+      if(!yukle) throw new Error('bilinmeyen alt modül: '+ad);
+      const m = await yukle();
+      const f = (m && (m.default || m));
       if(typeof f !== 'function') throw new Error('modül fonksiyon döndürmedi (tip: '+typeof f+')');
       return await f(req, res);
     }catch(e){
@@ -341,8 +359,8 @@ export default async function handler(req, res){
               'ya da modül yüklenirken hata attı. X-KTPanel-Surum: '+_SURUM });
     }
   }
-  if (_mod === 'yorum') return _yonlendir('./_lib/kapyorum.js', 'kapyorum');
-  if (_mod === 'sukuk') return _yonlendir('./_lib/sukuk.js', 'sukuk');
+  if (_mod === 'yorum') return _yonlendir('yorum');
+  if (_mod === 'sukuk') return _yonlendir('sukuk');
   /* §201 YOKLAMA: KAP yapısal finansal veri veriyor mu?
      Fintables'ın kaynağı KAP. Eğer KAP'ın finansal rapor uçları sunucudan
      erişilebiliyorsa, şu an Fintables'a bağımlı BEŞ katman birden çözülür:
