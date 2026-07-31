@@ -6947,11 +6947,19 @@ async function ftGetir(){
     const r = await fetch(u, {cache:'no-store'});
     const j = await r.json();
     const aday = (j.fr||[]).filter(x => x.yil===yil && x.donem===don);
+    /* §223c HANGİ DÖNEMLER VAR — sorulan yoksa bulunanları göster.
+       BORSK vakası: kullanıcı 2Ç26 aradı, şirket 1Ç26 açıklamıştı (121 gün
+       gecikmeli). Panel "bulunamadı" deyip susuyordu; oysa aynı pencerede
+       BAŞKA bir dönem vardı ve bunu söylemek tek satırlık iş. */
+    const varOlanlar = [...new Set((j.fr||[]).filter(x=>x.kod===kod && x.yil)
+      .map(x=>x.yil+'/'+x.donem+(x.tur?' ('+x.tur+')':'')))];
     if(!aday.length){
       d.textContent = 'bulunamadı';
       N.innerHTML = '<div class="note" style="border-left:3px solid var(--down)"><b>Bildirim bulunamadı.</b> '+
         esc(kod)+' için '+yil+'/'+don+' dönemi, '+esc(py+b1)+' – '+esc(py+b2)+' penceresinde yok. '+
-        'Şirket geç açıklamış olabilir (bazıları 120+ gün gecikiyor) ya da o dönem finansal rapor vermemiş olabilir.'+
+        (varOlanlar.length
+          ? 'Ama bu pencerede <b>'+varOlanlar.map(esc).join(', ')+'</b> bulundu — dönem seçimini kontrol et. '
+          : 'Şirket geç açıklamış olabilir (bazıları 120+ gün gecikiyor) ya da o dönem finansal rapor vermemiş olabilir. ')+
         (j.uyari ? '<br><span class="thin">'+esc(String(j.uyari))+'</span>' : '')+'</div>';
       return;
     }

@@ -2677,6 +2677,48 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 223. UC SORUN: yanlis satir · kesik JSON · yanlis donem (31 Tem)
+
+BORSK taslagi uc ayri sorun gosterdi.
+
+### 223.1 CIRO NEGATIF CIKTI — isaret kisiti eklendi
+    "ciro": { "deger": -1.383.291.932, "yoy": 14.7 }
+Hasilat NEGATIF OLAMAZ. Ustelik 1,4 KATRILYON TL — kucuk bir seker sirketi
+icin sacma. Ozkaynak da 7,8 katrilyon cikmisti.
+SEBEP: "Hasılat" etiketi bir DIPNOT/KIRILIM tablosunda yakalandi ve oradaki
+negatif sayi alindi. Ilk eslesme kabul ediliyordu.
+COZUM: bazi kalemlerin ISARETI BELLIDIR.
+    ciro·ozkaynak·nakit·varlik·stok...  -> POZITIF
+    satisMaliyet·finansGider·pazarlama·karsilik·vergi -> NEGATIF
+    brutKar·faaliyetKar·netKar·parasal  -> SERBEST (zarar olabilir)
+Ustelik BUYUKLUK kisiti: bin TL cinsinde bir kalem 1 milyar bin TL'yi
+(1 katrilyon TL) asamaz — BIST'te oyle sirket yok.
+Kisita uymayan eslesme REDDEDILIR ve arama SONRAKI eslesmeyle DEVAM EDER.
+§206'daki dipnot suzgecinin kardesi: BICIM yetmiyorsa ANLAM kisiti koy.
+
+### 223.2 JSON KESILDI — token ve onarim
+Hata: "Expected ',' or ']' ... at position 1510". max_tokens 1400 yetmemis.
+Kart yapisi (ozet + 6 metrik + 3 madde + guidance + tez) rahat 2000 istiyor.
+2600'e cikarildi.
+AYRICA ONARIM eklendi: yanit yine kesilirse yarim kalan son nesne/ozellik/
+dizi elemani atilir ve parantezler dengelenir. TEST EDILDI — dort senaryo
+(nesne ortasi · dizi elemani ortasi · ozellik ortasi · TAM JSON) dogru
+sonuc veriyor; tam JSON BOZULMUYOR.
+Onarim yapildiysa `onarildi:true` doner ve kullaniciya SOYLENIR: "model
+yaniti KESILDI, son alanlar eksik olabilir". Yarim kart hic karttan iyidir
+AMA ancak eksik oldugu SOYLENIRSE.
+
+### 223.3 YANLIS DONEM SECIMI — ne VAR onu goster
+Kullanici Finansal Tablolar'da BORSK 2C26 aradi. BORSK 1C26 aciklamisti
+(121 gun gecikmeli). Panel "bulunamadi" deyip SUSUYORDU.
+Oysa AYNI PENCEREDE baska bir donem VARDI ve bunu soylemek tek satirlik is:
+    "Ama bu pencerede 2026/1 (3 Aylık) bulundu — donem secimini kontrol et."
+Bir arama sonucsuz kaldiginda, YAKININDA NE OLDUGUNU soylemek arayanin
+isini yariya indirir.
+
+DOSYALAR: api/kap.js + api/ajanktp.js + app.js + index.html.
+app.js v=20260731k.
+
 ## 222. TASLAK ARTIK KART YAPISINDA + ONAY AKISI (31 Tem)
 
 Kullanici: "yorum bizim kartlarla uyumlu degil, yapiya uygun olsun. Ayrica
