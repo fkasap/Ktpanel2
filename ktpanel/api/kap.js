@@ -280,14 +280,25 @@ export default async function handler(req, res){
         const yeni = { kod, tarih, saat, yil:x.year, donem:x.period, tur:x.ruleType||null,
           gecikmeGun: gecikmeHesap(x.year, x.period, x.ruleType, tarih),
           id: idx, unvan: x.kapTitle || null, tekrar: 1,
+          /* §211 TÜM KİMLİKLER. Tekilleştirme en erkeni tutuyordu ama EN ERKEN
+             BİLDİRİM FİNANSAL TABLO OLMAYABİLİR — faaliyet raporu, ek belge ya
+             da denetim raporu olabilir ve içinde bilanço tablosu bulunmaz.
+             ÖLÇÜLDÜ: TOASO 1Ç26'da üç bildirim var; en erkeni (1601476)
+             ayrıştırıldığında 0/8 kalem çıktı. 2Ç26'da yedi bildirim vardı ve
+             işleyen (1639026) ORTADAKİYDİ.
+             Artık hepsi `idler` dizisinde; ayrıştırıcı sırayla dener. */
+          idler: [idx],
           url: idx ? 'https://www.kap.org.tr/tr/Bildirim/'+idx : null };
         yeni.gec = yeni.gecikmeGun != null && yeni.gecikmeGun > 80;
         const eski = kayit.get(anahtar);
         if(!eski){ kayit.set(anahtar, yeni); return; }
         eski.tekrar++;
-        /* EN ERKEN kalır — asıl açıklama o */
+        if(eski.idler.indexOf(idx) < 0) eski.idler.push(idx);
+        /* EN ERKEN gösterilir (gecikme hesabı ona göre) ama TÜM kimlikler
+           saklanır — hangisinin finansal tablo olduğu ancak denenerek bulunur. */
         if(yeni.tarih < eski.tarih || (yeni.tarih === eski.tarih && yeni.saat < eski.saat)){
-          yeni.tekrar = eski.tekrar; kayit.set(anahtar, yeni);
+          yeni.tekrar = eski.tekrar; yeni.idler = eski.idler;
+          kayit.set(anahtar, yeni);
         }
       });
     });
@@ -358,12 +369,20 @@ export default async function handler(req, res){
          hangi adımda düştüğü belli. */
       const b1 = await _bilancoAyristir(id);
       if(!b1 || !b1.ok) return res.status(200).json({ ok:false, id, err:'cari bilanço ayrıştırılamadı', detay:b1 });
-      let b0 = null, b0Hata = null;
-      if(onc){
-        try{ b0 = await _bilancoAyristir(onc); }
-        catch(e){ b0Hata = String(e.message||e).slice(0,120); }
-        if(b0 && !b0.ok) b0Hata = b0.err || ('bulunan '+b0.bulunan+'/'+b0.toplam);
+      /* §211b BİRDEN FAZLA KİMLİK DENE. `onceki` virgülle ayrık liste alabilir
+         (mod=fr çıktısındaki `idler`). İlk ayrışan kullanılır. En erken bildirim
+         çoğu zaman faaliyet raporudur; finansal tablo genelde sonrakilerdedir. */
+      let b0 = null, b0Hata = null, b0Kullanilan = null;
+      const oncListe = onc.split(',').map(x=>x.replace(/[^0-9]/g,'')).filter(Boolean).slice(0,6);
+      const denemeler = [];
+      for(const oid of oncListe){
+        try{
+          const d = await _bilancoAyristir(oid);
+          denemeler.push({ id:oid, bulunan:(d&&d.bulunan)||0, ok:!!(d&&d.ok) });
+          if(d && d.ok){ b0 = d; b0Kullanilan = oid; break; }
+        }catch(e){ denemeler.push({ id:oid, hata:String(e.message||e).slice(0,60) }); }
       }
+      if(oncListe.length && !b0) b0Hata = oncListe.length+' kimlik denendi, hiçbirinde kalem yok';
 
       const cikar = (a,b) => (a==null) ? null : (b==null ? a : a-b);
       const kumulatif = {}, ceyreklik = {};
@@ -378,12 +397,13 @@ export default async function handler(req, res){
       });
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ ok:true, id, oncekiId:onc||null, sablon:b1.sablon,
+      return res.status(200).json({ ok:true, id, oncekiId:b0Kullanilan||onc||null, sablon:b1.sablon,
         bulunan:b1.bulunan, toplam:b1.toplam, eksik:b1.eksik,
         kumulatif, ceyreklik,
         /* SEBEBİ SÖYLE — "ayrıştırılamadı" tek başına işe yaramaz (§145) */
-        oncekiDurum: onc ? (b0 && b0.ok ? { ok:true, bulunan:b0.bulunan, sablon:b0.sablon }
-                                        : { ok:false, sebep:b0Hata || 'bilinmiyor', http:(b0&&b0.http)||null }) : null,
+        oncekiDurum: onc ? (b0 && b0.ok
+          ? { ok:true, kullanilan:b0Kullanilan, bulunan:b0.bulunan, sablon:b0.sablon, denemeler }
+          : { ok:false, sebep:b0Hata || 'bilinmiyor', denemeler }) : null,
         uyari: (onc && (!b0 || !b0.ok)) ? ('önceki dönem ayrıştırılamadı ('+(b0Hata||'sebep bilinmiyor')+') — çeyreklik yok, kümülatif var') : b1.uyari,
         not: 'kumulatif = KAP dönemsel · ceyreklik = cari − önceki. STOK kalemleri (özkaynak, nakit) çıkarılmaz. Birim BİN TL.' });
     }catch(e){ return res.status(200).json({ ok:false, id, hata:String(e.message||e).slice(0,140) }); }
