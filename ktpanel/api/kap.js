@@ -118,7 +118,22 @@ async function _bilancoAyristir(id){
       while((m = kalip.exec(h)) !== null){
         const dilim = h.slice(m.index, m.index + 3000);
         const hucreler = [...dilim.matchAll(/>([\-\(]?[\d.,]{3,})\s*</g)].map(x=>_sayiCoz(x[1])).filter(v=>v!==null);
-        if(hucreler.length >= 1) return { deger:hucreler[0], onceki:hucreler[1] ?? null, etiket:e };
+        /* §212 DÖRT SÜTUN. İlk iki hücreyi almak YETMEZ.
+           Türk ara dönem raporları DÖRT sütun taşır:
+             1 Oca–30 Haz 2026 | 1 Oca–30 Haz 2025 | 1 Nis–30 Haz 2026 | 1 Nis–30 Haz 2025
+           yani KÜMÜLATİF ikisi, ÇEYREKLİK ikisi.
+           NEDEN ÖNEMLİ: çeyrekliği "6A − 3A" ile hesaplamak ENFLASYON
+           MUHASEBESİ altında YANLIŞ. Ölçüldü — TOASO 2Ç26:
+             çıkarma  106.687.189   ·   gerçek 100.016.179   fark +6,7 mlr
+           Çünkü 1Ç26 raporu 1Ç26 satın alma gücünde, 2Ç26 raporu aynı dönemi
+           2Ç26 gücüne GÜNCELLEYEREK yazıyor. İki rapordan çıkarma yapılamaz.
+           ÇÖZÜM: raporun KENDİ çeyrek sütunlarını oku. Aynı rapor, aynı fiyat
+           seviyesi, çıkarma yok. */
+        if(hucreler.length >= 1) return {
+          deger: hucreler[0], onceki: hucreler[1] ?? null,          // kümülatif
+          ceyrek: hucreler[2] ?? null, ceyrekOnceki: hucreler[3] ?? null,
+          hepsi: hucreler.slice(0,6),                               // teşhis: sütun yapısı görünsün
+          etiket: e };
       }
     }
     return null;
@@ -397,10 +412,19 @@ export default async function handler(req, res){
         const c = b1.kalemler[k]; if(!c) return;
         kumulatif[k] = { deger:c.deger, onceki:c.onceki };
         if(_STOK.has(k)){ ceyreklik[k] = { deger:c.deger, onceki:c.onceki, tur:'stok' }; return; }
-        if(!onc){ ceyreklik[k] = { deger:c.deger, onceki:c.onceki, tur:'kümülatif (önceki dönem verilmedi)' }; return; }
+        /* §212b ÖNCELİK SIRASI:
+           1. RAPORUN KENDİ çeyrek sütunu — en doğru, aynı fiyat seviyesi
+           2. çıkarma — yalnız 1. yoksa; ENFLASYON SAPMASI TAŞIR, işaretlenir
+           3. 1. dönemse kümülatif zaten çeyrekliktir */
+        if(c.ceyrek != null){
+          ceyreklik[k] = { deger:c.ceyrek, onceki:c.ceyrekOnceki, tur:'rapor sütunu' };
+          return;
+        }
+        if(!onc){ ceyreklik[k] = { deger:c.deger, onceki:c.onceki, tur:'kümülatif (çeyrek sütunu yok)' }; return; }
         const p = (b0 && b0.ok && b0.kalemler[k]) || null;
         if(!p){ ceyreklik[k] = { deger:null, onceki:null, tur:'hesaplanamadı' }; return; }
-        ceyreklik[k] = { deger: cikar(c.deger,p.deger), onceki: cikar(c.onceki,p.onceki), tur:'ceyreklik' };
+        ceyreklik[k] = { deger: cikar(c.deger,p.deger), onceki: cikar(c.onceki,p.onceki),
+          tur:'çıkarma (⚠ enflasyon sapması taşır)' };
       });
 
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
