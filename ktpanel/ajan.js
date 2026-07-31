@@ -799,10 +799,21 @@ async function _notMotoru(){
   parti.forEach((x,i)=>{
     const yeni=j[String(i+1)]!==undefined ? j[String(i+1)] : j[x.ad];
     if(yeni&&typeof yeni==='string'&&yeni.length>40){
+      /* §243 KURAL VARDI, YAPTIRIM YOKTU.
+         §111 canlı kartta rakam yasağını koydu ve istem bunu AÇIKÇA söylüyor.
+         Ama denetim yalnız RAPORLUYORDU: ihlal eden not yine de yayınlanıyor,
+         günlüğe uyarı düşüyor, panel kendisiyle çelişmeye devam ediyordu.
+         Uyarı her turda tekrarlanınca gürültüye dönüştü — okunmaz oldu.
+         ARTIK REDDEDİLİR: eski not korunur, kart bir sonraki turda yeniden denenir.
+         NEDEN ESKİ NOT DAHA İYİ: birkaç saat eski bir not tolere edilir; tabloyla
+         ÇELİŞEN bir not okuyucuya hangisinin doğru olduğunu sordurur ve panelin
+         TAMAMINI şüpheli kılar. Eskilik görünür bir kusur, çelişki gizli bir yalan.
+         İSTİSNA: eşik/hedef ifadeleri meşru ("%2 hedefi", "%20 eşiği") — sabittir,
+         tabloyla çelişmez. Onlar geçer. */
+      const _oranVar = /%\s*[-−+]?\d|[-−+]?\d+[.,]\d+\s*%/.test(yeni);
+      const _esikMi  = /%\s*[\d.,]+\s*(hedef|eşi[kğ]|sınır|band|bandı|üzeri|altı|üstü|üzerinde|altında)/i.test(yeni);
+      if(x.canli && _oranVar && !_esikMi){ rakamUyari.push(x.ad); return; }
       x.nt.innerHTML=imzaEkle(yeni);   // §110: önce eski imza kalıntıları silinir
-      // §111 denetimi: canlı kartta oran kaldıysa RAPORLA. Kesmiyoruz — "%20 eşiğinin
-      // altında" gibi meşru kullanımlar var; ama sessiz bırakmak da yok (§106 dersi).
-      if(x.canli && /%\s*[-−+]?\d|[-−+]?\d+[.,]\d+\s*%/.test(yeni)) rakamUyari.push(x.ad);
       x.nt.dataset.ebu='1';
       kayitli[x.ad]={ html:x.nt.innerHTML, hash:x.hash, ts:simdi, saat:saat() };
       g++;
@@ -810,7 +821,19 @@ async function _notMotoru(){
   });
   notKaydet(kayitli);
   if(g<parti.length) kayit('⚠ eşleşmeyen yanıt anahtarları: '+Object.keys(j).slice(0,6).join(','));
-  if(rakamUyari.length) kayit('⚠ CANLI kartta rakam yazıldı (§111 — tabloyla çelişebilir): '+rakamUyari.slice(0,4).join(' / '));
+  /* §243b GÜNLÜK GÜRÜLTÜSÜ. Aynı uyarı her turda tekrarlanınca okunmaz olur —
+     kullanıcı bugün tam bunu sordu. Yalnız ihlal eden kart KÜMESİ DEĞİŞTİYSE yaz. */
+  if(rakamUyari.length){
+    const imza = rakamUyari.slice().sort().join('|');
+    if(imza !== AJAN.__sonRakamIhlal){
+      AJAN.__sonRakamIhlal = imza;
+      kayit('§111 yaptırım: '+rakamUyari.length+' not REDDEDİLDİ (canlı kartta rakam) — eski not korundu: '+
+        rakamUyari.slice(0,4).join(' / '));
+    }
+  } else if(AJAN.__sonRakamIhlal){
+    AJAN.__sonRakamIhlal = null;
+    kayit('§111: canlı kartlarda rakam ihlali kalmadı ✓');
+  }
   kayit('Not motoru: '+g+'/'+parti.length+' not güncellendi 🤖'+(kirli.length>parti.length?' · '+(kirli.length-parti.length)+' sırada':''));
   if(g>0 && kirli.length>parti.length){
     kayit('⚡ hız modu: kuyruk sürüyor — 20 sn sonra sonraki parti');

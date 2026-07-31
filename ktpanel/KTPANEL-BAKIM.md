@@ -2715,6 +2715,45 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 243. KURAL VARDI, YAPTIRIM YOKTU (31 Tem)
+
+Kullanici Ebu gunlugunu gosterdi:
+  [14:47] ⚠ CANLI kartta rakam yazıldı (§111 — tabloyla çelişebilir): Emtia
+  [14:46] ⚠ CANLI kartta rakam yazıldı (§111): GLOBAL RİSK BAROMETRESİ
+Uyari her turda tekrarliyordu.
+
+### 243.1 TESHIS: UC KATMAN VARDI, ORTADAKI BOSTU
+  KURAL   §111 — canli kartta rakam yazma          ✓ var
+  ISTEM   modele ACIKCA soyluyor ("⚠ [CANLI] ...")  ✓ var
+  YAPTIRIM                                          ✗ YOK
+Denetim yalniz RAPORLUYORDU. Ihlal eden not YINE DE YAYINLANIYOR, gunluge
+uyari dusuyor, panel kendisiyle celismeye devam ediyordu.
+§111'in kendi yorumunda gerekce yaziliydi: "Kesmiyoruz — '%20 eşiğinin
+altında' gibi meşru kullanımlar var." Endise DOGRUYDU ama cozum yanlisti:
+istisna varsa ISTISNAYI TANIMLA, kurali gevset degil.
+
+### 243.2 COZUM
+    oranVar && !esikMi  ->  NOT REDDEDILIR, eski not korunur
+esikMi: "%2 hedefi" · "%20 eşiği" · "%5 üzeri" · "%3 altında" gibi SABIT
+ifadeler. Bunlar tabloyla celismez cunku degismezler.
+TEST EDILDI — alti vaka, altisi da dogru ayrildi.
+
+### 243.3 NEDEN ESKI NOT, CELISEN NOTTAN IYI
+Birkac saat eski bir not TOLERE EDILIR: kullanici imzadaki saati gorur.
+Tabloyla CELISEN bir not ise okuyucuya "hangisi dogru" sorusunu sordurur ve
+panelin TAMAMINI supheli kilar.
+ESKILIK GORUNUR BIR KUSUR, CELISKI GIZLI BIR YALANDIR.
+Kart bir sonraki turda yeniden denenir; model bu sefer kurala uyarsa yayinlanir.
+
+### 243.4 GUNLUK GURULTUSU (§243b)
+Ayni uyari her turda tekrarlaniyordu — kullanicinin fark etmesinin sebebi buydu.
+Artik yalniz ihlal eden kart KUMESI DEGISTIYSE yazilir, duzelince de
+"ihlal kalmadı ✓" der.
+Surekli tekrarlanan bir uyari, uyari olmaktan cikar; arka plan gurultusune
+doner ve GERCEK bir uyari geldiginde de gorulmez.
+
+ajan.js v=20260731m. DOSYALAR: ajan.js + index.html
+
 ## 242. AVRUPA ENFLASYON KARTI — ECB'den kirilimli (31 Tem)
 
 Kullanici: "Avrupa kartinda enflasyon kartı yok, ECB apisinden ceker misin?"
