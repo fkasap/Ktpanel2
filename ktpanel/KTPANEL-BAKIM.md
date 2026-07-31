@@ -2715,6 +2715,53 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 238. FINTABLES MCP — dogru arac elimin altindaydi (31 Tem)
+
+Kullanici: "abi fintablesten ceksene." HAKLI. Iki tur web aramasi yapip
+"acilanan rakamlari bulamiyorum" dedim; oysa FINTABLES MCP BAGLIYDI.
+Tek sorguda geldi.
+
+### 238.1 NE YAPTIM
+    hisse_finansal_tablolari -> YKBNK 2026/6 yayinlanmis mi?
+      -> 2026-07-31T05:00:31Z (08:00 TSI) · KAP 1639924 · sablon 'bank'
+    hisse_finansal_tablolari_gelir_tablosu_kalemleri -> 45 kalem, try_ceyreklik
+    ayni tablodan 1C26 (2026/3) ve 2C25 (2025/6) -> karsilastirma
+Uc sorgu, tam veri, CEYREKLIK sutun (enflasyon sapmasi yok).
+Web aramasi iki turdur bulamadigi rakami Fintables ANINDA verdi — cunku
+KAP'a dusen veriyi ISLEYIP saklyor, haber sitesinin yazmasini beklemiyor.
+
+### 238.2 DERS — ARAC ENVANTERINI KONTROL ET
+Bu oturumda KAP ayristiricisi kurarken "Fintables bagimliligini kirdik" diye
+sevindim (§207.1). Dogruydu — AMA Fintables'i KULLANMAYI birakmak anlamina
+gelmiyordu. Bagimliligi kirmak, aracin degerini yok etmez.
+Ustelik hiz farki buyuk: KAP ayristirici 5 MB sayfa cekip regex ile
+ayristiriyor; Fintables tek SQL sorgusu. Ikisi FARKLI ISLER icin:
+  · KAP ayristirici -> panelde CANLI, sunucudan, aninda, bagimsiz
+  · Fintables MCP   -> BURADA, oturum icinde, kart yazarken
+DERS: elde birden fazla arac varsa, gorevin dogru aracini SEC. "Yeni kurdum"
+demek, "her yerde onu kullan" demek degil.
+
+### 238.3 YKBNK BULGUSU — teshis dogru, SEBEP yanlis
+Is Yatirim "YKBNK sektorun gerisinde kalacak: marj baskisi + zayif ticari
+gelirler" demisti.
+GERCEKLESEN: net faiz geliri c/c +%2,0 ARTTI — marj baskisi OLMADI.
+Yonetim de 1C'de "2C'de marjda asagi yonlu seyir" demisti, o da olmadi.
+Kari tek basina TICARI ZARAR dusurdu: −27,26 mlr (c/c %45 derinlesme),
+altinda turev finansal islemlerden −39,94 mlr (1C: −9,72, DORT KAT).
+Yani tahmin TUTTU (10,72 vs 10,76 beklenti) ama GEREKCESI tutmadi.
+BU AYRIM ONEMLI: dogru sayiya yanlis sebeple ulasan bir tahmin, gelecek
+ceyrekte YANLIS sayiya goturur.
+
+### 238.4 UC BANKA ORTAK DESENI
+    GARAN 30,30 mlr · AKBNK 15,20 mlr · YKBNK 10,72 mlr (2C ceyreklik net kar)
+Ucunde de AYNI YAPI: cekirdek bankacilik (net faiz + komisyon) TUTUYOR,
+ticari zarar ve karsilik ALT SATIRI YIYOR.
+Bu, panelin TL/Sabit Getirili tezine ve PPK patikasina dogrudan girdi:
+bankalarin ticari zarari faiz patikasina duyarli; indirim dongusu hizlanirsa
+bu kalem TERSINE DONER.
+
+DOSYALAR: inceleme-ai.json (28 kart)
+
 ## 237. TASLAK KARTINDA UC KUSUR (31 Tem)
 
 BORSK taslagi onaylandi, Earnings AI'a dustu. Uc sorun:

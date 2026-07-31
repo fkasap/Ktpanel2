@@ -3,6 +3,62 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "YKBNK",
+   "ad": "Yapı Kredi",
+   "donem": "2Ç26 (6A)",
+   "tarih": "31 Tem 2026",
+   "tarih_iso": "2026-07-31",
+   "sablon": "bist",
+   "skor": 4.5,
+   "ozet": "Beklenti tutturuldu ama beklentinin kendisi zaten düşüktü. Net kâr 10,72 mlr ₺ — Şeker Yatırım'ın 10,76 mlr beklentisiyle çizgide (sapma −%0,5). Sorun rakamın beklentiye uyması değil, ç/ç −%47,2 ve y/y −%5,4 olması. ÇEKİRDEK BANKACILIK SAĞLAM: net faiz geliri ç/ç +%2,0 ve y/y +%68,3, komisyon +%2,7 / +%18,8. Kârı yiyen kalem TİCARİ ZARAR: 2Ç'de −27,26 mlr ₺, ç/ç %45 derinleşti. Altında türev finansal işlemlerden −39,94 mlr ₺ var (1Ç: −9,72). İş Yatırım 'YKBNK sektörün gerisinde kalacak, sebep marj baskısı ve zayıf ticari gelirler' demişti — ikinci yarısı tuttu, birincisi TUTMADI.",
+   "metrikler": [
+    {
+     "ad": "Net kâr (2Ç)",
+     "deger": "10,72 mlr ₺",
+     "cc": "ç/ç −%47,2 (1Ç26: 20,30)",
+     "yoy": "−%5,4 (2Ç25: 11,33) · beklenti 10,76 → çizgide"
+    },
+    {
+     "ad": "Net faiz geliri (2Ç)",
+     "deger": "59,26 mlr ₺",
+     "cc": "ç/ç +%2,0 — marj baskısına rağmen ARTTI",
+     "yoy": "+%68,3 (2Ç25: 35,20)"
+    },
+    {
+     "ad": "Net komisyon (2Ç)",
+     "deger": "33,32 mlr ₺",
+     "cc": "ç/ç +%2,7",
+     "yoy": "+%18,8 — enflasyonun altında"
+    },
+    {
+     "ad": "Ticari kâr/zarar (2Ç)",
+     "deger": "−27,26 mlr ₺",
+     "cc": "ç/ç %45 DERİNLEŞTİ (1Ç: −18,81)",
+     "yoy": "−15,35 → −27,26 · türev −39,94, kambiyo +11,71"
+    },
+    {
+     "ad": "Karşılıklar (2Ç)",
+     "deger": "−17,33 mlr ₺",
+     "cc": "ç/ç −%20,8 AZALDI (1Ç: −21,88)",
+     "yoy": "+%40,3 (2Ç25: −12,35)"
+    },
+    {
+     "ad": "Net faaliyet kârı (2Ç)",
+     "deger": "14,46 mlr ₺",
+     "cc": "ç/ç −%46,6",
+     "yoy": "+%11,1"
+    }
+   ],
+   "onemli": [
+    "MARJ BASKISI GERÇEKLEŞMEDİ, TİCARİ ZARAR GERÇEKLEŞTİ: İş Yatırım iki sebep saymıştı — marj baskısı ve zayıf ticari gelirler. Net faiz geliri ç/ç +%2 ARTTI, yani marj tarafı beklenenden iyi. Yönetim 1Ç sunumunda '2Ç'de marjda aşağı yönlü seyir' demişti; o da gerçekleşmedi. Kârı düşüren TEK BAŞINA ticari zarar. Doğru teşhis yanlış sebeple konmuş.",
+    "TÜREV ZARARI DÖRT KATLANDI: 1Ç'de −9,72 mlr olan türev finansal işlem zararı 2Ç'de −39,94 mlr'a çıktı. Kambiyo +11,71 mlr ile kısmen dengeledi ama net ticari zarar −27,26 mlr. Bu kalem swap maliyeti ve kur/faiz pozisyonundan geliyorsa faiz patikasıyla düzelir; yapısal bir korunma zararıysa devam eder. AYRIMI DİPNOTTAN OKUNMALI — kart bu ayrımı yapamıyor.",
+    "KARŞILIK RAHATLADI, ÇELİŞKİ VAR: karşılıklar ç/ç −%20,8 azaldı (21,88 → 17,33) ama y/y +%40,3 arttı. GARAN'da da (§182), TSKB'de de (§160) aynı desen çıkmıştı. Çeyreklik bakan 'aktif kalitesi rahatladı' der, yıllık bakan 'baskı sürüyor' der. İKİSİ DE DOĞRU: 1Ç'nin karşılığı anormal yüksekti, 2Ç normalleşme. Trend dönüşü olarak okunmamalı."
+   ],
+   "guidance": "Yönetim 2026 hedeflerini 1Ç'de korumuştu: TL kredilerde büyüme, net faiz marjında 100+ baz puan iyileşme, komisyonda enflasyon civarı artış, gider büyümesinde sınır, 150–175 baz puan net kredi riski maliyeti. İZLENECEK ÜÇ EŞİK: (1) türev zararı 3Ç'de daralıyor mu — kârın tek belirleyicisi bu; (2) net faiz geliri ivmesi korunuyor mu (yönetim 3Ç'de 1Ç seviyelerine dönüş bekliyordu); (3) komisyon büyümesi %18,8 ile enflasyonun altında, reel daralma sürerse gider tarafı sıkışır.",
+   "kaynak": "Fintables (KAP bildirim 1639924 · 31 Tem 2026 08:00) — çeyreklik sütun, enflasyon sapması yok. Beklenti: Şeker Yatırım 10.764 mn. Sektör görüşü: İş Yatırım 2Ç26 tahmin raporu.",
+   "tez": "YKBNK katılım evreninde DEĞİL — konvansiyonel banka, XK100/XKTUM/XKTMT üyesi değil, model portföyde ve analist takibinde yok. Panel açısından KAPSAM DIŞI. Yine de yazıldı çünkü ÜÇ BANKA KARŞILAŞTIRMASI tamamlanıyor: GARAN 30,30 mlr · AKBNK 15,20 mlr · YKBNK 10,72 mlr çeyreklik net kâr. Üçünde de ORTAK DESEN var — çekirdek bankacılık (net faiz + komisyon) tutarken ticari zarar ve karşılık alt satırı yiyor. Bu, panelin TL/Sabit Getirili tezinin ve PPK patikasının doğrudan girdisi: bankaların ticari zararı faiz patikasına duyarlı ve indirim döngüsü hızlanırsa bu kalem tersine döner."
+  },
+  {
    "kod": "GARAN",
    "ad": "Garanti BBVA",
    "donem": "2Ç26 (6A)",
@@ -2044,7 +2100,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "31 Tem 2026 — AAPL · AMZN (30 Tem kapanış sonrası) eklendi.",
+ "guncelleme": "31 Tem 2026 — YKBNK 2Ç26 eklendi (Fintables). AAPL · AMZN 30 Tem.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
