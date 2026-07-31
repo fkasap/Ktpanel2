@@ -401,6 +401,24 @@ export default async function handler(req, res){
        (TR/EN sürüm, düzeltme, ek belge). İlk bildirim ASIL açıklamadır;
        sonrakiler onun tekrarı. Nöbet ve gecikme hesabı ilkini kullanmalı.
        §197'deki "aynı dönemin ikinci bildirimi" sorunu kökten burada çözülür. */
+    /* §227 BAŞLIK AYRIMI — deneme yanılma BİTTİ.
+       Ham KAP akışı üç ayrı bildirimi AYNI sınıfta (FR) veriyor:
+         "Finansal Rapor"                      -> TABLOLAR BURADA
+         "Faaliyet Raporu (Konsolide)"         -> tablo YOK, düz metin
+         "Sorumluluk Beyanı (Konsolide Olmayan)" -> tablo YOK, imza sayfası
+       ÖLÇÜLDÜ: TOASO 1639759 = Faaliyet Raporu; 0/8 kalem çıkmasının sebebi
+       buydu. §211'de "en erken bildirim finansal tablo olmayabilir" diye
+       tespit etmiş ama SEBEBİNİ bilmediğim için sırayla denemeye başlamıştım.
+       Şimdi sebep belli: BAŞLIK söylüyor.
+       AYRICA "Konsolide Olmayan" ibaresi SOLO şablon demek (§220) — hangi
+       etiket setinin kullanılacağı önceden biliniyor. */
+    const _BASLIK_TIP = (b) => {
+      const t = String(b||'');
+      if(/^Finansal Rapor/i.test(t)) return 'tablo';
+      if(/Faaliyet Raporu/i.test(t)) return 'faaliyet';
+      if(/Sorumluluk Beyan/i.test(t)) return 'beyan';
+      return 'diger';
+    };
     const kayit = new Map();
     ham.forEach(x => {
       if(String(x.disclosureClass||'').toUpperCase() !== 'FR') return;
@@ -415,6 +433,9 @@ export default async function handler(req, res){
         const yeni = { kod, tarih, saat, yil:x.year, donem:x.period, tur:x.ruleType||null,
           gecikmeGun: gecikmeHesap(x.year, x.period, x.ruleType, tarih),
           id: idx, unvan: x.kapTitle || null, tekrar: 1,
+          /* Başlıktan türeyen iki bilgi: tablo taşıyor mu, solo mu konsolide mi */
+          tip: _BASLIK_TIP(x.subject || x.kapTitle),
+          solo: /Konsolide Olmayan/i.test(String(x.subject||'')),
           /* §211 TÜM KİMLİKLER. Tekilleştirme en erkeni tutuyordu ama EN ERKEN
              BİLDİRİM FİNANSAL TABLO OLMAYABİLİR — faaliyet raporu, ek belge ya
              da denetim raporu olabilir ve içinde bilanço tablosu bulunmaz.
@@ -423,12 +444,18 @@ export default async function handler(req, res){
              işleyen (1639026) ORTADAKİYDİ.
              Artık hepsi `idler` dizisinde; ayrıştırıcı sırayla dener. */
           idler: [idx],
+          /* TABLO TAŞIYAN kimlikler ayrı tutulur — ayrıştırıcı ÖNCE bunları
+             dener, deneme sayısı 7'den 1'e iner. */
+          tabloIdler: _BASLIK_TIP(x.subject || x.kapTitle) === 'tablo' ? [idx] : [],
           url: idx ? 'https://www.kap.org.tr/tr/Bildirim/'+idx : null };
         yeni.gec = yeni.gecikmeGun != null && yeni.gecikmeGun > 80;
         const eski = kayit.get(anahtar);
         if(!eski){ kayit.set(anahtar, yeni); return; }
         eski.tekrar++;
         if(eski.idler.indexOf(idx) < 0) eski.idler.push(idx);
+        if(_BASLIK_TIP(x.subject || x.kapTitle) === 'tablo' && eski.tabloIdler.indexOf(idx) < 0)
+          eski.tabloIdler.push(idx);
+        if(/Konsolide Olmayan/i.test(String(x.subject||''))) eski.solo = true;
         /* EN ERKEN gösterilir (gecikme hesabı ona göre) ama TÜM kimlikler
            saklanır — hangisinin finansal tablo olduğu ancak denenerek bulunur. */
         if(yeni.tarih < eski.tarih || (yeni.tarih === eski.tarih && yeni.saat < eski.saat)){
@@ -436,6 +463,13 @@ export default async function handler(req, res){
           kayit.set(anahtar, yeni);
         }
       });
+    });
+    /* idler dizisini TABLO TAŞIYANLAR ÖNDE olacak şekilde sırala */
+    kayit.forEach(v => {
+      if(v.tabloIdler && v.tabloIdler.length){
+        const digerleri = v.idler.filter(i => v.tabloIdler.indexOf(i) < 0);
+        v.idler = v.tabloIdler.concat(digerleri);
+      }
     });
     const fr = [...kayit.values()].sort((a,b)=>
       a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : (a.saat < b.saat ? 1 : -1));
