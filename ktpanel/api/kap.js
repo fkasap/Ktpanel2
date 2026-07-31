@@ -326,7 +326,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-m';
+const _SURUM = 'kap-2026-07-31-n';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -1140,10 +1140,25 @@ export default async function handler(req, res){
       cookie = sc.map(c=>c.split(';')[0]).join('; ');
     }catch(e){ /* warmup başarısızsa çerezsiz dene */ }
 
-    // 2) byCriteria — son 2 günlük pencere (2000 tavanına uzak)
+    /* §245i PENCERE UYUMSUZLUĞU — çağıran 30 gün sanıyordu, kaynak yarım gün veriyordu.
+       Eskiden burası SABİTTİ: 2 günlük pencere + .slice(0,150). sukuk.js ise
+       /api/kap'ı PARAMETRESİZ çağırıp sonucu 30 GÜNLÜK süzgeçten geçiriyordu.
+       Üstelik asıl darboğaz pencere değil DİLİMDİ: KAP günde ~280 bildirim
+       üretiyor, 150 kayıt ≈ yarım gün. Yani sukuk süzgeci 30 gün soruyor,
+       fiilen son YARIM GÜNÜ tarıyordu ve "canliAdet:0" dönüyordu.
+       Bu, boş sonuçtan daha kötüsüydü: yanıt `pencereGun:30` diyordu, yani
+       YANLIŞ BİLGİ veriyordu — "30 gün tarandı, piyasa sakin" dedirtiyordu.
+       §243'ün ayrımı: eskilik görünür kusur, ÇELİŞKİ gizli yalandır.
+       Artık gun/limit dışarıdan verilebiliyor. VARSAYILANLAR DEĞİŞMEDİ (2 gün,
+       150 kayıt) — mevcut çağıranların davranışı aynı kalsın diye.
+       TAVAN: §''de ölçülmüş — 7 günde 1978 kayıt geliyor, KAP tavanı 2000.
+       Bu yüzden gun en fazla 10, limit en fazla 2000. Zaman aşımı da pencereye
+       göre ölçekleniyor: dar pencerede 9 sn yeterli, geniş pencerede değil. */
+    const gunIst = Math.min(Math.max(parseInt(req.query && req.query.gun) || 2, 1), 10);
+    const limIst = Math.min(Math.max(parseInt(req.query && req.query.limit) || 150, 50), 2000);
     const gun = 86400000, simdi = new Date();
     const tarih = d => d.toISOString().slice(0,10);
-    const govde = { fromDate: tarih(new Date(simdi - 2*gun)), toDate: tarih(simdi), mkkMemberOidList: [], subjectList: [] };
+    const govde = { fromDate: tarih(new Date(simdi - gunIst*gun)), toDate: tarih(simdi), mkkMemberOidList: [], subjectList: [] };
     const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
       method: 'POST',
       headers: {
@@ -1154,15 +1169,21 @@ export default async function handler(req, res){
         ...(cookie ? { 'cookie': cookie } : {})
       },
       body: JSON.stringify(govde),
-      signal: AbortSignal.timeout(9000)
+      signal: AbortSignal.timeout(gunIst <= 2 ? 9000 : 22000)
     });
     if (!r.ok) throw new Error('KAP HTTP '+r.status);
     const j = await r.json();
     const dizi = Array.isArray(j) ? j : (j.items || j.data || []);
+    const hamAdet = dizi.length;
     const items = dizi.map(normalize).filter(Boolean)
-      .sort((a,b)=>b.i-a.i).slice(0, 150);
+      .sort((a,b)=>b.i-a.i).slice(0, limIst);
     return res.status(200).json({ surum:_SURUM,  ok: items.length>0, kaynak:'byCriteria', alinma:new Date().toISOString(),
-      pencere: govde.fromDate+'..'+govde.toDate, items,
+      pencere: govde.fromDate+'..'+govde.toDate, pencereGun:gunIst, limit:limIst,
+      /* hamAdet = KAP'ın döndürdüğü, SÜZÜLMEDEN önceki kayıt sayısı.
+         Çağıran "0 sonuç" aldığında kaynağın mı sustuğunu yoksa süzgecin mi
+         elediğini AYIRT EDEBİLSİN diye (§245h: ayırt etmeyen teşhis yoktur).
+         hamAdet 2000'e dayanmışsa pencere KIRPILMIŞ demektir. */
+      hamAdet, tavanaDayandi: hamAdet >= 2000, items,
       ...(items.length ? {} : { err:'Uç yanıt verdi ama kayıt çözülemedi (şema değişmiş olabilir)' }) });
   }catch(e){
     return res.status(200).json({ surum:_SURUM,  ok:false, err:'KAP kaynağına ulaşılamadı: '+String(e.message||e).slice(0,120), alinma:new Date().toISOString(), items:[] });
