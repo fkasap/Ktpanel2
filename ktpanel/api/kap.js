@@ -332,7 +332,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-h';
+const _SURUM = 'kap-2026-07-31-i';
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -524,7 +524,18 @@ export default async function handler(req, res){
         /* EN ERKEN gösterilir (gecikme hesabı ona göre) ama TÜM kimlikler
            saklanır — hangisinin finansal tablo olduğu ancak denenerek bulunur. */
         if(yeni.tarih < eski.tarih || (yeni.tarih === eski.tarih && yeni.saat < eski.saat)){
-          yeni.tekrar = eski.tekrar; yeni.idler = eski.idler;
+          /* §234 tabloIdler DE TAŞINMALI — burası kırılmıştı.
+             Daha erken bir bildirim kaydın yerine geçerken `idler` taşınıyor
+             ama `tabloIdler` taşınmıyordu. TOASO'nun en erken bildirimi
+             "Faaliyet Raporu" olduğu için tabloIdler BOŞALIYOR, sonra §232
+             süzgeci kaydı tamamen ELİYOR: "bildirim bulunamadı".
+             Finansal Rapor orada duruyordu; kayıt süzgece takılıyordu.
+             §232'yi eklerken tekilleştirmenin bu dalını gözden kaçırdım —
+             onuncu "bir yeri değiştirip diğerini bırakma" vakası. */
+          yeni.tekrar = eski.tekrar;
+          yeni.idler = eski.idler;
+          yeni.tabloIdler = eski.tabloIdler;
+          yeni.solo = eski.solo || yeni.solo;
           kayit.set(anahtar, yeni);
         }
       });
