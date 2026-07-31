@@ -2886,8 +2886,44 @@ onerror'da false doner, tkYukle "grafik kutuphanesi yuklenemedi (CDN engelli
 olabilir)" diyerek durum satirina yazar. DAMGA §B3'teki teshis yolu isliyor.
 Aksiyon gerekmiyor — ama Teknik sekmesi bos acilirsa bakilacak ilk yer burasi.
 
-app.js v=20260731z · ajan.js v=20260731n · api kap-2026-07-31-k
-DOSYALAR: app.js + ajan.js + index.html + guncelleme-plani.json + api/kap.js
+### 245g KOK NEDEN BULUNDU — DEGISKENLI import() PAKETE GIRMIYOR
+§245c'de eklenen teshis ISE YARADI: opak 500, teshisli 502'ye dondu ve konsolda
+"KAP yorum akisi HTTP 502 — statik yedek gosteriliyor" gorundu. Sebep:
+    async function _altModul(yol){ const m = await import(yol); ... }
+`import()` icine DEGISKEN veriliyordu. Vercel'in dosya izleyicisi (@vercel/nft)
+STATIK analiz yapar: `import('./_lib/x.js')` gibi SABIT DIZGEYI izler ve dosyayi
+dagitim paketine koyar; `import(yol)` gibi degiskeni IZLEYEMEZ. Sonuc:
+api/_lib/kapyorum.js ve sukuk.js dagitima HIC girmiyordu -> ERR_MODULE_NOT_FOUND.
+KANIT YAN YANA DURUYORDU, uc turdur bakmamisim:
+    api/data.js   require('./_lib/mail.js')    SABIT -> calisiyor
+    api/evds2.js  require('./_lib/tlref.js')   SABIT -> calisiyor
+    api/kap.js    import(yol)                  DEGISKEN -> tek bozuk dosya
+Yerelde calisip uretimde patlamasi da tam bunu soyluyordu: yerelde dosya diskte
+duruyor, uretimde pakete alinmamis. §245c'de "yerelde 200 dondu" olcumunu
+yapmistim ama bu isareti okumamistim — OLCUM YETMEZ, OKUNMASI DA GEREKIR.
+COZUM: her modul SABIT dizgeli kendi ok fonksiyonunda (_ALT_MODUL haritasi).
+Tembel yukleme korunuyor, nft artik izleyebiliyor.
+AYRICA vercel.json -> api/kap.js includeFiles:'api/_lib/**' (kemer + aski).
+DOGRULAMA: yorumlar soyuldu, canli kodda degiskenli import KALMADI, iki sabit
+dizge duruyor (ilk denetimim kusurluydu: satir basinda '*' aradi, oysa satirlar
+/* */ blogunun ICINDEydi — yanlis "CANLI KOD" alarmi verdi).
+
+### 245h SUNUCUYU KONUSTURUP ISTEMCIYI SAGIR BIRAKMISIM
+§245c'de sunucuya teshis govdesi ekledim: {mod, asama, hata, mesaj, ipucu}.
+Ama istemci tarafinda yazdigim satir:
+    if(!r.ok){ damgaUyar('HTTP '+r.status); return; }
+GOVDEYI OKUMADAN cikiyordu. Konsolda "HTTP 502" gorundu, SEBEBI gorunmedi.
+Teshis uretildi ve ayni turda cope atildi. Kok nedeni bulmak icin koda geri
+donup `_altModul`'u okumak gerekti — oysa cevap sunucunun yanitindaydi.
+DERS: bir teshis, OKUNMUYORSA YOKTUR. Teshis eklerken "bunu kim, nerede
+gorecek" sorusu kodun kendisi kadar onemli.
+Duzeltildi: hata govdesi ayristirilip hem damgaya hem konsola dusuyor.
+AYRICA mod=sukuk ayni hatanin ikinci kurbaniydi ve `catch(e){}` ile sessizdi —
+uc turdur gorunmemisti. Satir bazinda "CANLI" rozeti "canli degil" diyordu ama
+"niye degil" demiyordu. Artik konsola dusuyor.
+
+app.js v=20260731aa · ajan.js v=20260731n · api kap-2026-07-31-m
+DOSYALAR: app.js + index.html + api/kap.js + vercel.json
 
 
 ## 244. TEMETTU KARTI VE YIELD CURVE LAB KALDIRILDI (31 Tem)

@@ -10,7 +10,8 @@
    "maxDuration": 45
   },
   "api/kap.js": {
-   "maxDuration": 60
+   "maxDuration": 60,
+   "includeFiles": "api/_lib/**"
   },
   "api/katfon.js": {
    "maxDuration": 20

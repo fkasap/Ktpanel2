@@ -1675,7 +1675,21 @@ async function haberCanliCek(){
     const kodlar=(typeof TOP40!=='undefined'?TOP40:[]).join(',');
     const port=(()=>{ try{ return (poz||[]).filter(x=>x.tip==='hisse').map(x=>x.kod).join(','); }catch(e){ return ''; } })();
     const r=await fetch('/api/kap?mod=yorum&kodlar='+encodeURIComponent(kodlar)+'&portfoy='+encodeURIComponent(port)+'&gun=4&limit=18');
-    if(!r.ok){ damgaUyar('HTTP '+r.status); console.warn('[KTPanel] KAP yorum akışı HTTP',r.status,'— statik yedek gösteriliyor'); return; }
+    if(!r.ok){
+      /* §245h SUNUCUYU KONUŞTURUP İSTEMCİYİ SAĞIR BIRAKMIŞIM.
+         İlk halim `if(!r.ok){ damgaUyar('HTTP '+r.status); return; }` idi —
+         gövdeyi OKUMADAN çıkıyordu. Oysa §245c'de sunucuya tam da bu durum için
+         teşhis gövdesi eklemiştim: {mod, asama, hata, mesaj, ipucu}.
+         Sonuç: 31 Tem konsolunda "HTTP 502" göründü, SEBEBİ görünmedi — teşhis
+         üretildi ve çöpe atıldı. Bir teşhis, okunmuyorsa yok demektir.
+         Artık hata gövdesi de ayrıştırılıp konsola basılıyor. */
+      let tani=null;
+      try{ tani = await r.json(); }catch(_){}
+      const ozet = tani && (tani.mesaj || tani.err) ? (tani.mod||'?')+'/'+(tani.asama||'?')+': '+(tani.mesaj||tani.err) : '';
+      damgaUyar('HTTP '+r.status+(ozet?' · '+ozet:''));
+      console.warn('[KTPanel] KAP yorum akışı HTTP',r.status,'— statik yedek gösteriliyor', tani||'(gövde okunamadı)');
+      return;
+    }
     const j=await r.json();
     if(j&&j.ok&&j.items&&j.items.length){
       HABER_CANLI=j;
@@ -5823,7 +5837,17 @@ async function ihracRender(){
     // VKŞ ünvan haritasıyla zenginleştirir ve statik arşivle birleştirir.
     // Düşerse statik dosyaya döner (damgalı yedek deseni). Hazine bloğu bundan bağımsızdır.
     let d=null;
-    try{ const r=await fetch('/api/kap?mod=sukuk'); const j=await r.json(); if(j&&j.ok)d=j; }catch(e){}
+    /* §245h: sebep artık yutulmuyor. Satır bazında "CANLI" rozeti zaten var,
+       yani yedeğe düşüş görsel olarak sezilebiliyordu — ama NEDEN düştüğü
+       hiçbir yerde yoktu. mod=sukuk, mod=yorum ile AYNI hatanın kurbanıydı
+       (§245g: değişkenli import paketlenmiyordu) ve boş catch yüzünden üç
+       turdur görünmemişti. Rozet "canlı değil" der; konsol "niye değil" der. */
+    try{
+      const r=await fetch('/api/kap?mod=sukuk');
+      const j=await r.json();
+      if(j&&j.ok) d=j;
+      else console.warn('[KTPanel] sukuk canlı akışı düştü → statik arşiv:', (j&&(j.mesaj||j.err))||('HTTP '+r.status), j||'');
+    }catch(e){ console.warn('[KTPanel] sukuk canlı akışı düştü → statik arşiv:', (e&&e.message)||e); }
     if(!d) d=await (await fetch('/sukuk-ihrac.json',{cache:'no-store'})).json();
     const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
     const trh=(s)=>{const p=s.split('-');return p[2]+' '+ay[parseInt(p[1])-1]+' '+p[0].slice(2);};
