@@ -2715,6 +2715,39 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 237. TASLAK KARTINDA UC KUSUR (31 Tem)
+
+BORSK taslagi onaylandi, Earnings AI'a dustu. Uc sorun:
+
+### 237.1 DONEM IKI KEZ BICIMLENDI: "2026/2026/1"
+Nobet kaydinda `donem` ZATEN "2026/1" olarak biciimlendiriliyordu.
+Taslak dugmesi bir kez DAHA yil+'/'+donem yapiyordu -> "2026/2026/1".
+DUZELTME: biciimlendirme TEK YERDE (nobet kaydinda), dugme onu OLDUGU GIBI
+gecirir.
+DERS: ayni degeri iki yerde bicimlendirmek, iki yerde hesaplamakla ayni
+sinifta. Bir yerde yap, digeri KULLANSIN.
+
+### 237.2 KART TARIHI BUGUN YAZILIYORDU
+`tarih_iso` uretim gunu (31 Tem) olarak yaziliyordu. BORSK 30 Tem'de
+aciklamisti; kart GARAN'in (30 Tem) USTUNE cikti ve listede yanlis yere
+oturdu.
+Siralama tarih_iso'ya gore ve dogru olan BILDIRIM TARIHI.
+DUZELTME: bildirim tarihi zincirin basindan sonuna tasiniyor
+(nobet kaydi `tsIso` -> dugme -> POST `tarihIso` -> kart `tarih_iso`).
+Uretim zamani `_uretim` alaninda ayrica duruyor, kaybolmuyor.
+
+### 237.3 NOBET ONAYLANAN KARTI GORMUYORDU
+Nobet kartlari YALNIZ inceleme-ai.json'dan okuyordu. Onaylanan taslak
+buluta yaziliyor ve Earnings AI'da GORUNUYOR ama nobet onu gormedigi icin
+"kart bekliyor" demeye DEVAM EDIYORDU.
+Kullanici karti onayliyor, is bitiyor, nobet hala uyariyor — en can sikici
+YANLIS POZITIF turu: yapilan isi yapilmamis gostermek.
+app.js ayni birlestirmeyi §222b'de yapiyordu; NOBETE EKLEMEYI UNUTTUM.
+ONIKINCI "bir yeri degistirip digerini birakma" vakasi — ve yine ayni desen:
+bir birlestirme mantigi IKI TUKETICI tarafindan gerekiyordu, birine yazildi.
+
+ajan.js v=20260731k. DOSYALAR: ajan.js + api/ajanktp.js + index.html.
+
 ## 236. AAPL + AMZN KARTLARI — dortlu tablo tamamlandi (31 Tem)
 
 30 Tem kapanis sonrasi ikisi de acikladi. §184 kurali islendi: once Alpha

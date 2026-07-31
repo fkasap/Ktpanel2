@@ -369,6 +369,21 @@ async function bilancoNobeti(){
     if(!kr.ok || !ir.ok) return null;
     const kap = await kr.json(), inc = await ir.json();
     const kartlar = {};
+    /* §237c ONAYLANAN TASLAKLAR DA SAYILSIN.
+       Nöbet kartları YALNIZ inceleme-ai.json'dan okuyordu. Onaylanan taslak
+       buluta/yerele yazılıyor ve Earnings AI'da görünüyor AMA nöbet onu
+       görmediği için "kart bekliyor" demeye devam ediyordu.
+       Kullanıcı kartı onaylıyor, iş bitiyor, nöbet hâlâ uyarıyor — en can
+       sıkıcı yanlış pozitif türü.
+       app.js aynı birleştirmeyi yapıyor (§222b); nöbet de yapmalı. */
+    try{
+      (JSON.parse(localStorage.getItem('ktp_taslak_kart_v1')||'[]')||[]).forEach(t=>{
+        if(!t || !t.kod) return;
+        const kod = String(t.kod).toUpperCase();
+        const d = nobTarih(t.tarih_iso || t.tarih);
+        if(d && (!kartlar[kod] || d > kartlar[kod])) kartlar[kod] = d;
+      });
+    }catch(e){}
     (inc.kartlar||[]).forEach(k=>{
       const kod = String(k.kod||'').toUpperCase();
       const d = nobTarih(k.tarih);
@@ -437,7 +452,12 @@ async function bilancoNobeti(){
           baslik: (it.yil ? it.yil+'/'+it.donem+(it.tur?' · '+it.tur:'') : 'Finansal Rapor')
                   + (it.gec ? ' · ⚠ '+it.gecikmeGun+' GÜN GECİKMİŞ' : '')
                   + (it.tekrar>1 ? ' · '+it.tekrar+' bildirim' : ''),
+          /* §237 donem BURADA biçimlendiriliyor; düğme TEKRAR biçimlendirmemeli.
+             Önce düğme yil+'/'+donem yapıyordu ve donem zaten "2026/1" olduğu
+             için "2026/2026/1" çıkıyordu. Aynı değerin iki yerde
+             biçimlendirilmesi — bir yerde yap, diğeri kullansın. */
           donem: it.yil ? it.yil+'/'+it.donem : null, gec:!!it.gec,
+          tsIso: it.tarih || null,          // BİLDİRİM tarihi — kart sıralaması buna göre
           url:it.url||null, portfoyde:!!(typeof poz!=='undefined' && poz.some(p=>p.kod && String(p.kod).toUpperCase()===kod)),
           kartVar:!!kartT};
       }
@@ -475,7 +495,7 @@ function nobetCiz(){
              /api/ajanktp?mod=bilanco'dan. Tarayıcı ikisini sırayla çağırır —
              sunucudan sunucuya istek YOK (§208 dersi). */
           ((x.idler&&x.idler.length)
-            ? '<button class="mini" style="font-size:9px;padding:1px 6px;margin-right:5px" onclick="bilancoTaslak(this,&quot;'+esc(x.kod)+'&quot;,&quot;'+x.idler.join(',')+'&quot;,&quot;'+((x.yil||'')+'/'+(x.donem||''))+'&quot;)">taslak</button>' : '')+
+            ? '<button class="mini" style="font-size:9px;padding:1px 6px;margin-right:5px" onclick="bilancoTaslak(this,&quot;'+esc(x.kod)+'&quot;,&quot;'+x.idler.join(',')+'&quot;,&quot;'+esc(x.donem||'')+'&quot;,&quot;'+esc(x.tsIso||'')+'&quot;)">taslak</button>' : '')+
           '<span class="sub" style="font-size:9px">'+x.ts.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+
           (x.kartVar?' \u00b7 yeni d\u00f6nem':'')+'</span></div>').join('')+'</div>';
     } else if(B){
@@ -1025,7 +1045,7 @@ else basla();
    finansal tablo olduğu belli değildir (§211 — en erken çoğu zaman faaliyet
    raporudur). Sırayla denenir, ilk ayrışan kullanılır.
    TASLAK YAYINLANMAZ: ekranda gösterilir, kopyalanır. Skor ve karar insanda. */
-async function bilancoTaslak(btn, kod, idler, donem){
+async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
   const eski = btn.textContent; btn.disabled = true; btn.textContent = 'metrik…';
   const kutu = document.createElement('div');
   kutu.style.cssText = 'margin:6px 0 10px;padding:9px 11px;border-left:3px solid var(--mm2);background:var(--bg2);border-radius:0 6px 6px 0;font-size:11px;line-height:1.6;white-space:pre-wrap';
@@ -1059,7 +1079,7 @@ async function bilancoTaslak(btn, kod, idler, donem){
     kutu.textContent = 'metrikler alındı ('+met.bulunan+'/'+met.toplam+' kalem, '+met.temel+'). Yorum yazılıyor…';
     const r2 = await fetch('/api/ajanktp?mod=bilanco', {
       method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify({ kod, donem, temel:met.temel, sablon:met.sablon,
+      body: JSON.stringify({ kod, donem, tarihIso, temel:met.temel, sablon:met.sablon,
         metrikler:met.metrikler, isaretler:met.isaretler, birim:met.birim })
     });
     const j2 = await r2.json();
