@@ -177,7 +177,16 @@ export default async function handler(req, res){
      PENCERE: varsayılan 7 gün. KAP'ın 2000 kayıt tavanı var; 7 günde 1978
      kayıt geldi, yani tavan ZORLANIYOR. gun>10 istenirse iki dilime bölünür. */
   if (_mod === 'fr') {
+    /* §209 TARİH ARALIĞI. `gun` yalnız BUGÜNDEN geriye bakıyordu; geçmiş bir
+       çeyreğin bildirimini bulmak imkânsızdı (TOASO 1Ç26 nisan sonunda).
+       Artık ?bas=YYYY-MM-DD&son=YYYY-MM-DD ile herhangi bir pencere taranır.
+       `kod` verilirse yalnız o hisse döner — 2000 tavanına takılmadan geniş
+       aralık taramak için. */
     const gunIst = Math.min(Math.max(parseInt(req.query && req.query.gun) || 7, 1), 40);
+    const basIst = String((req.query && req.query.bas) || '').slice(0,10);
+    const sonIst = String((req.query && req.query.son) || '').slice(0,10);
+    const kodSuz = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
+    const ARALIK = /^\d{4}-\d{2}-\d{2}$/.test(basIst) && /^\d{4}-\d{2}-\d{2}$/.test(sonIst);
     const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
     let cookie = '';
     try{
@@ -192,7 +201,13 @@ export default async function handler(req, res){
        istenirse 5 günlük dilimlere bölünür — §168'deki Finnhub dersinin aynısı:
        "veri gelmiyor" demeden önce SINIRA çarpıp çarpmadığına bak. */
     const dilimler = [];
-    for(let b = gunIst; b > 0; b -= 5) dilimler.push([Math.max(b-5,0), b]);
+    if(ARALIK){
+      /* Aralık modu: mutlak tarihlerle 5 günlük dilimler */
+      const b0 = new Date(basIst+'T00:00:00Z').getTime(), s0 = new Date(sonIst+'T00:00:00Z').getTime();
+      for(let t = s0; t > b0; t -= 5*GUN) dilimler.push([Math.max(t-5*GUN, b0), t]);
+    } else {
+      for(let b = gunIst; b > 0; b -= 5) dilimler.push([Math.max(b-5,0), b]);
+    }
     const ham = [], hatalar = [];
     for(const [bas, son] of dilimler){
       try{
@@ -201,8 +216,10 @@ export default async function handler(req, res){
           headers:{ 'content-type':'application/json', 'accept':'application/json',
                     'referer':'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent':UA,
                     ...(cookie ? { 'cookie': cookie } : {}) },
-          body: JSON.stringify({ fromDate: iso(simdi - son*GUN), toDate: iso(simdi - bas*GUN),
-                                 mkkMemberOidList: [], subjectList: [] }),
+          body: JSON.stringify({
+            fromDate: ARALIK ? iso(bas) : iso(simdi - son*GUN),
+            toDate:   ARALIK ? iso(son) : iso(simdi - bas*GUN),
+            mkkMemberOidList: [], subjectList: [] }),
           signal: AbortSignal.timeout(12000)
         });
         if(!r.ok){ hatalar.push('HTTP '+r.status+' ('+bas+'-'+son+'g)'); continue; }
@@ -246,6 +263,7 @@ export default async function handler(req, res){
       const saat = String(x.publishDate||'').slice(11,16);
       kodlar.forEach(kRaw => {
         const kod = kRaw.toUpperCase();
+        if(kodSuz && kod !== kodSuz) return;      // §209 kod süzgeci
         const anahtar = kod+'|'+x.year+'|'+x.period;
         const yeni = { kod, tarih, saat, yil:x.year, donem:x.period, tur:x.ruleType||null,
           gecikmeGun: gecikmeHesap(x.year, x.period, x.ruleType, tarih),
@@ -265,7 +283,9 @@ export default async function handler(req, res){
       a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : (a.saat < b.saat ? 1 : -1));
 
     res.setHeader('Cache-Control','s-maxage=540, stale-while-revalidate=1800');
-    return res.status(200).json({ ok: fr.length>0, kaynak:'byCriteria/FR', gun:gunIst,
+    return res.status(200).json({ ok: fr.length>0, kaynak:'byCriteria/FR',
+      pencere: ARALIK ? (basIst+' → '+sonIst) : (gunIst+' gün'),
+      kodSuzgeci: kodSuz || null, gun:gunIst,
       taranan: ham.length, dilim: dilimler.length,
       hamBildirim: ham.filter(x=>String(x.disclosureClass||'').toUpperCase()==='FR').length,
       bildirim: fr.length,                       // tekilleştirilmiş
