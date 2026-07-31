@@ -2715,6 +2715,48 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 239. KATFON TAZELENDI — tek oturumda, tek tarihte (31 Tem)
+
+Onceki hali: getiriler 28 Tem, AUM/akis 29 Tem — IKI FARKLI TARIH ve ikisi de
+bayat. "Fintables kopru rituali" ile elle toplaniyordu.
+Simdi Fintables MCP ile UC SORGUDA bitti ve HEPSI AYNI TARIH: 31 Tem.
+
+### 239.1 NASIL
+  1. gunluk_fon_degerleri -> 46 fon icin buyukluk · yatirimci · gunluk akis
+     (DISTINCT ON + tarih DESC ile fon basina en son kayit)
+  2. mumlar_gunluk_gh     -> son ve onceki gun kapanisi (1G getirisi)
+  3. mumlar_gunluk_gh     -> referans tarihlerdeki kapanislar
+     1A=30 Haz · 3A=30 Nis · YTD=31 Ara 2025 · 1Y=31 Tem 2025 · 3Y=31 Tem 2023
+     (her donem icin PARTITION + ROW_NUMBER ile o tarihe kadarki SON islem gunu)
+REFERANS TARIHI SECIMI ONEMLI: "30 Haziran" tatil olabilir; `t <= tarih`
+kosuluyla o tarihe kadarki SON ISLEM GUNU aliniyor, boslugu atlamiyor.
+
+### 239.2 DENETIM — dort kural kosuldu
+  tarih birligi        ✓ fiyat = akis = getiri = 2026-07-31
+  1G aykiri (|%|>1,5)  ✓ yok
+  1G bosluk            ✓ yok, 46/46
+  donem sirasi (YTD>=3A>=1A)  ✓ bozuk yok
+Dorduncusu ozellikle degerli: getiri hesabinda referans tarihi kayarsa donem
+sirasi BOZULUR ve bu tek bakista gorunur. §186'daki denetim kulturunun
+fon tarafina uygulanmasi.
+
+### 239.3 TABLO
+  TOPLAM AUM       479,3 mlr TL (46 fon)
+  31 Tem NET AKIS  −3.439 mn TL — cikis gunu
+  En buyuk: KLU 93,1 · KPR 77,4 · ZP8 57,7 mlr
+  En yuksek YTD: KKL %29,3 · TLV %27,0 · KNS %25,5
+En buyuk cikislar ZP8 (−1,61 mlr) ve KLU (−1,18 mlr); en buyuk giris
+KTV (+600 mn) ve HPV (+555 mn).
+
+### 239.4 DERS — "KOPRU RITUELI" GEREKSIZDI
+Bu veri Fintables'ta HEP VARDI. Elle toplama ritueli, aracin ne verdigini
+tam bilmemekten dogmustu. §238'de ayni sey olmustu (web'de aradim, MCP
+bagliydi).
+KURAL: tekrarlayan bir ELLE IS varsa, once "bu veriyi zaten veren bir arac
+var mi" diye sor. Rituel kurmak, aracin yerine gecmez — sadece gorunmez kilar.
+
+DOSYALAR: katfon.json
+
 ## 238. FINTABLES MCP — dogru arac elimin altindaydi (31 Tem)
 
 Kullanici: "abi fintablesten ceksene." HAKLI. Iki tur web aramasi yapip
