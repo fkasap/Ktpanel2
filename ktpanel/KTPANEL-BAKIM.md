@@ -2677,6 +2677,34 @@ tasinmali — yoksa dokuman ile davranis sessizce ayrisir.
 
 ajan.js v=20260729b. DOSYALAR: ajan.js + index.html.
 
+## 219. NOBET EVRENI DARDI — katilim endeksleri girmiyordu (31 Tem)
+
+Kullanici: "73 kod izleniyor ama tum XKTUM'u izlemesi lazim." HAKLI.
+
+### 219.1 ESKI EVREN
+    kartlar (25) + portfoy (30) + TOP40 (40) = 73 benzersiz kod
+Panelin ASIL ilgi alani KATILIM EVRENI oldugu halde XKTUM uyeleri
+izlenmiyordu. Portfoyde olmayan bir katilim hissesi bilanco aciklasa nobet
+SUSUYORDU — ve bu sessizlik "her sey yolunda" gibi gorunuyordu.
+
+### 219.2 YENI EVREN
+ENDAG'daki uc endeksin uyeleri eklendi:
+    XK100 100 · XKTUM 150 · XKTMT 34  ->  158 BENZERSIZ kod
+Ucu de eklendi cunku listeler TAM ORTUSMUYOR: §159'da olculdu, XKTMT'de
+XKTUM'da olmayan dort isim var (AYEN·ELITE·PLTUR·VAKKO).
+Yeni evren ~208 kod.
+KAYNAK: app.js'in yukledigi ENDAG. Ayni sayfada calisildigi icin erisilebilir;
+ayri fetch gereksiz olurdu.
+
+### 219.3 KIRILIM EKRANA TASINDI
+Onceden yalniz "73 kod izleniyor" yaziyordu. Tek sayi, NEREDEN GELDIGINI
+soylemiyor — kullanici ancak SEZEREK fark etti eksigi.
+Artik: "208 kod: katilim endeksleri 158 + portfoy + kartli 25"
+§141'in ayni mantigi: panel ne bildigini degil, NEREDEN bildigini de
+soylemeli. Bir kapsam sayisi, kapsamin ICERIGINI gostermiyorsa denetlenemez.
+
+ajan.js v=20260731f. DOSYALAR: ajan.js + index.html.
+
 ## 218. FINANSAL TABLOLAR SEKMESI (t23) — yatay + dikey analiz (31 Tem)
 
 Kullanici: "portfoy yonetimi altina Finansal Tablolar sekmesi, tickerini

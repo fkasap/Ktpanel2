@@ -379,6 +379,23 @@ async function bilancoNobeti(){
     try{ (JSON.parse(localStorage.getItem('poz_v1')||'[]')||[])
       .forEach(p=>{ if(p && p.kod && p.tip!=='nakit') evren.add(String(p.kod).toUpperCase()); }); }catch(e){}
     if(typeof TOP40!=='undefined' && Array.isArray(TOP40)) TOP40.forEach(k=>evren.add(String(k).toUpperCase()));
+    /* §219 KATILIM ENDEKSLERİ EVRENE GİRDİ.
+       Önce evren yalnız kartlar + portföy + Top-40 idi = 73 kod. Panelin ASIL
+       ilgi alanı KATILIM EVRENİ olduğu halde XKTUM üyeleri izlenmiyordu —
+       portföyde olmayan bir katılım hissesi bilanço açıklasa nöbet susuyordu.
+       XKTUM en geniş katılım endeksi; XK100 ve XKTMT onun alt kümesi ama
+       ikisi de eklendi (üyelik listeleri tam örtüşmüyor, §159'da ölçüldü:
+       XKTMT'de XKTUM'da olmayan dört isim var).
+       KAYNAK: app.js'in yüklediği ENDAG. Aynı sayfada çalıştığımız için
+       erişilebilir; ayrı fetch gereksiz olurdu. */
+    try{
+      if(typeof ENDAG!=='undefined' && ENDAG){
+        Object.keys(ENDAG).forEach(e=>{
+          const u = ENDAG[e] && ENDAG[e].uyeler;
+          if(u) Object.keys(u).forEach(kk=>evren.add(String(kk).toUpperCase()));
+        });
+      }
+    }catch(e){ console.warn('[Ebu] endeks evreni okunamadı:', e); }
 
     const bekleyen = {};
     /* mod=fr `fr` dizisi döndürür (kod/tarih/yil/donem/gec); eski uç `items`.
@@ -427,7 +444,16 @@ async function bilancoNobeti(){
     });
     const liste = Object.keys(bekleyen).map(k=>bekleyen[k])
       .sort((a,b)=> (b.portfoyde?1:0)-(a.portfoyde?1:0) || b.ts-a.ts);
-    return {liste, taranan:(kap.items||[]).length, evren:evren.size};
+    /* Evren kırılımı görünür olsun — "kaç kod izleniyor" sorusunun cevabı
+       tek sayı değil, NEREDEN GELDİĞİ de bilinmeli (§141). */
+    let endeksAdet = 0;
+    try{ if(typeof ENDAG!=='undefined' && ENDAG){
+      const s = new Set();
+      Object.keys(ENDAG).forEach(e=>{ const u=ENDAG[e]&&ENDAG[e].uyeler; if(u) Object.keys(u).forEach(x=>s.add(x)); });
+      endeksAdet = s.size;
+    } }catch(e){}
+    return {liste, taranan:(kap.items||[]).length, evren:evren.size,
+      kirilim:{ kart:Object.keys(kartlar).length, endeks:endeksAdet }};
   }catch(e){ return null; }
 }
 
@@ -453,7 +479,8 @@ function nobetCiz(){
           '<span class="sub" style="font-size:9px">'+x.ts.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+
           (x.kartVar?' \u00b7 yeni d\u00f6nem':'')+'</span></div>').join('')+'</div>';
     } else if(B){
-      h += '<div class="sub" style="font-size:11px;margin-bottom:7px">\u2713 Bekleyen bilan\u00e7o kart\u0131 yok ('+B.evren+' kod izleniyor)</div>';
+      h += '<div class="sub" style="font-size:11px;margin-bottom:7px">\u2713 Bekleyen bilan\u00e7o kart\u0131 yok <span class="thin">('+B.evren+' kod: katılım endeksleri '+
+        ((B.kirilim&&B.kirilim.endeks)||0)+' + portföy + kartlı '+((B.kirilim&&B.kirilim.kart)||0)+')</span></div>';
     }
     if(T && T.bayat.length){
       h += '<div><span class="lbl" style="color:#E8933B">\u23f0 TAZELENMEL\u0130 \u00b7 '+T.bayat.length+'</span>'+
