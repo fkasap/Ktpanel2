@@ -79,6 +79,66 @@ const ayir = (o, ortakMi) => { const r = {};
   Object.keys(o || {}).forEach(k => { if (ORTAK_ANAHTARLAR.includes(k) === ortakMi) r[k] = o[k]; });
   return r; };
 
+/* §245m ORTAK KUTU ARTIK EZİLMEZ — ANAHTAR BAZLI BİRLEŞTİRME.
+   Eski akış: istemcinin gönderdiği ortak kopya OLDUĞU GİBİ yazılıyordu.
+   İki kişi aynı anda yazmasa bile bozuluyordu: sabah açık kalan sekme
+   (kopyasında 40 kayıt) akşam PORTFÖY kaydederken ortak kutuyu da gönderir
+   ve arkadaşının öğlen girdiği 5 kaydı (bulutta 45) kendi bayat 40'ıyla
+   ezerdi. Boş-yazma emniyeti bunu YAKALAYAMAZ: gelen veri boş değil, BAYAT.
+   Günlük yedek kurtarır ama ancak kayıp FARK EDİLİRSE.
+   YENİ AKIŞ (kayıt bazında):
+     1. Her kayda KİMLİK: guidance → kod|yıl (aynı şirket-yıl tek kayıttır),
+        arz → kod. İstemci §245m'den beri ts (epoch ms) damgası da basıyor.
+     2. BİRLEŞİM: bulut ∪ gelen. Yalnız bulutta olan KORUNUR (asıl kazanç),
+        yalnız gelende olan EKLENİR, ikisinde de olan ts BÜYÜK olanla kalır
+        (ts'siz eski kayıtlar 0 sayılır → damgalı taraf kazanır).
+     3. MEZAR TAŞI: silme, birleşimde geri dirilmesin diye istemci silinen
+        kimlikleri __sil_<anahtar> listesinde gönderir (kimlik+ts). Sunucu
+        mezar taşlarını da BİRLEŞTİRİR ve mezardaki kayıtları dışlar —
+        ama kayıt mezardan SONRA yeniden eklendiyse (ts > mezar ts) yaşar.
+        Mezar taşları 90 günden eski ise budanır (kutu sonsuz büyümesin).
+   Gerçek optimistic locking (CAS) Upstash REST'te zahmetli; bu birleşim
+   pratikte aynı işi görür: bayat kopya artık kimseyi ezemez. */
+const MERGE_KIMLIK = {
+  guidance_v1:      (x) => (String(x.k||'').toUpperCase()+'|'+String(x.yil||'')),
+  ktp_arz_kayit_v1: (x) => String(x.kod||'').toUpperCase()
+};
+const kayitTs = (x) => {
+  if (x && x.ts != null && isFinite(+x.ts)) return +x.ts;
+  if (x && x.zaman) { const t = Date.parse(x.zaman); if (isFinite(t)) return t; }
+  return 0;
+};
+function ortakBirlestir(eskiKutu, yeniKutu) {
+  const sonuc = {}, rapor = {};
+  ORTAK_ANAHTARLAR.forEach(an => {
+    const kimlik = MERGE_KIMLIK[an] || ((x) => JSON.stringify(x));
+    const eski = Array.isArray(eskiKutu && eskiKutu[an]) ? eskiKutu[an] : [];
+    const yeni = Array.isArray(yeniKutu && yeniKutu[an]) ? yeniKutu[an] : [];
+    // mezar taşları: iki taraftan birleştir, 90 günden eskileri buda
+    const mAn = '__sil_' + an, SINIR = Date.now() - 90*86400000;
+    const mezar = {};
+    [].concat((eskiKutu && eskiKutu[mAn]) || [], (yeniKutu && yeniKutu[mAn]) || [])
+      .forEach(m => { if (m && m.id != null && kayitTs(m) > SINIR)
+        mezar[m.id] = Math.max(mezar[m.id] || 0, kayitTs(m)); });
+    // birleşim: ts büyük kazanır
+    const harita = {};
+    eski.concat(yeni).forEach(x => {
+      if (!x || typeof x !== 'object') return;
+      const id = kimlik(x);
+      if (!harita[id] || kayitTs(x) >= kayitTs(harita[id])) harita[id] = x;
+    });
+    // mezardakini dışla — ama mezardan sonra yeniden eklendiyse yaşat
+    const canli = Object.keys(harita)
+      .filter(id => !(mezar[id] != null && kayitTs(harita[id]) <= mezar[id]))
+      .map(id => harita[id]);
+    canli.sort((a, b) => kayitTs(b) - kayitTs(a));
+    sonuc[an] = canli;
+    sonuc[mAn] = Object.keys(mezar).map(id => ({ id: id, ts: mezar[id] }));
+    rapor[an] = { eski: eski.length, gelen: yeni.length, sonuc: canli.length, mezar: sonuc[mAn].length };
+  });
+  return { kutu: sonuc, rapor: rapor };
+}
+
 module.exports = async (req, res) => {
   if (String((req.query && req.query.mod) || '').toLowerCase() === 'mail') return _mail(req, res);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -153,22 +213,26 @@ module.exports = async (req, res) => {
       yazilan += yK;
 
       // ── ORTAK kutu (yalnız profil çözülebildiyse) ──
-      let ortakSay = 0;
+      let ortakSay = 0, ortakRapor = null;
       if (profil) {
         const yeniOrtak = ayir(yeniVeri, true);
+        // mezar taşı alanlarını da al (ayir bunları ortak saymaz; elle taşı)
+        Object.keys(yeniVeri || {}).forEach(k => {
+          if (k.indexOf('__sil_') === 0) yeniOrtak[k] = yeniVeri[k]; });
         if (Object.keys(yeniOrtak).length) {
           const eskiOrtak = await kvGet(KEY_ORTAK);
-          const yO = say(yeniOrtak), eO = say(eskiOrtak);
-          if (!(eO >= 3 && yO === 0)) {   // ortak kutuda da boş yazma yasağı
-            if (eskiOrtak) { try { await kvSet(KEY_ORTAK + '_yedek_' + gun, JSON.stringify(eskiOrtak), 604800); } catch (e) {} }
-            await kvSet(KEY_ORTAK, JSON.stringify(yeniOrtak));
-            ortakSay = yO;
-          }
+          /* §245m: "olduğu gibi yaz" → "birleştirerek yaz". Boş-yazma yasağı
+             artık gereksiz: gelen boşsa birleşim = buluttaki, hiçbir şey
+             kaybolmaz. Yedek yine alınır — merge hatasına karşı son sigorta. */
+          const B = ortakBirlestir(eskiOrtak, yeniOrtak);
+          if (eskiOrtak) { try { await kvSet(KEY_ORTAK + '_yedek_' + gun, JSON.stringify(eskiOrtak), 604800); } catch (e) {} }
+          await kvSet(KEY_ORTAK, JSON.stringify(B.kutu));
+          ortakSay = say(B.kutu); ortakRapor = B.rapor;
         }
       }
 
       res.status(200).json({ ok: true, kayit: yazilan + ortakSay, kisisel: yazilan,
-                             ortak: ortakSay, __profil: profil });
+                             ortak: ortakSay, ortakBirlesim: ortakRapor, __profil: profil });
       return;
     }
 
