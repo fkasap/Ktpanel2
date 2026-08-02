@@ -270,6 +270,28 @@ async function ecbTarayiciCek(){
     if(y) return {...sonFark(y), akis:'HICP'};
     const eski=await cek('ICP','M.U2.N.'+item+'.4.ANR',3);   // yedek: dondurulmuş arşiv
     return eski?{...sonFark(eski), akis:'ICP-arşiv'}:null; };
+  /* §245v KIRILIM İÇİN ÇOK-ANAHTARLI ÇEKİM + TANI.
+     Hizmet/Gıda/Sanayi §242'de eklendiğinden beri HİÇ dolmadı — eski ICP'de
+     bu kalemler yokmuş; akış taşınınca da (245u) kendiliğinden dolmadılar.
+     İki taşıma da 'anahtar tahmini' ile yapıldı ve ikisinde de kırılım
+     kör kaldı. Bu kez iki ilke: (1) kalem başına ALTERNATİF kod listesi —
+     portal kanıtı: gıda yeni sette FOODPR (işlenmiş+alkol+tütün) ve FOODUN
+     (işlenmemiş) olarak bölünmüş, toplam FOOD00 görünmüyor; SERV00/IGXE00
+     tanımları duruyor. (2) TAHMİNİ BIRAK, ÖLÇTÜR: her deneme sonucu
+     window.EBU_HICP_TANI'ya yazılır ve kırılım boşsa kart tanıyı GÖSTERİR —
+     bir sonraki ekran görüntüsü tahmin değil kanıt taşır. */
+  window.EBU_HICP_TANI = {};
+  const hicpCoklu = async (adaylar, etiketler)=>{
+    for(let i=0;i<adaylar.length;i++){
+      const kod=adaylar[i];
+      const y=await cek('HICP','M.U2.N.'+kod+'.4D0.ANR',3);
+      if(y){ window.EBU_HICP_TANI[kod]='✓';
+             const r={...sonFark(y), akis:'HICP'};
+             if(etiketler&&etiketler[i]) r.altEtiket=etiketler[i];
+             return r; }
+      window.EBU_HICP_TANI[kod]='boş';
+    }
+    return null; };
   /* §242 ENFLASYON KIRILIMI. Önce üç seri vardı (manşet·çekirdek·enerji) ve
      ECB faiz kartının İÇİNE sıkıştırılmıştı. Enflasyon ECB'nin tek görevi;
      kendi kartını hak ediyor ve kırılım olmadan okunmuyor.
@@ -287,7 +309,9 @@ async function ecbTarayiciCek(){
   const [dfr,bilanco,manset,cekirdek,enerji,gida,hizmet,sanayi,de,fr,it,es,bund,btp,oat]=await Promise.all([
     cek('FM','B.U2.EUR.4F.KR.DFR.LEV',3), cek('ILM','W.U2.C.T000000.Z5.Z01',6),
     hicp('000000'), hicp('XEF000'), hicp('NRGY00'),
-    hicp('FOOD00'), hicp('SERV00'), hicp('IGXE00'),
+    hicpCoklu(['FOOD00','FOODPR','FOODUN'],[null,'işlenmiş gıda','işlenmemiş gıda']),
+    hicpCoklu(['SERV00','SERV'],[null,null]),
+    hicpCoklu(['IGXE00','IGDXEN','NEIG00'],[null,null,null]),
     ulke('DE'), ulke('FR'), ulke('IT'), ulke('ES'),
     cek('IRS','M.DE.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.IT.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)
   ]);
@@ -414,8 +438,9 @@ async function avrupaSekme(){
           const f=v.fark, ivmeCls=f==null?'':(f>0?'down':'up');
           const uzak=v.deger-HEDEF;
           const dCls=uzak>1?'down':(uzak<-0.5?'up':'');
+          const notF=v.altEtiket?(v.altEtiket+(not_?' · '+not_:'')):not_;   /* §245v: alternatif kodla dolduysa söyle */
           return '<div class="kv"><span class="k">'+ad+
-            (not_?' <span class="thin" style="font-size:9px">'+not_+'</span>':'')+'</span>'+
+            (notF?' <span class="thin" style="font-size:9px">'+notF+'</span>':'')+'</span>'+
             '<span'+(vurgu?' style="font-weight:600"':'')+'>%'+trN(v.deger,1)+
             ' <span class="'+dCls+'" style="font-size:10px">('+(uzak>=0?'+':'')+trN(uzak,1)+' hedefe)</span>'+
             (f!=null?' <span class="'+ivmeCls+'" style="font-size:10px">ivme '+(f>=0?'+':'')+trN(f,2)+'</span>':'')+
@@ -429,6 +454,14 @@ async function avrupaSekme(){
         eh+=sat(S.hicpEnerji,'Enerji','Brent geçişkenliği',false);
         eh+=sat(S.hicpGida,'Gıda','işlenmiş+işlenmemiş',false);
         eh+=sat(S.hicpSanayi,'Sanayi malı','enerji dışı · küresel arz zinciri',false);
+        /* §245v TANI GÖRÜNÜR: kırılımdan biri boşsa hangi anahtarların denenip
+           boş döndüğünü kartın kendisi söyler — bir sonraki hata bildirimi
+           tahmin değil kanıt taşısın. Doluysa satır hiç görünmez. */
+        if(!S.hicpHizmet||!S.hicpGida||!S.hicpSanayi){
+          const T=window.EBU_HICP_TANI||{};
+          const boslar=Object.keys(T).filter(k=>T[k]!=='✓');
+          if(boslar.length) eh+='<div class="thin" style="font-size:8px;margin-top:3px;color:var(--muted)">kırılım tanısı — boş dönen anahtarlar: '+boslar.join(' · ')+' <span style="opacity:.7">(4D0.ANR)</span></div>';
+        }
         /* ÜLKE KIRILIMI — parçalanma termometresi */
         const U=S.ulkeler||{};
         const varOlan=Object.keys(U);

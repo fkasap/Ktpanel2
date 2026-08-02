@@ -2750,6 +2750,42 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245v HICP KIRILIMI: TAHMINI BIRAK, OLCTUR (2 Agu, aksam)
+
+245u sonrasi kullanici ekrani: manset/cekirdek/enerji 2026-07'ye ATLADI
+(akis tasimasi CALISTI — manset %2,9, enerji %10,0 Brent sokuyla tutarli).
+Ama Hizmet/Gida/Sanayi hala bos. Ek olcum: bu uc satir §242'de eklendiginden
+beri HIC dolmamis — eski ICP'de de yokmus; iki akis tasimasi da 'anahtar
+tahmini' ile yapildi ve ikisinde de kirilim kor kaldi.
+
+PORTAL KANITI (web): gida yeni sette BOLUNMUS — FOODPR (islenmis+alkol+tutun)
+ve FOODUN (islenmemis) ayri seriler, toplam FOOD00 gorunmuyor. SERV00 ve
+IGXE00 tanimlari yeni sette duruyor (SERV00 4D0.ANR Haziran 2026'ya kadar
+canli ornek goruldu) — o halde U2 cagrilarinin neden bos dondugu TAHMINLE
+cozulemez, OLCUM gerekir. ECB'ye bu ortamdan erisim yok; olcum yeri TARAYICI.
+
+YAPILAN (app.js):
+1. hicpCoklu(adaylar[], etiketler[]): kalem basina SIRALI alternatif kod
+   listesi — ilk dolu olan kazanir, alternatife dusulduyse satirda kucuk
+   etiket gorunur ('islenmis gida' gibi). Baglanti:
+     Gida    FOOD00 -> FOODPR -> FOODUN
+     Hizmet  SERV00 -> SERV
+     Sanayi  IGXE00 -> IGDXEN -> NEIG00
+2. TANI GORUNUR: her deneme window.EBU_HICP_TANI'ya yazilir; kirilimdan biri
+   hala bossa kartin dibinde 'bos donen anahtarlar: ...' satiri cikar.
+   Boylece bir SONRAKI ekran goruntusu tahmin degil KANIT tasir — hangi
+   anahtar bos, dogrudan gorulur. Uc satir da doluysa tani hic gorunmez.
+DERS (245u'nun devami): iki tasima da tahminle yapildi, ikisi de kirilimi
+acamadi. Ucuncu deneme tahmin DEGIL: alternatifler + olcum enstrumani.
+Erisemedigin API'yi kod icinden OLCTUR; kullanici ekrani laboratuvardir.
+
+NOT: kart altindaki Ebu yorumlari hala eski rakamlari soyluyor ('%1,9,
+cekirdegin altinda' — artik %2,9 ve USTUNDE). Not motoru 20 saatlik soguma
+sonrasi veri degisimini gorup kendisi yeniden yazacak; mudahale edilmedi.
+
+app.js v=20260802e · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html
+
 ## 245u AVRUPA TURU: DONMUS HICP AKISI + YARIM DUZELTME + BILANCO KARTLARI (2 Agu)
 
 Kullanici Avrupa kartini gosterdi: "damgali veri var mi, gelmeyen verilerin
