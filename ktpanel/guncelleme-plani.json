@@ -73,7 +73,9 @@
       "son": "2026-07-17",
       "kaynak": "TCMB menkul kıymet ist. + ödemeler dengesi + web",
       "_245": "DAMGA §B: Perşembe ritüeli, ELLE (hafta_seri'ye ekleme). siklik=\"canli\" idi → muaftı.",
-      "_245k": "KISMEN canlı: stok + SON hafta EVDS CANLI (yabCanli → mod=yab, damgalıyı ezer). hafta_seri GEÇMİŞİ ve aylık ödemeler dengesi ELLE — dosya damgası onları izler. Yani bu katman damgalı KALIR ama bayatlama riski yalnız seri geçmişinde."
+      "_245k": "KISMEN canlı: stok + SON hafta EVDS CANLI (yabCanli → mod=yab, damgalıyı ezer). hafta_seri GEÇMİŞİ ve aylık ödemeler dengesi ELLE — dosya damgası onları izler. Yani bu katman damgalı KALIR ama bayatlama riski yalnız seri geçmişinde.",
+      "limit_gun": 13,
+      "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği."
     },
     {
       "ad": "Net rezerv (Rezerv Karnesi)",
@@ -220,8 +222,10 @@
       "ad": "Swap stoku (rezerv bileşeni)",
       "dosya": "rezerv.json",
       "siklik": "haftalik",
-      "son": "2026-07-17",
-      "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır)"
+      "son": "2026-07-24",
+      "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır)",
+      "limit_gun": 13,
+      "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği."
     },
     {
       "ad": "Sukuk ihraç arşivi (yedek)",

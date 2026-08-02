@@ -2715,6 +2715,58 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245p IKI TAZELIK OKUYUCUSU — PANEL KENDISIYLE CELISIYORDU (2 Agu)
+
+Kullanici Veri Durumu cekmecesini gosterdi: iki katman KIRMIZI "GUNCELLE".
+Sordu: "bunlar gercekten eski mi yoksa bir hata mi var?" — CEVAP: BIRI GERCEK,
+BIRI HATA. Ve hata benim taramamin kacirdigi bir seydi.
+
+### 245p.1 KOK NEDEN: AYNI ISI YAPAN IKI KOD (§112 ihlali)
+  ajan.js tazelikNobeti()  dosya tarihi okur ✓ · siklik normalize ✓ · yaptirim ✓
+  app.js  planInit()       yalniz plan.son okur ✗ · birebir 'canli' ✗ · sessiz 7 ✗
+§198'de dosya-tarihi okumasini, §245'te normalize + yaptirimi ajan.js'e
+uyguladim — UC KEZ dokundum ama "bu isi baska kim yapiyor" diye HIC sormadim.
+Sonuc: nobet panosu dogruyu, cekmece yanlisi soyluyordu. Ayni panelde iki
+farkli cevap. §112 tam bu yuzden var: AYNI BUYUKLUGUN IKI SAHIBI OLMAZ —
+biri duzeltilir, oteki eskir ve celiski GIZLI kalir.
+DERS: bir duzeltmeyi uygularken ONCE ayni isi yapan baska kod aranir.
+`grep` ile "bu hesabi baska kim yapiyor" sorusu, duzeltmenin ilk adimidir.
+
+### 245p.2 COZUM: window.tazelikHesap — TEK SAHIP
+Hesap app.js'e tasindi (norm · dosyaTarihleri · limitCoz · durum).
+index.html app.js'i ajan.js'ten ONCE yukluyor, sira guvenli.
+planInit artik bunu cagiriyor; dosya tarihi DOSYADAN geliyorsa satirda
+"·dosya" izi var — plan geride kaldiginda "neden farkli" sorusunu kod
+kendisi cevapliyor.
+
+### 245p.3 IKI KIRMIZININ TESHISI
+  Yabanci para akisi + carry — HATAYDI. yabanci.json kendi icinde 28 Tem
+    yaziyor (5 gun, TAZE); plan `son` 17 Tem'de kalmisti. Ayrica katman adi
+    "+ carry" diyor ama CARRY ZATEN CANLI: §112 geregi yabanci.json'daki
+    carry alani bosaltilmis, deger window.EXANTE'den (canli EVDS) geliyor.
+    Yani etiket IKI KERE yaniltiyordu.
+  Swap stoku — GERCEKTI. 17 Tem verisiyle 16 gun; 24 ve 31 Tem yayinlari
+    kacmisti.
+
+### 245p.4 SWAP STOKU GUNCELLENDI (elle — otomatiklestirilemez, §245k)
+24 Tem haftasi (30 Tem Persembe yayini): brut 162,6 · net 51,1 ·
+swap haric net 38,3 -> swapStoku = 51,1 − 38,3 = 12,8 (onceki 13,5).
+DOGRULAMA: 51,1 − 12,8 = 38,3, yayinlanan rakamla BIREBIR.
+rezerv.json guncelleme 2026-07-24. Siradaki: 31 Tem haftasi, 6 Agu Persembe.
+
+### 245p.5 LIMIT KALIBRASYONU — alarm YAYIN KACINCA calsin
+Guncelleme sonrasi swap stoku "yaklasti" (9 gun / limit 7) cikti — oysa bu
+ELDE OLABILECEK EN TAZE VERI. TCMB Persembe yayinlar, veri bir onceki CUMA'ya
+aittir: katman dogasi geregi 6–12 gun salinir. 7 gunluk genel limit haftanin
+COGUNDA bosuna turuncu yakar ve uyari gurultuye doner (§243).
+COZUM: katman kaydinda `limit_gun` gecersiz kilma alani (sozlugun onune gecer).
+Rezerv/yabanci katmanlarina 13 kondu = "bir yayin kacti" esigi.
+SONUC: izlenen 10 · kirmizi 0 · turuncu 0 · yesil 10. Alarm artik yalnizca
+GERCEK bir yayin kacinca calacak.
+
+app.js v=20260802a · ajan.js v=20260731p · api kap-2026-07-31-n · data.js §245m
+DOSYALAR: app.js + index.html + guncelleme-plani.json + rezerv.json
+
 ## 245n "REDDEDILDI" — YAPTIRIM DOGRUYDU, TESHIS YANLISTI (2 Agu)
 
 Kullanici Ebu gunlugunu gosterdi:

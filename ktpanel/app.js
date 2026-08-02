@@ -6599,23 +6599,101 @@ function takvimSatirlari(){
 }
 
 /* ---- Veri Tazeliği (guncelleme-plani.json) ---- */
+/* §245p TAZELİK HESABI TEK SAHİPTE (§112).
+   İKİ AYRI OKUYUCU VARDI ve panel kendisiyle çelişiyordu:
+     ajan.js tazelikNobeti()  dosya tarihi okur ✓ · sıklık normalize ✓ · yaptırım ✓
+     app.js  planInit()       yalnız plan.son okur ✗ · birebir 'canli' ✗ · sessiz 7 ✗
+   Sonuç 2 Ağu'da görüldü: "Yabancı para akışı + carry — 17 Tem · GÜNCELLE"
+   kırmızı yanıyordu, oysa yabanci.json kendi içinde 28 Tem yazıyor (5 gün, TAZE).
+   Nöbet panosu doğruyu, çekmece yanlışı söylüyordu. §112 tam bu yüzden var:
+   AYNI BÜYÜKLÜĞÜN İKİ SAHİBİ OLMAZ — biri düzeltilir, öteki eskir.
+   §198 ve §245 düzeltmelerini ajan.js'e üç kez uyguladım ama "bu işi başka
+   kim yapıyor" diye sormadım. Ders: bir düzeltmeyi uygularken önce AYNI İŞİ
+   YAPAN başka kod var mı diye aranır.
+   Artık hesap BURADA, window.tazelikHesap olarak; ajan.js de bunu kullanır
+   (app.js index.html'de ajan.js'ten ÖNCE yükleniyor — sıra güvenli). */
+window.tazelikHesap = (function(){
+  const norm = (s) => String(s||'').toLowerCase()
+    .replace(/\(.*?\)/g,'')
+    .replace(/[ıİ]/g,'i').replace(/[şŞ]/g,'s').replace(/[çÇ]/g,'c')
+    .replace(/[ğĞ]/g,'g').replace(/[üÜ]/g,'u').replace(/[öÖ]/g,'o')
+    .replace(/[^a-z]/g,'');
+  /* Dosyaların KENDİ tarih damgası — plan `son` alanı elle tutulduğu için
+     geride kalabilir; hangisi YENİYSE o geçerlidir. */
+  async function dosyaTarihleri(katmanlar){
+    const t = {};
+    await Promise.all((katmanlar||[]).map(async k=>{
+      const f = String(k.dosya||'');
+      if(!f.endsWith('.json') || f.indexOf('/')>=0) return;
+      try{
+        const r = await fetch('/'+f, {cache:'no-store'});
+        if(!r.ok) return;
+        const j = await r.json();
+        const d = j.guncelleme || j.tarih || j.fiyat_tarihi || null;
+        if(d) t[f] = d;
+      }catch(e){}
+    }));
+    return t;
+  }
+  function limitCoz(ham, sg, k){
+    /* §245p KATMANA ÖZEL LİMİT. Bazı kaynakların YAPISAL yayın gecikmesi var:
+       TCMB haftalık rezerv Perşembe yayınlanır ama veri bir önceki CUMA'ya
+       aittir — yani bu katman doğası gereği 6–12 gün arasında salınır.
+       Genel 7 günlük haftalık limit, haftanın çoğunda boşuna turuncu yakar
+       ve uyarı gürültüye dönüşür (§243'ün tam olarak uyardığı şey).
+       Alarm, veri "eski" olduğunda değil YAYIN KAÇTIĞINDA çalmalı.
+       Katman kaydına limit_gun konursa sözlüğün önüne geçer. */
+    if(k && k.limit_gun != null && isFinite(k.limit_gun))
+      return {limit:+k.limit_gun, anahtar:norm(ham), ozel:true};
+    const n = norm(ham), anahtarlar = Object.keys(sg||{});
+    if(sg && sg[n] != null) return {limit:sg[n], anahtar:n};
+    const p = anahtarlar.find(a => n.indexOf(a) === 0);
+    if(p) return {limit:sg[p], anahtar:p};
+    return {limit:null, anahtar:null};   /* TANIMSIZ — sessizce varsayma */
+  }
+  /* Tek katmanın durumu: {tip, gun, limit, tarih} · tip: canli|olay|taze|yaklasti|bayat|tanimsiz */
+  function durum(k, sg, dosyaT, bugun){
+    const S = limitCoz(k.siklik, sg, k);
+    if(S.anahtar === 'canli' || k.son === 'otomatik') return {tip:'canli'};
+    if(S.anahtar === 'olay') return {tip:'olay', tarih:k.son};
+    if(S.limit == null) return {tip:'tanimsiz', siklik:k.siklik};
+    const df = dosyaT[String(k.dosya||'')] || null;
+    const pd = (k.son && /^\d{4}/.test(k.son)) ? new Date(k.son) : null;
+    const dd = df ? new Date(df) : null;
+    const d = (dd && (!pd || dd > pd)) ? dd : pd;      /* YENİ olan geçerli */
+    if(!d || isNaN(d)) return {tip:'olay', tarih:k.son};
+    const gun = Math.floor((bugun - d) / 86400000);
+    const tip = gun <= S.limit ? 'taze' : (gun <= S.limit*2 ? 'yaklasti' : 'bayat');
+    return {tip, gun, limit:S.limit, tarih:d.toISOString().slice(0,10),
+            kaynak:(dd && (!pd || dd > pd)) ? 'dosya' : 'plan'};
+  }
+  return {norm, dosyaTarihleri, limitCoz, durum};
+})();
+
 async function planInit(){
   let plan;
   try{plan=await (await fetch('/guncelleme-plani.json',{cache:'no-store'})).json();}catch(e){return;}
   if(!$('planBody'))return;
   const bugun=new Date(), sg=plan.siklik_gun;
   const ayKisa=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-  const fmtKisa=s=>{const d=new Date(s);return d.getDate()+' '+ayKisa[d.getMonth()];};
+  const fmtKisa=s=>{const d=new Date(s);return isNaN(d)?String(s||'—'):(d.getDate()+' '+ayKisa[d.getMonth()]);};
+  const TZ=window.tazelikHesap;
+  const dosyaT=await TZ.dosyaTarihleri(plan.katmanlar);
   let bayat=0;
   const html=plan.katmanlar.map(k=>{
+    const D=TZ.durum(k, sg, dosyaT, bugun);
     let renk,durum;
-    if(k.siklik==='canli'||k.son==='otomatik'){renk='#0FA26B';durum='CANLI';}
-    else if(k.siklik==='olay'){renk='#8FA098';durum=fmtKisa(k.son)+' · olay';}
+    if(D.tip==='canli'){renk='#0FA26B';durum='CANLI';}
+    else if(D.tip==='olay'){renk='#8FA098';durum=fmtKisa(D.tarih)+' · olay';}
+    else if(D.tip==='tanimsiz'){renk='#DE4B5E';durum='SIKLIK TANIMSIZ';bayat++;}
     else{
-      const f=Math.floor((bugun-new Date(k.son))/86400000), limit=sg[k.siklik]||7, et=fmtKisa(k.son);
-      if(f<=limit){renk='#0FA26B';durum=et+' · taze';}
-      else if(f<=limit*2){renk='#E8933B';durum=et+' · vade yaklaştı';}
-      else{renk='#DE4B5E';durum=et+' · GÜNCELLE';bayat++;}
+      const et=fmtKisa(D.tarih);
+      /* §245p: tarih DOSYADAN geldiyse minik iz — plan geride kaldığında
+         "neden farklı" sorusunu kod sordurmasın diye. */
+      const iz=(D.kaynak==='dosya')?'<span class="thin" style="font-size:8px"> ·dosya</span>':'';
+      if(D.tip==='taze'){renk='#0FA26B';durum=et+' · taze'+iz;}
+      else if(D.tip==='yaklasti'){renk='#E8933B';durum=et+' · vade yaklaştı'+iz;}
+      else{renk='#DE4B5E';durum=et+' · GÜNCELLE'+iz;bayat++;}
     }
     return '<span class="fitem"><span class="fdot" style="background:'+renk+'"></span>'+k.ad+' — <span style="color:'+renk+';font-weight:600">'+durum+'</span></span>';
   }).join('');

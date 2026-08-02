@@ -1,13 +1,14 @@
 {
-  "guncelleme": "2026-07-17",
+  "guncelleme": "2026-07-24",
   "kaynak": "TCMB haftalık basın açıklaması (web) — swap stoku bileşeni EVDS'de yok (yurt dışı ikili swap, ağırlıkla Katar)",
-  "swapStoku": 13.5,
+  "swapStoku": 12.8,
   "webDogrulama": {
-    "tarih": "17-07-2026",
-    "brut": 160.5,
-    "net": 51.2,
-    "swapHaricNet": 37.7,
-    "not": "swapStoku = net − swapHaricNet = 51,2 − 37,7 = 13,5"
+    "tarih": "24-07-2026",
+    "brut": 162.6,
+    "net": 51.1,
+    "swapHaricNet": 38.3,
+    "not": "swapStoku = net − swapHaricNet = 51,1 − 38,3 = 12,8. Kaynak: TCMB haftalık para ve banka istatistikleri, 24 Tem haftası (30 Tem Perşembe yayını). Önceki: 17 Tem haftası net 51,2 − swap hariç 37,7 = 13,5.",
+    "_245p": "17 Tem verisiyle 16 gün bayat kalmıştı; 24 ve 31 Tem yayınları kaçmıştı. 24 Tem yayını işlendi. SIRADAKİ: 31 Tem haftası verisi 6 Ağu Perşembe yayınlanır."
   },
   "aciklama": "Swap stoku yavaş değişen bir kalemdir (yurt dışı MB ikili anlaşmaları, ağırlıkla Katar ~15 mlr limit). Haftalık net rezerv hareketi ağırlıkla kur+bilançodan gelir. Bu dosya 'rezervleri güncelle' komutuyla web'den tazelenir; ara zamanlarda swap hariç net = canlı net − swapStoku olarak hesaplanır (net EVDS'den canlı)."
 }
