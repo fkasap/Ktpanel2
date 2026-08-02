@@ -2715,6 +2715,70 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245m ORTAK KUTU: "OLDUGU GIBI YAZ" -> "BIRLESTIREREK YAZ" (2 Agu)
+
+Ikinci goz (ChatGPT analizi) yaris kosulunu isaretledi; olcunce DAHA KOTUSU
+cikti: ayir(yeniVeri,true) istemcinin ortak kopyasini KV'dekiyle birlestirmeden
+OLDUGU GIBI yaziyordu. Es-zamanlilik bile gerekmiyordu — sabah acik kalan sekme
+(kopyasinda 40 kayit) aksam PORTFOY kaydederken ortak kutuyu da gonderir ve
+arkadasin ogle girdigi 5 kaydi kendi bayat 40'iyla ezerdi. Bos-yazma emniyeti
+yakalamaz: gelen veri bos degil BAYATTI. Gunluk yedek kurtarir ama ancak kayip
+FARK EDILIRSE.
+
+ONEMLI SINIR: sorun YALNIZ ortak kutudaydi (guidance_v1 + ktp_arz_kayit_v1).
+Portfoy/journal KISISEL kutuda (ktpanel:kisi:<profil>) — orada ezme zaten
+IMKANSIZ, tek yazar var. Kullanicinin istedigi ayrim ZATEN calisiyordu;
+is, iki kisinin ortak yazdigi iki anahtardaydi.
+
+### COZUM: ANAHTAR BAZLI BIRLESIM + MEZAR TASI (api/data.js)
+  KIMLIK   guidance -> kod|yil (ayni sirket-yil tek kayit) · arz -> kod
+  HAKEM    ts (epoch ms). Istemci artik ekleme aninda ts basiyor
+           (guidanceEkle + arzKaydet). ts'siz eski kayitlar 0 sayilir ->
+           damgali taraf kazanir, ama kayit KAYBOLMAZ (S6 testi).
+  BIRLESIM bulut ∪ gelen: yalniz bulutta olan KORUNUR (asil kazanc),
+           yalniz gelende olan EKLENIR, ikisinde olan ts buyukle kalir.
+  MEZAR    silme birlesimde geri dirilmesin diye silinen kimlikler
+           __sil_<anahtar> listesinde tasinir (id+ts), sunucuda birlesir,
+           90 gunde budanir. Mezardan SONRA yeniden eklenen yasar (ts>mezar).
+  Bos-yazma yasagi kaldirildi — birlesimde gereksiz: bos gelen istek
+  birlesim=buluttaki demek, hicbir sey kaybolmaz (S7 testi).
+  Yedek yine alinir: merge hatasina karsi son sigorta.
+  Yanita ortakBirlesim raporu eklendi: {eski, gelen, sonuc, mezar} —
+  panel istedigi gun "3 kayit birlesti" gosterebilir.
+
+### ISTEMCI (app.js)
+  guidanceEkle -> ts:Date.now() · arzKaydet -> ts eklendi
+  guidance silme -> __sil_guidance_v1'e mezar tasi (son 200 tutulur)
+  CLOUD_KEYS'e __sil_guidance_v1 eklendi -> mezar buluta cikar/iner,
+  cihazlar arasi silme de senkron olur.
+
+### TEST — 7 SENARYO, 7/7 (gercek fonksiyon, /tmp/mtest.js)
+  S1 bayat kopya arkadasin kaydini EZEMIYOR (ana vaka)
+  S2 iki tarafin ekledigi birlesiyor
+  S3 ayni kayitta yeni ts kazaniyor
+  S4 silinen, bayat kopyadan GERI DONMUYOR (mezar)
+  S5 mezardan sonra bilerek eklenen YASIYOR
+  S6 ts'siz eski kayitlar korunuyor (geriye uyum)
+  S7 bos istek buluttakini silemiyor
+NOT: CAS/optimistic locking Upstash REST'te zahmetli; anahtar-bazli birlesim
+pratikte ayni isi goruyor. Kalan teorik pencere: iki JSON.stringify yazmasi
+ayni MILISANIYEDE cakisirsa son yazan kazanir — ama artik ikisi de BIRLESIK
+kutu yazdigi icin kaybedilen sey en fazla obur tarafin ayni anki tek kaydi
+olur ve bir sonraki senkronda geri gelir (mezar+birlesim kalici kayip birakmaz).
+
+### CHATGPT ANALIZININ DIGER MADDELERI (olculdu)
+  CORS '*'      dogru ama middleware 401 kalkani var — hijyen isi, acil degil
+  write-key     "sizarsa" senaryosu mimariyi yanlis okumus: anahtar kodda
+                degil kullanicinin localStorage'inda; ayrica tek basina
+                yetmiyor (oturum cerezi de sart)
+  package.json  "dependency cakismasi" bos cikti: ikisinde de tek ve AYNI
+                bagimlilik (playwright ^1.48.0). Gercek borc baska: ESM/CJS
+                karisimi (§245.7'de zaten kayitli)
+  8 soru        6'sinin cevabi BAKIM.md + guncelleme-plani.json'da yaziliydi
+
+app.js v=20260731ae · ajan.js v=20260731n · api kap-2026-07-31-n · data.js §245m
+DOSYALAR: app.js + index.html + api/data.js
+
 ## 245k TCMB UCLUSU: OTOMASYON DEGIL, DURUSTLUK ISIYMIS (31 Tem)
 
 Kullanici "damgali sayisini minimuma indirecegiz" dedi; TCMB uclusunu

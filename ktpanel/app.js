@@ -3469,13 +3469,24 @@ function guidanceRender(){
     '<div class="card" style="margin-bottom:8px;padding:8px 12px"><div class="lbl" style="display:flex;align-items:center;gap:6px">'+s.k+' <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)">'+esc(s.ad||'')+'</span> <span class="tag'+(s.kaynak==='Fintables'?' snap':'')+'">'+s.kaynak+(s.yil?' \u00b7 '+s.yil:'')+'</span>'+(s.kaynak==='Manuel'?' <button data-gsil="'+s.mi+'" style="margin-left:auto;background:none;border:none;color:var(--down);cursor:pointer;font-size:13px">\u2715</button>':'')+'</div><div style="overflow-x:auto;margin-top:4px">'+gTablo(s.g)+'</div></div>'
   ).join(''):'<div class="sub">Eşleşen şirket bulunamadı.</div>';
   $('guidanceListe').querySelectorAll('button[data-gsil]').forEach(b=>b.addEventListener('click',()=>{
+    /* §245m MEZAR TAŞI: silinen kaydın kimliği (kod|yıl) damgayla saklanır.
+       Yoksa birleştirme sunucuda kaydı "yalnız diğer tarafta var" sanıp
+       GERİ DİRİLTİR — birinin sildiği, diğerinin bayat kopyasından döner. */
+    const sil=guidanceManuel[+b.dataset.gsil];
+    if(sil){
+      try{
+        const m=JSON.parse(_origGet('__sil_guidance_v1')||'[]');
+        m.push({id:String(sil.k||'').toUpperCase()+'|'+String(sil.yil||''), ts:Date.now()});
+        localStorage.setItem('__sil_guidance_v1',JSON.stringify(m.slice(-200)));
+      }catch(e){}
+    }
     guidanceManuel.splice(+b.dataset.gsil,1);localStorage.setItem('guidance_v1',JSON.stringify(guidanceManuel));guidanceRender();
   }));
 }
 function guidanceEkle(){
   const k=$('gmKod').value.trim().toUpperCase(), ad=$('gmAd').value.trim(), yil=$('gmYil').value.trim(), g=$('gmMetin').value.trim();
   if(!k||!g){$('gmMsg').textContent='Kod ve metin gerekli.';return;}
-  guidanceManuel.unshift({k,ad,yil,g});
+  guidanceManuel.unshift({k,ad,yil,g,ts:Date.now()}); /* §245m: birleşim hakemi */
   localStorage.setItem('guidance_v1',JSON.stringify(guidanceManuel));
   $('gmKod').value='';$('gmAd').value='';$('gmMetin').value='';$('gmMsg').textContent=k+' eklendi \u2713';
   guidanceRender();
@@ -3682,7 +3693,7 @@ function arzKaydet(){
   const girdi={}; ARZ_ALAN.forEach(id=>{const e=$(id);if(e)girdi[id]=e.value;});
   const l=arzKayitOku();
   const i=l.findIndex(x=>x.kod===kod);
-  const kayit={id:Date.now(),kod:kod,ozet:ARZ_SON||{},girdi:girdi,zaman:new Date().toISOString()};
+  const kayit={id:Date.now(),kod:kod,ozet:ARZ_SON||{},girdi:girdi,zaman:new Date().toISOString(),ts:Date.now()};
   if(i>=0)l[i]=kayit;else l.unshift(kayit);
   arzKayitYaz(l.slice(0,60)); arzKayitRender();
   const m=$('arzMsg');if(m)m.textContent=kod+(i>=0?' güncellendi ✓':' kaydedildi ✓');
@@ -5658,7 +5669,7 @@ setTimeout(()=>{
 
 /* ==== KTPanel BOOT — tek merkezi başlatma (TDZ-güvenli, hata-izole, sağlık kontrollü) ==== */
 /* ==== Bulut senkron (paylaşımlı ortak depo) ==== */
-const CLOUD_KEYS=['poz_v1','journal_v1','guidance_v1','ktp_sukuk_kayit_v1','trk_seri_v1','ktp_arz_kayit_v1','rb_ayar_v1','trk_baz_v1','fm_agirlik_v1','tk_cizgi_v1','ppk_olasilik_v1','ktp_portfoyler_v1','ayr_seri_v1',
+const CLOUD_KEYS=['__sil_guidance_v1','poz_v1','journal_v1','guidance_v1','ktp_sukuk_kayit_v1','trk_seri_v1','ktp_arz_kayit_v1','rb_ayar_v1','trk_baz_v1','fm_agirlik_v1','tk_cizgi_v1','ppk_olasilik_v1','ktp_portfoyler_v1','ayr_seri_v1',
   /* §200: parite geçmişi buluta bağlandı. Günlük snapshot biriktiriyor ve
      120 kayıtla sınırlı (~4 ay); tarayıcı değişince SIFIRLANIYORDU ve o
      geçmiş bir daha kurulamıyordu — geriye dönük hesaplanamaz, yalnız
