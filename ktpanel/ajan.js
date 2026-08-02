@@ -814,8 +814,19 @@ async function _notMotoru(){
     'ÇIKTI BİÇİMİ (JSON DEĞİL): her not için önce ### ve numara, altına notun kendisi. Örnek:\n'+
     '###1\n(1 numaralı kartın yeni notu)\n###2\n(2 numaralı kartın yeni notu)\n'+
     'Başka hiçbir açıklama yazma.\n\n'+
-    parti.map((x,i)=>'### '+(i+1)+' ('+x.ad+')'+(x.canli?' [CANLI]':' [damgalı]')+'\nGÜNCEL VERİ: '+x.veri.slice(0,420)+'\nMEVCUT NOT: '+
-      notMetni(x.nt).slice(0,650)).join('\n\n');   // imza SOYULMUS (§110)
+    parti.map((x,i)=>{
+      /* §245n ADRESLİ UYARI. Genel kural istemde zaten vardı ama model bazı
+         kartlarda ısrarla rakam yazıyordu; ret sessiz kalınca aynı kart tur
+         tur reddedilip notu hiç güncellenmiyordu. Kaçıncı kez reddedildiğini
+         karta İLİŞTİRİYORUZ — ikinci retten sonra dil sertleşiyor. */
+      const red=(AJAN.__redSayac&&AJAN.__redSayac[x.ad])||0;
+      const redNot = red ? ('\n⛔ BU KARTTA ÖNCEKİ DENEMEN REDDEDİLDİ ('+red+' kez): not RAKAM içeriyordu. '+
+        (red>=2 ? 'BU SEFER HİÇ SAYI YAZMA — yüzde işareti, ondalık, oran hiç geçmesin. Yalnız yön ve anlam.'
+                : 'Yüzde/oran yazma; yön ve kompozisyon yeter.')) : '';
+      return '### '+(i+1)+' ('+x.ad+')'+(x.canli?' [CANLI]':' [damgalı]')+redNot+
+        '\nGÜNCEL VERİ: '+x.veri.slice(0,420)+'\nMEVCUT NOT: '+
+        notMetni(x.nt).slice(0,650);
+    }).join('\n\n');   // imza SOYULMUS (§110)
   const metin=await aiCagir(prompt, Math.min(2400, 200+parti.length*500));
   if(!metin){ kayit('Not motoru: AI erişilemedi — sonraki tura bekletildi'); return; }
   // Dayanıklı ayrıştırma: (1) çitleri soy, (2) ilk { ile son } arası, (3) olmadıysa regex ile kısmi kurtarma
@@ -837,7 +848,7 @@ async function _notMotoru(){
     kayit('Not motoru: yanıt çözülemedi — ilk 60 kr: '+String(metin).slice(0,60).replace(/\n/g,' '));
     return;
   }
-  let g=0; const rakamUyari=[];
+  let g=0; const rakamUyari=[], bulunamadi=[];
   parti.forEach((x,i)=>{
     const yeni=j[String(i+1)]!==undefined ? j[String(i+1)] : j[x.ad];
     if(yeni&&typeof yeni==='string'&&yeni.length>40){
@@ -853,16 +864,48 @@ async function _notMotoru(){
          İSTİSNA: eşik/hedef ifadeleri meşru ("%2 hedefi", "%20 eşiği") — sabittir,
          tabloyla çelişmez. Onlar geçer. */
       const _oranVar = /%\s*[-−+]?\d|[-−+]?\d+[.,]\d+\s*%/.test(yeni);
-      const _esikMi  = /%\s*[\d.,]+\s*(hedef|eşi[kğ]|sınır|band|bandı|üzeri|altı|üstü|üzerinde|altında)/i.test(yeni);
-      if(x.canli && _oranVar && !_esikMi){ rakamUyari.push(x.ad); return; }
+      /* §245n MUAFİYET KALIBI DAR GELİYORDU. Eski desen sayı ile anahtar
+         kelimenin BİTİŞİK olmasını istiyordu (%\s*[\d.,]+\s*(hedef|eşik…)).
+         Ölçüldü: "Fed %2 enflasyon hedefine odaklı" REDDEDİLİYORDU — araya
+         "enflasyon" girdiği için. Oysa bu tam da meşru kullanım: politika
+         hedefi SABİTTİR, tabloyla çelişmez. Model doğru not yazıyor, yaptırım
+         yanlış yere vuruyor, kart hiç güncellenmiyordu.
+         Artık sayı ile anahtar kelime arasında en fazla 3 kelime olabilir.
+         Kapsam da genişledi: hedefi/bandı çağrıştıran kelimeler eklendi. */
+      const _esikMi  = /%\s*[\d.,]+(?:\s+\S+){0,3}\s*(hedef\w*|eşi[kğ]\w*|sınır\w*|band\w*|bant\w*|üzeri\w*|altı\w*|üstü\w*|üzerinde|altında|taban\w*|tavan\w*)/i.test(yeni);
+      if(x.canli && _oranVar && !_esikMi){
+        rakamUyari.push(x.ad);
+        /* §245n GERİ BESLEME. Ret tek başına çıkmazı çözmüyordu: model her
+           turda aynı kartlara yine rakam yazıyor, yaptırım yine reddediyor,
+           o kartların notu HİÇ güncellenmiyordu (kullanıcının gördüğü
+           "0/4 not güncellendi" tam buydu — dört tur üst üste aynı dört kart).
+           Ret sayısı kartta biriktirilir; istem bir sonraki turda o karta
+           ÖZEL uyarı taşır. Kural istemde geneldi, artık ADRESLİ. */
+        AJAN.__redSayac = AJAN.__redSayac || {};
+        AJAN.__redSayac[x.ad] = (AJAN.__redSayac[x.ad]||0) + 1;
+        return;
+      }
+      if(AJAN.__redSayac) delete AJAN.__redSayac[x.ad];   // temiz yazdı → sayaç sıfırlanır
       x.nt.innerHTML=imzaEkle(yeni);   // §110: önce eski imza kalıntıları silinir
       x.nt.dataset.ebu='1';
       kayitli[x.ad]={ html:x.nt.innerHTML, hash:x.hash, ts:simdi, saat:saat() };
       g++;
+    } else {
+      /* §245n: not YOK ya da çok kısa — bu GERÇEK anahtar/biçim sorunudur.
+         §111 reddiyle karıştırılmamalı (aşağıdaki uyarı ayrımı buna dayanır). */
+      bulunamadi.push(x.ad);
     }
   });
   notKaydet(kayitli);
-  if(g<parti.length) kayit('⚠ eşleşmeyen yanıt anahtarları: '+Object.keys(j).slice(0,6).join(','));
+  /* §245n YANLIŞ TEŞHİS DÜZELTİLDİ. Eski satır: `if(g<parti.length)` —
+     g yalnız YAZILAN notu sayar, §111 reddi de g'yi artırmaz. Sonuç: dört not
+     reddedildiğinde günlük "⚠ eşleşmeyen yanıt anahtarları: 1,2,3,4" yazıyordu.
+     Oysa 1,2,3,4 anahtarları TAM EŞLEŞMİŞTİ; notlar bulundu, rakam yüzünden
+     reddedildi. İki farklı arıza tek mesaja binmişti ve mesaj YANLIŞ olanı
+     söylüyordu — kullanıcı haklı olarak "neden reddedildi" diye sordu.
+     §245h'nin dersi: ayırt etmeyen teşhis, teşhis değildir. */
+  if(bulunamadi.length) kayit('⚠ yanıtta karşılığı olmayan kart: '+bulunamadi.slice(0,4).join(' / ')+
+    ' — gelen anahtarlar: '+Object.keys(j).slice(0,6).join(','));
   /* §243b GÜNLÜK GÜRÜLTÜSÜ. Aynı uyarı her turda tekrarlanınca okunmaz olur —
      kullanıcı bugün tam bunu sordu. Yalnız ihlal eden kart KÜMESİ DEĞİŞTİYSE yaz. */
   if(rakamUyari.length){

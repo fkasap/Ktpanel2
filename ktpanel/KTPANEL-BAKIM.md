@@ -2715,6 +2715,57 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245n "REDDEDILDI" — YAPTIRIM DOGRUYDU, TESHIS YANLISTI (2 Agu)
+
+Kullanici Ebu gunlugunu gosterdi:
+    Not motoru: 0/4 not guncellendi · 16 sirada
+    §111 yaptirim: 4 not REDDEDILDI (canli kartta rakam) — eski not korundu
+    ⚠ eslesmeyen yanit anahtarlari: 1,2,3,4
+"Neden reddedildi diyor?" — hakli soru, cunku UC AYRI SORUN ust uste binmisti.
+
+### 245n.1 YANLIS TESHIS (asil kafa karistirici)
+    if(g < parti.length) kayit('⚠ eslesmeyen yanit anahtarlari: ...')
+g yalniz YAZILAN notu sayar. §111 reddi de g'yi artirmaz (satir 857 `return`).
+Sonuc: dort not reddedilince kod "anahtarlar eslesmedi" saniyor ve
+"1,2,3,4" basiyor — oysa o anahtarlar TAM ESLESMISTI. Notlar bulundu,
+rakam yuzunden reddedildi. Iki farkli ariza tek mesaja bindi ve mesaj
+YANLIS olani soyledi.
+COZUM: bulunamadi[] ayri toplanir; anahtar uyarisi YALNIZ gercekten
+karsiligi olmayan kart varsa yazilir, metni de netlesti.
+§245h'nin dersi ucuncu kez: AYIRT ETMEYEN TESHIS, TESHIS DEGILDIR.
+
+### 245n.2 MUAFIYET KALIBI DAR — asil ret sebebi buydu
+    /%\s*[\d.,]+\s*(hedef|esik|...)/    <- sayi ile kelime BITISIK olmali
+Olculdu: "Fed %2 enflasyon hedefine odakli" REDDEDILIYORDU — araya
+"enflasyon" girdigi icin muafiyet tutmuyordu. Oysa politika hedefi SABITTIR,
+tabloyla celismez; §111'in korumak istedigi sey bu degil.
+Yani model DOGRU not yaziyor, yaptirim YANLIS yere vuruyor, kart hic
+guncellenmiyordu. Kural dogruydu, KALIBI hataliydi.
+COZUM: sayi ile anahtar kelime arasinda 3 kelimeye izin; kapsam genisledi
+(taban/tavan/bant + ekli haller). 9 ornekle test: 9/9.
+
+### 245n.3 CIKMAZ: ret sessizdi, model ogrenmiyordu
+Ret tek basina yetmiyordu — model her turda ayni kartlara yine rakam yaziyor,
+yaptirim yine reddediyor, o kartlarin notu HIC guncellenmiyordu. Kullanicinin
+gordugu "0/4" tam buydu.
+COZUM: AJAN.__redSayac ile kart bazinda ret sayaci; istem bir sonraki turda
+O KARTA OZEL uyari tasiyor ("onceki denemen reddedildi, N kez"), ikinci retten
+sonra dil sertlesiyor ("HIC sayi yazma"). Temiz yazan kartin sayaci sifirlanir.
+Kural istemde GENELDI, artik ADRESLI.
+
+### NE DEGISMEDI
+§111 yaptiriminin KENDISI dogru ve yerinde: canli kartin sayisi dakikada bir
+degisir, not saatlerce durur; tabloda %-0,49 iken notta %-0,34 kalmasi paneli
+kendisiyle celiskiye dusurur. Eski notu korumak dogru karar.
+
+### BILINEN ACIK (bu turda kapatilmadi)
+Suzgec yalniz YUZDE kaliplarini yakaliyor. "CDS 206bp" ya da "Brent 91$" gibi
+yuzdesiz canli rakamlar geciyor. Genisletmek yanlis-ret riskini artirir;
+once bu turun etkisi olculmeli (kac kart temiz yaziyor). Siradaki ise yazildi.
+
+app.js v=20260731af · ajan.js v=20260731p · api kap-2026-07-31-n · data.js §245m
+DOSYALAR: ajan.js + index.html
+
 ## 245m ORTAK KUTU: "OLDUGU GIBI YAZ" -> "BIRLESTIREREK YAZ" (2 Agu)
 
 Ikinci goz (ChatGPT analizi) yaris kosulunu isaretledi; olcunce DAHA KOTUSU
