@@ -942,6 +942,35 @@ async function yabCanli(){
       $('yabHaftaVal').innerHTML='hisse '+(V.hisseNet.deger>=0?'+':'')+trN(V.hisseNet.deger,1)+'mn · DİBS '+(V.dibsNet.deger>=0?'+':'')+trN(V.dibsNet.deger,1)+'mn <span class="sub" style="display:inline">EVDS canlı</span>';
       if($('yabHaftaTag')&&V.hisseNet.tarih)$('yabHaftaTag').textContent='('+V.hisseNet.tarih+' · canlı)';
     }
+    /* §245r SERİ DE ARTIK CANLI — otomasyon kuralının ilk uygulaması.
+       "5 haftalık seri" satırı yabanci.json'daki ELLE tutulan hafta_seri'den
+       basılıyordu (Perşembe ritüeli: her yayın elle eklenirdi). Oysa cozCek
+       90 günlük ham seriyi ZATEN çekiyordu, yalnız son gözlemi verip gerisini
+       atıyordu. Uç artık seriyi de döndürüyor; burada son 5 hafta canlıdan
+       kurulup damgalı satır EZİLİYOR. Elle iş: haftada bir JSON düzenleme →
+       SIFIR. yabanci.json'da elle kalan tek şey aylık ödemeler dengesi
+       (o gerçekten EVDS haftalıklarında yok). */
+    if(V.hisseNet&&V.hisseNet.seri&&V.dibsNet&&V.dibsNet.seri){
+      const H=V.hisseNet.seri.slice(-5), D=V.dibsNet.seri.slice(-5);
+      if(H.length>=3){
+        const kisa=(t)=>{let p=String(t).split(/[-.\/]/); const ay=['','Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+          if(p.length>=3 && p[0].length===4) p=[p[2],p[1],p[0]];   /* ISO (yıl önde) → çevir */
+          return p.length>=3 ? (+p[0])+'\u00A0'+(ay[+p[1]]||p[1]) : String(t); };
+        const satir=H.map((h,i)=>{
+          const t=D[i]?D[i].v:null, rekor=(t!=null&&t>2000);
+          return kisa(h.t)+' <b>'+Math.round(h.v)+'</b>/<b'+(rekor?' class="up"':'')+'>'+(t==null?'—':Math.round(t))+(rekor?'★':'')+'</b>';
+        }).join(' → ');
+        const kap=$('yabHaftaVal') && $('yabHaftaVal').closest('div');
+        /* seri satırını id ile bul: render'da üretiliyor, id yok — metinden yakala */
+        document.querySelectorAll('#yabanciBody .kv').forEach(el=>{
+          const k=el.querySelector('.k');
+          if(k && /5 haftal[ıi]k seri/i.test(k.textContent)){
+            const v=el.querySelector('span[style]:last-child')||el.children[1];
+            if(v){ v.innerHTML=satir+' <span class="sub" style="display:inline">EVDS canlı</span>'; }
+          }
+        });
+      }
+    }
   }catch(e){ console.warn('[KTPanel] yabancı canlı katman düştü:',(e&&e.message)||e,'— damgalı gösterimde'); }
 }
 

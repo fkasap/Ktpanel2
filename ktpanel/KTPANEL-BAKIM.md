@@ -6,6 +6,41 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-07-17
 
 
+## ⭐ OTOMASYON KURALI (KULLANICI KURALI — 2 Agu 2026)
+
+"Artik sistemi otomatiklestiriyoruz. Damgali bir sey yok, cok cok zorda
+kalmadikca." — Bu tarihten itibaren:
+
+1. YENI OZELLIK OTOMATIK DOGAR. Otomatik beslenemeyecek bir kart/katman
+   PANELE GIRMEZ. Once kanal (Yahoo/EVDS/KAP/bot), sonra kart.
+   §245j emsal: ozet kartlari saf turetim, damgasiz — yeni is boyle kurulur.
+2. MEVCUT DAMGALILAR ERITILIR, cogaltilmaz. Elle katman sayisi su an 10
+   (yol haritasi asagida). Her turda bu sayi ya sabit kalir ya duser —
+   ASLA artmaz.
+3. MESRU ISTISNALAR (olculdu, gercekten otomatiklestirilemez):
+   - Swap stoku: EVDS'de YOK (yurt disi ikili swap, TCMB basin aciklamasi).
+     Tek sayi, haftalik, "rezervleri guncelle" komutuyla elle. §245k.
+   - Olay bazli katmanlar (kredi notu, halka arz, kopru testi): damga degil,
+     dogasi seyrek.
+   Istisna listesine ekleme = once OLCUM (kanal denendi ve yok), sonra
+   gunluge gerekce.
+4. DAMGALI VERI EKLEMEK GEREKIRSE (cok cok zorda): kart uzerinde tarih
+   GORUNUR + guncelleme-plani.json kaydi + nobetci limiti ZORUNLU.
+   Gizli damga (sabit sayi + sessiz dusus) YASAK — §245k'nin dersi.
+
+### ELLE KALAN 10 KATMAN — ERITME YOL HARITASI (2 Agu)
+  KANAL HAZIR (siradaki isler):
+    yabanci.json seri gecmisi  -> /api/evds2?mod=yab zaten VAR; su an yalniz
+                                  son haftayi eziyor, SERIYE ekleme yazilacak
+    bist-takvim + beklenen     -> KAP FR listesi (§201 adim 1, uc calisiyor)
+    hazine-takvim              -> Hazine aylik ihrac programi, cekilebilir
+  KANAL ARASTIRILACAK:
+    sektor.json                -> DAMGA §B2 "otomasyon yok" diyor ama Yahoo
+                                  sektor endeksleri (XBANK.IS vb.) denenebilir
+    analist / multiple payda   -> bilanco kalemi ister; §201 adim 2'ye bagli
+    fm.json / guidance            (KAP kalem veriyor mu — henuz belirsiz)
+  ISTISNA (kalici elle): swap stoku.
+
 ## ⭐ VERI KAYNAGI ONCELIGI (KULLANICI KURALI — 24 Tem 2026)
 
 SIRALAMA: Fintables > Alpha Vantage > Yahoo > digerleri
@@ -2714,6 +2749,33 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
+
+## 245r OTOMASYON KURALININ ILK UYGULAMASI — hafta_seri CANLIYA GECTI (2 Agu)
+
+Kural kondu ("damgali bir sey yok, cok cok zorda kalmadikca") ve ayni turda
+ilk eritme yapildi: yabanci.json'daki ELLE tutulan hafta_seri.
+
+### TESPIT: seri ZATEN cekiliyordu, atiliyordu
+cozCek() EVDS'ten 90 gunluk ham seriyi cekiyor, yalniz SON IKI gozlemi
+donduruyor, gerisini atiyordu. Yani "5 haftalik seri" satiri icin gereken
+veri her cagrida elde ediliyor ve COPE gidiyordu; satir ise Persembe
+rituelinde ELLE JSON duzenlemeyle besleniyordu. Otomasyon eksigi degil,
+ISRAF vardi.
+
+### YAPILAN
+1. cozCek ciktisina `seri` alani eklendi (tum dolu gozlemler, t+v ciftleri).
+   Mevcut cagiranlar etkilenmez — yalniz yeni alan.
+2. yabCanli: son 5 hafta canlidan kurulup damgali satir EZILIYOR
+   ("EVDS canli" iziyle). Tarih bicimi savunmali: GG-AA-YYYY · GG.AA.YYYY ·
+   ISO (yil onde) ucu de cozuluyor; hisse/DIBS dizileri farkli uzunluktaysa
+   cokmuyor (eksik "—" basilir). DIBS>2000mn rekor yildizi korundu.
+3. ELLE IS: haftada bir JSON duzenleme -> SIFIR. yabanci.json'da elle kalan
+   tek sey ayl ik odemeler dengesi blogu (EVDS haftaliklarinda gercekten yok).
+
+ELLE KATMAN SAYACI: 10 -> 9 (kural #2 isliyor).
+
+app.js v=20260802b · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + api/evds2.js + KTPANEL-BAKIM.md (kural)
 
 ## 245p IKI TAZELIK OKUYUCUSU — PANEL KENDISIYLE CELISIYORDU (2 Agu)
 
