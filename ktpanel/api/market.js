@@ -338,12 +338,17 @@ async function ecbModu(req, res){
     return { deger:son[1], tarih:son[0], fark: once?+(son[1]-once[1]).toFixed(2):null };
   };
   try{
-    // HICP: önce yeni dataflow, boşsa eski ICP (2025-12'ye kadar)
+    /* §245u YARIM KALMIŞ DÜZELTME TAMAMLANDI. Önceki hali yorumunda "yeni
+       dataflow denenir" diyordu ama İKİ DAL DA aynı eski 'ICP'yi çekiyordu —
+       ve ilk dal 'akis:HICP' etiketi basıyordu: YALAN ETİKET. Kod çalışıyor
+       görünüyor, etiket taze akış söylüyor, veri 2025-12'de donmuş duruyordu.
+       Yeni anahtar doğrulandı: dataflow 'HICP', sağlayıcı '4D0'
+       (HICP.M.U2.N.000000.4D0.ANR — portalda 17 Haz 2026 canlı). */
     const hicpCek = async (item)=>{
-      const yeni=await cekCsv('ICP','M.U2.N.'+item+'.4.ANR',3);
+      const yeni=await cekCsv('HICP','M.U2.N.'+item+'.4D0.ANR',3);
       if(yeni) return { ...sonFark(yeni), akis:'HICP' };
       const eski=await cekCsv('ICP','M.U2.N.'+item+'.4.ANR',3);
-      return eski? { ...sonFark(eski), akis:'ICP (eski seri, 2025-12 son)' } : null;
+      return eski? { ...sonFark(eski), akis:'ICP-arşiv (2025-12 son)' } : null;
     };
     const [dfr, bilanco, manset, cekirdek, enerji, bund, btp, oat] = await Promise.all([
       cekCsv('FM','B.U2.EUR.4F.KR.DFR.LEV',3),
