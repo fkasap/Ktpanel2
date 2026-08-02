@@ -1,18 +1,18 @@
-# Tazeleme — 2026-08-01
+# Tazeleme — 2026-08-02
 
 Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
-### XK100 ağırlıkları — ✗ KALDI
+### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
-- ✗ **tarih birliği**: 2 FARKLI tarih
-  - 2026-07-30 · 2026-07-31
+- ✓ **tarih birliği**: baskın 2026-07-30 (%99) · 1 kayıt ≤0 gün geride (işlem görmemiş olabilir)
+  - YEOTK:2026-07-31
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
-### XKTUM ağırlıkları — ✗ KALDI
+### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
-- ✗ **tarih birliği**: 2 FARKLI tarih
-  - 2026-07-30 · 2026-07-31
+- ✓ **tarih birliği**: baskın 2026-07-30 (%99) · 1 kayıt ≤0 gün geride (işlem görmemiş olabilir)
+  - YEOTK:2026-07-31
 - ✓ **toplam**: 96.50 (hedef 96.5 ±3)
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
@@ -20,11 +20,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-07-30
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
-### Multiple fiyatları — ✗ KALDI
+### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
-- ✗ **tarih birliği**: 2 FARKLI tarih
-  - 2026-07-30 · 2026-07-31
-- ✗ **aykırı değer**: 1 kayıt ±%25 sınırını aştı
+- ✓ **tarih birliği**: baskın 2026-07-30 (%99) · 1 kayıt ≤0 gün geride (işlem görmemiş olabilir)
+  - YEOTK:2026-07-31
+- ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): YEOTK → pay adedi + referans fiyat ELLE güncellenmeli
   - YEOTK: -59.42%
 
 ### Model sicili — ✓ GEÇTİ
@@ -42,6 +42,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XKTMT ağırlıkları · Model sicili (39 fiyat) · risk metrikleri (86)
-
-⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · Multiple fiyatları (139 fiyat · 1 karantina)
