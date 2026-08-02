@@ -46,7 +46,12 @@ async function cozCek(key, grupRx, hedefler, gunGeri){
     if(!dolu.length){ cikti[ad]=null; continue; }
     const so=dolu[dolu.length-1], on=dolu.length>1?dolu[dolu.length-2]:null;
     cikti[ad]={ deger:parseFloat(so[al]), tarih:so.Tarih||so.TARIH||'',
-      fark:on?+(parseFloat(so[al])-parseFloat(on[al])).toFixed(1):null, seriAd:adlar[ad] };
+      fark:on?+(parseFloat(so[al])-parseFloat(on[al])).toFixed(1):null, seriAd:adlar[ad],
+      /* §245r: ham 90 günlük seri ZATEN çekiliyordu, yalnız son iki gözlem
+         dışarı veriliyordu — gerisi atılıyordu. Artık isteyen mod tüm
+         gözlemleri alır (tarih+değer çiftleri). Elle tutulan hafta_seri'nin
+         yerini bu alacak: veri kaynaktan gelirken damgalı kopyası tutulmaz. */
+      seri: dolu.map(x=>({ t:x.Tarih||x.TARIH||'', v:parseFloat(x[al]) })) };
   }
   return { ok:true, grup:g.DATAGROUP_CODE, veri:cikti };
 }
