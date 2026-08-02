@@ -150,25 +150,56 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
   const f = await yahooFiyat(kodlar);
   const kapsanan = kodlar.filter(k => f[k]);
 
+  /* §245s AYKIRI ARTIK KATMANI DÜŞÜRMÜYOR — KARANTİNAYA ALIYOR.
+     1 Ağu: YEOTK %133,8 bedelsiz sermaye artırımı (hak kullanımı 31 Tem) →
+     fiyat o gün bölündü, referansa göre −%59. Süzgeç GÖREVİNİ YAPTI: bu
+     fiyat eski sermaye yapısındaki referansla karşılaştırılamaz, çarpan
+     hesabına girmemeli. AMA eski akış `if(!s.gecti) return null` diyordu:
+     BİR hissenin meşru kurumsal işlemi 141 hissenin TAMAMININ güncellenmesini
+     engelliyordu. Bilanço sezonunda bedelsiz yağmuru olur — her seferinde
+     bütün katman donar, fiyatlar günlerce bayatlar. Orantısız.
+     YENİ: aykırı hisseler KARANTİNAYA alınır — fiyatları GÜNCELLENMEZ
+     (referans eski yapıda, yeni fiyat yazmak çarpanı bozar), kodları dosyaya
+     `_karantina` olarak yazılır, rapor "elle bak: pay adedi + referans fiyat
+     birlikte güncellenmeli" der. Kalan hisseler NORMAL güncellenir.
+     Kapsam ve tarih birliği düşürmeye devam eder — onlar kaynak arızasıdır,
+     kurumsal işlem değil. */
   const kontrol = [
     KURALLAR.kapsam(kapsanan.length, kodlar.length, 0.95),
-    KURALLAR.tarihBirligi(kapsanan.map(k => f[k]), 'tarih'),
-    KURALLAR.aykiri(
-      liste.filter(x => f[x[kodAlan]] && x[fiyatAlan])
-        .map(x => ({ kod: x[kodAlan], d: (f[x[kodAlan]].fiyat / x[fiyatAlan] - 1) * 100 })),
-      'd', 25)
+    KURALLAR.tarihBirligi(kapsanan.map(k => f[k]), 'tarih')
   ];
+  const aykiriSonuc = KURALLAR.aykiri(
+    liste.filter(x => f[x[kodAlan]] && x[fiyatAlan])
+      .map(x => ({ kod: x[kodAlan], d: (f[x[kodAlan]].fiyat / x[fiyatAlan] - 1) * 100 })),
+    'd', 25);
+  const karantina = new Set(
+    (aykiriSonuc.gecti ? [] : (aykiriSonuc.detay || '').split(' · '))
+      .map(t => String(t).split(':')[0]).filter(Boolean));
+  /* aykırı sonucu rapora bilgi olarak girer ama geçti/kaldı hesabına girmez */
+  aykiriSonuc.gecti = true;
+  aykiriSonuc.mesaj = karantina.size
+    ? `${karantina.size} hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): ${[...karantina].join(', ')} → pay adedi + referans fiyat ELLE güncellenmeli`
+    : aykiriSonuc.mesaj;
+  kontrol.push(aykiriSonuc);
+
   const s = denetle(ad, kontrol);
   raporlar.push(s.rapor());
   if (!s.gecti) { denetimDustu = true; return null; }
 
   let n = 0;
-  liste.forEach(x => { const k = x[kodAlan]; if (f[k] && x[fiyatAlan] !== f[k].fiyat) { x[fiyatAlan] = f[k].fiyat; n++; } });
-  if (n) {
+  liste.forEach(x => {
+    const k = x[kodAlan];
+    if (karantina.has(k)) return;                      /* karantinadaki fiyata DOKUNMA */
+    if (f[k] && x[fiyatAlan] !== f[k].fiyat) { x[fiyatAlan] = f[k].fiyat; n++; }
+  });
+  if (karantina.size) d._karantina = { kodlar: [...karantina], tarih: bugun,
+    not: 'Fiyat referansla ±%25 üstü ayrıştı — kurumsal işlem (bedelsiz/bölünme) olası. Pay adedi ve referans fiyat birlikte elle güncellenene dek fiyat tazelenmez.' };
+  else delete d._karantina;
+  if (n || karantina.size) {
     d.fiyat_tarihi = f[kapsanan[0]].tarih;
     d.guncelleme = bugun;
     await yaz(dosya, d);
-    degisenler.push(`${ad} (${n} fiyat)`);
+    degisenler.push(`${ad} (${n} fiyat${karantina.size ? ` · ${karantina.size} karantina` : ''})`);
   }
   return n;
 }
