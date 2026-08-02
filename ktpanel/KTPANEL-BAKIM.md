@@ -2750,6 +2750,96 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245t UC IS: SICIL ELMA/ARMUT · KATFON PERSEMBE CIKTI · YEOTK KAPANDI (2 Agu)
+
+### 245t.1 SICIL -%27,59 — MATEMATIK PARMAK IZIYLE KOK NEDEN
+Ekran: "XKTUM (kurulustan) -27,59% · referans 18.586,93". Ama endeks tablosu
+XKTUM'u 18.254 gosteriyordu -> gercek dusus -%1,79. Kanit:
+    13.458 (XU100 canli) / 18.587 (XKTUM referansi) - 1 = -%27,59  BIREBIR
+Sicil, XKTUM referansina XU100 PUANINI boluyordu. m.xktum §191'de BILEREK
+XU100'e yonlendirilmisti (Actions kosusunda XKTUM.IS bos donmustu). AMA
+Vercel/market yolunda XKTUM.IS CALISIYOR — BIST tablosundaki canli 18.254
+zaten m.end.XKTUM'dan geliyordu. Gercek XKTUM ELDEYDI, sicil yanlis alani
+okuyordu. §191'in "XKTUM yok" kaniti ORTAMA ozeldi (Actions IP'si), genel
+gecer sanilmis. DERS: "kaynak yok" tespiti hangi ortamda olculduyse ORAYA
+aittir; baska yol calisiyor olabilir.
+DUZELTME: sicil + trkSifirla artik m.end.XKTUM okur. Gercek XKTUM yoksa
+endeks noktasi NULL — ASLA XU100'le bolunmez; trackRender null'u tasir
+(cizgiden atlar, 'veri yok' yazar, alfa '—'). trkSifirla XU100'le kurulmayi
+REDDEDER (yanlis tabanla kurulan sicil hatayi KALICI yapardi).
+NOT: bulut serisindeki eski -27'li noktalar bir sonraki acilista bugunun
+dogru noktasiyla guncellenir; kalici kirlilik gorulurse SIFIRLA kullanilir.
+
+### 245t.2 KATFON: "31 TEM" DAMGASI ASLINDA 30 TEM PERSEMBEYDI
+Kullanici "Cuma kapanislari cikmis olmali" dedi — HAKLIYDI. Fintables sorgusu
+kanitladi: mevcut json'daki fiyatlar (orn GOP 1,188176) yeni sorgunun p_1g
+(30 Tem) sutunuyla birebir; Cuma kapanisi (GOP 1,189483) ayri satirda duruyordu.
+Yani onceki cekim Cuma gunu OGLEN yapilmis, son fiyat henuz Persembe'ydi,
+damga "31 Tem" yazilmisti. GIZLI BIR GUN KAYMASI.
+YENILEME: 46 fon x 7 referans (son·1G·1A·3A·YTD·1Y·3Y) tek SQL'de cekildi,
+getiriler yeniden hesaplandi (43 fonun YTD'si ~+0,13 puan yukari = Cuma
+kazanci), AUM+akis+yatirimci sayisi 31 Tem kesin verisiyle guncellendi.
+DERS: "bugunun tarihi" ile "son kapanisin tarihi" ayri seylerdir; damga
+IKINCISINI yazmali. Cekim saati kapanistan onceyse damga bir gun geridir.
+
+### 245t.3 YEOTK KARANTINASI KAPANDI (dun acilmisti, §245s)
+Fintables sermaye artirimi tablosu web bulgusunu dogruladi: bedelsiz
+58,77 (ihrac) + 75,03 (ic kaynak) = %133,8 · 31 Tem DAGITILDI.
+multiple.json: adet 355 -> 830 mn · referans fiyat 96,1 -> 39,0.
+KENDINI KANITLAMA: 830/355 = 2,3380 = tam bedelsiz carpani; piyasa degeri
+korunumu %-5,1 fark (Cuma'nin fiyat hareketi dahil — beklenen). Yarinki bot
+kosusu YEOTK'yi karantinasiz normal gunceller.
+
+app.js v=20260802c · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + katfon.json + multiple.json
+
+## 245s GITHUB ACTIONS DENETIMI: DOGRU YAKALADI, YANLIS CEZALANDIRDI (2 Agu)
+
+1 Agu tazeleme raporu uc katmani dusurdu:
+  XK100 + XKTUM + Multiple  "tarih birligi: 2 FARKLI tarih (30+31 Tem)"
+  Multiple ayrica            "YEOTK -59,42% aykiri"
+Kullanici "bu hatayi duzelt" dedi. OLCUNCE iki ayri durum cikti ve IKISI DE
+denetimin hatasi degildi — CEZANIN OLCUSU hataliydi.
+
+### 245s.1 TARIH "KARISIKLIGI" VERI HATASI DEGIL, PIYASA GERCEGI
+141 hissenin 137'si Cuma (31 Tem) kapanisli, 4'u Persembe (30 Tem) — cunku
+likit olmayan kagitlar Cuma gunu HIC ISLEM GORMEMIS; Yahoo son islem gununun
+barini veriyor. Bu Turkiye kucuk-kagit gercegi: mutlak "tek tarih" sarti
+likit olmayan kuyrukta HER ZAMAN duser ve gecerli 137 fiyatin guncellenmesini
+de bloke eder.
+YENI KURAL (denetim.mjs tarihBirligi): GECER ancak ve ancak
+  a) baskin tarih kayitlarin >= %90'i   (kaynak arizasi elenir)
+  b) azinlik en fazla 3 takvim gunu geride  (suruklenen bayat fiyat elenir)
+  c) azinlik ISIMLE raporlanir — sessiz tolerans yok
+Test: 137+4/1gun GECER · tek hisse 5 gun geride KALIR · %80 baskin KALIR.
+
+### 245s.2 YEOTK: SUZGEC GOREVINI YAPTI, CEZA YANLIS YERE KESILDI
+-59,42% gercek bir fiyat hatasi DEGIL: YEOTK 31 Tem'de %133,8 BEDELSIZ
+sermaye artirimi yapti (web'den dogrulandi) — fiyat mekanik dustu, referans
+fiyat eski pay yapisinda. Aykiri suzgeci tam bu is icin var ve YAKALADI.
+AMA ceza katman-capliydi: TEK hisse 141 hissenin guncellenmesini bloke etti.
+YENI KURAL (tazele.mjs fiyatTazele): aykirilar KARANTINAYA alinir —
+  fiyatlari GUNCELLENMEZ (referans eski yapida, yeni fiyat carpani bozar),
+  d._karantina = {kodlar, tarih, not} dosyaya yazilir,
+  rapor "pay adedi + referans fiyat ELLE guncellenmeli" der,
+  kalan 140 hisse NORMAL guncellenir. Katman DUSMEZ.
+Kapsam ve tarih birligi dusurmeye devam eder — onlar kaynak arizasidir.
+Karantina ayristirma testi: detay "YEOTK: -59.42%" -> Set{YEOTK}, ASELS disari.
+
+### DERS
+Denetim kurali yazarken iki soru ayri sorulur: (1) bu sinyal GERCEK bir
+ariza mi yakaliyor? (2) cezanin KAPSAMI sinyalin kapsamiyla orantili mi?
+Burada (1) evet, (2) hayirdi: hisse-seviyesi sinyal, katman-seviyesi ceza.
+Aykiri = karantina (cerrahî) · kapsam/tarih arizasi = katman durur (genel).
+
+### KULLANICIYA NOT — YEOTK ELLE ISI
+multiple.json'da YEOTK'nin pay adedi ve referans fiyati bedelsiz sonrasi
+yapiyla guncellenmeli (%133,8 bedelsiz -> pay 2,338x, fiyat /2,338).
+Karantina o zamana kadar YEOTK fiyatina dokunmaz, eski carpan korunur.
+
+DOSYALAR: scripts/denetim.mjs + scripts/tazele.mjs -> DEPO KOKU scripts/
+          (Actions kokten kosar, ktpanel/ DEGIL!) · KTPANEL-BAKIM.md -> ktpanel/
+
 ## 245r OTOMASYON KURALININ ILK UYGULAMASI — hafta_seri CANLIYA GECTI (2 Agu)
 
 Kural kondu ("damgali bir sey yok, cok cok zorda kalmadikca") ve ayni turda

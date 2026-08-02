@@ -1246,7 +1246,13 @@ function trkBazUygula(){
 }
 function trkSifirla(){
   const m=window.__market;
-  if(!m||!m.his||!m.xktum||!m.xktum.p){ alert('Canlı fiyatlar henüz yüklenmedi — birkaç saniye sonra tekrar dene.'); return; }
+  if(!m||!m.his){ alert('Canlı fiyatlar henüz yüklenmedi — birkaç saniye sonra tekrar dene.'); return; }
+  /* §245t: taban GERÇEK XKTUM ile kurulur (m.end.XKTUM). m.xktum §191'de
+     XU100'e yönlendirilmişti; onunla kurulan taban elma/armut hatasını
+     KALICI yapar. Gerçek XKTUM yoksa sıfırlama durur — yanlış tabanla
+     kurulmaktansa hiç kurulmasın. */
+  const xkSfr=(m.end&&m.end.XKTUM&&m.end.XKTUM.p)?m.end.XKTUM.p:null;
+  if(!xkSfr){ alert('XKTUM canlı değeri alınamadı — sıfırlama yapılmadı.\n(XU100 ile kurulamaz: farklı endeks, taban kayar.)'); return; }
   if(!TRK||!TRK.holdings||!TRK.holdings.length){ alert('Sicil verisi (track.json) yüklenmedi.'); return; }
   const bugun=new Date().toISOString().slice(0,10);
   const p0={}, eksik=[];
@@ -1262,10 +1268,10 @@ function trkSifirla(){
   if(!confirm('SİCİL SIFIRLANACAK\n\n'+
     '· Yeni kuruluş tarihi: '+bugun+'\n'+
     '· '+kapsam+'/'+TRK.holdings.length+' hissenin BUGÜNKÜ canlı fiyatı yeni kuruluş fiyatı olur\n'+
-    '· XKTUM referansı: '+trN(m.xktum.p,2)+'\n'+
+    '· XKTUM referansı: '+trN(xkSfr,2)+'\n'+
     (eksik.length?'· Fiyatı çözülemeyen '+eksik.length+' hisse son bilinen fiyatını kullanır\n':'')+
     '· ÖNCEKİ SERİ SİLİNİR (geri alınamaz)\n\nDevam edilsin mi?')) return;
-  const baz={tarih:bugun, endeks0:m.xktum.p, p0:p0, kuruldu:new Date().toISOString()};
+  const baz={tarih:bugun, endeks0:xkSfr, p0:p0, kuruldu:new Date().toISOString()};
   try{ localStorage.setItem(TRK_BAZ, JSON.stringify(baz));
        localStorage.setItem('trk_seri_v1','[]'); }catch(e){}
   TRK.__statik=null; TRK.series=[{d:bugun,model:0,endeks:0}];
@@ -1273,29 +1279,34 @@ function trkSifirla(){
   if(typeof trackRender==='function') trackRender();
 }
 function trackRender(){
+  /* §245t NULL SAVUNMASI: endeks noktası artık null olabilir (gerçek XKTUM
+     alınamazsa asla XU100'le doldurulmaz). Render bunu çökmeden taşımalı:
+     null'lu noktalar endeks çizgisinden atlanır, etikette 'veri yok' yazar,
+     alfa hesaplanamıyorsa '—'. */
   const s=TRK.series,son=s[s.length-1];
-  const fark=son.model-son.endeks;
-  const fmtP=v=>(v>=0?'+':'')+v.toFixed(2).replace('.',',')+'%';
+  const eSon=(son.endeks!=null&&isFinite(son.endeks))?son.endeks:null;
+  const fark=(eSon==null)?null:(son.model-eSon);
+  const fmtP=v=>(v==null||!isFinite(v))?'veri yok':((v>=0?'+':'')+v.toFixed(2).replace('.',',')+'%');
   $('trkSum').innerHTML=
     '<div class="card"><div class="lbl">Model (kuruluştan)</div><div class="val '+(son.model>=0?'up':'down')+'">'+fmtP(son.model)+'</div><div class="sub">'+(TRK.sepet||(TRK.holdings.length+' hisse'))+'</div></div>'+
-    '<div class="card"><div class="lbl">'+TRK.endeks+' (kuruluştan)</div><div class="val '+(son.endeks>=0?'up':'down')+'">'+fmtP(son.endeks)+'</div><div class="sub">referans: '+trN(TRK.endeks_kapanis)+' ('+TRK.fiyat_tarihi+')</div></div>'+
-    '<div class="card"><div class="lbl">Fark (alfa)</div><div class="val '+(fark>=0?'up':'down')+'">'+fmtP(fark)+'</div><div class="sub">model − endeks</div></div>'+
+    '<div class="card"><div class="lbl">'+TRK.endeks+' (kuruluştan)</div><div class="val '+(eSon==null?'':(eSon>=0?'up':'down'))+'">'+fmtP(son.endeks)+'</div><div class="sub">referans: '+trN(TRK.endeks_kapanis)+' ('+TRK.fiyat_tarihi+')</div></div>'+
+    '<div class="card"><div class="lbl">Fark (alfa)</div><div class="val '+(fark==null?'':(fark>=0?'up':'down'))+'">'+fmtP(fark)+'</div><div class="sub">model − endeks</div></div>'+
     '<div class="card"><div class="lbl">Veri noktası</div><div class="val">'+s.length+'</div><div class="sub">son: '+son.d+'</div></div>';
   if(s.length>=2){
     $('trkChartBox').style.display='block';
-    const all=s.flatMap(p=>[p.model,p.endeks]);
+    const all=s.flatMap(p=>[p.model,p.endeks]).filter(v=>v!=null&&isFinite(v));
     const mn=Math.min.apply(null,all),mx=Math.max.apply(null,all),rng=(mx-mn)||1;
     const X=i=>(i/(s.length-1))*690+5, Y=v=>140-((v-mn)/rng)*130+5-0;
-    const line=key=>s.map((p,i)=>X(i).toFixed(1)+','+Y(p[key]).toFixed(1)).join(' ');
+    const line=key=>s.map((p,i)=>(p[key]==null||!isFinite(p[key]))?null:(X(i).toFixed(1)+','+Y(p[key]).toFixed(1))).filter(Boolean).join(' ');
     const zY=Y(0),lx=X(s.length-1);
     $('trkChart').innerHTML=
       ((mn<0&&mx>0)?'<line x1="5" y1="'+zY.toFixed(1)+'" x2="695" y2="'+zY.toFixed(1)+'" stroke="#E2EBE6" stroke-width="1" stroke-dasharray="4 3"/>':'')+
       '<polyline points="'+line('endeks')+'" fill="none" stroke="#B9C9C1" stroke-width="2"/>'+
       '<polyline points="'+line('model')+'" fill="none" stroke="#128A66" stroke-width="2.5"/>'+
-      '<circle cx="'+lx.toFixed(1)+'" cy="'+Y(son.endeks).toFixed(1)+'" r="3.2" fill="#B9C9C1"/>'+
+      (eSon==null?'':'<circle cx="'+lx.toFixed(1)+'" cy="'+Y(eSon).toFixed(1)+'" r="3.2" fill="#B9C9C1"/>')+
       '<circle cx="'+lx.toFixed(1)+'" cy="'+Y(son.model).toFixed(1)+'" r="3.2" fill="#128A66"/>'+
       '<text x="8" y="14" font-family="IBM Plex Mono" font-size="10" font-weight="600" fill="#128A66">Model '+fmtP(son.model)+'</text>'+
-      '<text x="120" y="14" font-family="IBM Plex Mono" font-size="10" fill="#8FA098">'+TRK.endeks+' '+fmtP(son.endeks)+'</text>';
+      '<text x="120" y="14" font-family="IBM Plex Mono" font-size="10" fill="#8FA098">'+TRK.endeks+' '+fmtP(eSon)+'</text>';
     $('trkNote').textContent='İzlenen portföy: kuruluş günü varsayılan ağırlıklarla damgalanan resmi Top-25. Getiriler Fintables kapanışlarıyla her damgalı güncellemede hesaplanır; temettü ve işlem maliyeti hariçtir.';
   }else{
     $('trkNote').innerHTML='Sicil <em>bugün</em> kuruldu — ilk performans noktası bir sonraki damgalı güncellemede ("güncelle" komutuyla) eklenecek. İzlenen portföy tabloda görünen seçim değil, kuruluşta damgalanan resmi Top-25\u0027tir: ağırlık kutucuklarıyla oynaman sicili etkilemez. Bu disiplin önemli: sicil ancak <em>önceden ilan edilmiş</em> kurallarla tutulursa anlamlıdır — sonradan ağırlık değiştirip "aslında şöyle yapsaydık" demek sicil değil, hikâye olur.';
@@ -2949,16 +2960,22 @@ function canliEnjekte(){
     if(say>0){SEKTOR.canli=say; if(typeof renderHeatmap==='function')renderHeatmap(); if(typeof renderRotasyon==='function')renderRotasyon();}
   }
   // B) Model portföy sicili: bugünün canlı noktası
-  if(typeof TRK!=='undefined'&&TRK&&TRK.holdings&&m.his&&m.xktum&&m.xktum.p){
+  if(typeof TRK!=='undefined'&&TRK&&TRK.holdings&&m.his){
     let mg=0,eksik=0;
     TRK.holdings.forEach(h=>{const c=m.his[h.t];const p=(c&&c.p)?c.p:h.p;if(!(c&&c.p))eksik++;mg+=h.w*(p/h.p0-1);});
-    /* §191: XKTUM Yahoo'da bulunmadığı için endeks referansı XU100'e düştü.
-       track.json'un endeks_kapanis'i ise Fintables'tan gelen GERÇEK XKTUM.
-       İKİSİ FARKLI ENDEKS — oran alınamaz, taban kayması olur (§114).
-       Bu yüzden karşılaştırma yapılır AMA hangi endekse göre olduğu YAZILIR. */
-    const eg=(m.xktum.p/TRK.endeks_kapanis-1)*100;
+    /* §245t ELMA BÖLÜ ARMUT — sicil -%27,59 gösteriyordu.
+       Matematik parmak izi: 13.458 (XU100 canlı) / 18.587 (XKTUM referansı)
+       = -%27,59. m.xktum §191'de BİLEREK XU100'e yönlendirilmişti (Actions
+       koşusunda XKTUM.IS boş dönmüştü) — ama Vercel/market yolunda XKTUM.IS
+       ÇALIŞIYOR: BIST endeks tablosundaki canlı 18.254 zaten m.end.XKTUM'dan
+       geliyor. Yani gerçek XKTUM eldeydi, sicil yanlış alanı okuyordu.
+       §114'ün tekrarı: pay ve payda AYNI endeks olmak zorunda. Gerçek XKTUM
+       yoksa endeks noktası NULL olur — asla XU100'le bölünmez; model çizgisi
+       yine çizilir, endeks 'veri yok' der. Yanlış sayıdan iyidir. */
+    const xkC = (m.end && m.end.XKTUM && m.end.XKTUM.p) ? m.end.XKTUM.p : null;
+    const eg = (xkC && TRK.endeks_kapanis) ? (xkC/TRK.endeks_kapanis-1)*100 : null;
     const bugun=new Date().toISOString().slice(0,10);
-    const nokta={d:bugun,model:+(mg*100).toFixed(2),endeks:+eg.toFixed(2),canli:true};
+    const nokta={d:bugun,model:+(mg*100).toFixed(2),endeks:eg==null?null:+eg.toFixed(2),canli:true};
     // ── Günlük birikim: noktayı buluta yaz (her açılışta günceller, gün değişince yeni satır) ──
     let bulutSeri=[]; try{ bulutSeri=JSON.parse(localStorage.getItem('trk_seri_v1')||'[]'); }catch(e){}
     const _bz=trkBazOku(); if(_bz) bulutSeri=bulutSeri.filter(x=>x&&x.d>=_bz.tarih);   // sıfırlama öncesi noktalar düşer (§108)
