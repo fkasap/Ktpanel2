@@ -71,16 +71,46 @@ export const KURALLAR = {
     };
   },
 
-  /* ── TARİH BİRLİĞİ: tüm kayıtlar AYNI tarihten mi ────────────────────────
+  /* ── TARİH BİRLİĞİ: kayıtlar AYNI güne mi oturuyor ───────────────────────
      29 Tem'deki 1. hatanın doğrudan panzehiri. Karışık tarihli hesap sessizce
-     yanlış sonuç üretir ve fark edilmez. */
+     yanlış sonuç üretir ve fark edilmez.
+     §245s KURAL AKILLANDIRILDI (mutlaklık gevşetilmeden):
+     1 Ağu koşusu üç katmanı "2 FARKLI tarih" ile düşürdü. Ölçüldü: 141
+     hisseden birkaç likit olmayan kağıt Cuma HİÇ İŞLEM GÖRMEMİŞTİ — onların
+     son Yahoo barı Perşembe. Bu veri hatası DEĞİL, piyasa gerçeği: işlem
+     görmeyen hissenin resmî fiyatı önceki kapanıştır, BIST endeksi de öyle
+     hesaplar. Mutlak "tek tarih" şartı likit olmayan kuyrukta HER ZAMAN
+     kırılır ve katmanı komple düşürür — 29 Tem'in korkusu (karışık GÜNLER
+     boyunca sürüklenen bayat fiyat) ile bunun arası ayrılmalı.
+     YENİ ÖLÇÜT (üçü birden sağlanmalı, yoksa yine KALIR):
+       a) BASKIN tarih kayıtların ≥ %90'ını kapsar
+       b) azınlık, baskından EN FAZLA 3 takvim günü geridedir
+       c) azınlık İSİMLE raporlanır — sessiz tolerans yok
+     Tek hisse 5 gün geride kalırsa (a) sağlansa da (b) düşürür: sürüklenen
+     bayat fiyat hâlâ yakalanır. */
   tarihBirligi(kayitlar, alan = 'tarih') {
-    const tarihler = [...new Set(kayitlar.map(k => k[alan]).filter(Boolean))];
+    const dolu = kayitlar.filter(k => k && k[alan]);
+    const sayim = {};
+    dolu.forEach(k => { sayim[k[alan]] = (sayim[k[alan]] || 0) + 1; });
+    const tarihler = Object.keys(sayim).sort();
+    if (tarihler.length <= 1) return {
+      ad: 'tarih birliği', gecti: true,
+      mesaj: `tek tarih: ${tarihler[0] || '—'}`, detay: null
+    };
+    const baskin = tarihler.reduce((a, b) => sayim[b] > sayim[a] ? b : a);
+    const oran = sayim[baskin] / dolu.length;
+    const enEski = tarihler[0];
+    const gunFark = Math.round((new Date(baskin) - new Date(enEski)) / 86400000);
+    const azinlik = dolu.filter(k => k[alan] !== baskin)
+      .map(k => `${k.kod || '?'}:${k[alan]}`);
+    const gecti = oran >= 0.90 && gunFark <= 3;
     return {
       ad: 'tarih birliği',
-      gecti: tarihler.length <= 1,
-      mesaj: tarihler.length <= 1 ? `tek tarih: ${tarihler[0] || '—'}` : `${tarihler.length} FARKLI tarih`,
-      detay: tarihler.length > 1 ? tarihler.sort().join(' · ') : null
+      gecti,
+      mesaj: gecti
+        ? `baskın ${baskin} (%${Math.round(oran * 100)}) · ${azinlik.length} kayıt ≤${gunFark} gün geride (işlem görmemiş olabilir)`
+        : `${tarihler.length} FARKLI tarih · baskın %${Math.round(oran * 100)}${gunFark > 3 ? ` · en eski ${gunFark} gün geride` : ''}`,
+      detay: azinlik.length ? azinlik.slice(0, 8).join(' · ') : tarihler.join(' · ')
     };
   },
 
