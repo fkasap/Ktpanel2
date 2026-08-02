@@ -912,10 +912,16 @@ async function kkoKart(){
 
 /* ---- Yabancı kartı canlı katman (mod=yab): stok + son hafta EVDS'den ---- */
 async function yabCanli(){
+  /* §245k: sessiz düşüş görünür yapıldı. Bu fonksiyon damgalı yabanci.json
+     verisinin ÜZERİNE canlıyı yazar — düşerse damgalı görünmeye devam eder,
+     bu tasarım gereği doğru (kart tarihli damga taşıyor, yalan yok). Ama
+     NEDEN canlıya geçemediği artık konsola düşüyor; yoksa "hâlâ damgalı"
+     ile "EVDS bozuk" ayırt edilemiyordu. */
   try{
     const r=await fetch('/api/evds2?mod=yab');
-    const d=r.ok?await r.json():null;
-    if(!(d&&d.ok&&d.veri))return;
+    if(!r.ok){ console.warn('[KTPanel] yabancı canlı katman HTTP',r.status,'— damgalı gösterimde'); return; }
+    const d=await r.json();
+    if(!(d&&d.ok&&d.veri)){ console.warn('[KTPanel] yabancı canlı katman:', (d&&d.err)||'veri yok','— damgalı gösterimde'); return; }
     const V=d.veri;
     // Stok satırı: hafta satırının hemen üstüne enjekte
     const hedef=$('yabHaftaTag');
@@ -936,7 +942,7 @@ async function yabCanli(){
       $('yabHaftaVal').innerHTML='hisse '+(V.hisseNet.deger>=0?'+':'')+trN(V.hisseNet.deger,1)+'mn · DİBS '+(V.dibsNet.deger>=0?'+':'')+trN(V.dibsNet.deger,1)+'mn <span class="sub" style="display:inline">EVDS canlı</span>';
       if($('yabHaftaTag')&&V.hisseNet.tarih)$('yabHaftaTag').textContent='('+V.hisseNet.tarih+' · canlı)';
     }
-  }catch(e){}
+  }catch(e){ console.warn('[KTPanel] yabancı canlı katman düştü:',(e&&e.message)||e,'— damgalı gösterimde'); }
 }
 
 /* ---- Hong Kong Makro (HKMA canlı) ---- */
@@ -7106,7 +7112,11 @@ async function loadYabanciCanli(){
       if(rr&&rr.ok&&rr.net&&rr.net.degerUSD!=null&&rj&&rj.swapStoku!=null){
         const shNet=+(rr.net.degerUSD-rj.swapStoku).toFixed(1);
         const trend=shNet>=40?'güçlü':shNet>=35?'toparlanıyor':'zayıf';
-        $('yabRezervVal').innerHTML='~'+trN(shNet,1)+' mlr $ · '+trend+' <span class="thin" style="font-size:9px">· canlı</span>';
+        /* §245k: "· canlı" damgası yarım doğruydu — net canlı ama swap stoku
+           elle. Stok 10 günü aştıysa yaş damgada görünür (karne ile aynı kural). */
+        let sy=null; try{ sy=Math.round((Date.now()-new Date((rj.guncelleme||'')+'T00:00:00').getTime())/86400000); }catch(e){}
+        const ek=(sy!=null&&sy>10)?' <span style="color:#E8933B;font-size:9px">stok '+sy+'g</span>':'';
+        $('yabRezervVal').innerHTML='~'+trN(shNet,1)+' mlr $ · '+trend+' <span class="thin" style="font-size:9px">· canlı</span>'+ek;
         $('yabRezervVal').className=shNet>=35?'up':'down';
       }
     }
@@ -7116,11 +7126,21 @@ async function loadYabanciCanli(){
 /* ---- Rezerv Karnesi canlı: brüt (haftalık) + net (aylık, kur çevirimli) ---- */
 async function karneRezervCanli(){
   if(!$('karneBrut'))return;
+  /* §245k SESSİZ DÜŞÜŞ GÖRÜNÜR YAPILDI. Eski halde üç çıkış yolu vardı ve
+     üçü de sessizdi: if(!r.ok)return · if(!j.ok)return · catch(e){}.
+     HTML'de sabit yedekler dururken bu sessizlik ÖLÜMCÜLDÜ: EVDS düşünce
+     16 Tem'in sayıları bugünmüş gibi kalıyordu. Sabit yedekler kaldırıldı
+     (§245k index.html) — şimdi düşüş "—" olarak görünür VE damga sebebini
+     söyler. haberCanliCek (§245d) ile aynı desen: yedeğe düşmek kusur değil,
+     SESSİZCE düşmek kusurdur. */
+  const dusum=(neden)=>{ const t=$('karneTag'); if(!t) return;
+    t.innerHTML='<span style="color:var(--down)">\u26a0 EVDS alınamadı</span> <span class="thin">· '+esc(String(neden).slice(0,50))+'</span>';
+    console.warn('[KTPanel] rezerv karnesi EVDS düşüşü:', neden); };
   try{
     const r=await fetch('/api/evds2?mod=rezerv');
-    if(!r.ok)return;
+    if(!r.ok){ dusum('HTTP '+r.status); return; }
     const j=await r.json();
-    if(!j.ok)return;
+    if(!j.ok){ dusum(j.err||'ok:false'); return; }
     // Brüt (haftalık, USD milyar hazır geliyor)
     if(j.brut && $('karneBrut')){
       const b=j.brut;
@@ -7144,11 +7164,26 @@ async function karneRezervCanli(){
         const swapStoku=rj.swapStoku||0;
         const shNet=+(j.net.degerUSD - swapStoku).toFixed(1);
         const gun=rj.guncelleme||'';
-        $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· net − swap '+trN(swapStoku,1)+' · canlı (stok '+gun+')</span>';
+        /* §245k SWAP STOKU YAŞI HÜCREDE. Bu hesabın tek elle girdisi swapStoku
+           (EVDS'de yok — yurt dışı ikili swap, TCMB haftalık basın açıklaması).
+           Net CANLI olduğu için sonuç canlı GÖRÜNÜYOR; ama stok bayatsa sonuç
+           da o kadar bayat. TCMB Perşembe yayınlar: stok 10 günü aştıysa en az
+           bir yayın kaçmış demektir → sarı yaş uyarısı hücrede belirir.
+           Nöbet panosu zaten alarm veriyor; bu satır uyarıyı SAYININ YANINA
+           taşır — sayıyı okuyan kişi panoya bakmamış olabilir. */
+        let stokYas=null; try{ stokYas=Math.round((Date.now()-new Date(gun+'T00:00:00').getTime())/86400000); }catch(e){}
+        const bayat = (stokYas!=null && stokYas>10);
+        $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· net − swap '+trN(swapStoku,1)+' · canlı (stok '+gun+')</span>'+
+          (bayat?' <span style="color:#E8933B;font-size:9px;font-weight:600">\u26a0 stok '+stokYas+' günlük — "rezervleri güncelle"</span>':'');
         $('karneSwapHaric').className='up';
-      }catch(e){}
+      }catch(e){
+        /* §245k: rezerv.json okunamazsa swap hariç hesaplanamaz — ama net
+           elimizde. Boş bırakmak yerine NEDENİ hücreye yaz. */
+        $('karneSwapHaric').innerHTML='<span class="thin">hesaplanamadı · rezerv.json okunamadı</span>';
+        console.warn('[KTPanel] swap hariç net:', (e&&e.message)||e);
+      }
     }
-  }catch(e){}
+  }catch(e){ dusum((e&&e.message)||'ağ hatası'); }
 }
 
 // Grup son değer + ay etiketi yardımcısı (aylık seriler için)

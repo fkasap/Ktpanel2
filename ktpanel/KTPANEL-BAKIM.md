@@ -2715,6 +2715,57 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245k TCMB UCLUSU: OTOMASYON DEGIL, DURUSTLUK ISIYMIS (31 Tem)
+
+Kullanici "damgali sayisini minimuma indirecegiz" dedi; TCMB uclusunu
+otomatiklestirmeyi onerdim. OLCUNCE ONERIM YANLIS CIKTI — cogu zaten otomatikti:
+  Net rezerv    karneRezervCanli -> /api/evds2?mod=rezerv  TAM CANLI
+  Yabanci akis  yabCanli -> mod=yab  KISMEN CANLI (stok+son hafta, damgaliyi ezer)
+  Swap stoku    GERCEKTEN elle — ve OTOMATIKLESTIRILEMEZ: EVDS'de yok (yurt disi
+                ikili swap, agirlikla Katar; TCMB haftalik basin aciklamasi)
+DERS: "damgali" ETIKETI ile damgali GERCEK ayri seyler. Plan 17 gosteriyordu.
+
+### ASIL SORUN: SABIT YEDEK + SESSIZ DUSUS BILESIMI
+index.html'de uc SABIT sayi (163,3 · 56,3 · 42,5 — 16 Tem) duruyordu;
+karneRezervCanli canliyi uzerine yaziyordu ama uc cikis yolu da sessizdi
+(if(!r.ok)return · if(!j.ok)return · catch(e){}). EVDS dusunce 16 Tem'in
+sayilari BUGUNMUS GIBI kaliyordu. Gizli damga, acik damgadan kotu.
+
+### YAPILANLAR
+1. SABIT YEDEKLER KALDIRILDI: uc hucre "—" baslar. Bos hucre yanlis sayidan iyi.
+2. SESSIZ DUSUS KONUSTURULDU (karneRezervCanli + yabCanli): damgada sebep +
+   konsol warn (§245d deseni). yabCanli duserse damgaliya birakir — DOGRU
+   davranis (tarihli damga yalan degil); eklenen sey NEDENIN gorunmesi.
+3. PLAN ETIKETLERI GERCEGE UYDURULDU:
+   Net rezerv -> canli/otomatik (nobetci 15 gun BOSUNA alarm veriyordu)
+   Risk metrikleri -> canli (bot §230'dan beri guncelliyor, etiket eskiydi)
+   Endeks agirliklari -> canli + dosya:xktum.json (§198 okumasi calissin)
+   Yabanci akis haftalik KALIR (seri gecmisi elle; dosya damgasi izliyor)
+   DAMGALI: 17 -> 14, ve kalan 14'un damgasi artik GERCEGI soyluyor.
+4. SWAP STOKU YASI SAYININ YANINDA: stok >10 gunse karnede ve yabanci kartinda
+   sari uyari ("stok 14 gunluk — rezervleri guncelle"). "· canli" damgasi yarim
+   dogruydu: net canli ama stok elle — simdi tam.
+
+### DOGRULAMA
+Nobetci simulasyonu: yanlis alarm (net rezerv) GITTI, gercek alarm (swap 14g —
+TCMB 17 ve 24 Tem yayinlari islenmemis) KALDI. Yas mantigi 4 sinir durumunda
+test edildi (14g uyari · 7g/1g/bos sessiz, NaN yok).
+
+### 245k-EK: PARTI BIRLESTIRME KAZASI (ayni tur)
+Bu turun calisma kopyasini DEPODAN (aa) kurdum — oysa ab (sukuk penceresi) ve
+ac (ozet kartlari) partileri henuz depoya yuklenmemisti, ayri kopyada duruyordu.
+Teslim etseydim kullanicinin yukleyecegi app.js O IKI PARTIYI GERI ALIRDI.
+Surum denetimi yakaladi (beklenen ad, gorunen aa) — surum damgasi tam bu is
+icin var (§233). Cozum: ab+ac tabanina 245k parca parca, assert'li tasindi;
+her iki partinin izleri birlesik dosyada dogrulandi.
+DERS: calisma kopyasi HER ZAMAN son teslimden kurulur, depodan degil —
+depo, kullanicinin yukleme ritmine gore GERIDE olabilir.
+
+app.js v=20260731ad (ab+ac+ad birlesik) · ajan.js v=20260731n · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + guncelleme-plani.json
+NOT: ab ve ac partileri bu dosyalarin ICINDE — ayrica api/kap.js ve
+api/_lib/sukuk.js (245i teslimi) hala gecerli, degismedi.
+
 ## 245j OZET KARTLARI TABLONUN KOPYASIYDI — ALANI HAK ETTIRILDI (31 Tem)
 
 Kullanici: "ustteki buyuk kutulara gerek yok dimi asagida ayniları var."

@@ -72,15 +72,17 @@
       "siklik": "haftalik",
       "son": "2026-07-17",
       "kaynak": "TCMB menkul kıymet ist. + ödemeler dengesi + web",
-      "_245": "DAMGA §B: Perşembe ritüeli, ELLE (hafta_seri'ye ekleme). siklik=\"canli\" idi → muaftı."
+      "_245": "DAMGA §B: Perşembe ritüeli, ELLE (hafta_seri'ye ekleme). siklik=\"canli\" idi → muaftı.",
+      "_245k": "KISMEN canlı: stok + SON hafta EVDS CANLI (yabCanli → mod=yab, damgalıyı ezer). hafta_seri GEÇMİŞİ ve aylık ödemeler dengesi ELLE — dosya damgası onları izler. Yani bu katman damgalı KALIR ama bayatlama riski yalnız seri geçmişinde."
     },
     {
       "ad": "Net rezerv (Rezerv Karnesi)",
       "dosya": "index.html",
-      "siklik": "haftalik",
-      "son": "2026-07-16",
+      "siklik": "canli",
       "kaynak": "TCMB haftalık rezerv (Perşembe) + web",
-      "_245": "DAMGA §B: TCMB Perşembe yayını, ELLE işlenir. siklik=\"canli\" idi → muaftı. dosya index.html olduğu için tarih plandan okunur; tazeleyince \"son\" ELLE güncellenmeli."
+      "_245": "DAMGA §B: TCMB Perşembe yayını, ELLE işlenir. siklik=\"canli\" idi → muaftı. dosya index.html olduğu için tarih plandan okunur; tazeleyince \"son\" ELLE güncellenmeli.",
+      "_245k": "Brüt+net+swap hariç EVDS3 CANLI (karneRezervCanli → mod=rezerv). Elle kalan TEK şey swapStoku (rezerv.json) — o ayrı katmanda izleniyor. Önceki \"haftalik damgalı\" etiketi YANLIŞTI; nöbetçi boşuna 15 gün alarmı veriyordu.",
+      "son": "otomatik"
     },
     {
       "ad": "TCMB faizi / para politikası",
@@ -124,7 +126,8 @@
       "siklik": "ceyreklik",
       "son": "2026-07-29",
       "kaynak": "Fintables finansal_tablolar (bilanço dönemi) | 29 Tem: FIYAT tazelendi (Fintables mumlar_gunluk_gh, 141/141). Bilanco kalemleri 1C26 — 2C26 aciklanmadi.",
-      "sezon": true
+      "sezon": true,
+      "_245k": "Fiyat sütunu BOT (fiyatTazele), EV/EBITDA PAYDASI elle çeyreklik. Karma katman: damgalı kalır ama damga yalnız paydayı temsil eder."
     },
     {
       "ad": "Hazine ihraç takvimi",
@@ -200,9 +203,10 @@
     {
       "ad": "Risk metrikleri (vol · beta)",
       "dosya": "risk.json",
-      "siklik": "aylik",
-      "son": "2026-07-16",
-      "kaynak": "Fintables günlük getiri · vol=yıllık std, beta=XKTUM'a karşı · risk bütçesi kartının tabanı"
+      "siklik": "canli",
+      "son": "otomatik",
+      "kaynak": "Fintables günlük getiri · vol=yıllık std, beta=XKTUM'a karşı · risk bütçesi kartının tabanı",
+      "_245k": "BOT güncelliyor (scripts/tazele.mjs → riskTazele, GitHub Actions haftaiçi 15:10 UTC). \"aylik damgalı\" etiketi ESKİYDİ — §230 otomasyonundan önce yazılmış."
     },
     {
       "ad": "Analist konsensüsü (hedef fiyat)",
@@ -228,12 +232,14 @@
     },
     {
       "ad": "Endeks agirliklari (XKTUM + XK100 + XKTMT)",
-      "siklik": "haftalik",
-      "son": "2026-07-29",
+      "siklik": "canli",
+      "son": "otomatik",
       "sezon": false,
       "kaynak": "xk100.json — Fintables hisse_senetleri. IKI RITIM: uyelik UC AYDA BIR degisir (BIST revizyonu, 1 May-31 Eki / 1 Kas-30 Nis), AGIRLIK ise HER GUN kayar cunku serbest dolasim piyasa degerinden turer (fiyat hareketiyle birlikte). Ayni sorgu ikisini de yakalar. HAFTALIK tazeleme yeterli: bir haftada agirlik kaymasi tipik olarak 10-30 bps, aktif agirlik yorumunu bozmaz. | §159: XKTUM da eklendi (242 uye, ilk 150 = %96,5). Sorgu ayni, yalniz 'XK100' -> 'XKTUM'. | §164: XKTMT (34 uye) eklendi. XK050 diye endeks YOK.",
       "sorgu": "SELECT hisse_senedi_kodu, fiili_dolasim_pay_adedi, son_fiyat FROM hisse_senetleri WHERE 'XK100' = ANY(endeksler) ORDER BY fiili_dolasim_pay_adedi * son_fiyat DESC  [LIMIT 50 + OFFSET 50]",
-      "hesap": "agirlik_i = (sd_adet_i x fiyat_i) / toplam x 100"
+      "hesap": "agirlik_i = (sd_adet_i x fiyat_i) / toplam x 100",
+      "dosya": "xktum.json",
+      "_245k": "BOT güncelliyor (endeksTazele ×3). dosya alanı da eklendi (§198 dosya-tarihi okuması çalışsın diye; xktum temsilci — üçü aynı koşuda yazılır). pay_adedi ELLE ve çeyreklik (BIST revizyonu) — o ritim bozulursa bot raporu uyarır."
     },
     {
       "ad": "BIST beklenen bilanco takvimi",

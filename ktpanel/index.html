@@ -430,10 +430,18 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="note">TCMB EVDS3 API'sinden panel açılışında otomatik çekilir. TÜFE her ayın ~3'ünde, rezerv haftalık (Perşembe), REK aylık güncellenir — yeni veri EVDS'ye düştüğü an panelde. Değer "—" kalırsa o serinin kodu erişilemiyor demektir (köprü sağlam, seri kodu düzeltilir). REK yeni bazda (2025=100): <b>100 = 2025 ortalaması</b>. 100 üstü = TL 2025'e göre reel <em>değerlenmiş</em> (ithal enflasyonda rahatlama, ihracatçıda rekabet baskısı); 100 altı = reel ucuzlama. Eski 2003=100 serisinin 55-75 bandıyla kıyaslanmaz — diller farklı. TÜİK'in 2025 baz yenilemesiyle TÜFE ve REK aynı anda yeni seriye geçti; panel her ikisini de yeni bazdan çeker.</div>
   </div>
   <div class="card">
-    <div class="lbl">REZERV KARNESİ <span class="tag" id="karneTag">mlr $ · 10 TEM</span></div>
-    <div class="kv"><span class="k">Brüt rezervler <span class="thin" style="font-size:8px">haftalık</span></span><span class="up" id="karneBrut">163,3 (+3,6 haftalık)</span></div>
-    <div class="kv"><span class="k">Net rezervler <span class="thin" style="font-size:8px">aylık</span></span><span class="up" id="karneNet">56,3 (+1,3)</span></div>
-    <div class="kv"><span class="k">Swap hariç net rezerv <span class="thin" style="font-size:8px">net − swap stoku</span></span><span class="up" style="font-weight:600" id="karneSwapHaric">42,5 — Mart'tan beri zirve</span></div>
+    <div class="lbl">REZERV KARNESİ <span class="tag" id="karneTag">mlr $ · EVDS bekleniyor</span></div>
+    <!-- §245k SABİT YEDEKLER KALDIRILDI. Bu üç hücrede 16 Tem'in sayıları
+         (163,3 · 56,3 · 42,5) SABİT duruyordu; karneRezervCanli() EVDS'den
+         canlı değeri ÜZERİNE yazıyordu. EVDS düşerse eski sayılar bugünmüş
+         gibi ekranda kalıyordu — ve üç çıkış yolu da sessiz olduğu için
+         (if(!r.ok)return · if(!j.ok)return · catch(e){}) kimse fark etmiyordu.
+         Boş hücre yanlış sayıdan iyidir: "—" soru sordurur, bayat sayı
+         yanlış karar verdirir. Canlı gelmezse artık karneRezervCanli
+         damgaya sebep yazar (§245k app.js tarafı). -->
+    <div class="kv"><span class="k">Brüt rezervler <span class="thin" style="font-size:8px">haftalık</span></span><span id="karneBrut">—</span></div>
+    <div class="kv"><span class="k">Net rezervler <span class="thin" style="font-size:8px">aylık</span></span><span id="karneNet">—</span></div>
+    <div class="kv"><span class="k">Swap hariç net rezerv <span class="thin" style="font-size:8px">net − swap stoku</span></span><span style="font-weight:600" id="karneSwapHaric">—</span></div>
     <div class="kv"><span class="k">Referans: Ocak zirvesi</span><span>brüt 215,5 / swap hariç 85,7</span></div>
     <div class="kv"><span class="k">Haziran dibi (26 Haz)</span><span class="down">brüt 149,2 / swap hariç 28</span></div>
     <div class="kv"><span class="k">Sıradaki haftalık veri</span><span id="tcmbHaftalik">—</span></div>
@@ -1507,7 +1515,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260731ac"></script>
+<script src="/app.js?v=20260731ad"></script>
 <script src="/ajan.js?v=20260731n"></script>
 </body>
 </html>
