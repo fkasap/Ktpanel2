@@ -657,18 +657,79 @@ async function asyaRender(){
     ['kosdaq','KOSDAQ','G. Kore'],['taiwan','Taiwan','Tayvan'],
     ['nifty','Nifty 50','Hindistan'],['asx','ASX 200','Avustralya'],
   ];
-  // Özet: 4 ana endeks
+  /* §245j KARTLAR TABLONUN KOPYASIYDI — ALANI HAK ETSİN.
+     Eski hali Nikkei · Hang Seng · Shanghai · KOSPI'yi büyük punto ile
+     gösteriyordu. Bunlar tablonun İLK DÖRT SATIRIYDI, aynı sırada, aynı
+     kaynaktan (window.__market), üstelik EKSİK: tabloda hafta ve ay da var.
+     Yani kartlar dikey alanı harcayıp hiçbir şey eklemiyordu.
+     YENİ ÖLÇÜT: bir kart, tablonun SÖYLEYEMEDİĞİNİ söylemeli. Tablo tek tek
+     endeksleri verir; kartlar artık BÜTÜNÜ okur — 8 satıra bakıp kafadan
+     hesaplaman gereken dört şey:
+       1 GECE YÖNÜ  ortalama + genişlik → dalga mı, tek hikâye mi
+       2 DAĞILIM    en iyi−en kötü aralık → makro mu, ülkeye özgü mü
+       3 TEKNO·İHRC Nikkei+KOSPI+KOSDAQ+Taiwan → küresel teknoloji/ihracat iştahı
+       4 ÇİN TALEBİ Hang Seng+Shanghai → emtia ve ihracatçı kanalı
+     3 ve 4'ün gruplaması panelin KENDİ çerçevesinden geliyor (t16 alt notu:
+     "Nikkei ve KOSPI teknoloji/ihracat öncüsü · Hang Seng ve Shanghai Çin
+     talep sinyali"). Not zaten bunu söylüyordu, panel hesaplamıyordu.
+     GÜN + AY BİRLİKTE gösteriliyor: gün yönü ayla ZITSA bu bir sıçramadır,
+     trend değil. 31 Tem verisi tam bu: tekno gün +%5,9 · ay −%15,1. */
   if(m&&$('asyaEndeksOzet')){
-    const one=[['nikkei','Nikkei','Japonya'],['hangseng','Hang Seng','Hong Kong'],['shanghai','Shanghai','Çin'],['kospi','KOSPI','G. Kore']];
-    $('asyaEndeksOzet').innerHTML=one.map(([k,ad,ul])=>{
-      const d=m[k];
-      if(!d||d.p==null)return '<div class="card" style="padding:10px 12px"><div class="lbl">'+ad+'</div><div class="sub">—</div></div>';
-      const sgn=d.chg>=0?'+':'',cls=d.chg>=0?'up':'down';
-      return '<div class="card" style="padding:10px 12px">'+
-        '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">'+ad+' <span style="font-size:8px">'+ul+'</span></div>'+
-        '<div style="font-size:20px;font-weight:700;margin:2px 0;font-family:var(--mono)">'+trN(d.p,0)+'</div>'+
-        '<div class="'+cls+'" style="font-size:11px;font-weight:600">'+sgn+trN(d.chg,2)+'% gün</div></div>';
-    }).join('');
+    const TUM=ENDEKS.map(x=>x[0]);
+    const AD={}; ENDEKS.forEach(([k,ad])=>AD[k]=ad.replace(/\s*\d+$/,''));
+    const gv=(k,alan)=>{ const d=m[k]; return (d&&d[alan]!=null&&isFinite(d[alan]))?d[alan]:null; };
+    const ort=(ks,alan)=>{ const v=ks.map(k=>gv(k,alan)).filter(x=>x!=null);
+      return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null; };
+    const varOlan=TUM.filter(k=>gv(k,'chg')!=null);
+
+    const kart=(etiket,deger,cls,alt)=>
+      '<div class="card" style="padding:10px 12px">'+
+      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">'+etiket+'</div>'+
+      '<div class="'+(cls||'')+'" style="font-size:20px;font-weight:700;margin:2px 0;font-family:var(--mono)">'+deger+'</div>'+
+      '<div class="sub" style="font-size:10px">'+alt+'</div></div>';
+    const yz=(v,b)=>v==null?'—':((v>=0?'+':'')+trN(v,b==null?2:b)+'%');
+    const sn=v=>v==null?'':(v>=0?'up':'down');
+
+    let h='';
+    if(!varOlan.length){
+      h=kart('GECE YÖNÜ','—','','veri yok');
+    } else {
+      /* 1) GECE YÖNÜ — ağırlıksız ortalama + genişlik.
+         Ağırlıksız BİLEREK: burada aranan piyasa büyüklüğü değil, kaç ayrı
+         piyasanın aynı yöne baktığı. Genişlik yönü, ortalama şiddeti verir. */
+      const o=ort(varOlan,'chg'), arti=varOlan.filter(k=>gv(k,'chg')>0).length;
+      h+=kart('GECE YÖNÜ',yz(o),sn(o),arti+'/'+varOlan.length+' endeks artıda');
+
+      /* 2) DAĞILIM — en iyi ile en kötü arasındaki puan farkı.
+         DAR dağılım = ortak bir makro itki (risk açıldı/kapandı) — BIST'e
+         taşınma olasılığı yüksek. GENİŞ dağılım = ülkeye özgü hikâyeler,
+         gecenin ortalaması yanıltıcıdır. Tabloda 8 satır var ama bu farkı
+         gözle çıkarmak zor; asıl sinyal burada. */
+      const sirali=varOlan.slice().sort((a,b)=>gv(b,'chg')-gv(a,'chg'));
+      const ust=sirali[0], alt=sirali[sirali.length-1];
+      const aralik=gv(ust,'chg')-gv(alt,'chg');
+      h+=kart('DAĞILIM',trN(aralik,1)+' <span style="font-size:11px">puan</span>','',
+        AD[ust]+' ↔ '+AD[alt]+(aralik>=6?' · hikâye bazlı':' · ortak itki'));
+
+      /* 3-4) İKİ KANAL — panelin kendi çerçevesi.
+         Gün ile AY birlikte: zıt işaretliyse sıçrama, aynı işaretliyse trend. */
+      const kanal=(etiket,ks,aciklama)=>{
+        const v=ks.filter(k=>gv(k,'chg')!=null);
+        if(!v.length) return kart(etiket,'—','',aciklama);
+        const g=ort(v,'chg'), a=ort(v,'a1');
+        const zit=(g!=null&&a!=null&&g*a<0);
+        return kart(etiket,yz(g),sn(g),
+          'ay '+yz(a,1)+(zit?' · <b>sıçrama</b>':(a!=null?' · trendle uyumlu':''))
+          +' <span style="opacity:.65">'+aciklama+'</span>');
+      };
+      h+=kanal('TEKNO · İHRACAT',['nikkei','kospi','kosdaq','taiwan'],'');
+      h+=kanal('ÇİN TALEBİ',['hangseng','shanghai'],'');
+    }
+    $('asyaEndeksOzet').innerHTML=h;
+    const nt=$('asyaOzetNot');
+    if(nt) nt.innerHTML='Kartlar tabloyu <b>özetlemez</b>, tablonun söylemediğini söyler: '+
+      'genişlik gecenin ortak mı tek hikâye mi olduğunu, dağılım BIST\u0027e taşınma olasılığını, '+
+      'iki kanal ise sıçrama ile trendi ayırır. Tek tek endeksler aşağıdaki tabloda.';
   }
   // Endeks tablosu (Yahoo)
   let html='<table class="tbl"><thead><tr><th>Endeks</th><th class="num">Değer</th><th class="num">Gün</th><th class="num">Hafta</th><th class="num">Ay</th></tr></thead><tbody>';
@@ -916,17 +977,74 @@ async function hkMakro(){
 function emtiaRender(){
   const m=window.__market; if(!m)return;
   if(!$('emtiaBody'))return;
-  // Özet kartları: en çok bilinen 4 (Brent, Altın, Bakır, Doğalgaz)
-  const one=[['brent','Brent','$/varil'],['altin','Altın','$/ons'],['bakir','Bakır','$/lb'],['dogalgaz','Doğalgaz','$/MMBtu']];
-  $('emtiaOzet').innerHTML=one.map(([k,ad,br])=>{
-    const d=m[k];
-    if(!d||d.p==null)return '<div class="card" style="padding:10px 12px"><div class="lbl">'+ad+'</div><div class="sub">—</div></div>';
-    const s=d.chg>=0?'+':'',cls=d.chg>=0?'up':'down';
-    return '<div class="card" style="padding:10px 12px">'+
-      '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">'+ad+' <span style="font-size:8px">'+br+'</span></div>'+
-      '<div style="font-size:20px;font-weight:700;margin:2px 0;font-family:var(--mono)">'+trN(d.p,2)+'</div>'+
-      '<div class="'+cls+'" style="font-size:11px;font-weight:600">'+s+trN(d.chg,2)+'% bugün</div></div>';
-  }).join('');
+  /* §245j EMTİA KARTLARI DA TABLONUN KOPYASIYDI.
+     Eski hali Brent · Altın · Bakır · Doğalgaz'ı büyük punto ile tekrar
+     ediyordu — dördü de tabloda, üstelik hafta/ay sütunlarıyla birlikte.
+     AMA Emtia'da Asya'dan FARKLI bir çözüm gerekti: tablo ZATEN gruplu
+     (Enerji · Değerli Metal · Sanayi Metali · Tahıl · Yumuşak). Yani grup
+     ortalaması göstermek yeni bilgi olmazdı.
+     Eksik olan GRUPLAR ARASI okuma — ve bir Türkiye fonu için asıl soru bu:
+       1 MALİYET BASKISI  Brent+doğalgaz+buğday → cari açık ve TÜFE kanalı.
+                          Türkiye net enerji ithalatçısı; bu üçü panelin kendi
+                          notunda "TL baskısı ve TÜFE'ye geçer" diye tanımlı.
+       2 BAKIR/ALTIN      klasik büyüme-korku oranı. Bakır sanayi talebini,
+                          altın korunma talebini temsil eder. Oran YÜKSELİYORSA
+                          döngü, DÜŞÜYORSA korunma öndedir. Tabloda iki ayrı
+                          satır var ama ORAN yok — asıl sinyal orada.
+       3 REEL FAİZ        altın gün+ay. Altın reel faize ters çalışır.
+       4 GENİŞLİK         kaç emtia artıda + dağılım → ortak itki mi, tek
+                          kalemin hikâyesi mi.
+     Ölçüt Asya ile aynı: kart, tablonun SÖYLEYEMEDİĞİNİ söylemeli. */
+  const eg=(k,al)=>{ const d=m[k]; return (d&&d[al]!=null&&isFinite(d[al]))?d[al]:null; };
+  const eort=(ks,al)=>{ const v=ks.map(k=>eg(k,al)).filter(x=>x!=null);
+    return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null; };
+  const ekart=(etiket,deger,cls,alt)=>
+    '<div class="card" style="padding:10px 12px">'+
+    '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">'+etiket+'</div>'+
+    '<div class="'+(cls||'')+'" style="font-size:20px;font-weight:700;margin:2px 0;font-family:var(--mono)">'+deger+'</div>'+
+    '<div class="sub" style="font-size:10px">'+alt+'</div></div>';
+  const eyz=(v,b)=>v==null?'—':((v>=0?'+':'')+trN(v,b==null?2:b)+'%');
+  const esn=v=>v==null?'':(v>=0?'up':'down');
+
+  let oz='';
+  /* 1) MALİYET BASKISI — Türkiye'nin ithalat faturası kalemleri */
+  const MAL=['brent','dogalgaz','bugday'].filter(k=>eg(k,'chg')!=null);
+  if(MAL.length){
+    const g=eort(MAL,'chg'), a=eort(MAL,'a1');
+    oz+=ekart('MALİYET BASKISI',eyz(g),esn(g),
+      'ay '+eyz(a,1)+' <span style="opacity:.65">· cari açık + TÜFE kanalı</span>');
+  } else oz+=ekart('MALİYET BASKISI','—','','veri yok');
+
+  /* 2) BAKIR / ALTIN — büyüme mi korku mu. Oran seviyesi tek başına anlamsız
+     (birimler farklı), o yüzden GÜNLÜK GÖRELİ hareket gösteriliyor: bakırın
+     altına karşı kaç puan ayrıştığı. Artı = döngü öne geçti. */
+  const bg=eg('bakir','chg'), ag=eg('altin','chg');
+  if(bg!=null&&ag!=null){
+    const fark=bg-ag;
+    oz+=ekart('BAKIR − ALTIN',(fark>=0?'+':'')+trN(fark,1)+' <span style="font-size:11px">puan</span>',esn(fark),
+      (fark>=0?'<b>büyüme</b> önde':'<b>korunma</b> önde')+' <span style="opacity:.65">· döngü sinyali</span>');
+  } else oz+=ekart('BAKIR − ALTIN','—','','veri yok');
+
+  /* 3) ALTIN — reel faiz ve güvenli liman */
+  const alg=eg('altin','chg'), ala=eg('altin','a1');
+  oz+=ekart('ALTIN',eyz(alg),esn(alg),
+    (ala==null?'':'ay '+eyz(ala,1))+' <span style="opacity:.65">· reel faize ters</span>');
+
+  /* 4) GENİŞLİK — kaç kalem artıda + dağılım */
+  const TUME=EMTIA.map(x=>x[0]).filter(k=>eg(k,'chg')!=null);
+  if(TUME.length){
+    const arti=TUME.filter(k=>eg(k,'chg')>0).length;
+    const sr=TUME.slice().sort((x,y)=>eg(y,'chg')-eg(x,'chg'));
+    const ar=eg(sr[0],'chg')-eg(sr[sr.length-1],'chg');
+    oz+=ekart('GENİŞLİK',arti+'<span style="font-size:13px">/'+TUME.length+'</span>','',
+      'artıda · dağılım '+trN(ar,1)+' puan'+(ar>=8?' <b>· tek kalem hikâyesi</b>':''));
+  } else oz+=ekart('GENİŞLİK','—','','veri yok');
+
+  $('emtiaOzet').innerHTML=oz;
+  const ent=$('emtiaOzetNot');
+  if(ent) ent.innerHTML='Kartlar tabloyu özetlemez — tablo kalemleri gruplu zaten verir. '+
+    'Buradakiler <b>gruplar arası</b> okuma: ithalat faturası baskısı, büyüme-korunma dengesi ve genişlik. '+
+    'Tek tek kalemler ve bağlam notları aşağıda.';
   // Gruplu tablo
   let html='';
   EMTIA_GRUP.forEach(grup=>{

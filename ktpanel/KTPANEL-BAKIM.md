@@ -2715,6 +2715,66 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245j OZET KARTLARI TABLONUN KOPYASIYDI — ALANI HAK ETTIRILDI (31 Tem)
+
+Kullanici: "ustteki buyuk kutulara gerek yok dimi asagida ayniları var."
+OLCULDU, dogruydu: Asya sekmesindeki dort kart (Nikkei · Hang Seng · Shanghai ·
+KOSPI) tablonun ILK DORT SATIRIYDI — ayni sira, ayni kaynak (window.__market),
+ayni iki alan (d.p, d.chg). Ustelik EKSIK: tabloda hafta (h1) ve ay (a1) da var.
+Emtia sekmesinde ayni desen (Brent · Altin · Bakir · Dogalgaz).
+
+Iki secenek sunuldu — SIL ya da ALANI HAK ETTIR. Kullanici ikincisini secti.
+
+### YENI OLCUT
+Bir ozet karti, tablonun SOYLEYEMEDIGINI soylemeli. Tablo tek tek kalemleri
+verir; kart BUTUNU okumali. Yoksa dikey alani harciyor demektir.
+
+### ASYA — dort kart
+  1 GECE YONU     agirliksiz ortalama + kac/kac artida
+                  AGIRLIKSIZ BILEREK: aranan piyasa buyuklugu degil, kac ayri
+                  piyasanin ayni yone baktigi. Genislik yonu, ortalama siddeti.
+  2 DAGILIM       en iyi - en kotu puan farki + uclardaki isimler
+                  DAR = ortak makro itki, BIST'e tasinma olasiligi yuksek.
+                  GENIS = ulkeye ozgu hikayeler, gece ortalamasi YANILTICI.
+  3 TEKNO·IHRACAT Nikkei+KOSPI+KOSDAQ+Taiwan ortalamasi
+  4 CIN TALEBI    Hang Seng+Shanghai ortalamasi
+3 ve 4'un gruplamasi panelin KENDI cercevesinden geliyor — t16 alt notu zaten
+"Nikkei ve KOSPI teknoloji/ihracat oncusu · Hang Seng ve Shanghai Cin talep
+sinyali" diyordu. Not bunu SOYLUYORDU, panel HESAPLAMIYORDU.
+Ikisinde GUN + AY birlikte: zit isaretliyse SICRAMA, ayni isaretliyse trend.
+31 Tem verisiyle dogrulandi: tekno gun +%5,90 · ay -%15,1 -> sicrama.
+Dagilim 11,7 puan (KOSDAQ ↔ KOSPI) -> hikaye bazli, makro dalga DEGIL.
+Tablo bu dordunun HICBIRINI soylemiyordu; 8 satira bakip kafadan hesaplaniyordu.
+
+### EMTIA — ayni olcut, FARKLI cozum
+Emtia tablosu ZATEN gruplu (Enerji · Degerli Metal · Sanayi Metali · Tahil ·
+Yumusak). Yani grup ortalamasi gostermek yeni bilgi OLMAZDI — Asya desenini
+mekanik kopyalamak yanlis olurdu. Eksik olan GRUPLAR ARASI okuma:
+  1 MALIYET BASKISI  Brent+dogalgaz+bugday. Turkiye net enerji ithalatcisi;
+                     panelin kendi notu "cari acigi ve TL baskisini artirir,
+                     TUFE'ye gecer" diyor. Fon icin asil emtia sorusu bu.
+  2 BAKIR − ALTIN    klasik buyume-korku dengesi. Tabloda iki AYRI satir var
+                     ama ORAN yok. Seviye orani anlamsiz (birimler farkli),
+                     o yuzden GUNLUK GORELI hareket: bakirin altina karsi kac
+                     puan ayristigi. Arti = dongu onde, eksi = korunma onde.
+  3 ALTIN            gun+ay, reel faize ters
+  4 GENISLIK         kac kalem artida + dagilim
+
+### SINIR DURUMLARI TEST EDILDI
+Asya 4 senaryo: gercek veri · tekduze makro hareket (dagilim 0,7 -> "ortak
+itki") · yarisi eksik veri (3/3 hesaplar, cokmez) · veri hic yok (tek "—" kart).
+Emtia 3 senaryo: enerji soku · risk-off (bakir-altin -6,2 -> korunma onde) ·
+veri yok. Hicbirinde NaN/undefined sizmiyor.
+
+### DERS
+"Bu kart tablodaki bir satirin buyutulmus hali mi?" — oyleyse ya silinir ya
+yukseltilir. Ozet, TEKRAR degil TURETIM olmali.
+Ve desen kopyalanirken baglam sorgulanmali: Asya'da grup ortalamasi yeni
+bilgiydi, Emtia'da OLMAZDI cunku tablo zaten gruplu.
+
+app.js v=20260731ac · ajan.js v=20260731n · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html
+
 ## 245i PENCERE UYUMSUZLUGU — 30 GUN SANILIYORDU, YARIM GUN TARANIYORDU (31 Tem)
 
 Kullanici /api/kap?mod=sukuk ciktisini yapistirdi:
