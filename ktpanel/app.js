@@ -251,9 +251,25 @@ async function ecbTarayiciCek(){
   const sonFark=(seri)=>{ if(!seri||!seri.length)return null;
     const s=seri[seri.length-1], o=seri.length>1?seri[seri.length-2]:null;
     return { deger:s[1], tarih:s[0], fark:o?+(s[1]-o[1]).toFixed(2):null }; };
-  const hicp = async (item)=>{                       // DOĞRU akış adı: ICP (HICP diye bir dataflow yok → 404)
-    const y=await cek('ICP','M.U2.N.'+item+'.4.ANR',3);
-    return y?{...sonFark(y), akis:'ICP'}:null; };
+  const hicp = async (item)=>{
+    /* §245u AKIŞ İKİNCİ KEZ TAŞINDI — bu sefer TERS YÖNE.
+       Tarihçe: §104'te 'HICP' 404 veriyordu, doğru akış 'ICP' çıktı (o gün
+       için DOĞRUYDU). Sonra ECB 4 Şubat 2026'da Eurostat metodoloji değişimiyle
+       ICP setini KALDIRDI ve yerine YENİ HICP setini koydu (DSD ECB_ICP3).
+       Ölü ICP akışı tarihsel veriyi dondurulmuş döndürmeye devam etti —
+       bu yüzden manşet/çekirdek/enerji '2025-12' ile 7 AY bayat görünüyordu
+       ve hata da yoktu: akış ölmemişti, DONMUŞTU. Donan akış, ölen akıştan
+       sinsi: 404 vermez, sadece eskir.
+       YENİ ANAHTAR: sağlayıcı boyutu '4' → '4D0' (Eurostat'ın yeni kodu).
+       Doğrulama: HICP.M.U2.N.000000.4D0.ANR ve NRGY00.4D0.ANR portalda canlı
+       (son güncelleme 17 Haz 2026). Kalem kodları AYNI (000000/XEF000/NRGY00/
+       FOOD00/SERV00/IGXE00) — yalnız akış adı ve sağlayıcı değişti.
+       DERS: 'doğru akış' tespitleri TARİHLİDİR; kaynak kurumlar akış adını
+       değiştirir. Donmuş seri şüphesinde ilk soru: 'bu dataset hâlâ yaşıyor mu?' */
+    const y=await cek('HICP','M.U2.N.'+item+'.4D0.ANR',3);
+    if(y) return {...sonFark(y), akis:'HICP'};
+    const eski=await cek('ICP','M.U2.N.'+item+'.4.ANR',3);   // yedek: dondurulmuş arşiv
+    return eski?{...sonFark(eski), akis:'ICP-arşiv'}:null; };
   /* §242 ENFLASYON KIRILIMI. Önce üç seri vardı (manşet·çekirdek·enerji) ve
      ECB faiz kartının İÇİNE sıkıştırılmıştı. Enflasyon ECB'nin tek görevi;
      kendi kartını hak ediyor ve kırılım olmadan okunmuyor.
@@ -264,7 +280,10 @@ async function ecbTarayiciCek(){
        · DÖRT ÜLKE (DE·FR·IT·ES) — parçalanma riski
          Tek para politikası, enflasyonlar ayrıştıkça herkese aynı gelmez.
      ICP akışında ülke kodu U2 yerine ISO2 ile değişiyor: M.<ülke>.N.<kalem>.4.ANR */
-  const ulke = async (k)=>{ const y=await cek('ICP','M.'+k+'.N.000000.4.ANR',3); return y?sonFark(y):null; };
+  const ulke = async (k)=>{ /* §245u: ülke serileri de yeni HICP+4D0 akışında */
+    const y=await cek('HICP','M.'+k+'.N.000000.4D0.ANR',3);
+    if(y) return sonFark(y);
+    const e=await cek('ICP','M.'+k+'.N.000000.4.ANR',3); return e?sonFark(e):null; };
   const [dfr,bilanco,manset,cekirdek,enerji,gida,hizmet,sanayi,de,fr,it,es,bund,btp,oat]=await Promise.all([
     cek('FM','B.U2.EUR.4F.KR.DFR.LEV',3), cek('ILM','W.U2.C.T000000.Z5.Z01',6),
     hicp('000000'), hicp('XEF000'), hicp('NRGY00'),

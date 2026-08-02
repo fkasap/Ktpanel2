@@ -3,6 +3,51 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "005930",
+   "ad": "Samsung Electronics",
+   "donem": "2Ç26",
+   "tarih": "30 Tem 2026",
+   "tarih_iso": "2026-07-30",
+   "sablon": "teknoloji",
+   "skor": "GÜÇLÜ",
+   "ozet": "Bellek süper döngüsünün merkez üssü. Ciro 171,5 trilyon won (ç/ç +%28, y/y +%130) ve faaliyet kârı 89,5 trilyon won (ç/ç +%56, y/y ~+%1.810) — üç çeyrek üst üste rekor, konsensüsün (85-86 trilyon) üzerinde. Faaliyet marjı %52,2; kârın %99,7'si çip (DS) bölümünden: DRAM ve NAND rekor satış. EPS 10.849 won (ç/ç +%52). Tek çeyrek faaliyet kârı NVIDIA'nın son çeyreğini (≈81,8 trilyon won karşılığı) geçti.",
+   "detay": "Ciro 171,5 tr won +%130 y/y · faaliyet kârı 89,5 tr won, marj %52,2 · net: EPS 10.849 won ç/ç +%52 · brüt marj: açıklanmadı · FCF/capex: açıklanmadı (konferans çağrısında yıllık capex planı; kesin rakam raporda). Segment: DS (çip) faaliyet kârının %99,7'si; DX ciro arttı ama bileşen maliyeti (bellek fiyatları!) marjı yedi; Harman ciro 4,6 tr, FK 0,4 tr. Tek seferlik: ~%10,5 oranında (~19-20 tr won) performans primi karşılığı 2Ç'ye yüklendi. SLSI/foundry hâlâ zararda; 2nm 2. nesil mobil seri üretim başlıyor. Görünüm: HBM4/HBM4E + DDR5 + SOCAMM2/eSSD ile agentic-AI talebinde liderlik planı; peak-out tartışması başladı (bellek döngüseldir).",
+   "baglanti": "ABD kartlarıyla aynı hikâyenin iki yüzü: Apple'ın 'bellek kıtlığı → Mac/iPad zam' baskısı = Samsung'un rekor DRAM/NAND fiyatlaması. Samsung'un DX bölümünün maliyet sıkışması, bellek almak zorunda olan HERKESİN sıkışması. BIST bağı: bellek fiyat döngüsü Türk elektronik ithalatçısı/montajcısında maliyet, veri merkezi yatırımcısında capex baskısı.",
+   "kaynak": "Samsung Newsroom + konferans çağrısı (30 Tem 2026), kesin sonuçlar"
+  },
+  {
+   "kod": "SMSN",
+   "ad": "Samsung Electronics",
+   "donem": "2Ç26",
+   "tarih": "30 Tem 2026",
+   "tarih_iso": "2026-07-30",
+   "sablon": "teknoloji",
+   "skor": "GÜÇLÜ",
+   "ozet": "Şirket tarihinin en büyük çeyreği — ama tek motorla. Ciro ₩171,5 tr (+%130 y/y, ç/ç +%28, üst üste 3. rekor), faaliyet kârı ₩89,5 tr (~62 mlr$, y/y ×19, beklenti 88,1'in üstünde). EPS +%52 → ₩10.849. Kârın %99'undan fazlası yarı iletkenden: DS bölümü ₩127,5 tr ciro / ₩89,2 tr kâr — HBM süper döngüsü. HBM4'te kitle üretim + HBM4E ilk numuneler; yönetim 3Ç'de HBM4 gelirinin ×3 olmasını, yıl ikinci yarısında HBM gelirinin %60+'ını oluşturmasını bekliyor; arz kıtlığı 2028'e kadar sürecek, 2027 daha sıkı. Madalyonun öbür yüzü: MX (telefon) ₩33,2 tr ciroya rağmen İLK KEZ faaliyet zararı (−₩0,7 tr) — aynı bellek kıtlığı kendi telefonunun bileşen maliyetini yuttu. Tüketici elektroniği de hafif zararda. Okuma: AI bellek döngüsü şirketi tek başına taşıyor; çeşitlendirilmiş görünen gelir tablosu fiilen tek silindirli.",
+   "metrikler": {
+    "ciro": "₩171,5 tr (+%130 y/y, +%28 ç/ç — rekor)",
+    "faaliyet_kari": "₩89,5 tr · marj %52,2 (y/y ×19; beklenti ₩88,1 tr)",
+    "net_eps": "EPS ₩10.849 (+%52)",
+    "segment": "DS (çip) ₩127,5 tr ciro/₩89,2 tr kâr · MX ₩33,2 tr/−₩0,7 tr İLK ZARAR · Display ₩7,5 tr/+₩0,7 tr · TV-beyaz eşya hafif zarar",
+    "brut_marj": "açıklanmadı",
+    "fcf_capex": "açıklanmadı (capex artışı sürüyor — 2027 kıtlık beklentisiyle)"
+   },
+   "kaynak": "Samsung Newsroom + earnings call (30 Tem) · web araştırma 2 Ağu",
+   "baglanti": "BIST bağı: bellek fiyat şoku Türk elektronik ithalatçısına maliyet, VESTEL/ARCLK bileşen tarafına baskı; AAPL kartındaki 'bellek kıtlığı → Mac/iPad zam' ile aynı döngünün arz ucu."
+  },
+  {
+   "kod": "EFOR",
+   "ad": "Efor Holding",
+   "donem": "2Ç26 (6A)",
+   "tarih": "31 Tem 2026",
+   "tarih_iso": "2026-07-31",
+   "sablon": "bist",
+   "skor": 2.0,
+   "ozet": "Daralan ciro, dönen zarar. Satışlar 3.839 mn ₺ — y/y −%11,5 (2Ç25: 4.338), ç/ç −%4,2 (1Ç26: 4.006). Ana ortaklık net −90 mn ₺: geçen yılın aynı çeyreği de zarardı (−54) ama 1Ç26'daki +124'lük toparlanma korunamadı. TTM ana ortaklık kârı 13 mn ₺'ye eridi — 45 mlr ₺ piyasa değerinin altındaki kazanç tabanı fiilen sıfır.",
+   "detay": "Ciro 3.839 mn y/y −%11,5 · brüt kâr 634 mn, marj %16,5 (2Ç25: %17,2 · 1Ç26: %13,3 — çeyreklik marj toparlaması var ama ciro küçülürken) · faaliyet kârı/FAVÖK: ara kalemler çekilmedi, açıklanmadı olarak bırakıldı · net: ana ortaklık −90 mn (TTM 13 mn) · FCF/capex: açıklanmadı · segment: açıklanmadı. Okuma: brüt marj ç/ç düzeldi (%13,3→%16,5) fakat y/y hem ciro hem marj geride; zarar ana ortaklığa yazılıyor.",
+   "kaynak": "Fintables finansal tablolar (KAP 31 Tem 2026 yayını)"
+  },
+  {
    "kod": "YKBNK",
    "ad": "Yapı Kredi",
    "donem": "2Ç26 (6A)",
@@ -2100,7 +2145,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "31 Tem 2026 — YKBNK 2Ç26 eklendi (Fintables). AAPL · AMZN 30 Tem.",
+ "guncelleme": "2026-08-02 — Samsung 2Ç26 (30 Tem kesin) + EFOR 2Ç26 (31 Tem, Fintables) kartları eklendi. Megacap ABD kartları (MSFT/META/AAPL/AMZN) 30-31 Tem'den beri mevcuttu. Kalan küçükler: DOGUB (3,2 mlr) ve ANGEN (2,1 mlr) eşik altı, kart açılmadı.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."

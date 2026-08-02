@@ -2750,6 +2750,112 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245u AVRUPA TURU: DONMUS HICP AKISI + YARIM DUZELTME + BILANCO KARTLARI (2 Agu)
+
+Kullanici Avrupa kartini gosterdi: "damgali veri var mi, gelmeyen verilerin
+API'sini kontrol et, haftalik yorum + varlik dagilimini guncelle (Pazartesi
+toplantisi), megacap/BIST bilancolarini hallet."
+
+### 245u.1 KOK NEDEN: ECB AKISI OLMEDI, DONDU (7 ay bayat HICP)
+Ekran: manset/cekirdek/enerji 2025-12 · Hizmet/Gida/Sanayi BOS.
+Tarihce iki kez dondu: §104'te 'HICP' 404 veriyordu -> dogru akis 'ICP'
+bulundu (O GUN DOGRUYDU). Sonra ECB 4 SUBAT 2026'da Eurostat metodoloji
+degisimiyle ICP setini KALDIRDI, yerine YENI HICP setini koydu (DSD ECB_ICP3).
+Olu ICP tarihsel veriyi DONDURULMUS dondurmeye devam etti: 404 yok, hata yok,
+sadece 2025-12'de kalmis seri. DONAN AKIS OLEN AKISTAN SINSI.
+YENI ANAHTAR: dataflow 'HICP' + saglayici '4' -> '4D0'
+(HICP.M.U2.N.000000.4D0.ANR — portal 17 Haz 2026 canli; kalem kodlari ayni).
+app.js hicp() + ulke() tasindi, ICP'ye yalniz arsiv yedegi olarak dusuluyor
+('ICP-arsiv' etiketiyle — yalan etiket yok).
+
+### 245u.2 market.js'TE YARIM KALMIS DUZELTME (yalan etiket)
+api/market.js hicpCek yorumu "yeni dataflow denenir" diyordu ama IKI DAL DA
+ayni eski 'ICP'yi cekiyordu ve ilk dal 'akis:HICP' ETIKETI BASIYORDU.
+Kod calisiyor gorunuyor, etiket taze akis soyluyor, veri donmus duruyordu.
+Tamamlandi: ilk dal gercekten HICP+4D0.
+DERS: yorum ve etiket KODUN kanitidir sanilir — degildir. Duzeltme yaparken
+"etiket ne diyor" degil "fetch NEREYE gidiyor" okunur.
+
+### 245u.3 AVRUPA KARTINDAKI DIGER DAMGALILAR — TESHIS
+  ECB&Politika + Mega-cap notlari (27 Tem · CLAUDE): AJAN.NOTLAR'da tarayici
+    localStorage'inda — DOSYADAN MUDAHALE EDILEMEZ. Ebu not motoru kartin
+    verisi degisince (HICP duzelince degisecek) kendi yeniden yazar.
+  Tahvil 2026-06: Maastricht AYLIK seri — dogal ritim, sorun degil.
+
+### 245u.4 HAFTALIK YORUM + VARLIK DAGILIMI — OTOMASYON KURALINA UYULDU
+"Varlik dagilimi" = haftalik yorumun TAKTIKSEL DAGILIM blogu (hyHtml ~3054).
+index.html notu: Ebu HER PAZARTESI Haftalik Yorum sayfasini panelin CANLI
+verilerinden bastan yazar (yorumPano). Elle yazmak otomasyon kuralinin
+ihlali olurdu — yazilmadi. Pazartesi panel ACILDIGINDA bugun duzeltilen
+taze verilerle (HICP canli, sicil dogru XKTUM, katfon Cuma kapanisi) Ebu
+kendisi yazacak. Tek sart: panelin Pazartesi acilmasi.
+
+### 245u.5 BILANCO KARTLARI (inceleme-ai.json 28 -> 30)
+KESIF: MSFT/META/AAPL/AMZN/GARAN/TOASO/YKBNK/TSKB kartlari ZATEN vardi
+(30-31 Tem) — is onceden yapilmis, MUKERRER YAZILMADI.
+EKLENEN 1 — SAMSUNG 2Ç26 (30 Tem, Kore megacap): ciro ₩171,5 tr (+%130 y/y,
+rekor x3), faaliyet ₩89,5 tr (~62 mlr$, y/y x19, beklenti ustu), EPS +%52.
+Karin %99'u DS/HBM'den; MX (telefon) ILK KEZ faaliyet zarari (−₩0,7 tr) —
+ayni bellek kitligi kendi telefonunu vurdu. HBM4 3Ç'de x3, kitlik 2028'e dek.
+EKLENEN 2 — EFOR 2Ç26 (31 Tem, XKTUM uyesi, PD 45,2 mlr): satis 3.839 mn
+(y/y −%11,5), brut marj %16,5, ana ortaklik −90 mn (1Ç +124'ten zarara),
+TTM 13 mn — PD/kar carpani anlamsiz bolgede. Fintables kesin kalemleri.
+ATLANAN: DOGUB (3,2 mlr) + ANGEN (2,1 mlr) — kucukluk esiginin altinda.
+
+app.js v=20260802d · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + api/market.js + inceleme-ai.json
+
+## 245u AVRUPA TURU: DONAN HICP AKISI + BILANCO KARTLARI (2 Agu)
+
+Kullanicinin dort istekli Avrupa turu. Bulgular ve yapilanlar:
+
+### 245u.1 GELMEYEN VERI — HICP AKISI OLMEMIS, DONMUSTU (kok neden)
+Ekran: manset/cekirdek/enerji '2025-12' (7 ay bayat), Hizmet/Gida/Sanayi BOS.
+KOK NEDEN: ECB 4 Subat 2026'da Eurostat metodoloji degisimiyle eski ICP
+setini KALDIRDI, yerine YENI 'HICP' seti koydu (DSD ECB_ICP3). Olu ICP
+akisi tarihsel veriyi DONDURULMUS dondurmeye devam etti — 404 yok, hata
+yok, sadece 2025-12'de sabit. DONAN AKIS, OLEN AKISTAN SINSI.
+Tarihce cetveli: §104'te 'HICP 404 -> dogru akis ICP' tespiti O GUN icin
+DOGRUYDU; Subat'ta ECB adi GERI HICP yapti ve saglayici kodunu degistirdi.
+DERS: 'dogru akis' tespitleri TARIHLIDIR. Donmus seri suphesinde ilk soru:
+'bu dataset hala yasiyor mu?'
+DUZELTME (iki dosya):
+  app.js hicp() + ulke(): cek('HICP','M.U2.N.<kalem>.4D0.ANR') — saglayici
+    '4' -> '4D0'. Kalem kodlari AYNI. Yedek: ICP-arsiv (etiketiyle).
+  api/market.js hicpCek: YARIM KALMIS duzeltme bulundu — yorum 'yeni
+    dataflow denenir' diyordu ama IKI DAL DA eski ICP'yi cekiyor ve ilk dal
+    'akis:HICP' YALAN ETIKETI basiyordu. Tamamlandi.
+Beklenen: manset ~2026-06'ya atlar, Hizmet/Gida/Sanayi kirilimi ILK KEZ dolar.
+
+### 245u.2 AVRUPA KARTINDA DAMGALI NE VAR
+  ECB&Politika + Mega-cap notlari '27 Tem · CLAUDE' — bunlar AJAN.NOTLAR'da
+  TARAYICIDA sakli; dosyadan mudahale EDILEMEZ. Ebu not motoru, kartin verisi
+  degisince (HICP duzeltmesi tam bunu tetikler) kendi yeniden yazar.
+  Tahvil 2026-06: Maastricht AYLIK serisi — dogal ritim, bayat degil.
+
+### 245u.3 HAFTALIK YORUM + TAKTIKSEL DAGILIM — PAZARTESI OTOMATIK
+'Varlik dagilimi' = haftalik yorumun TAKTIKSEL DAGILIM blogu (hyHtml).
+index.html notu: Ebu HER PAZARTESI Haftalik Yorum sayfasini panelin CANLI
+verilerinden bastan yazar. OTOMASYON KURALI geregi elle yazilmadi — Pazartesi
+panel acilinca bugun duzeltilen taze verilerle (HICP, sicil, katfon, YEOTK)
+kendisi yazacak. Tek sart: panelin Pazartesi ACILMASI.
+
+### 245u.4 BILANCO KARTLARI (inceleme-ai.json 31 kart)
+KESIF: MSFT/META/AAPL/AMZN + GARAN/TOASO/YKBNK/TSKB kartlari ZATEN VARDI
+(30-31 Tem) — is onceden yapilmis. EKSIKLER kapatildi:
+  005930 Samsung 2Ç26 (30 Tem kesin): ciro 171,5 tr won c/c +%28 y/y +%130 ·
+    faaliyet 89,5 tr won marj %52,2, DS %99,7 · EPS 10.849 c/c +%52 ·
+    uc ceyrek ust uste rekor, NVIDIA'nin ceyregini gecti · ~19-20 tr won
+    prim karsiligi tek seferlik · peak-out tartismasi basladi.
+    ABD kartlariyla bag: Apple'in bellek zammi = Samsung'un fiyatlamasi.
+  EFOR 2Ç26 (31 Tem, Fintables): satis 3.839 mn y/y -%11,5 · brut marj %16,5
+    (c/c toparladi, y/y geride) · ana ortaklik -90 mn, TTM 13 mn'e eridi.
+    Skor 2,0. Standart uygulandi: FAVOK/FCF cekilmedi -> 'aciklanmadi'.
+  DOGUB (3,2 mlr) + ANGEN (2,1 mlr): esik alti, kart acilmadi (kayitli).
+
+app.js v=20260802d · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + api/market.js + inceleme-ai.json + BAKIM.md
+
 ## 245t UC IS: SICIL ELMA/ARMUT · KATFON PERSEMBE CIKTI · YEOTK KAPANDI (2 Agu)
 
 ### 245t.1 SICIL -%27,59 — MATEMATIK PARMAK IZIYLE KOK NEDEN
