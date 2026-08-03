@@ -2803,7 +2803,8 @@ function hrcRender(){
      '<span class="bv'+(v.tip===1?' down':'')+'">'+(v.tip===2?'<b>':'')+trN(v.yil,2)+(v.tip===2?'</b>':'')+'</span>'+
      '<span class="bk">'+v.katki+'</span></div>').join('');
   const d=$('hrcDamga');
-  if(d)d.textContent=HRC_CANLI?('EVDS · '+HRC_DONEM):'damgalı (Haz 2026)';
+  if(d){ const eks=HRC_CANLI?HRC_STATIK.filter(r=>!HRC_CANLI[r[0]]).map(r=>r[0].split(',')[0]):[];
+    d.textContent=HRC_CANLI?('EVDS · '+HRC_DONEM+(eks.length?' · eşleşmeyen: '+eks.join(', '):'')):'damgalı (Haz 2026)'; }
 }
 async function hrcCek(){
   try{
@@ -2824,7 +2825,7 @@ async function hrcCek(){
   hrcRender();
 }
 const UFE_STATIK_SOL=[
-  ['Yİ-ÜFE — aylık / yıllık', /yurt içi üfe|^genel$|yi-üfe.*genel|üfe genel/, '%1,80 / %28,09', 9],
+  ['Yİ-ÜFE — aylık / yıllık', /yurt içi üretici/, '%1,80 / %28,09', 9],   /* §247g: ölçülen ad T1 '1.Yurt İçi Üretici Fiyat Endeksi' */
   ['Madencilik ve taş ocakçılığı (aylık)', /madencilik/, 8.30, 1],
   ['Elektrik, gaz üretimi ve dağıtımı (aylık)', /elektrik.*gaz/, 7.10, 1],
   ['Su temini (aylık)', /su temini|su şebeke/, 1.97, 0],
@@ -2852,7 +2853,9 @@ function ufeRender(){
   L.innerHTML=UFE_STATIK_SOL.map(ufeSatir).join('');
   R.innerHTML=UFE_STATIK_SAG.map(ufeSatir).join('');
   const d=$('ufeDamga');
-  if(d)d.textContent=UFE_CANLI?('EVDS · '+UFE_DONEM):'damgalı (Haz 2026)';
+  if(d){ const tum=[...UFE_STATIK_SOL,...UFE_STATIK_SAG];
+    const eks=UFE_CANLI?tum.filter(r=>!UFE_CANLI[r[0]]).map(r=>r[0].replace(/ \(aylık.*$/,'')):[];
+    d.textContent=UFE_CANLI?('EVDS · '+UFE_DONEM+(eks.length?' · eşleşmeyen: '+eks.slice(0,4).join(', '):'')):'damgalı (Haz 2026)'; }
 }
 async function ufeCek(){
   try{

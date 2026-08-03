@@ -2768,6 +2768,24 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247g KISMI CANLILIK + UFE GENEL DESENI (3 Agu, gece 2)
+
+Ekran: TUFE karti CANLIYA DONDU ('EVDS · 2026-7') — Temmuz verisi panelde:
+Gida %35,45->%37,53 YUKSELDI, Genel %32,11->%31,75 DUSTU. Ama KISMI:
+Konut ve Ulastirma eslesemedi, Haziran degerinde nokta isaretsiz kaldi.
+Yi-UFE hala damgali — VE kendi hatam olculdu: genel satir desenine
+'yurt içi üfe' yazmisim, olculen ad 'yurt içi üretici' (kisaltma tuzagi
+UCUNCU kez). Duzeltildi.
+TANI GORUNUR yapildi (ECB kirilim dersinin EVDS hali): iki kartin damgasi
+artik eslesmeyen satirlari ISIMLE soyler ('EVDS · 2026-7 · eslesmeyen:
+Konut, Ulastirma') — sonraki ekran tahmin degil kanit tasir.
+Konut/Ulastirma ve UFE sektor adlarinin kesin yazimi icin kullaniciya
+evds2'nin q parametreli list linkleri verildi (rapor).
+NOT: kismi-canli karisim riski kabul edildi: eslesmeyen satir damgali
+deger gosterir, nokta isareti ayirt eder; tani satiri artik acikca soyler.
+
+app.js v=20260803o · DOSYALAR: app.js + index.html
+
 ## 247f IKI GRUP DA SABIT — DESEN HATASI OLCUMLE YAKALANDI (3 Agu, gece)
 
 Kullanicinin son iki olcumu:
