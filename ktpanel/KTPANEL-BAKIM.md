@@ -2750,6 +2750,27 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246e KIRILIM SON HAMLE: SUNUCUYA TASINDI (3 Agu)
+
+Uc client-tarafi deneme (retry, iki dalga, tek-istek) sahada dogrulanamadi.
+Yapi kesfi kesin ipucunu verdi: kartta d2 (sunucu /api/market yaniti) ZATEN
+var ve mansetin dolmasi muhtemelen ondan — client'in ECB fetch'i tarayici
+ortaminda (CORS/engelleyici) bastan beri olu olabilir; kullanicinin link
+testi gezinmeydi, CORS'a takilmaz. TESHIS DEGISTI: rate-limit degil,
+CLIENT->ECB kanalinin kendisi supheli.
+COZUM: kanal degistirildi —
+  market.js: hicpCek'e FOOD00/SERV00/IGXE00 eklendi; seriler.hicpGida/
+    Hizmet/Sanayi yanita kondu (Vercel cikisi CORS/adblock tanimaz).
+  app.js: render oncesi S'nin eksik alanlari d2.seriler'den tamamlanir;
+    client cekimi artik YEDEK.
+Ayni bicim (sonFark+akis) iki tarafta da ayni — render degismedi.
+DERS: 'kullanici eski surumde' varsayimi iki tur yedi; kanalin kendisini
+degistirmek surum tartismasini da gecersiz kilar. Deploy edilen HERHANGI
+surumde kirilim artik sunucudan dolar.
+
+app.js v=20260803e · ajan.js v=20260803a · api market.js §246e
+DOSYALAR: app.js + index.html + api/market.js (ktpanel/api/!)
+
 ## 246d KIRILIM: ISTEK AZALTMA YETMEDI, TEKE INDIRILDI (3 Agu)
 
 Kullanici: 'hala gelmiyor' — tani satiri da ekranda yok. Iki tur yama

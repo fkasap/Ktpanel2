@@ -479,6 +479,12 @@ async function avrupaSekme(){
        SIRA ÖNEMLİ: manşet → çekirdek → hizmet. ECB toplantı metinlerinde
        bu sırayla okur; hizmet en yapışkan olduğu için son sözü o söyler. */
     if($('avEnfBody')){
+      /* §246e SUNUCU TAMAMLAMASI: client'ın ECB çekimi hangi sebeple boş
+         kalırsa kalsın (CORS, engelleyici, hız sınırı), sunucunun (d2)
+         çektiği seriler eksik alanları doldurur. Kırılımın güvenilir yolu
+         artık Vercel; client çekimi yedeğe düştü. */
+      if(d2&&d2.seriler){ ['hicpManset','hicpCekirdek','hicpEnerji','hicpGida','hicpHizmet','hicpSanayi']
+        .forEach(k=>{ if(!S[k]&&d2.seriler[k]) S[k]=d2.seriler[k]; }); }
       if(!S || !S.hicpManset){
         $('avEnfBody').innerHTML='<div class="sub">HICP serisi alınamadı'+
           (d2&&d2.err?' — '+esc(String(d2.err)):'')+'. ECB Data Portal yanıt vermiyor olabilir.</div>';
