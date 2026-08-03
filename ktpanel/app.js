@@ -2807,7 +2807,7 @@ function hrcRender(){
 }
 async function hrcCek(){
   try{
-    const g=await mkGrupBul('tüfe', /harcama grup/);
+    const g=await mkGrupBul('tüketici', /tüketici fiyat|fiyat endeksi.*tüketici/);  /* §247e: 'tüfe' kısaltması grup adlarında GEÇMİYOR (ölçüldü) */
     if(g){
       const sonuc={};
       for(const r of HRC_STATIK){
@@ -2856,8 +2856,11 @@ function ufeRender(){
 }
 async function ufeCek(){
   try{
-    const g=await mkGrupBul('üfe', /yurt içi üretici|yi-üfe/);
-    if(g){
+    /* §247e: grup kodu kullanıcı ölçümüyle SABİTLENDİ — ?ara=üretici çıktısı:
+       bie_tufe1yi = 'Yurt İçi Üretici Fiyat Endeksi' (arşiv değil).
+       Eski arama 'üfe' hiç grup bulamıyordu: grup ADLARINDA kısaltma yok. */
+    const g='bie_tufe1yi';
+    {
       const sonuc={};
       for(const r of [...UFE_STATIK_SOL,...UFE_STATIK_SAG]){
         const s=await mkSeri(g, r[1], 500, /arşiv|yıllık değişim/);

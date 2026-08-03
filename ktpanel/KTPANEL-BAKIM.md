@@ -2768,6 +2768,23 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247e OLCUM SONUCU: KISALTMALAR GRUP ADINDA YOK (3 Agu, gece)
+
+Kullanici iki test linkini calistirdi — kok neden netlesti: mkGrupBul
+aramalarim ('tüfe','üfe') HIC grup bulamiyordu cunku EVDS grup adlari
+kisaltma icermiyor ('Tüketici Fiyat Endeksi' icinde 'tüfe' alt dizesi
+gecmez). Kartlarin damgalida kalmasi dogru savunmaydi, arama kelimesi
+yanlisti.
+KESINLESEN: Yi-UFE grubu = bie_tufe1yi ('Yurt İçi Üretici Fiyat Endeksi',
+arsiv degil) — koda SABITLENDI (arama kaldirildi). TUFE ana grup icin
+arama 'tüketici'ye cevrildi; kesin grup kodu + seri adi desenleri
+kullanicinin iki olcumuyle (asagida) sabitlenecek.
+DERS: meta-katalog aramasinda KISALTMAYLA degil TAM ADLA ara; grup kodu
+bir kez olculdukten sonra aramaya degil SABITE baglan (arama kesif
+araci, calisma-zamani bagimliligi degil).
+
+app.js v=20260803m · DOSYALAR: app.js + index.html
+
 ## 247d IKI STATIK TUFE KARTI EVDS CANLIYA BAGLANDI (3 Agu, aksam)
 
 Kullanici istegi (246'daki eritme onerisinin onayi): Ana Harcama Gruplari
