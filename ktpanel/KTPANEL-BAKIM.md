@@ -2768,6 +2768,22 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247c "SUTUNLAR" DUGMESI OLU DOGMUSTU — TDZ (3 Agu, aksam)
+
+Kullanici: sekme geldi, sutun secici dugmesi calismiyor. Olcum: KOL_TUM
+tanimi satir 3445, KULLANIMI satir 3422 — const geriye erisim vermez
+(temporal dead zone); yevrenInit checkbox basma satirinda sessizce oluyordu.
+Tablonun cizilmesi yaniltti: filtre listener'lari hatadan ONCE baglandigi
+icin cizim onlardan tetikleniyordu, secici ise hic dogmuyordu.
+DUZELTME: KOL_TUM + yevGor + __yevKol tanim blogu yevrenInit'ten ONCEYE
+tasindi (tanim -> init -> cizim sirasi); dogrulama: tanim offseti <
+kullanim offseti olculdu.
+DERS: ayni fonksiyon ailesine sonradan ozellik eklerken tanimlarin
+KULLANIMDAN ONCE geldigi dogrulanir — node --check TDZ'yi YAKALAMAZ
+(calisma zamani hatasi), siralama testi elle yapilir.
+
+app.js v=20260803j · DOSYALAR: app.js + index.html
+
 ## 247b ALT CUBUK KAYBI + SUTUN SECICI (3 Agu)
 
 Kullanici ekrani: Yabanci Hisse acikken PY alt sekme cubugu KAYIP.

@@ -3397,6 +3397,18 @@ function incPaylasInit(){
    3 Ağu CSV'si BOŞ geldi (yalnız başlık) — panel dürüst "veri bekleniyor"
    durumuyla açılır; dolu CSV işlenince kendiliğinden tabloya döner.
    Fiyat kolonu ileride Yahoo'dan canlı bindirilecek (his2 deseni). */
+/* §247c: KOL_TUM/yevGor tanımları init'ten ÖNCEYE taşındı — TDZ:
+   const tanımı kullanımdan SONRA geliyordu, "Sütunlar" seçicisi hiç doğmadan
+   init o satırda ölüyordu. Sıralama: tanım → init → çizim. */
+  const KOL_TUM=[['t','Ticker',0],['u','Ülke',0],['mc','PD mlr$',1],['pe1','F/K FY1',1],['pe2','F/K FY2',1],
+    ['ee','EV/EBITDA',1],['ee1','EV/EB FY1',1],['ee2','EV/EB FY2',1],['es1','EV/Satış FY1',1],
+    ['nde','NB/EBITDA',1],['pf','P/FCF',1],['fcf','FCF mlr$',1],['cfo','CFO mlr$',1],
+    ['dy','Tem %',1],['peg','PEG',1],['z','Altman Z',1],['nb','#Al',1],['ar','Analist',0],
+    ['c6','6A %',1],['rv','Rel.Hacim',1]];
+  const YEV_VARS=['t','u','mc','pe1','ee','ee1','nde','fcf','dy','z','ar','c6'];
+  let yevGor;
+  try{ yevGor=JSON.parse(localStorage.getItem('yev_kolon_v1'))||YEV_VARS; }catch(e){ yevGor=YEV_VARS; }
+  window.__yevKol=()=>KOL_TUM.filter(k=>yevGor.includes(k[0]));
 let YEV=null, yevSira={k:'mc', yon:-1};
 async function yevrenInit(){
   const tb=$('yevBody'); if(!tb) return;
@@ -3442,15 +3454,6 @@ function yevrenCiz(){
   /* §247b SÜTUN SEÇİCİ: tüm aday kolonlar tanımlı; görünürlük kullanıcının
      seçimi (localStorage'da saklanır — kişisel görünüm tercihi, buluta gitmez).
      Varsayılan: ilk 12'lik klasik set. */
-  const KOL_TUM=[['t','Ticker',0],['u','Ülke',0],['mc','PD mlr$',1],['pe1','F/K FY1',1],['pe2','F/K FY2',1],
-    ['ee','EV/EBITDA',1],['ee1','EV/EB FY1',1],['ee2','EV/EB FY2',1],['es1','EV/Satış FY1',1],
-    ['nde','NB/EBITDA',1],['pf','P/FCF',1],['fcf','FCF mlr$',1],['cfo','CFO mlr$',1],
-    ['dy','Tem %',1],['peg','PEG',1],['z','Altman Z',1],['nb','#Al',1],['ar','Analist',0],
-    ['c6','6A %',1],['rv','Rel.Hacim',1]];
-  const YEV_VARS=['t','u','mc','pe1','ee','ee1','nde','fcf','dy','z','ar','c6'];
-  let yevGor;
-  try{ yevGor=JSON.parse(localStorage.getItem('yev_kolon_v1'))||YEV_VARS; }catch(e){ yevGor=YEV_VARS; }
-  window.__yevKol=()=>KOL_TUM.filter(k=>yevGor.includes(k[0]));
   window.__yevGorSet=(g)=>{yevGor=g;};
   bas.innerHTML='<tr>'+KOL.map(k=>'<th data-yk="'+k[0]+'" style="cursor:pointer;white-space:nowrap">'+k[1]+(yevSira.k===k[0]?(yevSira.yon<0?' ▼':' ▲'):'')+'</th>').join('')+'</tr>';
   bas.querySelectorAll('th').forEach(th=>th.onclick=()=>{
