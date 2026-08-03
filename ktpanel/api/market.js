@@ -350,10 +350,14 @@ async function ecbModu(req, res){
       const eski=await cekCsv('ICP','M.U2.N.'+item+'.4.ANR',3);
       return eski? { ...sonFark(eski), akis:'ICP-arşiv (2025-12 son)' } : null;
     };
-    const [dfr, bilanco, manset, cekirdek, enerji, bund, btp, oat] = await Promise.all([
+    /* §246e: kırılım SUNUCUDAN. Client'ın ECB fetch'i tarayıcı ortamına
+       bağımlı (CORS/engelleyici) ve sahada iki gündür doğrulanamadı; Vercel
+       çıkışı bu bağımlılıkların hiçbirine takılmaz. */
+    const [dfr, bilanco, manset, cekirdek, enerji, gida, hizmet, sanayi, bund, btp, oat] = await Promise.all([
       cekCsv('FM','B.U2.EUR.4F.KR.DFR.LEV',3),
       cekCsv('ILM','W.U2.C.T000000.Z5.Z01',6),
       hicpCek('000000'), hicpCek('XEF000'), hicpCek('NRGY00'),
+      hicpCek('FOOD00'), hicpCek('SERV00'), hicpCek('IGXE00'),
       cekCsv('IRS','M.DE.L.L40.CI.0000.EUR.N.Z',3),  // Almanya 10Y (Maastricht, aylık)
       cekCsv('IRS','M.IT.L.L40.CI.0000.EUR.N.Z',3),  // İtalya 10Y
       cekCsv('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)   // Fransa 10Y
@@ -367,6 +371,9 @@ async function ecbModu(req, res){
     }
     if(manset) seriler.hicpManset=manset;
     if(cekirdek) seriler.hicpCekirdek=cekirdek;
+    if(gida) seriler.hicpGida=gida;
+    if(hizmet) seriler.hicpHizmet=hizmet;
+    if(sanayi) seriler.hicpSanayi=sanayi;
     if(enerji) seriler.hicpEnerji=enerji;
     if(bund){ const b=sonFark(bund); if(b) seriler.bund10=b; }
     if(btp){ const b=sonFark(btp); if(b) seriler.btp10=b; }
