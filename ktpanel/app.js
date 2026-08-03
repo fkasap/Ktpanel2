@@ -6189,6 +6189,13 @@ async function ihracRender(){
 function taktikRender(){
   const el=$('taktikBody'), el2=$('taktikBody2');
   if(!el&&!el2)return;
+  /* §246b: etiket statik '27 TEM'de kalıyordu — tablo CANLI verilerden
+     türediği için damga da CANLI olmalı. Haftanın aralığı hesaplanır. */
+  const tg=$('taktikTag2');
+  if(tg){ const b=new Date(); b.setHours(0,0,0,0); b.setDate(b.getDate()-((b.getDay()+6)%7));
+    const e=new Date(b); e.setDate(e.getDate()+6);
+    const AY=['OCA','ŞUB','MAR','NİS','MAY','HAZ','TEM','AĞU','EYL','EKİ','KAS','ARA'];
+    tg.textContent=b.getDate()+' '+AY[b.getMonth()]+'–'+e.getDate()+' '+AY[e.getMonth()]+' · CANLI TÜRETİM'; }
   // Canlı sinyalleri DOM'daki EVDS satırlarından oku (dolmuşsa)
   const oku=(id)=>{const s=$(id);if(!s)return null;const t=s.textContent.replace(/[·%]/g,' ').replace(/canlı/gi,'').trim();const m=t.match(/-?\d+[.,]?\d*/);return m?parseFloat(m[0].replace(',','.')):null;};
   const aofm=oku('aofmLive'), tufe=oku('tufeLive'), rek=oku('rekLive');

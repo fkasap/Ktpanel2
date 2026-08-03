@@ -2750,6 +2750,37 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246b PAZARTESI YORUMU NEDEN YAZILMADI — TETIK OLCUSU YANLISTI (3 Agu)
+
+Kullanici ekrani: haftalik yorum hala '27 TEM–2 AGU', imza 'Ebu 09:33'
+(localStorage'dan GERI YUKLENEN eski not — 246'daki statik guncelleme bu
+yuzden hic gorunmedi: kayitli not statik HTML'i ezer, bu TASARIM GEREGI).
+Asil soru: Ebu bu sabah Pazartesi NEDEN yeni yorum yazmadi?
+
+KOK NEDEN (ajan.js): bayat = 'son yazimdan 5+ gun gecti'. Son yorum FOMC
+sonrasi hafta ICI elle tazelendi (Car/Per) -> Pazartesi'ye 3-4 gun ->
+'bayat degil' -> YAZILMADI. Olcu yanlis: dogru soru 'kac gun gecti' degil
+'HANGI HAFTAYA AIT'.
+DUZELTME: hafta-kimligi tetigi — Pazartesi VE son yazim bu haftanin
+pazartesisinden onceyse yaz. Hafta ici elle tazeleme artik Pazartesi
+yenilemesini iptal EDEMEZ. (§245p limit kalibrasyonuyla ayni aile:
+alarm/tetik, takvim ritmine gore olculur.)
+
+EK: TAKTIKSEL DAGILIM etiketi '27 TEM · FOMC HAFTASI' statikti — tablo
+CANLI turetim oldugu halde damgasi bayat gorunuyordu (guven asindirir).
+taktikRender artik etiketi kendisi basar: '<hafta araligi> · CANLI TURETIM'.
+
+KULLANICIYA AKIS: deploy -> paneli ac -> 40. saniyede Ebu bu haftanin
+yorumunu CANLI kartlardan yazar (bu haftaki tum gelismeler kartlarda:
+enflasyon donusu, Samsung, rezerv, katfon Cuma kapanislari). Beklemek
+istemezse Ebu panelindeki 📝 butonu aninda tetikler.
+NOT: index.html'deki statik 3-9 Agu blogu bos-tarayici/ilk-kurulum icin
+dogru baslangic olarak KALDI; kayitli notu olan tarayicida gorunmez, bu
+celiski degil katman sirasi.
+
+app.js v=20260803b · ajan.js v=20260803a · api kap-2026-07-31-n
+DOSYALAR: app.js + ajan.js + index.html
+
 ## 246a KIRILIM COZULDU: ANAHTAR DEGIL, HIZ SINIRIYDI (3 Agu)
 
 Kullanici verilen test linklerini calistirip UC CSV yapistirdi — kesin kanit:

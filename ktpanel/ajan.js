@@ -932,9 +932,17 @@ async function haftalikYorumYaz(zorla){
   let kayitli={}; try{ kayitli=JSON.parse(localStorage.getItem('ajan_notlar')||'{}'); }catch(e){}
   const son=kayitli.__HAFTALIK__;
   if(!zorla){
+    /* §246b PAZARTESİ TETİĞİ DÜZELTİLDİ. Eski şart: 'son yazımdan 5+ gün
+       geçtiyse'. FOMC/olay sonrası hafta İÇİ elle tazeleme yapılınca (Çar/Per)
+       Pazartesi'ye 3-4 gün kalıyor → bayat sayılmıyor → YENİ HAFTA YAZILMIYOR.
+       3 Ağu sabahı tam bu oldu: kullanıcı Pazartesi paneli açtı, yorum
+       '27 Tem-2 Ağu'da kaldı. Doğru ölçü gün sayısı değil HAFTA KİMLİĞİ:
+       Pazartesi + son yazım BU haftanın pazartesisinden önceyse → yaz.
+       Hafta içi elle tazeleme artık Pazartesi yenilemesini İPTAL EDEMEZ. */
     const pazartesi=(new Date()).getDay()===1;
-    const bayat=!son||!son.ts||(Date.now()-son.ts)>5*86400000;
-    if(!(pazartesi&&bayat)) return;
+    const haftaBasi=(t)=>{const d=new Date(t); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.getTime();};
+    const yeniHafta=!son||!son.ts||son.ts<haftaBasi(Date.now());
+    if(!(pazartesi&&yeniHafta)) return;
   }
   kayit('Haftalık yorum yazılıyor (panel verilerinden)…');
   const ozet=kartKesfet().slice(0,26).map(K=>'• '+K.ad+': '+K.veri.slice(0,150)).join('\n');
