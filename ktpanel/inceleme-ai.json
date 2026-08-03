@@ -10,7 +10,7 @@
    "tarih_iso": "2026-08-03",
    "sablon": "bist",
    "skor": 1.5,
-   "ozet": "Zarar derinleşiyor. Satışlar 10.953 mn ₺ — y/y −%27,3 (2Ç25: 15.061), ç/ç +%7,2 ile hafif toparlama. Brüt kâr 1.425 mn, marj %13,0 — geçen yılın %27,7'sinden yarıdan fazla erimiş. Ana ortaklık −2.779 mn ₺: 1Ç'deki −1.713'ün üstüne zarar BÜYÜDÜ; TTM zarar −6.106 mn'e ulaştı. 36,6 mlr ₺ PD, negatif TTM kazanç üstünde.",
+   "ozet": "Zarar derinleşiyor. Satışlar 10.953 mn ₺ — y/y −%27,3 (2Ç25: 15.061), ç/ç +%7,2 ile hafif toparlama. Brüt kâr 1.425 mn, marj %13,0 — geçen yılın %27,7'sinden yarıdan fazla erimiş. Ana ortaklık −2.779 mn ₺: 1Ç'deki −1.713'ün üstüne zarar BÜYÜDÜ; TTM zarar −6.106 mn'e ulaştı. 36,6 mlr ₺ PD, negatif TTM kazanç üstünde. FAVÖK 2Ç'de −587 mn (TTM −1.436'ya döndü); TTM FCF −14.689 mn — nakit yakımı TTM zararın iki katından fazla, işletme sermayesi de nakit yiyor.",
    "metrikler": [
     {
      "ad": "Satışlar (2Ç)",
@@ -37,19 +37,26 @@
      "yoy": "36,6 mlr PD negatif kazanç üstünde"
     },
     {
-     "ad": "FAVÖK · FCF · segment",
-     "deger": "açıklanmadı",
-     "cc": "ara kalemler çekilmedi",
-     "yoy": "standart gereği tahmin edilmedi"
+     "ad": "FAVÖK",
+     "deger": "−587 mn ₺ (2Ç)",
+     "cc": "1Ç26: −1.764 — zarar daraldı ama hâlâ negatif",
+     "yoy": "2Ç25: +1.903 · TTM FAVÖK −1.436 mn'e döndü"
+    },
+    {
+     "ad": "FCF (İNA − capex)",
+     "deger": "−4.363 mn ₺ (2Ç)",
+     "cc": "İNA −3.400 · capex 963",
+     "yoy": "TTM FCF −14.689 mn — nakit yakımı zararın İKİ KATINDAN fazla"
     }
    ],
    "onemli": [
     "Ciro daralması (y/y −%27) + marj çöküşü (%27,7→%13,0) + büyüyen zarar üçlüsü aynı anda — savunma/ihracat teslimat takvimi ve iç pazar ticari araç talebi birlikte zayıf.",
-    "Çeyreklik brüt marj toparlaması (%4,5→%13,0) tek olumlu sinyal; zarar çizgisine henüz yansımadı."
+    "Çeyreklik brüt marj toparlaması (%4,5→%13,0) tek olumlu sinyal; zarar çizgisine henüz yansımadı.",
+    "Nakit tablosu kâr tablosundan kötü: TTM İNA −10.883 mn — zarar sadece muhasebe değil, nakit olarak da çıkıyor; borçlanma ihtiyacı büyür."
    ],
    "guidance": "Şirket rehberliği: açıklanmadı.",
-   "tez": "Skor 1,5: kazanç tabanı negatif ve derinleşiyor; savunma teslimat haberleri gelene kadar hikâye kağıdı — katılım evreninde temel gerekçeyle taşınacak profil değil, izleme listesi.",
-   "kaynak": "Fintables finansal tablolar (KAP yayını, 3 Ağu 2026)"
+   "tez": "Skor 1,5: kazanç NEGATİF, FAVÖK NEGATİF, FCF derin negatif — üç tablo da aynı yönde. Savunma teslimat/tahsilat haberi gelene kadar izleme listesi; katılım evreninde temel gerekçeyle taşınacak profil değil.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 3 Ağu 2026)"
   },
   {
    "kod": "005930",
@@ -2245,7 +2252,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-03 — OTKAR 2Ç26 kartı eklendi (Fintables). 31 kart.",
+ "guncelleme": "2026-08-03 — OTKAR kartı FAVÖK+FCF ile tamamlandı (Fintables, tam set).",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
