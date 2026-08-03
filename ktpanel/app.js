@@ -32,7 +32,7 @@ const HABER_TARIH="2026-07-14";
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
 const KTP_SURUM = '20260731-x';
 
-const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t23']; // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
+const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t25','t23']; /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
   if(!hedef)return; // sekme paneli yoksa sessizce çık — nav'ı kilitleme
@@ -3416,17 +3416,42 @@ async function yevrenInit(){
     us.innerHTML='<option value="">Tüm ülkeler ('+ulkeler.length+')</option>'+ulkeler.map(u=>'<option>'+esc(u)+'</option>').join('');
   }
   ['yevAra','yevUlke','yevMc'].forEach(id=>{ const el=$(id); if(el&&!el.__b){ el.__b=1; el.addEventListener('input',yevrenCiz); el.addEventListener('change',yevrenCiz);} });
+  /* §247b: sütun seçici — details içinde onay kutuları; seçim localStorage'a */
+  const ks=$('yevKolSec');
+  if(ks && !ks.__b){ ks.__b=1;
+    ks.innerHTML=KOL_TUM.map(k=>'<label style="display:inline-flex;align-items:center;gap:3px;margin:2px 8px 2px 0;font-size:11px;white-space:nowrap"><input type="checkbox" data-yk="'+k[0]+'"'+(yevGor.includes(k[0])?' checked':'')+(k[0]==='t'?' disabled':'')+'> '+esc(k[1])+'</label>').join('');
+    ks.querySelectorAll('input').forEach(cb=>cb.addEventListener('change',()=>{
+      yevGor=[...ks.querySelectorAll('input:checked')].map(c=>c.dataset.yk);
+      if(!yevGor.includes('t')) yevGor.unshift('t');
+      try{ localStorage.setItem('yev_kolon_v1',JSON.stringify(yevGor)); }catch(e){}
+      yevrenCiz();
+    }));
+  }
+
   yevrenCiz();
 }
 function yevrenCiz(){
   const tb=$('yevBody'), bas=$('yevBas'); if(!tb||!YEV) return;
+  const KOL=(window.__yevKol&&window.__yevKol())||[];
   const H=YEV.hisseler||[];
   if(!H.length){
     bas.innerHTML=''; tb.innerHTML='<tr><td class="sub" style="padding:14px">Evren dosyası boş — dolu Koyfin CSV\'si yüklenip "koyfin işle" denince tablo burada doğar.</td></tr>';
     if($('yevSay')) $('yevSay').textContent='';
     return;
   }
-  const KOL=[['t','Ticker',0],['u','Ülke',0],['mc','PD mlr$',1],['pe1','F/K FY1',1],['ee','EV/EBITDA',1],['ee1','EV/EB FY1',1],['nde','NB/EBITDA',1],['fcf','FCF mlr$',1],['dy','Tem %',1],['z','Altman Z',1],['ar','Analist',0],['c6','6A %',1]];
+  /* §247b SÜTUN SEÇİCİ: tüm aday kolonlar tanımlı; görünürlük kullanıcının
+     seçimi (localStorage'da saklanır — kişisel görünüm tercihi, buluta gitmez).
+     Varsayılan: ilk 12'lik klasik set. */
+  const KOL_TUM=[['t','Ticker',0],['u','Ülke',0],['mc','PD mlr$',1],['pe1','F/K FY1',1],['pe2','F/K FY2',1],
+    ['ee','EV/EBITDA',1],['ee1','EV/EB FY1',1],['ee2','EV/EB FY2',1],['es1','EV/Satış FY1',1],
+    ['nde','NB/EBITDA',1],['pf','P/FCF',1],['fcf','FCF mlr$',1],['cfo','CFO mlr$',1],
+    ['dy','Tem %',1],['peg','PEG',1],['z','Altman Z',1],['nb','#Al',1],['ar','Analist',0],
+    ['c6','6A %',1],['rv','Rel.Hacim',1]];
+  const YEV_VARS=['t','u','mc','pe1','ee','ee1','nde','fcf','dy','z','ar','c6'];
+  let yevGor;
+  try{ yevGor=JSON.parse(localStorage.getItem('yev_kolon_v1'))||YEV_VARS; }catch(e){ yevGor=YEV_VARS; }
+  window.__yevKol=()=>KOL_TUM.filter(k=>yevGor.includes(k[0]));
+  window.__yevGorSet=(g)=>{yevGor=g;};
   bas.innerHTML='<tr>'+KOL.map(k=>'<th data-yk="'+k[0]+'" style="cursor:pointer;white-space:nowrap">'+k[1]+(yevSira.k===k[0]?(yevSira.yon<0?' ▼':' ▲'):'')+'</th>').join('')+'</tr>';
   bas.querySelectorAll('th').forEach(th=>th.onclick=()=>{
     const k=th.dataset.yk;
@@ -3448,14 +3473,13 @@ function yevrenCiz(){
   });
   if($('yevSay')) $('yevSay').textContent=L.length+' / '+H.length+' hisse';
   const f=(v,d)=>v==null?'<span class="thin">—</span>':(typeof v==='number'?trN(v,d):esc(String(v)));
-  tb.innerHTML=L.slice(0,200).map(x=>'<tr>'+
-    '<td><b>'+esc(String(x.t||''))+'</b></td><td>'+f(x.u)+'</td>'+
-    '<td class="num">'+f(x.mc,1)+'</td><td class="num">'+f(x.pe1,1)+'</td>'+
-    '<td class="num">'+f(x.ee,1)+'</td><td class="num">'+f(x.ee1,1)+'</td>'+
-    '<td class="num">'+f(x.nde,2)+'</td><td class="num">'+f(x.fcf,0)+'</td>'+
-    '<td class="num">'+f(x.dy,2)+'</td><td class="num">'+f(x.z,2)+'</td>'+
-    '<td>'+f(x.ar)+'</td><td class="num '+((x.c6||0)>=0?'up':'down')+'">'+f(x.c6,1)+'</td>'+
-    '</tr>').join('') + (L.length>200?'<tr><td colspan="12" class="sub">ilk 200 gösteriliyor — filtreyle daralt</td></tr>':'');
+  const ONDALIK={mc:1,pe1:1,pe2:1,ee:1,ee1:1,ee2:1,es1:1,nde:2,pf:1,fcf:0,cfo:0,dy:2,peg:2,z:2,nb:0,c6:1,rv:1};
+  tb.innerHTML=L.slice(0,200).map(x=>'<tr>'+KOL.map(k=>{
+    const kod=k[0], v=x[kod];
+    if(kod==='t') return '<td><b>'+esc(String(v||''))+'</b></td>';
+    if(kod==='c6') return '<td class="num '+((v||0)>=0?'up':'down')+'">'+f(v,1)+'</td>';
+    return '<td'+(k[2]?' class="num"':'')+'>'+f(v,ONDALIK[kod])+'</td>';
+  }).join('')+'</tr>').join('') + (L.length>200?'<tr><td colspan="'+KOL.length+'" class="sub">ilk 200 gösteriliyor — filtreyle daralt</td></tr>':'');
 }
 
 async function incelemeInit(){

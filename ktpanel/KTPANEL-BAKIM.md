@@ -2768,6 +2768,25 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247b ALT CUBUK KAYBI + SUTUN SECICI (3 Agu)
+
+Kullanici ekrani: Yabanci Hisse acikken PY alt sekme cubugu KAYIP.
+KOK NEDEN tek satir: PY_GRUP dizisine t25 eklenMEMISTI — listede olmayan
+sekmede kod alt cubugu bilerek gizliyor (grup disi sekme sanmis).
+t25 gruba eklendi; artik alt cubuk durur, ust cubuk zaten duruyordu.
+DERS: yeni alt sekme ac iliski LISTESINI de guncelle — sekme mekanigi
+tek yerde (PY_GRUP) ama kayit orada, HTML'de degil.
+
+SUTUN SECICI (istek): 'Sutunlar ▾' detay paneli — 20 aday kolon
+(F/K FY2 · EV/EB FY2 · EV/Satis FY1 · P/FCF · CFO · PEG · #Al · Rel.Hacim
+dahil), onay kutulariyla ac/kapa; Ticker kapatilamaz. Secim localStorage
+('yev_kolon_v1') — kisisel gorunum tercihi, buluta gitmez. Satir hucreleri
+sabit dizilimden KOL-gudumlu dizilime cevrildi: baslik ve hucre ayni
+listeden uretilir, hiza BOZULAMAZ (test: secim degisiminde baslik-hucre
+esitligi + kapatilan kolonun kaybolmasi dogrulandi). colspan dinamik.
+
+app.js v=20260803i · DOSYALAR: app.js + index.html
+
 ## 247a EVREN DOLDU — OLCEK BILMECESI COZULDU (3 Agu)
 
 Dolu CSV geldi (738 hisse) ama ILK ISLEME SUPHELI sayilar uretti: 'en buyuk
