@@ -2768,6 +2768,35 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247d IKI STATIK TUFE KARTI EVDS CANLIYA BAGLANDI (3 Agu, aksam)
+
+Kullanici istegi (246'daki eritme onerisinin onayi): Ana Harcama Gruplari
+ve Yi-UFE Detayi statikti, ortadaki Ozel Kapsamli gibi otomatik olsun.
+
+YONTEM — OKT deseninin birebir kopyasi (kod tahmini SIFIR):
+  mkGrupBul meta katalogdan grubu ARAR ('tüfe'+/harcama grup/,
+  'üfe'+/yurt içi üretici/), mkSeri ad desenine uyan seriyi cheker;
+  uymayan satir DAMGALI kalir (sessiz uydurma yok). Statik diziler
+  Haziran degerleriyle yedek olarak duruyor; canli gelince ● isareti +
+  damga 'EVDS · <donem>' olur.
+  hrcCek: 4 grup, endeksten yillik% hesabi (son/12 ay once), en az 2
+    eslesme sartiyla canliya gecis. Bar genisligi canli maks'a oranli.
+  ufeCek: 10 sektor/MIGS satiri, aylik% (son/onceki) + genel icin yillik;
+    en az 3 eslesme sarti. 'yillik degisim' adli seriler ELENIR (endeks
+    isteniyor, hazir-yuzde serisiyle cift donusum olmasin).
+  KATKI pp: canli ayda '—' — agirlik serisi baglanmadan katki UYDURULMAZ
+  (yaklasik katki=w×yillik hesabi bile agirlik dogrulanmadan yazilmadi).
+  Ebu notlari (00:48/09:32) Haziran metniyle kaldi — not motoru veri
+  degisince kendisi tazeler.
+RISK/BILINEN: desenler EVDS seri adlarina gore yazildi ama adlarin gercek
+bicimi OLCULMEDI (bu ortamdan EVDS'ye erisim yok) — ilk canli kosuda
+eslesme sayisi damgada gorunur ('EVDS · TEM' vs 'damgali'); eksik satir
+cikarsa seri adi olculup desen duzeltilir. Elle sayac: 10 -> 8 ADAY
+(iki kart canliya gecince elle katman listesinden dusecek; ilk basarili
+TEM kosusu dogrulayinca gunluge islenir).
+
+app.js v=20260803k · DOSYALAR: app.js + index.html
+
 ## 247c "SUTUNLAR" DUGMESI OLU DOGMUSTU — TDZ (3 Agu, aksam)
 
 Kullanici: sekme geldi, sutun secici dugmesi calismiyor. Olcum: KOL_TUM

@@ -2778,6 +2778,101 @@ async function oktCek(){
   }catch(e){}
   oktRender();
 }
+
+/* §247d TÜFE HARCAMA GRUPLARI + Yİ-ÜFE → EVDS CANLI (OKT deseni).
+   Statik dizi = damgalı yedek; mkGrupBul/mkSeri meta katalogdan bulur —
+   SERİ KODU TAHMİN EDİLMEZ, ad desenine uymayan satır damgalı kalır.
+   Katkı pp yalnız damgalı dönemden bilinir: canlı ayda ağırlık serisi
+   bağlanana dek '—' basılır (yaklaşık katkı UYDURULMAZ). */
+const HRC_STATIK=[
+  ['Konut, su, elektrik, gaz', /konut|su.*elektrik.*gaz/, 45.14, '5,92', 1],
+  ['Gıda ve alkolsüz içecekler', /gıda.*alkolsüz/, 35.45, '8,61', 0],
+  ['TÜFE — Genel', /^genel$|^tüfe$|tüketici fiyat.*genel/, 32.11, '—', 2],
+  ['Ulaştırma', /ulaştırma/, 31.15, '5,19', 0]];
+let HRC_CANLI=null, HRC_DONEM='';
+function hrcRender(){
+  const el=$('hrcBody'); if(!el)return;
+  const veriler=HRC_STATIK.map(r=>{
+    const c=HRC_CANLI?HRC_CANLI[r[0]]:null;
+    return {ad:r[0], yil:(c&&c.yillik!=null)?c.yillik:r[2], katki:c?'—':r[3], tz:!!c, tip:r[4]};
+  });
+  const max=Math.max(...veriler.map(v=>v.yil));
+  el.innerHTML='<div class="bar" style="font-weight:700;color:var(--muted)"><span class="bn">GRUP</span><span></span><span class="bv" style="font-family:var(--sans);font-size:9px">YILLIK %</span><span class="bk" style="font-family:var(--sans);font-size:9px">KATKI pp</span></div>'+
+   veriler.map(v=>'<div class="bar"><span class="bn">'+(v.tip===2?'<b>':'')+esc(v.ad)+(v.tip===2?'</b>':'')+(v.tz?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span>'+
+     '<span class="bt"><span class="bf" style="width:'+(v.yil/max*100).toFixed(1)+'%'+(v.tip===2?';background:#152720':'')+'"></span></span>'+
+     '<span class="bv'+(v.tip===1?' down':'')+'">'+(v.tip===2?'<b>':'')+trN(v.yil,2)+(v.tip===2?'</b>':'')+'</span>'+
+     '<span class="bk">'+v.katki+'</span></div>').join('');
+  const d=$('hrcDamga');
+  if(d)d.textContent=HRC_CANLI?('EVDS · '+HRC_DONEM):'damgalı (Haz 2026)';
+}
+async function hrcCek(){
+  try{
+    const g=await mkGrupBul('tüfe', /harcama grup/);
+    if(g){
+      const sonuc={};
+      for(const r of HRC_STATIK){
+        const s=await mkSeri(g, r[1], 800, /arşiv/);
+        if(s&&s.items.length>=13){
+          const A=s.items, son=A[A.length-1], onceYil=A[A.length-13];
+          const yillik=(son.v/onceYil.v-1)*100;
+          if(isFinite(yillik)){ sonuc[r[0]]={yillik, tarih:son.t}; HRC_DONEM=son.t; }
+        }
+      }
+      if(Object.keys(sonuc).length>=2)HRC_CANLI=sonuc;   // en az 2 satır eşleşmeden canlıya geçme
+    }
+  }catch(e){}
+  hrcRender();
+}
+const UFE_STATIK_SOL=[
+  ['Yİ-ÜFE — aylık / yıllık', /yurt içi üfe|^genel$|yi-üfe.*genel|üfe genel/, '%1,80 / %28,09', 9],
+  ['Madencilik ve taş ocakçılığı (aylık)', /madencilik/, 8.30, 1],
+  ['Elektrik, gaz üretimi ve dağıtımı (aylık)', /elektrik.*gaz/, 7.10, 1],
+  ['Su temini (aylık)', /su temini|su şebeke/, 1.97, 0],
+  ['İmalat (aylık)', /^imalat|imalat sanayi|imalat \(/, 1.01, 0]];
+const UFE_STATIK_SAG=[
+  ['Enerji (ana sanayi, aylık)', /enerji/, 3.04, 1],
+  ['Ara malları (aylık)', /ara mal/, 1.88, 0],
+  ['Sermaye malları (aylık)', /sermaye mal/, 1.66, 0],
+  ['Dayanıksız tüketim malları (aylık)', /dayanıksız/, 1.41, 0],
+  ['Dayanıklı tüketim malları (aylık)', /dayanıklı tüketim/, 0.24, 0]];
+let UFE_CANLI=null, UFE_DONEM='';
+function ufeSatir(r){
+  const c=UFE_CANLI?UFE_CANLI[r[0]]:null;
+  if(r[3]===9){  // genel satır: aylık/yıllık çifti
+    const m=c?trN(c.aylik,2):null;
+    const metin=c?('%'+m+' / %'+trN(c.yillik,2)):r[2];
+    return '<div class="kv"><span class="k">'+esc(r[0])+(c?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span><span><b>'+metin+'</b></span></div>';
+  }
+  const v=(c&&c.aylik!=null)?c.aylik:r[2];
+  const cls=v>=3?'down':(v<=0.5?'up':'');
+  return '<div class="kv"><span class="k">'+esc(r[0])+(c?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span><span class="num '+cls+'">+%'+trN(v,2)+'</span></div>';
+}
+function ufeRender(){
+  const L=$('ufeSol'), R=$('ufeSag'); if(!L||!R)return;
+  L.innerHTML=UFE_STATIK_SOL.map(ufeSatir).join('');
+  R.innerHTML=UFE_STATIK_SAG.map(ufeSatir).join('');
+  const d=$('ufeDamga');
+  if(d)d.textContent=UFE_CANLI?('EVDS · '+UFE_DONEM):'damgalı (Haz 2026)';
+}
+async function ufeCek(){
+  try{
+    const g=await mkGrupBul('üfe', /yurt içi üretici|yi-üfe/);
+    if(g){
+      const sonuc={};
+      for(const r of [...UFE_STATIK_SOL,...UFE_STATIK_SAG]){
+        const s=await mkSeri(g, r[1], 500, /arşiv|yıllık değişim/);
+        if(s&&s.items.length>=13){
+          const A=s.items, son=A[A.length-1], onc=A[A.length-2], oy=A[A.length-13];
+          const aylik=(son.v/onc.v-1)*100, yillik=(son.v/oy.v-1)*100;
+          if(isFinite(aylik)){ sonuc[r[0]]={aylik, yillik, tarih:son.t}; UFE_DONEM=son.t; }
+        }
+      }
+      if(Object.keys(sonuc).length>=3)UFE_CANLI=sonuc;
+    }
+  }catch(e){}
+  ufeRender();
+}
+
 /* ---- Getiri Eğrisi (EVDS canlı · damgalı yedek) ---- */
 const EGRI_STATIK=[['3A','3 Ay',34.50,0],['6A','6 Ay',41.36,0],['9A','9 Ay',42.40,0],
  ['2Y','2 Yıl (gösterge)',42.16,0],['3Y','3 Yıl',41.19,0],['5Y','5 Yıl',39.31,0],['10Y','10 Yıl',35.46,0]]; // 27 Tem canlıdan damgalandı
@@ -6152,6 +6247,8 @@ async function boot(){
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],
+    ['TÜFE harcama grupları', ()=>setTimeout(hrcCek,5200)],
+    ['Yİ-ÜFE detayı', ()=>setTimeout(ufeCek,5500)],
     /* §245: ['İnceleme AI', aiInit] KALDIRILDI — fonksiyon ölüydü, silindi. */
     ['Canlı AOFM', loadAOFM],
     ['Haftalık yorum panosu', ()=>setTimeout(yorumPano,2500)],
