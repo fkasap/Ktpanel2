@@ -2371,6 +2371,17 @@ async function mkListe(grup){
   }catch(e){MK_ONBELLEK[anahtar]=[];}
   return MK_ONBELLEK[anahtar];
 }
+/* §247h: seri kodu bir kez ÖLÇÜLDÜYSE arama bitti — doğrudan çekim. */
+async function mkSeriKod(kod, gun){
+  try{
+    const r=await fetch('/api/evds2?series='+encodeURIComponent(kod)+'&gun='+(gun||800)+'&full=1');
+    if(!r.ok)return null;
+    const d=await r.json(), alan=String(kod).replace(/\./g,'_');
+    const items=(d.ham||[]).filter(x=>x[alan]!=null&&x[alan]!=='')
+      .map(x=>({t:String(x.Tarih), v:parseFloat(String(x[alan]).replace(',','.'))})).filter(x=>isFinite(x.v));
+    return items.length?{items, kod}:null;
+  }catch(e){return null;}
+}
 async function mkSeri(grup, seriDeseni, gun, eleme){
   try{
     const liste=await mkListe(grup); if(!liste.length)return null;
@@ -2784,11 +2795,11 @@ async function oktCek(){
    SERİ KODU TAHMİN EDİLMEZ, ad desenine uymayan satır damgalı kalır.
    Katkı pp yalnız damgalı dönemden bilinir: canlı ayda ağırlık serisi
    bağlanana dek '—' basılır (yaklaşık katkı UYDURULMAZ). */
-const HRC_STATIK=[
-  ['Konut, su, elektrik, gaz', /konut|su.*elektrik.*gaz/, 45.14, '5,92', 1],
-  ['Gıda ve alkolsüz içecekler', /gıda.*alkolsüz/, 35.45, '8,61', 0],
-  ['TÜFE — Genel', /genel/, 32.11, '—', 2],   /* §247f: adlar önekli, dar desen tutmaz */
-  ['Ulaştırma', /ulaştırma/, 31.15, '5,19', 0]];
+const HRC_STATIK=[   /* §247h: konut/ulaştırma ÖLÇÜLEN kodla (desen aramaları o iki satırda tutmuyordu) */
+  ['Konut, su, elektrik, gaz', /konut/, 45.14, '5,92', 1, 'TP.TUKFIY2025.04'],
+  ['Gıda ve alkolsüz içecekler', /gıda.*alkolsüz/, 35.45, '8,61', 0, null],
+  ['TÜFE — Genel', /genel/, 32.11, '—', 2, null],
+  ['Ulaştırma', /ulaştırma/, 31.15, '5,19', 0, 'TP.TUKFIY2025.07']];
 let HRC_CANLI=null, HRC_DONEM='';
 function hrcRender(){
   const el=$('hrcBody'); if(!el)return;
@@ -2812,7 +2823,7 @@ async function hrcCek(){
     if(g){
       const sonuc={};
       for(const r of HRC_STATIK){
-        const s=await mkSeri(g, r[1], 800, /arşiv/);
+        const s=r[5]?await mkSeriKod(r[5],800):await mkSeri(g, r[1], 800, /arşiv/);  /* §247h: kod varsa aramasız */
         if(s&&s.items.length>=13){
           const A=s.items, son=A[A.length-1], onceYil=A[A.length-13];
           const yillik=(son.v/onceYil.v-1)*100;

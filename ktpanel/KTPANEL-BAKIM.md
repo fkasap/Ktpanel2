@@ -2768,6 +2768,23 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247h KONUT/ULASTIRMA KODLA SABIT + MIGS AYRI GRUPTA (3 Agu, gece 3)
+
+Uc olcum: Konut = TP.TUKFIY2025.04 ('04. Konut, Su, Elektrik, Gaz Ve Diger
+Yakitlar'), Ulastirma = TP.TUKFIY2025.07 (tek sonuc). Desenler bu adlari
+tutmaliydi ama SAHADA tutmadi — sebep pesinde kosmak yerine mimari karar:
+OLCULEN KOD VARSA ARAMA BITER. mkSeriKod eklendi (desen aramasiz dogrudan
+cekim); HRC iki satiri koda baglandi, calisan gida/genel desenle kaldi.
+KRITIK BULGU: ?q=mallar bie_tufe1yi'de SIFIR sonuc — MIGS beslisi (enerji/
+ara/sermaye/dayanikli/dayaniksiz) bu grupta YOK, ayri grupta. O 5 satir
+mevcut grupta asla dolmayacak; grup adi olculunce baglanacak (kullaniciya
+?ara=sanayi linki verildi). O zamana dek 5 satir damgali — durust durum.
+BEKLENEN (bu surumle): TUFE 4/4 canli 'EVDS · 2026-7'; UFE sol blok
+(genel/madencilik/elektrik/su/imalat) canli, sag blok damgali + tani
+satiri eksikleri isimle soyler.
+
+app.js v=20260803p · DOSYALAR: app.js + index.html
+
 ## 247g KISMI CANLILIK + UFE GENEL DESENI (3 Agu, gece 2)
 
 Ekran: TUFE karti CANLIYA DONDU ('EVDS · 2026-7') — Temmuz verisi panelde:
