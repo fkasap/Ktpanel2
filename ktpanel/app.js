@@ -2206,7 +2206,7 @@ async function loadRotasyon(){
   }catch(e){}
   // 2) YP gerçek değişim + parite etkisi + altın (aynı grup, tek istek)
   try{
-    const r=await fetch('/api/evds2?series=TP.HPBITABLO5.1,TP.HPBITABLO5.12,TP.HPBITABLO5.6,TP.HPBITABLO5.11&gun=30&full=1');
+    const r=await fetch('/api/evds2?series=TP.HPBITABLO5.1,TP.HPBITABLO5.12,TP.HPBITABLO5.6,TP.HPBITABLO5.11&gun=60&full=1');
     if(r.ok){const d=await r.json();const ham=d.ham||[];
       const sonV=(k)=>{const al=k.replace(/\./g,'_');const it=ham.filter(x=>x[al]!=null&&x[al]!=='');return it.length?parseFloat(it[it.length-1][al]):null;};
       ypG=sonV('TP.HPBITABLO5.1');
@@ -2217,25 +2217,26 @@ async function loadRotasyon(){
       if($('rotAltin'))$('rotAltin').innerHTML='<span class="'+(altin<=0?'up':'down')+'">'+(altin>=0?'+':'')+trN(altin,0)+' mn $</span>';
       // 4 haftalık YP gerçek serisi + kümülatif yorum
       const gSeri=ham.filter(x=>x['TP_HPBITABLO5_1']!=null&&x['TP_HPBITABLO5_1']!=='').map(x=>parseFloat(x['TP_HPBITABLO5_1']));
-      if(gSeri.length>=4&&$('rotSeri')){
+      /* §246f: 'Son 4 hafta' satırı boşalıyordu — gun=30 penceresi Pazartesi
+         günleri 4. yayını dışarı düşürüyor (TCMB Perşembe yayınlar, son veri
+         24 Tem). Pencere-kenarı hatası: önceden dolu görünmesi takvim şansıydı.
+         Pencere 60 güne çıktı + 4'ten az hafta varsa eldeki kadarı gösterilir
+         (etiketiyle) — hepsi-ya-hiç yerine dürüst kısmi görünüm. */
+      if(gSeri.length>=2&&$('rotSeri')){
         const s4=gSeri.slice(-4), top=s4.reduce((t,v)=>t+v,0);
         $('rotSeri').innerHTML=s4.map(v=>'<b class="'+(v<=0?'up':'down')+'">'+(v>=0?'+':'')+trN(v,0)+'</b>').join(' → ')+
-          ' mn $ · kümülatif <b class="'+(top<=0?'up':'down')+'">'+(top>=0?'+':'')+trN(top,0)+'</b> '+(top<=0?'(TL\u0027leşme)':'(dolarizasyon baskısı)');
+          ' mn $ ('+s4.length+' hafta) · kümülatif <b class="'+(top<=0?'up':'down')+'">'+(top>=0?'+':'')+trN(top,0)+'</b> '+(top<=0?'(TL\u0027leşme)':'(dolarizasyon baskısı)');
       }}
   }catch(e){}
-  // 3) KKM haftalık fark — döviz DDKKM (K1, mlr $) + TL KKM (K4, mlr ₺), ikisi ayrı
+  // 3) YP mevduat stoku — §246g: KKM Δ satırı ÖLÜ seriyi (program kapandı,
+  // TP.KKM.K1/K4 boş dönüyor) gösteriyordu; '—' arıza değil gerçekti ama
+  // ekranda arıza gibi duruyordu. Yerine TAHMİNSİZ değişim: zaten çekilen
+  // YP serisinin (TP_HPBITABLO5_1) son stok değeri + yayın tarihi.
   try{
-    const r=await fetch('/api/evds2?series=TP.KKM.K1,TP.KKM.K4&gun=40&full=1');
-    if(r.ok){const d=await r.json();const ham=d.ham||[];
-      const dov=son2(ham,'TP_KKM_K1');   // DDKKM döviz, milyar $
-      const tl=son2(ham,'TP_KKM_K4');    // TL KKM, milyar TL
-      let parts=[];
-      if(dov){const f=dov.s-dov.o;parts.push('<span class="'+(f<=0?'up':'down')+'">DDKKM '+(f>=0?'+':'')+trN(f*1000,0)+' mn $</span>');}
-      if(tl){const f=tl.s-tl.o;parts.push('<span class="'+(f<=0?'up':'down')+'">TL '+(f>=0?'+':'')+trN(f,1)+' mlr ₺</span>');}
-      if(parts.length&&$('rotKKM')){
-        const stokBilgi=dov?' <span class="thin" style="font-size:9px">(DDKKM stok '+trN(dov.s,1)+' mlr $)</span>':'';
-        $('rotKKM').innerHTML=parts.join(' · ')+stokBilgi;
-      }
+    if($('rotKKM')&&typeof gSeri!=='undefined'&&gSeri.length){
+      const st=gSeri[gSeri.length-1];
+      const tarih=(typeof ham!=='undefined'&&ham.length)?(ham[ham.length-1].Tarih||ham[ham.length-1].TARIH||''):'';
+      $('rotKKM').innerHTML='<b>'+trN(st/1000,1)+' mlr $</b>'+(tarih?' <span class="thin" style="font-size:9px">'+esc(tarih)+' · EVDS canlı</span>':'');
     }
   }catch(e){}
   // 4) Yön sinyali: TL↑ + YP gerçek↓ = TL'leşme

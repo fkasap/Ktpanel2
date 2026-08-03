@@ -2750,6 +2750,35 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246f 'SON 4 HAFTA' SATIRI — PENCERE-KENARI HATASI (3 Agu)
+
+Kullanici: rotasyon kartinda 'Son 4 hafta YP degisim' onceden doluydu,
+simdi bos. OLCUM: ayni ham'dan ilk uc satir DOLU -> veri geliyor; bosluk
+`gSeri.length>=4` HEPSI-YA-HIC sartindan. Sorgu gun=30: bugun (Pzt 3 Agu)
+- 30g = 4 Tem; TCMB Persembe yayinlar, son veri 24 Tem -> pencerede 3-4
+yayin ve haftanin ilerleyen gunlerinde 4.su DISARI DUSUYOR. Onceden dolu
+gorunmesi takvim sansiydi. (§245p limit kalibrasyonuyla ayni aile:
+pencereler yayin RITMINE gore boyutlanir, yuvarlak sayiya gore degil.)
+DUZELTME: gun=30 -> 60 (8 yayin garantisi) + length>=2 ile KISMI gosterim
+('N hafta' etiketiyle) — hepsi-ya-hic yerine durust kismi gorunum.
+KKM satiri ('—') ayri konu: gun=40 penceresi ayni riske acik ama KKM
+verisinin kendisi de sonlanmis olabilir (program kapanisi) — siradaki
+turda olculecek (bekleyen islere kondu).
+
+app.js v=20260803f · ajan.js v=20260803a
+DOSYALAR: app.js + index.html
+
+## 246g OLU KKM SATIRI YASAYAN GOSTERGEYLE DEGISTI (3 Agu)
+
+KKM Δ satiri olu seriyi (program kapandi, TP.KKM.K1/K4 bos) gosteriyordu —
+bostluk ariza degil GERCEKTI ama ekranda ariza gibi duruyordu. Kullanici
+onayiyla satir, TAHMINSIZ bir gostergeye cevrildi: zaten cekilen YP mevduat
+serisinin (TP_HPBITABLO5_1) son stok degeri + yayin tarihi (EVDS canli).
+Yeni EVDS seri kodu TAHMIN EDILMEDI (oturumun dersi); dolarizasyon ORANI
+icin TL toplam mevduat serisi gerekir — kodu dogrulanmadan eklenmedi,
+istenirse Persembe sonrasi ayri turda olculerek yapilir.
+app.js v=20260803f · DOSYALAR: app.js + index.html
+
 ## 246e KIRILIM SON HAMLE: SUNUCUYA TASINDI (3 Agu)
 
 Uc client-tarafi deneme (retry, iki dalga, tek-istek) sahada dogrulanamadi.
