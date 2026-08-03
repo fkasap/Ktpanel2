@@ -2750,6 +2750,39 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246 HAFTALIK YORUM ELLE TAZELENDI + ECB TEST LINKLERI (3 Agu Pzt)
+
+### 246.1 HAFTALIK YORUM — index.html statik baslangici bu haftaya tasindi
+Kullanici acikca istedi ("haftalik yorum sayfasini guncelle, tum siteyi
+inceleyip"). Yapi kesfi: yorum TARAYICIDA yasar (yorumMetin DOM +
+ajan_notlar.__HAFTALIK__); ajan.js Pazartesi acilisinda 40. sn otomatik
+yazar (ajanHaftalikBtn ile elle zorlanir). AMA index.html'de STATIK
+baslangic icerigi var ve '27 TEM–2 AGU' etiketiyle GECEN HAFTADA kalmisti.
+O blok bu haftanin olculmus panel verileriyle yeniden yazildi (5 bolum +
+buyuk resim): enflasyon donusu (AB manset %1,9->%2,9), bilanco zirvesi
+bilancosu (MSFT/AMZN/META/AAPL/Samsung), BIST&katilim (XKTUM +%1,0, EFOR
+zayif, YEOTK bedelsiz, sicil alfa ~+1,6), rezerv (162,6/38,3/12,8 · 6 Agu
+Persembe yayin), Avrupa revizyonu, ajanda&riskler. Etiket: '3–9 AGU ·
+ENFLASYON DONUSU + REZERV HAFTASI'. Ebu Pazartesi otomatigi UZERINE yazar —
+statik blok panel acilana kadarki dogru baslangictir, celiski degil.
+NOT: taktikBody2 (TAKTIKSEL DAGILIM) JS'ten dolar — statik karsiligi yok,
+dokunulmadi.
+
+### 246.2 TARIHI HTML BORCU KAPANDI
+Yeni denetime <b>/<em> sayimi eklenince tarihî bir cift '<b><b>' yakalandi
+(satir 397, GOOGL notu — onceki teslimlerde de vardi, tarayici tolere
+ediyordu). Kapatildi. Denetim listesi artik b+em dahil.
+
+### 246.3 ECB KIRILIM — KULLANICI TEST LINKLERI
+Kirilim (Hizmet/Gida/Sanayi) hala bos ve tani satiri son ekranda yoktu
+(goruntu tani surumunden onceki acilistan olabilir). Kullanici 'link ver
+deneyeyim' dedi — dogru yontem: kanit tarayicidan. Verilen linkler CSV
+dondurur; BOS sayfa = seri yok, VERI satiri = anahtar dogru. Sonuca gore
+hicpCoklu aday listesi kanitla guncellenir. (Linkler teslim raporunda.)
+
+app.js v=20260802g · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: index.html + KTPANEL-BAKIM.md
+
 ## 245z TEK BOZUK KART 30 KARTI OLDURDU (2 Agu, gece 2)
 
 245y'nin ayirt eden teshisi ILK KOSUDA meyve verdi — kullanici ekrani:
