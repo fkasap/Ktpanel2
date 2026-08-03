@@ -2750,6 +2750,33 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246c TAKTIKSEL DAGILIM: DORT KART BIRDEN BU HAFTAYA (3 Agu)
+
+Kullanici elestirisi HAKLIYDI: "neden parca parca guncelliyorsun" — 246b'de
+yalniz ETIKETI dinamiklestirdim, TEZ METINLERI '27 Tem' haftasinda kaldi
+(28 Tem AKBNK 'gelecek' diye, MSFT/META 'bu hafta test' diye yaziyordu —
+hepsi SONUCLANMIS olaylar). Ders: bir bileseni guncellerken o bilesenin
+TUM icerik katmanlari (etiket + tez + tetik + risk) birlikte taranir;
+yarim guncelleme bayat veriden kotudur cunku taze GORUNUR.
+
+Dort kartin teze+tetik metinleri sonuclanmis olaylar ve bu haftanin
+ajandasiyla yeniden yazildi (durus/dayanak/risk iskeleti korundu):
+  Yerli NOTR   banka bilancolari test gecti, XKTUM +%1,0; hakem BUGUN TUFE
+  Yabanci ALTI bilanco zirvesi sonuclandi (AMZN/MSFT guclu, META/AAPL ceza),
+               Avrupa enflasyon donusu 'sikilasma uzar' riskini buyuttu
+  Altin NOTR   ons 4.062$ plato; ECB indirim umudu otelendi, tetik uzaklasti
+  TL USTU      koro uzadikca yuksek nominali uzun kilitleme firsati;
+               katfon 479,3 mlr akis kaniti; tetikler TUFE + 6 Agu rezerv
+Statik '27 TEM · FOMC HAFTASI' etiketi zaten 246b'de dinamige baglanmisti.
+
+AVRUPA KIRILIMI: kullanici 'yine calismiyor' dedi — 20260803a+ deploy'unun
+yuklu olup olmadigi ekrandan teyit edilemedi. v>=e'de kirilim bossa kartin
+dibinde TANI SATIRI cikmali ('bos donen anahtarlar: ... (HTTP kod)').
+Siradaki adim: kullanicidan tani satirinin goruntusu — tahmin yok, kanit var.
+
+app.js v=20260803c · ajan.js v=20260803a · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html
+
 ## 246b PAZARTESI YORUMU NEDEN YAZILMADI — TETIK OLCUSU YANLISTI (3 Agu)
 
 Kullanici ekrani: haftalik yorum hala '27 TEM–2 AGU', imza 'Ebu 09:33'
