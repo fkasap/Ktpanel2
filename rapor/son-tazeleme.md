@@ -1,45 +1,43 @@
-# Tazeleme — 2026-08-02
+# Tazeleme — 2026-08-03
 
 Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
-- ✓ **tarih birliği**: baskın 2026-07-30 (%99) · 1 kayıt ≤0 gün geride (işlem görmemiş olabilir)
-  - YEOTK:2026-07-31
+- ✓ **tarih birliği**: tek tarih: 2026-08-03
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
-- ✓ **tarih birliği**: baskın 2026-07-30 (%99) · 1 kayıt ≤0 gün geride (işlem görmemiş olabilir)
-  - YEOTK:2026-07-31
+- ✓ **tarih birliği**: tek tarih: 2026-08-03
 - ✓ **toplam**: 96.50 (hedef 96.5 ±3)
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 34/34 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-07-30
+- ✓ **tarih birliği**: tek tarih: 2026-08-03
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
-- ✓ **tarih birliği**: baskın 2026-07-30 (%99) · 1 kayıt ≤0 gün geride (işlem görmemiş olabilir)
-  - YEOTK:2026-07-31
-- ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): YEOTK → pay adedi + referans fiyat ELLE güncellenmeli
-  - YEOTK: -59.42%
+- ✓ **tarih birliği**: tek tarih: 2026-08-03
+- ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): PASEU → pay adedi + referans fiyat ELLE güncellenmeli
+  - PASEU: 30.20%
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-07-30
-- ✓ **aykırı değer**: temiz (sınır ±%25)
+- ✓ **tarih birliği**: tek tarih: 2026-08-03
+- ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): KTLEV → pay adedi + referans fiyat ELLE güncellenmeli
+  - KTLEV: -73.60%
 
 ### Risk metrikleri — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XU100.IS** (251 gün)
+- ℹ **beta referansı: XU100.IS** (250 gün)
 - ℹ 4 gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz) — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir
-- denenen: XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 251
+- denenen: XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 250
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · Multiple fiyatları (139 fiyat · 1 karantina)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (137 fiyat · 1 karantina) · Model sicili (39 fiyat · 1 karantina) · risk metrikleri (122)
