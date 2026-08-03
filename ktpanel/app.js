@@ -2841,12 +2841,15 @@ const UFE_STATIK_SOL=[
   ['Elektrik, gaz üretimi ve dağıtımı (aylık)', /elektrik.*gaz/, 7.10, 1, 'TP.TUFE1YI.T118'],   /* §247i: ölçülen '4. Elektrik Gaz Buhar...' */
   ['Su temini (aylık)', /su temini/, 1.97, 0, 'TP.TUFE1YI.T123'],   /* §247i: ölçülen '5. Su Temini Kanalizasyon...' */
   ['İmalat (aylık)', /imalat/, 1.01, 0]];   /* §247f: seri adı '3. İmalat' — önekli, ilk eşleşme ana sektör */
+/* §247j: MIGS beşlisi EVDS'de YOK (6 ölçümle kesin) — sağ blok, grupta
+   YAŞAYAN imalat alt sektörlerine çevrildi (kullanıcı B kararı; kodlar
+   ölçüldü). Portföy dili: ana metal=çelik girdisi, kok-rafine=petrokimya. */
 const UFE_STATIK_SAG=[
-  ['Enerji (ana sanayi, aylık)', /enerji/, 3.04, 1],
-  ['Ara malları (aylık)', /ara mal/, 1.88, 0],
-  ['Sermaye malları (aylık)', /sermaye mal/, 1.66, 0],
-  ['Dayanıksız tüketim malları (aylık)', /dayanıksız/, 1.41, 0],
-  ['Dayanıklı tüketim malları (aylık)', /dayanıklı tüketim/, 0.24, 0]];
+  ['Gıda ürünleri (imalat, aylık)', /gıda ürünleri/, null, 0, 'TP.TUFE1YI.T16'],
+  ['Kok ve rafine petrol (aylık)', /kok/, null, 1, 'TP.TUFE1YI.T49'],
+  ['Kimyasallar (aylık)', /kimyasal/, null, 0, 'TP.TUFE1YI.T52'],
+  ['Ana metaller (aylık)', /ana metal/, null, 0, 'TP.TUFE1YI.T73'],
+  ['Motorlu kara taşıtları (aylık)', /motorlu/, null, 0, 'TP.TUFE1YI.T105']];
 let UFE_CANLI=null, UFE_DONEM='';
 function ufeSatir(r){
   const c=UFE_CANLI?UFE_CANLI[r[0]]:null;
@@ -2856,8 +2859,10 @@ function ufeSatir(r){
     return '<div class="kv"><span class="k">'+esc(r[0])+(c?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span><span><b>'+metin+'</b></span></div>';
   }
   const v=(c&&c.aylik!=null)?c.aylik:r[2];
+  if(v==null) return '<div class="kv"><span class="k">'+esc(r[0])+'</span><span class="thin">—</span></div>';   /* §247j: yeni satırların Haziran yedeği yok */
   const cls=v>=3?'down':(v<=0.5?'up':'');
-  return '<div class="kv"><span class="k">'+esc(r[0])+(c?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span><span class="num '+cls+'">+%'+trN(v,2)+'</span></div>';
+  const isr=(v>=0?'+':'−');
+  return '<div class="kv"><span class="k">'+esc(r[0])+(c?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span><span class="num '+cls+'">'+isr+'%'+trN(Math.abs(v),2)+'</span></div>';
 }
 function ufeRender(){
   const L=$('ufeSol'), R=$('ufeSag'); if(!L||!R)return;

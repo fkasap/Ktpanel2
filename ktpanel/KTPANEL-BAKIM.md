@@ -2768,6 +2768,25 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247j SAG BLOK B PLANI: BES CANLI IMALAT SEKTORU (3 Agu, gece 5)
+
+MIGS 6 olcumle kesin YOK; kullanicinin 'hepsi vardir' inadi B plani icin
+HAKLI cikti — imalat alt sektorlerinin tamami grupta ve kodlari olculdu:
+  Gida urunleri T16 · Kok-rafine petrol T49 · Kimyasallar T52 ·
+  Ana metaller T73 · Motorlu kara tasitlari T105 (hepsi bolum duzeyi).
+UFE_STATIK_SAG bu beslige cevrildi (tumu kodlu -> aramasiz, tam canli).
+Yeni satirlarin Haziran yedegi yok: statik deger null, ufeSatir null'da
+'—' basar (NaN korumasi) + negatif deger isareti duzeltildi (madencilik
+-%4,22 orneginde '+%-4,22' gorunuyordu -> '−%4,22').
+ufeNot statik yorumu sektor-tanim diline cevrildi; Temmuz yorumunu veri
+degisince Ebu yazacak. Portfoy dili: ana metal=celik girdisi, kok-rafine=
+petrokimya marji, gida urunleri=perakende maliyet, motorlu=otomotiv
+fiyatlama.
+SONUC: Yi-UFE kartinda damgali satir KALMADI — iki TUFE karti uctan uca
+EVDS canli. Elle sayac 10 -> 8 KESINLESTI (ilk tam canli ekranla).
+
+app.js v=20260803r · DOSYALAR: app.js + index.html
+
 ## 247i UFE ELEKTRIK+SU KODLA SABIT (3 Agu, gece 4)
 
 Son iki olcum: Elektrik-gaz ana sektoru TP.TUFE1YI.T118 ('4. Elektrik Gaz
