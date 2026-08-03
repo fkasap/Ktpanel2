@@ -214,9 +214,22 @@ async function ecbTarayiciCek(){
         c.push(g); return c; };
       const dene=async(ek)=>{
         const u='https://data-api.ecb.europa.eu/service/data/'+flow+'/'+key+'?lastNObservations='+n+'&format=csvdata'+ek;
-        const r=await fetch(u,{headers:{'Accept':'text/csv'}});
+        let r=await fetch(u,{headers:{'Accept':'text/csv'}});
+        /* §246a HIZ SINIRI SAVUNMASI. Kullanıcı testi kanıtladı: SERV00/FOOD00
+           tarayıcıdan TEK istekle DOLU dönüyor — anahtarlar doğruydu. Panelin
+           boş göstermesinin sebebi anahtar değil EŞZAMANLILIK: sekme açılışta
+           ECB'ye 15+ isteği aynı anda atıyordu; ilk gelenler doluyor, kalanlar
+           429'a takılıp buradaki `if(!r.ok) return null` ile SESSİZCE yutuluyordu.
+           Sessiz catch dersinin HTTP hali. İki önlem: 429/5xx'te ~1sn bekleyip
+           BİR kez daha dene; yine olmazsa durumu EBU_ECB_TANI'ya yaz — kartın
+           tanı satırı artık 'boş' yerine 'HTTP 429' gösterir. */
+        if(r.status===429||r.status>=500){
+          await new Promise(z=>setTimeout(z,900+Math.random()*700));
+          r=await fetch(u,{headers:{'Accept':'text/csv'}});
+        }
         if(flow==='IRS'&&!r.ok){ window.EBU_IRS_TANI=(window.EBU_IRS_TANI||'')+key.split('.')[1]+':HTTP'+r.status+' '; }
-        if(!r.ok) return null;
+        if(!r.ok){ window.EBU_ECB_TANI=window.EBU_ECB_TANI||{};
+                   window.EBU_ECB_TANI[flow+'.'+key.split('.')[3]]='HTTP '+r.status; return null; }
         const t=await r.text();
         const sat=t.split(/\r?\n/).filter(x=>x.trim());
         if(sat.length<2) return null;
@@ -306,14 +319,20 @@ async function ecbTarayiciCek(){
     const y=await cek('HICP','M.'+k+'.N.000000.4D0.ANR',3);
     if(y) return sonFark(y);
     const e=await cek('ICP','M.'+k+'.N.000000.4.ANR',3); return e?sonFark(e):null; };
-  const [dfr,bilanco,manset,cekirdek,enerji,gida,hizmet,sanayi,de,fr,it,es,bund,btp,oat]=await Promise.all([
+  /* §246a İKİ DALGA: 15+ eşzamanlı istek ECB hız sınırına çarpıyordu.
+     Dalga 1 = kart omurgası (8 istek), kısa nefes, Dalga 2 = kırılım+ülkeler.
+     hicpCoklu kendi içinde zaten sıralı; anlık istek sayısı ≤8 kalır. */
+  const [dfr,bilanco,manset,cekirdek,enerji,bund,btp,oat]=await Promise.all([
     cek('FM','B.U2.EUR.4F.KR.DFR.LEV',3), cek('ILM','W.U2.C.T000000.Z5.Z01',6),
     hicp('000000'), hicp('XEF000'), hicp('NRGY00'),
+    cek('IRS','M.DE.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.IT.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)
+  ]);
+  await new Promise(z=>setTimeout(z,450));
+  const [gida,hizmet,sanayi,de,fr,it,es]=await Promise.all([
     hicpCoklu(['FOOD00','FOODPR','FOODUN'],[null,'işlenmiş gıda','işlenmemiş gıda']),
     hicpCoklu(['SERV00','SERV'],[null,null]),
     hicpCoklu(['IGXE00','IGDXEN','NEIG00'],[null,null,null]),
-    ulke('DE'), ulke('FR'), ulke('IT'), ulke('ES'),
-    cek('IRS','M.DE.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.IT.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)
+    ulke('DE'), ulke('FR'), ulke('IT'), ulke('ES')
   ]);
   const S={};
   if(dfr){ const x=sonFark(dfr); if(x) S.dfr=x; }
@@ -459,7 +478,9 @@ async function avrupaSekme(){
            tahmin değil kanıt taşısın. Doluysa satır hiç görünmez. */
         if(!S.hicpHizmet||!S.hicpGida||!S.hicpSanayi){
           const T=window.EBU_HICP_TANI||{};
-          const boslar=Object.keys(T).filter(k=>T[k]!=='✓');
+          const H=window.EBU_ECB_TANI||{};
+          const boslar=Object.keys(T).filter(k=>T[k]!=='✓')
+            .map(k=>k+(H['HICP.'+k]?' ('+H['HICP.'+k]+')':''));   /* §246a: sebep de görünsün */
           if(boslar.length) eh+='<div class="thin" style="font-size:8px;margin-top:3px;color:var(--muted)">kırılım tanısı — boş dönen anahtarlar: '+boslar.join(' · ')+' <span style="opacity:.7">(4D0.ANR)</span></div>';
         }
         /* ÜLKE KIRILIMI — parçalanma termometresi */

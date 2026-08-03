@@ -2750,6 +2750,39 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246a KIRILIM COZULDU: ANAHTAR DEGIL, HIZ SINIRIYDI (3 Agu)
+
+Kullanici verilen test linklerini calistirip UC CSV yapistirdi — kesin kanit:
+  SERV00  %3,3 (2026-07, ivme +0,10)   FOOD00  %1,2 (ivme -0,30, dusus!)
+  FOODUN  %2,5 — hepsi DOLU, hepsi 4D0.ANR, Temmuz satiri OBS_STATUS=E (flash).
+ANAHTARLAR BASTAN BERI DOGRUYDU. Parser da temiz: kullanicinin gercek
+CSV'siyle birebir test edildi, 3/3 satir okundu (E bayragi dahil).
+
+O halde panel neden bos? TEK aday kaldi ve kod onayladi: avrupaSekme
+acilista ECB'ye 15+ istegi AYNI ANDA atiyordu; ilk gelenler (manset/
+cekirdek/enerji) doluyor, kalanlar 429'a takiliyor ve cek() icindeki
+`if(!r.ok) return null` ile SESSIZCE yutuluyordu. Ulke kiriliminin da bos
+olmasi ayni sebep. Sessiz catch dersinin HTTP hali: hata kodu yutulunca
+'anahtar yanlis' diye iki gun yanlis iz surduk.
+
+DUZELTMELER (app.js v=20260803a):
+  1. cek(): 429/5xx'te ~1sn bekle + BIR kez yeniden dene; yine olmazsa
+     EBU_ECB_TANI[flow.kalem]='HTTP <kod>' — sessizlik bitti.
+  2. IKI DALGA: Promise.all bolundu — dalga 1 kart omurgasi (8 istek:
+     DFR, bilanco, 3 ana HICP, 3 IRS), 450ms nefes, dalga 2 kirilim+ulkeler
+     (hicpCoklu zaten sirali). Anlik istek <=8.
+  3. Tani satiri artik SEBEP gosterir: 'FOOD00 (HTTP 429)' — bir sonraki
+     ariza bildiriminde kod da gorunur.
+BEKLENEN: Hizmet %3,3 · Gida %1,2 (dusus — mansetteki yukselisin enerji
+kaynakli oldugunun kaniti) · Sanayi dolar; ulke kirilimi geri gelir.
+DERS: 'veri gelmiyor' arizasinda uc soru SIRAYLA: anahtar dogru mu (test
+linki) -> parser dogru mu (gercek veriyle) -> TASIMA katmani mi (hiz siniri,
+CORS, eszamanlilik). Ilk ikisini olcmeden ucuncuye bakmadik ve iki tur
+kaybettik; kullanicinin tek tarayici testi hepsini cozdu.
+
+app.js v=20260803a · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html
+
 ## 246 HAFTALIK YORUM ELLE TAZELENDI + ECB TEST LINKLERI (3 Agu Pzt)
 
 ### 246.1 HAFTALIK YORUM — index.html statik baslangici bu haftaya tasindi
