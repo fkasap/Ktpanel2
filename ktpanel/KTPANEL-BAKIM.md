@@ -2750,6 +2750,33 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245z TEK BOZUK KART 30 KARTI OLDURDU (2 Agu, gece 2)
+
+245y'nin ayirt eden teshisi ILK KOSUDA meyve verdi — kullanici ekrani:
+"(k.metrikler||[]).map is not a function". Dosya inmis, JSON gecerli,
+RENDER kiriliyor. Olcum tablosu iki suclu gosterdi:
+  SMSN   onceki oturumdan cift Samsung karti — metrikler DIZI degil OBJE.
+         .map firlatti, 30 kartin 30'u birden kayboldu. Sekme muhtemelen
+         o kart yazildigindan beri kirikti; bugun fark edildi.
+  005930+EFOR (bu oturum) — kirmiyordu ama semaya uymuyordu: metrikler
+         yerine duz metin 'detay'; 'onemli' string (sema DIZI bekliyor —
+         mail fonksiyonu forEach cagiriyor, orada kirilirdi).
+DERSLER:
+  1. SEMAYI TAHMIN ETME, OLC: kart eklerken mevcut saglam karttan sema
+     cikarilir (kod,ad,donem,tarih,tarih_iso,sablon,skor,ozet,metrikler[],
+     onemli[],guidance,tez,kaynak). Iki oturum ust uste iki farkli el
+     (SMSN'yi yazan + ben) ayni hatayi yapti.
+  2. KAYIT-SEVIYESI ARIZA KATMAN-SEVIYESI CEZA ALMAZ (§245s YEOTK'nin
+     render hali): kart() artik tip zorluyor — metrikler obje gelirse
+     Object.values ile kurtarilir, olmazsa kart METRIKSIZ ama GORUNUR.
+     'onemli' string gelirse tek elemanli diziye sarilir.
+YAPILAN: SMSN silindi (005930 guncel kart kaldi — 30 Tem kesin sonuclar) ·
+005930+EFOR metrikler[]/onemli[]/guidance/tez semasina donusturuldu ·
+kart() tip zorlamasi · 30/30 render+mail simulasyonu gecti.
+
+app.js v=20260802g · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + inceleme-ai.json
+
 ## 245y "KARTLAR KAYBOLDU" — DOSYA SAGLAM, TESHIS KORDU (2 Agu, gece)
 
 Earnings AI sekmesi: "Inceleme kartlari yuklenemedi — inceleme-ai.json

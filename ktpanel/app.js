@@ -3174,13 +3174,21 @@ function incHtml(kartlar){
   const skorRenk=s=>s==='POZİTİF'?YES:s==='NEGATİF'?KIR:GRI;
   const yon=v=>{const s=String(v||'');return s.startsWith('+')?YES:(s.startsWith('−')||s.startsWith('-'))?KIR:MUT;};
   const kart=(k)=>{
-    const met=(k.metrikler||[]).map((x,ix)=>
+    /* §245z TEK KART SEKMEYİ ÖLDÜREMEZ. 2 Ağu: bir kartta metrikler dizi
+       yerine OBJE yazılmıştı, .map fırlattı, 30 kartın 30'u birden kayboldu.
+       §245s YEOTK dersinin render hali: kayıt-seviyesi arıza, katman-seviyesi
+       ceza almaz. Tip zorlaması: dizi değilse Object.values ile kurtar,
+       o da olmazsa boş dizi — kart metriksiz ama GÖRÜNÜR kalır. */
+    const hamMet=k.metrikler;
+    const metListe=Array.isArray(hamMet)?hamMet
+      :(hamMet&&typeof hamMet==='object'?Object.values(hamMet).filter(x=>x&&typeof x==='object'):[]);
+    const met=metListe.map((x,ix)=>
       '<tr style="background:'+(ix%2?ZEM:'#fff')+'">'+
       '<td style="padding:6px 10px;font:400 11px '+SANS+';color:'+MUT+';border-bottom:1px solid '+LIN+'">'+esc(x.ad)+'</td>'+
       '<td style="padding:6px 10px;font:700 12px '+MONO+';color:'+INK+';text-align:right;white-space:nowrap;border-bottom:1px solid '+LIN+'">'+esc(x.deger)+'</td>'+
       '<td style="padding:6px 10px;font:400 11px '+MONO+';color:'+yon(x.cc)+';text-align:right;white-space:nowrap;border-bottom:1px solid '+LIN+'">'+esc(x.cc||'—')+'</td>'+
       '<td style="padding:6px 10px;font:400 11px '+MONO+';color:'+yon(x.yoy)+';text-align:right;white-space:nowrap;border-bottom:1px solid '+LIN+'">'+esc(x.yoy||'—')+'</td></tr>').join('');
-    const onem=(k.onemli||[]).map(o=>
+    const onem=(Array.isArray(k.onemli)?k.onemli:(k.onemli?[k.onemli]:[])).map(o=>
       '<tr><td style="padding:3px 0 3px 14px;font:400 12px '+SANS+';line-height:1.6;color:'+INK+';position:relative">'+
       '<span style="color:'+YES+'">▪</span> '+esc(o)+'</td></tr>').join('');
     return ''+
