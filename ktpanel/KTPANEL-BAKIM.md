@@ -2768,6 +2768,24 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247m AYRISMA DONEM SECICI VERIYE DARALTILDI (3 Agu, gece 7)
+
+Kullanici: XKTMT'de 1H/1A/3A gelmiyor, 'duzeltmesi zor mu, zorsa kaldir'.
+OLCUM: market.js one() h1/a1/q3'u ZATEN hesapliyor AMA 5+ seans bar
+gerektirir; XKTMT'de Yahoo anlik fiyati (meta) verip TARIHSEL BAR
+vermiyor -> gunluk dolu, donemler null. Veri yoksa sunucu hesaplayamaz —
+'kolay duzeltme' yok (XKTUM/Actions ailesinden sembol kapsama sorunu).
+YAPILAN (kaldirmanin akilli hali): donem secici secili endeksin VERI-DOLU
+alanlarina daraltilir — verisiz donem devre disi '(veri yok)' etiketli;
+secili donem verisizlesirse 1G'ye duser. XK100 gibi bar gecmisi olanlarda
+tum donemler calisir; XKTMT'de yalniz 1G secilebilir, hata mesaji yerine
+NEDEN gorunur.
+KALICI COZUM (bekleyen): tazele.mjs her kosuda END kapanislarini
+endeks-arsiv.json'a biriktirir -> 1H bir haftada, 3A uc ayda dogal dolar
+(geriye donuk kurulamaz). Sentetik XKTUM isiyle ayni ailede ele alinabilir.
+
+app.js v=20260803t · DOSYALAR: app.js + index.html
+
 ## 247k MAKRO SERIT UFE KARTI DA AYNI TUZAKTA (3 Agu, gece 6)
 
 Kullanici: makro seritte canliya bagli olmayan veriler var. Olcum: seridin

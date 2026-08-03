@@ -5845,7 +5845,23 @@ function ayrismaHesap(donemAlan, endeksKod){
 function ayrismaCiz(){
   const el = $('ayrBody'); if(!el) return;
   const endeksKod = ($('ayrEndeks') && $('ayrEndeks').value) || 'XK100';
-  const donemAd   = ($('ayrDonem')  && $('ayrDonem').value)  || 'chg';
+  let donemAd   = ($('ayrDonem')  && $('ayrDonem').value)  || 'chg';
+  /* §247m: XKTMT gibi endekslerde Yahoo tarihsel bar vermiyor — h1/a1/q3
+     hesaplanamıyor (günlük meta'dan gelir). 'Gelmedi' hatası göstermek
+     yerine dönem seçici, SEÇİLİ ENDEKSİN veri-dolu dönemlerine daraltılır;
+     verisiz dönem devre dışı '(veri yok)' etiketiyle. Kalıcı çözüm (endeks
+     kapanış arşivi, tazele.mjs) bekleyen işlerde. */
+  const mE=(window.__market||{}).end||{}; const eV=mE[($('ayrEndeks')||{}).value]||mE.XK100||{};
+  const ds0=$('ayrDonem');
+  if(ds0){
+    ds0.querySelectorAll('option').forEach(o=>{
+      const dolu=(o.value==='chg')||(eV[o.value]!=null);
+      o.disabled=!dolu;
+      const temiz=o.textContent.replace(' · veri yok','');
+      o.textContent=dolu?temiz:temiz+' · veri yok';
+    });
+    if(ds0.selectedOptions[0]&&ds0.selectedOptions[0].disabled){ ds0.value='chg'; donemAd='chg'; }
+  }
   const D = AYR_DONEM.find(x=>x.alan===donemAd) || AYR_DONEM[0];
   const E = AYR_ENDEKS.find(x=>x.kod===endeksKod) || AYR_ENDEKS[0];
   const R = ayrismaHesap(donemAd, endeksKod);
