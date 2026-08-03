@@ -294,6 +294,32 @@ async function ecbTarayiciCek(){
      window.EBU_HICP_TANI'ya yazılır ve kırılım boşsa kart tanıyı GÖSTERİR —
      bir sonraki ekran görüntüsü tahmin değil kanıt taşır. */
   window.EBU_HICP_TANI = {};
+  /* §246d KÖKTEN ÇÖZÜM: TEK İSTEKTE ÇOK SERİ. Kırılım iki turdur boş ve
+     tanı bile ekrana düşmeden kayboluyordu — istek sayısını azaltmak yerine
+     SIFIRA yakına indiriyoruz. SDMX anahtar sözdizimi '+' ile OR destekler:
+     M.U2.N.000000+XEF000+NRGY00+FOOD00+SERV00+IGXE00.4D0.ANR = 6 seri,
+     TEK istek. Hız sınırına çarpacak kalabalık kalmıyor. CSV zaten her
+     satırda ICP_ITEM/REF_AREA taşıyor — grupla, dağıt. */
+  const cokluCek = async (flow, key, n, grupKolon)=>{
+    try{
+      const u='https://data-api.ecb.europa.eu/service/data/'+flow+'/'+key+'?lastNObservations='+n+'&format=csvdata';
+      let r=await fetch(u,{headers:{'Accept':'text/csv'}});
+      if(r.status===429||r.status>=500){ await new Promise(z=>setTimeout(z,900)); r=await fetch(u,{headers:{'Accept':'text/csv'}}); }
+      if(!r.ok){ window.EBU_ECB_TANI=window.EBU_ECB_TANI||{}; window.EBU_ECB_TANI[flow+'(çoklu)']='HTTP '+r.status; return {}; }
+      const t=await r.text();
+      const sat=t.split(/\r?\n/).filter(x=>x.trim());
+      if(sat.length<2) return {};
+      const bol=(l)=>{const c=[];let g='',q=false;for(const ch of l){if(ch==='"'){q=!q;continue;}if(ch===','&&!q){c.push(g);g='';continue;}g+=ch;}c.push(g);return c;};
+      const h=bol(sat[0]), it=h.indexOf('TIME_PERIOD'), iv=h.indexOf('OBS_VALUE'), ig=h.indexOf(grupKolon);
+      if(it<0||iv<0||ig<0) return {};
+      const G={};
+      for(let i=1;i<sat.length;i++){ const p=bol(sat[i]);
+        if(p.length>Math.max(it,iv,ig)){ const v=parseFloat(p[iv]);
+          if(!isNaN(v)&&p[it]){ (G[p[ig]]=G[p[ig]]||[]).push([p[it],v]); } } }
+      Object.keys(G).forEach(k=>G[k].sort((a,b)=>a[0]<b[0]?-1:1));
+      return G;
+    }catch(e){ window.EBU_ECB_TANI=window.EBU_ECB_TANI||{}; window.EBU_ECB_TANI[flow+'(çoklu)']='ağ: '+String(e).slice(0,60); return {}; }
+  };
   const hicpCoklu = async (adaylar, etiketler)=>{
     for(let i=0;i<adaylar.length;i++){
       const kod=adaylar[i];
@@ -327,13 +353,19 @@ async function ecbTarayiciCek(){
     hicp('000000'), hicp('XEF000'), hicp('NRGY00'),
     cek('IRS','M.DE.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.IT.L.L40.CI.0000.EUR.N.Z',3), cek('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)
   ]);
-  await new Promise(z=>setTimeout(z,450));
-  const [gida,hizmet,sanayi,de,fr,it,es]=await Promise.all([
-    hicpCoklu(['FOOD00','FOODPR','FOODUN'],[null,'işlenmiş gıda','işlenmemiş gıda']),
-    hicpCoklu(['SERV00','SERV'],[null,null]),
-    hicpCoklu(['IGXE00','IGDXEN','NEIG00'],[null,null,null]),
-    ulke('DE'), ulke('FR'), ulke('IT'), ulke('ES')
+  await new Promise(z=>setTimeout(z,300));
+  /* §246d: kırılım 3 + ülke 4 = eskiden 7-13 istek; şimdi 2. */
+  const kal=(G,kod)=>{ const s=G[kod];
+    window.EBU_HICP_TANI[kod]=s&&s.length?'✓':'boş';
+    if(!s||!s.length) return null;
+    const x=sonFark(s); return x?{...x, akis:'HICP'}:null; };
+  const [KIR, ULK]=await Promise.all([
+    cokluCek('HICP','M.U2.N.FOOD00+SERV00+IGXE00.4D0.ANR',3,'ICP_ITEM'),
+    cokluCek('HICP','M.DE+FR+IT+ES.N.000000.4D0.ANR',3,'REF_AREA')
   ]);
+  const gida=kal(KIR,'FOOD00'), hizmet=kal(KIR,'SERV00'), sanayi=kal(KIR,'IGXE00');
+  const uK=(k)=>{ const x=ULK[k]&&ULK[k].length?sonFark(ULK[k]):null; return x||null; };
+  const de=uK('DE'), fr=uK('FR'), it=uK('IT'), es=uK('ES');
   const S={};
   if(dfr){ const x=sonFark(dfr); if(x) S.dfr=x; }
   if(bilanco){ const x=sonFark(bilanco);

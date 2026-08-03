@@ -2750,6 +2750,25 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 246d KIRILIM: ISTEK AZALTMA YETMEDI, TEKE INDIRILDI (3 Agu)
+
+Kullanici: 'hala gelmiyor' — tani satiri da ekranda yok. Iki tur yama
+(retry + iki dalga) sahada dogrulanamadi; dongu kirilsin diye mimari
+degistirildi: SDMX '+' sozdizimi TEK istekte cok seri verir.
+  Kirilim : M.U2.N.FOOD00+SERV00+IGXE00.4D0.ANR   -> 1 istek
+  Ulkeler : M.DE+FR+IT+ES.N.000000.4D0.ANR        -> 1 istek
+Eski mimari 7-13 istekti; hiz sinirina carpacak kalabalik KALMADI.
+cokluCek(): grup kolonuyla (ICP_ITEM/REF_AREA) ayirir, 429/5xx tek retry,
+hata EBU_ECB_TANI'ya. Test: cok-serili CSV ile 3 seri dogru gruplandi,
+eski->yeni siralama dogru, tirnakli virgul parser'i sasirtmadi.
+hicpCoklu kirilimda artik KULLANILMIYOR (tanim duruyor, cagiran yok).
+NOT: onceki ekranlarda taninin hic gorunmemesi buyuk olasilikla eski deploy
+(Ebu imzalari dunku saatler). Yine de varsayima yaslanmak yerine istek
+sayisi kokten dusuruldu — hangi surumde olursa olsun 429 fiilen imkansiz.
+
+app.js v=20260803d · ajan.js v=20260803a · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html
+
 ## 246c TAKTIKSEL DAGILIM: DORT KART BIRDEN BU HAFTAYA (3 Agu)
 
 Kullanici elestirisi HAKLIYDI: "neden parca parca guncelliyorsun" — 246b'de
