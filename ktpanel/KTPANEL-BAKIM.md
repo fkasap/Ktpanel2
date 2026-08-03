@@ -2768,6 +2768,26 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247f IKI GRUP DA SABIT — DESEN HATASI OLCUMLE YAKALANDI (3 Agu, gece)
+
+Kullanicinin son iki olcumu:
+  TUFE grubu KESIN: bie_tukfiy2025 ('Tüketici Fiyat Endeksi (2025=100)',
+    guncel resmi baz) — koda sabitlendi, arama kalkti.
+  Yi-UFE seri listesi KESIN: T1 genel, T2 'Madencilik ve Taşocakçılığı',
+    T15 '3. İmalat' — adlar SAYI ONEKLI. Bu, /^imalat/ desenimin ASLA
+    tutmayacagini gosterdi (bastaki '3. ' yuzunden) — /imalat/ yapildi
+    (liste sirali, ilk eslesme ana sektor). Genel TUFE deseni de onekli
+    adlara dayanikli /genel/'e gevsatildi.
+  MIGS beslisi (enerji/ara/sermaye/dayanikli/dayaniksiz): 124 serilik
+    listenin gorulen ilk 40'inda yok — sonda ya da ayri grupta; desenler
+    duruyor, eslesmezse o 5 satir damgali kalir (durust), ilk kosu soyler.
+BEKLENEN: iki damga da 'EVDS · <Tem>' olur; katki pp '—' (bilinen sinir).
+Elle sayac 10 -> 8 (dogrulama ilk basarili kosuyla gunluge islenecek).
+DERS ZINCIRI TAMAM: kisaltma degil tam ad (247e) + onek varsayma (247f) —
+meta-katalog desenleri OLCULMUS ada yazilir, koda sabitlenir.
+
+app.js v=20260803n · DOSYALAR: app.js + index.html
+
 ## 247e OLCUM SONUCU: KISALTMALAR GRUP ADINDA YOK (3 Agu, gece)
 
 Kullanici iki test linkini calistirdi — kok neden netlesti: mkGrupBul

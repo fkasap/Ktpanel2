@@ -2787,7 +2787,7 @@ async function oktCek(){
 const HRC_STATIK=[
   ['Konut, su, elektrik, gaz', /konut|su.*elektrik.*gaz/, 45.14, '5,92', 1],
   ['Gıda ve alkolsüz içecekler', /gıda.*alkolsüz/, 35.45, '8,61', 0],
-  ['TÜFE — Genel', /^genel$|^tüfe$|tüketici fiyat.*genel/, 32.11, '—', 2],
+  ['TÜFE — Genel', /genel/, 32.11, '—', 2],   /* §247f: adlar önekli, dar desen tutmaz */
   ['Ulaştırma', /ulaştırma/, 31.15, '5,19', 0]];
 let HRC_CANLI=null, HRC_DONEM='';
 function hrcRender(){
@@ -2807,7 +2807,7 @@ function hrcRender(){
 }
 async function hrcCek(){
   try{
-    const g=await mkGrupBul('tüketici', /tüketici fiyat|fiyat endeksi.*tüketici/);  /* §247e: 'tüfe' kısaltması grup adlarında GEÇMİYOR (ölçüldü) */
+    const g='bie_tukfiy2025';  /* §247f: kullanıcı ölçümüyle SABİT — 'Tüketici Fiyat Endeksi (2025=100)', güncel baz */
     if(g){
       const sonuc={};
       for(const r of HRC_STATIK){
@@ -2828,7 +2828,7 @@ const UFE_STATIK_SOL=[
   ['Madencilik ve taş ocakçılığı (aylık)', /madencilik/, 8.30, 1],
   ['Elektrik, gaz üretimi ve dağıtımı (aylık)', /elektrik.*gaz/, 7.10, 1],
   ['Su temini (aylık)', /su temini|su şebeke/, 1.97, 0],
-  ['İmalat (aylık)', /^imalat|imalat sanayi|imalat \(/, 1.01, 0]];
+  ['İmalat (aylık)', /imalat/, 1.01, 0]];   /* §247f: seri adı '3. İmalat' — önekli, ilk eşleşme ana sektör */
 const UFE_STATIK_SAG=[
   ['Enerji (ana sanayi, aylık)', /enerji/, 3.04, 1],
   ['Ara malları (aylık)', /ara mal/, 1.88, 0],
