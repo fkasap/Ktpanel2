@@ -3326,7 +3326,17 @@ function incPaylasInit(){
 async function incelemeInit(){
   const el=$('incelemeBody'); if(!el)return;
   try{
-    const d=await (await fetch('/inceleme-ai.json',{cache:'no-store'})).json();
+    /* §245y AYIRT EDEN TEŞHİS. Eski catch 404'ü, parse hatasını ve ağ
+       kopmasını AYNI mesaja bindiriyordu ("yüklenemedi — klasörde mi?").
+       2 Ağu'da kartlar kaybolunca dosyanın mı, yüklemenin mi, kodun mu
+       suçlu olduğu ekrandan ANLAŞILAMADI — §245h dersinin dördüncü tekrarı:
+       ayırt etmeyen teşhis, teşhis değildir. Artık üç arıza üç ayrı mesaj. */
+    const r=await fetch('/inceleme-ai.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP_'+r.status);
+    const ham=await r.text();
+    let d;
+    try{ d=JSON.parse(ham); }
+    catch(pe){ throw new Error('PARSE:'+String(pe.message).slice(0,120)+' · boyut '+(ham.length/1024).toFixed(0)+' KB'); }
     /* §161: panel DOSYA SIRASIYLA basıyordu, sıralama yapmıyordu. Yeni kart
        dosyanın SONUNA eklenince listenin DİBİNE düşüyor ve kullanıcı görmüyor
        (29 Tem'de tam bu oldu — üç kart yazıldı, 18-20. sıradaydı).
@@ -3408,7 +3418,15 @@ el.innerHTML=birlesik.map(k=>{
     }).join('');
     incPaylasInit();
     if(window.incSecSay)window.incSecSay();
-  }catch(e){el.innerHTML='<div class="sub">İnceleme kartları yüklenemedi — inceleme-ai.json klasörde mi?</div>';}
+  }catch(e){
+    /* §245y: arıza tipine göre mesaj — bir sonraki ekran görüntüsü kanıt taşır */
+    const m=String(e&&e.message||e);
+    let msg;
+    if(m.indexOf('HTTP_404')===0) msg='inceleme-ai.json sunucuda YOK (404) — dosya ktpanel/ klasörüne yüklenmemiş ya da deploy tamamlanmamış.';
+    else if(m.indexOf('HTTP_')===0) msg='inceleme-ai.json sunucudan '+m.replace('HTTP_','HTTP ')+' döndü — deploy/yetki sorunu olabilir.';
+    else if(m.indexOf('PARSE:')===0) msg='inceleme-ai.json indirildi ama JSON BOZUK — yükleme sırasında dosya kesilmiş/bozulmuş olabilir. Detay: '+esc(m.slice(6));
+    else msg='İnceleme kartları yüklenemedi (ağ hatası): '+esc(m.slice(0,120));
+    el.innerHTML='<div class="sub">'+msg+'</div>';}
 }
 
 let SEKTOR=null;

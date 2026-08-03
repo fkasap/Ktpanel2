@@ -2750,6 +2750,41 @@ gelmez. Genisletme YENI VARSAYIMLAR getirir ve onlar ayrica olculmelidir.
 app.js v=20260731q · panel 20260731-q · api kap-2026-07-31-h.
 DOSYALAR: api/kap.js + app.js + index.html.
 
+## 245y "KARTLAR KAYBOLDU" — DOSYA SAGLAM, TESHIS KORDU (2 Agu, gece)
+
+Earnings AI sekmesi: "Inceleme kartlari yuklenemedi — inceleme-ai.json
+klasorde mi?" Kullanici hakli olarak "kartlar kayboldu" dedi.
+
+### OLCUM: dosya SUCSUZ
+Teslim edilen inceleme-ai.json JS gozuyle test edildi (Python degil —
+Python daha toleransli, §: json.dump NaN yazabilir, JSON.parse reddeder):
+JSON.parse GECTI · 31 kart · BOM yok · NaN/Infinity yok · 119 KB.
+Yani ariza dosyada degil YUKLEME ZINCIRINDE: dosya Vercel'e hic gitmedi
+(404) ya da giderken kesildi/bozuldu (parse). Hangisi? EKRANDAN ANLASILAMAZ,
+cunku...
+
+### KOK KUSUR: catch UC ARIZAYI TEK MESAJA BINDIRIYORDU
+incelemeInit'in catch'i 404'u, parse hatasini ve ag kopmasini ayni
+"yuklenemedi" cumlesine sikistiriyordu. §245h dersinin DORDUNCU tekrari:
+AYIRT ETMEYEN TESHIS, TESHIS DEGILDIR.
+DUZELTME (app.js): fetch sonucu r.ok kontrolu + text() sonra parse;
+uc ariza uc ayri mesaj:
+  404          -> "dosya sunucuda YOK — yuklenmemis ya da deploy bitmemis"
+  diger HTTP   -> durum koduyla
+  PARSE        -> "indirildi ama JSON BOZUK — yukleme sirasinda kesilmis
+                  olabilir" + hata detayi + inen boyut KB
+Bir sonraki ekran goruntusu tahmin degil KANIT tasiyacak.
+
+### TESLIM BUTUNLUK KANITI
+inceleme-ai.json yeniden teslim edildi. Dogrulama degerleri asagida (yukleme
+sonrasi https://<site>/inceleme-ai.json acilip boyut/kart karsilastirilabilir):
+  boyut ~119 KB (121.877 bayt civari) · kart 31 · ilk kod 005930 · md5 gunlukte degil,
+  teslim raporunda. Kullanici GitHub web arayuzunden yuklerken buyuk JSON'un
+  kesilme riski dusuk ama SIFIR degil; suphe halinde raw URL'den boyut bakilir.
+
+app.js v=20260802f · ajan.js v=20260731p · api kap-2026-07-31-n
+DOSYALAR: app.js + index.html + inceleme-ai.json (yeniden)
+
 ## 245v HICP KIRILIMI: TAHMINI BIRAK, OLCTUR (2 Agu, aksam)
 
 245u sonrasi kullanici ekrani: manset/cekirdek/enerji 2026-07'ye ATLADI
