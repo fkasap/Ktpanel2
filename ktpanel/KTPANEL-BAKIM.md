@@ -2768,6 +2768,67 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247a EVREN DOLDU — OLCEK BILMECESI COZULDU (3 Agu)
+
+Dolu CSV geldi (738 hisse) ama ILK ISLEME SUPHELI sayilar uretti: 'en buyuk
+PD 992.036 mlr$' (imkansiz). Ham dagilim olcumu bilmeceyi cozdu: export
+MILYON TL cinsindendi (Koyfin hesabi TL gorunumde). KANIT (kur 47,5478):
+  AAPL 212.559.484 mnTL -> 4.470 mlr$ ✓ (gercek ~4,4-4,5tr)
+  NVDA -> 5.009 mlr$ ✓ · MSFT -> 3.626 ✓ · Hitachi(6501) -> 149,3 ✓
+  AAPL FCF -> 134 mlr$ ✓ · NVDA FCF -> 112,7 ✓
+Isleyici duzeltildi: parasal kolonlar (mc,fcf,cfo,cap,nd,r1,r2) mnTL->mlr$
+kur parametresiyle (varsayilan 47,55; 3. arguman); oranlar dokunulmadi
+(birimden bagimsiz). json'a 'kur' damgasi. Kolon basligi 'FCF mlr$';
+veri varken sekme notu kullanim notuna doner.
+Evren profili: 738 hisse · US 302, JP 64, CN 63, CA 29, TW 24 · doluluk
+pe1 %87, ee %93, z %79, analist %90.
+DERS (245t.2 ailesi): ihracat/export dosyasinda ILK soru birim ve para
+birimidir; 'mantiksiz buyukluk' testi (dunyanin en buyuk sirketiyle kiyas)
+tek satirlik ama kesin bir dogrulamadir.
+
+app.js v=20260803h · DOSYALAR: app.js + index.html + yevren.json +
+arac/koyfin-isle.py (ktpanel/arac/)
+
+## 247 YABANCI HISSE SEKMESI — SHARIAH EVRENI ALTYAPISI (3 Agu)
+
+Kullanici istegi: Portfoy Yonetimi altina 'Yabanci Hisse' alt sekmesi +
+Koyfin Shariah evreni filtreli/siralanabilir tablo.
+
+### ONEMLI BULGU: yuklenen CSV BOS
+739 satirin 738'i tamamen bos — yalniz baslik dolu. Koyfin export'u tablo
+ekranda doluyken alinmamis. Sahte/ornek veriyle doldurulMADI (otomasyon
+kurali + durustluk): panel 'VERI BEKLENIYOR' durumuyla acilir, notu sebebi
+soyler. Dolu CSV gelince 'koyfin isle' komutu tablolari doldurur.
+
+### KURULAN ALTYAPI
+  index.html  pySubnav'a data-tab=t25 buton (ust sekmeler KAYBOLMAZ —
+              mevcut alt-sekme mekanizmasi ayni) + t25 paneli:
+              arama kutusu · ulke secici · PD esigi (10/50/200 mlr$) ·
+              sayac · siralanabilir tablo iskeleti.
+  yevren.json iskelet: kolon sozlugu (25 Koyfin kolonu -> kisa anahtar),
+              hisseler[] bos, kaynak/damga durust.
+  app.js      yevrenInit + yevrenCiz (§247): fetch->filtre->sirala->bas.
+              Siralama: basliga tik (ikinci tik yon cevirir), null degerler
+              HER YONDE SONA atilir (bos veri siralamayi kirletmez),
+              dizge kolonlar localeCompare. 200 satir ustu kirpilir
+              ('filtreyle daralt'). Kolonlar: Ticker·Ulke·PD·F/K FY1·
+              EV/EBITDA(LTM+FY1)·NB/EBITDA·FCF·Temettu·AltmanZ·Analist·6A%.
+  arac/koyfin-isle.py  CSV->json isleyici: bos satir atar, sayisallastirir,
+              MCap mlr$/buyuk kalemler mn$'a normalize, bos CSV'de acikca
+              DURUR ('yine bos' uyarisi).
+  Test: siralama cekirdegi 5 sahte hisseyle dogrulandi (null sona, filtre,
+        A-Z); ilk kosuda 'HATA' cikti ama motor degil TEST BEKLENTISI
+        yanlisti (410>=400) — olcum once kendini olcer.
+
+### SONRAKI ADIMLAR (sirali)
+  1. Kullanici dolu CSV yukler -> 'koyfin isle' -> yevren.json dolar.
+  2. Yahoo canli fiyat bindirme (his2 deseni) — fiyat+gunluk% kolonu.
+  3. api/globalq: AV_KEY ile izleme listesine EARNINGS_ESTIMATES
+     (forward EPS/gelir + revizyon momentumu — 246 kesfi).
+
+app.js v=20260803g · ajan.js v=20260803a
+DOSYALAR: app.js + index.html + yevren.json + arac/koyfin-isle.py
+
 ## 246g OLU KKM SATIRI YASAYAN GOSTERGEYLE DEGISTI (3 Agu)
 
 KKM Δ satiri olu seriyi (program kapandi, TP.KKM.K1/K4 bos) gosteriyordu —

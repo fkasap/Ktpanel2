@@ -3391,6 +3391,73 @@ function incPaylasInit(){
   });
   incAliciGoster();
 }
+
+/* §247 YABANCI HİSSE — SHARIAH EVRENİ. Koyfin CSV'den türetilen yevren.json'u
+   filtre (arama · ülke · PD eşiği) + tıkla-sırala tablosuyla basar.
+   3 Ağu CSV'si BOŞ geldi (yalnız başlık) — panel dürüst "veri bekleniyor"
+   durumuyla açılır; dolu CSV işlenince kendiliğinden tabloya döner.
+   Fiyat kolonu ileride Yahoo'dan canlı bindirilecek (his2 deseni). */
+let YEV=null, yevSira={k:'mc', yon:-1};
+async function yevrenInit(){
+  const tb=$('yevBody'); if(!tb) return;
+  try{
+    const r=await fetch('/yevren.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP_'+r.status);
+    YEV=await r.json();
+  }catch(e){ tb.innerHTML='<tr><td colspan="12" class="sub">yevren.json yüklenemedi: '+esc(String(e.message||e))+'</td></tr>'; return; }
+  const H=YEV.hisseler||[];
+  if($('yevDamga')) $('yevDamga').textContent = H.length ? (H.length+' HİSSE · '+(YEV.guncelleme||'')) : 'VERİ BEKLENİYOR';
+  /* §247a: veri geldiyse 'boş' açıklaması yerine kullanım notu */
+  if(H.length && $('yevNot')) $('yevNot').innerHTML='Kaynak: Koyfin Shariah evreni ('+(YEV.guncelleme||'')+' · mnTL→mlr$ kur '+(YEV.kur||'')+'). Parasal kolonlar mlr $; oranlar birimden bağımsız. Kolon başlığına tık = sırala, ikinci tık yön çevirir. Haftalık tazeleme: yeni CSV + "koyfin işle".';
+  // ülke seçici
+  const us=$('yevUlke');
+  if(us && H.length){
+    const ulkeler=[...new Set(H.map(x=>x.u).filter(Boolean))].sort();
+    us.innerHTML='<option value="">Tüm ülkeler ('+ulkeler.length+')</option>'+ulkeler.map(u=>'<option>'+esc(u)+'</option>').join('');
+  }
+  ['yevAra','yevUlke','yevMc'].forEach(id=>{ const el=$(id); if(el&&!el.__b){ el.__b=1; el.addEventListener('input',yevrenCiz); el.addEventListener('change',yevrenCiz);} });
+  yevrenCiz();
+}
+function yevrenCiz(){
+  const tb=$('yevBody'), bas=$('yevBas'); if(!tb||!YEV) return;
+  const H=YEV.hisseler||[];
+  if(!H.length){
+    bas.innerHTML=''; tb.innerHTML='<tr><td class="sub" style="padding:14px">Evren dosyası boş — dolu Koyfin CSV\'si yüklenip "koyfin işle" denince tablo burada doğar.</td></tr>';
+    if($('yevSay')) $('yevSay').textContent='';
+    return;
+  }
+  const KOL=[['t','Ticker',0],['u','Ülke',0],['mc','PD mlr$',1],['pe1','F/K FY1',1],['ee','EV/EBITDA',1],['ee1','EV/EB FY1',1],['nde','NB/EBITDA',1],['fcf','FCF mlr$',1],['dy','Tem %',1],['z','Altman Z',1],['ar','Analist',0],['c6','6A %',1]];
+  bas.innerHTML='<tr>'+KOL.map(k=>'<th data-yk="'+k[0]+'" style="cursor:pointer;white-space:nowrap">'+k[1]+(yevSira.k===k[0]?(yevSira.yon<0?' ▼':' ▲'):'')+'</th>').join('')+'</tr>';
+  bas.querySelectorAll('th').forEach(th=>th.onclick=()=>{
+    const k=th.dataset.yk;
+    if(yevSira.k===k) yevSira.yon*=-1; else { yevSira.k=k; yevSira.yon=-1; }
+    yevrenCiz();
+  });
+  const ara=(($('yevAra')||{}).value||'').trim().toUpperCase();
+  const ulk=(($('yevUlke')||{}).value||'');
+  const mcE=parseFloat((($('yevMc')||{}).value||'0'));
+  let L=H.filter(x=> (!ara || String(x.t||'').toUpperCase().indexOf(ara)>=0)
+                  && (!ulk || x.u===ulk)
+                  && (!mcE || (x.mc!=null && x.mc>=mcE)) );
+  const k=yevSira.k, yon=yevSira.yon;
+  L.sort((a,b)=>{
+    const va=a[k], vb=b[k];
+    if(va==null&&vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;   // boşlar hep sona
+    if(typeof va==='string') return String(va).localeCompare(String(vb))*yon;
+    return (va-vb)*yon;
+  });
+  if($('yevSay')) $('yevSay').textContent=L.length+' / '+H.length+' hisse';
+  const f=(v,d)=>v==null?'<span class="thin">—</span>':(typeof v==='number'?trN(v,d):esc(String(v)));
+  tb.innerHTML=L.slice(0,200).map(x=>'<tr>'+
+    '<td><b>'+esc(String(x.t||''))+'</b></td><td>'+f(x.u)+'</td>'+
+    '<td class="num">'+f(x.mc,1)+'</td><td class="num">'+f(x.pe1,1)+'</td>'+
+    '<td class="num">'+f(x.ee,1)+'</td><td class="num">'+f(x.ee1,1)+'</td>'+
+    '<td class="num">'+f(x.nde,2)+'</td><td class="num">'+f(x.fcf,0)+'</td>'+
+    '<td class="num">'+f(x.dy,2)+'</td><td class="num">'+f(x.z,2)+'</td>'+
+    '<td>'+f(x.ar)+'</td><td class="num '+((x.c6||0)>=0?'up':'down')+'">'+f(x.c6,1)+'</td>'+
+    '</tr>').join('') + (L.length>200?'<tr><td colspan="12" class="sub">ilk 200 gösteriliyor — filtreyle daralt</td></tr>':'');
+}
+
 async function incelemeInit(){
   const el=$('incelemeBody'); if(!el)return;
   try{
@@ -6057,6 +6124,7 @@ async function boot(){
     ['Portföy Yönetimi', pyInit],
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
+    ['Yabancı Hisse evreni', yevrenInit],
     /* §245: ['İnceleme AI', aiInit] KALDIRILDI — fonksiyon ölüydü, silindi. */
     ['Canlı AOFM', loadAOFM],
     ['Haftalık yorum panosu', ()=>setTimeout(yorumPano,2500)],
