@@ -2436,8 +2436,9 @@ async function makroKartlar(){
   }catch(e){}
   // 3) Yİ-ÜFE
   try{
-    const g=await mkGrupBul('üretici fiyat', /yurt içi üretici fiyat|yurt ıçı üretici fiyat/);
-    const s=g?await mkSeri(g,/genel/,700,/mevsim|sanayi grupları|ana sanayi|alt sektör/):null;
+    /* §247k: /genel/ deseni 124 serinin HİÇBİRİNDE geçmiyor (ölçüldü) —
+       ana seri 'T1: 1.Yurt İçi Üretici Fiyat Endeksi'. Kod doğrudan. */
+    const s=await mkSeriKod('TP.TUFE1YI.T1',700);
     if(s&&s.items.length>=13){
       const son=s.items[s.items.length-1], onc=s.items[s.items.length-2], yil=s.items[s.items.length-13];
       const yoy=(son.v/yil.v-1)*100, mom=(son.v/onc.v-1)*100, d=mkDonem(son.t);

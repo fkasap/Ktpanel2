@@ -2768,6 +2768,23 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247k MAKRO SERIT UFE KARTI DA AYNI TUZAKTA (3 Agu, gece 6)
+
+Kullanici: makro seritte canliya bagli olmayan veriler var. Olcum: seridin
+Yi-UFE karti HAZ %28,09'da kalmis (detay kart Temmuz %27,83'u cekmisken).
+KOK: serit cekimi grubu buluyordu ama seriyi /genel/ deseniyle ariyordu —
+124 serinin HICBIRINDE 'genel' kelimesi yok (T1 adi '1.Yurt İçi Üretici
+Fiyat Endeksi'). TUFE serit kartinin calismasi yaniltici paralellikti:
+onun grubunda 'Genel' adli seri gercekten var.
+DUZELTME: serit UFE dogrudan mkSeriKod('TP.TUFE1YI.T1') — ayni gecenin
+ayni cozumu, ucuncu uygulama.
+DIGER KARTLAR ARIZA DEGIL: cari MAY (Haziran ~11 Agu), sanayi MAY (8 Agu),
+buyume C1 (C2 1 Eyl), issizlik HAZ guncel — yayin takviminin dogal ritmi.
+Dis ticaret MAY sinirda (Haziran 31 Tem aciklandi, EVDS aktarimi gecikebilir;
+birkac gun icinde kendiliginden donmeli, donmezse ayrica olculur).
+
+app.js v=20260803s · DOSYALAR: app.js + index.html
+
 ## 247j SAG BLOK B PLANI: BES CANLI IMALAT SEKTORU (3 Agu, gece 5)
 
 MIGS 6 olcumle kesin YOK; kullanicinin 'hepsi vardir' inadi B plani icin
