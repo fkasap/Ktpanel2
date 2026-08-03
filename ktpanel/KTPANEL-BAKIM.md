@@ -2768,6 +2768,27 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 247i UFE ELEKTRIK+SU KODLA SABIT (3 Agu, gece 4)
+
+Son iki olcum: Elektrik-gaz ana sektoru TP.TUFE1YI.T118 ('4. Elektrik Gaz
+Buhar ve Iklimlendirme...'), Su TP.TUFE1YI.T123 ('5. Su Temini
+Kanalizasyon...') — ikisi de bolum duzeyi. mkSeriKod'a baglandi (desenler
+bu adlari tutmaliyken sahada tutmuyordu; sebep avciligi yerine kod sabit).
+ufeCek satir yapisina 5. eleman (kod) eklendi; kod varsa arama atlanir.
+EKRAN KANITI (onceki tur): UFE karti CANLI 'EVDS · 2026-7' — Temmuz:
+genel %1,52/%27,83 (Haz %1,80/%28,09'dan yavaslama), MADENCILIK -%4,22
+(+%8,30'dan SERT DONUS — petrol soku duzeltmesinin UFE yansimasi; Ebu'nun
+'sok gectikce normallesir' tezi bir ayda dogrulandi), imalat %1,06.
+Tani satiri ilk kosusunda eksikleri isimle saydi — tasarim ise yaradi.
+SAG BLOK (MIGS 5'lisi): EVDS'de karsiligi YOK (uc olcumle kesin: q=mallar
+0, q=dayanikli yalniz 'atese dayanikli', ara=sanayi yalniz uretim/KKO).
+Durum: damgali kalir; secenekler kullaniciya sunuldu (A: aylik elle bulten
+/ B: grupta yasayan imalat alt sektorlerine donustur — gida urunleri T16
+olculdu, digerleri olculecek). Karar bekleniyor.
+BEKLENEN (bu surum): UFE sol blok 5/5 canli; TUFE 4/4 canli (247h).
+
+app.js v=20260803q · DOSYALAR: app.js + index.html
+
 ## 247h KONUT/ULASTIRMA KODLA SABIT + MIGS AYRI GRUPTA (3 Agu, gece 3)
 
 Uc olcum: Konut = TP.TUKFIY2025.04 ('04. Konut, Su, Elektrik, Gaz Ve Diger

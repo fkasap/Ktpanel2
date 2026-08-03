@@ -2838,8 +2838,8 @@ async function hrcCek(){
 const UFE_STATIK_SOL=[
   ['Yİ-ÜFE — aylık / yıllık', /yurt içi üretici/, '%1,80 / %28,09', 9],   /* §247g: ölçülen ad T1 '1.Yurt İçi Üretici Fiyat Endeksi' */
   ['Madencilik ve taş ocakçılığı (aylık)', /madencilik/, 8.30, 1],
-  ['Elektrik, gaz üretimi ve dağıtımı (aylık)', /elektrik.*gaz/, 7.10, 1],
-  ['Su temini (aylık)', /su temini|su şebeke/, 1.97, 0],
+  ['Elektrik, gaz üretimi ve dağıtımı (aylık)', /elektrik.*gaz/, 7.10, 1, 'TP.TUFE1YI.T118'],   /* §247i: ölçülen '4. Elektrik Gaz Buhar...' */
+  ['Su temini (aylık)', /su temini/, 1.97, 0, 'TP.TUFE1YI.T123'],   /* §247i: ölçülen '5. Su Temini Kanalizasyon...' */
   ['İmalat (aylık)', /imalat/, 1.01, 0]];   /* §247f: seri adı '3. İmalat' — önekli, ilk eşleşme ana sektör */
 const UFE_STATIK_SAG=[
   ['Enerji (ana sanayi, aylık)', /enerji/, 3.04, 1],
@@ -2877,7 +2877,7 @@ async function ufeCek(){
     {
       const sonuc={};
       for(const r of [...UFE_STATIK_SOL,...UFE_STATIK_SAG]){
-        const s=await mkSeri(g, r[1], 500, /arşiv|yıllık değişim/);
+        const s=r[4]&&typeof r[4]==='string'?await mkSeriKod(r[4],500):await mkSeri(g, r[1], 500, /arşiv|yıllık değişim/);  /* §247i */
         if(s&&s.items.length>=13){
           const A=s.items, son=A[A.length-1], onc=A[A.length-2], oy=A[A.length-13];
           const aylik=(son.v/onc.v-1)*100, yillik=(son.v/oy.v-1)*100;
