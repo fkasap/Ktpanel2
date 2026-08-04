@@ -531,7 +531,8 @@ async function fonTazele() {
       let fN = 0;
       for (const f of fonlar) {
         try {
-          const rf = await fetch('https://ktpanel.vercel.app/api/tefas?mod=fiyat&kod=' + f.k, { signal: AbortSignal.timeout(12000) });
+          const gVar = !!G0[f.k];   /* §249m: getiri listesinde yoksa 36 aylık seri iste, dönemler seriden hesaplanır */
+          const rf = await fetch('https://ktpanel.vercel.app/api/tefas?mod=fiyat&kod=' + f.k + (gVar ? '' : '&p=36'), { signal: AbortSignal.timeout(15000) });
           if (!rf.ok) continue;
           const fj = await rf.json();
           const seri = (fj.veri || []).filter(x => isFinite(parseFloat(x.fiyat)));
@@ -541,6 +542,20 @@ async function fonTazele() {
           f.yu = parseFloat(son.fiyat);
           const eskiG2 = f.g || [null,null,null,null,null,null];
           eskiG2[0] = Math.round((parseFloat(son.fiyat) / parseFloat(onc.fiyat) - 1) * 1e6) / 1e4;
+          if (!gVar && seri.length > 30) {   /* §249m: 5 dönem seriden — <= hedef tarihe en yakın kapanış */
+            const ms = 86400000, simdi = new Date(String(son.tarih));
+            const ref = (gun) => {
+              const hedef = new Date(simdi - gun * ms).toISOString().slice(0, 10);
+              let a = null;
+              for (const x of seri) { if (String(x.tarih) <= hedef) a = x; else break; }
+              return a ? parseFloat(a.fiyat) : null;
+            };
+            const yilbasi = (() => { const h = simdi.getFullYear() + '-01-01'; let a = null;
+              for (const x of seri) { if (String(x.tarih) < h) a = x; else break; } return a ? parseFloat(a.fiyat) : null; })();
+            const pct = (r) => r ? Math.round((f.yu / r - 1) * 1e6) / 1e4 : null;
+            eskiG2[1] = pct(ref(30)); eskiG2[2] = pct(ref(91)); eskiG2[3] = pct(yilbasi);
+            eskiG2[4] = pct(ref(365)); eskiG2[5] = pct(ref(1095));
+          }
           f.g = eskiG2;
           fN++;
         } catch (e2) {}
