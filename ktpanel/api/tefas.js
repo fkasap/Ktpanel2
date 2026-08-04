@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
     let url, body;
     if (mod === 'fiyat') {   /* §249l: KPR HAR'ından — günlük fiyat serisi */
       url = 'https://www.tefas.gov.tr/api/funds/fonFiyatBilgiGetir';
-      body = { fonKodu: String(req.query.kod || '').toUpperCase(), dil: 'TR', periyod: 1 };
+      body = { fonKodu: String(req.query.kod || '').toUpperCase(), dil: 'TR', periyod: parseInt(req.query.p) || 1 };   /* §249m: p=36 → 3 yıllık seri */
     } else if (mod === 'liste') {
       url = 'https://www.tefas.gov.tr/api/statistics/tefas/getFplFonList';
       body = {};
