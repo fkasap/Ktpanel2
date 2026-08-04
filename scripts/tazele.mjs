@@ -424,7 +424,7 @@ async function fonTazele() {
     let g2 = null, l2 = null;
     try {
       const rg = await fetch('https://ktpanel.vercel.app/api/tefas?mod=getiri&tip=YAT', { signal: AbortSignal.timeout(25000) });
-      g2 = rg.ok ? await rg.json() : { error: 'HTTP_' + rg.status };
+      g2 = await rg.json().catch(() => ({ error: 'HTTP_' + rg.status + '_govdesiz' }));   /* §249i: hata gövdesi de okunur — v alanı köprü sürümünü söyler */
       const rl = await fetch('https://ktpanel.vercel.app/api/tefas?mod=liste', { signal: AbortSignal.timeout(25000) });
       l2 = rl.ok ? await rl.json() : { error: 'HTTP_' + rl.status };
     } catch (e) { g2 = g2 || { error: String(e.message || e).slice(0, 80) }; }
