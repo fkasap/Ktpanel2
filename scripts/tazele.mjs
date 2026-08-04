@@ -527,9 +527,28 @@ async function fonTazele() {
         f.g = [eskiG[0], gx.getiri1a ?? null, gx.getiri3a ?? null, gx.getiriyb ?? null, gx.getiri1y ?? null, gx.getiri3y ?? null];
         n0++;
       });
-      d.guncelleme = `${bugun} — getiriler otomatik (TEFAS resmî · köprü); fiyat/AUM/akış önceki turdan`;
+      /* §249l: FİYAT + 1G — fonFiyatBilgiGetir (KPR HAR keşfi), fon başına seri */
+      let fN = 0;
+      for (const f of fonlar) {
+        try {
+          const rf = await fetch('https://ktpanel.vercel.app/api/tefas?mod=fiyat&kod=' + f.k, { signal: AbortSignal.timeout(12000) });
+          if (!rf.ok) continue;
+          const fj = await rf.json();
+          const seri = (fj.veri || []).filter(x => isFinite(parseFloat(x.fiyat)));
+          if (seri.length < 2) continue;
+          seri.sort((a, b) => String(a.tarih) < String(b.tarih) ? -1 : 1);
+          const son = seri[seri.length - 1], onc = seri[seri.length - 2];
+          f.yu = parseFloat(son.fiyat);
+          const eskiG2 = f.g || [null,null,null,null,null,null];
+          eskiG2[0] = Math.round((parseFloat(son.fiyat) / parseFloat(onc.fiyat) - 1) * 1e6) / 1e4;
+          f.g = eskiG2;
+          fN++;
+        } catch (e2) {}
+      }
+      d.fiyat_tarihi = bugun;
+      d.guncelleme = `${bugun} — getiriler + fiyat/1G otomatik (TEFAS resmî · köprü · ${fN} fon fiyatlı); AUM/akış önceki turdan`;
       await yaz(dosya, d);
-      raporlar.push('### Katılım fonları — ✓ GETİRİ-MODU: ' + n0 + '/' + kodlar.length + ' fonun 5 dönem getirisi TEFAS resmî değerleriyle yazıldı (fiyat ucu henüz yok — 1G/AUM/akış önceki turdan)');
+      raporlar.push('### Katılım fonları — ✓ GETİRİ-MODU: ' + n0 + '/' + kodlar.length + ' fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)');
       degisenler.push('katılım fonları (getiri-modu ' + n0 + ')');
       return n0;
     }
