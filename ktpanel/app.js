@@ -3511,6 +3511,44 @@ function incPaylasInit(){
 }
 
 
+
+/* §248b SPK Seryet AUM — uç kullanıcı DevTools ölçümüyle bulundu; api/spk proxy.
+   Doluluk < 25 şirketse bir önceki aya düşer (bildirimler ay ortasına dek damlar). */
+const SPK_KATILIM=/KATILIM|ALBARAKA|KUVEYT|GOLDEN GLOBAL|EMLAK/;
+async function spkCek(){
+  const el=$('spkB'); if(!el) return;
+  const simdi=new Date(); let yil=simdi.getFullYear(), ay=simdi.getMonth(); // önceki ay
+  if(ay===0){ay=12;yil--;}
+  for(let dene=0; dene<3; dene++){
+    try{
+      const r=await fetch('/api/tcmb?spk=1&yil='+yil+'&ay='+ay);   /* §248c: ayrı uç yerine bindirme — fonksiyon limiti korundu */
+      if(!r.ok) throw new Error('HTTP_'+r.status);
+      const d=await r.json();
+      if((d.dolu||0)>=25){ spkBas(d); return; }
+    }catch(e){}
+    ay--; if(ay===0){ay=12;yil--;}
+  }
+  el.innerHTML='<div class="sub">SPK verisi alınamadı (üç ay denendi)</div>';
+  if($('spkDamga'))$('spkDamga').textContent='ERİŞİLEMEDİ';
+}
+function spkBas(d){
+  const el=$('spkB'); if(!el) return;
+  const L=(d.veri||[]).filter(x=>(x.yonetilenToplamPortfoyBuyuklugu||0)>0)
+    .sort((a,b)=>b.yonetilenToplamPortfoyBuyuklugu-a.yonetilenToplamPortfoyBuyuklugu).slice(0,14);
+  const max=L.length?L[0].yonetilenToplamPortfoyBuyuklugu:1;
+  el.innerHTML=L.map(x=>{
+    const ad=x.sirketAdi.replace(/ PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ\s*$/,'').replace(/ GAYRİMENKUL VE GİRİŞİM SERMAYESİ$/,' GYO-GSYF');
+    const kat=SPK_KATILIM.test(x.sirketAdi);
+    const v=x.yonetilenToplamPortfoyBuyuklugu;
+    const m=v>=1e12?trN(v/1e12,2)+' tr':trN(v/1e9,0)+' mlr';
+    return '<div class="bar"><span class="bn" style="font-size:10px">'+esc(ad)+(kat?'<span style="color:var(--mm2)"> ●</span>':'')+'</span>'+
+      '<span class="bt"><span class="bf" style="width:'+(v/max*100).toFixed(1)+'%'+(kat?';background:var(--mm2)':'')+'"></span></span>'+
+      '<span class="bv">'+m+'</span><span class="bk thin" style="font-size:9px">₺</span></div>';
+  }).join('');
+  if($('spkDonem'))$('spkDonem').textContent='· '+d.yil+'/'+String(d.ay).padStart(2,'0');
+  if($('spkDamga'))$('spkDamga').textContent='CANLI · '+d.dolu+' şirket bildirdi';
+}
+
 /* §248 PYŞ SEKTÖRÜ — net para girişleri (PDF/TEFAS türevi, damgalı).
    Panel temalı yatay barlar (.bar ailesi); üç blok × dönem düğmeleri.
    Otomasyon adayı: tazele.mjs TEFAS tüm-fon katmanı (bekleyen işler). */
@@ -3524,6 +3562,7 @@ async function pysInit(){
   if($('pysDamga')) $('pysDamga').textContent='DAMGALI · '+(PYS.guncelleme||'');
   if($('pysNot')) $('pysNot').innerHTML='Kaynak: '+esc(PYS.kaynak||'')+'. Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı. Döviz serbest fonların yıllık 269 mlr ₺ ile açık ara lider olması dolarizasyon talebinin kurumsal kanıtı.';
   pysCiz();
+  spkCek();   /* §248b: AUM bloğu */
 }
 function pysBar(hedefId, liste, birim){
   const el=$(hedefId); if(!el) return;

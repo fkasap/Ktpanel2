@@ -2768,6 +2768,48 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 248c SPK AYRI UC IPTAL — TCMB UCUNA BINDIRME (4 Agu)
+
+Kullanici uyardi: her api/*.js bir Vercel fonksiyonu, Hobby limiti 12 ve
+envanter spk.js ile 11'e cikmisti (ajanktp bddk data evds2 kap katfon
+market spk tcmb tefas usnews). HAKLI — mimari duzeltildi:
+  api/spk.js SILINDI (hic deploy edilmedi, slot yakilmadi).
+  SPK modu api/tcmb.js'e bindirildi: ?spk=1&yil&ay — ayni proxy mantigi
+  (Origin basligi, doluluk sayaci, 6 saat cache), kur modu dokunulmadi.
+  app.js spkCek yolu /api/tcmb?spk=1'e cevrildi.
+Envanter yeniden 10 fonksiyon; 2 slot nefes payi.
+DERS: yeni dis kaynak = REFLEKS olarak yeni uc DEGIL — once mevcut
+kamu-veri uclarina (tcmb/bddk/evds2) parametre moduyla bindirme dusunulur;
+uc sayisi kit kaynak.
+
+app.js v=20260804a (icerik degisti, damga ayni gun) · DOSYALAR:
+api/tcmb.js + app.js + KTPANEL-BAKIM.md (api/spk.js YUKLENMEYECEK —
+onceki teslimde indirdiysen depoya KOYMA)
+
+## 248b SPK AUM UCU BULUNDU VE BAGLANDI — TAM OTOMASYON (4 Agu)
+
+Kullanici DevTools'tan (Safari Ag sekmesi, tarif verildi) ucu YAKALADI:
+  ws.spk.gov.tr/SeryetPortfoyDegerleri/api/GetPortfoyDegerleri?yil&ay
+Dogrulama: sunucudan basliksiz GET temiz JSON donduruyor (Origin sarti
+yok). Haziran fotografı: Ziraat 2,29 TRILYON TL toplam AUM lideri, Is
+1,57tr, Garanti 1,48tr, Pusula 818mlr(!), Kuveyt Turk 608mlr, QNB 580mlr.
+Bazi buyukler (Ak/YKP/Deniz) null = o ayin bildirimi henuz gonderilmemis
+— bildirimler ay ortasina dek damlar.
+YAPILAN:
+  api/spk.js (YENI UC): parametreli proxy, 6 saat cache, doluluk sayaci.
+  t26'ya 4. blok: 'PYS Portfoy Buyuklukleri — SPK' — top 14 yatay bar,
+    katilim PYS'leri (KATILIM/ALBARAKA/KUVEYT/GOLDEN/EMLAK deseni) yesil
+    nokta + yesil bar; damga 'CANLI · N sirket bildirdi'.
+  spkCek: onceki aydan baslar, doluluk<25 ise uc aya kadar geri duser
+    (eksik bildirim ayinda yanlis siralama basmaz).
+SONUC: PYS Sektor sekmesi iki kaynakli oldu — AKIS (Fintables, 'pys
+tazele' yari-otomatik) + STOK (SPK, TAM otomatik). SPK icin elle adim
+SIFIR. DevTools yontemi ECB/EVDS olcum ailesine eklendi: ic uc bir kez
+olculur, sonsuza dek baglanir.
+
+app.js v=20260804a · DOSYALAR: api/spk.js (ktpanel/api/ YENI) + app.js +
+index.html + KTPANEL-BAKIM.md
+
 ## 248a PYS SEKTOR OTOMASYONU KANITLANDI + RECETE (4 Agu, gece 9)
 
 Kullanici: 'nasil otomatiklestiririz, Fintables'a bak.' CEVAP: EVET —
