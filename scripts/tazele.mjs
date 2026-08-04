@@ -416,6 +416,44 @@ async function fonTazele() {
        otomatik hali). Yakalanan uç + alan adları RAPORA basılır — TEFAS yine
        taşınsa bile bu yöntem bulur. */
     const meta = {};
+    /* §249g BİRİNCİL AŞAMA: VERCEL KÖPRÜSÜ — Actions, TEFAS'a doğrudan değil
+       kendi ucumuza gider (WAF'tan Vercel geçiyor; HAR ölçümüyle yeni uçlar +
+       statik bearer api/tefas.js'te). Getiriler TEFAS'ın RESMİ yüzdeleri —
+       çapa hesabının yerine doğrudan yazılır. Köprü boş/hatalıysa Playwright
+       ağ-dinleme yedeği devam eder. */
+    let g2 = null, l2 = null;
+    try {
+      const rg = await fetch('https://ktpanel.vercel.app/api/tefas?mod=getiri&tip=YAT', { signal: AbortSignal.timeout(25000) });
+      g2 = rg.ok ? await rg.json() : { error: 'HTTP_' + rg.status };
+      const rl = await fetch('https://ktpanel.vercel.app/api/tefas?mod=liste', { signal: AbortSignal.timeout(25000) });
+      l2 = rl.ok ? await rl.json() : { error: 'HTTP_' + rl.status };
+    } catch (e) { g2 = g2 || { error: String(e.message || e).slice(0, 80) }; }
+    const getiriler = {};
+    if (g2 && Array.isArray(g2.veri)) {
+      g2.veri.forEach(x => {
+        const k = String(x.fonKodu || '').toUpperCase();
+        if (k) getiriler[k] = x;
+      });
+      raporlar.push('### TEFAS köprü (bilgi)\n- getiri: ' + g2.n + ' fon ✓ · liste: ' + (l2 && l2.n != null ? l2.n + ' kayıt · alanlar: ' + (l2.ornek || []).join(', ').slice(0, 250) : JSON.stringify(l2).slice(0, 160)));
+      if (l2 && Array.isArray(l2.veri)) {
+        const P_ADAY = ['fiyat','birimPayDegeri','sonFiyat','FIYAT','price'];
+        const AUM_ADAY = ['fonBuyuklugu','portfoyBuyuklugu','portfolioSize','PORTFOYBUYUKLUK'];
+        const YS_ADAY = ['yatirimciSayisi','kisiSayisi','KISISAYISI'];
+        const bulV = (x, L2) => { const a = L2.find(k2 => x[k2] != null && x[k2] !== ''); return a ? x[a] : null; };
+        l2.veri.forEach(x => {
+          const k = String(x.fonKodu || x.FONKODU || '').toUpperCase();
+          const p = parseFloat(String(bulV(x, P_ADAY)).replace(',', '.'));
+          if (!k || !isFinite(p) || p <= 0) return;
+          const aum = parseFloat(bulV(x, AUM_ADAY)) || null;
+          meta[k] = { p, aum: (isFinite(aum) && aum > 0) ? aum : null,
+            ys: parseInt(bulV(x, YS_ADAY)) || null,
+            pay: (isFinite(aum) && aum > 0) ? aum / p : null };
+        });
+      }
+      globalThis.__tefasGetiri = getiriler;
+    } else {
+      raporlar.push('### TEFAS köprü (bilgi)\n- getiri ucu: ' + JSON.stringify(g2).slice(0, 200) + (g2 && g2.tokenSuphesi ? ' → TOKEN YENİLE (yeni HAR gerekir)' : ''));
+    }
     const yakalanan = [];
     sayfa.on('response', async (r) => {
       try {
@@ -431,9 +469,17 @@ async function fonTazele() {
         }
       } catch (e) {}
     });
+    let tumYanit = 0;
+    sayfa.on('response', () => { tumYanit++; });
     await sayfa.goto('https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT', { waitUntil: 'networkidle', timeout: 45000 });
     await sayfa.waitForTimeout(4000);
-    let yol = 'yok', hamNot = 'yakalanan JSON yanıtı: ' + yakalanan.length;
+    /* §249f (v4.1): WAF mı SPA mı — sayfanın kimliği rapora */
+    const kimlik = await sayfa.evaluate(() => ({
+      baslik: document.title || '',
+      govde: (document.body ? document.body.innerText : '').slice(0, 180).replace(/\s+/g, ' ')
+    })).catch(() => ({ baslik: '?', govde: '?' }));
+    let yol = 'yok', hamNot = 'yakalanan JSON: ' + yakalanan.length + ' / toplam yanıt: ' + tumYanit +
+      ' · sayfa: "' + kimlik.baslik.slice(0, 60) + '" · gövde: `' + kimlik.govde + '`';
     if (yakalanan.length) {
       hamNot += ' · uçlar: ' + yakalanan.map(y2 => y2.url.replace('https://www.tefas.gov.tr','') + ' (' + y2.n + ')').join(' | ').slice(0, 400);
       const buyuk = yakalanan.sort((a, b) => b.n - a.n)[0];
@@ -456,6 +502,7 @@ async function fonTazele() {
       const n2 = Object.keys(meta).length;
       if (n2) yol = 'ağ-dinleme (yeni site, ' + n2 + ' fon)';
     }
+    if (Object.keys(meta).length && globalThis.__tefasGetiri) yol = 'vercel-köprüsü (' + Object.keys(meta).length + ' fon fiyat + ' + Object.keys(globalThis.__tefasGetiri).length + ' getiri)';
     raporlar.push('### TEFAS çekim tanısı (bilgi)\n- yol: ' + yol + '\n- ' + hamNot);
     Object.keys(meta).forEach(k => fiyat[k] = meta[k].p);
     globalThis.__tefasMeta = meta;
@@ -510,7 +557,13 @@ async function fonTazele() {
     const g = Object.keys(arsiv.gunler || {}).sort();
     return g.length ? arsiv.gunler[g[g.length - 1]] : null;
   })();
+  const G = globalThis.__tefasGetiri || {};
   fonlar.forEach(f => {
+    const gx = G[f.k];
+    if (gx) {   /* §249g: TEFAS resmi dönem getirileri doğrudan — [1G,1A,3A,YTD,1Y,3Y] */
+      const eskiG = f.g || [null,null,null,null,null,null];
+      f.g = [eskiG[0], gx.getiri1a ?? null, gx.getiri3a ?? null, gx.getiriyb ?? null, gx.getiri1y ?? null, gx.getiri3y ?? null];
+    }
     const m = meta[f.k]; if (!m) return;
     if (m.aum) f.b = Math.round(m.aum);
     if (m.ys)  f.ys = m.ys;
