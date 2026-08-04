@@ -2768,6 +2768,25 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 248d 'PYS TAZELE' ILK KOSUSU — SEKME CANLI VERIYE DONDU (4 Agu)
+
+Kullanici: 'hala damgali geliyor neden' — cevap: tasarim geregi (248a'da
+json bilerek uretilmemisti, cift kayit duzeltmesi ilk kosuya birakilmisti).
+ILK KOSU yapildi: 6 sade sorgu (recete birebir izlendi; gunluk bloklar
+SON DAMGA >= 2026-08-04 tek gunuyle — YLB artik TEK satir, tuzak cozuldu).
+pyssektor.json 64 cubukla CANLI uretildi (damga 2026-08-03 Pazartesi).
+Damga etiketi kaynak-duyarli oldu: Fintables kaynakli ise 'FINTABLES ·
+<tarih>', PDF ise 'DAMGALI'.
+GUNUN FOTOGRAFI (temiz veri PDF'ten COK farkli cikti — cift kayit ve
+gun karisimi eski resmi bozuyormus): TUR 1G Para Piyasasi 38,6 mlr acik
+lider (PDF 2,3 gosteriyordu); PYS 1G Is 7,12 · YKP 6,49 · Ziraat 4,99 ·
+ALBARAKA 4,07 (katilim!); TUR 1A PP 211,5 mlr / Kira Sert toplam 17,1;
+FON 1A GAL 64,2 mlr — tek fonda aylik rekor.
+NOT: FON 1A satirlari yalniz kodla (unvan sorgusu token ekonomisi;
+sonraki kosuda JOIN'la unvanli).
+
+app.js v=20260804a · DOSYALAR: pyssektor.json + app.js + KTPANEL-BAKIM.md
+
 ## 248c SPK AYRI UC IPTAL — TCMB UCUNA BINDIRME (4 Agu)
 
 Kullanici uyardi: her api/*.js bir Vercel fonksiyonu, Hobby limiti 12 ve

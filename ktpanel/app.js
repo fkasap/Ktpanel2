@@ -3559,7 +3559,7 @@ async function pysInit(){
     if(!r.ok) throw new Error('HTTP_'+r.status);
     PYS=await r.json();
   }catch(e){ $('pysB1').innerHTML='<div class="sub">pyssektor.json yüklenemedi: '+esc(String(e.message||e))+'</div>'; return; }
-  if($('pysDamga')) $('pysDamga').textContent='DAMGALI · '+(PYS.guncelleme||'');
+  if($('pysDamga')) $('pysDamga').textContent=((PYS.kaynak||'').indexOf('Fintables')>=0?'FİNTABLES · ':'DAMGALI · ')+(PYS.guncelleme||'');   /* §248d */
   if($('pysNot')) $('pysNot').innerHTML='Kaynak: '+esc(PYS.kaynak||'')+'. Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı. Döviz serbest fonların yıllık 269 mlr ₺ ile açık ara lider olması dolarizasyon talebinin kurumsal kanıtı.';
   pysCiz();
   spkCek();   /* §248b: AUM bloğu */
