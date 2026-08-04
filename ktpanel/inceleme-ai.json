@@ -3,6 +3,55 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "ESCOM",
+   "ad": "Escort Teknoloji Yatırım",
+   "donem": "2Ç26 (6A)",
+   "tarih": "4 Ağu 2026",
+   "tarih_iso": "2026-08-04",
+   "sablon": "yatirim-holding",
+   "skor": 2.5,
+   "ozet": "Yatırım holdingi — doğru mercek NAV, kâr değil. Ana ortaklık 2Ç 208 mn ₺ (TTM 1.697; geçen yıl TTM −409'dan dönüş) ama bu kârın doğası portföy değerleme artışı: nakde dönmüş kazanç değil, kağıt üstünde işaretleme. Asıl tablo: NAV (özkaynak) 4.262 mn — 6 ayda +%9, yani 6 aylık enflasyonun ALTINDA: portföy reel olarak küçüldü. PD 3,81 mlr → PD/NAV 0,89 (%11 iskonto) — VC holdingler için DAR; global benzerleri %20-40 iskontoyla işlem görür. Kasada 1 mn ₺ nakit: yeni yatırım kapasitesi bilançoda yok.",
+   "metrikler": [
+    {
+     "ad": "NAV (ana ortaklık özkaynak)",
+     "deger": "4.262 mn ₺",
+     "cc": "2025 sonu: 3.911 — 6A +%9,0",
+     "yoy": "6 aylık TÜFE ~%15 → REEL KÜÇÜLME"
+    },
+    {
+     "ad": "PD / NAV",
+     "deger": "0,89 — %11 iskonto",
+     "cc": "PD 3.810 mn",
+     "yoy": "VC holding normu %20-40 iskonto — burası DAR"
+    },
+    {
+     "ad": "Finansal yatırımlar (portföy)",
+     "deger": "4.302 mn ₺",
+     "cc": "2025 sonu: 3.961 — +%8,6",
+     "yoy": "62+ girişim (8 doğrudan, 54 Alesta)"
+    },
+    {
+     "ad": "Ana ortaklık net (2Ç)",
+     "deger": "208 mn ₺",
+     "cc": "1Ç: 142 · TTM 1.697",
+     "yoy": "2Ç25: 2 mn — kaynak: değerleme artışı"
+    },
+    {
+     "ad": "Nakit",
+     "deger": "1 mn ₺",
+     "cc": "—",
+     "yoy": "yeni tur kapasitesi için sermaye artırımı/çıkış gerekir"
+    }
+   ],
+   "onemli": [
+    "UNICORN İDDİASI DOĞRULANAMADI: 2Ç26'ya bağlı bir mega-değerleme/exit açıklaması kaynaklarda yok; şirketin 2023 bülteni 'unicorn kulübü için gün sayan iştirakler' der — iddia, gerçekleşme değil. Madalyonun öbür yüzü: erken aşama yatırımlar muhafazakâr (maliyet/son tur) taşınır — defter 4,3 mlr ₺ (~90 mn $), gerçek bir unicorn payı defterde GÖRÜNMEZDİ; yukarı yönlü sürpriz opsiyonu vardır ama fiyatlanamaz spekülasyondur.",
+    "Katılım süzgeci notu: portföyde fintech iştirakler var — faiz temelli iş modeli taşıyanlar evren uygunluğunu iştirak bazında sorgulatır; pozisyon öncesi portföy taraması şart."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 2,5: kâr başlığı pozitif ama NAV reel küçülüyor, iskonto emsallere göre dar (yükseliş marjı sınırlı), nakit sıfır. Tez ancak 'gizli opsiyon' (muhafazakâr taşınan bir iştirakin patlaması) üzerine kurulabilir — o da ölçülemez; ölçülebilen her şey nötr-altı.",
+   "kaynak": "Fintables finansal tablolar + bilanço (KAP, 4 Ağu 2026); iddia taraması: şirket bültenleri + haber akışı"
+  },
+  {
    "kod": "ASELS",
    "ad": "Aselsan",
    "donem": "2Ç26 (6A)",
@@ -2448,7 +2497,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-04 — TUPRS 2Ç26 (4,0: şok çeyreği, İNA 125,6 mlr) + ASELS 2Ç26 (3,5: reel büyüme, F/K 38,6) eklendi. 35 kart.",
+ "guncelleme": "2026-08-04 — ESCOM 2Ç26 (2,5: NAV merceği, unicorn iddiası doğrulanamadı) eklendi. 36 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
