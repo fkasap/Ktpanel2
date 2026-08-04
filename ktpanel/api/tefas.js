@@ -4,6 +4,7 @@
 // token değişebilir: 401/403'te panel/rapor "token yenile" der, yeni HAR
 // ile 1 dakikada güncellenir. Vercel IP'leri WAF'tan geçiyor (kanıt:
 // eski uç Rejected değil ERR-006 almıştı).
+const SURUM = 'h2-cerezli';
 const TB = 'Bearer ST-tefaswebwse3irfmSBj4iRAzGPbAlS94Se';
 /* §249h: 401 tanısı sonrası başlıklar HAR'daki gerçek istekle BİREBİR —
    kritik eksik x-request-id idi (istek başına UUID; token'la zorunlu ikili). */
@@ -20,6 +21,7 @@ const BAS = () => ({
   'Sec-Fetch-Site': 'same-origin',
   'Sec-Fetch-Mode': 'cors',
   'Sec-Fetch-Dest': 'empty',
+  'Cookie': 'wid451d009d027=08ce165641ab20003d69a7e941b8b852ef8d78d5d7b',   /* §249i: F5 kimlik çerezi (HAR'dan) — son koz */
   'x-request-id': (globalThis.crypto && crypto.randomUUID) ? crypto.randomUUID() :
     'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&0x3|0x8)).toString(16); })
 });
@@ -43,7 +45,7 @@ module.exports = async (req, res) => {
     const txt = await r.text();
     if (!r.ok) {
       res.setHeader('Cache-Control','no-store');
-      return res.status(502).json({ error:'TEFAS_HTTP_'+r.status, tokenSuphesi:(r.status===401||r.status===403), ilk:txt.slice(0,180) });
+      return res.status(502).json({ v:SURUM, error:'TEFAS_HTTP_'+r.status, tokenSuphesi:(r.status===401||r.status===403), ilk:txt.slice(0,180) });
     }
     let j; try { j = JSON.parse(txt); } catch { 
       res.setHeader('Cache-Control','no-store');
@@ -51,7 +53,7 @@ module.exports = async (req, res) => {
     }
     const L = j.resultList || j.data || (Array.isArray(j)?j:[]);
     res.setHeader('Cache-Control','s-maxage=1800, stale-while-revalidate=7200');
-    return res.status(200).json({ mod, tip, n:(L||[]).length, ornek:(L&&L[0])?Object.keys(L[0]):[], veri:L });
+    return res.status(200).json({ v:SURUM, mod, tip, n:(L||[]).length, ornek:(L&&L[0])?Object.keys(L[0]):[], veri:L });
   } catch (e) {
     res.setHeader('Cache-Control','no-store');
     return res.status(500).json({ error:String(e && e.message || e) });
