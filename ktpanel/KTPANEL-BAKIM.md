@@ -30,8 +30,7 @@ kalmadikca." — Bu tarihten itibaren:
 
 ### ELLE KALAN 10 KATMAN — ERITME YOL HARITASI (2 Agu)
   KANAL HAZIR (siradaki isler):
-    yabanci.json seri gecmisi  -> /api/evds2?mod=yab zaten VAR; su an yalniz
-                                  son haftayi eziyor, SERIYE ekleme yazilacak
+    yabanci.json seri gecmisi  -> ✓ BITTI (§245r: seri canli, elle sifir)
     bist-takvim + beklenen     -> KAP FR listesi (§201 adim 1, uc calisiyor)
     hazine-takvim              -> Hazine aylik ihrac programi, cekilebilir
   KANAL ARASTIRILACAK:
@@ -2767,6 +2766,60 @@ turda olculecek (bekleyen islere kondu).
 
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
+
+## 249 DALGA-2 PARCA 1: KATFON TAM OTOMASYON + AKIS ARSIVI (4 Agu)
+
+Kullanici 'Dalga 2'yi yap' dedi. OLCUM ZINCIRI once uc kesif cikardi:
+  1. fonTazele() ZATEN YAZILMIS (Playwright ile TEFAS challenge asimi,
+     %95 kapsam + kar payi dagitim tuzagi + capa yontemli getiri) — ama
+     yalniz FIYAT cekiyordu (BindComparisonFundReturns) ve AUM/akis yoktu.
+  2. Son kosu raporunda fon bolumu HIC yok: kapsanan=0 dali SESSIZ
+     return'du — tani gorunmezdi.
+  3. Workflow fon katmanini cron'da kapsiyor (inputs bos -> 'hepsi').
+
+YAMALAR (scripts/tazele.mjs — DEPO KOKU, ktpanel DEGIL!):
+  A) BindHistoryInfo'ya gecis (panel api/tefas.js'ten kanitli body):
+     son 6 gun istenir, fon basina EN YENI satir — fiyat + PORTFOYBUYUKLUK
+     (AUM) + KISISAYISI (yatirimci) + TEDPAYSAYISI tek istekte.
+  B) Sessiz return raporlu: 'TEFAS eslesme SIFIR' + denetimDustu.
+  C) AKIS = Δpay × fiyat: fon-arsiv.json birikimli gunluk kayit (40 is
+     gunu pencere). Ilk kosuda dun yok -> akis null + temel atilir
+     (UYDURMA YOK); ikinci kosudan itibaren akis otomatik.
+Simulasyon: akis hesabi + 40 gun kirpma dogrulandi. node --check gecti.
+SONUC: ilk iki basarili Actions kosusundan sonra 'katfon guncelle' elle
+turu OLUR TARIHE KARISIR (getiri+AUM+yatirimci+akis tam otomatik).
+Elle sayac 7 -> 6 (ilk kosu kanitiyla kesinlesir).
+KALAN DALGA PARCALARI (siradaki turlar): pyssektor uretimi ayni arsivden
+(unvan->PYS + tur eslemesi), endeks kapanis arsivi + sentetik XKTUM,
+KAP FR takvim + hazine-takvim, inceleme-ai tetigi.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKUNE — Ktpanel2/scripts/) +
+KTPANEL-BAKIM.md (ktpanel/)
+
+## 248g DALGA-1 OLCUMU: LISTE BAYATMIS — SAYAC 7 (4 Agu)
+
+Kullanici 'Dalga 1'i yap' dedi; olcum uc surpriz cikardi:
+  1. Yabanci seri gecmisi: §245r'de ZATEN bitmis (uc 90 gunluk seri
+     donduruyor, istemci son 5 haftayi canlidan kurup damgaliyi eziyor,
+     elle is SIFIR). 2 Agu yol haritasi bayatti.
+  2. Rezerv brut: serit karti ZATEN canli (mkGrupBul 'rezerv' +
+     /toplam|brut/ — ekrandaki 24-07 ● bunun kaniti). Persembe ritueli
+     yalniz swap-hariç net + swap stoku (yabanci.json) icin elle.
+  3. Kalan gercek Dalga-1 isleri (bist-takvim gelecek tarihleri +
+     hazine-takvim) ISTEMCI isi degil ACTIONS isi (KAP FR listesi/HMB
+     programi kosuda cekilip json uretilmeli) — hafta sonu TEFAS
+     dalgasina BIRLESTIRILDI (tek tazele.mjs patch'i, tek test turu).
+GUNCEL ELLE SAYAC: 7 — yevren(haftalik CSV) · pyssektor('pys tazele') ·
+katfon('katfon guncelle') · inceleme-ai(analiz, tetigi otomatiklesecek) ·
+bist-takvim(beklenen) · hazine-takvim · swap net/stok(kalici istisna,
+haftada tek satir).
+HAFTA SONU TEFAS DALGASI KAPSAMI (buyuk patch, tek koşu): TEFAS tum-fon
+fiyat+akis (katfon+pyssektor otomatik olur, sayac 7->5) + endeks kapanis
+arsivi (ayrisma 1H/3A) + sentetik XKTUM + KAP FR takvim + hazine-takvim
+(sayac 5->3) + inceleme-ai tetik uyarisi.
+
+DOSYALAR: KTPANEL-BAKIM.md (yalniz gunluk — kod degisikligi yok, iki
+kalem zaten canliydi; gereksiz deploy turu ACILMADI)
 
 ## 248f BAR DOLGULARI OLU DOGMUS — display:block (4 Agu)
 
