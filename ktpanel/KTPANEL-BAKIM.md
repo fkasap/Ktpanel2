@@ -2768,6 +2768,25 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 248f BAR DOLGULARI OLU DOGMUS — display:block (4 Agu)
+
+Kullanici hakliydi ve iki turdur soyluyordu: bar GENISLIKLERI calismiyor,
+tum cubuklar ayni boy soluk serit. Ben etikete bakip asil arizayi
+iskaladim — ozur gunluge de islendi.
+KOK NEDEN (uc olcum sonra bulundu): .bf bir <span> ve CSS'inde display
+tanimi YOK -> varsayilan inline -> inline elemanda width/height YOK
+SAYILIR -> dolgu sifir boyut. Dis kap .bt grid hucresi oldugu icin
+bloklasirken icteki dolgu bloklasmiyordu. Yani PANELDEKI TUM .bf
+dolgulari (fm sektor agirliklari, TUFE harcama barlari, pys, spk AUM)
+bastan beri olu idi — degerler yakin oldugu kartlarda fark edilmemis,
+PYS'nin genis araligi (7,12 vs 1,41) ortaya cikardi.
+DUZELTME: .bf{display:block;...} — tek satir, BES kart birden dirildi.
+DERS: 'grid cocugu bloklasir' guveni yalniz DOGRUDAN cocuk icin gecerli;
+ic ice span'da display acikca verilir. Gorsel bilesen ilk kez ekranda
+DOLU DEGERLE dogrulanmadan 'calisiyor' sayilmaz.
+
+index.html v=20260804c · DOSYALAR: index.html + KTPANEL-BAKIM.md
+
 ## 248e SURUM DAMGASI IHLALI — KURAL KENDIME DE ISLER (4 Agu)
 
 Kullanici: 'hala damgali' (ikinci kez). Tani ekrandan: VERILER YENI
