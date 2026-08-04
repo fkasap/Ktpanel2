@@ -2767,6 +2767,17 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 249m EKSIK 10 FON: SERIDEN HESAP (5 Agu, sabah 4)
+
+36/46'nin eksigi buyuk olasilikla nitelikli-yatirimci serbest fonlari
+(genel getiri listesi kapsamiyor) ama fiyat ucu FON-BAZLI ve serbest
+KPR'de calisti. v7.1: getirisi listede olmayan fonlarda fiyat cekimi
+p=36 (3 yillik seri) ile yapilir, 5 donem SERIDEN hesaplanir (<= hedef
+tarihe en yakin kapanis; YTD yilbasi oncesi son kapanis). tefas.js
+periyod parametreli. BEKLENEN: GETIRI-MODU 46/46 + fiyat.
+
+DOSYALAR: api/tefas.js (ktpanel/api/) + scripts/tazele.mjs (KOK)
+
 ## 249l SON PARCA: FIYAT UCU (5 Agu, sabah 3)
 
 KPR detay HAR'i son kapiyi acti: POST /api/funds/fonFiyatBilgiGetir
