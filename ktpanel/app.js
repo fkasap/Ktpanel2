@@ -32,7 +32,7 @@ const HABER_TARIH="2026-07-14";
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
 const KTP_SURUM = '20260731-x';
 
-const PY_GRUP=['t11','t3','t9','t21','t4','t6','t5','t8','t14','t20','t25','t23']; /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
+const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
   if(!hedef)return; // sekme paneli yoksa sessizce çık — nav'ı kilitleme
@@ -3510,6 +3510,49 @@ function incPaylasInit(){
   incAliciGoster();
 }
 
+
+/* §248 PYŞ SEKTÖRÜ — net para girişleri (PDF/TEFAS türevi, damgalı).
+   Panel temalı yatay barlar (.bar ailesi); üç blok × dönem düğmeleri.
+   Otomasyon adayı: tazele.mjs TEFAS tüm-fon katmanı (bekleyen işler). */
+let PYS=null, pysSec={b1:'1G', b2:'1G', b3:'1G'};
+async function pysInit(){
+  if(!$('pysB1')) return;
+  try{ const r=await fetch('/pyssektor.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP_'+r.status);
+    PYS=await r.json();
+  }catch(e){ $('pysB1').innerHTML='<div class="sub">pyssektor.json yüklenemedi: '+esc(String(e.message||e))+'</div>'; return; }
+  if($('pysDamga')) $('pysDamga').textContent='DAMGALI · '+(PYS.guncelleme||'');
+  if($('pysNot')) $('pysNot').innerHTML='Kaynak: '+esc(PYS.kaynak||'')+'. Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı. Döviz serbest fonların yıllık 269 mlr ₺ ile açık ara lider olması dolarizasyon talebinin kurumsal kanıtı.';
+  pysCiz();
+}
+function pysBar(hedefId, liste, birim){
+  const el=$(hedefId); if(!el) return;
+  if(!liste||!liste.length){ el.innerHTML='<div class="sub">bu dönem için veri yok</div>'; return; }
+  const max=Math.max(...liste.map(x=>Math.abs(x[1])));
+  el.innerHTML=liste.map(x=>'<div class="bar"><span class="bn" style="font-size:10px">'+esc(x[0])+'</span>'+
+    '<span class="bt"><span class="bf" style="width:'+(Math.abs(x[1])/max*100).toFixed(1)+'%'+(x[1]<0?';background:#B23A48':'')+'"></span></span>'+
+    '<span class="bv'+(x[1]<0?' down':'')+'">'+(x[1]<0?'−':'')+trN(Math.abs(x[1]),x[1]<10?2:0)+'</span>'+
+    '<span class="bk thin" style="font-size:9px">mlr ₺</span></div>').join('');
+}
+function pysDugme(id, blok, secili){
+  const el=$(id); if(!el||!PYS) return;
+  const D={'1G':'Günlük','1H':'Haftalık','1A':'Aylık','1Y':'Yıllık'};
+  const var_=Object.keys(PYS[blok]||{});
+  el.innerHTML=var_.map(d=>'<button class="pysd" data-b="'+blok+'" data-d="'+d+'" style="background:'+(d===secili?'var(--mm2)':'none')+';color:'+(d===secili?'#fff':'var(--muted)')+';border:1px solid var(--line);border-radius:4px;font-size:10px;padding:3px 10px;margin-right:4px;cursor:pointer;font-family:inherit">'+D[d]+'</button>').join('');
+}
+function pysCiz(){
+  if(!PYS) return;
+  pysDugme('pysBtn1','pys',pysSec.b1); pysDugme('pysBtn2','fon',pysSec.b2); pysDugme('pysBtn3','tur',pysSec.b3);
+  pysBar('pysB1',(PYS.pys||{})[pysSec.b1]); pysBar('pysB2',(PYS.fon||{})[pysSec.b2]); pysBar('pysB3',(PYS.tur||{})[pysSec.b3]);
+  const D={'1G':'günlük','1H':'haftalık','1A':'aylık','1Y':'yıllık'};
+  if($('pysD1'))$('pysD1').textContent='· '+D[pysSec.b1]; if($('pysD2'))$('pysD2').textContent='· '+D[pysSec.b2]; if($('pysD3'))$('pysD3').textContent='· '+D[pysSec.b3];
+  document.querySelectorAll('.pysd').forEach(b=>b.onclick=()=>{
+    const bl=b.dataset.b, d=b.dataset.d;
+    if(bl==='pys')pysSec.b1=d; else if(bl==='fon')pysSec.b2=d; else pysSec.b3=d;
+    pysCiz();
+  });
+}
+
 /* §247 YABANCI HİSSE — SHARIAH EVRENİ. Koyfin CSV'den türetilen yevren.json'u
    filtre (arama · ülke · PD eşiği) + tıkla-sırala tablosuyla basar.
    3 Ağu CSV'si BOŞ geldi (yalnız başlık) — panel dürüst "veri bekleniyor"
@@ -6286,6 +6329,7 @@ async function boot(){
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],
+    ['PYŞ Sektör', pysInit],
     ['TÜFE harcama grupları', ()=>setTimeout(hrcCek,5200)],
     ['Yİ-ÜFE detayı', ()=>setTimeout(ufeCek,5500)],
     /* §245: ['İnceleme AI', aiInit] KALDIRILDI — fonksiyon ölüydü, silindi. */

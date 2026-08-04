@@ -2768,6 +2768,43 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 248 KATFON SUKUK'A TASINDI + PYS SEKTOR SEKMESI (3 Agu, gece 8)
+
+Kullanici uclu istek: (1) Katilim Fonlari alt sekmesi Sukuk'un altina,
+Ihrac Takvimi'nin sagina; (2) PY altina PYS Sektor yeni alt sekme (alt
+cubuk kaybolmadan — 247b dersi pesinen uygulandi); (3) icerik: Power BI
+PDF'indeki net para girisi grafiklerinin panel-temali hali + veri kaynagi
+arastirmasi.
+
+### 248.1 TASIMA
+t5 tab'i derinlik sayaciyla kesildi, icerigi AYNEN (ic id'ler korunarak —
+katfon init'leri degismeden calisir) Sukuk'un subtab duzenine tasindi:
+yeni buton data-subtab=sk-katfon (Ihrac Takvimi'nin sagi), panel
+sk-ihrac'in ardinda. pySubnav butonu silindi, PY_GRUP'tan t5 cikti.
+Kalinti dogrulandi: data-tab="t5" ve 't5' referansi iki dosyada SIFIR.
+
+### 248.2 PYS SEKTOR (t26)
+pySubnav + PY_GRUP + panel: uc blok (PYS / Fon / Tur bazinda) x donem
+dugmeleri (verisi olan donemler gosterilir). Sablon panel temasi: mevcut
+.bar ailesi (Power BI renk cirkinligi yok), negatif deger kirmizi.
+pyssektor.json: PDF'in 8 sayfasindan METIN KATMANIYLA cikarilan 58 cubuk
+(deger-etiket eslesmesi sirali ve dogrulanabilirdi; haftalik turde degeri
+metne dusmeyen 2 mini bar ATLANDI — tahmin edilmedi). Damga acik:
+'DAMGALI · 2026-07-31'.
+Analitik not karta yazildi: doviz serbest fonlarin yillik 269 mlr TL ile
+acik ara liderligi = dolarizasyon talebinin kurumsal kaniti.
+
+### 248.3 VERI KAYNAGI ARASTIRMASI
+SPK portfoy degerleri sayfasi: DINAMIK — tablo iskeleti bos, veri donem
+secimiyle AJAX'tan geliyor; dogrudan fetch CALISMAZ. Secenekler:
+(a) aylik Excel'i elle indirip 'spk isle' (Koyfin deseni), (b) ic API
+kesfi (ayri calisma). PDF verilerinin asil kaynagi TEFAS akis turevleri:
+KALICI OTOMASYON ADAYI = tazele.mjs'e TEFAS tum-fon katmani (gunluk
+kosuda fon akislarini hesaplar) — bekleyen buyuk islere eklendi
+(sentetik XKTUM + endeks arsiviyle ayni aile).
+
+app.js v=20260803u · DOSYALAR: app.js + index.html + pyssektor.json
+
 ## 247m AYRISMA DONEM SECICI VERIYE DARALTILDI (3 Agu, gece 7)
 
 Kullanici: XKTMT'de 1H/1A/3A gelmiyor, 'duzeltmesi zor mu, zorsa kaldir'.

@@ -1,0 +1,258 @@
+{
+ "guncelleme": "2026-07-31",
+ "kaynak": "TEFAS türevi günlük akış raporu (Power BI PDF, elle) — otomasyon adayı: tazele.mjs TEFAS tüm-fon katmanı",
+ "pys": {
+  "1G": [
+   [
+    "Vakıf Katılım Portföy",
+    2.64
+   ],
+   [
+    "Hedef Portföy",
+    1.75
+   ],
+   [
+    "Yapı Kredi Portföy",
+    0.72
+   ]
+  ],
+  "1A": [
+   [
+    "Yapı Kredi Portföy",
+    25
+   ],
+   [
+    "Ak Portföy",
+    23
+   ],
+   [
+    "Deniz Portföy",
+    22
+   ],
+   [
+    "Garanti Portföy",
+    21
+   ],
+   [
+    "Ziraat Portföy",
+    17
+   ],
+   [
+    "İş Portföy",
+    15
+   ],
+   [
+    "Atlas Portföy",
+    14
+   ],
+   [
+    "V Portföy",
+    12
+   ]
+  ]
+ },
+ "fon": {
+  "1G": [
+   [
+    "Ak Portföy Üçüncü PP Serbest (TL)",
+    10.0
+   ],
+   [
+    "Garanti Portföy İkinci PP Serbest (TL)",
+    8.9
+   ],
+   [
+    "Deniz Portföy Yakamoz Serbest (Döviz)",
+    8.6
+   ],
+   [
+    "Deniz Portföy İkinci PP (TL)",
+    7.1
+   ],
+   [
+    "Yapı Kredi Portföy Birinci Serbest",
+    3.8
+   ],
+   [
+    "İş Portföy Üçüncü Serbest (TL)",
+    3.6
+   ],
+   [
+    "Yapı Kredi Portföy PP Fonu",
+    3.5
+   ],
+   [
+    "Albaraka Portföy Vakıf İki.Kıs.Vad.Ka.",
+    3.2
+   ],
+   [
+    "Vakıf Katılım Portföy PP Katılım",
+    2.6
+   ],
+   [
+    "Tera Portföy PP (TL)",
+    2.3
+   ],
+   [
+    "Garanti Portföy Bir. PP (TL)",
+    2.2
+   ],
+   [
+    "Deniz Portföy PP (TL)",
+    2.2
+   ]
+  ],
+  "1A": [
+   [
+    "Garanti Portföy Bir. PP (TL)",
+    29.7
+   ],
+   [
+    "Kuveyt Türk Port. PP Katılım Serbest",
+    27.1
+   ],
+   [
+    "Ziraat Portföy Başak PP (TL)",
+    17.3
+   ],
+   [
+    "Deniz Portföy PP (TL)",
+    16.4
+   ],
+   [
+    "Ak Portföy Üçüncü PP Serbest (TL)",
+    16.0
+   ],
+   [
+    "Yapı Kredi Portföy PP Fonu",
+    15.1
+   ],
+   [
+    "Pusula Portföy Üçüncü Hisse Serb. (HSYF)",
+    13.3
+   ],
+   [
+    "Ak Portföy Ondördüncü Serbest (Döviz)",
+    11.7
+   ],
+   [
+    "V Portföy VakıfBank PP (TL)",
+    11.6
+   ],
+   [
+    "Pusula Portföy İkinci PP (TL)",
+    11.2
+   ],
+   [
+    "Deniz Portföy Yakamoz Serbest (Döviz)",
+    10.8
+   ],
+   [
+    "Ak Portföy İkinci PP Serbest (TL)",
+    10.7
+   ],
+   [
+    "İş Portföy PP (TL)",
+    9.3
+   ],
+   [
+    "Tera Portföy PP (TL)",
+    9.1
+   ],
+   [
+    "Atlas Portföy Serbest Fon",
+    8.9
+   ]
+  ]
+ },
+ "tur": {
+  "1G": [
+   [
+    "Serbest Fonlar — Diğer",
+    5.0
+   ],
+   [
+    "Döviz Serbest Fon",
+    4.8
+   ],
+   [
+    "Para Piyasası Fonları",
+    2.3
+   ]
+  ],
+  "1H": [
+   [
+    "Para Piyasası Serbest Fon",
+    70
+   ],
+   [
+    "Döviz Serbest Fon",
+    2
+   ]
+  ],
+  "1A": [
+   [
+    "Para Piyasası Fonları",
+    116
+   ],
+   [
+    "Para Piyasası Serbest Fon",
+    37
+   ],
+   [
+    "Kısa Vadeli Kira Sertifikası Fonları",
+    16
+   ],
+   [
+    "Hisse Senedi Serbest Fon",
+    15
+   ],
+   [
+    "Serbest Fonlar — Diğer",
+    8
+   ]
+  ],
+  "1Y": [
+   [
+    "Döviz Serbest Fon",
+    269
+   ],
+   [
+    "Para Piyasası Fonları",
+    196
+   ],
+   [
+    "Serbest Fonlar — Diğer",
+    111
+   ],
+   [
+    "Kıymetli Maden BYF",
+    80
+   ],
+   [
+    "Hisse Senedi Serbest Fon",
+    65
+   ],
+   [
+    "Kısa Vadeli Kira Sertifikası Fonları",
+    64
+   ],
+   [
+    "Serbest Özel Diğer",
+    38
+   ],
+   [
+    "Para Piyasası Serbest Fon",
+    34
+   ],
+   [
+    "Altın Fonları",
+    31
+   ],
+   [
+    "Agresif Değişken Fonlar",
+    25
+   ]
+  ]
+ }
+}
