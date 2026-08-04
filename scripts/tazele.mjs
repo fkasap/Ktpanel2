@@ -512,6 +512,28 @@ async function fonTazele() {
   } finally { await browser.close(); }
 
   const kapsanan = kodlar.filter(k => fiyat[k]);
+  /* §249k GETİRİ-MODU: yeni liste ucu fiyat değil KİMLİK verdi (ölçüldü) —
+     fiyat yokken 1047 resmi getiriyi çöpe atmak israf. Getiri kapsamı
+     yeterliyse yalnız g[1..5] TEFAS resmi değerleriyle yazılır; fiyat/AUM/
+     akış önceki (Fintables) değerlerinde damgalı kalır — hibrit ama dürüst. */
+  {
+    const G0 = globalThis.__tefasGetiri || {};
+    const gKapsam = kodlar.filter(k => G0[k]).length;
+    if (!kapsanan.length && gKapsam >= Math.floor(kodlar.length * 0.8)) {
+      let n0 = 0;
+      fonlar.forEach(f => {
+        const gx = G0[f.k]; if (!gx) return;
+        const eskiG = f.g || [null,null,null,null,null,null];
+        f.g = [eskiG[0], gx.getiri1a ?? null, gx.getiri3a ?? null, gx.getiriyb ?? null, gx.getiri1y ?? null, gx.getiri3y ?? null];
+        n0++;
+      });
+      d.guncelleme = `${bugun} — getiriler otomatik (TEFAS resmî · köprü); fiyat/AUM/akış önceki turdan`;
+      await yaz(dosya, d);
+      raporlar.push('### Katılım fonları — ✓ GETİRİ-MODU: ' + n0 + '/' + kodlar.length + ' fonun 5 dönem getirisi TEFAS resmî değerleriyle yazıldı (fiyat ucu henüz yok — 1G/AUM/akış önceki turdan)');
+      degisenler.push('katılım fonları (getiri-modu ' + n0 + ')');
+      return n0;
+    }
+  }
   if (!kapsanan.length) {
     raporlar.push('### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)\n- Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.');
     denetimDustu = true;
