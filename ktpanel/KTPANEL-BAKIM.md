@@ -2767,6 +2767,26 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 249a DALGA-3/1: BILANCO TETIGI OTOMATIK (4 Agu)
+
+inceleme-ai'nin uretimi bilinçli elde kaliyor (analiz kalitesi) ama
+TETIGI artik otomatik:
+  tazele.mjs bilancoTetik(): her hafta ici kosuda KAP byCriteria'dan son
+    24 saatin FR bildirimleri -> BIST kodlari -> bilanco-tetik.json
+    (rapora sirket listesi de dusuyor — Actions ozeti tek bakista okunur).
+    Uc formati panel api/kap.js'ten birebir (Referer zorunlu, JSON body).
+  app.js incelemeInit: kartta OLMAYAN yeni aciklananlar Earnings AI
+    sekmesinin ustunde yesil serit: 'Bilanco tetigi: N sirket FR yayimladi,
+    karti yok — X, Y, Z. Kart istemek icin: ...'
+Boylece akis: aksam kosusu -> panel seridi -> kullanici 'X Y kartlarini
+yaz' -> ben Fintables tam setiyle uretirim. KAP'i elle tarama bitti.
+KALAN DALGA-3: yevren AV rotasyonu (25 istek/gun x 30 gun = aylik tam
+forward seti) — siradaki tur; endeks arsivi + XKTUM + hazine takvim
+listede.
+
+app.js v=20260804d · DOSYALAR: scripts/tazele.mjs (DEPO KOKU) + app.js +
+index.html + KTPANEL-BAKIM.md (ktpanel/)
+
 ## 249 DALGA-2 PARCA 1: KATFON TAM OTOMASYON + AKIS ARSIVI (4 Agu)
 
 Kullanici 'Dalga 2'yi yap' dedi. OLCUM ZINCIRI once uc kesif cikardi:

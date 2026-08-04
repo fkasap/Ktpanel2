@@ -3687,6 +3687,25 @@ function yevrenCiz(){
 
 async function incelemeInit(){
   const el=$('incelemeBody'); if(!el)return;
+  /* §249a: bilanço tetiği şeridi — Actions her koşuda KAP FR listesini
+     bilanco-tetik.json'a yazar; burada kartı OLMAYAN yeni açıklananlar
+     duyurulur. Kart üretimi bilinçli olarak elde: analiz otomatikleşmez. */
+  try{
+    const tr=await fetch('/bilanco-tetik.json',{cache:'no-store'});
+    if(tr.ok){
+      const T=await tr.json();
+      const varOlan=new Set((INC_KARTLAR||[]).map(k=>k.kod));
+      const yeni=(T.kodlar||[]).filter(k=>!varOlan.has(k));
+      if(yeni.length && !$('bilTetik')){
+        const div=document.createElement('div'); div.id='bilTetik'; div.className='note';
+        div.style.borderColor='var(--mm2)';
+        div.innerHTML='<b>Bilanço tetiği ('+esc(T.tarih||'')+'):</b> '+yeni.length+' şirket FR yayımladı, kartı yok — '+
+          yeni.slice(0,12).map(esc).join(', ')+(yeni.length>12?' …':'')+
+          '. <span class="thin">Kart istemek için: "X Y kartlarını yaz".</span>';
+        el.parentNode.insertBefore(div, el);
+      }
+    }
+  }catch(e){}
   try{
     /* §245y AYIRT EDEN TEŞHİS. Eski catch 404'ü, parse hatasını ve ağ
        kopmasını AYNI mesaja bindiriyordu ("yüklenemedi — klasörde mi?").
