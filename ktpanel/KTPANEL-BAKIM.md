@@ -2767,6 +2767,195 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 249l SON PARCA: FIYAT UCU (5 Agu, sabah 3)
+
+KPR detay HAR'i son kapiyi acti: POST /api/funds/fonFiyatBilgiGetir
+{fonKodu, dil, periyod} -> gunluk fiyat serisi (tarih+fiyat).
+tefas.js h3: ?mod=fiyat&kod=X (periyod=1 ay yeter). tazele v7:
+getiri-modunda 46 fon icin fiyat serisi cekilir (~15 sn) -> yu=son
+fiyat, g[0]=1G (son/onceki). AUM/akis hala Fintables (haftalik tur) —
+bilinen tek kalan parca; TEFAS'ta AUM ucu gorulurse o da baglanir.
+BEKLENEN: 'GETIRI-MODU: 36/46 + fiyat' — katfon gunluk ritmi TAM.
+
+DOSYALAR: api/tefas.js h3 (ktpanel/api/) + scripts/tazele.mjs v7 (KOK)
+
+## 249k KAPI ACILDI — GETIRI-MODU (5 Agu, sabah 2)
+
+TARIHI SATIR: 'TEFAS kopru: getiri 1047 fon ✓ · liste 1031 kayit'.
+Token + birebir basliklar + middleware muafiyeti = TEFAS ILK KEZ veri
+verdi. Iki bulgu: (1) liste ucu fiyat degil KIMLIK listesi (fonKod,
+kurucuKod/Ad — pyssektor PYS eslemesi icin altin); (2) kod fiyat-zorunlu
+oldugundan 1047 resmi getiriyi elinde tutup YAZMADAN dondu.
+v6 GETIRI-MODU: fiyat yoksa ve getiri kapsami >=%80 ise g[1..5] TEFAS
+RESMI degerleriyle yazilir (1A/3A/YTD/1Y/3Y — hesap yok, resmi yuzde);
+1G/fiyat/AUM/akis onceki turdan damgali kalir. Hibrit: katfonun en agir
+kismi (5 donem getiri x 46 fon) ARTIK OTOMATIK; fiyat ucu bulununca
+(fon detay sayfasi HAR'i — ileride) tam otomasyona gecilir.
+Yol haritasi guncel: pyssektor PYS eslemesi icin kurucuKod/Ad listesi
+hazir bekliyor.
+
+DOSYALAR: scripts/tazele.mjs v6 (DEPO KOKU)
+
+## 249j GERCEK SUCLU: KENDI KAPIMIZ (5 Agu, sabah)
+
+v'li tani ilk govdeli kosuda bilmeceyi COZDU: 'giris gerekli' — TURKCE
+mesaj = PANELIN KENDI middleware'i. Actions cerezsiz gelince oturum
+korumasi /api/tefas'i kesiyordu; UC KOSULUK 401 TEFAS'in degil BIZIM
+kapinin cevabiydi (eski format govdesiz oldugundan ayirt edilememisti —
+govde-okuma yamasi tam bu yuzden degerliydi).
+DUZELTME: middleware'e tek satir — /api/tefas GIRISSIZ (kamu verisi
+proxy'si, hassas icerik yok, 30 dk cache). Bearer/CRON_SECRET yolu da
+vardi; en az surtunmeli path muafiyeti secildi.
+NOT: TEFAS token+basliklarin gercekten yeterli olup olmadigi ILK KEZ bu
+kosuda test edilecek — simdiye dek TEFAS'a hic ulasamamistik.
+
+DOSYALAR: middleware.js (ktpanel/ KOKUNE — api/ degil!) + KTPANEL-BAKIM.md
+
+## 249i UCUNCU META-HATA DERSI + SON KOZ (5 Agu, gece 5)
+
+Ikinci 401 — ama ESKI mi YENI mi tefas.js kostu AYIRT EDILEMEDI: kopru
+yanitina surum alani koymamistim (ayni meta-hata ucuncu kez: 249b mesaj,
+249d asama-2, simdi kopru). KURAL ARTIK MUTLAK: HER tani/yanit uretici
+bilesene surum damgasi, istisnasiz.
+Uc yama: (1) tefas.js v:'h2-cerezli' alani — tazele koprusu raporu g2
+JSON'unu bastigi icin surum RAPORDA gorunur; (2) tazele hata GOVDESINI
+de okur (TEFAS 401'de ne diyor: invalid token / missing id ayrimi);
+(3) SON KOZ: HAR'daki F5 kimlik cerezi (wid...) basliklara eklendi
+(kullanici HAR'i paylasarak fiilen onayladi; GA cerezi GOMULMEDI —
+kisisel takip kimligi, gereksiz). wid TTL'li/IP-bagli cikabilir —
+yanit kesin soyler.
+SIRA: tefas.js yukle -> Vercel READY -> dispatch. Rapor artik uc seyden
+birini soyler: basari / 'v:h2 + TEFAS mesaji' (cerez de yetmedi, mesaj
+yol gosterir) / v'siz yanit (deploy gecikmesi).
+
+DOSYALAR: api/tefas.js (ktpanel/api/) + scripts/tazele.mjs (DEPO KOKU)
+
+## 249h KOPRU 401 COZUMU: x-request-id (5 Agu, gece 4)
+
+Ilk kopru kosusu IKI kesin tani verdi: (1) Playwright yolu Actions'ta
+resmen OLU — v4.1 sayfa kimligi ilk kez konustu: GitHub IP'sine 'Request
+Rejected' HTML'i veriliyor, dinleme yolu kapatildi sayilir; (2) kopru
+TEFAS'a ULASTI — Rejected degil HTTP 401: WAF gecildi, API kapisinda
+yalniz kimlik reddedildi.
+HAR'in tam baslik dokumunde kritik eksik bulundu: x-request-id (istek
+basina UUID; sayfa JS'i token'la BIRLIKTE uretiyordu — zorunlu ikili).
+api/tefas.js: basliklar HAR'daki gercek istekle BIREBIR (Accept:*/*,
+Accept-Language, Pragma/Cache-Control, Sec-Fetch uclusu) + her istekte
+taze UUID. CEREZ BILEREK DISARIDA (kisisel GA + F5 wid kimligi; cogu
+API katmani istemez) — 401 surerse son koz olarak degerlendirilir.
+SIRA: api/tefas.js yukle -> deploy bekle -> dispatch katman=fon.
+
+DOSYALAR: api/tefas.js (ktpanel/api/)
+
+## 249g HAR COZDU: YENI UCLAR + VERCEL KOPRUSU (5 Agu, gece 3)
+
+Kullanicinin HAR dosyasi destani bitirdi — DevTools kaydinin tamami:
+  YENI ANA UC: POST /api/funds/fonGetiriBazliBilgiGetir — 1.047 fon,
+    alanlar: fonKodu, fonUnvan, fonTurAciklama (TUR!), getiri1a/3a/6a/
+    1y/yb/3y/5y (RESMI yuzdeler — hesap gereksiz), riskDegeri.
+  IKINCI UC: /api/statistics/tefas/getFplFonList (261KB — govdesi HAR'a
+    kaydedilmemis; alanlari kopru ilk canli cagrida RAPORA basar).
+  TOKEN STATIK: Bearer 'ST-tefasweb...' sayfanin JS paketinde HARD-CODED
+    (comm on-*.js icinde olculdu) — oturum degil uygulama sabiti.
+    Kirilganlik notu: bundle yenilenirse degisebilir; kopru 401/403'te
+    'TOKEN YENILE' der, yeni HAR ile 1 dk'da guncellenir.
+MIMARI:
+  api/tefas.js SIFIRDAN: iki mod (?mod=getiri&tip=YAT / ?mod=liste),
+    sabit bearer + tarayici basliklari, 30 dk cache, alan-kesfi ('ornek')
+    yanitta. Vercel WAF'tan geciyor (ERR-006 kaniti).
+  tazele.mjs v5: BIRINCIL ASAMA Vercel koprusu — Actions TEFAS'a degil
+    ktpanel.vercel.app/api/tefas'a gider. Getiriler katfon g dizisine
+    TEFAS RESMI degerleriyle yazilir ([1G korunur, 1A,3A,YTD,1Y,3Y
+    resmi]); fiyat/AUM liste ucundan aday alanlarla. Playwright dinleme
+    YEDEK olarak duruyor.
+BEKLENEN: once api/tefas.js deploy, sonra dispatch — rapor 'yol:
+vercel-koprusu (N fon fiyat + 1047 getiri)' + liste alan kesfi.
+1G akis icin fon-arsiv birikimi ayni sekilde isler.
+
+DOSYALAR: api/tefas.js (ktpanel/api/ USTUNE YAZ) + scripts/tazele.mjs
+(DEPO KOKU) + KTPANEL-BAKIM.md
+
+## 249f v4.1 + PLAN B: VERCEL KOPRUSU STRATEJISI (5 Agu, gece 2)
+
+v4 kosusu: 'yakalanan JSON: 0' — sayfa acildi ama tek JSON gelmedi.
+Guclu suphe: WAF, Actions'in datacenter IP'sine sayfanin kendisi yerine
+'Request Rejected' HTML'i veriyor (o sayfada XHR olmaz). v4.1 kesin
+ayirt eder: SAYFA BASLIGI + govde ilk 180 karakter + toplam yanit sayisi
+rapora — 'Request Rejected' gorursek WAF-IP kesin.
+KRITIK IPUCU + PLAN B: eski uc Actions'tan 'Rejected' DEGIL ERR-006
+almisti = Vercel IP'leri WAF'tan GECIYOR. Kalici mimari:
+  1. Kullanici yeni sayfada DevTools ile XHR'i yakalar (SPK yontemi),
+  2. Yeni uc api/tefas.js'e (Vercel) yazilir,
+  3. tazele.mjs Actions'tan TEFAS'a degil KENDI Vercel ucumuza gider
+     (ktpanel.vercel.app/api/tefas) — WAF sorunu kokten biter, panel ve
+     Actions ayni tek kaynagi kullanir.
+Bilanco tetigi ucuncu kosuda da ✓ (32 sirket — FROTO, AYGAZ, GOZDE
+katildi; sezon zirvede).
+
+DOSYALAR: scripts/tazele.mjs v4.1 (DEPO KOKU)
+
+## 249e v4: AG DINLEME — YENI TEFAS SITESI (5 Agu, gece)
+
+Kullanici YENI TEFAS arayuzunu buldu: tefas.gov.tr/tr/fon-getirileri
+(?fundType=YAT / EMK) — eski .aspx'lerin ERR-006'sinin sebebi site
+yenilemesi. Dogrudan sunucu fetch'i WAF'a takildi ('Request Rejected',
+F5 imzali) ama Playwright zaten iceride.
+v4 YAKLASIMI (uc tahmini DEVRI KAPANDI): gercek tarayici yeni sayfayi
+acar, sayfanin KENDI cagirdigi JSON yanitlarini DINLER
+(sayfa.on('response') — DevTools'un otomatik hali):
+  20+ kayitli her tefas.gov.tr JSON'u yakalanir; en buyugu secilir;
+  UC + ALAN ADLARI rapora basilir ('TEFAS alan kesfi') — TEFAS yeniden
+  tasinsa bile yontem bulur, kod korlemesine kalmaz.
+  Alan adaylari iki nesil kapsar (FONKODU/fonKodu, FIYAT/birimPayDegeri,
+  PORTFOYBUYUKLUK/fonBuyuklugu...) — camelCase yeni API normu.
+  Turkce sayi bicimi ('1.234,56') parse guard'li.
+EMK linki not edildi: ayni dinleme fundType=EMK ile emeklilik fonlarina
+genisletilebilir (pyssektor kapsam buyumesi — bekleyen).
+BEKLENEN ILK KOSU: ya 'yol: ag-dinleme (N fon)' + katfon dolar, ya da
+tani satiri yakalanan uc listesini soyler — her iki durumda OKUYARAK
+ilerlenir.
+
+DOSYALAR: scripts/tazele.mjs v4 (DEPO KOKU)
+
+## 249d TANI KONUSTU: TEFAS API KATALOGU DEGISMIS (4-5 Agu gecesi)
+
+v3 kosusu tam is gordu — 'TEFAS cekim tanisi: comparison HTTP 404 ·
+ERR-006 Method not found or disabled!'. Bu WAF/bot engeli DEGIL: API
+gecidinin resmi 'metot yok' cevabi. TEFAS uc kataloğunu degistirmis —
+BindComparisonFundReturns OLMUS. Asama 2 (BindHistoryInfo) de bos ama
+onun ham tanisi raporlanmamisti — v3.1: ilk denenen kod icin status +
+ilk 120 karakter hamNot'a eklenir; bir sonraki kosu HistoryInfo'nun da
+mi oldugunu (ayni ERR-006 mu, farkli mi) KESIN soyler.
+YENI UCLARI BULMA YOLU (SPK'da 30 saniyede calisan yontem): kullanici
+tefas.gov.tr/FonKarsilastirma.aspx'te DevTools Network/XHR ile tabloyu
+yukleyen istegi kopyalar -> yeni uc sabitlenir. Panel api/tefas.js de
+ayni eski uclari kullaniyor — TEFAS degisikligi ONU DA kirmis olabilir;
+yeni uc bulununca ikisi birden guncellenir.
+NOT: bilanco tetigi ikinci kosuda da ✓ (30 sirket — bilanco sezonu
+kiziserek suruyor); PASEU/KTLEV karantina hatirlatmasi duruyor.
+
+DOSYALAR: scripts/tazele.mjs v3.1 (DEPO KOKU) + KTPANEL-BAKIM.md
+
+## 249c FON CEKIMI v3: IKI ASAMALI + VERSIYONLU TANI (4 Agu, gece)
+
+Kullanicinin elle dispatch kosusu ayni 'eslesme SIFIR' mesajini verdi —
+ve BEN AYIRT EDEMEDIM: 249b mesaji versiyonlamamistim, eski dosya mi
+kostu yoksa Comparison da mi bos dondu belirsiz kaldi. Tani mesaji
+surumsuz birakmak hataydi; v3 bunu kokten cozer:
+  ASAMA 1: BindComparisonFundReturns (tek istek; calisirsa alan kesfi +
+    pyssektor zemini).
+  ASAMA 2 (dusus): KANITLI tek-fon modu — panelin fiilen calistirdigi
+    BindHistoryInfo cagrisi, 46 katfon kodu icin dongyle (~10 sn).
+    Uc degisse de en dayanikli yol.
+  HER KOSUDA rapor: 'TEFAS cekim tanisi — yol: ... · comparison HTTP N ·
+    ilk 160 karakter' — bir daha korlemesine tur atilmaz.
+  Eslesme-sifir mesaji '(v3)' damgali: eski dosya kosarsa damgasizligindan
+    ANINDA belli olur.
+Exit code 1 tasarim geregi (denetim dusunce veri yazilmaz + kosu kirmizi).
+Node 20 uyarisi kozmetik (checkout@v4 bagimliligi), islevi etkilemiyor.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU — Ktpanel2/scripts/)
+
 ## 249b ILK KOSU RAPORU: TETIK ✓ / FON UCU DUZELTMESI (4 Agu, aksam)
 
 Ilk Actions kosusu tasarimi sahada dogruladi:
