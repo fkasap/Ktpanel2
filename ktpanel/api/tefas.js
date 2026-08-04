@@ -1,85 +1,49 @@
-// TEFAS fon verisi — BindHistoryInfo tek istekte ~3 aylik aralikla sinirlidir;
-// bu yuzden 400 gunluk pencere ~80 gunluk parcalara bolunur, paralel cekilir, birlestirilir.
-// Yatirim fonunda (YAT) veri yoksa emeklilik fonu (EMK) tipi de denenir.
-const HEADERS = {
-  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+// §249g TEFAS YENİ NESİL KÖPRÜSÜ (5 Ağu 2026) — eski .aspx uçları öldü
+// (ERR-006). Yeni uçlar kullanıcının HAR ölçümünden; Bearer token sayfanın
+// JS paketinde HARD-CODED (statik uygulama anahtarı) — bundle yenilenirse
+// token değişebilir: 401/403'te panel/rapor "token yenile" der, yeni HAR
+// ile 1 dakikada güncellenir. Vercel IP'leri WAF'tan geçiyor (kanıt:
+// eski uç Rejected değil ERR-006 almıştı).
+const TB = 'Bearer ST-tefaswebwse3irfmSBj4iRAzGPbAlS94Se';
+const BAS = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'Authorization': TB,
   'Origin': 'https://www.tefas.gov.tr',
-  'Referer': 'https://www.tefas.gov.tr/TarihselVeriler.aspx',
-  'X-Requested-With': 'XMLHttpRequest',
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36'
+  'Referer': 'https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15'
 };
-const fmt = (d) => String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
-
-async function fetchChunk(fontip, fon, start, end) {
-  const body = new URLSearchParams({ fontip, fonkod: fon, bastarih: fmt(start), bittarih: fmt(end) });
-  const r = await fetch('https://www.tefas.gov.tr/api/DB/BindHistoryInfo', { method: 'POST', headers: HEADERS, body: body.toString() });
-  if (!r.ok) throw new Error('TEFAS yanit kodu: ' + r.status);
-  const j = await r.json();
-  return (j && j.data) || [];
-}
-
-async function fetchAll(fontip, fon) {
-  const end = new Date();
-  const start = new Date(); start.setDate(start.getDate() - 400);
-  const chunks = [];
-  let s = new Date(start);
-  while (s < end) {
-    const e = new Date(s); e.setDate(e.getDate() + 80);
-    chunks.push([new Date(s), e < end ? e : new Date(end)]);
-    s = new Date(e); s.setDate(s.getDate() + 1);
-  }
-  const results = await Promise.all(chunks.map(([a, b]) => fetchChunk(fontip, fon, a, b).catch(() => [])));
-  return results.flat();
-}
-
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=7200');
+  const mod = req.query.mod || 'getiri';
+  const tip = (req.query.tip || 'YAT').toUpperCase();
   try {
-    const fon = String((req.query && req.query.fon) || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-    if (!fon) return res.status(400).json({ error: 'fon parametresi gerekli, orn: /api/tefas?fon=AFT' });
-
-    let rows = await fetchAll('YAT', fon);
-    let tip = 'YAT';
-    if (!rows.length) { rows = await fetchAll('EMK', fon); tip = 'EMK'; }
-    if (!rows.length) return res.status(404).json({ error: fon + ' icin veri bulunamadi (yatirim + emeklilik tipi denendi) — fon kodunu kontrol et' });
-
-    const map = new Map();
-    for (const x of rows) {
-      const t = Number(x.TARIH), p = Number(x.FIYAT);
-      if (isFinite(t) && isFinite(p) && p > 0) map.set(t, { t, p, u: x.FONUNVAN });
+    let url, body;
+    if (mod === 'liste') {
+      url = 'https://www.tefas.gov.tr/api/statistics/tefas/getFplFonList';
+      body = {};
+    } else {
+      url = 'https://www.tefas.gov.tr/api/funds/fonGetiriBazliBilgiGetir';
+      body = { dil:'TR', fonTipi:tip, kurucuKodu:null, sfonTurKod:null, fonTurAciklama:null,
+        islem:1, fonTurKod:null, fonGrubu:null, donemGetiri1a:'1', donemGetiri3a:'1',
+        donemGetiri6a:'1', donemGetiri1y:'1', donemGetiriyb:'1', donemGetiri3y:'1',
+        donemGetiri5y:'1', basTarih:null, bitTarih:null, calismaTipi:2, getiriOrani:'1' };
     }
-    const seri = [...map.values()].sort((a, b) => a.t - b.t);
-    if (seri.length < 2) return res.status(404).json({ error: 'Yetersiz fiyat verisi' });
-
-    const son = seri[seri.length - 1];
-    const priceAt = (targetMs) => {
-      let best = null;
-      for (const s2 of seri) { if (s2.t <= targetMs) best = s2; else break; }
-      return best;
-    };
-    const gun = 24 * 3600 * 1000;
-    const ret = (eski) => (eski && eski.p > 0) ? +(((son.p / eski.p) - 1) * 100).toFixed(2) : null;
-    const yilbasi = new Date(new Date(son.t).getFullYear(), 0, 1).getTime();
-
-    const step = Math.max(1, Math.ceil(seri.length / 120));
-    const grafik = seri.filter((_, i) => i % step === 0);
-    if (grafik[grafik.length - 1].t !== son.t) grafik.push(son);
-
-    res.status(200).json({
-      kaynak: 'TEFAS', fon, fontip: tip,
-      unvan: son.u || seri[0].u || null,
-      sonFiyat: son.p,
-      sonTarih: new Date(son.t).toISOString().slice(0, 10),
-      getiri: {
-        a1: ret(priceAt(son.t - 30 * gun)),
-        a3: ret(priceAt(son.t - 91 * gun)),
-        ytd: ret(priceAt(yilbasi)),
-        y1: ret(priceAt(son.t - 365 * gun))
-      },
-      seri: grafik.map((x) => ({ t: new Date(x.t).toISOString().slice(0, 10), p: x.p }))
-    });
+    const r = await fetch(url, { method:'POST', headers:BAS, body:JSON.stringify(body) });
+    const txt = await r.text();
+    if (!r.ok) {
+      res.setHeader('Cache-Control','no-store');
+      return res.status(502).json({ error:'TEFAS_HTTP_'+r.status, tokenSuphesi:(r.status===401||r.status===403), ilk:txt.slice(0,180) });
+    }
+    let j; try { j = JSON.parse(txt); } catch { 
+      res.setHeader('Cache-Control','no-store');
+      return res.status(502).json({ error:'TEFAS_JSON_DEGIL', ilk:txt.slice(0,180) });
+    }
+    const L = j.resultList || j.data || (Array.isArray(j)?j:[]);
+    res.setHeader('Cache-Control','s-maxage=1800, stale-while-revalidate=7200');
+    return res.status(200).json({ mod, tip, n:(L||[]).length, ornek:(L&&L[0])?Object.keys(L[0]):[], veri:L });
   } catch (e) {
-    res.status(502).json({ error: 'TEFAS verisine ulasilamadi', detay: String(e.message || e) });
+    res.setHeader('Cache-Control','no-store');
+    return res.status(500).json({ error:String(e && e.message || e) });
   }
 };
