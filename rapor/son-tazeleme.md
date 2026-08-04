@@ -22,13 +22,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-04
 - ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): PASEU → pay adedi + referans fiyat ELLE güncellenmeli
-  - PASEU: 35.36%
+  - PASEU: 32.67%
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-04
 - ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): KTLEV → pay adedi + referans fiyat ELLE güncellenmeli
-  - KTLEV: -75.32%
+  - KTLEV: -73.64%
 
 ### Risk metrikleri — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
@@ -46,6 +46,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (83 fiyat · 1 karantina) · Model sicili (23 fiyat · 1 karantina) · risk metrikleri (11) · bilanço tetiği (14)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (104 fiyat · 1 karantina) · Model sicili (29 fiyat · 1 karantina) · risk metrikleri (125) · bilanço tetiği (14)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
