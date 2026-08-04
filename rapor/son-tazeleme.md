@@ -43,13 +43,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007810236540> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008023585343> [Go Back]`
 
-### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi TEFAS resmî değerleriyle yazıldı (fiyat ucu henüz yok — 1G/AUM/akış önceki turdan)
+### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
 ### Bilanço tetiği — ✓ 32 şirket FR yayımladı
 - AKDFA, ALBTN, ALJF, ASELS, AYGAZ, BRGAN, BRGFK, CIMSA, CONSE, ESCOM, FADE, FIBAF, FROTO, GIPTA, GLYHO, GOZDE, HDFGS, ISATR, ISYAT, KAPLM …
 
 
 ---
-**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · risk metrikleri (2) · katılım fonları (getiri-modu 36) · bilanço tetiği (32)
+**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · katılım fonları (getiri-modu 36) · bilanço tetiği (32)
