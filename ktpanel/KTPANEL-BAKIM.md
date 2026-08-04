@@ -2768,6 +2768,21 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 248e SURUM DAMGASI IHLALI — KURAL KENDIME DE ISLER (4 Agu)
+
+Kullanici: 'hala damgali' (ikinci kez). Tani ekrandan: VERILER YENI
+(Is 7,12 / GAL 63 = canli json yuklenmis) ama etiket 'DAMGALI' ve not
+eski PDF metni = ESKI app.js onbellekte. KOK NEDEN: 248d turunda app.js
+icerigi degisti ama surum parametresi ARTIRILMADI (gunluge bile 'damga
+ayni gun' diye yazmisim) — 'her degisiklikte surum artar' kuralinin
+ihlali, fail bende. index.html v=20260804b yapildi; sert yenilemeyle
+kaynak-duyarli etiket iner, damga 'FINTABLES · 2026-08-03' olur.
+DERS SERTLESTIRILDI: surum artirimi 'ayni gun ikinci degisiklikte
+atlanabilir' DEGILDIR — icerik degisti mi harf artar, istisnasiz.
+(Ebu'nun alt notu ilk ajan kosusunda yeni veriyle kendisi tazelenir.)
+
+DOSYALAR: index.html + KTPANEL-BAKIM.md (app.js zaten onceki teslimde)
+
 ## 248d 'PYS TAZELE' ILK KOSUSU — SEKME CANLI VERIYE DONDU (4 Agu)
 
 Kullanici: 'hala damgali geliyor neden' — cevap: tasarim geregi (248a'da
