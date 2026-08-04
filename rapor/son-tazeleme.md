@@ -22,13 +22,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-04
 - ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): PASEU → pay adedi + referans fiyat ELLE güncellenmeli
-  - PASEU: 32.67%
+  - PASEU: 37.13%
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-04
 - ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): KTLEV → pay adedi + referans fiyat ELLE güncellenmeli
-  - KTLEV: -73.64%
+  - KTLEV: -73.54%
 
 ### Risk metrikleri — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
@@ -41,11 +41,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Katılım fonları — ✗ TEFAS eşleşme SIFIR
 - Sayfa açıldı ama BindHistoryInfo listemizden hiçbir kodu döndürmedi (uç/alan adı değişmiş olabilir) — katman yazılmadı.
 
-### Bilanço tetiği — ✓ 14 şirket FR yayımladı
-- ALBTN, BRGFK, CIMSA, CONSE, GIPTA, GLYHO, HDFGS, ISATR, KAPLM, KORDS, MAALT, NTGAZ, TERA, TTRAK
+### Bilanço tetiği — ✓ 29 şirket FR yayımladı
+- AKDFA, ALBTN, ALJF, ASELS, AYGAZ, BRGAN, BRGFK, CIMSA, CONSE, ESCOM, FADE, FIBAF, GIPTA, GLYHO, HDFGS, ISATR, ISYAT, KAPLM, KORDS, LYDYE …
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (104 fiyat · 1 karantina) · Model sicili (29 fiyat · 1 karantina) · risk metrikleri (125) · bilanço tetiği (14)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (134 fiyat · 1 karantina) · Model sicili (39 fiyat · 1 karantina) · risk metrikleri (126) · bilanço tetiği (29)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**

@@ -1,21 +1,36 @@
 {
  "tarih": "2026-08-04",
  "kodlar": [
+  "AKDFA",
   "ALBTN",
+  "ALJF",
+  "ASELS",
+  "AYGAZ",
+  "BRGAN",
   "BRGFK",
   "CIMSA",
   "CONSE",
+  "ESCOM",
+  "FADE",
+  "FIBAF",
   "GIPTA",
   "GLYHO",
   "HDFGS",
   "ISATR",
+  "ISYAT",
   "KAPLM",
   "KORDS",
+  "LYDYE",
   "MAALT",
   "NTGAZ",
+  "PAHOL",
+  "RODRG",
+  "SANKO",
   "TERA",
-  "TTRAK"
+  "TTRAK",
+  "TUPRS",
+  "UFUK"
  ],
- "sayi": 14,
- "guncelleme": "2026-08-04 12:47 UTC — otomatik (KAP FR)"
+ "sayi": 29,
+ "guncelleme": "2026-08-04 17:01 UTC — otomatik (KAP FR)"
 }
