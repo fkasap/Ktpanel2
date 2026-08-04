@@ -95,6 +95,11 @@ export default async function middleware(req) {
 
   const url = new URL(req.url);
 
+  // §249j: /api/tefas GİRİŞSİZ — kamu verisi proxy'si (TEFAS köprüsü);
+  // Actions çerezsiz gelir, middleware onu kesiyordu ("giriş gerekli" —
+  // üç koşuluk 401 bilmecesinin gerçek suçlusu TEFAS değil BU kapıydı).
+  if (url.pathname === '/api/tefas') return;
+
   // Vercel Cron muafiyeti (TÜM cron path'leri: /api/ajanktp, /api/data mail...):
   // Vercel, cron isteklerine Authorization: Bearer CRON_SECRET ekler.
   {
