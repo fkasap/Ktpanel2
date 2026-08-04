@@ -38,14 +38,23 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 4 gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz) — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir
 - denenen: XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 251
 
-### Katılım fonları — ✗ TEFAS eşleşme SIFIR
-- Sayfa açıldı ama BindHistoryInfo listemizden hiçbir kodu döndürmedi (uç/alan adı değişmiş olabilir) — katman yazılmadı.
+### TEFAS çekim tanısı (bilgi)
+- yol: yok
+- comparison HTTP 404 · ilk: `{
+  "fault" :{ 
+    "correlationId":"fb8e68e7-9f15-426f-95d5-62816dff5120",
+    "faultCode":"ERR-006",
+    "faultString":"Method not found or disabled!",
+    "f`
 
-### Bilanço tetiği — ✓ 29 şirket FR yayımladı
+### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v3)
+- İki aşama da boş döndü — üstteki çekim tanısı satırı ham durumu söylüyor; katman yazılmadı.
+
+### Bilanço tetiği — ✓ 30 şirket FR yayımladı
 - AKDFA, ALBTN, ALJF, ASELS, AYGAZ, BRGAN, BRGFK, CIMSA, CONSE, ESCOM, FADE, FIBAF, GIPTA, GLYHO, HDFGS, ISATR, ISYAT, KAPLM, KORDS, LYDYE …
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (134 fiyat · 1 karantina) · Model sicili (39 fiyat · 1 karantina) · risk metrikleri (126) · bilanço tetiği (29)
+**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · bilanço tetiği (30)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
