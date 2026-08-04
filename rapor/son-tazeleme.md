@@ -40,21 +40,16 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- comparison HTTP 404 · ilk: `{
-  "fault" :{ 
-    "correlationId":"fb8e68e7-9f15-426f-95d5-62816dff5120",
-    "faultCode":"ERR-006",
-    "faultString":"Method not found or disabled!",
-    "f`
+- yakalanan JSON yanıtı: 0
 
-### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v3)
-- İki aşama da boş döndü — üstteki çekim tanısı satırı ham durumu söylüyor; katman yazılmadı.
+### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)
+- Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.
 
-### Bilanço tetiği — ✓ 30 şirket FR yayımladı
-- AKDFA, ALBTN, ALJF, ASELS, AYGAZ, BRGAN, BRGFK, CIMSA, CONSE, ESCOM, FADE, FIBAF, GIPTA, GLYHO, HDFGS, ISATR, ISYAT, KAPLM, KORDS, LYDYE …
+### Bilanço tetiği — ✓ 32 şirket FR yayımladı
+- AKDFA, ALBTN, ALJF, ASELS, AYGAZ, BRGAN, BRGFK, CIMSA, CONSE, ESCOM, FADE, FIBAF, FROTO, GIPTA, GLYHO, GOZDE, HDFGS, ISATR, ISYAT, KAPLM …
 
 
 ---
-**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · bilanço tetiği (30)
+**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · bilanço tetiği (32)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
