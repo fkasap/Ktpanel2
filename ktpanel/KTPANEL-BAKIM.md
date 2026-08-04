@@ -2767,6 +2767,26 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 249b ILK KOSU RAPORU: TETIK ✓ / FON UCU DUZELTMESI (4 Agu, aksam)
+
+Ilk Actions kosusu tasarimi sahada dogruladi:
+  BILANCO TETIGI ✓ ILK KOSUDA: 14 sirket FR (ALBTN...TTRAK) — liste
+    raporda, panel seridi kartsizlari gosterecek.
+  SESSIZLIK YASAGI ✓: fon katmani dustu ama 'TEFAS eslesme SIFIR' diye
+    bagirdi, eski veri korundu — 249'un B yamasi ilk sinavini verdi.
+ARIZA TANISI: BindHistoryInfo fonkod BOSKEN liste vermiyor (panelin
+kaniti tek-fon icindi; genelleme benim hatamdi). DUZELTME (§249b):
+  Kanitli BindComparisonFundReturns'e donuldu; PAY ADEDI GEREKMIYOR —
+  pay = AUM/fiyat TURETILIR, akis = Δpay×fiyat aynen calisir.
+  Kod kendini olcer: yanit alan adlari rapora basilir ('TEFAS alan
+  kesfi') — alan tahmini devri bitti; AUM/ys aday listelerinden ilk
+  bulunan kullanilir, yoksa null (uydurma yok).
+AYRICA: iki YENI karantina — PASEU +35,4 / KTLEV -75,3 (kurumsal islem;
+pay adedi + referans fiyat elle guncellenmeli — YEOTK proseduru).
+Fintables olcumuyle sonraki turda kapatilir. YEOTK karantinasi KAPANDI ✓.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU) + KTPANEL-BAKIM.md (ktpanel/)
+
 ## 249a DALGA-3/1: BILANCO TETIGI OTOMATIK (4 Agu)
 
 inceleme-ai'nin uretimi bilinçli elde kaliyor (analiz kalitesi) ama
