@@ -406,74 +406,55 @@ async function fonTazele() {
   const sayfa = await browser.newPage({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64) KtPanel/1.0' });
   const fiyat = {};
   try {
-    await sayfa.goto('https://www.tefas.gov.tr/FonKarsilastirma.aspx', { waitUntil: 'networkidle', timeout: 30000 });
+    /* §249e: goto v4 bloğunun içinde — yeni site */
     /* Çerez/challenge geçildikten SONRA sayfa bağlamından API çağrısı yapılır —
        tarayıcının kendi çerezleriyle gider, bot koruması takılmaz. */
-    /* §249c (v3): İKİ AŞAMALI ÇEKİM + VERSİYONLU TANI.
-       Aşama 1: BindComparisonFundReturns (tek istek, tüm fonlar) — çalışırsa
-                pyssektor'a da zemin.
-       Aşama 2 (düşüş): Aşama 1 boşsa KANITLI tek-fon modu — panel
-                api/tefas.js'in fiilen çalıştırdığı çağrı, katfonun 46 kodu
-                için döngüyle (≈10 sn). Uç değişse de bu yol en dayanıklı.
-       Rapor hangi yolun çalıştığını + ham durumu HER KOŞUDA yazar. */
-    const KATFON_KODLARI = (d.kategoriler || []).flatMap(k => (k.fonlar || []).map(f => f.k));
-    const fmtT = (dt) => String(dt.getDate()).padStart(2,'0')+'.'+String(dt.getMonth()+1).padStart(2,'0')+'.'+dt.getFullYear();
-    const bit = new Date(), bas = new Date(); bas.setDate(bas.getDate()-6);
-    let yol = 'yok', hamNot = '';
-    let kayitlar = [];
-    try {
-      const c = await sayfa.evaluate(async () => {
-        const r = await fetch('/api/DB/BindComparisonFundReturns', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-          body: 'calismatipi=2&fontip=YAT&sfontur=&kurucukod=&fongrup=&bastarih=&bittarih=&fonturkod=&fonunvantip='
-        });
-        const t = await r.text();
-        return { status: r.status, ilk: t.slice(0, 160), json: (() => { try { return JSON.parse(t); } catch { return null; } })() };
-      });
-      hamNot = 'comparison HTTP ' + c.status + ' · ilk: `' + String(c.ilk).replace(/`/g, '') + '`';
-      kayitlar = c.json?.data || [];
-      if (kayitlar.length) yol = 'comparison (tek istek, ' + kayitlar.length + ' fon)';
-    } catch (e) { hamNot = 'comparison istisna: ' + String(e.message || e).slice(0, 100); }
+    /* §249e (v4): AĞ DİNLEME — TEFAS yeni siteye geçti (/tr/fon-getirileri),
+       eski .aspx API'leri "ERR-006 Method not found" (ölçüldü, WAF de doğrudan
+       fetch'i kesiyor). Uç adı TAHMİN EDİLMEZ: gerçek tarayıcı yeni sayfayı
+       açar, sayfanın KENDİ çağırdığı JSON yanıtları dinlenir (DevTools'un
+       otomatik hali). Yakalanan uç + alan adları RAPORA basılır — TEFAS yine
+       taşınsa bile bu yöntem bulur. */
     const meta = {};
-    if (kayitlar.length) {
-      raporlar.push('### TEFAS alan keşfi (bilgi)\n- ' + Object.keys(kayitlar[0]).join(', ').slice(0, 300));
-      const AUM_ADAY = ['PORTBUYUKLUK','PORTFOYBUYUKLUK','PORTFOYBUYUKLUGU','FONTOPLAMDEGER'];
-      const YS_ADAY  = ['KISISAYISI','YATIRIMCISAYISI','KISISAYI'];
-      kayitlar.forEach(x => {
-        const kod = String(x.FONKODU || '').toUpperCase();
-        const p = parseFloat(x.FIYAT ?? x.SONFIYAT);
-        if (!kod || !isFinite(p) || p <= 0) return;
-        const aumAlan = AUM_ADAY.find(a => x[a] != null);
-        const aum = aumAlan ? parseFloat(x[aumAlan]) : null;
-        meta[kod] = { p, aum: (isFinite(aum) && aum > 0) ? aum : null,
-          ys: (() => { const a = YS_ADAY.find(a2 => x[a2] != null); return a ? (parseInt(x[a]) || null) : null; })(),
+    const yakalanan = [];
+    sayfa.on('response', async (r) => {
+      try {
+        const url = r.url();
+        if (!/tefas\.gov\.tr/.test(url)) return;
+        const ct = String(r.headers()['content-type'] || '');
+        if (!ct.includes('json')) return;
+        const j2 = await r.json().catch(() => null);
+        if (!j2) return;
+        const dizi = Array.isArray(j2) ? j2 : (j2.data || j2.result || j2.items || j2.list || null);
+        if (Array.isArray(dizi) && dizi.length > 20) {
+          yakalanan.push({ url: url.slice(0, 200), n: dizi.length, ornek: dizi[0], dizi });
+        }
+      } catch (e) {}
+    });
+    await sayfa.goto('https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT', { waitUntil: 'networkidle', timeout: 45000 });
+    await sayfa.waitForTimeout(4000);
+    let yol = 'yok', hamNot = 'yakalanan JSON yanıtı: ' + yakalanan.length;
+    if (yakalanan.length) {
+      hamNot += ' · uçlar: ' + yakalanan.map(y2 => y2.url.replace('https://www.tefas.gov.tr','') + ' (' + y2.n + ')').join(' | ').slice(0, 400);
+      const buyuk = yakalanan.sort((a, b) => b.n - a.n)[0];
+      raporlar.push('### TEFAS alan keşfi (bilgi)\n- uç: `' + buyuk.url.replace('https://www.tefas.gov.tr','') + '`\n- alanlar: ' + Object.keys(buyuk.ornek || {}).join(', ').slice(0, 350));
+      const KOD_ADAY = ['FONKODU','fonKodu','fundCode','code','kod'];
+      const P_ADAY   = ['FIYAT','SONFIYAT','fiyat','price','birimPayDegeri','unitPrice','sonFiyat'];
+      const AUM_ADAY = ['PORTFOYBUYUKLUK','PORTBUYUKLUK','fonBuyuklugu','portfolioSize','fonToplamDeger','portfoyBuyuklugu'];
+      const YS_ADAY  = ['KISISAYISI','yatirimciSayisi','investorCount','kisiSayisi'];
+      const bul = (x, L) => { const a = L.find(k => x[k] != null && x[k] !== ''); return a ? x[a] : null; };
+      buyuk.dizi.forEach(x => {
+        const kod = String(bul(x, KOD_ADAY) || '').toUpperCase().trim();
+        const p = parseFloat(String(bul(x, P_ADAY)).replace(',', '.'));
+        if (!kod || !/^[A-Z0-9]{2,4}$/.test(kod) || !isFinite(p) || p <= 0) return;
+        const aum = parseFloat(String(bul(x, AUM_ADAY)).replace(/\./g, '').replace(',', '.')) || parseFloat(bul(x, AUM_ADAY)) || null;
+        meta[kod] = { p,
+          aum: (isFinite(aum) && aum > 0) ? aum : null,
+          ys: parseInt(bul(x, YS_ADAY)) || null,
           pay: (isFinite(aum) && aum > 0) ? aum / p : null };
       });
-    } else {
-      /* Aşama 2 — kanıtlı tek-fon modu, yalnız katfon kodları */
-      let ok = 0;
-      for (const kod of KATFON_KODLARI) {
-        try {
-          const h = await sayfa.evaluate(async (arg) => {
-            const r = await fetch('/api/DB/BindHistoryInfo', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-              body: new URLSearchParams({ fontip: 'YAT', fonkod: arg.kod, bastarih: arg.bas, bittarih: arg.bit }).toString()
-            });
-            return r.ok ? r.json() : null;
-          }, { kod, bas: fmtT(bas), bit: fmtT(bit) });
-          const L = (h?.data || []).filter(x => isFinite(parseFloat(x.FIYAT)));
-          if (!L.length) continue;
-          L.sort((a, b) => String(a.TARIH) < String(b.TARIH) ? 1 : -1);
-          const x = L[0], p = parseFloat(x.FIYAT);
-          const aum = parseFloat(x.PORTFOYBUYUKLUK ?? x.PORTBUYUKLUK) || null;
-          meta[kod] = { p, aum, ys: parseInt(x.KISISAYISI ?? x.YATIRIMCISAYISI) || null,
-            pay: parseFloat(x.TEDPAYSAYISI) || (aum ? aum / p : null) };
-          ok++;
-        } catch (e) {}
-      }
-      if (ok) yol = 'tek-fon×' + ok + ' (BindHistoryInfo, kanıtlı mod)';
+      const n2 = Object.keys(meta).length;
+      if (n2) yol = 'ağ-dinleme (yeni site, ' + n2 + ' fon)';
     }
     raporlar.push('### TEFAS çekim tanısı (bilgi)\n- yol: ' + yol + '\n- ' + hamNot);
     Object.keys(meta).forEach(k => fiyat[k] = meta[k].p);
@@ -485,7 +466,7 @@ async function fonTazele() {
 
   const kapsanan = kodlar.filter(k => fiyat[k]);
   if (!kapsanan.length) {
-    raporlar.push('### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v3)\n- İki aşama da boş döndü — üstteki çekim tanısı satırı ham durumu söylüyor; katman yazılmadı.');
+    raporlar.push('### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)\n- Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.');
     denetimDustu = true;
     return null;
   }
