@@ -39,11 +39,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - denenen: XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 251
 
 ### TEFAS köprü (bilgi)
-- getiri ucu: {"ok":false,"err":"giriş gerekli"}
+- getiri: 1047 fon ✓ · liste: 1031 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007368549352> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007418613901> [Go Back]`
 
 ### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)
 - Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.
@@ -53,6 +53,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · risk metrikleri (123) · bilanço tetiği (32)
+**Sonuç:** Multiple fiyatları (0 fiyat · 1 karantina) · Model sicili (0 fiyat · 1 karantina) · risk metrikleri (121) · bilanço tetiği (32)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
