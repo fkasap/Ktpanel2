@@ -409,26 +409,46 @@ async function fonTazele() {
     await sayfa.goto('https://www.tefas.gov.tr/FonKarsilastirma.aspx', { waitUntil: 'networkidle', timeout: 30000 });
     /* Çerez/challenge geçildikten SONRA sayfa bağlamından API çağrısı yapılır —
        tarayıcının kendi çerezleriyle gider, bot koruması takılmaz. */
-    const veri = await sayfa.evaluate(async () => {
-      const r = await fetch('/api/DB/BindComparisonFundReturns', {
+    /* §249 DALGA-2/1: BindHistoryInfo'ya geçildi — fiyat YANINDA portföy
+       büyüklüğü, yatırımcı sayısı ve TEDAVÜLDEKİ PAY da gelir (panel
+       api/tefas.js'te kanıtlı uç; body formatı oradan). Son 6 takvim günü
+       istenir, fon başına EN YENİ satır alınır (hafta sonu/tatil dayanıklı). */
+    const fmtT = (d) => String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+    const bit = new Date(), bas = new Date(); bas.setDate(bas.getDate()-6);
+    const veri = await sayfa.evaluate(async (b) => {
+      const r = await fetch('/api/DB/BindHistoryInfo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: 'calismatipi=2&fontip=YAT&sfontur=&kurucukod=&fongrup=&bastarih=&bittarih=&fonturkod=&fonunvantip='
+        body: b
       });
       return r.ok ? r.json() : null;
-    });
+    }, new URLSearchParams({ fontip:'YAT', fonkod:'', bastarih: fmtT(bas), bittarih: fmtT(bit) }).toString());
+    const meta = {};   // kod → {p, aum, ys, pay, t}
     (veri?.data || []).forEach(x => {
       const kod = String(x.FONKODU || '').toUpperCase();
       const p = parseFloat(x.FIYAT ?? x.SONFIYAT);
-      if (kod && isFinite(p) && p > 0) fiyat[kod] = p;
+      const t = x.TARIH || '';
+      if (!kod || !isFinite(p) || p <= 0) return;
+      if (!meta[kod] || String(t) > String(meta[kod].t)) {
+        meta[kod] = { p, t,
+          aum: parseFloat(x.PORTFOYBUYUKLUK ?? x.PORTBUYUKLUK) || null,
+          ys:  parseInt(x.KISISAYISI ?? x.YATIRIMCISAYISI) || null,
+          pay: parseFloat(x.TEDPAYSAYISI ?? x.TEDAVULDEKIPAYSAYISI) || null };
+      }
     });
+    Object.keys(meta).forEach(k => fiyat[k] = meta[k].p);
+    globalThis.__tefasMeta = meta;   // aşağıda AUM/akış için
   } catch (e) {
     raporlar.push(`### Katılım fonları — ✗ TEFAS erişimi düştü\n- ${String(e.message || e).slice(0, 140)}`);
     denetimDustu = true;
   } finally { await browser.close(); }
 
   const kapsanan = kodlar.filter(k => fiyat[k]);
-  if (!kapsanan.length) return null;
+  if (!kapsanan.length) {
+    raporlar.push('### Katılım fonları — ✗ TEFAS eşleşme SIFIR\n- Sayfa açıldı ama BindHistoryInfo listemizden hiçbir kodu döndürmedi (uç/alan adı değişmiş olabilir) — katman yazılmadı.');
+    denetimDustu = true;
+    return null;
+  }
 
   /* Günlük getiri ve dağıtım tuzağı kontrolü — §149'da MPE'nin kâr payı
      dağıtımı tek günde −%3,57 ile yakalanmıştı. Para piyasası fonunda
@@ -460,10 +480,37 @@ async function fonTazele() {
     f.g[0] = +((yeni / eski - 1) * 100).toFixed(4);
     f.yu = yeni; n++;
   });
+  /* §249: AUM + yatırımcı canlı; AKIŞ = Δpay × fiyat (dünkü pay arşivden).
+     Arşiv yoksa ilk koşu akışı null bırakır ve temeli atar — uydurma yok. */
+  const meta = globalThis.__tefasMeta || {};
+  const arsivDosya = 'fon-arsiv.json';
+  let arsiv = (await varMi(arsivDosya)) ? await oku(arsivDosya) : { gunler: {} };
+  const dunKayit = (() => {
+    const g = Object.keys(arsiv.gunler || {}).sort();
+    return g.length ? arsiv.gunler[g[g.length - 1]] : null;
+  })();
+  fonlar.forEach(f => {
+    const m = meta[f.k]; if (!m) return;
+    if (m.aum) f.b = Math.round(m.aum);
+    if (m.ys)  f.ys = m.ys;
+    if (m.pay && dunKayit && dunKayit[f.k] && dunKayit[f.k].pay) {
+      f.a = Math.round((m.pay - dunKayit[f.k].pay) * m.p);
+    } else if (!dunKayit) { f.a = null; }
+  });
+  const bugunKayit = {};
+  Object.keys(meta).forEach(k => { bugunKayit[k] = { p: meta[k].p, pay: meta[k].pay, aum: meta[k].aum }; });
+  arsiv.gunler = arsiv.gunler || {};
+  arsiv.gunler[bugun] = bugunKayit;
+  const gunlerS = Object.keys(arsiv.gunler).sort();
+  while (gunlerS.length > 40) delete arsiv.gunler[gunlerS.shift()];   // 40 iş günü yeter (1A akışlar)
+  arsiv.guncelleme = bugun;
+  await yaz(arsivDosya, arsiv);
+
   d.fiyat_tarihi = bugun;
-  d.guncelleme = `${bugun} — otomatik (GitHub Actions · TEFAS)`;
+  d.akis_tarihi = bugun;
+  d.guncelleme = `${bugun} — otomatik (GitHub Actions · TEFAS BindHistoryInfo: fiyat+AUM+yatırımcı${dunKayit ? '+akış' : '; akış arşiv doldukça'})`;
   await yaz(dosya, d);
-  degisenler.push(`katılım fonları (${n})`);
+  degisenler.push(`katılım fonları (${n}${dunKayit ? '+akış' : ''})`);
   return n;
 }
 
