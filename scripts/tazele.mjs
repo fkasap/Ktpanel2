@@ -514,6 +514,45 @@ async function fonTazele() {
   return n;
 }
 
+
+/* ── BİLANÇO TETİĞİ (KAP FR bildirimleri) — §249a ─────────────────────────
+   Amaç: inceleme-ai kartlarının TETİĞİNİ otomatikleştirmek. Her koşuda son
+   24 saatin Finansal Rapor bildirimleri çekilir; BIST kodları
+   bilanco-tetik.json'a yazılır. Panel Earnings AI sekmesinde "bugün
+   açıklananlar" şeridi basar; kullanıcı tek komutla kart ister.
+   Uç formatı panel api/kap.js'ten (kanıtlı: Referer zorunlu, JSON body). */
+async function bilancoTetik() {
+  const dosya = 'bilanco-tetik.json';
+  try {
+    const simdi = Date.now(), GUN = 86400000;
+    const iso = (t) => new Date(t).toISOString().slice(0, 10);
+    const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'accept': 'application/json',
+                 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu',
+                 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' },
+      body: JSON.stringify({ fromDate: iso(simdi - GUN), toDate: iso(simdi), mkkMemberOidList: [], subjectList: [] }),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!r.ok) { raporlar.push('### Bilanço tetiği — ✗ KAP HTTP ' + r.status); return null; }
+    const j = await r.json();
+    const items = Array.isArray(j) ? j : (j.items || j.data || []);
+    const kodlar = [...new Set(items
+      .filter(b => String(b.disclosureType || b.disclosureCategory || '').toUpperCase().includes('FR'))
+      .map(b => String(b.stockCodes || b.stockCode || '').split(/[,;\s]+/)[0].trim().toUpperCase())
+      .filter(k => /^[A-Z]{4,6}$/.test(k)))].sort();
+    await yaz(dosya, { tarih: bugun, kodlar, sayi: kodlar.length,
+      guncelleme: new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (KAP FR)' });
+    raporlar.push('### Bilanço tetiği — ✓ ' + kodlar.length + ' şirket FR yayımladı' +
+      (kodlar.length ? '\n- ' + kodlar.slice(0, 20).join(', ') + (kodlar.length > 20 ? ' …' : '') : ''));
+    degisenler.push('bilanço tetiği (' + kodlar.length + ')');
+    return kodlar.length;
+  } catch (e) {
+    raporlar.push('### Bilanço tetiği — ✗ ' + String(e.message || e).slice(0, 120));
+    return null;
+  }
+}
+
 /* ── ANA AKIŞ ───────────────────────────────────────────────────────────── */
 (async () => {
   const goreliDizin = path.relative(process.cwd(), KOK) || '.';
@@ -536,6 +575,9 @@ async function fonTazele() {
   }
   if (ister('fon')) {
     await fonTazele();
+  }
+  if (ister('hepsi') || ister('fiyat')) {
+    await bilancoTetik();   /* §249a: hafta içi her koşuda */
   }
 
   raporlar.push(
