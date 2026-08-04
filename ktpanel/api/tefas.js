@@ -5,14 +5,24 @@
 // ile 1 dakikada güncellenir. Vercel IP'leri WAF'tan geçiyor (kanıt:
 // eski uç Rejected değil ERR-006 almıştı).
 const TB = 'Bearer ST-tefaswebwse3irfmSBj4iRAzGPbAlS94Se';
-const BAS = {
+/* §249h: 401 tanısı sonrası başlıklar HAR'daki gerçek istekle BİREBİR —
+   kritik eksik x-request-id idi (istek başına UUID; token'la zorunlu ikili). */
+const BAS = () => ({
   'Content-Type': 'application/json',
-  'Accept': 'application/json',
+  'Accept': '*/*',
+  'Accept-Language': 'tr-TR,tr;q=0.9',
   'Authorization': TB,
   'Origin': 'https://www.tefas.gov.tr',
   'Referer': 'https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
-  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15'
-};
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Safari/605.1.15',
+  'Pragma': 'no-cache',
+  'Cache-Control': 'no-cache',
+  'Sec-Fetch-Site': 'same-origin',
+  'Sec-Fetch-Mode': 'cors',
+  'Sec-Fetch-Dest': 'empty',
+  'x-request-id': (globalThis.crypto && crypto.randomUUID) ? crypto.randomUUID() :
+    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&0x3|0x8)).toString(16); })
+});
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   const mod = req.query.mod || 'getiri';
@@ -29,7 +39,7 @@ module.exports = async (req, res) => {
         donemGetiri6a:'1', donemGetiri1y:'1', donemGetiriyb:'1', donemGetiri3y:'1',
         donemGetiri5y:'1', basTarih:null, bitTarih:null, calismaTipi:2, getiriOrani:'1' };
     }
-    const r = await fetch(url, { method:'POST', headers:BAS, body:JSON.stringify(body) });
+    const r = await fetch(url, { method:'POST', headers:BAS(), body:JSON.stringify(body) });
     const txt = await r.text();
     if (!r.ok) {
       res.setHeader('Cache-Control','no-store');
