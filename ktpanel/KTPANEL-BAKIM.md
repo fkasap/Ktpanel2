@@ -2768,6 +2768,29 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 248a PYS SEKTOR OTOMASYONU KANITLANDI + RECETE (4 Agu, gece 9)
+
+Kullanici: 'nasil otomatiklestiririz, Fintables'a bak.' CEVAP: EVET —
+yapi taslari canli sorguyla KANITLANDI:
+  TUR bazinda: 4'lu JOIN + GROUP BY + SUM calisiyor (3 Agu: Kira Sert-KV
+    1,88 + Kira Sert 1,73 mlr — Fintables taksonomisi TEFAS semsiyesinden
+    farkli ama katilim icin DAHA ayirt edici).
+  PYS bazinda 1G: Yapi Kredi 7,21 · Vakif Katilim 2,22 · Tera 1,75 mlr.
+  PYS 1A: Deniz 33,7 · YKP 29,5 · Garanti 27,2 · Ak 24,2 · Ziraat 23,5.
+  FON 1G: GAL tek gunde 63,3 mlr (kurumsal blok!), DCB 11,4, UCP 10,0.
+OLCULEN KISITLAR (recetenin kurallari): ROUND(double) -> CAST sart;
+UNION+GROUP BY birlikte REDDEDILIR (donem basina ayri sorgu); CIFT KAYIT
+TUZAGI: >= filtresi iki damga gununu kapsayabiliyor (YLB listede iki kez
+gorundu — kanit) -> gunluk blok SON_DAMGA esitligiyle.
+TESLIM: arac/pys-tazele.md (sorgu sablonlari + kurallar). 'pys tazele'
+komutu = 4-6 sade sorgu -> pyssektor.json yeniden uretim (yari-otomatik,
+tek komut). TAM otomasyon panele Fintables erisimi olmadigi icin Actions/
+TEFAS katmanina bagli — bekleyen buyuk iste (sentetik XKTUM ailesi).
+NOT: pyssektor.json bu turda YENIDEN URETILMEDI (cift-kayit duzeltmesli
+tam set sonraki 'pys tazele' kosusunda) — eldeki 31 Tem damgasi durust.
+
+DOSYALAR: arac/pys-tazele.md (ktpanel/arac/) + KTPANEL-BAKIM.md
+
 ## 248 KATFON SUKUK'A TASINDI + PYS SEKTOR SEKMESI (3 Agu, gece 8)
 
 Kullanici uclu istek: (1) Katilim Fonlari alt sekmesi Sukuk'un altina,
