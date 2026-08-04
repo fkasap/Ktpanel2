@@ -3,6 +3,104 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "ASELS",
+   "ad": "Aselsan",
+   "donem": "2Ç26 (6A)",
+   "tarih": "4 Ağu 2026",
+   "tarih_iso": "2026-08-04",
+   "sablon": "bist",
+   "skor": 3.5,
+   "ozet": "Savunma döngüsü tam gaz — reel büyüme + kâr ivmesi. Satışlar 51.782 mn ₺ (y/y +%32,6 — enflasyon üstü, ç/ç +%41,1); brüt marj %32,5. FAVÖK 13.995 mn (y/y +%32,2, marj %27,0). Ana ortaklık 8.511 mn — y/y +%61,4; TTM net 41.246 → F/K ~38,6. Nakit tarafı savunma sektörünün klasiği: 2Ç İNA 8.931'e karşılık capex 19.236 — TTM FCF −6,7 mlr; büyüme yatırımı ve işletme sermayesi (alacak/stok döngüsü uzun) nakdi yutuyor.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "51.782 mn ₺",
+     "cc": "+%41,1 (1Ç: 36.712)",
+     "yoy": "+%32,6 (2Ç25: 39.038) — reel büyüme"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "16.820 mn ₺ · marj %32,5",
+     "cc": "1Ç: %30,7 — toparlama",
+     "yoy": "2Ç25: %33,7 — hafif altında"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "13.995 mn ₺ · marj %27,0",
+     "cc": "ç/ç +%51",
+     "yoy": "+%32,2 · TTM 61.176"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "8.511 mn ₺",
+     "cc": "ç/ç +%43,6",
+     "yoy": "+%61,4 (2Ç25: 5.275) · TTM 41.246 → F/K ~38,6"
+    },
+    {
+     "ad": "Nakit (İNA/FCF)",
+     "deger": "2Ç İNA 8.931 · capex 19.236",
+     "cc": "2Ç FCF −10,3 mlr",
+     "yoy": "TTM FCF −6,7 mlr — yatırım+işletme sermayesi yutuyor"
+    }
+   ],
+   "onemli": [
+    "Y/y %32,6 ciro büyümesi TÜFE'nin (%31,75) üzerinde — savunma talebinde reel genişleme sürüyor; net kârdaki %61 sıçrama faaliyet kaldıracının işlemesi.",
+    "F/K ~38,6 + negatif FCF: piyasa backlog'un gelecekteki nakdini bugünden fiyatlıyor — çarpan, teslimat takvimi ve tahsilat döngüsüne duyarlı; işletme sermayesi normalleşmesi izlenecek ana değişken."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,5: operasyonel tablo güçlü ve reel; değerleme dolu. Katılım evreninin amiral savunma hissesinde pozisyon boyutu, çarpanın ima ettiği kusursuz teslimat varsayımına ne kadar güvenildiğiyle orantılı olmalı.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 4 Ağu 2026)"
+  },
+  {
+   "kod": "TUPRS",
+   "ad": "Tüpraş",
+   "donem": "2Ç26 (6A)",
+   "tarih": "4 Ağu 2026",
+   "tarih_iso": "2026-08-04",
+   "sablon": "bist",
+   "skor": 4.0,
+   "ozet": "Çeyreğin bombası — petrol şoku rafinaj marjını patlattı. Satışlar 386.420 mn ₺ (y/y +%59,7, ç/ç +%39,8); brüt marj %8,4'ten (1Ç) %15,8'e sıçradı. FAVÖK 54.342 mn — y/y 3×. Ana ortaklık 45.877 mn: 2Ç25'in ~4, 1Ç26'nın 11 katı. 2Ç İNA 125.636 mn — TEK ÇEYREKTE PD'nin (559 mlr) %22'si nakit üretildi; TTM FCF 152 mlr → FCF verimi ~%27. Haziran jeopolitik şoku ürün fiyatlarını hamdan hızlı yükseltti (crack genişledi); madencilik ÜFE +%8,30'un kâr tarafı bu tablo.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "386.420 mn ₺",
+     "cc": "+%39,8 (1Ç: 276.367)",
+     "yoy": "+%59,7 (2Ç25: 241.975)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "61.036 mn ₺ · marj %15,8",
+     "cc": "1Ç marjı %8,4 — neredeyse 2×",
+     "yoy": "2Ç25: %9,7"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "54.342 mn ₺ · marj %14,1",
+     "cc": "1Ç: 16.903 — ç/ç 3,2×",
+     "yoy": "2Ç25: 18.348 — y/y 3× · TTM 112.337"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "45.877 mn ₺",
+     "cc": "1Ç: 3.969 — 11,6×",
+     "yoy": "2Ç25: 11.736 — 3,9× · TTM 72.741 → F/K ~7,7"
+    },
+    {
+     "ad": "Nakit (İNA/FCF)",
+     "deger": "2Ç İNA 125.636 mn",
+     "cc": "capex 7.417 → 2Ç FCF 118 mlr",
+     "yoy": "TTM FCF ~152 mlr / PD 559 mlr = verim ~%27"
+    }
+   ],
+   "onemli": [
+    "Tek çeyrekte PD'nin %22'si kadar işletme nakdi — temettü kapasitesi rekor düzeyde yenilendi.",
+    "SÜRDÜRÜLEBİLİRLİK UYARISI: bu marj şok marjı. Temmuz'da madencilik ÜFE +%8,30→−%4,22'ye döndü (panelde canlı) — şok sönerken crack normalleşir; 3Ç'de bu tablo tekrarlanmaz, baz olarak alınmamalı."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 4,0: olağanüstü çeyrek + F/K ~7,7 + %27 FCF verimi ucuz görünüyor; ama kârın şok bileşeni geçici — pozisyon 'normalleşmiş marjla değerleme' üzerinden kurulmalı, şok çeyreği çarpanla ödüllendirilmemeli. Temettü açıklaması yakın katalizör.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 4 Ağu 2026)"
+  },
+  {
    "kod": "CIMSA",
    "ad": "Çimsa",
    "donem": "2Ç26 (6A)",
@@ -2350,7 +2448,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-03 gece — NTGAZ 2Ç26 (3,5 pozitif) + CIMSA 2Ç26 (3,0) tam setle eklendi. 33 kart.",
+ "guncelleme": "2026-08-04 — TUPRS 2Ç26 (4,0: şok çeyreği, İNA 125,6 mlr) + ASELS 2Ç26 (3,5: reel büyüme, F/K 38,6) eklendi. 35 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
