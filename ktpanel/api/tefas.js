@@ -4,7 +4,7 @@
 // token değişebilir: 401/403'te panel/rapor "token yenile" der, yeni HAR
 // ile 1 dakikada güncellenir. Vercel IP'leri WAF'tan geçiyor (kanıt:
 // eski uç Rejected değil ERR-006 almıştı).
-const SURUM = 'h2-cerezli';
+const SURUM = 'h3-fiyatli';
 const TB = 'Bearer ST-tefaswebwse3irfmSBj4iRAzGPbAlS94Se';
 /* §249h: 401 tanısı sonrası başlıklar HAR'daki gerçek istekle BİREBİR —
    kritik eksik x-request-id idi (istek başına UUID; token'la zorunlu ikili). */
@@ -31,7 +31,10 @@ module.exports = async (req, res) => {
   const tip = (req.query.tip || 'YAT').toUpperCase();
   try {
     let url, body;
-    if (mod === 'liste') {
+    if (mod === 'fiyat') {   /* §249l: KPR HAR'ından — günlük fiyat serisi */
+      url = 'https://www.tefas.gov.tr/api/funds/fonFiyatBilgiGetir';
+      body = { fonKodu: String(req.query.kod || '').toUpperCase(), dil: 'TR', periyod: 1 };
+    } else if (mod === 'liste') {
       url = 'https://www.tefas.gov.tr/api/statistics/tefas/getFplFonList';
       body = {};
     } else {
