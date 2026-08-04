@@ -409,35 +409,40 @@ async function fonTazele() {
     await sayfa.goto('https://www.tefas.gov.tr/FonKarsilastirma.aspx', { waitUntil: 'networkidle', timeout: 30000 });
     /* Çerez/challenge geçildikten SONRA sayfa bağlamından API çağrısı yapılır —
        tarayıcının kendi çerezleriyle gider, bot koruması takılmaz. */
-    /* §249 DALGA-2/1: BindHistoryInfo'ya geçildi — fiyat YANINDA portföy
-       büyüklüğü, yatırımcı sayısı ve TEDAVÜLDEKİ PAY da gelir (panel
-       api/tefas.js'te kanıtlı uç; body formatı oradan). Son 6 takvim günü
-       istenir, fon başına EN YENİ satır alınır (hafta sonu/tatil dayanıklı). */
-    const fmtT = (d) => String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
-    const bit = new Date(), bas = new Date(); bas.setDate(bas.getDate()-6);
-    const veri = await sayfa.evaluate(async (b) => {
-      const r = await fetch('/api/DB/BindHistoryInfo', {
+    /* §249b: BindHistoryInfo fonkod BOŞKEN liste VERMİYOR (ilk koşu kanıtı:
+       "eşleşme SIFIR"). KANITLI uca dönüldü: BindComparisonFundReturns
+       (fiyat + portföy büyüklüğü döndürür). PAY ADEDİ GEREKMEZ:
+       pay = AUM/fiyat türetilir, akış = Δpay × fiyat aynen çalışır.
+       Kod kendini ölçer: yanıtın alan adları RAPORA basılır (tahmin bitti). */
+    const veri = await sayfa.evaluate(async () => {
+      const r = await fetch('/api/DB/BindComparisonFundReturns', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: b
+        body: 'calismatipi=2&fontip=YAT&sfontur=&kurucukod=&fongrup=&bastarih=&bittarih=&fonturkod=&fonunvantip='
       });
       return r.ok ? r.json() : null;
-    }, new URLSearchParams({ fontip:'YAT', fonkod:'', bastarih: fmtT(bas), bittarih: fmtT(bit) }).toString());
-    const meta = {};   // kod → {p, aum, ys, pay, t}
-    (veri?.data || []).forEach(x => {
+    });
+    const kayitlar = veri?.data || [];
+    if (kayitlar.length) {
+      raporlar.push('### TEFAS alan keşfi (bilgi)\n- ' + Object.keys(kayitlar[0]).join(', ').slice(0, 300));
+    }
+    const AUM_ADAY = ['PORTBUYUKLUK','PORTFOYBUYUKLUK','PORTFOYBUYUKLUGU','FONTOPLAMDEGER','PORTFOLIOSIZE'];
+    const YS_ADAY  = ['KISISAYISI','YATIRIMCISAYISI','KISISAYI'];
+    const meta = {};
+    kayitlar.forEach(x => {
       const kod = String(x.FONKODU || '').toUpperCase();
       const p = parseFloat(x.FIYAT ?? x.SONFIYAT);
-      const t = x.TARIH || '';
       if (!kod || !isFinite(p) || p <= 0) return;
-      if (!meta[kod] || String(t) > String(meta[kod].t)) {
-        meta[kod] = { p, t,
-          aum: parseFloat(x.PORTFOYBUYUKLUK ?? x.PORTBUYUKLUK) || null,
-          ys:  parseInt(x.KISISAYISI ?? x.YATIRIMCISAYISI) || null,
-          pay: parseFloat(x.TEDPAYSAYISI ?? x.TEDAVULDEKIPAYSAYISI) || null };
-      }
+      const aumAlan = AUM_ADAY.find(a => x[a] != null);
+      const ysAlan  = YS_ADAY.find(a => x[a] != null);
+      const aum = aumAlan ? parseFloat(x[aumAlan]) : null;
+      meta[kod] = { p,
+        aum: (isFinite(aum) && aum > 0) ? aum : null,
+        ys:  ysAlan ? (parseInt(x[ysAlan]) || null) : null,
+        pay: (isFinite(aum) && aum > 0) ? aum / p : null };   // türetilmiş pay
     });
     Object.keys(meta).forEach(k => fiyat[k] = meta[k].p);
-    globalThis.__tefasMeta = meta;   // aşağıda AUM/akış için
+    globalThis.__tefasMeta = meta;
   } catch (e) {
     raporlar.push(`### Katılım fonları — ✗ TEFAS erişimi düştü\n- ${String(e.message || e).slice(0, 140)}`);
     denetimDustu = true;
