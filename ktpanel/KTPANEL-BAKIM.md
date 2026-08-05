@@ -2767,6 +2767,25 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250c ZIP TUTTU + BETA CIPASI XKTUM'A BAGLANDI (5 Agu, aksam 2)
+
+Kosu kaniti: 'Endeks kapanislari ✓ 87 endeks · XKTUM 18292,29 · XKTMT
+16965,73 · XK100 17144,33 · XU100 13687,93 · TLREFK 3988,87 · arsiv 2
+gun · zip:[FiyatEndeksleri(84), GetiriEndeksleri(2)]'. Aylarca 'Yahoo'da
+bos' olan XKTUM artik HER AKSAM depoda.
+§250c: riskTazele endeks secimi ARSIV ONCELIKLI oldu — endeks-arsiv.json'da
+XKTUM >= 60 gun birikince beta GERCEK katilim cipasiyla hesaplanir
+(XU100 %25 banka agirlikliydi, katilim evrenini yanlis temsil ediyordu);
+o zamana dek Yahoo zinciri yedek. Rapor cipayi acikca yazar:
+'XKTUM (BIST resmi arsiv) — ✓ GERCEK katilim cipasi'.
+TAKVIM: arsiv gunde 1 gun buyur; ~3 ay sonra (60 is gunu) betalar
+kendiliginde n dogru cipaya gecer. Aceleyse XKTUM tarihsel serisi BIST'ten
+tek seferlik alinip arsive tohumlanabilir (opsiyonel).
+KARANTINA: CVKMD -%61,8 · PASEU +%40,4 · KTLEV -%72,5 — uc hisse
+bekliyor ('karantinalari kapat').
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
 ## 250b ZIP YOLU: FIYAT/GETIRI ENDEKSLERI (5 Agu, aksam)
 
 Ilk kosu iki katmani da dogruladi: 'Endeks uyelikleri ✓ XKTUM:242 ...
