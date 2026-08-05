@@ -41,7 +41,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008117683983> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008118321215> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -51,11 +51,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu: panelin 150 hissesi resmî listede (kapsam %96.5, tasarım gereği ilk 150)
 
-### Aylık endeks tohumu — ⚠ CSV bulunamadı · TR_PayEndeksleriFiyat.zip→[TR_PayEndeksleriFiyat.xlsx] · TR_PayEndeksleriFiyat.xlsx:xlsx hata ENOENT: no such file or directory, open  · TR_PayEndeksleriGetiri.zip→[TR_PayEndeksleriGetiri.xlsx] · TR_PayEndeksleriGetiri.xlsx:xlsx hata ENOENT: no such file or directory, open 
+### Aylık endeks tohumu — ✓ 95563 kayıt (ay sonu serileri; ayrışma 1A/3A/YTD için)
 
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 04/08/2026
 - XKTUM 18292.29 · XKTMT 16965.73 · XK100 17144.33 · XU100 13687.93 · BISTTLREFK 3988.86976
-- arşiv: 1036 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+- arşiv: 1473 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
 ### Bülten keşfi (§250k) — ✓ thb202608041.zip indi · 285KB
@@ -64,4 +64,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (90 fiyat) · Model sicili (26 fiyat) · risk metrikleri (4) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (90 fiyat) · Model sicili (28 fiyat) · risk metrikleri (5) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
