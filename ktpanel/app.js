@@ -1998,6 +1998,7 @@ function haberRender(){
 /* ---- Katılım Fon Dünyası ---- */
 let KATFON=null,katfonSort='ytd';
 async function katfonInit(){
+  await tlrefkYukle();   /* §250e */
   try{KATFON=await (await fetch('/katfon.json',{cache:'no-store'})).json();}catch(e){$('katfonBody').innerHTML='<div class="note">katfon.json yüklenemedi.</div>';return;}
   const sel=$('katfonSort');if(sel)sel.addEventListener('change',()=>{katfonSort=sel.value;katfonRender();});
   katfonRender();
@@ -2078,6 +2079,24 @@ async function katfonCanli(){
     console.error('[KTPanel] katfonCanli:', e);
   }
 }
+/* §250e: TLREFK ALFA — katılım fonlarının doğal benchmark'ı (BIST TLREFK
+   endeksi, endeks-arsiv.json'da birikiyor + tarihsel tohum). YTD getirisi
+   hesaplanır, fon YTD'sinden düşülerek ALFA sütunu basılır: "TLV, TLREFK'i
+   +X puan geçti" — nominal getiriden çok daha anlamlı ölçü. */
+let TLREFK_YTD=null;
+async function tlrefkYukle(){
+  try{
+    const r=await fetch('/endeks-arsiv.json',{cache:'no-store'}); if(!r.ok)return;
+    const a=await r.json(), G=a.gunler||{};
+    const gunler=Object.keys(G).filter(g=>G[g]&&G[g].BISTTLREFK>0).sort();
+    if(gunler.length<20) return;
+    const son=G[gunler[gunler.length-1]].BISTTLREFK;
+    const yil=gunler[gunler.length-1].slice(0,4);
+    let baz=null;
+    for(const g of gunler){ if(g < yil+'-01-01') baz=G[g].BISTTLREFK; else break; }
+    if(baz>0) TLREFK_YTD=(son/baz-1)*100;
+  }catch(e){}
+}
 function katfonRender(){
   /* §241 BAŞLIĞI app.js YAZAR — index.html bağımlılığı kalktı.
      Metin index.html'de STATİKTİ; değişince HEM index.html HEM app.js
@@ -2123,12 +2142,19 @@ function katfonRender(){
     const fs=kat.fonlar.slice().sort((a,b)=>{const av=a.g[sIdx],bv=b.g[sIdx];if(av==null)return 1;if(bv==null)return -1;return bv-av;});
     const renk=renkler[ki%6];
     html+='<div style="margin-top:'+(ki?18:4)+'px"><div style="display:flex;align-items:baseline;gap:8px;border-left:3px solid '+renk+';padding-left:8px;margin-bottom:6px"><span style="font-weight:700;font-size:13px">'+esc(kat.ad)+'</span><span class="sub">'+kat.fonlar.length+' fon · '+esc(kat.aciklama)+'</span></div>';
-    html+='<div style="overflow-x:auto"><table><thead><tr><th>Kod</th><th>Fon</th><th>Tip</th><th class="num">YÜ%</th><th class="num">AUM · günlük akış</th>'+donemLbl.map((d,i)=>'<th class="num"'+(i===sIdx?' style="color:var(--mm2)"':'')+'>'+d+'</th>').join('')+'</tr></thead><tbody>';
+    html+='<div style="overflow-x:auto"><table><thead><tr><th>Kod</th><th>Fon</th><th>Tip</th><th class="num">YÜ%</th><th class="num">AUM · günlük akış</th>'+donemLbl.map((d,i)=>'<th class="num"'+(i===sIdx?' style="color:var(--mm2)"':'')+'>'+d+'</th>').join('')+(TLREFK_YTD!=null?'<th class="num" title="YTD getiri − TLREFK YTD (katılım referans)">α vs TLREFK</th>':'')+'</tr></thead><tbody>';
     fs.forEach((f,i)=>{
       const top=i===0;
       const aumH=f.b!=null?('<td class="num" style="font-size:9px">'+ (f.b>=1e9?trN(f.b/1e9,1)+'mlr':trN(f.b/1e6,0)+'mn') + (f.a?(' <span class="'+(f.a>=0?'up':'down')+'">'+(f.a>=0?'▲':'▼')+(Math.abs(f.a)>=1e9?trN(Math.abs(f.a)/1e9,1)+'mlr':trN(Math.abs(f.a)/1e6,0)+'mn')+'</span>'):'')+'</td>'):'<td class="num" style="color:var(--line2)">\u2014</td>';
       html+='<tr'+(top?' style="background:var(--mmL)"':'')+'><td><b'+(top?' style="color:var(--mm2)"':'')+'>'+f.k+'</b></td><td style="font-size:10px;color:var(--muted);font-family:var(--sans)">'+esc(f.u)+'</td><td><span style="font-size:8px;font-weight:700;letter-spacing:.5px;color:'+(f.t==='K'?'var(--mm2)':'var(--blue)')+'">'+(f.t==='K'?'KATILIM':'SERBEST')+'</span></td><td class="num" style="color:var(--muted)">'+trN(f.yu,4)+'</td>'+aumH;
       f.g.forEach((v,gi)=>{html+='<td class="num"'+(gi===sIdx?' style="font-weight:700"':'')+'>'+(v==null?'<span style="color:var(--line2)">\u2014</span>':'<span class="'+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+trG(v)+'</span>')+'</td>';});
+      /* §250e: alfa hücresi — YTD (g[3]) − TLREFK YTD */
+      if(TLREFK_YTD!=null){
+        const ytd=(f.g&&f.g[3]!=null)?f.g[3]:null;
+        const al=(ytd!=null)?(ytd-TLREFK_YTD):null;
+        html+='<td class="num" style="font-weight:700">'+(al==null?'<span style="color:var(--line2)">\u2014</span>':
+          '<span class="'+(al>=0?'up':'down')+'">'+(al>=0?'+':'\u2212')+trN(Math.abs(al),1)+'</span>')+'</td>';
+      }
       html+='</tr>';
     });
     html+='</tbody></table></div></div>';

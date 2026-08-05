@@ -2767,6 +2767,28 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250e KAPSAM UYARISI DUZELTILDI + TLREFK ALFA (5 Agu, aksam 3)
+
+OZ-DUZELTME: §250'deki 'panel 150 / resmi 242 KAPSAM' uyarisi YANLIS
+ALARMDI — xktum.json 242 uyeyi ZATEN biliyor, ilk 150'yi KASTEN tasiyor,
+agirliklar normalize DEGIL (toplam %96,5 dogru, dosyanin kendi notunda
+yaziyor). Uyari kaldirildi; yerine GERCEK kontrol: UYELIK REVIZYONU —
+panelde olup BIST listesinde olmayan hisseler (olu agirlik, %'siyle) ya
+da uyum teyidi. BIST uc ayda bir revize eder; asil risk budur.
+DERS: 'panel X, resmi Y' farki gormek YETMEZ — dosyanin kendi tasarim
+notu okunmadan uyari yazilmaz (kaynak once, alarm sonra).
+
+TLREFK ALFA (full otomasyon hedefine dogru):
+  tazele: BISTTLREFKENDEKSI_D.zip tarihsel tohum (arsivde <30 gun TLREFK
+    varsa bir kez) -> YTD/1Y hesabi mumkun; arsiv penceresi 400->1500 gun.
+  app.js: tlrefkYukle() endeks-arsiv.json'dan TLREFK YTD hesaplar;
+    katfon tablosuna 'α vs TLREFK' sutunu — fonun YTD getirisi eksi
+    benchmark. Nominal getiri yerine GERCEK alfa: 'TLV +X puan'.
+  TLREFK verisi yoksa sutun hic basilmaz (dursuz).
+
+app.js v=20260805b · DOSYALAR: scripts/tazele.mjs (KOK) + app.js +
+index.html + KTPANEL-BAKIM.md (ktpanel/)
+
 ## 250d UC KARANTINA KAPATILDI — BIRI YANLIS ALARM (5 Agu)
 
 Fintables olcumu (odenmis_sermaye + son_fiyat + PD) uc vakayi ayirdi:
