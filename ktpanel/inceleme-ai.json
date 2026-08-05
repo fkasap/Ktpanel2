@@ -3,6 +3,56 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "THYAO",
+   "ad": "Türk Hava Yolları",
+   "donem": "2Ç26 (6A)",
+   "tarih": "5 Ağu 2026",
+   "tarih_iso": "2026-08-05",
+   "sablon": "bist",
+   "skor": 2.5,
+   "ozet": "Ciro rekor, marj erimiş. Satışlar 327.108 mn ₺ — y/y +%41,4 (2Ç25: 231.324), ç/ç +%26,8; yaz sezonu hacmi geldi. AMA brüt kâr 21.019 mn ile y/y −%52,7 ve marj %19,2'den **%6,4'e** çöktü. FAVÖK 22.670 mn (y/y −%50,8, marj %6,9); ana ortaklık 8.949 mn — y/y −%66,6 (2Ç25: 26.831). TTM net 112.059 mn / PD 432,6 mlr → F/K ~3,9: ucuz görünen çarpanın arkasında hızla eriyen kazanç tabanı var (TTM zirvesi 1Ç'de 129.941 idi). Nakit dirençli: 2Ç İNA 30.990, capex 23.099 → FCF +7,9 mlr; TTM FCF 66,6 mlr.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "327.108 mn ₺",
+     "cc": "+%26,8 (1Ç26: 257.961)",
+     "yoy": "+%41,4 — hacim/fiyat güçlü"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "21.019 mn ₺ · marj %6,4",
+     "cc": "1Ç26 marjı %8,4 — düşüş sürüyor",
+     "yoy": "2Ç25: %19,2 → 12,8 PUAN erime"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "22.670 mn ₺ · marj %6,9",
+     "cc": "1Ç26: 21.261",
+     "yoy": "−%50,8 (2Ç25: 46.071) · TTM 145.910"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "8.949 mn ₺",
+     "cc": "1Ç26: 9.915 — ç/ç de geriledi",
+     "yoy": "−%66,6 · TTM 112.059 → F/K ~3,9"
+    },
+    {
+     "ad": "Nakit (İNA/FCF)",
+     "deger": "2Ç İNA 30.990 · capex 23.099",
+     "cc": "2Ç FCF +7.891 mn",
+     "yoy": "TTM FCF 66,6 mlr — kâr erirken nakit ayakta"
+    }
+   ],
+   "onemli": [
+    "MAKAS AÇILIYOR: ciro +%41 büyürken brüt kâr yarıya indi — birim gelir (RASK) maliyet artışına yetişemiyor. Personel, kira/leasing ve bakım kalemleri döviz+enflasyon çift baskısı altında; yaz sezonunda bile marj toparlamadıysa sorun mevsimsel değil yapısal olabilir.",
+    "ÇARPAN TUZAĞI: F/K ~3,9 cazip görünür ama TTM kâr üç çeyrektir eriyor (1Ç TTM 129,9 → 2Ç TTM 112,1 mlr). Kazanç tabanı düşmeye devam ederse çarpan kendiliğinden 'normalleşir' — ucuzluk tezi, marj dönüşü teyit edilmeden kurulamaz.",
+    "TEK GÜÇLÜ AYAK NAKİT: TTM FCF 66,6 mlr ve capex'e rağmen 2Ç pozitif. Filo yatırımı süren bir şirkette bu, bilanço dayanıklılığı demek; borçlanma baskısı sınırlı kalır."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 2,5: hacim tarafı sağlam, kârlılık tarafı bozuk. Akaryakıtta Temmuz normalleşmesi (madencilik ÜFE +%8,30→−%4,22, panelde canlı) 3Ç'de maliyet baskısını hafifletebilir — asıl izlenecek eşik brüt marjın %6,4'ten yukarı dönüp dönmediği. Katılım evreninde ağırlık artırmadan önce en az bir çeyrek marj teyidi beklenmeli.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 5 Ağu 2026)"
+  },
+  {
    "kod": "ESCOM",
    "ad": "Escort Teknoloji Yatırım",
    "donem": "2Ç26 (6A)",
@@ -2497,7 +2547,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-04 — ESCOM 2Ç26 (2,5: NAV merceği, unicorn iddiası doğrulanamadı) eklendi. 36 kart.",
+ "guncelleme": "2026-08-05 — THYAO 2Ç26 (2,5: ciro rekor, marj çöküşü) eklendi. 37 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
