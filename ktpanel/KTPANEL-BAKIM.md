@@ -2767,6 +2767,135 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250l XLSX SHEET KESFI + BULTEN SONUCU (5 Agu)
+
+Iki tani:
+1) BULTEN (§250k sonucu): thb202608041.zip INDI (285KB, tek CSV). AMA
+   icerik HISSE BAZLI: TARIH;ISLEM KODU;BULTEN ADI;PAZAR;...;BIST 100
+   ENDEKS;BIST 30 ENDEKS — buradaki 'ENDEKS' kolonlari hissenin o
+   endekste olup olmadigini gosteren BAYRAK, endeks DEGERI degil.
+   SONUC: XKTUM gunluk serisi bultende YOK; gunluk tarihsel icin kamu
+   kaynagi kalmadi -> dogal birikim (gunde 1) devam.
+   YAN FIRSAT (bekleyen): bultende HISSE KAPANISLARI var (285KB, tum
+   pazar) — Yahoo bagimliligini azaltacak RESMI fiyat kaynagi olabilir;
+   multiple/risk katmanlari icin ayrica degerlendirilecek.
+2) AYLIK TOHUM: 'xlsx hata ENOENT' — sheet dosyasinin adi sabit degil.
+   §250l: xl/worksheets dizinindeki ILK .xml bulunur; dizin yoksa xl/
+   icerigi rapora basilir (kesif). Boylece TR_PayEndeksleri*.xlsx
+   ay sonu serileri arsive girecek.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250k GUNLUK TARIHSEL ICIN BULTEN KESFI (5 Agu)
+
+Kullanici: 'gunluk de cekilemiyor mu?' — /datum/ katalogunda gunluk
+tarihsel endeks YOK (son gun + ay sonu var). AMA doküman baska bir kapi
+gosteriyor: BULTEN VERILERI /data/thb/YYYY/AA/thbYYYYAAGGS.zip — BIST'in
+gunluk tam bulteni; endeks kapanislari icinde olabilir.
+§250k bultenKesif(): DUN icin dort sonek denenir (S=1/2/3/bos), inen zip
+acilir, ilk 12 dosyada XKTUM/XU100/ENDEKS izi aranir; DOSYA LISTESI +
+IZ SATIRI rapora basilir. Tahmin yok — olcum.
+Tutarsa: 60-90 gunluk tohum donguse cevrilir (gun basina bir zip) ve
+GUNLUK XKTUM arsivi bir kosuda dolar -> betalar HEMEN gercek katilim
+cipasina gecer (3 ay beklemek yerine).
+Tutmazsa: dogal birikim devam (gunde 1 gun, ~3 ay) — panel bu arada
+dogru calisiyor, yalnizca cipa yedekte.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250j XLSX OKUYUCU (kutuphanesiz) — 5 Agu
+
+Tani: 'Aylik endeks tohumu — CSV bulunamadi · TR_PayEndeksleriFiyat.zip
+→[TR_PayEndeksleriFiyat.xlsx]'. Dosyalar .xlsx cikti.
+§250j: bagimlilik EKLEMEDEN xlsx okuyucu — xlsx zaten bir ZIP: acilir,
+xl/sharedStrings.xml (metin havuzu) + xl/worksheets/sheet1.xml (hucreler)
+regexle okunur; t="s" hucre paylasilan metin indeksi, digerleri ham sayi.
+Excel SERI TARIHI de desteklenir (1899-12-30 + gun) — BIST metin tarih
+kullaniyor ama iki ihtimal de kapsandi.
+TEST: sahte XML ile dogrulandi → ['30.11.2015','XKTUM',...,'6768.97']
+dogru ayristirildi (kod XKTUM, kapanis 6768,97, tarih 2015-11-30).
+Beklenen: 'Aylik endeks tohumu ✓ N kayit' — XKTUM'un 2015'e uzanan ay
+sonu serisi arsive girer; ayrisma 1A/3A/YTD/1Y icin taban hazir olur.
+Beta korumasi (250i) yerinde: aylik noktalar gunluk beta cipasini
+ETKILEMEZ (son 120g yogunluk sarti).
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250i AYLIK TARIHSEL TOHUM + BETA YOGUNLUK KORUMASI (5 Agu)
+
+BIST format dokumani (§2.1.7/2.1.8) iki yeni kaynak verdi:
+  TR_PayEndeksleriFiyat.zip / TR_PayEndeksleriGetiri.zip → endeksin
+  HESAPLANMAYA BASLANDIGI TARIHTEN itibaren AY SONU kapanislari.
+KRITIK AYRIM: bu veri AYLIK. Ayrisma 1A/3A/YTD/1Y icin altin ama GUNLUK
+BETA icin KULLANILAMAZ — aylik noktalarla gunluk beta hesaplanirsa sonuc
+saçmalar. Bu yuzden iki yama BIRLIKTE:
+  (a) Aylik tohum: iki zip cekilir, CSV varsa ayristirilir (BOM/kodlama
+      otomatik), arsive yazilir; CSV yoksa (xlsx olabilir) icerik listesi
+      rapora basilir — tahmin yok.
+  (b) BETA KORUMASI: arsiv secimi artik 'nokta sayisi >= 60' degil
+      'SON 120 TAKVIM GUNUNDE >= 60 nokta' sartina bagli; aylik tohum
+      sayaci sisirse bile beta yanlis cipaya GECMEZ. Rapor yogunlugu
+      yazar: 'arsiv XKTUM: N nokta (son 120g: M)'.
+DERS: yeni veri eklerken o verinin FREKANSI mevcut hesaplarla uyumlu mu
+diye sorulur; uyumsuzsa veri eklenir ama KULLANIM KAPISI korunur.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250h TOHUM COZULDU: UTF-16 + BASLIKTAN KOLON (5 Agu, gece 3)
+
+Alan kesfi bilmeceyi cozdu — ornek satirdaki 'ÿş' BOM'u ve harf-arasi
+bosluklar TARIHSEL dosyanin UTF-16LE oldugunu gosterdi (gunluk dosya
+ISO-8859-9). Ayrica kolon duzeni FARKLI: tarih ILK kolonda, gunlukte
+6. kolonda.
+§250h: (a) BOM'a bakip decode ('utf-16le' / 'iso-8859-9'); (b) kolon
+indeksleri BASLIK SATIRINDAN ogrenilir (TARIH|DATE ve KAPANIS|CLOSING
+aramasi) — sabit indeks yerine okuma; bulunamazsa gunluk duzen yedek.
+Simulasyon: baslikta tarih=0, kapanis=4 dogru tespit edildi.
+BEKLENEN: 'TLREFK tarihsel tohum ✓ N gun' -> katfon tablosunda
+'α vs TLREFK' sutunu ACILIR (fon YTD − benchmark YTD).
+DERS PEKISTI: dosya formati TAHMIN EDILMEZ, ORNEK SATIR RAPORLANIR ve
+kodlama/kolon ORADAN ogrenilir (EVDS seri adi, TEFAS alan adi, simdi
+BIST kodlamasi — ayni desen ucuncu kez kazandirdi).
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250g TOHUM ALAN KESFI (5 Agu, gece 2)
+
+Tani mukemmel calisti: zip INDI (87 endeks, XKTUM 18292,29 arsivde ✓),
+'inmeyenler' satirindaki iki HTTP404 KOZMETIK (o CSV'ler zaten zip
+icinde, dogrudan adres yok). Tek gercek sorun: 'TLREFK tohum — zip
+acildi ama CSV ayristirilamadi' — TARIHSEL dosyanin kolon/tarih duzeni
+GUNLUK dosyadan farkli.
+§250g: (a) ayristirilamazsa zip ICERIGI + ilk 3 satir ORNEK rapora
+basilir (TEFAS'ta ise yarayan alan-kesfi deseni); (b) tarih ayristirma
+esnetildi: GG/AA/YYYY, G.A.YYYY ve YYYY-AA-GG kabul; (c) 'ilk 2 satiri
+atla' yerine HER SATIR denenir (baslik satirlari desen filtresine
+takilip elenir) — tarihsel dosyada baslik sayisi farkli olabilir.
+Sonraki kosuda ya tohum gelir ya da ornek satir bize gercek formati
+soyler.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250f INDIRME SESSIZLIGI KIRILDI (5 Agu, gece)
+
+Kosu raporu iki SESSIZ basarisizlik gosterdi: endeks kapanislari 87 ->
+1 endekse dustu (PayEndeksleri.zip inmedi) ve 'TLREFK tarihsel tohum'
+satiri HIC cikmadi (o zip de inmedi). Sebep ayni: cek() null donunce kod
+sessizce geciyordu — 249b'de fon katmaninda ogrendigimiz dersin AYNISI,
+yeni katmanda tekrarlanmis.
+§250f: cek() artik cekNot dizisine SEBEP yazar (HTTP kodu / bos govde /
+istisna) ve rapora '⚠ inmeyenler: dosya:HTTP403 ...' satiri duser; iki
+zip icin de else dallari eklendi ('PayEndeksleri.zip INMEDI', 'TLREFK
+tohum — ⚠ ... inmedi'). Ayrica: 30 sn zaman asimi, Accept:*/* basligi,
+200 bayttan kucuk yanit 'bos' sayilir (WAF/HTML hata sayfasi tuzagi).
+GOZLEM: onceki kosuda ayni zip INMISTI (87 endeks) — yani kaynak
+kararsiz; tani satiri artik hangi turde ne oldugunu kalici olarak
+kaydedecek.
+KARANTINALAR TEMIZ ✓ (250d dogrulandi) · UYELIK UYUMU ✓ (250e oz-duzeltme
+dogrulandi).
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
 ## 250e KAPSAM UYARISI DUZELTILDI + TLREFK ALFA (5 Agu, aksam 3)
 
 OZ-DUZELTME: §250'deki 'panel 150 / resmi 242 KAPSAM' uyarisi YANLIS
