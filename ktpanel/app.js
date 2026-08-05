@@ -5895,12 +5895,44 @@ Object.defineProperty(window,'XK100',{get:()=>ENDAG&&ENDAG.XK100,configurable:tr
       Eksik ağırlık da bir karardır ve bedeli/getirisi vardır. Eski kurgu bunları
       tamamen görmüyordu.
    EVREN = portföyüm ∪ endeks üyeleri. */
+/* §250m: ENDEKS ARŞİVİ — BIST resmî kapanışları (endeks-arsiv.json; günlük
+   birikim + 2015'e uzanan ay sonu tohumu). Canlı akış bir dönemi vermiyorsa
+   (XKTMT'de 1H/1A/3A boştu) arşivden hesaplanır: son değer / referans tarihe
+   en yakın önceki kapanış. Aylık tohum sayesinde 1A/3A/YTD/1Y açılır;
+   1H (hafta) günlük veri ister — arşiv doldukça o da gelir. */
+let ENDARS=null;
+async function endArsivYukle(){
+  if(ENDARS!==null) return;
+  try{ const r=await fetch('/endeks-arsiv.json',{cache:'no-store'}); ENDARS=r.ok?await r.json():false; }
+  catch(e){ ENDARS=false; }
+}
+function endArsivGetiri(kod, donemAlan){
+  if(!ENDARS||!ENDARS.gunler) return null;
+  const G=ENDARS.gunler;
+  const gunler=Object.keys(G).filter(g=>G[g]&&G[g][kod]>0).sort();
+  if(gunler.length<2) return null;
+  const sonG=gunler[gunler.length-1], son=G[sonG][kod];
+  const GUN={h1:7,a1:31,q3:92,y1:366};
+  let hedef;
+  if(donemAlan==='ytd') hedef=sonG.slice(0,4)+'-01-01';
+  else { const n=GUN[donemAlan]; if(!n) return null;
+    hedef=new Date(new Date(sonG).getTime()-n*86400000).toISOString().slice(0,10); }
+  let baz=null;
+  for(const g of gunler){ if(g<=hedef) baz=G[g][kod]; else break; }
+  if(!(baz>0)) return null;
+  return (son/baz-1)*100;
+}
 function ayrismaHesap(donemAlan, endeksKod){
   const m = window.__market;
   if(!m || !m.his || !m.end) return {hata:'canlı fiyat akışı yok'};
   const eEnd = m.end[endeksKod];
-  const rB = eEnd ? eEnd[donemAlan] : null;
-  if(rB == null) return {hata:endeksKod+' için bu dönemin getirisi gelmedi'};
+  let rB = eEnd ? eEnd[donemAlan] : null;
+  let rBKaynak = 'canlı';
+  if(rB == null){   /* §250m: canlı yoksa BIST resmî arşiv */
+    const a = endArsivGetiri(endeksKod, donemAlan);
+    if(a != null){ rB = a; rBKaynak = 'BIST arşiv'; }
+  }
+  if(rB == null) return {hata:endeksKod+' için bu dönemin getirisi gelmedi (canlı akış ve BIST arşivi boş)'};
 
   /* §159: eskiden endeksKod==='XK100' diye SABİTLENMİŞTİ; XKTUM seçilse bile
      XK100 ağırlıkları kullanılır ya da hata verirdi. Artık seçilen endeksin
@@ -5990,6 +6022,7 @@ function ayrismaHesap(donemAlan, endeksKod){
 }
 
 function ayrismaCiz(){
+  endArsivYukle().then(()=>{ if(ENDARS) ayrismaCiz(); });   /* §250m */
   const el = $('ayrBody'); if(!el) return;
   const endeksKod = ($('ayrEndeks') && $('ayrEndeks').value) || 'XK100';
   let donemAd   = ($('ayrDonem')  && $('ayrDonem').value)  || 'chg';
@@ -6002,7 +6035,7 @@ function ayrismaCiz(){
   const ds0=$('ayrDonem');
   if(ds0){
     ds0.querySelectorAll('option').forEach(o=>{
-      const dolu=(o.value==='chg')||(eV[o.value]!=null);
+      const dolu=(o.value==='chg')||(eV[o.value]!=null)||(endArsivGetiri(($('ayrEndeks')||{}).value||'XKTUM', o.value)!=null);   /* §250m */
       o.disabled=!dolu;
       const temiz=o.textContent.replace(' · veri yok','');
       o.textContent=dolu?temiz:temiz+' · veri yok';

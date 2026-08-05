@@ -2767,6 +2767,20 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250m ARSIV TABANLI DONEM GETIRISI — AYRISMA ACILDI (5 Agu)
+
+Aylik tohum TUTTU: 95.563 kayit, arsiv 1.473 gun (XKTUM 2015'e uzaniyor).
+Panel yamasi (§250m): ayrismaHesap'ta endeks donem getirisi icin ONCE
+canli akis, YOKSA endeks-arsiv.json — 'son deger / hedef tarihe en yakin
+onceki kapanis'. Donem secici de arsivi hesaba katar (247m'nin 'veri yok'
+kilidi aylik seri sayesinde acilir).
+Simulasyon dogrulandi: YTD/1A/3A hesaplari beklenen degerleri verdi.
+KAPSAM: 1A/3A/YTD/1Y aylik tohumla CALISIR; 1H (hafta) gunluk veri ister —
+gunluk arsiv doldukca (gunde 1) o da acilir. Beta cipasi ayni takvimde.
+Rapor/etiket: rBKaynak alani 'canli' | 'BIST arsiv' ayrimini tutar.
+
+app.js v=20260805c · DOSYALAR: app.js + index.html (ktpanel/)
+
 ## 250l XLSX SHEET KESFI + BULTEN SONUCU (5 Agu)
 
 Iki tani:
