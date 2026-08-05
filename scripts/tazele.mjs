@@ -893,6 +893,20 @@ async function endeksKapanisTazele() {
        Dosyalar .xlsx: satır bazlı basit XML okuma yerine, zip içi sharedStrings
        olmadan sayı/tarih çıkarımı riskli olduğundan yalnız CSV varyantı denenir;
        yoksa rapor içerik listesini basar (alan keşfi). */
+    /* §250q: önceki tohum KAYIK kodlarla yazıldı (seyrek hücre hatası) —
+       bayrak sürümlü: eski 'aylik_tohum' yok sayılır, kirli kayıtlar
+       temizlenir (endeks kodu deseni: 2-8 harf/rakam, '_' yok). */
+    if (arsiv.aylik_tohum && !arsiv.aylik_tohum_v2) {
+      let atilan = 0;
+      for (const g of Object.keys(arsiv.gunler)) {
+        for (const k of Object.keys(arsiv.gunler[g])) {
+          if (!/^[A-Z0-9]{2,8}$/.test(k)) { delete arsiv.gunler[g][k]; atilan++; }
+        }
+        if (!Object.keys(arsiv.gunler[g]).length) delete arsiv.gunler[g];
+      }
+      delete arsiv.aylik_tohum;
+      if (atilan) raporlar.push('### Arşiv temizliği — ' + atilan + ' kayık anahtar silindi (§250q)');
+    }
     if (!arsiv.aylik_tohum) {
       try {
         const os3 = await import('node:os'), fsp3 = await import('node:fs/promises'), cp3 = await import('node:child_process');
@@ -940,17 +954,32 @@ async function endeksKapanisTazele() {
               const sh = await fsp3.readFile(shYol, 'utf8');
               const seriTarih = (n) => new Date(Date.UTC(1899, 11, 30) + n * 86400000).toISOString().slice(0, 10);
               for (const rm of sh.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)) {
-                const hucreler = [...rm[1].matchAll(/<c[^>]*?(?:\st="(\w+)")?[^>]*>(?:<v>([\s\S]*?)<\/v>)?/g)]
-                  .map(c => (c[2] == null ? '' : (c[1] === 's' ? (paylasilan[+c[2]] || '') : c[2])));
+                /* §250q: xlsx'te BOŞ hücre XML'de HİÇ YAZILMAZ (seyrek satır) —
+                   sırayla okumak kolonları kaydırıyordu (kod yerine ad/kur okundu,
+                   arşive yanlış anahtarla yazıldı). Artık hücre ADRESİ (r="B2")
+                   kolon indeksine çevrilir; boşluklar korunur. */
+                const hucreler = [];
+                for (const c of rm[1].matchAll(/<c\s([^>]*)>(?:<v>([\s\S]*?)<\/v>)?/g)) {
+                  const nit = c[1] || '';
+                  const rr = (nit.match(/r="([A-Z]+)\d+"/) || [])[1] || '';
+                  const t = (nit.match(/t="(\w+)"/) || [])[1];
+                  let idx = 0;
+                  for (let i = 0; i < rr.length; i++) idx = idx * 26 + (rr.charCodeAt(i) - 64);
+                  idx = idx ? idx - 1 : hucreler.length;
+                  hucreler[idx] = (c[2] == null ? '' : (t === 's' ? (paylasilan[+c[2]] || '') : c[2]));
+                }
+                for (let i = 0; i < hucreler.length; i++) if (hucreler[i] == null) hucreler[i] = '';
                 if (hucreler.length < 4) continue;
                 const kod = String(hucreler[1] || '').trim().toUpperCase();
-                const kap = parseFloat(String(hucreler[hucreler.length - 1]).replace(',', '.'));
+                const sonDolu = hucreler.filter(x => String(x).trim() !== '').pop();
+                const kap = parseFloat(String(hucreler[4] !== '' && hucreler[4] != null ? hucreler[4] : sonDolu).replace(',', '.'));
                 let t0 = String(hucreler[0] || '').trim(), iso = null;
                 const mm = t0.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
                 if (mm) iso = mm[3] + '-' + String(mm[2]).padStart(2, '0') + '-' + String(mm[1]).padStart(2, '0');
                 else if (/^\d{5}(\.\d+)?$/.test(t0)) iso = seriTarih(parseFloat(t0));
                 else if (/^\d{4}-\d{2}-\d{2}/.test(t0)) iso = t0.slice(0, 10);
                 if (!iso || !kod || kod.includes('_') || !isFinite(kap) || kap <= 0) continue;
+                if (eklenen === 0) notlar.push('ilk satır: [' + hucreler.slice(0, 6).join('|').slice(0, 90) + ']');
                 arsiv.gunler[iso] = Object.assign(arsiv.gunler[iso] || {}, { [kod]: kap });
                 eklenen++;
               }
@@ -974,7 +1003,7 @@ async function endeksKapanisTazele() {
             });
           }
         }
-        if (eklenen) { arsiv.aylik_tohum = bugun; raporlar.push('### Aylık endeks tohumu — ✓ ' + eklenen + ' kayıt (ay sonu serileri; ayrışma 1A/3A/YTD için)'); }
+        if (eklenen) { arsiv.aylik_tohum = bugun; arsiv.aylik_tohum_v2 = 1; raporlar.push('### Aylık endeks tohumu — ✓ ' + eklenen + ' kayıt (ay sonu serileri; ayrışma 1A/3A/YTD için)'); }
         else raporlar.push('### Aylık endeks tohumu — ⚠ CSV bulunamadı · ' + notlar.join(' · '));
       } catch (e5) { raporlar.push('### Aylık endeks tohumu — ✗ ' + String(e5.message || e5).slice(0, 90)); }
     }
