@@ -2767,6 +2767,30 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 249o SPK AYLIK AUM DEGISIMI (5 Agu)
+
+Kullanici: 'SPK PYS para girislerini de otomatige ekleyelim.' DURUST
+CERCEVE: SPK akis yayimlamaz, aylik STOK yayimlar; iki dolu ayin farki =
+buyukluk degisimi (piyasa etkisi dahil) — etiket 'AUM Δ', para girisi
+DEGIL. spkCek ilk dolu ayi bulunca bir onceki dolu ayi da ceker (ayni
+uc, cache'li); spkBas her satira aylik %Δ basar (yesil/kirmizi), damga
+'Δ: 2026/05'e gore aylik'. TAM OTOMATIK — elle adim sifir.
+
+app.js v=20260805a · DOSYALAR: app.js + index.html (ktpanel/)
+
+## 249n SABAH KOSUSU: DUNKU GETIRI TAZE (5 Agu)
+
+Kullanicinin operasyonel tespiti dogru: fon fiyati SABAH ilan edilir ve
+DUNUN degerlemesidir — aksam 18:10 kosusu hep bir gun geriden gelir.
+COZUM: ikinci cron '10 6 * * 1-5' (09:10 TSI) — yalniz FON katmani
+(github.event.schedule kosuluyla; kopru Playwright'siz ~1 dk... not:
+Playwright kurulum adimi fon kosusunda hala calisiyor, sadelestirme
+bekleyende). Aksam kosusu aynen: gec ilan eden fonlari yakalar + diger
+katmanlar. Ritim: sabah 09:10 dunku getiri panele duser; aksam 18:10
+tamamlama.
+
+DOSYALAR: .github/workflows/tazele.yml (DEPO KOKU .github/workflows/)
+
 ## 249m EKSIK 10 FON: SERIDEN HESAP (5 Agu, sabah 4)
 
 36/46'nin eksigi buyuk olasilikla nitelikli-yatirimci serbest fonlari

@@ -3524,14 +3524,28 @@ async function spkCek(){
       const r=await fetch('/api/tcmb?spk=1&yil='+yil+'&ay='+ay);   /* §248c: ayrı uç yerine bindirme — fonksiyon limiti korundu */
       if(!r.ok) throw new Error('HTTP_'+r.status);
       const d=await r.json();
-      if((d.dolu||0)>=25){ spkBas(d); return; }
+      if((d.dolu||0)>=25){
+        /* §249o: bir önceki dolu ay da çekilir → aylık AUM DEĞİŞİMİ (Δ) kolonu.
+           SPK akış yayımlamaz; Δ = büyüklük değişimi (piyasa etkisi dahil) —
+           etiket dürüst: 'AUM Δ', para girişi DEĞİL. */
+        let onceki=null;
+        try{
+          let oy=ay-1, oyil=yil; if(oy===0){oy=12;oyil--;}
+          for(let d2=0; d2<2; d2++){
+            const r2=await fetch('/api/tcmb?spk=1&yil='+oyil+'&ay='+oy);
+            if(r2.ok){ const j2=await r2.json(); if((j2.dolu||0)>=25){ onceki=j2; break; } }
+            oy--; if(oy===0){oy=12;oyil--;}
+          }
+        }catch(e2){}
+        spkBas(d, onceki); return;
+      }
     }catch(e){}
     ay--; if(ay===0){ay=12;yil--;}
   }
   el.innerHTML='<div class="sub">SPK verisi alınamadı (üç ay denendi)</div>';
   if($('spkDamga'))$('spkDamga').textContent='ERİŞİLEMEDİ';
 }
-function spkBas(d){
+function spkBas(d, onceki){
   const el=$('spkB'); if(!el) return;
   const L=(d.veri||[]).filter(x=>(x.yonetilenToplamPortfoyBuyuklugu||0)>0)
     .sort((a,b)=>b.yonetilenToplamPortfoyBuyuklugu-a.yonetilenToplamPortfoyBuyuklugu).slice(0,14);
@@ -3541,12 +3555,18 @@ function spkBas(d){
     const kat=SPK_KATILIM.test(x.sirketAdi);
     const v=x.yonetilenToplamPortfoyBuyuklugu;
     const m=v>=1e12?trN(v/1e12,2)+' tr':trN(v/1e9,0)+' mlr';
+    let dTxt='';
+    if(onceki){
+      const o=(onceki.veri||[]).find(x2=>x2.sirketAdi===x.sirketAdi);
+      const ov=o&&o.yonetilenToplamPortfoyBuyuklugu;
+      if(ov>0){ const pct=(v/ov-1)*100; dTxt='<span class="'+(pct>=0?'up':'down')+'" style="font-size:9px">'+(pct>=0?'+':'−')+'%'+trN(Math.abs(pct),1)+'</span>'; }
+    }
     return '<div class="bar"><span class="bn" style="font-size:10px">'+esc(ad)+(kat?'<span style="color:var(--mm2)"> ●</span>':'')+'</span>'+
       '<span class="bt"><span class="bf" style="width:'+(v/max*100).toFixed(1)+'%'+(kat?';background:var(--mm2)':'')+'"></span></span>'+
-      '<span class="bv">'+m+'</span><span class="bk thin" style="font-size:9px">₺</span></div>';
+      '<span class="bv">'+m+'</span><span class="bk" style="font-size:9px">'+(dTxt||'<span class="thin">₺</span>')+'</span></div>';
   }).join('');
   if($('spkDonem'))$('spkDonem').textContent='· '+d.yil+'/'+String(d.ay).padStart(2,'0');
-  if($('spkDamga'))$('spkDamga').textContent='CANLI · '+d.dolu+' şirket bildirdi';
+  if($('spkDamga'))$('spkDamga').textContent='CANLI · '+d.dolu+' şirket'+(onceki?' · Δ: '+onceki.yil+'/'+String(onceki.ay).padStart(2,'0')+"'e göre aylık":'');
 }
 
 /* §248 PYŞ SEKTÖRÜ — net para girişleri (PDF/TEFAS türevi, damgalı).
