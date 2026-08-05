@@ -34,25 +34,30 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XU100.IS** (251 gün)
 - ℹ 5 gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz) — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir
-- denenen: arşiv XKTUM: 1 nokta (son 120g: 0) · XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 251
+- denenen: arşiv XKTUM: 1 nokta (son 120g: 1) · XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 251
 
 ### TEFAS köprü (bilgi)
 - getiri: 1047 fon ✓ · liste: 1031 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007863269273> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007551140746> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
 ### Bilanço tetiği — ✓ 20 şirket FR yayımladı
 - AKDFA, ALJF, ASELS, AYGAZ, BLKOM, BRGAN, ESCOM, FADE, FIBAF, FROTO, GOZDE, ISYAT, LYDYE, PAHOL, RAYSG, RODRG, SANKO, THYAO, TUPRS, UFUK
 
-### Endeks üyelikleri — ✗ fetch failed
+### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
+- ✓ üyelik uyumu: panelin 150 hissesi resmî listede (kapsam %96.5, tasarım gereği ilk 150)
+
+### Arşiv temizliği — 1674 kayık anahtar silindi (§250q)
+
+### Aylık endeks tohumu — ✓ 16344 kayıt (ay sonu serileri; ayrışma 1A/3A/YTD için)
 
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-04
 - XKTUM 18292.29 · XKTMT 16965.73 · XK100 17144.33 · XU100 13687.93 · BISTTLREFK 3988.86976
-- arşiv: 1472 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+- arşiv: 488 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
 ### Bülten keşfi (§250k) — ✓ thb202608041.zip indi · 285KB
@@ -61,4 +66,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (120 fiyat) · Model sicili (38 fiyat) · risk metrikleri (120) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (107 fiyat) · Model sicili (33 fiyat) · risk metrikleri (8) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
