@@ -906,6 +906,43 @@ async function endeksKapanisTazele() {
           try { cp3.execSync('unzip -o -q "' + zp3 + '" -d "' + dz3 + '"', { stdio: 'ignore' }); } catch (e6) {}
           const ic3 = (await fsp3.readdir(dz3)).filter(x => !/\.zip$/i.test(x));
           notlar.push(ad + '→[' + ic3.join(', ').slice(0, 80) + ']');
+          /* §250j: dosyalar .xlsx çıktı (rapor söyledi) — kütüphanesiz okuyucu:
+             xlsx bir zip'tir; xl/sharedStrings.xml (metinler) + xl/worksheets/
+             sheet1.xml (hücreler). t="s" olan hücre paylaşılan metin indeksidir,
+             diğerleri ham sayı. Excel seri tarihi de (sayı) ISO'ya çevrilir. */
+          for (const fx of ic3) {
+            if (!/\.xlsx$/i.test(fx)) continue;
+            try {
+              const dx = path.join(dz3, 'x_' + fx.replace(/\W/g, ''));
+              await fsp3.mkdir(dx, { recursive: true });
+              cp3.execSync('unzip -o -q "' + path.join(dz3, fx) + '" -d "' + dx + '"', { stdio: 'ignore' });
+              let paylasilan = [];
+              try {
+                const ss = await fsp3.readFile(path.join(dx, 'xl', 'sharedStrings.xml'), 'utf8');
+                paylasilan = [...ss.matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m =>
+                  [...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(t => t[1]).join('')
+                    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+              } catch (e7) {}
+              const shYol = path.join(dx, 'xl', 'worksheets', 'sheet1.xml');
+              const sh = await fsp3.readFile(shYol, 'utf8');
+              const seriTarih = (n) => new Date(Date.UTC(1899, 11, 30) + n * 86400000).toISOString().slice(0, 10);
+              for (const rm of sh.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)) {
+                const hucreler = [...rm[1].matchAll(/<c[^>]*?(?:\st="(\w+)")?[^>]*>(?:<v>([\s\S]*?)<\/v>)?/g)]
+                  .map(c => (c[2] == null ? '' : (c[1] === 's' ? (paylasilan[+c[2]] || '') : c[2])));
+                if (hucreler.length < 4) continue;
+                const kod = String(hucreler[1] || '').trim().toUpperCase();
+                const kap = parseFloat(String(hucreler[hucreler.length - 1]).replace(',', '.'));
+                let t0 = String(hucreler[0] || '').trim(), iso = null;
+                const mm = t0.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
+                if (mm) iso = mm[3] + '-' + String(mm[2]).padStart(2, '0') + '-' + String(mm[1]).padStart(2, '0');
+                else if (/^\d{5}(\.\d+)?$/.test(t0)) iso = seriTarih(parseFloat(t0));
+                else if (/^\d{4}-\d{2}-\d{2}/.test(t0)) iso = t0.slice(0, 10);
+                if (!iso || !kod || kod.includes('_') || !isFinite(kap) || kap <= 0) continue;
+                arsiv.gunler[iso] = Object.assign(arsiv.gunler[iso] || {}, { [kod]: kap });
+                eklenen++;
+              }
+            } catch (e8) { notlar.push(fx + ':xlsx hata ' + String(e8.message || e8).slice(0, 40)); }
+          }
           for (const f3 of ic3) {
             if (!/\.csv$/i.test(f3)) continue;
             const ham3 = await fsp3.readFile(path.join(dz3, f3));
