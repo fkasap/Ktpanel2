@@ -683,6 +683,122 @@ async function bilancoTetik() {
   }
 }
 
+
+/* ── ENDEKS ÜYELİKLERİ (BIST resmî CSV) — §250 ───────────────────────────
+   Kaynak: borsaistanbul.com/datum/hisse_endeks_katilim_ds.csv — KAMU, auth yok
+   (kullanıcının BIST veri dizini haritasından keşfedildi). Katılım endeksleri
+   XKTUM/XKTMT/XK100/XK050/XK030/XSRDK/XK030EA üyeleri GÜNLÜK tazelenir.
+   ISO-8859-9 (Türkçe) kodlama; ';' ayraç; ilk 2 satır başlık.
+   Ayrıca kapsam denetimi: panelin xktum.json üye sayısı resmîden AZ ise uyarır
+   (denetim şimdiye dek kendi listesine %100 diyordu — kör nokta kapandı). */
+async function endeksUyeTazele() {
+  const dosya = 'endeks-uyeler.json';
+  try {
+    const r = await fetch('https://borsaistanbul.com/datum/hisse_endeks_katilim_ds.csv', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(20000) });
+    if (!r.ok) { raporlar.push('### Endeks üyelikleri — ✗ HTTP ' + r.status); return null; }
+    const buf = Buffer.from(await r.arrayBuffer());
+    const metin = new TextDecoder('iso-8859-9').decode(buf);
+    const satirlar = metin.split(/\r?\n/).slice(2).filter(x => x.trim());
+    const uyeler = {}; let damga = '';
+    satirlar.forEach(sat => {
+      const p = sat.split(';');
+      if (p.length < 6) return;
+      const kod = String(p[0]).split('.')[0].trim().toUpperCase();
+      const endeks = String(p[2]).trim().toUpperCase();
+      if (!kod || !endeks) return;
+      (uyeler[endeks] = uyeler[endeks] || []).push(kod);
+      damga = damga || String(p[5]).trim();
+    });
+    const sayim = Object.fromEntries(Object.entries(uyeler).map(([k, v]) => [k, v.length]));
+    if (!Object.keys(uyeler).length) { raporlar.push('### Endeks üyelikleri — ✗ satır ayrıştırılamadı'); return null; }
+    await yaz(dosya, { guncelleme: bugun, kaynak: 'BIST resmî (hisse_endeks_katilim_ds.csv)', bist_damga: damga, sayim, uyeler });
+    /* kapsam kıyası: panelin xktum.json'ı resmîden az mı? */
+    let uyari = '';
+    try {
+      if (await varMi('xktum.json')) {
+        const xk = await oku('xktum.json');
+        const bizim = Object.keys(xk.uyeler || xk.paylar || {}).length || (Array.isArray(xk.hisseler) ? xk.hisseler.length : 0);
+        const resmi = (uyeler.XKTUM || []).length;
+        if (bizim && resmi && bizim < resmi * 0.95) uyari = '\n- ⚠ KAPSAM: panel XKTUM ' + bizim + ' üye taşıyor, BIST resmî ' + resmi + ' — eksik üyeler sentetik endeks/ağırlık hesabını saptırır';
+      }
+    } catch (e) {}
+    raporlar.push('### Endeks üyelikleri — ✓ ' + Object.entries(sayim).map(([k, v]) => k + ':' + v).join(' · ') + uyari);
+    degisenler.push('endeks üyelikleri');
+    return Object.keys(uyeler).length;
+  } catch (e) {
+    raporlar.push('### Endeks üyelikleri — ✗ ' + String(e.message || e).slice(0, 120));
+    return null;
+  }
+}
+
+
+/* ── ENDEKS KAPANIŞLARI + TLREFK (BIST resmî) — §250a ────────────────────
+   Kullanıcının indirdiği üç dosya keşfedildi: Fiyat/Getiri endeksleri ve
+   BIST TLREFK. KRİTİK: XKTUM kapanışı BURADA (Yahoo'da boştu) — beta çıpası
+   ve ayrışma dönemleri için resmî kaynak. Dosyalar PayEndeksleri.zip içinde
+   gelir; zip yoksa doğrudan CSV denenir. Arşiv birikimli (günlük seri kurar).
+   ISO-8859-9 · ';' · ilk 2 satır başlık · KAPANIS = 7. kolon. */
+async function endeksKapanisTazele() {
+  const dosya = 'endeks-arsiv.json';
+  const cek = async (u) => {
+    try {
+      const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(25000) });
+      if (!r.ok) return null;
+      return Buffer.from(await r.arrayBuffer());
+    } catch (e) { return null; }
+  };
+  const ayristir = (buf) => {
+    const metin = new TextDecoder('iso-8859-9').decode(buf);
+    const out = {};
+    metin.split(/\r?\n/).slice(2).forEach(sat => {
+      const p = sat.split(';');
+      if (p.length < 7) return;
+      const kod = String(p[1]).trim().toUpperCase();
+      const kap = parseFloat(String(p[6]).replace(',', '.'));
+      const tar = String(p[5]).trim();
+      if (kod && isFinite(kap) && kap > 0 && !kod.includes('_')) out[kod] = { k: kap, t: tar };
+    });
+    return out;
+  };
+  try {
+    const kaynaklar = [
+      'https://borsaistanbul.com/datum/FiyatEndeksleri_PriceIndices.csv',
+      'https://borsaistanbul.com/datum/GetiriEndeksleri_ReturnIndices.csv',
+      'https://borsaistanbul.com/datum/bisttlrefkendeksi.csv'
+    ];
+    let birlesik = {}, basarili = [];
+    for (const u of kaynaklar) {
+      const b = await cek(u);
+      if (!b) continue;
+      const o = ayristir(b);
+      if (Object.keys(o).length) { Object.assign(birlesik, o); basarili.push(u.split('/').pop() + '(' + Object.keys(o).length + ')'); }
+    }
+    if (!Object.keys(birlesik).length) {
+      raporlar.push('### Endeks kapanışları — ✗ üç CSV de boş/erişilemedi (adresler PayEndeksleri.zip içinde olabilir)');
+      return null;
+    }
+    let arsiv = (await varMi(dosya)) ? await oku(dosya) : { gunler: {} };
+    arsiv.gunler = arsiv.gunler || {};
+    const veriGunu = (birlesik.XU100 && birlesik.XU100.t) || bugun;
+    arsiv.gunler[veriGunu] = Object.fromEntries(Object.entries(birlesik).map(([k, v]) => [k, v.k]));
+    const g = Object.keys(arsiv.gunler).sort();
+    while (g.length > 400) delete arsiv.gunler[g.shift()];   // ~1,5 yıl
+    arsiv.guncelleme = bugun;
+    arsiv.kaynak = 'BIST resmî endeks CSV (fiyat+getiri+TLREFK)';
+    await yaz(dosya, arsiv);
+    const one = ['XKTUM', 'XKTMT', 'XK100', 'XU100', 'BISTTLREFK'].filter(k => birlesik[k])
+      .map(k => k + ' ' + birlesik[k].k).join(' · ');
+    raporlar.push('### Endeks kapanışları — ✓ ' + Object.keys(birlesik).length + ' endeks · veri günü ' + veriGunu +
+      '\n- ' + one + '\n- arşiv: ' + Object.keys(arsiv.gunler).length + ' gün · dosyalar: ' + basarili.join(', '));
+    degisenler.push('endeks arşivi');
+    return Object.keys(birlesik).length;
+  } catch (e) {
+    raporlar.push('### Endeks kapanışları — ✗ ' + String(e.message || e).slice(0, 120));
+    return null;
+  }
+}
+
 /* ── ANA AKIŞ ───────────────────────────────────────────────────────────── */
 (async () => {
   const goreliDizin = path.relative(process.cwd(), KOK) || '.';
@@ -708,6 +824,8 @@ async function bilancoTetik() {
   }
   if (ister('hepsi') || ister('fiyat')) {
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
+    await endeksUyeTazele();   /* §250 */
+    await endeksKapanisTazele();   /* §250a */
   }
 
   raporlar.push(
