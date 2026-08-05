@@ -2767,6 +2767,66 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250b ZIP YOLU: FIYAT/GETIRI ENDEKSLERI (5 Agu, aksam)
+
+Ilk kosu iki katmani da dogruladi: 'Endeks uyelikleri ✓ XKTUM:242 ...
+⚠ KAPSAM: panel 150 / BIST 242' (kor nokta artik raporda) ve 'Endeks
+kapanislari ✓ 1 endeks — BISTTLREFK 3988,87'. TANI: yalniz
+bisttlrefkendeksi.csv /datum/ altinda; Fiyat/Getiri endeks CSV'leri ZIP
+icinde (PayEndeksleri.zip) — tahmin degil, rapor soyledi.
+§250b: XKTUM yoksa zip indirilir, unzip ile acilir, icindeki TUM CSV'ler
+ayristirilir; zip ICERIK LISTESI rapora basilir (dosya adi tahmini yok).
+Beklenen: 87+ endeks, XKTUM 18292 civari, arsiv gunluk birikir.
+ONCELIK NOTU: XKTUM kapanisi gelince (a) risk betalari gercek katilim
+cipasina cevrilecek, (b) ayrisma 1H/3A arsivden dolacak, (c) panel
+xktum.json 150->242 tamamlanacak (uyari bunu izler).
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250a ENDEKS KAPANISLARI + TLREFK BAGLANDI — XKTUM BULUNDU (5 Agu)
+
+Kullanicinin indirdigi uc BIST dosyasi (Fiyat/Getiri endeksleri +
+bisttlrefkendeksi) katmana baglandi. TARIHI BULGU: **XKTUM KAPANISI
+BURADA** — 18.292,29 (4 Agu). Aylardir 'XKTUM.IS Yahoo'da bos, YEDEK
+endeks kullanildi, beta cipasi XU100'e dusuyor' uyarisini basan sorun
+RESMI KAYNAKLA cozuldu; SENTETIK XKTUM hesabina gerek KALMAYABILIR
+(Laspeyres isi opsiyonel hale geldi).
+endeksKapanisTazele(): uc CSV cekilir (ISO-8859-9, ';', KAPANIS=7. kolon,
+'_' iceren doviz varyantlari elenir) -> endeks-arsiv.json birikimli
+(400 gun pencere). Gercek dosyalarla TEST: 87 endeks, XKTUM 18292,29 ·
+XKTMT 16965,73 · XK100 17144,33 · TLREFK 3988,87.
+ACILAN KAPILAR: (1) risk.json betalari GERCEK XKTUM cipasiyla
+hesaplanabilir (XU100 %25 banka — yanlis cipaydi); (2) Ayrisma sekmesi
+1H/1A/3A arsiv biriktikce dogal dolar (247m'nin kalici cozumu);
+(3) TLREFK = katilim fonlarinin dogal benchmark'i — fon tablosuna alfa
+sutunu (TLV vs TLREFK) eklenebilir.
+NOT: CSV adresleri /datum/ altinda varsayildi; ilk kosu dogrulayacak,
+bos donerse dosyalar PayEndeksleri.zip icinden alinacak (rapor soyler).
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
+## 250 BIST RESMI ENDEKS UYELIKLERI + KAPSAM KOR NOKTASI (5 Agu)
+
+Kullanicinin BIST veri dizini haritasi (VerilerDosyaIsimleri.xlsx) uc
+hazine cikardi — hepsi KAMU, auth yok:
+  hisse_endeks_katilim_ds.csv  -> katilim endeks UYELIKLERI (baglandi)
+  PayEndeksleri.zip            -> endeks kapanislari (XKTUM.IS bos derdi)
+  tlrefkorani / bisttlrefkendeksi -> TLREFK katilim referans getirisi
+    (katilim fonlarinin dogal benchmark'i — panel fon tablosuna alfa olcusu)
+BAGLANAN (§250): tazele.mjs endeksUyeTazele() — CSV (ISO-8859-9, ';')
+gunluk cekilir -> endeks-uyeler.json {sayim, uyeler}. Gercek dosyayla
+ayristirma TEST EDILDI: XKTUM 242 · XK100 100 · XK050 50 · XK030 30 ·
+XKTMT 39 · XSRDK 24 · XK030EA 30, damga 5/8/26.
+KRITIK BULGU — KOR NOKTA: panelin xktum.json'i 150 uye tasiyor, BIST
+resmi 242. Denetim 'XKTUM agirliklari 150/150 %100' derken KENDI
+listesine bakiyordu; kapsam eksigi gorunmuyordu. Yeni katman resmiyle
+kiyaslayip uyari basar (%95 esigi). Sentetik XKTUM isine girmeden ONCE
+bu fark kapatilmali — yoksa endeks yanlis cikar.
+SIRADAKI: PayEndeksleri.zip (endeks kapanis arsivi -> ayrisma 1H/3A) ve
+TLREFK (fon benchmark'i) — ikisi de ayni desenle baglanabilir.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
 ## 249o SPK AYLIK AUM DEGISIMI (5 Agu)
 
 Kullanici: 'SPK PYS para girislerini de otomatige ekleyelim.' DURUST
