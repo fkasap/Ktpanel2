@@ -765,12 +765,16 @@ async function endeksUyeTazele() {
    ISO-8859-9 · ';' · ilk 2 satır başlık · KAPANIS = 7. kolon. */
 async function endeksKapanisTazele() {
   const dosya = 'endeks-arsiv.json';
+  const cekNot = [];   /* §250f: indirme başarısızlığı SESSİZ kalmaz */
   const cek = async (u) => {
+    const ad = u.split('/').pop();
     try {
-      const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(25000) });
-      if (!r.ok) return null;
-      return Buffer.from(await r.arrayBuffer());
-    } catch (e) { return null; }
+      const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': '*/*' }, signal: AbortSignal.timeout(30000) });
+      if (!r.ok) { cekNot.push(ad + ':HTTP' + r.status); return null; }
+      const b = Buffer.from(await r.arrayBuffer());
+      if (b.length < 200) { cekNot.push(ad + ':boş(' + b.length + 'b)'); return null; }
+      return b;
+    } catch (e) { cekNot.push(ad + ':' + String(e.message || e).slice(0, 40)); return null; }
   };
   const ayristir = (buf) => {
     const metin = new TextDecoder('iso-8859-9').decode(buf);
@@ -821,6 +825,7 @@ async function endeksKapanisTazele() {
             if (Object.keys(o2).length) { Object.assign(birlesik, o2); basarili.push(ad + '(' + Object.keys(o2).length + ')'); }
           }
         }
+        else basarili.push('PayEndeksleri.zip İNMEDİ');
       } catch (e3) { basarili.push('zip hatası: ' + String(e3.message || e3).slice(0, 60)); }
     }
     if (!Object.keys(birlesik).length) {
@@ -858,7 +863,8 @@ async function endeksKapanisTazele() {
             });
           }
           if (n2) { arsiv.tlrefk_tohum = bugun; raporlar.push('### TLREFK tarihsel tohum — ✓ ' + n2 + ' gün eklendi (benchmark serisi hazır)'); }
-        }
+          else raporlar.push('### TLREFK tohum — ⚠ zip açıldı ama CSV ayrıştırılamadı');
+        } else raporlar.push('### TLREFK tohum — ⚠ BISTTLREFKENDEKSI_D.zip inmedi');
       } catch (e4) { raporlar.push('### TLREFK tohum — ✗ ' + String(e4.message || e4).slice(0, 80)); }
     }
     const veriGunu = (birlesik.XU100 && birlesik.XU100.t) || bugun;
@@ -871,7 +877,7 @@ async function endeksKapanisTazele() {
     const one = ['XKTUM', 'XKTMT', 'XK100', 'XU100', 'BISTTLREFK'].filter(k => birlesik[k])
       .map(k => k + ' ' + birlesik[k].k).join(' · ');
     raporlar.push('### Endeks kapanışları — ✓ ' + Object.keys(birlesik).length + ' endeks · veri günü ' + veriGunu +
-      '\n- ' + one + '\n- arşiv: ' + Object.keys(arsiv.gunler).length + ' gün · dosyalar: ' + basarili.join(', '));
+      '\n- ' + one + '\n- arşiv: ' + Object.keys(arsiv.gunler).length + ' gün · dosyalar: ' + basarili.join(', ') + (cekNot.length ? '\n- ⚠ inmeyenler: ' + cekNot.join(' · ') : ''));
     degisenler.push('endeks arşivi');
     return Object.keys(birlesik).length;
   } catch (e) {
