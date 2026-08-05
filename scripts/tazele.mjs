@@ -774,6 +774,31 @@ async function endeksKapanisTazele() {
       const o = ayristir(b);
       if (Object.keys(o).length) { Object.assign(birlesik, o); basarili.push(u.split('/').pop() + '(' + Object.keys(o).length + ')'); }
     }
+    /* §250b: fiyat/getiri CSV'leri /datum/ altında YOK (ilk koşu kanıtı) —
+       PayEndeksleri.zip içindeler. Zip indirilir, unzip ile açılır, içindeki
+       tüm CSV'ler ayrıştırılır. Dosya adları rapora basılır (alan keşfi deseni). */
+    if (!birlesik.XKTUM) {
+      try {
+        const zb = await cek('https://borsaistanbul.com/datum/PayEndeksleri.zip');
+        if (zb) {
+          const os = await import('node:os'), fsp = await import('node:fs/promises');
+          const cp = await import('node:child_process');
+          const dizin = path.join(os.tmpdir(), 'bistzip');
+          await fsp.rm(dizin, { recursive: true, force: true });
+          await fsp.mkdir(dizin, { recursive: true });
+          const zp = path.join(dizin, 'p.zip');
+          await fsp.writeFile(zp, zb);
+          cp.execSync('unzip -o -q "' + zp + '" -d "' + dizin + '"', { stdio: 'ignore' });
+          const icerik = await fsp.readdir(dizin);
+          basarili.push('zip:[' + icerik.filter(x => !x.endsWith('.zip')).join(', ').slice(0, 120) + ']');
+          for (const ad of icerik) {
+            if (!/\.csv$/i.test(ad)) continue;
+            const o2 = ayristir(await fsp.readFile(path.join(dizin, ad)));
+            if (Object.keys(o2).length) { Object.assign(birlesik, o2); basarili.push(ad + '(' + Object.keys(o2).length + ')'); }
+          }
+        }
+      } catch (e3) { basarili.push('zip hatası: ' + String(e3.message || e3).slice(0, 60)); }
+    }
     if (!Object.keys(birlesik).length) {
       raporlar.push('### Endeks kapanışları — ✗ üç CSV de boş/erişilemedi (adresler PayEndeksleri.zip içinde olabilir)');
       return null;
