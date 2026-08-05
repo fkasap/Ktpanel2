@@ -41,7 +41,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007445936744> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007547101146> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -51,7 +51,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu: panelin 150 hissesi resmî listede (kapsam %96.5, tasarım gereği ilk 150)
 
-### Aylık endeks tohumu — ⚠ CSV bulunamadı · TR_PayEndeksleriFiyat.zip→[TR_PayEndeksleriFiyat.xlsx] · TR_PayEndeksleriGetiri.zip→[TR_PayEndeksleriGetiri.xlsx]
+### Aylık endeks tohumu — ⚠ CSV bulunamadı · TR_PayEndeksleriFiyat.zip→[TR_PayEndeksleriFiyat.xlsx] · TR_PayEndeksleriFiyat.xlsx:xlsx hata ENOENT: no such file or directory, open  · TR_PayEndeksleriGetiri.zip→[TR_PayEndeksleriGetiri.xlsx] · TR_PayEndeksleriGetiri.xlsx:xlsx hata ENOENT: no such file or directory, open 
 
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 04/08/2026
 - XKTUM 18292.29 · XKTMT 16965.73 · XK100 17144.33 · XU100 13687.93 · BISTTLREFK 3988.86976
@@ -60,4 +60,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (135 fiyat) · Model sicili (37 fiyat) · risk metrikleri (120) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (91 fiyat) · Model sicili (26 fiyat) · risk metrikleri (6) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
