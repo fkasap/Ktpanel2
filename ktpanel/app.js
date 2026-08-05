@@ -6051,6 +6051,17 @@ function ayrismaCiz(){
       o.textContent=dolu?temiz:temiz+' · veri yok';
     });
     if(ds0.selectedOptions[0]&&ds0.selectedOptions[0].disabled){ ds0.value='chg'; donemAd='chg'; }
+    /* §250o GÖRÜNÜR TANI: dönemler açılmadıysa sebebi ekranda yazsın —
+       arşiv yüklendi mi, seçili endeks arşivde var mı, kaç nokta? */
+    let tn=document.getElementById('ayrTani');
+    if(!tn){ tn=document.createElement('span'); tn.id='ayrTani';
+      tn.className='thin'; tn.style.cssText='font-size:9px;margin-left:8px';
+      ds0.parentNode.appendChild(tn); }
+    const kodT=($('ayrEndeks')||{}).value||'XKTUM';
+    if(ENDARS===null) tn.textContent='arşiv yükleniyor…';
+    else if(!ENDARS) tn.textContent='arşiv yok (endeks-arsiv.json okunamadı)';
+    else { const n=(__endArsivBellek[kodT]||Object.keys(ENDARS.gunler||{}).filter(g=>ENDARS.gunler[g]&&ENDARS.gunler[g][kodT]>0)).length;
+      tn.textContent='arşiv: '+kodT+' '+n+' nokta'+(n?'':' — bu endeks arşivde yok'); }
   }
   const D = AYR_DONEM.find(x=>x.alan===donemAd) || AYR_DONEM[0];
   const E = AYR_ENDEKS.find(x=>x.kod===endeksKod) || AYR_ENDEKS[0];
