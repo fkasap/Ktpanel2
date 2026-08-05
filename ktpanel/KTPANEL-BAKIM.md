@@ -2767,6 +2767,26 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250p TARIH ANAHTARI KARISIKLIGI COZULDU (5 Agu)
+
+Kullanicinin actigi endeks-arsiv.json ekrani kok nedeni gosterdi: anahtar
+IKI FORMATTA — '2026-08-05' (ISO, TLREFK yolundan) ve '04/08/2026'
+(GG/AA/YYYY, gunluk CSV'nin TARIH kolonundan). Siralama/karsilastirma ISO
+varsayiyordu; karisik anahtarlarla gecmis bulunamiyor, panelde donemler
+acilmiyordu.
+IKI TARAFLI DUZELTME:
+  tazele (§250p): veriGunu artik isoCevir() ile HER ZAMAN ISO; ayrica
+    arsivdeki eski GG/AA/YYYY anahtarlar tek seferlik ISO'ya TASINIR
+    (onarim, veri kaybi yok).
+  app.js: panel Actions'i beklemeden okurken normallestirir — anahtarlar
+    ISO'ya cevrilip harita kurulur, degerler oradan okunur.
+Test: karisik anahtarli arsivde 1A getirisi dogru hesaplandi (+7,15%).
+DERS: ayni dosyaya IKI FARKLI KAYNAKTAN yazilirken anahtar bicimi TEK
+noktada normallestirilir; yoksa dosya 'dolu ama okunamaz' olur.
+
+app.js v=20260805f · DOSYALAR: app.js + index.html (ktpanel/) +
+scripts/tazele.mjs (DEPO KOKU)
+
 ## 250n ACIL: SONSUZ DONGU (sekme kilitlenmesi) — 5 Agu
 
 Kullanici: 'Portfoy Yonetimi > Portfoy'e tiklayinca sayfa tikaniyor.'

@@ -5913,16 +5913,26 @@ function endArsivGetiri(kod, donemAlan){
   /* §250n: 1.473 günlük arşivi her çağrıda filtreleyip sıralamak sekmeyi
      yavaşlatıyordu (dönem seçici × render). Kod başına bir kez hesaplanır. */
   let gunler=__endArsivBellek[kod];
-  if(!gunler){ gunler=Object.keys(G).filter(g=>G[g]&&G[g][kod]>0).sort(); __endArsivBellek[kod]=gunler; }
+  if(!gunler){
+    /* §250p: arşivde GG/AA/YYYY anahtarlar da olabilir (eski koşular) —
+       okurken ISO'ya çevirip öyle sıralanır; panel Actions'ı beklemez. */
+    const norm=(t)=>{ const m=String(t).match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})/);
+      return m? m[3]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0') : t; };
+    const harita={};
+    Object.keys(G).forEach(g=>{ if(G[g]&&G[g][kod]>0) harita[norm(g)]=G[g][kod]; });
+    gunler=Object.keys(harita).sort();
+    __endArsivBellek[kod]=gunler; __endArsivBellek['_v_'+kod]=harita;
+  }
+  const VAL=__endArsivBellek['_v_'+kod]||{};
   if(gunler.length<2) return null;
-  const sonG=gunler[gunler.length-1], son=G[sonG][kod];
+  const sonG=gunler[gunler.length-1], son=VAL[sonG];
   const GUN={h1:7,a1:31,q3:92,y1:366};
   let hedef;
   if(donemAlan==='ytd') hedef=sonG.slice(0,4)+'-01-01';
   else { const n=GUN[donemAlan]; if(!n) return null;
     hedef=new Date(new Date(sonG).getTime()-n*86400000).toISOString().slice(0,10); }
   let baz=null;
-  for(const g of gunler){ if(g<=hedef) baz=G[g][kod]; else break; }
+  for(const g of gunler){ if(g<=hedef) baz=VAL[g]; else break; }
   if(!(baz>0)) return null;
   return (son/baz-1)*100;
 }
