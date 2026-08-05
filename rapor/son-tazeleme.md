@@ -41,7 +41,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007851486553> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007435496600> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -51,10 +51,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu: panelin 150 hissesi resmî listede (kapsam %96.5, tasarım gereği ilk 150)
 
-### Endeks kapanışları — ✓ 1 endeks · veri günü 2026-08-05
-- BISTTLREFK 3988.86976
-- arşiv: 2 gün · dosyalar: bisttlrefkendeksi.csv(1)
+### TLREFK tohum — ⚠ zip açıldı ama CSV ayrıştırılamadı
+
+### Endeks kapanışları — ✓ 87 endeks · veri günü 04/08/2026
+- XKTUM 18292.29 · XKTMT 16965.73 · XK100 17144.33 · XU100 13687.93 · BISTTLREFK 3988.86976
+- arşiv: 2 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+- ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (139 fiyat) · Model sicili (40 fiyat) · risk metrikleri (118) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (96 fiyat) · Model sicili (27 fiyat) · risk metrikleri (120) · katılım fonları (getiri-modu 36) · bilanço tetiği (20) · endeks üyelikleri · endeks arşivi
