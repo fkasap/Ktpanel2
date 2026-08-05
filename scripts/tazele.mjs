@@ -281,7 +281,21 @@ async function riskTazele() {
     { kod: 'XU100', ekle: '.IS' }, { kod: '^XU100', ekle: '' }
   ];
   let eSeri = null, eKod = null, denemeler = [];
-  for (const a of ENDEKS_ADAY) {
+  /* §250c: BIST RESMÎ ARŞİVİ ÖNCE — endeks-arsiv.json'da XKTUM birikiyor
+     (Yahoo'da yok, BIST CSV'sinden geliyor). Yeterli gün varsa beta GERÇEK
+     katılım çıpasıyla ölçülür; XU100 (%25 banka) yanlış çıpaydı. Arşiv
+     doldukça (60+ gün) devreye girer, o zamana dek Yahoo zinciri sürer. */
+  try {
+    if (await varMi('endeks-arsiv.json')) {
+      const ar = await oku('endeks-arsiv.json');
+      const gunler = Object.keys(ar.gunler || {}).sort();
+      const seri = new Map();
+      gunler.forEach(g => { const v = ar.gunler[g] && ar.gunler[g].XKTUM; if (v > 0) seri.set(g, v); });
+      denemeler.push('arşiv XKTUM: ' + seri.size + ' gün');
+      if (seri.size >= 60) { eSeri = seri; eKod = 'XKTUM (BIST resmî arşiv)'; }
+    }
+  } catch (e0) {}
+  if (!eSeri) for (const a of ENDEKS_ADAY) {
     const h = await yahooSeri([a.kod], a.ekle);
     const boy = h[a.kod] ? h[a.kod].size : 0;
     denemeler.push(`${a.kod}${a.ekle}: ${boy || 'boş'}`);
@@ -365,7 +379,7 @@ async function riskTazele() {
     `\n- ℹ **beta referansı: ${eKod}** (${eSeri.size} gün)` +
     (atlananGun ? `\n- ℹ ${atlananGun} gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)` : '') +
     (hamKalan.length ? `\n- ⚠ düzeltilmiş seri yok, HAM kapanış kullanıldı: ${hamKalan.slice(0, 8).join(', ')}${hamKalan.length > 8 ? ' +' + (hamKalan.length - 8) : ''} — bölünme varsa vol şişer` : '') +
-    (eKod.indexOf('XKTUM') < 0 ? ' — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir' : '') +
+    (eKod.indexOf('XKTUM') < 0 ? ' — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir' : (eKod.indexOf('arşiv') >= 0 ? ' — ✓ GERÇEK katılım çıpası (BIST resmî)' : '')) +
     (denemeler.length > 1 ? `\n- denenen: ${denemeler.join(' · ')}` : '') +
     (hesaplanamayan.length ? `\n- ⚠ seri kısa, hesaplanamadı: ${hesaplanamayan.slice(0, 10).join(', ')}` : ''));
   if (!s.gecti) { denetimDustu = true; return null; }
