@@ -2767,6 +2767,23 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250d UC KARANTINA KAPATILDI — BIRI YANLIS ALARM (5 Agu)
+
+Fintables olcumu (odenmis_sermaye + son_fiyat + PD) uc vakayi ayirdi:
+  CVKMD BEDELSIZ: adet 1400 -> 3.780 mn, fiyat 36 -> 14,74. PD korunumu
+    testi: 50.400 -> 55.717 mn (fark %10,5 = gercek fiyat hareketi) ✓.
+    multiple.json fiyat+adet guncellendi.
+  KTLEV BEDELSIZ: sermaye 7.000 mn; ima carpan 3,618x. track.json p0
+    196,1 -> 54,2 ve p 156 -> 43,12. GETIRI KORUNUMU: -%20,4 -> -%20,4 ✓
+    (bedelsiz duzeltmesinin dogru yapildiginin kaniti — sicil bozulmadi).
+  PASEU YANLIS ALARM: adet 672 mn DEGISMEDI — kurumsal islem YOK, fiyat
+    129,8 -> 182,5 GERCEK yukselis (%40). Karantina esigi (±%25) hizli
+    ralli yapan hisseyi de yakaliyor; fiyat guncellendi, karantina duser.
+    DERS: karantina 'kurumsal islem SUPHESI'dir, teshis DEGIL — adet
+    degismediyse alarm yanlistir.
+
+DOSYALAR: multiple.json + track.json (ktpanel/)
+
 ## 250c ZIP TUTTU + BETA CIPASI XKTUM'A BAGLANDI (5 Agu, aksam 2)
 
 Kosu kaniti: 'Endeks kapanislari ✓ 87 endeks · XKTUM 18292,29 · XKTMT
