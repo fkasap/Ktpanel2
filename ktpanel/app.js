@@ -5906,10 +5906,14 @@ async function endArsivYukle(){
   try{ const r=await fetch('/endeks-arsiv.json',{cache:'no-store'}); ENDARS=r.ok?await r.json():false; }
   catch(e){ ENDARS=false; }
 }
+const __endArsivBellek={};
 function endArsivGetiri(kod, donemAlan){
   if(!ENDARS||!ENDARS.gunler) return null;
   const G=ENDARS.gunler;
-  const gunler=Object.keys(G).filter(g=>G[g]&&G[g][kod]>0).sort();
+  /* §250n: 1.473 günlük arşivi her çağrıda filtreleyip sıralamak sekmeyi
+     yavaşlatıyordu (dönem seçici × render). Kod başına bir kez hesaplanır. */
+  let gunler=__endArsivBellek[kod];
+  if(!gunler){ gunler=Object.keys(G).filter(g=>G[g]&&G[g][kod]>0).sort(); __endArsivBellek[kod]=gunler; }
   if(gunler.length<2) return null;
   const sonG=gunler[gunler.length-1], son=G[sonG][kod];
   const GUN={h1:7,a1:31,q3:92,y1:366};
@@ -6022,7 +6026,13 @@ function ayrismaHesap(donemAlan, endeksKod){
 }
 
 function ayrismaCiz(){
-  endArsivYukle().then(()=>{ if(ENDARS) ayrismaCiz(); });   /* §250m */
+  /* §250n SONSUZ DÖNGÜ DÜZELTMESİ: eski hali her çizimde kendini yeniden
+     çağırıyordu (ayrismaCiz → then → ayrismaCiz → …) ve sekme kilitleniyordu.
+     Artık TEK KEZ tetiklenir; yükleme bitince yalnız bir kez yeniden çizer. */
+  if(!window.__endArsivTetik){
+    window.__endArsivTetik = 1;
+    endArsivYukle().then(()=>{ if(ENDARS) ayrismaCiz(); });
+  }
   const el = $('ayrBody'); if(!el) return;
   const endeksKod = ($('ayrEndeks') && $('ayrEndeks').value) || 'XK100';
   let donemAd   = ($('ayrDonem')  && $('ayrDonem').value)  || 'chg';

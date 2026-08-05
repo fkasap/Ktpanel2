@@ -2767,6 +2767,21 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 250n ACIL: SONSUZ DONGU (sekme kilitlenmesi) — 5 Agu
+
+Kullanici: 'Portfoy Yonetimi > Portfoy'e tiklayinca sayfa tikaniyor.'
+KOK NEDEN (benim 250m hatam): ayrismaCiz icine koydugum
+endArsivYukle().then(()=>ayrismaCiz()) her cizimde yeniden tetikleniyordu
+— ENDARS dolu olsa bile then calisip ayrismaCiz'i cagiriyor, o da yine...
+SONSUZ DONGU, sekme kilitleniyor.
+§250n: (a) tetik window.__endArsivTetik bayragiyla TEK KEZ; (b) performans:
+1.473 gunluk arsivin gun listesi her cagrida filtrelenip siralaniyordu —
+kod basina onbellek (__endArsivBellek).
+DERS: 'yukle sonra yeniden ciz' deseni ciziм fonksiyonunun ICINE
+konulacaksa MUTLAKA tek-sefer bayragi ister.
+
+app.js v=20260805d · DOSYALAR: app.js + index.html (ktpanel/)
+
 ## 250m ARSIV TABANLI DONEM GETIRISI — AYRISMA ACILDI (5 Agu)
 
 Aylik tohum TUTTU: 95.563 kayit, arsiv 1.473 gun (XKTUM 2015'e uzaniyor).
