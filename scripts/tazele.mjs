@@ -291,8 +291,12 @@ async function riskTazele() {
       const gunler = Object.keys(ar.gunler || {}).sort();
       const seri = new Map();
       gunler.forEach(g => { const v = ar.gunler[g] && ar.gunler[g].XKTUM; if (v > 0) seri.set(g, v); });
-      denemeler.push('arşiv XKTUM: ' + seri.size + ' gün');
-      if (seri.size >= 60) { eSeri = seri; eKod = 'XKTUM (BIST resmî arşiv)'; }
+      /* §250i: aylık tohum arşive girdiği için PUAN SAYISI yanıltıcı olabilir;
+         beta GÜNLÜK seri ister → son 120 takvim gününde en az 60 nokta şartı. */
+      const sinir = new Date(Date.now() - 120 * 86400000).toISOString().slice(0, 10);
+      const sonYogunluk = [...seri.keys()].filter(g => g >= sinir).length;
+      denemeler.push('arşiv XKTUM: ' + seri.size + ' nokta (son 120g: ' + sonYogunluk + ')');
+      if (sonYogunluk >= 60) { eSeri = seri; eKod = 'XKTUM (BIST resmî arşiv)'; }
     }
   } catch (e0) {}
   if (!eSeri) for (const a of ENDEKS_ADAY) {
@@ -881,6 +885,48 @@ async function endeksKapanisTazele() {
           else raporlar.push('### TLREFK tohum — ⚠ zip açıldı ama CSV ayrıştırılamadı\n- içerik: ' + icerik2.join(', ').slice(0,120) + '\n- örnek: `' + ornek.replace(/`/g,'') + '`');
         } else raporlar.push('### TLREFK tohum — ⚠ BISTTLREFKENDEKSI_D.zip inmedi');
       } catch (e4) { raporlar.push('### TLREFK tohum — ✗ ' + String(e4.message || e4).slice(0, 80)); }
+    }
+    /* §250i AYLIK TARİHSEL TOHUM (BIST format dokümanı §2.1.7/2.1.8):
+       TR_PayEndeksleri{Fiyat,Getiri}.zip → endeksin BAŞLANGICINDAN İTİBAREN
+       AY SONU kapanışları. Ayrışma 1A/3A/YTD/1Y için altın; GÜNLÜK BETA için
+       KULLANILAMAZ (aylık nokta) — beta tarafında yoğunluk koruması var.
+       Dosyalar .xlsx: satır bazlı basit XML okuma yerine, zip içi sharedStrings
+       olmadan sayı/tarih çıkarımı riskli olduğundan yalnız CSV varyantı denenir;
+       yoksa rapor içerik listesini basar (alan keşfi). */
+    if (!arsiv.aylik_tohum) {
+      try {
+        const os3 = await import('node:os'), fsp3 = await import('node:fs/promises'), cp3 = await import('node:child_process');
+        let eklenen = 0, notlar = [];
+        for (const ad of ['TR_PayEndeksleriFiyat.zip', 'TR_PayEndeksleriGetiri.zip']) {
+          const zb3 = await cek('https://borsaistanbul.com/datum/' + ad);
+          if (!zb3) continue;
+          const dz3 = path.join(os3.tmpdir(), 'aylik_' + ad.replace(/\W/g, ''));
+          await fsp3.rm(dz3, { recursive: true, force: true }); await fsp3.mkdir(dz3, { recursive: true });
+          const zp3 = path.join(dz3, 'a.zip'); await fsp3.writeFile(zp3, zb3);
+          try { cp3.execSync('unzip -o -q "' + zp3 + '" -d "' + dz3 + '"', { stdio: 'ignore' }); } catch (e6) {}
+          const ic3 = (await fsp3.readdir(dz3)).filter(x => !/\.zip$/i.test(x));
+          notlar.push(ad + '→[' + ic3.join(', ').slice(0, 80) + ']');
+          for (const f3 of ic3) {
+            if (!/\.csv$/i.test(f3)) continue;
+            const ham3 = await fsp3.readFile(path.join(dz3, f3));
+            const bom3 = ham3.length > 1 && ((ham3[0] === 0xFF && ham3[1] === 0xFE) || (ham3[0] === 0xFE && ham3[1] === 0xFF));
+            const mt3 = new TextDecoder(bom3 ? 'utf-16le' : 'iso-8859-9').decode(ham3);
+            mt3.split(/\r?\n/).forEach(sat => {
+              const p = sat.split(';');
+              if (p.length < 5) return;
+              const t = String(p[0]).trim(), kod = String(p[1]).trim().toUpperCase();
+              const kap = parseFloat(String(p[p.length - 1]).replace(',', '.'));
+              const m = t.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/);
+              if (!m || !kod || kod.includes('_') || !isFinite(kap) || kap <= 0) return;
+              const iso = m[3] + '-' + String(m[2]).padStart(2, '0') + '-' + String(m[1]).padStart(2, '0');
+              arsiv.gunler[iso] = Object.assign(arsiv.gunler[iso] || {}, { [kod]: kap });
+              eklenen++;
+            });
+          }
+        }
+        if (eklenen) { arsiv.aylik_tohum = bugun; raporlar.push('### Aylık endeks tohumu — ✓ ' + eklenen + ' kayıt (ay sonu serileri; ayrışma 1A/3A/YTD için)'); }
+        else raporlar.push('### Aylık endeks tohumu — ⚠ CSV bulunamadı · ' + notlar.join(' · '));
+      } catch (e5) { raporlar.push('### Aylık endeks tohumu — ✗ ' + String(e5.message || e5).slice(0, 90)); }
     }
     const veriGunu = (birlesik.XU100 && birlesik.XU100.t) || bugun;
     arsiv.gunler[veriGunu] = Object.fromEntries(Object.entries(birlesik).map(([k, v]) => [k, v.k]));
