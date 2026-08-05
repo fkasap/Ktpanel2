@@ -984,6 +984,52 @@ async function endeksKapanisTazele() {
   }
 }
 
+
+/* ── GÜNLÜK BÜLTEN KEŞFİ (§250k) ─────────────────────────────────────────
+   Soru: XKTUM'un GÜNLÜK geçmişi çekilebilir mi? /datum/ kataloğunda yok
+   (yalnız son gün + ay sonu tarihsel). Ama BIST günlük BÜLTEN yayımlıyor:
+   /data/thb/YYYY/AA/thbYYYYAAGGS.zip — içinde endeks kapanışları olabilir.
+   Bu fonksiyon TEK GÜN çeker ve içeriği RAPORA basar (tahmin yok, ölçüm).
+   Tuttuğu doğrulanırsa 60-90 günlük tohum döngüsüne genişletilir. */
+async function bultenKesif() {
+  if (globalThis.__bultenBakildi) return; globalThis.__bultenBakildi = 1;
+  try {
+    const os4 = await import('node:os'), fsp4 = await import('node:fs/promises'), cp4 = await import('node:child_process');
+    const d = new Date(Date.now() - 86400000);   /* dün */
+    const Y = d.getFullYear(), A = String(d.getMonth() + 1).padStart(2, '0'), G = String(d.getDate()).padStart(2, '0');
+    const denenen = [];
+    for (const sonek of ['1', '2', '3', '']) {
+      const ad = 'thb' + Y + A + G + sonek + '.zip';
+      const u = 'https://borsaistanbul.com/data/thb/' + Y + '/' + A + '/' + ad;
+      let b = null;
+      try {
+        const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(20000) });
+        if (r.ok) { const bb = Buffer.from(await r.arrayBuffer()); if (bb.length > 500) b = bb; else denenen.push(ad + ':boş'); }
+        else denenen.push(ad + ':HTTP' + r.status);
+      } catch (e) { denenen.push(ad + ':' + String(e.message || e).slice(0, 30)); }
+      if (!b) continue;
+      const dz = path.join(os4.tmpdir(), 'bulten'); await fsp4.rm(dz, { recursive: true, force: true }); await fsp4.mkdir(dz, { recursive: true });
+      const zp = path.join(dz, 'b.zip'); await fsp4.writeFile(zp, b);
+      try { cp4.execSync('unzip -o -q "' + zp + '" -d "' + dz + '"', { stdio: 'ignore' }); } catch (e) {}
+      const ic = (await fsp4.readdir(dz)).filter(x => !/\.zip$/i.test(x));
+      /* endeks geçen dosyayı ara: ilk 400 karakterde XKTUM/XU100 var mı */
+      let ipucu = '';
+      for (const f of ic.slice(0, 12)) {
+        try {
+          const ham = await fsp4.readFile(path.join(dz, f));
+          const bom = ham.length > 1 && ham[0] === 0xFF && ham[1] === 0xFE;
+          const mt = new TextDecoder(bom ? 'utf-16le' : 'iso-8859-9').decode(ham.subarray(0, 4000));
+          if (/XKTUM|XU100|ENDEKS/i.test(mt)) { ipucu = f + ' → ' + mt.split(/\r?\n/).slice(0, 2).join(' ¶ ').slice(0, 200); break; }
+        } catch (e) {}
+      }
+      raporlar.push('### Bülten keşfi (§250k) — ✓ ' + ad + ' indi · ' + (b.length / 1024).toFixed(0) + 'KB' +
+        '\n- içerik: ' + ic.join(', ').slice(0, 200) + (ipucu ? '\n- endeks izi: `' + ipucu.replace(/`/g, '') + '`' : '\n- endeks izi: ilk 12 dosyada bulunamadı'));
+      return;
+    }
+    raporlar.push('### Bülten keşfi (§250k) — ⚠ indirilemedi · ' + denenen.join(' · '));
+  } catch (e) { raporlar.push('### Bülten keşfi — ✗ ' + String(e.message || e).slice(0, 90)); }
+}
+
 /* ── ANA AKIŞ ───────────────────────────────────────────────────────────── */
 (async () => {
   const goreliDizin = path.relative(process.cwd(), KOK) || '.';
@@ -1011,6 +1057,7 @@ async function endeksKapanisTazele() {
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */
+    await bultenKesif();   /* §250k: günlük tarihsel için keşif */
   }
 
   raporlar.push(
