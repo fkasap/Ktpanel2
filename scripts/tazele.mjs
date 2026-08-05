@@ -728,13 +728,23 @@ async function endeksUyeTazele() {
     if (!Object.keys(uyeler).length) { raporlar.push('### Endeks üyelikleri — ✗ satır ayrıştırılamadı'); return null; }
     await yaz(dosya, { guncelleme: bugun, kaynak: 'BIST resmî (hisse_endeks_katilim_ds.csv)', bist_damga: damga, sayim, uyeler });
     /* kapsam kıyası: panelin xktum.json'ı resmîden az mı? */
+    /* §250e: ÖNCEKİ UYARI YANLIŞTI — xktum.json 242 üyeyi BİLİYOR, ilk 150'yi
+       kasten taşıyor (ağırlıklar normalize DEĞİL, toplam %96,5 doğru). Doğru
+       kontrol kapsam sayısı değil ÜYELİK REVİZYONU: panelde olup resmî listede
+       OLMAYAN (endeksten çıkmış → ölü ağırlık) ve resmî listede olup panelde
+       olmayan BÜYÜK isimler. BIST üç ayda bir revize eder; kaçarsa atıf bozulur. */
     let uyari = '';
     try {
       if (await varMi('xktum.json')) {
         const xk = await oku('xktum.json');
-        const bizim = Object.keys(xk.uyeler || xk.paylar || {}).length || (Array.isArray(xk.hisseler) ? xk.hisseler.length : 0);
-        const resmi = (uyeler.XKTUM || []).length;
-        if (bizim && resmi && bizim < resmi * 0.95) uyari = '\n- ⚠ KAPSAM: panel XKTUM ' + bizim + ' üye taşıyor, BIST resmî ' + resmi + ' — eksik üyeler sentetik endeks/ağırlık hesabını saptırır';
+        const bizimU = Object.keys(xk.uyeler || {});
+        const resmiU = new Set(uyeler.XKTUM || []);
+        const cikan = bizimU.filter(k => !resmiU.has(k));
+        const toplamCikan = cikan.reduce((a, k) => a + (xk.uyeler[k] || 0), 0);
+        if (cikan.length) uyari += '\n- ⚠ REVİZYON: panelde olup BIST XKTUM listesinde OLMAYAN ' + cikan.length +
+          ' hisse (' + cikan.slice(0, 8).join(', ') + ') · ölü ağırlık %' + toplamCikan.toFixed(2) + ' — xktum.json revize edilmeli';
+        else uyari += '\n- ✓ üyelik uyumu: panelin ' + bizimU.length + ' hissesi resmî listede (kapsam %' +
+          (xk.kapsanan_agirlik || '?') + ', tasarım gereği ilk ' + bizimU.length + ')';
       }
     } catch (e) {}
     raporlar.push('### Endeks üyelikleri — ✓ ' + Object.entries(sayim).map(([k, v]) => k + ':' + v).join(' · ') + uyari);
@@ -819,10 +829,42 @@ async function endeksKapanisTazele() {
     }
     let arsiv = (await varMi(dosya)) ? await oku(dosya) : { gunler: {} };
     arsiv.gunler = arsiv.gunler || {};
+    /* §250e: TLREFK TARİHSEL TOHUM — arşiv yeni, YTD/1Y hesaplanamıyor.
+       BISTTLREFKENDEKSI_D.zip geçmiş seriyi verir; bir kez tohumlanır
+       (arşivde 30'dan az TLREFK günü varsa). Katılım fonlarının benchmark'ı. */
+    const tlrefkGun = Object.values(arsiv.gunler).filter(g => g && g.BISTTLREFK).length;
+    if (tlrefkGun < 30 && !arsiv.tlrefk_tohum) {
+      try {
+        const zb2 = await cek('https://borsaistanbul.com/datum/BISTTLREFKENDEKSI_D.zip');
+        if (zb2) {
+          const os2 = await import('node:os'), fsp2 = await import('node:fs/promises'), cp2 = await import('node:child_process');
+          const dz = path.join(os2.tmpdir(), 'tlrefk'); await fsp2.rm(dz, { recursive: true, force: true }); await fsp2.mkdir(dz, { recursive: true });
+          const zp2 = path.join(dz, 't.zip'); await fsp2.writeFile(zp2, zb2);
+          cp2.execSync('unzip -o -q "' + zp2 + '" -d "' + dz + '"', { stdio: 'ignore' });
+          let n2 = 0;
+          for (const ad of await fsp2.readdir(dz)) {
+            if (!/\.csv$/i.test(ad)) continue;
+            const metin2 = new TextDecoder('iso-8859-9').decode(await fsp2.readFile(path.join(dz, ad)));
+            metin2.split(/\r?\n/).slice(2).forEach(sat => {
+              const p = sat.split(';');
+              if (p.length < 7) return;
+              const kap = parseFloat(String(p[6]).replace(',', '.'));
+              const t = String(p[5]).trim();   // GG/AA/YYYY
+              const m = t.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+              if (!m || !isFinite(kap) || kap <= 0) return;
+              const iso = m[3] + '-' + m[2] + '-' + m[1];
+              arsiv.gunler[iso] = Object.assign(arsiv.gunler[iso] || {}, { BISTTLREFK: kap });
+              n2++;
+            });
+          }
+          if (n2) { arsiv.tlrefk_tohum = bugun; raporlar.push('### TLREFK tarihsel tohum — ✓ ' + n2 + ' gün eklendi (benchmark serisi hazır)'); }
+        }
+      } catch (e4) { raporlar.push('### TLREFK tohum — ✗ ' + String(e4.message || e4).slice(0, 80)); }
+    }
     const veriGunu = (birlesik.XU100 && birlesik.XU100.t) || bugun;
     arsiv.gunler[veriGunu] = Object.fromEntries(Object.entries(birlesik).map(([k, v]) => [k, v.k]));
     const g = Object.keys(arsiv.gunler).sort();
-    while (g.length > 400) delete arsiv.gunler[g.shift()];   // ~1,5 yıl
+    while (g.length > 1500) delete arsiv.gunler[g.shift()];   // §250e: ~6 yıl (TLREFK tohum + endeks serisi)
     arsiv.guncelleme = bugun;
     arsiv.kaynak = 'BIST resmî endeks CSV (fiyat+getiri+TLREFK)';
     await yaz(dosya, arsiv);
