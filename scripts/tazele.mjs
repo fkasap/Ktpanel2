@@ -847,23 +847,29 @@ async function endeksKapanisTazele() {
           const zp2 = path.join(dz, 't.zip'); await fsp2.writeFile(zp2, zb2);
           cp2.execSync('unzip -o -q "' + zp2 + '" -d "' + dz + '"', { stdio: 'ignore' });
           let n2 = 0;
-          for (const ad of await fsp2.readdir(dz)) {
+          const icerik2 = await fsp2.readdir(dz);
+          let ornek = '';
+          for (const ad of icerik2) {
             if (!/\.csv$/i.test(ad)) continue;
             const metin2 = new TextDecoder('iso-8859-9').decode(await fsp2.readFile(path.join(dz, ad)));
-            metin2.split(/\r?\n/).slice(2).forEach(sat => {
+            /* §250g: ayrıştırılamazsa NEDEN görünsün — dosya adı + ilk 2 satır rapora */
+            if (!ornek) ornek = ad + ' → ' + metin2.split(/\r?\n/).slice(0, 3).join(' ¶ ').slice(0, 260);
+            metin2.split(/\r?\n/).forEach(sat => {   /* başlık atlamak yerine desen filtresi: her satır denenir */
               const p = sat.split(';');
               if (p.length < 7) return;
               const kap = parseFloat(String(p[6]).replace(',', '.'));
               const t = String(p[5]).trim();   // GG/AA/YYYY
-              const m = t.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-              if (!m || !isFinite(kap) || kap <= 0) return;
-              const iso = m[3] + '-' + m[2] + '-' + m[1];
+              let iso = null;
+              let m = t.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})$/);
+              if (m) iso = m[3] + '-' + String(m[2]).padStart(2,'0') + '-' + String(m[1]).padStart(2,'0');
+              else { m = t.match(/^(\d{4})-(\d{2})-(\d{2})/); if (m) iso = m[0].slice(0,10); }
+              if (!iso || !isFinite(kap) || kap <= 0) return;
               arsiv.gunler[iso] = Object.assign(arsiv.gunler[iso] || {}, { BISTTLREFK: kap });
               n2++;
             });
           }
           if (n2) { arsiv.tlrefk_tohum = bugun; raporlar.push('### TLREFK tarihsel tohum — ✓ ' + n2 + ' gün eklendi (benchmark serisi hazır)'); }
-          else raporlar.push('### TLREFK tohum — ⚠ zip açıldı ama CSV ayrıştırılamadı');
+          else raporlar.push('### TLREFK tohum — ⚠ zip açıldı ama CSV ayrıştırılamadı\n- içerik: ' + icerik2.join(', ').slice(0,120) + '\n- örnek: `' + ornek.replace(/`/g,'') + '`');
         } else raporlar.push('### TLREFK tohum — ⚠ BISTTLREFKENDEKSI_D.zip inmedi');
       } catch (e4) { raporlar.push('### TLREFK tohum — ✗ ' + String(e4.message || e4).slice(0, 80)); }
     }
