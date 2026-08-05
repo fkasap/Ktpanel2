@@ -978,7 +978,24 @@ async function endeksKapanisTazele() {
         else raporlar.push('### Aylık endeks tohumu — ⚠ CSV bulunamadı · ' + notlar.join(' · '));
       } catch (e5) { raporlar.push('### Aylık endeks tohumu — ✗ ' + String(e5.message || e5).slice(0, 90)); }
     }
-    const veriGunu = (birlesik.XU100 && birlesik.XU100.t) || bugun;
+    /* §250p: veri günü GG/AA/YYYY geliyordu ve arşive ÖYLE yazılıyordu —
+       ISO anahtarlarla karışınca sıralama/karşılaştırma bozuluyor (panelde
+       dönemler açılmadı). Anahtar HER ZAMAN ISO. */
+    const isoCevir = (t) => {
+      const m = String(t || '').match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/);
+      if (m) return m[3] + '-' + String(m[2]).padStart(2, '0') + '-' + String(m[1]).padStart(2, '0');
+      const m2 = String(t || '').match(/^\d{4}-\d{2}-\d{2}/);
+      return m2 ? m2[0] : bugun;
+    };
+    const veriGunu = isoCevir((birlesik.XU100 && birlesik.XU100.t) || bugun);
+    /* eski GG/AA/YYYY anahtarları varsa ISO'ya taşı (tek seferlik onarım) */
+    for (const k of Object.keys(arsiv.gunler)) {
+      if (/^\d{1,2}[.\/]\d{1,2}[.\/]\d{4}/.test(k)) {
+        const yeni = isoCevir(k);
+        arsiv.gunler[yeni] = Object.assign(arsiv.gunler[yeni] || {}, arsiv.gunler[k]);
+        delete arsiv.gunler[k];
+      }
+    }
     arsiv.gunler[veriGunu] = Object.fromEntries(Object.entries(birlesik).map(([k, v]) => [k, v.k]));
     const g = Object.keys(arsiv.gunler).sort();
     while (g.length > 1500) delete arsiv.gunler[g.shift()];   // §250e: ~6 yıl (TLREFK tohum + endeks serisi)
