@@ -851,14 +851,23 @@ async function endeksKapanisTazele() {
           let ornek = '';
           for (const ad of icerik2) {
             if (!/\.csv$/i.test(ad)) continue;
-            const metin2 = new TextDecoder('iso-8859-9').decode(await fsp2.readFile(path.join(dz, ad)));
+            /* §250h: KODLAMA + KOLON OTOMATİK — tarihsel dosya UTF-16LE ve
+               tarih İLK kolonda (günlük dosya ISO-8859-9, tarih 6. kolonda).
+               BOM'a bakıp decode edilir, başlık satırından kolon indeksleri
+               ÖĞRENİLİR (ad tahmini değil, başlıktan okuma). */
+            const ham2 = await fsp2.readFile(path.join(dz, ad));
+            const bom = ham2.length > 1 && ((ham2[0] === 0xFF && ham2[1] === 0xFE) || (ham2[0] === 0xFE && ham2[1] === 0xFF));
+            const metin2 = new TextDecoder(bom ? 'utf-16le' : 'iso-8859-9').decode(ham2);
+            const bas2 = (metin2.split(/\r?\n/)[0] || '').split(';').map(x => x.toLocaleUpperCase('tr').trim());
+            const iT = bas2.findIndex(x => x.includes('TARIH') || x.includes('DATE'));
+            const iK = bas2.findIndex(x => x.includes('KAPANIS') || x.includes('CLOSING'));
             /* §250g: ayrıştırılamazsa NEDEN görünsün — dosya adı + ilk 2 satır rapora */
             if (!ornek) ornek = ad + ' → ' + metin2.split(/\r?\n/).slice(0, 3).join(' ¶ ').slice(0, 260);
             metin2.split(/\r?\n/).forEach(sat => {   /* başlık atlamak yerine desen filtresi: her satır denenir */
               const p = sat.split(';');
-              if (p.length < 7) return;
-              const kap = parseFloat(String(p[6]).replace(',', '.'));
-              const t = String(p[5]).trim();   // GG/AA/YYYY
+              if (p.length < 3) return;
+              const kap = parseFloat(String(p[iK >= 0 ? iK : 6] || '').replace(',', '.'));
+              const t = String(p[iT >= 0 ? iT : 5] || '').trim();
               let iso = null;
               let m = t.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})$/);
               if (m) iso = m[3] + '-' + String(m[2]).padStart(2,'0') + '-' + String(m[1]).padStart(2,'0');
