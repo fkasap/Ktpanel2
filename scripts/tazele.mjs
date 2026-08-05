@@ -923,7 +923,20 @@ async function endeksKapanisTazele() {
                   [...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(t => t[1]).join('')
                     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
               } catch (e7) {}
-              const shYol = path.join(dx, 'xl', 'worksheets', 'sheet1.xml');
+              /* §250l: sheet adı sabit DEĞİL (ENOENT kanıtı) — worksheets
+                 dizinindeki İLK xml bulunur; dizin yoksa xl altı taranır. */
+              let shYol = null;
+              try {
+                const wd = path.join(dx, 'xl', 'worksheets');
+                const wl = (await fsp3.readdir(wd)).filter(x => /\.xml$/i.test(x)).sort();
+                if (wl.length) shYol = path.join(wd, wl[0]);
+              } catch (e9) {}
+              if (!shYol) {
+                const xl = path.join(dx, 'xl');
+                const alt = await fsp3.readdir(xl).catch(() => []);
+                notlar.push(fx + ':xl=[' + alt.join(',').slice(0, 60) + ']');
+                continue;
+              }
               const sh = await fsp3.readFile(shYol, 'utf8');
               const seriTarih = (n) => new Date(Date.UTC(1899, 11, 30) + n * 86400000).toISOString().slice(0, 10);
               for (const rm of sh.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)) {
