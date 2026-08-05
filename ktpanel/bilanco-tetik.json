@@ -1,27 +1,40 @@
 {
  "tarih": "2026-08-05",
  "kodlar": [
+  "ADLVY",
   "AKDFA",
   "ALJF",
   "ASELS",
+  "ATLFA",
   "AYGAZ",
   "BLKOM",
   "BRGAN",
+  "DAGI",
   "ESCOM",
   "FADE",
   "FIBAF",
   "FROTO",
   "GOZDE",
   "ISYAT",
+  "KCAER",
+  "KCHOL",
+  "LILAK",
   "LYDYE",
+  "MPARK",
+  "ORCAY",
   "PAHOL",
   "RAYSG",
   "RODRG",
   "SANKO",
+  "SARAE",
+  "SAYAS",
+  "SEGYO",
   "THYAO",
+  "TUCLK",
   "TUPRS",
-  "UFUK"
+  "UFUK",
+  "YATVK"
  ],
- "sayi": 20,
- "guncelleme": "2026-08-05 11:33 UTC — otomatik (KAP FR)"
+ "sayi": 33,
+ "guncelleme": "2026-08-05 16:50 UTC — otomatik (KAP FR)"
 }
