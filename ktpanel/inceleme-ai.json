@@ -3,6 +3,545 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "SAYAS",
+   "ad": "Say Reklamcılık (Say Yenilenebilir)",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 2.5,
+   "ozet": "Küçük ölçek, dalgalı seyir. Satış 811 mn ₺ (y/y +%11,7, ç/ç +%5,7); brüt marj %31,1 (2Ç25: %29,9). FAVÖK 185 mn (y/y +%11,4). Ana ortaklık 104 mn — 1Ç'nin 17 mn'undan sıçrama ama 2Ç25'in (176 mn) altında; TTM net 203 mn / PD 4,0 mlr → F/K ~19,7. TTM İNA 204 mn, capex 19 mn → FCF ~185 mn (verim ~%4,6).",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "811 mn ₺",
+     "cc": "+%5,7 (1Ç: 767)",
+     "yoy": "+%11,7 (2Ç25: 726)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "252 mn ₺ · marj %31,1",
+     "cc": "1Ç: %22,7 — toparlanma",
+     "yoy": "2Ç25: %29,9"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "185 mn ₺ · marj %22,8",
+     "cc": "1Ç: 113 — ç/ç +%64",
+     "yoy": "+%11,4 (2Ç25: 166)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "104 mn ₺",
+     "cc": "1Ç: 17 — 6×",
+     "yoy": "−%40,9 (2Ç25: 176) · TTM 203"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 204 · capex 19",
+     "cc": "TTM FCF ~185 mn",
+     "yoy": "PD 4,0 mlr → verim ~%4,6"
+    }
+   ],
+   "onemli": [
+    "ÇEYREKLİK OYNAKLIK YÜKSEK: net kâr 176 → 17 → 104 mn seyri, küçük ölçekli şirketlerde tek projenin sonucu değiştirdiğini gösterir; tek çeyreğe dayalı tez kurulmamalı.",
+    "Marj seviyeleri (brüt %31, FAVÖK %22,8) iş modeli için sağlıklı; nakit üretimi pozitif ve capex hafif — bilanço baskısı düşük."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 2,5: operasyonel olarak istikrarlı ama küçük ölçek + kâr oynaklığı nedeniyle konumlanma zor. İzleme listesi profili.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "FORTE",
+   "ad": "Forte Bilgi İletişim",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.0,
+   "ozet": "Küçük ölçekli, hızlı büyüyen. Satış 1.029 mn ₺ (y/y 2,9×, ç/ç −%3,0); brüt marj %30,4 (2Ç25: %16,6 — iki kat). FAVÖK 327 mn (2Ç25: 29 mn — 11×). Ana ortaklık 202 mn (2Ç25: −25). TTM net 3.029 mn ama bu rakam 1Ç'deki tek seferlik kalemle şişkin görünüyor (1Ç TTM 2.800, çeyreklik yalnız 10 mn). PD 7,6 mlr; TTM İNA 4.015 mn (aynı şekilde olağandışı yüksek).",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "1.029 mn ₺",
+     "cc": "−%3,0 (1Ç: 1.061)",
+     "yoy": "2,9× (2Ç25: 349)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "313 mn ₺ · marj %30,4",
+     "cc": "1Ç: %15,4 — iki kat",
+     "yoy": "2Ç25: %16,6"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "327 mn ₺ · marj %31,8",
+     "cc": "1Ç: 70 — 4,7×",
+     "yoy": "11× (2Ç25: 29)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "202 mn ₺",
+     "cc": "1Ç: 10 mn",
+     "yoy": "2Ç25: −25 (zarardan dönüş)"
+    },
+    {
+     "ad": "TTM tutarsızlığı",
+     "deger": "TTM net 3.029 mn",
+     "cc": "çeyreklik toplam bunu desteklemiyor",
+     "yoy": "tek seferlik kalem şüphesi — dipnot okunmalı"
+    }
+   ],
+   "onemli": [
+    "DİKKAT — TTM ANOMALİSİ: çeyreklik kârlar (10 + 202 mn) TTM 3.029 mn'u açıklamıyor; 1Ç'de büyük bir tek seferlik gelir (varlık satışı/değerleme) olmuş olabilir. Bu rakamla çarpan hesaplamak yanıltıcıdır; KAP dipnotu okunmadan F/K kullanılmamalı.",
+    "Operasyonel taraf gerçekten güçlü: ciro 2,9×, FAVÖK marjı %31,8. Küçük ölçekte (PD 7,6 mlr) bu büyüme hızı dikkat çekici ama tek müşteri/proje yoğunlaşması riski sorgulanmalı."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,0: operasyonel büyüme etkileyici, ancak TTM kârın kompozisyonu netleşmeden değerleme yapılamaz. 'Araştır' listesine alınmalı, çarpanla karar verilmemeli.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "KCAER",
+   "ad": "Kocaer Çelik",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 2.5,
+   "ozet": "Toparlanma var ama zayıf temelden. Satış 6.175 mn ₺ (y/y −%18,3, ç/ç +%14,2); brüt marj %23,1 (2Ç25: %19,9 — genişleme). FAVÖK 995 mn (y/y −%6,7, ç/ç +%30). Ana ortaklık 483 mn — 2Ç25'in 3,7 katı; TTM 654 mn / PD 28,5 mlr → F/K ~43,6. Nakit sorunlu: 2Ç İNA −33 mn, TTM 340 mn'a karşılık capex 1.277 → TTM FCF NEGATİF (~−937 mn).",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "6.175 mn ₺",
+     "cc": "+%14,2 (1Ç: 5.409)",
+     "yoy": "−%18,3 (2Ç25: 7.557)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "1.425 mn ₺ · marj %23,1",
+     "cc": "1Ç: %18,6",
+     "yoy": "2Ç25: %19,9 — genişleme"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "995 mn ₺ · marj %16,1",
+     "cc": "1Ç: 765 — ç/ç +%30",
+     "yoy": "−%6,7 (2Ç25: 1.066)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "483 mn ₺",
+     "cc": "1Ç: 127",
+     "yoy": "3,7× (2Ç25: 132) · TTM 654 → F/K ~43,6"
+    },
+    {
+     "ad": "Nakit",
+     "deger": "2Ç İNA −33 mn (negatif)",
+     "cc": "TTM İNA 340 · capex 1.277",
+     "yoy": "TTM FCF ~−937 mn"
+    }
+   ],
+   "onemli": [
+    "MARJ İYİ, NAKİT KÖTÜ: brüt marj genişlerken işletme nakdinin negatife dönmesi alacak/stok birikimine işaret eder — çelikte ihracat vadeli satışın klasik yan etkisi; tahsilat döngüsü izlenmeli.",
+    "EREGL/ISDMR'nin sektörel dönüşünden KCAER kısmen faydalanmış (marj ↑) ama ciro y/y −%18 ile ayrışıyor; ürün segmenti (profil/yapısal çelik) inşaat talebine daha duyarlı."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 2,5: kârlılık yönü doğru ama nakit üretimi negatif ve çarpan yüksek (F/K ~44). Sektör rüzgârı lehte; şirket bazlı teyit için tahsilat ve TTM kâr artışı gerekli.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "GENIL",
+   "ad": "Gen İlaç",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.0,
+   "ozet": "Sağlam ama ivme yavaşladı. Satış 6.966 mn ₺ (y/y +%22,9, ç/ç −%1,7); brüt marj %21,3 (1Ç: %29,4 — belirgin düşüş). FAVÖK 764 mn (1Ç: 1.381 — ç/ç yarıya). Ana ortaklık 490 mn (y/y 4,8×, ç/ç +%22); TTM net 1.300 mn / PD 43,9 mlr → F/K ~33,8. Nakit zayıf: TTM İNA 1.554 · capex 1.101 → FCF ~450 mn (verim ~%1,0).",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "6.966 mn ₺",
+     "cc": "−%1,7 (1Ç: 7.088)",
+     "yoy": "+%22,9 (2Ç25: 5.666)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "1.486 mn ₺ · marj %21,3",
+     "cc": "1Ç: %29,4 — 8 puan düşüş",
+     "yoy": "2Ç25: %20,8"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "764 mn ₺ · marj %11,0",
+     "cc": "1Ç: 1.381 — ç/ç −%44,7",
+     "yoy": "+%25,9 (2Ç25: 607)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "490 mn ₺",
+     "cc": "1Ç: 401 — +%22",
+     "yoy": "4,8× (2Ç25: 102) · TTM 1.300"
+    },
+    {
+     "ad": "Değerleme/nakit",
+     "deger": "PD 43,9 mlr · F/K ~33,8",
+     "cc": "TTM FCF ~450 mn",
+     "yoy": "FCF verimi ~%1,0 — çarpan dolu"
+    }
+   ],
+   "onemli": [
+    "ÇEYREKLİK MARJ OYNAKLIĞI: 1Ç'de %29,4 olan brüt marjın %21,3'e inmesi ürün karması/ihale fiyatlaması kaynaklı olabilir; ilaç sektöründe bu dalgalanma sık ama trendi izlemek gerekir.",
+    "F/K ~34 + FCF verimi %1: değerleme büyüme beklentisini şimdiden içeriyor. Ciro büyümesi (+%23 y/y) bunu kısmen destekliyor ama marj sürdürülemezse çarpan risklidir."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,0: büyüme gerçek, kâr artıyor; ancak marj oynak ve çarpan dolu. Fiyat düzeltmesi olmadan ağırlık artırmak için gerekçe zayıf.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "TKNSA",
+   "ad": "Teknosa",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 1.5,
+   "ozet": "Zarar derinleşiyor. Satış 22.602 mn ₺ (y/y −%3,2, ç/ç −%5,0) — reel sert daralma; brüt marj %14,4'ten %11,9'a indi. FAVÖK 742 mn (y/y −%37,3). Ana ortaklık −986 mn zarar (2Ç25: −715); TTM net −2.851 mn ve dört çeyrektir kötüleşiyor. Tek olumlu: 2Ç İNA 2.518 mn (işletme sermayesi tahsilatı) ama TTM FCF ~2,1 mlr, PD 3,2 mlr'a göre yanıltıcı derecede yüksek — kâr yokken nakit stok azaltmadan geliyor.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "22.602 mn ₺",
+     "cc": "−%5,0 (1Ç: 23.799)",
+     "yoy": "−%3,2 (2Ç25: 23.340) — reel daralma"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "2.699 mn ₺ · marj %11,9",
+     "cc": "1Ç: %11,5",
+     "yoy": "2Ç25: %14,4 — 2,5 puan erime"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "742 mn ₺ · marj %3,3",
+     "cc": "1Ç: 639 · TTM 4.401 (düşüyor)",
+     "yoy": "−%37,3 (2Ç25: 1.183)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "−986 mn ₺",
+     "cc": "1Ç: −509 — zarar büyüyor",
+     "yoy": "2Ç25: −715 · TTM −2.851"
+    },
+    {
+     "ad": "Nakit",
+     "deger": "2Ç İNA 2.518 · TTM 3.041",
+     "cc": "capex TTM 907",
+     "yoy": "kâr yokken nakit: stok/işletme sermayesi kaynaklı"
+    }
+   ],
+   "onemli": [
+    "KEYFİ HARCAMA DARALMASININ BİREBİR YANSIMASI: panel kart verisinde keyfi harcamalar reel −%6,9; elektronik perakende bu kategorinin merkezinde. Marj erimesi + zarar büyümesi yapısal talep sorununa işaret ediyor.",
+    "PD 3,2 mlr ₺ ile TTM zarar 2,9 mlr neredeyse eşit — piyasa şirketi 'dönüş opsiyonu' olarak fiyatlıyor. Nakit girişi operasyonel kârdan değil işletme sermayesinden geliyor; bu kaynak sınırlıdır."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 1,5: dört çeyreklik zarar serisi, daralan ciro, eriyen marj. Tüketici döngüsü dönmeden tez kurulamaz; katılım evreninde daha iyi risk-getiri var.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "EBEBK",
+   "ad": "ebebek",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.5,
+   "ozet": "Perakendede sağlam çeyrek. Satış 9.338 mn ₺ (y/y +%16,9, ç/ç +%4,5); brüt marj %37,1 (2Ç25: %39,0 — hafif erime ama yüksek seviye). FAVÖK 1.332 mn (y/y −%8,5). Ana ortaklık 304 mn — 2Ç25'te −24 mn zarardı; TTM net 533 mn'a çıktı (bir yıl önce −75). Nakit: TTM İNA 5.031 · capex 1.367 → FCF ~3,7 mlr / PD 13,2 mlr ≈ %27,7 verim.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "9.338 mn ₺",
+     "cc": "+%4,5 (1Ç: 8.932)",
+     "yoy": "+%16,9 (2Ç25: 7.987)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "3.463 mn ₺ · marj %37,1",
+     "cc": "1Ç: %33,2 — toparlanma",
+     "yoy": "2Ç25: %39,0"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "1.332 mn ₺ · marj %14,3",
+     "cc": "1Ç: 801 — ç/ç +%66",
+     "yoy": "−%8,5 (2Ç25: 1.456)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "304 mn ₺",
+     "cc": "1Ç: 75",
+     "yoy": "2Ç25: −24 → TTM 533 (bir yıl önce −75)"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 5.031 · capex 1.367",
+     "cc": "TTM FCF ~3,7 mlr",
+     "yoy": "PD 13,2 mlr → verim ~%27,7"
+    }
+   ],
+   "onemli": [
+    "MAKAS TEZİYLE UYUMLU: panelin kart harcaması verisinde temel harcamalar reel +%10,5, keyfi −%6,9. Bebek/çocuk ürünleri 'yarı-zorunlu' kategoride — ciro reel büyümesi bu ayrımı doğruluyor.",
+    "Brüt marj %37 ile perakendede üst bantta; FAVÖK'ün y/y gerilemesi operasyonel gider artışına (mağaza/personel) işaret eder, izlenmeli."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,5: zarardan kâra dönüş + yüksek nakit verimi + savunmacı kategori. Tüketici sıkışmasında dayanıklı profil; çarpan cazip görünüyor.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "BRISA",
+   "ad": "Brisa Bridgestone",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.5,
+   "ozet": "Zarardan güçlü dönüş. Satış 11.125 mn ₺ (y/y −%3,8, ç/ç −%13,2) — ciro zayıf ama kârlılık patladı: brüt marj %18,1'den %24,7'ye, FAVÖK 1.744 mn (y/y +%59,3). Ana ortaklık 229 mn; TTM net −485'ten +453 mn'a döndü. Nakit çok güçlü: TTM İNA 9.056 · capex 1.954 → FCF ~7,1 mlr / PD 23,9 mlr ≈ %29,7 verim.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "11.125 mn ₺",
+     "cc": "−%13,2 (1Ç: 12.817)",
+     "yoy": "−%3,8 (2Ç25: 11.563)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "2.744 mn ₺ · marj %24,7",
+     "cc": "1Ç: %22,5",
+     "yoy": "2Ç25: %18,1 — 6,6 puan genişleme"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "1.744 mn ₺ · marj %15,7",
+     "cc": "TTM 8.123 (1Ç TTM 7.475)",
+     "yoy": "+%59,3 (2Ç25: 1.095)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "229 mn ₺",
+     "cc": "1Ç: 29",
+     "yoy": "2Ç25: −765 · TTM +453 (artıya döndü)"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 9.056 · capex 1.954",
+     "cc": "TTM FCF ~7,1 mlr",
+     "yoy": "PD 23,9 mlr → verim ~%29,7"
+    }
+   ],
+   "onemli": [
+    "MARJ HİKÂYESİ CİRODAN GÜÇLÜ: satış daralırken brüt marjın 6,6 puan genişlemesi hammadde (kauçuk/petrokimya) maliyetinin düşüşüne işaret — PETKM'deki tabloyla aynı zincirin alt halkası.",
+    "TTM FCF/PD ~%30: bu seviye ya piyasanın kârı geçici saydığını ya da bilançoda görünmeyen bir risk fiyatladığını gösterir; borç yapısı ayrıca incelenmeli."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,5: kârlılık dönüşü + olağanüstü nakit verimi. Ciro tarafındaki zayıflık (yerli talep) ana çekince; maliyet avantajı sürerse yeniden değerleme adayı.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "MPARK",
+   "ad": "MLP Sağlık (Medical Park)",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.0,
+   "ozet": "İstikrarlı büyüme, kâr yatay. Satış 16.735 mn ₺ (y/y +%6,7, ç/ç −%3,8 — mevsimsel); FAVÖK 4.806 mn, marj %28,7 (sektör için güçlü). Ana ortaklık 1.368 mn (y/y −%0,8); TTM net 6.654 mn / PD 81,5 mlr → F/K ~12,2. Nakit güçlü: 2Ç İNA 5.799 mn, TTM 15.807; capex TTM 10.067 → TTM FCF ~5,7 mlr (verim ~%7,0).",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "16.735 mn ₺",
+     "cc": "−%3,8 (1Ç: 17.391)",
+     "yoy": "+%6,7 (2Ç25: 15.682)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "4.142 mn ₺ · marj %24,8",
+     "cc": "1Ç: %27,5",
+     "yoy": "2Ç25: %25,7"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "4.806 mn ₺ · marj %28,7",
+     "cc": "TTM 20.055 — yükseliyor",
+     "yoy": "+%25,6 (2Ç25: 3.826)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "1.368 mn ₺",
+     "cc": "1Ç: 1.784",
+     "yoy": "−%0,8 · TTM 6.654 → F/K ~12,2"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 15.807 · capex 10.067",
+     "cc": "TTM FCF ~5,7 mlr",
+     "yoy": "PD 81,5 mlr → verim ~%7,0"
+    }
+   ],
+   "onemli": [
+    "FAVÖK marjı %28,7 ve TTM 20 mlr'a tırmanıyor — operasyonel taban sağlam; net kârın yatay kalması finansman gideri ve amortisman kaynaklı olabilir.",
+    "Capex İNA'nın üçte ikisi: hastane yatırımı süren bir modelde bu normal ama serbest nakdi sınırlıyor; büyüme yavaşlarsa FCF hızla iyileşir."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,0: savunmacı sağlık hikâyesi, marj kaliteli, çarpan makul (F/K ~12). Katalizör eksikliği ve yatırım yükü nedeniyle 'tut' profili.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "PETKM",
+   "ad": "Petkim",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.5,
+   "ozet": "Zarardan çıkış — üç yıllık kâbus bitiyor olabilir. Satış 36.415 mn ₺ (y/y +%38,5, ç/ç +%26,1). Brüt kâr 3.122 mn: 2Ç25'te −584 idi. FAVÖK +3.376 mn (2Ç25: −715) ve TTM FAVÖK ilk kez artıya döndü (+1.514). Ana ortaklık 4.075 mn — TTM hâlâ −3.272 ama 1Ç'deki −8.116'dan hızlı toparlanma. Nakit: TTM İNA 1.078 mn, capex 4.253 → FCF negatif.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "36.415 mn ₺",
+     "cc": "+%26,1 (1Ç: 28.887)",
+     "yoy": "+%38,5 (2Ç25: 26.289)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "3.122 mn ₺",
+     "cc": "1Ç: 4 mn — sıçrama",
+     "yoy": "2Ç25: −584 (zarardan dönüş)"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "+3.376 mn ₺",
+     "cc": "1Ç: 174 · TTM +1.514 (artıya döndü)",
+     "yoy": "2Ç25: −715"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "4.075 mn ₺",
+     "cc": "1Ç: 327",
+     "yoy": "2Ç25: −768 · TTM −3.272 (iyileşiyor)"
+    },
+    {
+     "ad": "Nakit",
+     "deger": "TTM İNA 1.078 · capex 4.253",
+     "cc": "2Ç İNA 1.565",
+     "yoy": "TTM FCF NEGATİF — nakit dönüşü henüz yok"
+    }
+   ],
+   "onemli": [
+    "PETROKİMYA MAKASI AÇILDI: nafta maliyeti düşerken ürün fiyatı geç uyum sağlıyor — TUPRS kartındaki crack hikâyesinin petrokimya versiyonu. Aynı sebep, aynı uyarı: bu marj şok marjı olabilir.",
+    "TTM hâlâ zararda ve FCF negatif; capex sürüyor. 'Dönüş' tezi ancak 3Ç'de FAVÖK'ün pozitif kalmasıyla teyit edilir — tek çeyrek yeterli değil."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,5: uzun zarar serisinden ilk anlamlı çıkış ve TTM FAVÖK'ün artıya dönmesi kritik eşik. Nakit tarafı hâlâ zayıf; pozisyon için teyit çeyreği beklenmeli.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "ISDMR",
+   "ad": "İskenderun Demir Çelik",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 4.0,
+   "ozet": "Kardeş şirketle aynı yönde, daha da güçlü marj. Satış 36.189 mn ₺ (y/y +%25,9, ç/ç +%14,3); FAVÖK 3.617 mn, marj %10,0. Ana ortaklık 7.726 mn — 2Ç25'in 3,8 katı ve TTM'in (12.299) yarısından fazlası tek çeyrekte. TTM FAVÖK 13.988. Nakit: TTM İNA 24.163 · capex 4.417 → FCF ~19,7 mlr / PD 153,0 mlr ≈ %12,9 verim.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "36.189 mn ₺",
+     "cc": "+%14,3 (1Ç: 31.667)",
+     "yoy": "+%25,9 (2Ç25: 28.746)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "3.256 mn ₺ · marj %9,0",
+     "cc": "1Ç: %8,4",
+     "yoy": "2Ç25: %9,5"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "3.617 mn ₺ · marj %10,0",
+     "cc": "+%14,8 ç/ç · TTM 13.988",
+     "yoy": "+%18,9 (2Ç25: 3.042)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "7.726 mn ₺",
+     "cc": "1Ç: 1.502 — 5,1×",
+     "yoy": "3,8× (2Ç25: 2.013) · TTM 12.299"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 24.163 · capex 4.417",
+     "cc": "TTM FCF ~19,7 mlr",
+     "yoy": "PD 153,0 mlr → verim ~%12,9"
+    }
+   ],
+   "onemli": [
+    "EREGL ile birlikte okunmalı: aynı grubun iki çelik varlığı da aynı çeyrekte sıçradı — bu, şirkete özgü değil SEKTÖREL bir marj dönüşü olduğunun kanıtı (fiyat/maliyet makası).",
+    "Capex EREGL'e göre hafif (TTM 4,4 mlr vs 12,4 mlr) — nakit dönüşümü daha yüksek; ama yatırım eksikliği uzun vadede kapasite/verimlilik dezavantajı yaratabilir."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 4,0: sektörel dönüşün en kârlı ifadesi; nakit üretimi güçlü, capex ılımlı. Çelik fiyat döngüsüne bağımlılık ana risk.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
+   "kod": "EREGL",
+   "ad": "Ereğli Demir Çelik",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 4.0,
+   "ozet": "Çeyreğin patlaması. Satış 64.882 mn ₺ (y/y +%56,7, ç/ç +%8,7); FAVÖK 6.581 mn (y/y +%59,2), brüt marj %9,1. Ana ortaklık 8.549 mn — 2Ç25'in 6,5 katı; tek çeyrekte TTM'i (7.711) aşan kâr. TTM FAVÖK 24.591 mn. Nakit: 2Ç İNA 3.223 · capex 1.931 → FCF +1,3 mlr; TTM FCF 39,9 mlr / PD 270,8 mlr ≈ %14,7 verim.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "64.882 mn ₺",
+     "cc": "+%8,7 (1Ç: 59.684)",
+     "yoy": "+%56,7 (2Ç25: 41.412)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "5.878 mn ₺ · marj %9,1",
+     "cc": "1Ç: %8,1 — genişleme",
+     "yoy": "2Ç25: %9,3"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "6.581 mn ₺",
+     "cc": "+%13,1 ç/ç · TTM 24.591",
+     "yoy": "+%59,2 (2Ç25: 4.133)"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "8.549 mn ₺",
+     "cc": "1Ç: 383 — 22×",
+     "yoy": "6,5× (2Ç25: 1.306) · TTM 7.711"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 52.304 · capex 12.434",
+     "cc": "TTM FCF ~39,9 mlr",
+     "yoy": "PD 270,8 mlr → FCF verimi ~%14,7"
+    }
+   ],
+   "onemli": [
+    "ÇELİKTE DÖNÜŞ TEYİDİ: ciro reel büyürken FAVÖK marjı korunmuş; Temmuz'da madencilik/enerji ÜFE'sinin −%4,22'ye dönmesi (panelde canlı) 3Ç maliyet tarafını da destekler.",
+    "Tek çeyrekte yıllık kârı aşmak, önceki çeyreklerin ne kadar baskılandığını gösterir — TTM normalleştikçe çarpanlar hızla değişir; kâr kalitesinin (tek seferlik kalem var mı) izlenmesi gerekir."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 4,0: operasyonel dönüş + güçlü nakit + %14,7 FCF verimi. Katılım evreninin ağır sanayi ayağında en net toparlanma hikâyesi; ana risk çelik fiyat döngüsünün tersine dönmesi.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
    "kod": "CEMTS",
    "ad": "Çemtaş Çelik",
    "donem": "2Ç26 (6A)",
@@ -2694,7 +3233,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-07 — ALBRK (3,5) + ALCTL (1,5) + CEMTS (2,5) 2Ç26 kartları eklendi. 40 kart.",
+ "guncelleme": "2026-08-07 — 11 kart eklendi (EREGL/ISDMR 4,0 · PETKM/BRISA/EBEBK 3,5 · MPARK/GENIL/FORTE 3,0 · KCAER/SAYAS 2,5 · TKNSA 1,5). 51 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
