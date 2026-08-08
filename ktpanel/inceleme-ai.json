@@ -3,6 +3,56 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "LOGO",
+   "ad": "Logo Yazılım",
+   "donem": "2Ç26 (6A)",
+   "tarih": "7 Ağu 2026",
+   "tarih_iso": "2026-08-07",
+   "sablon": "bist",
+   "skor": 3.0,
+   "ozet": "Yatay ama kaliteli. Satış 1.742 mn ₺ — y/y +%1,6, ç/ç +%7,2: reel olarak enflasyonun altında, hacim büyümesi yok. Buna karşılık kârlılık sağlam: brüt marj %97,2 (yazılım modeli), FAVÖK 728 mn · marj %41,8 (2Ç25: %41,5 — korunmuş). Ana ortaklık 369 mn (y/y +%1,1). TTM net 888 mn / PD 12,8 mlr → F/K ~14,4. Nakit güçlü: TTM İNA 2.488 · capex 1.226 → TTM FCF ~1,26 mlr, FCF verimi ~%9,9.",
+   "metrikler": [
+    {
+     "ad": "Satışlar (2Ç)",
+     "deger": "1.742 mn ₺",
+     "cc": "+%7,2 (1Ç: 1.625)",
+     "yoy": "+%1,6 — REEL DARALMA (TÜFE %31,8)"
+    },
+    {
+     "ad": "Brüt kâr",
+     "deger": "1.693 mn ₺ · marj %97,2",
+     "cc": "1Ç: %97,7",
+     "yoy": "2Ç25: %96,3 — yazılım marjı"
+    },
+    {
+     "ad": "FAVÖK",
+     "deger": "728 mn ₺ · marj %41,8",
+     "cc": "+%27,1 ç/ç · TTM 2.378",
+     "yoy": "+%2,2 (2Ç25: 712) — marj korundu"
+    },
+    {
+     "ad": "Ana ortaklık net",
+     "deger": "369 mn ₺",
+     "cc": "1Ç: 139 — ç/ç 2,7×",
+     "yoy": "+%1,1 · TTM 888 → F/K ~14,4"
+    },
+    {
+     "ad": "Nakit (TTM)",
+     "deger": "İNA 2.488 · capex 1.226",
+     "cc": "2Ç FCF +160 mn",
+     "yoy": "TTM FCF ~1,26 mlr → verim ~%9,9"
+    }
+   ],
+   "onemli": [
+    "REEL BÜYÜME YOK: ciro y/y +%1,6 iken TÜFE %31,8 — yani reel olarak ciddi daralma. Yazılımda fiyatlama genelde enflasyona endeksli yapılır; bu tablo ya lisans yenilemelerinde direnç ya da yurt dışı (Romanya) tarafında kur etkisi olduğunu düşündürür. Kırılım açıklanmadığı için tez kurmadan önce faaliyet raporu okunmalı.",
+    "MARJ KALESİ SAĞLAM: FAVÖK marjı %41,8 ile korunmuş ve TTM FCF 1,26 mlr — bilanço baskısı yok, temettü/geri alım kapasitesi var. Kârlılığın bu seviyede tutulması, ciro zayıflığının maliyet disipliniyle telafi edildiğini gösterir.",
+    "PORTFÖY NOTU: panelde ~%4,1 ağırlıkla taşınıyor ve endekste %0,41 — yani 370 bps aktif ağırlık. Aylık ayrışmada −0,33 puan katkıyla en çok götüren beşinciydi; hissenin son ay −%2,17 getirisi bu tabloyla uyumlu."
+   ],
+   "guidance": "Şirket rehberliği: açıklanmadı.",
+   "tez": "Skor 3,0: iş modeli kaliteli (marj %42, FCF verimi ~%10, borçsuz nakit üretimi) ama büyüme motoru durmuş. F/K ~14 bu kalite için pahalı değil; ancak reel daralma sürerse çarpan haklı çıkmaz. Ağırlık artırmak için ciro tarafında dönüş sinyali beklenmeli — mevcut pozisyon korunabilir.",
+   "kaynak": "Fintables finansal tablolar + nakit akış (KAP yayını, 7 Ağu 2026)"
+  },
+  {
    "kod": "SAYAS",
    "ad": "Say Reklamcılık (Say Yenilenebilir)",
    "donem": "2Ç26 (6A)",
@@ -3233,7 +3283,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-07 — 11 kart eklendi (EREGL/ISDMR 4,0 · PETKM/BRISA/EBEBK 3,5 · MPARK/GENIL/FORTE 3,0 · KCAER/SAYAS 2,5 · TKNSA 1,5). 51 kart.",
+ "guncelleme": "2026-08-07 — LOGO 2Ç26 (3,0: marj kalesi sağlam, reel büyüme yok) eklendi. 52 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
