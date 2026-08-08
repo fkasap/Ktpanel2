@@ -17,7 +17,9 @@ module.exports = async (req, res) => {
       .split(',').map(x => x.trim()).filter(Boolean);
     const bulgu = [];
     for (const ds of adaylar) {
-      const u = 'https://api.ci.spglobal.com/' + ds + '/v1/metadata';
+      /* §251d: yol sürümlü — v1'de 404 alan dataset v3'te yaşıyor olabilir
+         (market-data kanıtı). ?ver= ile değiştirilebilir; varsayılan v3. */
+      const u = 'https://api.ci.spglobal.com/' + ds + '/' + String(req.query.ver || 'v3') + '/' + String(req.query.uc || 'metadata');
       try {
         const rr = await fetch(u, { headers: { 'Authorization': 'Bearer ' + anahtar, 'Accept': 'application/json', 'appkey': anahtar },
           signal: AbortSignal.timeout(12000) });
