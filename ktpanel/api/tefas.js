@@ -4,7 +4,7 @@
 // token değişebilir: 401/403'te panel/rapor "token yenile" der, yeni HAR
 // ile 1 dakikada güncellenir. Vercel IP'leri WAF'tan geçiyor (kanıt:
 // eski uç Rejected değil ERR-006 almıştı).
-const SURUM = 'h3-fiyatli';
+const SURUM = 'h4-profil';
 const TB = 'Bearer ST-tefaswebwse3irfmSBj4iRAzGPbAlS94Se';
 /* §249h: 401 tanısı sonrası başlıklar HAR'daki gerçek istekle BİREBİR —
    kritik eksik x-request-id idi (istek başına UUID; token'la zorunlu ikili). */
@@ -31,7 +31,13 @@ module.exports = async (req, res) => {
   const tip = (req.query.tip || 'YAT').toUpperCase();
   try {
     let url, body;
-    if (mod === 'fiyat') {   /* §249l: KPR HAR'ından — günlük fiyat serisi */
+    if (mod === 'profil') {   /* §253: AUM/yatırımcı keşfi — akış otomasyonu için */
+      url = 'https://www.tefas.gov.tr/api/funds/fonProfilDtyGetir';
+      body = { dil:'TR', fonKodu: String(req.query.kod || '').toUpperCase(), periyod: '12' };
+    } else if (mod === 'detay') {
+      url = 'https://www.tefas.gov.tr/api/funds/' + String(req.query.uc || 'fonDetayGetir');
+      body = { dil:'TR', fonKodu: String(req.query.kod || '').toUpperCase() };
+    } else if (mod === 'fiyat') {   /* §249l: KPR HAR'ından — günlük fiyat serisi */
       url = 'https://www.tefas.gov.tr/api/funds/fonFiyatBilgiGetir';
       body = { fonKodu: String(req.query.kod || '').toUpperCase(), dil: 'TR', periyod: parseInt(req.query.p) || 1 };   /* §249m: p=36 → 3 yıllık seri */
     } else if (mod === 'liste') {
