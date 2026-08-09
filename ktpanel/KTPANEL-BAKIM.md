@@ -2767,6 +2767,31 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 252a DAMGALI KART TARAMASI + MB KARTLARI GUNCELLENDI (8 Agu)
+
+TARAMA: panelde damgali/eski etiket taramasi yapildi. 15 aday bulundu:
+  - TUFE/UFE kartlari (628, 642): 'damgali (Haz 2026)' etiketi VARSAYILAN
+    metin — canli EVDS gelince 'EVDS · 2026-7' oluyor. SORUN YOK.
+  - 11 kart '27 TEM' damgasinda (12 gun eski): global risk barometresi,
+    getiri egrisi, BOJ, BOK, ECB, Avrupa mega-cap, FED, ABD bilanco,
+    haber akisi, gundem ozeti.
+GUNCELLENEN (web arastirmasiyla dogrulanan guncel durum):
+  BOJ: Temmuz toplantisi SABIT %1,00 (8-1; Takata %1,25 istedi); riskler
+    dengeli, AI talebi + kur izleniyor. Haziran'da +25bp yapmisti.
+  ECB: 17 Haz %2,25 artirim — bes indirimden sonra donus, ARTIRAN TEK
+    buyuk merkez. Agustos toplantisi yok, 10-11 Eylul; Hormuz enerji soku
+    enflasyonu hedef ustunde tutarsa ikinci artirim tartisilir.
+  FED: 'Eylul artirim %82' rakami DONDURULDU — o 27 Tem fiyatlamasiydi;
+    yerine durust ifade: fiyatlama oynak, kurul derin bolunmus (4-8
+    muhalefet), piyasa uzun sureli bekleme fiyatliyor.
+NOT: eski metinlerdeki tek tek olasilik rakamlari (X%) hizla bayatliyor —
+kartlarda RAKAM yerine REJIM tarif etmek daha dayanikli; bu ilke
+uygulandi.
+KALAN ESKI KARTLAR (sonraki tur): global risk barometresi, getiri egrisi
+gorseli, BOK, Avrupa mega-cap, ABD bilanco, gundem ozeti.
+
+DOSYALAR: index.html (ktpanel/)
+
 ## 252 HAFTALIK YORUM + TAKTIKSEL DURUS YENILENDI (8 Agu)
 
 HAFTALIK YORUM (index.html, 5 blok tamamen yeniden yazildi):
