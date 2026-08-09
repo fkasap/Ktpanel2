@@ -6703,42 +6703,42 @@ function taktikRender(){
   const varliklar=[
     {
       ad:'Yerli Hisse (BIST)', kod:'poz1',
-      durus: 'NÖTR', renk:'#8896A5',
-      benchmark:'XKTUM / XU100',
-      teze:'Ana tez sağlam (indirim döngüsü başlarken iskonto iner → çarpan genişler) ve ilk teyitler GELDİ: banka bilançoları (AKBNK/GARAN/YKBNK) korkulan makas hasarını göstermedi, XKTUM haftayı endeksten güçlü kapadı (+%1,0 vs XU100 yatay). Yine de duruş NÖTR: Brent şoku (zirve 102$, düzeltmede ~91$) girdi maliyeti ve TÜFE geçişkenliği kanalıyla indirim alanını daraltıyor; tarife belirsizliği sürüyor. Bilanço kuyruğunda kazanç tabanı zayıf kağıtlar ayrışıyor (EFOR: ciro −%11,5, TTM kâr ≈0 — 45 mlr PD taşınamaz). Bugün açıklanacak TÜFE, "indirim alanı" sorusunun bu haftaki hakemi.',
-      dayanak:['İndirim döngüsü → iskonto oranı düşer, çarpan genişler','Dezenflasyon sürüyor → reel kazanç görünürlüğü artar','YTD rotasyon (sınai +%33 vs banka −%8) → piyasa indirimi önden fiyatlıyor'],
-      risk:['Reel faiz (ex-post) '+(carry!=null?'+%'+trN(carry,1):'pozitif')+' → hissenin fırsat maliyeti: kılçıksız mevduat/PP rekabeti (yabancı akışı da tahvile: hafta +1,2mlr$ DİBS vs +34mn hisse)','REK '+(rek!=null?rek:'>100')+' → ihracatçı marj baskısı','Brent şoku (zirve 102$ → ~91$ düzeltme, aylık hâlâ +%23) → girdi maliyeti kanalı; bugünkü TÜFE\'de zirve fiyatların izi görülür','Trump tarifeleri (TR kapsamda) → ihracatçı/sınai tezine gölge','Model portföy benchmark '+(alfa!=null?(alfa>=0?'ÜSTÜ (+'+trN(alfa,1)+'pp)':'ALTINDA ('+trN(alfa,1)+'pp)'):'takipte')],
-      tetik:'BUGÜN TÜFE (3 Ağu): dezenflasyon teyidi → ağırlığı NÖTR→ÜSTÜ tartış; sapma yukarı → nötrü koru. Per 6 Ağu rezerv yayını: swap hariç net toparlanması sürerse TL varlık zemini güçlenir. Brent yeniden 100$+ → nötrle.'
+      durus: 'ÜSTÜ', renk:'#0FA26B',
+      benchmark:'XKTUM / XK100',
+      teze:'NÖTR→ÜSTÜ. Tez artık beklenti değil KANIT: 2Ç bilançoları emtia-sanayi hattında marj dönüşünü teyit etti (TUPRS 4×, EREGL 6,5×, ISDMR 3,8×, PETKM zarardan çıkış, BRISA +6,6 puan marj). Katılım bankacılığı ayağı da döndü (ALBRK y/y +%69). Manşet TÜFE %31,75\'e indi, üretici tarafı daha hızlı soğuyor (Yİ-ÜFE %27,83, madencilik −%4,22). İndirim döngüsü başladığında iskonto oranı düşer + kazanç tabanı zaten toparlanmış olur — ikisi çakışırsa çarpan genişlemesi çift motorlu olur.',
+      dayanak:['2Ç kâr dönüşü GERÇEKLEŞTİ (emtia zinciri + banka) — tez teyitli','Üretici enflasyonu tüketiciden hızlı soğuyor → marj görünürlüğü','XK100 aylık +%6,6 ile momentum endekste','Katılım fonlarına akan 211 mlr₺/ay parkta bekliyor — rotasyon yakıtı'],
+      risk:['ŞOK MARJI UYARISI: rafineri/petrokimya kârları geçici olabilir; 3Ç normalleşmesi kâr revizyonu getirir','Gıda enflasyonu %37,5\'e çıktı → manşetteki iniş sürdürülemezse indirim ertelenir','Reel faiz (ex-post) '+(carry!=null?'+%'+trN(carry,1):'pozitif')+' → mevduat/PP rekabeti sürüyor','Model portföy aylık 3,03 puan geride — seçicilik endeksi yenemiyor'],
+      tetik:'3Ç bilançolarında emtia marjları korunursa ÜSTÜ pekişir; crack\'ler sertçe daralır + gıda enflasyonu yapışırsa NÖTR\'e dön. TCMB indirim adımı → çarpan genişlemesi tezinin ateşleyicisi.'
     },
     {
       ad:'Yabancı Hisse (Global)', kod:'poz2',
       durus:'ALTI', renk:'#D64545',
       benchmark:'S&P 500 / MSCI',
-      teze:'Bilanço zirvesi SONUÇLANDI ve tablo karışık: AMZN (+%7, AWS +%36,7, ilk 200 mlr$ çeyrek) ve MSFT (+%8, FY27 capex 255-260 mlr$) güçlü; META ciro beat/EPS miss ile −%9,6, AAPL rekor ciroya rağmen bellek maliyeti baskısıyla eksi. Samsung 89,5 tr won faaliyet kârıyla bellek süper döngüsünü mühürledi — AI capex teması iki kıtada canlı ama ceza anında kesiliyor. Duruş ALTI kalır: ABD 10Y yüksek, Fed Eylül ≈%82 artırım fiyatlı ve Avrupa enflasyon dönüşü (%1,9→%2,9) "küresel sıkılaşma uzar" riskini büyüttü. Risksiz getiri hissenin üstünde durdukça çoklu daralma riski asıl fren.',
-      dayanak:['S&P 2Ç kâr büyümesi +%23,6 → AI/teknoloji tarafı güçlü','TL bazlı: USD/TRY yükselişi kısmi telafi (kur)','Coğrafi çeşitlendirme → TL varlık yoğunluğunu dengeler'],
-      risk:['ABD 10Y %4,7 (Ocak 2025 zirvesi) → risksiz faiz hisseyi eziyor','Fed 29 Tem\'de sabit tuttu ama 3 şahin muhalefet (2016\'dan beri ilk) → Eylül ≈%82 artırım fiyatlı; gerçekleşirse rekor değerlemede çoklu daralma riski','Rekor değerleme → yükselen faizde çoklu daralma riski','Trump tarife dalgası (60 ülke) → küresel ticaret + risk-off baskısı'],
-      tetik:'Fed Eylül fiyatlaması (≈%82) soğursa → nötre çık; bellek zinciri peak-out satışı derinleşirse AI teması öncü depremini verir → altıda kal. Novo Q2 (Sal 5 Ağu) "eski şampiyonlar" temasının sınavı.'
+      teze:'ALTI korunuyor. Yerli tarafta somut kâr dönüşü varken küresel hisse hâlâ yüksek reel faiz ve zengin çarpanlarla fiyatlanıyor; göreli cazibe yurt içi lehine. Yabancı evren panelde 738 hisseyle canlı izleniyor (forward çarpanlar, analist notu, Altman Z) — ağırlık artırmak için tekil fırsat gerekir, sınıf bazında değil.',
+      dayanak:['Coğrafi/kur çeşitlendirmesi (TL riskine karşı doğal denge)','AI/teknoloji kâr büyümesi sürüyor','Katılım evreni dar → yurt dışı derinlik sunuyor'],
+      risk:['Yüksek reel faiz zengin çarpanları eziyor','Yurt içinde kanıtlanmış kâr dönüşü varken göreli cazibe düşük','Kur kazancı TL bazlı getiriyi şişirip gerçek performansı maskeliyor'],
+      tetik:'Küresel indirim döngüsü netleşir ya da yabancı evrende forward F/K + FCF verimi birlikte cazipleşirse NÖTR\'e çık.'
     },
     {
       ad:'Altın', kod:'poz3',
       durus:'NÖTR', renk:'#8896A5',
       benchmark:'Stratejik %10-15',
-      teze:'NÖTR — ons 4.062$ ile yüksek platoda: jeopolitik prim ve MB alımları taban, yüksek küresel reel faiz tavan. Geçen haftanın kanıtı hâlâ geçerli: Brent şokuna rağmen ons yatay-eksi seyretti, çünkü tahvil getirisi ve dolar bastırıyor. Avrupa enflasyon dönüşü ECB indirim umudunu öteledi → "küresel indirim sinyali" tetiği uzaklaştı. Gram (6.205₺) TL tarafında kur desteğiyle görece dirençli. Stratejik ağırlıkta kal; agresif üstü için Fed güvercinleşmesi ön şart.',
-      dayanak:['Jeopolitik prim + MB alımları → düşüşe taban (sigorta değeri)','TL bazlı: kur + altın kısmi koruma','Dedolarizasyon → uzun vadeli yapısal talep'],
-      risk:['Yüksek reel faiz + küresel indirim yok → altının fırsat maliyeti (asıl baskı)','Ons 4.060$ bölgesinde dirençli — MB alımları + Brent şoku taban veriyor; yine de küresel indirim gelmeden agresif ÜSTÜ için katalizör eksik','Jeopolitik yatışırsa prim erir'],
-      tetik:'Fed/ECB indirim sinyali → NÖTR→ÜSTÜ. Reel faiz yeni zirve ya da jeopolitik yatışma → stratejik tabana çek. Perşembe rezerv verisi TCMB alım iştahının izini verir.'
+      teze:'NÖTR — ama TEZ ÇÜRÜDÜ, dürüstçe kaydedelim. Panelin duruşu "yüksek küresel reel faiz tavan koyar" varsayımına dayanıyordu; ons 4.400$\'a (haftada +%8,7), gümüş +%10,3 ile fiyat bu tezi reddetti. Bu büyüklükte hareket ya MB alımları/dedolarizasyonun reel faiz baskısını yendiğini ya da piyasanın indirim döngüsünü öne çektiğini gösterir. Stratejik ağırlık korunur; ralliye geç katılmak için ÜSTÜ demek yerine tezin yenilenmesi beklenir.',
+      dayanak:['MB alımları + dedolarizasyon → yapısal talep tabanı','Kuyumcu kart harcaması reel +%29,6 → hane korunma refleksi canlı','TL bazlı çift koruma (kur + ons)','Gümüşün +%10,3\'ü ile birlikte hareket = geniş tabanlı değerli metal talebi'],
+      risk:['ÇÜRÜYEN TEZ: reel faiz tavanı işlemedi — modelin varsayımı yenilenmeli','Rekor bölgede alım = geç katılım riski; düzeltme sert olabilir','Panik kaynaklı hareketse risk iştahı bozulduğunda hisse tarafına da vurur'],
+      tetik:'Ons 4.400 üstünde tutunma + Fed indirim sinyali → NÖTR\'den ÜSTÜ\'ye tartış. Sert düzeltme (%10+) → stratejik tabana çek ve tezi yeniden kur.'
     },
     {
       ad:'TL / Sabit Getirili', kod:'poz4',
       durus: carryCazip?'ÜSTÜ':'NÖTR', renk: carryCazip?'#0FA26B':'#8896A5',
-      benchmark:'Para piyasası + sukuk',
-      teze:'Kılçıksız getiri sürüyor: nominal ~%40 + pozitif reel carry — küresel sıkılaşma korosu uzadıkça (dört merkez + Avrupa enflasyon dönüşü) TCMB indirimi ötelenir, bu da yüksek nominali DAHA UZUN kilitleme fırsatı demek. Katılım evreni akış kanıtı taze: 479,3 mlr₺ AUM, para piyasası katılım YTD ~%22,4 (TLV %27,1 lider). İki kazanç kanalı aynen: (1) indirim öncesi yüksek nominali kilitle, (2) indirim gelince süre/sukuk uzat. Kırılganlık hâlâ para piyasası bacağında ve indirim SONRASI için.'+(aofm!=null?'%'+trN(aofm,0):'~%37')+' + reel carry (ex-post) '+(carry!=null?'+%'+trN(carry,1):'pozitif')+' — Türkiye dünyada en yüksek reel faiz veren ülkelerden biri (küresel ölçekte belki sadece Arjantin önde). Neredeyse risksiz taşıma, ve yabancı da aynı yerde (haftalık +1,2mlr$ DİBS girişi). İki kazanç kanalı: (1) indirim öncesi yüksek nominali kilitle, (2) indirim gelince süre/sukuk uzat → fiyat kazancı. Kırılganlık sadece para piyasası bacağında ve indirim SONRASI için.',
-      dayanak:['Nominal '+(aofm!=null?'%'+trN(aofm,0):'~%40')+' → indirim öncesi yüksek taşıma','Reel carry pozitif → enflasyonu yeniyor','Düşük volatilite → portföy dengeleyici'],
-      risk:['İndirim → para piyasası getirisi aşınır (en kırılgan)','Dezenflasyon sürer → nominal getiri geriler','Fırsat maliyeti: reflasyonda hisse daha çok kazandırır',
-        'FED ZİNCİRİ: 29 Tem\'de sabit + 3 şahin muhalefet → Eylül ≈%82 artırım fiyatlı. Gerçekleşirse TCMB\'nin indirim alanı DARALIR — faiz farkı kapanınca carry parası çıkar, rezerv erir. Bu kartın "kılçıksız getiri" tezi Fed\'in duruşuna bağlıdır; ön şart değişirse tez de değişir.'],
-      tetik:'BUGÜN TÜFE: aşağı sürpriz indirim tartışmasını öne çeker → süre/sukuk uzatmayı hızlandır. Fed Eylül artırırsa faiz farkı daralır → carry tezinin ön şartını yeniden ölç. Per 6 Ağu rezerv: swap stoku güncellenir.'
+      benchmark:'Para piyasası + sukuk · TLREFK',
+      teze:'ÜSTÜ sürüyor ama zirveye yakın. Kılçıksız getiri devam ediyor ve akış bunu teyit ediyor: para piyasası fonlarına günlük 39 mlr₺, aylık 211,5 mlr₺ net giriş. Artık ölçü de net — panel her fonun TLREFK\'e göre ALFA\'sını hesaplıyor (TLV +1,8 puan). Ama dezenflasyon sürer ve indirim başlarsa bu sınıf en hızlı aşınan taraf olur; süre uzatma (sukuk) kararı için pencere daralıyor.',
+      dayanak:['Nominal '+(aofm!=null?'%'+trN(aofm,0):'~%40')+' + pozitif reel carry','Akış teyidi: PP fonlarına aylık 211,5 mlr₺','TLREFK benchmark\'ı panelde canlı → alfa ölçülebilir','Kira sertifikası ailesine aylık 17,1 mlr₺ giriş — katılım tarafı derinleşiyor'],
+      risk:['İndirim başlarsa PP getirisi en hızlı aşınan kalem','Gıda enflasyonu yapışkan → reel getiri beklenenden düşük kalabilir','Fırsat maliyeti: hisse tarafında kâr dönüşü kanıtlandı, rotasyon gecikirse getiri kaçar'],
+      tetik:'İlk indirim adımı → süreyi UZAT (sukuk/uzun vade), PP ağırlığını azalt. Gıda kaynaklı enflasyon sürprizi → mevcut kısa duruşu koru.'
     }
   ];
+;
 
   const html=varliklar.map(v=>
     '<div style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:10px;border-left:3px solid '+v.renk+'">'+

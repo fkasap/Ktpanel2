@@ -2767,6 +2767,94 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 252 HAFTALIK YORUM + TAKTIKSEL DURUS YENILENDI (8 Agu)
+
+HAFTALIK YORUM (index.html, 5 blok tamamen yeniden yazildi):
+ 1. Ceyregin temasi: MALIYET MAKASI — emtia zinciri patladi (TUPRS 4x,
+    EREGL 6,5x, ISDMR 3,8x, PETKM zarardan cikis, BRISA +6,6 puan marj).
+    Sok marji uyarisi: madencilik UFE +8,30 -> -4,22 dondu.
+ 2. BIST/katilim: XKTUM 18.694; XK100 aylik +6,60 vs model +3,57 =
+    3,03 puan GERIDE. Atif: ASELS eksik agirlik +1,69 kazandirdi ama
+    TUPRS eksikligi (+%26 ralli) -0,94 goturdu. ALBRK +%69 dondu;
+    THYAO marj cokusu, TKNSA/ALCTL zayif.
+ 3. Enflasyon: TUFE %31,75 indi AMA gida %37,53'e cikti (dezenflasyon
+    genele yayilmis DEGIL); Yi-UFE %27,83. PP fonlarina gunluk 39 mlr,
+    aylik 211,5 mlr. TLREFK 4.010,7 — alfa sutunu canli.
+ 4. Degerli metal: altin 4.399,70 (hafta +8,7), gumus +10,3.
+ 5. Tuketici ikiye ayrildi (makas +17,4 puan): EBEBK vs TKNSA; ajanda
+    ve Agustos halka arz yogunlugu.
+
+TAKTIKSEL DURUS (app.js varliklar dizisi):
+  Yerli Hisse NOTR -> USTU: tez artik beklenti degil KANIT (2C kar
+    donusu + banka toparlanmasi + UFE'nin TUFE'den hizli sogumasi).
+  Yabanci Hisse ALTI korundu (goreli cazibe yurt ici lehine).
+  Altin NOTR — ama TEZ CURUDU acikca yazildi: 'yuksek reel faiz tavan
+    koyar' varsayimini fiyat REDDETTI (+%8,7 hafta). Ralliye gec
+    katilmamak icin USTU denmedi; tezin yenilenmesi bekleniyor.
+    DURUSTLUK NOTU: modelin yanildigi yer kartta ACIKCA kayitli.
+  TL/Sabit USTU — ama 'zirveye yakin' uyarisiyla; ilk indirimde sure
+    uzatma (sukuk) karari icin pencere daraliyor.
+
+app.js v=20260808a · DOSYALAR: app.js + index.html (ktpanel/)
+
+## 251 S&P GLOBAL (PLATTS) KOPRUSU — KESIF TAMAM, SEMBOL BEKLENIYOR (8 Agu)
+
+Kullanici S&P Global Commodity Insights aboneligi aldi, anahtari Vercel
+env SPG_KEY olarak ekledi. Kopru kuruldu ve KESIF turlariyla API'nin
+yapisi OLCULDU (tahmin yok):
+
+MIMARI: api/platts.js AYRI FONKSIYON (kullanici tercihi; tcmb'ye
+bindirme geri alindi — farkli kimlik modeli/kota/hata dili). Envanter
+11/12. Uc KORUMALI birakildi (middleware muafiyeti YOK) — ucuncu kisiler
+abonelik kotasini tuketemesin; panel oturumla cagirir.
+
+OLCUM SONUCLARI (Bearer + Accept + appkey basligiyla):
+  ✓ CALISIYOR: /market-data/v3/value/current/symbol
+      filtre dili: filter=symbol="KOD"  (IN ve : varyantlari da kabul)
+      hata mesaji 'Unsubscribed symbols: X' = boru hatti SAGLAM, yalniz
+      sembol abonelik disi.
+  ✓ /market-data/v3/metadata → 200; sorgulanabilir TEK alan 'symbol'
+      (isQueryField:true). Alanlar: mdc, value, symbol, bate, ...
+  ✗ /market-data/v3/value/current/mdc → 403 'User doesn't have access to
+      the dataset' (MDC/kategori bazli toplu sorgu abonelikte YOK).
+  ✗ reference-data/search → 403 (sembol ARAMA kapali — katalog gezilemez).
+  ✗ 18 dataset taramasi: yalniz market-data 200; refinery-data 401
+      (route VAR, kimlik farkli — ileride bakilabilir); digerleri 404.
+
+KALAN TEK EKSIK: abone olunan 7 karakterli SEMBOL KODLARI (jet, nafta,
+gasoil, varsa freight). Portal: Entitlements / My Subscriptions.
+Kodlar gelince: platts.js uretim moduna (sabit semboller), platts-arsiv
+.json gunluk birikim, Emtia sekmesine 'Rafineri Marjlari & Navlun' blogu
+(jet/nafta gercek Platts + gasoil-Brent crack + sparkline).
+
+ARA COZUM (Platts gelene dek): crack'ler Yahoo verisinden HESAPLANABILIR —
+emtia sekmesinde Brent/WTI/RB(benzin)/HO(ULSD) zaten var:
+  diesel crack = HO×42 − Brent · benzin crack = RB×42 − Brent
+  3-2-1 crack = ((2×RB + 1×HO)×42 − 3×Brent)/3
+Jet crack icin ULSD vekil (orta distilat ailesi, birkac $ diferansiyel).
+Nafta ve BDI icin ucretsiz karsilik YOK (BDI Baltic Exchange lisansli;
+Massive'de Platts/Baltic urunleri KATALOGDA var ama fiyat 403 — futures
+paketi gerekiyor).
+
+DOSYALAR: api/platts.js (ktpanel/api/) + middleware.js + KTPANEL-BAKIM.md
+
+## 250q XLSX SEYREK HUCRE — KOLON KAYMASI (5 Agu)
+
+Panel tanisi bilmeceyi cozdu: 'arsiv: XK100 1 nokta' — 95.563 kayit
+girmis ama XK100/XKTUM ANAHTARIYLA DEGIL. Kok neden: xlsx'te BOS HUCRE
+XML'de HIC YAZILMAZ (seyrek satir); ben hucreleri SIRAYLA okuyunca
+kolonlar kayiyordu (kod yerine ad/kur okundu) — tarihler dogruydu, o
+yuzden arsiv 1.472 gun gorunuyordu ama endeks kodlari coptu.
+§250q: hucre ADRESI (r="B2") kolon indeksine cevrilir (A=0, B=1...),
+boşluklar korunur; kapanis 5. kolon (dokuman: Tarih;Kod;Ad;Kur;Kapanis),
+yoksa son dolu hucre. Ilk satir ORNEK olarak rapora basilir.
+TEMIZLIK: eski tohum kayik anahtarlar birakti — bayrak surumlendi
+(aylik_tohum_v2); eski tohumda endeks-kodu desenine uymayan anahtarlar
+SILINIR, tohum yeniden calisir.
+TEST: seyrek satir (C kolonu bos) dogru okundu → tarih/kod/kapanis yerinde.
+
+DOSYALAR: scripts/tazele.mjs (DEPO KOKU)
+
 ## 250p TARIH ANAHTARI KARISIKLIGI COZULDU (5 Agu)
 
 Kullanicinin actigi endeks-arsiv.json ekrani kok nedeni gosterdi: anahtar
