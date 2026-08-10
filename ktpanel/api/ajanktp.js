@@ -113,6 +113,42 @@ module.exports = async (req, res) => {
        ve model onu tekrarlıyordu — BORSK'ta rakamlar bin kat büyük göründü.
        Birim artık RAPORDAN geliyor; belirsizse model bunu SÖYLEYECEK. */
     const birim = (g.birim && g.birim.ad) ? String(g.birim.ad) : 'belirsiz';
+    /* §257 BİÇİMLENDİRME MODELDEN ALINDI.
+       BULGU (10 Ağu, LMKDC): istemdeki ÖRNEK satır "deger":"100,02 mlr ₺"
+       yazıyordu ve model bu EKİ KOPYALIYORDU — gerçek ölçeğe bakmadan.
+       Sonuç: özet doğru ("2,32 milyar ₺"), tablo bin kat şişik
+       ("2.317,8 mlr ₺"). Aynı kartın içinde iki farklı ölçek.
+       ÇÖZÜM: ölçek KARARINI model vermez. Ham değer × çarpan ile TL'ye
+       çevrilir, büyüklüğe göre mlr/mn/₺ SUNUCUDA seçilir, modele HAZIR
+       DİZGİ verilir ve "aynen kullan" denir.
+       Birim belirsizse dizgi üretilmez — model de o zaman ölçek yazmaz
+       (§229: yanlış kesinlik yerine dürüst belirsizlik). */
+    const _c = (g.birim && g.birim.carpan) || null;
+    const _tr = (v, d) => Number(v).toLocaleString('tr-TR', {minimumFractionDigits:d, maximumFractionDigits:d});
+    const _bicim = (ham) => {
+      if(!_c || ham == null || !isFinite(ham)) return null;
+      const tl = ham * _c, a = Math.abs(tl);
+      if(a >= 1e9) return _tr(tl/1e9, 2) + ' mlr ₺';
+      if(a >= 1e6) return _tr(tl/1e6, 1) + ' mn ₺';
+      if(a >= 1e3) return _tr(tl/1e3, 0) + ' bin ₺';
+      return _tr(tl, 0) + ' ₺';
+    };
+    /* Her metrik için hazır dizgi — modelin uyduracak yeri kalmasın */
+    const _gost = {};
+    try{
+      const M = g.metrikler || {};
+      for(const k of Object.keys(M)){
+        const o = M[k]; if(!o || typeof o !== 'object') continue;
+        const d = _bicim(o.deger);      if(d) _gost[k] = d;
+        const t = _bicim(o.tutar);      if(t) _gost[k+'_tutar'] = t;
+        const on = _bicim(o.onceki);    if(on) _gost[k+'_onceki'] = on;
+      }
+    }catch(e){}
+    const _gostMetin = Object.keys(_gost).length
+      ? ('\n\nHAZIR GÖSTERİM (deger alanında BUNLARI AYNEN KULLAN — ölçek eki EKLEME, DEĞİŞTİRME):\n'
+         + Object.keys(_gost).map(k => '  '+k+' = '+_gost[k]).join('\n')
+         + '\n⚠ Bu listede olmayan bir kalem için ölçek eki (mlr/mn) YAZMA — yalnız ham sayıyı yaz.')
+      : '\n\n⚠ BİRİM ÇÖZÜLEMEDİ: hiçbir tutara ölçek eki (mlr/mn/₺) YAZMA. Ham sayıyı yaz ve özette birimin belirsiz olduğunu SÖYLE.';
 
     /* İSTEM — bugün elle yazılan kartlardan türedi. Her kural bir VAKAYA
        dayanıyor; soyut "iyi analiz yap" demiyor, NEYE BAKILACAĞINI söylüyor. */
@@ -133,6 +169,8 @@ BİRİM: ${birim}${birim==='belirsiz' ? ' — RAPORDA BELİRTİLMEMİŞ. Tutarla
 METRİKLER:
 ${JSON.stringify(g.metrikler, null, 1)}
 
+${_gostMetin}
+
 OTOMATİK İŞARETLER (bakılacak yerler):
 ${(g.isaretler||[]).map(x=>'- '+x.tip+': '+x.not).join('\n') || '- yok'}
 
@@ -141,7 +179,7 @@ YALNIZCA GEÇERLİ JSON DÖNDÜR. Başka hiçbir şey yazma, markdown kod bloğu
 {
  "ozet": "3-5 cümle. Manşet ne diyor, ALTINDA ne var. Rakamları binlik ayraçla yaz.",
  "metrikler": [
-   {"ad":"Ciro (2Ç)","deger":"100,02 mlr ₺","cc":"çeyreklik değişim ya da bağlam","yoy":"+%9,0 (2Ç25: 91,74)"}
+   {"ad":"Ciro (2Ç)","deger":"<HAZIR GÖSTERİM listesinden ciro değeri>","cc":"çeyreklik değişim ya da bağlam","yoy":"+%9,0 (2Ç25: <önceki>)"}
  ],
  "onemli": ["BAŞLIK BÜYÜK HARF: açıklama. Neden önemli olduğu.", "...", "..."],
  "guidance": "Şirket guidance veriyorsa özeti; vermiyorsa İZLENECEK EŞİKLER — gelecek çeyrekte hangi rakama bakılmalı.",

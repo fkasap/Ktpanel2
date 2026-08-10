@@ -203,26 +203,40 @@ const _CARPAN_ADAY = [
   { ad:'TL',        carpan:1    },
   { ad:'milyon TL', carpan:1e6  }
 ];
-function _birimDogrula(birim, ciroCeyrek, ttmCiroMn){
+function _birimDogrula(birim, ciroCeyrek, ttmCiroMn, ozkaynak, pdMn){
   /* Zaten kesinse dokunma — sayfanın kendi beyanı her zaman üstündür. */
   if(birim && birim.carpan) return { birim, kanit:null };
-  if(!isFinite(ciroCeyrek) || ciroCeyrek <= 0) return { birim, kanit:null };
-  if(!isFinite(ttmCiroMn)  || ttmCiroMn  <= 0) return { birim, kanit:null };
+  /* İKİ EKSEN, sırayla:
+       1) CİRO — çeyreklik×4 vs multiple.json TTM cirosu. En güvenilir.
+       2) ÖZKAYNAK — piyasa değeri / özkaynak = PD/DD. Ciro referansı yoksa.
+     §257b: multiple.json 141 hisse taşıyor; KTLEV gibi kapsam dışı isimlerde
+     birinci eksen çalışmaz. PD/DD ikinci eksen olarak devreye girer —
+     borsada işlem gören bir şirkette PD/DD pratikte 0,05–30 bandındadır,
+     yanlış ölçek bu bandın 1000 KAT dışına düşer. */
+  const eksen = [];
+  if(isFinite(ciroCeyrek) && ciroCeyrek > 0 && isFinite(ttmCiroMn) && ttmCiroMn > 0)
+    eksen.push({ ad:'ciro', ham:ciroCeyrek,
+                 olc:(h,c)=>(h*c*4)/1e6/ttmCiroMn, alt:0.3, ust:3.0, ref:ttmCiroMn });
+  if(isFinite(ozkaynak) && ozkaynak > 0 && isFinite(pdMn) && pdMn > 0)
+    eksen.push({ ad:'ozkaynak(PD/DD)', ham:ozkaynak,
+                 olc:(h,c)=>pdMn/((h*c)/1e6), alt:0.05, ust:30, ref:pdMn });
+  if(!eksen.length) return { birim, kanit:null };
+  const E = eksen[0];
   const gecen = [];
   for(const a of _CARPAN_ADAY){
-    const yillikMn = (ciroCeyrek * a.carpan * 4) / 1e6;
-    const oran = yillikMn / ttmCiroMn;
-    if(oran >= 0.3 && oran <= 3.0) gecen.push({ ...a, oran:+oran.toFixed(3), yillikMn:Math.round(yillikMn) });
+    const oran = E.olc(E.ham, a.carpan);
+    if(oran >= E.alt && oran <= E.ust) gecen.push({ ...a, oran:+oran.toFixed(3), eksen:E.ad });
   }
   /* TEK aday geçmeli. İki aday geçerse ayrışma yetersizdir ve KARAR VERİLMEZ —
      belirsizi belirsiz bırakmak, yanlış kesinlikten iyidir (§229). */
-  if(gecen.length !== 1) return { birim, kanit:{ sonuc:'kararsiz', gecen, ttmCiroMn } };
+  if(gecen.length !== 1) return { birim, kanit:{ sonuc:'kararsiz', eksen:E.ad, gecen, ref:E.ref } };
   const k = gecen[0];
   return {
     birim: { ad:k.ad, carpan:k.carpan, kaynak:'capraz-dogrulama' },
-    kanit: { sonuc:'kanitlandi', secilen:k.ad, oran:k.oran,
-             ceyrekHam:ciroCeyrek, yillikMn:k.yillikMn, ttmCiroMn,
-             not:'ceyreklik ciro x4, multiple.json TTM cirosuna oranlandi' }
+    kanit: { sonuc:'kanitlandi', eksen:E.ad, secilen:k.ad, oran:k.oran, ham:E.ham, ref:E.ref,
+             not: E.ad==='ciro'
+               ? 'ceyreklik ciro x4, multiple.json TTM cirosuna oranlandi'
+               : 'piyasa degeri / ozkaynak = PD/DD makul bandda mi' }
   };
 }
 function _isaretUygun(ad, v, sinir){
@@ -983,7 +997,9 @@ export default async function handler(req, res){
          İstemci `?ttm=<milyon TL>` geçirir (multiple.json'daki `ciro`).
          Geçmezse davranış AYNEN eskisi gibi kalır — belirsiz, belirsiz. */
       const _ttmRef = parseFloat(String(req.query.ttm || '').replace(',', '.'));
-      const _dg = _birimDogrula(b.birim, (m.ciro && m.ciro.deger), _ttmRef);
+      const _pdRef  = parseFloat(String(req.query.pd  || '').replace(',', '.'));   /* §257b milyon TL */
+      const _dg = _birimDogrula(b.birim, (m.ciro && m.ciro.deger), _ttmRef,
+                                (m.ozkaynak && m.ozkaynak.deger), _pdRef);
       const _birimSon = _dg.birim;
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
       return res.status(200).json({ surum:_SURUM,  ok:true, id, sablon:b.sablon, birim:_birimSon,
