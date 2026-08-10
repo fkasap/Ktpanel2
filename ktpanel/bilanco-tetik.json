@@ -88,9 +88,12 @@
   "MRMAG",
   "MTRYO",
   "NIBAS",
+  "NRBNK",
+  "NURVK",
   "ORFIN",
   "OTOSR",
   "OYLUM",
+  "OZATD",
   "OZYSR",
   "PARSN",
   "PKART",
@@ -127,6 +130,6 @@
   "ZGYO",
   "ZRGYO"
  ],
- "sayi": 125,
- "guncelleme": "2026-08-10 19:07 UTC — otomatik (KAP FR)"
+ "sayi": 128,
+ "guncelleme": "2026-08-10 19:14 UTC — otomatik (KAP FR)"
 }

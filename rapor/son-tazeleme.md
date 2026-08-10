@@ -39,16 +39,22 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
+### TEFAS genel bilgi (§253i) — ✓ 995 fon · AUM + yatırımcı sayısı köprüden (uç 1000 kayıt döndürdü)
+
 ### TEFAS köprü (bilgi)
 - getiri: 1048 fon ✓ · liste: 1039 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
-- yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008392695612> [Go Back]`
+- yol: vercel-köprüsü (995 fon fiyat + 1048 getiri)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008857805051> [Go Back]`
 
-### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
+### Katılım fonları — ✗ KALDI
+- ✗ **kapsam**: 10/46 (%22)
+  - eşik %95 — 36 kayıt eksik
+- ✓ **aykırı değer**: temiz (sınır ±%2)
+- ✓ **dönem tutarlılığı**: temiz
 
-### Bilanço tetiği — ✓ 125 şirket FR yayımladı
+### Bilanço tetiği — ✓ 128 şirket FR yayımladı
 - AAGYO, ACSEL, ADEL, AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ARTMS, ASGYO, ATAVK, ATLAS, AVPGY, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
@@ -67,4 +73,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (227.65 bp) · risk metrikleri (138) · katılım fonları (getiri-modu 36) · bilanço tetiği (125) · endeks üyelikleri · endeks arşivi
+**Sonuç:** TR 5Y CDS (227.65 bp) · risk metrikleri (138) · bilanço tetiği (128) · endeks üyelikleri · endeks arşivi
+
+⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
