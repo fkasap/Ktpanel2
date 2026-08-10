@@ -37,7 +37,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260810e';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260810f';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -3996,16 +3996,34 @@ const RISK_CDS_KAYNAK='investing.com · TR 5Y CDS (id 1096486)';
    Başarısızlıkta CDS_CANLI null kalır, renderRiskBaro damgalı yedeğe düşer ve
    etikete "damgalı" basar. Sessiz düşüş YOK (§245k). */
 async function cdsCek(){
+  /* §253e ÜÇ KADEMELİ DÜŞÜŞ — her kademe ÖLÇÜLEREK sıralandı:
+       1) /api/tcmb?cds=1  — Vercel'den investing.com. ŞU AN 403 (Cloudflare
+          datacenter IP engeli, 10 Ağu ölçümü). Yine de ilk sırada: engel
+          kalkarsa en taze veri buradan gelir, kod değişikliği gerekmez.
+       2) /cds.json        — GitHub Actions koşusunun yazdığı dosya (§253e).
+          Actions IP havuzu farklı; TEFAS'ta TERSİ yaşandı (Actions geçiyor,
+          Vercel geçmiyor), o yüzden bu kademe gerçekçi.
+       3) damgalı yedek    — RISK_CDS. Etikete "damgalı" basılır.
+     TARAYICI YOLU DENENMEDİ ÇÜNKÜ ÖLÇÜLDÜ: yanıt
+     `Access-Control-Allow-Origin: https://tr.investing.com` döndürüyor,
+     ktpanel.vercel.app'ten CORS engeli kesin. */
+  const uygula=(deger,tarih,degisim,kaynak)=>{
+    if(!isFinite(deger)) return false;
+    CDS_CANLI={deger:+deger, tarih, degisim:isFinite(degisim)?+degisim:null, kaynak};
+    renderRiskBaro(); glbCdsYaz();
+    return true;
+  };
   try{
     const r=await fetch('/api/tcmb?cds=1&gun=30',{cache:'no-store'});
-    if(!r.ok) return;
-    const j=await r.json();
-    if(j&&j.ok&&isFinite(j.deger)){
-      CDS_CANLI={deger:+j.deger, tarih:j.tarih, degisim:isFinite(j.degisim)?+j.degisim:null};
-      renderRiskBaro();          /* değer geldi, barometreyi YENİDEN çiz */
-      glbCdsYaz();               /* §253d ikinci gösterim — global barometre */
-    }
+    if(r.ok){ const j=await r.json();
+      if(j&&j.ok&&uygula(j.deger,j.tarih,j.degisim,'vercel')) return; }
   }catch(e){}
+  try{
+    const r=await fetch('/cds.json',{cache:'no-store'});
+    if(r.ok){ const j=await r.json();
+      if(j&&uygula(j.deger,j.tarih,j.degisim,'actions')) return; }
+  }catch(e){}
+  /* ikisi de düştü — damgalı yedek zaten çizili, dokunma */
 }
 /* §253d GLOBAL RİSK BAROMETRESİ'ndeki CDS. index.html:303'te STATİK yazılıydı
    ve id'si yoktu — risk barometresi düzeltilirken bu kopya 206'da kaldı, aynı
