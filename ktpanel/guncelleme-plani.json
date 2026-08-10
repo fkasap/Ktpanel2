@@ -200,7 +200,8 @@
    "siklik": "ceyreklik",
    "son": "2026-07-14",
    "kaynak": "Fintables 29 metrik → rank-normal standardizasyon · sektör içi VALUE/GROWTH/QUALITY",
-   "sezon": true
+   "sezon": true,
+   "_252s_karar": "10 Agu 2026 — TAZELEME BILEREK ERTELENDI. Kullanici karari: 2C sezonu bitmeden guncellemek isi IKI KEZ yaptirir ve ara durum yari-pismis olur (10 Agu itibariyla takipteki 40 sirketin 25'i henuz aciklamamisti). SPK siniri: konsolide olmayan 14 Agu, konsolide 29 Agu -> HEDEF TARIH ~1 EYLUL 2026. HAZIR: ktpanel/arac/fm-isle.py yazildi ve dogrulandi (yapisal imza mevcut dosyayla ortusuyor; QUALITY .919 LOW_RISK .855 korelasyon, MOMENTUM .386 — hizli degisen faktorde dusuk olmasi BEKLENEN). Kullanim: python3 fm-isle.py <csv> fm.json --dogrula <eski fm.json>. KARAR BEKLEYEN: 10 Agu CSV'si 215 hisse tasiyordu, mevcut evren 147. Olculdu — Top-40 degisiminin YARISI bilancodan, YARISI evren genislemesinden geliyor (A->B 14 isim, B->C 14 isim). Evren genisletilecekse BILINCLI bir gecis olarak kaydedilmeli; track.json sicil sepeti 28 Tem temelli, DEGISTIRILMEMELI yoksa sicil kopar."
   },
   {
    "ad": "Risk metrikleri (vol · beta)",
