@@ -32,16 +32,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XU100.IS** (250 gün)
-- ℹ 5 gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz) — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir
-- denenen: arşiv XKTUM: 61 nokta (son 120g: 7) · XKTUM.IS: boş · ^XKTUM: boş · XU100.IS: 250
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (178 gün)
+- ℹ 234 gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1048 fon ✓ · liste: 1032 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008779310094> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008367015404> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -55,11 +54,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-07
 - XKTUM 18694.71 · XKTMT 17201.71 · XK100 17517.53 · XU100 13779.39 · BISTTLREFK 4010.70089
-- arşiv: 490 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+- arşiv: 607 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
 ### Bülten keşfi (§250k) — ⚠ indirilemedi · thb202608091.zip:HTTP404 · thb202608092.zip:HTTP404 · thb202608093.zip:HTTP404 · thb20260809.zip:HTTP404
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (126 fiyat) · Model sicili (38 fiyat) · risk metrikleri (32) · katılım fonları (getiri-modu 36) · bilanço tetiği (3) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (113 fiyat) · Model sicili (33 fiyat) · risk metrikleri (141) · katılım fonları (getiri-modu 36) · bilanço tetiği (3) · endeks üyelikleri · endeks arşivi
