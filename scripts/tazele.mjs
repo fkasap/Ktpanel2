@@ -737,20 +737,41 @@ async function endeksUyeTazele() {
        kontrol kapsam sayısı değil ÜYELİK REVİZYONU: panelde olup resmî listede
        OLMAYAN (endeksten çıkmış → ölü ağırlık) ve resmî listede olup panelde
        olmayan BÜYÜK isimler. BIST üç ayda bir revize eder; kaçarsa atıf bozulur. */
+    /* §252o KONTROL UC DOSYAYA GENISLETILDI. Onceki hali YALNIZ xktum.json'a
+       bakiyordu; 9 Agu'da xktmt.json'in resmi 39 uye yerine 34 tasidigi
+       (JANTS FAZLA, 6 isim EKSIK) bu yuzden aylarca gorulmedi — dogrulayacak
+       veri (endeks-uyeler.json) 5 Agu'dan beri ayni dizinde duruyordu.
+       IKI FARKLI TASARIM, IKI FARKLI KONTROL:
+         xktum.json  -> KASTEN ilk 150 / 242. Yalniz "panelde var resmide yok"
+                        (olu agirlik) anlamlidir; eksik olmasi NORMAL.
+         xk100/xktmt -> TAM kapsam. HER IKI YON de hatadir. */
+    const UYELIK_KONTROL = {
+      'xktum.json': { endeks: 'XKTUM', tam: false },
+      'xk100.json': { endeks: 'XK100', tam: true },
+      'xktmt.json': { endeks: 'XKTMT', tam: true }
+    };
     let uyari = '';
-    try {
-      if (await varMi('xktum.json')) {
-        const xk = await oku('xktum.json');
-        const bizimU = Object.keys(xk.uyeler || {});
-        const resmiU = new Set(uyeler.XKTUM || []);
-        const cikan = bizimU.filter(k => !resmiU.has(k));
-        const toplamCikan = cikan.reduce((a, k) => a + (xk.uyeler[k] || 0), 0);
-        if (cikan.length) uyari += '\n- ⚠ REVİZYON: panelde olup BIST XKTUM listesinde OLMAYAN ' + cikan.length +
-          ' hisse (' + cikan.slice(0, 8).join(', ') + ') · ölü ağırlık %' + toplamCikan.toFixed(2) + ' — xktum.json revize edilmeli';
-        else uyari += '\n- ✓ üyelik uyumu: panelin ' + bizimU.length + ' hissesi resmî listede (kapsam %' +
-          (xk.kapsanan_agirlik || '?') + ', tasarım gereği ilk ' + bizimU.length + ')';
-      }
-    } catch (e) {}
+    for (const [df, k] of Object.entries(UYELIK_KONTROL)) {
+      try {
+        if (!(await varMi(df))) continue;
+        const d = await oku(df);
+        /* uyelik kaynagi pay_adedi'dir (agirliklar ondan turetilir), uyeler yedek */
+        const bizim = Object.keys(d.pay_adedi || d.uyeler || {});
+        const resmi = new Set(uyeler[k.endeks] || []);
+        if (!resmi.size) { uyari += '\n- ℹ ' + k.endeks + ': resmî listede bulunamadı, kontrol atlandı'; continue; }
+        if (!bizim.length) { uyari += '\n- ⚠ ' + k.endeks + ': ' + df + ' üye taşımıyor'; continue; }
+        const cikan = bizim.filter(x => !resmi.has(x));
+        const eksik = k.tam ? [...resmi].filter(x => !bizim.includes(x)) : [];
+        const oluAgirlik = cikan.reduce((a, x) => a + ((d.uyeler || {})[x] || 0), 0);
+        const sorun = [];
+        if (cikan.length) sorun.push('FAZLA ' + cikan.length + ' (' + cikan.slice(0, 6).join(', ') +
+          ') · ölü ağırlık %' + oluAgirlik.toFixed(2));
+        if (eksik.length) sorun.push('EKSİK ' + eksik.length + ' (' + eksik.slice(0, 6).join(', ') + ')');
+        if (sorun.length) uyari += '\n- ⚠ REVİZYON ' + k.endeks + ': ' + sorun.join(' · ') + ' — ' + df + ' revize edilmeli';
+        else uyari += '\n- ✓ üyelik uyumu ' + k.endeks + ': ' + bizim.length + '/' + resmi.size +
+          (k.tam ? ' (tam kapsam)' : ' (tasarım gereği ilk ' + bizim.length + ')');
+      } catch (e) { uyari += '\n- ℹ ' + k.endeks + ' kontrolü atlandı: ' + String(e.message || e).slice(0, 60); }
+    }
     raporlar.push('### Endeks üyelikleri — ✓ ' + Object.entries(sayim).map(([k, v]) => k + ':' + v).join(' · ') + uyari);
     degisenler.push('endeks üyelikleri');
     return Object.keys(uyeler).length;
