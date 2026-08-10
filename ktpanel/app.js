@@ -37,7 +37,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260810f';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260810g';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -3543,6 +3543,40 @@ function incAliciGoster(){
   const a=localStorage.getItem('ktp_mail_to')||'';
   e.textContent=a?a:'alıcı ayarlanmadı';
 }
+/* §256 ONAYLI TASLAĞI KALDIR — taslakOnayla'nın (ajan.js) SİMETRİĞİ.
+   Onay tek yönlüydü: kart localStorage + buluta yazılıyor, geri alma yolu YOK.
+   10 Ağu'da LMKDC kartı bin kat şişik birimle onaylandı ve tek çare konsola
+   JSON yazmaktı. Yanlış kart, eksik karttan kötüdür (§243).
+   ÜÇ ADIM, onayın tersi sırayla:
+     1) ktp_taslak_kart_v1'den çıkar
+     2) BULUTA YAZ — yoksa başka cihazda geri gelir (§200'ün sessiz kaybı)
+     3) listeyi yeniden kur ki ekrandan da düşsün
+   İKİ TIK: ilk tık onay ister. Silme geri alınamaz; tek tıkla kazara
+   silinmemeli. 4 saniye içinde ikinci tık gelmezse düğme eski haline döner. */
+async function taslakKartSil(btn, kod, donem){
+  if(btn.dataset.onay !== '1'){
+    btn.dataset.onay = '1';
+    const eskiHtml = btn.innerHTML, eskiT = btn.title;
+    btn.innerHTML = 'sil?'; btn.title = 'silmek için tekrar tıkla';
+    btn.style.fontWeight = '700';
+    setTimeout(()=>{ if(btn.dataset.onay==='1'){ btn.dataset.onay=''; btn.innerHTML=eskiHtml; btn.title=eskiT; btn.style.fontWeight=''; } }, 4000);
+    return;
+  }
+  btn.dataset.onay = ''; btn.disabled = true; btn.innerHTML = '…';
+  try{
+    let L=[]; try{ L=JSON.parse(localStorage.getItem('ktp_taslak_kart_v1')||'[]')||[]; }catch(e){}
+    const once=L.length;
+    L = L.filter(x => !(String(x.kod)===String(kod) && (!donem || String(x.donem)===String(donem))));
+    localStorage.setItem('ktp_taslak_kart_v1', JSON.stringify(L));
+    /* Buluta yaz — aksi halde başka cihazda ya da yeniden yüklemede GERİ GELİR */
+    try{ if(typeof cloudSaveDebounced==='function') cloudSaveDebounced();
+         else if(typeof cloudSave==='function') cloudSave(); }catch(e){}
+    if(once===L.length){ btn.innerHTML='?'; btn.title='kayıt bulunamadı (dosyadaki kart olabilir)'; btn.disabled=false; return; }
+    if(typeof incelemeInit==='function') await incelemeInit();   /* kart ekrandan düşer */
+  }catch(e){
+    btn.disabled=false; btn.innerHTML='🗑'; btn.title='silinemedi: '+String(e&&e.message||e).slice(0,60);
+  }
+}
 function incPaylasInit(){
   const b1=$('incMailHepsi'); if(b1)b1.addEventListener('click',()=>incMail(null));
   // --- Kart seçimi: kaç kart gönderileceğini kullanıcı belirler ---
@@ -3579,8 +3613,9 @@ function incPaylasInit(){
   const el=$('incelemeBody');
   if(el)el.addEventListener('click',e=>{
     const t=e.target; if(!t.getAttribute)return;
-    const m=t.getAttribute('data-mail'), k=t.getAttribute('data-kopya');
+    const m=t.getAttribute('data-mail'), k=t.getAttribute('data-kopya'), sl=t.getAttribute('data-sil');
     if(m)incMail(m); else if(k)incKopyala(k);
+    else if(sl)taslakKartSil(t, sl, t.getAttribute('data-sildonem')||'');
   });
   incAliciGoster();
 }
@@ -3884,6 +3919,15 @@ el.innerHTML=birlesik.map(k=>{
         '<div style="display:flex;gap:5px;align-items:center">'+
         '<button class="btn" data-mail="'+k.kod+'" title="Bu kartı mail at" style="font-size:9px;padding:2px 7px">✉</button>'+
         '<button class="btn" data-kopya="'+k.kod+'" title="Panoya kopyala" style="font-size:9px;padding:2px 7px">⧉</button>'+
+        /* §256 SİL — YALNIZ ONAYLI TASLAKTA. Dosyadan (inceleme-ai.json) gelen
+           kart repoda yaşar, tarayıcıdan silinemez; düğme çıkarsa yanıltır.
+           NEDEN GEREKLİ: onay TEK YÖNLÜYDÜ. 10 Ağu'da LMKDC kartı BİN KAT şişik
+           birimle onaylandı (birim 'belirsiz' kalınca model uydurdu) ve geri
+           alma yolu YOKTU — tek çare konsola JSON yazmaktı.
+           Yanlış kart, eksik karttan kötüdür (§243). */
+        (k._onaylanmis
+          ? '<button class="btn" data-sil="'+k.kod+'" data-sildonem="'+(k.donem||'')+'" title="Bu onaylı taslağı kaldır" style="font-size:9px;padding:2px 7px;color:var(--down)">🗑</button>'
+          : '')+
         '<span style="font-size:9px;font-weight:700;color:#fff;background:'+skorRenk(k.skor)+';padding:2px 8px;border-radius:10px">'+k.skor+'</span></div></div>'+
         '<div class="note" style="margin:8px 0">'+k.ozet+'</div>'+
         met+
