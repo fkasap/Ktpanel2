@@ -7800,8 +7800,13 @@ async function loadAOFM(){
   await koyGrupSon('reelGuvenVal','reelGuvenTag','bie_rkgey2','Reel Kesim Güven',x=>trN(x,1));
   // 8) Toplam YP mevduat (milyon $ -> mlr $) — dolarizasyon göstergesi
   await koyGrupSon('ypmevVal','ypmevTag','bie_hpbitablo4','TOPLAM YP MEVDUAT',x=>trN(x/1000,1)+' mlr $');
-  // 9) Bankacılık kredi hacmi (seçilmiş kredi büyüklükleri)
-  await koyGrupSon('krediVal','krediTag','bie_hpbitablo6','',x=>trN(x/1e6,2)+' trl ₺');
+  /* 9) Bankacılık kredi hacmi.
+     §252l BIRIM HATASI — §252j (rotTL) ile BIREBIR AYNI, dorduncu vaka.
+     bie_hpbitablo6 BIN TL biriminde gelir. /1e6 ile "26.609,54 trl ₺" basiliyordu;
+     bu Turkiye GSYH'sinin ~530 kati. Dogrusu /1e9 -> 26,61 trl ₺.
+     NOT: birim GRUBA GORE DEGISIR, kopyalamadan once dogrula —
+     bie_hpbitablo4 MILYON $ (/1000 dogru, 260,1 mlr $), bu tablo BIN TL. */
+  await koyGrupSon('krediVal','krediTag','bie_hpbitablo6','',x=>trN(x/1e9,2)+' trl ₺');
   // 10) Yabancı Para Akışı kartı — haftalık hisse+tahvil, rezerv, carry (canlı)
   await loadYabanciCanli();
   // 11) Enflasyon beklenti grafiği (gerçekleşen vs 3 beklenti serisi)
