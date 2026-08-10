@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260810b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260810c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -7349,8 +7349,20 @@ window.tazelikHesap = (function(){
     if(p) return {limit:sg[p], anahtar:p};
     return {limit:null, anahtar:null};   /* TANIMSIZ — sessizce varsayma */
   }
+  /* §252q SEZON KURALI TEK SAHIBE TASINDI.
+     §245p bu hesabi window.tazelikHesap'ta birlestirdigini SOYLUYORDU ("ajan.js
+     de bunu kullanir") ama OLCULDU: ajan.js tazelikHesap'i HIC CAGIRMIYOR —
+     kendi sikCoz/dosyaTarihleri/dongusunu calistiriyor. Birlestirme YARIM
+     KALMIS; app.js tarafi yazilmis, ajan.js tarafi tasinmamis.
+     GORUNEN BELIRTI: sezon kurali (bilanco sezonunda 'sezon:true' katmanlarin
+     limiti sezon_limit_gun'e DUSER) yalniz ajan.js:445'te vardi. 10 Agu
+     olcumu: BES katman ayrisiyor — Faktor modeli 27g ve Guidance 24g Ebu'ya
+     gore BAYAT, cekmeceye gore TAZE(90). Sezon ortasinda faktor tabani 27
+     gunluk; cekmeceye bakan "her sey yolunda" goruyor.
+     §112'nin kurali: AYNI BUYUKLUGUN IKI SAHIBI OLMAZ. Kural artik BURADA;
+     ajan.js'in kendi dongusu de ayni sonucu uretir (limit hesabi ozdes). */
   /* Tek katmanın durumu: {tip, gun, limit, tarih} · tip: canli|olay|taze|yaklasti|bayat|tanimsiz */
-  function durum(k, sg, dosyaT, bugun){
+  function durum(k, sg, dosyaT, bugun, sezonCtx){
     const S = limitCoz(k.siklik, sg, k);
     if(S.anahtar === 'canli' || k.son === 'otomatik') return {tip:'canli'};
     if(S.anahtar === 'olay') return {tip:'olay', tarih:k.son};
@@ -7361,11 +7373,25 @@ window.tazelikHesap = (function(){
     const d = (dd && (!pd || dd > pd)) ? dd : pd;      /* YENİ olan geçerli */
     if(!d || isNaN(d)) return {tip:'olay', tarih:k.son};
     const gun = Math.floor((bugun - d) / 86400000);
-    const tip = gun <= S.limit ? 'taze' : (gun <= S.limit*2 ? 'yaklasti' : 'bayat');
-    return {tip, gun, limit:S.limit, tarih:d.toISOString().slice(0,10),
+    /* Sezon indirimi: yalnizca k.sezon isaretli katmanlarda ve YALNIZCA limiti
+       DUSURUR (asla yukseltmez). sezonCtx verilmezse davranis eskisi gibi. */
+    let limit = S.limit, sez = false;
+    const sc = sezonCtx || {};
+    if(k.sezon && sc.sezonda && sc.sezonLimit != null && limit > sc.sezonLimit){
+      limit = sc.sezonLimit; sez = true;
+    }
+    const tip = gun <= limit ? 'taze' : (gun <= limit*2 ? 'yaklasti' : 'bayat');
+    return {tip, gun, limit, sez, limitNormal:S.limit, tarih:d.toISOString().slice(0,10),
             kaynak:(dd && (!pd || dd > pd)) ? 'dosya' : 'plan'};
   }
-  return {norm, dosyaTarihleri, limitCoz, durum};
+  /* Sezon baglamini plandan uretir — cagiranlarin ay hesabi kopyalamasina gerek yok */
+  function sezonBaglam(plan, bugun){
+    const aylar = (plan && plan.bilanco_sezonu_aylar) || [];
+    const lim = (plan && plan.sezon_limit_gun) || 10;
+    const d = bugun || new Date();
+    return {sezonda: aylar.indexOf(d.getMonth()+1) >= 0, sezonLimit: lim};
+  }
+  return {norm, dosyaTarihleri, limitCoz, durum, sezonBaglam};
 })();
 
 async function planInit(){
@@ -7376,10 +7402,11 @@ async function planInit(){
   const ayKisa=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
   const fmtKisa=s=>{const d=new Date(s);return isNaN(d)?String(s||'—'):(d.getDate()+' '+ayKisa[d.getMonth()]);};
   const TZ=window.tazelikHesap;
+  const SEZ=TZ.sezonBaglam(plan, bugun);   /* §252q */
   const dosyaT=await TZ.dosyaTarihleri(plan.katmanlar);
   let bayat=0;
   const html=plan.katmanlar.map(k=>{
-    const D=TZ.durum(k, sg, dosyaT, bugun);
+    const D=TZ.durum(k, sg, dosyaT, bugun, SEZ);   /* §252q sezon indirimi */
     let renk,durum;
     if(D.tip==='canli'){renk='#0FA26B';durum='CANLI';}
     else if(D.tip==='olay'){renk='#8FA098';durum=fmtKisa(D.tarih)+' · olay';}
@@ -7389,9 +7416,13 @@ async function planInit(){
       /* §245p: tarih DOSYADAN geldiyse minik iz — plan geride kaldığında
          "neden farklı" sorusunu kod sordurmasın diye. */
       const iz=(D.kaynak==='dosya')?'<span class="thin" style="font-size:8px"> ·dosya</span>':'';
-      if(D.tip==='taze'){renk='#0FA26B';durum=et+' · taze'+iz;}
-      else if(D.tip==='yaklasti'){renk='#E8933B';durum=et+' · vade yaklaştı'+iz;}
-      else{renk='#DE4B5E';durum=et+' · GÜNCELLE'+iz;bayat++;}
+      /* §252q sezon indirimi uygulandiysa SOYLENIR. Aksi halde kullanici
+         "90 gunluk katman neden 24 gunde kirmizi" diye sorar ve cevabi kodda
+         arar. Gizli siki limit, gizli gevsek limit kadar kafa karistirir. */
+      const sz=D.sez?'<span class="thin" style="font-size:8px"> ·sezon '+D.limit+'g</span>':'';
+      if(D.tip==='taze'){renk='#0FA26B';durum=et+' · taze'+iz+sz;}
+      else if(D.tip==='yaklasti'){renk='#E8933B';durum=et+' · vade yaklaştı'+iz+sz;}
+      else{renk='#DE4B5E';durum=et+' · GÜNCELLE'+iz+sz;bayat++;}
     }
     return '<span class="fitem"><span class="fdot" style="background:'+renk+'"></span>'+k.ad+' — <span style="color:'+renk+';font-weight:600">'+durum+'</span></span>';
   }).join('');
