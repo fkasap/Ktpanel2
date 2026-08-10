@@ -28,9 +28,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-08-10
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
-### TR 5Y CDS — ⏭ ATLANDI
-- HTTP 403 (Cloudflare, Actions IP de engelli — Vercel gibi)
-- Panel damgalı yedekle çalışır; cds.json YAZILMADI.
+### TR 5Y CDS — ✓ 227.65 bp · 2026-08-08 · -0.78
+- ✓ 3272 günlük seri · kaynak etiketi 2026-08-10 (hafta sonu doldurmalı)
 
 ### Risk metrikleri — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
@@ -45,11 +44,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008641994719> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007912316360> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
-### Bilanço tetiği — ✓ 86 şirket FR yayımladı
+### Bilanço tetiği — ✓ 88 şirket FR yayımladı
 - AAGYO, AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ASGYO, ATLAS, AVPGY, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO, BETAE, BFREN, BRKVY, BURVA …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
@@ -66,4 +65,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** risk metrikleri (139) · katılım fonları (getiri-modu 36) · bilanço tetiği (86) · endeks üyelikleri · endeks arşivi
+**Sonuç:** TR 5Y CDS (227.65 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (88) · endeks üyelikleri · endeks arşivi
