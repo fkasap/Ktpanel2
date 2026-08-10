@@ -44,12 +44,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587007912316360> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008392695612> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
-### Bilanço tetiği — ✓ 88 şirket FR yayımladı
-- AAGYO, AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ASGYO, ATLAS, AVPGY, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO, BETAE, BFREN, BRKVY, BURVA …
+### Bilanço tetiği — ✓ 125 şirket FR yayımladı
+- AAGYO, ACSEL, ADEL, AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ARTMS, ASGYO, ATAVK, ATLAS, AVPGY, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu XKTUM: 150/242 (tasarım gereği ilk 150)
@@ -59,10 +59,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-10
 - XKTUM 18819.67 · XKTMT 17312.87 · XK100 17600.94 · XU100 13811.6 · BISTTLREFK 4015.02998
 - arşiv: 607 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
-- ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
+- ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
-### Bülten keşfi (§250k) — ⚠ indirilemedi · thb202608091.zip:HTTP404 · thb202608092.zip:HTTP404 · thb202608093.zip:HTTP404 · thb20260809.zip:HTTP404
+### Bülten keşfi (§250k) — ✓ thb202608071.zip indi · 295KB
+- içerik: thb202608071.csv
+- endeks izi: `thb202608071.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
 
 
 ---
-**Sonuç:** TR 5Y CDS (227.65 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (88) · endeks üyelikleri · endeks arşivi
+**Sonuç:** TR 5Y CDS (227.65 bp) · risk metrikleri (138) · katılım fonları (getiri-modu 36) · bilanço tetiği (125) · endeks üyelikleri · endeks arşivi
