@@ -331,12 +331,30 @@ async function riskTazele() {
      Atılan gün SAYILIR ve raporlanır — sessizce yutulmaz.
      §149'un aynı mantığı: orada fon dağıtımı, burada hisse bölünmesi. */
   const LIMIT = 0.20;
-  let atlananGun = 0;
+  /* §252z TARIH SUREKLILIGI SARTI — 10 Agu'da OLCULEREK eklendi.
+     BULGU: endeks-arsiv.json'a XKTUM gunluk serisi tohumlandiginda (§252y)
+     "kurumsal islem suzgecine takilan gun" 5'ten 234'e ZIPLADI. Sebep:
+     arsiv artik KARMA — Sub-Agu 2026 GUNLUK (117 nokta) + 2021-2026 AYLIK
+     tohum (61 nokta). Hisse serisi (Yahoo) ardisik gunluk oldugundan
+     kesisimin eski bolumunde noktalar AY ARALIKLI kaliyor ve betik ardisik
+     iki noktayi "gunluk getiri" sayiyordu.
+     ASIL TEHLIKE ATILANLAR DEGIL ATILMAYANLARDI: %20'nin ALTINDA kalan aylik
+     getiriler gunluk getiri gibi seriye giriyor, vol sqrt(252) ile
+     yillliklandirilinca SISIYOR ve beta bozuluyordu.
+     COZUM: ardisik iki gozlem arasi 5 TAKVIM GUNUNDEN uzunsa getiri
+     HESAPLANMAZ (egri.js:250'deki ayni kalip: `fark>0 && fark<=5`).
+     Iki sayac AYRI tutulur — "bosluk" ile "kurumsal islem" farkli seylerdir
+     ve tek sayacta toplanirsa teshis yalan soyler. */
+  const MAKS_BOSLUK = 5;          // takvim gunu; hafta sonu + 1 tatil paylar
+  let atlananGun = 0, atlananBosluk = 0;
+  const gunFark = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
   const getiriler = (seri, gunler) => {
     const g = [];
     for (let i = 1; i < gunler.length; i++) {
       const a = seri.get(gunler[i - 1]), b = seri.get(gunler[i]);
       if (!(a > 0 && b > 0)) continue;
+      const df = gunFark(gunler[i - 1], gunler[i]);
+      if (!(df > 0 && df <= MAKS_BOSLUK)) { atlananBosluk++; g.push(null); continue; }
       const r = b / a - 1;
       if (Math.abs(r) > LIMIT) { atlananGun++; g.push(null); continue; }  // yer korunur
       g.push(r);
@@ -388,7 +406,8 @@ async function riskTazele() {
   const s = denetle('Risk metrikleri', kontrol);
   raporlar.push(s.rapor() +
     `\n- ℹ **beta referansı: ${eKod}** (${eSeri.size} gün)` +
-    (atlananGun ? `\n- ℹ ${atlananGun} gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)` : '') +
+    (atlananGun ? `\n- ℹ ${atlananGun} gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)` : '') +
+    (atlananBosluk ? `\n- ℹ ${atlananBosluk} gözlem TARİH BOŞLUĞU nedeniyle atlandı (>${MAKS_BOSLUK} gün ara — aylık tohum noktaları; §252z)` : '') +
     (hamKalan.length ? `\n- ⚠ düzeltilmiş seri yok, HAM kapanış kullanıldı: ${hamKalan.slice(0, 8).join(', ')}${hamKalan.length > 8 ? ' +' + (hamKalan.length - 8) : ''} — bölünme varsa vol şişer` : '') +
     (eKod.indexOf('XKTUM') < 0 ? ' — ⚠ XKTUM bulunamadı, YEDEK endeks kullanıldı; sicil karşılaştırmasıyla taban FARKLI olabilir' : (eKod.indexOf('arşiv') >= 0 ? ' — ✓ GERÇEK katılım çıpası (BIST resmî)' : '')) +
     (denemeler.length > 1 ? `\n- denenen: ${denemeler.join(' · ')}` : '') +
