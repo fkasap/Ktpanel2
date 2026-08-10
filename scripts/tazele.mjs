@@ -1097,62 +1097,68 @@ async function endeksKapanisTazele() {
    /data/thb/YYYY/AA/thbYYYYAAGGS.zip — içinde endeks kapanışları olabilir.
    Bu fonksiyon TEK GÜN çeker ve içeriği RAPORA basar (tahmin yok, ölçüm).
    Tuttuğu doğrulanırsa 60-90 günlük tohum döngüsüne genişletilir. */
-/* §253e CDS — ACTIONS RUNNER'DAN. Vercel yolu OLCULDU ve KAPALI:
-   /api/tcmb?cds=1 -> {"ok":false,"err":"CDS_HTTP_403"} (Cloudflare datacenter
-   IP engeli). Tarayici yolu da kapali: yanit `Access-Control-Allow-Origin:
-   https://tr.investing.com` donuyor, ktpanel.vercel.app'ten CORS engeli.
-   GERIYE ACTIONS KALDI ve MANTIKLI: TEFAS'ta TERSI yasandi — Actions 1048 fon
-   cekebiliyor, Vercel koprusu "Request Rejected" aliyor. IP havuzlari farkli.
-   BU BIR DENEME. Tutmazsa cds.json YAZILMAZ, panel damgali yedekle calisir —
-   rapor da sebebini SOYLER. Sessiz basarisizlik yok. */
+/* §253f CDS — worldgovernmentbonds.com.
+   investing.com HER IKI sunucu yolundan da 403 verdi (Vercel VE Actions,
+   Cloudflare datacenter engeli — 10 Agu'da IKISI DE OLCULDU) ve tarayici yolu
+   CORS'ta kapali (`Access-Control-Allow-Origin: https://tr.investing.com`).
+   Bu kaynak FARKLI: sayfasi ham fetch ile ACILIYOR, bot engeli YOK — asil
+   fark bu. Deger investing ile BIREBIR ayni; site zaten kunyesinde
+   Investing.com'u kaynak gosteriyor.
+   Uc: POST /wp-json/common/v1/historical · govdede FUNCTION:"CDS",
+   COUNTRY1.SYMBOL:"13" (Turkiye), DURATA:60 (5 yil). Kullanicinin 10 Agu HAR
+   olcumunden alindi. Cerez GEREKMIYOR (giden cerezler analitik/reklam).
+   TARIH UYARISI: kaynak hafta sonlarini ve tatilleri son degeri TASIYARAK
+   dolduruyor, ustune ~2 gun ileri kayma var (duz kosu 08-08'de basliyor,
+   investing ayni degeri 08-06'ya yaziyor). DEGER dogru, TARIH ~2 gun iyimser.
+   Duz kosu geriye taranip gozlem gunu bulunur; ham etiket de yazilir. */
 async function cdsTazele() {
   const dosya = 'cds.json';
   try {
-    const r = await fetch('https://api.investing.com/api/financialdata/1096486/historical/chart/?interval=P1D&pointscount=60', {
+    const r = await fetch('https://www.worldgovernmentbonds.com/wp-json/common/v1/historical', {
+      method: 'POST',
       headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
-        'Origin': 'https://tr.investing.com',
-        'Referer': 'https://tr.investing.com/rates-bonds/turkey-cds-5-year-usd',
-        'domain-id': 'tr',
+        'Origin': 'https://www.worldgovernmentbonds.com',
+        'Referer': 'https://www.worldgovernmentbonds.com/cds-historical-data/turkey/5-years/',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
       },
-      signal: AbortSignal.timeout(20000)
+      body: '{"GLOBALVAR":{"JS_VARIABLE":"jsGlobalVars","FUNCTION":"CDS","DOMESTIC":true,"ENDPOINT":"https://www.worldgovernmentbonds.com/wp-json/common/v1/historical","DATE_RIF":"2099-12-31","DEBUG":false,"OBJ":{"UNIT":"","DECIMAL":2,"UNIT_DELTA":"%","DECIMAL_DELTA":2},"COUNTRY1":{"SYMBOL":"13","PAESE":"Turkey","PAESE_UPPERCASE":"TURKEY","BANDIERA":"tr","URL_PAGE":"turkey"},"COUNTRY2":null,"OBJ1":{"DURATA_STRING":"5 Years","DURATA":60},"OBJ2":null}}',
+      signal: AbortSignal.timeout(25000)
     });
     if (!r.ok) {
-      raporlar.push('### TR 5Y CDS — ⏭ ATLANDI\n- HTTP ' + r.status +
-        (r.status === 403 ? ' (Cloudflare, Actions IP de engelli — Vercel gibi)' : '') +
-        '\n- Panel damgalı yedekle çalışır; cds.json YAZILMADI.');
+      raporlar.push('### TR 5Y CDS — ⏭ ATLANDI\n- HTTP ' + r.status + '\n- cds.json YAZILMADI, panel damgalı yedekle çalışır.');
       return;
     }
     const d = await r.json();
-    const ham = Array.isArray(d && d.data) ? d.data : [];
-    const seri = ham
-      .filter(x => Array.isArray(x) && x.length > 4 && isFinite(x[0]) && isFinite(x[4]) && x[4] > 0)
-      .map(x => [x[0], +(+x[4]).toFixed(2)]);
-    if (!seri.length) { raporlar.push('### TR 5Y CDS — ✗ boş seri (ham ' + ham.length + ' satır)'); return; }
-    const son = seri[seri.length - 1], onc = seri.length > 1 ? seri[seri.length - 2] : null;
-    /* AKLI BASINDA ARALIK — Turkiye CDS'i 2016'dan beri 150-950 bandinda.
-       Disina cikan deger ALAN KAYMASIDIR, sessizce kabul edilmez. */
+    const q = (d && d.result && d.result.quote) || {};
+    const seri = Object.keys(q).map(k => q[k])
+      .filter(v => v && isFinite(v.CLOSE_VAL) && v.CLOSE_VAL > 0 && v.DATA_VAL)
+      .map(v => [v.DATA_VAL, +(+v.CLOSE_VAL).toFixed(2)])
+      .sort((a, b) => a[0] < b[0] ? -1 : 1);
+    if (!seri.length) { raporlar.push('### TR 5Y CDS — ✗ boş seri'); return; }
+    let i = seri.length - 1;
+    while (i > 0 && seri[i - 1][1] === seri[i][1]) i--;
+    const gercekGun = seri[i][0], son = seri[seri.length - 1];
+    const oncFar = seri.slice(0, i).reverse().find(x => x[1] !== son[1]) || null;
     if (!(son[1] >= 100 && son[1] <= 1500)) {
-      raporlar.push('### TR 5Y CDS — ✗ DENETİM: makul aralık dışı (' + son[1] + ' bp)\n- alan kayması olabilir; YAZILMADI.');
+      raporlar.push('### TR 5Y CDS — ✗ DENETİM: makul aralık dışı (' + son[1] + ' bp) — YAZILMADI.');
       return;
     }
-    const tarih = new Date(son[0]).toISOString().slice(0, 10);
-    const yas = Math.floor((Date.now() - son[0]) / 86400000);
+    const dgs = oncFar ? +(son[1] - oncFar[1]).toFixed(2) : null;
     await yaz(dosya, {
-      guncelleme: bugun, deger: son[1], tarih,
-      onceki: onc ? onc[1] : null, degisim: onc ? +(son[1] - onc[1]).toFixed(2) : null,
-      adet: seri.length, seri,
-      kaynak: 'investing.com · TR 5Y CDS (id 1096486) · GitHub Actions runner',
-      _not: 'Vercel IP\'sinden 403 geliyor (Cloudflare); bu dosya Actions kosusunda yazilir. §253e'
+      guncelleme: bugun, deger: son[1], tarih: gercekGun, etiketTarih: son[0],
+      onceki: oncFar ? oncFar[1] : null, degisim: dgs,
+      adet: seri.length, seri: seri.slice(-120),
+      kaynak: 'worldgovernmentbonds.com · TR 5Y CDS (5 Years, SYMBOL 13)',
+      _not: 'investing.com her iki sunucu yolundan da 403 veriyor (Cloudflare). Ayni veri; tarih etiketi ~2 gun ileri kaymis olabilir. §253f'
     });
     degisenler.push('TR 5Y CDS (' + son[1] + ' bp)');
-    raporlar.push('### TR 5Y CDS — ✓ ' + son[1] + ' bp · ' + tarih +
-      (onc ? ' · ' + (son[1] - onc[1] >= 0 ? '+' : '') + (son[1] - onc[1]).toFixed(2) : '') +
-      '\n- ✓ ' + seri.length + ' günlük seri · veri yaşı ' + yas + ' gün' +
-      (yas > 5 ? ' ⚠ (kaynak güncellemiyor olabilir)' : ''));
+    raporlar.push('### TR 5Y CDS — ✓ ' + son[1] + ' bp · ' + gercekGun +
+      (dgs != null ? ' · ' + (dgs >= 0 ? '+' : '') + dgs : '') +
+      '\n- ✓ ' + seri.length + ' günlük seri · kaynak etiketi ' + son[0] + ' (hafta sonu doldurmalı)');
   } catch (e) {
-    raporlar.push('### TR 5Y CDS — ⏭ ATLANDI\n- ' + String(e && e.message || e).slice(0, 90) + '\n- cds.json YAZILMADI, panel damgalı yedekle çalışır.');
+    raporlar.push('### TR 5Y CDS — ⏭ ATLANDI\n- ' + String(e && e.message || e).slice(0, 90) + '\n- cds.json YAZILMADI.');
   }
 }
 async function bultenKesif() {
