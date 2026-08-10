@@ -474,10 +474,26 @@ async function fonTazele() {
        döndürüyor, fonDetayGetir boş, fonToplamDegerGetir ERR-006) — uç adı
        TAHMİN EDİLMEZ, ÖLÇÜLÜR (§249e'nin aynı dersi). */
     try {
-      const rgn = await fetch('https://ktpanel.vercel.app/api/tefas?mod=gnl&tip=YAT&bas=1&bit=1000',
-        { signal: AbortSignal.timeout(30000) });
-      const gn = await rgn.json().catch(() => null);
-      const dizi = (gn && Array.isArray(gn.veri)) ? gn.veri : [];
+      /* §253i-DUZELTME SAYFALAMA. Ilk yazimda tek cagri (bas=1&bit=1000) vardi
+         ve REGRESYONA yol acti: TEFAS'ta 2030 fon var, ilk 1000'e 46 katilim
+         fonunun YALNIZ 10'u dusuyordu -> "Katilim fonlari ✗ KALDI 10/46".
+         Onceki hal 36/46 yaziyordu (Playwright bloke oldugu icin meta BOS
+         kaliyor, kod GETIRI-MODU'na dusuyordu). Yani yeni veri EKSIK oldugu
+         icin eskisinden KOTU sonuc verdi.
+         DENETIM YAKALADI ve veriyi YAZMADI (%95 esigi) — §104'un tam isi.
+         Artik tum sayfalar cekilir. */
+      const dizi = [];
+      let gn = null;
+      for (let sayfa = 0; sayfa < 4; sayfa++) {
+        const bas = sayfa * 1000 + 1;
+        const rgn = await fetch('https://ktpanel.vercel.app/api/tefas?mod=gnl&tip=YAT&bas=' + bas + '&bit=' + (bas + 999),
+          { signal: AbortSignal.timeout(30000) });
+        const j = await rgn.json().catch(() => null);
+        if (sayfa === 0) gn = j;
+        const d = (j && Array.isArray(j.veri)) ? j.veri : [];
+        dizi.push(...d);
+        if (d.length < 1000) break;   /* son sayfa */
+      }
       let nA = 0;
       for (const x of dizi) {
         const kod = String(x.fonKodu || '').toUpperCase().trim();
@@ -492,7 +508,7 @@ async function fonTazele() {
         nA++;
       }
       if (nA) raporlar.push('### TEFAS genel bilgi (§253i) — ✓ ' + nA + ' fon · AUM + yatırımcı sayısı köprüden'
-        + (gn && gn.n ? ' (uç ' + gn.n + ' kayıt döndürdü)' : ''));
+        + ' (ham ' + dizi.length + ' kayıt, sayfalamalı)');
       else raporlar.push('### TEFAS genel bilgi (§253i) — ⏭ boş döndü'
         + (gn && gn.error ? ' · ' + String(gn.error).slice(0, 60) : '') + '\n- Playwright yedeği devrede.');
     } catch (e) {
