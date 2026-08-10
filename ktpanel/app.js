@@ -2231,7 +2231,7 @@ function yabanciRender(){
   }).join('');
   const kum=d.aylik.reduce((s,a)=>s+a.portfoy,0);
   $('yabanciBody').innerHTML=
-    '<div style="margin-bottom:8px"><span style="font-family:var(--mono);font-size:32px;font-weight:700;color:'+e[1]+'">'+skor+'</span> <span style="font-weight:700;font-size:13px;letter-spacing:.5px;color:'+e[1]+'">'+e[0]+'</span> <span class="sub" style="display:inline">/100 · yabancı para yön skoru'+(carryEksik?' · <b style="color:var(--down)">⚠ carry ölçülemedi, nötr alındı</b>':'')+'</span></div>'+
+    '<div style="margin-bottom:8px"><span style="font-family:var(--mono);font-size:32px;font-weight:700;color:'+e[1]+'">'+skor+'</span> <span style="font-weight:700;font-size:13px;letter-spacing:.5px;color:'+e[1]+'">'+e[0]+'</span> <span class="sub" style="display:inline">/100 · yabancı para yön skoru <span class="thin">(aylık ödemeler dengesi)</span>'+(carryEksik?' · <b style="color:var(--down)">⚠ carry ölçülemedi, nötr alındı</b>':'')+'</span></div>'+
     '<div class="lbl">AYLIK NET PORTFÖY AKIŞI <span class="thin" style="font-weight:400">(mlr $ · yeşil giriş / kırmızı çıkış · soluk = tahmini)</span></div>'+
     '<div style="display:flex;align-items:stretch;gap:3px;margin:6px 0 10px">'+bars+'</div>'+
     '<div class="kv"><span class="k">2026 kümülatif</span><span class="'+(kum>=0?'up':'down')+'" style="font-weight:600">'+(kum>=0?'+':'')+kum.toFixed(1)+' mlr $</span></div>'+
@@ -4112,7 +4112,11 @@ function yabHaftaCanliYaz(){
     const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
     const kisa = t => { const m=String(t).match(/^(\d{2})-(\d{2})-/); return m ? (+m[1])+' '+ay[+m[2]-1] : t; };
     const im = v => (v>=0?'+':'')+trN(v,1);
-    if($('yabHaftaTag')) $('yabHaftaTag').textContent = '('+kisa(ry.sonHafta)+' · EVDS canlı)';
+    if($('yabHaftaTag')) $('yabHaftaTag').textContent = '('+kisa(ry.sonHafta)+' · haftalık menkul kıymet · EVDS canlı)';
+    /* §259d SIKLIK AYRIMI. Skor AYLIK ödemeler dengesinden, bu satır HAFTALIK
+       menkul kıymet istatistiğinden geliyor. İkisi de "ılımlı giriş/çıkış"
+       diyor ve 10 Ağu'da ZIT yöne işaret ettiler (skor giriş, hafta çıkış) —
+       okuyan çelişki sanır. Ölçüler farklı, kelimeler aynıydı. */
     if($('yabHaftaVal')) $('yabHaftaVal').innerHTML =
         'hisse <b class="'+(ry.hisse>=0?'up':'down')+'">'+im(ry.hisse)+'</b>mn · '+
         'DİBS <b class="'+(ry.dibs>=0?'up':'down')+'">'+im(ry.dibs)+'</b>mn · '+
