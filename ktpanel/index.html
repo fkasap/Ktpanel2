@@ -300,7 +300,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div><div class="lbl" style="margin:0">DXY (dolar)</div><div class="val" id="dxyV">100,77 <span class="sub" style="display:inline">+%0,15</span></div></div>
     <div><div class="lbl" style="margin:0">Brent</div><div class="val" id="brentV">77,81 <span class="sub down" style="display:inline">−%2,80</span></div></div>
     <div><div class="lbl" style="margin:0">ABD 10Y</div><div class="val">%4,71 <span class="sub" style="display:inline">FRED 23 Tem</span></div></div>
-    <div><div class="lbl" style="margin:0">TR 5Y CDS</div><div class="val up">≈206 <span class="sub" style="display:inline">bp · 27 Tem · iyileşiyor</span></div></div>
+    <!-- §253d BU SATIR STATIKTI VE ID'SI YOKTU — app.js ona hic dokunamiyordu.
+     Risk baromertesindeki CDS duzeltilirken bu kopya 206'da kalmisti; ayni
+     ekranda iki farkli CDS gorunuyordu (§241: ayni deger iki yerde). Artik
+     id verildi ve canli kaynaga baglandi; canli gelmezse damgali yedek. -->
+<div><div class="lbl" style="margin:0">TR 5Y CDS</div><div class="val up" id="glbCds">— <span class="sub" style="display:inline">yükleniyor</span></div></div>
   </div>
   <div class="note">Termometre <em>yumuşuyor</em>: <b>Brent 23 Tem'de 102$'ı gördü, sonra sert düzeltti</b> (24 Tem −%5,2, 26 Tem −%7,6 → ~91$) — tetik: Pakistan/Çin arabuluculuk umudu + EIA'nın 2026 talep tahminini kısması. Aylık hâlâ +%23 ve Hürmüz/Babülmendep riski çözülmedi — "şok bitti" değil, "zirveden düzeltme". Türkiye için kısmi rahatlama: TÜFE geçişi ve cari baskı hafifler, ama kalıcılığı diplomatik habere bağlı. <b>TR CDS ≈206bp</b> (225'ten geriledi, aylık −%15,6) — risk primi iyileşiyor; düşük CDS → ucuz dış borçlanma → rezerv → kur istikrarı → BIST'e yabancı girişi zinciri lehte çalışıyor. Kritik bağlantı: Brent düzeltmesi kalıcıysa Fed'in Eylül artırım gerekçesi (enerji-enflasyon) zayıflar — Çarşamba Warsh tonu bu yüzden daha da belirleyici.</div>
 </div>

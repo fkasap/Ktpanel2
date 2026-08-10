@@ -1312,7 +1312,7 @@ async function marketCek(){
     if(mk&&mk.data){window.__market=mk.data;renderKuresel();emtiaRender();
       const rb=(id,k,dec)=>{const d=mk.data[k];if(d&&d.p!=null&&$(id)){const s=d.chg>=0?'+':'';$(id).innerHTML=trN(d.p,dec)+' <span class="sub'+(d.chg>=0?'':' down')+'" style="display:inline">'+s+'%'+trN(d.chg,2)+'</span>';}};
       rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
-      cdsCek();   /* §253b — CDS ayrı uçtan gelir, market yanıtını BEKLETMEZ */
+      glbCdsYaz(); cdsCek();   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
       const d=$('sekDamga');
       if(d){
         const s=(mk.data.xu100&&mk.data.xu100.gun)?mk.data.xu100.gun:'';
@@ -4003,8 +4003,26 @@ async function cdsCek(){
     if(j&&j.ok&&isFinite(j.deger)){
       CDS_CANLI={deger:+j.deger, tarih:j.tarih, degisim:isFinite(j.degisim)?+j.degisim:null};
       renderRiskBaro();          /* değer geldi, barometreyi YENİDEN çiz */
+      glbCdsYaz();               /* §253d ikinci gösterim — global barometre */
     }
   }catch(e){}
+}
+/* §253d GLOBAL RİSK BAROMETRESİ'ndeki CDS. index.html:303'te STATİK yazılıydı
+   ve id'si yoktu — risk barometresi düzeltilirken bu kopya 206'da kaldı, aynı
+   ekranda İKİ FARKLI CDS göründü. Tek kaynak, iki gösterim. */
+function glbCdsYaz(){
+  const el=$('glbCds'); if(!el) return;
+  const c=(CDS_CANLI&&isFinite(CDS_CANLI.deger))?CDS_CANLI:null;
+  const v=c?c.deger:RISK_CDS, gun=c?c.tarih:RISK_CDS_DAMGA;
+  let tar=gun; try{ const d=new Date(gun);
+    tar=d.getDate()+' '+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][d.getMonth()];
+  }catch(e){}
+  /* Yön etiketi ARTIK ÖLÇÜLÜYOR — "iyileşiyor" sabit yazılıydı ve CDS yükselse
+     bile öyle kalırdı. Canlı değişim yoksa yön İDDİA EDİLMEZ. */
+  let yon='', sinif='val';
+  if(c&&isFinite(c.degisim)&&c.degisim!==0){ yon=c.degisim<0?' · iyileşiyor':' · kötüleşiyor'; sinif=c.degisim<0?'val up':'val down'; }
+  el.className=sinif;
+  el.innerHTML=trN(v,0)+' <span class="sub" style="display:inline">bp · '+tar+(c?' · canlı':' · damgalı')+yon+'</span>';
 }
 function renderRiskBaro(){
   if(!$('riskBaroSkor'))return;
