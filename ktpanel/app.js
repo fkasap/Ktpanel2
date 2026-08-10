@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260810c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260810d';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -7676,7 +7676,18 @@ function bistTakvimRender(){
   const B=(typeof BISTTAK!=='undefined'&&BISTTAK&&BISTTAK.beklenen)?BISTTAK.beklenen:{};
   const bekleyen=Object.keys(B).filter(k=>!varOlan.has(k))
     .map(k=>({kod:k, iso:B[k], durum:(B[k]<bugun?'gecikti':'bekleniyor')}));
-  const hepsi=aciklanan.concat(bekleyen).sort((a,b)=>a.iso<b.iso?1:a.iso>b.iso?-1:0);
+  /* §252r GERCEKLESEN BLOGU. Takvimde artik iki blok var: `beklenen` (tahmin)
+     ve `gerceklesen` (KAP'ta yayinlanmis GERCEK tarih). Render onceden yalniz
+     `beklenen`i okuyordu ve aciklananlari INC_KARTLAR'dan aliyordu — yani
+     ACIKLAMIS AMA KARTI HENUZ YAZILMAMIS sirket LISTEDEN TAMAMEN KAYBOLUYORDU.
+     10 Agu olcumu: 15 aciklamanin 14'unun karti vardi, KTLEV'inki YOKTU —
+     tam da gorunmesi gereken isim (o gun acikladi, bedelsiz sonrasi ilk tablo).
+     Simdi gerceklesen blogu da listeye giriyor; karti olan zaten aciklanan'dan
+     gelir, olmayan buradan gelir ve 'yayinlandi' etiketiyle gorunur. */
+  const G=(typeof BISTTAK!=='undefined'&&BISTTAK&&BISTTAK.gerceklesen)?BISTTAK.gerceklesen:{};
+  const yayinlanan=Object.keys(G).filter(k=>!varOlan.has(k))
+    .map(k=>({kod:k, iso:G[k], durum:'yayınlandı'}));
+  const hepsi=aciklanan.concat(bekleyen).concat(yayinlanan).sort((a,b)=>a.iso<b.iso?1:a.iso>b.iso?-1:0);
   if(!hepsi.length){ el.innerHTML='<div class="sub">Veri bekleniyor.</div>'; return; }
   const ayK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
   const trT=(iso)=>{ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso); return m?(+m[3])+' '+ayK[+m[2]-1]:iso; };
@@ -7688,10 +7699,15 @@ function bistTakvimRender(){
   const acik=hepsi.filter(x=>x.durum==='açıklandı');
   const satir=(x)=>{
     const bugunMu=(x.iso===bugun), a=(x.durum==='açıklandı');
+    /* §252r 'yayınlandı' = KAP'ta tablo VAR ama AI kartı henüz YOK. Bu dalı
+       eklemezsem else'e duser ve BEKLENIYOR yazardi — aciklamis sirkete
+       "bekleniyor" demek, gecikmemis sirkete "GECIKTI" demek kadar yanlis. */
     const rozet = a ? (bugunMu?'<span class="tag">BUGÜN</span>':'')
+      : (x.durum==='yayınlandı'
+          ? '<span class="tag" style="background:var(--mm2)">YAYINLANDI · kart bekliyor</span>'
       : (x.durum==='gecikti'
           ? '<span class="tag" style="background:var(--down)">GECİKTİ</span>'
-          : '<span class="tag" style="background:var(--muted)">BEKLENİYOR</span>');
+          : '<span class="tag" style="background:var(--muted)">BEKLENİYOR</span>'));
     return '<tr'+(bugunMu?' style="background:var(--bg2)"':(a?'':' style="opacity:.82"'))+'>'+
       '<td style="white-space:nowrap'+(bugunMu?';color:var(--mm2);font-weight:700':'')+'">'+esc(trT(x.iso))+'</td>'+
       '<td><b>'+esc(x.kod)+'</b></td>'+
