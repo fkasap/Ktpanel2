@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260731-x';
+const KTP_SURUM = '20260810a';   // §252d/e/g/h — OKU_* tazelendi, bulutUyari DOM'a alindi, GÜÇLÜ rengi, egri sapma
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -3184,7 +3184,14 @@ async function egriCek(){
     fetch('/api/evds2?mod=egri&tur=parite').then(r=>r.json())
   ]);
   try{ const j=a.status==='fulfilled'?a.value:null;
-    if(j&&j.ok&&j.vadeler){EGRI_CANLI=j.vadeler;EGRI_KONV=j.konvansiyon?('fiyat: '+j.konvansiyon):'';}
+    /* §252h SAPMA GORUNUR OLDU. egri.js fiyat konvansiyonunu (temiz/kirli x
+       donemsel/yillik) 24 Tem'de olculmus REF capalariyla SECIYOR ve secimin
+       ne kadar tuttugunu j.sapma.skor ile RAPORLUYOR. Panel bugune kadar yalniz
+       j.konvansiyon'u basiyordu — oz-denetim vardi, ekrana cikmiyordu. Capa
+       eskidikce sapma buyur; artik damgada gorulur. */
+    if(j&&j.ok&&j.vadeler){EGRI_CANLI=j.vadeler;
+      const sp=(j.sapma&&j.sapma.skor!=null)?(' · sapma '+trN(j.sapma.skor,2)):'';
+      EGRI_KONV=j.konvansiyon?('fiyat: '+j.konvansiyon+sp):'';}
   }catch(e){}
   try{ const j=b.status==='fulfilled'?b.value:null;
     if(j&&j.ok&&j.vadeler)EGRI_SUKUK=j.vadeler;
@@ -3380,7 +3387,10 @@ function incHtml(kartlar){
   const YES='#0FA26B', KIR='#DE4B5E', GRI='#8896A5', INK='#1B2733', MUT='#6B7B8C', LIN='#E8EDF1', ZEM='#F6F8F9';
   const MONO="ui-monospace,SFMono-Regular,'SF Mono',Menlo,monospace";
   const SANS="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-  const skorRenk=s=>s==='POZİTİF'?YES:s==='NEGATİF'?KIR:GRI;
+  /* §252g GÜÇLÜ skoru griye dusuyordu. inceleme-ai.json'da metin skorlar:
+     POZİTİF(7) KARIŞIK(4) NEGATİF(3) NÖTR(1) GÜÇLÜ(1). GÜÇLÜ hicbir dala
+     uymuyordu -> GRI, yani NÖTR ile ayni. Sezonun en guclu bilancosu notr gorunuyordu. */
+  const skorRenk=s=>(s==='POZİTİF'||s==='GÜÇLÜ')?YES:s==='NEGATİF'?KIR:GRI;
   const yon=v=>{const s=String(v||'');return s.startsWith('+')?YES:(s.startsWith('−')||s.startsWith('-'))?KIR:MUT;};
   const kart=(k)=>{
     /* §245z TEK KART SEKMEYİ ÖLDÜREMEZ. 2 Ağu: bir kartta metrikler dizi
@@ -3812,7 +3822,7 @@ async function incelemeInit(){
     /* Tek çağrı yeter — iki kez yazılmıştı, ikincisi boşuna iş. */
     try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
     if(!birlesik.length){el.innerHTML='<div class="sub">Henüz kart yok — ilk bilanço incelemesini iste.</div>';return;}
-    const skorRenk=(s)=>s==='POZİTİF'?'var(--mm2)':s==='NEGATİF'?'#DE4B5E':'#8896A5';
+    const skorRenk=(s)=>(s==='POZİTİF'||s==='GÜÇLÜ')?'var(--mm2)':s==='NEGATİF'?'#DE4B5E':'#8896A5';   // §252g
     /* §224 ÇİZİM ARTIK BİRLEŞİK LİSTEDEN. Önce INC_KARTLAR birleştiriliyor ama
    ÇİZİM hâlâ `kartlar`ı (yalnız dosyayı) kullanıyordu — onaylanan taslak
    listeye giriyor, EKRANA GELMİYORDU. "Eklendi" diyip göstermemek, en

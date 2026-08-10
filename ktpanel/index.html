@@ -55,8 +55,7 @@ h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--li
    (ağ beklemeden), canlı gelince değiştirir. Arada eski rakam ekranda durur
    ve GÜNCEL GÖRÜNÜR — 20 Tem tarihi bugünkü sanılabilir. Daha kötüsü: canlı
    çağrı düşerse o hâlde KALIR ve hiç uyarı çıkmaz.
-   Çözüm: <body class="veri-bekliyor">
-<div id="bulutUyari" class="note" style="display:none;margin:8px 12px 0;border-left:3px solid var(--down)"></div> boot'ta `veri-bekliyor` taşır, damgalar soluk+nabızlı olur.
+   Çözüm: <body class="veri-bekliyor"> — boot'ta `veri-bekliyor` taşır, damgalar soluk+nabızlı olur.
    Kural: geçici bir durum, kalıcı gibi GÖRÜNMEMELİ. */
 body.veri-bekliyor .tag{opacity:.45;border:1px dashed rgba(255,255,255,.5);animation:ktNabiz 1.6s ease-in-out infinite}
 body.veri-bekliyor .tag::after{content:' ⏳'}
@@ -165,6 +164,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </head>
 <body>
 <div class="tape" aria-hidden="true"><div class="tape-in" id="tape"><span>Kt Panel yükleniyor…</span></div></div>
+<!-- §252e: bu eleman §200b'de yazilmis ama YAPISTIRMA KAZASIYLA <style> icindeki
+     §193 yorumunun ortasina dusmustu (satir 59). DOM'da olmadigi icin app.js:6330
+     $('bulutUyari') daima null donuyordu ve "Bulut deposu kapali" uyarisi HIC
+     BASILMIYORDU — §200'un tarif ettigi sessiz veri kaybi aynen duruyordu. -->
+<div id="bulutUyari" class="note" style="display:none;margin:8px 12px 0;border-left:3px solid var(--down)"></div>
 <div class="wrap">
 
 <header>
