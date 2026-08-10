@@ -816,12 +816,23 @@ async function endeksUyeTazele() {
    ISO-8859-9 · ';' · ilk 2 satır başlık · KAPANIS = 7. kolon. */
 async function endeksKapanisTazele() {
   const dosya = 'endeks-arsiv.json';
-  const cekNot = [];   /* §250f: indirme başarısızlığı SESSİZ kalmaz */
+  const cekNot = [];       /* §250f: indirme başarısızlığı SESSİZ kalmaz */
+  const beklenenNot = [];  /* §253g: BEKLENEN başarısızlıklar — gürültü yapmasın */
+  /* §253g GÜRÜLTÜLÜ BAŞARI SORUNU. §250b ZATEN ölçmüştü: fiyat/getiri CSV'leri
+     /datum/ altında YOK, PayEndeksleri.zip içindeler. Kod doğru davranıyor —
+     tekil URL'yi dener, 404 alır, zip'e düşer ve ÇALIŞIR (84 endeks).
+     Ama rapor bunu her koşuda "⚠ inmeyenler" diye basıyordu. Beklenen bir
+     düşüş, GERÇEK arıza gibi görünüyordu; gerçek bir arıza çıktığında
+     aralarında KAYBOLURDU. Artık ayrı satırda, ℹ ile. */
+  const BEKLENEN_404 = ['FiyatEndeksleri_PriceIndices.csv', 'GetiriEndeksleri_ReturnIndices.csv'];
   const cek = async (u) => {
     const ad = u.split('/').pop();
     try {
       const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': '*/*' }, signal: AbortSignal.timeout(30000) });
-      if (!r.ok) { cekNot.push(ad + ':HTTP' + r.status); return null; }
+      if (!r.ok) {
+        (BEKLENEN_404.includes(ad) && r.status === 404 ? beklenenNot : cekNot).push(ad + ':HTTP' + r.status);
+        return null;
+      }
       const b = Buffer.from(await r.arrayBuffer());
       if (b.length < 200) { cekNot.push(ad + ':boş(' + b.length + 'b)'); return null; }
       return b;
@@ -1081,7 +1092,8 @@ async function endeksKapanisTazele() {
     const one = ['XKTUM', 'XKTMT', 'XK100', 'XU100', 'BISTTLREFK'].filter(k => birlesik[k])
       .map(k => k + ' ' + birlesik[k].k).join(' · ');
     raporlar.push('### Endeks kapanışları — ✓ ' + Object.keys(birlesik).length + ' endeks · veri günü ' + veriGunu +
-      '\n- ' + one + '\n- arşiv: ' + Object.keys(arsiv.gunler).length + ' gün · dosyalar: ' + basarili.join(', ') + (cekNot.length ? '\n- ⚠ inmeyenler: ' + cekNot.join(' · ') : ''));
+      '\n- ' + one + '\n- arşiv: ' + Object.keys(arsiv.gunler).length + ' gün · dosyalar: ' + basarili.join(', ') + (cekNot.length ? '\n- ⚠ inmeyenler: ' + cekNot.join(' · ') : '') +
+      (beklenenNot.length ? '\n- ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): ' + beklenenNot.join(' · ') : ''));
     degisenler.push('endeks arşivi');
     return Object.keys(birlesik).length;
   } catch (e) {
@@ -1165,10 +1177,23 @@ async function bultenKesif() {
   if (globalThis.__bultenBakildi) return; globalThis.__bultenBakildi = 1;
   try {
     const os4 = await import('node:os'), fsp4 = await import('node:fs/promises'), cp4 = await import('node:child_process');
-    const d = new Date(Date.now() - 86400000);   /* dün */
-    const Y = d.getFullYear(), A = String(d.getMonth() + 1).padStart(2, '0'), G = String(d.getDate()).padStart(2, '0');
+    /* §253h SON İŞ GÜNÜ — "dün" YETMİYORDU. Kod düz `Date.now()-86400000`
+       kullanıyordu; PAZARTESİ koşusunda bu PAZAR'a denk geliyor, borsa kapalı,
+       bülten YOK -> her hafta başı dört 404 ve "⚠ indirilemedi" satırı.
+       Rapor bir arıza bildiriyordu ama arıza yoktu. (§253g ile aynı sınıf:
+       beklenen düşüş, gerçek arıza gibi görünüyor.)
+       Artık hafta sonu ATLANIYOR ve gerekirse 4 iş gününe kadar geriye
+       bakılıyor (resmî tatiller için). İlk inen kabul edilir. */
+    const isGunu = (x) => x.getDay() !== 0 && x.getDay() !== 6;
+    const adaylar = [];
+    for (let geri = 1; geri <= 6 && adaylar.length < 4; geri++) {
+      const x = new Date(Date.now() - geri * 86400000);
+      if (isGunu(x)) adaylar.push(x);
+    }
     const denenen = [];
-    for (const sonek of ['1', '2', '3', '']) {
+    for (const d of adaylar) {
+      const Y = d.getFullYear(), A = String(d.getMonth() + 1).padStart(2, '0'), G = String(d.getDate()).padStart(2, '0');
+      for (const sonek of ['1', '2', '3', '']) {
       const ad = 'thb' + Y + A + G + sonek + '.zip';
       const u = 'https://borsaistanbul.com/data/thb/' + Y + '/' + A + '/' + ad;
       let b = null;
@@ -1195,8 +1220,14 @@ async function bultenKesif() {
       raporlar.push('### Bülten keşfi (§250k) — ✓ ' + ad + ' indi · ' + (b.length / 1024).toFixed(0) + 'KB' +
         '\n- içerik: ' + ic.join(', ').slice(0, 200) + (ipucu ? '\n- endeks izi: `' + ipucu.replace(/`/g, '') + '`' : '\n- endeks izi: ilk 12 dosyada bulunamadı'));
       return;
+      }
     }
-    raporlar.push('### Bülten keşfi (§250k) — ⚠ indirilemedi · ' + denenen.join(' · '));
+    /* Hiçbir aday inmedi. Bu ARIZA OLMAYABİLİR: resmî tatil haftası ya da
+       BIST'in yayın gecikmesi. Denenen günler raporda görünsün ki ayırt
+       edilebilsin — dört ardışık iş günü boşsa GERÇEK sorun vardır. */
+    raporlar.push('### Bülten keşfi (§250k) — ℹ inmedi · denenen ' + adaylar.length +
+      ' iş günü: ' + adaylar.map(x => x.toISOString().slice(0, 10)).join(', ') +
+      '\n- ' + denenen.join(' · '));
   } catch (e) { raporlar.push('### Bülten keşfi — ✗ ' + String(e.message || e).slice(0, 90)); }
 }
 
