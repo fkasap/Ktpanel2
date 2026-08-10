@@ -180,6 +180,51 @@ function _birimBul(h){
   if(/Tam\s*T[Ll]|tutarlar\s+Türk\s+Lirası|TL\s*olarak\s+gösteril/i.test(bas)) return { ad:'TL', carpan:1 };
   return { ad:'belirsiz', carpan:null };
 }
+/* §255 BİRİM ÇAPRAZ DOĞRULAMASI — kalıp bulunamazsa ÖLÇEKLE KANITLA.
+   SORUN: _birimBul sayfada "Bin TL / Milyon TL / Tam TL" ifadelerini arar.
+   LMKDC 2Ç26'da (KAP 1647444) hiçbiri tutmadı -> birim 'belirsiz'. §229'un
+   kuralı gereği varsayılan UYDURULMADI ve modele "belirsiz" denildi — ama
+   MODEL UYDURDU: özette "2,32 milyar", tabloda "2.317,8 mlr birim" yazdı.
+   İkisi 1000 KAT farklıydı ve kart o haliyle onaylandı.
+   ÇÖZÜM: ölçeği METİNDEN değil VERİDEN kanıtla. Panelin multiple.json'unda
+   her hisse için TTM ciro (milyon TL) zaten var. Çeyreklik ciro × 4, üç
+   aday çarpanla denenip TTM'e oranlanır; oran makul bandda olan ADAY KAZANIR.
+   LMKDC ÖLÇÜMÜ (10 Ağu):
+     bin TL   -> 2.317.827 ×1000 ×4 /1e6 = 9.271 mn  · TTM 9.306 -> oran 0,996 ✓
+     TL       -> 9,3 mn                              -> oran 0,001 ✗
+     milyon TL-> 9.271.308 mn                        -> oran 996   ✗
+   Ayrışma 1000 KAT — belirsizlik yok. Fintables ile de doğrulandı: KAP ham
+   değerleri tam TL karşılıklarının BİREBİR 1/1000'i (beş kalemde de).
+   TOLERANS: çeyrek×4 ile TTM arasında mevsimsellik farkı olur; [0,3–3,0]
+   bandı bunu fazlasıyla karşılar ve yanlış adayı (1000 kat uzakta) ASLA
+   içine almaz. */
+const _CARPAN_ADAY = [
+  { ad:'bin TL',    carpan:1000 },
+  { ad:'TL',        carpan:1    },
+  { ad:'milyon TL', carpan:1e6  }
+];
+function _birimDogrula(birim, ciroCeyrek, ttmCiroMn){
+  /* Zaten kesinse dokunma — sayfanın kendi beyanı her zaman üstündür. */
+  if(birim && birim.carpan) return { birim, kanit:null };
+  if(!isFinite(ciroCeyrek) || ciroCeyrek <= 0) return { birim, kanit:null };
+  if(!isFinite(ttmCiroMn)  || ttmCiroMn  <= 0) return { birim, kanit:null };
+  const gecen = [];
+  for(const a of _CARPAN_ADAY){
+    const yillikMn = (ciroCeyrek * a.carpan * 4) / 1e6;
+    const oran = yillikMn / ttmCiroMn;
+    if(oran >= 0.3 && oran <= 3.0) gecen.push({ ...a, oran:+oran.toFixed(3), yillikMn:Math.round(yillikMn) });
+  }
+  /* TEK aday geçmeli. İki aday geçerse ayrışma yetersizdir ve KARAR VERİLMEZ —
+     belirsizi belirsiz bırakmak, yanlış kesinlikten iyidir (§229). */
+  if(gecen.length !== 1) return { birim, kanit:{ sonuc:'kararsiz', gecen, ttmCiroMn } };
+  const k = gecen[0];
+  return {
+    birim: { ad:k.ad, carpan:k.carpan, kaynak:'capraz-dogrulama' },
+    kanit: { sonuc:'kanitlandi', secilen:k.ad, oran:k.oran,
+             ceyrekHam:ciroCeyrek, yillikMn:k.yillikMn, ttmCiroMn,
+             not:'ceyreklik ciro x4, multiple.json TTM cirosuna oranlandi' }
+  };
+}
 function _isaretUygun(ad, v, sinir){
   if(v == null) return false;
   if(!isFinite(v) || Math.abs(v) > (sinir || 1e13)) return false;
@@ -933,8 +978,16 @@ export default async function handler(req, res){
           isaret.push({ tip:'net faiz baz etkisi', not:'net faiz y/y %'+m.netFaiz.yoy+' — geçen yılın düşük bazından geliyor olabilir, ÇEYREKLİK seyre bakılmalı' });
       }
 
+      /* §255 BİRİM ÇAPRAZ DOĞRULAMASI. Sayfa birimi beyan etmediyse (belirsiz),
+         çeyreklik ciroyu panelin TTM cirosuna oranlayarak ölçeği KANITLA.
+         İstemci `?ttm=<milyon TL>` geçirir (multiple.json'daki `ciro`).
+         Geçmezse davranış AYNEN eskisi gibi kalır — belirsiz, belirsiz. */
+      const _ttmRef = parseFloat(String(req.query.ttm || '').replace(',', '.'));
+      const _dg = _birimDogrula(b.birim, (m.ciro && m.ciro.deger), _ttmRef);
+      const _birimSon = _dg.birim;
       res.setHeader('Cache-Control','s-maxage=86400, stale-while-revalidate=604800');
-      return res.status(200).json({ surum:_SURUM,  ok:true, id, sablon:b.sablon, birim:b.birim,
+      return res.status(200).json({ surum:_SURUM,  ok:true, id, sablon:b.sablon, birim:_birimSon,
+        birimKanit:_dg.kanit,
         temel: ceyrekVar ? 'çeyreklik (rapor sütunu)' : 'kümülatif (çeyrek sütunu yok)',
         bulunan:b.bulunan, toplam:b.toplam, eksik:b.eksik,
         metrikler:m, isaretler:isaret,
