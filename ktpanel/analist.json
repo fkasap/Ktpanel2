@@ -333,9 +333,11 @@
   {
    "k": "YEOTK",
    "kurum": 1,
-   "hedef": 173.5,
-   "son": "2026-05-14"
+   "hedef": 74.21,
+   "son": "2026-05-14",
+   "duzeltildi": "bedelsiz 2026-07-31 (x2,3380) icin duzeltildi; ham hedef 173,50"
   }
  ],
- "not": "Aracı kurum hedef fiyatlarının 6 aylık ortalaması (Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, yayın tarihi >= 29 Oca 2026). kurum = farklı aracı kurum sayısı, son = en güncel rapor tarihi. Tek kurumlu isimlerde konsensüs zayıftır. BAYAT İŞARETİ: son 6 ayda aracı kurum raporu bulunmayan hisseler \"bayat\":true taşır — hedef fiyatları ESKİ, güncel fiyatla kıyaslanınca yanıltıcı potansiyel üretirler (örn. SNGYO +%238 gerçek değil, eski hedefin artefaktı). Panel bunları ayrı göstermeli ya da hiç göstermemeli."
+ "not": "Aracı kurum hedef fiyatlarının 6 aylık ortalaması (Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, yayın tarihi >= 29 Oca 2026). kurum = farklı aracı kurum sayısı, son = en güncel rapor tarihi. Tek kurumlu isimlerde konsensüs zayıftır. BAYAT İŞARETİ: son 6 ayda aracı kurum raporu bulunmayan hisseler \"bayat\":true taşır — hedef fiyatları ESKİ, güncel fiyatla kıyaslanınca yanıltıcı potansiyel üretirler (örn. SNGYO +%238 gerçek değil, eski hedefin artefaktı). Panel bunları ayrı göstermeli ya da hiç göstermemeli.",
+ "_duzeltme": "§252c (9 Agu): YEOTK hedef fiyati 173,50 -> 74,21 olarak BEDELSIZ DUZELTMESI yapildi. 31 Tem 2026 bedelsizi (%58,77 + ic kaynak %75,03 = x2,3380) sermayeyi 830 mn TL yapti. Raporu veren tek kurum 14 May tarihli hedefini REVIZE ETMEDI — Fintables da ayni ham 173,50 degerini tasiyor, yani bu bir bayatlik degil KURUMSAL ISLEM duzeltmesidir. Duzeltilmeden panel +%341 sahte potansiyel gosteriyordu; duzeltilmis deger +%89. §179 bayat bayragi bu vakayi YAKALAMAZ: rapor 6 aydan yeni, sorun tarihi degil bolunmesi. KONTROL EDILDI: ayni donemde BIMAS (14 May, x2) ve GOODY (2 Tem, x5,63) de bedelsiz yapti ama panel hedefleri bedelsiz SONRASI tarihli, duzeltme gerekmedi."
 }
