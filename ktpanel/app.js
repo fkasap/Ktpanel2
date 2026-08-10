@@ -37,7 +37,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260810g';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260810h';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -2985,6 +2985,14 @@ function egriRender(){
      Panel kendi icinde celisiyordu: bilanco tezi metni ve index.html:707 zaten %31,75 diyordu,
      bu sabit ise %32,11'de kalmisti -> 2Y/10Y REEL GETIRI 0,36 puan yanlis hesaplaniyordu. */
   const OKU_POLITIKA=37, OKU_TUFE=31.75, OKU_BEK=23.95;
+  /* §258 ETİKETLER DE BU SABİTTEN. index.html'de "cari TÜFE %32,11" ve
+     "12a beklenti %23,81" SABİT YAZILIYDI; §252d hesabı düzeltti ama etiketi
+     düzeltmedi ve aynı satırda doğru değer + yanlış gerekçe yan yana kaldı.
+     Artık tek kaynak. */
+  try{
+    const et1=$('okuTufeEt'); if(et1) et1.textContent='(cari TÜFE %'+trN(OKU_TUFE,2)+"'e göre)";
+    const et2=$('okuBekEt');  if(et2) et2.textContent='(12a beklenti %'+trN(OKU_BEK,2)+')';
+  }catch(e){}
   const y2=EGRI_CANLI&&EGRI_CANLI['2Y']?EGRI_CANLI['2Y'].getiri:null;
   const y10=EGRI_CANLI&&EGRI_CANLI['10Y']?EGRI_CANLI['10Y'].getiri:null;
   if(y2!=null){

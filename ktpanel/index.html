@@ -530,8 +530,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="card">
     <div class="lbl">OKUMA &amp; REEL FAİZ</div>
     <div class="kv"><span class="k">Gösterge (2Y) — politika faizi (%37)</span><span class="up" id="okuFark">+516bp (piyasa TCMB'nin üstünde)</span></div>
-    <div class="kv"><span class="k">2Y reel (cari TÜFE %32,11'e göre)</span><span class="up" style="font-weight:600" id="oku2yReel">≈ +10,1 puan</span></div>
-    <div class="kv"><span class="k">2Y ileriye dönük reel (12a beklenti %23,81)</span><span class="up" id="oku2yIleri">≈ +18,4 puan</span></div>
+    <!-- §258 ETİKET DE CANLI. Değer id ile bağlıydı ama ETİKETTEKİ TÜFE SABİT
+     YAZILIYDI. §252d ile OKU_TUFE 32,11→31,75 yapılınca HESAP düzeldi
+     (+9,5 puan) ama etiket "%32,11" de kaldı — aynı satırda doğru sayı ve
+     yanlış gerekçe yan yana durdu. Etiket artık app.js'teki AYNI sabitten
+     üretiliyor; ikisi bir daha ayrışamaz. (§241: aynı değer iki yerde.) -->
+<div class="kv"><span class="k">2Y reel <span id="okuTufeEt">(cari TÜFE)</span></span><span class="up" style="font-weight:600" id="oku2yReel">≈ +10,1 puan</span></div>
+    <div class="kv"><span class="k">2Y ileriye dönük reel <span id="okuBekEt">(12a beklenti)</span></span><span class="up" id="oku2yIleri">≈ +18,4 puan</span></div>
     <div class="kv"><span class="k">10Y reel (cari TÜFE'ye göre)</span><span class="up" id="oku10yReel">≈ +3,4 puan</span></div>
     <div class="kv"><span class="k">Eğri eğimi (2Y–10Y)</span><span class="down" id="egriEgim">−783bp (ters)</span></div>
     <div class="note">Portföy çevirisi: gösterge tahvilin politika faizinin belirgin üstünde seyretmesi (fark üstte canlı), piyasanın 23 Tem'de indirim değil <em>temkin</em> beklediğini söyler — para piyasası fonları için hâlâ elverişli zemin. Ters eğri ise "faiz zirvesi geride" tezini destekler; bu tez tutarsa uzun vadeli tahvil fonları (yüksek duration) kazanır. İki senaryo çatışıyor: bugünkü satış (getiri sıçrayışı) kısa vadeli temkini, eğrinin şekli uzun vadeli iyimserliği fiyatlıyor.</div>
