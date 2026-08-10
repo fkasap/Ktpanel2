@@ -1246,10 +1246,27 @@ async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
      betikler arası bağımlılığı TAMAMEN kaldırıyorum. Dosya zaten önbellekte.) */
   let ttmEk = '';
   try{
+    const K = String(kod).toUpperCase();
     const mj = await (await fetch('/multiple.json', {cache:'force-cache'})).json();
-    const M = (mj && mj.hisseler) || [];
-    const rec = M.find(x => x && String(x.k).toUpperCase() === String(kod).toUpperCase());
-    if(rec && isFinite(rec.ciro) && rec.ciro > 0) ttmEk = '&ttm=' + rec.ciro;
+    const rec = ((mj && mj.hisseler) || []).find(x => x && String(x.k).toUpperCase() === K);
+    if(rec && isFinite(rec.ciro) && rec.ciro > 0) ttmEk += '&ttm=' + rec.ciro;
+    /* §257b PD/DD ekseni — multiple.json 141 hisse taşıyor; kapsam dışı isimde
+       (KTLEV gibi) ciro referansı YOK. Piyasa değeri endeks dosyalarındaki
+       pay_adedi × fiyat ile kurulur. multiple.json'da varsa oradan (fiyat×adet,
+       adet zaten MİLYON adet), yoksa xktum/xk100/xktmt'den. */
+    let pdMn = null;
+    if(rec && isFinite(rec.fiyat) && isFinite(rec.adet)) pdMn = rec.fiyat * rec.adet;
+    if(pdMn == null){
+      for(const dosya of ['/xktum.json','/xk100.json','/xktmt.json']){
+        try{
+          const d = await (await fetch(dosya, {cache:'force-cache'})).json();
+          const pay = d && d.pay_adedi && d.pay_adedi[K];
+          const fy  = (typeof CANLI_FIYAT !== 'undefined' && CANLI_FIYAT) ? CANLI_FIYAT[K] : null;
+          if(isFinite(pay) && pay > 0 && isFinite(fy) && fy > 0){ pdMn = (pay * fy) / 1e6; break; }
+        }catch(e){}
+      }
+    }
+    if(isFinite(pdMn) && pdMn > 0) ttmEk += '&pd=' + Math.round(pdMn);
   }catch(e){}
   const kutu = document.createElement('div');
   kutu.style.cssText = 'margin:6px 0 10px;padding:9px 11px;border-left:3px solid var(--mm2);background:var(--bg2);border-radius:0 6px 6px 0;font-size:11px;line-height:1.6;white-space:pre-wrap';
