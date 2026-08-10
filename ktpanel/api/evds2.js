@@ -57,18 +57,71 @@ async function cozCek(key, grupRx, hedefler, gunGeri){
 }
 
 // ═══ yab modu — Yabancıların menkul kıymet portföyü (haftalık stok+değişim) ═══
+/* §259 YABANCI AKIŞI — REGEX TAHMİNİ YERİNE KESİN SERİ KODLARI.
+   ÖNCEKİ HAL SESSİZCE BOŞ DÖNÜYORDU: cozCek'e verilen grup deseni
+   /yurt dışı yerleşiklerin.../ idi ama CANLI grubun adı "Yurt Dışı
+   Yerleşikler Menkul Kıymet Portföyü" — İYELİK EKİ YOK. Desen yalnız ARŞİV
+   grubuna (bie_yymkpyuk) uydu ve alt-desenler orada tutmadı:
+     {"ok":true,"grup":"bie_yymkpyuk","veri":{hisseNet:null,dibsNet:null,...}}
+   `ok:true` DÖNÜYORDU — başarı gibi görünen boş yanıt. Panel de elle
+   girilen yabanci.json'a düşüyordu ve o 24 GÜN ESKİYDİ.
+   10 Agu ÖLÇÜMÜ: panel 17 Tem haftasını gösteriyordu (+278 mn net GİRİŞ);
+   EVDS'de 24 Tem ve 31 TEM DE VARDI ve 31 Tem NET ÇIKIŞ (-152 mn):
+   hisse -185,9 · ÖST -129,9 — İŞARET DÖNMÜŞ. Panelin "ılımlı giriş" anlatısı
+   yalnız eski değil TERS olmuştu.
+   SERİ KODLARI kullanıcının 10 Agu list ölçümünden (bie_mknethar, 32 seri):
+     M7  = 2.1.1. Hisse Senedi              (net değişim, haftalık, mn $)
+     M8  = 2.1.2. DİBS (Kesin Alım)         (net değişim)
+     M12 = 2.1.3. Genel Yönetim Dışı Borçlanma Senetleri = ÖST
+     M1/M2/M6 = aynıların STOK karşılıkları
+   Kod TAHMİN EDİLMEZ, ÖLÇÜLÜR — regex grup adına bağlıydı ve tek harf
+   (yerleşikler/yerleşiklerin) yüzünden aylardır çalışmıyordu. */
 async function yabModu(req, res, cfg){
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=43200');
   if(!(cfg&&cfg.key)) return res.status(200).json({ ok:false, err:'EVDS_KEY yok' });
+  const SERI = {
+    hisseNet:'TP.MKNETHAR.M7', dibsNet:'TP.MKNETHAR.M8', ostNet:'TP.MKNETHAR.M12',
+    hisseStok:'TP.MKNETHAR.M1', dibsStok:'TP.MKNETHAR.M2', ostStok:'TP.MKNETHAR.M6'
+  };
+  const hafta = Math.min(52, Math.max(3, parseInt(req.query.hafta) || 8));
   try{
-    const r = await cozCek(cfg.key, /yurt dışı yerleşiklerin mülkiyetindeki|yurt dışı yerleşiklerin menkul/i, [
-      { ad:'hisseStok', rx:/hisse.*stok|stok.*hisse|hisse senedi \(piyasa/i },
-      { ad:'dibsStok',  rx:/DİBS.*stok|stok.*DİBS|DİBS \(piyasa/i },
-      { ad:'hisseNet',  rx:/hisse.*net|net.*hisse/i },
-      { ad:'dibsNet',   rx:/DİBS.*net|net.*DİBS/i }
-    ], 90);
-    return res.status(200).json(r);
+    const bit = new Date();
+    const bas = new Date(bit.getTime() - (hafta+3)*7*86400000);
+    const gg = d => String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
+    const url = 'https://evds2.tcmb.gov.tr/service/evds/series='+Object.values(SERI).join('-')
+      + '&startDate='+gg(bas)+'&endDate='+gg(bit)+'&type=json';
+    const r = await fetch(url, { headers:{ key: cfg.key }, signal: AbortSignal.timeout(20000) });
+    if(!r.ok) return res.status(200).json({ ok:false, err:'EVDS_HTTP_'+r.status });
+    const j = await r.json();
+    const ham = Array.isArray(j && j.items) ? j.items : [];
+    const say = v => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x) ? x : null; };
+    const sut = k => SERI[k].replace(/\./g,'_');
+    /* Yalnız net-değişim serisi DOLU olan haftalar — EVDS boş satır da döndürür */
+    const seri = ham.map(x => ({
+        tarih: String(x.Tarih||''),
+        hisse: say(x[sut('hisseNet')]), dibs: say(x[sut('dibsNet')]), ost: say(x[sut('ostNet')]),
+        hisseStok: say(x[sut('hisseStok')]), dibsStok: say(x[sut('dibsStok')]), ostStok: say(x[sut('ostStok')])
+      }))
+      .filter(x => x.hisse!=null || x.dibs!=null || x.ost!=null)
+      .slice(-hafta);
+    if(!seri.length) return res.status(200).json({ ok:false, err:'boş seri', hamAdet:ham.length });
+    const son = seri[seri.length-1];
+    const t = (o) => (o.hisse||0)+(o.dibs||0)+(o.ost||0);
+    const sonTop = +t(son).toFixed(1);
+    /* YÖN HESAPLANIR, İDDİA EDİLMEZ — "ılımlı giriş" metni elle yazılıyordu ve
+       son hafta net ÇIKIŞ olduğu halde "giriş" diyordu. */
+    const yon = sonTop > 200 ? 'güçlü giriş' : sonTop > 0 ? 'ılımlı giriş'
+              : sonTop > -200 ? 'ılımlı çıkış' : 'güçlü çıkış';
+    const kum4 = +seri.slice(-4).reduce((a,x)=>a+t(x),0).toFixed(1);
+    return res.status(200).json({
+      ok:true, kaynak:'TCMB EVDS · bie_mknethar (haftalık, mn $)',
+      sonHafta: son.tarih, hisse: son.hisse, dibs: son.dibs, ost: son.ost,
+      toplam: sonTop, yon, kumulatif4h: kum4,
+      stok: { hisse: son.hisseStok, dibs: son.dibsStok, ost: son.ostStok },
+      seri,
+      not: 'net degisim = o haftaki NET alim/satim. Yon HESAPLANIR (esik ±200 mn $), elle yazilmaz. §259'
+    });
   }catch(e){ return res.status(200).json({ ok:false, err:String(e.message||e).slice(0,120) }); }
 }
 
