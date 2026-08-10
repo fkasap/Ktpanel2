@@ -1,6 +1,7 @@
 {
  "tarih": "2026-08-10",
  "kodlar": [
+  "AAGYO",
   "AHSGY",
   "AKCVR",
   "AKTVK",
@@ -9,12 +10,14 @@
   "ARSVY",
   "ASGYO",
   "ATLAS",
+  "AVPGY",
   "AYES",
   "BAHKM",
   "BANVT",
   "BASCM",
   "BASGZ",
   "BEGYO",
+  "BETAE",
   "BFREN",
   "BRKVY",
   "BURVA",
@@ -22,6 +25,7 @@
   "CEMAS",
   "CGCAM",
   "CRDFA",
+  "DERIM",
   "DGGYO",
   "DMSAS",
   "DNZEN",
@@ -35,9 +39,11 @@
   "EUREN",
   "FIGOF",
   "GUNDG",
+  "GWIND",
   "HEDEF",
   "HUZFA",
   "ICUGS",
+  "IHGZT",
   "ISSEN",
   "IZENR",
   "KFILO",
@@ -56,6 +62,7 @@
   "METRO",
   "MRMAG",
   "MTRYO",
+  "ORFIN",
   "OTOSR",
   "OYLUM",
   "PRDGS",
@@ -77,8 +84,10 @@
   "TURGG",
   "VRGYO",
   "VSNMD",
+  "YESIL",
+  "YYLGD",
   "ZGYO"
  ],
- "sayi": 77,
- "guncelleme": "2026-08-10 16:07 UTC — otomatik (KAP FR)"
+ "sayi": 86,
+ "guncelleme": "2026-08-10 16:25 UTC — otomatik (KAP FR)"
 }

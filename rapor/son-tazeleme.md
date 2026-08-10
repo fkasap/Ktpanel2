@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-10
 
-Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
+Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -28,17 +28,29 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-08-10
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
+### TR 5Y CDS — ⏭ ATLANDI
+- HTTP 403 (Cloudflare, Actions IP de engelli — Vercel gibi)
+- Panel damgalı yedekle çalışır; cds.json YAZILMADI.
+
+### Risk metrikleri — ✓ GEÇTİ
+- ✓ **kapsam**: 141/141 (%100)
+- ✓ **aykırı değer**: temiz (sınır ±%3)
+- ✓ **aykırı değer**: temiz (sınır ±%150)
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (178 gün)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
+
 ### TEFAS köprü (bilgi)
 - getiri: 1048 fon ✓ · liste: 1039 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008641697551> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008641994719> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
-### Bilanço tetiği — ✓ 77 şirket FR yayımladı
-- AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ASGYO, ATLAS, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO, BFREN, BRKVY, BURVA, CCOLA, CEMAS, CGCAM …
+### Bilanço tetiği — ✓ 86 şirket FR yayımladı
+- AAGYO, AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ASGYO, ATLAS, AVPGY, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO, BETAE, BFREN, BRKVY, BURVA …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu XKTUM: 150/242 (tasarım gereği ilk 150)
@@ -54,4 +66,4 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (124 fiyat) · Model sicili (36 fiyat) · katılım fonları (getiri-modu 36) · bilanço tetiği (77) · endeks üyelikleri · endeks arşivi
+**Sonuç:** risk metrikleri (139) · katılım fonları (getiri-modu 36) · bilanço tetiği (86) · endeks üyelikleri · endeks arşivi
