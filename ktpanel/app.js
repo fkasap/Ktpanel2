@@ -2951,7 +2951,12 @@ function egriRender(){
     eg.className=bp>=0?'down':'up';
   }
   // Okuma kartı — canlı hesap (damgalı sabitler: politika %37, cari TÜFE %32,11, 12a beklenti %23,81)
-  const OKU_POLITIKA=37, OKU_TUFE=32.11, OKU_BEK=23.81;
+  /* §252d (9 Agu): TUFE 32,11 (Haz) -> 31,75 (Tem, TUIK 3 Agu · yillik 0,35 puan geriledi).
+     BEK 23,81 (Haz anketi) -> 23,95 (Tem anketi, 13-16 Tem uygulandi, 20 Tem yayin).
+     POLITIKA 37 DEGISMEDI — 23 Tem PPK sabit tuttu, dogrulandi.
+     Panel kendi icinde celisiyordu: bilanco tezi metni ve index.html:707 zaten %31,75 diyordu,
+     bu sabit ise %32,11'de kalmisti -> 2Y/10Y REEL GETIRI 0,36 puan yanlis hesaplaniyordu. */
+  const OKU_POLITIKA=37, OKU_TUFE=31.75, OKU_BEK=23.95;
   const y2=EGRI_CANLI&&EGRI_CANLI['2Y']?EGRI_CANLI['2Y'].getiri:null;
   const y10=EGRI_CANLI&&EGRI_CANLI['10Y']?EGRI_CANLI['10Y'].getiri:null;
   if(y2!=null){
