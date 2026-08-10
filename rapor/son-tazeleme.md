@@ -33,14 +33,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (178 gün)
-- ℹ 234 gün kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz) — ✓ GERÇEK katılım çıpası (BIST resmî)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1048 fon ✓ · liste: 1032 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008367015404> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008847699259> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -53,7 +54,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-07
-- XKTUM 18694.71 · XKTMT 17201.71 · XK100 17517.53 · XU100 13779.39 · BISTTLREFK 4010.70089
+- XKTUM 18694.71 · XKTMT 17201.71 · XK100 17517.53 · XU100 13779.39 · BISTTLREFK 4015.02998
 - arşiv: 607 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
@@ -61,4 +62,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (113 fiyat) · Model sicili (33 fiyat) · risk metrikleri (141) · katılım fonları (getiri-modu 36) · bilanço tetiği (3) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (135 fiyat) · Model sicili (40 fiyat) · risk metrikleri (141) · katılım fonları (getiri-modu 36) · bilanço tetiği (3) · endeks üyelikleri · endeks arşivi
