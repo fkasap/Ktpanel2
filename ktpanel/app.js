@@ -3182,11 +3182,17 @@ async function egriCek(){
   try{ const j=a.status==='fulfilled'?a.value:null;
     /* §252h SAPMA GORUNUR OLDU. egri.js fiyat konvansiyonunu (temiz/kirli x
        donemsel/yillik) 24 Tem'de olculmus REF capalariyla SECIYOR ve secimin
-       ne kadar tuttugunu j.sapma.skor ile RAPORLUYOR. Panel bugune kadar yalniz
+       ne kadar tuttugunu sapma puaniyla RAPORLUYOR. Panel bugune kadar yalniz
        j.konvansiyon'u basiyordu — oz-denetim vardi, ekrana cikmiyordu. Capa
        eskidikce sapma buyur; artik damgada gorulur. */
     if(j&&j.ok&&j.vadeler){EGRI_CANLI=j.vadeler;
-      const sp=(j.sapma&&j.sapma.skor!=null)?(' · sapma '+trN(j.sapma.skor,2)):'';
+      /* §252h-DUZELTME (10 Agu): ilk yazimda j.sapma.skor yazmistim — OYLE BIR ALAN YOK.
+         egri.js:263 `sapma:skor` dondurur ve skor bir NESNEDIR: {konvansiyon_adi: puan}.
+         Secilen konvansiyonun puani j.sapma[j.konvansiyon]. Ilk halde sp hep '' kaliyordu,
+         yani eklenen kod OLU DOGMUSTU (§247c ile ayni sinif). Canli ekran dokumunde
+         egriDamga'da sapma gorunmemesiyle yakalandi. */
+      const spD=(j.sapma&&j.konvansiyon!=null)?j.sapma[j.konvansiyon]:null;
+      const sp=(spD!=null&&isFinite(spD))?(' · sapma '+trN(spD,2)):'';
       EGRI_KONV=j.konvansiyon?('fiyat: '+j.konvansiyon+sp):'';}
   }catch(e){}
   try{ const j=b.status==='fulfilled'?b.value:null;
@@ -5871,7 +5877,11 @@ const AYR_DONEM = [
 const AYR_ENDEKS = [
   {kod:'XKTUM', ad:'BIST Katılım Tüm', dosya:'/xktum.json'},
   {kod:'XK100', ad:'BIST Katılım 100', dosya:'/xk100.json'},
-  {kod:'XKTMT', ad:'BIST Katılım (dar · 34)', dosya:'/xktmt.json'}
+  /* §252m ETIKET SABIT KALMISTI. Uye sayisi 34 diye YAZILIYDI; 9 Agu'da dosya
+     resmi listeye gore 39 uyeye cikarildi (JANTS cikti — o XKTUM/XK100 uyesi —,
+     AVPGY GENTS KBORU NETCD SDTTR TEZOL girdi) ama etiket 34'te kaldi.
+     Artik sayi DOSYADAN okunuyor (uyeSayi), bir daha elle guncellenmesi gerekmez. */
+  {kod:'XKTMT', ad:'BIST Katılım (dar)', dosya:'/xktmt.json', uyeSayi:true}
 ];
 let AYR_SIRA = {alan:'katki', yon:-1};   // tablo sıralaması (§164)
 /* §159: endeks ağırlıkları artık İKİ endeks için. XK100 (100 üye, dar) ve
@@ -6207,7 +6217,14 @@ function ayrismaInit(){
   if(!$('ayrBody')) return;
   const es = $('ayrEndeks');
   if(es && !es.dataset.dolu){ es.dataset.dolu='1';
-    es.innerHTML = AYR_ENDEKS.map(x=>'<option value="'+x.kod+'">'+x.kod+' — '+x.ad+'</option>').join('');
+    /* §252m uyeSayi bayragi: etiketteki uye sayisi DOSYADAN okunur, sabit yazilmaz.
+       ENDAG o an yuklu degilse sayisiz ada duser — yanlis sayi yerine sayisiz etiket. */
+    es.innerHTML = AYR_ENDEKS.map(x=>{
+      let ad=x.ad;
+      if(x.uyeSayi){ const d=ENDAG&&ENDAG[x.kod];
+        const n=d&&(d.toplam_uye||(d.uyeler&&Object.keys(d.uyeler).length));
+        if(n) ad=ad.replace(/\)$/,' · '+n+')'); }
+      return '<option value="'+x.kod+'">'+x.kod+' — '+ad+'</option>'; }).join('');
     es.addEventListener('change', ayrismaCiz); }
   const ds = $('ayrDonem');
   if(ds && !ds.dataset.dolu){ ds.dataset.dolu='1';
