@@ -111,8 +111,8 @@ async function yorumTuru(zorla){
       durum('🤖 canlı · son tur '+saat());
       return;
     }
-    if(sd&&sd.err&&sd.err!=='sunucu-anahtari-yok'){ kayit('Sunucu AI: '+sd.err); window.AJAN_SUNUCU_HATA=sd.err; }
-    else window.AJAN_SUNUCU_HATA=null;
+    if(sd&&sd.err&&sd.err!=='sunucu-anahtari-yok'){ kayit('Sunucu AI: '+sd.err); window.AJAN_SUNUCU_HATA=ajanHataOzet(sd.err,sd.err,0); ajanDurumSeridi(); }   /* §254 */
+    else { window.AJAN_SUNUCU_HATA=null; ajanDurumSeridi(); }   /* §254 hata gecince serit KALKAR */
   }catch(e){}
   // 2) Yerel anahtar (tarayıcı)
   const key=localStorage.getItem('ajan_api_key')||'';
@@ -651,7 +651,7 @@ function notNobetci(){
       kartKesfet(false).forEach(K=>{
         if(!k[K.ad]||!k[K.ad].html) return;
         if(K.nt.dataset.ebu==='1') return;              // Ebu'nunki duruyor
-        K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; geri++;
+        K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); geri++;
       });
       if(geri) kayit('Nöbetçi: '+geri+' not yeniden çizimden sonra geri kondu 🤖');
     }catch(e){}
@@ -665,6 +665,29 @@ function notNobetci(){
 }
 
 /* ── BULUT HAFIZA (api/ajan — KV): localStorage'ın cihazlar-arası ikizi ── */
+/* §254 NOT YASI GORUNUR. Bir not 3 gunden eskiyse okuyucu BILMELI — ozellikle
+   motor duruksa. 10 Agu olcumu: 123 notun 74'u 7 GUNDEN eskiydi, ortanca
+   11 GUN, ve panelde bunu soyleyen HICBIR isaret yoktu. Rotasyon kartinda not
+   "her iki enstruman da artis gosteriyor" diyordu; uc kalem de NEGATIFTI.
+   Yargi eskir ve SESSIZCE eskir — sayi eskiyince goze carpar, yargi carpmaz.
+   3 GUN esigi: taze notlar etiketlenmez (gurultu olmasin).
+   Etiket her basimda TEKILLENIR — not UC AYRI yerde boyaniyor (hizliGeriYukle,
+   notlariGeriYukle x2) ve ustuste eklenmemeli. */
+function notYasEtiketi(nt, kayit){
+  try{
+    if(!nt||!kayit||!kayit.ts) return;
+    const eski=nt.querySelector('.ebu-yas'); if(eski) eski.remove();
+    const saat=(Date.now()-kayit.ts)/3600000;
+    if(saat<72) return;
+    const gun=Math.floor(saat/24);
+    const sp=document.createElement('span');
+    sp.className='ebu-yas thin';
+    sp.style.cssText='font-size:9px;opacity:.75;margin-left:6px;white-space:nowrap';
+    sp.textContent='· '+gun+'g önce yazıldı';
+    if(window.AJAN_SUNUCU_HATA){ sp.style.color='var(--down)'; sp.textContent+=' ⚠'; }
+    nt.appendChild(sp);
+  }catch(e){}
+}
 function notKaydet(kayitli){
   try{ localStorage.setItem('ajan_notlar', JSON.stringify(kayitli)); }catch(e){}
   try{ fetch('/api/ajanktp?mod=yaz',{ method:'POST', headers:{'content-type':'application/json'},
@@ -688,7 +711,7 @@ function hizliGeriYukle(){
   try{
     const k=JSON.parse(localStorage.getItem('ajan_notlar')||'{}');
     let n=0;
-    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; n++; } });
+    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     const ym=$('yorumMetin');
     if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html; n++; }
     if(k.__GUNDEM__&&k.__GUNDEM__.html&&$('ajanNot')){
@@ -714,7 +737,7 @@ async function notlariGeriYukle(){
         '<div class="sub" style="font-size:9px;margin-top:4px">🤖 '+(k.__GUNDEM__.kaynak==='cron'?'sabah cron\u0027u — sen uyurken yazıldı':'Claude Haiku')+' · yükleme: '+saat()+'</div>';
     }
     let n=0;
-    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; n++; } });
+    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     const ym=$('yorumMetin');
     if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html; n++; }
     const bugun=bugunStr();
@@ -743,6 +766,41 @@ async function notlariGeriYukle(){
   }catch(e){}
 }
 
+/* §254 HATA -> OKUNABILIR TURKCE. Kullanici "credit_balance_too_low" degil
+   "API bakiyesi tukendi" gormeli; eylem de belli olmali. */
+function ajanHataOzet(tip, mesaj, durum){
+  const t=String(tip||'').toLowerCase(), m=String(mesaj||'').toLowerCase();
+  if(t.includes('credit')||m.includes('credit balance')) return 'API bakiyesi tükendi — Plans & Billing';
+  if(t.includes('rate_limit')||durum===429)              return 'hız sınırı — bir süre bekleniyor';
+  if(t.includes('authentication')||durum===401)          return 'API anahtarı geçersiz';
+  if(t.includes('permission')||durum===403)              return 'API anahtarı bu modele yetkisiz';
+  if(t.includes('not_found')||durum===404)               return 'model adı bulunamadı: '+(window.AJAN&&AJAN.MODEL||'?');
+  if(t.includes('overloaded')||durum===529)              return 'servis yoğun — sonraki tur';
+  return (tip||'bilinmeyen hata')+(mesaj?' · '+String(mesaj).slice(0,70):'');
+}
+/* §254 DURUM SERIDI — hata GUNLUKTE vardi ama KARTTA yoktu.
+   11 gun boyunca kota bitikti, gunluk her turda soyluyordu, panelde HICBIR
+   isaret yoktu. Rotasyon kartini okuyan biri kendinden emin bir yorum
+   goruyor; notun 11 gunluk oldugunu ve motorun durdugunu bilmiyordu.
+   Tespit edildigi yer ile gosterildigi yer AYRIYDI. */
+function ajanDurumSeridi(){
+  try{
+    const el=$('ajanDurum'); if(!el) return;
+    const h=window.AJAN_SUNUCU_HATA;
+    let eski=el.querySelector('.ebu-uyari'); if(eski) eski.remove();
+    if(!h) return;
+    let k={}; try{ k=JSON.parse(localStorage.getItem('ajan_notlar')||'{}'); }catch(e){}
+    const tsler=Object.values(k).map(v=>v&&v.ts).filter(Boolean);
+    const enYeni=tsler.length?Math.max(...tsler):0;
+    const gun=enYeni?Math.floor((Date.now()-enYeni)/86400000):null;
+    const d=document.createElement('div');
+    d.className='ebu-uyari';
+    d.style.cssText='margin-top:4px;font-size:10px;color:var(--down);line-height:1.5';
+    d.innerHTML='⚠ Ebu duraklatıldı — '+String(h).slice(0,70)+
+      (gun!=null?('<br><span class="thin">notlar '+(gun===0?'bugün yazıldı':gun+' gündür güncellenmiyor')+'</span>'):'');
+    el.appendChild(d);
+  }catch(e){}
+}
 async function aiCagir(prompt, maxTok){
   try{
     const sr=await fetch('/api/market?mod=ai',{ method:'POST',
@@ -750,7 +808,7 @@ async function aiCagir(prompt, maxTok){
       body:JSON.stringify({prompt, max_tokens:maxTok||500}) });
     const sd=sr.ok?await sr.json():null;
     if(sd&&sd.ok&&sd.metin){ window.AJAN_SON_STOP=sd.stop||''; return sd.metin; }
-    if(sd&&sd.err&&sd.err!=='sunucu-anahtari-yok'){ window.AJAN_SUNUCU_HATA=sd.err; kayit('Sunucu AI: '+sd.err); }
+    if(sd&&sd.err&&sd.err!=='sunucu-anahtari-yok'){ window.AJAN_SUNUCU_HATA=ajanHataOzet(sd.err,sd.err,0); kayit('Sunucu AI: '+sd.err); ajanDurumSeridi(); }   /* §254 */
   }catch(e){}
   const key=localStorage.getItem('ajan_api_key')||'';
   if(!key) return null;
@@ -762,8 +820,25 @@ async function aiCagir(prompt, maxTok){
         messages:[{role:'user',content:prompt}] }) });
     const d=await r.json();
     window.AJAN_SON_STOP=d.stop_reason||'';
+    /* §254 HATA SINIFLANDIRMASI. Onceden yalnizca `content` var mi diye
+       bakiliyordu; r.ok HIC KONTROL EDILMIYORDU. Anthropic hata durumunda
+       200 DEGIL 4xx doner ve govdede {type:'error',error:{type,message}}
+       gelir — `content` olmadigi icin null donuyordu ve NEDEN null oldugu
+       KAYBOLUYORDU. Cagiran taraf yalnizca "AI erisilemedi" yaziyordu:
+       kota mi, anahtar mi, ag mi, model adi mi — ayirt edilemiyordu.
+       NOT: SUNUCU yolu (satir 753) hatayi ZATEN dogru yakaliyor ve gunluge
+       yaziyor. Bu duzeltme TARAYICI-DOGRUDAN yedegi icin. */
+    if(!r.ok || (d && d.type==='error')){
+      const et=(d&&d.error&&d.error.type)||('HTTP_'+r.status);
+      const em=(d&&d.error&&d.error.message)||'';
+      window.AJAN_SUNUCU_HATA = ajanHataOzet(et, em, r.status);
+      return null;
+    }
     return (d&&d.content&&d.content[0]&&d.content[0].text)?d.content[0].text:null;
-  }catch(e){ return null; }
+  }catch(e){
+    window.AJAN_SUNUCU_HATA = 'ağ hatası: '+String(e&&e.message||e).slice(0,60);
+    return null;
+  }
 }
 
 async function notMotoru(){
@@ -828,7 +903,7 @@ async function _notMotoru(){
         notMetni(x.nt).slice(0,650);
     }).join('\n\n');   // imza SOYULMUS (§110)
   const metin=await aiCagir(prompt, Math.min(2400, 200+parti.length*500));
-  if(!metin){ kayit('Not motoru: AI erişilemedi — sonraki tura bekletildi'); return; }
+  if(!metin){ kayit('Not motoru: AI erişilemedi ('+(window.AJAN_SUNUCU_HATA||'sebep bilinmiyor')+') — sonraki tura bekletildi'); ajanDurumSeridi(); return; }   /* §254 */
   // Dayanıklı ayrıştırma: (1) çitleri soy, (2) ilk { ile son } arası, (3) olmadıysa regex ile kısmi kurtarma
   let j={};
   // ── Bloklu biçim: ###1 / ###2 ... (HTML içeriğe dayanıklı) ──
