@@ -30,6 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
+let YAB_CANLI=null;   /* §259c canlı yabancı haftalık akış (/api/evds2?mod=yab) */
 let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    TDZ ONLEMI: `let` HOISTED DEGILDIR. Bu degisken renderRiskBaro() icinde
    okunuyor ve o fonksiyon satir 1307'de (dosyanin cok yukarisinda) cagriliyor.
@@ -37,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260810h';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260810i';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -2235,7 +2236,7 @@ function yabanciRender(){
     '<div style="display:flex;align-items:stretch;gap:3px;margin:6px 0 10px">'+bars+'</div>'+
     '<div class="kv"><span class="k">2026 kümülatif</span><span class="'+(kum>=0?'up':'down')+'" style="font-weight:600">'+(kum>=0?'+':'')+kum.toFixed(1)+' mlr $</span></div>'+
     '<div class="kv"><span class="k">Son hafta <span id="yabHaftaTag">('+d.hafta_son.etiket+')</span></span><span id="yabHaftaVal">hisse '+(d.hafta_son.hisse>=0?'+':'')+d.hafta_son.hisse+'mn · DİBS +'+d.hafta_son.tahvil+'mn'+(d.hafta_son.ost!=null?' · ÖST +'+d.hafta_son.ost+'mn':'')+' <span class="sub" style="display:inline">'+(d.hafta_son.not||'')+'</span></span></div>'+
-    (d.hafta_seri?('<div class="kv"><span class="k">5 haftalık seri <span class="sub" style="display:inline">(hisse/tahvil mn$)</span></span><span style="font-size:10px">'+
+    (d.hafta_seri?('<div class="kv"><span class="k">5 haftalık seri <span class="sub" style="display:inline">(hisse/tahvil mn$)</span></span><span id="yabSeriVal" style="font-size:10px">'+
       d.hafta_seri.map(w=>{const t=w.tahvil+(w.ost||0);const rekor=t>2000;return w.h.replace(' ','\u00A0')+' <b>'+Math.round(w.hisse)+'</b>/<b'+(rekor?' class="up"':'')+'>'+Math.round(t)+(rekor?'★':'')+'</b>';}).join(' → ')+'</span></div>'):'')+
     (d.hafta_not?('<div class="note" style="font-size:10px;margin:4px 0 6px;padding:6px 10px">'+d.hafta_not+'</div>'):'')+
     '<div class="kv"><span class="k">Swap hariç net rezerv</span><span id="yabRezervVal" class="'+(d.rezerv.trend==='toparlanıyor'?'up':'down')+'">~'+d.rezerv.guncel+' mlr $ · '+d.rezerv.trend+'</span></div>'+
@@ -2247,6 +2248,11 @@ function yabanciRender(){
     '<div class="kv"><span class="k">Carry getirisi <span class="thin">(reel faiz · iki bakış)</span></span><span id="yabCarryVal">'+
       reelFaizSatiri(RF)+'</span></div>'+
     '<div class="note">Skor üç bileşenden: <em>aylık portföy akışı</em> (hisse+tahvil net; Nis +4,05 / May −3,07 kesin ödemeler dengesi, diğer aylar eğilim), <em>swap hariç net rezerv trendi</em> (dar carry parası girince şişer, çıkınca erir — Oca zirvesi 85,7→Haz dibi 28 mlr sert carry çıkışıydı) ve <em>carry getirisi</em>. Bugünkü okuma: para tümüyle çıkmadı ama <em>oynak ve seçici</em> — hisseden tahvile kaydı, dar carry rezerv toparlanmasıyla ılımlı dönüyor. Kesin rakam değil, <em>yön işareti</em>; ödemeler dengesi ayda bir, menkul kıymet haftalık tazelenir.</div>';
+  /* §259c YENİDEN ÇİZİMDEN SONRA CANLI DEĞERİ GERİ BAS. Bu fonksiyon kartı
+     JSON'dan komple kuruyor; exAnteHesapla → yabCarryTazele → yabanciRender
+     zinciri kullanıcı Tahminler sekmesini açınca tetikleniyor ve canlı akış
+     yazımını SİLERDİ — panel sessizce 17 Tem'e ("+278 giriş") dönerdi. */
+  try{ if(YAB_CANLI) yabHaftaCanliYaz(); }catch(e){}
 }
 
 /* ---- Yurt İçi Yatırımcı Rotasyonu (EVDS · haftalık) ---- */
@@ -4093,6 +4099,32 @@ function glbCdsYaz(){
   if(c&&isFinite(c.degisim)&&c.degisim!==0){ yon=c.degisim<0?' · iyileşiyor':' · kötüleşiyor'; sinif=c.degisim<0?'val up':'val down'; }
   el.className=sinif;
   el.innerHTML=trN(v,0)+' <span class="sub" style="display:inline">bp · '+tar+(c?' · canlı':' · damgalı')+yon+'</span>';
+}
+/* §259c CANLI AKIŞI DOM'A YAZAR — ve YENİDEN ÇİZİMDEN SONRA TEKRAR ÇAĞRILIR.
+   yabanciRender() kartı JSON'dan komple yeniden kuruyor ve exAnteHesapla →
+   yabCarryTazele → yabanciRender zinciri KULLANICI TAHMİNLER SEKMESİNİ AÇINCA
+   tetikleniyor. Tek seferlik yazım o an SİLİNİRDİ ve panel sessizce eski
+   (17 Tem, "+278 giriş") değerlere dönerdi. Değer YAB_CANLI'da saklanıyor,
+   render sonunda yeniden basılıyor. (§252m'nin zamanlama dersi.) */
+function yabHaftaCanliYaz(){
+  const ry = YAB_CANLI; if(!ry || !ry.ok) return;
+  try{
+    const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const kisa = t => { const m=String(t).match(/^(\d{2})-(\d{2})-/); return m ? (+m[1])+' '+ay[+m[2]-1] : t; };
+    const im = v => (v>=0?'+':'')+trN(v,1);
+    if($('yabHaftaTag')) $('yabHaftaTag').textContent = '('+kisa(ry.sonHafta)+' · EVDS canlı)';
+    if($('yabHaftaVal')) $('yabHaftaVal').innerHTML =
+        'hisse <b class="'+(ry.hisse>=0?'up':'down')+'">'+im(ry.hisse)+'</b>mn · '+
+        'DİBS <b class="'+(ry.dibs>=0?'up':'down')+'">'+im(ry.dibs)+'</b>mn · '+
+        'ÖST <b class="'+(ry.ost>=0?'up':'down')+'">'+im(ry.ost)+'</b>mn '+
+        '<span class="thin">· toplam '+im(ry.toplam)+' mn $ — '+ry.yon+'</span>';
+    if($('yabSeriVal') && Array.isArray(ry.seri)) $('yabSeriVal').innerHTML =
+        ry.seri.slice(-5).map(w=>{
+          const t=(w.dibs||0)+(w.ost||0), rekor=t>2000;
+          return kisa(w.tarih).replace(' ','\u00A0')+' <b class="'+((w.hisse||0)>=0?'up':'down')+'">'+Math.round(w.hisse||0)+
+                 '</b>/<b'+(rekor?' class="up"':'')+'>'+Math.round(t)+(rekor?'★':'')+'</b>';
+        }).join(' → ');
+  }catch(e){}
 }
 function renderRiskBaro(){
   if(!$('riskBaroSkor'))return;
@@ -8098,6 +8130,17 @@ async function loadYabanciCanli(){
   // Sıra güvenli: AOFM_SON ve TUFE_YILLIK bu turda tazelendi, dolayısıyla
   // reelFaizler'in DOM'dan okuduğu değerler de güncel.
   try{ if(typeof yabCarryTazele==='function') yabCarryTazele(); }catch(e){}
+  /* §259c YABANCI HAFTALIK AKIŞ — CANLI. yabanci.json elle giriliyordu ve
+     10 Ağu'da 24 GÜN eskiydi: panel 17 Tem haftasını (+278 mn GİRİŞ) gösterirken
+     EVDS'de 24 Tem ve 31 Tem de vardı — 31 Tem NET ÇIKIŞ (-152 mn, hisse -186 /
+     ÖST -130). Anlatı yalnız eski değil TERS olmuştu ("ılımlı giriş" diyordu).
+     Ayrıca etiket "sıradaki 30 Tem" yazıyordu — kendi vadesini 11 gün geçmiş.
+     Uç /api/evds2?mod=yab (§259). Düşerse dosyadaki değer KALIR ve etikete
+     dokunulmaz — sessiz düşüş yok, ama panel de boşalmaz. */
+  try{
+    const ry = await fetch('/api/evds2?mod=yab&hafta=6',{cache:'no-store'}).then(r=>r.json());
+    if(ry && ry.ok && ry.sonHafta && isFinite(ry.toplam)){ YAB_CANLI = ry; yabHaftaCanliYaz(); }
+  }catch(e){}
   // Swap hariç net rezerv — karneyle aynı canlı kaynak (net − rezerv.json swap stoku)
   try{
     if($('yabRezervVal')){
