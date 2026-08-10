@@ -465,6 +465,39 @@ async function fonTazele() {
        statik bearer api/tefas.js'te). Getiriler TEFAS'ın RESMİ yüzdeleri —
        çapa hesabının yerine doğrudan yazılır. Köprü boş/hatalıysa Playwright
        ağ-dinleme yedeği devam eder. */
+    /* §253i AUM + YATIRIMCI SAYISI KÖPRÜDEN. Önceki yol Playwright ağ-dinleme
+       idi ve F5 güvenlik duvarına takılıyordu ("Request Rejected" — her koşuda
+       raporda görünüyordu). Doğru uç kullanıcının 10 Ağu HAR ölçümüyle bulundu:
+       fonGnlBlgSiraliGetir → portfoyBuyukluk + kisiSayisi + tedPaySayisi.
+       Köprüden çalışıyor; Playwright'e GEREK KALMADAN meta doluyor.
+       TAHMİN EDİLEN ÜÇ UÇ YANLIŞTI (fonProfilDtyGetir kıyaslama getirisi
+       döndürüyor, fonDetayGetir boş, fonToplamDegerGetir ERR-006) — uç adı
+       TAHMİN EDİLMEZ, ÖLÇÜLÜR (§249e'nin aynı dersi). */
+    try {
+      const rgn = await fetch('https://ktpanel.vercel.app/api/tefas?mod=gnl&tip=YAT&bas=1&bit=1000',
+        { signal: AbortSignal.timeout(30000) });
+      const gn = await rgn.json().catch(() => null);
+      const dizi = (gn && Array.isArray(gn.veri)) ? gn.veri : [];
+      let nA = 0;
+      for (const x of dizi) {
+        const kod = String(x.fonKodu || '').toUpperCase().trim();
+        const p = parseFloat(x.fiyat);
+        if (!kod || !isFinite(p) || p <= 0) continue;
+        const aum = parseFloat(x.portfoyBuyukluk);
+        const pay = parseFloat(x.tedPaySayisi);
+        meta[kod] = { p,
+          aum: (isFinite(aum) && aum > 0) ? aum : null,
+          ys: parseInt(x.kisiSayisi) || null,
+          pay: (isFinite(pay) && pay > 0) ? pay : ((isFinite(aum) && aum > 0) ? aum / p : null) };
+        nA++;
+      }
+      if (nA) raporlar.push('### TEFAS genel bilgi (§253i) — ✓ ' + nA + ' fon · AUM + yatırımcı sayısı köprüden'
+        + (gn && gn.n ? ' (uç ' + gn.n + ' kayıt döndürdü)' : ''));
+      else raporlar.push('### TEFAS genel bilgi (§253i) — ⏭ boş döndü'
+        + (gn && gn.error ? ' · ' + String(gn.error).slice(0, 60) : '') + '\n- Playwright yedeği devrede.');
+    } catch (e) {
+      raporlar.push('### TEFAS genel bilgi (§253i) — ⏭ ' + String(e && e.message || e).slice(0, 70));
+    }
     let g2 = null, l2 = null;
     try {
       const rg = await fetch('https://ktpanel.vercel.app/api/tefas?mod=getiri&tip=YAT', { signal: AbortSignal.timeout(25000) });
