@@ -39,18 +39,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
-### TEFAS genel bilgi (§253i) — ✓ 995 fon · AUM + yatırımcı sayısı köprüden (uç 1000 kayıt döndürdü)
+### TEFAS genel bilgi (§253i) — ✓ 2023 fon · AUM + yatırımcı sayısı köprüden (ham 2030 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1048 fon ✓ · liste: 1039 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (995 fon fiyat + 1048 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008857805051> [Go Back]`
+### TEFAS alan keşfi (bilgi)
+- uç: `/api/statistics/tefas/getFplFonList`
+- alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### Katılım fonları — ✗ KALDI
-- ✗ **kapsam**: 10/46 (%22)
-  - eşik %95 — 36 kayıt eksik
+### TEFAS çekim tanısı (bilgi)
+- yol: vercel-köprüsü (2023 fon fiyat + 1048 getiri)
+- yakalanan JSON: 1 / toplam yanıt: 82 · sayfa: "Fon Getirileri - TEFAS Fon Bilgilendirme ve Karşılaştırma | " · gövde: `Ana içeriğe geç Ana Sayfa Fon Getirileri Fon Karşılaştır Fon Verileri İstatistikler Kurumsal SSS Varsayılan olarak işletim sistemi tema tercihi kullanılır. Bu düğmeyle açık` · uçlar: /api/statistics/tefas/getFplFonList (1039)
+
+### Katılım fonları — ✓ GEÇTİ
+- ✓ **kapsam**: 46/46 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%2)
 - ✓ **dönem tutarlılığı**: temiz
 
@@ -73,6 +76,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (227.65 bp) · risk metrikleri (138) · bilanço tetiği (128) · endeks üyelikleri · endeks arşivi
-
-⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
+**Sonuç:** TR 5Y CDS (227.65 bp) · risk metrikleri (138) · katılım fonları (46) · bilanço tetiği (128) · endeks üyelikleri · endeks arşivi
