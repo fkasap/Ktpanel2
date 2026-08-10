@@ -1238,6 +1238,19 @@ else basla();
    TASLAK YAYINLANMAZ: ekranda gösterilir, kopyalanır. Skor ve karar insanda. */
 async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
   const eski = btn.textContent; btn.disabled = true; btn.textContent = 'metrik…';
+  /* §255 TTM ciro referansı (milyon TL) — multiple.json'dan DOĞRUDAN okunur.
+     İLK YAZIMDA `window.MULT` kullanmıştım: İKİ HATA birden. (1) değişkenin
+     adı MULTIPLE, MULT değil. (2) app.js'te `let MULTIPLE` ile tanımlı ve
+     `let` WINDOW'A BAĞLANMAZ — window.MULTIPLE de olmazdı.
+     (§252m'de aynı sınıf hataya düşmüştüm; bu sefer dosyayı doğrudan okuyup
+     betikler arası bağımlılığı TAMAMEN kaldırıyorum. Dosya zaten önbellekte.) */
+  let ttmEk = '';
+  try{
+    const mj = await (await fetch('/multiple.json', {cache:'force-cache'})).json();
+    const M = (mj && mj.hisseler) || [];
+    const rec = M.find(x => x && String(x.k).toUpperCase() === String(kod).toUpperCase());
+    if(rec && isFinite(rec.ciro) && rec.ciro > 0) ttmEk = '&ttm=' + rec.ciro;
+  }catch(e){}
   const kutu = document.createElement('div');
   kutu.style.cssText = 'margin:6px 0 10px;padding:9px 11px;border-left:3px solid var(--mm2);background:var(--bg2);border-radius:0 6px 6px 0;font-size:11px;line-height:1.6;white-space:pre-wrap';
   btn.parentNode.appendChild(kutu);
@@ -1246,7 +1259,11 @@ async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
     let met = null, kullanilan = null; const denemeKaydi = [];
     for(const id of String(idler).split(',').filter(Boolean).slice(0,6)){
       try{
-        const r = await fetch('/api/kap?mod=kart&id='+id, {cache:'no-store'});
+        /* §255 TTM ciro referansı gönderilir — kap.js birim belirsizse ölçeği
+           bununla KANITLAR (çeyreklik ciro ×4, TTM'e oranlanır). multiple.json
+           zaten panelde yüklü; yeni veri kaynağı YOK. Bulunamazsa parametre
+           gitmez ve davranış eskisi gibi kalır. */
+        const r = await fetch('/api/kap?mod=kart&id='+id+ttmEk, {cache:'no-store'});
         const j = await r.json();
         denemeKaydi.push({ id, bulunan:(j&&j.bulunan)||0, toplam:(j&&j.toplam)||8, hata:(j&&!j.ok)?(j.err||null):null });
         if(j && j.ok && j.metrikler){ met = j; kullanilan = id; break; }
