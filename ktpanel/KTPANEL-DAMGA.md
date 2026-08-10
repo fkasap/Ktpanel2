@@ -2,7 +2,8 @@
 # HER OTURUMDA ILK BU DOSYA OKUNUR. Amac: hangi kart ne zaman eskir —
 # tek bakista gorunur, tur tur kesif yapip kontor harcanmaz.
 # Bir kart guncellenince buradaki "son:" tarihi de guncellenir (ayni turda!).
-# Son tam denetim: 10 Agu 2026 (§252b-n: tum repo okundu, 15 duzeltme)
+# Son tam denetim: 10 Agu 2026 (§252b-ü: tum repo okundu, 31 duzeltme)
+# CRON DUZENI (§252x): hafta ici 09:10 fon · 18:10 endeks,fiyat,fon · Cmt 07:00 hepsi(risk dahil)
 
 ## ALTIN KURALLAR
 1. Panelde GORELI ZAMAN IFADESI YASAK: "bu gece / bugun / yarin" yazilmaz —
@@ -45,6 +46,11 @@
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
+| Beta cipasi (risk.json) | ARTIK OTOMATIK — XKTUM (BIST resmi arsiv). Rapor 'XU100.IS' derse arsiv tohumu bozulmus demektir (§252y) | 10A ✓ |
+| Sektor rotasyonu (sektor.json) | Fintables endeks mumlari · capalar dosyada yazili | 10A §252w |
+| Swap stoku (rezerv.json) | TCMB haftalik yayin, PERSEMBE. Sıradaki: 13 Agu (7 Agu haftasi) | 10A §252v |
+| Faktor modeli (fm.json) | ⏸ ~1 EYLUL'e ERTELENDI — 2C sezonu bitmeden yarim evren. arac/fm-isle.py HAZIR. Evren karari (147 vs 215) o zaman verilecek | 14T |
+| Guidance (guidance.json) | ⏸ ayni gerekce — sirketler 2C ile beklenti revize ediyor | 17T |
 | Endeks pay_adedi (xktum/xk100/xktmt.json) | HER BEDELSIZ/SERMAYE ARTIRIMINDA — ceyreklik YETMEZ. 9 Agu'da 10 gunde 3 bedelsiz kacti (KTLEV x3,33 uc dosyada birden) | 10A §252b |
 | XKTMT uyelik (39) | BIST revizyonu. Denetim bunu KONTROL ETMIYOR (yalniz xktum) — A2 isi acik | 10A §252b |
 | Egri Okuma sabitleri (app.js OKU_*) | PPK (politika 37, 23T sabit) / TUFE (31,75 Tem) / anket (23,95 Tem) | 10A §252d |

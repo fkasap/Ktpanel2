@@ -3,7 +3,7 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-07-17
+Son güncelleme: 2026-08-10
 
 
 ## ⭐ OTOMASYON KURALI (KULLANICI KURALI — 2 Agu 2026)
@@ -2766,6 +2766,200 @@ turda olculecek (bekleyen islere kondu).
 
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
+
+## 252ü OTURUM DERSI-2: YAZDIGIM DUZELTMENIN KENDISI KIRIK CIKTI (10 Agu)
+
+Bu oturumun ikinci yarisinda app.js/tazele.mjs'e yazilan duzeltmelerin UCU
+ILK HALINDE CALISMIYORDU. Ucu de `node --check`ten VE fonksiyon envanteri
+testinden GECTI. Ucunu de yalniz CALISAN SISTEMIN CIKTISI yakaladi:
+
+  §252h  sapma      -> `j.sapma.skor` yazildi, OYLE BIR ALAN YOK (nesne).
+                       YAKALAYAN: konsol dokumunde egriDamga'da sapma yoktu.
+  §252m  uyeSayi    -> kod dogru, ZAMANLAMA yanlis: es.innerHTML kuruluyor
+                       ama ENDAG asagida doluyor; dataset.dolu ikinci
+                       doldurmayi engelliyor -> etiket sonsuza kadar sayisiz.
+                       YAKALAYAN: $('ayrEndeks').textContent bos dondu.
+  §252y  tohumlama  -> arsive gunluk seri eklendi ama arsiv KARMA hale geldi
+                       (gunluk + aylik); betik ay-araligini gunluk getiri
+                       saydi. YAKALAYAN: raporda bir sayinin 5'ten 234'e
+                       ziplamasi.
+
+KURAL (§252n'nin sertlestirilmis hali): "kod var" ile "kod isini yapiyor"
+AYRI SEYLERDIR. Sozdizimi + envanter GEREKLI ama YETERLI DEGIL.
+Her duzeltme icin deploy sonrasi UC SORU:
+  1. Elemanin/alanin GERCEKTEN var oldugunu ne kanitliyor? (konsol, id sayimi)
+  2. Kod CALISTIGINDA veri HAZIR mi? (zamanlama — §247c, §252m)
+  3. Duzeltme YENI bir sayiyi degistirdi mi? (rapordaki sayaclari KIYASLA)
+3. madde bu oturumda en pahali hatayi yakaladi ve hicbir statik test bulamazdi.
+
+## 252z BETA TOHUMLAMASI TARIH SUREKLILIGINI BOZDU — ONARILDI (10 Agu)
+
+§252y tohumlamasindan sonra "kurumsal islem suzgecine takilan gun" 5 -> 234.
+KOK NEDEN: endeks-arsiv.json artik KARMA yogunlukta — Sub-Agu 2026 GUNLUK
+(117 nokta) + 2021-2026 AYLIK tohum (61 nokta). Hisse serisi (Yahoo) ardisik
+gunluk oldugundan kesisimin eski bolumunde noktalar AY ARALIKLI kaliyor ve
+`getiriler()` ardisik iki noktayi "gunluk getiri" sayiyordu.
+ASIL TEHLIKE ATILANLAR DEGIL ATILMAYANLARDI: %20'nin ALTINDA kalan aylik
+getiriler gunluk gibi seriye giriyor, vol sqrt(252) ile yillliklandirilinca
+SISIYORDU. Olculdu: 12 gozlem kirli, vol 20,8 -> 19,6 (%6 sisme).
+COZUM: ardisik iki gozlem arasi >5 TAKVIM GUNU ise getiri HESAPLANMAZ
+(egri.js:250'deki ayni kalip). Iki sayac AYRI tutuldu.
+SONUC (olculdu): kurumsal islem 234 -> 4 · tarih boslugu 1692 (yeni sayac)
+· kapsam 141/141 KORUNDU.
+DERS: iki sayaci tek sayacta toplamak TESHISI YALANCI yapar. 234 rakami
+"bedelsiz" diye raporlaniyordu; gercekte 230'u ay-boslugu, 4'u bedelsizdi.
+
+## 252y BETA CIPASI COZULDU — ARSIVE XKTUM TOHUMLANDI (10 Agu)
+
+SORUN: beta aylardir XU100'e dusuyordu. XU100 ~%25 BANKA agirlikli; katilim
+evreni portfoyunun betasi yanlis cipada olculuyordu (βp, tracking error,
+katki atfi hepsi kayikti).
+ELENEN YOL — VERCEL KOPRUSU: §245t "XKTUM.IS Vercel IP'sinden geliyor"
+demisti ve ben bunu SERIYE GENELLEMISTIM. OLCULDU:
+  /api/market?mod=seri&kod=XKTUM&gun=400  ->  {"ok":false,"adet":1,...}
+Yahoo XKTUM.IS icin CANLI FIYAT verir (sonFiyat 18854.68 dondu) ama GECMIS
+VERMEZ. §245t dogruydu ama YALNIZ ANLIK KOTASYON icin. Olcmeden yazsaydim
+sessizce XU100'e dusen bir kod eklemis olacaktim.
+ELENEN YOL — ARSIV BEKLEME: gunluk birikim 4 Agu'da basladi, 1 nokta/gun;
+60 esigine ~3 AY sonra ulasilirdi.
+COZUM: Fintables endeks_mumlar_gunluk_gh — XKTUM'un 400 GUNLUK tam serisi
+var. 126 gun (Sub-Agu 2026) cekildi, arsive tohumlandi.
+DOGRULAMA: cakisan 9 gunde arsiv ve Fintables BIREBIR ayni (2026-08-07 =
+18694.71 her ikisinde). Eski degerlerden HICBIRI degismedi.
+SONUC: XKTUM 61 -> 178 nokta · son 120 gunde 7 -> 77 (esik 60) · beta artik
+"XKTUM (BIST resmi arsiv)".
+SURDURULEBILIRLIK: gunluk birikim ~21 nokta/ay ekliyor, 120 gunluk pencerede
+~85 nokta kalir — esik kendiliginden korunur, tekrar tohumlama gerekmez.
+
+## 252x tazele.yml: SABAH KOSUSU EKLENDI + RISK HAFTALIGA ALINDI (10 Agu)
+
+BULGU 1: §249n (5 Agu) gunluge "ikinci cron '10 6 * * 1-5', yalniz FON
+katmani" diye yazilmisti ama DOSYADA NE O CRON VARDI NE github.event.schedule
+KOSULU. Fon getirileri hala bir gun geriden geliyordu.
+BULGU 2: `--katman="${{ github.event.inputs.katman || 'hepsi' }}"` —
+inputs YALNIZ workflow_dispatch'te dolu. Her iki cron da 'hepsi' kosuyordu.
+Cumartesi yorumu ("haftalik kalemler") ve KURULUM.md tablosu bir AYRIM TARIF
+EDIYORDU ama kodda KARSILIGI YOKTU -> risk katmani HER GUN (141 gereksiz
+Yahoo istegi/gun; vol/beta 1 yillik pencereden, gunluk oynamasi anlamsiz).
+COZUM: `Katman sec` adimi github.event.schedule'a bakar:
+  '10 6 * * 1-5'  -> fon                (09:10 sabah, YENI)
+  '10 15 * * 1-5' -> endeks,fiyat,fon   (18:10 aksam, risk YOK)
+  '0 4 * * 6'     -> hepsi              (cumartesi, risk DAHIL)
+  bilinmeyen/bos  -> hepsi              (ESKI DAVRANIS = guvenli varsayilan)
+tazele.mjs `ister()` artik VIRGULLU LISTE kabul eder (geriye uyumlu, test
+edildi: hepsi|fiyat|endeks|risk|fon ve bos deger aynen davranir).
+Risk katmani haftada 6 -> 1 kez. Sekiz tetikleme yolu shell'de test edildi.
+
+## 252w-v VERI TAZELEME TURU (10 Agu)
+
+sektor.json  — dort capa Fintables endeks_mumlar_gunluk_gh'den. CAPA
+  TARIHLERI ARTIK DOSYADA (`capalar` alani) — hangi gune gore hesaplandigi
+  sonradan sorgulanabilsin. 3A capasi 8 May HAFTA SONUNA denk geldi, en
+  yakin islem gunu 11 May kullanildi. Kimya/Petrol 1H +%9,31.
+analist.json — 55 hisse, PENCERE 1 YIL OLARAK KORUNDU. Fintables'in 6 aylik
+  sorgusu daha taze gorunur ama kurum sayilarini DUSURUR (ASELS 23->18,
+  THYAO 30->22) — bu TAZELEME degil METODOLOJI DARALTMASI olurdu (§252c'nin
+  ayni dersi). 1-yil sorgusu panelin kurum sayilariyla BIREBIR tuttu.
+  YEOTK bedelsiz duzeltmesi (74,21) korundu.
+rezerv.json  — swapStoku 12,8 -> 13,4. TCMB 31 Tem haftasi (6 Agu yayini;
+  dosyanin KENDI uyardigi, kacan yayin). net 54,2 - swap haric 40,8 = 13,4.
+  Panelin brut rakami (164,4) TCMB ile zaten TUTUYORDU — geride kalan
+  yalniz swap bilesenıydi.
+bist-takvim.json — 15 sirket TAHMINDEN GERCEGE gecti (yeni `gerceklesen`
+  bloku). ONEMLI OLCUM: tahmin yontemi SAGLAM cikti — ortalama mutlak sapma
+  2,7 GUN, 3/15 tam isabet, 8/15 ±1 gun. Onceki "15/40 yanlis" tespitim
+  YANLISTI: "tahmini gecmis ama aciklamamis" ile "yanlis tahmin"i
+  karistirmistim (bu oturumun ikinci olcum hatasi).
+  RENDER RISKI YAKALANDI: aciklananlar INC_KARTLAR'dan geliyor; karti
+  olmayan sirket `beklenen`den cikinca LISTEDEN TAMAMEN KAYBOLUYORDU.
+  KTLEV tam o durumdaydi (o gun acikladi, karti yok). §252r ile
+  `gerceklesen` blogu render'a baglandi + "YAYINLANDI · kart bekliyor"
+  rozeti. Simulasyon: 40/40, kimse kaybolmuyor.
+fm.json      — TAZELENMEDI, BILEREK (bkz. guncelleme-plani.json karar notu).
+guidance.json— TAZELENMEDI, ayni gerekce (sezon ortasinda yarim revizyon).
+
+## 252t FAKTOR MODELI BORU HATTI YAZILDI: arac/fm-isle.py (10 Agu)
+
+BOSLUK: yevren.json icin koyfin-isle.py vardi, fm.json icin BETIK YOKTU —
+her sezon elden geciyordu ve elle islem metrik setinin sessizce kaymasina
+acik kapiydi. Ustelik YONTEM HICBIR YERDE YAZILI DEGILDI.
+YONTEM GERI COZULDU (mevcut fm.json'un istatistiksel imzasindan +
+app.js:1518-1523 etiketleriyle teyitli):
+  - metrik basina z-skor, ±3 KIRPMA (mevcut dosyada hic |z|>3 yok)
+  - VALUE/GROWTH/QUALITY SEKTOR ICINDE, MOMENTUM/LOW_RISK TUM EVRENDE
+    (olcum: sektorler arasi yayilim VAL .114 GRO .021 QUA .074 = dar;
+     MOM .414 LOW .650 = genis — etiketlerle ortusuyor)
+  - hib=false metrikte ISARET TERS
+  - faktor skoru = mevcut metrik z-skorlarinin ORTALAMASI (std 0,57-0,74;
+    tek z-skor olsa 1,0 olurdu)
+  - f dizisi sirasi app.js:1519 ile SABIT: VALUE:0 GROWTH:1 QUALITY:2
+    MOMENTUM:3 LOW_RISK:4
+DOGRULAMA SINIRI: 14 Tem CSV'si elde olmadigi icin SAYISAL dogrulama
+yapilamadi. Dogrulanan sey YAPISAL IMZA (ort/std/kirpma/sektor yayilimi) VE
+korelasyon deseni: QUALITY .919, LOW_RISK .855 (yavas degisen) vs MOMENTUM
+.386 (hizli degisen). Yontem yanlis olsaydi korelasyonlar RASTGELE dagilirdi,
+HIZINA GORE siralanmazdi.
+EVREN KARARI ERTELENDI: 10 Agu CSV'si 215 hisse tasiyordu, mevcut evren 147.
+ETKI AYRISTIRILDI — Top-40 degisiminin YARISI bilancodan, YARISI evren
+genislemesinden: A(14 Tem/147)->B(10 Agu/147) 14 isim, B->C(10 Agu/215)
+14 isim, A->C 21 isim. Evren genisletilecekse BILINCLI gecis olarak
+kaydedilmeli. track.json sicil sepeti 28 Tem temelli, DEGISTIRILMEMELI.
+
+## 252s CDS OTOMATIKLESTIRILEMIYOR — BES KAYNAK ELENDI (10 Agu)
+
+RISK_CDS=206 (27 Tem) barometrenin %25'ini besliyor. Otomasyon kurali
+geregi API'ye baglanmak istendi. BES KAYNAK DENENDI, BESI DE KAPALI:
+  EVDS               — sovereign CDS YOK. `?ara=risk` yalnizca BANKACILIK
+                       sektoru kredi riski donduruyor (Sektor Riski Nakdi/
+                       Gayri Nakdi × TL/YP). Beklenen sonuc: CDS Londra'da
+                       islem goren bir turev, TCMB yayinlamaz.
+  Fintables          — katalogda yok (hisse/endeks/fon/finansal tablo).
+  Alpha Vantage      — sovereign CDS yok.
+  worldgovernmentbonds — sayfa BOT KORUMASIZ acildi ama degerler `----`;
+                       JS ile basiliyor, sunucu tarafi fetch kabugu alir.
+  TradingEconomics   — SUNUCU TARAFI BASIYOR (Turkiye 2Y 37,77 · 10Y 32,24
+                       · USDTRY 47,7175 ham fetch ile geldi) AMA CDS SAYFASI
+                       YOK. NOT: yedek kaynak olarak degerli, bir gun Yahoo
+                       ya da EVDS duserse burasi ayakta olabilir.
+  investing.com      — var, ama Cloudflare + Refinitiv RIC kodu
+                       (TRGV5YUSAC=R). §249i'de tefas.js icin gomulen
+                       Bearer+F5 cerezinin AYNI DESENI — o coz bugun
+                       "Request Rejected" veriyor.
+KARAR: sabit KALDI (kullanici karari). ONERI ACIK: barometre altindaki
+"TR CDS (ulke riski)" satirina DAMGA TARIHI eklenmeli — su an 13 gunluk bir
+sayiya bakildigi SOYLENMIYOR. §245k: gizli damga, acik damgadan kotudur.
+KAYNAK NOTU: panelin 206'si uydurma DEGIL — TRT Haber Haz 2026'da CDS'in
+225'i gordugunu yazmis, kod yorumu da "225->206" diyor. Kaynak muhtemelen
+Bloomberg CDS mid (Turk medyasinin standart referansi). Investing.com'un
+239,57'si FARKLI BIR KOTASYON; benim "%16 fark" diye isaretledigim sey
+muhtemelen kaynak farki, HATA DEGIL.
+
+## 252r-o DENETIM VE PANEL DUZELTMELERI (10 Agu)
+
+252o UYELIK DENETIMI UC DOSYAYA GENISLETILDI (scripts/denetim yolu,
+  tazele.mjs:713). Onceki hali YALNIZ xktum.json'a bakiyordu; xktmt.json'in
+  34/39 tasidigi bu yuzden gorulmedi. IKI FARKLI TASARIM, IKI FARKLI KONTROL:
+  xktum KASTEN ilk 150/242 (yalniz "fazla" anlamli), xk100/xktmt TAM kapsam
+  (HER IKI YON hata). ESKI DOSYAYLA SIMULE EDILDI, bugunku hatayi aynen
+  basiyor; duzeltilmis dosyalarla YANLIS ALARM URETMIYOR.
+252p SERIT DONMUSTU. tapeItems'in BIST 100/30 degerleri sabit yaziliydi ve
+  HICBIR YAZAR yoktu — sayfanin en tepesindeki akan sayi hep 14.080/16.175.
+  Veri ZATEN ELDEYDI (m.end.XU100/XU030). Yedege '(damgali)' etiketi eklendi:
+  canli gelmezse SESSIZCE eski sayi gostermez, damgali oldugunu SOYLER.
+  Yedi senaryo test edildi (veri yok/kismi/p=null/chg=NaN/chg=0).
+252q SEZON KURALI TEK SAHIBE TASINDI. §245p "hesap window.tazelikHesap'ta
+  birlestirildi, ajan.js de bunu kullanir" DIYORDU — OLCULDU: ajan.js
+  tazelikHesap'i HIC CAGIRMIYOR, kendi kopyasini calistiriyor. Birlestirme
+  YARIM KALMIS. Gorunen belirti: sezon kurali yalniz ajan.js:445'teydi.
+  10 Agu olcumu: BES katman ayrisiyor (Faktor modeli 27g ve Guidance 24g
+  Ebu'ya gore BAYAT, cekmeceye gore TAZE(90)). Kural tazelikHesap.durum()
+  icine alindi + sezonBaglam() yardimcisi. Ayrisma 5 -> 0.
+  SEZON ROZETI eklendi ('·sezon 10g') — gizli siki limit, gizli gevsek limit
+  kadar kafa karistirir.
+  ACIK KALAN: ajan.js hala kendi kopyasini calistiriyor. Bugun SONUCLAR
+  hizalandi ama IKI UYGULAMA DURUYOR — bir sonraki duzeltme yine birinde
+  eskiyebilir. Gercek cozum ajan.js dongusunu tazelikHesap'a baglamak.
+252r BILANCO TAKVIMI `gerceklesen` blogu render'a baglandi + rozet.
 
 ## 252n OTURUM DERSI: OKUMAK YETMIYOR, EKRANI OLCMEK GEREK (10 Agu)
 
