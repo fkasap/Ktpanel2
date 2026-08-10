@@ -32,7 +32,14 @@ const KOK = ADAYLAR.find(d => existsSync(path.join(d, 'index.html'))) || process
 const bugun = new Date().toISOString().slice(0, 10);
 const arg = k => (process.argv.find(a => a.startsWith(`--${k}=`)) || '').split('=')[1] || '';
 const KATMAN = arg('katman') || 'hepsi';
-const ister = k => KATMAN === 'hepsi' || KATMAN === k;
+/* §252w COKLU KATMAN. Onceden tek deger kabul ediliyordu (hepsi|fiyat|endeks|risk|fon),
+   dolayisiyla "risk HARIC her sey" demenin yolu yoktu ve hafta ici aksam kosusu
+   mecburen 'hepsi' cagiriyordu -> RISK KATMANI HER GUN kosuyordu (141 gereksiz
+   Yahoo istegi/gun; vol ve beta 1 YILLIK pencereden hesaplanir, gunluk oynamasi
+   anlamsiz). Artik virgullu liste kabul edilir: --katman=endeks,fiyat,fon
+   GERIYE UYUM: tek deger ve 'hepsi' aynen calisir. */
+const KSET = new Set(String(KATMAN).split(',').map(x => x.trim()).filter(Boolean));
+const ister = k => KSET.has('hepsi') || KSET.has(k);
 
 const raporlar = [];
 const degisenler = [];
