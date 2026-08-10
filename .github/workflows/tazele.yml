@@ -18,6 +18,12 @@ on:
   schedule:
     # Hafta içi 18:10 TSİ (15:10 UTC) — BIST kapanışından ~40 dk sonra
     - cron: '10 15 * * 1-5'
+    # Hafta içi 09:10 TSİ (06:10 UTC) — §249n SABAH KOŞUSU, YALNIZ FON katmanı.
+    # Fon fiyatı SABAH ilan edilir ve DÜNÜN değerlemesidir; akşam koşusu hep bir
+    # gün geriden gelir. Bu koşu dünkü getiriyi aynı gün panele düşürür.
+    # NOT: §249n 5 Ağu'da günlüğe "eklendi" diye yazılmıştı ama DOSYAYA HİÇ
+    # GİRMEMİŞTİ — 10 Ağu tam okumasında yakalandı (§252x).
+    - cron: '10 6 * * 1-5'
     # Cumartesi 07:00 TSİ — haftalık kalemler (risk metrikleri dahil;
     # vol ve beta 1 yıllık pencereden hesaplanır, günlük oynaması anlamsız)
     - cron: '0 4 * * 6'
@@ -42,6 +48,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      # §252x KATMAN ARTIK CRON'A GÖRE SEÇİLİYOR.
+      # ÖNCE: `--katman="${{ github.event.inputs.katman || 'hepsi' }}"` —
+      # inputs YALNIZ workflow_dispatch'te dolu olduğundan HER İKİ cron da
+      # 'hepsi' koşuyordu. Cumartesi yorumu ("haftalık kalemler") ve
+      # KURULUM.md'deki zamanlama tablosu bir ayrım TARİF EDİYORDU ama kodda
+      # KARŞILIĞI YOKTU: risk katmanı her gün koşuyordu (141 gereksiz Yahoo
+      # isteği/gün). github.event.schedule hiç kullanılmamıştı.
+      # GÜVENLİ VARSAYILAN: tanınmayan/boş schedule -> 'hepsi' (eski davranış).
+      - name: Katman seç
+        id: sec
+        run: |
+          IN="${{ github.event.inputs.katman }}"
+          SCH="${{ github.event.schedule }}"
+          if   [ -n "$IN" ];                 then K="$IN"                # elle tetikleme
+          elif [ "$SCH" = "10 6 * * 1-5" ];  then K="fon"                # 09:10 sabah
+          elif [ "$SCH" = "10 15 * * 1-5" ]; then K="endeks,fiyat,fon"   # 18:10 akşam (risk YOK)
+          elif [ "$SCH" = "0 4 * * 6" ];     then K="hepsi"              # cumartesi (risk DAHİL)
+          else                                    K="hepsi"              # bilinmeyen -> eski davranış
+          fi
+          echo "katman=$K" >> $GITHUB_OUTPUT
+          echo "seçilen katman: $K   (schedule='$SCH' · input='$IN')"
 
       - uses: actions/setup-node@v4
         with:
@@ -68,8 +96,11 @@ jobs:
       # Playwright yalnız FON katmanı için gerekli (TEFAS bot koruması).
       # Diğer katmanlar düz fetch ile çalışır; boşuna kurmayalım.
       # Playwright kurulumu düşerse diğer katmanlar yine koşsun.
+      # §252x: koşul artık SEÇİLEN katmana bakıyor. Önceden github.event.inputs'a
+      # bakıyordu ve scheduled koşuda o hep '' olduğundan Playwright HER koşuda
+      # kuruluyordu — sabah fon koşusunda gerekli, ama endeks/risk koşusunda değil.
       - name: Playwright (yalnız fon katmanı)
-        if: github.event.inputs.katman == 'fon' || github.event.inputs.katman == 'hepsi' || github.event.inputs.katman == ''
+        if: contains(steps.sec.outputs.katman, 'fon') || contains(steps.sec.outputs.katman, 'hepsi')
         continue-on-error: true
         run: npx playwright install --with-deps chromium
 
@@ -96,7 +127,7 @@ jobs:
       - name: Tazele
         id: tazele
         continue-on-error: true
-        run: node scripts/tazele.mjs --katman="${{ github.event.inputs.katman || 'hepsi' }}"
+        run: node scripts/tazele.mjs --katman="${{ steps.sec.outputs.katman }}"
         env:
           TZ: Europe/Istanbul
 
