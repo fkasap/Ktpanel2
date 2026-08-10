@@ -2767,6 +2767,169 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 253i TEFAS AUM/YATIRIMCI KOPRUYE ALINDI — UC ADI OLCULDU (10 Agu)
+
+SORUN: AUM ve yatirimci sayisi Playwright AG-DINLEME ile toplaniyordu; TEFAS'in
+F5 guvenlik duvari "Request Rejected" veriyordu ve rapor her kosuda
+"AUM/akis onceki turdan" diyordu. Getiri yolu (1048 fon) SAGLAMDI — engelli
+olan yalnizca KESIF yoluydu.
+UC ADI UC KEZ TAHMIN EDILDI, UCU DE YANLIS CIKTI:
+  fonProfilDtyGetir     -> AUM DEGIL, fonun ALTIN/BIST100/USD karsisindaki
+                           KIYASLAMA GETIRISI (n=9, alanlar fonTurGetiri...)
+  fonDetayGetir         -> bos dizi
+  fonToplamDegerGetir   -> ERR-006 "Method not found or disabled!"
+  fonPortfoyDagilimGetir-> ERR-006
+DOGRUSU KULLANICININ HAR OLCUMUNDEN GELDI:
+  POST /api/funds/fonGnlBlgSiraliGetir -> resultList[]
+  alanlar: fonKodu · fonUnvan · tarih · fiyat · tedPaySayisi · kisiSayisi ·
+           portfoyBuyukluk    (HEPSI TEK CAGRIDA)
+  govde: {fonTipi,fonKodu,basTarih,bitTarih,basSira,bitSira,dil,...}
+  toplamSayi 2030 · sayfalamali
+  TOKEN: HAR'daki Authorization tefas.js'te ZATEN gomulu olanla BIREBIR AYNI —
+  yeni sir eklenmedi, mevcut kopru altyapisi tasidi.
+COZUM: api/tefas.js'e `mod=gnl` eklendi (yeni uc DEGIL, mevcut uca mod).
+tazele.mjs kopru asamasinda cagirir; Playwright'e GEREK KALMIYOR.
+
+### REGRESYON VE DENETIMIN YAKALAMASI — kayda deger
+Ilk yazimda TEK CAGRI vardi (bas=1&bit=1000). TEFAS'ta 2030 fon var ve 46
+katilim fonu tum listeye DAGILMIS; ilk 1000'e yalnizca 10'u dusuyordu.
+  ONCE (Playwright bloke, meta BOS)  -> GETIRI-MODU, 36/46 yaziliyordu
+  SONRA (meta dolu ama EKSIK)        -> tam yol, 10/46
+Yani YENI VERI, EKSIK OLDUGU ICIN ESKISINDEN KOTU SONUC VERDI.
+DENETIM YAKALADI: "Katilim fonlari — ✗ KALDI · kapsam 10/46 (%22), esik %95"
+ve VERIYI YAZMADI. katfon.json eski+dogru haliyle kaldi. §104'un tam isi.
+DUZELTME: sayfalama (1-1000, 1001-2000, 2001-3000; d.length<1000 ise dur).
+SONUC: 2023 fon · Katilim fonlari ✓ 46/46 (%100).
+DERS: denetim esikleri yalniz DIS KAYNAGI degil, KENDI DEGISIKLIGINI de
+yakalar. Bu oturumda uc kez arkalarina saklandim (CDS makul aralik, tarih
+sureklilik, kapsam esigi) ve UCUNDE DE HAKLI CIKTILAR.
+YAN ETKI: son kosuda Playwright sayfayi ACABILDI (82 yanit, 1 JSON) —
+F5 engeli KALICI DEGIL, OTURUMSAL. Ama artik ona bagimli degiliz.
+
+## 253g-h GURULTULU BASARI: IKI SAHTE UYARI SUSTURULDU (10 Agu)
+
+Rapor her kosuda iki "ariza" bildiriyordu ve IKISI DE ARIZA DEGILDI.
+Bu, §143'un sessiz-yedek ailesinin TERSI ve ayni derecede tehlikeli:
+gercek bir ariza ciktiginda SAHTE UYARILARIN ARASINDA KAYBOLUR.
+
+§253g CSV 404 — BEKLENEN DAVRANISTI.
+  §250b ZATEN olcmustu: FiyatEndeksleri_PriceIndices.csv ve
+  GetiriEndeksleri_ReturnIndices.csv /datum/ altinda YOK, PayEndeksleri.zip
+  ICINDELER. Kod DOGRU davraniyor: tekil URL'yi dener, 404 alir, zip'e duser,
+  CALISIR (84 endeks). Ama rapor bunu "⚠ inmeyenler" diye basiyordu.
+  COZUM: BEKLENEN_404 listesi + ayri "ℹ beklenen 404" satiri.
+
+§253h BULTEN 404 — DUNU ARIYORDU.
+  Kod duz `Date.now()-86400000` kullaniyordu. PAZARTESI kosusunda bu PAZAR'a
+  denk geliyor; borsa kapali, bulten YOK -> her hafta basi dort 404 ve
+  "⚠ indirilemedi". Rapor bir ariza bildiriyordu ama ARIZA YOKTU.
+  COZUM: hafta sonu atlanir, gerekirse 4 IS GUNU geriye bakilir (resmi
+  tatiller icin). Ilk inen kabul edilir. Hicbiri inmezse DENENEN GUNLER
+  raporda gorunur — dort ardisik is gunu bossa GERCEK sorun vardir.
+  DOGRULANDI: Pazartesi kosusu thb202608071.zip (CUMA) indirdi, 295KB.
+
+KURAL: uyari, GERCEKTEN UYARILACAK BIR SEY OLDUGUNDA cikmali. Bu oturumda
+tersini de uc kez gorduk (bulutUyari, rotKKM, taktikselBody: ariza VARDI,
+hic bagirmiyordu). Ikisi ayni kurala bakiyor.
+
+## 253 CDS CANLIYA BAGLANDI — DOKUZ KAYNAK, BIR HAR DOSYASI (10 Agu)
+
+SONUC: /api/tcmb?cds=1 -> worldgovernmentbonds.com. Panel artik
+"228 bp -0,8 · 8 Agu · canli". Damgali sabit oldu.
+
+### Bulgu 1: 206 BAYAT DEGIL, YANLISTI
+Kullanicinin DevTools HAR olcumuyle gercek seri elde edildi:
+  24 Tem 244,00 · 27 Tem 239,96 · 30 Tem 239,57 · 6 Agu 227,65
+Panel 27 Tem icin 206 diyordu — 34 PUAN sapma. Serinin 160 gunluk tamaminda
+206'ya yakin TEK GUN YOK; en dusuk 203,98 ve o Aralik 2025. Muhtemelen
+52-HAFTALIK DIP kutusundan okunmustu.
+ETKISI: cdsS=(330-cds)/140*100 · 206 -> 88,6 · 227,65 -> 73,1 puan.
+Barometre 77 -> 73: "ASIRI ACGOZLULUK" -> "ACGOZLULUK". BIR ESIK YUKARIDAYDI.
+
+### Bulgu 2: IKINCI BIR CDS GOSTERIMI VARDI
+index.html:303 "Global Risk Barometresi" icinde TR 5Y CDS ≈206 — TAMAMEN
+STATIK, ID'SI YOK, app.js ona hic dokunamiyordu. Risk barometresi
+duzeltilirken bu kopya 206'da kaldi; AYNI EKRANDA IKI FARKLI CDS gorundu.
+§241'in ayni dersi: ayni deger iki yerde. Artik id verildi (#glbCds), tek
+kaynak iki gosterim.
+AYRICA "iyilesiyor" ETIKETI DE SABIT YAZILIYDI — CDS yukselse bile oyle
+kalirdi. Artik degisimden OLCULUYOR; canli veri yoksa yon HIC IDDIA EDILMIYOR.
+
+### ELENEN DOKUZ KAYNAK (tekrar denenmesin)
+  EVDS                 — sovereign CDS YOK. ?ara=risk yalnizca BANKACILIK
+                         sektoru kredi riski donduruyor (Sektor Riski
+                         Nakdi/Gayri Nakdi × TL/YP). Beklenen: CDS Londra'da
+                         islem goren bir turev, TCMB yayinlamaz.
+  Fintables            — katalogda yok (hisse/endeks/fon/finansal tablo).
+  Alpha Vantage        — yok. SYMBOL_SEARCH "TRGV5YUSAC" -> bos.
+  Massive              — Economy bolumu tamamen ABD Fed verisi.
+  TradingEconomics     — SUNUCU TARAFI BASIYOR (TR 2Y 37,77 · 10Y 32,24 ham
+                         fetch ile geldi) AMA CDS SAYFASI YOK.
+                         NOT: YEDEK KAYNAK OLARAK DEGERLI — Yahoo ya da EVDS
+                         duserse burasi ayakta olabilir.
+  doviz724.com         — sunucu tarafi basiyor AMA VERI ARALIK 2024'TE DURMUS
+                         (257.71 · 29 Ara 2024; 2026 tablosu BOS).
+  Yahoo TRGV5YUSAC=R   — "No data found, symbol may be delisted". Refinitiv
+                         RIC'i tescilli kodlama; Yahoo tasimaz.
+  Yahoo CDS            — o ticker "Evolve One Inc.", son islem 2019 (donmus).
+  investing.com API    — CALISIYOR ama HER IKI SUNUCU YOLUNDAN DA 403:
+                         Vercel 403 · GitHub Actions 403 (Cloudflare
+                         datacenter IP engeli, IKISI DE OLCULDU).
+                         Tarayici yolu da kapali: yanit
+                         `Access-Control-Allow-Origin: https://tr.investing.com`.
+UCRETLI OLANLAR DA ISE YARAMIYOR: EODHD sovereign CDS alani Damodaran/NYU
+verisi (YILDA IKI KEZ) · MacroMicro kendi yaziyor "haftalik sunulur" ·
+Cbonds Excel eklentisi · Markit/Bloomberg kurumsal abonelik.
+
+### COZUM: worldgovernmentbonds.com
+ASIL FARK: sayfasi ham fetch ile ACILIYOR, Cloudflare bot engeli YOK.
+Ben bu siteyi ONCE ELEMISTIM ("degerler ---- geliyor, JS ile basiliyor") —
+DOGRUYDU AMA EKSIKTI. JS ile basiliyorsa BIR UC VARDIR ve o uc engelsizdi.
+HAR olmadan bulunamazdi.
+  POST https://www.worldgovernmentbonds.com/wp-json/common/v1/historical
+  govde: {"GLOBALVAR":{"FUNCTION":"CDS","COUNTRY1":{"SYMBOL":"13",...},
+          "OBJ1":{"DURATA":60},...}}
+  CEREZ GEREKMIYOR — giden cerezlerin hepsi analitik/reklam (_ga, __gads).
+  3272 kayit, 2015-12-15'ten beri.
+DEGER DOGRULANDI: investing.com ile BIREBIR ayni; site zaten kunyesinde
+Investing.com'u kaynak gosteriyor.
+
+### TARIH TUZAGI — YAKALANDI
+Kaynak hafta sonlarini ve tatilleri SON DEGERI TASIYARAK dolduruyor:
+08-08, 08-09, 08-10 hepsi 227,65. Ham haliyle alinsa panel "10 Agustos
+verisi" derdi — YALAN OLURDU.
+COZUM: sondan geriye "duz kosu" (ayni degerin tekrari) taranir, dizinin BASI
+gozlem gunudur.
+KALINTI SAPMA (durustce kayda geciyor): duz kosu 08-08'de basliyor, investing
+ayni degeri 08-06'ya yaziyor. Yani kaynagin tarihleri ~2 GUN ILERI kaymis.
+DEGER dogru, TARIH ~2 gun iyimser. Ham etiket (etiketTarih) de yanitta
+tasiniyor ki fark olculebilsin.
+
+### UC KADEMELI DUSUS (app.js cdsCek)
+  1) /api/tcmb?cds=1  — Vercel'den wgb. CALISIYOR (10 Agu dogrulandi).
+  2) /cds.json        — Actions kosusunun yazdigi dosya (tazele.mjs
+                        cdsTazele, 'fiyat' katmani). Vercel engellenirse.
+  3) damgali yedek    — RISK_CDS=227.65, etikete "damgali" basilir.
+Her kademe basarisizsa BIR SONRAKINE duser; hicbirinde SESSIZ DUSUS yok.
+
+### MIMARI NOTLAR
+- Yeni uc ACILMADI: §248c kurali, ?cds=1 olarak tcmb.js'e bindirildi.
+  Fonksiyon kotasi 10/12 korundu.
+- AKLI BASINDA ARALIK: 100-1500 bp disi deger REDDEDILIR. Kaynak alan
+  sirasini degistirirse sessizce sacma deger kabul edilmez (test: 0,5 bp
+  girdisi "makul aralik disi" ile reddedildi).
+- cdsCek() AYRI ucdan gider, market yanitina baglanmaz — kaynak yavassa
+  barometrenin geri kalanini bekletmez.
+- CDS_CANLI tanimi dosyanin EN USTUNE alindi: `let` HOISTED DEGILDIR ve
+  renderRiskBaro() satir 1314'te cagriliyor. Su an guvenli (await sonrasi
+  async govde) ama TESADUFI bir guvenlikti. (§247c / §252m ayni sinif.)
+
+### DERS
+Dokuz kaynagi ben denedim, hepsi kapandi. Cozen sey ARAMAK DEGIL, KULLANICININ
+TARAYICI OLCUMUYDU. Bir sitenin "JS ile basiyor" diye elenmesi, ARKASINDAKI
+UCUN DA KAPALI oldugu anlamina GELMEZ. Bir dahaki sefere: JS ile basan sayfa
+gorulunce ONCE HAR istenir, sonra elenir.
+
 ## 252ü OTURUM DERSI-2: YAZDIGIM DUZELTMENIN KENDISI KIRIK CIKTI (10 Agu)
 
 Bu oturumun ikinci yarisinda app.js/tazele.mjs'e yazilan duzeltmelerin UCU
