@@ -86,15 +86,25 @@ async function yabModu(req, res, cfg){
   };
   const hafta = Math.min(52, Math.max(3, parseInt(req.query.hafta) || 8));
   try{
-    const bit = new Date();
-    const bas = new Date(bit.getTime() - (hafta+3)*7*86400000);
+    /* §259b UÇ ADRESİ DÜZELTİLDİ. İlk yazımda evds2.tcmb.gov.tr/service/evds/
+       kullanmıştım — o ESKİ uç ve HTML döndürüyor ("Unexpected token '<'").
+       Dosyanın GERİ KALANI evds3.tcmb.gov.tr/igmevdsms-dis/ kullanıyor ve
+       çalışıyor. Kendi URL'mi yazmak yerine ÇALIŞAN KALIBI kullanmalıydım —
+       aynı dosyada kanıtı duruyordu. İki denemeli, HTML gelirse null. */
+    const H = { 'key': cfg.key, 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' };
     const gg = d => String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
-    const url = 'https://evds2.tcmb.gov.tr/service/evds/series='+Object.values(SERI).join('-')
-      + '&startDate='+gg(bas)+'&endDate='+gg(bit)+'&type=json';
-    const r = await fetch(url, { headers:{ key: cfg.key }, signal: AbortSignal.timeout(20000) });
-    if(!r.ok) return res.status(200).json({ ok:false, err:'EVDS_HTTP_'+r.status });
-    const j = await r.json();
-    const ham = Array.isArray(j && j.items) ? j.items : [];
+    const bit = new Date(), bas = new Date(bit.getTime() - (hafta+4)*7*86400000);
+    const url = 'https://evds3.tcmb.gov.tr/igmevdsms-dis/series=' + Object.values(SERI).join('-')
+      + '&startDate=' + gg(bas) + '&endDate=' + gg(bit) + '&type=json';
+    let ham = null;
+    for(const ms of [12000, 22000]){
+      try{
+        const r = await fetch(url, { headers:H, signal: AbortSignal.timeout(ms) });
+        const t = await r.text();
+        if(t.trim().startsWith('{') || t.trim().startsWith('[')){ const j = JSON.parse(t); ham = j.items || []; break; }
+      }catch(e){}
+    }
+    if(!Array.isArray(ham)) return res.status(200).json({ ok:false, err:'EVDS yanıt vermedi ya da JSON değil' });
     const say = v => { const x = parseFloat(String(v).replace(',','.')); return isFinite(x) ? x : null; };
     const sut = k => SERI[k].replace(/\./g,'_');
     /* Yalnız net-değişim serisi DOLU olan haftalar — EVDS boş satır da döndürür */
