@@ -31,7 +31,29 @@ module.exports = async (req, res) => {
   const tip = (req.query.tip || 'YAT').toUpperCase();
   try {
     let url, body;
-    if (mod === 'profil') {   /* §253: AUM/yatırımcı keşfi — akış otomasyonu için */
+    /* §253i AUM + YATIRIMCI SAYISI — DOĞRU UÇ BULUNDU.
+       Önceki `profil` (fonProfilDtyGetir) AUM DEĞİL, fonun ALTIN/BIST100/USD
+       karşısındaki KIYASLAMA GETİRİSİNİ döndürüyordu. `fonDetayGetir` boş
+       dizi, `fonToplamDegerGetir`/`fonPortfoyDagilimGetir` ERR-006
+       "Method not found". ÜÇÜ DE TAHMİNDİ ve üçü de yanlıştı.
+       Kullanıcının 10 Ağu HAR ölçümü doğrusunu verdi: fonGnlBlgSiraliGetir
+       → resultList[] · fonKodu, fiyat, tedPaySayisi, kisiSayisi,
+       portfoyBuyukluk. Hepsi TEK çağrıda, sayfalamalı (toplamSayi 2030).
+       TOKEN: HAR'daki Authorization, tefas.js'te ZATEN gömülü olanla BİREBİR
+       AYNI — yeni sır eklenmedi, mevcut köprü altyapısı taşıyor.
+       NOT: Playwright yolu (tazele.mjs ağ dinleme) F5 güvenlik duvarına
+       takılıyordu ("Request Rejected"); bu uç KÖPRÜDEN çalışıyor. */
+    if (mod === 'gnl') {
+      url = 'https://www.tefas.gov.tr/api/funds/fonGnlBlgSiraliGetir';
+      const g = String(req.query.gun || '').replace(/\D/g, '') ||
+        new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const bas = Math.max(1, parseInt(req.query.bas) || 1);
+      const bit = Math.min(bas + 999, Math.max(bas, parseInt(req.query.bit) || (bas + 499)));
+      body = { fonTipi: tip, fonKodu: req.query.kod ? String(req.query.kod).toUpperCase() : null,
+        aramaMetni: null, fonTurKod: null, fonGrubu: null, sfonTurKod: null,
+        basTarih: g, bitTarih: g, basSira: bas, bitSira: bit,
+        fonTurAciklama: null, dil: 'TR', kurucuKod: null };
+    } else if (mod === 'profil') {   /* §253: fon KIYASLAMA getirisi (AUM DEĞİL) */
       url = 'https://www.tefas.gov.tr/api/funds/fonProfilDtyGetir';
       body = { dil:'TR', fonKodu: String(req.query.kod || '').toUpperCase(), periyod: '12' };
     } else if (mod === 'detay') {
