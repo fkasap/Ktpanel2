@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-10
 
-Katman: `hepsi` · Veri dizini: `ktpanel`
+Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -28,33 +28,25 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-08-10
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
-### Risk metrikleri — ✓ GEÇTİ
-- ✓ **kapsam**: 141/141 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%3)
-- ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (178 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
-- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
-
 ### TEFAS köprü (bilgi)
-- getiri: 1048 fon ✓ · liste: 1032 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
+- getiri: 1048 fon ✓ · liste: 1039 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008847699259> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008641697551> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
-### Bilanço tetiği — ✓ 3 şirket FR yayımladı
-- AHSGY, KTLEV, SASA
+### Bilanço tetiği — ✓ 77 şirket FR yayımladı
+- AHSGY, AKCVR, AKTVK, ALKA, ALNUS, ARSVY, ASGYO, ATLAS, AYES, BAHKM, BANVT, BASCM, BASGZ, BEGYO, BFREN, BRKVY, BURVA, CCOLA, CEMAS, CGCAM …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu XKTUM: 150/242 (tasarım gereği ilk 150)
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
-### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-07
-- XKTUM 18694.71 · XKTMT 17201.71 · XK100 17517.53 · XU100 13779.39 · BISTTLREFK 4015.02998
+### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-10
+- XKTUM 18819.67 · XKTMT 17312.87 · XK100 17600.94 · XU100 13811.6 · BISTTLREFK 4015.02998
 - arşiv: 607 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ⚠ inmeyenler: FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
@@ -62,4 +54,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (135 fiyat) · Model sicili (40 fiyat) · risk metrikleri (141) · katılım fonları (getiri-modu 36) · bilanço tetiği (3) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (124 fiyat) · Model sicili (36 fiyat) · katılım fonları (getiri-modu 36) · bilanço tetiği (77) · endeks üyelikleri · endeks arşivi
