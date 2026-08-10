@@ -684,7 +684,8 @@ function notYasEtiketi(nt, kayit){
     sp.className='ebu-yas thin';
     sp.style.cssText='font-size:9px;opacity:.75;margin-left:6px;white-space:nowrap';
     sp.textContent='· '+gun+'g önce yazıldı';
-    if(window.AJAN_SUNUCU_HATA){ sp.style.color='var(--down)'; sp.textContent+=' ⚠'; }
+    const H=window.AJAN_SUNUCU_HATA;
+    if(H && !(typeof H==='object' && H.g)){ sp.style.color='var(--down)'; sp.textContent+=' ⚠'; }   /* §254b yalnız KALICI hatada */
     nt.appendChild(sp);
   }catch(e){}
 }
@@ -769,14 +770,27 @@ async function notlariGeriYukle(){
 /* §254 HATA -> OKUNABILIR TURKCE. Kullanici "credit_balance_too_low" degil
    "API bakiyesi tukendi" gormeli; eylem de belli olmali. */
 function ajanHataOzet(tip, mesaj, durum){
-  const t=String(tip||'').toLowerCase(), m=String(mesaj||'').toLowerCase();
-  if(t.includes('credit')||m.includes('credit balance')) return 'API bakiyesi tükendi — Plans & Billing';
-  if(t.includes('rate_limit')||durum===429)              return 'hız sınırı — bir süre bekleniyor';
-  if(t.includes('authentication')||durum===401)          return 'API anahtarı geçersiz';
-  if(t.includes('permission')||durum===403)              return 'API anahtarı bu modele yetkisiz';
-  if(t.includes('not_found')||durum===404)               return 'model adı bulunamadı: '+(window.AJAN&&AJAN.MODEL||'?');
-  if(t.includes('overloaded')||durum===529)              return 'servis yoğun — sonraki tur';
-  return (tip||'bilinmeyen hata')+(mesaj?' · '+String(mesaj).slice(0,70):'');
+  /* §254b ÇİFTLENMİŞ METİN TEKİLLENİR. Sunucu iki deneme yapıp hataları
+     " · " ile birleştiriyor; aynı cümle iki kez görünüyordu. */
+  const tek = (x) => {
+    const p = String(x||'').split(' · ').map(z=>z.trim()).filter(Boolean);
+    return [...new Set(p)].join(' · ');
+  };
+  const t=tek(tip).toLowerCase(), m=tek(mesaj).toLowerCase();
+  /* KALICI — insan müdahalesi gerekir */
+  if(t.includes('credit')||m.includes('credit balance')) return {m:'API bakiyesi tükendi — Plans & Billing', g:false};
+  if(t.includes('authentication')||durum===401)          return {m:'API anahtarı geçersiz', g:false};
+  if(t.includes('permission')||durum===403)              return {m:'API anahtarı bu modele yetkisiz', g:false};
+  if(t.includes('not_found')||durum===404)               return {m:'model adı bulunamadı: '+(window.AJAN&&AJAN.MODEL||'?'), g:false};
+  /* GEÇİCİ — kendiliğinden düzelir, "duraklatıldı" DEMEK YANILTIR.
+     §254b: 10 Ağu'da kota geldi, Ebu 41 not yazdı, ama bir turda zaman aşımı
+     oldu ve şerit "duraklatıldı" dedi — oysa motor ÇALIŞIYORDU. Geçici hata
+     kalıcı gibi gösterilirse kullanıcı gereksiz müdahale eder. */
+  if(t.includes('rate_limit')||durum===429)              return {m:'hız sınırı — sonraki tur', g:true};
+  if(t.includes('overloaded')||durum===529)              return {m:'servis yoğun — sonraki tur', g:true};
+  if(t.includes('timeout')||t.includes('abort')||m.includes('timeout')||m.includes('abort'))
+                                                         return {m:'zaman aşımı — sonraki tur', g:true};
+  return {m:(tek(tip)||'bilinmeyen hata')+(mesaj?' · '+tek(mesaj).slice(0,70):''), g:true};
 }
 /* §254 DURUM SERIDI — hata GUNLUKTE vardi ama KARTTA yoktu.
    11 gun boyunca kota bitikti, gunluk her turda soyluyordu, panelde HICBIR
@@ -793,11 +807,15 @@ function ajanDurumSeridi(){
     const tsler=Object.values(k).map(v=>v&&v.ts).filter(Boolean);
     const enYeni=tsler.length?Math.max(...tsler):0;
     const gun=enYeni?Math.floor((Date.now()-enYeni)/86400000):null;
+    /* §254b GEÇİCİ / KALICI AYRIMI. h artık {m,g} — g:true ise motor çalışmaya
+       devam ediyor, "duraklatıldı" demek yanıltır. */
+    const mesaj = (h && typeof h === 'object') ? h.m : String(h);
+    const gecici = !!(h && typeof h === 'object' && h.g);
     const d=document.createElement('div');
     d.className='ebu-uyari';
-    d.style.cssText='margin-top:4px;font-size:10px;color:var(--down);line-height:1.5';
-    d.innerHTML='⚠ Ebu duraklatıldı — '+String(h).slice(0,70)+
-      (gun!=null?('<br><span class="thin">notlar '+(gun===0?'bugün yazıldı':gun+' gündür güncellenmiyor')+'</span>'):'');
+    d.style.cssText='margin-top:4px;font-size:10px;line-height:1.5;color:'+(gecici?'var(--muted)':'var(--down)');
+    d.innerHTML=(gecici?'ℹ son tur atlandı — ':'⚠ Ebu duraklatıldı — ')+String(mesaj).slice(0,70)+
+      (!gecici&&gun!=null?('<br><span class="thin">notlar '+(gun===0?'bugün yazıldı':gun+' gündür güncellenmiyor')+'</span>'):'');
     el.appendChild(d);
   }catch(e){}
 }
