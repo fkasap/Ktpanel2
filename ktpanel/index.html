@@ -486,7 +486,19 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="kv"><span class="k">&nbsp;&nbsp;↳ parite etkisi <span class="thin">(kur oynaması payı)</span></span><span id="rotParite" class="thin">—</span></div>
   <div class="kv"><span class="k">Altın (kıymetli maden) hesapları Δ</span><span id="rotAltin">—</span></div>
   <div class="kv"><span class="k">Son 4 hafta — YP gerçek değişim</span><span id="rotSeri" style="font-size:10px">—</span></div>
-  <div class="kv"><span class="k">YP mevduat stoku <span class="thin">gerçek kişi · parite arındırılmamış</span></span><span id="rotKKM">—</span></div>
+  <!-- §252k SATIR KALDIRILDI. Gecmisi: §246g KKM serisi (TP.KKM.K1/K4 program
+     kapandi, bos donuyor) yerine "YP mevduat stoku" koymayi denedi. Iki ayri
+     kirik vardi: (1) gSeri onceki try-blogunun if icinde const, bu blokta
+     KAPSAM DISI — typeof kontrolu daima false, satir hic yazilmadi (9 Agu
+     konsol teyidi: rotKKM = "—"). (2) Kapsam duzeltilse bile YANLIS SAYI
+     basacakti: TP.HPBITABLO5.1 bir AKIM serisi (haftalik degisim, mn $),
+     stok degil — rotYP ile ayni sayinin bin kati kucugu, "stok" etiketiyle.
+     Dogru stok serisi arandi: HPBITABLO tablo 5 tamamen akim; tablo 3 stok
+     ama seri ADLARI cozulemedi (3.1=20,09 trl, 3.2=17,82 trl, fark 2,27 trl
+     ~55 mlr $ — Turkiye YP mevduatinin ucte biri, yani 3.1 "toplam" degil).
+     KURAL (§243): etiketi dogrulanamayan sayi, BOS SATIRDAN kotudur. Kart
+     zaten YP akimini rotYP/rotSeri/rotParite/rotAltin ile veriyor.
+     Geri getirmek icin: dogru stok serisinin EVDS adi tespit edilmeli. -->
   <div class="note">Yabancı akış kartının <b>yerli ikizi</b>: büyük para yurt içi yerleşikte, tercihi (TL mi, döviz mi, altın mı) hem kur baskısının hem TCMB'nin TL'leşme hedefinin gerçek termometresi. <b>Okuma:</b> TL mevduat artarken YP <em>gerçek</em> değişim negatifse TL'leşme sürüyor (%37 faiz yerliyi tutuyor) — indirim döngüsü için TCMB'nin aradığı güven. YP artışı parite etkisinden geliyorsa gerçek dolarizasyon değildir; "gerçek değişim" satırı bu ayrımı yapar (EVDS bunu ayrıştırıp yayınlar). Altın hesabı artışı dolarizasyonun gizli bacağıdır. KKM düşüşü + TL mevduat artışı = çözülen paranın TL'de kaldığının kanıtı (en sağlıklı kombinasyon).</div>
 </div>
 </div>

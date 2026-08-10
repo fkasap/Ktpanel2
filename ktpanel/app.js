@@ -2226,8 +2226,14 @@ async function loadRotasyon(){
   try{
     const r=await fetch('/api/evds2?series=TP.HPBITABLO3.2&gun=40&full=1');
     if(r.ok){const d=await r.json();const v=son2(d.ham,'TP_HPBITABLO3_2');
-      if(v){tlD=v.s-v.o;const stokTrl=v.s/1e6, dTrl=tlD/1e6;
-        $('rotTL').innerHTML=trN(stokTrl,2)+' trl ₺ <span class="'+(tlD>=0?'up':'down')+'">('+(tlD>=0?'+':'')+trN(dTrl*1000,0)+' mlr)</span>';
+      /* §252j BIRIM HATASI (§229 ailesi, ucuncu vaka). TP.HPBITABLO3.2 BIN TL
+         biriminde gelir. Ham son deger 17821006486 = 17,82 TRILYON TL.
+         Panel /1e6 yapip "17.821,01 trl" basiyordu — BIN KAT sisik; Turkiye'nin
+         GSYH'sinin ~350 kati bir mevduat stoku. Dogru bolen 1e9.
+         Degisim satirinda da fazladan *1000 vardi: gercek -95,5 mlr TL,
+         ekranda "-95.468 mlr" yaziyordu. Olcum: 9 Agu tarayici konsolu. */
+      if(v){tlD=v.s-v.o;const stokTrl=v.s/1e9, dTrl=tlD/1e6;
+        $('rotTL').innerHTML=trN(stokTrl,2)+' trl ₺ <span class="'+(tlD>=0?'up':'down')+'">('+(tlD>=0?'+':'')+trN(dTrl,1)+' mlr)</span>';
         if($('rotTLTag'))$('rotTLTag').textContent='('+(v.t||'')+')';}}
   }catch(e){}
   // 2) YP gerçek değişim + parite etkisi + altın (aynı grup, tek istek)
@@ -2254,17 +2260,7 @@ async function loadRotasyon(){
           ' mn $ ('+s4.length+' hafta) · kümülatif <b class="'+(top<=0?'up':'down')+'">'+(top>=0?'+':'')+trN(top,0)+'</b> '+(top<=0?'(TL\u0027leşme)':'(dolarizasyon baskısı)');
       }}
   }catch(e){}
-  // 3) YP mevduat stoku — §246g: KKM Δ satırı ÖLÜ seriyi (program kapandı,
-  // TP.KKM.K1/K4 boş dönüyor) gösteriyordu; '—' arıza değil gerçekti ama
-  // ekranda arıza gibi duruyordu. Yerine TAHMİNSİZ değişim: zaten çekilen
-  // YP serisinin (TP_HPBITABLO5_1) son stok değeri + yayın tarihi.
-  try{
-    if($('rotKKM')&&typeof gSeri!=='undefined'&&gSeri.length){
-      const st=gSeri[gSeri.length-1];
-      const tarih=(typeof ham!=='undefined'&&ham.length)?(ham[ham.length-1].Tarih||ham[ham.length-1].TARIH||''):'';
-      $('rotKKM').innerHTML='<b>'+trN(st/1000,1)+' mlr $</b>'+(tarih?' <span class="thin" style="font-size:9px">'+esc(tarih)+' · EVDS canlı</span>':'');
-    }
-  }catch(e){}
+  // 3) YP mevduat stoku — §252k: SATIR KALDIRILDI (gerekce index.html'de).
   // 4) Yön sinyali: TL↑ + YP gerçek↓ = TL'leşme
   const el=$('rotSinyal');
   if(el){
