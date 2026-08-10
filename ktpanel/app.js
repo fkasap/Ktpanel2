@@ -30,7 +30,7 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260810a';   // §252d/e/g/h — OKU_* tazelendi, bulutUyari DOM'a alindi, GÜÇLÜ rengi, egri sapma
+const KTP_SURUM = '20260810b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -148,11 +148,35 @@ function endeksRender(){
 }
 endeksRender();
 /* ---- Ticker ---- */
-const tapeItems={'BIST 100':'14.080 ▼%0,09','BIST 30':'16.175 ▼%0,49'};
+/* §252p SERIT DONMUSTU. BIST 100/30 degerleri BURADA SABIT yaziliydi ve
+   HICBIR YAZAR yoktu — sayfanin en tepesindeki akan serit, panel ne kadar
+   canli olursa olsun hep 14.080/16.175 gosteriyordu. Diger kalemler
+   (USD/TRY, altin, BTC) 1223-1233'te tazeleniyordu; bu ikisi unutulmus.
+   Veri ZATEN ELDEYDI: m.end.XU100 ve m.end.XU030 (market.js END dizisi).
+   Yazar tapeEndeksTazele() ile eklendi, canliEnjekte yanina baglandi. */
+const tapeItems={'BIST 100':'14.080 ▼%0,09 (damgalı)','BIST 30':'16.175 ▼%0,49 (damgalı)'};
 function updTape(){
   const order=['BIST 100','BIST 30','USD/TRY','EUR/TRY','GRAM ALTIN','BTC','EUR/USD','GBP/USD','USD/JPY'];
   const html=order.filter(k=>tapeItems[k]).map(k=>'<span>'+k+' <b>'+tapeItems[k]+'</b></span>').join('');
   if(html)$('tape').innerHTML=html+html;
+}
+/* §252p canlı endeksleri şeride yazar. m.end.XU100/XU030 zaten çekiliyor;
+   burada yalnız biçimlendirilip tapeItems'a konuyor. Veri yoksa DOKUNMAZ —
+   damgalı yedek yerinde kalır ve '(damgalı)' etiketiyle kendini söyler. */
+function tapeEndeksTazele(){
+  try{
+    const e=(window.__market||{}).end||{};
+    const yaz=(ad,kod)=>{
+      const d=e[kod];
+      if(!d||d.p==null||!isFinite(d.p))return false;
+      const g=isFinite(d.chg)?d.chg:null;
+      const ok=(g==null)?'':(g>=0?' ▲%':' ▼%')+trN(Math.abs(g),2);
+      tapeItems[ad]=trN(d.p,0)+ok;
+      return true;
+    };
+    const a=yaz('BIST 100','XU100'), b=yaz('BIST 30','XU030');
+    if(a||b) updTape();
+  }catch(e){}
 }
 updTape();
 /* ---- Canlı ---- */
@@ -1280,7 +1304,7 @@ async function marketCek(){
     if(mk) window.__marketKapsam={istenen:ekKod.length, donen:mk.hisAdet||null, kirpilan:mk.hisKirpildi||0};
     if(mk&&mk.data){window.__market=mk.data;renderKuresel();emtiaRender();
       const rb=(id,k,dec)=>{const d=mk.data[k];if(d&&d.p!=null&&$(id)){const s=d.chg>=0?'+':'';$(id).innerHTML=trN(d.p,dec)+' <span class="sub'+(d.chg>=0?'':' down')+'" style="display:inline">'+s+'%'+trN(d.chg,2)+'</span>';}};
-      rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();canliEnjekte();endeksRender();
+      rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
       const d=$('sekDamga');
       if(d){
         const s=(mk.data.xu100&&mk.data.xu100.gun)?mk.data.xu100.gun:'';
