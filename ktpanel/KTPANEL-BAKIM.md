@@ -2767,6 +2767,198 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 252n OTURUM DERSI: OKUMAK YETMIYOR, EKRANI OLCMEK GEREK (10 Agu)
+
+Bu oturumda repodaki HER kod ve belge dosyasi satir satir okundu (~28.000
+satir; 24 JS, 7 MD, 29 JSON). Buna ragmen gunun EN BUYUK iki hatasi
+okumayla DEGIL, tarayici konsolundan gelen ciktiyla bulundu:
+  - rotTL "17.821,01 trl TL" (bin kat) — §252j
+  - krediVal "26.609,54 trl TL" (bin kat) — §252l
+Ikisi de kodda DOGRU gorunuyordu. Hata bolen ile SERININ BIRIMI arasindaki
+uyumsuzluktaydi; kaynak birimini bilmeden koda bakarak anlasilamaz.
+
+DAHA CIDDISI: bu oturumda app.js'e yazilan 4 duzeltmenin IKISI OLU DOGDU.
+  - §252h sapma: `j.sapma.skor` yazildi — OYLE BIR ALAN YOK. egri.js
+    `sapma:skor` doner ve skor bir NESNEDIR {konvansiyon_adi: puan}.
+    Dogrusu j.sapma[j.konvansiyon]. sp hep '' kaliyordu.
+  - §252m uyeSayi: kod dogruydu, ZAMANLAMA yanlisti. es.innerHTML
+    kuruluyor ama ENDAG asagidaki endeksAgirlikYukle() ile SONRA doluyor;
+    ustune dataset.dolu ikinci doldurmayi engelliyor -> etiket sonsuza
+    kadar sayisiz kalirdi.
+IKISI DE `node --check`ten GECTI. IKISI DE fonksiyon envanteri testinden
+gecti. Ikisini de yalniz CALISAN PANEL yakaladi.
+
+KURAL (yeni): app.js'e yazilan her duzeltme, deploy sonrasi konsoldan
+TEK TEK dogrulanir. Sozdizimi ve envanter kontrolleri GEREKLI ama YETERLI
+DEGIL — ikisi de "kod var" der, "kod isini yapiyor" demez.
+Dogrulama kalibi: console.log ile ilgili id'nin textContent'i okunur ve
+BEKLENEN DEGERLE karsilastirilir. Beklenen deger yamayi yazarken
+hesaplanip yaziya dokulur (ornek: "17821006486/1e9 = 17,82 trl").
+
+IKINCI KALIP — tam ekran dokumu (mertebe testi):
+  document.querySelectorAll('[id]') ile yaprak dugumler taranir, sayi
+  iceren her deger dokulur. Bilinen capalarla kiyaslanir: GSYH ~50 trl TL,
+  toplam mevduat ~20 trl, bankacilik kredi ~26 trl, brut rezerv ~170 mlr $,
+  YP mevduat ~260 mlr $, politika faizi %37, TUFE %31,75.
+  Bu testle bu oturumda 2 bin-kat hatasi + 1 bayat etiket bulundu.
+  UYARI: dokum betigi kart basligini yanlis eslestirebiliyor — "aofmLive
+  %40 Politika faizi satirinda" diye yanlis alarm verdi; gercekte satir
+  index.html:420'de "AOFM — efektif fonlama" olarak DOGRU etiketli.
+  Alarmi koda bakmadan rapor etme.
+
+UCUNCU DERS — YANLIS BULGU: pyssektor.json'da "uc blok celisikli" diye
+bir bulgu raporlandi (fon toplami 112,89 vs pys toplami 38,37; GAL 63,28
+vs Garanti 4,56). GERI CEKILDI. Sebep: fon blogu BRUT GIRISE gore ilk 12,
+pys blogu NETE gore ilk 10 — iki FARKLI olcu toplanip fark celiski
+sanildi. Olcum: GAL'in 4 Agu'daki +63,28'i GERCEK, o gun piyasadaki en
+buyuk tek fon girisi (brut girisin %43u) ve ayni fon 31 Tem'de -70,13
+vermis; kurumsal nakit tasiyan bir arac, gidis-donus yapiyor.
+DERS: farkli tabanlarda siralanmis iki listenin TOPLAMLARI kiyaslanmaz.
+Panelde hata yoktu; analizde vardi.
+
+## 252m XKTMT ETIKETI SABIT KALMISTI -> DOSYADAN OKUNUYOR (10 Agu)
+
+app.js:5874 `ad:'BIST Katilim (dar · 34)'` sabit yaziliydi. §252b'de dosya
+39 uyeye cikarildi, etiket 34'te kaldi. Konsol dokumunde yakalandi.
+COZUM: `uyeSayi:true` bayragi + ayrEtiketTazele() — sayi ENDAG'dan (yani
+DOSYADAN) okunur. Uye sayisi bir daha degisirse elle guncelleme GEREKMEZ.
+DIKKAT: ilk yazim calismiyordu (siralama), bkz §252n.
+
+## 252l BANKACILIK KREDI HACMI BIN KAT SISIK (10 Agu)
+
+Ekranda "26.609,54 trl TL" — Turkiye GSYH'sinin ~530 kati.
+app.js:7804 `x=>trN(x/1e6,2)+' trl TL'`. bie_hpbitablo6 BIN TL biriminde
+gelir; dogru bolen 1e9. -> 26,61 trl TL.
+§229 (BORSK bin kat) ve §252j (rotTL) ile ayni aile, DORDUNCU vaka.
+KRITIK NOT: koyGrupSon bolenleri GRUBA GORE DEGISIR. bie_hpbitablo4
+MILYON $ (/1000 dogru, 260,1 mlr $), bie_hpbitablo6 BIN TL (/1e9).
+Yeni satir eklerken KOPYALAMADAN once serinin birimi dogrulanir.
+Ayrica: KKM notu duzeltildi — seri sifira oturmus (program kapandi),
+"dusus trendi" anlatmak yaniltiyordu.
+
+## 252k rotKKM SATIRI KALDIRILDI — IKI AYRI KIRIK (10 Agu)
+
+§246g "YP mevduat stoku" satirini eklemisti. Konsol teyidi: rotKKM = "—".
+KIRIK 1 (kapsam): gSeri onceki try-blogunun if'i icinde const, bu blokta
+KAPSAM DISI. `typeof gSeri!=='undefined'` tanimsiz isim icin 'undefined'
+doner -> kosul DAIMA false, satir hic yazilmadi.
+KIRIK 2 (semantik): kapsam duzeltilse bile YANLIS SAYI basacakti.
+TP.HPBITABLO5.1 bir AKIM serisi (haftalik degisim, mn $), stok degil —
+rotYP ile ayni sayinin bin kati kucugu, "stok" etiketiyle.
+Dogru stok serisi ARANDI: HPBITABLO tablo 5 tamamen akim (5.2..5.10 hepsi
+birkac bin mertebesinde); tablo 3 stok ama seri ADLARI cozulemedi
+(3.1=20,09 trl, 3.2=17,82 trl, fark 2,27 trl ~55 mlr $ — Turkiye YP
+mevduatinin ucte biri, yani 3.1 "toplam" degil).
+KARAR: satir kaldirildi. §243 kurali — etiketi DOGRULANAMAYAN sayi, BOS
+SATIRDAN kotudur. Ayrica panel zaten iki kart yukarida "Toplam YP mevduat
+260,1 mlr $" (bie_hpbitablo4) gosteriyor; satir onu TEKRARLAYACAKTI.
+Geri getirmek icin: dogru stok serisinin EVDS adi tespit edilmeli.
+
+## 252j rotTL BIN KAT SISIK (10 Agu)
+
+Ekranda "17.821,01 trl TL". Ham deger 17821006486, seri BIN TL biriminde
+-> gercek 17,82 TRILYON TL. Bolen 1e6 idi, 1e9 olmali. Degisim satirinda
+da fazladan *1000 vardi: gercek -95,5 mlr TL, ekranda "-95.468 mlr".
+NASIL BULUNDU: rotKKM'yi olcmek icin istenen konsol ciktisi ortaya
+cikardi. 28.000 satir okunurken GOZDEN KACTI.
+
+## 252i mail.js ID UYUSMAZLIGI — TAKTIKSEL BLOK MAILE HIC GIRMIYORDU (10 Agu)
+
+api/_lib/mail.js `al('taktikselBody') || al('taktiksel')` ariyordu;
+index.html'de IKISI DE YOK. Gercek id 'taktikBody2' (yedegi 'taktikBody').
+app.js:3279 dogrusunu biliyor. Sonuc: takVar hep false, TAKTIKSEL DAGILIM
+blogu maile HIC girmiyor, dipnot zarifce "panelde hesaplanir" deyip
+geciyordu — ARIZA GIBI GORUNMUYORDU (§143 sessiz yedek ailesi).
+NOT: O1 HALA ACIK — Pazartesi cron'u index.html'i SUNUCUDAN cekiyor,
+Ebu'nun yorumu localStorage.__HAFTALIK__'ta. Mail damgali fabrika metnini
+gonderiyor. Cozum yolu: mail.js Upstash'ten okusun (ajanktp kvKomut deseni).
+
+## 252g GUCLU SKORU GRIYE DUSUYORDU (10 Agu)
+
+inceleme-ai.json metin skorlari: POZITIF(7) KARISIK(4) NEGATIF(3) NOTR(1)
+GUCLU(1). skorRenk GUCLU'yu hicbir dala uydurmuyordu -> GRI, yani NOTR ile
+ayni. Sezonun en guclu bilancosu (Samsung) notr gorunuyordu.
+Iki ayri cizicide birden duzeltildi (app.js:3383 ve 3815).
+
+## 252f ID KAPSAM DENETIMI — YENI KONTROL (10 Agu)
+
+app.js'in $('...') ile aradigi TUM id'ler index.html'e karsi tarandi:
+380 id, 9'u HTML'de yok. Sekizi DINAMIK yaratiliyor (yabCarryVal,
+asyaForexBody, bilTetik, pariteTestDurum...), dokuzuncusu yedek zincirin
+ikinci halkasi (taktikBody). Yani bulutUyari TEK GERCEK KAYIPTI.
+Denetim hem hatayi buldu hem YANLIS ALARM URETMEDI.
+Bu kontrol kopru-testi.js'e eklenmeye degen bir adaydir.
+
+## 252e bulutUyari ELEMANI <style> ICINDE SIKISMISTI (10 Agu)
+
+index.html:59 — §200b'de yazilan uyari elemani YAPISTIRMA KAZASIYLA
+<style> blogundaki §193 yorumunun ORTASINA dusmustu. DOM'da olmadigi icin
+app.js:6330 $('bulutUyari') daima null donuyordu ve "Bulut deposu kapali"
+uyarisi HIC BASILMIYORDU — §200'un tarif ettigi sessiz veri kaybi aynen
+duruyordu. Eleman seridin altina, wrap'in ustune alindi.
+DESEN: "duzeltme yazildi, teslim noktasi koptu, kopukluk sessiz" —
+bu oturumda 7 vaka sayildi (rotKKM, bulutUyari, Pazartesi maili,
+taktikselBody, xktumGercek, §249n cron'u, egri sapma).
+
+## 252d OKU_* SABITLERI TAZELENDI (10 Agu)
+
+app.js:2954 `OKU_POLITIKA=37, OKU_TUFE=32.11, OKU_BEK=23.81`.
+  - TUFE 32,11 (Haz) -> 31,75 (Tem, TUIK 3 Agu, yillik 0,35 puan geriledi)
+  - BEK 23,81 (Haz anketi) -> 23,95 (Tem anketi, 20 Tem yayin)
+  - POLITIKA 37 DEGISMEDI — 23 Tem PPK sabit tuttu, dogrulandi
+Panel KENDI ICINDE CELISIYORDU: bilanco tezi metni ve index.html:707 zaten
+%31,75 diyordu, sabit %32,11'de kalmisti -> 2Y/10Y REEL GETIRI 0,36 puan
+yanlis. Canli teyit: oku2yReel +9,0 -> +9,4 · oku2yIleri +17,3 -> +17,2.
+RISK_CDS'E DOKUNULMADI: panel 206 diyor, Investing.com 30 Tem kapanisi
+239,57. Kaynak konvansiyonu BAKIM.md'de KAYITLI DEGIL. Bilinmeyen kaynagi
+bilinmeyen sayiyla degistirmek, bayat birakmaktan kotudur. Kaynak
+belirlenince duzeltilecek.
+
+## 252c YEOTK BEDELSIZ DUZELTMESI — analist.json (10 Agu)
+
+Hedef 173,50 (14 May, TEK kurum) / fiyat 39,30 -> panel +%341 potansiyel
+gosteriyordu. 31 Tem 2026 bedelsizi (%58,77 + ic kaynak %75,03 = x2,3380)
+sermayeyi 830 mn TL yapti. Duzeltilmis hedef 74,21 -> +%89.
+KRITIK AYRIM: bu bir BAYATLIK sorunu DEGIL. Fintables da ayni ham 173,50
+degerini tasiyor — raporu veren kurum revize etmemis. Kaynak duzeltmiyorsa
+PANEL duzeltmek zorunda. §179 bayat bayragi bu vakayi YAKALAMAZ: rapor
+6 aydan yeni, sorun tarihi degil BOLUNMESI.
+KONTROL EDILDI: BIMAS (14 May, x2) ve GOODY (2 Tem, x5,63) de bedelsiz
+yapti ama panel hedefleri bedelsiz SONRASI tarihli, duzeltme gerekmedi.
+NOT: analist.json genel olarak COK IYI durumda — 55 hissenin yalniz 2'si
+%10+ sapiyor (EREGL, TUPRS; sadece daha taze rapor) ve bayat bayraklari
+Fintables ile BIREBIR tuttu. Tum dosya TAZELENMEDI cunku Fintables sorgusu
+6 aylik pencere, panelin dosyasi 1 YILLIK (kurum sayilari tutarli bicimde
+daha yuksek: ASELS 20 vs 18, THYAO 24 vs 22). Ezmek metodolojiyi sessizce
+DARALTMAK olurdu — duzeltme degil.
+
+## 252b ENDEKS DOSYALARI: UC BEDELSIZ ISLENMEMISTI (9-10 Agu)
+
+BULGU 1 — XKTMT UYELIGI: resmi 39, panel 34. JANTS FAZLA (o XKTUM ve
+XK100 uyesi, XKTMT degil), AVPGY GENTS KBORU NETCD SDTTR TEZOL EKSIK.
+kapsanan_agirlik:100 yalandi — 34 ismi %100'e normalize ediyordu.
+Iki BAGIMSIZ kaynak teyit etti: BIST resmi CSV (endeks-uyeler.json) ve
+Fintables. Ikisi de 39 dedi.
+YAKALANMAMA SEBEBI: tazele.mjs:713 uyelik uyumunu YALNIZ xktum.json icin
+kontrol ediyor. Dogrulayacak veri 5 Agu'dan beri repoda duruyordu.
+-> A2 ISI ACIK: denetime XKTMT/XK100 uyelik kontrolu eklenmeli.
+
+BULGU 2 (daha buyuk) — PAY ADEDI BAYAT: son 10 gunde UC bedelsiz olmus,
+panel hicbirini kaydetmemis:
+  YEOTK 31 Tem  %58,77 + ic kaynak %75,03  (x2,3380)
+  KTLEV  3 Agu  ic kaynaklardan %238,16     (x3,3260)
+  CVKMD  5 Agu  sermaye 3,78 mlr'a
+KTLEV UC DOSYADA BIRDEN bayatti (xk100, xktum, xktmt) ve portfoyde.
+XKTMT'de agirligi %1,56 -> %4,88 (+333 bp). Ilk 4 yogunlasma %85,8 -> %81,5.
+Toplam 20+ isimde >%2 sapma vardi.
+_gocs alani ZATEN UYARIYORDU: "pay_adedi CEYREKLIK elle tazelenir (BIST
+endeks revizyonu + SERMAYE ARTIRIMLARI)". Rituel kacmis.
+DOGRULAMA: Actions kosusu XK100 100/100, XKTUM 150/150, XKTMT 39/39,
+toplam 100.00 — ucu de GECTI.
+NOT: tazele.mjs risk katmani bedelsizleri ZATEN yakaliyordu ("5 gun
+kurumsal islem suzgecine takildi, ±%20 ustu hareket"). Suzgec calisiyordu,
+SINYALI KIMSE OKUMUYORDU.
+
 ## 252a DAMGALI KART TARAMASI + MB KARTLARI GUNCELLENDI (8 Agu)
 
 TARAMA: panelde damgali/eski etiket taramasi yapildi. 15 aday bulundu:

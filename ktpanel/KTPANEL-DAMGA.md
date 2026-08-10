@@ -2,7 +2,7 @@
 # HER OTURUMDA ILK BU DOSYA OKUNUR. Amac: hangi kart ne zaman eskir —
 # tek bakista gorunur, tur tur kesif yapip kontor harcanmaz.
 # Bir kart guncellenince buradaki "son:" tarihi de guncellenir (ayni turda!).
-# Son tam denetim: 28 Tem 2026 (ANHYT 2C26 karti islendi)
+# Son tam denetim: 10 Agu 2026 (§252b-n: tum repo okundu, 15 duzeltme)
 
 ## ALTIN KURALLAR
 1. Panelde GORELI ZAMAN IFADESI YASAK: "bu gece / bugun / yarin" yazilmaz —
@@ -45,8 +45,10 @@
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
-| Egri Okuma sabitleri (app.js OKU_*) | PPK (politika) / TUFE aciklamasi (32,11) / anket (23,81) | 27T |
-| RISK_CDS sabiti (app.js) | CDS belirgin degisince (haftalik kontrol yeter) | 27T (206) |
+| Endeks pay_adedi (xktum/xk100/xktmt.json) | HER BEDELSIZ/SERMAYE ARTIRIMINDA — ceyreklik YETMEZ. 9 Agu'da 10 gunde 3 bedelsiz kacti (KTLEV x3,33 uc dosyada birden) | 10A §252b |
+| XKTMT uyelik (39) | BIST revizyonu. Denetim bunu KONTROL ETMIYOR (yalniz xktum) — A2 isi acik | 10A §252b |
+| Egri Okuma sabitleri (app.js OKU_*) | PPK (politika 37, 23T sabit) / TUFE (31,75 Tem) / anket (23,95 Tem) | 10A §252d |
+| RISK_CDS sabiti (app.js) | CDS degisince. ⚠ KAYNAK BELIRSIZ: panel 206, Investing 30T kapanis 239,57. Kaynak yazilmadan DOKUNMA (§252d) | 27T (206) |
 | Mega-cap Derinlik @t17 | bilanco sonuclari gecince (29-30T sonrasi yenile) | 25T (icerik dogru) |
 | Haftalik yorum ici olay satirlari @mk-yorum | Fed tonu / AKBNK / TUFE sonuclari | 27T |
 
@@ -61,7 +63,7 @@
 | Is | son veri | siradaki |
 |---|---|---|
 | Yabanci akis yabanci.json (hafta_seri'ye ekle) | 17T haftasi | 30T yayini |
-| Rezerv karnesi @mk-para (swap haric net) | 10T verisi (42,5) | 30T yayini |
+| Rezerv karnesi @mk-para (swap haric net) | canli 46,5 · ⚠ swap stoku 24T (18 gunluk), panel kendi uyariyor | 13A Per yayini |
 | Katfon akis/AUM gomulu (Fintables) @t5 | 24T | hafta ici herhangi gun |
 | Katfon donem getirileri (1A..3Y damgali taban) | 21T | haftalik (Fintables'tan hesaplanabilir) |
 | Makroihtiyati @mk-banka: YP mevduat + kredi hacmi (BDDK haftalik) | Tem basi | Cuma yayini |
