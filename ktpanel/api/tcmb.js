@@ -21,56 +21,59 @@ module.exports = async (req, res) => {
       return res.status(500).json({ error: String(e2 && e2.message || e2) });
     }
   }
-  /* §253b CDS MODU (?cds=1) — §248c ile AYNI GEREKÇE: yeni uç açmak yerine
-     kamu-veri kardeşine bindirildi (fonksiyon kotası 10/12, dar).
-     KAYNAK: api.investing.com financialdata/1096486 (Türkiye 5Y CDS, USD).
-     Enstrüman kimliği 1096486, kullanıcının 10 Ağu tarihli DevTools HAR
-     ölçümünden alındı — TAHMİN DEĞİL, gözlem.
-     ÇEREZ/TOKEN GEREKTİRMİYOR: yalnız Origin/Referer/User-Agent/domain-id
-     sabit başlıkları. Bu, api/tefas.js'teki gömülü Bearer+F5 çerezinden
-     (§249i, bugün "Request Rejected" veriyor) YAPISAL OLARAK daha sağlam —
-     kişiye/oturuma bağlı bir sır taşımıyor.
-     YİNE DE KIRILGAN: Cloudflare arkasında, bir gün kapanabilir. O yüzden
-     app.js tarafı BAŞARISIZLIĞI GÖRÜNÜR kılar — canlı gelmezse damgalı
-     yedeğe düşer ve "damgalı" etiketini BASAR (§245k). Sessizce eski sayı
-     göstermez.
-     YANIT: {ok, deger, tarih, onceki, degisim, seri:[[ms,c]...]} */
+/* §253f CDS — worldgovernmentbonds.com. investing.com HER İKİ sunucu yolundan
+   da 403 verdi (Vercel VE Actions, Cloudflare datacenter engeli) ve tarayıcı
+   yolu CORS'ta kapalı. Bu kaynak FARKLI: sayfası ham fetch ile AÇILIYOR,
+   Cloudflare bot engeli YOK — asıl fark bu.
+   Uç: POST /wp-json/common/v1/historical · gövdede FUNCTION:"CDS",
+   COUNTRY1.SYMBOL:"13" (Türkiye), DURATA:60 (5 yıl). Kullanıcının 10 Ağu HAR
+   ölçümünden alındı, TAHMİN DEĞİL.
+   ÇEREZ GEREKMİYOR: istekte giden çerezlerin hepsi analitik/reklam
+   (_ga, __gads, FCCDCF) — kimlik doğrulama yok.
+   DEĞER DOĞRULANDI: investing.com ile BİREBİR aynı (site zaten künyesinde
+   Investing.com'u kaynak gösteriyor).
+   ⚠ TARİH KAYMASI: bu kaynak HAFTA SONLARINI ve tatilleri son değeri
+   TAŞIYARAK dolduruyor — 08-08/09/10 hepsi 227.65. Yani DEĞER doğru, TARİH
+   etiketi iyimser. O yüzden aşağıda "düz koşu" (aynı değerin tekrarı) geriye
+   doğru taranıp GERÇEK gözlem günü bulunuyor. */
   if (req.query.cds) {
     try {
-      const say = Math.min(400, Math.max(5, parseInt(req.query.gun) || 160));
-      const r = await fetch('https://api.investing.com/api/financialdata/1096486/historical/chart/?interval=P1D&pointscount=' + say, {
+      const r = await fetch('https://www.worldgovernmentbonds.com/wp-json/common/v1/historical', {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
-          'Origin': 'https://tr.investing.com',
-          'Referer': 'https://tr.investing.com/rates-bonds/turkey-cds-5-year-usd',
-          'domain-id': 'tr',
+          'Origin': 'https://www.worldgovernmentbonds.com',
+          'Referer': 'https://www.worldgovernmentbonds.com/cds-historical-data/turkey/5-years/',
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-        }
+        },
+        body: '{"GLOBALVAR":{"JS_VARIABLE":"jsGlobalVars","FUNCTION":"CDS","DOMESTIC":true,"ENDPOINT":"https://www.worldgovernmentbonds.com/wp-json/common/v1/historical","DATE_RIF":"2099-12-31","DEBUG":false,"OBJ":{"UNIT":"","DECIMAL":2,"UNIT_DELTA":"%","DECIMAL_DELTA":2},"COUNTRY1":{"SYMBOL":"13","PAESE":"Turkey","PAESE_UPPERCASE":"TURKEY","BANDIERA":"tr","URL_PAGE":"turkey"},"COUNTRY2":null,"OBJ1":{"DURATA_STRING":"5 Years","DURATA":60},"OBJ2":null}}'
       });
       if (!r.ok) { res.setHeader('Cache-Control','no-store'); return res.status(502).json({ ok:false, err:'CDS_HTTP_'+r.status }); }
       const d = await r.json();
-      const ham = Array.isArray(d && d.data) ? d.data : [];
-      /* biçim: [zaman_ms, o, h, l, c, ...] — kapanış 5. alan (indeks 4) */
-      const seri = ham
-        .filter(x => Array.isArray(x) && x.length > 4 && isFinite(x[0]) && isFinite(x[4]) && x[4] > 0)
-        .map(x => [x[0], +x[4]]);
-      if (!seri.length) { res.setHeader('Cache-Control','no-store'); return res.status(502).json({ ok:false, err:'CDS boş seri', hamAdet: ham.length }); }
-      const son = seri[seri.length - 1], onc = seri.length > 1 ? seri[seri.length - 2] : null;
-      /* AKLI BAŞINDA ARALIK: Türkiye CDS'i 2016'dan beri 150-950 bandında.
-         Dışına çıkan değer alan kayması ya da biçim değişikliğidir — sessizce
-         kabul edilmez (§245s: kayıt-seviyesi arıza, katman-seviyesi ceza almaz). */
+    const q = (d && d.result && d.result.quote) || {};
+    const seri = Object.keys(q)
+      .map(k => q[k]).filter(v => v && isFinite(v.CLOSE_VAL) && v.CLOSE_VAL > 0 && v.DATA_VAL)
+      .map(v => [v.DATA_VAL, +(+v.CLOSE_VAL).toFixed(2)])
+      .sort((a, b) => a[0] < b[0] ? -1 : 1);
+      if (!seri.length) { res.setHeader('Cache-Control','no-store'); return res.status(502).json({ ok:false, err:'CDS boş seri' }); }
+    /* GERÇEK GÖZLEM GÜNÜ: kaynak hafta sonunu son değeri taşıyarak doldurur.
+       Sondan geriye aynı değerin tekrarını tara, dizinin BAŞI gerçek gündür. */
+    let i = seri.length - 1;
+    while (i > 0 && seri[i - 1][1] === seri[i][1]) i--;
+    const gercekGun = seri[i][0], son = seri[seri.length - 1];
+    const oncFar = seri.slice(0, i).reverse().find(x => x[1] !== son[1]) || null;
       if (!(son[1] >= 100 && son[1] <= 1500)) {
         res.setHeader('Cache-Control','no-store');
         return res.status(502).json({ ok:false, err:'CDS makul aralık dışı: '+son[1], not:'alan kayması olabilir' });
       }
       res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=21600');
       return res.status(200).json({
-        ok: true, kaynak: 'investing.com · TR 5Y CDS (id 1096486)',
-        deger: +son[1].toFixed(2),
-        tarih: new Date(son[0]).toISOString().slice(0, 10),
-        onceki: onc ? +onc[1].toFixed(2) : null,
-        degisim: onc ? +(son[1] - onc[1]).toFixed(2) : null,
-        adet: seri.length, seri
+        ok: true, kaynak: 'worldgovernmentbonds.com · TR 5Y CDS',
+        deger: son[1], tarih: gercekGun, etiketTarih: son[0],
+        onceki: oncFar ? oncFar[1] : null,
+        degisim: oncFar ? +(son[1] - oncFar[1]).toFixed(2) : null,
+        adet: seri.length, seri: seri.slice(-90)
       });
     } catch (e3) {
       res.setHeader('Cache-Control','no-store');
