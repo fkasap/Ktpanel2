@@ -6219,18 +6219,30 @@ function ayrismaInit(){
   if(es && !es.dataset.dolu){ es.dataset.dolu='1';
     /* §252m uyeSayi bayragi: etiketteki uye sayisi DOSYADAN okunur, sabit yazilmaz.
        ENDAG o an yuklu degilse sayisiz ada duser — yanlis sayi yerine sayisiz etiket. */
-    es.innerHTML = AYR_ENDEKS.map(x=>{
-      let ad=x.ad;
-      if(x.uyeSayi){ const d=ENDAG&&ENDAG[x.kod];
-        const n=d&&(d.toplam_uye||(d.uyeler&&Object.keys(d.uyeler).length));
-        if(n) ad=ad.replace(/\)$/,' · '+n+')'); }
-      return '<option value="'+x.kod+'">'+x.kod+' — '+ad+'</option>'; }).join('');
+    es.innerHTML = AYR_ENDEKS.map(x=>'<option value="'+x.kod+'">'+x.kod+' — '+x.ad+'</option>').join('');   // sayi ayrEtiketTazele'de eklenir
     es.addEventListener('change', ayrismaCiz); }
   const ds = $('ayrDonem');
   if(ds && !ds.dataset.dolu){ ds.dataset.dolu='1';
     ds.innerHTML = AYR_DONEM.map(x=>'<option value="'+x.alan+'">'+x.etiket+' ('+x.ad+')</option>').join('');
     ds.addEventListener('change', ayrismaCiz); }
-  endeksAgirlikYukle().then(ayrismaCiz);
+  /* §252m-DUZELTME (10 Agu): uyeSayi etiketi ILK YAZIMDA CALISMIYORDU.
+     Sebep SIRALAMA: es.innerHTML yukarida kuruluyor ama ENDAG asagidaki
+     endeksAgirlikYukle() ile SONRA doluyor — o an null. Ustune dataset.dolu
+     bayragi ikinci doldurmayi engelledigi icin etiket sonsuza kadar sayisiz
+     kalirdi. (§247c ile ayni sinif: kod dogru, ZAMANLAMA yanlis.)
+     Cozum: ENDAG geldikten SONRA yalniz option METNINI tazele. */
+  endeksAgirlikYukle().then(()=>{ ayrEtiketTazele(); ayrismaCiz(); });
+}
+function ayrEtiketTazele(){
+  const es=$('ayrEndeks'); if(!es||!ENDAG) return;
+  AYR_ENDEKS.forEach(x=>{
+    if(!x.uyeSayi) return;
+    const d=ENDAG[x.kod];
+    const n=d&&(d.toplam_uye||(d.uyeler&&Object.keys(d.uyeler).length));
+    if(!n) return;
+    const o=es.querySelector('option[value="'+x.kod+'"]');
+    if(o) o.textContent=x.kod+' — '+x.ad.replace(/\)$/,' · '+n+')');
+  });
 }
 
 /* ── GÜNLÜK BİRİKİM (§151) ────────────────────────────────────────────────────
