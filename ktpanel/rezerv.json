@@ -1,14 +1,14 @@
 {
-  "guncelleme": "2026-07-24",
-  "kaynak": "TCMB haftalık basın açıklaması (web) — swap stoku bileşeni EVDS'de yok (yurt dışı ikili swap, ağırlıkla Katar)",
-  "swapStoku": 12.8,
-  "webDogrulama": {
-    "tarih": "24-07-2026",
-    "brut": 162.6,
-    "net": 51.1,
-    "swapHaricNet": 38.3,
-    "not": "swapStoku = net − swapHaricNet = 51,1 − 38,3 = 12,8. Kaynak: TCMB haftalık para ve banka istatistikleri, 24 Tem haftası (30 Tem Perşembe yayını). Önceki: 17 Tem haftası net 51,2 − swap hariç 37,7 = 13,5.",
-    "_245p": "17 Tem verisiyle 16 gün bayat kalmıştı; 24 ve 31 Tem yayınları kaçmıştı. 24 Tem yayını işlendi. SIRADAKİ: 31 Tem haftası verisi 6 Ağu Perşembe yayınlanır."
-  },
-  "aciklama": "Swap stoku yavaş değişen bir kalemdir (yurt dışı MB ikili anlaşmaları, ağırlıkla Katar ~15 mlr limit). Haftalık net rezerv hareketi ağırlıkla kur+bilançodan gelir. Bu dosya 'rezervleri güncelle' komutuyla web'den tazelenir; ara zamanlarda swap hariç net = canlı net − swapStoku olarak hesaplanır (net EVDS'den canlı)."
+ "guncelleme": "2026-08-10",
+ "kaynak": "TCMB haftalık basın açıklaması (web) — swap stoku bileşeni EVDS'de yok (yurt dışı ikili swap, ağırlıkla Katar)",
+ "swapStoku": 13.4,
+ "webDogrulama": {
+  "tarih": "31-07-2026",
+  "brut": 164.4,
+  "net": 54.2,
+  "swapHaricNet": 40.8,
+  "not": "swapStoku = net − swapHaricNet = 54,2 − 40,8 = 13,4. Kaynak: TCMB Haftalik Para ve Banka Istatistikleri, 31 Tem haftasi (6 Agu Persembe yayini). Onceki: 24 Tem haftasi net 51,1 − swap haric 38,3 = 12,8. Brut 162,6 -> 164,4 (+1,842 mlr; 1,415 doviz + 0,427 altin).",
+  "_252u": "10 Agu: 6 Agu yayini islendi (dosyanin kendi uyarisi \"SIRADAKI: 31 Tem haftasi verisi 6 Agu Persembe yayinlanir\" diyordu, kacmisti — 4 gun gecikmeyle kapatildi). SIRADAKI: 7 Agu haftasi verisi 13 Agu Persembe yayinlanir. DOGRULAMA IZI: panelin karneBrut alani zaten 164,4 gosteriyordu (EVDS canli), yani brut rakam TCMB yayini ile TUTTU — swap bileseni geride kalmisti."
+ },
+ "aciklama": "Swap stoku yavaş değişen bir kalemdir (yurt dışı MB ikili anlaşmaları, ağırlıkla Katar ~15 mlr limit). Haftalık net rezerv hareketi ağırlıkla kur+bilançodan gelir. Bu dosya 'rezervleri güncelle' komutuyla web'den tazelenir; ara zamanlarda swap hariç net = canlı net − swapStoku olarak hesaplanır (net EVDS'den canlı)."
 }
