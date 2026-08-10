@@ -30,7 +30,14 @@ const HABER_TARIH="2026-07-14";
    İKİ YERDE TANIMLI BİR ŞEY — düğme HTML'de, üyelik burada. Biri değişince
    diğeri de değişmeli. Bu oturumun en sık hatası (§211c) yine burada. */
 /* §231 Panel sürüm damgası — deploy durumunu tek bakışta görmek için. */
-const KTP_SURUM = '20260810d';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
+   TDZ ONLEMI: `let` HOISTED DEGILDIR. Bu degisken renderRiskBaro() icinde
+   okunuyor ve o fonksiyon satir 1307'de (dosyanin cok yukarisinda) cagriliyor.
+   Su an guvenli — o cagri `await`ten sonraki async govdede, yani betik tam
+   ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
+   senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
+   Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
+const KTP_SURUM = '20260810e';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1305,6 +1312,7 @@ async function marketCek(){
     if(mk&&mk.data){window.__market=mk.data;renderKuresel();emtiaRender();
       const rb=(id,k,dec)=>{const d=mk.data[k];if(d&&d.p!=null&&$(id)){const s=d.chg>=0?'+':'';$(id).innerHTML=trN(d.p,dec)+' <span class="sub'+(d.chg>=0?'':' down')+'" style="display:inline">'+s+'%'+trN(d.chg,2)+'</span>';}};
       rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
+      cdsCek();   /* §253b — CDS ayrı uçtan gelir, market yanıtını BEKLETMEZ */
       const d=$('sekDamga');
       if(d){
         const s=(mk.data.xu100&&mk.data.xu100.gun)?mk.data.xu100.gun:'';
@@ -3953,11 +3961,58 @@ function renderRotasyon(){
 }
 
 /* ---- Risk İştahı Barometresi (canlı) ---- */
-const RISK_CDS=206; // 27 Tem (225→206, aylık −%15,6 iyileşme)
+/* §253 CDS DAMGASI GORUNUR OLDU — deger degil, ETIKET duzeltildi.
+   10 Agu'da SEKIZ kaynak denendi, sekizi de kapali cikti:
+     EVDS (yalniz bankacilik kredi riski) · Fintables · Alpha Vantage ·
+     Massive (ABD Fed verisi) · TradingEconomics (sunucu tarafi basiyor AMA
+     CDS sayfasi yok) · worldgovernmentbonds (degerler JS ile basiliyor) ·
+     Yahoo TRGV5YUSAC=R (Refinitiv RIC, 'symbol may be delisted') ·
+     Yahoo CDS (o ticker 'Evolve One Inc.', son islem 2019).
+   SEBEP: CDS tezgahustu bir turev — borsada islem gormez, halka acik fiyat
+   akisi YOKTUR. Markit dealer kotasyonlarindan derler ve SATAR. Ucretsiz
+   olanlar bile en fazla HAFTALIK (MacroMicro) ya da YILLIK (EODHD/Damodaran).
+   DEGER DEGISTIRILMEDI: kaynaklar celisiyor — panel 206 (27 Tem), TRT Haber
+   Haz'da 225 (3,5 ayin dibi), Investing 30 Tem'de 239,57 (52h aralik
+   203,98-311,12). Ayni seri olmadiklari acik. Bilinmeyen kaynagi bilinmeyen
+   sayiyla degistirmek, bayat birakmaktan KOTUDUR.
+   YAPILAN: damga tarihi EKRANA yazildi. Asil sorun degerin 206 olmasi degil,
+   13 GUN ESKI OLDUGUNUN GORUNMEMESIYDI (§245k: gizli damga, acik damgadan
+   kotudur). Guncellerken ASAGIDAKI IKI SATIRI DA guncelle. */
+const RISK_CDS=227.65;                 /* §253c: 206 YANLISTI, bkz asagi */
+const RISK_CDS_DAMGA='2026-08-06';
+const RISK_CDS_KAYNAK='investing.com · TR 5Y CDS (id 1096486)';
+/* §253c DAMGALI YEDEK DUZELTILDI — 206 BAYAT DEGIL YANLISTI.
+   10 Agu'da kullanicinin DevTools HAR olcumuyle gercek seri elde edildi:
+     24 Tem 244,00 · 27 Tem 239,96 · 30 Tem 239,57 · 6 Agu 227,65
+   Panel 27 Tem icin 206 diyordu — 34 PUAN sapma. Serinin 160 gunluk
+   tamaminda 206'ya yakin TEK GUN YOK; en dusuk 203,98 ve o Aralik 2025.
+   Yani 206 muhtemelen 52-HAFTALIK DIP kutusundan okunmustu.
+   ETKISI: cdsS=(330-cds)/140*100 · 206 -> 88,6 puan · 227,65 -> 73,1 puan.
+   Barometre skoru 76 -> 72, yani "ASIRI ACGOZLULUK" -> "ACGOZLULUK".
+   Panel BIR ESIK YUKARIDA duruyordu.
+   Bu deger artik YALNIZ YEDEK — canli /api/tcmb?cds=1 duserse kullanilir. */
+/* §253b CDS ÇEKİCİSİ. Ayrı uç (/api/tcmb?cds=1) — market yanıtına bağlanmaz,
+   çünkü investing.com yavaş ya da kapalı olursa TÜM barometreyi bekletmemeli.
+   Başarısızlıkta CDS_CANLI null kalır, renderRiskBaro damgalı yedeğe düşer ve
+   etikete "damgalı" basar. Sessiz düşüş YOK (§245k). */
+async function cdsCek(){
+  try{
+    const r=await fetch('/api/tcmb?cds=1&gun=30',{cache:'no-store'});
+    if(!r.ok) return;
+    const j=await r.json();
+    if(j&&j.ok&&isFinite(j.deger)){
+      CDS_CANLI={deger:+j.deger, tarih:j.tarih, degisim:isFinite(j.degisim)?+j.degisim:null};
+      renderRiskBaro();          /* değer geldi, barometreyi YENİDEN çiz */
+    }
+  }catch(e){}
+}
 function renderRiskBaro(){
   if(!$('riskBaroSkor'))return;
   const m=window.__market;
-  const vix=(m&&m.vix)?m.vix.p:17, bist=(m&&m.xu100)?m.xu100.chg:0, cds=RISK_CDS;
+  /* §253b CANLI CDS. Gelmezse damgali yedege duser ve BUNU SOYLER. */
+  const cdsCanli=!!(CDS_CANLI&&isFinite(CDS_CANLI.deger));
+  const vix=(m&&m.vix)?m.vix.p:17, bist=(m&&m.xu100)?m.xu100.chg:0,
+        cds=cdsCanli?CDS_CANLI.deger:RISK_CDS;
   const cl=x=>Math.max(0,Math.min(100,x));
   const vixS=cl((28-vix)/(28-13)*100), cdsS=cl((330-cds)/(330-190)*100), bistS=cl((bist+3)/6*100);
   const skor=Math.round(vixS*0.35+cdsS*0.25+bistS*0.40);
@@ -3965,7 +4020,21 @@ function renderRiskBaro(){
   $('riskBaroSkor').innerHTML='<span style="font-family:var(--mono);font-size:34px;font-weight:700;color:'+e[1]+'">'+skor+'</span> <span style="font-weight:700;font-size:13px;letter-spacing:.5px;color:'+e[1]+'">'+e[0]+'</span> <span class="sub" style="display:inline">/100</span>';
   $('riskBaroIbre').style.left='calc('+skor+'% - 2px)';
   const bl=(ad,v,det)=>'<div class="kv"><span class="k">'+ad+'</span><span><b>'+Math.round(v)+'</b>/100 <span class="sub" style="display:inline">'+det+'</span></span></div>';
-  $('riskBaroBilesen').innerHTML=bl('VIX (küresel korku)',vixS,'%'+trN(vix,2))+bl('TR CDS (ülke riski)',cdsS,~~cds+' bp')+bl('BIST momentum (günlük)',bistS,(bist>=0?'+':'')+trN(bist,2)+'%');
+  /* §253 CDS satiri artik YASINI SOYLUYOR. VIX ve BIST canli; CDS elle.
+     Yas 10 gunu gecerse etiket kirmizilasir — barometrenin %25'inin bayat
+     oldugu SESSIZ kalmaz. */
+  const cdsGun=cdsCanli?CDS_CANLI.tarih:RISK_CDS_DAMGA;
+  let cdsYas=null;
+  try{ cdsYas=Math.floor((new Date()-new Date(cdsGun))/86400000); }catch(e){}
+  const cdsTar=(()=>{ try{ const d=new Date(cdsGun);
+      return d.getDate()+' '+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][d.getMonth()];
+    }catch(e){ return cdsGun; } })();
+  const cdsEski=(cdsYas!=null&&cdsYas>10);
+  const cdsDgs=(cdsCanli&&isFinite(CDS_CANLI.degisim)&&CDS_CANLI.degisim!==0)
+    ? ' <span class="'+(CDS_CANLI.degisim<0?'up':'down')+'">'+(CDS_CANLI.degisim>0?'+':'')+trN(CDS_CANLI.degisim,1)+'</span>' : '';
+  const cdsDet=trN(cds,0)+' bp'+cdsDgs+' <span class="thin" style="font-size:9px;color:'+(cdsEski?'var(--down)':'var(--muted)')+'">· '
+    +cdsTar+(cdsYas!=null?' ('+cdsYas+'g)':'')+(cdsCanli?' · canlı':' · damgalı')+(cdsEski?' ⚠':'')+'</span>';
+  $('riskBaroBilesen').innerHTML=bl('VIX (küresel korku)',vixS,'%'+trN(vix,2))+bl('TR CDS (ülke riski)',cdsS,cdsDet)+bl('BIST momentum (günlük)',bistS,(bist>=0?'+':'')+trN(bist,2)+'%');
 }
 
 /* ---- Tek tus canli yenileme ---- */
