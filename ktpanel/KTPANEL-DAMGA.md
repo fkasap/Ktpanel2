@@ -2,7 +2,7 @@
 # HER OTURUMDA ILK BU DOSYA OKUNUR. Amac: hangi kart ne zaman eskir —
 # tek bakista gorunur, tur tur kesif yapip kontor harcanmaz.
 # Bir kart guncellenince buradaki "son:" tarihi de guncellenir (ayni turda!).
-# Son tam denetim: 10 Agu 2026 (§252b-ü: tum repo okundu, 31 duzeltme)
+# Son tam denetim: 11 Agu 2026 (§252b-260: tum repo okundu, 59 duzeltme)
 # CRON DUZENI (§252x): hafta ici 09:10 fon · 18:10 endeks,fiyat,fon · Cmt 07:00 hepsi(risk dahil)
 
 ## ALTIN KURALLAR
@@ -46,6 +46,12 @@
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
+| Yabanci haftalik akis | ARTIK OTOMATIK — /api/evds2?mod=yab (bie_mknethar M7/M8/M12). Panelde 'EVDS canli' yazmiyorsa uc dusmus (§259) | 11A ✓ |
+| TR 5Y CDS (barometre) | ARTIK OTOMATIK — /api/tcmb?cds=1 · worldgovernmentbonds. 'canli' yazmiyorsa uc dusmus (§253). Eski 206 YANLISTI, 34 puan sapma | 10A ✓ |
+| Kart harcamalari (kart.js) | ARTIK OTOMATIK ay secimi — ayin son gozlemi ay sonuna <7 gun ise ay KAPANDI sayilir (§260). Onceki hal bir ay GERIDEYDI | 11A ✓ |
+| TEFAS AUM + yatirimci | ARTIK OTOMATIK — kopruden mod=gnl (fonGnlBlgSiraliGetir, sayfalamali). Playwright'e gerek yok (§253i) | 10A ✓ |
+| Ebu not motoru | ⚠ KOTA BITERSE panelde serit cikar (#ajanDurum). 'Ebu duraklatildi' KALICI, 'son tur atlandi' GECICI (§254) | izleniyor |
+| Bilanco karti birimi | Sayfa beyan etmezse CAPRAZ DOGRULAMA (ciro/TTM ya da PD/DD). Kart 'birim belirsiz' diyorsa ikisi de tutmamis (§255/257) | 11A ✓ |
 | Beta cipasi (risk.json) | ARTIK OTOMATIK — XKTUM (BIST resmi arsiv). Rapor 'XU100.IS' derse arsiv tohumu bozulmus demektir (§252y) | 10A ✓ |
 | Sektor rotasyonu (sektor.json) | Fintables endeks mumlari · capalar dosyada yazili | 10A §252w |
 | Swap stoku (rezerv.json) | TCMB haftalik yayin, PERSEMBE. Sıradaki: 13 Agu (7 Agu haftasi) | 10A §252v |
@@ -54,7 +60,6 @@
 | Endeks pay_adedi (xktum/xk100/xktmt.json) | HER BEDELSIZ/SERMAYE ARTIRIMINDA — ceyreklik YETMEZ. 9 Agu'da 10 gunde 3 bedelsiz kacti (KTLEV x3,33 uc dosyada birden) | 10A §252b |
 | XKTMT uyelik (39) | BIST revizyonu. Denetim bunu KONTROL ETMIYOR (yalniz xktum) — A2 isi acik | 10A §252b |
 | Egri Okuma sabitleri (app.js OKU_*) | PPK (politika 37, 23T sabit) / TUFE (31,75 Tem) / anket (23,95 Tem) | 10A §252d |
-| RISK_CDS sabiti (app.js) | CDS degisince. ⚠ KAYNAK BELIRSIZ: panel 206, Investing 30T kapanis 239,57. Kaynak yazilmadan DOKUNMA (§252d) | 27T (206) |
 | Mega-cap Derinlik @t17 | bilanco sonuclari gecince (29-30T sonrasi yenile) | 25T (icerik dogru) |
 | Haftalik yorum ici olay satirlari @mk-yorum | Fed tonu / AKBNK / TUFE sonuclari | 27T |
 

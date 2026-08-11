@@ -3,7 +3,7 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-08-10
+Son güncelleme: 2026-08-11
 
 
 ## ⭐ OTOMASYON KURALI (KULLANICI KURALI — 2 Agu 2026)
@@ -2766,6 +2766,177 @@ turda olculecek (bekleyen islere kondu).
 
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
+
+## 260 KART HARCAMALARI BIR AY GERIDEYDI — "YORUM DOGRU, KOD BASKA" (11 Agu)
+
+BULGU: panel kart harcamalarinda 2026-06 gosteriyordu; Temmuz TAMAMLANMISTI.
+Olcum: TP.KKHARTUT.KT1 haftalik seri — May 5 hafta (son 29-05), Haz 4 hafta
+(son 26-06), TEM 5 HAFTA (son 31-07, AYIN TAM SON GUNU).
+KOK NEDEN — _lib/kart.js:138:
+    // TAMAMLANMIS AY: bir sonraki ayda gozlem varsa o ay tamamlanmistir.
+    const donem = toplamAylar[toplamAylar.length-2] || ...
+Yorum bir KURAL tarif ediyordu, kod o kurali HIC UYGULAMIYORDU — korlemesine
+sondan ikinciyi aliyordu. (Bu oturumun en sik deseni: yorum dogruyu soyluyor,
+kod baska sey yapiyor. bkz. §252q "ajan.js de bunu kullanir" — kullanmiyordu.)
+YORUMUN KENDI KURALI DA YETMEZDI: EVDS haftalik veriyi ~1 HAFTA GECIKMEYLE
+yayinlar. 11 Agu'da Agustos gozlemi HENUZ YOK, dolayisiyla "sonraki ayda
+gozlem var mi" testi TEMMUZ'U DA ELERDI. Yani kural uygulansaydi bile
+sonuc yine Haziran olurdu.
+DOGRU OLCUT: ayin SON GOZLEMI ayin sonuna 7 GUNDEN YAKIN MI.
+  Bir ayin son haftalik gozlemi o ayin SON CUMASIDIR; ay sonuna uzakligi
+  yapisal olarak 0-6 gundur. Tamamlanmamis ayda bu >=7 olur.
+  Ornek: Agustos 2026 Cumalari 7-14-21-28; 29 Agu-4 Eyl haftasi kodun kendi
+  notu geregi EYLUL'e yazilir, yani Agustos 28'de KAPANIR (31-28=3 <7 ✓).
+  En az 4 hafta sarti korundu (kismi ay elenir).
+EK DUZELTME (§260b): satir 127 `if (!sonTarih || String(it.Tarih) > '')` —
+bir dizge bos dizgeden DAIMA buyuktur, kosul HEP DOGRUYDU. EVDS kronolojik
+donduugu icin kazara calisiyordu. Gercek tarih karsilastirmasina cevrildi
+(GG-AA-YYYY -> YYYYAAGG).
+YAN ETKI: donem Temmuz olunca TUFE deflatoru de %32,11 (Haz) yerine
+%31,75 (Tem) olur — REEL ORANLAR da duzelir.
+
+## 259 YABANCI AKISI: BIR IYELIK EKI, 24 GUNLUK BAYATLIK, TERS ANLATI (10-11 Agu)
+
+`mod=yab` YAZILMISTI ama HIC CALISMAMISTI. cozCek'e verilen grup deseni
+  /yurt disi yerlesiklerin mulkiyetindeki|yurt disi yerlesiklerin menkul/i
+Gercek grup adi: "Yurt Disi Yerlesikler Menkul Kiymet Portfoyu" — IYELIK EKI
+YOK. Desen yalnizca ARSIV grubuna (bie_yymkpyuk) uydu, alt-desenler orada
+tutmadi ve uc sunu dondurdu:
+  {"ok":true,"grup":"bie_yymkpyuk","veri":{hisseNet:null,dibsNet:null,...}}
+`ok:true` DONEN BOS YANIT — basari gibi gorunen basarisizlik. Panel elle
+girilen yabanci.json'a dustu ve o 24 GUN ESKIDI.
+SONUCU SADECE BAYATLIK DEGILDI, ANLATI TERSTI:
+  panel  17 Tem: hisse +37,5 · DIBS +196,6 · OST +43,8 = +278 mn GIRIS
+  EVDS'de ayrica 24 Tem (+981) VE 31 TEM VARDI:
+  31 Tem: hisse -185,9 · DIBS +164,0 · OST -129,9 = -152 mn NET CIKIS
+Panel "ilimli giris · akis saf carry" diyordu. Gercek: ILIMLI CIKIS.
+Ustelik etiket "sıradaki 30 Tem" yaziyordu — KENDI VADESINI 11 GUN GECMIS.
+COZUM: regex tahmini KALDIRILDI, kesin seri kodlari kullanildi (kullanicinin
+?list=bie_mknethar olcumunden, 32 seri):
+  M7  = 2.1.1. Hisse Senedi (net degisim, haftalik, mn $)
+  M8  = 2.1.2. DIBS (Kesin Alim)
+  M12 = 2.1.3. Genel Yonetim Disi Borclanma Senetleri (OST)
+  M1/M2/M6 = ayni kalemlerin STOK karsiliklari
+YON ARTIK HESAPLANIYOR, IDDIA EDILMIYOR: esik ±200 mn $.
+STOK DA GELDI ve ayri bir hikaye anlatiyor: hisse stoku 41,4 -> 39,6 mlr $
+(son hafta -1,8 mlr) — net akim -186 mn iken stok 1,8 mlr dustu; aradaki
+fark FIYAT ETKISI.
+
+### §259b KENDI HATAM: CALISAN KALIP AYNI DOSYADAYDI
+Ilk yazimda URL'yi SIFIRDAN yazdim: evds2.tcmb.gov.tr/service/evds/ — o ESKI
+uc ve HTML donduruyor ("Unexpected token '<'"). Dosyanin geri kalani 14 YERDE
+evds3.tcmb.gov.tr/igmevdsms-dis/ kullaniyor ve CALISIYOR.
+DERS: yeni bir dis cagri yazmadan once AYNI DOSYADA calisan kalip var mi diye
+bakilir. Bu oturumda ayni hatayi uc kez yaptim (dokuz CDS kaynagi denerken,
+uc TEFAS ucu tahmin ederken, burada).
+
+### §259c PANELE BAGLANDI — VE YENIDEN CIZIM TUZAGI
+yabanciRender() karti JSON'dan KOMPLE yeniden kuruyor ve
+exAnteHesapla -> yabCarryTazele -> yabanciRender zinciri KULLANICI TAHMINLER
+SEKMESINI ACINCA tetikleniyor. Tek seferlik yazim o an SILINIRDI ve panel
+sessizce 17 Tem'e donerdi. Deger YAB_CANLI'da saklanip render sonunda
+yeniden basiliyor.
+NOT: bu tuzagi app.js:8095'teki KENDI ESKI YORUMUN uyardi ("bu blok loadAOFM
+sonunda USTUNE YAZIYORDU — etiket yeni, deger eski gorunuyordu; ekran
+goruntusuyle yakalandi"). Ayni kart, ayni tuzak.
+
+### §259d SIKLIK AYRIMI
+Kart iki farkli olcuyu AYNI KELIMELERLE gosteriyordu: skor AYLIK odemeler
+dengesinden ("57 ILIMLI GIRIS"), haftalik satir MENKUL KIYMET
+istatistiginden ("ilimli cikis"). 10 Agu'da ZIT yone isaret ettiler ve
+okuyan CELISKI SANDI. Ikisi de dogruydu, etiketleri eksikti. Sikliklar
+yazildi.
+
+## 258 ETIKET ILE DEGER AYRISMISTI (10 Agu)
+
+Egri kartinda: "2Y reel (cari TUFE %32,11'e gore)  ≈ +9,5 puan"
+HESAP DOGRUYDU (41,20 - 31,75 = 9,45) ama ETIKET ESKIYDI. §252d sabiti
+duzeltmisti; index.html:533'teki etiket metni SABIT YAZILIYDI ve kalmisti.
+Ayni satirda DOGRU SAYI ve YANLIS GEREKCE yan yana durdu.
+COZUM: etiket de app.js'teki AYNI sabitten uretiliyor (#okuTufeEt, #okuBekEt).
+Kullanici EKRANDAN yakaladi.
+DERS: bir sayiyi duzeltirken o sayinin ETIKETTE de gecip gecmedigine bakilir.
+§241'in ayni dersi: ayni deger iki yerde yasarsa biri gunceller, oteki kalir.
+
+## 257 BILANCO KARTI BIRIM ZINCIRI — UC AYRI KIRIK (10-11 Agu)
+
+LMKDC 2C26 karti BIN KAT sisik birimle onaylandi: ozet "2,32 milyar TL"
+derken tablo "2.317,8 mlr TL" yaziyordu — AYNI KARTIN ICINDE iki farkli olcek.
+
+KIRIK 1 — _birimBul tutmadi. Sayfada "Bin TL/Milyon TL/Tam TL" kaliplarini
+  arar; LMKDC'de hicbiri eslesmedi -> birim 'belirsiz'. §229 geregi varsayilan
+  UYDURULMADI (dogru davranis) ve modele "belirsiz" denildi.
+KIRIK 2 — MODEL UYDURDU. Istem "birim belirsizligini SOYLE, uydurma" diyordu;
+  model "milyar birim varsayilmistir" yazdi VE tutarsiz yazdi.
+KIRIK 3 (KOK NEDEN) — ajanktp.js:144'teki ORNEK SATIR:
+     {"ad":"Ciro (2C)","deger":"100,02 mlr ₺",...}
+  Model bu EKI KOPYALIYORDU, gercek olcege bakmadan. Ozet serbest metin
+  oldugu icin orada dogru yaziyor, tabloda ORNEGI TAKLIT EDIYORDU.
+
+COZUM 1 — CAPRAZ DOGRULAMA (§255). Sayfa birimi beyan etmezse olcek VERIDEN
+kanitlanir. IKI EKSEN:
+  (a) CIRO: ceyreklik ciro x4, multiple.json TTM cirosuna oranlanir.
+      LMKDC: bin TL -> 9.271 mn vs TTM 9.306 -> oran 0,996 ✓
+             TL -> 0,001 ✗ · milyon TL -> 996 ✗   (1000 KAT ayrisma)
+  (b) PD/DD: piyasa degeri / ozkaynak. multiple.json 141 hisse tasiyor;
+      KTLEV gibi kapsam disi isimlerde (a) calismaz. Borsada islem goren
+      sirkette PD/DD 0,05-30 bandindadir, yanlis olcek 1000 kat disina duser.
+  IKI ADAY GECERSE 'kararsiz' -> birim belirsiz KALIR (yanlis kesinlik yerine
+  durust belirsizlik).
+  FINTABLES ILE TEYIT: KAP ham degerleri tam TL karsiliklarinin BIREBIR
+  1/1000'i (bes kalemde de).
+COZUM 2 — BICIMLENDIRME MODELDEN ALINDI (§257). Ham deger x carpan ile TL'ye
+cevrilir, buyuklige gore mlr/mn/₺ SUNUCUDA secilir, modele HAZIR DIZGI verilir:
+"deger alaninda BUNLARI AYNEN KULLAN — olcek eki EKLEME."
+Birim cozulemezse dizgi uretilmez ve model olcek eki YAZMAZ.
+SONUC (dogrulandi): ciro 2,32 mlr ₺ · net kar 539,0 mn ₺ · parasal -181,9 mn ₺
+— dordu de OZETLE BIREBIR AYNI.
+
+### §256 SIL DUGMESI — ONAY TEK YONLUYDU
+Kart onaylanabiliyordu ama GERI ALINAMIYORDU; tek care konsola JSON yazmakti.
+🗑 dugmesi eklendi, YALNIZ onayli taslakta (dosyadan gelen kart repoda yasar,
+tarayicidan silinemez; dugme cikarsa yaniltir). IKI TIK onay ister.
+Uc adim, onayin tersi sirayla: localStorage'dan cikar -> BULUTA YAZ (yoksa
+baska cihazda geri gelir) -> listeyi yeniden kur.
+ktp_taslak_kart_v1 CLOUD_KEYS'te (dogrulandi) — setItem maymun-yamasi zaten
+senkronu tetikliyor, acik cagri fazladan guvence.
+
+## 254 EBU'NUN SESSIZLIGI GORUNUR OLDU (10 Agu)
+
+11 GUNDUR kota bitikti. Gunluk her turda soyluyordu ("Your credit balance is
+too low") ama PANELDE HICBIR ISARET YOKTU. Rotasyon kartini okuyan biri
+kendinden emin bir yorum goruyordu; notun 11 gunluk oldugunu bilmiyordu.
+Sorun "tespit edilmiyor" DEGIL, TESPIT EDILDIGI YER ILE GOSTERILDIGI YERIN
+AYRI OLMASIYDI.
+OLCUM: 123 notun 74'u 7 GUNDEN eski, ortanca 11 GUN, ve <6s kutusunda 1 not.
+Dagilim UCURUM sekliydi (6s-3g arasi TAMAMEN BOS) — aclik degil DURMA.
+EK OLCUM: PARTI=4 x 30dk = gunde 192 yazim kapasitesi, 126 kart icin
+fazlasiyla yeterli. "Parti acligi" teshisim YANLISTI, kullanici hakliydi.
+
+UC DUZELTME:
+  1. aiCagir r.ok'u HIC kontrol etmiyordu. Anthropic hata durumunda 4xx doner
+     ve govdede {type:'error',error:{type,message}} gelir; `content` olmadigi
+     icin null donuyordu ve NEDEN null oldugu KAYBOLUYORDU.
+     Yedi hata tipi ayirt ediliyor.
+  2. Durum seridi (#ajanDurum) — hata + not yasi.
+  3. Not yasi etiketi — 3 gunden eski notlarda "· Ng once yazildi".
+     UC boyama noktasina da baglandi (hizliGeriYukle + notlariGeriYukle x2),
+     etiket her basimda TEKILLENIR.
+
+### §254b GECICI / KALICI AYRIMI — kendi kusurumu duzelttim
+Kota gelince Ebu 41 not yazdi, ama bir turda zaman asimi oldu ve serit
+"⚠ Ebu duraklatildi" dedi — MOTOR CALISIYORDU. Gecici hata kalici gibi
+gosterilirse kullanici gereksiz mudahale eder.
+  KALICI (mudahale gerek): kota, gecersiz anahtar, yetki, model adi
+  GECICI (kendiliginden duzelir): zaman asimi, hiz siniri, servis yogun
+Gecicide "ℹ son tur atlandi" (soluk), kalicida "⚠ Ebu duraklatildi" + not yasi.
+Sunucu iki denemeyi " · " ile birlestirdigi icin ayni cumle iki kez
+goruruyordu — TEKILLESTIRME eklendi.
+
+### ACIK KALAN: 54 YETIM NOT
+SEKME_DISLA'daki 11 sekmede kalmis kartlarin notlari depoda duruyor (126
+kayit, Ebu 72 tariyor). Kota gelse bile GUNCELLENMEYECEKLER. Karar gerekiyor:
+sekmeler kapsama alinsin mi, yoksa o notlar temizlensin mi.
 
 ## 253i TEFAS AUM/YATIRIMCI KOPRUYE ALINDI — UC ADI OLCULDU (10 Agu)
 
