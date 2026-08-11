@@ -121,10 +121,18 @@ module.exports = async (req, res) => {
           if (v === null || v === undefined || v === '') return;
           const sayi = parseFloat(v); if (!isFinite(sayi)) return;
           (haftalik[kod] = haftalik[kod] || {});
-          const h = (haftalik[kod][ay] = haftalik[kod][ay] || { top:0, hafta:0 });
+          const h = (haftalik[kod][ay] = haftalik[kod][ay] || { top:0, hafta:0, sonGun:0 });
           h.top += sayi; h.hafta += 1;
+          /* §260: ayın SON gözlem gününü tut — ay tamamlandı mı kararı buna dayanır */
+          const _g = parseInt(String(it.Tarih||'').slice(0,2)) || 0;
+          if (_g > h.sonGun) h.sonGun = _g;
           if (kod === 'TP.KKHARTUT.KT1') {
-            if (!sonTarih || String(it.Tarih) > '') { sonTarih = it.Tarih; sonHaftaTop = sayi; }
+            /* §260b: koşul `String(it.Tarih) > ''` idi — bir dizge boş dizgeden
+               DAİMA büyüktür, yani koşul HEP DOĞRU. EVDS kronolojik döndüğü
+               için kazara çalışıyordu. Artık gerçek tarih karşılaştırması
+               (GG-AA-YYYY → YYYYAAGG). */
+            const _sk = x => { const m = String(x||'').match(/^(\d{2})-(\d{2})-(\d{4})$/); return m ? m[3]+m[2]+m[1] : ''; };
+            if (!sonTarih || _sk(it.Tarih) > _sk(sonTarih)) { sonTarih = it.Tarih; sonHaftaTop = sayi; }
           }
         });
       });
@@ -133,9 +141,27 @@ module.exports = async (req, res) => {
     const toplamAylar = Object.keys(haftalik['TP.KKHARTUT.KT1'] || {}).sort();
     if (!toplamAylar.length) return res.status(200).json({ ok:false, err:'EVDS kart serisi boş döndü' });
 
-    // TAMAMLANMIŞ AY: bir sonraki ayda gözlem varsa o ay tamamlanmıştır.
-    // (Son ay her zaman kısmidir — 17 Tem verisiyle temmuz henüz bitmemiştir.)
-    const donem = toplamAylar[toplamAylar.length-2] || toplamAylar[toplamAylar.length-1];
+    /* §260 TAMAMLANMIŞ AY ARTIK ÖLÇÜLÜYOR — önceki hal PANELİ BİR AY GERİDE
+       TUTUYORDU. Yorum "bir sonraki ayda gözlem varsa o ay tamamlanmıştır"
+       diyordu ama KOD bunu kontrol etmiyordu: körlemesine sondan ikinciyi
+       alıyordu. 11 Ağu ölçümü: Temmuz'un 5 haftası da vardı (son gözlem
+       31-07, ayın TAM SON GÜNÜ) ama panel Haziran gösteriyordu.
+       Yorumun kendi kuralı da yetmezdi: EVDS haftalık veriyi ~1 hafta
+       gecikmeyle yayınlar, dolayısıyla 11 Ağu'da Ağustos gözlemi HENÜZ YOK
+       ve "sonraki ayda gözlem var mı" testi Temmuz'u da eler.
+       DOĞRU ÖLÇÜT: ayın SON gözlemi ayın sonuna yakın mı. Temmuz'un son
+       haftası 31'inde bitiyorsa ay kapanmıştır — sonraki ayı beklemeye
+       gerek yok. Eşik 7 gün: haftalık seri en fazla bir hafta boşluk bırakır.
+       En az 4 hafta şartı da korunuyor (kısmi ay elenir). */
+    const _T = haftalik['TP.KKHARTUT.KT1'] || {};
+    const _ayKapandi = (ay) => {
+      const h = _T[ay]; if (!h || h.hafta < 4) return false;
+      const [yy, mm] = ay.split('-').map(Number);
+      const ayinSonGunu = new Date(yy, mm, 0).getDate();   // ayın son günü (28/29/30/31)
+      return (ayinSonGunu - (h.sonGun || 0)) < 7;
+    };
+    const donem = [...toplamAylar].reverse().find(_ayKapandi)
+      || toplamAylar[toplamAylar.length-2] || toplamAylar[toplamAylar.length-1];
     const oncekiAy = ayKaydir(donem,-1), gecenYil = ayKaydir(donem,-12);
 
     // TÜFE — aynı ay ve bir yıl öncesi
