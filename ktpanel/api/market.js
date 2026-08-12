@@ -187,6 +187,14 @@ async function fredModu(req, res){
       const gozlemler = (j.observations || []).filter(o=>o.value && o.value!=='.');
       if(!gozlemler.length) return [id, null];
       if(tip==='yillik'){
+        /* §272 HAM GÖZLEM TEŞHİSİ. 12 Ağu: panel CPIAUCNS için %3,52 hesapladı,
+           BLS manşeti %3,4. Hesap yöntemi doğru görünüyor (0 ÷ 12) ama
+           doğrulamak için HAM SEVİYELERİ görmek gerekti; tarayıcıdan FRED'e
+           CORS yüzünden gidilemiyor. ?hamSeri=CPIAUCNS ile ilk 14 gözlem
+           döndürülür — tahmin etmek yerine ÖLÇMEK için. */
+        if(String((req.query && req.query.hamSeri) || '').toUpperCase() === id){
+          globalThis.__hamGozlem = { id, gozlemler: gozlemler.slice(0,14).map(o=>[o.date,o.value]) };
+        }
         // Yıllık %: son gözlem vs 12 ay öncesi (aylık seri → index 12); bir önceki ayın yıllığı da (trend farkı)
         if(gozlemler.length < 14) return [id, null];
         const yil = (a,b)=> +(((gozlemler[a].value/gozlemler[b].value)-1)*100).toFixed(2);
@@ -204,7 +212,10 @@ async function fredModu(req, res){
     const ciftler = await Promise.all(SERILER.map(bir));
     const sonuc = {};
     ciftler.forEach(([k,v])=>{ sonuc[k]=v; });
-    return res.status(200).json({ ok:true, kaynak:'FRED (St. Louis Fed)', alinma:new Date().toISOString(), seriler:sonuc });
+    /* §272: ?hamSeri=<ID> verilirse o serinin ham gözlemleri de döner */
+  const _ham = globalThis.__hamGozlem; globalThis.__hamGozlem = null;
+  return res.status(200).json({ ok:true, kaynak:'FRED (St. Louis Fed)', alinma:new Date().toISOString(),
+    hamGozlem: (_ham && req.query && req.query.hamSeri) ? _ham : undefined, seriler:sonuc });
   }catch(e){
     return res.status(200).json({ ok:false, err:'FRED: '+String((e&&e.message)||e).slice(0,100), seriler:{} });
   }
