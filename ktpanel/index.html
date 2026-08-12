@@ -1468,7 +1468,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="card"><div class="lbl">PORTFÖY</div><div class="sub" style="margin-top:4px">Pozisyon yönetimi: <b>Command Center</b>'da hisse/nakit pozisyonları girersin (kod, adet, maliyet fiyatı). Altında Risk Lensi (makro duyarlılık), Çeşitlendirme Lensi (faktör-uzayı benzerliği), Senaryo & Stres (kur/faiz/petrol şoku). <b>Nasıl:</b> Buraya girdiğin pozisyonlar hem burada hem Portföy Yönetimi sekmesinde kullanılır.</div></div>
 <div class="card"><div class="lbl">DEĞERLEME (DCF + MULTIPLE)</div><div class="sub" style="margin-top:4px">İki değerleme aracı. <b>DCF:</b> gelecek serbest nakit akışlarını bugüne indirgeyip içsel değer bulur — TL nominal / USD / Reel bazda. <b>Multiple:</b> EV/EBITDA çarpanının büyümeyle yıllar içinde nasıl "eridiğini" gösterir. <b>Nasıl:</b> DCF'te FCF, WACC, büyüme, terminal gir; baz seçimine göre WACC aralığı değişir (nominal ~%45, USD ~%12). Aselsan gibi büyüme şirketlerinde multiple'a, olgun nakit-üreten şirketlerde DCF'e güven.</div></div>
 <div class="card"><div class="lbl">SUKUK</div><div class="sub" style="margin-top:4px">Kira sertifikası / tahvil fiyat↔getiri hesabı. <b>Yeni İhraç:</b> valörden ileri kupon üretir, birikmiş kupon yok. <b>İkincil Piyasa:</b> kupon günü sabit, birikmiş kupon hesaplanır, temiz/kirli fiyat ayrılır. <b>Nasıl:</b> İşlem tipini seç, valör/vade/kupon gir, "Üret"e bas, gerekirse kupon tarihlerini elle düzelt.</div></div>
-<div class="card"><div class="lbl">FAKTÖR MODEL</div><div class="sub" style="margin-top:4px">147 XKTUM hissesinin faktör skorları (değer, kalite, momentum vb.) + <b>canlı sicil</b>: faktör-seçilmiş model portföyün XKTUM endeksine karşı günlük performansı. <b>Nasıl:</b> Sicil grafiğinde model çizgisi endeksin üstündeyse pozitif alfa üretiyor demektir.</div></div>
+<div class="card"><div class="lbl">FAKTÖR MODEL</div><div class="sub" style="margin-top:4px">XKTUM evrenindeki hisselerin faktör skorları (değer, kalite, momentum vb.) + <b>canlı sicil</b>: faktör-seçilmiş model portföyün XKTUM endeksine karşı günlük performansı. <b>Nasıl:</b> Sicil grafiğinde model çizgisi endeksin üstündeyse pozitif alfa üretiyor demektir.</div></div>
 <div class="card"><div class="lbl">DİĞER</div><div class="sub" style="margin-top:4px"><b>Journal:</b> yatırım notların. <b>Katılım Fonları:</b> katılım fonu takibi. <b>Guidance:</b> şirketlerin 2026 beklentileri. <b>Haberler:</b> portföy + Top hisseler için KAP bildirimleri.</div></div>
 
 <h2 style="margin-top:18px">Kavram Sözlüğü</h2>
@@ -1505,6 +1505,41 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="kv"><span class="k">Analist konsensüs</span><span class="sub" style="max-width:62%;text-align:right">Aracı kurumların ortalama hedef fiyatı + tavsiye dağılımı. Piyasa beklentisinin aynası.</span></div></div>
 
 <div class="note" style="margin-top:12px">Altın kural: her araç bir <em>bakış açısıdır</em>, kesin doğru değil. DCF içsel değeri, multiple piyasa çarpanını, analist konsensüsü kurumların beklentisini, faktör modeli görece ucuzluğu gösterir. En güçlü tez, bu lenslerin <b>ayrıştığı</b> yerde saklıdır: senin modelin ucuz derken piyasa pahalı diyorsa, orayı incelemeye değer.</div>
+
+<!-- §262 YARDIM GUNCELLENDI (12 Agu). Kilavuz sekme rehberi + kavram sozlugu
+     olarak IYIYDI ama panelin SU ANKI CALISMA BICIMINI anlatmiyordu: Ebu hic
+     gecmiyordu, canli/damgali ayrimi yoktu, bilanco karti akisi ve nobet
+     yoktu. 10-11 Agu'da sekiz katman canliya gecti (CDS, yabanci akisi, TEFAS
+     AUM, beta cipasi, kart harcamalari...) — bu bolumler onu anlatiyor.
+     Sekme rehberi ve sozluk KORUNDU, ustune eklendi. -->
+
+<h3 style="margin:22px 0 8px;font-size:13px">Veri nereden gelir — <span style="color:var(--mm2)">canlı</span> mı <span style="color:var(--muted)">damgalı</span> mı?</h3>
+<div class="note" style="margin-bottom:10px">Paneldeki her sayının bir <b>kaynağı ve yaşı</b> vardır. Bunu gizlemek yerine göstermeyi seçtik: bir değer <b>canlı</b> ise etiketinde öyle yazar, <b>damgalı</b> ise tarihi ve kaç günlük olduğu görünür. Yaş sınırı aşılırsa etiket kırmızıya döner. <em>Gizli damga, açık damgadan kötüdür</em> — çünkü kimse sorgulamaz.</div>
+<div class="card" style="margin-bottom:12px">
+<div class="kv"><span class="k">CANLI · her açılışta</span><span class="sub" style="max-width:64%;text-align:right">Kur, küresel endeksler, VIX/DXY/Brent, altın–gümüş, kripto. Doğrudan Yahoo/CoinGecko'dan; şeritteki BIST 100/30 de buradan.</span></div>
+<div class="kv"><span class="k">CANLI · uç üzerinden</span><span class="sub" style="max-width:64%;text-align:right">TCMB EVDS (TÜFE, faiz eğrisi, rezerv, kart harcamaları, yabancı haftalık akış), BDDK bankacılık, KAP bildirimleri, TEFAS fon getirileri ve AUM, TR 5Y CDS. Yavaş ya da kapalıysa damgalı yedeğe düşer <b>ve bunu söyler</b>.</span></div>
+<div class="kv"><span class="k">OTOMASYON · günde 2–3 kez</span><span class="sub" style="max-width:64%;text-align:right">GitHub Actions: hafta içi 09:10 fon getirileri, 18:10 endeks ağırlıkları + fiyatlar, cumartesi 07:00 risk metrikleri (vol/beta 1 yıllık pencereden, günlük koşması anlamsız). Her koşu <b>denetimden</b> geçer; eşiği tutmayan katman <b>YAZILMAZ</b> — eski ve doğru veri korunur.</span></div>
+<div class="kv"><span class="k">DAMGALI · elle</span><span class="sub" style="max-width:64%;text-align:right">Faktör modeli (çeyreklik CSV), guidance, aylık ödemeler dengesi. Bunlar otomatikleştirilemediği için elle tazelenir ve <b>Ebu nöbeti</b> vadesi geçince uyarır.</span></div>
+</div>
+
+<h3 style="margin:22px 0 8px;font-size:13px">🤖 Ebu — panelin yaşayan katmanı</h3>
+<div class="note" style="margin-bottom:10px">Ebu tarayıcı içinde çalışır; panel açıkken yaşar, kapalıyken durur. <b>İki işi</b> vardır ve sağ üstteki 🤖 düğmesinden panosu açılır.</div>
+<div class="card" style="margin-bottom:12px">
+<div class="kv"><span class="k">1 · Veri turu <span class="thin">10 dk</span></span><span class="sub" style="max-width:64%;text-align:right">Canlı kaynakları tazeler. Elle bir şey yapmana gerek yok; “↻ veri turu” ile hemen tetikleyebilirsin.</span></div>
+<div class="kv"><span class="k">2 · Not motoru <span class="thin">30 dk</span></span><span class="sub" style="max-width:64%;text-align:right">Kart altındaki yorumları yazar — ama <b>yalnız o kartın verisi değiştiğinde</b>. Kartın metni hash'lenir; hash aynıysa not korunur, değiştiyse yeniden yazılır. Böylece yorum veriyle birlikte yaşlanmaz.</span></div>
+<div class="kv"><span class="k">Nöbet</span><span class="sub" style="max-width:64%;text-align:right">Panoda iki liste: <b>kart bekleyen bilanço</b> (KAP'ta finansal tablo var, kartı yok) ve <b>tazelenmeli</b> (damgalı katmanın vadesi geçti). Bilanço sezonunda limitler otomatik sıkılaşır.</span></div>
+<div class="kv"><span class="k">Not yaşı</span><span class="sub" style="max-width:64%;text-align:right">Bir yorum 3 günden eskiyse altında “· N g önce yazıldı” çıkar. Ebu duraksadıysa (API kotası vb.) panosunda <b>kırmızı şerit</b> belirir; geçici bir aksaklıksa soluk “son tur atlandı” yazar.</span></div>
+</div>
+
+<h3 style="margin:22px 0 8px;font-size:13px">Bilanço kartı nasıl üretilir?</h3>
+<div class="note" style="margin-bottom:10px">Şirket KAP'a finansal tablo yüklediğinde Ebu bunu görür ve panosunda <b>taslak</b> düğmesi çıkarır. Üç adım:</div>
+<div class="card" style="margin-bottom:12px">
+<div class="kv"><span class="k">1 · taslak</span><span class="sub" style="max-width:64%;text-align:right">Metrikler KAP'tan çekilir (ciro, marjlar, net kâr, parasal pozisyon, özkaynak, nakit) ve karta dönüştürülür. <b>Rakamlar modelden değil tablodan</b> gelir.</span></div>
+<div class="kv"><span class="k">2 · oku</span><span class="sub" style="max-width:64%;text-align:right">Kart yayınlanacağı biçimde önizlenir. Üstünde “⚠ TASLAK · KAP no · N/8 kalem · birim” damgası vardır. <b>Birim raporda yazmıyorsa</b> panel ölçeği çapraz doğrulamayla kanıtlar (çeyrek ciro ÷ yıllık ciro, ya da piyasa değeri ÷ özkaynak); kanıtlanamazsa ölçek eki <b>hiç yazılmaz</b>.</span></div>
+<div class="kv"><span class="k">3 · skor + onayla</span><span class="sub" style="max-width:64%;text-align:right">Skoru <b>sen</b> verirsin (0–10) — model skor üretmez. Onaylanan kart anında Earnings AI listesine ve buluta geçer, deploy beklemez. Yanlışsa 🗑 ile kaldırılır (iki tık onay ister).</span></div>
+</div>
+
+<div class="note" style="margin-top:12px;border-left:3px solid var(--mm2)">Panelin tasarım ilkesi: <b>sessiz başarısızlık yok</b>. Bir kaynak düşerse yedeğe geçilir ama bu <em>söylenir</em>; bir denetim eşiği tutmazsa veri yazılmaz ve rapora düşer; bir yorum eskirse yaşı görünür. Ekranda gördüğün sayı ya canlıdır ya da ne zamandan kaldığını sana söyler.</div>
 </div><div class="tab" id="t7"><h2>10 Haber Akışı <span class="thin">(KAP · portföy + Top-40 · otomatik yorumlu)</span> <span class="tag" id="haberDamga" style="font-weight:400">damgalı</span></h2>
 <div class="card" style="margin-bottom:10px">
   <div class="lbl">CANLI KAP AKIŞI <span class="tag" id="kapDurum">başlatılıyor…</span></div>
