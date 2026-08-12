@@ -197,10 +197,35 @@ async function fredModu(req, res){
         }
         // Yıllık %: son gözlem vs 12 ay öncesi (aylık seri → index 12); bir önceki ayın yıllığı da (trend farkı)
         if(gozlemler.length < 14) return [id, null];
-        const yil = (a,b)=> +(((gozlemler[a].value/gozlemler[b].value)-1)*100).toFixed(2);
-        const simdiki = yil(0,12), onceki = yil(1,13);
+        /* §272 TARİHE GÖRE EŞLE — İNDEKS SAYMA.
+           BULGU (12 Ağu): panel CPIAUCNS için %3,52 hesapladı, BLS %3,4.
+           SEBEP: gozlemler[0] ÷ gozlemler[12] yapılıyordu. Ama FRED listesinde
+           2025-10 GÖZLEMİ YOKTU (boş/'.'	 değer süzülmüş) ve indeks 12,
+           Temmuz 2025 yerine HAZİRAN 2025'e denk geldi:
+             333.918 / 322.561 (Haz'25) - 1 = 3,52%   ← panel, YANLIŞ ay
+             333.918 / 323.048 (Tem'25) - 1 = 3,37%   ← BLS ile aynı
+           İndeks sayarak geriye gitmek, seride TEK BİR boşluk olsa bile hesabı
+           SESSİZCE kaydırır. Artık tarih hesaplanıp o tarihli gözlem ARANIYOR;
+           bulunamazsa hesap YAPILMAZ (yanlış ay yerine değer yok).
+           §252z'nin aynı ailesi: iki ucun hangi zamana ait olduğunu ne
+           garanti ediyor? */
+        const _ayGeri = (tarih, n) => {
+          const [y,m] = String(tarih).split('-').map(Number);
+          const t = m - n; const yy = y + Math.floor((t-1)/12); const mm = ((t-1)%12+12)%12 + 1;
+          return yy + '-' + String(mm).padStart(2,'0');
+        };
+        const _bul = (yyyymm) => gozlemler.find(o => String(o.date).slice(0,7) === yyyymm);
+        const yil = (birinci, geriAy) => {
+          const a = gozlemler[birinci]; if(!a) return null;
+          const b = _bul(_ayGeri(a.date, geriAy)); if(!b) return null;
+          const va = parseFloat(a.value), vb = parseFloat(b.value);
+          if(!isFinite(va) || !isFinite(vb) || vb === 0) return null;
+          return +(((va/vb)-1)*100).toFixed(2);
+        };
+        const simdiki = yil(0,12), onceki = yil(1,12);
+        if(simdiki == null) return [id, null];
         return [id, { deger:simdiki, tarih:gozlemler[0].date,
-                      fark: +(simdiki - onceki).toFixed(2), tip:'yillik' }];
+                      fark: (onceki==null ? null : +(simdiki - onceki).toFixed(2)), tip:'yillik' }];
       }
       const obs = gozlemler[0];
       const onceki = gozlemler[1];
