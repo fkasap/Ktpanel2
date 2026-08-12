@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-12
 
-Katman: `hepsi` · Veri dizini: `ktpanel`
+Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -31,14 +31,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### TR 5Y CDS — ✓ 224.48 bp · 2026-08-12 · -1.94
 - ✓ 3274 günlük seri · kaynak etiketi 2026-08-12 (hafta sonu doldurmalı)
 
-### Risk metrikleri — ✓ GEÇTİ
-- ✓ **kapsam**: 141/141 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%3)
-- ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (179 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
-- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
-
 ### TEFAS genel bilgi (§253i) — ✓ 2024 fon · AUM + yatırımcı sayısı köprüden (ham 2031 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
@@ -48,7 +40,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2024 fon fiyat + 1048 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008102507629> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008561042457> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -57,17 +49,17 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)
 
-### Bilanço tetiği — ✓ 25 şirket FR yayımladı
-- AEFES, AGROT, ARMGD, ASUZU, BIGTK, BINBN, BRYAT, CLKMT, DOHOL, EMVAR, GSRAY, HDFVK, HOROZ, HTTBT, INTEK, KBORU, MDASM, MGROS, MNGFA, NUGYO …
+### Bilanço tetiği — ✓ 30 şirket FR yayımladı
+- AEFES, AGROT, ARMGD, ASUZU, BIGTK, BINBN, BLUME, BRYAT, CLKMT, DERHL, DOHOL, EMVAR, GSRAY, HDFVK, HOROZ, HTTBT, INTEK, KBORU, MDASM, MGROS …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu XKTUM: 150/242 (tasarım gereği ilk 150)
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
-### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-11
-- XKTUM 18727.94 · XKTMT 17407.28 · XK100 17539.62 · XU100 13704.52 · BISTTLREFK 4019.36046
-- arşiv: 608 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-12
+- XKTUM 19218.71 · XKTMT 17849.49 · XK100 17882.25 · XU100 14110.14 · BISTTLREFK 4023.69924
+- arşiv: 609 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
 ### Bülten keşfi (§250k) — ✓ thb202608111.zip indi · 293KB
@@ -76,4 +68,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (120 fiyat) · Model sicili (37 fiyat) · TR 5Y CDS (224.48 bp) · risk metrikleri (13) · katılım fonları (46+akış) · bilanço tetiği (25) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (133 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (224.48 bp) · katılım fonları (46+akış) · bilanço tetiği (30) · endeks üyelikleri · endeks arşivi
