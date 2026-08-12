@@ -399,13 +399,29 @@ Türkçe yaz. Kısa cümle kur.`;
       sablon: 'bist',
       skor: null,                                   // ONAYDA girilecek
       ozet: String(kart.ozet||''),
-      metrikler: Array.isArray(kart.metrikler) ? kart.metrikler.slice(0,8) : [],
+      /* §269c "undefined" DİZGESİ TEMİZLENİR. 12 Ağu RGYAS: model metrik
+         değerine LİTERAL "undefined" yazdı (JS'ten sızmış bir kalıntı) ve
+         kartta öyle göründü. esc(m.deger||'') bunu yakalamaz — dolu bir
+         dizgedir. Eksik değeri "—" ile göstermek, "undefined" göstermekten
+         hem dürüst hem okunur. Hangi alanların boş kaldığı da raporlanır. */
+      metrikler: (Array.isArray(kart.metrikler) ? kart.metrikler.slice(0,8) : []).map(m => {
+        const tmz = (v) => {
+          const t = String(v == null ? '' : v).trim();
+          return (!t || t === 'undefined' || t === 'null' || t === 'NaN') ? '—' : t;
+        };
+        return { ...m, ad: String(m && m.ad || ''), deger: tmz(m && m.deger),
+                 cc: tmz(m && m.cc), yoy: tmz(m && m.yoy) };
+      }),
       onemli: Array.isArray(kart.onemli) ? kart.onemli.slice(0,5) : [],
       guidance: String(kart.guidance||''),
       tez: String(kart.tez||''),
       _taslak: true, _kaynak: 'KAP + Claude taslağı', _uretim: bugun.toISOString()
     };
+    /* §269c eksik alan SAYISI raporlanır — kullanıcı kartın ne kadar tam
+       olduğunu görsün, sessizce "—" dolu bir kart onaylamasın. */
+    const _eksik = (tam.metrikler || []).filter(m => m.deger === '—').length;
     return res.status(200).json({ ok:true, kod, donem, kart:tam, onarildi,
+      eksikMetrik: _eksik || undefined,
       uyari:'TASLAK. Skor YOK — onaylarken sen gireceksin. Okunmadan yayınlanmamalı.'+
         (onarildi ? ' ⚠ Model yanıtı KESİLDİ, JSON onarıldı — son alanlar eksik olabilir.' : '') });
   }
