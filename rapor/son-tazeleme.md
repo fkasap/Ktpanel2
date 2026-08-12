@@ -39,7 +39,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
-### TEFAS genel bilgi (§253i) — ✓ 2023 fon · AUM + yatırımcı sayısı köprüden (ham 2031 kayıt, sayfalamalı)
+### TEFAS genel bilgi (§253i) — ✓ 2024 fon · AUM + yatırımcı sayısı köprüden (ham 2031 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1048 fon ✓ · liste: 1039 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
@@ -47,8 +47,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Fon akışı (§263) — ℹ ilk gün kaydedildi, akış için ikinci gün gerekli (1 gün arşivde)
 
 ### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (2023 fon fiyat + 1048 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008893535471> [Go Back]`
+- yol: vercel-köprüsü (2024 fon fiyat + 1048 getiri)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008102507629> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -76,4 +76,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (116 fiyat) · Model sicili (34 fiyat) · TR 5Y CDS (224.48 bp) · risk metrikleri (68) · katılım fonları (46+akış) · bilanço tetiği (25) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (120 fiyat) · Model sicili (37 fiyat) · TR 5Y CDS (224.48 bp) · risk metrikleri (13) · katılım fonları (46+akış) · bilanço tetiği (25) · endeks üyelikleri · endeks arşivi
