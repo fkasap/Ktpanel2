@@ -200,10 +200,54 @@ module.exports = async (req, res) => {
         const v = _d(_m[k]);
         if (v != null && Math.abs(v) > 0) _kat.push([ad, v]);
       }
+      /* §268 PUAN / BP AYRIMI — HESAPLANIR.
+         12 Ağu RGYAS: model "faaliyet marjı y/y -122 bp düştü" yazdı. Gerçek
+         fark 122 PUAN = 12.200 bp — YÜZ KAT hata. İlginç olan: aynı kart brüt
+         marjda "+3 bp"yi DOĞRU kullandı. Yani birimi biliyor, büyük farkta
+         kayıyor. Kural: |fark| >= 1 puan ise PUAN yaz, altındaysa bp.
+         Modele kuralı SÖYLEMEK yetmez — eşiği burada ölçüp hazır dizgi veriyoruz. */
+      const _mp = [];
+      const _marjCift = (ad, o) => {
+        if (!o || !isFinite(o.marj) || !isFinite(o.oncekiMarj)) return;
+        const f = o.marj - o.oncekiMarj;
+        const birim = Math.abs(f) >= 1 ? (Math.abs(f).toFixed(2).replace('.', ',') + ' puan')
+                                       : (Math.round(Math.abs(f) * 100) + ' bp');
+        _mp.push('  ' + ad + ': %' + _tr(o.oncekiMarj, 2) + ' → %' + _tr(o.marj, 2)
+          + ' = ' + (f >= 0 ? '+' : '-') + birim);
+      };
+      _marjCift('brüt marj', _m.brutMarj);
+      _marjCift('faaliyet marjı', _m.faaliyetKar);
+      _marjCift('net marj', _m.netKar);
+      /* §268b BİLANÇO KALEMLERİNİN TABANI FARKLIDIR.
+         12 Ağu RGYAS: model "öz kaynaklar 163,93 mlr'ye yükseldi (+%4,6)" yazdı.
+         Gerçek y/y +%15,2 (142,4 → 163,9). Model suçlu DEĞİL: KAP BİLANÇOSUNDA
+         `onceki` = ÖNCEKİ DÖNEM SONU (yıl başı / geçen çeyrek), GELİR TABLOSUNDA
+         ise GEÇEN YILIN AYNI ÇEYREĞİ. İki farklı taban, AYNI alan adı — istemde
+         hangisinin ne olduğu SÖYLENMİYORDU.
+         Karşılaştırma yüzdesini burada hesaplayıp TABANINI da yazıyoruz. */
+      const _bl = [];
+      for (const [ad, k] of [['özkaynak','ozkaynak'], ['nakit','nakit']]) {
+        const o = _m[k];
+        if (!o || !isFinite(o.deger) || !isFinite(o.onceki) || o.onceki === 0) continue;
+        const y = ((o.deger / o.onceki - 1) * 100);
+        _bl.push('  ' + ad + ': ' + (_bicim(o.onceki) || o.onceki) + ' → ' + (_bicim(o.deger) || o.deger)
+          + ' = ' + (y >= 0 ? '+' : '') + _tr(y, 1) + '%');
+      }
+      if (_bl.length) {
+        _marjUyari += '\nBİLANÇO KALEMLERİ (⚠ TABAN FARKLI — bu ÖNCEKİ DÖNEM SONUdur, '
+          + 'GEÇEN YILIN AYNI ÇEYREĞİ DEĞİL):\n' + _bl.join('\n') + '\n'
+          + '  Bu yüzdeleri "y/y" DİYE SUNMA. "dönem içinde" ya da "önceki bilanço dönemine göre" de.\n'
+          + '  Gelir tablosu kalemlerindeki y/y ile KARIŞTIRMA — onlar geçen yılın aynı çeyreğidir.\n';
+      }
+      if (_mp.length) {
+        _marjUyari += '\nMARJ DEĞİŞİMLERİ (birim ZATEN SEÇİLDİ — AYNEN kullan, bp/puan ÇEVİRME):\n'
+          + _mp.join('\n') + '\n'
+          + '  KURAL: 1 puan = 100 bp. |fark| >= 1 puan ise PUAN yazılır, altındaysa bp.\n';
+      }
       if (_kat.length > 1) {
         _kat.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
-        _marjUyari += '\nNET KÂR KÖPRÜSÜ (y/y değişim, BÜYÜKTEN KÜÇÜĞE — '
-          + 'hangisinin baskın olduğunu BU SIRAYA göre söyle, tahmin etme):\n'
+        _marjUyari += '\nNET KÂR KÖPRÜSÜ (y/y = GEÇEN YILIN AYNI ÇEYREĞİNE göre, '
+          + 'BÜYÜKTEN KÜÇÜĞE — hangisinin baskın olduğunu BU SIRAYA göre söyle, tahmin etme):\n'
           + _kat.map(x => '  ' + x[0] + ': ' + (x[1] >= 0 ? '+' : '') + (_bicim(x[1]) || x[1].toFixed(0))).join('\n') + '\n';
       }
     }catch(e){}
