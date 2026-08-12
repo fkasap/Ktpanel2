@@ -144,6 +144,69 @@ module.exports = async (req, res) => {
         const on = _bicim(o.onceki);    if(on) _gost[k+'_onceki'] = on;
       }
     }catch(e){}
+    /* §267 GYO / YATIRIM ŞİRKETİ MARJ TUZAĞI.
+       12 Ağu, RGYAS 2Ç26: model "faaliyet marjı %115'e düştü, sorunlu seviye"
+       yazdı. Rakam DOĞRUYDU (5,31/4,61 = %115) ama OKUMA YANLIŞTI — faaliyet
+       kârı ciroyu aşamaz; GYO'da aşar çünkü YATIRIM AMAÇLI GAYRİMENKUL
+       DEĞERLEME KAZANCI "Diğer Faaliyet Gelirleri"nden faaliyet kârına girer,
+       ciroya girmez. RGYAS'ta bu kalem 2,49 mlr ₺ (faaliyet kârının %47'si).
+       2Ç25'te oran %237 idi; yani "marj düştü" değil DEĞERLEME KAZANCI KÜÇÜLDÜ.
+       Panelde EKGYO/AVPGY/PAGYO/BEGYO/ASGYO... çok — tuzak TEKRARLAYACAK.
+       ÇÖZÜM: modele "dikkat et" DEMEK yerine oranı SUNUCUDA ölç ve söyle.
+       Bir kural, hesaplanmış bir olguyla birlikte verilirse tutar. */
+    let _marjUyari = '';
+    try{
+      const _m = g.metrikler || {};
+      const _ciro = _m.ciro && _m.ciro.deger;
+      const _fk = _m.faaliyetKar && _m.faaliyetKar.deger;
+      if (isFinite(_ciro) && _ciro > 0 && isFinite(_fk) && _fk > _ciro) {
+        const _o = (_fk / _ciro * 100).toFixed(0);
+        _marjUyari =
+          '\n⚠ MARJ DİLİ KULLANMA — FAALİYET KÂRI CİROYU AŞIYOR (%' + _o + ').\n'
+        + 'Bu bir MARJ DEĞİLDİR ve "marj %' + _o + '" diye yazmak YANLIŞ OKUMADIR.\n'
+        + 'Sebep: GYO/holding/yatırım şirketlerinde YATIRIM AMAÇLI VARLIK DEĞERLEME\n'
+        + 'KAZANCI ve iştirak payları "Diğer Faaliyet Gelirleri" üzerinden faaliyet\n'
+        + 'kârına girer ama CİROYA GİRMEZ. Faaliyet kârının bir kısmı SATIŞTAN DEĞİL,\n'
+        + 'DEĞERLEME/YENİDEN DEĞERLEMEDEN gelir — nakit değildir.\n'
+        + 'BUNUN YERİNE: (a) faaliyet kârı ile brüt kâr ARASINDAKİ FARKI tutar olarak\n'
+        + 'söyle, (b) bu farkın değerleme kaynaklı olabileceğini belirt, (c) oranın\n'
+        + 'y/y DEĞİŞİMİNİ yorumla ("değerleme katkısı küçüldü/büyüdü"), (d) operasyonel\n'
+        + 'performans için BRÜT MARJI kullan — o satışa dayanır.\n';
+      }
+      /* §267b NET KÂR DEĞİŞİMİNİN KAYNAĞI — HESAPLANIR, TAHMİN EDİLMEZ.
+         RGYAS kartı "net kâr artışı parasal pozisyon kazancından kaynaklanıyor"
+         dedi. ÖLÇÜLDÜ: finansman gideri -4,39 → -2,18 (+2,21 mlr katkı),
+         parasal kazanç 1,15 → 1,78 (+0,63 mlr). Finansman ÜÇ KAT daha büyük
+         etken; model sıralamayı TERS kurmuştu.
+         Modelin bunu doğru sıralaması için katkıları ÖNCEDEN hesaplayıp
+         veriyoruz — "hangisi büyük" sorusu yorum değil ARİTMETİKTİR. */
+      const _kat = [];
+      /* §267c ÖNCEKİ DEĞER: kap.js yalnız parasal/ozkaynak/nakit'te `onceki`
+         gönderir; ciro, faaliyetKar, finansGider için sadece `yoy` yüzdesi
+         var. Yüzdeden geri hesaplanır: onceki = deger / (1 + yoy/100).
+         Bu bir TÜRETMEDİR — o yüzden köprü satırı "çeyreklik değişim" değil
+         y/y değişimi olabilir; modele hangisi olduğu söyleniyor.
+         yoy = -100 ise (sıfırdan çıkış) bölme tanımsız, atlanır. */
+      const _onc = (o) => {
+        if (!o) return null;
+        if (isFinite(o.onceki)) return o.onceki;
+        if (isFinite(o.deger) && isFinite(o.yoy) && Math.abs(100 + o.yoy) > 1e-9)
+          return o.deger / (1 + o.yoy / 100);
+        return null;
+      };
+      const _d = (o) => { const p = _onc(o); return (o && isFinite(o.deger) && p != null) ? (o.deger - p) : null; };
+      for (const [ad, k] of [['finansman gideri','finansGider'], ['parasal pozisyon','parasal'],
+                             ['faaliyet kârı','faaliyetKar'], ['brüt kâr','brutKar']]) {
+        const v = _d(_m[k]);
+        if (v != null && Math.abs(v) > 0) _kat.push([ad, v]);
+      }
+      if (_kat.length > 1) {
+        _kat.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+        _marjUyari += '\nNET KÂR KÖPRÜSÜ (y/y değişim, BÜYÜKTEN KÜÇÜĞE — '
+          + 'hangisinin baskın olduğunu BU SIRAYA göre söyle, tahmin etme):\n'
+          + _kat.map(x => '  ' + x[0] + ': ' + (x[1] >= 0 ? '+' : '') + (_bicim(x[1]) || x[1].toFixed(0))).join('\n') + '\n';
+      }
+    }catch(e){}
     const _gostMetin = Object.keys(_gost).length
       ? ('\n\nHAZIR GÖSTERİM (deger alanında BUNLARI AYNEN KULLAN — ölçek eki EKLEME, DEĞİŞTİRME):\n'
          + Object.keys(_gost).map(k => '  '+k+' = '+_gost[k]).join('\n')
@@ -171,7 +234,7 @@ ${JSON.stringify(g.metrikler, null, 1)}
 
 ${_gostMetin}
 
-OTOMATİK İŞARETLER (bakılacak yerler):
+${_marjUyari}OTOMATİK İŞARETLER (bakılacak yerler):
 ${(g.isaretler||[]).map(x=>'- '+x.tip+': '+x.not).join('\n') || '- yok'}
 
 YALNIZCA GEÇERLİ JSON DÖNDÜR. Başka hiçbir şey yazma, markdown kod bloğu kullanma.
