@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -3583,9 +3583,11 @@ async function taslakKartSil(btn, kod, donem){
     const once=L.length;
     L = L.filter(x => !(String(x.kod)===String(kod) && (!donem || String(x.donem)===String(donem))));
     localStorage.setItem('ktp_taslak_kart_v1', JSON.stringify(L));
-    /* Buluta yaz — aksi halde başka cihazda ya da yeniden yüklemede GERİ GELİR */
-    try{ if(typeof cloudSaveDebounced==='function') cloudSaveDebounced();
-         else if(typeof cloudSave==='function') cloudSave(); }catch(e){}
+    /* §264 BULUTA HEMEN YAZ — debounce DEĞİL. Silme için bu KRİTİK: 900 ms
+       gecikmede kullanıcı yenilerse silinen kart bulutta durur ve birleştirme
+       (§264) onu GERİ GETİRİR. Silme anlık ve kesin olmalı. */
+    try{ if(typeof cloudSave==='function') await cloudSave();
+         else if(typeof cloudSaveDebounced==='function') cloudSaveDebounced(); }catch(e){}
     if(once===L.length){ btn.innerHTML='?'; btn.title='kayıt bulunamadı (dosyadaki kart olabilir)'; btn.disabled=false; return; }
     if(typeof incelemeInit==='function') await incelemeInit();   /* kart ekrandan düşer */
   }catch(e){
@@ -6669,6 +6671,36 @@ async function cloudLoad(){
           let yerel=null; try{ yerel=JSON.parse(_origGet(k)||'null'); }catch(e){}
           const bSay=Array.isArray(bulut)?bulut.length:0, ySay=Array.isArray(yerel)?yerel.length:0;
           if(bSay===0&&ySay>0) return;               // bulut boş, yerel dolu → YERELİ KORU
+          /* §264 TASLAK KARTLAR BİRLEŞTİRİLİR, EZİLMEZ.
+             ÖLÇÜLDÜ (12 Ağu): ZERGY kartı onaylandı, localStorage'a YAZILDI
+             ("✓ Earnings AI'a eklendi" mesajı çıktı, kayıt doğrulandı) ama
+             SAYFA YENİLENİNCE KAYBOLDU.
+             SEBEP: cloudSaveDebounced 900 ms bekler. O süre dolmadan yenileme
+             yapılırsa kayıt buluta HİÇ GİTMEZ; cloudLoad bulutdaki ESKİ listeyi
+             (8 kart) yerelin ÜSTÜNE yazar (9 kart) ve yeni kart silinir.
+             Üstteki koruma bunu yakalamıyordu: yalnız bulut TAMAMEN BOŞken
+             devreye giriyor (bSay===0). Burada bSay=8, ySay=9 → koşul tutmadı.
+             ÇÖZÜM: taslak kartlar İÇERİK ANAHTARIYLA (kod+dönem) birleştirilir;
+             her iki taraftaki kayıt korunur, çakışmada YENİ olan (_onay damgası)
+             kazanır. Bu anahtar EKLEMELİ bir liste — silme zaten 🗑 ile açıkça
+             yapılıyor ve o anda buluta yazılıyor (§256). */
+          if(k==='ktp_taslak_kart_v1' && Array.isArray(bulut) && Array.isArray(yerel) && ySay){
+            const anahtar=x=>String(x&&x.kod||'')+'|'+String(x&&x.donem||'');
+            const harita=new Map();
+            for(const x of bulut) if(x&&x.kod) harita.set(anahtar(x),x);
+            for(const x of yerel){
+              if(!x||!x.kod) continue;
+              const a=anahtar(x), v=harita.get(a);
+              /* Çakışma: _onay damgası YENİ olan kazanır; damgasız olan kaybeder */
+              if(!v || String(x._onay||'') > String(v._onay||'')) harita.set(a,x);
+            }
+            const birlesik=[...harita.values()]
+              .sort((a,b)=>String(b._onay||'').localeCompare(String(a._onay||'')))
+              .slice(0,60);
+            _origSet(k,JSON.stringify(birlesik)); yazilan++;
+            if(birlesik.length!==bSay) console.info('[KTPanel] §264 taslak kartlar birleştirildi: bulut '+bSay+' + yerel '+ySay+' → '+birlesik.length);
+            return;
+          }
         }
         _origSet(k,JSON.stringify(bulut)); yazilan++;
       });

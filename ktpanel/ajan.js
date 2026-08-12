@@ -1354,9 +1354,15 @@ async function taslakOnayla(btn){
     liste = liste.filter(x => !(String(x.kod)===String(kart.kod) && String(x.donem)===String(kart.donem)));
     liste.unshift(kart);
     localStorage.setItem('ktp_taslak_kart_v1', JSON.stringify(liste.slice(0,60)));
-    /* Buluta da yaz — cihaz değişince kaybolmasın */
-    try{ if(typeof cloudSaveDebounced==='function') cloudSaveDebounced();
-         else if(typeof cloudSave==='function') cloudSave(); }catch(e){}
+    /* §264 BULUTA HEMEN YAZ — debounce DEĞİL.
+       cloudSaveDebounced 900 ms bekler; kullanıcı o süre dolmadan sayfayı
+       yenilerse kayıt buluta HİÇ GİTMEZ ve cloudLoad eski listeyi geri yazar.
+       12 Ağu'da ZERGY tam böyle kayboldu: localStorage'a yazıldı, "✓ eklendi"
+       dendi, yenilemede yok oldu. app.js tarafına birleştirme korumasını da
+       ekledim (§264) ama asıl çözüm gecikmeyi kaldırmak — onay ANLIK bir
+       eylemdir, biriktirilecek bir şey yok. */
+    try{ if(typeof cloudSave==='function') await cloudSave();
+         else if(typeof cloudSaveDebounced==='function') cloudSaveDebounced(); }catch(e){}
     /* Kart listesini yeniden kur ki Earnings AI'da GÖRÜNSÜN */
     /* Kart listesini yeniden kur ki Earnings AI'da GÖRÜNSÜN.
        Fonksiyon adı `incelemeInit` — app.js'te tanımlı, inceleme-ai.json'u
