@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812d';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812e';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -721,6 +721,30 @@ async function abdSekme(){
           eh+=eSatir('CUSR0000SASLE','Hizmet (enerji hariç)',false);
           eh+=eSatir('PCEPILFE','Çekirdek PCE — Fed\'in resmi pusulası',true);
           $('usEnfBody').innerHTML = eh||'<div class="sub">Enflasyon serileri boş.</div>';
+          /* §270 FED KARTINDAKİ TÜFE DE BURADAN. İki kart aynı ekranda farklı
+             sayı söylüyordu: sol "çekirdek %2,6 (Haz)" sabit, sağ "%2,8 (Tem)"
+             canlı. Tek kaynak — ay etiketi de veriden geliyor, elle yazılmıyor. */
+          try{
+            const mn=S['CPIAUCSL'], ck=S['CPILFESL'];
+            if(mn && $('fedTufeVal')){
+              $('fedTufeVal').innerHTML='yıllık %'+trN(mn.deger,1)+(ck?' · çekirdek %'+trN(ck.deger,1):'');
+              const AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+              const p=String(mn.tarih||'').slice(0,7).split('-');
+              if($('fedTufeTag')) $('fedTufeTag').textContent =
+                (p.length===2 ? '('+AYK[+p[1]-1]+' · canlı)' : '(canlı)');
+            }
+          }catch(e){}
+          /* §270c FED OLASILIK ÖLÇÜMÜNÜN YAŞI. "27 Tem'de ≈%82" damgalı bir
+             ölçüm; kaldırmıyoruz (geçmiş veri değerli) ama KAÇ GÜNLÜK olduğunu
+             söylüyoruz. 10 günü geçince kırmızı. Alttaki not "yüksek olasılıkla
+             fiyatlanıyor" diye KESİN konuşuyordu — oysa aynı satır fiyatlamanın
+             OYNAK olduğunu yazıyordu. */
+          try{
+            const _fo=$('fedOlasilikYas');
+            if(_fo){ const _g=Math.floor((Date.now()-new Date('2026-07-27').getTime())/86400000);
+              _fo.textContent='('+_g+'g önce)';
+              _fo.style.color=_g>10?'var(--down)':'var(--muted)'; }
+          }catch(e){}
         }
         // ---- Fed bilançosu (QT) ----
         if($('usBilancoBody')){
@@ -1312,7 +1336,12 @@ async function marketCek(){
     if(mk) window.__marketKapsam={istenen:ekKod.length, donen:mk.hisAdet||null, kirpilan:mk.hisKirpildi||0};
     if(mk&&mk.data){window.__market=mk.data;renderKuresel();emtiaRender();
       const rb=(id,k,dec)=>{const d=mk.data[k];if(d&&d.p!=null&&$(id)){const s=d.chg>=0?'+':'';$(id).innerHTML=trN(d.p,dec)+' <span class="sub'+(d.chg>=0?'':' down')+'" style="display:inline">'+s+'%'+trN(d.chg,2)+'</span>';}};
-      rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
+      rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();
+    /* §270b Fed kartındaki enerji satırına CANLI Brent eklenir — sabit "102$"
+       yerine güncel seviye. Veri yoksa etiket boş kalır, iddia edilmez. */
+    try{ const br=mk.data.brent;
+      if(br && br.p!=null && $('fedBrentTag')) $('fedBrentTag').textContent='· Brent '+trN(br.p,1)+'$';
+    }catch(e){}canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
       glbCdsYaz(); cdsCek();   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
       const d=$('sekDamga');
       if(d){

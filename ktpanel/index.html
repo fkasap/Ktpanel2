@@ -1443,9 +1443,20 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="card">
     <div class="lbl">FED &amp; POLİTİKA <span class="tag snap">8 AĞU · BAŞKAN: WARSH</span></div>
     <div class="kv"><span class="k">Sıradaki FOMC</span><span id="fomcSonraki" style="color:var(--mm2);font-weight:600">—</span></div>
-    <div class="kv"><span class="k">Eylül ARTIRIM olasılığı</span><span class="down">Fiyatlama OYNAK — 27 Tem'de ≈%82 idi; kurul derin bölünmüş (son toplantılarda 4–8 muhalefet). Piyasa uzun süreli bekleme fiyatlıyor</span></div>
-    <div class="kv"><span class="k">Sürükleyici</span><span>Brent şoku (zirve 102$, düzeltmede ~91$) → enflasyon bekl. → artırım fiyatlaması</span></div>
-    <div class="kv"><span class="k">TÜFE (Haz)</span><span>yıllık %3,5 · çekirdek %2,6</span></div>
+    <!-- §270c YAŞ GÖRÜNÜR. Satır "27 Tem'de ≈%82" diyor — 16 GÜN eski ve
+     fiyatlama OYNAK oldugu kendi metninde yazili. Alttaki not ise "piyasa
+     YUKSEK OLASILIKLA fiyatlamakta" diye KESIN konusuyordu — ikisi zit.
+     Rakam kaldirilmadi (gecmis bir olcum, degerli) ama yasi yazildi. -->
+<div class="kv"><span class="k">Eylül ARTIRIM olasılığı</span><span class="down">Fiyatlama OYNAK — <b>27 Tem ölçümü ≈%82</b> <span class="thin" id="fedOlasilikYas"></span>; kurul derin bölünmüş (son toplantılarda 4-8 muhalefet). Güncel fiyatlama panelde İZLENMİYOR</span></div>
+    <!-- §270b RAKAMSIZLASTIRILDI. "zirve 102$, duzeltmede ~91$" 15 gun eskiydi;
+     canli Brent 86,25. Sayi ustteki serit ve Global Risk kartinda ZATEN canli —
+     burada tekrarlamak iki sahipli deger yaratiyordu. Metin artik YONU anlatiyor. -->
+<div class="kv"><span class="k">Sürükleyici</span><span>Enerji fiyatı şoku → enflasyon beklentisi → artırım fiyatlaması <span class="thin" id="fedBrentTag"></span></span></div>
+    <!-- §270 CANLI TÜFE. Bu satır "TÜFE (Haz) · yıllık %3,5 · çekirdek %2,6" diye
+     SABİT yaziliydi. Sagdaki ABD ENFLASYON KIRILIMI karti CANLI FRED verisi
+     gosteriyordu: Temmuz cekirdek %2,8. Iki kart AYNI EKRANDA farkli sayi
+     soyluyordu (§241 ailesi). Artik ayni kaynaktan (S.CPIAUCSL/CPILFESL). -->
+<div class="kv"><span class="k">TÜFE <span class="thin" id="fedTufeTag">(damgalı)</span></span><span id="fedTufeVal">yıllık %3,5 · çekirdek %2,6</span></div>
 <div class="note" style="font-size:10px">Fed 2026'da ters yönde: dünya gevşerken Warsh yönetimi artırım tartışıyor — enerji şoku enflasyonu tekrar yükseltti. Piyasa artık indirim değil ARTIRIM fiyatlıyor (Eylül ≈%82). Portföy çevirisi: Fed artırırsa dolar güçlenir, EM (TL dahil) fonlama koşulları sıkılaşır; ABD tahvil getirisi hisseyi ezer (taktiksel duruş: yabancı hisse ALTI bu yüzden). Artırım olasılığı damgalıdır — CME FedWatch'tan Claude günceller.</div>
   </div>
   <div class="card">
