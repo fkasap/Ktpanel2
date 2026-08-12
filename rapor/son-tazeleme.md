@@ -36,7 +36,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (179 gün)
-- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2023 fon · AUM + yatırımcı sayısı köprüden (ham 2031 kayıt, sayfalamalı)
@@ -48,12 +48,14 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2023 fon fiyat + 1048 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008520327145> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008893535471> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%2)
 - ✓ **dönem tutarlılığı**: temiz
+
+### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)
 
 ### Bilanço tetiği — ✓ 25 şirket FR yayımladı
 - AEFES, AGROT, ARMGD, ASUZU, BIGTK, BINBN, BRYAT, CLKMT, DOHOL, EMVAR, GSRAY, HDFVK, HOROZ, HTTBT, INTEK, KBORU, MDASM, MGROS, MNGFA, NUGYO …
@@ -74,4 +76,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (138 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (224.48 bp) · risk metrikleri (131) · katılım fonları (46+akış) · bilanço tetiği (25) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (116 fiyat) · Model sicili (34 fiyat) · TR 5Y CDS (224.48 bp) · risk metrikleri (68) · katılım fonları (46+akış) · bilanço tetiği (25) · endeks üyelikleri · endeks arşivi
