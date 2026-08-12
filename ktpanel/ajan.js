@@ -249,7 +249,21 @@ function kartKesfet(veriSart){
     const canli = kart ? !!kartCanli.get(kart) : (sonH3Canli||sonH2Canli);
     liste.push({ad, nt, veri, canli});
   });
-  return liste;
+  /* §274 AYNI KART ADI İKİ KEZ EŞLEŞMESİN. 12 Ağu Avrupa sekmesi: "AVRO
+     BÖLGESİ ENFLASYON — KIRILIM" notu ekranda İKİ KEZ basıldı — aynı metin,
+     aynı damga, alt alta. Sebep: kart içinde BİRDEN FAZLA .note elemanı var
+     ve ikisi de aynı başlığa çözüldü; notNobetci/notlariGeriYukle her ikisine
+     de yazdı. innerHTML ile yazıldığı için çoğaltma değil, AYNI NOTUN İKİ
+     YERDE görünmesiydi.
+     Ad başına İLK not tutulur — sonrakiler atılır. İlk olan kartın kendi not
+     alanıdır (DOM sırası), sonrakiler açıklama/dipnot bloklarıdır. */
+  const _gorulen = new Set();
+  const _tekil = liste.filter(x => {
+    const a = String(x && x.ad || '');
+    if (!a || _gorulen.has(a)) return false;
+    _gorulen.add(a); return true;
+  });
+  return _tekil;
 }
 
 function h32(t){ let h=0; for(let i=0;i<t.length;i++){ h=(h*31+t.charCodeAt(i))|0; } return String(h); }

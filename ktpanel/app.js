@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812g';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812h';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -740,10 +740,14 @@ async function abdSekme(){
              fiyatlanıyor" diye KESİN konuşuyordu — oysa aynı satır fiyatlamanın
              OYNAK olduğunu yazıyordu. */
           try{
-            const _fo=$('fedOlasilikYas');
-            if(_fo){ const _g=Math.floor((Date.now()-new Date('2026-07-27').getTime())/86400000);
+            const _g=Math.floor((Date.now()-new Date('2026-07-27').getTime())/86400000);
+            /* §270c aynı ölçüm İKİ kartta geçiyor (Fed & Politika + ECB Koro) —
+               ikisine de yaş etiketi. Tek yerde işaretlemek diğerini yalancı bırakır. */
+            for(const _id of ['fedOlasilikYas','ecbFedYas']){
+              const _fo=$(_id); if(!_fo) continue;
               _fo.textContent='('+_g+'g önce)';
-              _fo.style.color=_g>10?'var(--down)':'var(--muted)'; }
+              _fo.style.color=_g>10?'var(--down)':'var(--muted)';
+            }
           }catch(e){}
         }
         // ---- Fed bilançosu (QT) ----
@@ -1349,7 +1353,11 @@ async function marketCek(){
     /* §270b Fed kartındaki enerji satırına CANLI Brent eklenir — sabit "102$"
        yerine güncel seviye. Veri yoksa etiket boş kalır, iddia edilmez. */
     try{ const br=mk.data.brent;
-      if(br && br.p!=null && $('fedBrentTag')) $('fedBrentTag').textContent='· Brent '+trN(br.p,1)+'$';
+      if(br && br.p!=null){
+        const _bt='· Brent '+trN(br.p,1)+'$';
+        if($('fedBrentTag')) $('fedBrentTag').textContent=_bt;
+        if($('ecbBrentTag')) $('ecbBrentTag').textContent=_bt;   /* §270b Avrupa kartı */
+      }
     }catch(e){}canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
       glbCdsYaz(); cdsCek();   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
       const d=$('sekDamga');
