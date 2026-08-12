@@ -279,11 +279,13 @@ function nobTarih(s){
   const a = NOB_AY[m[2].toLowerCase()];
   return (a==null) ? null : new Date(+m[3], a, +m[1]);
 }
-const nobGun = (d) => d ? Math.floor((Date.now()-d.getTime())/86400000) : null;
+/* §261 OLU YARDIMCI KALDIRILDI: nobGun. tazelikNobeti hesabi TZ.durum()'a
+   devredilince gun farki orada hesaplaniyor; tanim 1, cagri 0 kalmisti. */
 /* GÜN ANAHTARI: kart tarihi saatsizdir (00:00), KAP bildirimi saatlidir (19:08).
    Damga-zamanı karşılaştırılırsa kart AYNI GÜN yazılmış olsa bile "eski" sayanır ve
    nöbetçi kalıcı yanlış alarm üretir. Karşılaştırma GÜN bazında yapılır (§118 testi yakaladı). */
-const nobGunAnahtar = (d) => d ? (d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate()) : 0;
+/* §261 nobGunAnahtar DA OLU (cagri 0) — bu OTURUMDAN ONCE de oyleydi,
+   benim degisikligimle ilgisi yok. Ayni turda temizlendi. */
 
 /* ── NÖBET 1: TAZELİK ─────────────────────────────────────────────────────────
    guncelleme-plani.json'daki her katmanın yaşını ölçer, vadesi geçenleri toplar.
@@ -295,82 +297,45 @@ const nobGunAnahtar = (d) => d ? (d.getFullYear()*10000 + (d.getMonth()+1)*100 +
    KÖR NOKTA NOTU: bu nöbet ancak kayıttaki katmanları görür. Panele veri besleyen
    HER dosya guncelleme-plani.json'da olmalı — 28 Tem'e kadar altısı yoktu. */
 async function tazelikNobeti(){
+  /* §261 HESAP TEK SAHİBE DEVREDİLDİ — window.tazelikHesap.
+     §245p bunu YAPTIĞINI SÖYLÜYORDU ("ajan.js de bunu kullanır") ama ÖLÇÜLDÜ:
+     ajan.js tazelikHesap'ı HİÇ ÇAĞIRMIYORDU; kendi sikCoz/dosyaTarihleri/
+     döngüsünü çalıştırıyordu. Birleştirme YARIM KALMIŞTI ve fark BÜYÜMÜŞTÜ.
+     11 Ağu ÖLÇÜMÜ — 33 katmanda ÜÇ GERÇEK FARK:
+       1) `limit_gun` ALANI: planda "Yabancı para akışı" ve "Swap stoku" için
+          limit_gun:13 yazılı. app.js okuyor, ajan.js HİÇ BAKMIYORDU ve
+          sözlükten 7 alıyordu — plana yazılmış kural Ebu'ya ULAŞMIYORDU.
+       2) `olay` TİPİ: Ülke kredi notu / Halka arzlar / İnceleme AI / Köprü
+          testi olay bazlı, takvimi yok. app.js muaf tutuyor; ajan.js'te bu
+          dal YOKTU, 999 limitine düşüp KAZARA "taze" diyordu.
+       3) `yaklasti` KADEMESİ: app.js taze/yaklasti/bayat (3), ajan.js
+          taze/bayat (2). Yedi katmanda Ebu BAYAT derken çekmece "yaklaştı".
+     KORUNAN — Ebu'nun RAPOR katmanı kendisine ait: `tanimsiz` yaptırım
+     listesi (§245), `asim` sıralaması, pano sözleşmesi {dosya, gun, sez}.
+     Tek hesap, iki rapor.
+     BİLİNÇLİ FARK: Ebu 'yaklasti'yı DA bayat sayar (tip!=='taze'), çünkü
+     nöbetin işi UYARMAK, çekmecenin işi DURUM GÖSTERMEK. Aynı hesap, farklı
+     eşik — ve bu fark artık kaza değil, yazılı. */
   try{
+    const TZ = window.tazelikHesap;
+    if(!TZ) return null;                    /* app.js yüklenmediyse sessiz çık */
     const r = await fetch('/guncelleme-plani.json', {cache:'no-store'});
     if(!r.ok) return null;
     const plan = await r.json();
     const sg = plan.siklik_gun || {};
-    const sezonAylar = plan.bilanco_sezonu_aylar || [];
-    const sezonLimit = plan.sezon_limit_gun || 10;
-    const sezonda = sezonAylar.indexOf(new Date().getMonth()+1) >= 0;
+    const bugun = new Date();
+    const SEZ = TZ.sezonBaglam(plan, bugun);
+    const dosyaT = await TZ.dosyaTarihleri(plan.katmanlar || []);
     const bayat = [], tanimsiz = [];
-    /* §245 SIKLIK SERBEST METİNDİ, ENUM GİBİ OKUNUYORDU.
-       Eski satır: `let limit = sg[k.siklik] || 7`. Sözlükte olmayan HER değer
-       sessizce 7 güne düşüyordu. ÖLÇÜLDÜ: 32 katmanın 12'sinde `siklik`
-       sözlükle eşleşmiyor — 'canlı (Yahoo)', 'canlı (EVDS)', 'aylık (~25'i)',
-       'olay bazlı (FR)' … Sonuç: AYLIK bir katman 7 günde bayat sayılır,
-       OLAY BAZLI olan da öyle — kronik yanlış alarm. Ve yanlış alarm, §243'te
-       öğrendiğimiz gibi, bir süre sonra arka plan gürültüsüne dönüşür.
-       İKİ KATMANLI ÇÖZÜM:
-         1) NORMALİZE — parantezli ek atılır, Türkçe harf sadeleşir:
-            'canlı (Yahoo)' → canli · 'aylık (~25'i)' → aylik
-            'olay bazlı (FR)' → olaybazli → ÖN EK eşleşmesiyle 'olay'
-         2) YAPTIRIM — normalize sonrası HÂLÂ eşleşmiyorsa VARSAYMA YOK:
-            katman `tanimsiz` listesine düşer ve panoda görünür.
-       §243'ün dersi buydu: kural vardı, yaptırım yoktu. Sessiz varsayım,
-       yanlış limitten daha tehlikelidir — çünkü kimse sorgulamaz. */
-    const SIK_ANAHTAR = Object.keys(sg);
-    const sikNorm = (s) => String(s||'').toLowerCase()
-      .replace(/\(.*?\)/g,'')
-      .replace(/[ıİ]/g,'i').replace(/[şŞ]/g,'s').replace(/[çÇ]/g,'c')
-      .replace(/[ğĞ]/g,'g').replace(/[üÜ]/g,'u').replace(/[öÖ]/g,'o')
-      .replace(/[^a-z]/g,'');
-    const sikCoz = (ham) => {
-      const n = sikNorm(ham);
-      if(sg[n] != null) return {limit:sg[n], anahtar:n};
-      const p = SIK_ANAHTAR.find(a => n.indexOf(a) === 0);
-      if(p) return {limit:sg[p], anahtar:p};
-      return {limit:null, anahtar:null};
-    };
-    /* §198 TEK KAYNAK: dosyanın KENDİ tarihi, plandakinden ÖNCELİKLİ.
-       Sorun: plan `son` alanı ELLE tutuluyordu. inceleme-ai.json 30 Tem'de
-       tazelendi ama plan 21 Tem'de kaldı ve Ebu "10 gün bayat" dedi — dosya
-       taze, damga eski. §157.2'de yazdığım kuralın ("veri tazelenince damga
-       da tazelenir") ihlali; kural yazmak yetmiyor, MEKANİZMA gerekiyor.
-       ÇÖZÜM: JSON katmanlarında dosyanın içindeki `guncelleme`/`tarih` alanı
-       okunur ve plandakinden YENİYSE o kullanılır. Plan artık yalnız YEDEK.
-       Böylece elle senkron tutma zorunluluğu kalkar (§112 tek kaynak). */
-    const dosyaTarihleri = {};
-    await Promise.all((plan.katmanlar||[]).map(async k=>{
-      const f = String(k.dosya||'');
-      if(!f.endsWith('.json') || f.indexOf('/')>=0) return;
-      try{
-        const r = await fetch('/'+f, {cache:'no-store'});
-        if(!r.ok) return;
-        const j = await r.json();
-        const t = j.guncelleme || j.tarih || j.fiyat_tarihi || null;
-        if(t) dosyaTarihleri[f] = t;
-      }catch(e){}
-    }));
-    (plan.katmanlar||[]).forEach(k=>{
-      const S = sikCoz(k.siklik);
-      /* Muafiyet artık NORMALİZE anahtardan okunuyor: 'canlı (EVDS)' de
-         'canli' sayılır. Önceden yalnız birebir 'canli' eşleşiyordu. */
-      if(S.anahtar==='canli' || k.son==='otomatik') return;
-      if(S.limit==null){ tanimsiz.push({ad:k.ad, dosya:k.dosya, siklik:k.siklik}); return; }
-      const dosyaT = dosyaTarihleri[String(k.dosya||'')];
-      const planD = nobTarih(k.son), dosyaD = nobTarih(dosyaT);
-      /* Hangisi YENİYSE o geçerli — plan geride kalmış olabilir (elle tutuluyor),
-         dosya geride kalmış olabilir (guncelleme alanı yazılmamış olabilir). */
-      const d = (dosyaD && (!planD || dosyaD > planD)) ? dosyaD : planD;
-      if(!d) return;
-      const gun = nobGun(d);
-      let limit = S.limit, sez = false;
-      if(k.sezon && sezonda && limit > sezonLimit){ limit = sezonLimit; sez = true; }
-      if(gun > limit) bayat.push({ad:k.ad, dosya:k.dosya, gun, limit, sez, asim:gun-limit});
+    (plan.katmanlar || []).forEach(k => {
+      const D = TZ.durum(k, sg, dosyaT, bugun, SEZ);
+      if(D.tip === 'canli' || D.tip === 'olay' || D.tip === 'taze') return;
+      if(D.tip === 'tanimsiz'){ tanimsiz.push({ad:k.ad, dosya:k.dosya, siklik:k.siklik}); return; }
+      bayat.push({ad:k.ad, dosya:k.dosya, gun:D.gun, limit:D.limit, sez:!!D.sez,
+                  asim:D.gun - D.limit, tip:D.tip});
     });
-    bayat.sort((a,b)=>b.asim-a.asim);
-    return {bayat, tanimsiz, sezonda, toplam:(plan.katmanlar||[]).length};
+    bayat.sort((a,b) => b.asim - a.asim);
+    return {bayat, tanimsiz, sezonda:SEZ.sezonda, toplam:(plan.katmanlar||[]).length};
   }catch(e){ return null; }
 }
 
