@@ -700,10 +700,25 @@ async function fonTazele() {
 
   /* Çapa yöntemi: dönem getirisi eski fiyattan geri hesaplanır, yeni fiyata
      göre yeniden ölçülür. Çapalar sabit kaldığı için tutarlı kayar (§180.1). */
+  /* §266 AYNI GÜN İKİNCİ KOŞU 1G'Yİ SIFIRLIYORDU.
+     ÖLÇÜLDÜ (12 Ağu): katfon.json'da 46 fonun HEPSİNDE g[0]=0 ve a=0.
+     SEBEP: 1G = (yeni/f.yu − 1) hesaplanıyor, hemen ardından f.yu = yeni
+     yazılıyor. İlk koşu DOĞRU. Aynı gün ikinci koşuda f.yu ARTIK BUGÜNÜN
+     fiyatı → yeni/eski = 1 → 1G TAM SIFIR. Akış da aynı sebeple sıfırlanıyor
+     (fon-arsiv.json'daki pay adedi güncellenmiş, Δpay = 0).
+     Bugün Actions üç kez `hepsi` koştu ve gerçek 1G değerleri (0,1101 · 0,0998)
+     silindi. Panel "+0" gösterdi.
+     ÇÖZÜM: dosyanın fiyat_tarihi BUGÜN ise bu bir TEKRAR koşudur — seviyeler
+     (fiyat/AUM) tazelenir ama 1G ve akış KORUNUR. İlk koşunun hesabı doğrudur,
+     ikincisinin yapacak işi yoktur.
+     NOT: bu, §252z'nin (tarih sürekliliği) aynı ailesi — iki ölçüm arasındaki
+     GERÇEK zaman farkı sıfırsa, getiri de tanımsızdır. */
+  const _ayniGun = String(d.fiyat_tarihi || '') === String(bugun);
   let n = 0;
   fonlar.forEach(f => {
     const yeni = fiyat[f.k]; if (!yeni) return;
     const eski = f.yu;
+    if (_ayniGun) { f.yu = yeni; n++; return; }   /* tekrar koşu: 1G'ye DOKUNMA */
     for (let i = 1; i < f.g.length; i++) {
       if (f.g[i] == null) continue;
       const capa = eski / (1 + f.g[i] / 100);
@@ -712,13 +727,20 @@ async function fonTazele() {
     f.g[0] = +((yeni / eski - 1) * 100).toFixed(4);
     f.yu = yeni; n++;
   });
+  if (_ayniGun) raporlar.push('### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)');
   /* §249: AUM + yatırımcı canlı; AKIŞ = Δpay × fiyat (dünkü pay arşivden).
      Arşiv yoksa ilk koşu akışı null bırakır ve temeli atar — uydurma yok. */
   const meta = globalThis.__tefasMeta || {};
   const arsivDosya = 'fon-arsiv.json';
   let arsiv = (await varMi(arsivDosya)) ? await oku(arsivDosya) : { gunler: {} };
+  /* §266b DÜN = BUGÜN DEĞİL. Önceki hal arşivin SON gününü alıyordu; aynı gün
+     ikinci koşuda o gün ZATEN BUGÜNDÜ (ilk koşu yazmıştı) → Δpay = 0 → akış
+     46 fonda birden SIFIR. 1G ile aynı kök (§266): iki ölçüm arasındaki gerçek
+     zaman farkı sıfırsa değişim de tanımsızdır.
+     Artık bugün AÇIKÇA dışlanıyor; hafta sonu/tatil boşluğu kendiliğinden
+     atlanır çünkü sıralı son ÖNCEKİ kayıt alınır. */
   const dunKayit = (() => {
-    const g = Object.keys(arsiv.gunler || {}).sort();
+    const g = Object.keys(arsiv.gunler || {}).sort().filter(x => x !== bugun);
     return g.length ? arsiv.gunler[g[g.length - 1]] : null;
   })();
   const G = globalThis.__tefasGetiri || {};
