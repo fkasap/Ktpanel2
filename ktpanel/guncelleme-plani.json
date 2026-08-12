@@ -48,7 +48,7 @@
    "ad": "Sektör ısı haritası + rotasyon",
    "dosya": "sektor.json",
    "siklik": "haftalik",
-   "son": "2026-07-28",
+   "son": "2026-08-10",
    "kaynak": "Yahoo → /api/market",
    "_245": "DAMGA §B2: otomasyon YOK, Fintables köprüsü ZORUNLU (komut: \"sektorleri tazele\"). son=\"otomatik\" idi → nöbetten muaftı. Oysa bu dosya eskidikçe RS ufukları da eskir."
   },
@@ -63,19 +63,19 @@
    "ad": "Katılım fonları",
    "dosya": "katfon.json",
    "siklik": "canlı (TEFAS)",
-   "son": "2026-07-29",
+   "son": "2026-08-11",
    "kaynak": "TEFAS fonGnlBlgSiraliGetir (YENİ API) → /api/katfon · 1G+fiyat+AUM canlı · dönem getirileri damgalı taban"
   },
   {
-   "ad": "Yabancı para akışı + carry",
+   "ad": "Yabancı akışı — AYLIK ödemeler dengesi",
    "dosya": "yabanci.json",
-   "siklik": "haftalik",
-   "son": "2026-07-17",
-   "kaynak": "TCMB menkul kıymet ist. + ödemeler dengesi + web",
+   "siklik": "aylik",
+   "son": "2026-08-11",
+   "kaynak": "TCMB ödemeler dengesi (aylık, elle) — haftalık kısım CANLI",
    "_245": "DAMGA §B: Perşembe ritüeli, ELLE (hafta_seri'ye ekleme). siklik=\"canli\" idi → muaftı.",
    "_245k": "KISMEN canlı: stok + SON hafta EVDS CANLI (yabCanli → mod=yab, damgalıyı ezer). hafta_seri GEÇMİŞİ ve aylık ödemeler dengesi ELLE — dosya damgası onları izler. Yani bu katman damgalı KALIR ama bayatlama riski yalnız seri geçmişinde.",
-   "limit_gun": 13,
-   "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği."
+   "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği.",
+   "_261": "11 Agu: HAFTALIK KISIM CANLIYA GECTI (§259). /api/evds2?mod=yab alti haftalik seriyi ve stoku EVDS bie_mknethar M7/M8/M12 den veriyor; app.js yabHaftaCanliYaz() ile basiyor ve yeniden cizimden sonra geri koyuyor. Dosyadaki hafta_son/hafta_seri bloklari ARTIK OKUNMUYOR — panel onlara dusmez. GERIYE ELLE KALAN: aylik `aylik` blogu (odemeler dengesi, ayda bir yayin) ve `rezerv` blogu (o da OLU — app.js canli hesapliyor, bkz asagi). BU YUZDEN siklik haftalik -> AYLIK. limit_gun:13 KALDIRILDI: o esik TCMB nin Persembe haftalik yayin ritmi icindi (§245p), aylik veride anlamsiz."
   },
   {
    "ad": "Net rezerv (Rezerv Karnesi)",
@@ -126,7 +126,7 @@
    "ad": "Multiple snapshot (EV/EBITDA)",
    "dosya": "multiple.json",
    "siklik": "ceyreklik",
-   "son": "2026-07-29",
+   "son": "2026-08-11",
    "kaynak": "Fintables finansal_tablolar (bilanço dönemi) | 29 Tem: FIYAT tazelendi (Fintables mumlar_gunluk_gh, 141/141). Bilanco kalemleri 1C26 — 2C26 aciklanmadi.",
    "sezon": true,
    "_245k": "Fiyat sütunu BOT (fiyatTazele), EV/EBITDA PAYDASI elle çeyreklik. Karma katman: damgalı kalır ama damga yalnız paydayı temsil eder."
@@ -200,8 +200,7 @@
    "siklik": "ceyreklik",
    "son": "2026-07-14",
    "kaynak": "Fintables 29 metrik → rank-normal standardizasyon · sektör içi VALUE/GROWTH/QUALITY",
-   "sezon": true,
-   "_252s_karar": "10 Agu 2026 — TAZELEME BILEREK ERTELENDI. Kullanici karari: 2C sezonu bitmeden guncellemek isi IKI KEZ yaptirir ve ara durum yari-pismis olur (10 Agu itibariyla takipteki 40 sirketin 25'i henuz aciklamamisti). SPK siniri: konsolide olmayan 14 Agu, konsolide 29 Agu -> HEDEF TARIH ~1 EYLUL 2026. HAZIR: ktpanel/arac/fm-isle.py yazildi ve dogrulandi (yapisal imza mevcut dosyayla ortusuyor; QUALITY .919 LOW_RISK .855 korelasyon, MOMENTUM .386 — hizli degisen faktorde dusuk olmasi BEKLENEN). Kullanim: python3 fm-isle.py <csv> fm.json --dogrula <eski fm.json>. KARAR BEKLEYEN: 10 Agu CSV'si 215 hisse tasiyordu, mevcut evren 147. Olculdu — Top-40 degisiminin YARISI bilancodan, YARISI evren genislemesinden geliyor (A->B 14 isim, B->C 14 isim). Evren genisletilecekse BILINCLI bir gecis olarak kaydedilmeli; track.json sicil sepeti 28 Tem temelli, DEGISTIRILMEMELI yoksa sicil kopar."
+   "sezon": true
   },
   {
    "ad": "Risk metrikleri (vol · beta)",
@@ -215,7 +214,7 @@
    "ad": "Analist konsensüsü (hedef fiyat)",
    "dosya": "analist.json",
    "siklik": "aylik",
-   "son": "2026-07-29",
+   "son": "2026-08-10",
    "kaynak": "analist.json — Fintables hisse_senedi_araci_kurum_hedef_fiyatlari. Son 6 ayin hedef fiyat ORTALAMASI (yayin_tarihi >= bugun-180g). Sorgu: GROUP BY hisse, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat). Son 6 ayda raporu olmayan hisse \"bayat\":true isaretlenir — hedefi eskidir, guncel fiyatla kiyaslanmamalidir.",
    "sezon": true
   },
@@ -223,7 +222,7 @@
    "ad": "Swap stoku (rezerv bileşeni)",
    "dosya": "rezerv.json",
    "siklik": "haftalik",
-   "son": "2026-07-24",
+   "son": "2026-08-10",
    "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır)",
    "limit_gun": 13,
    "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği."
@@ -248,18 +247,17 @@
   },
   {
    "ad": "BIST beklenen bilanco takvimi",
-   "dosya": "bist-takvim.json",
    "siklik": "ceyreklik",
-   "son": "2026-07-29",
+   "son": "2026-08-10",
    "sezon": true,
    "kaynak": "bist-takvim.json — TAHMIN. Gecen yilin ayni donem KAP aciklama tarihi, ayni hafta gunune hizalanarak tasinir. Her CEYREK BASINDA yenilenir (yeni donemin tahminleri). Sorgu: SELECT hisse_senedi_kodu, yayinlanma_tarihi_utc FROM hisse_finansal_tablolari WHERE yil=<oncekiYil> AND ay=<donem>. SPK sinirini asan tahminler 'farkli_mali_yil' altina ayrilir (MAVI, TKFEN gibi).",
-   "_252r": "dosya alani EKSIKTI — tazelikHesap dosyanin kendi tarihini okuyamiyor, yalniz elle tutulan son alanina mahkumdu (§198 tam bunu cozmustu ama bu kayitta uygulanmamisti). Ayni dosyayi izleyen ikinci katman \"BIST bilanco takvimi\" zaten dosya alanina sahipti."
+   "dosya": "bist-takvim.json"
   },
   {
    "ad": "BIST bilanço takvimi",
    "dosya": "bist-takvim.json",
    "siklik": "haftalik",
-   "son": "2026-07-29",
+   "son": "2026-08-10",
    "kaynak": "KAP beklenen bildirimler + Fintables",
    "_245": "§F0 ihlali: panele veri besliyordu ama kayıtta YOKTU → sessizce eskiyordu."
   }
