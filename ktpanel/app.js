@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812e';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812f';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -714,8 +714,8 @@ async function abdSekme(){
               ' <span style="color:var(--muted);font-size:9px">'+v.tarih.slice(0,7)+'</span></span></div>';
           };
           let eh='';
-          eh+=eSatir('CPIAUCSL','Manşet TÜFE',true);
-          eh+=eSatir('CPILFESL','Çekirdek TÜFE (gıda+enerji hariç)',false);
+          eh+=eSatir('CPIAUCNS','Manşet TÜFE',true);
+          eh+=eSatir('CPILFENS','Çekirdek TÜFE (gıda+enerji hariç)',false);
           eh+=eSatir('CPIENGSL','Enerji kalemi — Brent geçişkenliği',true);
           eh+=eSatir('CUSR0000SAH1','Barınma/kira — yapışkanlık',false);
           eh+=eSatir('CUSR0000SASLE','Hizmet (enerji hariç)',false);
@@ -725,7 +725,7 @@ async function abdSekme(){
              sayı söylüyordu: sol "çekirdek %2,6 (Haz)" sabit, sağ "%2,8 (Tem)"
              canlı. Tek kaynak — ay etiketi de veriden geliyor, elle yazılmıyor. */
           try{
-            const mn=S['CPIAUCSL'], ck=S['CPILFESL'];
+            const mn=S['CPIAUCNS'], ck=S['CPILFENS'];   /* §271 NSA — BLS manşetiyle aynı */
             if(mn && $('fedTufeVal')){
               $('fedTufeVal').innerHTML='yıllık %'+trN(mn.deger,1)+(ck?' · çekirdek %'+trN(ck.deger,1):'');
               const AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
