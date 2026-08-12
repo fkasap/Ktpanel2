@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812d';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -6615,7 +6615,12 @@ const CLOUD_KEYS=['__sil_guidance_v1','poz_v1','journal_v1','guidance_v1','ktp_s
      yazılamaz; onaylanan kartlar buluta gider ve dosyayla BİRLEŞTİRİLİR.
      Böylece deploy beklemeden Earnings AI'da görünür. Kalıcı hâle gelince
      dosyaya işlenir ve buluttan silinir. */
-  'ktp_taslak_kart_v1'];   // sukuk + model sicili de buluta
+  'ktp_taslak_kart_v1',
+  /* §265 BILANCO YOKSAYMA LISTESI. Kart bekleyen liste KAP'tan turetilir;
+     kullanici 29 sirketin hepsinin kartini yazmak istemez. Gizlenenler
+     kod+donem kapsaminda burada tutulur. Cihazlar arasi tasinmali — yoksa
+     her cihazda ayni sirketleri tek tek gizlemek gerekir. */
+  'ktp_bilanco_yoksay_v1'];   // sukuk + model sicili de buluta
 const _origSet=localStorage.setItem.bind(localStorage);
 const _origGet=localStorage.getItem.bind(localStorage);
 let _cloudTimer;

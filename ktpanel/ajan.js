@@ -459,7 +459,13 @@ async function bilancoNobeti(){
           kartVar:!!kartT};
       }
     });
+    /* §265 YOKSAYILANLAR SÜZÜLÜR — kod+dönem kapsamında. Yeni çeyrek gelince
+       anahtar değişir ve şirket LİSTEYE GERİ DÖNER; yoksayma tek bir dönem
+       için verilmiş karardır, kalıcı sessizleştirme değil. */
+    const _yok = (typeof yoksayOku==='function') ? yoksayOku() : {};
+    const _yokSay = Object.keys(_yok).length;
     const liste = Object.keys(bekleyen).map(k=>bekleyen[k])
+      .filter(x => !_yok[x.kod+'|'+(x.donem||'')])
       .sort((a,b)=> (b.portfoyde?1:0)-(a.portfoyde?1:0) || b.ts-a.ts);
     /* Evren kırılımı görünür olsun — "kaç kod izleniyor" sorusunun cevabı
        tek sayı değil, NEREDEN GELDİĞİ de bilinmeli (§141). */
@@ -469,7 +475,7 @@ async function bilancoNobeti(){
       Object.keys(ENDAG).forEach(e=>{ const u=ENDAG[e]&&ENDAG[e].uyeler; if(u) Object.keys(u).forEach(x=>s.add(x)); });
       endeksAdet = s.size;
     } }catch(e){}
-    return {liste, taranan:(kap.items||[]).length, evren:evren.size,
+    return {liste, taranan:(kap.items||[]).length, evren:evren.size, yoksayilan:_yokSay, yoksay:_yok,
       kirilim:{ kart:Object.keys(kartlar).length, endeks:endeksAdet }};
   }catch(e){ return null; }
 }
@@ -479,6 +485,35 @@ async function bilancoNobeti(){
    Sabah gündem notunun bağlamına da girer — cron notu bunları görsün diye. */
 let NOBET_SON = {tazelik:null, bilanco:null, saat:null};
 
+/* §265 "İLGİLENMİYORUM" LİSTESİ. Kart bekleyen bilanço listesi KAP'tan
+   TÜRETİLİR — statik değildir; bir kaydı silmek işe yaramaz, sonraki nöbette
+   geri gelir. Kullanıcının gerçek ihtiyacı 29 şirketin hepsinin kartını
+   yazmamak: ilgilenmediğini KALICI olarak işaretlemek.
+   Kapsam kod+dönem: ZERGY 2026/2'yi yoksaymak 2026/3'ü gizlemez — yeni çeyrek
+   yeni karardır. Buluta da yazılır (CLOUD_KEYS'te), cihazlar arası taşınır.
+   Geri almak için panonun altındaki "gizlenenler" satırından tek tık. */
+const YOKSAY_ANAHTAR = 'ktp_bilanco_yoksay_v1';
+function yoksayOku(){
+  try{ const o=JSON.parse(localStorage.getItem(YOKSAY_ANAHTAR)||'{}'); return (o&&typeof o==='object')?o:{}; }
+  catch(e){ return {}; }
+}
+function yoksayYaz(o){
+  try{ localStorage.setItem(YOKSAY_ANAHTAR, JSON.stringify(o)); }catch(e){}
+  /* §264 dersi: debounce DEĞİL — kullanıcı hemen yenilerse kayıt kaybolur */
+  try{ if(typeof cloudSave==='function') cloudSave(); }catch(e){}
+}
+function yoksayEkle(kod, donem){
+  const o=yoksayOku(); o[String(kod).toUpperCase()+'|'+(donem||'')]={ts:Date.now(), kod:String(kod).toUpperCase(), donem:donem||''};
+  yoksayYaz(o); kayit('Yoksayıldı: '+kod+(donem?' '+donem:''));
+  nobetTuru();
+}
+function yoksayKaldir(anahtar){
+  const o=yoksayOku(); delete o[anahtar]; yoksayYaz(o);
+  kayit('Yoksayma kaldırıldı: '+anahtar.split('|')[0]);
+  nobetTuru();
+}
+window.yoksayEkle = yoksayEkle;      /* onclick'ten çağrılıyor */
+window.yoksayKaldir = yoksayKaldir;
 function nobetCiz(){
   const T = NOBET_SON.tazelik, B = NOBET_SON.bilanco;
   const el = $('nobetPano');
@@ -488,6 +523,12 @@ function nobetCiz(){
       h += '<div style="margin-bottom:7px"><span class="lbl" style="color:var(--down)">\u26a0 KART BEKLEYEN B\u0130LAN\u00c7O \u00b7 '+B.liste.length+'</span>'+
         B.liste.slice(0,6).map(x=>'<div style="font-size:11px;margin-top:3px">'+
           (x.portfoyde?'<b style="color:var(--mm2)">\u25cf</b> ':'') + '<b>'+esc(x.kod)+'</b> '+
+          /* §265 GİZLE — kartını yazmak istemediğin şirket için. Liste KAP'tan
+             türetildiği için "silme" işe yaramaz (sonraki nöbette geri gelir);
+             bu düğme kod+dönem kapsamında KALICI yoksayma yazar. */
+          '<button class="mini" title="Bu dönem için gizle — kartını yazmayacağım" '+
+          'style="font-size:9px;padding:1px 5px;margin-right:4px;opacity:.65" '+
+          'onclick="yoksayEkle(&quot;'+esc(x.kod)+'&quot;,&quot;'+esc(x.donem||'')+'&quot;)">\u2715</button>'+
           /* §215b TASLAK DÜĞMESİ. Metrikler /api/kap?mod=kart'tan, yorum
              /api/ajanktp?mod=bilanco'dan. Tarayıcı ikisini sırayla çağırır —
              sunucudan sunucuya istek YOK (§208 dersi). */
@@ -495,6 +536,13 @@ function nobetCiz(){
             ? '<button class="mini" style="font-size:9px;padding:1px 6px;margin-right:5px" onclick="bilancoTaslak(this,&quot;'+esc(x.kod)+'&quot;,&quot;'+x.idler.join(',')+'&quot;,&quot;'+esc(x.donem||'')+'&quot;,&quot;'+esc(x.tsIso||'')+'&quot;)">taslak</button>' : '')+
           '<span class="sub" style="font-size:9px">'+x.ts.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+
           (x.kartVar?' \u00b7 yeni d\u00f6nem':'')+'</span></div>').join('')+'</div>';
+      /* §265 GİZLENENLER — geri alma yolu görünür olmalı, yoksa kullanıcı
+         neyi sakladığını unutur ve liste sessizce eksik kalır. */
+      if(B.yoksayilan){
+        h += '<div class="sub" style="font-size:10px;margin:4px 0 7px;opacity:.7">gizlenen '+B.yoksayilan+': '+
+          Object.keys(B.yoksay||{}).slice(0,8).map(a=>'<span style="cursor:pointer;text-decoration:underline dotted" '+
+            'title="geri getir" onclick="yoksayKaldir(&quot;'+esc(a)+'&quot;)">'+esc(a.split('|')[0])+'</span>').join(' · ')+'</div>';
+      }
     } else if(B){
       h += '<div class="sub" style="font-size:11px;margin-bottom:7px">\u2713 Bekleyen bilan\u00e7o kart\u0131 yok <span class="thin">('+B.evren+' kod: katılım endeksleri '+
         ((B.kirilim&&B.kirilim.endeks)||0)+' + portföy + kartlı '+((B.kirilim&&B.kirilim.kart)||0)+')</span></div>';
@@ -530,7 +578,12 @@ function nobetCiz(){
           (x.portfoyde?'border-color:var(--mm2);font-weight:700':'')+'">'+
           (x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">':'')+
           esc(x.kod)+' <span class="sub" style="font-size:9px">'+x.ts.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+'</span>'+
-          (x.url?'</a>':'')+'</span>').join('')+'</div>'+
+          (x.url?'</a>':'')+
+          /* §265 rozetin icinde gizle — 29 sirketin hepsinin karti istenmez.
+             event.stopPropagation: rozet <a> icerdiginde tiklamayi yutmali. */
+          ' <span title="bu donem icin gizle" style="cursor:pointer;opacity:.45;font-size:10px" '+
+          'onclick="event.preventDefault();event.stopPropagation();yoksayEkle(&quot;'+esc(x.kod)+'&quot;,&quot;'+esc(x.donem||'')+'&quot;)">\u2715</span>'+
+          '</span>').join('')+'</div>'+
         '<div class="sub" style="font-size:10px;margin-top:6px">Ye\u015fil \u00e7er\u00e7eve = portf\u00f6y\u00fcnde. Claude\u2019a "<b>'+
         esc(B.liste[0].kod)+' bilan\u00e7osunu incele</b>" diyerek kart\u0131 yazd\u0131rabilirsin.</div></div>'
       : '';
