@@ -76,6 +76,69 @@ async function cozCek(key, grupRx, hedefler, gunGeri){
      M1/M2/M6 = aynıların STOK karşılıkları
    Kod TAHMİN EDİLMEZ, ÖLÇÜLÜR — regex grup adına bağlıydı ve tek harf
    (yerleşikler/yerleşiklerin) yüzünden aylardır çalışmıyordu. */
+/* §275 ECB VERİ PORTALI — AÇIK API, ANAHTAR YOK.
+   12 Ağu ölçümü: data-api.ecb.europa.eu tarayıcıdan DOĞRUDAN açıldı (CORS izni
+   var) ve DFR=2,25 döndü. Dosyadaki eski not "ECB ağı kapalıyken OECD serisi"
+   diyordu — o durum artık geçerli değil, en azından bu uç için.
+   Panelde ECB kartları ELLE giriliyordu (HICP %2,9/%2,5/%10,0 · DFR %2,25) ve
+   damgalıydı. Artık kaynaktan gelir, tarih de veriden.
+   YENİ UÇ AÇILMADI (§248c): evds2'ye mod=ecb olarak bindirildi.
+   BİÇİM SDMX-JSON: değer  dataSets[0].series[<anahtar>].observations[i][0]
+                    tarih  structure.dimensions.observation[0].values[i].id */
+const ECB_SERI = {
+  dfr:      ['FM/D.U2.EUR.4F.KR.DFR.LEV',   'Mevduat faizi (DFR)'],
+  hicp:     ['ICP/M.U2.N.000000.4.ANR',     'HICP manşet (yıllık)'],
+  hicpCekirdek: ['ICP/M.U2.N.XEF000.4.ANR', 'HICP çekirdek (enerji+gıda hariç)'],
+  hicpEnerji:   ['ICP/M.U2.N.NRGY00.4.ANR', 'HICP enerji']
+};
+async function ecbModu(req, res){
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=43200');
+  const n = Math.min(24, Math.max(1, parseInt(req.query.n) || 2));
+  /* SDMX-JSON'dan [tarih, değer] çiftleri. Yapı derin ve tek bir alan eksikse
+     sessizce çöker — her adım korumalı. */
+  const coz = (j) => {
+    try{
+      const ds = j && j.dataSets && j.dataSets[0];
+      const seri = ds && ds.series && Object.values(ds.series)[0];
+      const obs = seri && seri.observations;
+      const zaman = j.structure && j.structure.dimensions
+        && (j.structure.dimensions.observation || []).find(d => d.id === 'TIME_PERIOD');
+      if(!obs || !zaman) return null;
+      const cikti = [];
+      for(const k of Object.keys(obs)){
+        const v = obs[k] && obs[k][0];
+        const t = zaman.values[+k] && (zaman.values[+k].id || zaman.values[+k].name);
+        if(t != null && isFinite(v)) cikti.push([String(t), +v]);
+      }
+      return cikti.sort((a,b) => a[0] < b[0] ? -1 : 1);
+    }catch(e){ return null; }
+  };
+  const sonuc = {}; const hata = [];
+  await Promise.all(Object.keys(ECB_SERI).map(async (ad) => {
+    const [yol, aciklama] = ECB_SERI[ad];
+    try{
+      const u = 'https://data-api.ecb.europa.eu/service/data/' + yol
+        + '?lastNObservations=' + n + '&format=jsondata';
+      const r = await fetch(u, { headers:{ 'Accept':'application/json' }, signal: AbortSignal.timeout(12000) });
+      if(!r.ok){ hata.push(ad + ':HTTP' + r.status); return; }
+      const seri = coz(await r.json());
+      if(!seri || !seri.length){ hata.push(ad + ':boş'); return; }
+      const son = seri[seri.length-1], onc = seri.length > 1 ? seri[seri.length-2] : null;
+      sonuc[ad] = { ad:aciklama, deger:son[1], tarih:son[0],
+        onceki: onc ? onc[1] : null,
+        /* ivme = son − önceki. HICP'de bu "hızlanıyor mu" demektir; DFR'de
+           "son adım" büyüklüğü. İkisi de anlamlı, ikisi de HESAPLANIR. */
+        fark: onc ? +(son[1] - onc[1]).toFixed(2) : null,
+        seri: seri.slice(-12) };
+    }catch(e){ hata.push(ad + ':' + String(e.message||e).slice(0,40)); }
+  }));
+  if(!Object.keys(sonuc).length)
+    return res.status(200).json({ ok:false, err:'ECB yanıt vermedi', hata });
+  return res.status(200).json({ ok:true, kaynak:'ECB Data Portal (data-api.ecb.europa.eu · açık API)',
+    veri:sonuc, eksik: hata.length ? hata : undefined,
+    not:'Anahtar gerekmez. Damgalı ECB kartlarının yerini alır (§275).' });
+}
 async function yabModu(req, res, cfg){
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=43200');
@@ -217,6 +280,7 @@ module.exports = async (req, res) => {
   if (mod === 'kart')  return _kart(req, res);
   if (mod === 'rezerv') return rezervModu(req, res);
   if (mod === 'dvz') return dvzModu(req, res, { key: process.env.EVDS_KEY || req.query.key });
+  if (mod === 'ecb') return ecbModu(req, res);   /* §275 — EVDS anahtarı GEREKMEZ */
   if (mod === 'yab') return yabModu(req, res, { key: process.env.EVDS_KEY || req.query.key });
   if (mod === 'kko') return kkoModu(req, res, { key: process.env.EVDS_KEY || req.query.key });
 
