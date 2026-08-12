@@ -2767,6 +2767,74 @@ turda olculecek (bekleyen islere kondu).
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
 
+## 261 TAZELIK HESABI TEK SAHIBE DEVREDILDI — §245p'NIN YARIM ISI (11 Agu)
+
+§245p "hesap artik window.tazelikHesap'ta, ajan.js de bunu kullanir" DIYORDU.
+OLCULDU: ajan.js tazelikHesap'i HIC CAGIRMIYORDU — kendi sikCoz/sikNorm/
+dosyaTarihleri/dongusunu calistiriyordu. Birlestirme yarim kalmis, fark
+BUYUMUSTU. (10 Agu'da sezon kuralini hizalamistim; asil ayrisma daha derindi.)
+
+### 33 KATMANDA UC GERCEK FARK — olculdu, tahmin degil
+1) `limit_gun` ALANI OKUNMUYORDU. Planda "Yabanci para akisi" ve "Swap stoku"
+   icin limit_gun:13 YAZILI (§245p: TCMB Persembe yayinlar, veri onceki
+   CUMA'ya ait, katman dogasi geregi 6-12 gun salinir; 13 = "bir yayin kacti"
+   esigi). app.js okuyor, ajan.js HIC BAKMIYOR ve sozlukten 7 aliyordu.
+   PLANA YAZILMIS BIR KURAL EBU'YA ULASMIYORDU.
+2) `olay` TIPI YOKTU. Ulke kredi notu / Halka arzlar / Inceleme AI / Kopru
+   testi olay bazli, takvimi yok. app.js 'olay' deyip muaf tutuyor; ajan.js'te
+   bu dal YOKTU, 999 limitine dusup KAZARA "taze" diyordu. Dogru sonuc,
+   YANLIS GEREKCE — ve 999 baska bir katmanda ciksa yanlis alarm verirdi.
+3) `yaklasti` KADEMESI YOKTU. app.js taze/yaklasti/bayat (3 kademe),
+   ajan.js taze/bayat (2). YEDI katmanda Ebu BAYAT derken cekmece "yaklasti"
+   diyordu — ayni veriye bakip farkli sey soyluyorlardi.
+
+### COZUM: tek hesap, iki rapor
+tazelikNobeti artik TZ.durum() / TZ.dosyaTarihleri() / TZ.sezonBaglam()
+cagiriyor. Kendi sikCoz/sikNorm/dongusu KALDIRILDI.
+HESAP AYRISMASI ARTIK FIZIKEN IMKANSIZ.
+KORUNAN — Ebu'nun RAPOR katmani kendisine ait kalir:
+  · `tanimsiz` yaptirim listesi (§245) — sozlukle eslesmeyeni panoda gosterir
+  · `asim`'e gore siralama
+  · pano sozlesmesi {ad, dosya, gun, limit, sez, asim, tip}
+BILINCLI FARK (yaziya dokuldu): Ebu 'yaklasti'yi DA bayat sayar
+(tip!=='taze'), cunku NOBETIN ISI UYARMAK, CEKMECENIN ISI DURUM GOSTERMEK.
+Ayni hesap, farkli esik — artik kaza degil, karar.
+
+### YAN TEMIZLIK
+nobGun ve nobGunAnahtar OLU kaldi, kaldirildi. NOT: nobGunAnahtar BU
+OTURUMDAN ONCE de oluydu (cagri 0), benim degisikligimle ilgisi yok.
+
+### YABANCI KATMANI DARALTILDI
+Kaydin kendisi zaten "KISMEN canli" diyordu. 11 Agu'da haftalik kisim TAMAMEN
+canliya gecti (§259: mod=yab alti haftalik seri + stok). Geriye ELLE kalan tek
+blok: `aylik` (odemeler dengesi, ayda bir yayin).
+  ad: "Yabanci para akisi + carry" -> "Yabanci akisi — AYLIK odemeler dengesi"
+  siklik: haftalik -> aylik
+  limit_gun: 13 KALDIRILDI (o esik Persembe haftalik ritmi icindi, aylikta
+             anlamsiz)
+Sonuc: yabanci.json nobet listesinden DUSTU — yanlis alarm degil, dogru kapsam.
+
+### PLAN TARIHLERI HIZALANDI
+7 kayit: 10-11 Agu'da GERCEKTEN tazelenenler (sektor, katfon, multiple,
+analist, rezerv, bist-takvim, yabanci). Ayrica "BIST beklenen bilanco takvimi"
+kaydina EKSIK `dosya` alani eklendi (§252r'de bulunmustu).
+NOBET SONUCU: 3 -> 2. Kalan ikisi (fm.json 29g, guidance.json 26g) BILINCLI
+ERTELENEN kalemler, gerekcesi plan dosyasinda yazili.
+
+### CANLIDA GORULEN IKI MEKANIZMA
+Ekran gunlugunde:
+  "§111 yaptirim: 1 not REDDEDILDI (canli kartta rakam) — eski not korundu"
+  "Nobetci: 1 not yeniden cizimden sonra geri kondu"
+Ikincisi §259c'de app.js tarafina ekledigim korumanin Ebu'daki karsiligi —
+ayni tuzak (render'in canli yazimi silmesi) iki yerde de cozulmus durumda.
+
+### rezerv YEDEGI — "olu" dedigim alan olu degilmis
+10 Agu'da yabanci.json'daki `rezerv` blogunu "panel okumuyor" diye isaretledim.
+YANLISTI: app.js'te 5 YERDE okunuyor, ILK CIZIM yedegi. Canli hesap sonra
+ustune yaziyor. 37,7'de kalmisti (17 Tem verisi) -> 46,8 hizalandi
+(net 60,2 - swap 13,4). Blogun KENDI NOTU zaten "TEK DOGRU KAYNAK
+rezerv.json'dur, bu alan onunla hizalanir" diyordu; hizali degildi.
+
 ## 260 KART HARCAMALARI BIR AY GERIDEYDI — "YORUM DOGRU, KOD BASKA" (11 Agu)
 
 BULGU: panel kart harcamalarinda 2026-06 gosteriyordu; Temmuz TAMAMLANMISTI.

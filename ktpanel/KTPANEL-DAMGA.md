@@ -46,6 +46,8 @@
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
+| Tazelik hesabi | TEK SAHIP: window.tazelikHesap. ajan.js kendi kopyasini KULLANMIYOR artik (§261). Cekmece ile nobet AYRISAMAZ; fark yalniz ESIKTE (Ebu yaklasti'yi da uyarir) | 11A ✓ |
+| Yabanci AYLIK blogu | ELLE — odemeler dengesi, ayda bir. Haftalik kisim CANLI (§259/261) | 11A |
 | Yabanci haftalik akis | ARTIK OTOMATIK — /api/evds2?mod=yab (bie_mknethar M7/M8/M12). Panelde 'EVDS canli' yazmiyorsa uc dusmus (§259) | 11A ✓ |
 | TR 5Y CDS (barometre) | ARTIK OTOMATIK — /api/tcmb?cds=1 · worldgovernmentbonds. 'canli' yazmiyorsa uc dusmus (§253). Eski 206 YANLISTI, 34 puan sapma | 10A ✓ |
 | Kart harcamalari (kart.js) | ARTIK OTOMATIK ay secimi — ayin son gozlemi ay sonuna <7 gun ise ay KAPANDI sayilir (§260). Onceki hal bir ay GERIDEYDI | 11A ✓ |

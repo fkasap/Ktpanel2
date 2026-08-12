@@ -79,11 +79,11 @@
  ],
  "hafta_not": "Hisse: Haz'da güçlü (466→203mn) → Tem'de DURDU (11→33→38mn). Tahvil: 6 haftadır kesintisiz alım; 10 Tem REKOR haftası — DİBS 1,23 mlr + ÖST 1,34 mlr = tek haftada ~2,5 mlr $ carry girişi (13 Şub'dan beri en yüksek), 17 Tem'de normalleşme.",
  "rezerv": {
-  "guncel": 45.9,
+  "guncel": 46.8,
   "dip": 28,
   "zirve": 85.7,
   "trend": "güçlü",
-  "not": "Swap hariç net. TEK DOĞRU KAYNAK rezerv.json — bu alan YALNIZCA ilk çizim yedeğidir; app.js canlı net − rezerv.json.swapStoku ile kendi hesaplar ve üstüne yazar. §261: 11 Ağu'da 37,7 → 45,9 hizalandı (17 Tem verisiyle kalmıştı, rezerv.json 6 Ağu yayınına geçmişti). Trend etiketi de app.js'te HESAPLANIR (≥40 güçlü, ≥35 toparlanıyor, altı zayıf) — buradaki metin yalnız yedek."
+  "not": "Swap hariç net. YALNIZCA İLK ÇİZİM YEDEĞİ — app.js canlı EVDS net rezerv eksi rezerv.json.swapStoku ile kendi hesaplar ve üstüne yazar; trend etiketi de orada HESAPLANIR (>=40 güçlü, >=35 toparlanıyor, altı zayıf). §261: 11 Ağu 37,7 -> 46,8 (net 60,2 - swap 13,4). Bu alan panelin gösterdiği değerden GERİ KALIRSA sorun DEĞİLDİR: canlı hesap üstüne yazar. Elle tutmaya çalışma, yalnız rezerv.json ile aynı yayına dayanmasına dikkat et."
  },
  "carry": {
   "not": "Damgali reel_faiz=7.9 KALDIRILDI. Yeniden uretilemiyordu ve iki ayri buyuklukle karistiriliyordu: EX-ANTE reel (politika vs BEKLENEN enflasyon, TCMB cipasi, ~%10,5) ve EX-POST reel (AOFM vs GERCEKLESEN TUFE, fonun fiilen kazandigi, Fisher ile ~%6,0). Ikisi ayri sorularin cevabidir, karistirilmamali. §112: bir buyuklugun tek sahibi olur.",
