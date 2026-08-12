@@ -28,10 +28,25 @@ async function aiUret(prompt, maxTok){
     const r = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
       headers:{ 'x-api-key':KEY, 'anthropic-version':'2023-06-01', 'content-type':'application/json' },
       body: JSON.stringify({ model:'claude-haiku-4-5-20251001',
-        max_tokens: Math.min(2500, maxTok||900),
+        /* §269 TAVAN 2500 -> 4000. Bilanço kartı istemi §257/§267/§268 ile
+           zenginleşti (hazır gösterim, marj tuzağı, net kâr köprüsü, puan/bp,
+           bilanço tabanı) ve model daha uzun yazmaya başladı. 12 Ağu RGYAS:
+           JSON ORTADA KESİLDİ — son iki metrik "undefined", PORTFÖY TEZİ HİÇ
+           YAZILMADI, ve model bütçeyi metriklerde harcayıp hazır gösterimi
+           kullanmadı (ciro "4.608.603 bin ₺" diye ham yazıldı).
+           Çağıran zaten 2600 istiyordu; min() onu 2500'e KIRPIYORDU. */
+        max_tokens: Math.min(4000, maxTok||900),
         messages:[{ role:'user', content: prompt }] }),
       signal: AbortSignal.timeout(30000) });
     const d = await r.json();
+    /* §269b KESİLME SESSİZ KALMASIN. stop_reason='max_tokens' ise JSON eksiktir
+       ve ayrıştırma ya patlar ya da "undefined" alanlar üretir — ikisi de
+       kullanıcıya YANLIŞ KART olarak görünür. Metnin sonuna işaret bırakılır;
+       çağıran taraf bunu görüp kartı reddedebilir. */
+    if (d && d.stop_reason === 'max_tokens') {
+      const t = (d.content && d.content[0] && d.content[0].text) || '';
+      return t ? (t + '\n/*__KESILDI__*/') : null;
+    }
     return (d&&d.content&&d.content[0]&&d.content[0].text) ? d.content[0].text : null;
   }catch(e){ return null; }
 }
@@ -318,9 +333,22 @@ Türkçe yaz. Kısa cümle kur.`;
        tez) rahat 2000 token istiyor. 2600 verildi, tampon bırakıldı.
        Kesilme SESSİZ bir hataydı: model doğru yazıyordu, biz yeterli yer
        vermiyorduk. */
-    const metin = await aiUret(istem, 2600);
+    /* §269: 2600 -> 3600. §223b'de 2600 verilmişti ama aiUret'teki
+       min(2500, ...) onu SESSİZCE 2500'e KIRPIYORDU — iki kat sessiz hata.
+       Tavan 4000'e çıkarıldı, istem §257/§267/§268 ile zenginleştiği için
+       3600 isteniyor. */
+    const metin = await aiUret(istem, 3600);
     if (!metin) return res.status(200).json({ ok:false, kod,
       err:'AI yanıt vermedi — ANTHROPIC_API_KEY tanımlı mı?' });
+    /* §269b KESİLDİYSE KART ÜRETME. Eksik JSON "undefined" alanlar ve tezsiz
+       kart demektir; kullanıcı bunu YANLIŞ KART olarak görür. 12 Ağu RGYAS
+       tam böyle çıktı. Sessizce yarım kart vermektense açıkça reddet. */
+    if (String(metin).includes('__KESILDI__')) {
+      return res.status(200).json({ ok:false, kod, kesildi:true,
+        err:'yanıt token sınırında kesildi — kart eksik olurdu, üretilmedi',
+        oneri:'tekrar dene; sürerse ajanktp.js maxTok değeri artırılmalı',
+        uzunluk:String(metin).length });
+    }
 
     /* JSON AYRIŞTIRMA. Model bazen kod bloğuyla sarar ya da önüne yazı ekler;
        ilk { ile son } arası alınır. Ayrışmazsa HAM METİN döndürülür ve
