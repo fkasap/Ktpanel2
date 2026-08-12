@@ -1106,6 +1106,17 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div id="sk-katfon" class="subtab-panel" style="display:none"><h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
 <div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
+<!-- §263 GÜNLÜK FON AKIŞI. Formül: (pay_t − pay_t−1) × fiyat_t. Ham ΔAUM
+     KULLANILMAZ — o hem akıştan hem GETİRİDEN değişir ve 12 Ağu ölçümünde
+     ortalama %48 sapıyordu. Pay adedi getiriden etkilenmez.
+     Veri: TEFAS köprüsü (mod=gnl) → fon-akis.json, Actions sabah koşusunda.
+     Fintables GEREKMEZ. -->
+<div class="card" style="margin-bottom:14px">
+  <div class="lbl">GÜNLÜK FON AKIŞI <span class="thin" id="fonAkisTag">—</span></div>
+  <div id="fonAkisOzet" style="display:grid;grid-template-columns:repeat(3,minmax(110px,1fr));gap:10px;margin:8px 0"></div>
+  <div id="fonAkisBody"></div>
+  <div class="note" style="margin-top:8px">Net akış = <em>(tedavüldeki pay adedi değişimi) × birim pay fiyatı</em>. Pay adedi yalnız alım–satımla değişir; fonun getirisi bu sayıyı etkilemez. Ham portföy büyüklüğü değişimi <b>kullanılmaz</b> — o, akış ile getiriyi birbirine karıştırır.</div>
+</div>
 <div class="fonbar" style="margin-bottom:10px">
   <label style="font-size:11.5px;color:var(--muted)">Sıralama dönemi:
     <select id="katfonSort" style="margin-left:6px;padding:3px 7px;border:1px solid var(--line2);border-radius:5px;font-family:var(--sans);font-size:11.5px;background:var(--card);color:var(--text)">

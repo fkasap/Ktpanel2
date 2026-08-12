@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -2036,6 +2036,7 @@ async function katfonInit(){
   const sel=$('katfonSort');if(sel)sel.addEventListener('change',()=>{katfonSort=sel.value;katfonRender();});
   katfonRender();
   katfonCanli();
+  fonAkisRender();   /* §263 günlük fon akışı — ayrı dosya, katfon'u bekletmez */
 }
 async function katfonCanli(){
   /* §143 SESSİZ HATA KAPATILDI. Önceki sürüm iki yerde sessizce çıkıyordu:
@@ -4099,6 +4100,55 @@ function glbCdsYaz(){
   if(c&&isFinite(c.degisim)&&c.degisim!==0){ yon=c.degisim<0?' · iyileşiyor':' · kötüleşiyor'; sinif=c.degisim<0?'val up':'val down'; }
   el.className=sinif;
   el.innerHTML=trN(v,0)+' <span class="sub" style="display:inline">bp · '+tar+(c?' · canlı':' · damgalı')+yon+'</span>';
+}
+/* §263 GÜNLÜK FON AKIŞI — PYŞ bazında. fon-akis.json'u okur (Actions sabah
+   koşusunda TEFAS köprüsünden üretilir). Formül dosyada değil BURADA da
+   yazılı olsun diye tekrar: akış = (pay_t − pay_t−1) × fiyat_t.
+   HAM ΔAUM KULLANILMAZ — 12 Ağu ölçümünde ortalama %48 sapıyordu çünkü AUM
+   hem akıştan hem GETİRİDEN değişir. Pay adedi getiriden etkilenmez.
+   Doğrulama: 25 gözlemde Fintables'ın kendi akış alanıyla medyan %0 fark. */
+async function fonAkisRender(){
+  const el=$('fonAkisBody'); if(!el) return;
+  let d=null;
+  try{ d=await (await fetch('/fon-akis.json',{cache:'no-store'})).json(); }catch(e){}
+  if(!d || !d.akis || !d.akis.fon || !Object.keys(d.akis.fon).length){
+    el.innerHTML='<div class="note">Akış verisi henüz yok — ilk hesap için iki ardışık iş günü kaydı gerekir.</div>';
+    if($('fonAkisTag')) $('fonAkisTag').textContent='(veri bekleniyor)';
+    return;
+  }
+  const F=d.akis.fon, K=d.kurucu||{};
+  const kisa=t=>{ const m=String(t).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m? (+m[3])+' '+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][+m[2]-1] : t; };
+  if($('fonAkisTag')) $('fonAkisTag').textContent='('+kisa(d.akis.gun)+' · '+d.akis.adet+' fon · TEFAS köprüsü)';
+  /* PYŞ bazında topla — kurucu bilinmiyorsa fon kodu altında kalır */
+  const pys={};
+  for(const k of Object.keys(F)){
+    const ad=K[k]||'(kurucu bilinmiyor)';
+    (pys[ad]=pys[ad]||{net:0,fon:[]});
+    pys[ad].net+=F[k];
+    pys[ad].fon.push([k,F[k]]);
+  }
+  const sirali=Object.entries(pys).sort((a,b)=>b[1].net-a[1].net);
+  const tum=Object.values(F);
+  const giris=tum.filter(x=>x>0).reduce((s,x)=>s+x,0);
+  const cikis=tum.filter(x=>x<0).reduce((s,x)=>s+x,0);
+  const mlr=v=>(v>=0?'+':'')+trN(v/1e9,2);
+  if($('fonAkisOzet')) $('fonAkisOzet').innerHTML=
+    '<div class="card"><div class="lbl">GİRİŞ</div><div class="val up">'+mlr(giris)+' mlr ₺</div></div>'+
+    '<div class="card"><div class="lbl">ÇIKIŞ</div><div class="val down">'+mlr(cikis)+' mlr ₺</div></div>'+
+    '<div class="card"><div class="lbl">NET</div><div class="val '+((giris+cikis)>=0?'up':'down')+'">'+mlr(giris+cikis)+' mlr ₺</div></div>';
+  /* İLK 8 GİREN + İLK 5 ÇIKAN — tamamı 200+ satır olurdu, uçlar bilgi taşır */
+  const ust=sirali.slice(0,8), alt=sirali.slice(-5).reverse().filter(x=>x[1].net<0);
+  const satir=(ad,o)=>{
+    const enB=o.fon.sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])).slice(0,3)
+      .map(f=>f[0]+' '+(f[1]>=0?'+':'')+trN(f[1]/1e6,0)).join(' · ');
+    return '<div class="kv"><span class="k">'+ad.slice(0,34)+' <span class="thin" style="font-size:9px">'+enB+'</span></span>'+
+           '<span class="'+(o.net>=0?'up':'down')+'" style="font-weight:600">'+mlr(o.net)+' mlr ₺</span></div>';
+  };
+  el.innerHTML='<div style="font-size:10px;color:var(--muted);margin:6px 0 2px;letter-spacing:.4px">EN ÇOK GİREN</div>'+
+    ust.map(([a,o])=>satir(a,o)).join('')+
+    (alt.length?('<div style="font-size:10px;color:var(--muted);margin:10px 0 2px;letter-spacing:.4px">EN ÇOK ÇIKAN</div>'+
+      alt.map(([a,o])=>satir(a,o)).join('')):'');
 }
 /* §259c CANLI AKIŞI DOM'A YAZAR — ve YENİDEN ÇİZİMDEN SONRA TEKRAR ÇAĞRILIR.
    yabanciRender() kartı JSON'dan komple yeniden kuruyor ve exAnteHesapla →
