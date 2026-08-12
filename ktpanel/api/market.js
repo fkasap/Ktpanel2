@@ -152,8 +152,21 @@ async function fredModu(req, res){
     ['DFEDTARL','seviye'],['DFEDTARU','seviye'],
     ['DFII10','seviye'],['BAMLH0A0HYM2','seviye'],['DTWEXBGS','seviye'],
     ['VIXCLS','seviye'],['ICSA','seviye'],['UNRATE','seviye'],
-    // Enflasyon kırılımı (endeks → yıllık %)
-    ['CPIAUCSL','yillik'],['CPILFESL','yillik'],['CPIENGSL','yillik'],
+    /* Enflasyon kırılımı (endeks → yıllık %)
+       §271 SA -> NSA. Manşet ve çekirdek TÜFE için MEVSİMSELLİKTEN ARINDIRILMAMIŞ
+       (NS) seriler kullanılır. ÖLÇÜM (12 Ağu, BLS Temmuz yayını):
+         BLS manşet %3,4 · çekirdek %2,5   (NSA, 12 aylık değişim — dünyanın
+                                            konuştuğu ve haberlere giren rakam)
+         panel   %3,54 · %2,79             (CPIAUCSL/CPILFESL = SA serilerinden
+                                            hesaplanmış y/y)
+       Hesap DOĞRUYDU, SERİ YANLIŞTI. BLS 12 aylık değişimi HER ZAMAN NSA
+       yayınlar; SA seri aylık değişim içindir. İkisinden y/y çıkarınca
+       manşette 0,14, çekirdekte 0,29 puan sapma oluşuyordu.
+       CPIAUCNS = manşet NSA · CPILFENS = çekirdek NSA.
+       DİĞERLERİ SA KALDI: enerji/barınma/hizmet kalemleri kırılım içindir ve
+       panelde ivme (fark) ile okunur; orada SA daha stabil. PCEPILFE zaten
+       Fed'in kendi pusulası ve SA yayınlanır. */
+    ['CPIAUCNS','yillik'],['CPILFENS','yillik'],['CPIENGSL','yillik'],
     ['CUSR0000SAH1','yillik'],['CUSR0000SASLE','yillik'],['PCEPILFE','yillik'],
     // Fed bilançosu (seviye, mlr$)
     ['WALCL','seviye'],['RRPONTSYD','seviye'],['WRESBAL','seviye'],
