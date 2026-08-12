@@ -507,6 +507,7 @@ async function fonTazele() {
           pay: (isFinite(pay) && pay > 0) ? pay : ((isFinite(aum) && aum > 0) ? aum / p : null) };
         nA++;
       }
+      if (nA) { globalThis.__akisMeta = meta; }   /* §263: liste (kurucuAd) çekildikten SONRA yazılır */
       if (nA) raporlar.push('### TEFAS genel bilgi (§253i) — ✓ ' + nA + ' fon · AUM + yatırımcı sayısı köprüden'
         + ' (ham ' + dizi.length + ' kayıt, sayfalamalı)');
       else raporlar.push('### TEFAS genel bilgi (§253i) — ⏭ boş döndü'
@@ -528,6 +529,20 @@ async function fonTazele() {
         if (k) getiriler[k] = x;
       });
       raporlar.push('### TEFAS köprü (bilgi)\n- getiri: ' + g2.n + ' fon ✓ · liste: ' + (l2 && l2.n != null ? l2.n + ' kayıt · alanlar: ' + (l2.ornek || []).join(', ').slice(0, 250) : JSON.stringify(l2).slice(0, 160)));
+      /* §263 FON AKIŞI — kurucu eşlemesi mod=liste'den gelir, o yüzden burada.
+         meta yukarıda (mod=gnl) dolduruldu ve globalThis'te bekletildi. */
+      if (globalThis.__akisMeta) {
+        const kurucu = {};
+        if (l2 && Array.isArray(l2.veri)) {
+          l2.veri.forEach(x => {
+            const k = String(x.fonKod || x.fonKodu || '').toUpperCase().trim();
+            const u = String(x.kurucuAd || x.kurucuKod || '').trim();
+            if (k && u) kurucu[k] = u;
+          });
+        }
+        await fonAkisArsiv(globalThis.__akisMeta, kurucu);
+        globalThis.__akisMeta = null;
+      }
       if (l2 && Array.isArray(l2.veri)) {
         const P_ADAY = ['fiyat','birimPayDegeri','sonFiyat','FIYAT','price'];
         const AUM_ADAY = ['fonBuyuklugu','portfoyBuyuklugu','portfolioSize','PORTFOYBUYUKLUK'];
@@ -1172,6 +1187,80 @@ async function endeksKapanisTazele() {
    dolduruyor, ustune ~2 gun ileri kayma var (duz kosu 08-08'de basliyor,
    investing ayni degeri 08-06'ya yaziyor). DEGER dogru, TARIH ~2 gun iyimser.
    Duz kosu geriye taranip gozlem gunu bulunur; ham etiket de yazilir. */
+/* §263 FON AKIŞI — PAY ADEDİ YÖNTEMİ.
+   ÖLÇÜLDÜ (12 Ağu, 25 gözlem): ham ΔAUM net akışa EŞİT DEĞİLDİR — ortalama
+   %48 sapar, çünkü AUM hem akıştan hem GETİRİDEN değişir. T3B'de akış tam
+   sıfırken AUM 6 günde +%9 arttı (tamamı getiri).
+   DOĞRU FORMÜL:  akış = (pay_t − pay_t−1) × fiyat_t
+   Pay adedi getiriden ETKİLENMEZ; yalnız alım/satımla değişir. Aynı 25
+   gözlemde Fintables'ın kendi gunluk_nakit_giris_cikisi alanıyla BİREBİR
+   tuttu (medyan hata %0, 25/25 gözlemde <%10).
+   VERİ ZATEN ELDE: mod=gnl yanıtı tedPaySayisi + fiyat veriyor, bölmeye bile
+   gerek yok. Tek eksik DÜNÜN pay adediydi — bu arşiv onu tutar.
+   FINTABLES GEREKMİYOR: hesap tamamen TEFAS köprüsünden. */
+async function fonAkisArsiv(meta, kurucu) {
+  const dosya = 'fon-akis.json';
+  try {
+    let a = { gunler: {}, _yontem: '' };
+    if (await varMi(dosya)) { try { a = await oku(dosya) || a; } catch (e) {} }
+    a.gunler = a.gunler || {};
+    /* Bugünün pay+fiyat anlık görüntüsü — yalnız pay adedi bilinen fonlar */
+    const bugunKayit = {};
+    for (const k of Object.keys(meta)) {
+      const m = meta[k];
+      if (m && isFinite(m.pay) && m.pay > 0 && isFinite(m.p) && m.p > 0) {
+        bugunKayit[k] = [ +m.pay.toFixed(2), +m.p.toFixed(6) ];   /* [pay, fiyat] */
+      }
+    }
+    if (!Object.keys(bugunKayit).length) return;
+    a.gunler[bugun] = bugunKayit;
+    /* Son 15 gün tutulur — akış hesabı için 2 gün yeter, gerisi grafik payı */
+    const gunler = Object.keys(a.gunler).sort();
+    while (gunler.length > 15) { delete a.gunler[gunler.shift()]; }
+    /* AKIŞ HESABI: bir önceki KAYITLI günle karşılaştır (hafta sonu boşluğu
+       kendiliğinden atlanır — ardışık kayıt yoksa hesap yapılmaz). */
+    const sonIki = Object.keys(a.gunler).sort().slice(-2);
+    a.akis = null;
+    if (sonIki.length === 2) {
+      const [g0, g1] = sonIki, e0 = a.gunler[g0], e1 = a.gunler[g1];
+      const fon = {};
+      let n = 0;
+      for (const k of Object.keys(e1)) {
+        if (!e0[k]) continue;
+        const dPay = e1[k][0] - e0[k][0];
+        const akis = dPay * e1[k][1];
+        /* AKLI BAŞINDA SINIR: tek fonda tek günde 50 mlr TL akış olmaz —
+           pay adedi düzeltmesi ya da bölünme olabilir, sessizce kabul etme. */
+        if (!isFinite(akis) || Math.abs(akis) > 5e10) continue;
+        fon[k] = Math.round(akis);
+        n++;
+      }
+      a.akis = { onceki: g0, gun: g1, adet: n, fon };
+    }
+    /* Kurucu eşlemesi arşivde tutulur — panel PYŞ bazında gruplayabilsin.
+       Yalnız DOLU gelirse yazılır; liste ucu düşerse eski eşleme korunur. */
+    if (kurucu && Object.keys(kurucu).length > 50) a.kurucu = kurucu;
+    a.guncelleme = bugun;
+    a._yontem = 'akis = (pay_t - pay_t-1) x fiyat_t. Pay adedi GETIRIDEN etkilenmez; ham dAUM %48 sapar (§263). '
+      + 'Kaynak: TEFAS kopru mod=gnl (tedPaySayisi + fiyat). Fintables GEREKMEZ.';
+    await yaz(dosya, a);
+    const n = (a.akis && a.akis.adet) || 0;
+    if (n) {
+      const v = Object.values(a.akis.fon);
+      const giris = v.filter(x => x > 0).reduce((s, x) => s + x, 0);
+      const cikis = v.filter(x => x < 0).reduce((s, x) => s + x, 0);
+      degisenler.push('fon akışı (' + n + ')');
+      raporlar.push('### Fon akışı (§263) — ✓ ' + n + ' fon · ' + a.akis.onceki + ' → ' + a.akis.gun
+        + '\n- giriş ' + (giris / 1e9).toFixed(2) + ' mlr ₺ · çıkış ' + (cikis / 1e9).toFixed(2)
+        + ' mlr ₺ · net ' + ((giris + cikis) / 1e9).toFixed(2) + ' mlr ₺');
+    } else {
+      raporlar.push('### Fon akışı (§263) — ℹ ilk gün kaydedildi, akış için ikinci gün gerekli ('
+        + Object.keys(a.gunler).length + ' gün arşivde)');
+    }
+  } catch (e) {
+    raporlar.push('### Fon akışı (§263) — ⏭ ' + String(e && e.message || e).slice(0, 80));
+  }
+}
 async function cdsTazele() {
   const dosya = 'cds.json';
   try {
