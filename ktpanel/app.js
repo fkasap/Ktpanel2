@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812f';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260812g';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -758,9 +758,18 @@ async function abdSekme(){
             bh+='<div class="kv"><span class="k">Zirveden bugüne (toplam QT)</span><span class="up" style="font-weight:600">−'+trN(qt,0)+' mlr$ <span style="color:var(--muted);font-size:9px">zirve 8.965 · Nis 2022</span></span></div>';
           }
           if(rrp){
-            const rmlr=rrp.deger/1000;
-            const durum=rmlr>400?'tampon dolu — QT etkisi hafif':(rmlr>100?'tampon eriyor — dikkat':'tampon BİTTİ — QT rezervleri emiyor');
-            bh+='<div class="kv"><span class="k">Ters repo (RRP) — likidite tamponu</span><span'+(rmlr<100?' class="down"':'')+'>'+trN(rmlr,0)+' mlr$ <span style="color:var(--muted);font-size:9px">'+durum+'</span></span></div>';
+            /* §273 BİRİM: RRPONTSYD FRED'den MİLYAR $ gelir, WALCL/WRESBAL MİLYON $.
+               Kod üçünü de 1000'e bölüyordu -> 0,725 / 1000 = 0,000725 -> trN(,0)
+               ile "0" göründü ve kart bunun üzerine "tampon BİTTİ" yargısını
+               kurdu. Gerçek değer 0,725 mlr = 725 MİLYON $ — tükenme sınırında
+               ama SIFIR DEĞİL. Yuvarlama bir yargıya dönüşmüştü.
+               (§252l ailesi: birim SERİYE GÖRE değişir, kopyalamadan doğrula.) */
+            const rmlr=rrp.deger;
+            /* §273 Eşikler mlr$ · 'BİTTİ' yerine 'tükendi sınırında' — 0,7 mlr
+               pratikte sıfırdır ama metin veriyi değil YUVARLAMAYI yansıtmasın. */
+            const durum=rmlr>400?'tampon dolu — QT etkisi hafif':(rmlr>100?'tampon eriyor — dikkat':
+              (rmlr>=1?'tampon tükendi — QT rezervleri emiyor':'tampon tükendi (<1 mlr) — QT doğrudan rezervlerden'));
+            bh+='<div class="kv"><span class="k">Ters repo (RRP) — likidite tamponu</span><span'+(rmlr<100?' class="down"':'')+'>'+trN(rmlr, rmlr<10?2:0)+' mlr$ <span style="color:var(--muted);font-size:9px">'+durum+'</span></span></div>';
           }
           if(rez){
             bh+='<div class="kv"><span class="k">Banka rezervleri</span><span>'+trN(rez.deger/1000,0)+' mlr$ <span class="'+(rez.fark<0?'down':'up')+'" style="font-size:10px">('+(rez.fark>0?'+':'')+trN(rez.fark/1000,0)+' hf)</span></span></div>';
