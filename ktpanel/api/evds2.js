@@ -102,7 +102,20 @@ const ECB_SERI = {
      KATALOĞA SORULDU — doğru yol buydu. */
   hicp:         ['HICP/M.U2.N.000000.4D0.ANR', 'HICP manşet (yıllık)'],
   hicpCekirdek: ['HICP/M.U2.N.XEF000.4D0.ANR', 'HICP çekirdek (enerji+gıda hariç)'],
-  hicpEnerji:   ['HICP/M.U2.N.NRGY00.4D0.ANR', 'HICP enerji']
+  hicpEnerji:   ['HICP/M.U2.N.NRGY00.4D0.ANR', 'HICP enerji'],
+  /* §281 EURO BÖLGESİ REEL GSYH — ÇEYREKLİK, YILLIK DEĞİŞİM.
+     Anahtar TAHMİN EDİLMEDİ: MNA akışının 29.593 serisi ?detail=serieskeysonly
+     ile çekilip süzüldü (Q · euro bölgesi · B1GQ · GY).
+     İKİ ADAY ÇIKTI ve aralarındaki fark KRİTİK:
+       I8 = 19 ülke (Hırvatistan HARİÇ) -> son gözlem 2024-Q1, SERİ DURMUŞ
+       I9 = 20 ülke (güncel bileşim)    -> son gözlem 2026-Q1 ✓
+     Hırvatistan 2023'te katıldıktan sonra ECB 19 ülkelik seriyi EMEKLİ ETMİŞ
+     (ICP akışında gördüğümüz desenin aynısı, §275).
+     NOT: FRED'in CLVMNACSCAB1GQEA19 serisi adından anlaşıldığı üzere EA19
+     kapsamında — yani ECB tarafında ÖLMÜŞ olan bileşim. ECB doğrudan daha
+     güncel ve daha doğru kapsam veriyor.
+     Y=mevsimsellik+takvim düzeltilmiş · LR=zincirlenmiş hacim · GY=yıllık % */
+  gsyh: ['MNA/Q.Y.I9.W2.S1.S1.B.B1GQ._Z._Z._Z.EUR.LR.GY', 'Reel GSYH (yıllık %, 20 ülke)']
   /* §275d (13 Ağu ÇÖZÜLDÜ, bkz §275e): HICP'ler ICP akışı emekli olduğu
      için 8 ay bayattı ve geçici olarak çıkarılmıştı. Yeni akış bulundu. */
 };
