@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813e';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813f';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -740,8 +740,12 @@ async function abdSekme(){
             };
             kutu('usGsyhBody', S['A191RL1Q225SBEA'],
               {ad:'Reel GSYH', not_:'çeyreklik · yıllıklandırılmış (SAAR)', kaynak:'BEA · FRED'});
+            /* §281 Avrupa GSYH artık ECB'den (bkz. evds2 mod=ecb). FRED'in
+               EA19 serisi 19 ÜLKELİK bileşim — ECB tarafında o seri 2024-Q1'de
+               DURMUŞ. Burada FRED yedek olarak kalır; ECB gelirse ecbGsyhYaz()
+               üstüne yazar. */
             kutu('avGsyhBody', S['CLVMNACSCAB1GQEA19'],
-              {ad:'Reel GSYH', not_:'yıllık değişim (y/y)', kaynak:'Eurostat · FRED'});
+              {ad:'Reel GSYH', not_:'yıllık değişim (y/y) · FRED yedeği', kaynak:'Eurostat · FRED'});
             /* GDPNow ABD kartına ek satır — cari çeyreğin canlı tahmini */
             const gn=S['GDPNOW'], ug=$('usGsyhBody');
             if(gn&&isFinite(gn.deger)&&ug) ug.innerHTML+=
@@ -1387,7 +1391,7 @@ async function marketCek(){
         if($('ecbBrentTag')) $('ecbBrentTag').textContent=_bt;   /* §270b Avrupa kartı */
       }
     }catch(e){}canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
-      glbCdsYaz(); cdsCek();   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
+      glbCdsYaz(); cdsCek(); ecbGsyhCek();   /* §281 */   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
       const d=$('sekDamga');
       if(d){
         const s=(mk.data.xu100&&mk.data.xu100.gun)?mk.data.xu100.gun:'';
@@ -4130,6 +4134,25 @@ const RISK_CDS_KAYNAK='investing.com · TR 5Y CDS (id 1096486)';
    çünkü investing.com yavaş ya da kapalı olursa TÜM barometreyi bekletmemeli.
    Başarısızlıkta CDS_CANLI null kalır, renderRiskBaro damgalı yedeğe düşer ve
    etikete "damgalı" basar. Sessiz düşüş YOK (§245k). */
+/* §281 AVRO BÖLGESİ GSYH — ECB'DEN. FRED yedeği çizildikten SONRA üstüne
+   yazar; ECB düşerse yedek görünür ve kaynağını söyler. */
+async function ecbGsyhCek(){
+  const el=$('avGsyhBody'); if(!el) return;
+  try{
+    const j=await (await fetch('/api/evds2?mod=ecb&n=5',{cache:'no-store'})).json();
+    const g=j&&j.ok&&j.veri&&j.veri.gsyh;
+    if(!g||!isFinite(g.deger)) return;
+    const ce=(t)=>{ const m=String(t||'').match(/^(\d{4})-Q?(\d)/);
+      return m ? ('Ç'+m[2]+"'"+m[1].slice(2)) : String(t||''); };
+    const v=g.deger, sn=v>=0?'up':'down';
+    el.innerHTML='<div class="kv"><span class="k">Reel GSYH <span class="tag snap">'+ce(g.tarih)+'</span></span>'
+      +'<span class="'+sn+'" style="font-weight:700;font-size:15px">'+(v>=0?'+':'')+'%'+trN(v,1)+'</span></div>'
+      +(isFinite(g.fark)?('<div class="kv"><span class="k thin">önceki çeyreğe göre</span><span class="'
+        +(g.fark>=0?'up':'down')+'">'+(g.fark>=0?'+':'')+trN(g.fark,1)+' puan</span></div>'):'')
+      +'<div class="kv"><span class="k thin">yıllık değişim · 20 ülke</span><span class="thin">ECB · canlı</span></div>'
+      +(g.bayat?'<div class="kv"><span class="k thin" style="color:var(--down)">⚠ seri '+g.yasGun+' gün eski</span><span></span></div>':'');
+  }catch(e){}
+}
 async function cdsCek(){
   /* §253e ÜÇ KADEMELİ DÜŞÜŞ — her kademe ÖLÇÜLEREK sıralandı:
        1) /api/tcmb?cds=1  — Vercel'den investing.com. ŞU AN 403 (Cloudflare
