@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813d';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813e';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -721,6 +721,34 @@ async function abdSekme(){
           eh+=eSatir('CUSR0000SASLE','Hizmet (enerji hariç)',false);
           eh+=eSatir('PCEPILFE','Çekirdek PCE — Fed\'in resmi pusulası',true);
           $('usEnfBody').innerHTML = eh||'<div class="sub">Enflasyon serileri boş.</div>';
+          /* §280 GSYH KARTLARI. ABD manşeti çeyreklik YILLIKLANDIRILMIŞ (SAAR),
+             Avrupa'nınki YILLIK — ikisi aynı şey DEĞİL ve etiketleri öyle yazılı.
+             Aynı karta koyup "büyüme" demek, iki farklı ölçüyü karıştırmak olurdu. */
+          try{
+            const ceyrekEt=(t)=>{ const p=String(t||'').slice(0,7).split('-');
+              if(p.length!==2) return String(t||'');
+              const c=Math.floor((+p[1]-1)/3)+1; return 'Ç'+c+"'"+p[0].slice(2); };
+            const kutu=(id,seri,ek)=>{
+              const el=$(id); if(!el) return;
+              if(!seri||!isFinite(seri.deger)){ el.innerHTML='<div class="sub">seri gelmedi</div>'; return; }
+              const v=seri.deger, sn=v>=0?'up':'down';
+              el.innerHTML='<div class="kv"><span class="k">'+ek.ad+' <span class="tag snap">'+ceyrekEt(seri.tarih)+'</span></span>'
+                +'<span class="'+sn+'" style="font-weight:700;font-size:15px">'+(v>=0?'+':'')+'%'+trN(v,1)+'</span></div>'
+                +(isFinite(seri.fark)?('<div class="kv"><span class="k thin">önceki döneme göre</span><span class="'
+                  +(seri.fark>=0?'up':'down')+'">'+(seri.fark>=0?'+':'')+trN(seri.fark,1)+' puan</span></div>'):'')
+                +'<div class="kv"><span class="k thin">'+ek.not_+'</span><span class="thin">'+ek.kaynak+'</span></div>';
+            };
+            kutu('usGsyhBody', S['A191RL1Q225SBEA'],
+              {ad:'Reel GSYH', not_:'çeyreklik · yıllıklandırılmış (SAAR)', kaynak:'BEA · FRED'});
+            kutu('avGsyhBody', S['CLVMNACSCAB1GQEA19'],
+              {ad:'Reel GSYH', not_:'yıllık değişim (y/y)', kaynak:'Eurostat · FRED'});
+            /* GDPNow ABD kartına ek satır — cari çeyreğin canlı tahmini */
+            const gn=S['GDPNOW'], ug=$('usGsyhBody');
+            if(gn&&isFinite(gn.deger)&&ug) ug.innerHTML+=
+              '<div class="kv" style="border-top:1px dotted var(--line);margin-top:4px;padding-top:4px">'
+              +'<span class="k">GDPNow <span class="thin">bu çeyrek tahmini</span></span>'
+              +'<span class="'+(gn.deger>=0?'up':'down')+'">'+(gn.deger>=0?'+':'')+'%'+trN(gn.deger,1)+' <span class="thin" style="font-size:9px">Atlanta Fed</span></span></div>';
+          }catch(e){}
           /* §270 FED KARTINDAKİ TÜFE DE BURADAN. İki kart aynı ekranda farklı
              sayı söylüyordu: sol "çekirdek %2,6 (Haz)" sabit, sağ "%2,8 (Tem)"
              canlı. Tek kaynak — ay etiketi de veriden geliyor, elle yazılmıyor. */

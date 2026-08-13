@@ -1401,7 +1401,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div id="avTahvilBody"><div class="sub">ECB yükleniyor…</div></div>
 
     <div class="note" style="font-size:10px">ECB canlı (aylık seri — ABD'deki günlük FRED'den seyrek ama trend için yeterli). <b>Bund 10Y</b> Avrupa'nın risksiz çıpası — küresel iskonto oranının euro ayağı. <b>BTP–Bund spread'i</b> Euro bölgesinin iç stres termometresi: para birliği tek ama maliye ayrı — spread açılması "parçalanma riski" fiyatlamasıdır (&lt;150bp sakin · 150–250 gergin · &gt;250 stres; 2011 krizinde 500+). <b>OAT–Bund</b> Fransa'nın siyasi/mali risk primi. MIB endeksinin "spread duyarlı" notu buraya bağlanır: spread açılırken İtalyan bankaları ve MIB baskılanır.</div>
-  </div><div class="card" style="margin-top:10px"><div class="lbl">AVRO BÖLGESİ ENFLASYON — KIRILIM <span class="ldot"></span></div>
+  </div><div class="card" style="margin-top:10px"><div class="lbl">AVRO BÖLGESİ BÜYÜME <span class="thin">(reel GSYH · yıllık)</span> <span class="ldot"></span></div>
+<div id="avGsyhBody"><div class="sub">FRED yükleniyor…</div></div>
+<div class="note" style="font-size:10px">Euro bölgesi reel GSYH, <b>yıllık değişim</b> (ABD'deki çeyreklik yıllıklandırılmıştan farklı okunur — Avrupa'da manşet genelde y/y verilir). Kaynak Eurostat, FRED üzerinden. Türkiye ihracatının en büyük pazarı; <b>DAX/PMI ile birlikte</b> okunmalı.</div>
+</div><div class="card" style="margin-top:10px"><div class="lbl">AVRO BÖLGESİ ENFLASYON — KIRILIM <span class="ldot"></span></div>
 <div id="avEnfBody"><div class="sub">HICP yükleniyor…</div></div>
 <div class="note" style="font-size:10px"><b>Çekirdek ve hizmet, ECB'nin asıl baktığı yerdir.</b> Manşet enerji ve gıdayla oynar; ECB'nin kontrol edebildiği kısım çekirdektir. <b>Hizmet enflasyonu</b> ücretlere bağlı olduğu için en yapışkan kalemdir — manşet hedefe inse bile hizmet %3'ün üstünde kalıyorsa indirim gecikir. Ülke kırılımı parçalanma riskini gösterir: Almanya ile Güney arasındaki fark açılırsa tek para politikası herkese aynı gelmez. Kaynak: ECB Data Portal · ICP akışı · yıllık değişim (ANR).</div></div>
   <div class="card">
@@ -1464,6 +1467,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
      soyluyordu (§241 ailesi). Artik ayni kaynaktan (S.CPIAUCSL/CPILFESL). -->
 <div class="kv"><span class="k">TÜFE <span class="thin" id="fedTufeTag">(damgalı)</span></span><span id="fedTufeVal">yıllık %3,5 · çekirdek %2,6</span></div>
 <div class="note" style="font-size:10px">Fed 2026'da ters yönde: dünya gevşerken Warsh yönetimi artırım tartışıyor — enerji şoku enflasyonu tekrar yükseltti. Piyasa artık indirim değil ARTIRIM fiyatlıyor (Eylül ≈%82). Portföy çevirisi: Fed artırırsa dolar güçlenir, EM (TL dahil) fonlama koşulları sıkılaşır; ABD tahvil getirisi hisseyi ezer (taktiksel duruş: yabancı hisse ALTI bu yüzden). Artırım olasılığı damgalıdır — CME FedWatch'tan Claude günceller.</div>
+  </div>
+<!-- §280 ABD BUYUME KARTI. Turkiye makro seridinde "BUYUME Ç1'26 +%2,5"
+     zaten vardi; ABD ve Avrupa icin karsiligi YOKTU. FRED'den canli. -->
+  <div class="card">
+    <div class="lbl">ABD BÜYÜME <span class="thin">(reel GSYH · çeyreklik)</span> <span class="ldot"></span></div>
+    <div id="usGsyhBody"><div class="sub">FRED yükleniyor…</div></div>
+    <div class="note" style="font-size:10px">Manşet rakam <b>çeyreklik yıllıklandırılmış</b> (SAAR) — "ekonomi %X büyüdü" dendiğinde kastedilen budur; çeyrek büyümesinin yıla oranlanmış hâli, y/y değil. Atlanta Fed <b>GDPNow</b> ise cari çeyreğin canlı tahminidir: resmî veri gelmeden önceki tek göstergedir, oynaktır.</div>
   </div>
   <div class="card">
     <div class="lbl">ABD ENFLASYON KIRILIMI <span class="thin">(yıllık %)</span> <span class="ldot"></span></div>
