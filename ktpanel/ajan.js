@@ -674,6 +674,27 @@ function imzaOnar(){
     if(n){ localStorage.setItem('ajan_notlar',JSON.stringify(k)); kayit('İmza onarımı: '+n+' notta fazla simge temizlendi'); }
   }catch(e){}
 }
+/* §274b AYNI METNİ TAŞIYAN İKİNCİ NOT GİZLENİR — METİN BAZLI.
+   13 Ağu Avrupa sekmesi: "AVRO BÖLGESİ ENFLASYON — KIRILIM" notu ekranda İKİ
+   KEZ göründü, aynı metin aynı damga. ÖLÇÜLDÜ: iki AYRI .note elemanı aynı
+   içeriği taşıyor (DOM sayımı = 2).
+   §274'te ad bazlı tekilleştirme yapmıştım — YAKALAMADI, çünkü bu iki eleman
+   FARKLI adlara çözülüyor. Ad hangisi olursa olsun, aynı metin iki kez
+   basılmışsa ikincisi gereksizdir.
+   Not SİLİNMEZ, GİZLENİR: bir sonraki tur adları doğru çözerse eleman yerinde
+   durur ve yeniden görünür. Silmek geri dönüşsüz olurdu. */
+function notCiftTemizle(){
+  try{
+    const gorulen = new Map();
+    document.querySelectorAll('.note').forEach(n => {
+      if(n.dataset.ebu !== '1') return;                 // yalnız Ebu notları
+      const imza = (n.textContent||'').replace(/\s+/g,' ').trim().slice(0,140);
+      if(imza.length < 40) return;                      // kısa notlar tesadüfen eşleşebilir
+      if(gorulen.has(imza)){ n.dataset.ciftGizli='1'; n.style.display='none'; }
+      else { gorulen.set(imza, n); if(n.dataset.ciftGizli){ delete n.dataset.ciftGizli; n.style.display=''; } }
+    });
+  }catch(e){}
+}
 let NOBET_ZAMAN=null;
 function notNobetci(){
   const uygula=()=>{
@@ -686,6 +707,7 @@ function notNobetci(){
         K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); geri++;
       });
       if(geri) kayit('Nöbetçi: '+geri+' not yeniden çizimden sonra geri kondu 🤖');
+      notCiftTemizle();
     }catch(e){}
   };
   const obs=new MutationObserver(()=>{
@@ -745,6 +767,7 @@ function hizliGeriYukle(){
     const k=JSON.parse(localStorage.getItem('ajan_notlar')||'{}');
     let n=0;
     kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
+    try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
     if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html; n++; }
     if(k.__GUNDEM__&&k.__GUNDEM__.html&&$('ajanNot')){
@@ -771,6 +794,7 @@ async function notlariGeriYukle(){
     }
     let n=0;
     kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
+    try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
     if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html; n++; }
     const bugun=bugunStr();
@@ -1045,6 +1069,7 @@ async function _notMotoru(){
     kayit('§111: canlı kartlarda rakam ihlali kalmadı ✓');
   }
   kayit('Not motoru: '+g+'/'+parti.length+' not güncellendi 🤖'+(kirli.length>parti.length?' · '+(kirli.length-parti.length)+' sırada':''));
+    try{ notCiftTemizle(); }catch(e){}   /* §274b yeni yazımdan sonra da */
   if(g>0 && kirli.length>parti.length){
     kayit('⚡ hız modu: kuyruk sürüyor — 20 sn sonra sonraki parti');
     setTimeout(notMotoru, 20000);
