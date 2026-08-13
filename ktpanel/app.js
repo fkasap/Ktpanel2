@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260812h';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -4438,8 +4438,25 @@ function arzHesapla(){
   const fiyat=arzS('arzFiyat'), mevcut=arzS('arzMevcut'), artan=arzS('arzArtan')||0,
         ortak=arzS('arzOrtak')||0, ek=arzS('arzEk')||0,
         netBorc=arzS('arzNetBorc'), maliyet=arzS('arzMaliyet')||0,
-        kur=arzS('arzKur'), birim=arzS('arzBirim')||1;
+        kur=arzS('arzKur');
+  /* §276 TAHMİN BİRİMİ ₺ YA DA $ OLABİLİR. Değer "usd:1000" gibi geldiğinde
+     tahminler önce ölçeklenir, sonra KUR ile ₺'ye çevrilir — çünkü PD/EV
+     hesabı ₺ tabanlıdır ve çarpanlar aynı para biriminde olmalı.
+     13 Ağu KPEKS: "₺ (tam)" seçiliydi ama veriler BİN ₺ idi; EV/Satışlar
+     108,5x göründü, gerçeği 0,1085x — TAM 1000 KAT. Birim seçimi bir
+     ayrıntı değil, çarpanların TAMAMINI belirliyor. */
+  const _bh = String(($('arzBirim')&&$('arzBirim').value) || '1');
+  const _bUsd = _bh.indexOf('usd:') === 0;
+  const birim = parseFloat(_bh.replace('usd:','')) || 1;
+  /* §276 TAHMİN $ İSE ÇARPAN TABANI DA $ OLUR — tahmini ₺'ye ÇEVİRMEK yanlış.
+     İlk yazımda tahminleri kur ile ₺'ye çeviriyordum; kullanıcı haklı olarak
+     düzeltti: USD EV ZATEN HESAPLANIYOR (sağ sütun). Doğrusu tahmini olduğu
+     gibi bırakıp PAYDAYI değiştirmek — $ tahmin, $ EV'ye bölünür.
+     Çevirmek yuvarlama hatası da ekler; bölmek temizdir. */
   const dv=arzT('arzDoviz');
+  /* §276 USD seçiliyken kur yoksa çarpım SIFIRLANIR — sessizce sıfır tahmin
+     üretmek yerine kullanıcıyı uyar. */
+  if(_bUsd && !kur){ const _d=$('arzDurum'); if(_d) _d.textContent='⚠ Tahmin birimi $ seçili ama KUR boş — çarpanlar hesaplanamaz'; }
 
   const sonrasi   = (mevcut!=null) ? mevcut+artan : null;                 // post-money adet
   const arzEdilen = (artan+ortak)||null;                                  // halka arz edilen
@@ -4524,20 +4541,29 @@ function arzHesapla(){
   const dolu=Y.some(y=>y.et||y.st!=null||y.fv!=null||y.nk!=null);
   let tab='';
   if(dolu){
-    const bir=birim===1000000?'mn ₺':birim===1000?'bin ₺':'₺';
+    const _pb = _bUsd ? (dv||'$') : '₺';
+    const bir = (birim===1000000?'mn ':birim===1000?'bin ':'') + _pb;
+    /* §276 ÇARPAN TABANI TAHMİNİN PARA BİRİMİYLE AYNI OLMALI.
+       Tahmin $ ise TL EV'ye bölmek anlamsız — USD EV zaten hesaplanıyor
+       (D(ev), köprü tablosunun sağ sütunu). Kullanıcı bunu yakaladı:
+       "TL EV ile dolar FAVÖK'ü bölüyor, halbuki USD EV'yi de hesaplıyor".
+       İlk düzeltmemde tahmini kur ile ₺'ye çeviriyordum — o da yanlıştı,
+       çünkü çevirme yuvarlama hatası ekler. Doğrusu PAYDAYI değiştirmek. */
+    const _pdT = _bUsd ? D(pd) : pd;
+    const _evT = _bUsd ? D(ev) : ev;
     const satir=(ad,fn,cls)=>'<tr><td'+(cls?' style="'+cls+'"':'')+'>'+ad+'</td>'+Y.map(y=>'<td'+(cls?' style="'+cls+'"':'')+'>'+fn(y)+'</td>').join('')+'</tr>';
     tab='<div style="overflow-x:auto;margin-top:12px"><table class="arzTbl" style="min-width:620px"><thead><tr><th style="width:150px">TAHMİNLER <span class="sub" style="font-size:9px">('+bir+')</span></th>'+
       Y.map(y=>'<th>'+(y.et?esc(y.et):'—')+'</th>').join('')+'</tr></thead><tbody>'+
-      satir('Satışlar',y=>arzF(y.st!=null?y.st/birim:null,0))+
+      satir('Satışlar <span class="thin" style="font-size:9px">('+bir+')</span>',y=>arzF(y.st!=null?y.st/birim:null,0))+
       satir('Büyüme',y=>arzP(y.by,0),'color:var(--blue);font-size:10px')+
       satir('FAVÖK',y=>arzF(y.fv!=null?y.fv/birim:null,0))+
       satir('FAVÖK Marjı',y=>arzP(y.fm,1),'color:var(--blue);font-size:10px')+
       satir('Net Kâr',y=>arzF(y.nk!=null?y.nk/birim:null,0))+
       satir('Net Kâr Marjı',y=>arzP(y.nm,1),'color:var(--blue);font-size:10px')+
       '<tr><td colspan="'+(ARZ_YILN+1)+'" style="height:6px;border:none"></td></tr>'+
-      satir('P/E',y=>arzX((pd!=null&&y.nk>0)?pd/y.nk:null),'font-weight:700;color:var(--mm2)')+
-      satir('EV/FAVÖK',y=>arzX((ev!=null&&y.fv>0)?ev/y.fv:null),'font-weight:700;color:var(--mm2)')+
-      satir('EV/Satışlar',y=>arzX((ev!=null&&y.st>0)?ev/y.st:null),'color:var(--muted)')+
+      satir('P/E',y=>arzX((_pdT!=null&&y.nk>0)?_pdT/y.nk:null),'font-weight:700;color:var(--mm2)')+
+      satir('EV/FAVÖK',y=>arzX((_evT!=null&&y.fv>0)?_evT/y.fv:null),'font-weight:700;color:var(--mm2)')+
+      satir('EV/Satışlar',y=>arzX((_evT!=null&&y.st>0)?_evT/y.st:null),'color:var(--muted)')+
       satir('Net İşl. Serm.',y=>arzF(y.is_!=null?y.is_/birim:null,0),'font-size:10px')+
       satir('NİS / Ciro',y=>arzP((y.is_!=null&&y.st)?y.is_/y.st*100:null,1),'color:var(--muted);font-size:10px')+
       '</tbody></table></div>';

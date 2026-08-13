@@ -1238,7 +1238,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
         <div class="lbl">BİLANÇO &amp; BAZ</div>
         <label class="arzLb" for="arzNetBorc">Net Borç — arz öncesi (₺) <span class="thin">− = net nakit</span></label><input class="arzIn" id="arzNetBorc" type="text" inputmode="decimal" placeholder="">
         <label class="arzLb" for="arzMaliyet">İhraç Maliyeti (%) <span class="thin">ops. · aracılık</span></label><input class="arzIn" id="arzMaliyet" type="text" inputmode="decimal" placeholder="">
-        <label class="arzLb" for="arzBirim">Tahmin Birimi</label><select class="arzIn" id="arzBirim"><option value="1000000">mn ₺</option><option value="1000">bin ₺</option><option value="1">₺ (tam)</option></select>
+        <label class="arzLb" for="arzBirim">Tahmin Birimi</label><!-- §276 USD SECENEKLERI. Tahminler cogu zaman izahnamede BIN TL ya da
+     MILYON USD verilir; birim yanlis secilince carpanlar 1000 KAT sapar.
+     13 Agu KPEKS: "tam ₺" secili, veriler BIN ₺ -> EV/Satislar 108,5x
+     gorundu, gercegi 0,1085x. USD secilirse KUR ile ₺ye cevrilir. -->
+<select class="arzIn" id="arzBirim"><option value="1000000">mn ₺</option><option value="1000">bin ₺</option><option value="1">₺ (tam)</option><option value="usd:1000000">mn $</option><option value="usd:1000">bin $</option><option value="usd:1">$ (tam)</option></select>
       </div>
       <div>
         <div class="lbl">DÖVİZ &amp; TAHSİSAT</div>
