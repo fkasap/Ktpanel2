@@ -552,6 +552,7 @@ async function fonTazele() {
            PİYASASI (TL) FONU". "PORTFÖY" kelimesine kadar olan kısım kurum
            adıdır. Türetme YALNIZ eşleme yoksa devreye girer — mevcut
            kurucuAd'a DOKUNMAZ, yani en kötü ihtimalde bugünkü durum kalır. */
+        const _listeKapsam = Object.keys(kurucu).length;   /* türetmeden ÖNCEKİ kapsam */
         let _turetildi = 0;
         try{
           for(const k of Object.keys(globalThis.__akisMeta)){
@@ -561,9 +562,13 @@ async function fonTazele() {
             if(m && m[1]){ kurucu[k] = m[1].trim() + ' PORTFÖY'; _turetildi++; }
           }
         }catch(e){}
+        /* §279c RAPOR SAYISI DÜZELTİLDİ. Önce Object.keys(kurucu).length
+           yazıyordu ama o TÜRETME SONRASI boyut (2015) — mesaj "mod=liste 2015
+           kayıt kapsıyor" diyordu, oysa liste 1041 döndürmüştü. Teşhis mesajı
+           yanlış sayı gösterirse bir sonraki okuyucuyu yanıltır. */
         if(_turetildi) raporlar.push('### Fon akışı — ℹ ' + _turetildi
-          + ' fonun kurucusu fon adından türetildi (§279; mod=liste ' + Object.keys(kurucu).length
-          + ' kayıt kapsıyor, evren daha geniş)');
+          + ' fonun kurucusu fon adından türetildi (§279; mod=liste ' + _listeKapsam
+          + ' kayıt kapsıyordu, evren ' + Object.keys(globalThis.__akisMeta).length + ')');
         await fonAkisArsiv(globalThis.__akisMeta, kurucu);
         globalThis.__akisMeta = null;
       }
