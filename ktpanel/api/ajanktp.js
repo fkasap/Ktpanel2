@@ -154,9 +154,17 @@ module.exports = async (req, res) => {
       const M = g.metrikler || {};
       for(const k of Object.keys(M)){
         const o = M[k]; if(!o || typeof o !== 'object') continue;
-        const d = _bicim(o.deger);      if(d) _gost[k] = d;
-        const t = _bicim(o.tutar);      if(t) _gost[k+'_tutar'] = t;
-        const on = _bicim(o.onceki);    if(on) _gost[k+'_onceki'] = on;
+        /* §283b BİRİM BELİRSİZKEN DE DİZGİ ÜRET — ölçeksiz, ham sayı.
+           13 Ağu ATATP: birim çözülemedi (_c null) -> _bicim hep null döndü ->
+           _gost BOŞ kaldı -> §283 doldurması dolduracak bir şey bulamadı ->
+           üç metrik "—" göründü.
+           Ölçek bilinmiyorsa ölçek EKİ yazmayız (§257 kuralı korunur) ama HAM
+           SAYIYI binlik ayraçla yazabiliriz. Bilinmeyen ölçekli bir rakam,
+           BOŞ KUTUDAN iyidir — kullanıcı büyüklüğü kendi yorumlar. */
+        const _ham = (v) => (v == null || !isFinite(v)) ? null : _tr(v, 0);
+        const d = _bicim(o.deger)  || _ham(o.deger);   if(d) _gost[k] = d;
+        const t = _bicim(o.tutar)  || _ham(o.tutar);   if(t) _gost[k+'_tutar'] = t;
+        const on = _bicim(o.onceki)|| _ham(o.onceki);  if(on) _gost[k+'_onceki'] = on;
       }
     }catch(e){}
     /* §267 GYO / YATIRIM ŞİRKETİ MARJ TUZAĞI.
