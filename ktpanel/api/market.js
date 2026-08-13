@@ -170,6 +170,18 @@ async function fredModu(req, res){
     ['CUSR0000SAH1','yillik'],['CUSR0000SASLE','yillik'],['PCEPILFE','yillik'],
     // Fed bilançosu (seviye, mlr$)
     ['WALCL','seviye'],['RRPONTSYD','seviye'],['WRESBAL','seviye'],
+    /* §280 GSYH — ABD ve EURO BÖLGESİ, ikisi de FRED'den.
+       ECB'nin MNA akışı da var ama anahtar yapısı §275'te gördüğümüz gibi
+       degisken; FRED Eurostat verisini zaten tasiyor ve bu uc CALISIYOR.
+       Tek kaynak, tek bicim, tahmin yok.
+       A191RL1Q225SBEA : ABD reel GSYH, ceyreklik YILLIKLANDIRILMIS % —
+                         "ekonomi %X buyudu" dendiginde kastedilen MANSET rakam.
+                         Zaten yuzde, o yuzden 'seviye'.
+       CLVMNACSCAB1GQEA19 : Euro bolgesi reel GSYH SEVIYESI (zincirlenmis).
+                         'yillik' ile y/y buyumeye cevrilir — §272'deki tarih
+                         eslemesi ceyreklik seride de calisir (12 ay geri =
+                         ayni ceyrek, gecen yil). */
+    ['A191RL1Q225SBEA','seviye'],['CLVMNACSCAB1GQEA19','yillik'],
     // Konjonktür & resesyon radarı
     ['T10Y3M','seviye'],['SAHMREALTIME','seviye'],['GDPNOW','seviye'],
     ['NFCI','seviye'],['PAYEMS','seviye'],['RSAFS','yillik'],['UMCSENT','seviye'],
