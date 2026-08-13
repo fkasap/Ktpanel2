@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813f';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813g';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1384,6 +1384,21 @@ async function marketCek(){
       rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();
     /* §270b Fed kartındaki enerji satırına CANLI Brent eklenir — sabit "102$"
        yerine güncel seviye. Veri yoksa etiket boş kalır, iddia edilmez. */
+    /* §282 AVRUPA MEGA-CAP CANLI FİYAT. Kart 27 Tem'den beri elle ve donmuş;
+       araştırma notları kalıyor (çeyrek rakamları hâlâ geçerli) ama fiyatlar
+       canlı. Para birimi SEMBOLDEN belli: .AS/.PA/.DE = €, .CO = kr.
+       Yahoo düşerse satır BOŞ kalır — yanlış fiyat göstermez. */
+    try{
+      const AV=[['ASML.AS','ASML','€'],['MC.PA','LVMH','€'],['SAP.DE','SAP','€'],['NOVO-B.CO','Novo','kr']];
+      const par=[];
+      for(const [sem,ad,pb] of AV){
+        const d=mk.data[sem]; if(!d||d.p==null) continue;
+        const sn=(d.chg>=0?'up':'down');
+        par.push('<b>'+ad+'</b> '+pb+trN(d.p,d.p<100?2:0)
+          +' <span class="'+sn+'">'+(d.chg>=0?'+':'')+trN(d.chg,1)+'%</span>');
+      }
+      if(par.length&&$('avMegaFiyat')) $('avMegaFiyat').innerHTML=par.join(' · ')+' <span class="thin">· canlı</span>';
+    }catch(e){}
     try{ const br=mk.data.brent;
       if(br && br.p!=null){
         const _bt='· Brent '+trN(br.p,1)+'$';
