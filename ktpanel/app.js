@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -4646,14 +4646,24 @@ function arzMarjTuret(){
         const kh=$(hedef+i), km=$(marj+i);
         if(!kh||!km) continue;
         const m=arzS(marj+i);
-        /* Kutu boş VE marj girilmiş -> türet. Kutuda değer varsa DOKUNMA. */
-        if(m!=null && String(kh.value||'').trim()===''){
-          kh.value=String(Math.round(st*m/100));
+        const bos = String(kh.value||'').trim()==='';
+        const bizimki = kh.dataset.turetildi==='1';
+        /* §278c KENDİ YAZDIĞIMIZI DA TAZELE.
+           İlk yazımda kural "yalnız kutu BOŞSA doldur" idi ve TERS TEPTİ:
+           kullanıcı "15" yazarken önce "1" tuşuna basıyor -> o anda FAVÖK
+           1.000.000×1/100 = 10.000 yazılıyor, sonra "5" gelince marj 15
+           oluyor AMA kutu artık DOLU olduğu için güncellenmiyordu.
+           Sonuç: satış 1.000.000, marj %15 girili, FAVÖK 10.000 (=%1).
+           Koruma doğruydu ama KENDİ YAZDIĞINI da "elle girilmiş" sayıyordu.
+           Artık: boşsa doldur, TÜRETİLMİŞSE yeniden hesapla, ELLE girilmişse
+           dokunma. Üç durum ayrı. */
+        if(m!=null && (bos || bizimki)){
+          const yeni=String(Math.round(st*m/100));
+          if(kh.value!==yeni) kh.value=yeni;
           kh.dataset.turetildi='1';
           kh.title='marjdan türetildi — elle değiştirebilirsin';
         }
-        /* Marj silindiyse ve değer TÜRETİLMİŞSE geri al; elle girilene dokunma */
-        else if(m==null && kh.dataset.turetildi==='1'){
+        else if(m==null && bizimki){
           kh.value=''; delete kh.dataset.turetildi; kh.title='';
         }
       }
