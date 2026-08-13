@@ -3,7 +3,7 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-08-11
+Son güncelleme: 2026-08-13
 
 
 ## ⭐ OTOMASYON KURALI (KULLANICI KURALI — 2 Agu 2026)
@@ -2766,6 +2766,310 @@ turda olculecek (bekleyen islere kondu).
 
 app.js v=20260803f · ajan.js v=20260803a
 DOSYALAR: app.js + index.html
+
+## 276 HALKA ARZ: TAHMIN BIRIMI $ ISE CARPAN TABANI DA $ OLMALI (13 Agu)
+
+BULGU (kullanici, KPEKS karti): "TL EV ile dolar FAVOK'u boluyor, halbuki USD
+EV'yi de hesapliyor."
+Tahmin Birimi secenekleri yalnizca ₺ idi (mn/bin/tam). Izahnameler cogu zaman
+MILYON USD verir; kullanici ₺ secip $ deger girince carpanlar anlamsizlasiyor.
+Ayrica birim YANLIS secilince 1000 KAT sapma: KPEKS'te "₺ (tam)" seciliydi,
+EV/Satislar 108,5x gorundu — dogrusu 0,1085x.
+ILK COZUMUM YANLISTI: tahmini KUR ile ₺'ye ceviriyordum. Kullanici duzeltti —
+USD EV ZATEN HESAPLANIYOR (D(ev), koprü tablosunun sag sutunu). Dogrusu
+tahmini oldugu gibi birakip PAYDAYI degistirmek:
+    _pdT = _bUsd ? D(pd) : pd
+    _evT = _bUsd ? D(ev) : ev
+Cevirmek yuvarlama hatasi da ekler; bolmek temizdir.
+EKLENEN: mn $ · bin $ · $ (tam) secenekleri. Tablo basligi para birimini
+gosterir ("Satislar (mn $)"). USD secili ama KUR bossa UYARI cikar — sessizce
+sifir tahmin uretmez.
+DERS: bir orani hesaplarken PAY ve PAYDANIN ayni para biriminde oldugunu ne
+garanti ediyor? (§252z ailesinin para birimi versiyonu.)
+
+## 275 ECB: ICP AKISI EMEKLI, HICP AKISI GELDI — BOYUT YAPISI DEGISTI (12-13 Agu)
+
+ECB Data Portal ACIK: anahtar yok, CORS izni var, tarayicidan dogrudan
+calisiyor. Dosyadaki eski not "ECB agi kapaliyken OECD serisi" diyordu — o
+durum artik gecerli DEGIL.
+YENI UC ACILMADI (§248c): evds2'ye mod=ecb olarak bindirildi.
+
+### ZINCIR — dort deneme, dorduncude KATALOGA SORULDU
+1) ICP/M.U2.N.000000.4.ANR -> ok ama son gozlem 2025-12 (8 AY ESKI).
+   Panel %2,9 (2026-07) gosteriyordu; uc "canli" diye 8 aylik veri verecekti.
+2) `Y` varyanti (arindirilmis) denendi -> 404, oyle bir seri YOK.
+3) HICP akisi ayni kalipla denendi -> 404.
+4) KATALOG SORULDU: /service/dataflow/ECB -> 104 akis, icinde HICP var.
+   Sonra ?detail=serieskeysonly ile 90.068 seri cekildi ve suzuldu.
+KOK NEDEN — BOYUT YAPISI DEGISMIS:
+   ICP  : FREQ.REF_AREA.ADJUSTMENT.ICP_ITEM.STS_INSTITUTION.ICP_SUFFIX
+   HICP : FREQ.REF_AREA.ADJUSTMENT.ICP_ITEM.DATA_PROVIDER.ICP_SUFFIX
+5. boyut '4' (Eurostat) yerine '4D0'. Akis adi ve madde kodlari AYNIYDI —
+tek bir boyut degeri yuzunden 404.
+DOGRU ANAHTARLAR (tahmin DEGIL, katalogdan suzuldu):
+   HICP/M.U2.N.000000.4D0.ANR   manset
+   HICP/M.U2.N.XEF000.4D0.ANR   cekirdek
+   HICP/M.U2.N.NRGY00.4D0.ANR   enerji
+   FM/D.U2.EUR.4F.KR.DFR.LEV    mevduat faizi (canli)
+   FM/D.U2.EUR.4F.KR.MRR_FR.LEV ana refinansman
+
+### §275b SIRALI CEKIM
+Dort eszamanli istekte dfr ve hicpCekirdek HTTP 504 verdi — ikisi de
+tarayicidan TEK TEK calisiyor. ECB portali eszamanlilikta yavasliyor.
+Sirali + 20 sn: dordu de geciyor.
+
+### §275c YAS KONTROLU — SESSIZ BAYATLIK EN KOTUSU
+Uc ok:true donuyordu ama veri 8 AY eskiydi. Aylik seri 90 gunden eskiyse
+`bayat:true` isaretlenir. Bu olmasaydi ICP'nin durdugunu FARK ETMEZDIK.
+
+### UYARI — ECB HIZ SINIRI
+Art arda alti sorgu atinca ECB IP'yi gecici engelledi ("Your access has been
+blocked due to security concerns", HTTP 400). Cerez degil IP tabanli;
+~1 saatte acildi. Kesif sorgulari ARALIKLI yapilmali, ozellikle
+?references=all gibi agir olanlar.
+
+## 274 AYNI NOT IKI KEZ BASILIYORDU — AD DEGIL METIN BAZLI COZUM (13 Agu)
+
+Avrupa sekmesi: "AVRO BOLGESI ENFLASYON — KIRILIM" notu ekranda IKI KEZ,
+ayni metin ayni damga.
+ILK COZUM (§274, ad bazli tekillestirme) YAKALAMADI. OLCULDU:
+  document.querySelectorAll('.note').filter(ayni metin).length = 2
+Iki AYRI .note elemani ayni icerigi tasiyor ve FARKLI adlara cozuluyorlar —
+ad bazli suzgec bu yuzden calismadi.
+§274b: METIN IMZASI ile karsilastirilir (ilk 140 karakter, >=40 uzunluk).
+Ad ne olursa olsun ayni icerik ikinci kez basilmissa GIZLENIR.
+GIZLENIR, SILINMEZ: sonraki tur adlari dogru cozerse eleman yerinde durur ve
+geri gorunur. Silmek geri donussuz olurdu.
+Dort noktadan cagrilir: nobetci, iki geri-yukleme, yeni yazim sonrasi.
+DOGRULANDI: kartta artik iki FARKLI icerik var (statik aciklama + Ebu notu),
+tekrar yok.
+
+## 273 RRP BIRIM HATASI — YUVARLAMA BIR YARGIYA DONUSMUSTU (12 Agu)
+
+Fed Bilancosu karti "Ters repo (RRP) 0 mlr\$ — tampon BITTI" diyordu ve
+uzerine anlati kuruyordu ("likidite tamponu bitmis, QT baskisi dogrudan banka
+rezervlerine aktariliyor").
+GERCEK DEGER 0,725 mlr\$ = 725 MILYON. Sifir DEGIL.
+KOK NEDEN: RRPONTSYD FRED'den MILYAR gelir, WALCL/WRESBAL MILYON. Kod ucunu
+de 1000'e boluyordu -> 0,725/1000 = 0,000725 -> trN(,0) -> "0".
+(§252l ailesi: birim SERIYE GORE degisir.)
+DUZELTME: bolme kaldirildi, gosterim <10 mlr icin 2 ondalik, ve esik metni
+"tampon BITTI" -> "tampon tukendi (<1 mlr)". Yon ayni, iddia durust.
+DERS: bir yuvarlama sonucu METIN URETIYORSA, o metin veriyi degil
+YUVARLAMAYI yansitiyor olabilir.
+
+## 272 TUFE: BIR EKSIK GOZLEM, BIR AYLIK KAYMA (12 Agu)
+
+Kullanici yakaladi: "TUFE temmuzda 3.4 geldi ama bir kontrol etsene."
+Panel %3,52 hesapliyordu, BLS mansети %3,4.
+UC TUR TAHMIN, DORDUNCUDE OLCUM:
+  1) onbellek sandim -> degildi (no-store ile ayni sonuc)
+  2) SA/NSA farki sandim -> CPIAUCSL->CPIAUCNS gecisi yaptim, %3,52 KALDI
+  3) tarayicidan FRED'e bakalim dedim -> CORS, gidilemez
+  4) market.js'e ?hamSeri= teshis parametresi eklendi -> HAM GOZLEMLER GELDI
+KOK NEDEN (ham veriden):
+    2025-12  324.054
+    2025-11  324.122
+    2025-09  324.800     <- 2025-10 GOZLEMI YOK
+Kod gozlemler[0] / gozlemler[12] yapiyordu. Bir ay eksik oldugu icin indeks 12
+Temmuz 2025 yerine HAZIRAN 2025'e denk geliyordu:
+    333.918 / 322.561 (Haz'25) = %3,52   <- panel
+    333.918 / 323.048 (Tem'25) = %3,37   <- BLS ile ayni
+DUZELTME: TARIHE GORE ESLEME. Ay hesaplanir, o tarihli gozlem ARANIR;
+bulunamazsa hesap YAPILMAZ (yanlis ay yerine deger yok).
+NOT: SA->NSA gecisi de DOGRUYDU ama YETMIYORDU — iki hata ust uste binmisti.
+DERS: indeks sayarak geriye gitmek, seride TEK BIR bosluk olsa bile hesabi
+SESSIZCE kaydirir. (§252z ile ayni aile, ucuncu vaka.)
+
+## 266 AYNI GUN IKINCI KOSU 1G'YI VE AKISI SIFIRLADI (12 Agu)
+
+BULGU: katfon.json'da 46 fonun HEPSINDE g[0]=0 VE a=0. Panel "+0" gosterdi.
+Dosyada onceki gun gercek degerler vardi (GOP 0,1101 · KSK 0,0998).
+KOK NEDEN:
+    const eski = f.yu;                  // dosyadaki fiyat
+    f.g[0] = (yeni / eski - 1) * 100;   // 1G hesaplanir
+    f.yu = yeni;                        // USTUNE YAZILIR
+Ilk kosu DOGRU. Ayni gun ikinci kosuda f.yu ARTIK BUGUNUN fiyati ->
+yeni/eski = 1 -> 1G TAM SIFIR. 12 Agu'da Actions UC KEZ `hepsi` kostu.
+AKIS ayni sebeple (§266b): dunKayit arsivin SON gununu aliyordu, o da
+BUGUNDU (ilk kosu yazmisti) -> Dpay = 0 -> 46 fonda birden sifir.
+COZUM:
+  1G  — d.fiyat_tarihi === bugun ise TEKRAR KOSUDUR: seviyeler (fiyat/AUM)
+        tazelenir, 1G ve akis KORUNUR. Ilk kosunun hesabi dogrudur,
+        ikincisinin yapacak isi yoktur. Rapora satir dusuluyor.
+  akis — dunKayit artik bugunu ACIKCA disliyor
+        (Object.keys(...).filter(x => x !== bugun)). Hafta sonu/tatil
+        boslugu kendiliginden atlanir.
+NOT: §263'un yeni fon-akis.json yolu bu hatayi TASIMIYOR — bugunun kaydini
+ANAHTAR BAZLI uzerine yaziyor, sonIki hep [dun, bugun] cikiyor. Test edildi.
+SIFIRLANANLAR GERI GELMEZ: eski fiyatlar dosyadan silindi. Sonraki gun
+kosusu dogru hesaplar.
+
+DESEN — BU OTURUMDA UCUNCU KEZ: iki olcum arasindaki GERCEK ZAMAN FARKI
+sifirsa, degisim de TANIMSIZDIR.
+  §252z  beta: arsiv karma yogunlukta, ay-araligi gunluk getiri sayiliyordu
+  §266   katfon 1G: ayni gun ikinci kosu, fiyat farki sifir
+  §266b  katfon akis: "dun" bugunun kendisi
+Ucunde de kod SESSIZCE sifir ya da sacma deger uretti. Bir degisim hesabi
+yazarken SORULACAK SORU: "iki ucun farkli zamanlara ait oldugunu ne
+garanti ediyor?"
+
+## 277 UC GUNUN ORTAK DERSI: "IKI UC HANGI ZAMANA/BIRIME AIT?" (13 Agu)
+
+Bu oturumda AYNI SINIF hata BES kez cikti ve hepsi SESSIZCE yanlis deger
+uretti — hicbiri hata firlatmadi, hicbiri denetimden dusmedi:
+
+  §252z  beta       arsiv karma yogunlukta; AY araligi GUNLUK getiri sayildi
+  §266   katfon 1G  ayni gun ikinci kosu; fiyat farki sifir
+  §266b  katfon akis "dun" bugunun kendisiydi
+  §272   ABD TUFE   bir eksik gozlem; indeks 12 BIR AY kaydi
+  §276   arz carpan TL EV bolu USD FAVOK
+
+Dordu ZAMAN, biri PARA BIRIMI — ama soru ayni:
+    BIR ORAN YA DA DEGISIM HESAPLARKEN, IKI UCUN AYNI OLCEGE
+    (ayni zaman araligi / ayni para birimi) AIT OLDUGUNU NE GARANTI EDIYOR?
+Kod bunu VARSAYIYORDU: "indeks 12 = 12 ay once", "son kayit = dun",
+"iki deger de TL". Varsayimlarin hicbiri kontrol edilmiyordu.
+
+KURAL: fark/oran hesaplayan her yerde ucun KIMLIGI dogrulanir —
+  · zaman: tarihi HESAPLA ve o tarihli gozlemi ARA (indeks sayma)
+  · sureklilik: iki gozlem arasi makul mu (>5 gun ise gunluk getiri DEGIL)
+  · ayni gun: dosyanin damgasi bugunse bu TEKRAR kosudur, hesap yapma
+  · para birimi: pay ve payda ayni birimde mi
+Bulunamazsa HESAP YAPILMAZ. Yanlis ay/birim yerine DEGER YOK daha iyidir.
+
+### IKINCI ORTAK DERS: TAHMIN ETME, KAYNAGA SOR
+Bu oturumda dort kaynak avi yasandi ve DORDU DE ayni sekilde cozuldu:
+  CDS      — dokuz kaynak denendi, kullanicinin HAR olcumu cozdu
+  TEFAS    — uc uc adi tahmin edildi (ucu de yanlis), HAR dogrusunu verdi
+  ABD TUFE — uc tur tahmin (onbellek/SA-NSA/CORS), HAM GOZLEM cozdu
+  ECB HICP — uc anahtar tahmin edildi (404), KATALOG cozdu
+Ortalama: her avda ~3 bosa deneme, sonra olcum. Tahmin sirasi TERSINE
+CEVRILMELI — once ham veriyi/katalogu iste, sonra kod yaz.
+
+### UCUNCU: DUZELTMENIN KENDISI KIRIK CIKABILIR
+Bu oturumda yazdigim duzeltmelerden ALTISI ilk halinde calismadi:
+  sapma (yanlis alan) · uyeSayi (zamanlama) · tohumlama (tarih surekliligi)
+  TEFAS sayfalamasi (ilk 1000) · EVDS URL (eski uc) · §276 (yanlis yon)
+Hepsi node --check ve envanter testinden GECTI. Hepsini CALISAN SISTEMIN
+CIKTISI yakaladi: konsol dokumu, ekran goruntusu, rapordaki sayi, kullanici.
+"Kod var" ile "kod isini yapiyor" AYRI SEYLERDIR (§252n/§252u).
+
+## 271 BILANCO KARTI ISTEMI: ALTI KURAL, ALTISI DA HESAPLANMIS (12 Agu)
+
+Gun boyunca bilanco kart zincirine alti kural eklendi ve HEPSI ayni ilkeyle:
+MODELE "DIKKAT ET" DEMEK YERINE OLGUYU SUNUCUDA HESAPLAYIP VERMEK.
+Bir kural, hesaplanmis bir olguyla birlikte verilirse TUTAR; yalniz uyari
+olarak verilirse model onu unutur ya da yanlis uygular.
+
+§257  BIRIM — hazir gosterim dizgisi (bkz. ayri bolum)
+§267  GYO MARJ TUZAGI. RGYAS: model "faaliyet marji %115'e dustu, sorunlu
+      seviye" yazdi. Rakam DOGRU (5,31/4,61) ama OKUMA YANLIS — faaliyet kari
+      ciroyu asamaz; GYO'da asar cunku YATIRIM AMACLI GAYRIMENKUL DEGERLEME
+      KAZANCI "Diger Faaliyet Gelirleri"nden faaliyet karina girer, ciroya
+      girmez. RGYAS'ta bu kalem 2,49 mlr (faaliyet karinin %47'si).
+      2C25'te oran %237 idi -> "marj dustu" degil DEGERLEME KAZANCI KUCULDU.
+      COZUM: faaliyet kari > ciro ise isteme UYARI + ALTERNATIF yazim yolu
+      (farki TUTAR olarak soyle, brut marji kullan). Esik SUNUCUDA olculur.
+      Panelde EKGYO/AVPGY/PAGYO/BEGYO/ASGYO... cok — tuzak TEKRARLAYACAK.
+§267b NET KAR KOPRUSU. Model "artis parasal kazanctan" dedi. OLCULDU:
+      finansman gideri +2,21 mlr · parasal +0,63 mlr -> finansman UC KAT
+      buyuk etken, model SIRALAMAYI TERS kurmustu. Artik katkilar buyukten
+      kucuge hesaplanip isteme yaziliyor: "hangisi baskin" YORUM DEGIL
+      ARITMETIKTIR.
+§267c ONCEKI DEGER TURETMESI. kap.js yalniz parasal/ozkaynak/nakit'te
+      `onceki` gonderiyor; digerleri icin yoy'dan geri hesaplanir
+      (onceki = deger/(1+yoy/100)). Gercek veriyle dogrulandi, sapma binde bir.
+§268  PUAN / BP. Model "faaliyet marji y/y -122 bp" yazdi; gercek fark 122
+      PUAN = 12.200 bp, YUZ KAT hata. Ilginc olan: AYNI KART brut marjda
+      "+3 bp"yi DOGRU kullandi — birimi biliyor, buyuk farkta kayiyor.
+      KURAL: |fark| >= 1 puan ise PUAN, altinda bp. Dizgi hazir verilir.
+§268b BILANCO TABANI. Model "oz kaynaklar +%4,6" dedi, gercek y/y +%15,2.
+      MODEL SUCLU DEGIL: KAP BILANCOSUNDA `onceki` = ONCEKI DONEM SONU,
+      GELIR TABLOSUNDA = GECEN YILIN AYNI CEYREGI. Iki farkli taban, AYNI
+      alan adi — istemde hangisinin ne oldugu SOYLENMIYORDU. Model dogru
+      hesaplamis, yanlis ETIKETLEMISTI. Artik taban acikca yaziliyor.
+§269  TOKEN TAVANI. RGYAS karti YARIМ cikti: son iki metrik "undefined",
+      PORTFOY TEZI HIC YAZILMADI, ve model butceyi metriklerde harcayip hazir
+      gosterimi kullanmadi (ciro "4.608.603 bin ₺" ham yazildi).
+      ALTINDA IKI KAT SESSIZ HATA: cagiran aiUret(istem, 2600) diyordu ama
+      aiUret icindeki Math.min(2500, ...) onu SESSIZCE KIRPIYORDU. §223b tam
+      bu sorunu bir kez yasamis, 1400->2600 yapmis ve tavanin kirptigini FARK
+      ETMEMIS. Tavan 4000, istek 3600.
+§269b KESILME REDDI. stop_reason==='max_tokens' yakalanir ve kart HIC
+      URETILMEZ. Yarim kart vermek, kart vermemekten KOTUDUR — cunku yarim
+      kart DOGRU GORUNUR. Kullanici "portfoy tezi yazmadi" diye fark etti;
+      fark etmeseydi eksik kart onaylanacakti.
+§269c "undefined" DIZGESI. Model metrik degerine LITERAL "undefined" yazdi;
+      esc(m.deger||'') bunu yakalamaz (dolu bir dizgedir). Artik "—" gosterilir
+      ve yanitta eksikMetrik sayaci doner.
+
+SONUC (dogrulandi): RGYAS karti ucuncu uretimde TAM cikti — 11 rakamin 11'i
+Fintables ile birebir, marj dili yok, kopru sirali, birimler dogru, tez yerinde.
+
+## 265 BILANCO YOKSAYMA — "SIL" DEGIL "GIZLE" (12 Agu)
+
+Kart bekleyen bilanco listesi 29 sirket gosteriyordu; kullanici hepsinin
+kartini yazmak istemiyor. Ama liste KAP'tan TURETILIR — statik bir kayit
+degil, silmek ise yaramaz (sonraki nobette geri gelir).
+COZUM: kod+DONEM kapsaminda kalici yoksayma (ktp_bilanco_yoksay_v1).
+  · ✕ dugmesi IKI yerde: Ebu panosu + Earnings AI rozet seridi
+  · Kapsam kod+donem: ZERGY 2026/2 gizlemek 2026/3'u GIZLEMEZ — yeni ceyrek
+    yeni karardir, kalici sessizlestirme degil
+  · GERI ALMA GORUNUR: pano altinda "gizlenen N: ZERGY · OZATD ..." satiri,
+    tiklayinca geri gelir. Yoksa kullanici neyi sakladigini unutur ve liste
+    sessizce eksik kalir.
+  · CLOUD_KEYS'e eklendi — her cihazda tek tek gizlemek gerekmesin.
+
+## 264 ONAYLANAN KART YENILEMEDE KAYBOLUYORDU (12 Agu)
+
+BULGU: ZERGY karti onaylandi, "✓ Earnings AI'a eklendi" mesaji cikti,
+localStorage'a YAZILDI (dogrulandi) — ama SAYFA YENILENINCE YOK OLDU.
+KOK NEDEN: cloudSaveDebounced 900 MS BEKLER. Kullanici o sure dolmadan
+yenilerse kayit buluta HIC GITMEZ; cloudLoad bulutdaki ESKI listeyi (8 kart)
+yerelin (9 kart) USTUNE yazar ve yeni kart silinir.
+MEVCUT KORUMA YETMIYORDU:
+    if(bSay===0 && ySay>0) return;   // yalniz bulut TAMAMEN BOSken
+Burada bSay=8, ySay=9 -> kosul tutmadi.
+IKI DUZELTME:
+  1) BIRLESTIRME (app.js cloudLoad): taslak kartlar kod|donem anahtariyla
+     BIRLESTIRILIR, ezilmez. Cakismada _onay damgasi YENI olan kazanir.
+     Test: kullanicinin durumu / cakisma / baska cihazda eklenen — ucu de dogru.
+  2) ANLIK BULUT YAZIMI: onay ve silme artik `await cloudSave()` kullaniyor,
+     debounce DEGIL. Onay ANLIK bir eylemdir, biriktirilecek bir sey yok.
+     SILME ICIN KRITIK: 900 ms gecikmede yenileme yapilirsa silinen kart
+     bulutta kalir ve BIRLESTIRME onu GERI GETIRIR.
+
+## 263 GUNLUK FON AKISI — PAY ADEDI YONTEMI, FINTABLES GEREKMEZ (12 Agu)
+
+SORU: Pusula/Tera fonlarina gunluk giris-cikis hesaplanabilir mi?
+OLCULDU (25 gozlem, 5 fon x 5 gun):
+  ham DAUM   -> ortalama %48 SAPMA. AUM hem akistan hem GETIRIDEN degisir.
+                T3B'de akis TAM SIFIRKEN AUM 6 gunde +%9 artti (tamami getiri).
+  pay adedi  -> MEDYAN %0 FARK, 25/25 gozlemde <%10.
+FORMUL:  akis = (pay_t - pay_t-1) x fiyat_t
+Pay adedi getiriden ETKILENMEZ; yalniz alim-satimla degisir. Fintables'in
+kendi gunluk_nakit_giris_cikisi alani da boyle hesaplaniyor.
+VERI ZATEN ELDEYDI: mod=gnl yaniti tedPaySayisi + fiyat veriyor. Tek eksik
+DUNUN pay adediydi -> fon-akis.json arsivi (son 15 gun).
+Kurucu eslemesi mod=liste'nin kurucuAd alanindan -> PYS bazinda gruplama.
+KART: Katilim Fonlari sekmesinde GIRIS/CIKIS/NET + en cok giren 8, en cok
+cikan 5 PYS (her satirda o kurumun en buyuk uc fonu).
+AKLI BASINDA SINIR: tek fonda tek gunde >50 mlr TL akis REDDEDILIR
+(pay adedi duzeltmesi ya da bolunme olabilir).
+
+## 262 YARDIM MENUSU GUNCELLENDI (12 Agu)
+
+Kilavuz sekme rehberi + kavram sozlugu olarak IYIYDI ama panelin SU ANKI
+calisma bicimini anlatmiyordu: Ebu hic gecmiyordu, canli/damgali ayrimi
+yoktu, bilanco karti akisi ve nobet yoktu.
+EKLENEN UC BOLUM: (1) veri nereden gelir — canli/uc/otomasyon/damgali dort
+katman, (2) Ebu — iki isi, hash mekanizmasi, nobet, not yasi, duraklama
+seridi, (3) bilanco karti akisi — taslak/oku/skor+onayla, birim capraz
+dogrulamasi, "skoru SEN verirsin".
+RAKAMSIZLASTIRMA: "147 XKTUM hissesi" -> "XKTUM evrenindeki hisseler".
+Evren karari Eylul'e ertelendi (147 vs 215); sabit sayi bir ay sonra yanlis
+olacakti. §258'in ayni ilkesi: sabit sayi yazma, ya canlidan uret ya hic yazma.
 
 ## 261 TAZELIK HESABI TEK SAHIBE DEVREDILDI — §245p'NIN YARIM ISI (11 Agu)
 

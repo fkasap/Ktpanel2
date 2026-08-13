@@ -2,7 +2,7 @@
 # HER OTURUMDA ILK BU DOSYA OKUNUR. Amac: hangi kart ne zaman eskir —
 # tek bakista gorunur, tur tur kesif yapip kontor harcanmaz.
 # Bir kart guncellenince buradaki "son:" tarihi de guncellenir (ayni turda!).
-# Son tam denetim: 11 Agu 2026 (§252b-260: tum repo okundu, 59 duzeltme)
+# Son tam denetim: 13 Agu 2026 (§252b-276: tum repo okundu, 83 duzeltme)
 # CRON DUZENI (§252x): hafta ici 09:10 fon · 18:10 endeks,fiyat,fon · Cmt 07:00 hepsi(risk dahil)
 
 ## ALTIN KURALLAR
@@ -46,6 +46,12 @@
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
+| ABD TUFE (FRED) | OTOMATIK — CPIAUCNS/CPILFENS (NSA, BLS mansetiyle ayni). Hesap TARIHE gore eslesir; indeks sayimi bir eksik gozlemde bir ay kaydiriyordu (§272) | 12A ✓ |
+| ECB HICP + politika | OTOMATIK — /api/evds2?mod=ecb. ICP akisi 4 Sub 2026'da EMEKLI, yeni akis HICP ve 5. boyut '4D0' (§275). Uc 'bayat' bayragi tasir | 13A ✓ |
+| Halka arz carpanlari | Tahmin birimi ₺ VEYA \$ — \$ secilirse carpan tabani da USD PD/EV olur (§276). Birim yanlis secilirse 1000 KAT sapar | 13A ✓ |
+| Bilanco karti istemi | Alti kural sunucuda HESAPLANIR: birim · GYO marj tuzagi · net kar koprusu · puan/bp · bilanco tabani · token tavani (§271) | 12A ✓ |
+| Gunluk fon akisi | OTOMATIK — fon-akis.json, Actions sabah kosusu. Formul (pay_t - pay_t-1) x fiyat. Ham DAUM KULLANILMAZ (%48 sapar) (§263) | 12A ✓ |
+| Katfon 1G + akis | ⚠ AYNI GUN IKINCI KOSU sifirliyordu — koruma eklendi (§266). Rapor 'ayni gun tekrar kosu' derse 1G korunmus demektir | 12A ✓ |
 | Tazelik hesabi | TEK SAHIP: window.tazelikHesap. ajan.js kendi kopyasini KULLANMIYOR artik (§261). Cekmece ile nobet AYRISAMAZ; fark yalniz ESIKTE (Ebu yaklasti'yi da uyarir) | 11A ✓ |
 | Yabanci AYLIK blogu | ELLE — odemeler dengesi, ayda bir. Haftalik kisim CANLI (§259/261) | 11A |
 | Yabanci haftalik akis | ARTIK OTOMATIK — /api/evds2?mod=yab (bie_mknethar M7/M8/M12). Panelde 'EVDS canli' yazmiyorsa uc dusmus (§259) | 11A ✓ |
