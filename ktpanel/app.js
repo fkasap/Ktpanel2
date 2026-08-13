@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -4630,10 +4630,72 @@ function arzKayitRender(){
       '<button class="btn" data-asil="'+k.id+'" style="font-size:10px;padding:2px 6px;opacity:.6">Sil</button></td></tr>';
     }).join('')+'</tbody></table></div>';
 }
+/* §278 MARJDAN FAVOK/NET KAR TURETME — KUTUYA YAZ.
+   Hesapta zaten vardi (fv==null && st && fm -> st*fm/100) ama SONUC
+   KULLANILIYOR, KUTUYA YAZILMIYORDU; kullanici marji girip FAVOK kutusunu bos
+   goruyordu ve "hesaplanmadi" saniyordu.
+   Artik kutuya yazilir — ama YALNIZ kutu BOSSA. Elle girilmis bir degeri
+   marjdan turetilenle EZMEK, kullanicinin verisini silmek olurdu.
+   Yazilan deger placeholder degil GERCEK deger: kaydedilir, disari aktarilir. */
+function arzMarjTuret(){
+  try{
+    for(let i=1;i<=ARZ_YILN;i++){
+      const st=arzS('arzSt'+i);
+      if(st==null||!st) continue;
+      for(const [hedef,marj] of [['arzFv','arzFm'],['arzNk','arzNm']]){
+        const kh=$(hedef+i), km=$(marj+i);
+        if(!kh||!km) continue;
+        const m=arzS(marj+i);
+        /* Kutu boş VE marj girilmiş -> türet. Kutuda değer varsa DOKUNMA. */
+        if(m!=null && String(kh.value||'').trim()===''){
+          kh.value=String(Math.round(st*m/100));
+          kh.dataset.turetildi='1';
+          kh.title='marjdan türetildi — elle değiştirebilirsin';
+        }
+        /* Marj silindiyse ve değer TÜRETİLMİŞSE geri al; elle girilene dokunma */
+        else if(m==null && kh.dataset.turetildi==='1'){
+          kh.value=''; delete kh.dataset.turetildi; kh.title='';
+        }
+      }
+    }
+  }catch(e){}
+}
+/* §278b YIL ETİKETLERİ OTOMATİK. 1. yıl girilince sonrakiler +1, +2...
+   YALNIZ BOŞ olanlar doldurulur — kullanıcı 3. yıla farklı bir etiket
+   yazdıysa (örn. "2027T") o korunur. */
+function arzYilOtoDoldur(){
+  try{
+    const ilk=$('arzY1'); if(!ilk) return;
+    const t=String(ilk.value||'').trim();
+    const y0=parseInt(t,10);
+    if(!isFinite(y0)||t.length!==4) return;          // yalnız 4 haneli yıl
+    for(let i=2;i<=ARZ_YILN;i++){
+      const el=$('arzY'+i); if(!el) continue;
+      if(String(el.value||'').trim()==='' || el.dataset.otoYil==='1'){
+        el.value=String(y0+i-1); el.dataset.otoYil='1';
+      }
+    }
+  }catch(e){}
+}
 function arzInit(){
   if(!$('arzSonuc'))return;
   arzIzgaraKur();
   ARZ_ALAN.forEach(id=>{const e=$(id);if(e)e.addEventListener('input',arzHesapla);});
+  /* §278: marj/satış değişince türet, sonra hesapla. Sıra önemli —
+     türetme kutuya yazar, arzHesapla o kutuyu okur. */
+  for(let i=1;i<=ARZ_YILN;i++){
+    for(const p of ['arzSt','arzFm','arzNm']){
+      const e=$(p+i); if(e) e.addEventListener('input',()=>{ arzMarjTuret(); arzHesapla(); });
+    }
+    /* Kullanıcı FAVÖK/net kâr kutusuna ELLE yazarsa türetme damgası kalkar */
+    for(const p of ['arzFv','arzNk']){
+      const e=$(p+i); if(e) e.addEventListener('input',()=>{ delete e.dataset.turetildi; e.title=''; });
+    }
+  }
+  const y1=$('arzY1'); if(y1) y1.addEventListener('input',()=>{ arzYilOtoDoldur(); arzHesapla(); });
+  for(let i=2;i<=ARZ_YILN;i++){
+    const e=$('arzY'+i); if(e) e.addEventListener('input',()=>{ delete e.dataset.otoYil; });
+  }
   const s=$('arzDoviz'); if(s)s.addEventListener('change',arzHesapla);
   const b=$('arzBirim'); if(b)b.addEventListener('change',arzHesapla);
   const k=$('arzKaydet'); if(k)k.addEventListener('click',arzKaydet);
