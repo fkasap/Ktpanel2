@@ -267,7 +267,9 @@ module.exports = async (req, res) => {
       }
     }catch(e){}
     const _gostMetin = Object.keys(_gost).length
-      ? ('\n\nHAZIR GÖSTERİM (deger alanında BUNLARI AYNEN KULLAN — ölçek eki EKLEME, DEĞİŞTİRME):\n'
+      ? ('\n\n⚠ ÖNCE `deger` ALANINI DOLDUR, sonra `cc`ye geç. `cc` KISA olsun '
+         + '(en fazla 12 kelime); asıl bilgi RAKAMdır, açıklama değil.\n\n'
+         + 'HAZIR GÖSTERİM (deger alanında BUNLARI AYNEN KULLAN — ölçek eki EKLEME, DEĞİŞTİRME):\n'
          + Object.keys(_gost).map(k => '  '+k+' = '+_gost[k]).join('\n')
          + '\n⚠ Bu listede olmayan bir kalem için ölçek eki (mlr/mn) YAZMA — yalnız ham sayıyı yaz.')
       : '\n\n⚠ BİRİM ÇÖZÜLEMEDİ: hiçbir tutara ölçek eki (mlr/mn/₺) YAZMA. Ham sayıyı yaz ve özette birimin belirsiz olduğunu SÖYLE.';
@@ -301,7 +303,7 @@ YALNIZCA GEÇERLİ JSON DÖNDÜR. Başka hiçbir şey yazma, markdown kod bloğu
 {
  "ozet": "3-5 cümle. Manşet ne diyor, ALTINDA ne var. Rakamları binlik ayraçla yaz.",
  "metrikler": [
-   {"ad":"Ciro (2Ç)","deger":"<HAZIR GÖSTERİM listesinden ciro değeri>","cc":"çeyreklik değişim ya da bağlam","yoy":"+%9,0 (2Ç25: <önceki>)"}
+   {"ad":"Ciro (2Ç)","deger":"<HAZIR GÖSTERİM listesinden ciro değeri>","cc":"ÇOK KISA — en fazla 12 kelime","yoy":"+%9,0 (2Ç25: <önceki>)"}
  ],
  "onemli": ["BAŞLIK BÜYÜK HARF: açıklama. Neden önemli olduğu.", "...", "..."],
  "guidance": "Şirket guidance veriyorsa özeti; vermiyorsa İZLENECEK EŞİKLER — gelecek çeyrekte hangi rakama bakılmalı.",
@@ -404,7 +406,40 @@ Türkçe yaz. Kısa cümle kur.`;
          kartta öyle göründü. esc(m.deger||'') bunu yakalamaz — dolu bir
          dizgedir. Eksik değeri "—" ile göstermek, "undefined" göstermekten
          hem dürüst hem okunur. Hangi alanların boş kaldığı da raporlanır. */
+      /* §283 MODEL BOŞ BIRAKIRSA SUNUCU DOLDURUR.
+         13 Ağu ARASE: dört metrikte deger boş geldi (Faaliyet Kârı, Net Kâr,
+         Finansman Gideri, Nakit) ve "—" göründü — oysa ÖZET METİNDE rakamlar
+         vardı ("faaliyet kârı 2,70 mlr ₺"). Model bütçeyi `cc` alanındaki uzun
+         açıklamalara harcayıp `deger`i atlamış.
+         DEĞERLER SUNUCUDA ZATEN HAZIR (_gost). Modelin yazmasını beklemek yerine
+         eksikse BURADAN doldururuz — deterministik, token'dan bağımsız.
+         EŞLEME: metrik adından anahtara. "Faaliyet Kârı (FAVÖK)" -> faaliyetKar.
+         Ad değişse bile anahtar kelimeyle yakalanır. */
       metrikler: (Array.isArray(kart.metrikler) ? kart.metrikler.slice(0,8) : []).map(m => {
+        try{
+          const ad = String(m && m.ad || '').toLowerCase();
+          const bos = !String(m && m.deger || '').trim()
+            || ['undefined','null','nan','—','-'].includes(String(m.deger).trim().toLowerCase());
+          if(bos){
+            const esle = [
+              [/ciro|satış|hasılat/, 'ciro'],
+              [/brüt/, 'brutMarj_tutar'],
+              [/faaliyet|favök|foko/, 'faaliyetKar'],
+              [/net\s*k[âa]r|dönem\s*k[âa]r/, 'netKar'],
+              [/finansman/, 'finansGider'],
+              /* SIRA ÖNEMLİ: "Nakit & Parasal Pozisyon" gibi birleşik başlıkta
+                 ÖNCE GEÇEN kalem esas alınır — nakit, parasal'dan önce. */
+              [/nakit/, 'nakit'],
+              [/parasal/, 'parasal'],
+              [/özkaynak|oz\s*kaynak/, 'ozkaynak']
+            ];
+            for(const [re, anahtar] of esle){
+              if(re.test(ad) && _gost[anahtar]){ m = { ...m, deger: _gost[anahtar], _dolduruldu: true }; break; }
+            }
+          }
+        }catch(e){}
+        return m;
+      }).map(m => {
         const tmz = (v) => {
           const t = String(v == null ? '' : v).trim();
           return (!t || t === 'undefined' || t === 'null' || t === 'NaN') ? '—' : t;
