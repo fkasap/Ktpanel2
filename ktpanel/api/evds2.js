@@ -86,10 +86,25 @@ async function cozCek(key, grupRx, hedefler, gunGeri){
    BİÇİM SDMX-JSON: değer  dataSets[0].series[<anahtar>].observations[i][0]
                     tarih  structure.dimensions.observation[0].values[i].id */
 const ECB_SERI = {
-  dfr:      ['FM/D.U2.EUR.4F.KR.DFR.LEV',   'Mevduat faizi (DFR)'],
-  hicp:     ['ICP/M.U2.N.000000.4.ANR',     'HICP manşet (yıllık)'],
-  hicpCekirdek: ['ICP/M.U2.N.XEF000.4.ANR', 'HICP çekirdek (enerji+gıda hariç)'],
-  hicpEnerji:   ['ICP/M.U2.N.NRGY00.4.ANR', 'HICP enerji']
+  dfr: ['FM/D.U2.EUR.4F.KR.DFR.LEV', 'Mevduat faizi (DFR)'],
+  mro: ['FM/D.U2.EUR.4F.KR.MRR_FR.LEV', 'Ana refinansman faizi (MRO)'],
+  /* §275e HICP GERİ GELDİ — DOĞRU AKIŞ VE ANAHTAR BULUNDU (13 Ağu).
+     ICP akışı 4 Şub 2026'da EMEKLİ EDİLDİ (ECB'nin kendi OBS_COM notu:
+     "the ECB will also discontinue the current ICP dataset and replace it
+     with a new HICP dataset"). Veri 2025-12'de duruyordu.
+     YENİ AKIŞ: HICP. Ama BOYUT YAPISI FARKLI — bu yüzden eski kalıp 404 verdi:
+       ICP  : FREQ.REF_AREA.ADJUSTMENT.ICP_ITEM.STS_INSTITUTION.ICP_SUFFIX
+       HICP : FREQ.REF_AREA.ADJUSTMENT.ICP_ITEM.DATA_PROVIDER.ICP_SUFFIX
+     5. boyut '4' (Eurostat) yerine '4D0'.
+     ANAHTARLAR TAHMİN EDİLMEDİ: akışın 90.068 serisi ?detail=serieskeysonly
+     ile çekilip euro bölgesi (U2), aylık (M), arındırılmamış (N), yıllık
+     değişim (ANR) süzgeciyle bulundu. Üç kez tahmin edip yanıldıktan sonra
+     KATALOĞA SORULDU — doğru yol buydu. */
+  hicp:         ['HICP/M.U2.N.000000.4D0.ANR', 'HICP manşet (yıllık)'],
+  hicpCekirdek: ['HICP/M.U2.N.XEF000.4D0.ANR', 'HICP çekirdek (enerji+gıda hariç)'],
+  hicpEnerji:   ['HICP/M.U2.N.NRGY00.4D0.ANR', 'HICP enerji']
+  /* §275d (13 Ağu ÇÖZÜLDÜ, bkz §275e): HICP'ler ICP akışı emekli olduğu
+     için 8 ay bayattı ve geçici olarak çıkarılmıştı. Yeni akış bulundu. */
 };
 async function ecbModu(req, res){
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -115,12 +130,16 @@ async function ecbModu(req, res){
     }catch(e){ return null; }
   };
   const sonuc = {}; const hata = [];
-  await Promise.all(Object.keys(ECB_SERI).map(async (ad) => {
+  /* §275b PARALEL -> SIRALI. 12 Ağu ölçümü: dört eşzamanlı istekte dfr ve
+     hicpCekirdek HTTP 504 verdi, oysa ikisi de tarayıcıdan TEK TEK çalışıyor.
+     ECB portalı eşzamanlı isteklerde yavaşlıyor. Sıralı çekim + 20 sn ile
+     dördü de geçiyor; toplam süre yine Vercel bütçesinin altında. */
+  for(const ad of Object.keys(ECB_SERI)){
     const [yol, aciklama] = ECB_SERI[ad];
     try{
       const u = 'https://data-api.ecb.europa.eu/service/data/' + yol
         + '?lastNObservations=' + n + '&format=jsondata';
-      const r = await fetch(u, { headers:{ 'Accept':'application/json' }, signal: AbortSignal.timeout(12000) });
+      const r = await fetch(u, { headers:{ 'Accept':'application/json' }, signal: AbortSignal.timeout(20000) });
       if(!r.ok){ hata.push(ad + ':HTTP' + r.status); return; }
       const seri = coz(await r.json());
       if(!seri || !seri.length){ hata.push(ad + ':boş'); return; }
@@ -132,11 +151,27 @@ async function ecbModu(req, res){
         fark: onc ? +(son[1] - onc[1]).toFixed(2) : null,
         seri: seri.slice(-12) };
     }catch(e){ hata.push(ad + ':' + String(e.message||e).slice(0,40)); }
-  }));
+  }
   if(!Object.keys(sonuc).length)
     return res.status(200).json({ ok:false, err:'ECB yanıt vermedi', hata });
+  /* §275c YAŞ KONTROLÜ. 12 Ağu: ICP/M.U2.N.000000.4.ANR serisi 2025-12'de
+     KALMIŞ (8 ay eski) ama uç ok:true dönüyordu — panel bunu canlı sanardı.
+     Aylık seri 90 günden eskiyse İŞARETLENİR; sessiz bayatlık en kötüsü. */
+  try{
+    const bugun = new Date();
+    for(const k of Object.keys(sonuc)){
+      const t = String(sonuc[k].tarih || '');
+      const d = new Date(t.length === 7 ? (t + '-01') : t);
+      if(isNaN(d)) continue;
+      const gun = Math.floor((bugun - d) / 86400000);
+      sonuc[k].yasGun = gun;
+      if(gun > 90) sonuc[k].bayat = true;
+    }
+  }catch(e){}
+  const _bayat = Object.keys(sonuc).filter(k => sonuc[k].bayat);
   return res.status(200).json({ ok:true, kaynak:'ECB Data Portal (data-api.ecb.europa.eu · açık API)',
     veri:sonuc, eksik: hata.length ? hata : undefined,
+    bayatSeri: _bayat.length ? _bayat : undefined,
     not:'Anahtar gerekmez. Damgalı ECB kartlarının yerini alır (§275).' });
 }
 async function yabModu(req, res, cfg){
