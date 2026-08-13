@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813d';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -4169,9 +4169,18 @@ async function fonAkisRender(){
     return m? (+m[3])+' '+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][+m[2]-1] : t; };
   if($('fonAkisTag')) $('fonAkisTag').textContent='('+kisa(d.akis.gun)+' · '+d.akis.adet+' fon · TEFAS köprüsü)';
   /* PYŞ bazında topla — kurucu bilinmiyorsa fon kodu altında kalır */
+  /* §279b KURUM ADI NORMALLEŞTİRİLİR. İki kaynak var: TEFAS kurucuAd
+     ("TERA PORTFÖY YÖNETİMİ A.Ş.") ve fon adından türetilen ("TERA PORTFÖY").
+     Normalleştirmezsek AYNI KURUM İKİ SATIR olur ve toplamlar bölünür.
+     "PORTFÖY"e kadar olan kısım kimliktir; gerisi (YÖNETİMİ A.Ş.) tekrar. */
+  const _norm=(a)=>{
+    const u=String(a||'').toUpperCase().replace(/\s+/g,' ').trim();
+    const m=u.match(/^(.{2,40}?)\s+PORTF[ÖO]Y\b/);
+    return m ? (m[1].trim()+' PORTFÖY') : (u||'(kurucu bilinmiyor)');
+  };
   const pys={};
   for(const k of Object.keys(F)){
-    const ad=K[k]||'(kurucu bilinmiyor)';
+    const ad=_norm(K[k]||'(kurucu bilinmiyor)');
     (pys[ad]=pys[ad]||{net:0,fon:[]});
     pys[ad].net+=F[k];
     pys[ad].fon.push([k,F[k]]);
