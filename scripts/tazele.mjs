@@ -504,7 +504,8 @@ async function fonTazele() {
         meta[kod] = { p,
           aum: (isFinite(aum) && aum > 0) ? aum : null,
           ys: parseInt(x.kisiSayisi) || null,
-          pay: (isFinite(pay) && pay > 0) ? pay : ((isFinite(aum) && aum > 0) ? aum / p : null) };
+          pay: (isFinite(pay) && pay > 0) ? pay : ((isFinite(aum) && aum > 0) ? aum / p : null),
+          unvan: String(x.fonUnvan || '').trim() };   /* §279: kurucu türetmesi için */
         nA++;
       }
       if (nA) { globalThis.__akisMeta = meta; }   /* §263: liste (kurucuAd) çekildikten SONRA yazılır */
@@ -540,6 +541,29 @@ async function fonTazele() {
             if (k && u) kurucu[k] = u;
           });
         }
+        /* §279 EKSİK KURUCU FON ADINDAN TÜRETİLİR.
+           ÖLÇÜLDÜ (13 Ağu): mod=liste 1039 kayıt döndürüyor ama evren 2015
+           fon — 976 fonun kurucusu YOK ve hepsi "(kurucu bilinmiyor)"
+           grubunda toplanıyor: +21,78 mlr ₺ tek satırda. Kurum toplamları bu
+           yüzden yanlış (Pusula panelde -2,51, gerçekte +1,85).
+           FON BAZINDA HESAP DOĞRU — dokuz fon Fintables ile birebir doğrulandı
+           (KLU/KTV/KTT/PBR/PRY/PNU/TLY/THF/TP2). Hata YALNIZCA dağılımda.
+           TEFAS fon adları kurumla başlar: "GARANTİ PORTFÖY İKİNCİ PARA
+           PİYASASI (TL) FONU". "PORTFÖY" kelimesine kadar olan kısım kurum
+           adıdır. Türetme YALNIZ eşleme yoksa devreye girer — mevcut
+           kurucuAd'a DOKUNMAZ, yani en kötü ihtimalde bugünkü durum kalır. */
+        let _turetildi = 0;
+        try{
+          for(const k of Object.keys(globalThis.__akisMeta)){
+            if(kurucu[k]) continue;
+            const u = String(globalThis.__akisMeta[k].unvan || '').toUpperCase();
+            const m = u.match(/^(.{2,40}?)\s+PORTF[ÖO]Y\b/);
+            if(m && m[1]){ kurucu[k] = m[1].trim() + ' PORTFÖY'; _turetildi++; }
+          }
+        }catch(e){}
+        if(_turetildi) raporlar.push('### Fon akışı — ℹ ' + _turetildi
+          + ' fonun kurucusu fon adından türetildi (§279; mod=liste ' + Object.keys(kurucu).length
+          + ' kayıt kapsıyor, evren daha geniş)');
         await fonAkisArsiv(globalThis.__akisMeta, kurucu);
         globalThis.__akisMeta = null;
       }
