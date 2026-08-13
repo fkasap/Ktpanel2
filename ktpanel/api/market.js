@@ -638,6 +638,12 @@ module.exports = async (req, res) => {
     const sec = {}; SEC.forEach((k, i) => { sec[k] = vals[keys.length + i]; });
     const end = {}; END.forEach((k, i) => { end[k] = vals[keys.length + SEC.length + i]; });
     const his = {}; HIS2.forEach((k, i) => { his[k] = vals[keys.length + SEC.length + END.length + i]; });
+    /* §282b AVMEGA SONUÇLARI DA DAĞITILIR. İlk yazımda sembolleri `tum`
+       listesine EKLEDİM ama `data`ya hiç YAZMADIM — her grup tek tek
+       dağıtılıyor (keys/SEC/END/HIS2) ve AVMEGA için o satır yoktu.
+       Çekiliyordu, sonuç ATILIYORDU: panel `ASML.AS: YOK` gösterdi.
+       "Kod var, teslim yok" — bu oturumda yedinci vaka. */
+    AVMEGA.forEach((k, i) => { data[k] = vals[keys.length + SEC.length + END.length + HIS2.length + i]; });
     data.sec = sec; data.end = end; data.his = his;
     res.status(200).json({ t: Date.now(), tarih: new Date().toISOString().slice(0, 10),
       hisAdet: HIS2.length, hisKirpildi: kirpildi || undefined, data });
