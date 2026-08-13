@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813g';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260813j';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -745,7 +745,10 @@ async function abdSekme(){
                DURMUŞ. Burada FRED yedek olarak kalır; ECB gelirse ecbGsyhYaz()
                üstüne yazar. */
             kutu('avGsyhBody', S['CLVMNACSCAB1GQEA19'],
-              {ad:'Reel GSYH', not_:'yıllık değişim (y/y) · FRED yedeği', kaynak:'Eurostat · FRED'});
+              {ad:'Reel GSYH', not_:'yıllık değişim (y/y)', kaynak:'Eurostat · FRED'});
+            /* §281b ECB karşılaştırması için FRED'in tarihini bırak. FRED serileri
+               `S` nesnesinde ve o yerel — ecbGsyhCek oraya erişemez. */
+            try{ window.__avGsyhFred = S['CLVMNACSCAB1GQEA19'] || null; }catch(e){}
             /* GDPNow ABD kartına ek satır — cari çeyreğin canlı tahmini */
             const gn=S['GDPNOW'], ug=$('usGsyhBody');
             if(gn&&isFinite(gn.deger)&&ug) ug.innerHTML+=
@@ -780,6 +783,14 @@ async function abdSekme(){
               _fo.textContent='('+_g+'g önce)';
               _fo.style.color=_g>10?'var(--down)':'var(--muted)';
             }
+            /* §284d AYNI ÖLÇÜM DÖRT KARTTA GEÇİYOR. İkisinde yaş etiketi vardı,
+               ikisinde yoktu — tek yerde işaretlemek diğerlerini YALANCI bırakır.
+               Sınıf bazlı seçim: yeni bir kart eklendiğinde de otomatik kapsar. */
+            document.querySelectorAll('.fedYas82').forEach(el=>{
+              el.textContent='('+_g+'g önce)';
+              el.style.color=_g>10?'var(--down)':'var(--muted)';
+              el.style.fontSize='9px';
+            });
           }catch(e){}
         }
         // ---- Fed bilançosu (QT) ----
@@ -4157,6 +4168,22 @@ async function ecbGsyhCek(){
     const j=await (await fetch('/api/evds2?mod=ecb&n=5',{cache:'no-store'})).json();
     const g=j&&j.ok&&j.veri&&j.veri.gsyh;
     if(!g||!isFinite(g.deger)) return;
+    /* §281b HANGİSİ YENİYSE O KAZANIR. 13 Ağu ölçümü BEKLENTİMİ TERSİNE
+       ÇEVİRDİ: ECB (MNA/I9) Ç1'26'da, FRED (Eurostat) Ç2'26'da. Eurostat hızlı
+       tahminini çeyrek bitiminden ~30 gün sonra yayınlıyor; ECB'nin MNA akışı
+       geriden geliyor.
+       ECB'yi seçme gerekçem "20 ülke kapsamı doğru" idi ve o hâlâ geçerli —
+       ama BİR ÇEYREK ESKİ veriyle üstüne yazmak KAZANÇ DEĞİL KAYIP olurdu.
+       Artık tarih karşılaştırılıyor: ECB yalnız DAHA YENİYSE yazar. */
+    try{
+      const fr=window.__avGsyhFred||null;
+      if(fr&&fr.tarih){
+        const ay=(t)=>{ const m=String(t).match(/^(\d{4})-Q?(\d{1,2})/);
+          if(!m) return 0; const q=+m[2];
+          return +m[1]*12 + (String(t).includes('Q') ? (q-1)*3 : q-1); };
+        if(ay(g.tarih) <= ay(fr.tarih)) return;   /* FRED aynı ya da daha yeni — dokunma */
+      }
+    }catch(e){}
     const ce=(t)=>{ const m=String(t||'').match(/^(\d{4})-Q?(\d)/);
       return m ? ('Ç'+m[2]+"'"+m[1].slice(2)) : String(t||''); };
     const v=g.deger, sn=v>=0?'up':'down';
@@ -5672,6 +5699,16 @@ function exAnteHesapla(politika, beklenti){
   if(!Number.isFinite(politika)||!Number.isFinite(beklenti)) return null;
   const r = ((1+politika/100)/(1+beklenti/100)-1)*100;
   window.EXANTE = {deger:+r.toFixed(2), canli:true, politika, beklenti};
+  /* §284 MERKEZ BANKALARI kartındaki satır da BU kaynaktan. Orada "≈ %13"
+     SABİT yazılıydı ve bu hesapla çelişiyordu — aynı ekranda iki farklı
+     reel faiz. §129'un tek-kaynak kuralı oraya uygulanmamıştı. */
+  try{
+    const el=document.getElementById('mbExAnte');
+    if(el) el.textContent='≈ %'+trN(window.EXANTE.deger,1);
+    /* §284c 12 ay beklentisi de aynı sabitten — iki yerde yaşamasın. */
+    const b12=document.getElementById('mbBek12');
+    if(b12 && isFinite(beklenti)) b12.textContent='%'+trN(beklenti,2);
+  }catch(e){}
   // carry kartı zaten çizildiyse tazele — sıra bağımlılığı olmasın
   try{ if(typeof yabCarryTazele==='function') yabCarryTazele(); }catch(e){}
   return window.EXANTE.deger;

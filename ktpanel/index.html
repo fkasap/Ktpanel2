@@ -333,7 +333,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="card">
     <table><thead><tr><th>Banka</th><th class="num">Faiz</th><th>Son Karar</th><th>Sıradaki</th></tr></thead><tbody>
       <tr><td><b>TCMB</b></td><td class="num" style="color:var(--mm2);font-weight:600">%37,00</td><td>Sabit (23 Tem)</td><td>10 Eyl</td></tr>
-      <tr><td>Fed</td><td class="num">%3,50–3,75</td><td>Sabit</td><td style="font-weight:600">29 Tem ÇAR</td></tr>
+      <!-- §284b SIRADAKİ FOMC 15-16 EYLÜL. "29 Tem ÇAR" GEÇMİŞTİ (bugün 13 Ağu)
+     ve Fed & Politika kartı ZATEN "15 Eyl–16 Eyl" diyordu — aynı ekranda
+     iki farklı tarih. Ağustos'ta FOMC yok, o yüzden sıradaki Eylül. -->
+<tr><td>Fed</td><td class="num">%3,50–3,75</td><td>Sabit (29 Tem)</td><td style="font-weight:600">15–16 Eyl</td></tr>
       <tr><td>ECB</td><td class="num">%2,25</td><td class="down">▲ +25bp (17 Haz)</td><td>10–11 Eyl</td></tr>
       <tr><td>BoJ</td><td class="num">%1,00</td><td class="down">▲ +25bp (16 Haz)</td><td>—</td></tr>
       <tr><td>BOK</td><td class="num">%2,75</td><td class="down">▲ +25bp (16 Tem)</td><td>—</td></tr>
@@ -341,18 +344,27 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     </tbody></table>
     <div class="kv" style="margin-top:6px"><span class="k">TCMB koridor / AOFM</span><span>%35,5–40,0 / ≈%40</span></div>
     <div class="kv"><span class="k">Karahan 2026 sonu TÜFE öngörüsü</span><span>%26</span></div>
-    <div class="note" style="font-size:9px"><b>Koro:</b> BoJ + ECB + BOK son iki ayda artırdı, Fed Eylül artırımı ≈%82 fiyatlanıyor — TCMB dört-merkez sıkılaşmasına karşı tek başına indirim patikasında (haftalık notta "ters akıntı" teması).</div>
+    <div class="note" style="font-size:9px"><b>Koro:</b> BoJ + ECB + BOK son iki ayda artırdı, Fed Eylül artırımı ≈%82 <span class="thin fedYas82"></span> fiyatlanıyor — TCMB dört-merkez sıkılaşmasına karşı tek başına indirim patikasında (haftalık notta "ters akıntı" teması).</div>
   </div>
   <div class="card">
     <div class="kv" style="border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:4px"><span class="k" style="font-weight:700;color:var(--mm2)">Enflasyon: beklenti → gerçekleşen</span><span id="ppkGercek" style="font-weight:600">—</span></div>
     <div class="kv"><span class="k">Piyasa 12-ay beklentisi <span class="thin" id="ppkPiyaTag"></span></span><span id="ppkPiya">—</span></div>
     <div class="kv"><span class="k">Hane halkı 12-ay beklentisi</span><span id="ppkHane">—</span></div>
     <div class="kv"><span class="k">Yıl sonu TÜFE (anket)</span><span>%29,14</span></div>
-    <div class="kv"><span class="k">12 / 24 ay TÜFE</span><span>%23,81 / %18,29</span></div>
+    <!-- §284c 12 AY BEKLENTİSİ CANLIYA. app.js'te OKU_BEK 23,95'e güncellenmişti
+     (§252d) ama bu satır %23,81'de kalmıştı. 24 ay elle kalıyor — o ayrı
+     bir anket serisi ve panelde canlı karşılığı yok. -->
+<div class="kv"><span class="k">12 / 24 ay TÜFE</span><span><span id="mbBek12">%23,81</span> / %18,29</span></div>
     <div class="kv"><span class="k">Yıl sonu politika faizi</span><span>≈%34,7 · Eylül'de indirim</span></div>
     <div class="kv"><span class="k">Yıl sonu / 12 ay USD/TRY</span><span>51,47 / 55,72</span></div>
     <div class="kv"><span class="k">2026 büyüme / cari açık</span><span>%3,2 / 49,2 mlr $</span></div>
-    <div class="kv"><span class="k">İleriye dönük reel faiz</span><span style="color:var(--mm2);font-weight:600">≈ %13</span></div>
+    <!-- §284 CANLIYA BAĞLANDI. "≈ %13" SABİT yazılıydı ve exAnteHesapla()
+     ile ÇELİŞİYORDU (o %10,5 veriyor: (1,37/1,2395-1)×100).
+     %13 muhtemelen beklenti ~%21 iken hesaplanmış bir damga.
+     §129 tam bu sorunu bir kez yaşamış: "Kullanıcı haklı olarak sordu:
+     %10,5 diyorsun ama burada %7,9". Aynı hata ÜÇÜNCÜ kez — o yüzden
+     artık TEK KAYNAK: window.EXANTE. -->
+<div class="kv"><span class="k">İleriye dönük reel faiz</span><span id="mbExAnte" style="color:var(--mm2);font-weight:600">—</span></div>
     <div class="note" style="font-size:9px">Üstteki üç satır EVDS'den <b>canlı</b>: fiili TÜFE (gerçekleşen) ve iki 12-ay beklentisi. Piyasa beklentisi gerçekleşene ne kadar yakınsa dezenflasyona inanç o kadar güçlü; hane halkı ile makas dezenflasyonun "algı" tarafındaki direnci gösterir. Alttaki satırlar Piyasa Katılımcıları Anketi'nin yıl sonu/uzun vade projeksiyonlarıdır.</div>
   </div>
 </div>
@@ -723,7 +735,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div class="card" style="margin-top:12px">
   <div class="lbl">HAFTALIK ARAŞTIRMA NOTU <span class="tag snap" id="yorumHafta">3–9 AĞU · ENFLASYON DÖNÜŞÜ + REZERV HAFTASI</span></div>
-  <div class="note" style="line-height:1.75;max-height:560px;overflow-y:auto;padding-right:6px" id="yorumMetin"><div style="background:#F0F7F4;border-left:3px solid var(--mm2);border-radius:0 6px 6px 0;padding:11px 13px;margin:0 0 14px"><b style="color:var(--mm2);font-size:12px">0 · BÜYÜK RESİM: Sıkılaşan dünyada enflasyon geri döndü, TCMB hâlâ ters akıntıda</b><br>Geçen haftanın hikâyesi "dört merkez aynı yönde" idi; bu hafta ona bir katman eklendi: <b>Avrupa'da enflasyon dönüşü</b>. Avro bölgesi manşeti %1,9'dan <b>%2,9'a</b> sıçradı (Tem), çekirdek %2,5 ve enerji <b>%10,0</b> — Brent şokunun (zirve 102$) geçişkenliği artık sadece senaryo değil, veri. Fed Eylül ≈%82, ECB'nin "işimiz bitti" anlatısı zayıfladı; küresel sıkılaşma korosu <em>uzayabilir</em>. TCMB ise yıl sonu %35 medyanla iki indirim fiyatlamaya devam ediyor — ters akıntı derinleşiyor, TL carry'nin göreli cazibesi sürer ama küresel risk iştahı kanalı daralıyor.</div>
+  <div class="note" style="line-height:1.75;max-height:560px;overflow-y:auto;padding-right:6px" id="yorumMetin"><div style="background:#F0F7F4;border-left:3px solid var(--mm2);border-radius:0 6px 6px 0;padding:11px 13px;margin:0 0 14px"><b style="color:var(--mm2);font-size:12px">0 · BÜYÜK RESİM: Sıkılaşan dünyada enflasyon geri döndü, TCMB hâlâ ters akıntıda</b><br>Geçen haftanın hikâyesi "dört merkez aynı yönde" idi; bu hafta ona bir katman eklendi: <b>Avrupa'da enflasyon dönüşü</b>. Avro bölgesi manşeti %1,9'dan <b>%2,9'a</b> sıçradı (Tem), çekirdek %2,5 ve enerji <b>%10,0</b> — Brent şokunun (zirve 102$) geçişkenliği artık sadece senaryo değil, veri. Fed Eylül ≈%82 <span class="thin fedYas82"></span>, ECB'nin "işimiz bitti" anlatısı zayıfladı; küresel sıkılaşma korosu <em>uzayabilir</em>. TCMB ise yıl sonu %35 medyanla iki indirim fiyatlamaya devam ediyor — ters akıntı derinleşiyor, TL carry'nin göreli cazibesi sürer ama küresel risk iştahı kanalı daralıyor.</div>
 
 <div style="margin:0 0 12px"><b style="color:var(--ink);font-size:12px">1 · ÇEYREĞİN TEMASI: MALİYET MAKASI AÇILDI — emtia zinciri patladı</b><br>Bilanço sezonunun mesajı tek cümlede: <b>girdi maliyeti düştü, ürün fiyatı geç uyum sağladı</b> ve arada kalan kâr rafineri-petrokimya-çelik hattına yazıldı. <b>TUPRS 2Ç net 45,9 mlr₺</b> — geçen yılın 4, önceki çeyreğin 11 katı; tek çeyrekte PD'sinin %22'si kadar işletme nakdi (125,6 mlr₺). <b>EREGL 8,5 mlr</b> (6,5×) ve <b>ISDMR 7,7 mlr</b> (3,8×) aynı çeyrekte birlikte sıçradı — bu şirkete özgü değil <b>sektörel</b> bir marj dönüşü. <b>PETKM</b> üç yıllık zarardan çıktı (TTM FAVÖK ilk kez artıda), <b>BRISA</b> ciro daralırken brüt marjını 6,6 puan genişletti ve %29,7 FCF verimiyle listenin nakit şampiyonu oldu. <b>Kritik uyarı:</b> bu marjlar <b>şok marjı</b>. Temmuz'da madencilik ÜFE'si +%8,30'dan <b>−%4,22</b>'ye döndü — şok sönerken crack normalleşir; 3Ç'de bu tablo tekrarlanmaz, çarpanlar "normalleşmiş kârla" okunmalı.</div>
 
@@ -1408,7 +1420,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="avEnfBody"><div class="sub">HICP yükleniyor…</div></div>
 <div class="note" style="font-size:10px"><b>Çekirdek ve hizmet, ECB'nin asıl baktığı yerdir.</b> Manşet enerji ve gıdayla oynar; ECB'nin kontrol edebildiği kısım çekirdektir. <b>Hizmet enflasyonu</b> ücretlere bağlı olduğu için en yapışkan kalemdir — manşet hedefe inse bile hizmet %3'ün üstünde kalıyorsa indirim gecikir. Ülke kırılımı parçalanma riskini gösterir: Almanya ile Güney arasındaki fark açılırsa tek para politikası herkese aynı gelmez. Kaynak: ECB Data Portal · ICP akışı · yıllık değişim (ANR).</div></div>
   <div class="card">
-    <div class="lbl">AVRUPA MEGA-CAP <span class="tag snap">27 TEM · WEB ARAŞTIRMA</span></div>
+    <div class="lbl">AVRUPA MEGA-CAP <span class="tag snap">FİYAT CANLI · ARAŞTIRMA 27 TEM</span></div>
 <!-- §282 CANLI FİYAT SATIRI. Kart 17 gündür elle ve donmuş; altındaki
      araştırma notları DEĞERLİ (çeyrek rakamları, rehberlik) ve kalıyor,
      ama FİYATLAR canlıya bağlandı. Yahoo ücretsiz ve sınırsız —
