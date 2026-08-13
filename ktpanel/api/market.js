@@ -520,6 +520,11 @@ module.exports = async (req, res) => {
     xu100: 'XU100.IS', xktum: 'XU100.IS'
   };
   const SEC = ['XKMYA','XGIDA','XMANA','XUSIN','XHOLD','XELKT','XUHIZ','XILTM','XINSA','XUTEK','XSGRT','XTRZM','XGMYO','XUMAL','XBANK'];
+  /* §282 AVRUPA MEGA-CAP — Yahoo sembolleri. Kart 27 Tem'den beri elle.
+     ASML.AS Amsterdam · MC.PA Paris · SAP.DE Xetra · NOVO-B.CO Kopenhag.
+     Hepsi kendi borsasında ve kendi para biriminde; ADR yerine YEREL kotasyon
+     seçildi ki araştırma notlarındaki €/DKK rakamlarıyla aynı zeminde olsun. */
+  const AVMEGA = ['ASML.AS','MC.PA','SAP.DE','NOVO-B.CO'];
   const END = ['XU100','XU030','XU050','XUTUM','XTUMY','XUMAL','XUSIN','XUSRD','XKURY','XTMTU','XK100','XKTUM','XKTMT','XHARZ','XUGRA'];
   const HIS = ['MAVI','ORGE','ARASE','LMKDC','TUPRS','NTGAZ','KTLEV','KRONT','GRSEL','ELITE','PLTUR','MPARK','GUBRF','GOKNR','KOTON','BIMAS','BAHKM','SEKUR','RGYAS','FONET','EUPWR','DAPGM','EGGUB','BASGZ','SAFKR','ARDYZ','EBEBK','GOLTS','ISDMR','CIMSA','ENJSA','YUNSA','KRDMD','GRTHO','AVPGY','KONYA','CEMTS','ASELS','KARSN','SUNTK'];
 
@@ -626,7 +631,7 @@ module.exports = async (req, res) => {
     const SINIR = 220;
     const kirpildi = Math.max(0, HIS_TUM.length - SINIR);
     const HIS2 = HIS_TUM.slice(0, SINIR);
-    const tum = keys.map((k) => syms[k]).concat(SEC.map((k) => k + '.IS'), END.map((k) => k + '.IS'), HIS2.map((k) => k + '.IS'));
+    const tum = keys.map((k) => syms[k]).concat(SEC.map((k) => k + '.IS'), END.map((k) => k + '.IS'), HIS2.map((k) => k + '.IS'), AVMEGA);
     const vals = await havuz(tum, one, 12);
     const data = {};
     keys.forEach((k, i) => { data[k] = vals[i]; });
