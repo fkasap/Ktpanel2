@@ -1,12 +1,22 @@
 #!/usr/bin/env node
 /* ═══════════════════════════════════════════════════════════════════════════
    KTPanel — KÖPRÜ TESTİ
-   Deploy ÖNCESİ / sonrası çalıştırılır. 10 serverless ucun HEPSİNİ çağırır ve
+   Deploy ÖNCESİ / sonrası çalıştırılır. Serverless uçların HEPSİNİ çağırır ve
    yanıt ŞEMASINI doğrular. Amaç "200 döndü mü" değil — o yetmiyor, çünkü tüm
    köprüler hata halinde bilerek 200 + {ok:false} döndürüyor (UI ayakta kalsın diye).
    Bu tasarım doğru ama SESSİZ KIRILMA üretiyor: BAKIM §60 (TEFAS API emekli oldu),
    §92 (üç kart birden boşaldı), §95-97 (ECB kesintisi), §101 (alan adı uyuşmazlığı)
    — dördü de kullanıcı gözüyle yakalandı, sistemle değil. Bu dosya o boşluğu kapatır.
+
+   §286 GÜNCELLEME (13 Agu 2026): test 29 Tem'den beri güncellenmemişti ve
+   aradan geçen sürede altı yeni uç kuruldu, bir doğrulayıcı da yanlıştı.
+     · mod=fiyat DOĞRULAYICISI KIRIKTI — d.fiyat/d.fiyatlar arıyordu ama uç
+       {KOD: deger} düz sözlük döndürüyor. Sağlam uçta ASILSIZ ALARM veriyordu.
+       (§116'nın aynısı: şema kaynaktan okunmalı, hatırlanmamalı.)
+     · EKLENEN: evds2 mod=yab · mod=ecb · tefas mod=gnl · tcmb cds=1 ·
+       kap mod=kart · fon-akis.json
+   Yeni uçlar KRİTİK DEĞİL: hepsinin damgalı yedeği var, düşerse panel boşalmaz
+   ama SESSİZCE eskir — uyarı olarak görünmeleri yeterli.
 
    KULLANIM
      node test/kopru-testi.js                          # varsayılan: prod
@@ -44,13 +54,18 @@ const UCLAR = [
       if(eDolu < 8) return 'BIST endeksleri eksik: '+eDolu+'/'+Object.keys(e).length;
       return true; } },
 
-  { ad:'market · toplu fiyat (141 hisse)', yol:'/api/market?mod=fiyat&kodlar=ASELS,TUPRS,BIMAS', kritik:true, dogrula:d=>{
-      const f = d.fiyat || d.fiyatlar;
-      if(!f || typeof f!=='object') return 'fiyat objesi yok';
-      const n = Object.keys(f).length;
-      if(n < 2) return 'yalnız '+n+' kod çözüldü (3 istendi)';
-      const v = f.ASELS ?? f.TUPRS ?? f.BIMAS;
-      if(!(v>0)) return 'fiyat pozitif sayı değil: '+v;
+  /* §286a DOĞRULAYICI DÜZELTİLDİ. Önceki hal `d.fiyat || d.fiyatlar` arıyordu;
+     ÖLÇÜLDÜ (13 Agu): fiyatModu {KOD: deger} DÜZ SÖZLÜK döndürüyor, sarmalayıcı
+     alan YOK. Yani uç sağlamken test HATA veriyordu — asılsız alarm, §116'nın
+     tekrarı. Şema yine kaynaktan okundu, hatırlanmadı. */
+  { ad:'market · toplu fiyat', yol:'/api/market?mod=fiyat&kodlar=ASELS,TUPRS,BIMAS', kritik:true, dogrula:d=>{
+      if(d && d.ok === false) return 'ok:false — '+(d.err||'');
+      const f = (d && (d.fiyat || d.fiyatlar || d.veri)) || d;   /* sarmalayıcı varsa da çalışsın */
+      if(!f || typeof f!=='object') return 'yanıt objesi değil';
+      const kod = ['ASELS','TUPRS','BIMAS'].filter(k => f[k] != null);
+      if(kod.length < 2) return 'yalnız '+kod.length+'/3 kod çözüldü — anahtarlar: '+Object.keys(f).slice(0,6).join(',');
+      const v = f[kod[0]];
+      if(!(Number(v) > 0)) return kod[0]+' fiyatı pozitif sayı değil: '+v;
       return true; } },
 
   // §115: sektör endekslerinin 1H/1A/3A serisi GERÇEKTEN geliyor mu?
@@ -72,12 +87,28 @@ const UCLAR = [
       }
       return true; } },
 
+  /* §286b AVRUPA MEGA-CAP. 13 Agu'da Yahoo'dan canlıya bağlandı (§282);
+     sembolleri `tum` listesine eklendi ama SONUÇLARI data'ya YAZILMAMIŞTI —
+     çekiliyor, atılıyordu. Panelde "ASML.AS: YOK" göründü. Test bunu yakalar. */
+  { ad:'market · Avrupa mega-cap', yol:'/api/market', kritik:false, dogrula:d=>{
+      const D = d.data || {};
+      const S = ['ASML.AS','MC.PA','SAP.DE','NOVO-B.CO'];
+      const dolu = S.filter(k => D[k] && D[k].p != null);
+      if(!dolu.length) return 'dördü de yok — §282b dağıtım satırı düşmüş olabilir';
+      if(dolu.length < 3) return 'yalnız '+dolu.length+'/4 sembol: '+dolu.join(',');
+      return true; } },
+
   // fredModu → { ok, kaynak, alinma, seriler:{...} }  ('seri' DEĞİL 'seriler')
   { ad:'market · FRED (ABD tahvil)', yol:'/api/market?mod=fred', kritik:false, dogrula:d=>{
       if(d.ok===false) return 'ok:false — '+(d.err||'sebep yok');
       const s = d.seriler || {};
       const n = Object.keys(s).length;
-      return n>0 ? true : 'seriler boş'; } },
+      if(!n) return 'seriler boş';
+      /* §272: TÜFE tarihe göre eşlenmeli. Manşet gelmiyor ya da 90 günden
+         eskiyse enflasyon kartı sessizce bayatlar. */
+      const c = s.CPIAUCNS;
+      if(!c || !isFinite(c.deger)) return 'CPIAUCNS yok — ABD TÜFE kartı boşalır (§271/272)';
+      return true; } },
 
   // §97: ECB sunucu tarafı düşerse panel TARAYICIDAN doğrudan çekiyor — bu BEKLENEN
   // bir durum, kart boş kalmaz. Bilgi amacıyla raporlanır, alarm değildir.
@@ -120,10 +151,41 @@ const UCLAR = [
       if(d.ok===false) return 'ok:false — '+(d.err||'');
       const p = d.paylarToplami;
       if(p!=null && Math.abs(p-100) > 3) return 'TUTARLILIK: sektör payları toplamı %'+p+' (≈100 olmalı) — seri seti eksik';
+      /* §260: tamamlanmış ay seçimi. Dönem 70 günden eskiyse ay seçimi
+         kaymış demektir (kod bir ay geride kalıyordu). */
+      if(d.donem && /^\d{4}-\d{2}$/.test(d.donem)){
+        const [y,m] = d.donem.split('-').map(Number);
+        const gun = Math.floor((Date.now() - new Date(y, m-1, 1).getTime())/86400000);
+        if(gun > 100) return 'DÖNEM ESKİ: '+d.donem+' ('+gun+' gün) — §260 ay seçimi kaymış olabilir';
+      }
       return true; } },
 
   { ad:'evds2 · rezerv', yol:'/api/evds2?mod=rezerv', kritik:false, dogrula:d=>
       d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+
+  /* §286c YABANCI HAFTALIK AKIŞ (§259). Bu uç 12 Agu'da kuruldu ve o güne
+     kadar BİR İYELİK EKİ yüzünden hiç çalışmıyordu: grup deseni
+     "yerleşiklerin" arıyordu, gerçek ad "Yerleşikler". ok:true dönüp BOŞ
+     veri veriyordu — testin yakalaması gereken tam bu durum. */
+  { ad:'evds2 · yabancı akış', yol:'/api/evds2?mod=yab&hafta=4', kritik:false, dogrula:d=>{
+      if(d.ok===false) return 'ok:false — '+(d.err||'');
+      if(!isFinite(d.toplam)) return 'toplam yok — ok:true ama BOŞ (§259 vakası)';
+      if(!Array.isArray(d.seri) || d.seri.length < 2) return 'seri kısa: '+((d.seri||[]).length);
+      if(!d.sonHafta) return 'sonHafta yok';
+      return true; } },
+
+  /* §286d ECB DOĞRUDAN (§275/281). ICP akışı 4 Şub 2026'da emekli edildi,
+     yerine HICP geldi ve 5. boyut '4' yerine '4D0' oldu. Uç bayat seriyi
+     ok:true ile döndürebiliyor — o yüzden bayat bayrağı da kontrol edilir. */
+  { ad:'evds2 · ECB (HICP + GSYH)', yol:'/api/evds2?mod=ecb&n=3', kritik:false, dogrula:d=>{
+      if(d.ok===false) return 'ok:false — '+(d.err||'');
+      const v = d.veri || {};
+      const n = Object.keys(v).length;
+      if(!n) return 'veri boş';
+      if(d.bayatSeri && d.bayatSeri.length)
+        return 'BAYAT SERİ: '+d.bayatSeri.join(', ')+' — akış emekli olmuş olabilir (§275)';
+      if(!v.dfr) return 'dfr yok — politika faizi kartı boşalır';
+      return true; } },
 
   { ad:'kap · bildirim akışı', yol:'/api/kap', kritik:true, dogrula:d=>{
       if(!Array.isArray(d.items)) return 'items dizisi yok';
@@ -147,21 +209,31 @@ const UCLAR = [
       if(!(bir.fiyat>0)) return 'fiyat pozitif değil';
       return true; } },
 
-  { ad:'bddk · panel', yol:'/api/bddk?panel=1', kritik:false, dogrula:d=>
-      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+  /* §286e TEFAS AUM KÖPRÜSÜ (§253i). Günlük fon akışı (§263) buna dayanıyor:
+     tedPaySayisi gelmezse akış hesaplanamaz. İlk kurulumda SAYFALAMA
+     UNUTULMUŞTU ve 2000 fonun yalnız 1000'i geliyordu — denetim yakalamıştı. */
+  { ad:'tefas · AUM/pay (mod=gnl)', yol:'/api/tefas?mod=gnl&bas=1&bit=5', kritik:false, dogrula:d=>{
+      if(d.ok===false) return 'ok:false — '+(d.err||'');
+      const L = d.resultList || d.veri || d.items;
+      if(!Array.isArray(L)) return 'resultList dizisi yok — anahtarlar: '+Object.keys(d||{}).slice(0,6).join(',');
+      if(!L.length) return 'liste boş';
+      const x = L[0];
+      if(x.tedPaySayisi == null) return 'tedPaySayisi YOK — günlük fon akışı (§263) hesaplanamaz';
+      if(!(Number(x.fiyat) > 0)) return 'fiyat pozitif değil';
+      return true; } },
 
-  { ad:'bddk · sahiplik', yol:'/api/bddk?sahiplik=1', kritik:false, dogrula:d=>
-      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
-
-  { ad:'usnews · AV haber akışı', yol:'/api/usnews', kritik:false, dogrula:d=>
-      d.ok===false ? ('ok:false — '+(d.err||'')) :
-      (Array.isArray(d.items)&&d.items.length ? true : 'haber çözülemedi') },
-
-  { ad:'usnews · Finnhub kazanç', yol:'/api/usnews?mod=kazanc', kritik:false, dogrula:d=>
-      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
-
-  { ad:'usnews · kripto', yol:'/api/usnews?mod=kripto', kritik:false, dogrula:d=>
-      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+  /* §286f TR 5Y CDS (§253). Dokuz kaynak denendikten sonra worldgovernmentbonds
+     ucuyla çözüldü. Panelin barometresinin dörtte biri buna bağlı ve eski
+     damgalı değer (206) 34 PUAN YANLIŞTI — sessiz bayatlık pahalı. */
+  { ad:'tcmb · TR 5Y CDS', yol:'/api/tcmb?cds=1', kritik:false, dogrula:d=>{
+      if(d.ok===false) return 'ok:false — '+(d.err||'')+' (damgalı yedeğe düşer, barometre eskir)';
+      if(!isFinite(d.deger)) return 'deger yok';
+      if(d.deger < 50 || d.deger > 2000) return 'AKIL DIŞI DEĞER: '+d.deger+' bp';
+      if(d.tarih){
+        const g = Math.floor((Date.now() - new Date(d.tarih).getTime())/86400000);
+        if(g > 10) return 'CDS '+g+' gün eski — kaynak durmuş olabilir';
+      }
+      return true; } },
 
   { ad:'tcmb · kurlar', yol:'/api/tcmb', kritik:true, dogrula:d=>
       (d.usd && d.usd.satis>0) ? true : 'USD kuru çözülemedi' },
@@ -173,9 +245,45 @@ const UCLAR = [
       if(!d.env) return 'env raporu yok';
       if(!d.env.url || !d.env.token) return 'Upstash env eksik (url:'+d.env.url+' token:'+d.env.token+')';
       return d.ok ? true : 'KV yazma/okuma başarısız'; } },
+
+  { ad:'usnews · AV haber akışı', yol:'/api/usnews', kritik:false, dogrula:d=>
+      d.ok===false ? ('ok:false — '+(d.err||'')) :
+      (Array.isArray(d.items)&&d.items.length ? true : 'haber çözülemedi') },
+
+  { ad:'usnews · Finnhub kazanç', yol:'/api/usnews?mod=kazanc', kritik:false, dogrula:d=>
+      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+
+  { ad:'usnews · kripto', yol:'/api/usnews?mod=kripto', kritik:false, dogrula:d=>
+      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+
+  { ad:'bddk · panel', yol:'/api/bddk?panel=1', kritik:false, dogrula:d=>
+      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+
+  { ad:'bddk · sahiplik', yol:'/api/bddk?sahiplik=1', kritik:false, dogrula:d=>
+      d.ok===false ? ('ok:false — '+(d.err||'')) : true },
+
+  /* §286g GÜNLÜK FON AKIŞI DOSYASI (§263). Uç değil, Actions'ın yazdığı dosya
+     — ama panelin Sukuk sekmesi buna bağlı. İki gün arşiv yoksa akış
+     hesaplanamaz; kurucu eşlemesi yoksa toplamlar "(kurucu bilinmiyor)"
+     satırında toplanır (§279 vakası: 21,78 mlr tek satırda). */
+  { ad:'dosya · fon-akis.json', yol:'/fon-akis.json', kritik:false, dogrula:d=>{
+      const g = Object.keys(d.gunler||{});
+      if(g.length < 2) return 'arşivde '+g.length+' gün — akış için iki ardışık iş günü gerekli';
+      if(!d.akis || !d.akis.fon) return 'akis bloğu yok';
+      const n = Object.keys(d.akis.fon).length;
+      if(n < 500) return 'yalnız '+n+' fon — evren daralmış olabilir';
+      const K = d.kurucu || {};
+      const eslesen = Object.keys(d.akis.fon).filter(k => K[k]).length;
+      const oran = n ? Math.round(eslesen/n*100) : 0;
+      if(oran < 90) return 'KURUCU EŞLEŞMESİ %'+oran+' ('+eslesen+'/'+n+') — kurum toplamları bozulur (§279)';
+      if(d.akis.gun){
+        const gun = Math.floor((Date.now() - new Date(d.akis.gun).getTime())/86400000);
+        if(gun > 5) return 'akış '+gun+' gün eski — Actions koşmuyor olabilir';
+      }
+      return true; } },
 ];
 
-const KRITIK_HIZLI = new Set(['market · toplu fiyat (141 hisse)','evds2 · TÜFE endeksi','kap · bildirim akışı','katfon · TEFAS','tcmb · kurlar']);
+const KRITIK_HIZLI = new Set(['market · toplu fiyat','evds2 · TÜFE endeksi','kap · bildirim akışı','katfon · TEFAS','tcmb · kurlar']);
 
 async function calistir(u){
   const bas = Date.now();
