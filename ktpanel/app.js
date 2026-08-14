@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260813j';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260814a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -3698,8 +3698,26 @@ async function taslakKartSil(btn, kod, donem){
     btn.disabled=false; btn.innerHTML='🗑'; btn.title='silinemedi: '+String(e&&e.message||e).slice(0,60);
   }
 }
+/* §287 DİNLEYİCİ ÇİFTLENMESİ — TEK MAIL İSTEĞİ İKİ MAIL GÖNDERİYORDU.
+   ÖLÇÜLDÜ (14 Ağu): kullanıcı bir kez tıklıyor, Resend İKİ mail gönderiyor.
+   KÖK NEDEN: incPaylasInit() her kart listesi çiziminde çağrılıyor (satır ~4060)
+   ve her çağrıda addEventListener YENİ bir dinleyici EKLİYOR — eskisi duruyor.
+   incelemeInit iki yerden koşuyor: açılışta VE kart silindiğinde (§256 sil
+   düğmesi). Sil-üret döngüsü ne kadar tekrarlarsa o kadar dinleyici birikiyor.
+   Yani Resend suçsuz: tarayıcı gerçekten iki POST atıyor.
+   ÇÖZÜM: bir kez bağla, damgala. `bagla()` yardımcısı dataset ile işaretliyor;
+   ikinci çağrıda atlanıyor. Bu, incPaylasInit'in TÜM dinleyicilerini kapsıyor
+   (mail, kopyala, yazdır, alıcı, seçim kutuları) — hepsi aynı hastalıktaydı,
+   yalnız maili fark ettik çünkü tek görünür belirtisi oydu. */
 function incPaylasInit(){
-  const b1=$('incMailHepsi'); if(b1)b1.addEventListener('click',()=>incMail(null));
+  const bagla=(el, olay, isle, ad)=>{
+    if(!el) return;
+    const im='b_'+(ad||olay);
+    if(el.dataset[im]==='1') return;      /* zaten bağlı — ikinci kez ekleme */
+    el.addEventListener(olay, isle);
+    el.dataset[im]='1';
+  };
+  const b1=$('incMailHepsi'); bagla(b1,'click',()=>incMail(null));
   // --- Kart seçimi: kaç kart gönderileceğini kullanıcı belirler ---
   const kutular=()=>Array.prototype.slice.call(document.querySelectorAll('#incelemeBody input.incSec'));
   const secilenKodlar=()=>kutular().filter(c=>c.checked).map(c=>c.getAttribute('data-kod'));
@@ -3709,30 +3727,33 @@ function incPaylasInit(){
     return n;
   };
   const el0=$('incelemeBody');
-  if(el0)el0.addEventListener('change',e=>{ if(e.target&&e.target.classList&&e.target.classList.contains('incSec')) window.incSecSay(); });
+  bagla(el0,'change',e=>{ if(e.target&&e.target.classList&&e.target.classList.contains('incSec')) window.incSecSay(); });
   const bSec=$('incMailSecili');
-  if(bSec)bSec.addEventListener('click',()=>{
+  bagla(bSec,'click',()=>{
     const k=secilenKodlar();
     if(!k.length){ const d=$('incMailDurum'); if(d)d.textContent='önce kart seç (kartların solundaki kutucuk)'; return; }
     incMail(k);
   });
   const hzSec=$('incHizli');
-  if(hzSec)hzSec.addEventListener('change',()=>{
+  bagla(hzSec,'change',()=>{
     const v=hzSec.value, ks=kutular();               // kartlar en yeniden eskiye sıralı
     if(v==='none')      ks.forEach(c=>c.checked=false);
     else if(v==='all')  ks.forEach(c=>c.checked=true);
     else if(v)          { const n=parseInt(v)||0; ks.forEach((c,i)=>c.checked = i<n); }
     hzSec.value=''; window.incSecSay();
   });
-  const b2=$('incKopyaHepsi'); if(b2)b2.addEventListener('click',()=>incKopyala(null));
-  const b3=$('incAliciBtn'); if(b3)b3.addEventListener('click',incAliciAyarla);
-  const b4=$('incYazdir'); if(b4)b4.addEventListener('click',()=>{
+  const b2=$('incKopyaHepsi'); bagla(b2,'click',()=>incKopyala(null));
+  const b3=$('incAliciBtn'); bagla(b3,'click',incAliciAyarla);
+  const b4=$('incYazdir'); bagla(b4,'click',()=>{
     const w=window.open('','_blank'); if(!w)return;
     w.document.write('<title>KTPanel · Earnings AI</title>'+incHtml(INC_KARTLAR));
     w.document.close(); setTimeout(()=>w.print(),400);
   });
+  /* §287 EN KRİTİK DİNLEYİCİ: kart içi ✉/⧉/🗑 düğmelerini yakalayan delege.
+     Çiftlenirse tek tıkta İKİ MAIL ve İKİ SİLME olur — kullanıcının gördüğü
+     çift mail büyük ihtimalle buradan geliyordu (kart içi ✉ düğmesi). */
   const el=$('incelemeBody');
-  if(el)el.addEventListener('click',e=>{
+  bagla(el,'click',e=>{
     const t=e.target; if(!t.getAttribute)return;
     const m=t.getAttribute('data-mail'), k=t.getAttribute('data-kopya'), sl=t.getAttribute('data-sil');
     if(m)incMail(m); else if(k)incKopyala(k);
