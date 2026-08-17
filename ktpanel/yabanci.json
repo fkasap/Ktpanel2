@@ -46,7 +46,8 @@
   "ost": 43.8,
   "toplam": 277.9,
   "not": "hisse iştahı durgun, akış saf carry",
-  "_261": "ARTIK OKUNMUYOR — /api/evds2?mod=yab canlı (§259). Bu blok yalnız uç düşerse ilk çizimde görünür."
+  "_261": "ARTIK OKUNMUYOR — /api/evds2?mod=yab canlı (§259). Bu blok yalnız uç düşerse ilk çizimde görünür.",
+  "_sahip": "§259/§261: bu blok ve hafta_seri ARTIK OKUNMUYOR — haftalik akis /api/evds2?mod=yab CANLI (app.js yabHaftaCanliYaz basiyor). Tarihsel referans olarak durur; tazelenmemesi bayatlik DEGILDIR. Elle kalan yalniz 'aylik' blogudur (odemeler dengesi)."
  },
  "hafta_seri": [
   {
