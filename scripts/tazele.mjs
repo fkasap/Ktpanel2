@@ -1312,6 +1312,49 @@ async function fonAkisArsiv(meta, kurucu) {
     raporlar.push('### Fon akışı (§263) — ⏭ ' + String(e && e.message || e).slice(0, 80));
   }
 }
+/* §291 SICIL SERISI GUNLUK EKLENIR — fon-akis (§263) deseninin sicil ikizi.
+   OLCULDU (17 Agu): holdings fiyatlari tazeleniyordu ama series'e 28 Tem'den
+   beri satir eklenmiyordu — dosya damgasi "taze", sicil OLUYDU; model karnesi
+   20 gunluk donuk seriden anlatiliyordu ve plan katmani "canli" etiketiyle
+   nobetten kaciyordu.
+   KURALLAR: endeks degeri AYNI GUNUN arsiv kaydindan — yoksa satir YAZILMAZ
+   (uydurma yok). Bosluk geriye DOLDURULMAZ; gorunur not dusulur (§252z:
+   iki olcum arasindaki gercek zaman farki etikette gorunmeli). */
+async function sicilSeriEkle() {
+  const dosya = 'track.json';
+  try {
+    if (!(await varMi(dosya))) return;
+    const t = await oku(dosya);
+    if (!t || !Array.isArray(t.holdings) || !Array.isArray(t.series)) return;
+    const gun = String(t.fiyat_tarihi || '');            /* fiyatTazele az once yazdi */
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(gun)) return;
+    let xk = null;
+    try { const ea = await oku('endeks-arsiv.json');
+      xk = ea && ea.gunler && ea.gunler[gun] && +ea.gunler[gun].XKTUM; } catch (e) {}
+    if (!isFinite(xk) || xk <= 0) {
+      raporlar.push('### Model sicili serisi (§291) — ⏭ ' + gun + ' icin XKTUM arsivde yok; satir yazilmadi (uydurma yok)');
+      return; }
+    const cift = t.holdings.filter(h => isFinite(h.p0) && h.p0 > 0 && isFinite(h.p) && h.p > 0);
+    if (cift.length < t.holdings.length * 0.9) {
+      raporlar.push('### Model sicili serisi (§291) — ⏭ fiyat kapsami ' + cift.length + '/' + t.holdings.length + ' — eksikle sicil yazilmaz');
+      return; }
+    const model  = +(cift.reduce((s, h) => s + (h.p / h.p0 - 1), 0) / cift.length * 100).toFixed(3);
+    const endeks = +((xk / t.endeks_kapanis - 1) * 100).toFixed(3);
+    const kayit = { d: gun, model, endeks };
+    const i = t.series.findIndex(x => x && x.d === gun);
+    if (i >= 0) t.series[i] = kayit; else t.series.push(kayit);
+    t.series.sort((a, b) => a.d < b.d ? -1 : 1);
+    await yaz(dosya, t);
+    degisenler.push('sicil serisi');
+    const onceki = t.series[t.series.length - 2];
+    raporlar.push('### Model sicili serisi (§291) — ✓ ' + gun + ' · model %' + model + ' / endeks %' + endeks);
+    if (onceki) {
+      const fark = Math.round((new Date(gun) - new Date(onceki.d)) / 864e5);
+      if (fark > 5) raporlar.push('- ⚠ ' + onceki.d + ' → ' + gun + ' arasi ' + fark + ' gunluk BOSLUK — geriye doldurulmadi, grafik kesikli okunmali');
+    }
+  } catch (e) { raporlar.push('### Model sicili serisi (§291) — ⏭ ' + String(e && e.message || e).slice(0, 80)); }
+}
+
 async function cdsTazele() {
   const dosya = 'cds.json';
   try {
@@ -1436,6 +1479,7 @@ async function bultenKesif() {
   if (ister('fiyat')) {
     await fiyatTazele('multiple.json', 'Multiple fiyatları', 'k', 'fiyat', 'hisseler');
     await fiyatTazele('track.json', 'Model sicili', 't', 'p', 'holdings');
+    await sicilSeriEkle();   /* §291 */
     await cdsTazele();
   }
   if (ister('risk')) {
@@ -1445,6 +1489,23 @@ async function bultenKesif() {
     await fonTazele();
   }
   if (ister('hepsi') || ister('fiyat')) {
+    /* §297 DEPO HIJYENI + KALEM TAZELIGI — dosya damgasi degil KALEM olculur.
+       Gerekce: track.json "taze"ydi, series 20 gun kesikti; ayrica kazara
+       kopya (kok app.js · api/ajan.js) UC KEZ yasandi ve hicbiri denetime
+       takilmadi. */
+    try {
+      const kontrol = [KURALLAR.ikizDosya()];
+      try { const t = await oku('track.json');
+        if (t && Array.isArray(t.series) && t.series.length && t.fiyat_tarihi)
+          kontrol.push(KURALLAR.seriGuncel(t.series[t.series.length - 1].d, t.fiyat_tarihi, 4, 'track.series'));
+      } catch (e) {}
+      try { const fa = await oku('fon-akis.json');
+        if (fa && fa.guncelleme) kontrol.push(KURALLAR.seriGuncel(fa.guncelleme, bugun, 4, 'fon-akis'));
+      } catch (e) {}
+      const s = denetle('Depo hijyeni + kalem tazeligi (§297)', kontrol);
+      raporlar.push(s.rapor());
+      if (!s.gecti) denetimDustu = true;
+    } catch (e) { raporlar.push('### Depo hijyeni (§297) — ⏭ ' + String(e && e.message || e).slice(0, 60)); }
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */

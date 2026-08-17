@@ -17,6 +17,8 @@
  * bozuk veri yayınlamaktan iyidir.
  */
 
+import { readdirSync } from 'node:fs';
+
 export const KURALLAR = {
 
   /* ── KAPSAM: kaç kayıt bekleniyordu, kaçı geldi ──────────────────────────
@@ -146,7 +148,38 @@ export const KURALLAR = {
       mesaj: `${deger.toFixed(2)} (hedef ${hedef} ±${tolerans})`,
       detay: fark > tolerans ? `sapma ${fark.toFixed(2)} — normalize hatası olabilir` : null
     };
-  }
+  },
+
+  /* ── SERI GUNCELLIGI (§291/297): dosyanin damgasi degil KALEMIN yasi olculur.
+     Gerekce: track.json "taze"ydi (holdings her gun tazeleniyor), series 20 gun
+     KESIKTI — dosya-bazli tazelik bunu hic goremedi. Referans tarih dosyanin
+     kendi fiyat_tarihi'dir; boylece hafta sonu/tatil yanlis alarm uretmez. */
+  seriGuncel(seriSonTarih, referansTarih, maksGun = 4, etiket = 'seri') {
+    const f = Math.round((new Date(referansTarih) - new Date(seriSonTarih)) / 864e5);
+    return { ad: 'seri guncelligi (' + etiket + ')',
+      gecti: isFinite(f) && f >= 0 && f <= maksGun,
+      mesaj: seriSonTarih + ' (referans ' + referansTarih + ', fark ' + f + 'g)',
+      detay: (isFinite(f) && f > maksGun) ? 'seri KESIK — ekleme adimi kosmamis olabilir (§291)' : null };
+  },
+
+  /* ── IKIZ DOSYA (§297): kazara kopya sinifi — kok mail.js, kok app.js,
+     api/ajan.js: ayni kaza UC KEZ yasandi. Kural 1: repo KOKUNDE kod dosyasi
+     durmaz (kod ktpanel/ altindadir). Kural 2: ktpanel/api/ yalniz bilinen
+     fonksiyonlari icerir — yabanci dosya hem Vercel slotu yakar (§7.3, 12
+     sinir) hem surtuklenme riskidir (duzeltme yanlis kopyada yasar). */
+  ikizDosya() {
+    /* platts.js: §251b mesru 11. fonksiyon (S&P koprusu) — kota 11/12, tek slot kaldi */
+    const API_BEYAZ = new Set(['ajanktp.js', 'bddk.js', 'data.js', 'evds2.js', 'kap.js',
+      'katfon.js', 'market.js', 'platts.js', 'tcmb.js', 'tefas.js', 'usnews.js']);
+    const h = [];
+    try { for (const f of readdirSync('.'))
+      if (/\.(js|html)$/.test(f)) h.push('KOKTE KOD: ' + f); } catch (e) {}
+    try { for (const f of readdirSync('ktpanel/api').filter(x => x.endsWith('.js')))
+      if (!API_BEYAZ.has(f)) h.push('api/ BEYAZ LISTE DISI: ' + f + ' (slot yakar, §7.3)'); } catch (e) {}
+    return { ad: 'ikiz dosya', gecti: !h.length,
+      mesaj: h.length ? h.join(' · ') : 'temiz',
+      detay: h.length ? 'sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi' : null };
+  },
 };
 
 /* Bir katmanın tüm kurallarını koştur, tek sonuç döndür. */
