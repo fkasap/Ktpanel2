@@ -133,6 +133,16 @@ export default async function middleware(req) {
 
   // Giriş denemesi
   if (url.pathname === '/giris' && req.method === 'POST') {
+    /* §296 KABA KUVVET FRENI: IP basina 60 saniyede 10 deneme. Edge bellegi
+       ornek basinadir ve kalici degildir — bu bir KILIT degil HIZ KESICIDIR;
+       asil savunma guclu parola + imzali cerez (degistirilmesi kapi acmaz). */
+    const _RL = globalThis.__ktpRL || (globalThis.__ktpRL = new Map());
+    const _ip = (req.headers.get('x-forwarded-for') || 'x').split(',')[0].trim();
+    const _t = Date.now();
+    const _son = (_RL.get(_ip) || []).filter(x => _t - x < 60000);
+    if (_son.length >= 10) return new Response('Cok deneme — 1 dakika bekleyin', { status: 429 });
+    _son.push(_t); _RL.set(_ip, _son);
+    if (_RL.size > 500) { for (const [k, v] of _RL) { if (!v.some(x => _t - x < 60000)) _RL.delete(k); } }
     const f = await req.formData().catch(() => null);
     const u = f && String(f.get('u') || ''), p = f && String(f.get('p') || '');
     const bulunan = KISILER.find(k => k.u === u && k.p === p);

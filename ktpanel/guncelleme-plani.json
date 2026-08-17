@@ -40,9 +40,11 @@
   {
    "ad": "Sicil (model vs endeks)",
    "dosya": "track.json",
-   "siklik": "canlı (Yahoo)",
-   "son": "2026-07-29",
-   "kaynak": "Fintables mumlar + XKTUM → Yahoo canlı · sıfırlanabilir taban (trk_baz_v1)"
+   "siklik": "gunluk",
+   "son": "otomatik",
+   "kaynak": "tazele.mjs §291 — series gunluk eklenir; ozet cipler canli (Yahoo)",
+   "limit_gun": 4,
+   "_291": "17 Agu: 'canli' etiketi series kesikligini 20 gun MASKELEDI. Canli olan CIPLERDI; kalici sicil DOSYADIR ve kalem bazinda denetlenir (denetim.mjs seriGuncel). limit 4 = Cuma->Pzt + bir kacik kosu payi."
   },
   {
    "ad": "Sektör ısı haritası + rotasyon",
@@ -260,6 +262,15 @@
    "son": "2026-08-10",
    "kaynak": "KAP beklenen bildirimler + Fintables",
    "_245": "§F0 ihlali: panele veri besliyordu ama kayıtta YOKTU → sessizce eskiyordu."
+  },
+  {
+   "ad": "Gunluk fon akisi",
+   "dosya": "fon-akis.json",
+   "siklik": "gunluk",
+   "limit_gun": 4,
+   "son": "otomatik",
+   "kaynak": "tazele.mjs §263 — (pay_t − pay_t−1) × fiyat_t, TEFAS koprusu mod=gnl",
+   "_245": "17 Agu: §245 kurali geregi plana eklendi (panele veri besleyen HER dosya kayitli olmali — 4 gunluk dosya kor noktadaydi). Ham dAUM KULLANILMAZ, %48 sapar (§263)."
   }
  ],
  "bilanco_sezonu_aylar": [

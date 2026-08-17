@@ -635,6 +635,22 @@ function nobetBaglam(){
      yazma  → imzaEkle()  önce eski imza kalıntılarını siler, sonra TEK imza basar
    Biri atlansa bile diğeri tutar. İmza artık .ebuImza sınıfı taşır — emoji
    aramaya gerek kalmadan güvenilir şekilde bulunur. */
+/* §292 AI CIKTISI SUZULUR. localStorage'da iki anahtar (ktp_wkey + ajan_api_key)
+   varken modele yazdirilan HTML'i suzmeden innerHTML'e basmak, istem
+   enjeksiyonunu XSS'e cevirir — kart metinleri isteme giriyor, yani saldiri
+   yuzeyi DIS VERIDIR (KAP basligi, haber metni...).
+   DAR mod (not motoru): yalniz b/em/br kalir — istem zaten fazlasina izin vermiyor.
+   GENIS mod (haftalik / ozel gorev / gunluk bakim): yapi korunur, yalniz
+   YURUTULEBILIR parcalar soyulur: script/style govdesi, on*= isleyiciler,
+   javascript: adresler. */
+function temizle(html, genis){
+  let s=String(html||'');
+  s=s.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'');
+  s=s.replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi,'');
+  s=s.replace(/(href|src)\s*=\s*("javascript:[^"]*"|'javascript:[^']*')/gi,'');
+  if(!genis) s=s.replace(/<(?!\/?(b|em|br)\b)[^>]*>/gi,'');
+  return s;
+}
 function imzaSil(html){
   let s=String(html||''), onceki=null, tur=0;
   while(s!==onceki && tur++<5){
@@ -1035,7 +1051,7 @@ async function _notMotoru(){
         return;
       }
       if(AJAN.__redSayac) delete AJAN.__redSayac[x.ad];   // temiz yazdı → sayaç sıfırlanır
-      x.nt.innerHTML=imzaEkle(yeni);   // §110: önce eski imza kalıntıları silinir
+      x.nt.innerHTML=imzaEkle(temizle(yeni));   // §110: önce eski imza kalıntıları silinir
       x.nt.dataset.ebu='1';
       kayitli[x.ad]={ html:x.nt.innerHTML, hash:x.hash, ts:simdi, saat:saat() };
       g++;
@@ -1106,7 +1122,7 @@ async function haftalikYorumYaz(zorla){
   if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Haftalık yorum: yanıt kesildi — basılmadı'); return; }
   const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
   if(html.length<300){ kayit('Haftalık yorum: yanıt kısa, uygulanmadı'); return; }
-  ym.innerHTML=html+'<div class="sub" style="font-size:9px;margin-top:6px">🤖 ajan tarafından panel verilerinden yazıldı · '+saat()+' · ⌫ ile fabrika yorumuna dönülür</div>';
+  ym.innerHTML=temizle(html,true)+'<div class="sub" style="font-size:9px;margin-top:6px">🤖 ajan tarafından panel verilerinden yazıldı · '+saat()+' · ⌫ ile fabrika yorumuna dönülür</div>';
   kayitli.__HAFTALIK__={ html:ym.innerHTML, ts:Date.now(), saat:saat() };
   notKaydet(kayitli);
   kayit('Haftalık yorum panel verilerinden yeniden yazıldı 🤖');
@@ -1156,7 +1172,7 @@ async function ozelGorevler(){
     if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Özel görev '+G.ad+': yanıt kesildi — basılmadı, sonraki turda kısaltılmış denenir'); continue; }
     const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
     if(html.length<200){ kayit('Özel görev '+G.ad+': yanıt kısa, uygulanmadı'); continue; }
-    nt.innerHTML=imzaEkle(html);   // §110
+    nt.innerHTML=imzaEkle(temizle(html,true));   // §110
     nt.dataset.ebu='1';
     kayitli[anah]={ html:nt.innerHTML, hash:hh, ts:simdi, saat:saat() };
     notKaydet(kayitli);
@@ -1238,7 +1254,7 @@ async function gunlukBakim(){
       hedefler.forEach(hd=>{
         const y=jj[String(hd.idx)];
         if(y&&/^<tr[\s>]/i.test(y.trim())&&/<\/tr>$/i.test(y.trim())){
-          satirlar[hd.idx].outerHTML=y.trim(); g++;
+          satirlar[hd.idx].outerHTML=temizle(y.trim(),true); g++;   /* §292 */
         }
       });
       kayitli[anah]={ gun:bugun, html:T.table.outerHTML, saat:saat() };
@@ -1336,19 +1352,15 @@ async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
         try{
           const d = await (await fetch(dosya, {cache:'force-cache'})).json();
           const pay = d && d.pay_adedi && d.pay_adedi[K];
-          /* §283c FİYAT CANLI_FIYAT'tan DEĞİL UÇTAN. CANLI_FIYAT yalnız o an
-             açık sekmede yüklenen hisseleri taşıyor; bilanço kartı Ebu
-             panosundan üretiliyor ve orada çoğu hisse YOK.
-             13 Ağu ATATP: pay_adedi xktum.json'da VARDI ama fiyat gelmediği
-             için pd gönderilmedi -> §255 PD/DD ekseni hiç çalışmadı ->
-             birim "belirsiz" kaldı -> üç metrik boş göründü.
-             Zincirin ilk halkası koptuğu için sondaki belirti bambaşka
-             görünüyordu. */
+          /* §283c FIYAT CANLI_FIYAT'tan DEGIL UCTAN. CANLI_FIYAT yalniz acik
+             sekmede yuklenen hisseleri tasir; bilanco karti Ebu panosundan
+             uretilir ve orada cogu hisse YOK. 13 Agu ATATP: pay_adedi vardi,
+             fiyat gelmedi -> pd gonderilmedi -> §255 birim kaniti calismadi ->
+             kart "birim belirsiz" kaldi. Zincirin ilk halkasi buydu. */
           let fy = (typeof CANLI_FIYAT !== 'undefined' && CANLI_FIYAT) ? CANLI_FIYAT[K] : null;
           if(!(isFinite(fy) && fy > 0)){
             try{
-              /* Uç: ?mod=fiyat&kodlar=XXX -> {"XXX": 12.34} biçiminde döner
-                 (parametre `kod` DEĞİL `kodlar`; yanıt düz sözlük). */
+              /* Uc: ?mod=fiyat&kodlar=XXX -> {"XXX": 12.34} (parametre `kodlar`; yanit duz sozluk) */
               const fr = await (await fetch('/api/market?mod=fiyat&kodlar=' + K, {cache:'no-store'})).json();
               const v = fr && (fr[K] != null ? fr[K] : (fr.veri && fr.veri[K]));
               if(isFinite(v) && v > 0) fy = +v;

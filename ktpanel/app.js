@@ -2119,7 +2119,7 @@ function haberRender(){
   const port=new Set(TOP40);
   try{JSON.parse(localStorage.getItem('poz_v1')||'[]').forEach(p=>{if(p.tip==='hisse'&&p.kod)port.add(p.kod.toUpperCase());});}catch(e){}
   let liste=(HABER_CANLI&&HABER_CANLI.items&&HABER_CANLI.items.length)?HABER_CANLI.items.slice():HABERLER.slice();
-  if(haberFiltre==='portfoy')liste=liste.filter(h=>port.has(h.k));
+  if(haberFiltre==='portfoy')liste=liste.filter(h=>Array.isArray(h.k)?h.k.some(k=>port.has(k)):port.has(h.k));   /* §294: canli akista k DIZI */
   else if(haberFiltre==='onemli')liste=liste.filter(h=>h.s>=2);
   $('haberSay').textContent=liste.length+' bildirim';
   const tb=$('haberBody');
@@ -4164,9 +4164,9 @@ function renderRotasyon(){
    YAPILAN: damga tarihi EKRANA yazildi. Asil sorun degerin 206 olmasi degil,
    13 GUN ESKI OLDUGUNUN GORUNMEMESIYDI (§245k: gizli damga, acik damgadan
    kotudur). Guncellerken ASAGIDAKI IKI SATIRI DA guncelle. */
-const RISK_CDS=227.65;                 /* §253c: 206 YANLISTI, bkz asagi */
-const RISK_CDS_DAMGA='2026-08-06';
-const RISK_CDS_KAYNAK='investing.com · TR 5Y CDS (id 1096486)';
+const RISK_CDS=221.62;                 /* §253g: yedek wgb ile hizalandi (eski: investing 227,65 / 6 Agu) */
+const RISK_CDS_DAMGA='2026-08-15';
+const RISK_CDS_KAYNAK='worldgovernmentbonds.com · TR 5Y CDS (SYMBOL 13)';
 /* §253c DAMGALI YEDEK DUZELTILDI — 206 BAYAT DEGIL YANLISTI.
    10 Agu'da kullanicinin DevTools HAR olcumuyle gercek seri elde edildi:
      24 Tem 244,00 · 27 Tem 239,96 · 30 Tem 239,57 · 6 Agu 227,65
@@ -4367,7 +4367,8 @@ async function fonAkisRender(){
   const F=d.akis.fon, K=d.kurucu||{};
   const kisa=t=>{ const m=String(t).match(/^(\d{4})-(\d{2})-(\d{2})$/);
     return m? (+m[3])+' '+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][+m[2]-1] : t; };
-  if($('fonAkisTag')) $('fonAkisTag').textContent='('+kisa(d.akis.gun)+' · '+d.akis.adet+' fon · TEFAS köprüsü)';
+  if($('fonAkisTag')){ const _f=Math.round((new Date(d.akis.gun)-new Date(d.akis.onceki))/864e5);
+    $('fonAkisTag').textContent='('+kisa(d.akis.onceki)+'\u2192'+kisa(d.akis.gun)+(_f>1?' \u00b7 '+_f+' g\u00fcn':'')+' \u00b7 '+d.akis.adet+' fon)'; }   /* §295: Pzt akisi 3 gunluk birikim — pencere gorunur */
   /* PYŞ bazında topla — kurucu bilinmiyorsa fon kodu altında kalır */
   /* §279b KURUM ADI NORMALLEŞTİRİLİR. İki kaynak var: TEFAS kurucuAd
      ("TERA PORTFÖY YÖNETİMİ A.Ş.") ve fon adından türetilen ("TERA PORTFÖY").
@@ -6897,7 +6898,7 @@ function ayrGunKaydet(endeksKod){
   if(R.hata) return null;
   const bugun = new Date().toISOString().slice(0,10);
   let s = ayrSeriOku();
-  const kayit = {d:bugun, p:+R.rP.toFixed(4), b:+R.rB.toFixed(4), e:endeksKod||'XK100', n:R.kapsam.length};
+  const kayit = {d:bugun, p:+R.rP.toFixed(4), b:+R.rB.toFixed(4), e:endeksKod||'XK100', n:R.satir.length};
   const i = s.findIndex(x=>x && x.d===bugun && x.e===kayit.e);
   if(i>=0) s[i]=kayit; else s.push(kayit);
   s = s.filter(x=>x&&x.d).sort((a,b)=>a.d<b.d?-1:1);
