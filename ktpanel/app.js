@@ -38,9 +38,9 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260817a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260817b';   // §298 sekme düzeni: Equity · Fix Income · PYŞ taşıma   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
-const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
+const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
   if(!hedef)return; // sekme paneli yoksa sessizce çık — nav'ı kilitleme
@@ -51,7 +51,7 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
   const subnav=document.getElementById('pySubnav');
   if(subnav)subnav.style.display=grupta?'':'none';
   if(grupta){
-    // Ana nav'da Portföy Yönetimi'ni, alt-nav'da tıklanan sekmeyi işaretle
+    // Ana nav'da Equity'yi (t11), alt-nav'da tıklanan sekmeyi işaretle
     const anaBtn=document.querySelector('nav.tabs:not(#pySubnav) button[data-tab="t11"]');
     if(anaBtn)anaBtn.classList.add('act');
     const altBtn=document.querySelector('#pySubnav button[data-tab="'+b.dataset.tab+'"]');
@@ -7201,7 +7201,7 @@ async function boot(){
     ['Sukuk', sukukInit],
     ['Veri Tazeliği', planInit],
     ['Takvim satırları (§245)', takvimSatirlari],
-    ['Portföy Yönetimi', pyInit],
+    ['Equity', pyInit],
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],

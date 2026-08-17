@@ -246,15 +246,15 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <nav class="tabs" aria-label="Bölümler">
   <button class="act" data-tab="t1">Piyasa</button>
   <button data-tab="t2">Makro Veriler</button>
-  <button data-tab="t11">Portföy Yönetimi</button>
-  <button data-tab="t10">Sukuk</button>
+  <button data-tab="t11">Equity</button>
+  <button data-tab="t10">Fix Income</button>
   <button data-tab="t15">Emtia</button>
   <button data-tab="t16">Asya-Pasifik</button>
   <button data-tab="t18">Avrupa</button>
   <button data-tab="t17">ABD</button>
   <button data-tab="t7">Haberler</button>
 </nav>
-<nav class="tabs" id="pySubnav" aria-label="Portföy Yönetimi bölümleri" style="display:none">
+<nav class="tabs" id="pySubnav" aria-label="Equity bölümleri" style="display:none">
   <button data-tab="t11">Yönetim</button>
   <button data-tab="t3">Portföy</button>
   <button data-tab="t9">Değerleme</button>
@@ -264,7 +264,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   
   <button data-tab="t8">Guidance</button>
   <button data-tab="t14">Earnings AI</button>
-  <button data-tab="t20">Halka Arzlar</button><button data-tab="t25">Yabancı Hisse</button><button data-tab="t26">PYŞ Sektör</button><button data-tab="t23">Finansal Tablolar</button>
+  <button data-tab="t20">Halka Arzlar</button><button data-tab="t25">Yabancı Hisse</button><button data-tab="t23">Finansal Tablolar</button>
   </nav>
 <div class="tab act" id="t1"><h2>02 Borsa İstanbul Endeksleri <span class="thin">(canlı Yahoo · damgalı yedek)</span> <span class="tag" id="endDamga" style="font-weight:400">yükleniyor…</span></h2>
 <div class="card" style="padding:6px 10px">
@@ -1036,6 +1036,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <button class="subtab-btn" data-subtab="sk-egri" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Getiri Eğrisi</button>
   <button class="subtab-btn" data-subtab="sk-ihrac" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">İhraç Takvimi</button>
   <button class="subtab-btn" data-subtab="sk-katfon" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Katılım Fonları</button>
+  <button class="subtab-btn" data-subtab="sk-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
 </div>
 
 <div id="sk-degerleme" class="subtab-panel">
@@ -1153,9 +1154,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="note">Getiriler Fintables kapanış fiyatlarıyla <em>13 Tem itibarıyla</em> hesaplanmıştır (fon fiyatları T+1 gecikmeli). Her kategoride seçili döneme göre en yüksek getirili fon <em>vurgulanır</em>. YÜ = yıllık yönetim ücreti; KATILIM/SERBEST şemsiye türüdür. GOP ve KHP yeni fonlar olduğundan 6A/YTD verisi henüz oluşmamıştır. Disiplin: nominal getiriyi %32,11 TÜFE ile kıyasla — <em>reel</em> getiri asıl performanstır.</div>
 </div>
 
-</div>
 
-<div class="tab" id="t26"><h2>PYŞ Sektörü — Net Para Girişleri <span class="thin">(TEFAS türevi · mlr ₺)</span> <span class="tag snap" id="pysDamga">—</span></h2>
+<!-- §298: PYŞ Sektör, Equity grubundan Fix Income (Sukuk sekmesi) altına taşındı —
+     §248 sk-katfon deseninin birebir tekrarı. İç id'ler (pysDamga/pysBtn1/pysB1..)
+     AYNEN korunur; pysInit dokunulmadan çalışır. Ebu notu: t10 SEKME_DISLA kapsamında. -->
+<div id="sk-pys" class="subtab-panel" style="display:none"><h2>PYŞ Sektörü — Net Para Girişleri <span class="thin">(TEFAS türevi · mlr ₺)</span> <span class="tag snap" id="pysDamga">—</span></h2>
 <div class="card" style="margin-bottom:12px"><div class="lbl">PYŞ BAZINDA <span class="thin" id="pysD1"></span></div>
   <div style="margin:6px 0 8px" id="pysBtn1"></div><div id="pysB1"></div></div>
 <div class="card" style="margin-bottom:12px"><div class="lbl">FON BAZINDA <span class="thin" id="pysD2"></span></div>
@@ -1182,6 +1185,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note" id="yevNot">Evren dosyası henüz boş — 3 Ağu'da yüklenen Koyfin CSV'si yalnız başlık satırı içeriyordu (738 veri satırı boş). Koyfin'de tabloyu ekranda doldurup yeniden dışa aktarın; "koyfin işle" komutuyla panel dolar. Kolon başlığına tıklayınca sıralanır; ikinci tık yönü çevirir.</div>
 </div>
 </div>
+</div>
+
 <div class="tab" id="t23"><h2>Finansal Tablolar <span class="thin">(KAP · bilançoda yatay, gelir tablosunda dikey analiz)</span></h2>
 <div class="card">
   <div class="kart-bas"><span class="lbl">ŞİRKET SEÇ</span><span class="tag" id="ftTag">KAP</span></div>
@@ -1201,7 +1206,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div id="ftBilanco" style="margin-top:10px"></div>
   <div id="ftGelir" style="margin-top:14px"></div>
   <div id="ftNot" style="margin-top:10px"></div>
-</div></div><div class="tab" id="t11"><h2>Portföy Yönetimi <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
+</div></div><div class="tab" id="t11"><h2>Equity <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
 
 <h2 style="margin-top:22px">Analist Konsensüsü <span class="thin">(ticker yaz → pop-up · 55 hisse kapsamda)</span></h2>
 <input id="anaAra" type="text" placeholder="Ticker: THYAO, ASELS, TUPRS…" style="width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--mono);font-size:13px;box-sizing:border-box;text-transform:uppercase">
@@ -1529,7 +1534,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="card"><div class="lbl">PİYASA</div><div class="sub" style="margin-top:4px">Günlük genel görünüm: BIST endeksleri, sektör ısı haritası ve rotasyon kadranı, küresel piyasalar, merkez bankası faizleri, halka arzlar, bilanço takvimi. <b>Nasıl:</b> Sabah ilk bakılan ekran; ısı haritasında yeşil/kırmızı yoğunluğu o günün risk iştahını, rotasyon kadranı hangi sektörün güçlenip zayıfladığını gösterir.</div></div>
 <div class="card"><div class="lbl">PORTFÖY YÖNETİMİ</div><div class="sub" style="margin-top:4px">Portföyünü ölçtüğün masa: <b>Analist Konsensüs</b> (ticker yaz → kaç kurum, hedef fiyat, potansiyel), <b>Getiri Atfı</b> (hangi pozisyon getiriye ne kattı), <b>Risk Metrikleri</b> (konsantrasyon + beta/vol/VaR/Sharpe), <b>Likidite</b> (çıkış süresi), <b>Ekonomik Takvim</b>. <b>Nasıl:</b> Önce Portföy sekmesinde pozisyon gir; buradaki tüm hesaplar o pozisyonlardan otomatik türer.</div></div>
 <div class="card"><div class="lbl">MAKRO</div><div class="sub" style="margin-top:4px">Ekonominin nabzı: para politikası (politika faizi + koridor), faiz eğrisi, yabancı para akışı + carry, risk iştahı barometreleri, rezerv karnesi, sanayi üretimi. <b>Nasıl:</b> Carry ve rezerv trendi TL varlıklara girişi; PPK tarihleri kritik dönüm noktalarını işaret eder.</div></div>
-<div class="card"><div class="lbl">PORTFÖY</div><div class="sub" style="margin-top:4px">Pozisyon yönetimi: <b>Command Center</b>'da hisse/nakit pozisyonları girersin (kod, adet, maliyet fiyatı). Altında Risk Lensi (makro duyarlılık), Çeşitlendirme Lensi (faktör-uzayı benzerliği), Senaryo & Stres (kur/faiz/petrol şoku). <b>Nasıl:</b> Buraya girdiğin pozisyonlar hem burada hem Portföy Yönetimi sekmesinde kullanılır.</div></div>
+<div class="card"><div class="lbl">PORTFÖY</div><div class="sub" style="margin-top:4px">Pozisyon yönetimi: <b>Command Center</b>'da hisse/nakit pozisyonları girersin (kod, adet, maliyet fiyatı). Altında Risk Lensi (makro duyarlılık), Çeşitlendirme Lensi (faktör-uzayı benzerliği), Senaryo & Stres (kur/faiz/petrol şoku). <b>Nasıl:</b> Buraya girdiğin pozisyonlar hem burada hem Equity sekmesinde kullanılır.</div></div>
 <div class="card"><div class="lbl">DEĞERLEME (DCF + MULTIPLE)</div><div class="sub" style="margin-top:4px">İki değerleme aracı. <b>DCF:</b> gelecek serbest nakit akışlarını bugüne indirgeyip içsel değer bulur — TL nominal / USD / Reel bazda. <b>Multiple:</b> EV/EBITDA çarpanının büyümeyle yıllar içinde nasıl "eridiğini" gösterir. <b>Nasıl:</b> DCF'te FCF, WACC, büyüme, terminal gir; baz seçimine göre WACC aralığı değişir (nominal ~%45, USD ~%12). Aselsan gibi büyüme şirketlerinde multiple'a, olgun nakit-üreten şirketlerde DCF'e güven.</div></div>
 <div class="card"><div class="lbl">SUKUK</div><div class="sub" style="margin-top:4px">Kira sertifikası / tahvil fiyat↔getiri hesabı. <b>Yeni İhraç:</b> valörden ileri kupon üretir, birikmiş kupon yok. <b>İkincil Piyasa:</b> kupon günü sabit, birikmiş kupon hesaplanır, temiz/kirli fiyat ayrılır. <b>Nasıl:</b> İşlem tipini seç, valör/vade/kupon gir, "Üret"e bas, gerekirse kupon tarihlerini elle düzelt.</div></div>
 <div class="card"><div class="lbl">FAKTÖR MODEL</div><div class="sub" style="margin-top:4px">XKTUM evrenindeki hisselerin faktör skorları (değer, kalite, momentum vb.) + <b>canlı sicil</b>: faktör-seçilmiş model portföyün XKTUM endeksine karşı günlük performansı. <b>Nasıl:</b> Sicil grafiğinde model çizgisi endeksin üstündeyse pozitif alfa üretiyor demektir.</div></div>
@@ -1646,7 +1651,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260808a"></script>
-<script src="/ajan.js?v=20260803a"></script>
+<script src="/app.js?v=20260817b"></script>
+<script src="/ajan.js?v=20260817a"></script>
 </body>
 </html>
