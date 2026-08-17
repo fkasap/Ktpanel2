@@ -371,7 +371,15 @@ module.exports = async (req, res) => {
         const bul = hepsi.filter(x => ((x.DATAGROUP_NAME || '') + ' ' + (x.DATAGROUP_NAME_ENG || '')).toLocaleLowerCase('tr').includes(q))
           .map(x => ({ kod: x.DATAGROUP_CODE, ad: x.DATAGROUP_NAME }));
         res.setHeader('Cache-Control', 'no-store');
-        return res.status(200).json({ arama: req.query.ara, bulunan: bul.length, gruplar: bul.slice(0, 30) });
+        /* §288 SINIR PARAMETRELİ. 13 Ağu: Piyasa Katılımcıları Anketi'nin ana
+           grubu aranırken beş terim denendi, hiçbiri tutmadı — ?ara=e 668 grup
+           buldu ama uç yalnız 30 döndürdüğü için grup GÖRÜLEMEDİ.
+           Varsayılan 30 kalıyor (yanıt küçük olsun); ?n= ile 500'e kadar
+           çıkılabiliyor. Katalog taraması gerektiğinde tahmin etmek yerine
+           TÜM LİSTE okunabilsin diye — bugünün en sık dersi. */
+        const _n = Math.min(500, Math.max(1, parseInt(req.query.n) || 30));
+        return res.status(200).json({ arama: req.query.ara, bulunan: bul.length,
+          gosterilen: Math.min(_n, bul.length), gruplar: bul.slice(0, _n) });
       }
       res.setHeader('Cache-Control', 'no-store');
       return res.status(502).json({ error: 'datagroups alınamadı', detay: g.hata || g.ilk200 || ('HTTP '+g.durum) });
