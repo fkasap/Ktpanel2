@@ -1336,7 +1336,24 @@ async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
         try{
           const d = await (await fetch(dosya, {cache:'force-cache'})).json();
           const pay = d && d.pay_adedi && d.pay_adedi[K];
-          const fy  = (typeof CANLI_FIYAT !== 'undefined' && CANLI_FIYAT) ? CANLI_FIYAT[K] : null;
+          /* §283c FİYAT CANLI_FIYAT'tan DEĞİL UÇTAN. CANLI_FIYAT yalnız o an
+             açık sekmede yüklenen hisseleri taşıyor; bilanço kartı Ebu
+             panosundan üretiliyor ve orada çoğu hisse YOK.
+             13 Ağu ATATP: pay_adedi xktum.json'da VARDI ama fiyat gelmediği
+             için pd gönderilmedi -> §255 PD/DD ekseni hiç çalışmadı ->
+             birim "belirsiz" kaldı -> üç metrik boş göründü.
+             Zincirin ilk halkası koptuğu için sondaki belirti bambaşka
+             görünüyordu. */
+          let fy = (typeof CANLI_FIYAT !== 'undefined' && CANLI_FIYAT) ? CANLI_FIYAT[K] : null;
+          if(!(isFinite(fy) && fy > 0)){
+            try{
+              /* Uç: ?mod=fiyat&kodlar=XXX -> {"XXX": 12.34} biçiminde döner
+                 (parametre `kod` DEĞİL `kodlar`; yanıt düz sözlük). */
+              const fr = await (await fetch('/api/market?mod=fiyat&kodlar=' + K, {cache:'no-store'})).json();
+              const v = fr && (fr[K] != null ? fr[K] : (fr.veri && fr.veri[K]));
+              if(isFinite(v) && v > 0) fy = +v;
+            }catch(e){}
+          }
           if(isFinite(pay) && pay > 0 && isFinite(fy) && fy > 0){ pdMn = (pay * fy) / 1e6; break; }
         }catch(e){}
       }
