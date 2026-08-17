@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-17
 
-Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
+Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -28,8 +28,20 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-08-17
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
+### Model sicili serisi (§291) — ✓ 2026-08-17 · model %1.93 / endeks %7.265
+
+- ⚠ 2026-07-28 → 2026-08-17 arasi 20 gunluk BOSLUK — geriye doldurulmadi, grafik kesikli okunmali
+
 ### TR 5Y CDS — ✓ 221.62 bp · 2026-08-15 · -2.01
 - ✓ 3278 günlük seri · kaynak etiketi 2026-08-16 (hafta sonu doldurmalı)
+
+### Risk metrikleri — ✓ GEÇTİ
+- ✓ **kapsam**: 141/141 (%100)
+- ✓ **aykırı değer**: temiz (sınır ±%3)
+- ✓ **aykırı değer**: temiz (sınır ±%150)
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (183 gün)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2026 fon · AUM + yatırımcı sayısı köprüden (ham 2033 kayıt, sayfalamalı)
 
@@ -43,7 +55,7 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2026 fon fiyat + 1052 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008652682234> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008656133850> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -52,11 +64,16 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 ### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)
 
-### Bilanço tetiği — ✓ 11 şirket FR yayımladı
-- AKHAN, BAGFS, CVKMD, DMRGD, HUNER, MOBTL, OBASE, SERNT, SRVGY, TMPOL, VBTYZ
+### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
+- ✓ **ikiz dosya**: temiz
+- ✓ **seri guncelligi (track.series)**: 2026-08-17 (referans 2026-08-17, fark 0g)
+- ✓ **seri guncelligi (fon-akis)**: 2026-08-17 (referans 2026-08-17, fark 0g)
 
-### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:242 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
-- ✓ üyelik uyumu XKTUM: 150/242 (tasarım gereği ilk 150)
+### Bilanço tetiği — ✓ 52 şirket FR yayımladı
+- AKHAN, BAGFS, BIZIM, BVSAN, CVKMD, DMRGD, ENTRA, EUPWR, EYGYO, FONET, FZLGY, GEDIK, GEDZA, GESAN, GOLTS, GRSEL, GRTHO, HUNER, IHEVA, IHLGM …
+
+### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:243 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
+- ✓ üyelik uyumu XKTUM: 150/243 (tasarım gereği ilk 150)
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
@@ -71,4 +88,4 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (138 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (221.62 bp) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (11) · endeks üyelikleri · endeks arşivi
+**Sonuç:** sicil serisi · TR 5Y CDS (221.62 bp) · risk metrikleri (140) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (52) · endeks üyelikleri · endeks arşivi
