@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260814b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260814c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1417,7 +1417,7 @@ async function marketCek(){
         if($('ecbBrentTag')) $('ecbBrentTag').textContent=_bt;   /* §270b Avrupa kartı */
       }
     }catch(e){}canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
-      glbCdsYaz(); cdsCek(); ecbGsyhCek(); exAnteAcilis();   /* §281 · §289 */   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
+      glbCdsYaz(); cdsCek(); ecbGsyhCek(); exAnteAcilis(); haneTercihCek();   /* §281 · §289 · §290 */   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
       const d=$('sekDamga');
       if(d){
         const s=(mk.data.xu100&&mk.data.xu100.gun)?mk.data.xu100.gun:'';
@@ -4195,6 +4195,47 @@ const RISK_CDS_KAYNAK='investing.com · TR 5Y CDS (id 1096486)';
    NOT: TP.ENFBEK.PKA12ENF = Piyasa Katılımcıları Anketi 12 ay TÜFE
    beklentisi. Bugün EVDS'de "anket" diye ararken bulamamıştık; meğer
    PANELDE ZATEN VARMIŞ (§288 aramasının cevabı buradaydı). */
+/* §290 HANE HALKI YATIRIM TERCİHİ (TP.HANEBEK.HAN20*).
+   TCMB Hanehalkı Beklenti Anketi SORU_20: "yatırım yapabileceğin nakit
+   varlığın olsa hangisini yaparsın?" — on seçenekli dağılım.
+   NEDEN DEĞERLİ: panelin günlük fon akışı (§263) GERÇEKLEŞEN davranışı
+   ölçüyor; bu seri NİYETİ veriyor. İkisi ayrışırsa sinyal.
+   Tek istekte çekiliyor: ?grup=bie_hanebek&adFiltre=SORU_20 */
+const HANE20 = [
+  ['HAN20A','Vadeli mevduat'], ['HAN20E','Döviz'], ['HAN20F','Altın'],
+  ['HAN20D','Borsa'], ['HAN20H','TL fonu'], ['HAN20I','Döviz fonu'],
+  ['HAN20G','Gayrimenkul'], ['HAN20B','Araba'], ['HAN20C','Dayanıklı tüketim']
+];
+async function haneTercihCek(){
+  const el=document.getElementById('haneTercihBody'); if(!el) return;
+  try{
+    const j=await (await fetch('/api/evds2?grup=bie_hanebek&adFiltre=SORU_20&gun=120&full=1',
+      {cache:'no-store'})).json();
+    const ham=(j&&j.ham)||[];
+    if(!ham.length){ el.innerHTML='<div class="sub" style="font-size:10px">seri gelmedi</div>'; return; }
+    const son=ham[ham.length-1], onc=ham.length>1?ham[ham.length-2]:null;
+    const oku=(r,k)=>{ const a='TP_HANEBEK_'+k; const v=r&&r[a];
+      return (v==null||v==='')?null:parseFloat(v); };
+    const sat=HANE20.map(([k,ad])=>({ad, v:oku(son,k), o:onc?oku(onc,k):null}))
+      .filter(x=>isFinite(x.v)).sort((a,b)=>b.v-a.v);
+    if(!sat.length){ el.innerHTML='<div class="sub" style="font-size:10px">değer yok</div>'; return; }
+    /* En yüksek beş tercih — tamamı ekranı doldurur, kalanlar gürültü. */
+    const enUst=sat.slice(0,5);
+    const mak=enUst[0].v||1;
+    el.innerHTML=enUst.map(x=>{
+      const d=(isFinite(x.o))?(x.v-x.o):null;
+      const bar=Math.max(2,Math.round(x.v/mak*100));
+      return '<div class="kv" style="align-items:center"><span class="k" style="font-size:10px">'+esc(x.ad)
+        +'</span><span style="display:flex;align-items:center;gap:6px">'
+        +'<span style="display:inline-block;height:4px;width:'+bar+'px;background:var(--mm2);opacity:.45;border-radius:2px"></span>'
+        +'<b style="font-size:11px">%'+trN(x.v,1)+'</b>'
+        +(d!=null?'<span class="'+(d>=0?'up':'down')+'" style="font-size:9px">'+(d>=0?'+':'')+trN(d,1)+'</span>':'')
+        +'</span></div>';
+    }).join('');
+    const y=document.getElementById('haneTercihYas');
+    if(y && son.Tarih) y.textContent=String(son.Tarih);
+  }catch(e){ try{ el.innerHTML='<div class="sub" style="font-size:10px">EVDS yanıt vermedi</div>'; }catch(_){} }
+}
 async function exAnteAcilis(){
   if(!document.getElementById('mbExAnte')) return;
   try{
