@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260814a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260814b';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -1417,7 +1417,7 @@ async function marketCek(){
         if($('ecbBrentTag')) $('ecbBrentTag').textContent=_bt;   /* §270b Avrupa kartı */
       }
     }catch(e){}canliEnjekte();endeksRender();tapeEndeksTazele();   /* §252p */
-      glbCdsYaz(); cdsCek(); ecbGsyhCek();   /* §281 */   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
+      glbCdsYaz(); cdsCek(); ecbGsyhCek(); exAnteAcilis();   /* §281 · §289 */   /* §253b/d — önce damgalıyı bas, canlı gelince üstüne yaz */
       const d=$('sekDamga');
       if(d){
         const s=(mk.data.xu100&&mk.data.xu100.gun)?mk.data.xu100.gun:'';
@@ -4183,6 +4183,37 @@ const RISK_CDS_KAYNAK='investing.com · TR 5Y CDS (id 1096486)';
    etikete "damgalı" basar. Sessiz düşüş YOK (§245k). */
 /* §281 AVRO BÖLGESİ GSYH — ECB'DEN. FRED yedeği çizildikten SONRA üstüne
    yazar; ECB düşerse yedek görünür ve kaynağını söyler. */
+/* §289 EX-ANTE REEL FAİZ AÇILIŞTA HESAPLANIR.
+   ÖLÇÜLDÜ (14 Ağu): exAnteHesapla yalnız tahminCiz() içinden çağrılıyor,
+   o da TAHMİNLER ALT SEKMESİ AÇILINCA koşuyor (satır 114, tembel yükleme).
+   Sonuç: kullanıcı o sekmeye girmeden Merkez Bankaları kartındaki
+   "İleriye dönük reel faiz" satırı BOŞ (—) kalıyordu.
+   Politika faizi ve 12 ay beklentisi iki UCA bağlı; ikisini burada
+   çekip window.EXANTE'yi dolduruyoruz. Tahminler sekmesi açılınca
+   tahminCiz() aynı değerle ÜSTÜNE YAZAR — çelişki olmaz, §127 tek sahip
+   kuralı korunur.
+   NOT: TP.ENFBEK.PKA12ENF = Piyasa Katılımcıları Anketi 12 ay TÜFE
+   beklentisi. Bugün EVDS'de "anket" diye ararken bulamamıştık; meğer
+   PANELDE ZATEN VARMIŞ (§288 aramasının cevabı buradaydı). */
+async function exAnteAcilis(){
+  if(!document.getElementById('mbExAnte')) return;
+  try{
+    /* Politika faizi UÇTAN DEĞİL tahminPolitikaFaizi()'nden — o zaten
+       BIS/EVDS sıralamasını ve damgalı yedeği yönetiyor (§125). Kendi
+       çağrımı yazsaydım ikinci bir sahip yaratırdım. */
+    if(typeof tahminPolitikaFaizi!=='function') return;
+    const [pf, br] = await Promise.all([
+      tahminPolitikaFaizi().catch(()=>null),
+      fetch('/api/evds2?series=TP.ENFBEK.PKA12ENF&gun=200&full=1',{cache:'no-store'}).then(r=>r.json()).catch(()=>null)
+    ]);
+    const pol = pf && isFinite(pf.deger) ? pf.deger : null;
+    let bek = null;
+    if(br){ const a='TP_ENFBEK_PKA12ENF';
+      const it=(br.ham||[]).filter(x=>x[a]!=null&&x[a]!=='');
+      if(it.length) bek = parseFloat(it[it.length-1][a]); }
+    if(isFinite(pol) && isFinite(bek)) exAnteHesapla(pol, bek);   /* §127: tek sahip yazar */
+  }catch(e){}
+}
 async function ecbGsyhCek(){
   const el=$('avGsyhBody'); if(!el) return;
   try{
