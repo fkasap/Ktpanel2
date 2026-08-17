@@ -2,7 +2,7 @@
 # HER OTURUMDA ILK BU DOSYA OKUNUR. Amac: hangi kart ne zaman eskir —
 # tek bakista gorunur, tur tur kesif yapip kontor harcanmaz.
 # Bir kart guncellenince buradaki "son:" tarihi de guncellenir (ayni turda!).
-# Son tam denetim: 13 Agu 2026 (§252b-276: tum repo okundu, 83 duzeltme)
+# Son tam denetim: 17 Agu 2026 (§252b-290: tum repo okundu, 100+ duzeltme)
 # CRON DUZENI (§252x): hafta ici 09:10 fon · 18:10 endeks,fiyat,fon · Cmt 07:00 hepsi(risk dahil)
 
 ## ALTIN KURALLAR
@@ -46,6 +46,11 @@
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
+| Hane halki yatirim tercihi | OTOMATIK — TP.HANEBEK.HAN20* (TCMB anketi, aylik). BES SERI AYRI cekilir: ?adFiltre eslesen ILK seriyi secer, hepsini degil (§290b). ARIZA: kutular "%0,0" gosterirse isFinite(null) tuzagi geri gelmis | 17A ✓ |
+| Ileriye donuk reel faiz | OTOMATIK — window.EXANTE tek kaynak. ACILISTA hesaplanir (§289); once yalniz Tahminler sekmesi acilinca kosuyordu. ARIZA: "—" gorunurse exAnteAcilis dusmus | 14A ✓ |
+| Avrupa mega-cap fiyat | OTOMATIK — Yahoo yerel borsalar (ASML.AS/MC.PA/SAP.DE/NOVO-B.CO). Notlar 27 Tem elle, FIYAT canli. ARIZA: satir bossa §282b dagitimi dusmus | 13A ✓ |
+| Avro bolgesi GSYH | OTOMATIK — ECB MNA/I9 (20 ulke) VE FRED; HANGISI YENIYSE o yazar (§285b). ECB kapsamda dogru ama bir ceyrek GERIDEN gelebiliyor | 13A ✓ |
+| Gunluk fon akisi kurucu | OTOMATIK — mod=liste 1041 kayit, evren ~2015; eksikler FON ADINDAN turetilir (§279). ARIZA: "(kurucu bilinmiyor)" satiri buyurse turetme dusmus | 13A ✓ |
 | ABD TUFE (FRED) | OTOMATIK — CPIAUCNS/CPILFENS (NSA, BLS mansetiyle ayni). Hesap TARIHE gore eslesir; indeks sayimi bir eksik gozlemde bir ay kaydiriyordu (§272) | 12A ✓ |
 | ECB HICP + politika | OTOMATIK — /api/evds2?mod=ecb. ICP akisi 4 Sub 2026'da EMEKLI, yeni akis HICP ve 5. boyut '4D0' (§275). Uc 'bayat' bayragi tasir | 13A ✓ |
 | Halka arz carpanlari | Tahmin birimi ₺ VEYA \$ — \$ secilirse carpan tabani da USD PD/EV olur (§276). Birim yanlis secilirse 1000 KAT sapar | 13A ✓ |

@@ -3,7 +3,7 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-08-13
+Son güncelleme: 2026-08-17
 
 
 ## ⭐ OTOMASYON KURALI (KULLANICI KURALI — 2 Agu 2026)
@@ -2913,6 +2913,207 @@ sifirsa, degisim de TANIMSIZDIR.
 Ucunde de kod SESSIZCE sifir ya da sacma deger uretti. Bir degisim hesabi
 yazarken SORULACAK SORU: "iki ucun farkli zamanlara ait oldugunu ne
 garanti ediyor?"
+
+## 290 HANE HALKI YATIRIM TERCIHI + IKI TUZAK (14-17 Agu)
+
+TCMB Hanehalki Beklenti Anketi SORU_20: "yatirim yapabilecegin nakit varligin
+olsa hangisini yaparsin?" — mevduat/doviz/altin/borsa/TL fonu/doviz fonu/
+gayrimenkul dagilimi. TP.HANEBEK.HAN20*
+NEDEN: gunluk fon akisi (§263) GERCEKLESEN davranisi olcuyor, bu seri NIYETI
+veriyor. Ikisi ayrisirsa sinyal — "borsada degerlendiririm" yukselirken fon
+girisi yoksa niyet var eylem yok demektir.
+
+### §290b IKI TUZAK, IKISI DE ILK SURUMU BOZDU
+1) ?adFiltre=SORU_20 ESLESEN ILK SERIYI seciyor, hepsini DEGIL. Yanitta
+   cozulen tek kod (HAN20A), ham'da tek sutun. Diger dordu HIC gelmiyordu.
+   -> Bes seri AYRI cekiliyor (uc onbellekli, maliyet dusuk).
+2) isFinite(null) JS'te TRUE doner — Number(null)=0 oldugu icin. Suzgec bos
+   degerleri GECIRDI ve kartta "%0,0" gorundu. isFinite('') de TRUE.
+   -> Number.isFinite kullanilir.
+DERS: bir suzgec "sayi mi" diye soruyorsa hangi isFinite oldugu ONEMLIDIR.
+
+### KAYNAK ARASTIRMASININ SONUCU (13-17 Agu)
+Piyasa Katilimcilari Anketi'nin TAM SETI EVDS'DE YOK. Bes arama terimi
+denendi (beklenti/katilimci/anket/piyasa/yeni), ?ara= siniri kaldirildi
+(§288), gruplar tarandi. Bulunan:
+  bie_enfbek      5 seri  — 12 ay enflasyon beklentisi (piyasa/reel sektor/
+                            hanehalki). UCU DE PANELDE ZATEN KULLANILIYOR.
+  bie_hanebek    33 seri  — hanehalki anketi: kur beklentisi (HAN19A), konut
+                            (HAN18A), yatirim tercihi (HAN20*)
+  bie_bekodtufeyeni 100   — yalniz olasilik dagilimlari
+YOK: yil sonu politika faizi · yil sonu TUFE · USD/TRY · buyume · cari acik.
+Bunlar TCMB'nin AYLIK PDF raporunda, EVDS'de yayinlanmiyor.
+SONUC: kartin o bes satirinin elle olmasi TERCIH DEGIL KAYNAK KISITI.
+
+## 289 EX-ANTE REEL FAIZ SEKMEYE BAGIMLIYDI (14 Agu)
+
+Merkez Bankalari kartindaki "Ileriye donuk reel faiz" BOS (—) gorunuyordu.
+KOK NEDEN: exAnteHesapla yalniz tahminCiz() icinden cagriliyor, o da
+TAHMINLER ALT SEKMESI acilinca kosuyor (tembel yukleme). Kullanici o sekmeye
+girmeden deger hic hesaplanmiyordu.
+DUZELTME: acilista da hesaplanir. Politika faizi UCTAN DEGIL
+tahminPolitikaFaizi()'nden alinir — o zaten BIS/EVDS siralamasini ve damgali
+yedegi yonetiyor (§125); kendi cagrimi yazsaydim IKINCI SAHIP yaratirdim.
+Tahminler acilinca tahminCiz() ayni degeri uzerine yazar, celiski olmaz.
+YAN BULGU: TP.ENFBEK.PKA12ENF (Piyasa Katilimcilari Anketi 12 ay TUFE)
+PANELDE ZATEN VARDI — gun boyu EVDS'de aradigimiz seri Tahminler sekmesinde
+calisiyormus. Once KENDI KODUNA bak.
+
+## 288 ?ara= SINIRI PARAMETRELI (13 Agu)
+
+Katalog aramasi 30 grupla sinirliydi. ?ara=e 668 grup buldu ama uc yalniz 30
+donduruyordu — aranan grup GORULEMEDI ve bes tur terim tahmin edildi.
+?n= ile 500'e kadar. Varsayilan 30 (yanit kucuk kalsin).
+DERS: katalog taramasi gerektiginde TUM LISTE okunabilmeli; tahmin turu
+maliyetli ve bugun dort kez bosa harcandi.
+
+## 287 TEK TIK IKI MAIL — DINLEYICI CIFTLENMESI (14 Agu)
+
+Kullanici bir kez tikliyor, Resend IKI mail gonderiyordu.
+KOK NEDEN: incPaylasInit() HER KART LISTESI CIZIMINDE cagriliyor ve her
+cagrida addEventListener YENI dinleyici EKLIYOR — eskisi duruyor.
+incelemeInit iki yerden kosuyor: acilista VE KART SILINDIGINDE. Sil-uret
+dongusu ne kadar tekrarlarsa o kadar dinleyici birikiyor.
+RESEND SUCSUZ: tarayici gercekten iki POST atiyordu.
+DUZELTME: bagla() yardimcisi — dataset ile "zaten bagli mi" isaretlenir,
+ikinci cagride atlanir. YEDI dinleyiciyi birden kapsar (mail/kopyala/yazdir/
+alici/secim/hizli secim) ve en kritigi KART ICI delege dinleyici: o
+ciftlenirse tek tikta iki mail VE IKI SILME olur.
+DERS: bir init fonksiyonu birden fazla kez cagrilabiliyorsa icindeki
+addEventListener'lar KORUMASIZ birikir. Belirti bambaska yerde gorunur.
+
+## 285 GSYH KARTLARI + ECB/FRED TAZELIK YARISI (13 Agu)
+
+Turkiye makro seridinde "BUYUME Ç1'26 +%2,5" vardi; ABD ve Avrupa icin
+karsiligi YOKTU.
+ABD : A191RL1Q225SBEA — ceyreklik YILLIKLANDIRILMIS (SAAR), manset rakam
+AVRO: MNA/Q.Y.I9... — YILLIK degisim (y/y)
+IKISI AYNI OLCU DEGIL ve kartlarda oyle YAZILI. Ayni karta koyup ikisine de
+"buyume" demek, farkli olculeri karistirmak olurdu (§268 ailesi).
+
+### §285b ECB SECIMIM YANLIS CIKTI — OLCUM DUZELTTI
+Anahtar TAHMIN EDILMEDI: MNA akisinin 29.593 serisi ?detail=serieskeysonly ile
+cekilip suzuldu. IKI ADAY:
+  I8 = 19 ulke (Hirvatistan HARIC) -> son gozlem 2024-Q1, SERI DURMUS
+  I9 = 20 ulke (guncel bilesim)    -> son gozlem 2026-Q1 ✓
+ECB'yi secme gerekcem "20 ulke kapsami dogru" idi ve HALA GECERLI. AMA:
+  ECB  (MNA/I9)      : Ç1'26 · +0,5%
+  FRED (Eurostat)    : Ç2'26 · +0,9%   <- BIR CEYREK ONDE
+Eurostat hizli tahminini ceyrek bitiminden ~30 gun sonra yayinliyor; ECB'nin
+MNA akisi geriden geliyor. Bir ceyrek ESKI veriyle ustune yazmak KAZANC DEGIL
+KAYIP olurdu.
+DUZELTME: tarih karsilastirilir, ECB yalniz DAHA YENIYSE yazar. Kapsam
+avantaji ECB'de, tazelik FRED'de — hangisi ondeyse o gorunur.
+DERS: "daha otoriter kaynak" ile "daha guncel kaynak" AYNI SEY DEGIL.
+
+## 284 AYNI DEGER IKI KARTTA, IKISI FARKLI (13 Agu)
+
+Kullanici sordu: "ileriye donuk reel faiz %13 dogru mu, baska kartta %10".
+"≈ %13" index.html'e SABIT yazilmisti, hicbir hesaba bagli degildi.
+Dogrusu (1,37/1,2395-1)×100 = %10,5 — IKI BUCUK PUAN sapma. %13 muhtemelen
+beklenti ~%21 iken hesaplanmis bir damga.
+§129 TAM BU SORUNU bir kez yasamis: "Kullanici hakli olarak sordu: %10,5
+diyorsun ama burada %7,9". Tek kaynak kurali konmus AMA BU KARTA
+UYGULANMAMIS.
+Ayni gun ayni desen ALTI kez: CDS · TUFE · Brent · Fed olasiligi · GSYH ·
+reel faiz. Hepsi ayni: BIR DEGERI DUZELTIRKEN AYNI DEGERIN BASKA NEREDE
+GECTIGINE BAKILMALI.
+§284b Fed "siradaki 29 Tem" GECMISTI (bugun 13 Agu) ve Fed & Politika karti
+  ZATEN "15-16 Eyl" diyordu — ayni ekranda iki tarih.
+§284c 12 ay TUFE %23,81 sabitti; OKU_BEK 23,95'e guncellenmis ama bu satir
+  eski degerde kalmisti.
+§284d ≈%82 Fed olasiligi DORT kartta geciyor, ikisinde yas etiketi vardi
+  ikisinde yoktu. SINIF BAZLI (.fedYas82) yapildi — yeni kart eklenirse
+  otomatik kapsar.
+
+## 283 BOS METRIK KUTULARI — ZINCIRIN ILK HALKASI KOPMUSTU (13 Agu)
+
+ARASE ve ATATP kartlarinda dort metrik "—" gorundu, oysa OZET METINDE
+rakamlar vardi. Kart "Birim belirsiz" diyordu.
+§283  Model boş birakirsa SUNUCU DOLDURUR: degerler _gost'ta zaten hazir,
+      metrik adindan eslenip yaziliyor. Deterministik, token'dan bagimsiz.
+      EŞLEME TUZAGI: "Nakit & Parasal Pozisyon" once parasal'a dusuyordu —
+      sira duzeltildi, basliktA ONCE GECEN kalem esas.
+§283b Birim COZULEMEZSE ham sayi yazilir. Olcek eki YOK (§257 korunur) ama
+      kutu DOLU. Bilinmeyen olcekli rakam, bos kutudan iyidir.
+§283c ASIL KOK NEDEN: fiyat CANLI_FIYAT sozlugunden aliniyordu; o yalniz ACIK
+      SEKMEDEKI hisseleri tasiyor. Bilanco karti Ebu panosundan uretiliyor ve
+      orada cogu hisse YOK. ATATP'nin pay_adedi xktum.json'da VARDI ama fiyat
+      gelmedigi icin pd gonderilmedi -> §255 PD/DD ekseni HIC calismadi ->
+      birim belirsiz kaldi -> kutular bos.
+      Artik fiyat UCTAN alinir (?mod=fiyat&kodlar=). Ilk yazimda parametre adi
+      (kod vs kodlar) ve yanit bicimi de yanlisti — ikisi de olculup duzeltildi.
+DERS: belirti "birim belirsiz" diyordu, hata UC ADIM ONCESINDE bir fiyat
+sorgusundaydi.
+
+## 282 AVRUPA MEGA-CAP CANLIYA — VE MARKETSTACK KOTASI KORUNDU (13 Agu)
+
+Kart 27 Tem'den beri elleydi. Arastirma notlari DEGERLI ve KALDI; yalniz
+FIYATLAR canliya bagli: ASML.AS · MC.PA · SAP.DE · NOVO-B.CO (yerel borsalar,
+kendi para birimlerinde — ADR degil, notlardaki €/DKK ile ayni zeminde).
+KARAR: Marketstack API'si alinmisti (ayda 100 istek) ama BURAYA HARCANMADI.
+Yahoo ayni veriyi ucretsiz ve sinirsiz veriyor. Kotanin gercek degeri
+split_factor/dividend alanlarinda — Yahoo onlari temiz vermiyor ve bedelsizler
+gunlerce kacabiliyor (KTLEV vakasi).
+§282b SESSIZ KAYIP: semboller `tum` listesine EKLENDI ama data'ya
+  YAZILMADI — her grup tek tek dagitiliyor (keys/SEC/END/HIS2) ve AVMEGA icin
+  o satir yoktu. Cekiliyordu, sonuc ATILIYORDU. Panel "ASML.AS: YOK" gosterdi.
+  Bu oturumda YEDINCI "kod var, teslim yok" vakasi.
+
+## 280 GUNLUK FON AKISI: KURUCU ESLEMESI (13 Agu)
+
+Kullanici sordu: "rakamlar dogru mu Actions'un cektigi".
+FON BAZINDA DOKUZ FON birebir dogrulandi (KLU/KTV/KTT/PBR/PRY/PNU/TLY/THF/TP2)
+— hesap, tarih, isaret, birim hepsi tam. AMA KURUM TOPLAMLARI ayrisiyordu:
+Pusula panelde -2,51 mlr, gercekte +1,85 mlr (ISARET BILE TERS).
+KOK NEDEN: mod=liste 1041 kayit donduruyor, evren 2015 fon. 974 fonun
+kurucusu YOK ve hepsi "(kurucu bilinmiyor)" satirinda toplaniyordu:
++21,78 MLR TEK SATIRDA.
+§279 COZUM: TEFAS fon adlari kurumla baslar ("GARANTI PORTFOY IKINCI PARA
+PIYASASI (TL) FONU"). "PORTFOY" kelimesine kadar olan kisim kurum kimligidir.
+Turetme YALNIZ esleme yoksa devreye girer — mevcut kurucuAd'a DOKUNMAZ, yani
+en kotu ihtimalde onceki durum kalir.
+§279b NORMALLESTIRME: "TERA PORTFOY YONETIMI A.S." (TEFAS) ve "TERA PORTFOY"
+(turetilen) ayni satira dusmeliydi, yoksa kurum IKI SATIR olurdu.
+SONUC (dogrulandi): 974 fon eslendi, "(kurucu bilinmiyor)" satiri TAMAMEN
+kayboldu, SEKIZ KURUM Fintables ile birebir tuttu.
+ZIRAAT/QNB farki HATA DEGIL: Halk Portfoy Ziraat bunyesine gecmis; TEFAS fon
+adini guncellemis, Fintables PYS tablosu eski eslemede. PANEL DAHA GUNCEL.
+YAN FAYDA: fon adindan turetmek, kurucu tablosundan okumaktan TAZE olabiliyor.
+
+DERS: hata HESAPTA DEGIL DAGITIMDA idi ve bunu ancak dokuz fonu tek tek
+dogrulayarak anladim. Formul bastan beri dogruydu; kurcalasaydim CALISAN BIR
+SEYI BOZACAKTIM.
+
+## 281 ARZ FORMU: MARJDAN TURETME + YIL OTO-DOLDURMA (13 Agu)
+
+Kullanici istedi: marj girilince FAVOK/net kar kendiliginden hesaplansin, ve
+1. yil girilince digerleri +1 gelsin.
+Hesapta marj turetmesi ZATEN VARDI ama sonuc yalniz hesapta kullaniliyor,
+KUTUYA YAZILMIYORDU — kullanici marji girip kutuyu bos goruyordu.
+§278c KENDI KORUMAM TERS TEPTI: "yalniz kutu BOSSA doldur" kurali koydum;
+  kullanici "15" yazarken once "1" tusuna basiyor -> FAVOK 10.000 yaziliyor ->
+  "5" gelince marj 15 oluyor AMA kutu artik DOLU oldugu icin guncellenmiyordu.
+  Koruma dogruydu ama KENDI YAZDIGINI da "elle girilmis" sayiyordu.
+  Uc durum AYRILDI: bos -> doldur · turetilmis -> YENIDEN HESAPLA ·
+  elle girilmis -> DOKUNMA.
+Yil etiketleri: yalniz BOS olanlar doldurulur; "2027T" gibi ozel etiket
+korunur ve o kutuya dokununca oto damgasi kalkar.
+
+## 286 KOPRU TESTI 15 GUNDUR GUNCELLENMEMISTI (14 Agu)
+
+test/kopru-testi.js son 29 Tem'de guncellenmis; aradan gecen surede ALTI yeni
+uc kuruldu ve BIR DOGRULAYICI YANLISTI.
+§286a mod=fiyat dogrulayicisi `d.fiyat || d.fiyatlar` ariyordu ama uc
+  {KOD: deger} DUZ SOZLUK donduruyor. SAGLAM UCTA ASILSIZ ALARM veriyordu —
+  §116'nin tekrari: sema KAYNAKTAN okunmali, hatirlanmamali.
+EKLENEN: evds2 mod=yab (ok:true ama BOS — §259 vakasi) · mod=ecb (bayat seri
+  bayragi) · tefas mod=gnl (tedPaySayisi yoksa fon akisi hesaplanamaz) ·
+  tcmb cds=1 (akil disi deger + 10 gun eskime) · market Avrupa mega-cap
+  (§282b "cekiliyor atiliyor" hatasi) · fon-akis.json (kurucu eslesmesi %90
+  altina duserse — §279 vakasi)
+24 -> 30 uc. Yeni uclarin hepsi KRITIK DEGIL: damgali yedekleri var, dususte
+panel bosalmaz ama SESSIZCE eskir — uyari yeterli.
 
 ## 277 UC GUNUN ORTAK DERSI: "IKI UC HANGI ZAMANA/BIRIME AIT?" (13 Agu)
 
