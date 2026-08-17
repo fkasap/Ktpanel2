@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260814c';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260817a';   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t26','t23'];  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -4209,21 +4209,35 @@ const HANE20 = [
 async function haneTercihCek(){
   const el=document.getElementById('haneTercihBody'); if(!el) return;
   try{
-    const j=await (await fetch('/api/evds2?grup=bie_hanebek&adFiltre=SORU_20&gun=120&full=1',
-      {cache:'no-store'})).json();
-    const ham=(j&&j.ham)||[];
-    if(!ham.length){ el.innerHTML='<div class="sub" style="font-size:10px">seri gelmedi</div>'; return; }
-    const son=ham[ham.length-1], onc=ham.length>1?ham[ham.length-2]:null;
-    const oku=(r,k)=>{ const a='TP_HANEBEK_'+k; const v=r&&r[a];
-      return (v==null||v==='')?null:parseFloat(v); };
-    const sat=HANE20.map(([k,ad])=>({ad, v:oku(son,k), o:onc?oku(onc,k):null}))
-      .filter(x=>isFinite(x.v)).sort((a,b)=>b.v-a.v);
+    /* §290b HER SERİ AYRI ÇEKİLİR. ÖLÇÜLDÜ (17 Ağu): ?adFiltre=SORU_20
+       eşleşen İLK seriyi seçiyor, hepsini değil — yanıtta cozulen tek kod
+       (HAN20A) ve ham'da tek sütun var. Diğer dördü hiç gelmiyordu.
+       Beş ayrı istek atıyoruz; uç önbellekli, maliyet düşük. */
+    const cek=async(k)=>{
+      try{
+        const r=await (await fetch('/api/evds2?series=TP.HANEBEK.'+k+'&gun=120&full=1',
+          {cache:'no-store'})).json();
+        const h=(r&&r.ham)||[]; const a='TP_HANEBEK_'+k;
+        const d=h.filter(x=>x[a]!=null&&x[a]!=='');
+        if(!d.length) return null;
+        const sonD=parseFloat(d[d.length-1][a]);
+        const oncD=d.length>1?parseFloat(d[d.length-2][a]):null;
+        return { v:sonD, o:oncD, tarih:d[d.length-1].Tarih };
+      }catch(e){ return null; }
+    };
+    const cevap=await Promise.all(HANE20.map(([k])=>cek(k)));
+    /* §290b DİKKAT: isFinite(null) JS'te TRUE döner (Number(null)=0).
+       İlk yazımda süzgeç bu yüzden boş değerleri geçirdi ve kartta
+       "%0,0" göründü. Number.isFinite kullanılır — null'ı eler. */
+    const sat=HANE20.map(([k,ad],i)=>({ad, ...(cevap[i]||{})}))
+      .filter(x=>Number.isFinite(x.v)).sort((a,b)=>b.v-a.v);
+    const son={Tarih:(cevap.find(x=>x&&x.tarih)||{}).tarih};
     if(!sat.length){ el.innerHTML='<div class="sub" style="font-size:10px">değer yok</div>'; return; }
     /* En yüksek beş tercih — tamamı ekranı doldurur, kalanlar gürültü. */
     const enUst=sat.slice(0,5);
     const mak=enUst[0].v||1;
     el.innerHTML=enUst.map(x=>{
-      const d=(isFinite(x.o))?(x.v-x.o):null;
+      const d=Number.isFinite(x.o)?(x.v-x.o):null;
       const bar=Math.max(2,Math.round(x.v/mak*100));
       return '<div class="kv" style="align-items:center"><span class="k" style="font-size:10px">'+esc(x.ad)
         +'</span><span style="display:flex;align-items:center;gap:6px">'
