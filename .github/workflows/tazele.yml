@@ -160,3 +160,28 @@ jobs:
         run: |
           echo "::error::Denetim başarısız — veri yazılmadı. rapor/son-tazeleme.md'ye bak."
           exit 1
+
+      # §306 KÖPRÜ TESTİ — yalnız Cumartesi koşusunda (haftalık sağlık turu).
+      # Test PROD uçlarını çağırıp yanıt ŞEMASINI doğrular; §60/§92/§95-101'de
+      # dört sessiz kırılma kullanıcı gözüyle yakalanmıştı, sistemle değil.
+      # Test 13 Ağu'dan beri repoda duruyordu ama otomasyona bağlı DEĞİLDİ —
+      # elle koşulmayan test, olmayan testtir (§243 sınıfı).
+      # Commit adımından SONRA: köprü kırığı veri yazımını engellememeli.
+      # CRON_SECRET tanımsızsa test atlanır — korumalı uçlara sırsız gitmek
+      # 401 yağmuru ve ASILSIZ kırmızı üretir (uyarı enflasyonu yasağı).
+      - name: Köprü testi (§306 · yalnız Cmt)
+        if: always() && github.event.schedule == '0 4 * * 6'
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::notice::CRON_SECRET secret'ı tanımlı değil — köprü testi atlandı. Repo Settings → Secrets → CRON_SECRET ekleyin (Vercel'dekiyle aynı değer)."
+            exit 0
+          fi
+          echo "## Köprü testi (§306)" >> $GITHUB_STEP_SUMMARY
+          node ktpanel/test/kopru-testi.js 2>&1 | tee kopru-cikti.txt || KIRIK=1
+          tail -30 kopru-cikti.txt | sed 's/\x1b\[[0-9;]*m//g' >> $GITHUB_STEP_SUMMARY
+          if [ "$KIRIK" = "1" ]; then
+            echo "::error::Köprü testinde KRİTİK uç bozuk — panel bir yedeğe düşmüş olabilir."
+            exit 1
+          fi
