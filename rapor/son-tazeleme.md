@@ -3,12 +3,16 @@
 Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
+- ℹ §307: Yahoo 2026-08-14 (hedef 2026-08-17) ama bülten yedeği alınamadı
+
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
 - ⚠ **fiyat yasi (XK100 ağırlıkları)**: 2026-08-14 — bugunden 2 IS GUNU geride
   - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+- ℹ §307: Yahoo 2026-08-14 (hedef 2026-08-17) ama bülten yedeği alınamadı
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
@@ -17,6 +21,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
   - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **toplam**: 96.50 (hedef 96.5 ±3)
 
+- ℹ §307: Yahoo 2026-08-14 (hedef 2026-08-17) ama bülten yedeği alınamadı
+
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 39/39 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
@@ -24,12 +30,16 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
   - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
+- ℹ §307: Yahoo 2026-08-14 (hedef 2026-08-17) ama bülten yedeği alınamadı
+
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
 - ⚠ **fiyat yasi (Multiple fiyatları)**: 2026-08-14 — bugunden 2 IS GUNU geride
   - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+- ℹ §307: Yahoo 2026-08-14 (hedef 2026-08-17) ama bülten yedeği alınamadı
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
@@ -48,7 +58,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (183 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 1981 fon · AUM + yatırımcı sayısı köprüden (ham 2032 kayıt, sayfalamalı)
@@ -63,7 +73,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1981 fon fiyat + 1054 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008692122570> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008693219450> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -103,10 +113,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202608171.csv
 - satır: 11161 · kolon: 57
-- TAM BAŞLIK: `TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZSERMAYE HALI;GECICI DURDURMA;ONCEKI KAPANIS FIYATI;ACILIS FIYATI;ACILIS SEANSI FIYATI;EN DUSUK FIYAT;EN YUKSEK FIYAT;KAPANIS FIYATI;KAPANIS SEANSI FIYATI;DEGISIM (%);BEKLEYEN EN IYI ALIS;BEKLEYEN EN IYI SATIS;A.O.F;TOPLAM ISLEM HACMI;TOPLAM ISLEM ADEDI;TOPLAM SOZLESME SAYISI;REFERANS FIYAT;ACILIS SEANSI ISLEM HACMI;ACILIS SEANSI ISLEM MIKTARI;ACILIS SEANSI SOZLESME SAYISI;KAPANIS SEANSI ISLEM HACMI`
-- fiyat kolon adayları: ONCEKI KAPANIS FIYATI · ACILIS FIYATI · ACILIS SEANSI FIYATI · EN DUSUK FIYAT · EN YUKSEK FIYAT · KAPANIS FIYATI · KAPANIS SEANSI FIYATI · REFERANS FIYAT · KAPANIS SEANSI ISLEM HACMI · KAPANIS SEANSI ISLEM MIKTARI · KAPANIS SEANSI SOZLESME SAYISI · KAPANIS FIYATINDAN ISLEMLER ISLEM HACMI · KAPANIS FIYATINDAN ISLEMLER ISLEM MIKTARI · KAPANIS FIYATINDAN ISLEMLER SOZLESME SAYISI · EN DUSUK ACIGA SATIS FIYATI · EN YUKSEK ACIGA SATIS FIYATI · OZEL ISLEM BILDIRIMI EN DUSUK FIYAT · OZEL ISLEM BILDIRIMI EN YUKSEK FIYAT
-- örnek satır: `2026-08-17;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
+- fiyat kolon adayları: ONCEKI KAPANIS FIYATI · ACILIS FIYATI · ACILIS SEANSI FIYATI · EN DUSUK FIYAT · EN YUKSEK FIYAT · KAPANIS FIYATI · KAPANIS SEANSI FIYATI · REFERANS FIYAT …
+- örnek satır (saf kod önce): `2026-08-17;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
 
 
 ---
-**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · fon akışı (1981) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi
+**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · risk metrikleri (139) · fon akışı (1981) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi

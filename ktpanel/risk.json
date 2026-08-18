@@ -4,228 +4,228 @@
  "hisseler": [
   {
    "k": "AKFYE",
-   "vol": 59.7,
-   "beta": 0.99
+   "vol": 58.8,
+   "beta": 0.96
   },
   {
    "k": "ALCTL",
-   "vol": 55.3,
-   "beta": 0.7
+   "vol": 56.2,
+   "beta": 0.72
   },
   {
    "k": "ALKA",
-   "vol": 43.4,
-   "beta": 0.81
+   "vol": 42.9,
+   "beta": 0.78
   },
   {
    "k": "ALKIM",
-   "vol": 36.4,
+   "vol": 36.5,
    "beta": 0.84
   },
   {
    "k": "ALKLC",
-   "vol": 58.6,
+   "vol": 58.8,
    "beta": 0.57
   },
   {
    "k": "ALTNY",
-   "vol": 45.5,
-   "beta": 0.94
+   "vol": 45.4,
+   "beta": 0.93
   },
   {
    "k": "ALVES",
-   "vol": 63,
+   "vol": 63.3,
    "beta": 1.14
   },
   {
    "k": "ANGEN",
-   "vol": 50.4,
-   "beta": 0.84
+   "vol": 50.6,
+   "beta": 0.83
   },
   {
    "k": "ARASE",
-   "vol": 42.5,
-   "beta": 0.53
+   "vol": 42.7,
+   "beta": 0.54
   },
   {
    "k": "ARDYZ",
-   "vol": 63.1,
-   "beta": 1.18
+   "vol": 63.2,
+   "beta": 1.2
   },
   {
    "k": "ASELS",
-   "vol": 51.1,
-   "beta": 1.67
+   "vol": 51.4,
+   "beta": 1.69
   },
   {
    "k": "ATAKP",
-   "vol": 38.6,
-   "beta": 0.89
+   "vol": 38.7,
+   "beta": 0.9
   },
   {
    "k": "AVPGY",
-   "vol": 33,
+   "vol": 33.1,
    "beta": 0.69
   },
   {
    "k": "BAHKM",
-   "vol": 68.7,
+   "vol": 69,
    "beta": 0.93
   },
   {
    "k": "BAKAB",
-   "vol": 56.7,
+   "vol": 56.9,
    "beta": 0.68
   },
   {
    "k": "BASGZ",
-   "vol": 28.7,
-   "beta": 0.51
+   "vol": 28.8,
+   "beta": 0.5
   },
   {
    "k": "BERA",
-   "vol": 46.7,
-   "beta": 1.05
+   "vol": 47.6,
+   "beta": 1.03
   },
   {
    "k": "BIENY",
    "vol": 49.9,
-   "beta": 1.07
+   "beta": 1.14
   },
   {
    "k": "BIMAS",
-   "vol": 33,
-   "beta": 0.83
+   "vol": 32.7,
+   "beta": 0.82
   },
   {
    "k": "BMSTL",
-   "vol": 54.3,
+   "vol": 54.5,
    "beta": 0.12
   },
   {
    "k": "BORSK",
-   "vol": 48.1,
+   "vol": 48.3,
    "beta": 1.1
   },
   {
    "k": "BOSSA",
-   "vol": 36.3,
+   "vol": 36.4,
    "beta": 0.76
   },
   {
    "k": "BRISA",
    "vol": 33.1,
-   "beta": 0.8
+   "beta": 0.79
   },
   {
    "k": "BRLSM",
-   "vol": 68.3,
-   "beta": 0.83
+   "vol": 68.7,
+   "beta": 0.81
   },
   {
    "k": "BSOKE",
-   "vol": 43.3,
-   "beta": 0.72
+   "vol": 43.6,
+   "beta": 0.69
   },
   {
    "k": "CANTE",
-   "vol": 41.7,
-   "beta": 1.1
+   "vol": 41.8,
+   "beta": 1.09
   },
   {
    "k": "CELHA",
-   "vol": 74.5,
-   "beta": 0.51
+   "vol": 74.8,
+   "beta": 0.52
   },
   {
    "k": "CEMTS",
-   "vol": 30.7,
+   "vol": 30.9,
    "beta": 0.86
   },
   {
    "k": "CEMZY",
-   "vol": 67.3,
-   "beta": 0.48
+   "vol": 67.6,
+   "beta": 0.47
   },
   {
    "k": "CIMSA",
-   "vol": 35.4,
-   "beta": 1.03
+   "vol": 35.7,
+   "beta": 1.04
   },
   {
    "k": "CMBTN",
-   "vol": 41.9,
+   "vol": 42.1,
    "beta": 0.71
   },
   {
    "k": "CVKMD",
-   "vol": 65.6,
-   "beta": 1.36
+   "vol": 65.4,
+   "beta": 1.39
   },
   {
    "k": "CWENE",
-   "vol": 57.8,
+   "vol": 58,
    "beta": 1.29
   },
   {
    "k": "DAPGM",
-   "vol": 62.1,
-   "beta": 0.71
+   "vol": 62.2,
+   "beta": 0.7
   },
   {
    "k": "DARDL",
-   "vol": 36.1,
-   "beta": 0.91
+   "vol": 35.9,
+   "beta": 0.89
   },
   {
    "k": "DCTTR",
-   "vol": 56.3,
+   "vol": 56.5,
    "beta": -0.07
   },
   {
    "k": "DYOBY",
-   "vol": 50.2,
-   "beta": 0.82
+   "vol": 50.4,
+   "beta": 0.83
   },
   {
    "k": "EBEBK",
-   "vol": 37.9,
-   "beta": 0.69
+   "vol": 38.4,
+   "beta": 0.72
   },
   {
    "k": "EDATA",
-   "vol": 75.2,
-   "beta": 0.8
+   "vol": 77.3,
+   "beta": 0.87
   },
   {
    "k": "EFOR",
-   "vol": 90.3,
-   "beta": 0.32
+   "vol": 90.6,
+   "beta": 0.38
   },
   {
    "k": "EGEPO",
    "vol": 39.3,
-   "beta": 0.49
+   "beta": 0.46
   },
   {
    "k": "EGGUB",
-   "vol": 52.6,
-   "beta": 0.65
+   "vol": 52.8,
+   "beta": 0.67
   },
   {
    "k": "EGPRO",
-   "vol": 55.2,
-   "beta": 1.1
+   "vol": 55.4,
+   "beta": 1.09
   },
   {
    "k": "EKGYO",
-   "vol": 42.1,
-   "beta": 1.05
+   "vol": 42.3,
+   "beta": 1.04
   },
   {
    "k": "EKSUN",
-   "vol": 47.2,
-   "beta": 0.88
+   "vol": 47.1,
+   "beta": 0.86
   },
   {
    "k": "ELITE",
@@ -234,468 +234,468 @@
   },
   {
    "k": "ENJSA",
-   "vol": 38.9,
+   "vol": 39.1,
    "beta": 0.87
   },
   {
    "k": "EREGL",
-   "vol": 44.3,
-   "beta": 1.18
+   "vol": 44.1,
+   "beta": 1.16
   },
   {
    "k": "EUPWR",
-   "vol": 73.5,
-   "beta": 0.96
+   "vol": 71.7,
+   "beta": 0.92
   },
   {
    "k": "FONET",
-   "vol": 65.9,
+   "vol": 66.2,
    "beta": 0.98
   },
   {
    "k": "FORTE",
-   "vol": 53.2,
-   "beta": 0.85
+   "vol": 52.9,
+   "beta": 0.82
   },
   {
    "k": "GENIL",
-   "vol": 51.9,
+   "vol": 52.1,
    "beta": 0.71
   },
   {
    "k": "GENTS",
-   "vol": 52.1,
-   "beta": 0.97
+   "vol": 52.3,
+   "beta": 0.98
   },
   {
    "k": "GEREL",
-   "vol": 73.4,
+   "vol": 73.7,
    "beta": 1.13
   },
   {
    "k": "GESAN",
-   "vol": 66.3,
-   "beta": 1.11
+   "vol": 66.1,
+   "beta": 1.09
   },
   {
    "k": "GLRMK",
-   "vol": 51.8,
+   "vol": 52,
    "beta": 1.2
   },
   {
    "k": "GOKNR",
-   "vol": 46.5,
-   "beta": 0.67
+   "vol": 46.4,
+   "beta": 0.66
   },
   {
    "k": "GOLTS",
-   "vol": 29,
+   "vol": 29.1,
    "beta": 0.81
   },
   {
    "k": "GOODY",
-   "vol": 49,
+   "vol": 49.2,
    "beta": 0.49
   },
   {
    "k": "GRSEL",
-   "vol": 40.5,
-   "beta": 0.72
+   "vol": 40.8,
+   "beta": 0.74
   },
   {
    "k": "GRTHO",
-   "vol": 54.4,
-   "beta": 1
+   "vol": 54.7,
+   "beta": 0.99
   },
   {
    "k": "GUBRF",
-   "vol": 47.9,
-   "beta": 1.14
+   "vol": 48,
+   "beta": 1.16
   },
   {
    "k": "HATSN",
-   "vol": 63.7,
-   "beta": 0.98
+   "vol": 64.1,
+   "beta": 0.97
   },
   {
    "k": "HOROZ",
-   "vol": 58.9,
-   "beta": 1.2
+   "vol": 59.3,
+   "beta": 1.19
   },
   {
    "k": "HRKET",
-   "vol": 61.7,
+   "vol": 62,
    "beta": 0.47
   },
   {
    "k": "IMASM",
-   "vol": 47.6,
+   "vol": 47.7,
    "beta": 1.1
   },
   {
    "k": "INTEM",
    "vol": 63.3,
-   "beta": 1.14
+   "beta": 1.13
   },
   {
    "k": "ISDMR",
-   "vol": 41,
-   "beta": 0.96
+   "vol": 41.1,
+   "beta": 0.95
   },
   {
    "k": "IZFAS",
-   "vol": 46.2,
-   "beta": 0.21
+   "vol": 46.6,
+   "beta": 0.22
   },
   {
    "k": "JANTS",
-   "vol": 40.3,
-   "beta": 0.77
+   "vol": 40.5,
+   "beta": 0.76
   },
   {
    "k": "KARSN",
-   "vol": 49,
+   "vol": 49.2,
    "beta": 1.15
   },
   {
    "k": "KATMR",
-   "vol": 39.3,
-   "beta": 0.95
+   "vol": 39.5,
+   "beta": 0.96
   },
   {
    "k": "KBORU",
-   "vol": 54.7,
+   "vol": 54.9,
    "beta": 0.87
   },
   {
    "k": "KCAER",
-   "vol": 48.1,
+   "vol": 48.3,
    "beta": 1.22
   },
   {
    "k": "KCHOL",
-   "vol": 33.9,
+   "vol": 34.1,
    "beta": 0.91
   },
   {
    "k": "KIMMR",
-   "vol": 50.5,
+   "vol": 50.7,
    "beta": 0.73
   },
   {
    "k": "KLSYN",
-   "vol": 69,
-   "beta": 1.1
+   "vol": 69.3,
+   "beta": 1.08
   },
   {
    "k": "KNFRT",
-   "vol": 53.8,
+   "vol": 54,
    "beta": 1.04
   },
   {
    "k": "KOCMT",
-   "vol": 63.1,
-   "beta": 0.83
+   "vol": 64.2,
+   "beta": 0.91
   },
   {
    "k": "KONKA",
    "vol": 45.2,
-   "beta": 0.93
+   "beta": 0.9
   },
   {
    "k": "KONYA",
-   "vol": 35.8,
-   "beta": 0.82
+   "vol": 35.9,
+   "beta": 0.81
   },
   {
    "k": "KOPOL",
    "vol": 50.3,
-   "beta": 0.98
+   "beta": 0.96
   },
   {
    "k": "KOTON",
-   "vol": 34.5,
+   "vol": 34.6,
    "beta": 0.7
   },
   {
    "k": "KRDMD",
-   "vol": 46.9,
-   "beta": 1.22
+   "vol": 46.6,
+   "beta": 1.2
   },
   {
    "k": "KRONT",
-   "vol": 67.7,
-   "beta": 1.17
+   "vol": 68,
+   "beta": 1.15
   },
   {
    "k": "KRVGD",
-   "vol": 38.2,
-   "beta": 0.93
+   "vol": 38.1,
+   "beta": 0.91
   },
   {
    "k": "KUTPO",
-   "vol": 33.4,
+   "vol": 33.5,
    "beta": 0.89
   },
   {
    "k": "KZBGY",
-   "vol": 55,
-   "beta": 1.03
+   "vol": 55.1,
+   "beta": 1.01
   },
   {
    "k": "LKMNH",
-   "vol": 31.9,
-   "beta": 0.62
+   "vol": 32.1,
+   "beta": 0.6
   },
   {
    "k": "LMKDC",
-   "vol": 38.4,
-   "beta": 0.92
+   "vol": 38.6,
+   "beta": 0.9
   },
   {
    "k": "MAGEN",
-   "vol": 63,
-   "beta": 0.84
+   "vol": 63.2,
+   "beta": 0.86
   },
   {
    "k": "MAKIM",
-   "vol": 48.9,
-   "beta": 0.56
+   "vol": 49.1,
+   "beta": 0.54
   },
   {
    "k": "MARBL",
-   "vol": 40.7,
+   "vol": 40.8,
    "beta": 0.98
   },
   {
    "k": "MAVI",
-   "vol": 34.2,
+   "vol": 34.3,
    "beta": 0.88
   },
   {
    "k": "MEDTR",
-   "vol": 31.1,
-   "beta": 0.64
+   "vol": 31.2,
+   "beta": 0.63
   },
   {
    "k": "MERCN",
-   "vol": 60.6,
-   "beta": 1.04
+   "vol": 60.8,
+   "beta": 1.01
   },
   {
    "k": "MGROS",
-   "vol": 36.5,
-   "beta": 0.65
+   "vol": 36.4,
+   "beta": 0.63
   },
   {
    "k": "MNDTR",
    "vol": 30.3,
-   "beta": 0.69
+   "beta": 0.68
   },
   {
    "k": "MOBTL",
-   "vol": 45.2,
+   "vol": 45.3,
    "beta": 0.54
   },
   {
    "k": "MPARK",
-   "vol": 38.5,
-   "beta": 0.89
+   "vol": 37.9,
+   "beta": 0.86
   },
   {
    "k": "NETAS",
-   "vol": 46.1,
-   "beta": 0.98
+   "vol": 46.3,
+   "beta": 0.97
   },
   {
    "k": "NTGAZ",
-   "vol": 45,
-   "beta": 0.69
+   "vol": 45.2,
+   "beta": 0.7
   },
   {
    "k": "ONCSM",
-   "vol": 58.9,
-   "beta": 0.75
+   "vol": 59.4,
+   "beta": 0.74
   },
   {
    "k": "ORGE",
-   "vol": 53,
-   "beta": 0.79
+   "vol": 53.3,
+   "beta": 0.82
   },
   {
    "k": "OZYSR",
-   "vol": 41.3,
-   "beta": 0.45
+   "vol": 41.4,
+   "beta": 0.46
   },
   {
    "k": "PARSN",
-   "vol": 36.8,
-   "beta": 0.89
+   "vol": 36.9,
+   "beta": 0.88
   },
   {
    "k": "PASEU",
-   "vol": 83.3,
-   "beta": 0.12
+   "vol": 85.7,
+   "beta": 0.17
   },
   {
    "k": "PGSUS",
-   "vol": 34.1,
+   "vol": 34.3,
    "beta": 0.87
   },
   {
    "k": "PKART",
-   "vol": 76,
-   "beta": 1.27
+   "vol": 74.8,
+   "beta": 1.22
   },
   {
    "k": "PLTUR",
-   "vol": 43.5,
+   "vol": 43.7,
    "beta": 0.71
   },
   {
    "k": "POLHO",
-   "vol": 48.3,
-   "beta": 0.77
+   "vol": 48.5,
+   "beta": 0.78
   },
   {
    "k": "QUAGR",
    "vol": 67.3,
-   "beta": 1.26
+   "beta": 1.33
   },
   {
    "k": "RGYAS",
    "vol": 32.3,
-   "beta": 0.65
+   "beta": 0.64
   },
   {
    "k": "SAFKR",
-   "vol": 50.3,
-   "beta": 0.53
+   "vol": 50.6,
+   "beta": 0.52
   },
   {
    "k": "SAHOL",
-   "vol": 37.9,
+   "vol": 38,
    "beta": 1.01
   },
   {
    "k": "SARKY",
-   "vol": 60.3,
-   "beta": 1.29
+   "vol": 60.6,
+   "beta": 1.31
   },
   {
    "k": "SAYAS",
-   "vol": 62.6,
-   "beta": 0.91
+   "vol": 63.4,
+   "beta": 0.96
   },
   {
    "k": "SEKUR",
-   "vol": 82.5,
+   "vol": 82.8,
    "beta": 0.84
   },
   {
    "k": "SELEC",
-   "vol": 63,
-   "beta": 0.78
+   "vol": 63.6,
+   "beta": 0.75
   },
   {
    "k": "SISE",
-   "vol": 40.7,
-   "beta": 1.12
+   "vol": 40.8,
+   "beta": 1.1
   },
   {
    "k": "SNGYO",
-   "vol": 43.2,
-   "beta": 0.96
+   "vol": 43.5,
+   "beta": 0.94
   },
   {
    "k": "SNICA",
-   "vol": 49,
+   "vol": 49.2,
    "beta": 0.84
   },
   {
    "k": "SOKE",
-   "vol": 50,
-   "beta": 0.94
+   "vol": 50.4,
+   "beta": 0.92
   },
   {
    "k": "SUNTK",
-   "vol": 64.5,
-   "beta": 0.58
+   "vol": 61.6,
+   "beta": 0.49
   },
   {
    "k": "SUWEN",
-   "vol": 46.7,
-   "beta": 0.94
+   "vol": 48.2,
+   "beta": 0.97
   },
   {
    "k": "TARKM",
-   "vol": 46.1,
-   "beta": 0.77
+   "vol": 46,
+   "beta": 0.76
   },
   {
    "k": "TCELL",
-   "vol": 34.6,
-   "beta": 0.87
+   "vol": 34.9,
+   "beta": 0.88
   },
   {
    "k": "TEZOL",
-   "vol": 49.7,
-   "beta": 0.69
+   "vol": 50.1,
+   "beta": 0.67
   },
   {
    "k": "THYAO",
-   "vol": 35.5,
-   "beta": 0.86
+   "vol": 35.7,
+   "beta": 0.84
   },
   {
    "k": "TKNSA",
-   "vol": 47.9,
-   "beta": 0.81
+   "vol": 48.1,
+   "beta": 0.8
   },
   {
    "k": "TOASO",
-   "vol": 39.6,
+   "vol": 39.8,
    "beta": 0.94
   },
   {
    "k": "TUKAS",
-   "vol": 33.2,
+   "vol": 33.3,
    "beta": 0.8
   },
   {
    "k": "TUPRS",
-   "vol": 41.4,
+   "vol": 41.8,
    "beta": 0.65
   },
   {
    "k": "TUREX",
-   "vol": 51.3,
+   "vol": 51.5,
    "beta": 1.01
   },
   {
    "k": "ULKER",
-   "vol": 31.7,
-   "beta": 0.97
+   "vol": 31.8,
+   "beta": 0.96
   },
   {
    "k": "ULUSE",
    "vol": 71.8,
-   "beta": 0.75
+   "beta": 0.7
   },
   {
    "k": "USAK",
-   "vol": 38.9,
+   "vol": 39.1,
    "beta": 0.97
   },
   {
    "k": "VAKKO",
-   "vol": 50.7,
-   "beta": 0.97
+   "vol": 50.8,
+   "beta": 0.96
   },
   {
    "k": "YATAS",
-   "vol": 41.7,
-   "beta": 1
+   "vol": 41.9,
+   "beta": 1.01
   },
   {
    "k": "YEOTK",
@@ -704,9 +704,9 @@
   },
   {
    "k": "YUNSA",
-   "vol": 48.7,
-   "beta": 1.05
+   "vol": 49,
+   "beta": 1.06
   }
  ],
- "yontem": "vol = günlük getiri std × √252 · beta = kov(hisse, XKTUM (BIST resmî arşiv)) / var(XKTUM (BIST resmî arşiv)) · ortalama 128 ortak işlem günü · kaynak Yahoo 1y"
+ "yontem": "vol = günlük getiri std × √252 · beta = kov(hisse, XKTUM (BIST resmî arşiv)) / var(XKTUM (BIST resmî arşiv)) · ortalama 127 ortak işlem günü · kaynak Yahoo 1y"
 }
