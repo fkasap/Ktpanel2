@@ -139,24 +139,33 @@ async function bultenFiyat(kodlar) {
       const iKod = kolon.indexOf('ISLEM KODU'), iKap = kolon.indexOf('KAPANIS FIYATI'), iTar = kolon.indexOf('TARIH');
       if (iKod < 0 || iKap < 0) continue;
       const iste = new Set(kodlar.map(k => k.toUpperCase()));
-      const out = {}; let tarih = null;
+      const out = {}; let tarih = null; const sonekSayaci = {};
       for (let i = 1; i < satirlar.length; i++) {
         const a = satirlar[i].split(';');
         const kod = (a[iKod] || '').trim().toUpperCase();
-        if (!iste.has(kod)) continue;                    /* §305 tuzağı: THYAO.AOF eşleşmez */
+        /* §308: 19 Ağu koşusu kanıtladı — bültende ÇIPLAK kod satırı YOK
+           (saf 'THYAO' deseni 11.161 satırda sıfır eşleşme). Pay satırı BIST
+           konvansiyonunda KOD.E olarak gezer. Kabul edilen biçimler yalnız
+           'KOD' ve 'KOD.E' — .AOF/.TE/temerrüt türevleri yine dışarıda. */
+        let temel = null;
+        if (iste.has(kod)) temel = kod;
+        else if (kod.endsWith('.E') && iste.has(kod.slice(0, -2))) temel = kod.slice(0, -2);
+        if (!temel) continue;
+        sonekSayaci[kod === temel ? '(çıplak)' : '.E'] = (sonekSayaci[kod === temel ? '(çıplak)' : '.E'] || 0) + 1;
+        const kod0 = kod; /* iz */
         /* Türk sayı biçimi güvenliği: '1.234,56' → 1234.56 · '305,25' → 305.25 · '305.25' → 305.25 */
         let vs = String(a[iKap] || '').trim();
         if (vs.includes('.') && vs.includes(',')) vs = vs.replace(/\./g, '').replace(',', '.');
         else vs = vs.replace(',', '.');
         const v = parseFloat(vs);
         if (!isFinite(v) || v <= 0) continue;            /* sıfır satır (askı/türev) atla */
-        if (out[kod]) continue;                          /* ilk geçerli satır kazanır */
-        out[kod] = { fiyat: v, tarih: (a[iTar] || '').trim().slice(0, 10) || null };
-        if (!tarih && out[kod].tarih) tarih = out[kod].tarih;
+        if (out[temel]) continue;                        /* ilk geçerli satır kazanır */
+        out[temel] = { fiyat: v, tarih: (a[iTar] || '').trim().slice(0, 10) || null };
+        if (!tarih && out[temel].tarih) tarih = out[temel].tarih;
       }
       const n = Object.keys(out).length;
       if (!n) return null;
-      return { fiyatlar: out, tarih, kapsam: n, istenen: kodlar.length, dosya: f };
+      return { fiyatlar: out, tarih, kapsam: n, istenen: kodlar.length, dosya: f, sonek: sonekSayaci };
     }
     return null;
   } catch (e) { return null; }
@@ -182,7 +191,7 @@ async function fiyatYedek(ad, f, kodlar) {
     kodlar.forEach(k => { const K = k.toUpperCase(); if (B.fiyatlar[K]) yeniF[k] = { fiyat: B.fiyatlar[K].fiyat, tarih: B.tarih }; });
     raporlar.push('### ' + ad + ' — §307 YEDEK DEVREDE: BIST bülteni ' + B.tarih +
       '\n- Yahoo ' + (yahooTarih || 'veri yok') + ' gün döndürdü (hedef ' + hedef + ') → resmî bülten kullanıldı' +
-      '\n- kapsam ' + B.kapsam + '/' + kodlar.length + ' · dosya ' + B.dosya + ' · TÜM fiyatlar tek kaynaktan (§114)');
+      '\n- kapsam ' + B.kapsam + '/' + kodlar.length + ' · dosya ' + B.dosya + ' · satır biçimi ' + JSON.stringify(B.sonek || {}) + ' · TÜM fiyatlar tek kaynaktan (§114)');
     return yeniF;
   } catch (e) { return f; }
 }
@@ -1674,11 +1683,18 @@ async function bultenKesif() {
         const baslik = satirlar[0];
         const kolonlar = baslik.split(';').map(x => x.trim());
         const fiyatAday = kolonlar.filter(k => /KAPAN|CLOS|AOF|AGIRLIKLI|ORTALAMA|FIYAT|PRICE|DUSUK|YUKSEK/i.test(k));
+        /* §308 sonda: THYAO'nun TÜM varyantları + kapanışları — sonek kanıtı */
+        const iKodS = kolonlar.findIndex(k => /ISLEM\s+KODU/i.test(k));
+        const iKapS = kolonlar.findIndex(k => k.trim().toUpperCase() === 'KAPANIS FIYATI');
+        const varyantlar = satirlar.slice(1).map(x => x.split(';'))
+          .filter(a2 => /THYAO/i.test(a2[iKodS] || ''))
+          .map(a2 => (a2[iKodS] || '').trim() + '=' + (a2[iKapS] || '').trim()).slice(0, 8);
         const ornek = satirlar.find(x => /^[^;]*;THYAO;/i.test(x)) || satirlar.find(x => /THYAO/i.test(x)) || null;
         raporlar.push('### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — ' + f +
           '\n- satır: ' + satirlar.length + ' · kolon: ' + kolonlar.length +
           '\n- fiyat kolon adayları: ' + (fiyatAday.length ? fiyatAday.slice(0, 8).join(' · ') + (fiyatAday.length > 8 ? ' …' : '') : 'BULUNAMADI') +
-          (ornek ? '\n- örnek satır (saf kod önce): `' + ornek.replace(/`/g, '').slice(0, 400) + '`' : '\n- THYAO satırı yok'));
+          '\n- THYAO varyantları (kod=kapanış): ' + (varyantlar.length ? varyantlar.join(' · ') : 'yok') +
+          (ornek ? '\n- örnek satır: `' + ornek.replace(/`/g, '').slice(0, 300) + '`' : ''));
         break;
       }
     } catch (e) { raporlar.push('- ⚠ §305 fiyat keşfi koşamadı: ' + String(e.message || e).slice(0, 60)); }
