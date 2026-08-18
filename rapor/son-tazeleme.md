@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-18
 
-Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
+Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -33,10 +33,18 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - ✓ **fiyat yasi (Model sicili)**: 2026-08-18 (0 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
-### Model sicili serisi (§291) — ⏭ 2026-08-18 icin XKTUM arsivde yok; satir yazilmadi (uydurma yok)
+### Model sicili serisi (§291) — ✓ 2026-08-18 · model %1.338 / endeks %7.804
 
 ### TR 5Y CDS — ✓ 218.68 bp · 2026-08-18 · -2.94
 - ✓ 3279 günlük seri · kaynak etiketi 2026-08-18 (hafta sonu doldurmalı)
+
+### Risk metrikleri — ✓ GEÇTİ
+- ✓ **kapsam**: 141/141 (%100)
+- ✓ **aykırı değer**: temiz (sınır ±%3)
+- ✓ **aykırı değer**: temiz (sınır ±%150)
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (184 gün)
+- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2025 fon · AUM + yatırımcı sayısı köprüden (ham 2032 kayıt, sayfalamalı)
 
@@ -48,13 +56,9 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 ### Fon akışı (§263) — ✓ 2025 fon · 2026-08-17 → 2026-08-18
 - giriş 57.15 mlr ₺ · çıkış -86.67 mlr ₺ · net -29.52 mlr ₺
 
-### TEFAS alan keşfi (bilgi)
-- uç: `/api/statistics/tefas/getFplFonList`
-- alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
-
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2025 fon fiyat + 1054 getiri)
-- yakalanan JSON: 1 / toplam yanıt: 83 · sayfa: "Fon Getirileri - TEFAS Fon Bilgilendirme ve Karşılaştırma | " · gövde: `Görme engelliler için erişilebilirliği etkinleştirin Erişilebilirlik menüsünü açma Erişilebilir Gezinme Menüsünü Açın Ana içeriğe geç Ana Sayfa Fon Getirileri Fon Karşılaştır F` · uçlar: /api/statistics/tefas/getFplFonList (1045)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009644995550> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -65,17 +69,17 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
-- ✓ **seri guncelligi (track.series)**: 2026-08-17 (referans 2026-08-18, fark 1g)
+- ✓ **seri guncelligi (track.series)**: 2026-08-18 (referans 2026-08-18, fark 0g)
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-18 (referans 2026-08-18, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ✓ **borc defteri (§299)**: 88 kart bekliyor · en eski AGYO (0g)
+- ✓ **borc defteri (§299)**: 95 kart bekliyor · en eski AGYO (0g)
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 88 şirket kart bekliyor
-- pencere: 88 FR · yeni deftere giren: 20 (AGYO, ALTNY, AVOD, BIOEN, BRKSN, BRMEN, GGBVK, GLRMK, INDES, IZFAS …)
+### Bilanço tetiği (§299 kümülatif) — ✓ 95 şirket kart bekliyor
+- pencere: 95 FR · yeni deftere giren: 7 (ALVES, ETILR, IZINV, KLKIM, MARBL, PLTUR, QUICK)
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 0 gündür bekliyor
-- AGYO, AKHAN, AKYHO, ALTNY, ASTOR, AVOD, BAGFS, BIMAS, BINHO, BIOEN, BIZIM, BRKSN, BRMEN, BVSAN, CVKMD, DMRGD, ENTRA, ERCB, EUPWR, EYGYO …
+- AGYO, AKHAN, AKYHO, ALTNY, ALVES, ASTOR, AVOD, BAGFS, BIMAS, BINHO, BIOEN, BIZIM, BRKSN, BRMEN, BVSAN, CVKMD, DMRGD, ENTRA, ERCB, ETILR …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:243 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu XKTUM: 150/243 (tasarım gereği ilk 150)
@@ -86,6 +90,15 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - XKTUM 19687.88 · XKTMT 18322.94 · XK100 18376.14 · XU100 14127.98 · BISTTLREFK 4049.42387
 - arşiv: 613 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
+
+### HMB ihale keşfi (§314A · tek koşuluk sonda)
+- https://www.hmb.gov.tr/duyurular → HTTP 200 · text/html · 5KB
+  - URL izleri: https://fonts.googleapis.com · https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700&display=swap
+  - script kaynakları: /static/js/2.69e3e0dd.chunk.js · /static/js/main.6b9fc9b4.chunk.js
+- https://www.hmb.gov.tr/ → HTTP 200 · text/html · 5KB
+  - URL izleri: https://fonts.googleapis.com · https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700&display=swap
+  - script kaynakları: /static/js/2.69e3e0dd.chunk.js · /static/js/main.6b9fc9b4.chunk.js
+- SONRAKİ ADIM: bu izlerden API ucu seçilip hazine-sonuc.json katmanı yazılacak (ölç→yaz).
 
 ### Bülten keşfi (§250k) — ✓ thb202608171.zip indi · 279KB
 - içerik: thb202608171.csv
@@ -99,4 +112,4 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (138 fiyat) · Model sicili (39 fiyat) · TR 5Y CDS (218.68 bp) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (88 bekliyor) · endeks üyelikleri · endeks arşivi
+**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · risk metrikleri (138) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (95 bekliyor) · endeks üyelikleri · endeks arşivi
