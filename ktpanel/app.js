@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818f';   // §311 fetch tavanı + §312 yavaş modül logu + §313 lwc eve alındı
+const KTP_SURUM = '20260818g';   // SS316 t25 kurtarma + SS313b chart yukleyici sigortasi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -5553,6 +5553,19 @@ function tkKutuphane(){
        Prevention her açılışta 4 uyarı basıyordu. Dosya npm'den birebir indirildi
        (lightweight-charts@5.2.0, 196KB), kendi alan adından sunulur. */
     s.src = '/lib/lightweight-charts.standalone.production.js?v=520';
+    /* SS313b SIGORTA (18 Agu aksami olculdu): lib/ dosyasi repoya girmeden
+       app.js f yayina cikti -> yerel yol 404 -> LightweightCharts undefined
+       -> Getiri Egrisi dahil tum chart kartlari sessizce bos kaldi.
+       Yerel BIRINCIL kalir; yalniz yerel yuklenemezse unpkg yedegine dusulur
+       ve konsola yazilir - deploy sirasi sigortasi. */
+    s.onerror = function(){
+      console.warn('[KTPanel] SS313b: /lib/ yerel kutuphane yuklenemedi - unpkg yedegine dusuluyor');
+      const y = document.createElement('script');
+      y.src = 'https://unpkg.com/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js';
+      y.onload = s.onload;
+      y.onerror = function(){ console.error('[KTPanel] SS313b: yedek de yuklenemedi - chart kartlari bos kalacak'); };
+      document.head.appendChild(y);
+    };
     s.onload = ()=>coz(true);
     s.onerror = ()=>coz(false);
     document.head.appendChild(s);

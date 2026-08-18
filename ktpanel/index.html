@@ -1171,6 +1171,15 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note">Kaynak: SPK Seryet (aylık bildirim). Boş görünen şirket o ayın bildirimini henüz göndermemiştir — uç, doluluk düşükse bir önceki aya kendiliğinden düşer. Katılım PYŞ'leri ● ile işaretli.</div>
 </div>
 </div>
+
+</div>
+
+<!-- SS316: t25 Yabanci Hisse, t10 DISINA tasindi. SS298 tasima kazasi:
+     t10 kapanisi sanilan kapanis etiketi aslinda t25 inkiydi; sk-pys paneli
+     araya girince t25 bir seviye iceri kaydi ve Sukuk kapaliyken 0 piksele
+     coktu. SAYI dengesi bunu yakalayamadi - bekci artik YAPIYI dogrular:
+     hicbir .tab baska .tab icinde olamaz. (Yorumda etiket adi gecmez:
+     onceki iki onarim denemesini sayaca takilan yorum metni dusurdu.) -->
 <div class="tab" id="t25"><h2>Yabancı Hisse — Shariah Evreni <span class="thin">(Koyfin temeller · Yahoo fiyat)</span> <span class="tag snap" id="yevDamga">VERİ BEKLENİYOR</span></h2>
 <div class="card" style="padding:8px 10px">
   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
@@ -1183,7 +1192,6 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
   <div style="overflow-x:auto"><table aria-label="Yabancı hisse evreni" style="min-width:900px"><thead id="yevBas"></thead><tbody id="yevBody"></tbody></table></div>
   <div class="note" id="yevNot">Evren dosyası henüz boş — 3 Ağu'da yüklenen Koyfin CSV'si yalnız başlık satırı içeriyordu (738 veri satırı boş). Koyfin'de tabloyu ekranda doldurup yeniden dışa aktarın; "koyfin işle" komutuyla panel dolar. Kolon başlığına tıklayınca sıralanır; ikinci tık yönü çevirir.</div>
-</div>
 </div>
 </div>
 
@@ -1651,7 +1659,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260818f"></script>
+<script src="/app.js?v=20260818g"></script>
 <script src="/ajan.js?v=20260817a"></script>
 </body>
 </html>
