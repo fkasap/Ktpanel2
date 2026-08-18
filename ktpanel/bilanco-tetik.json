@@ -46,6 +46,7 @@
   "KATMR",
   "KLKIM",
   "KMPUR",
+  "KNFRT",
   "KRONT",
   "KRVGD",
   "LKMNH",
@@ -97,7 +98,7 @@
   "VESTL",
   "YEOTK"
  ],
- "sayi": 95,
+ "sayi": 96,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -193,9 +194,10 @@
   "KLKIM": "2026-08-18",
   "MARBL": "2026-08-18",
   "PLTUR": "2026-08-18",
-  "QUICK": "2026-08-18"
+  "QUICK": "2026-08-18",
+  "KNFRT": "2026-08-18"
  },
- "pencere_sayi": 95,
+ "pencere_sayi": 96,
  "dusen_son": [],
- "guncelleme": "2026-08-18 16:40 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-18 16:56 UTC — otomatik (KAP FR · kümülatif §299)"
 }

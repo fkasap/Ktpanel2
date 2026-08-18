@@ -43,7 +43,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (184 gün)
-- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2025 fon · AUM + yatırımcı sayısı köprüden (ham 2032 kayıt, sayfalamalı)
@@ -58,7 +58,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2025 fon fiyat + 1054 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009644995550> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009535356703> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -73,10 +73,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-18 (referans 2026-08-18, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ✓ **borc defteri (§299)**: 95 kart bekliyor · en eski AGYO (0g)
+- ✓ **borc defteri (§299)**: 96 kart bekliyor · en eski AGYO (0g)
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 95 şirket kart bekliyor
-- pencere: 95 FR · yeni deftere giren: 7 (ALVES, ETILR, IZINV, KLKIM, MARBL, PLTUR, QUICK)
+### Bilanço tetiği (§299 kümülatif) — ✓ 96 şirket kart bekliyor
+- pencere: 96 FR · yeni deftere giren: 1 (KNFRT)
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 0 gündür bekliyor
 - AGYO, AKHAN, AKYHO, ALTNY, ALVES, ASTOR, AVOD, BAGFS, BIMAS, BINHO, BIOEN, BIZIM, BRKSN, BRMEN, BVSAN, CVKMD, DMRGD, ENTRA, ERCB, ETILR …
@@ -86,19 +86,25 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
-### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-18
-- XKTUM 19687.88 · XKTMT 18322.94 · XK100 18376.14 · XU100 14127.98 · BISTTLREFK 4049.42387
-- arşiv: 613 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
-- ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
+### Endeks kapanışları — ✗ üç CSV de boş/erişilemedi (adresler PayEndeksleri.zip içinde olabilir)
 
-### HMB ihale keşfi (§314A · tek koşuluk sonda)
-- https://www.hmb.gov.tr/duyurular → HTTP 200 · text/html · 5KB
-  - URL izleri: https://fonts.googleapis.com · https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700&display=swap
-  - script kaynakları: /static/js/2.69e3e0dd.chunk.js · /static/js/main.6b9fc9b4.chunk.js
-- https://www.hmb.gov.tr/ → HTTP 200 · text/html · 5KB
-  - URL izleri: https://fonts.googleapis.com · https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700&display=swap
-  - script kaynakları: /static/js/2.69e3e0dd.chunk.js · /static/js/main.6b9fc9b4.chunk.js
-- SONRAKİ ADIM: bu izlerden API ucu seçilip hazine-sonuc.json katmanı yazılacak (ölç→yaz).
+### Hazine ihale sonuçları (§314) — ✓ defter 10 duyuru · yeni 10
+- 2026-08-18 · 18 Ağustos 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İliş
+  - faizler → dönemsel:[] bileşik:[] kira:[]
+- 2026-08-17 · 17 Ağustos 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İliş
+  - faizler → dönemsel:[] bileşik:[] kira:[]
+- 2026-08-11 · 11 Ağustos 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İliş
+  - faizler → dönemsel:[] bileşik:[] kira:[]
+- 2026-08-10 · 10 Ağustos 2026 Tarihinde Gerçekleştirilen İhalenin Sonuçlarına İlişki
+  - faizler → dönemsel:[] bileşik:[] kira:[]
+- 2026-08-10 · 10 Ağustos 2026 Tarihinde Gerçekleştirilen 2 Yıl Vadeli TLREFK’ye Ende
+- 2026-07-21 · 21 Temmuz 2026 Tarihinde Kurumsal Yatırımcılara Gerçekleştirilen ABD D
+- 2026-07-21 · 21 Temmuz 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İlişk
+  - faizler → dönemsel:[] bileşik:[] kira:[]
+- 2026-07-20 · 20 Temmuz 2026 Tarihinde Gerçekleştirilen 2 Yıl Vadeli Sabit Getirili 
+- 2026-07-07 · 7 Temmuz 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İlişki
+  - faizler → dönemsel:[] bileşik:[] kira:[]
+- 2026-06-16 · 16 Haziran 2026 Tarihinde Gerçekleştirilen 1 Yıl Vadeli TLREFK’ye Ende
 
 ### Bülten keşfi (§250k) — ✓ thb202608171.zip indi · 279KB
 - içerik: thb202608171.csv
@@ -112,4 +118,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · risk metrikleri (138) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (95 bekliyor) · endeks üyelikleri · endeks arşivi
+**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · risk metrikleri (72) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (96 bekliyor) · endeks üyelikleri · hazine ihale sonuçları (+10)
