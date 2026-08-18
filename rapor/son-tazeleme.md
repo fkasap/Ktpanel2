@@ -49,20 +49,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009583312267> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008466136173> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
-### Depo hijyeni + kalem tazeligi (§297) — ✗ KALDI
+### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
-- ✗ **seri guncelligi (track.series)**: 2026-08-17 (referans 2026-08-14, fark -3g)
+- ⚠ **seri guncelligi (track.series)**: 2026-08-17 (referans 2026-08-14 — seri referanstan 3g ILERIDE)
+  - seri kesik DEGIL; REFERANS DOSYA GERILEMIS — fiyat kaynagi eski gun dondurmus olabilir (§300 geri gitme korumasi rapora bakiniz)
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-17 (referans 2026-08-18, fark 1g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
 - ✓ **borc defteri (§299)**: 65 kart bekliyor · en eski AKHAN (0g)
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 65 şirket kart bekliyor
-- pencere: 65 FR · yeni deftere giren: 13 (AKYHO, ASTOR, BIMAS, BINHO, ERCB, HURGZ, OFSYM, OZKGY, SAFKR, SDTTR …)
+- pencere: 65 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AKHAN · 0 gündür bekliyor
 - AKHAN, AKYHO, ASTOR, BAGFS, BIMAS, BINHO, BIZIM, BVSAN, CVKMD, DMRGD, ENTRA, ERCB, EUPWR, EYGYO, FONET, FZLGY, GEDIK, GEDZA, GESAN, GOLTS …
@@ -83,6 +84,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (137 fiyat) · Model sicili (39 fiyat) · sicil serisi · TR 5Y CDS (218.68 bp) · risk metrikleri (137) · katılım fonları (getiri-modu 36) · bilanço tetiği (65 bekliyor) · endeks üyelikleri · endeks arşivi
-
-⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
+**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (65 bekliyor) · endeks üyelikleri · endeks arşivi
