@@ -813,6 +813,25 @@ async function fonTazele() {
 async function bilancoTetik() {
   const dosya = 'bilanco-tetik.json';
   try {
+    /* §299 PENCERE → KÜMÜLATİF BORÇ DEFTERİ.
+       ESKİ DAVRANIŞ (hatalıydı): her koşuda KAP'ın son 1 günlük FR listesi
+       dosyanın ÜZERİNE yazılıyordu. Dosya "son günlerde bilanço açıklayanlar"
+       fotoğrafıydı; oysa panel şeridi onu "kartı yazılmayı bekleyenler" diye
+       okuyor. İki farklı soru, tek dosya.
+       ÖLÇÜLDÜ: 15 Ağu 128 → 16 Ağu 43 → 17 Ağu 52. Sayı düşmesi kart yazıldığı
+       için değil, PENCERE KAYDIĞI içindi — 85 şirket bir gecede sessizce
+       listeden düştü ve borç görünmez oldu (§245k: sessiz düşüş yasak).
+       YENİ DAVRANIŞ: dosya bir BORÇ DEFTERİdir. Bir kod listeye girdiğinde
+       ancak kartı yazılınca çıkar. Ödenmemiş borç, pencere kaysa da defterde
+       durur — muhasebenin en eski kuralı.
+       DÜŞÜŞ TEK SEBEPLE OLUR: inceleme-ai.json'da o koda kart yazılmış olması.
+       ilk_gorulme: her kodun deftere ilk girdiği gün. Borcun YAŞI görünür olur;
+       bir bilanço 20 gündür kartsız bekliyorsa bu, sayının kendisinden daha
+       çok şey söyler.
+       YOKSAY: kullanıcının "bu bilançoyu atla" işareti (ktp_bilanco_yoksay_v1)
+       tarayıcı/bulut tarafındadır, sunucu göremez — kabul edilen sınır. Panel
+       şeridi yoksayılanları istemci tarafında süzmeye devam eder; defter yalnız
+       "kart yazıldı mı" sorusunu bilir. */
     const simdi = Date.now(), GUN = 86400000;
     const iso = (t) => new Date(t).toISOString().slice(0, 10);
     const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', {
@@ -826,22 +845,72 @@ async function bilancoTetik() {
     if (!r.ok) { raporlar.push('### Bilanço tetiği — ✗ KAP HTTP ' + r.status); return null; }
     const j = await r.json();
     const items = Array.isArray(j) ? j : (j.items || j.data || []);
-    const kodlar = [...new Set(items
+    const pencere = [...new Set(items
       .filter(b => String(b.disclosureType || b.disclosureCategory || '').toUpperCase().includes('FR'))
       .map(b => String(b.stockCodes || b.stockCode || '').split(/[,;\s]+/)[0].trim().toUpperCase())
       .filter(k => /^[A-Z]{4,6}$/.test(k)))].sort();
-    await yaz(dosya, { tarih: bugun, kodlar, sayi: kodlar.length,
-      guncelleme: new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (KAP FR)' });
-    raporlar.push('### Bilanço tetiği — ✓ ' + kodlar.length + ' şirket FR yayımladı' +
+
+    /* 1) Mevcut defteri oku. Dosya yoksa/bozuksa boş defterle başla —
+          KAP çekimi başarılıyken eski dosya yüzünden katman düşmemeli. */
+    let eskiKodlar = [], ilkGorulme = {};
+    try {
+      if (await varMi(dosya)) {
+        const d = await oku(dosya);
+        eskiKodlar = Array.isArray(d.kodlar) ? d.kodlar.filter(k => /^[A-Z]{4,6}$/.test(String(k))) : [];
+        ilkGorulme = (d.ilk_gorulme && typeof d.ilk_gorulme === 'object') ? { ...d.ilk_gorulme } : {};
+      }
+    } catch (e) { raporlar.push('- ⚠ eski tetik dosyası okunamadı, defter sıfırdan kuruluyor: ' + String(e.message || e).slice(0, 60)); }
+
+    /* 2) Kartı yazılmış kodlar — borcun ÖDENDİĞİ tek kanıt. Dosya okunamazsa
+          BOŞ KÜME değil, DÜŞÜŞ YOK sayılır: kart listesi gelmedi diye 52 borcu
+          birden "ödenmiş" göstermek, sessiz veri kaybının ta kendisi olurdu. */
+    let kartli = null;
+    try {
+      const inc = await oku('inceleme-ai.json');
+      const dizi = Array.isArray(inc.kartlar) ? inc.kartlar : [];
+      kartli = new Set(dizi.map(k => String(k.kod || '').trim().toUpperCase()).filter(Boolean));
+    } catch (e) { raporlar.push('- ⚠ inceleme-ai.json okunamadı; bu koşuda düşüm YAPILMADI (defter korundu)'); }
+
+    /* 3) Birleştir: (eski ∪ yeni) − kartlılar */
+    const birlesikSet = new Set([...eskiKodlar, ...pencere]);
+    const yeniGelenler = pencere.filter(k => !eskiKodlar.includes(k));
+    const dusenler = kartli ? [...birlesikSet].filter(k => kartli.has(k)).sort() : [];
+    dusenler.forEach(k => { birlesikSet.delete(k); delete ilkGorulme[k]; });
+    const kodlar = [...birlesikSet].sort();
+    kodlar.forEach(k => { if (!ilkGorulme[k]) ilkGorulme[k] = bugun; });
+
+    /* 4) Borcun yaşı — en eski bekleyen kaç gündür defterde */
+    const yas = k => Math.round((new Date(bugun) - new Date(ilkGorulme[k])) / GUN);
+    const enEski = kodlar.length ? kodlar.slice().sort((a, b) => yas(b) - yas(a))[0] : null;
+
+    await yaz(dosya, { tarih: bugun, kodlar, sayi: kodlar.length, ilk_gorulme: ilkGorulme,
+      pencere_sayi: pencere.length, dusen_son: dusenler,
+      guncelleme: new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (KAP FR · kümülatif §299)' });
+
+    /* §299 NÖBETÇİ: defter yaşı denetime bağlanır. Kural UYARI üretir, işi
+       kırmızı yakmaz — kart yazmak insan işi, otomasyon onu zorlayamaz; ama
+       "20 gündür kartsız" bilgisi her koşuda rapora düşer. */
+    try {
+      const d = denetle('Bilanço borç defteri', [KURALLAR.borcYasi(kodlar, ilkGorulme, bugun)]);
+      raporlar.push(d.rapor());
+    } catch (e) { raporlar.push('- ⚠ borç defteri denetimi koşmadı: ' + String(e.message || e).slice(0, 60)); }
+
+    raporlar.push('### Bilanço tetiği (§299 kümülatif) — ✓ ' + kodlar.length + ' şirket kart bekliyor' +
+      '\n- pencere: ' + pencere.length + ' FR · yeni deftere giren: ' + yeniGelenler.length +
+      (yeniGelenler.length ? ' (' + yeniGelenler.slice(0, 10).join(', ') + (yeniGelenler.length > 10 ? ' …' : '') + ')' : '') +
+      '\n- ' + (kartli ? ('kart yazılıp düşen: ' + dusenler.length +
+        (dusenler.length ? ' (' + dusenler.slice(0, 10).join(', ') + (dusenler.length > 10 ? ' …' : '') + ')' : '')) :
+        '⚠ kart listesi okunamadı — bu koşuda düşüm yapılmadı') +
+      (enEski ? '\n- en eski borç: ' + enEski + ' · ' + yas(enEski) + ' gündür bekliyor' +
+        (yas(enEski) >= 14 ? ' ⚠' : '') : '') +
       (kodlar.length ? '\n- ' + kodlar.slice(0, 20).join(', ') + (kodlar.length > 20 ? ' …' : '') : ''));
-    degisenler.push('bilanço tetiği (' + kodlar.length + ')');
+    degisenler.push('bilanço tetiği (' + kodlar.length + ' bekliyor)');
     return kodlar.length;
   } catch (e) {
     raporlar.push('### Bilanço tetiği — ✗ ' + String(e.message || e).slice(0, 120));
     return null;
   }
 }
-
 
 /* ── ENDEKS ÜYELİKLERİ (BIST resmî CSV) — §250 ───────────────────────────
    Kaynak: borsaistanbul.com/datum/hisse_endeks_katilim_ds.csv — KAMU, auth yok

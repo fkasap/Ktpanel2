@@ -180,6 +180,35 @@ export const KURALLAR = {
       mesaj: h.length ? h.join(' · ') : 'temiz',
       detay: h.length ? 'sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi' : null };
   },
+
+  /* ── BORC DEFTERI YASI (§299): bilanco tetigi artik KUMULATIF — bir kod
+     karti yazilana kadar defterde kalir. Bu dogru davranis ama YENI BIR RISK
+     dogurur: defter sessizce SISEBILIR. Eskiden sayi her gun sifirlanip
+     yeniden doldugu icin "borc birikiyor" hic gorunmuyordu; simdi gorunur
+     ama kimse bakmazsa yine ayni yere cikar (§243: kural vardi, yaptirim
+     yoktu). Bu kural iki soru sorar:
+       1) en eski borc kac gundur bekliyor (esik 21 gun — bir bilanco sezonu)
+       2) defter anormal buyudu mu (esik 200 — BIST'te bir sezonda ~150-180
+          sirket FR yayimlar; ustu birikme degil, dusum mekanizmasinin
+          bozuldugunun isaretidir)
+     UYARI verir, KALDIRMAZ: kart yazmak insan isidir, is kirmizi yanmamali —
+     ama rapor her gun "su kadar gundur bekliyor" demeli. */
+  borcYasi(kodlar, ilkGorulme, referansTarih, maksGun = 21, maksAdet = 200) {
+    const n = Array.isArray(kodlar) ? kodlar.length : 0;
+    if (!n) return { ad: 'borc defteri (§299)', gecti: true, mesaj: 'defter bos — bekleyen kart yok' };
+    const G = ilkGorulme || {};
+    const yas = k => G[k] ? Math.round((new Date(referansTarih) - new Date(G[k])) / 864e5) : 0;
+    const sirali = kodlar.slice().sort((a, b) => yas(b) - yas(a));
+    const enEski = sirali[0], eY = yas(enEski);
+    const bekleyen = kodlar.filter(k => yas(k) >= maksGun);
+    const sisme = n > maksAdet;
+    return { ad: 'borc defteri (§299)',
+      gecti: true, uyari: (eY >= maksGun || sisme),
+      mesaj: n + ' kart bekliyor · en eski ' + enEski + ' (' + eY + 'g)',
+      detay: sisme ? ('defter ' + n + ' koda cikti (esik ' + maksAdet + ') — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?')
+        : (eY >= maksGun ? (bekleyen.length + ' kod ' + maksGun + ' gunden uzun suredir kartsiz: ' +
+            bekleyen.slice(0, 12).join(', ') + (bekleyen.length > 12 ? ' …' : '')) : null) };
+  },
 };
 
 /* Bir katmanın tüm kurallarını koştur, tek sonuç döndür. */
