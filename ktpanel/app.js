@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818a';   // §302 risk tek sahip + §298 sekme düzeni   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260818b';   // §302 risk tek sahip + §303 PPK artırım kolu + §298 sekme   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -5958,10 +5958,21 @@ const tufeGerekenAylik = (hedef)=> (Math.pow(1+hedef/100, 1/12)-1)*100;
      reel = (1+politika)/(1+beklenti) − 1
    Ex-post (geçmiş enflasyonla) hesaplamak en sık yapılan hatadır. */
 const PPK_VARSAYILAN = [
-  {tarih:'2026-09-10', p:{'-250':10,'-150':35,'-100':35,'0':20}},
-  {tarih:'2026-10-22', p:{'-250':15,'-150':35,'-100':30,'0':20}},
-  {tarih:'2026-12-10', p:{'-250':15,'-150':30,'-100':30,'0':25}}
+  {tarih:'2026-09-10', p:{'-250':10,'-150':35,'-100':35,'0':20,'+100':0,'+250':0}},
+  {tarih:'2026-10-22', p:{'-250':15,'-150':35,'-100':30,'0':20,'+100':0,'+250':0}},
+  {tarih:'2026-12-10', p:{'-250':15,'-150':30,'-100':30,'0':25,'+100':0,'+250':0}}
 ];
+/* §303 ARTIRIM KOLU: dağılım eskiden yalnız indirim/sabit kollarını içeriyordu —
+   KESİK dağılım. Kuyruk senaryosu (şok, jeopolitik, kur atağı → artırım)
+   fiyatlanamıyordu; 2023 Haziran'ı yaşamış bir masa için artırım kolu süs değil
+   disiplindir. Ex-ante reel faiz çıpası ve alfa bandı, kuyruk olmadan eksikti.
+   VARSAYILAN OLASILIK 0: kuyruğa kaç puan verileceği TAKDİRDİR ve takdir
+   kullanıcınındır — panel olasılık UYDURMAZ, yalnız kolonu açar. Matematik
+   (ppkPatika) anahtar-bağımsızdır: Number('+100')=100; beklenen değer ve sapma
+   kendiliğinden doğru çıkar (üç senaryoyla test edildi).
+   PPK_KOLLAR = kolon listesinin TEK SAHİBİ (§112) — eskiden başlık ve gövde
+   satırında ayrı ayrı gömülüydü; biri değişip öteki unutulunca tablo kayardı. */
+const PPK_KOLLAR = ['-250','-150','-100','0','+100','+250'];
 function ppkOku(){ try{ const s=JSON.parse(localStorage.getItem('ppk_olasilik_v1')||'null');
   return (Array.isArray(s)&&s.length)?s:JSON.parse(JSON.stringify(PPK_VARSAYILAN)); }
   catch(e){ return JSON.parse(JSON.stringify(PPK_VARSAYILAN)); } }
@@ -6439,14 +6450,14 @@ function tahminCiz(){
     const liste=ppkOku(), pat=ppkPatika(P.deger, liste);
     const fw=TAHMIN.egri;
     pe.innerHTML='<div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th style="width:96px">TOPLANTI</th>'+
-      ['-250','-150','-100','0'].map(k=>'<th>'+k+'bp</th>').join('')+
+      PPK_KOLLAR.map(k=>'<th>'+k+'bp</th>').join('')+
       '<th>BEKLENEN</th><th>BEL\u0130RS\u0130ZL\u0130K</th><th>FA\u0130Z</th></tr></thead><tbody>'+
       liste.map((t,i)=>'<tr><td style="font-weight:700">'+t.tarih.slice(5)+'</td>'+
-        ['-250','-150','-100','0'].map(k=>'<td style="padding:3px 4px"><input class="arzIn" data-ppk="'+i+'" data-mv="'+k+'" type="text" inputmode="decimal" value="'+(t.p[k]||0)+'" style="width:52px;text-align:right;padding:4px"></td>').join('')+
+        PPK_KOLLAR.map(k=>'<td style="padding:3px 4px"><input class="arzIn" data-ppk="'+i+'" data-mv="'+k+'" type="text" inputmode="decimal" value="'+(t.p[k]||0)+'" style="width:52px;text-align:right;padding:4px"></td>').join('')+
         '<td style="font-weight:700">'+F(pat[i].beklenenBp,0)+'bp</td>'+
         '<td style="color:var(--muted)">\u00b1'+F(pat[i].sapmaBp,0)+'bp</td>'+
         '<td style="font-weight:700;color:var(--mm2)">%'+F(pat[i].faiz,2)+'</td></tr>'+
-        (pat[i].toplam!==100?'<tr><td colspan="8" class="sub" style="color:var(--down);font-size:10px">\u26a0 '+t.tarih.slice(5)+' olas\u0131l\u0131klar\u0131 topla %'+F(pat[i].toplam,0)+' \u2014 100 olmal\u0131</td></tr>':'')
+        (pat[i].toplam!==100?'<tr><td colspan="'+(PPK_KOLLAR.length+4)+'" class="sub" style="color:var(--down);font-size:10px">\u26a0 '+t.tarih.slice(5)+' olas\u0131l\u0131klar\u0131 topla %'+F(pat[i].toplam,0)+' \u2014 100 olmal\u0131</td></tr>':'')
       ).join('')+'</tbody></table></div>'+
       (fw&&fw.forward.length ? '<div class="note" style="margin-top:9px"><b>Piyasan\u0131n ima etti\u011fi patika (s\u0131f\u0131r alfa senaryosu):</b> getiri e\u011frisinden t\u00fcretilen forward oranlar \u2014 '+
         // §131: '0.54y0.2y' okunmuyordu. Forward oranın ANLAMI "şu tarihten şu tarihe
