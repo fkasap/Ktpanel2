@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818b';   // §302 risk tek sahip + §303 PPK artırım kolu + §298 sekme   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260818c';   // §302+§303+§304: risk tek sahip · PPK artırım · DOM kazıma tasfiyesi   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -5769,17 +5769,22 @@ window.EXANTE = {deger:null, canli:false, politika:null, beklenti:null};
    HİÇBİR YOLDA NaN DÖNMEZ — hesaplanamayan alan null kalır, çağıran taraf
    Number.isFinite ile kontrol eder. (isFinite(null)===true olduğu için
    Number.isFinite kullanılır; §127'de yakalanan tuzak.) */
+/* §304 TEK SAHİP DEĞİŞKENLER: canlı makro değerlerin sahibi EVDS çekimidir;
+   çekim hem DOM'a yazar hem bu değişkenlere koyar. TÜKETİCİLER (reelFaizler,
+   taktikRender) eskiden DOM metnini regex'le GERİ KAZIYORDU — render biçimi
+   değişse hesap sessizce bozulurdu (§89 "undefined tablo" vakasının kuzeni).
+   Artık değişkenden okurlar; kabul testi: DOM metni elle bozulsa da hesaplar
+   DEĞİŞMEZ. Tanım bilinçli olarak ilk tüketiciden ÖNCE (let+TDZ güvenliği). */
+let TUFE_YILLIK=null, AOFM_SON=null, REK_SON=null;
+
 function reelFaizler(){
-  const domOku=(id)=>{ const s=$(id); if(!s) return null;
-    const m=(s.textContent||'').replace(/canlı/gi,'').match(/-?\d+[.,]?\d*/);
-    if(!m) return null; const v=parseFloat(m[0].replace(',','.'));
-    return Number.isFinite(v)?v:null; };
+  /* §304: DOM kazıma kaldırıldı — değerler tek sahipten (EVDS çekimi → değişken) */
   const fisher=(nom,enf)=> (Number.isFinite(nom)&&Number.isFinite(enf))
     ? +(((1+nom/100)/(1+enf/100)-1)*100).toFixed(2) : null;
 
   const X = (typeof window!=='undefined') ? window.EXANTE : null;
   const exante = (X && X.canli && Number.isFinite(X.deger)) ? X.deger : null;
-  const aofm = domOku('aofmLive'), tufe = domOku('tufeLive');
+  const aofm = Number.isFinite(AOFM_SON)?AOFM_SON:null, tufe = Number.isFinite(TUFE_YILLIK)?TUFE_YILLIK:null;
   const expost = fisher(aofm, tufe);
   return {exante, expost, aofm, tufe,
           politika: X?X.politika:null, beklenti: X?X.beklenti:null,
@@ -7397,9 +7402,8 @@ function taktikRender(){
     const e=new Date(b); e.setDate(e.getDate()+6);
     const AY=['OCA','ŞUB','MAR','NİS','MAY','HAZ','TEM','AĞU','EYL','EKİ','KAS','ARA'];
     tg.textContent=b.getDate()+' '+AY[b.getMonth()]+'–'+e.getDate()+' '+AY[e.getMonth()]+' · CANLI TÜRETİM'; }
-  // Canlı sinyalleri DOM'daki EVDS satırlarından oku (dolmuşsa)
-  const oku=(id)=>{const s=$(id);if(!s)return null;const t=s.textContent.replace(/[·%]/g,' ').replace(/canlı/gi,'').trim();const m=t.match(/-?\d+[.,]?\d*/);return m?parseFloat(m[0].replace(',','.')):null;};
-  const aofm=oku('aofmLive'), tufe=oku('tufeLive'), rek=oku('rekLive');
+  // §304: canlı sinyaller DOM'dan kazınmaz, tek sahibin değişkeninden okunur
+  const aofm=Number.isFinite(AOFM_SON)?AOFM_SON:null, tufe=Number.isFinite(TUFE_YILLIK)?TUFE_YILLIK:null, rek=Number.isFinite(REK_SON)?REK_SON:null;
   // §128 DÜZELTME: basit çıkarma → FISHER. §127 carry KARTINI tek sahibe bağladı
   // ama bu AYRI tüketici (duruş mantığı + tez metni) geride kalmıştı.
   // ÖLÇÜM: AOFM 40 · TÜFE 32,11 → basit 7,89 · Fisher 5,97 — 1,92 puan ŞİŞKİNLİK.
@@ -8483,7 +8487,7 @@ async function loadAOFM(){
   await Promise.all([
     koy('aofmLive','TP.APIFON4',x=>{AOFM_SON=x;return '%'+trN(x,2);}),
     koy('fonMiktar','TP.APIFON3',x=>trN(x/1000,1)+(x<0?' <span class="thin" style="font-size:9px">(net çekiş)</span>':'')),
-    koyGrup('rekLive','bie_rktufey','',x=>trN(x,1)),
+    koyGrup('rekLive','bie_rktufey','',x=>{REK_SON=x;return trN(x,1);}),
     koyGrup('rezervLive','bie_abres2','Toplam',x=>trN(x/1000,1))
   ]);
   karneRezervCanli();
@@ -8579,7 +8583,7 @@ async function loadAOFM(){
   await loadRotasyon();
 }
 /* ---- Yabancı Para Akışı canlı (EVDS) ---- */
-let TUFE_YILLIK=null, AOFM_SON=null;
+/* §304: tanım 8582'den buraya değil — aşağıya bak; bu satır taşındı */
 async function loadYabanciCanli(){
   // Haftalık net değişim: hisse (M7) + DİBS/tahvil (M8), milyon $
   try{
@@ -8775,7 +8779,11 @@ function yorumPano(){
       if(G&&$('yGeride'))$('yGeride').innerHTML='<span class="'+(G.h>=0?'':'down')+'">'+esc(G.ad)+' '+(G.h>=0?'+':'')+trN(G.h,1)+'%</span>';
     }
   }catch(e){}
-  // 3) Makro değerleri — EVDS satırlarından kopyala (zaten canlı doldurulmuş DOM'dan)
+  // 3) Makro değerleri — sahibin ÜRETTİĞİ metni aynala. §304 BİLİNÇLİ KARAR:
+  //    burada hesap YAPILMIYOR, biçimlenmiş metin kopyalanıyor; değişkenden
+  //    yeniden biçimlemek formatın İKİNCİ sahibini yaratırdı (§112'nin tersi).
+  //    Kazıma riski (regex ile sayı ayrıştırma) yalnız HESAP tüketicilerindeydi
+  //    ve §304 ile kaldırıldı — ayna kopya kalır.
   const kopyala=(src,dst)=>{const s=$(src);if(s&&$(dst)){const t=s.textContent.replace(/·\s*canlı/,'').trim();if(t&&t!=='—')$(dst).textContent=t;}};
   kopyala('aofmLive','yAOFM');
   kopyala('tufeLive','yTUFE');
