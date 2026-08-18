@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260817b';   // §298 sekme düzeni: Equity · Fix Income · PYŞ taşıma   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260818a';   // §302 risk tek sahip + §298 sekme düzeni   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -8185,22 +8185,31 @@ function riskMetRender(){
   const sekHHI=Object.values(sekAg).reduce((s,w)=>s+w*w,0);
   const sekSort=Object.entries(sekAg).sort((a,b)=>b[1]-a[1]), enBuyukSek=sekSort[0];
   const nakitOran=toplamVarlik?nakit/toplamVarlik*100:0;
-  const rHisse=hisseler.filter(p=>MRISK[p.kod.toUpperCase()]);
+  /* §302 TEK SAHİP (§112): Bu kart eskiden vol/VaR'ı KENDİ hesaplıyordu —
+     pVol = Σw·vol (korelasyonsuz toplam). riskButceHesap() aynı büyüklüğü tek
+     faktör modeliyle hesaplar ve o kodun İÇİNDE bu yönteme zaten "eski (yanlış)
+     yöntem" yazılmıştı: volNaif yalnız kıyas için tutuluyor. Aynı portföy iki
+     kartta iki farklı risk gösteriyordu; naif motor emekli edildi, iki kart
+     artık TEK motordan okur. Fark ölçüldü: naif yöntem çeşitlendirme faydasını
+     yok sayar, vol'u sistematik+idiyosinkratik ayrışımına göre 5-10 puan şişkin
+     gösterir — VaR da o şişkin voldan türediği için aynı oranda abartılıydı.
+     Bonus: motor canlı fiyat kullanır (CANLI_FIYAT→MFIYAT), eski kart pozisyon
+     giriş fiyatında (p.fiyat) kalıyordu.
+     "Sharpe (varsayımsal)" satırı kaldırıldı: (β·10)/vol — prim varsayımı
+     uydurmaydı, yerine motorun ÖLÇTÜĞÜ çeşitlendirme kazancı kondu. */
+  const h=(typeof riskButceHesap==='function')?riskButceHesap():{bos:true};
   let piyasaBolum='';
-  if(rHisse.length){
-    const rT=rHisse.reduce((s,p)=>s+p.adet*p.fiyat,0);
-    let pBeta=0,pVol=0;
-    rHisse.forEach(p=>{const kod=p.kod.toUpperCase(),w=p.adet*p.fiyat/rT,r=MRISK[kod];pBeta+=w*r.beta;pVol+=w*r.vol;});
-    const gVol=pVol/Math.sqrt(252)/100, var95g=rT*gVol*1.645, var95a=var95g*Math.sqrt(21), sharpe=pVol>0?(pBeta*10)/pVol:0;
+  if(!h.bos){
+    const gVol=h.volP/Math.sqrt(252)/100, var95g=h.riskliToplam*gVol*1.645, var95a=var95g*Math.sqrt(21);
     piyasaBolum='<div class="grid g2" style="margin-top:8px">'+
-      '<div class="card"><div class="lbl">PİYASA RİSKİ <span class="thin" style="font-weight:400">(fiyat geçmişi)</span></div>'+
-      '<div class="kv"><span class="k">Portföy betası (XKTUM)</span><span class="'+(pBeta>1.1?'down':pBeta<0.9?'up':'')+'" style="font-weight:600">'+trN(pBeta,2)+'</span></div>'+
-      '<div class="kv"><span class="k">Yıllık volatilite</span><span>%'+trN(pVol,1)+'</span></div>'+
-      '<div class="kv"><span class="k">Sharpe (varsayımsal)</span><span>'+trN(sharpe,2)+'</span></div></div>'+
+      '<div class="card"><div class="lbl">PİYASA RİSKİ <span class="thin" style="font-weight:400">(risk bütçesi motoru · tek sahip §302)</span></div>'+
+      '<div class="kv"><span class="k">Portföy betası (XKTUM)</span><span class="'+(h.betaP>1.1?'down':h.betaP<0.9?'up':'')+'" style="font-weight:600">'+trN(h.betaP,2)+'</span></div>'+
+      '<div class="kv"><span class="k">Yıllık volatilite (çeşitlendirilmiş)</span><span>%'+trN(h.volP,1)+'</span></div>'+
+      '<div class="kv"><span class="k">Çeşitlendirme kazancı</span><span class="up" title="naif toplam %'+trN(h.volNaif,1)+' − model %'+trN(h.volP,1)+'">−'+trN(h.cesitKazanc,1)+' puan</span></div></div>'+
       '<div class="card"><div class="lbl">RİSKTEKİ DEĞER (VaR %95)</div>'+
       '<div class="kv"><span class="k">Günlük VaR</span><span class="down" style="font-weight:600">'+trN(var95g,0)+' ₺</span></div>'+
       '<div class="kv"><span class="k">Aylık VaR (~21g)</span><span class="down">'+trN(var95a,0)+' ₺</span></div>'+
-      '<div class="kv"><span class="k">Kapsanan pozisyon değeri</span><span>'+trN(rT,0)+' ₺</span></div></div>'+
+      '<div class="kv"><span class="k">Kapsanan pozisyon değeri</span><span>'+trN(h.riskliToplam,0)+' ₺</span></div></div>'+
       '</div>';
   }
   $('riskMetBody').innerHTML=
