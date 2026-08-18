@@ -1666,11 +1666,41 @@ async function hmbIhale() {
     try { pdfParse = (await import('pdf-parse')).default; }
     catch (e) { raporlar.push('### Hazine ihale sonuçları (§314) — ✗ pdf-parse yüklü değil (npm ci koştu mu?): ' + String(e.message).slice(0, 60)); return; }
 
-    const sayiAl = (m, rx) => [...m.matchAll(rx)].map(x => parseFloat(x[1].replace(/\./g, '').replace(',', '.'))).filter(Number.isFinite);
+    /* SS314-V2 AYRISTIRICI (SS252n: ilk kosunun ham_ozet olcumunden):
+       PDF tablo hucreleri duzlesince iki kolon BITISIK geliyor -
+       "Ortalama Donem:3,012,87" = teklif 3,01 | gerceklesme 2,87.
+       Faiz bicimi sabit iki ondalik oldugundan ayrim deterministik.
+       Gercek defter kayitlariyla test edildi. */
+    const ciftAl = (m, etiket) => {
+      const r = new RegExp(etiket + '[^:]{0,12}:\\s*(\\d{1,2},\\d{2})(\\d{1,3},\\d{2})');
+      const x = m.match(r);
+      const f = (t) => parseFloat(t.replace(',', '.'));
+      return x ? { teklif: f(x[1]), gerceklesme: f(x[2]) } : null;
+    };
+    const tekAl = (m, rx) => { const x = m.match(rx); return x ? x[1].trim().slice(0, 60) : null; };
+    const tekIhale = (m) => ({
+      ihaleNo: tekAl(m, new RegExp('\u0130hale No:\\s*(\\d+)')),
+      isin: tekAl(m, /ISIN Kodu:\s*([A-Z0-9]{12})/),   /* ISIN sabit 12 hane - acgozlu +, 'Ortalama'nin O'sunu yutuyordu */
+      senet: tekAl(m, new RegExp('Senet Tan\u0131m\u0131:\\s*([^:]*?)(?:Ortalama|En |\u0130hra\u00e7|Vade)')),
+      donemsel: ciftAl(m, 'Ortalama D\u00f6nem'),
+      basit: ciftAl(m, 'Ortalama Y\u0131ll\u0131k Basit'),
+      bilesik: ciftAl(m, 'Ortalama Y\u0131ll\u0131k Bile\u015fik'),
+      kira: (() => { const x = m.match(/[Kk]ira[^%]{0,80}%\s*(\d{1,2},\d{2})/); return x ? parseFloat(x[1].replace(',', '.')) : null; })()
+    });
+    /* V2.1: bir duyuru BIRDEN COK ihale icerebilir (18 Agu = TUFE 4Y + sabit 9Y).
+       Metin 'Ihale No:' sinirlariyla bloklara bolunur, her blok ayri ayristirilir.
+       'Ihale No' hic yoksa (kira/dogrudan satis govdesi) tum metin tek blok. */
+    const hmbAyristir = (m) => {
+      const parcalar = m.split(new RegExp('(?=\u0130hale No:)')).filter(x => x.trim().length > 40);
+      const bloklar = (parcalar.length ? parcalar : [m]).map(tekIhale);
+      return bloklar.filter(b => b.bilesik || b.donemsel || b.kira != null || b.isin);
+    };
     const yeniler = [];
     for (const p of posts) {
       const slug = String(p.slug || '').slice(0, 80);
-      if (!slug || defter.kayitlar[slug]) continue;
+      if (!slug) continue;
+      const eskiK = defter.kayitlar[slug];
+      if (eskiK && eskiK.ihaleler && eskiK.ihaleler.length) continue;   /* V2: V1'in bos biraktiklari yeniden islenir */
       const html = (p.content && p.content.rendered) || '';
       const href = (html.match(/href="([^"]+\.pdf[^"]*)"/i) || [])[1] || null;
       const kayit = { tarih: String(p.date || '').slice(0, 10), baslik: String((p.title || {}).rendered || '').replace(/&#[0-9]+;/g, "'").slice(0, 140), ek: href };
@@ -1682,15 +1712,15 @@ async function hmbIhale() {
             kayit.dosyaAdi = href.split('/').pop().split('?')[0];
             const pd = await pdfParse(buf);
             const m = String(pd.text || '').replace(/\s+/g, ' ');
-            kayit.faizler = {
-              donemsel: sayiAl(m, /d[öo]nemsel[^%]{0,60}%\s*([\d.,]+)/gi),
-              bilesik:  sayiAl(m, /bile[şs]ik[^%]{0,60}%\s*([\d.,]+)/gi),
-              basit:    sayiAl(m, /basit[^%]{0,60}%\s*([\d.,]+)/gi),
-              kira:     sayiAl(m, /kira[^%]{0,80}%\s*([\d.,]+)/gi)
-            };
-            kayit.ham_ozet = m.slice(0, 600);   /* V1 doğrulama penceresi — regex oturunca kaldırılır */
+            kayit.ihaleler = hmbAyristir(m);
+            kayit.ham_ozet = m.slice(0, 400);   /* V2 izleme penceresi - bir tur daha */
           } else kayit.pdf_hata = 'HTTP ' + pr.status;
         } catch (e) { kayit.pdf_hata = String(e.message || e).slice(0, 60); }
+      } else {
+        /* V2: PDF'siz duyuru (kira sertifikasi / dogrudan satis) - icerik govdede */
+        const govde = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+        if (govde.length > 60) { kayit.ihaleler = hmbAyristir(govde); kayit.ham_ozet = govde.slice(0, 400); }
+        else kayit.pdf_hata = 'ek yok, govde kisa (' + govde.length + ')';
       }
       defter.kayitlar[slug] = kayit;
       yeniler.push(kayit);
@@ -1699,8 +1729,13 @@ async function hmbIhale() {
     defter.sayi = Object.keys(defter.kayitlar).length;
     await yaz(dosya, defter);
     if (yeniler.length) degisenler.push('hazine ihale sonuçları (+' + yeniler.length + ')');
-    const oz = yeniler.map(k => '- ' + k.tarih + ' · ' + k.baslik.slice(0, 70) +
-      (k.faizler ? ('\n  - faizler → dönemsel:' + JSON.stringify(k.faizler.donemsel) + ' bileşik:' + JSON.stringify(k.faizler.bilesik) + ' kira:' + JSON.stringify(k.faizler.kira)) : (k.pdf_hata ? '\n  - ⚠ PDF: ' + k.pdf_hata : ''))).join('\n');
+    const oz = yeniler.map(k => {
+      const cf = (x) => x ? (x.gerceklesme + ' (teklif ' + x.teklif + ')') : '-';
+      const sat = (k.ihaleler || []).map(A =>
+        '\n  - ' + (A.senet || '?') + ' → bilesik %' + cf(A.bilesik) + ' · donemsel %' + cf(A.donemsel) +
+        (A.kira != null ? ' · kira %' + A.kira : '') + (A.isin ? ' · ' + A.isin : '')).join('');
+      return '- ' + k.tarih + ' · ' + k.baslik.slice(0, 60) + (sat || (k.pdf_hata ? '\n  - ! ' + k.pdf_hata : ''));
+    }).join('\n');
     raporlar.push('### Hazine ihale sonuçları (§314) — ✓ defter ' + defter.sayi + ' duyuru · yeni ' + yeniler.length + (oz ? '\n' + oz : '\n- yeni duyuru yok'));
   } catch (e) { raporlar.push('### Hazine ihale sonuçları (§314) — ✗ ' + String(e.message || e).slice(0, 100)); }
 }
