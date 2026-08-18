@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818c';   // §302+§303+§304: risk tek sahip · PPK artırım · DOM kazıma tasfiyesi   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260818d';   // §302-304 + §310 paralel boot   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
@@ -7239,10 +7239,33 @@ async function boot(){
     ['Pozisyon fiyatları', ()=>setTimeout(pozFiyatOto,5000)],
     ['Kripto', ()=>setTimeout(kriptoRender,1500)]
   ];
-  for(const [ad,fn] of moduller){
-    try{ await fn(); }
-    catch(e){ console.error('[KTPanel] '+ad+' başlatılamadı:', (e&&e.message)||e); }
+  /* §310 PARALEL BOOT — ölçülerek tasarlandı:
+     17 fetch'li modül seri await'le koşuyordu; toplam gecikme = SÜRELERİN
+     TOPLAMI. Bağımlılık haritası çıkarıldı (grep MFIYAT/MRISK/CANLI_FIYAT):
+     yalnız pyInit ve planInit, multipleInit'in doldurduğu MFIYAT/MRISK'i
+     tüketiyor — geri kalan herkes kendi verisini çekip kendi DOM'una yazıyor.
+     TASARIM: iki aşama. 1. aşama (bağımsızlar) paralel; 2. aşama (Equity,
+     Veri Tazeliği) 1. aşama bitince paralel. Hata izolasyonu aynen korunur:
+     allSettled + modül başına log — bir modülün düşmesi diğerini durdurmaz
+     (eski davranışla birebir).
+     GERİ DÖNÜŞ ANAHTARI: localStorage 'ktp_boot_seri_v1'='1' → eski seri yol.
+     Paralellik bir gariplik doğurursa tarayıcı konsolundan
+     localStorage.setItem('ktp_boot_seri_v1','1') deyip yenilemek yeter —
+     deploy'suz teşhis (§136.4: kalkan değil, ANAHTAR). */
+  const IKINCI_ASAMA = new Set(['Equity','Veri Tazeliği']);
+  const bootT0 = (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now();
+  const seriBoot = (()=>{ try{ return localStorage.getItem('ktp_boot_seri_v1')==='1'; }catch(e){ return false; } })();
+  const kos = async ([ad,fn])=>{ try{ await fn(); }
+    catch(e){ console.error('[KTPanel] '+ad+' başlatılamadı:', (e&&e.message)||e); } };
+  if(seriBoot){
+    console.warn('[KTPanel] §310: seri boot anahtarı AÇIK — paralellik devre dışı');
+    for(const m of moduller) await kos(m);
+  }else{
+    await Promise.allSettled(moduller.filter(m=>!IKINCI_ASAMA.has(m[0])).map(kos));
+    await Promise.allSettled(moduller.filter(m=> IKINCI_ASAMA.has(m[0])).map(kos));
   }
+  const bootT1 = (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now();
+  console.log('[KTPanel] boot '+Math.round(bootT1-bootT0)+' ms ('+(seriBoot?'seri':'paralel §310')+')');
   /* Sağlık kontrolü: hangi bölüm boş kaldı?
      §245 İKİ AYRI ARIZA, İKİ AYRI RAPOR. Eski kod `if(!el) return false` diyordu:
      kap HİÇ YOKSA "sorun yok" sayılıyordu. Oysa kabın SİLİNMESİ, kabın boş
