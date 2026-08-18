@@ -1550,6 +1550,35 @@ async function bultenKesif() {
       }
       raporlar.push('### Bülten keşfi (§250k) — ✓ ' + ad + ' indi · ' + (b.length / 1024).toFixed(0) + 'KB' +
         '\n- içerik: ' + ic.join(', ').slice(0, 200) + (ipucu ? '\n- endeks izi: `' + ipucu.replace(/`/g, '') + '`' : '\n- endeks izi: ilk 12 dosyada bulunamadı'));
+
+      /* §305 FİYAT KEŞFİ — TEK KOŞULUK ÖLÇÜM, DOSYA YAZMAZ.
+         AMAÇ: Yahoo donması (18 Ağu: beş katman 14 Ağu'da kaldı, §300/§301)
+         BIST resmî bülteninden fiyat YEDEĞİ kurma fikrini doğurdu. Ama bülten
+         CSV'sinde kapanış kolonu VAR MI bilmiyoruz — §250k izi başlığın yalnız
+         ilk 200 karakterini basıyordu, fiyat kolonları kesilmiş olabilir.
+         TAHMİN YOK: bu blok tam başlığı, kolon adaylarını ve THYAO örnek
+         satırını rapora basar; yedek katmanın tasarımı BU ÇIKTIYA göre yapılır.
+         Ölçüm bitince (yedek yazılınca) bu blok sadeleştirilebilir. */
+      try {
+        for (const f of ic.slice(0, 12)) {
+          if (!/\.csv$/i.test(f)) continue;
+          const ham2 = await fsp4.readFile(path.join(dz, f));
+          const bom2 = ham2.length > 1 && ham2[0] === 0xFF && ham2[1] === 0xFE;
+          const metin = new TextDecoder(bom2 ? 'utf-16le' : 'iso-8859-9').decode(ham2);
+          const satirlar = metin.split(/\r?\n/).filter(x => x.trim());
+          if (satirlar.length < 2) continue;
+          const baslik = satirlar[0];
+          const kolonlar = baslik.split(';').map(x => x.trim());
+          const fiyatAday = kolonlar.filter(k => /KAPAN|CLOS|AOF|A\u011eIRLIKLI|AGIRLIKLI|ORTALAMA|FIYAT|PRICE|DUSUK|D\u00dc\u015e\u00dcK|YUKSEK|Y\u00dcKSEK/i.test(k));
+          const ornek = satirlar.find(x => /THYAO/i.test(x)) || satirlar.find(x => /TUPRS|ASELS/i.test(x)) || null;
+          raporlar.push('### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — ' + f +
+            '\n- satır: ' + satirlar.length + ' · kolon: ' + kolonlar.length +
+            '\n- TAM BAŞLIK: `' + baslik.replace(/`/g, '').slice(0, 600) + '`' +
+            '\n- fiyat kolon adayları: ' + (fiyatAday.length ? fiyatAday.join(' · ') : 'BULUNAMADI — bu dosya fiyat taşımıyor olabilir') +
+            (ornek ? '\n- örnek satır: `' + ornek.replace(/`/g, '').slice(0, 400) + '`' : '\n- THYAO/TUPRS/ASELS satırı yok'));
+          break;
+        }
+      } catch (e) { raporlar.push('- ⚠ §305 fiyat keşfi koşamadı: ' + String(e.message || e).slice(0, 60)); }
       return;
       }
     }
