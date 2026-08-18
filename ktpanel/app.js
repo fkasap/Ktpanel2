@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818e';   // §302-304 + §310 + §311 küresel fetch zaman aşımı
+const KTP_SURUM = '20260818f';   // §311 fetch tavanı + §312 yavaş modül logu + §313 lwc eve alındı
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -5548,7 +5548,11 @@ function tkKutuphane(){
   if(TK.yukleniyor) return TK.yukleniyor;
   TK.yukleniyor = new Promise(coz=>{
     const s = document.createElement('script');
-    s.src = 'https://unpkg.com/lightweight-charts@5.2.0/dist/lightweight-charts.standalone.production.js';
+    /* §313: kütüphane unpkg CDN'inden EVE alındı (/lib/). Gerekçe: üçüncü taraf
+       CDN tek hata noktasıydı (Yahoo dersinin kardeşi) ve Edge Tracking
+       Prevention her açılışta 4 uyarı basıyordu. Dosya npm'den birebir indirildi
+       (lightweight-charts@5.2.0, 196KB), kendi alan adından sunulur. */
+    s.src = '/lib/lightweight-charts.standalone.production.js?v=520';
     s.onload = ()=>coz(true);
     s.onerror = ()=>coz(false);
     document.head.appendChild(s);
@@ -7282,8 +7286,14 @@ async function boot(){
   const IKINCI_ASAMA = new Set(['Equity','Veri Tazeliği']);
   const bootT0 = (typeof performance!=='undefined'&&performance.now)?performance.now():Date.now();
   const seriBoot = (()=>{ try{ return localStorage.getItem('ktp_boot_seri_v1')==='1'; }catch(e){ return false; } })();
-  const kos = async ([ad,fn])=>{ try{ await fn(); }
-    catch(e){ console.error('[KTPanel] '+ad+' başlatılamadı:', (e&&e.message)||e); } };
+  /* §312: modül başına süre — 18 Ağu'da boot bir açılışta 12,5 sn sürdü ve
+     HANGİ modülün süründüğü görülemedi. 2,5 sn'yi aşan modüller artık konsola
+     yazılır; toplam satırıyla birlikte yavaşlık teşhisi tek bakışta yapılır. */
+  const kos = async ([ad,fn])=>{ const t0=(typeof performance!=='undefined'&&performance.now)?performance.now():Date.now();
+    try{ await fn(); }
+    catch(e){ console.error('[KTPanel] '+ad+' başlatılamadı:', (e&&e.message)||e); }
+    finally{ const ms=Math.round(((typeof performance!=='undefined'&&performance.now)?performance.now():Date.now())-t0);
+      if(ms>2500) console.warn('[KTPanel] §312 yavaş modül: '+ad+' '+ms+' ms'); } };
   if(seriBoot){
     console.warn('[KTPanel] §310: seri boot anahtarı AÇIK — paralellik devre dışı');
     for(const m of moduller) await kos(m);
