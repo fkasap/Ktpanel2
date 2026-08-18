@@ -1734,19 +1734,31 @@ async function hmbIhale() {
             const pd = await pdfParse(buf);
             const m = String(pd.text || '').replace(/\s+/g, ' ');
             kayit.ihaleler = hmbAyristir(m);
-            kayit.ham_ozet = m.slice(0, 400);   /* V2 izleme penceresi - bir tur daha */
+            /* SS314 MUHUR (18 Agu): ham_ozet penceresi kapatildi. Gorevini yapti -
+               V1 bos donusunu, tablo bitisikligini, cok-ihale yapisini ve duzyazi
+               sablonunu O gosterdi (uc surum onun olcumunden dogdu). Defter tam
+               (10 duyuru / 15 blok / bos YOK) oldugu kosuda muhurlendi. Yeni bir
+               sablon turerse ayristirma bos doner ve rapor soyler - o gun pencere
+               GECICI olarak yeniden acilir. */
           } else kayit.pdf_hata = 'HTTP ' + pr.status;
         } catch (e) { kayit.pdf_hata = String(e.message || e).slice(0, 60); }
       } else {
         /* V2: PDF'siz duyuru (kira sertifikasi / dogrudan satis) - icerik govdede */
         const govde = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
-        if (govde.length > 60) { kayit.ihaleler = hmbAyristir(govde); kayit.ham_ozet = govde.slice(0, 400); }
+        if (govde.length > 60) { kayit.ihaleler = hmbAyristir(govde); }
         else kayit.pdf_hata = 'ek yok, govde kisa (' + govde.length + ')';
       }
       defter.kayitlar[slug] = kayit;
       yeniler.push(kayit);
     }
-    defter.guncelleme = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (§314 HMB WP-API + PDF)';
+    /* muhur temizligi (tek seferlik calisir, sonra 0): dolu kayitlardaki eski
+       ham_ozet'ler silinir - dogrulama bitti, defter kucultulur */
+    let temiz = 0;
+    for (const k of Object.values(defter.kayitlar)) {
+      if (k.ham_ozet && k.ihaleler && k.ihaleler.length) { delete k.ham_ozet; temiz++; }
+    }
+    if (temiz) degisenler.push('hazine defteri muhurlendi (' + temiz + ' ham temizlendi)');
+    defter.guncelleme = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)';
     defter.sayi = Object.keys(defter.kayitlar).length;
     await yaz(dosya, defter);
     if (yeniler.length) degisenler.push('hazine ihale sonuçları (+' + yeniler.length + ')');
