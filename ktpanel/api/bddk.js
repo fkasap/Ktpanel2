@@ -17,9 +17,37 @@ function bddkIstek(yol, govde, ekBaslik){
     if(govde) opt.headers['Content-Length'] = Buffer.byteLength(govde);
     const r = https.request(opt, (s)=>{
       try{
-        const c = s.socket && s.socket.getPeerCertificate ? s.socket.getPeerCertificate() : null;
+        const c = s.socket && s.socket.getPeerCertificate ? s.socket.getPeerCertificate(true) : null;
         const ad = ((c&&c.subject&&c.subject.CN)||'') + ' ' + ((c&&c.subjectaltname)||'');
         if(!/bddk\.org\.tr/i.test(ad)){ s.destroy(); return red(new Error('Sertifika alan adı eşleşmedi: '+ad.slice(0,80))); }
+        /* §309 TLS SERTLEŞTİRME — üç katman:
+           1) KENDİNDEN İMZALI RED: subject==issuer olan sertifikada alan adını
+              saldırgan yazar; eski kontrol bunu GEÇİRİYORDU. Artık geçmez.
+           2) GEÇERLİLİK PENCERESİ: süresi dolmuş/başlamamış sertifika red.
+           3) PARMAK İZİ: BDDK_PIN doluysa sha256 eşleşmeyen bağlantı red.
+              Pin ŞU AN BOŞ çünkü gerçek parmak izi buradan ölçülemedi ve
+              TAHMİNLE PİN YAZILMAZ — her yanıt _tls alanında parmak izini
+              taşır; canlıdan bir kez okunup aşağıya yazıldığında pin devreye
+              girer (ölç → pinle, §252n). Sertifika yenilenirse pin bilerek
+              kırılır: sessiz devam etmektense gürültülü durmak yeğdir. */
+        const BDDK_PIN = '';   /* örn 'AB:CD:...' — canlı ölçümden sonra doldurulacak */
+        const issCN = (c&&c.issuer&&c.issuer.CN)||'';
+        const subCN = (c&&c.subject&&c.subject.CN)||'';
+        if(issCN && subCN && issCN===subCN && !(c&&c.issuerCertificate&&c.issuerCertificate!==c)){
+          s.destroy(); return red(new Error('Kendinden imzalı sertifika: '+subCN.slice(0,60)));
+        }
+        const simdi = Date.now();
+        if(c&&c.valid_from&&c.valid_to){
+          const v1=Date.parse(c.valid_from), v2=Date.parse(c.valid_to);
+          if(isFinite(v1)&&isFinite(v2)&&(simdi<v1||simdi>v2)){
+            s.destroy(); return red(new Error('Sertifika geçerlilik dışı: '+c.valid_from+' → '+c.valid_to));
+          }
+        }
+        const fp = (c&&(c.fingerprint256||c.fingerprint))||'';
+        if(BDDK_PIN && fp && fp.toUpperCase()!==BDDK_PIN.toUpperCase()){
+          s.destroy(); return red(new Error('TLS PIN UYUŞMADI — beklenen '+BDDK_PIN.slice(0,20)+'… gelen '+fp.slice(0,20)+'…'));
+        }
+        SON_TESHIS = Object.assign(SON_TESHIS||{}, { tls:{ fp, cn:subCN, veren:issCN, bitis:(c&&c.valid_to)||null, pin: BDDK_PIN?'AKTİF':'ölçüm modu' } });
       }catch(e){ return red(new Error('Sertifika okunamadı: '+e.message)); }
       let veri=''; s.setEncoding('utf8');
       s.on('data', d=>veri+=d);
@@ -62,7 +90,7 @@ module.exports = async (req, res) => {
       'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
       'Accept':'application/json, text/javascript, */*; q=0.01',
       'Referer':'https://www.bddk.org.tr/BultenAylik/tr/', 'Origin':'https://www.bddk.org.tr' });
-    SON_TESHIS = { durum:y.durum, ctype:y.ctype, uzunluk:(y.metin||'').length, ilk300:(y.metin||'').slice(0,300) };
+    SON_TESHIS = Object.assign(SON_TESHIS||{}, { durum:y.durum, ctype:y.ctype, uzunluk:(y.metin||'').length, ilk300:(y.metin||'').slice(0,300) });   /* §309: tls alanını EZME, birleştir */
     if(y.durum!==200) throw new Error('BDDK HTTP '+y.durum);
     let j=null; try{ j=JSON.parse(y.metin); }catch(e){ throw new Error('JSON değil (ilk 80: '+String(y.metin).slice(0,80).replace(/\s+/g,' ')+')'); }
     const rows = j && j.Json && j.Json.data && j.Json.data.rows;
