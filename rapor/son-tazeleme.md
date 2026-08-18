@@ -6,26 +6,36 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
+- ⚠ **fiyat yasi (XK100 ağırlıkları)**: 2026-08-14 — bugunden 2 IS GUNU geride
+  - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
+- ⚠ **fiyat yasi (XKTUM ağırlıkları)**: 2026-08-14 — bugunden 2 IS GUNU geride
+  - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **toplam**: 96.50 (hedef 96.5 ±3)
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 39/39 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
+- ⚠ **fiyat yasi (XKTMT ağırlıkları)**: 2026-08-14 — bugunden 2 IS GUNU geride
+  - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
+- ⚠ **fiyat yasi (Multiple fiyatları)**: 2026-08-14 — bugunden 2 IS GUNU geride
+  - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-14
+- ⚠ **fiyat yasi (Model sicili)**: 2026-08-14 — bugunden 2 IS GUNU geride
+  - kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
 ### Model sicili serisi (§291) — ✓ 2026-08-14 · model %1 / endeks %6.312
@@ -41,29 +51,38 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
-### TEFAS genel bilgi (§253i) — ⏭ boş döndü
-- Playwright yedeği devrede.
+### TEFAS genel bilgi (§253i) — ✓ 1957 fon · AUM + yatırımcı sayısı köprüden (ham 2032 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1052 fon ✓ · liste: 1043 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### TEFAS çekim tanısı (bilgi)
-- yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008466136173> [Go Back]`
+### Fon akışı — ℹ 945 fonun kurucusu fon adından türetildi (§279; mod=liste 1043 kayıt kapsıyordu, evren 1957)
 
-### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
+### Fon akışı (§263) — ✓ 1957 fon · 2026-08-17 → 2026-08-18
+- giriş 56.97 mlr ₺ · çıkış -84.67 mlr ₺ · net -27.71 mlr ₺
+
+### TEFAS çekim tanısı (bilgi)
+- yol: vercel-köprüsü (1957 fon fiyat + 1052 getiri)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008567856248> [Go Back]`
+
+### Katılım fonları — ✓ GEÇTİ
+- ✓ **kapsam**: 46/46 (%100)
+- ✓ **aykırı değer**: temiz (sınır ±%2)
+- ✓ **dönem tutarlılığı**: temiz
+
+### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
 - ⚠ **seri guncelligi (track.series)**: 2026-08-17 (referans 2026-08-14 — seri referanstan 3g ILERIDE)
   - seri kesik DEGIL; REFERANS DOSYA GERILEMIS — fiyat kaynagi eski gun dondurmus olabilir (§300 geri gitme korumasi rapora bakiniz)
-- ✓ **seri guncelligi (fon-akis)**: 2026-08-17 (referans 2026-08-18, fark 1g)
+- ✓ **seri guncelligi (fon-akis)**: 2026-08-18 (referans 2026-08-18, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ✓ **borc defteri (§299)**: 65 kart bekliyor · en eski AKHAN (0g)
+- ✓ **borc defteri (§299)**: 68 kart bekliyor · en eski AKHAN (0g)
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 65 şirket kart bekliyor
-- pencere: 65 FR · yeni deftere giren: 0
+### Bilanço tetiği (§299 kümülatif) — ✓ 68 şirket kart bekliyor
+- pencere: 68 FR · yeni deftere giren: 3 (MEGMT, MNDTR, SNGYO)
 - kart yazılıp düşen: 0
 - en eski borç: AKHAN · 0 gündür bekliyor
 - AKHAN, AKYHO, ASTOR, BAGFS, BIMAS, BINHO, BIZIM, BVSAN, CVKMD, DMRGD, ENTRA, ERCB, EUPWR, EYGYO, FONET, FZLGY, GEDIK, GEDZA, GESAN, GOLTS …
@@ -84,4 +103,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (65 bekliyor) · endeks üyelikleri · endeks arşivi
+**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · fon akışı (1957) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi

@@ -35,7 +35,9 @@
   "LKMNH",
   "LYDHO",
   "MASFN",
+  "MEGMT",
   "MEYSU",
+  "MNDTR",
   "MOBTL",
   "NUHCM",
   "OBASE",
@@ -54,6 +56,7 @@
   "SERNT",
   "SKTAS",
   "SMART",
+  "SNGYO",
   "SOKM",
   "SRVGY",
   "SUNTK",
@@ -67,7 +70,7 @@
   "VESTL",
   "YEOTK"
  ],
- "sayi": 65,
+ "sayi": 68,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -133,9 +136,12 @@
   "VAKKO": "2026-08-18",
   "VBTYZ": "2026-08-18",
   "VESTL": "2026-08-18",
-  "YEOTK": "2026-08-18"
+  "YEOTK": "2026-08-18",
+  "MEGMT": "2026-08-18",
+  "MNDTR": "2026-08-18",
+  "SNGYO": "2026-08-18"
  },
- "pencere_sayi": 65,
+ "pencere_sayi": 68,
  "dusen_son": [],
- "guncelleme": "2026-08-18 04:40 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-18 06:21 UTC — otomatik (KAP FR · kümülatif §299)"
 }
