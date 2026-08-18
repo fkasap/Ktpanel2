@@ -51,19 +51,19 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
-### TEFAS genel bilgi (§253i) — ✓ 1957 fon · AUM + yatırımcı sayısı köprüden (ham 2032 kayıt, sayfalamalı)
+### TEFAS genel bilgi (§253i) — ✓ 1981 fon · AUM + yatırımcı sayısı köprüden (ham 2032 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
-- getiri: 1052 fon ✓ · liste: 1043 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
+- getiri: 1054 fon ✓ · liste: 1045 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### Fon akışı — ℹ 945 fonun kurucusu fon adından türetildi (§279; mod=liste 1043 kayıt kapsıyordu, evren 1957)
+### Fon akışı — ℹ 960 fonun kurucusu fon adından türetildi (§279; mod=liste 1045 kayıt kapsıyordu, evren 1981)
 
-### Fon akışı (§263) — ✓ 1957 fon · 2026-08-17 → 2026-08-18
-- giriş 56.97 mlr ₺ · çıkış -84.67 mlr ₺ · net -27.71 mlr ₺
+### Fon akışı (§263) — ✓ 1981 fon · 2026-08-17 → 2026-08-18
+- giriş 56.98 mlr ₺ · çıkış -85.07 mlr ₺ · net -28.09 mlr ₺
 
 ### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (1957 fon fiyat + 1052 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008567856248> [Go Back]`
+- yol: vercel-köprüsü (1981 fon fiyat + 1054 getiri)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008692122570> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -82,7 +82,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **borc defteri (§299)**: 68 kart bekliyor · en eski AKHAN (0g)
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 68 şirket kart bekliyor
-- pencere: 68 FR · yeni deftere giren: 3 (MEGMT, MNDTR, SNGYO)
+- pencere: 68 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AKHAN · 0 gündür bekliyor
 - AKHAN, AKYHO, ASTOR, BAGFS, BIMAS, BINHO, BIZIM, BVSAN, CVKMD, DMRGD, ENTRA, ERCB, EUPWR, EYGYO, FONET, FZLGY, GEDIK, GEDZA, GESAN, GOLTS …
@@ -101,6 +101,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - içerik: thb202608171.csv
 - endeks izi: `thb202608171.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
 
+### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202608171.csv
+- satır: 11161 · kolon: 57
+- TAM BAŞLIK: `TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZSERMAYE HALI;GECICI DURDURMA;ONCEKI KAPANIS FIYATI;ACILIS FIYATI;ACILIS SEANSI FIYATI;EN DUSUK FIYAT;EN YUKSEK FIYAT;KAPANIS FIYATI;KAPANIS SEANSI FIYATI;DEGISIM (%);BEKLEYEN EN IYI ALIS;BEKLEYEN EN IYI SATIS;A.O.F;TOPLAM ISLEM HACMI;TOPLAM ISLEM ADEDI;TOPLAM SOZLESME SAYISI;REFERANS FIYAT;ACILIS SEANSI ISLEM HACMI;ACILIS SEANSI ISLEM MIKTARI;ACILIS SEANSI SOZLESME SAYISI;KAPANIS SEANSI ISLEM HACMI`
+- fiyat kolon adayları: ONCEKI KAPANIS FIYATI · ACILIS FIYATI · ACILIS SEANSI FIYATI · EN DUSUK FIYAT · EN YUKSEK FIYAT · KAPANIS FIYATI · KAPANIS SEANSI FIYATI · REFERANS FIYAT · KAPANIS SEANSI ISLEM HACMI · KAPANIS SEANSI ISLEM MIKTARI · KAPANIS SEANSI SOZLESME SAYISI · KAPANIS FIYATINDAN ISLEMLER ISLEM HACMI · KAPANIS FIYATINDAN ISLEMLER ISLEM MIKTARI · KAPANIS FIYATINDAN ISLEMLER SOZLESME SAYISI · EN DUSUK ACIGA SATIS FIYATI · EN YUKSEK ACIGA SATIS FIYATI · OZEL ISLEM BILDIRIMI EN DUSUK FIYAT · OZEL ISLEM BILDIRIMI EN YUKSEK FIYAT
+- örnek satır: `2026-08-17;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
+
 
 ---
-**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · fon akışı (1957) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi
+**Sonuç:** sicil serisi · TR 5Y CDS (218.68 bp) · fon akışı (1981) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi
