@@ -38,7 +38,34 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818d';   // §302-304 + §310 paralel boot   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
+const KTP_SURUM = '20260818e';   // §302-304 + §310 + §311 küresel fetch zaman aşımı
+
+/* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
+   Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
+   Kod suçsuzdu: catch/else dalları yer tutucuyu güncelliyordu — ama fetch
+   ZAMAN AŞIMSIZ beklediği için istek askıda kalınca HİÇBİR dal koşmadı.
+   ENVANTER: app.js'te 102 await fetch, SIFIR AbortSignal — aynı asılı kalma
+   her kartın başına gelebilirdi; Asya yalnız görünen ucuydu.
+   ÇÖZÜM (tek sahip, §112): 102 noktayı elle düzeltmek yerine fetch bir kez
+   sarılır. Kendi signal'ını getiren istek AYNEN geçer; getirmeyene 25 sn
+   üst sınır takılır. Süre dolunca TimeoutError fırlar → mevcut catch'ler
+   "alınamadı" basar. 25 sn bilinçli geniş: Vercel fonksiyon tavanlarının
+   üstü — normalde hiç devreye girmez, yalnız gerçek askıda tetiklenir.
+   ajan.js de kapsamda: bu dosya ondan ÖNCE yüklendiği için sarım sayfadaki
+   tüm fetch'lere (Ebu'nun 20 çağrısı dahil) uygulanır.
+   Tarayıcı AbortSignal.timeout desteklemiyorsa sarım sessizce devre dışı
+   kalır — davranış bugünküyle aynı olur, asla daha kötü olmaz. */
+(function(){
+  try{
+    if(typeof AbortSignal==='undefined' || !AbortSignal.timeout) return;
+    const ozgun = window.fetch.bind(window);
+    window.fetch = function(kaynak, secenek){
+      secenek = secenek || {};
+      if(!secenek.signal){ try{ secenek.signal = AbortSignal.timeout(25000); }catch(e){} }
+      return ozgun(kaynak, secenek);
+    };
+  }catch(e){}
+})();   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
 const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
