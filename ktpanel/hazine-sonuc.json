@@ -166,14 +166,34 @@
    "tarih": "2026-08-10",
    "baslik": "10 Ağustos 2026 Tarihinde Gerçekleştirilen 2 Yıl Vadeli TLREFK’ye Endeksli Kira Sertifikası İhraç Sonucuna İlişkin Basın Duyurusu",
    "ek": null,
-   "ihaleler": [],
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "TLREFK’ye endeksli kira sertifikası",
+     "isin": "TRD090828T17",
+     "tutar": 66589500000,
+     "doviz": "TL",
+     "valor": "12 Ağustos 2026",
+     "itfa": "9 Ağustos 2028"
+    }
+   ],
    "ham_ozet": "Bakanlığımızca, 10 Ağustos 2026 tarihinde, 66.589.500.000,00 TL tutarında 12 Ağustos 2026 valörlü, 9 Ağustos 2028 itfa tarihli ve TRD090828T17 ISIN kodlu TLREFK’ye endeksli kira sertifikası ihracı gerçekleştirilmiştir. Kira sertifikası almaya hak kazanan banka veya kamu kurum ve kuruluşlarına, satış tutarları bilgisi 10 Ağustos 2026 Pazartesi günü İHS (T.C. Merkez Bankası Ödeme Sistemleri İhale Si"
   },
   "21-temmuz-2026-tarihinde-kurumsal-yatirimcilara-gerceklestirilen-abd-dolari-cins": {
    "tarih": "2026-07-21",
    "baslik": "21 Temmuz 2026 Tarihinde Kurumsal Yatırımcılara Gerçekleştirilen ABD Doları Cinsi Sabit Kuponlu Devlet İç Borçlanma Senedi (DİBS) ile ABD Do",
    "ek": null,
-   "ihaleler": [],
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "ABD doları cinsi Devlet tahvili",
+     "isin": "TRT190728F14",
+     "tutar": 3917423000,
+     "doviz": "USD",
+     "valor": "22 Temmuz 2026",
+     "itfa": "19 Temmuz 2028"
+    }
+   ],
    "ham_ozet": "Bakanlığımızca 21 Temmuz 2026 tarihinde, 22 Temmuz 2026 valörlü, 19 Temmuz 2028 itfa tarihli TRT190728F14 ISIN kodlu ABD doları cinsi Devlet tahvili ile TRD190728F12 ISIN kodlu kira sertifikası ihracına toplam 3.938.424.000,00 ABD doları tutarında teklif gelmiştir. Söz konusu tekliflerin tamamı karşılanarak 3.917.423.000,00 ABD doları tutarında ABD doları cinsi Devlet tahvili ve 21.001.000,00 ABD "
   },
   "21-temmuz-2026-tarihinde-gerceklestirilen-ihalelerin-sonuclarina-iliskin-basin-d": {
@@ -225,7 +245,17 @@
    "tarih": "2026-07-20",
    "baslik": "20 Temmuz 2026 Tarihinde Gerçekleştirilen 2 Yıl Vadeli Sabit Getirili Kira Sertifikası İhraç Sonucuna İlişkin Basın Duyurusu",
    "ek": null,
-   "ihaleler": [],
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "sabit kira getirili kira sertifikası",
+     "isin": "TRD190728T16",
+     "tutar": 19851540000,
+     "doviz": "TL",
+     "valor": "22 Temmuz 2026",
+     "itfa": "19 Temmuz 2028"
+    }
+   ],
    "ham_ozet": "Bakanlığımızca, 20 Temmuz 2026 tarihinde, 19.851.540.000,00 TL tutarında 22 Temmuz 2026 valörlü, 19 Temmuz 2028 itfa tarihli ve TRD190728T16 ISIN kodlu sabit kira getirili kira sertifikası ihracı gerçekleştirilmiştir. Kira sertifikası almaya hak kazanan banka veya kamu kurum ve kuruluşlarına, satış tutarları bilgisi 20 Temmuz 2026 Pazartesi günü İHS (T.C. Merkez Bankası Ödeme Sistemleri İhale Sist"
   },
   "7-temmuz-2026-tarihinde-gerceklestirilen-ihalelerin-sonuclarina-iliskin-basin-du": {
@@ -277,10 +307,20 @@
    "tarih": "2026-06-16",
    "baslik": "16 Haziran 2026 Tarihinde Gerçekleştirilen 1 Yıl Vadeli TLREFK’ye Endeksli Kira Sertifikası İhraç Sonucuna İlişkin Basın Duyurusu",
    "ek": null,
-   "ihaleler": [],
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "TLREFK’ye endeksli kira sertifikası",
+     "isin": "TRD160627T37",
+     "tutar": 13424000000,
+     "doviz": "TL",
+     "valor": "17 Haziran 2026",
+     "itfa": "16 Haziran 2027"
+    }
+   ],
    "ham_ozet": "Bakanlığımızca, 16 Haziran 2026 tarihinde, 13.424.000.000,00 TL tutarında 17 Haziran 2026 valörlü, 16 Haziran 2027 itfa tarihli ve TRD160627T37 ISIN kodlu TLREFK’ye endeksli kira sertifikası ihracı gerçekleştirilmiştir. Kira sertifikası almaya hak kazanan banka veya kamu kurum ve kuruluşlarına, satış tutarları bilgisi 16 Haziran 2026 Salı günü İHS (T.C. Merkez Bankası Ödeme Sistemleri İhale Sistem"
   }
  },
- "guncelleme": "2026-08-18 21:55 UTC — otomatik (§314 HMB WP-API + PDF)",
+ "guncelleme": "2026-08-18 22:12 UTC — otomatik (§314 HMB WP-API + PDF)",
  "sayi": 10
 }
