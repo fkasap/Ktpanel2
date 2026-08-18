@@ -1635,44 +1635,74 @@ async function cdsTazele() {
     raporlar.push('### TR 5Y CDS — ⏭ ATLANDI\n- ' + String(e && e.message || e).slice(0, 90) + '\n- cds.json YAZILMADI.');
   }
 }
-/* ── §314A HMB İHALE SONUÇLARI KEŞFİ — TEK KOŞULUK SONDA, DOSYA YAZMAZ ──────
-   HEDEF (kullanıcı onayı 18 Ağu): ihale GERÇEKLEŞMELERİ (dönemsel/bileşik faiz,
-   kira oranları) panele otomatik aksın → hazine-sonuc.json katmanı + sukuk
-   taktik sinyali. ENGEL: hmb.gov.tr bir SPA — JavaScript'siz boş kabuk dönüyor
-   (web_fetch ölçümü 18 Ağu: "You need to enable JavaScript", tek satır).
-   Ama SPA'ların HAM kaynağında API izleri durur: script paketleri, gömülü uç
-   adresleri, bazen doğrudan JSON beslemesi. TAHMİN YOK: bu sonda ham HTML'i
-   çekip içindeki URL adaylarını ve script kaynaklarını RAPORA basar; katman
-   tasarımı bu çıktıya göre yapılır (§305 bülten keşfiyle aynı disiplin —
-   orada sonda .E soneki tuzağını yakalamıştı, burada da yakalayacağı
-   sürprizler olabilir). Umut veren ikinci iz: duyuru sayfaları sunucu-taraflı
-   da üretiliyorsa doğrudan duyuru URL'si denenir. */
-async function hmbKesif() {
-  if (globalThis.__hmbBakildi) return; globalThis.__hmbBakildi = 1;
-  const dene = async (u) => {
-    try {
-      const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36', 'accept': 'text/html,application/json' }, signal: AbortSignal.timeout(15000), redirect: 'follow' });
-      const m = await r.text();
-      return { durum: r.status, tip: (r.headers.get('content-type') || '').slice(0, 40), boy: m.length, metin: m };
-    } catch (e) { return { hata: String(e.message || e).slice(0, 60) }; }
-  };
+/* ── §314 HMB İHALE SONUÇLARI KATMANI — hazine-sonuc.json (KÜMÜLATİF) ────────
+   KEŞİF TAMAMLANDI (18 Ağu, tarayıcı üzerinden canlı ölçüm — sonda emekli):
+   1) hmb.gov.tr bir SPA ama arka ucu WORDPRESS: /portal/v2/* = WP REST proxy
+      (kanıt: guid "api.hmb.gov.tr/?page_id="). /duyurular rotası 404 bile olsa
+      API sağlam: GET /portal/v2/posts?search=ihale+sonuç → 200, 18 Ağu duyurusu
+      listede doğrulandı.
+   2) Duyuru gövdesi tek cümle; GERÇEK içerik ekli PDF'te:
+      ms.hmb.gov.tr/uploads/YYYY/MM/KAF_YYYYMMDD_ihale_sonucu_<enstrümanlar>.pdf
+      — dosya adı bile yapısal (4TUFE_9s = 4Y TÜFE + 9Y sabit).
+   3) PDF metni pdf-parse ile çıkarılır (package.json'a eklendi, npm ci kurar).
+   V1 SÖZLEŞMESİ (ölç→incelt): faiz regex'leri standart duyuru diline göre;
+   İLK koşularda her kayda ham_ozet (ilk 600 karakter) da yazılır ki ayrıştırma
+   gerçek metinle DOĞRULANSIN (§252n) — düzen farklıysa regex bir sonraki turda
+   gerçeğe göre inceltilir, kör kalınmaz. Kayıt anahtarı slug: duyuru bir kez
+   işlenir, defter KÜMÜLATİF büyür (§299 ailesi), pencere kayması yok. */
+async function hmbIhale() {
+  const dosya = 'hazine-sonuc.json';
   try {
-    const cikti = [];
-    for (const u of ['https://www.hmb.gov.tr/duyurular', 'https://www.hmb.gov.tr/']) {
-      const r = await dene(u);
-      if (r.hata) { cikti.push('- ' + u + ' → ✗ ' + r.hata); continue; }
-      const m = r.metin;
-      const urller = [...new Set((m.match(/https?:\/\/[^"'\s<>]{8,160}/g) || [])
-        .filter(x => /api|json|duyuru|ihale|cdn|hmb/i.test(x))
-        .filter(x => !/\.(png|jpg|svg|css|woff|ico)/i.test(x)))].slice(0, 12);
-      const scriptler = [...new Set((m.match(/<script[^>]+src="([^"]+)"/g) || []).map(x => x.replace(/.*src="/, '').replace(/".*/, '')))].slice(0, 8);
-      cikti.push('- ' + u + ' → HTTP ' + r.durum + ' · ' + r.tip + ' · ' + (r.boy / 1024).toFixed(0) + 'KB' +
-        '\n  - URL izleri: ' + (urller.join(' · ') || 'yok') +
-        '\n  - script kaynakları: ' + (scriptler.join(' · ') || 'yok'));
+    const UA = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36', 'accept': 'application/json' };
+    const r = await fetch('https://www.hmb.gov.tr/portal/v2/posts?search=' + encodeURIComponent('ihale sonuç') + '&per_page=10', { headers: UA, signal: AbortSignal.timeout(20000) });
+    if (!r.ok) { raporlar.push('### Hazine ihale sonuçları (§314) — ✗ posts HTTP ' + r.status); return; }
+    const posts = await r.json();
+    if (!Array.isArray(posts) || !posts.length) { raporlar.push('### Hazine ihale sonuçları (§314) — ⏭ duyuru listesi boş'); return; }
+
+    let defter = { kayitlar: {} };
+    try { if (await varMi(dosya)) { const d = await oku(dosya); if (d && d.kayitlar) defter = d; } } catch (e) {}
+
+    let pdfParse = null;
+    try { pdfParse = (await import('pdf-parse')).default; }
+    catch (e) { raporlar.push('### Hazine ihale sonuçları (§314) — ✗ pdf-parse yüklü değil (npm ci koştu mu?): ' + String(e.message).slice(0, 60)); return; }
+
+    const sayiAl = (m, rx) => [...m.matchAll(rx)].map(x => parseFloat(x[1].replace(/\./g, '').replace(',', '.'))).filter(Number.isFinite);
+    const yeniler = [];
+    for (const p of posts) {
+      const slug = String(p.slug || '').slice(0, 80);
+      if (!slug || defter.kayitlar[slug]) continue;
+      const html = (p.content && p.content.rendered) || '';
+      const href = (html.match(/href="([^"]+\.pdf[^"]*)"/i) || [])[1] || null;
+      const kayit = { tarih: String(p.date || '').slice(0, 10), baslik: String((p.title || {}).rendered || '').replace(/&#[0-9]+;/g, "'").slice(0, 140), ek: href };
+      if (href) {
+        try {
+          const pr = await fetch(href, { headers: { 'User-Agent': UA['User-Agent'] }, signal: AbortSignal.timeout(25000) });
+          if (pr.ok) {
+            const buf = Buffer.from(await pr.arrayBuffer());
+            kayit.dosyaAdi = href.split('/').pop().split('?')[0];
+            const pd = await pdfParse(buf);
+            const m = String(pd.text || '').replace(/\s+/g, ' ');
+            kayit.faizler = {
+              donemsel: sayiAl(m, /d[öo]nemsel[^%]{0,60}%\s*([\d.,]+)/gi),
+              bilesik:  sayiAl(m, /bile[şs]ik[^%]{0,60}%\s*([\d.,]+)/gi),
+              basit:    sayiAl(m, /basit[^%]{0,60}%\s*([\d.,]+)/gi),
+              kira:     sayiAl(m, /kira[^%]{0,80}%\s*([\d.,]+)/gi)
+            };
+            kayit.ham_ozet = m.slice(0, 600);   /* V1 doğrulama penceresi — regex oturunca kaldırılır */
+          } else kayit.pdf_hata = 'HTTP ' + pr.status;
+        } catch (e) { kayit.pdf_hata = String(e.message || e).slice(0, 60); }
+      }
+      defter.kayitlar[slug] = kayit;
+      yeniler.push(kayit);
     }
-    raporlar.push('### HMB ihale keşfi (§314A · tek koşuluk sonda)\n' + cikti.join('\n') +
-      '\n- SONRAKİ ADIM: bu izlerden API ucu seçilip hazine-sonuc.json katmanı yazılacak (ölç→yaz).');
-  } catch (e) { raporlar.push('### HMB ihale keşfi — ✗ ' + String(e.message || e).slice(0, 80)); }
+    defter.guncelleme = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (§314 HMB WP-API + PDF)';
+    defter.sayi = Object.keys(defter.kayitlar).length;
+    await yaz(dosya, defter);
+    if (yeniler.length) degisenler.push('hazine ihale sonuçları (+' + yeniler.length + ')');
+    const oz = yeniler.map(k => '- ' + k.tarih + ' · ' + k.baslik.slice(0, 70) +
+      (k.faizler ? ('\n  - faizler → dönemsel:' + JSON.stringify(k.faizler.donemsel) + ' bileşik:' + JSON.stringify(k.faizler.bilesik) + ' kira:' + JSON.stringify(k.faizler.kira)) : (k.pdf_hata ? '\n  - ⚠ PDF: ' + k.pdf_hata : ''))).join('\n');
+    raporlar.push('### Hazine ihale sonuçları (§314) — ✓ defter ' + defter.sayi + ' duyuru · yeni ' + yeniler.length + (oz ? '\n' + oz : '\n- yeni duyuru yok'));
+  } catch (e) { raporlar.push('### Hazine ihale sonuçları (§314) — ✗ ' + String(e.message || e).slice(0, 100)); }
 }
 
 async function bultenKesif() {
@@ -1787,7 +1817,7 @@ async function bultenKesif() {
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */
-    await hmbKesif();   /* §314A */
+    await hmbIhale();   /* §314 */
     await bultenKesif();   /* §250k: günlük tarihsel için keşif */
   }
 
