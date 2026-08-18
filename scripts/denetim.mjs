@@ -196,6 +196,32 @@ export const KURALLAR = {
       detay: h.length ? 'sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi' : null };
   },
 
+  /* ── FIYAT YASI (§301): tarih birligi KOR NOKTASININ kapanisi.
+     OLCULDU (18 Agu): Yahoo BIST beslemesi bozuldu — 17 Agu barinin close'u
+     null, 18 Agu bari hic yok, meta regularMarketPrice 11 Agu kapanisina esit.
+     Kod dogru davranip null'u atladi ve 14 Agu'ya dustu. AMA raporda
+     'tarih birligi: tek tarih 2026-08-14' YESIL yandi — cunku o kural
+     'hepsi ayni gunde mi' diye soruyor, 'O GUN BUGUNE YAKIN MI' diye sormuyor.
+     141 hisse BIRLIKTE eskirse denetim sessiz kaliyordu (§179.3'un olcum
+     tarafindaki bosluk). Bu kural fiyatin YASINI is gunuyle sayar.
+     HEP UYARI, ASLA KIRMIZI: kirmizi katmani durdurur; kaynak donmusken
+     durduracak yeni veri zaten yok — kaybi olmayan arizada is kirmizi
+     yakilmaz (§300 gerekce). Bayram tatilleri icin esik genis: 2 is gunu
+     normal sinir (Cuma→Pazartesi 1 is gunu, sorunsuz), 5+ is gunu 'kaynak
+     DONMUS' siddetinde uyari. */
+  fiyatYasi(fiyatTarihi, referansBugun, etiket = 'fiyat') {
+    const ad = 'fiyat yasi (' + etiket + ')';
+    if (!fiyatTarihi) return { ad, gecti: true, uyari: true, mesaj: 'fiyat tarihi yok — olculemedi' };
+    let g = 0;
+    const d = new Date(fiyatTarihi), son = new Date(referansBugun);
+    while (d < son) { d.setDate(d.getDate() + 1); const h = d.getDay(); if (h !== 0 && h !== 6) g++; }
+    if (g <= 1) return { ad, gecti: true, mesaj: fiyatTarihi + ' (' + g + ' is gunu — guncel)' };
+    return { ad, gecti: true, uyari: true,
+      mesaj: fiyatTarihi + ' — bugunden ' + g + ' IS GUNU geride',
+      detay: g >= 5 ? 'kaynak DONMUS gorunuyor (bayram degilse) — panel damgali katmani eski fiyatla gosteriyor; canli katman (/api/market) ayri yoldan gelir, panelden dogrulayin'
+        : 'kaynak son is gununun barini vermemis olabilir — surerse §300/§301 raporlarini birlikte okuyun' };
+  },
+
   /* ── BORC DEFTERI YASI (§299): bilanco tetigi artik KUMULATIF — bir kod
      karti yazilana kadar defterde kalir. Bu dogru davranis ama YENI BIR RISK
      dogurur: defter sessizce SISEBILIR. Eskiden sayi her gun sifirlanip

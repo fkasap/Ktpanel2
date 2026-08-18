@@ -151,6 +151,7 @@ async function endeksTazele(dosya, ad) {
   const kontrol = [
     KURALLAR.kapsam(kapsanan.length, kodlar.length, 0.95),
     KURALLAR.tarihBirligi(kapsanan.map(k => f[k]), 'tarih'),
+    KURALLAR.fiyatYasi(f[kapsanan[0]].tarih, bugun, ad),   /* §301: birlikte eskime gorunur olsun */
     KURALLAR.toplam(toplamAgirlik, d.kapsanan_agirlik_hedef ?? 100, 3)
   ];
   const s = denetle(ad, kontrol);
@@ -198,7 +199,8 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
      kurumsal işlem değil. */
   const kontrol = [
     KURALLAR.kapsam(kapsanan.length, kodlar.length, 0.95),
-    KURALLAR.tarihBirligi(kapsanan.map(k => f[k]), 'tarih')
+    KURALLAR.tarihBirligi(kapsanan.map(k => f[k]), 'tarih'),
+    KURALLAR.fiyatYasi(f[kapsanan[0]].tarih, bugun, ad)    /* §301 */
   ];
   const aykiriSonuc = KURALLAR.aykiri(
     liste.filter(x => f[x[kodAlan]] && x[fiyatAlan])
