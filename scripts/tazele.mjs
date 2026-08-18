@@ -1690,10 +1690,31 @@ async function hmbIhale() {
     /* V2.1: bir duyuru BIRDEN COK ihale icerebilir (18 Agu = TUFE 4Y + sabit 9Y).
        Metin 'Ihale No:' sinirlariyla bloklara bolunur, her blok ayri ayristirilir.
        'Ihale No' hic yoksa (kira/dogrudan satis govdesi) tum metin tek blok. */
+    /* V2.2 DUZYAZI AYRISTIRICI - kira/dogrudan satis duyurulari TABLOSUZ
+       duz metin (olculdu: 4 gercek kayit). Icerde ORAN YOK - dogrudan satista
+       aciklanmiyor; uydurma yok kurali geregi olani yapilandiririz:
+       tutar, valor, itfa, ISIN, senet turu. */
+    const duzYazi = (m) => {
+      const para = (t) => { const x = m.match(t); return x ? Math.round(parseFloat(x[1].replace(/\./g, '').replace(',', '.'))) : null; };
+      const doviz = /ABD [Dd]olar/.test(m) ? 'USD' : 'TL';
+      const satis = para(/kar\u015f\u0131lanarak\s+([\d.]+,\d{2})/) || para(/([\d.]+,\d{2})\s*(?:TL|ABD [Dd]olar\u0131) tutar\u0131nda/);
+      const tar = (rx) => { const x = m.match(rx); return x ? x[1] : null; };
+      return {
+        tip: 'dogrudan_satis',
+        senet: tar(/(TLREFK[^ ]{0,4}ye endeksli kira sertifikas\u0131|sabit kira getirili kira sertifikas\u0131|alt\u0131na dayal\u0131 kira sertifikas\u0131|kira sertifikas\u0131|ABD dolar\u0131 cinsi Devlet tahvili)/),
+        isin: tar(/([A-Z]{2}[A-Z0-9]{10})\s+ISIN kodlu/),
+        tutar: satis, doviz,
+        valor: tar(/(\d{1,2}\s+\S+\s+\d{4})\s+val\u00f6rl\u00fc/),
+        itfa: tar(/(\d{1,2}\s+\S+\s+\d{4})\s+itfa/)
+      };
+    };
     const hmbAyristir = (m) => {
       const parcalar = m.split(new RegExp('(?=\u0130hale No:)')).filter(x => x.trim().length > 40);
-      const bloklar = (parcalar.length ? parcalar : [m]).map(tekIhale);
-      return bloklar.filter(b => b.bilesik || b.donemsel || b.kira != null || b.isin);
+      const bloklar = (parcalar.length ? parcalar : [m]).map(tekIhale)
+        .filter(b => b.bilesik || b.donemsel || b.kira != null || b.isin);
+      if (bloklar.length) return bloklar;
+      const d = duzYazi(m);                       /* tablo yoksa duzyazi dene */
+      return (d.isin || d.tutar) ? [d] : [];
     };
     const yeniler = [];
     for (const p of posts) {
@@ -1732,8 +1753,10 @@ async function hmbIhale() {
     const oz = yeniler.map(k => {
       const cf = (x) => x ? (x.gerceklesme + ' (teklif ' + x.teklif + ')') : '-';
       const sat = (k.ihaleler || []).map(A =>
-        '\n  - ' + (A.senet || '?') + ' → bilesik %' + cf(A.bilesik) + ' · donemsel %' + cf(A.donemsel) +
-        (A.kira != null ? ' · kira %' + A.kira : '') + (A.isin ? ' · ' + A.isin : '')).join('');
+        A.tip === 'dogrudan_satis'
+          ? ('\n  - ' + (A.senet || 'dogrudan satis') + ' → ' + (A.tutar != null ? (A.tutar / 1e9).toFixed(2).replace('.', ',') + ' mlr ' + A.doviz : 'tutar ?') + (A.itfa ? ' · itfa ' + A.itfa : '') + (A.isin ? ' · ' + A.isin : ''))
+          : ('\n  - ' + (A.senet || '?') + ' → bilesik %' + cf(A.bilesik) + ' · donemsel %' + cf(A.donemsel) +
+             (A.kira != null ? ' · kira %' + A.kira : '') + (A.isin ? ' · ' + A.isin : ''))).join('');
       return '- ' + k.tarih + ' · ' + k.baslik.slice(0, 60) + (sat || (k.pdf_hata ? '\n  - ! ' + k.pdf_hata : ''));
     }).join('\n');
     raporlar.push('### Hazine ihale sonuçları (§314) — ✓ defter ' + defter.sayi + ' duyuru · yeni ' + yeniler.length + (oz ? '\n' + oz : '\n- yeni duyuru yok'));
