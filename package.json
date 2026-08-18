@@ -5,6 +5,10 @@
   "type": "commonjs",
   "_not": "REPO KOKUNDE durur, YALNIZ GitHub Actions icindir. Vercel Root Directory=ktpanel oldugu icin bu dosyayi GORMEZ. Panelin kendi package.json dosyasi ktpanel/ altindadir ve ayridir.",
   "devDependencies": {
-    "playwright": "^1.48.0"
-  }
+    "playwright": "1.62.1"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  },
+  "_314": "pdf-parse: §314 HMB ihale PDF ayrıştırma (tazele.mjs). dependencies altında — devDependencies DEĞİL; --omit=dev tuzağına (yukarıdaki playwright kazası) ikinci kez düşülmesin."
 }
