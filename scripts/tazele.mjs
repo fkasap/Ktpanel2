@@ -53,6 +53,29 @@ const varMi = async p => fs.access(path.join(KOK, p)).then(() => true, () => fal
    /v8/finance/chart uç noktası — crumb GEREKTİRMEZ (§176'da ölçüldü;
    /v10/quoteSummary gerektirir, o yüzden kullanılmıyor).
    Eşzamanlılık 12: 160 sembol ~14 tur, Actions'ın süre bütçesine rahat sığar. */
+/* ── §300 GERI GITME KORUMASI (monotonluk) ─────────────────────────────────
+   OLCULDU (18 Agu): ayni kosuda Yahoo'dan beslenen BES dosya (track, multiple,
+   xk100, xktum, xktmt) 17 Agu'dan 14 Agu'ya GERILEDI; Yahoo kullanmayan uc
+   dosya (risk=BIST arsivi, katfon=Fintables, cds=wgb) ayni kosuda ILERLEDI.
+   Yani ariza kaynak tarafindaydi — kod tarih hesaplamiyor, Yahoo'nun son
+   gecerli barinin damgasini yaziyor. Sonuc: 40 hissenin 39'unun TAZE fiyati
+   dort gun ESKI fiyatla uzerine yazildi (ARASE 124 -> 114,6) ve panel bunu
+   'bugunun fiyati' diye gosterdi.
+   §179.3'un harfi harfine ihlali: ESKI VERI, EKSIK VERIDEN TEHLIKELIDIR.
+   Eksik olsa panel 'veri yok' derdi; eski oldugu icin hicbir sey demedi.
+   KORUMA: gelen fiyat tarihi dosyadakinden ESKIYSE yazma, atla, RAPORDA SOYLE.
+   §266 (ayni-gun korumasi) ile ayni aile: taze veri, kaynak hickirdi diye
+   ezilemez. Kaynak toparlayinca normal yazim kendiliginden surer — elle
+   mudahale gerekmez. */
+function tarihGeriledi(ad, eskiTarih, yeniTarih) {
+  if (!eskiTarih || !yeniTarih || yeniTarih >= eskiTarih) return false;
+  const g = Math.round((new Date(eskiTarih) - new Date(yeniTarih)) / 864e5);
+  raporlar.push('### ' + ad + ' — ⏭ ATLANDI (§300 geri gitme korumasi)' +
+    '\n- kaynak ' + yeniTarih + ' dondurdu, dosyada ' + eskiTarih + ' var — ' + g + ' gun ESKI' +
+    '\n- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.');
+  return true;
+}
+
 async function yahooFiyat(kodlar, ekle = '.IS') {
   const havuz = async (items, fn, n) => {
     const out = new Array(items.length); let i = 0;
@@ -134,6 +157,8 @@ async function endeksTazele(dosya, ad) {
   raporlar.push(s.rapor());
   if (!s.gecti) { denetimDustu = true; return null; }
 
+  if (tarihGeriledi(ad, d.fiyat_tarihi, f[kapsanan[0]].tarih)) return null;   /* §300 */
+
   const eskiler = JSON.stringify(d.uyeler || {});
   d.uyeler = uyeler;
   d.tarih = bugun;
@@ -192,6 +217,9 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
   const s = denetle(ad, kontrol);
   raporlar.push(s.rapor());
   if (!s.gecti) { denetimDustu = true; return null; }
+  /* §300: fiyat YAZILMADAN once kontrol — forEach bellekteki nesneyi degistirir,
+     sonra kontrol etmek gec kalmis olurdu. */
+  if (tarihGeriledi(ad, d.fiyat_tarihi, f[kapsanan[0]].tarih)) return null;
 
   let n = 0;
   liste.forEach(x => {

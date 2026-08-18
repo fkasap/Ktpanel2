@@ -155,11 +155,26 @@ export const KURALLAR = {
      KESIKTI — dosya-bazli tazelik bunu hic goremedi. Referans tarih dosyanin
      kendi fiyat_tarihi'dir; boylece hafta sonu/tatil yanlis alarm uretmez. */
   seriGuncel(seriSonTarih, referansTarih, maksGun = 4, etiket = 'seri') {
+    const ad = 'seri guncelligi (' + etiket + ')';
     const f = Math.round((new Date(referansTarih) - new Date(seriSonTarih)) / 864e5);
-    return { ad: 'seri guncelligi (' + etiket + ')',
-      gecti: isFinite(f) && f >= 0 && f <= maksGun,
+    if (!isFinite(f)) return { ad, gecti: false, mesaj: 'tarih okunamadi: seri=' + seriSonTarih + ' referans=' + referansTarih };
+    /* §300 NEGATIF FARK AYRI BIR ARIZA SINIFIDIR — kirmizi DEGIL, uyari.
+       18 Agu olcumu: seri 17 Agu, referans (track.fiyat_tarihi) 14 Agu -> -3g.
+       Ilk yazimda kural `f >= 0` sarti yuzunden KALDI dedi ve isi kirmiziya
+       boyadi. Ama seri KESIK DEGILDI; tam tersine referanstan TAZEYDI.
+       Gercek ariza baska yerdeydi: fiyat kaynagi (Yahoo) 17 Agu'dan 14 Agu'ya
+       GERILEMIS, dosya eski tarihle uzerine yazilmisti.
+       Kural artik dogru yere parmak basiyor: 'seri ileride' demiyor, 'referans
+       gerilemis olabilir' diyor. Ve UYARI veriyor — cunku bu durumda VERI KAYBI
+       YOKTUR (seri zaten daha taze); kirmizi yakmak, gercek kesikligin kirmizisini
+       degersizlestirir. Bir nobetci her hickirikta bagirirsa kimse dinlemez. */
+    if (f < 0) return { ad, gecti: true, uyari: true,
+      mesaj: seriSonTarih + ' (referans ' + referansTarih + ' — seri referanstan ' + (-f) + 'g ILERIDE)',
+      detay: 'seri kesik DEGIL; REFERANS DOSYA GERILEMIS — fiyat kaynagi eski gun dondurmus olabilir (§300 geri gitme korumasi rapora bakiniz)' };
+    return { ad,
+      gecti: f <= maksGun,
       mesaj: seriSonTarih + ' (referans ' + referansTarih + ', fark ' + f + 'g)',
-      detay: (isFinite(f) && f > maksGun) ? 'seri KESIK — ekleme adimi kosmamis olabilir (§291)' : null };
+      detay: (f > maksGun) ? 'seri KESIK — ekleme adimi kosmamis olabilir (§291)' : null };
   },
 
   /* ── IKIZ DOSYA (§297): kazara kopya sinifi — kok mail.js, kok app.js,
