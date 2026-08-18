@@ -1635,6 +1635,46 @@ async function cdsTazele() {
     raporlar.push('### TR 5Y CDS — ⏭ ATLANDI\n- ' + String(e && e.message || e).slice(0, 90) + '\n- cds.json YAZILMADI.');
   }
 }
+/* ── §314A HMB İHALE SONUÇLARI KEŞFİ — TEK KOŞULUK SONDA, DOSYA YAZMAZ ──────
+   HEDEF (kullanıcı onayı 18 Ağu): ihale GERÇEKLEŞMELERİ (dönemsel/bileşik faiz,
+   kira oranları) panele otomatik aksın → hazine-sonuc.json katmanı + sukuk
+   taktik sinyali. ENGEL: hmb.gov.tr bir SPA — JavaScript'siz boş kabuk dönüyor
+   (web_fetch ölçümü 18 Ağu: "You need to enable JavaScript", tek satır).
+   Ama SPA'ların HAM kaynağında API izleri durur: script paketleri, gömülü uç
+   adresleri, bazen doğrudan JSON beslemesi. TAHMİN YOK: bu sonda ham HTML'i
+   çekip içindeki URL adaylarını ve script kaynaklarını RAPORA basar; katman
+   tasarımı bu çıktıya göre yapılır (§305 bülten keşfiyle aynı disiplin —
+   orada sonda .E soneki tuzağını yakalamıştı, burada da yakalayacağı
+   sürprizler olabilir). Umut veren ikinci iz: duyuru sayfaları sunucu-taraflı
+   da üretiliyorsa doğrudan duyuru URL'si denenir. */
+async function hmbKesif() {
+  if (globalThis.__hmbBakildi) return; globalThis.__hmbBakildi = 1;
+  const dene = async (u) => {
+    try {
+      const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36', 'accept': 'text/html,application/json' }, signal: AbortSignal.timeout(15000), redirect: 'follow' });
+      const m = await r.text();
+      return { durum: r.status, tip: (r.headers.get('content-type') || '').slice(0, 40), boy: m.length, metin: m };
+    } catch (e) { return { hata: String(e.message || e).slice(0, 60) }; }
+  };
+  try {
+    const cikti = [];
+    for (const u of ['https://www.hmb.gov.tr/duyurular', 'https://www.hmb.gov.tr/']) {
+      const r = await dene(u);
+      if (r.hata) { cikti.push('- ' + u + ' → ✗ ' + r.hata); continue; }
+      const m = r.metin;
+      const urller = [...new Set((m.match(/https?:\/\/[^"'\s<>]{8,160}/g) || [])
+        .filter(x => /api|json|duyuru|ihale|cdn|hmb/i.test(x))
+        .filter(x => !/\.(png|jpg|svg|css|woff|ico)/i.test(x)))].slice(0, 12);
+      const scriptler = [...new Set((m.match(/<script[^>]+src="([^"]+)"/g) || []).map(x => x.replace(/.*src="/, '').replace(/".*/, '')))].slice(0, 8);
+      cikti.push('- ' + u + ' → HTTP ' + r.durum + ' · ' + r.tip + ' · ' + (r.boy / 1024).toFixed(0) + 'KB' +
+        '\n  - URL izleri: ' + (urller.join(' · ') || 'yok') +
+        '\n  - script kaynakları: ' + (scriptler.join(' · ') || 'yok'));
+    }
+    raporlar.push('### HMB ihale keşfi (§314A · tek koşuluk sonda)\n' + cikti.join('\n') +
+      '\n- SONRAKİ ADIM: bu izlerden API ucu seçilip hazine-sonuc.json katmanı yazılacak (ölç→yaz).');
+  } catch (e) { raporlar.push('### HMB ihale keşfi — ✗ ' + String(e.message || e).slice(0, 80)); }
+}
+
 async function bultenKesif() {
   if (globalThis.__bultenBakildi) return; globalThis.__bultenBakildi = 1;
   try {
@@ -1747,6 +1787,7 @@ async function bultenKesif() {
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */
+    await hmbKesif();   /* §314A */
     await bultenKesif();   /* §250k: günlük tarihsel için keşif */
   }
 
