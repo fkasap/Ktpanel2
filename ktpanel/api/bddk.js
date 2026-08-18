@@ -30,7 +30,12 @@ function bddkIstek(yol, govde, ekBaslik){
               taşır; canlıdan bir kez okunup aşağıya yazıldığında pin devreye
               girer (ölç → pinle, §252n). Sertifika yenilenirse pin bilerek
               kırılır: sessiz devam etmektense gürültülü durmak yeğdir. */
-        const BDDK_PIN = '';   /* örn 'AB:CD:...' — canlı ölçümden sonra doldurulacak */
+        /* SS309 PIN AKTIF - 19 Agu 2026 canli teshis=1 olcumu:
+           CN *.bddk.org.tr - veren GlobalSign RSA OV SSL CA 2018 -
+           BITIS 15 Kas 2026 <- o tarih civari sertifika yenilenince pin
+           BILEREK kirilir. Yenileme tek adim: hata mesajindaki yeni parmak
+           izini buraya yapistir. Takvimli, gurultulu, tek satirlik bakim. */
+        const BDDK_PIN = '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79';
         const issCN = (c&&c.issuer&&c.issuer.CN)||'';
         const subCN = (c&&c.subject&&c.subject.CN)||'';
         if(issCN && subCN && issCN===subCN && !(c&&c.issuerCertificate&&c.issuerCertificate!==c)){
@@ -45,7 +50,7 @@ function bddkIstek(yol, govde, ekBaslik){
         }
         const fp = (c&&(c.fingerprint256||c.fingerprint))||'';
         if(BDDK_PIN && fp && fp.toUpperCase()!==BDDK_PIN.toUpperCase()){
-          s.destroy(); return red(new Error('TLS PIN UYUŞMADI — beklenen '+BDDK_PIN.slice(0,20)+'… gelen '+fp.slice(0,20)+'…'));
+          s.destroy(); return red(new Error('TLS PIN UYUSMADI (SS309) - sertifika yenilenmis olabilir. GELEN PARMAK IZI (dogruysa BDDK_PIN sabitine yapistir): '+fp));
         }
         SON_TESHIS = Object.assign(SON_TESHIS||{}, { tls:{ fp, cn:subCN, veren:issCN, bitis:(c&&c.valid_to)||null, pin: BDDK_PIN?'AKTİF':'ölçüm modu' } });
       }catch(e){ return red(new Error('Sertifika okunamadı: '+e.message)); }
