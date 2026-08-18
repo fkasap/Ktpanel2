@@ -67,6 +67,126 @@ const varMi = async p => fs.access(path.join(KOK, p)).then(() => true, () => fal
    §266 (ayni-gun korumasi) ile ayni aile: taze veri, kaynak hickirdi diye
    ezilemez. Kaynak toparlayinca normal yazim kendiliginden surer — elle
    mudahale gerekmez. */
+/* ── §307 BIST BÜLTEN FİYAT YEDEĞİ ────────────────────────────────────────────
+   GEREKÇE: 18 Ağu Yahoo donması — beş katman 14 Ağu'da kaldı, §300 koruması
+   gerilemeyi durdurur ama İLERLETEMEZ. Resmî kaynak (bülten) zaten her gün
+   indiriliyordu; §305 tek koşuluk ölçümü kolonları kanıtladı:
+   57 kolon · KAPANIS FIYATI mevcut · tarih ISO · 11.161 satır.
+   ÖLÇÜMÜN UYARISI: her kod için birden çok satır var (THYAO yanında THYAO.AOF
+   gibi türevler — örnek satır tamamı sıfırdı). Bu yüzden seçim kuralı:
+   TAM kod eşleşmesi (nokta soneki yok) + KAPANIS FIYATI > 0.
+   SIRA POLİTİKASI (tek sahip, §112): Yahoo BİRİNCİL kalır. Bülten yalnız
+   Yahoo'nun tarihi son iş gününden ESKİYSE devreye girer — iki kaynağın
+   karışması yasak (§114 karışık taban): yedek kullanılırsa O KATMANIN TÜM
+   fiyatları bültenden gelir, tek tarihle. Kapsam %80'in altındaysa yedek
+   REDDEDİLİR (yarım bülten, yarım Yahoo olmaz).
+   İndirme keşifle ORTAK ve önbellekli — zip bir koşuda bir kez iner. */
+const isGunuMu = (x) => x.getDay() !== 0 && x.getDay() !== 6;
+function sonIsGunu(ref) {
+  const x = new Date(ref); 
+  do { x.setDate(x.getDate() - 1); } while (!isGunuMu(x));
+  return x.toISOString().slice(0, 10);
+}
+async function bultenZipGetir() {
+  if (globalThis.__bultenPaket !== undefined) return globalThis.__bultenPaket;
+  globalThis.__bultenPaket = null;
+  try {
+    const os7 = await import('node:os'), fsp7 = await import('node:fs/promises'), cp7 = await import('node:child_process');
+    const adaylar = [];
+    for (let geri = 1; geri <= 6 && adaylar.length < 4; geri++) {
+      const x = new Date(Date.now() - geri * 86400000);
+      if (isGunuMu(x)) adaylar.push(x);
+    }
+    const denenen = [];
+    for (const d of adaylar) {
+      const Y = d.getFullYear(), A = String(d.getMonth() + 1).padStart(2, '0'), G = String(d.getDate()).padStart(2, '0');
+      for (const sonek of ['1', '2', '3', '']) {
+        const ad = 'thb' + Y + A + G + sonek + '.zip';
+        const u = 'https://borsaistanbul.com/data/thb/' + Y + '/' + A + '/' + ad;
+        let b = null;
+        try {
+          const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(20000) });
+          if (r.ok) { const bb = Buffer.from(await r.arrayBuffer()); if (bb.length > 500) b = bb; else denenen.push(ad + ':boş'); }
+          else denenen.push(ad + ':HTTP' + r.status);
+        } catch (e) { denenen.push(ad + ':' + String(e.message || e).slice(0, 30)); }
+        if (!b) continue;
+        const dz = path.join(os7.tmpdir(), 'bulten'); await fsp7.rm(dz, { recursive: true, force: true }); await fsp7.mkdir(dz, { recursive: true });
+        const zp = path.join(dz, 'b.zip'); await fsp7.writeFile(zp, b);
+        try { cp7.execSync('unzip -o -q "' + zp + '" -d "' + dz + '"', { stdio: 'ignore' }); } catch (e) {}
+        const ic = (await fsp7.readdir(dz)).filter(x => !/\.zip$/i.test(x));
+        globalThis.__bultenPaket = { ad, dz, ic, boyut: b.length, denenen };
+        return globalThis.__bultenPaket;
+      }
+    }
+    globalThis.__bultenPaket = { inmedi: true, adaylar: adaylar.map(x => x.toISOString().slice(0, 10)), denenen };
+  } catch (e) { globalThis.__bultenPaket = { inmedi: true, hata: String(e.message || e).slice(0, 60) }; }
+  return globalThis.__bultenPaket;
+}
+async function bultenFiyat(kodlar) {
+  try {
+    const B = await bultenZipGetir();
+    if (!B || B.inmedi) return null;
+    const fsp7 = await import('node:fs/promises');
+    for (const f of B.ic) {
+      if (!/\.csv$/i.test(f)) continue;
+      const ham = await fsp7.readFile(path.join(B.dz, f));
+      const bom = ham.length > 1 && ham[0] === 0xFF && ham[1] === 0xFE;
+      const metin = new TextDecoder(bom ? 'utf-16le' : 'iso-8859-9').decode(ham);
+      const satirlar = metin.split(/\r?\n/).filter(x => x.trim());
+      if (satirlar.length < 10) continue;
+      const norm = (k) => k.trim().toUpperCase().replace(/\s+/g, ' ');
+      const kolon = satirlar[0].split(';').map(norm);
+      const iKod = kolon.indexOf('ISLEM KODU'), iKap = kolon.indexOf('KAPANIS FIYATI'), iTar = kolon.indexOf('TARIH');
+      if (iKod < 0 || iKap < 0) continue;
+      const iste = new Set(kodlar.map(k => k.toUpperCase()));
+      const out = {}; let tarih = null;
+      for (let i = 1; i < satirlar.length; i++) {
+        const a = satirlar[i].split(';');
+        const kod = (a[iKod] || '').trim().toUpperCase();
+        if (!iste.has(kod)) continue;                    /* §305 tuzağı: THYAO.AOF eşleşmez */
+        /* Türk sayı biçimi güvenliği: '1.234,56' → 1234.56 · '305,25' → 305.25 · '305.25' → 305.25 */
+        let vs = String(a[iKap] || '').trim();
+        if (vs.includes('.') && vs.includes(',')) vs = vs.replace(/\./g, '').replace(',', '.');
+        else vs = vs.replace(',', '.');
+        const v = parseFloat(vs);
+        if (!isFinite(v) || v <= 0) continue;            /* sıfır satır (askı/türev) atla */
+        if (out[kod]) continue;                          /* ilk geçerli satır kazanır */
+        out[kod] = { fiyat: v, tarih: (a[iTar] || '').trim().slice(0, 10) || null };
+        if (!tarih && out[kod].tarih) tarih = out[kod].tarih;
+      }
+      const n = Object.keys(out).length;
+      if (!n) return null;
+      return { fiyatlar: out, tarih, kapsam: n, istenen: kodlar.length, dosya: f };
+    }
+    return null;
+  } catch (e) { return null; }
+}
+async function fiyatYedek(ad, f, kodlar) {
+  /* Yahoo tarihine bak; son iş gününden eskiyse bülteni dene. */
+  try {
+    const tarihler = Object.values(f || {}).map(x => x && x.tarih).filter(Boolean).sort();
+    const yahooTarih = tarihler[tarihler.length - 1] || null;
+    const hedef = sonIsGunu(bugun + 'T12:00:00Z');
+    if (yahooTarih && yahooTarih >= hedef) return f;      /* Yahoo güncel — yedek gereksiz */
+    const B = await bultenFiyat(kodlar);
+    if (!B) { raporlar.push('- ℹ §307: Yahoo ' + (yahooTarih || '?') + ' (hedef ' + hedef + ') ama bülten yedeği alınamadı'); return f; }
+    if (B.kapsam < kodlar.length * 0.8) {
+      raporlar.push('- ⚠ §307: bülten kapsamı yetersiz (' + B.kapsam + '/' + kodlar.length + ' — eşik %80) — yedek REDDEDİLDİ, Yahoo verisiyle devam (karışık taban yasak §114)');
+      return f;
+    }
+    if (!B.tarih || !(B.tarih > (yahooTarih || ''))) {
+      raporlar.push('- ℹ §307: bülten tarihi (' + B.tarih + ') Yahoo\'dan taze değil — yedek kullanılmadı');
+      return f;
+    }
+    const yeniF = {};
+    kodlar.forEach(k => { const K = k.toUpperCase(); if (B.fiyatlar[K]) yeniF[k] = { fiyat: B.fiyatlar[K].fiyat, tarih: B.tarih }; });
+    raporlar.push('### ' + ad + ' — §307 YEDEK DEVREDE: BIST bülteni ' + B.tarih +
+      '\n- Yahoo ' + (yahooTarih || 'veri yok') + ' gün döndürdü (hedef ' + hedef + ') → resmî bülten kullanıldı' +
+      '\n- kapsam ' + B.kapsam + '/' + kodlar.length + ' · dosya ' + B.dosya + ' · TÜM fiyatlar tek kaynaktan (§114)');
+    return yeniF;
+  } catch (e) { return f; }
+}
+
 function tarihGeriledi(ad, eskiTarih, yeniTarih) {
   if (!eskiTarih || !yeniTarih || yeniTarih >= eskiTarih) return false;
   const g = Math.round((new Date(eskiTarih) - new Date(yeniTarih)) / 864e5);
@@ -124,7 +244,8 @@ async function endeksTazele(dosya, ad) {
     return null;
   }
   const kodlar = Object.keys(pa);
-  const f = await yahooFiyat(kodlar);
+  let f = await yahooFiyat(kodlar);
+  f = await fiyatYedek(ad, f, kodlar);   /* §307: Yahoo eskiyse resmî bülten */
   const kapsanan = kodlar.filter(k => f[k]);
 
   const sd = {};
@@ -180,7 +301,8 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
   if (!Array.isArray(liste) || !liste.length) return null;
 
   const kodlar = liste.map(x => x[kodAlan]).filter(Boolean);
-  const f = await yahooFiyat(kodlar);
+  let f = await yahooFiyat(kodlar);
+  f = await fiyatYedek(ad, f, kodlar);   /* §307: Yahoo eskiyse resmî bülten */
   const kapsanan = kodlar.filter(k => f[k]);
 
   /* §245s AYKIRI ARTIK KATMANI DÜŞÜRMÜYOR — KARANTİNAYA ALIYOR.
@@ -1507,87 +1629,59 @@ async function cdsTazele() {
 async function bultenKesif() {
   if (globalThis.__bultenBakildi) return; globalThis.__bultenBakildi = 1;
   try {
-    const os4 = await import('node:os'), fsp4 = await import('node:fs/promises'), cp4 = await import('node:child_process');
-    /* §253h SON İŞ GÜNÜ — "dün" YETMİYORDU. Kod düz `Date.now()-86400000`
-       kullanıyordu; PAZARTESİ koşusunda bu PAZAR'a denk geliyor, borsa kapalı,
-       bülten YOK -> her hafta başı dört 404 ve "⚠ indirilemedi" satırı.
-       Rapor bir arıza bildiriyordu ama arıza yoktu. (§253g ile aynı sınıf:
-       beklenen düşüş, gerçek arıza gibi görünüyor.)
-       Artık hafta sonu ATLANIYOR ve gerekirse 4 iş gününe kadar geriye
-       bakılıyor (resmî tatiller için). İlk inen kabul edilir. */
-    const isGunu = (x) => x.getDay() !== 0 && x.getDay() !== 6;
-    const adaylar = [];
-    for (let geri = 1; geri <= 6 && adaylar.length < 4; geri++) {
-      const x = new Date(Date.now() - geri * 86400000);
-      if (isGunu(x)) adaylar.push(x);
-    }
-    const denenen = [];
-    for (const d of adaylar) {
-      const Y = d.getFullYear(), A = String(d.getMonth() + 1).padStart(2, '0'), G = String(d.getDate()).padStart(2, '0');
-      for (const sonek of ['1', '2', '3', '']) {
-      const ad = 'thb' + Y + A + G + sonek + '.zip';
-      const u = 'https://borsaistanbul.com/data/thb/' + Y + '/' + A + '/' + ad;
-      let b = null;
-      try {
-        const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(20000) });
-        if (r.ok) { const bb = Buffer.from(await r.arrayBuffer()); if (bb.length > 500) b = bb; else denenen.push(ad + ':boş'); }
-        else denenen.push(ad + ':HTTP' + r.status);
-      } catch (e) { denenen.push(ad + ':' + String(e.message || e).slice(0, 30)); }
-      if (!b) continue;
-      const dz = path.join(os4.tmpdir(), 'bulten'); await fsp4.rm(dz, { recursive: true, force: true }); await fsp4.mkdir(dz, { recursive: true });
-      const zp = path.join(dz, 'b.zip'); await fsp4.writeFile(zp, b);
-      try { cp4.execSync('unzip -o -q "' + zp + '" -d "' + dz + '"', { stdio: 'ignore' }); } catch (e) {}
-      const ic = (await fsp4.readdir(dz)).filter(x => !/\.zip$/i.test(x));
-      /* endeks geçen dosyayı ara: ilk 400 karakterde XKTUM/XU100 var mı */
-      let ipucu = '';
-      for (const f of ic.slice(0, 12)) {
-        try {
-          const ham = await fsp4.readFile(path.join(dz, f));
-          const bom = ham.length > 1 && ham[0] === 0xFF && ham[1] === 0xFE;
-          const mt = new TextDecoder(bom ? 'utf-16le' : 'iso-8859-9').decode(ham.subarray(0, 4000));
-          if (/XKTUM|XU100|ENDEKS/i.test(mt)) { ipucu = f + ' → ' + mt.split(/\r?\n/).slice(0, 2).join(' ¶ ').slice(0, 200); break; }
-        } catch (e) {}
-      }
-      raporlar.push('### Bülten keşfi (§250k) — ✓ ' + ad + ' indi · ' + (b.length / 1024).toFixed(0) + 'KB' +
-        '\n- içerik: ' + ic.join(', ').slice(0, 200) + (ipucu ? '\n- endeks izi: `' + ipucu.replace(/`/g, '') + '`' : '\n- endeks izi: ilk 12 dosyada bulunamadı'));
-
-      /* §305 FİYAT KEŞFİ — TEK KOŞULUK ÖLÇÜM, DOSYA YAZMAZ.
-         AMAÇ: Yahoo donması (18 Ağu: beş katman 14 Ağu'da kaldı, §300/§301)
-         BIST resmî bülteninden fiyat YEDEĞİ kurma fikrini doğurdu. Ama bülten
-         CSV'sinde kapanış kolonu VAR MI bilmiyoruz — §250k izi başlığın yalnız
-         ilk 200 karakterini basıyordu, fiyat kolonları kesilmiş olabilir.
-         TAHMİN YOK: bu blok tam başlığı, kolon adaylarını ve THYAO örnek
-         satırını rapora basar; yedek katmanın tasarımı BU ÇIKTIYA göre yapılır.
-         Ölçüm bitince (yedek yazılınca) bu blok sadeleştirilebilir. */
-      try {
-        for (const f of ic.slice(0, 12)) {
-          if (!/\.csv$/i.test(f)) continue;
-          const ham2 = await fsp4.readFile(path.join(dz, f));
-          const bom2 = ham2.length > 1 && ham2[0] === 0xFF && ham2[1] === 0xFE;
-          const metin = new TextDecoder(bom2 ? 'utf-16le' : 'iso-8859-9').decode(ham2);
-          const satirlar = metin.split(/\r?\n/).filter(x => x.trim());
-          if (satirlar.length < 2) continue;
-          const baslik = satirlar[0];
-          const kolonlar = baslik.split(';').map(x => x.trim());
-          const fiyatAday = kolonlar.filter(k => /KAPAN|CLOS|AOF|A\u011eIRLIKLI|AGIRLIKLI|ORTALAMA|FIYAT|PRICE|DUSUK|D\u00dc\u015e\u00dcK|YUKSEK|Y\u00dcKSEK/i.test(k));
-          const ornek = satirlar.find(x => /THYAO/i.test(x)) || satirlar.find(x => /TUPRS|ASELS/i.test(x)) || null;
-          raporlar.push('### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — ' + f +
-            '\n- satır: ' + satirlar.length + ' · kolon: ' + kolonlar.length +
-            '\n- TAM BAŞLIK: `' + baslik.replace(/`/g, '').slice(0, 600) + '`' +
-            '\n- fiyat kolon adayları: ' + (fiyatAday.length ? fiyatAday.join(' · ') : 'BULUNAMADI — bu dosya fiyat taşımıyor olabilir') +
-            (ornek ? '\n- örnek satır: `' + ornek.replace(/`/g, '').slice(0, 400) + '`' : '\n- THYAO/TUPRS/ASELS satırı yok'));
-          break;
-        }
-      } catch (e) { raporlar.push('- ⚠ §305 fiyat keşfi koşamadı: ' + String(e.message || e).slice(0, 60)); }
+    const fsp4 = await import('node:fs/promises');
+    /* §253h SON İŞ GÜNÜ kuralı ve aday/sonek mantığı bultenZipGetir()'e taşındı
+       (§307 ortak indirici — fiyat yedeğiyle keşif AYNI zip'i kullanır, bir
+       koşuda bir indirme). Kural özü korunur: hafta sonu atlanır, 4 iş gününe
+       kadar geriye bakılır, ilk inen kabul edilir. */
+    const B = await bultenZipGetir();
+    if (!B || B.inmedi) {
+      /* Hiçbir aday inmedi. Bu ARIZA OLMAYABİLİR: resmî tatil ya da yayın
+         gecikmesi. Denenen günler raporda görünsün ki ayırt edilebilsin —
+         dört ardışık iş günü boşsa GERÇEK sorun vardır. */
+      raporlar.push('### Bülten keşfi (§250k) — ℹ inmedi · denenen ' + (((B || {}).adaylar) || []).length +
+        ' iş günü: ' + (((B || {}).adaylar) || []).join(', ') +
+        '\n- ' + ((((B || {}).denenen) || []).join(' · ') || ((B || {}).hata || 'sebep yok')));
       return;
-      }
     }
-    /* Hiçbir aday inmedi. Bu ARIZA OLMAYABİLİR: resmî tatil haftası ya da
-       BIST'in yayın gecikmesi. Denenen günler raporda görünsün ki ayırt
-       edilebilsin — dört ardışık iş günü boşsa GERÇEK sorun vardır. */
-    raporlar.push('### Bülten keşfi (§250k) — ℹ inmedi · denenen ' + adaylar.length +
-      ' iş günü: ' + adaylar.map(x => x.toISOString().slice(0, 10)).join(', ') +
-      '\n- ' + denenen.join(' · '));
+    const ad = B.ad, dz = B.dz, ic = B.ic;
+    /* endeks geçen dosyayı ara: ilk 400 karakterde XKTUM/XU100 var mı */
+    let ipucu = '';
+    for (const f of ic.slice(0, 12)) {
+      try {
+        const ham = await fsp4.readFile(path.join(dz, f));
+        const bom = ham.length > 1 && ham[0] === 0xFF && ham[1] === 0xFE;
+        const mt = new TextDecoder(bom ? 'utf-16le' : 'iso-8859-9').decode(ham.subarray(0, 4000));
+        if (/XKTUM|XU100|ENDEKS/i.test(mt)) { ipucu = f + ' → ' + mt.split(/\r?\n/).slice(0, 2).join(' ¶ ').slice(0, 200); break; }
+      } catch (e) {}
+    }
+    raporlar.push('### Bülten keşfi (§250k) — ✓ ' + ad + ' indi · ' + (B.boyut / 1024).toFixed(0) + 'KB' +
+      '\n- içerik: ' + ic.join(', ').slice(0, 200) + (ipucu ? '\n- endeks izi: `' + ipucu.replace(/`/g, '') + '`' : '\n- endeks izi: ilk 12 dosyada bulunamadı'));
+
+    /* §305 FİYAT KEŞFİ — TEK KOŞULUK ÖLÇÜM, DOSYA YAZMAZ.
+       18 Ağu ölçümü SONUÇLANDI: 57 kolon, KAPANIS FIYATI mevcut, tarih ISO,
+       11.161 satır; THYAO örneği .AOF türev satırına denk geldi (tamamı sıfır)
+       → §307 seçim kuralı bu ölçümden doğdu (tam kod + kapanış>0).
+       Blok, yedek canlıda bir kez doğrulanana kadar raporda kalır. */
+    try {
+      for (const f of ic.slice(0, 12)) {
+        if (!/\.csv$/i.test(f)) continue;
+        const ham2 = await fsp4.readFile(path.join(dz, f));
+        const bom2 = ham2.length > 1 && ham2[0] === 0xFF && ham2[1] === 0xFE;
+        const metin = new TextDecoder(bom2 ? 'utf-16le' : 'iso-8859-9').decode(ham2);
+        const satirlar = metin.split(/\r?\n/).filter(x => x.trim());
+        if (satirlar.length < 2) continue;
+        const baslik = satirlar[0];
+        const kolonlar = baslik.split(';').map(x => x.trim());
+        const fiyatAday = kolonlar.filter(k => /KAPAN|CLOS|AOF|AGIRLIKLI|ORTALAMA|FIYAT|PRICE|DUSUK|YUKSEK/i.test(k));
+        const ornek = satirlar.find(x => /^[^;]*;THYAO;/i.test(x)) || satirlar.find(x => /THYAO/i.test(x)) || null;
+        raporlar.push('### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — ' + f +
+          '\n- satır: ' + satirlar.length + ' · kolon: ' + kolonlar.length +
+          '\n- fiyat kolon adayları: ' + (fiyatAday.length ? fiyatAday.slice(0, 8).join(' · ') + (fiyatAday.length > 8 ? ' …' : '') : 'BULUNAMADI') +
+          (ornek ? '\n- örnek satır (saf kod önce): `' + ornek.replace(/`/g, '').slice(0, 400) + '`' : '\n- THYAO satırı yok'));
+        break;
+      }
+    } catch (e) { raporlar.push('- ⚠ §305 fiyat keşfi koşamadı: ' + String(e.message || e).slice(0, 60)); }
   } catch (e) { raporlar.push('### Bülten keşfi — ✗ ' + String(e.message || e).slice(0, 90)); }
 }
 
