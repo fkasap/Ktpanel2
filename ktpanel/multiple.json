@@ -1,11 +1,11 @@
 {
- "guncelleme": "2026-08-17",
- "fiyat_tarihi": "2026-08-17",
+ "guncelleme": "2026-08-18",
+ "fiyat_tarihi": "2026-08-14",
  "not": "XKTUM + büyük hisseler · TTM ciro/EBITDA · negatif EBITDA hariç · ödenmiş sermaye=adet | 29 Tem: fiyatlar Fintables mumlar_gunluk_gh ile tazelendi. Bilanço kalemleri (ciro/ebitda/netBorc) 1Ç26 — 2Ç26 henüz aciklanmadi, dogrusu bu.",
  "hisseler": [
   {
    "k": "AKFYE",
-   "fiyat": 23.02,
+   "fiyat": 23.06,
    "adet": 1196,
    "ciro": 6616,
    "ebitda": 3589,
@@ -14,7 +14,7 @@
   },
   {
    "k": "ALCTL",
-   "fiyat": 130.1,
+   "fiyat": 127.3,
    "adet": 38,
    "ciro": 5243,
    "ebitda": 604,
@@ -23,7 +23,7 @@
   },
   {
    "k": "ALKA",
-   "fiyat": 8.08,
+   "fiyat": 8.13,
    "adet": 735,
    "ciro": 3056,
    "ebitda": 152,
@@ -32,7 +32,7 @@
   },
   {
    "k": "ALKIM",
-   "fiyat": 15.67,
+   "fiyat": 15.71,
    "adet": 300,
    "ciro": 5522,
    "ebitda": 263,
@@ -41,7 +41,7 @@
   },
   {
    "k": "ALKLC",
-   "fiyat": 425,
+   "fiyat": 425.5,
    "adet": 112,
    "ciro": 5681,
    "ebitda": 1049,
@@ -50,7 +50,7 @@
   },
   {
    "k": "ALTNY",
-   "fiyat": 15.79,
+   "fiyat": 16.77,
    "adet": 1000,
    "ciro": 3179,
    "ebitda": 656,
@@ -59,7 +59,7 @@
   },
   {
    "k": "ALVES",
-   "fiyat": 1.76,
+   "fiyat": 1.75,
    "adet": 1600,
    "ciro": 11857,
    "ebitda": 2489,
@@ -68,7 +68,7 @@
   },
   {
    "k": "ANGEN",
-   "fiyat": 9.14,
+   "fiyat": 9.1,
    "adet": 220,
    "ciro": 814,
    "ebitda": 85,
@@ -77,7 +77,7 @@
   },
   {
    "k": "ARASE",
-   "fiyat": 124,
+   "fiyat": 114.6,
    "adet": 250,
    "ciro": 38416,
    "ebitda": 9118,
@@ -86,7 +86,7 @@
   },
   {
    "k": "ARDYZ",
-   "fiyat": 91.6,
+   "fiyat": 83.3,
    "adet": 322,
    "ciro": 5969,
    "ebitda": 2514,
@@ -95,7 +95,7 @@
   },
   {
    "k": "ASELS",
-   "fiyat": 389,
+   "fiyat": 387.5,
    "adet": 4560,
    "ciro": 203046,
    "ebitda": 53985,
@@ -104,7 +104,7 @@
   },
   {
    "k": "ATAKP",
-   "fiyat": 45.9,
+   "fiyat": 44.7,
    "adet": 138,
    "ciro": 4143,
    "ebitda": 490,
@@ -113,7 +113,7 @@
   },
   {
    "k": "AVPGY",
-   "fiyat": 51,
+   "fiyat": 51.4,
    "adet": 400,
    "ciro": 7757,
    "ebitda": 3031,
@@ -122,7 +122,7 @@
   },
   {
    "k": "BAHKM",
-   "fiyat": 126.8,
+   "fiyat": 120.9,
    "adet": 55,
    "ciro": 985,
    "ebitda": 127,
@@ -131,7 +131,7 @@
   },
   {
    "k": "BAKAB",
-   "fiyat": 46.24,
+   "fiyat": 45.34,
    "adet": 72,
    "ciro": 6568,
    "ebitda": 456,
@@ -140,7 +140,7 @@
   },
   {
    "k": "BASGZ",
-   "fiyat": 42.9,
+   "fiyat": 42.96,
    "adet": 700,
    "ciro": 54074,
    "ebitda": 7150,
@@ -149,7 +149,7 @@
   },
   {
    "k": "BERA",
-   "fiyat": 13.34,
+   "fiyat": 13.48,
    "adet": 683,
    "ciro": 21238,
    "ebitda": 2612,
@@ -158,7 +158,7 @@
   },
   {
    "k": "BIENY",
-   "fiyat": 21.58,
+   "fiyat": 20.8,
    "adet": 361,
    "ciro": 13773,
    "ebitda": 2235,
@@ -167,7 +167,7 @@
   },
   {
    "k": "BIMAS",
-   "fiyat": 382,
+   "fiyat": 374.75,
    "adet": 600,
    "ciro": 813017,
    "ebitda": 51050,
@@ -176,7 +176,7 @@
   },
   {
    "k": "BMSTL",
-   "fiyat": 46.04,
+   "fiyat": 46.1,
    "adet": 150,
    "ciro": 2552,
    "ebitda": 229,
@@ -185,7 +185,7 @@
   },
   {
    "k": "BORSK",
-   "fiyat": 6.09,
+   "fiyat": 6.05,
    "adet": 960,
    "ciro": 5256,
    "ebitda": 618,
@@ -194,7 +194,7 @@
   },
   {
    "k": "BOSSA",
-   "fiyat": 6.63,
+   "fiyat": 7.1,
    "adet": 1300,
    "ciro": 7024,
    "ebitda": 1011,
@@ -203,7 +203,7 @@
   },
   {
    "k": "BRISA",
-   "fiyat": 78.65,
+   "fiyat": 81.45,
    "adet": 305,
    "ciro": 46799,
    "ebitda": 6985,
@@ -212,7 +212,7 @@
   },
   {
    "k": "BRLSM",
-   "fiyat": 15.87,
+   "fiyat": 16.03,
    "adet": 224,
    "ciro": 5667,
    "ebitda": 449,
@@ -221,7 +221,7 @@
   },
   {
    "k": "BSOKE",
-   "fiyat": 34.1,
+   "fiyat": 34.04,
    "adet": 1600,
    "ciro": 6333,
    "ebitda": 276,
@@ -230,7 +230,7 @@
   },
   {
    "k": "CANTE",
-   "fiyat": 1.23,
+   "fiyat": 1.19,
    "adet": 10000,
    "ciro": 7361,
    "ebitda": 2341,
@@ -239,7 +239,7 @@
   },
   {
    "k": "CELHA",
-   "fiyat": 26.04,
+   "fiyat": 24.66,
    "adet": 385,
    "ciro": 2352,
    "ebitda": 205,
@@ -248,7 +248,7 @@
   },
   {
    "k": "CEMTS",
-   "fiyat": 8.8,
+   "fiyat": 8.89,
    "adet": 500,
    "ciro": 6738,
    "ebitda": 827,
@@ -257,7 +257,7 @@
   },
   {
    "k": "CEMZY",
-   "fiyat": 14.63,
+   "fiyat": 13.3,
    "adet": 402,
    "ciro": 2992,
    "ebitda": 647,
@@ -275,7 +275,7 @@
   },
   {
    "k": "CMBTN",
-   "fiyat": 1570,
+   "fiyat": 1584,
    "adet": 1,
    "ciro": 4867,
    "ebitda": 55,
@@ -284,7 +284,7 @@
   },
   {
    "k": "CVKMD",
-   "fiyat": 16.81,
+   "fiyat": 16.79,
    "adet": 3780,
    "ciro": 3411,
    "ebitda": 929,
@@ -293,7 +293,7 @@
   },
   {
    "k": "CWENE",
-   "fiyat": 38,
+   "fiyat": 37,
    "adet": 1078,
    "ciro": 19029,
    "ebitda": 3785,
@@ -302,7 +302,7 @@
   },
   {
    "k": "DAPGM",
-   "fiyat": 8.56,
+   "fiyat": 8.63,
    "adet": 2650,
    "ciro": 9396,
    "ebitda": 6556,
@@ -320,7 +320,7 @@
   },
   {
    "k": "DCTTR",
-   "fiyat": 7.49,
+   "fiyat": 7.48,
    "adet": 390,
    "ciro": 1819,
    "ebitda": 116,
@@ -329,7 +329,7 @@
   },
   {
    "k": "DYOBY",
-   "fiyat": 13.15,
+   "fiyat": 13.5,
    "adet": 300,
    "ciro": 10124,
    "ebitda": 1643,
@@ -338,7 +338,7 @@
   },
   {
    "k": "EBEBK",
-   "fiyat": 77.9,
+   "fiyat": 78.2,
    "adet": 160,
    "ciro": 32004,
    "ebitda": 4338,
@@ -347,7 +347,7 @@
   },
   {
    "k": "EDATA",
-   "fiyat": 21.18,
+   "fiyat": 19.53,
    "adet": 402,
    "ciro": 2632,
    "ebitda": 69,
@@ -356,7 +356,7 @@
   },
   {
    "k": "EFOR",
-   "fiyat": 18.2,
+   "fiyat": 18.74,
    "adet": 2178,
    "ciro": 14340,
    "ebitda": 1987,
@@ -365,7 +365,7 @@
   },
   {
    "k": "EGEPO",
-   "fiyat": 17.83,
+   "fiyat": 17.7,
    "adet": 500,
    "ciro": 1543,
    "ebitda": 293,
@@ -374,7 +374,7 @@
   },
   {
    "k": "EGGUB",
-   "fiyat": 102.6,
+   "fiyat": 102.3,
    "adet": 100,
    "ciro": 3898,
    "ebitda": 1760,
@@ -383,7 +383,7 @@
   },
   {
    "k": "EGPRO",
-   "fiyat": 35.44,
+   "fiyat": 35.4,
    "adet": 545,
    "ciro": 13981,
    "ebitda": 3441,
@@ -392,7 +392,7 @@
   },
   {
    "k": "EKGYO",
-   "fiyat": 18.61,
+   "fiyat": 18.3,
    "adet": 3800,
    "ciro": 101157,
    "ebitda": 22940,
@@ -410,7 +410,7 @@
   },
   {
    "k": "ELITE",
-   "fiyat": 28.54,
+   "fiyat": 27.82,
    "adet": 129,
    "ciro": 2660,
    "ebitda": 624,
@@ -419,7 +419,7 @@
   },
   {
    "k": "ENJSA",
-   "fiyat": 107.8,
+   "fiyat": 106.2,
    "adet": 1181,
    "ciro": 251864,
    "ebitda": 48258,
@@ -428,7 +428,7 @@
   },
   {
    "k": "EREGL",
-   "fiyat": 37.94,
+   "fiyat": 37.38,
    "adet": 7000,
    "ciro": 215050,
    "ebitda": 22143,
@@ -437,7 +437,7 @@
   },
   {
    "k": "EUPWR",
-   "fiyat": 97,
+   "fiyat": 97.2,
    "adet": 660,
    "ciro": 16295,
    "ebitda": 3942,
@@ -446,7 +446,7 @@
   },
   {
    "k": "FONET",
-   "fiyat": 5.42,
+   "fiyat": 5.17,
    "adet": 936,
    "ciro": 983,
    "ebitda": 434,
@@ -455,7 +455,7 @@
   },
   {
    "k": "FORTE",
-   "fiyat": 143,
+   "fiyat": 136.5,
    "adet": 67,
    "ciro": 3352,
    "ebitda": 911,
@@ -464,7 +464,7 @@
   },
   {
    "k": "GENIL",
-   "fiyat": 11.12,
+   "fiyat": 10.93,
    "adet": 4500,
    "ciro": 22682,
    "ebitda": 2920,
@@ -473,7 +473,7 @@
   },
   {
    "k": "GENTS",
-   "fiyat": 5.19,
+   "fiyat": 5.25,
    "adet": 750,
    "ciro": 5607,
    "ebitda": 763,
@@ -482,7 +482,7 @@
   },
   {
    "k": "GEREL",
-   "fiyat": 45.8,
+   "fiyat": 45.9,
    "adet": 372,
    "ciro": 2861,
    "ebitda": 218,
@@ -491,7 +491,7 @@
   },
   {
    "k": "GESAN",
-   "fiyat": 85,
+   "fiyat": 84.5,
    "adet": 460,
    "ciro": 24301,
    "ebitda": 5314,
@@ -500,7 +500,7 @@
   },
   {
    "k": "GLRMK",
-   "fiyat": 177.3,
+   "fiyat": 179,
    "adet": 322,
    "ciro": 50818,
    "ebitda": 6723,
@@ -509,7 +509,7 @@
   },
   {
    "k": "GOKNR",
-   "fiyat": 19.5,
+   "fiyat": 18.4,
    "adet": 350,
    "ciro": 16544,
    "ebitda": 1586,
@@ -518,7 +518,7 @@
   },
   {
    "k": "GOLTS",
-   "fiyat": 297.25,
+   "fiyat": 293.5,
    "adet": 18,
    "ciro": 7471,
    "ebitda": 811,
@@ -536,7 +536,7 @@
   },
   {
    "k": "GRSEL",
-   "fiyat": 343,
+   "fiyat": 348,
    "adet": 102,
    "ciro": 12729,
    "ebitda": 4203,
@@ -545,7 +545,7 @@
   },
   {
    "k": "GRTHO",
-   "fiyat": 224.8,
+   "fiyat": 225.8,
    "adet": 125,
    "ciro": 7543,
    "ebitda": 918,
@@ -554,7 +554,7 @@
   },
   {
    "k": "GUBRF",
-   "fiyat": 445.25,
+   "fiyat": 419.25,
    "adet": 334,
    "ciro": 61994,
    "ebitda": 13827,
@@ -563,7 +563,7 @@
   },
   {
    "k": "HATSN",
-   "fiyat": 50.65,
+   "fiyat": 50.55,
    "adet": 221,
    "ciro": 5057,
    "ebitda": 145,
@@ -572,7 +572,7 @@
   },
   {
    "k": "HOROZ",
-   "fiyat": 68.05,
+   "fiyat": 66.2,
    "adet": 90,
    "ciro": 13669,
    "ebitda": 1637,
@@ -581,7 +581,7 @@
   },
   {
    "k": "HRKET",
-   "fiyat": 105.8,
+   "fiyat": 99.7,
    "adet": 115,
    "ciro": 7088,
    "ebitda": 1545,
@@ -590,7 +590,7 @@
   },
   {
    "k": "IMASM",
-   "fiyat": 2.44,
+   "fiyat": 2.53,
    "adet": 925,
    "ciro": 2977,
    "ebitda": 247,
@@ -599,7 +599,7 @@
   },
   {
    "k": "INTEM",
-   "fiyat": 262.75,
+   "fiyat": 258.5,
    "adet": 19,
    "ciro": 2106,
    "ebitda": 377,
@@ -608,7 +608,7 @@
   },
   {
    "k": "ISDMR",
-   "fiyat": 52.55,
+   "fiyat": 51.1,
    "adet": 2900,
    "ciro": 125716,
    "ebitda": 13413,
@@ -617,7 +617,7 @@
   },
   {
    "k": "IZFAS",
-   "fiyat": 60,
+   "fiyat": 62.2,
    "adet": 177,
    "ciro": 506,
    "ebitda": 42,
@@ -626,7 +626,7 @@
   },
   {
    "k": "JANTS",
-   "fiyat": 14.92,
+   "fiyat": 14.73,
    "adet": 700,
    "ciro": 6961,
    "ebitda": 476,
@@ -635,7 +635,7 @@
   },
   {
    "k": "KARSN",
-   "fiyat": 9.58,
+   "fiyat": 10.13,
    "adet": 900,
    "ciro": 21051,
    "ebitda": 3919,
@@ -644,7 +644,7 @@
   },
   {
    "k": "KATMR",
-   "fiyat": 2.27,
+   "fiyat": 2.3,
    "adet": 2153,
    "ciro": 2418,
    "ebitda": 676,
@@ -653,7 +653,7 @@
   },
   {
    "k": "KBORU",
-   "fiyat": 23.52,
+   "fiyat": 23.2,
    "adet": 600,
    "ciro": 6416,
    "ebitda": 820,
@@ -662,7 +662,7 @@
   },
   {
    "k": "KCAER",
-   "fiyat": 16.05,
+   "fiyat": 15.99,
    "adet": 1915,
    "ciro": 25668,
    "ebitda": 3281,
@@ -671,7 +671,7 @@
   },
   {
    "k": "KCHOL",
-   "fiyat": 205.6,
+   "fiyat": 207.2,
    "adet": 2536,
    "ciro": 2057239,
    "ebitda": 243910,
@@ -680,7 +680,7 @@
   },
   {
    "k": "KIMMR",
-   "fiyat": 13.7,
+   "fiyat": 13.82,
    "adet": 240,
    "ciro": 15853,
    "ebitda": 1261,
@@ -689,7 +689,7 @@
   },
   {
    "k": "KLSYN",
-   "fiyat": 15.98,
+   "fiyat": 16.08,
    "adet": 431,
    "ciro": 2074,
    "ebitda": 385,
@@ -698,7 +698,7 @@
   },
   {
    "k": "KNFRT",
-   "fiyat": 12.6,
+   "fiyat": 11.8,
    "adet": 264,
    "ciro": 7255,
    "ebitda": 98,
@@ -707,7 +707,7 @@
   },
   {
    "k": "KOCMT",
-   "fiyat": 5.64,
+   "fiyat": 5.18,
    "adet": 2500,
    "ciro": 18647,
    "ebitda": 234,
@@ -716,7 +716,7 @@
   },
   {
    "k": "KONKA",
-   "fiyat": 11.95,
+   "fiyat": 11.55,
    "adet": 390,
    "ciro": 3299,
    "ebitda": 249,
@@ -725,7 +725,7 @@
   },
   {
    "k": "KONYA",
-   "fiyat": 3700,
+   "fiyat": 3717.5,
    "adet": 4,
    "ciro": 6970,
    "ebitda": 887,
@@ -734,7 +734,7 @@
   },
   {
    "k": "KOPOL",
-   "fiyat": 5.63,
+   "fiyat": 5.69,
    "adet": 1296,
    "ciro": 5212,
    "ebitda": 627,
@@ -743,7 +743,7 @@
   },
   {
    "k": "KOTON",
-   "fiyat": 12.47,
+   "fiyat": 12.46,
    "adet": 829,
    "ciro": 36112,
    "ebitda": 7943,
@@ -752,7 +752,7 @@
   },
   {
    "k": "KRDMD",
-   "fiyat": 45.62,
+   "fiyat": 41.48,
    "adet": 1140,
    "ciro": 70032,
    "ebitda": 8026,
@@ -761,7 +761,7 @@
   },
   {
    "k": "KRONT",
-   "fiyat": 27.62,
+   "fiyat": 28.1,
    "adet": 171,
    "ciro": 605,
    "ebitda": 256,
@@ -770,7 +770,7 @@
   },
   {
    "k": "KRVGD",
-   "fiyat": 2.39,
+   "fiyat": 2.4,
    "adet": 2160,
    "ciro": 16800,
    "ebitda": 1699,
@@ -779,7 +779,7 @@
   },
   {
    "k": "KUTPO",
-   "fiyat": 81.25,
+   "fiyat": 83,
    "adet": 39,
    "ciro": 4743,
    "ebitda": 891,
@@ -788,7 +788,7 @@
   },
   {
    "k": "KZBGY",
-   "fiyat": 2.02,
+   "fiyat": 2.04,
    "adet": 4000,
    "ciro": 1814,
    "ebitda": 1347,
@@ -797,7 +797,7 @@
   },
   {
    "k": "LKMNH",
-   "fiyat": 13.41,
+   "fiyat": 13.66,
    "adet": 216,
    "ciro": 4792,
    "ebitda": 1117,
@@ -806,7 +806,7 @@
   },
   {
    "k": "LMKDC",
-   "fiyat": 25.1,
+   "fiyat": 24.58,
    "adet": 516,
    "ciro": 9306,
    "ebitda": 3541,
@@ -815,7 +815,7 @@
   },
   {
    "k": "MAGEN",
-   "fiyat": 35.26,
+   "fiyat": 35.62,
    "adet": 2950,
    "ciro": 1596,
    "ebitda": 530,
@@ -824,7 +824,7 @@
   },
   {
    "k": "MAKIM",
-   "fiyat": 16.18,
+   "fiyat": 15.91,
    "adet": 112,
    "ciro": 1574,
    "ebitda": 211,
@@ -833,7 +833,7 @@
   },
   {
    "k": "MARBL",
-   "fiyat": 12.3,
+   "fiyat": 12.27,
    "adet": 228,
    "ciro": 3352,
    "ebitda": 451,
@@ -842,7 +842,7 @@
   },
   {
    "k": "MAVI",
-   "fiyat": 38.14,
+   "fiyat": 38.22,
    "adet": 794,
    "ciro": 51954,
    "ebitda": 9439,
@@ -851,7 +851,7 @@
   },
   {
    "k": "MEDTR",
-   "fiyat": 25.94,
+   "fiyat": 25.12,
    "adet": 119,
    "ciro": 3022,
    "ebitda": 295,
@@ -860,7 +860,7 @@
   },
   {
    "k": "MERCN",
-   "fiyat": 22.1,
+   "fiyat": 20.7,
    "adet": 190,
    "ciro": 3181,
    "ebitda": 563,
@@ -869,7 +869,7 @@
   },
   {
    "k": "MGROS",
-   "fiyat": 562,
+   "fiyat": 555,
    "adet": 181,
    "ciro": 460797,
    "ebitda": 30528,
@@ -878,7 +878,7 @@
   },
   {
    "k": "MNDTR",
-   "fiyat": 5.08,
+   "fiyat": 5.1,
    "adet": 1049,
    "ciro": 17234,
    "ebitda": 680,
@@ -887,7 +887,7 @@
   },
   {
    "k": "MOBTL",
-   "fiyat": 13.6,
+   "fiyat": 14.89,
    "adet": 1025,
    "ciro": 17903,
    "ebitda": 1072,
@@ -896,7 +896,7 @@
   },
   {
    "k": "MPARK",
-   "fiyat": 438,
+   "fiyat": 438.25,
    "adet": 191,
    "ciro": 61494,
    "ebitda": 17825,
@@ -905,7 +905,7 @@
   },
   {
    "k": "NETAS",
-   "fiyat": 68.3,
+   "fiyat": 62.1,
    "adet": 64,
    "ciro": 13337,
    "ebitda": 364,
@@ -914,7 +914,7 @@
   },
   {
    "k": "NTGAZ",
-   "fiyat": 10.6,
+   "fiyat": 10.89,
    "adet": 690,
    "ciro": 8926,
    "ebitda": 2053,
@@ -923,7 +923,7 @@
   },
   {
    "k": "ONCSM",
-   "fiyat": 239.5,
+   "fiyat": 242,
    "adet": 23,
    "ciro": 799,
    "ebitda": 252,
@@ -932,7 +932,7 @@
   },
   {
    "k": "ORGE",
-   "fiyat": 114,
+   "fiyat": 110.7,
    "adet": 80,
    "ciro": 4079,
    "ebitda": 2237,
@@ -941,7 +941,7 @@
   },
   {
    "k": "OZYSR",
-   "fiyat": 13.21,
+   "fiyat": 12.71,
    "adet": 103,
    "ciro": 7915,
    "ebitda": 442,
@@ -950,7 +950,7 @@
   },
   {
    "k": "PARSN",
-   "fiyat": 72.05,
+   "fiyat": 70.95,
    "adet": 86,
    "ciro": 5568,
    "ebitda": 194,
@@ -959,7 +959,7 @@
   },
   {
    "k": "PASEU",
-   "fiyat": 164,
+   "fiyat": 169,
    "adet": 672,
    "ciro": 2493,
    "ebitda": 77,
@@ -968,7 +968,7 @@
   },
   {
    "k": "PGSUS",
-   "fiyat": 151.2,
+   "fiyat": 151.7,
    "adet": 500,
    "ciro": 163300,
    "ebitda": 35967,
@@ -977,7 +977,7 @@
   },
   {
    "k": "PKART",
-   "fiyat": 127,
+   "fiyat": 132.7,
    "adet": 22,
    "ciro": 2775,
    "ebitda": 253,
@@ -986,7 +986,7 @@
   },
   {
    "k": "PLTUR",
-   "fiyat": 20.16,
+   "fiyat": 20.66,
    "adet": 244,
    "ciro": 9038,
    "ebitda": 2410,
@@ -995,7 +995,7 @@
   },
   {
    "k": "POLHO",
-   "fiyat": 23.02,
+   "fiyat": 22.32,
    "adet": 758,
    "ciro": 6766,
    "ebitda": 972,
@@ -1004,7 +1004,7 @@
   },
   {
    "k": "QUAGR",
-   "fiyat": 3.21,
+   "fiyat": 3.18,
    "adet": 2640,
    "ciro": 11372,
    "ebitda": 2006,
@@ -1013,7 +1013,7 @@
   },
   {
    "k": "RGYAS",
-   "fiyat": 203,
+   "fiyat": 209.4,
    "adet": 331,
    "ciro": 14986,
    "ebitda": 9915,
@@ -1022,7 +1022,7 @@
   },
   {
    "k": "SAFKR",
-   "fiyat": 20.22,
+   "fiyat": 20.5,
    "adet": 200,
    "ciro": 2092,
    "ebitda": 405,
@@ -1031,7 +1031,7 @@
   },
   {
    "k": "SAHOL",
-   "fiyat": 88.9,
+   "fiyat": 89.4,
    "adet": 2100,
    "ciro": 267951,
    "ebitda": 109400,
@@ -1040,7 +1040,7 @@
   },
   {
    "k": "SARKY",
-   "fiyat": 26.8,
+   "fiyat": 26.02,
    "adet": 1000,
    "ciro": 93562,
    "ebitda": 2835,
@@ -1049,7 +1049,7 @@
   },
   {
    "k": "SAYAS",
-   "fiyat": 55.3,
+   "fiyat": 58.55,
    "adet": 77,
    "ciro": 2515,
    "ebitda": 494,
@@ -1058,7 +1058,7 @@
   },
   {
    "k": "SEKUR",
-   "fiyat": 10.99,
+   "fiyat": 11,
    "adet": 187,
    "ciro": 1709,
    "ebitda": 237,
@@ -1067,7 +1067,7 @@
   },
   {
    "k": "SELEC",
-   "fiyat": 260,
+   "fiyat": 251,
    "adet": 621,
    "ciro": 192149,
    "ebitda": 7264,
@@ -1076,7 +1076,7 @@
   },
   {
    "k": "SISE",
-   "fiyat": 38.64,
+   "fiyat": 41.4,
    "adet": 3063,
    "ciro": 245055,
    "ebitda": 21230,
@@ -1085,7 +1085,7 @@
   },
   {
    "k": "SNGYO",
-   "fiyat": 3.21,
+   "fiyat": 3.24,
    "adet": 4000,
    "ciro": 7136,
    "ebitda": 2411,
@@ -1094,7 +1094,7 @@
   },
   {
    "k": "SNICA",
-   "fiyat": 3.16,
+   "fiyat": 3.15,
    "adet": 600,
    "ciro": 3568,
    "ebitda": 361,
@@ -1103,7 +1103,7 @@
   },
   {
    "k": "SOKE",
-   "fiyat": 14.83,
+   "fiyat": 14.84,
    "adet": 386,
    "ciro": 8586,
    "ebitda": 364,
@@ -1112,7 +1112,7 @@
   },
   {
    "k": "SUNTK",
-   "fiyat": 39.3,
+   "fiyat": 39.88,
    "adet": 474,
    "ciro": 13944,
    "ebitda": 1691,
@@ -1121,7 +1121,7 @@
   },
   {
    "k": "SUWEN",
-   "fiyat": 6.3,
+   "fiyat": 6.45,
    "adet": 560,
    "ciro": 6519,
    "ebitda": 1281,
@@ -1130,7 +1130,7 @@
   },
   {
    "k": "TARKM",
-   "fiyat": 455.5,
+   "fiyat": 446,
    "adet": 21,
    "ciro": 2264,
    "ebitda": 481,
@@ -1139,7 +1139,7 @@
   },
   {
    "k": "TCELL",
-   "fiyat": 102.9,
+   "fiyat": 104.1,
    "adet": 2200,
    "ciro": 257538,
    "ebitda": 116370,
@@ -1148,7 +1148,7 @@
   },
   {
    "k": "TEZOL",
-   "fiyat": 9.85,
+   "fiyat": 9.86,
    "adet": 500,
    "ciro": 6017,
    "ebitda": 444,
@@ -1157,7 +1157,7 @@
   },
   {
    "k": "THYAO",
-   "fiyat": 301,
+   "fiyat": 305.25,
    "adet": 1380,
    "ciro": 1036721,
    "ebitda": 169311,
@@ -1166,7 +1166,7 @@
   },
   {
    "k": "TKNSA",
-   "fiyat": 19.74,
+   "fiyat": 17.95,
    "adet": 201,
    "ciro": 92546,
    "ebitda": 4524,
@@ -1175,7 +1175,7 @@
   },
   {
    "k": "TOASO",
-   "fiyat": 266.75,
+   "fiyat": 268.5,
    "adet": 500,
    "ciro": 414924,
    "ebitda": 12573,
@@ -1184,7 +1184,7 @@
   },
   {
    "k": "TUKAS",
-   "fiyat": 1.99,
+   "fiyat": 1.98,
    "adet": 4500,
    "ciro": 9505,
    "ebitda": 2626,
@@ -1193,7 +1193,7 @@
   },
   {
    "k": "TUPRS",
-   "fiyat": 368.75,
+   "fiyat": 361.75,
    "adet": 1926,
    "ciro": 964413,
    "ebitda": 71340,
@@ -1202,7 +1202,7 @@
   },
   {
    "k": "TUREX",
-   "fiyat": 6.51,
+   "fiyat": 6.53,
    "adet": 1080,
    "ciro": 8874,
    "ebitda": 2292,
@@ -1211,7 +1211,7 @@
   },
   {
    "k": "ULKER",
-   "fiyat": 91.1,
+   "fiyat": 90.7,
    "adet": 369,
    "ciro": 121763,
    "ebitda": 18217,
@@ -1220,7 +1220,7 @@
   },
   {
    "k": "ULUSE",
-   "fiyat": 306.75,
+   "fiyat": 303.25,
    "adet": 80,
    "ciro": 9302,
    "ebitda": 815,
@@ -1229,7 +1229,7 @@
   },
   {
    "k": "USAK",
-   "fiyat": 1.24,
+   "fiyat": 1.23,
    "adet": 2450,
    "ciro": 5461,
    "ebitda": 567,
@@ -1238,7 +1238,7 @@
   },
   {
    "k": "VAKKO",
-   "fiyat": 68.8,
+   "fiyat": 68.95,
    "adet": 160,
    "ciro": 22003,
    "ebitda": 2557,
@@ -1247,7 +1247,7 @@
   },
   {
    "k": "YATAS",
-   "fiyat": 35.14,
+   "fiyat": 35.02,
    "adet": 149,
    "ciro": 24995,
    "ebitda": 2824,
@@ -1256,7 +1256,7 @@
   },
   {
    "k": "YEOTK",
-   "fiyat": 41.24,
+   "fiyat": 41.64,
    "adet": 830,
    "ciro": 20339,
    "ebitda": 4548,
@@ -1266,7 +1266,7 @@
   },
   {
    "k": "YUNSA",
-   "fiyat": 8.72,
+   "fiyat": 9.13,
    "adet": 480,
    "ciro": 3564,
    "ebitda": 523,
