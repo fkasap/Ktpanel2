@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819r';   // SS335 tek zaman cizgisi + SS322b Ebu paketi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260819s';   // SS335b tablo secicisi duzeltildi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8698,10 +8698,17 @@ function kritikTakvimSadelestir(){
   if(kart.dataset.sadeBagli) return; kart.dataset.sadeBagli='1';
   const AYK={'oca':0,'şub':1,'sub':1,'mar':2,'nis':3,'may':4,'haz':5,'tem':6,'ağu':7,'agu':7,'eyl':8,'eki':9,'kas':10,'ara':11};
   const bugun=new Date(); bugun.setHours(0,0,0,0);
-  const satirlar=[...kart.querySelectorAll('.kv')].filter(x=>!x.closest('#makroOto'));
+  /* SS335b SECICI DUZELTMESI (canli olcum): elle takvim .kv DEGIL,
+     <table class="cal"> icinde 15 <tr> — ilk hucre tarih, ikincisi olay.
+     Ilk surum .kv ariyordu, sifir bulup sessizce cikti (fonksiyon kostu ama
+     hicbir sey yapmadi). DERS (bugun ikinci kez): SECICIYI DOM'DAN DOGRULA,
+     kaynaktan varsayma. */
+  const tablo=kart.querySelector('table.cal');
+  const satirlar=tablo ? [...tablo.querySelectorAll('tr')] : [];
   let gecmis=[];
   satirlar.forEach(kv=>{
-    const t=(kv.textContent||'').trim().slice(0,22).toLocaleLowerCase('tr');
+    const ilk=kv.children[0]; if(!ilk) return;
+    const t=(ilk.textContent||'').trim().toLocaleLowerCase('tr');
     const m=t.match(/(\d{1,2})\s*[-–]?\s*(\d{1,2})?\s*(oca|şub|sub|mar|nis|may|haz|tem|ağu|agu|eyl|eki|kas|ara)/);
     if(!m) return;
     const gun=+(m[2]||m[1]), ay=AYK[m[3]];
@@ -8714,17 +8721,22 @@ function kritikTakvimSadelestir(){
   });
   if(gecmis.length<2) return;                            /* katlamaya degmez */
   gecmis.forEach(x=>{ x.style.display='none'; x.dataset.gecmis='1'; });
-  const dug=document.createElement('div');
-  dug.className='sub';
-  dug.style.cssText='cursor:pointer;padding:3px 0 5px;font-size:10px;color:var(--mm2);border-bottom:1px dashed var(--line2);margin-bottom:4px';
-  dug.textContent='▸ '+gecmis.length+' geçmiş olay (göster)';
-  dug.onclick=function(){
-    const acik=dug.dataset.acik==='1';
+  /* SS335b: dugme de TABLO SATIRI olmali — div bir <table> icine konulamaz
+     (tarayici onu tablonun DISINA atar ve duzen bozulur). */
+  const kolon=(gecmis[0].children.length)||2;
+  const tr=document.createElement('tr');
+  const td=document.createElement('td');
+  td.colSpan=kolon;
+  td.style.cssText='cursor:pointer;padding:4px 0 6px;font-size:10px;color:var(--mm2)';
+  td.textContent='▸ '+gecmis.length+' geçmiş olay (göster)';
+  td.onclick=function(){
+    const acik=tr.dataset.acik==='1';
     gecmis.forEach(x=>{ x.style.display=acik?'none':''; });
-    dug.dataset.acik=acik?'0':'1';
-    dug.textContent=(acik?'▸ ':'▾ ')+gecmis.length+' geçmiş olay'+(acik?' (göster)':' (gizle)');
+    tr.dataset.acik=acik?'0':'1';
+    td.textContent=(acik?'▸ ':'▾ ')+gecmis.length+' geçmiş olay'+(acik?' (göster)':' (gizle)');
   };
-  gecmis[0].parentNode.insertBefore(dug,gecmis[0]);
+  tr.appendChild(td);
+  gecmis[0].parentNode.insertBefore(tr,gecmis[0]);
 }
 
 async function makroTakvimRender(){
