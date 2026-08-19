@@ -1754,6 +1754,203 @@ async function olcKos(ad, fn) {
   }
 }
 
+/* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
+   ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
+   (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
+   evde, kopruye gerek yok. Dogrulama: XKMYA 3A arsivden %13,98, Fintables
+   koprusuyle %13,86 (ayni pencerede degil, yakin) — arsiv yeterli.
+   CAPA KURALI: hedef gun (bugun-7/-30/-90) arsivde yoksa EN YAKIN ONCEKI gun
+   kullanilir ve SAPMA RAPORA yazilir (sektor satirlari arsive her gun degil,
+   BIST zip'i sektor tasidiginda dusuyor: son 70 gunun 14'u).
+   §114 TABAN BIRLIGI: benchmark (XU100) ve sektorler AYNI capa gunlerinden
+   okunur — karisik taban yasak. Bir sektor capa gununde yoksa O SEKTOR atlanir,
+   digerleri yazilir (kismi veri > hic veri, eksik gorunur kalir). */
+/* ── SS334 HAZINE IHRAC TAKVIMI OTOMATIK (hazine-takvim.json) ───────────────
+   ELLE RITUELDI: ayin ~25'inde HMB uc aylik ic borclanma stratejisini
+   yayimliyor, Claude PDF'i okuyup takvimi yaziyordu. SS314 zaten yolu acti:
+   ayni WP-API (portal/v2/posts) + pdf-parse.
+   ARAMA: "ic borclanma stratejisi" — duyuru basligi standarttir.
+   AYRISTIRMA: strateji PDF'inde ihale takvimi TABLO halinde durur; satirlar
+   "GG.AA.YYYY" ihale tarihi + senet tanimi + vade iceriyor. Regex tarih-oncelikli
+   calisir: once GG.AA.YYYY yakalanir, ayni satirdaki metinden enstruman ve
+   vade cikarilir. TAHMIN YOK: eslesme bulunamazsa dosya KORUNUR ve ham metnin
+   ilk 600 karakteri rapora dusulur (SS314 V1 deseni — sonraki tur gercek
+   duzene gore inceltilir).
+   KATILIM AYRIMI: "kira sertifikasi" gecen satirlar katilim=true isaretlenir —
+   panelin sukuk tarafi bunu okur. */
+async function hazineTakvimOto() {
+  const dosya = 'hazine-takvim.json';
+  try {
+    if (!(await varMi(dosya))) return;
+    const UA = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36', 'accept': 'application/json' };
+    const r = await fetch('https://www.hmb.gov.tr/portal/v2/posts?search=' + encodeURIComponent('iç borçlanma stratejisi') + '&per_page=5',
+      { headers: UA, signal: AbortSignal.timeout(20000) });
+    if (!r.ok) { raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ posts HTTP ' + r.status); return; }
+    const posts = await r.json();
+    if (!Array.isArray(posts) || !posts.length) { raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ duyuru bulunamadı'); return; }
+
+    const d = await oku(dosya);
+    const enYeni = posts.map(p => ({ slug: String(p.slug || ''), tarih: String(p.date || '').slice(0, 10),
+      baslik: String((p.title || {}).rendered || '').replace(/&#[0-9]+;/g, "'"),
+      pdf: ((p.content && p.content.rendered) || '').match(/href="([^"]+\.pdf[^"]*)"/i) }))
+      .filter(x => x.slug && x.pdf).sort((a, b) => b.tarih.localeCompare(a.tarih))[0];
+    if (!enYeni) { raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ PDF ekli duyuru yok'); return; }
+    if (d._kaynak_slug === enYeni.slug) { raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: ' + enYeni.tarih + ')'); return; }
+
+    let pdfParse = null;
+    try { pdfParse = (await import('pdf-parse')).default; }
+    catch (e) { raporlar.push('### Hazine ihraç takvimi (§334) — ✗ pdf-parse yok'); return; }
+    const pr = await fetch(enYeni.pdf[1], { headers: { 'User-Agent': UA['User-Agent'] }, signal: AbortSignal.timeout(25000) });
+    if (!pr.ok) { raporlar.push('### Hazine ihraç takvimi (§334) — ✗ PDF HTTP ' + pr.status); return; }
+    const pd = await pdfParse(Buffer.from(await pr.arrayBuffer()));
+    const metin = String(pd.text || '').replace(/\s+/g, ' ');
+
+    /* satir bolme: her ihale tarihi yeni kayit baslatir */
+    const parcalar = metin.split(/(?=\d{2}\.\d{2}\.\d{4})/).filter(x => /^\d{2}\.\d{2}\.\d{4}/.test(x));
+    const isoCevir = (t) => { const p = t.split('.'); return p[2] + '-' + p[1] + '-' + p[0]; };
+    const ENST = [[/T[ÜU]FE/i, "TÜFE'ye Endeksli DT"], [/TLREF/i, "TLREF'e Endeksli DT"], [/kira sertifikas/i, 'Kira Sertifikası'],
+      [/de[ğg]i[şs]ken faizli/i, 'Değişken Faizli DT'], [/kuponsuz|hazine bonosu/i, 'Kuponsuz Devlet Tahvili'],
+      [/sabit kuponlu/i, 'Sabit Kuponlu DT'], [/ABD dolar|USD/i, 'USD Cinsi Kıymet'], [/alt[ıi]n/i, 'Altına Dayalı Kıymet']];
+    /* SS334b PENCERE SUZGECI (ilk testte yakalandi): metin her tarihte bolununce
+       ITFA tarihleri de "ihale" gibi gorunuyordu — 14.09.2031 sahte kayit
+       uretmisti. Strateji UC AYLIK bir programdir: ihale gunu bugunden en fazla
+       ~7 ay ileride, gecmise de 1 aydan fazla gitmez. Itfa (yillar sonrasi)
+       bu pencerede olamaz. Boylece tarih-tabanli bolme guvenli hale gelir. */
+    const bugunT = new Date(bugun + 'T00:00:00Z').getTime();
+    const ALT = bugunT - 31 * 864e5, UST = bugunT + 214 * 864e5;
+    const ihraclar = [];
+    for (const p of parcalar) {
+      const t = p.match(/^(\d{2}\.\d{2}\.\d{4})/)[1];
+      const tms = new Date(isoCevir(t) + 'T00:00:00Z').getTime();
+      if (!(tms >= ALT && tms <= UST)) continue;              /* itfa/gecmis tarih — atla */
+      const govde = p.slice(0, 260);
+      const enst = ENST.find(([rx]) => rx.test(govde));
+      if (!enst) continue;
+      const vadeM = govde.match(/(\d{1,2})\s*(y[ıi]l|ay)/i);
+      const itfaM = govde.match(/\d{2}\.\d{2}\.\d{4}/g);
+      ihraclar.push({ t: isoCevir(t), ad: enst[1],
+        vade: vadeM ? (vadeM[1] + ' ' + (/ay/i.test(vadeM[2]) ? 'Ay' : 'Yıl')) : '',
+        /* SS334c ITFA: parcalama tarihte boldugu icin itfa BIR SONRAKI parcanin
+           BASINDA kalir (olculdu: parca "08.09.2026 5 Yil ... Ihraç " ile biter,
+           "14.09.2031 15.09.2026 2 Yil..." diye devam eder). Bu yuzden itfa
+           SIRADAKI parcanin ilk tarihidir — ve o tarih ihale penceresinin
+           DISINDA olmalidir (yillar sonrasi); pencere ici ise o bir sonraki
+           IHALEDIR, itfa degil ve bos birakilir (uydurma yok). */
+        itfa: (function(){
+          const sonraki = parcalar[parcalar.indexOf(p) + 1];
+          if (!sonraki) return '';
+          const m2 = sonraki.match(/^(\d{2}\.\d{2}\.\d{4})/);
+          if (!m2) return '';
+          const iso2 = isoCevir(m2[1]);
+          const ms2 = new Date(iso2 + 'T00:00:00Z').getTime();
+          return (ms2 > UST) ? iso2 : '';
+        })(),
+        yontem: /do[ğg]rudan sat/i.test(govde) ? 'Doğrudan Satış' : 'İhale / Yeniden',
+        katilim: /kira sertifikas/i.test(govde) });
+    }
+    if (ihraclar.length < 3) {
+      raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ PDF ayrıştırılamadı (' + ihraclar.length + ' satır), dosya KORUNDU' +
+        '\n- kaynak: ' + enYeni.tarih + ' · ' + enYeni.baslik.slice(0, 70) +
+        '\n- ham (600): ' + metin.slice(0, 600));
+      return;
+    }
+    d.ihraclar = ihraclar.sort((a, b) => a.t.localeCompare(b.t));
+    d.donem = enYeni.baslik.replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü \-]/g, '').slice(0, 60);
+    d.guncelleme = bugun; d._kaynak_slug = enYeni.slug; d._kaynak_pdf = enYeni.pdf[1];
+    await yaz(dosya, d);
+    degisenler.push('hazine ihraç takvimi (' + ihraclar.length + ')');
+    const ks = ihraclar.filter(x => x.katilim).length;
+    raporlar.push('### Hazine ihraç takvimi (§334) — ✓ ' + ihraclar.length + ' ihraç · ' + ks + ' kira sertifikası' +
+      '\n- kaynak: ' + enYeni.tarih + ' · ' + enYeni.baslik.slice(0, 70) +
+      '\n' + ihraclar.slice(0, 6).map(x => '- ' + x.t + ' · ' + x.ad + (x.vade ? ' · ' + x.vade : '') + (x.katilim ? ' · KATILIM' : '')).join('\n'));
+  } catch (e) { raporlar.push('### Hazine ihraç takvimi (§334) — ✗ ' + String(e && e.message || e).slice(0, 90)); }
+}
+
+async function sektorTazele() {
+  const dosya = 'sektor.json';
+  try {
+    if (!(await varMi(dosya))) return;
+    if (!(await varMi('endeks-arsiv.json'))) { raporlar.push('### Sektör ısı (§333) — ⏭ endeks arşivi yok'); return; }
+    const d = await oku(dosya);
+    const ar = await oku('endeks-arsiv.json');
+    const G = (ar && ar.gunler) || {};
+    const gunler = Object.keys(G).sort();
+    if (!gunler.length) { raporlar.push('### Sektör ısı (§333) — ⏭ arşiv boş'); return; }
+
+    const kodlar = [d.benchmark.k].concat(d.sektorler.map(x => x.k));
+    /* capa: hedef tarihten geriye dogru, ISTENEN KODUN bulundugu ilk gun */
+    const capa = (hedefISO, kod) => {
+      for (let i = gunler.length - 1; i >= 0; i--) {
+        const g = gunler[i];
+        if (g <= hedefISO && G[g] && isFinite(+G[g][kod]) && +G[g][kod] > 0) return g;
+      }
+      return null;
+    };
+    const sonGun = capa('9999-12-31', d.benchmark.k);
+    if (!sonGun) { raporlar.push('### Sektör ısı (§333) — ⏭ benchmark arşivde yok'); return; }
+    const gunEkle = (iso, n) => { const t = new Date(iso + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() - n); return t.toISOString().slice(0, 10); };
+    const UFUK = [['1G', 1], ['1H', 7], ['1A', 30], ['3A', 90]];
+
+    /* TABAN BIRLIGI: capa gunleri BENCHMARK uzerinden bir kez secilir, tum
+       sektorler AYNI gunlerden okunur (§114). */
+    const capalar = {}; const sapma = [];
+    for (const [ad, gun] of UFUK) {
+      const hedef = gunEkle(sonGun, gun);
+      const c = capa(hedef, d.benchmark.k);
+      if (!c) { raporlar.push('### Sektör ısı (§333) — ⏭ ' + ad + ' çapası bulunamadı'); return; }
+      const farkGun = Math.round((new Date(hedef) - new Date(c)) / 864e5);
+      /* SS333b DURUSTLUK ESIGI (ilk testte yakalandi): sektor satirlari arsive
+         4 Agu'dan BERI gunluk dusuyor; oncesinde yalniz ay sonu tohumlari var
+         (30 Nis · 26 May · 30 Haz · 31 Tem). Bu yuzden "1A" capasi 20 gun
+         geriye kayiyor ve etiket 1 AY derken 50 GUNLUK getiri gosteriyordu.
+         KURAL: capa hedeften 7 gunden fazla saparsa O UFUK HESAPLANMAZ —
+         dosyadaki damgali eski deger KORUNUR ve rapor sapmayi yazar.
+         Yanlis etiketli dogru sayi, yanlis sayidan daha tehlikelidir (§179.3).
+         Arsiv doldukca (Eyl'de 1A, Kas'ta 3A) ufuklar kendiliginden acilir. */
+      if (farkGun > 7) { sapma.push(ad + ' hedef ' + hedef + ' → ' + c + ' (' + farkGun + ' gün geride) — ufuk ATLANDI, damgalı değer korundu'); capalar[ad] = null; continue; }
+      capalar[ad] = c;
+    }
+    const getiri = (kod) => UFUK.map(([ad]) => {
+      const c = capalar[ad];
+      if (!c) return null;                                   /* SS333b: atlanan ufuk */
+      const p0 = G[c] && +G[c][kod], p1 = G[sonGun] && +G[sonGun][kod];
+      return (isFinite(p0) && p0 > 0 && isFinite(p1) && p1 > 0) ? +((p1 / p0 - 1) * 100).toFixed(2) : null;
+    });
+
+    /* SS333b: ufuk bazinda birlestirme — yeni deger varsa o, yoksa DAMGALI eski.
+       Ufuk icinde taban birligi korunur (ayni ufkun tum kodlari ayni capadan);
+       ufuklar arasi zaten farkli tarihlerdir, karisiklik degildir. */
+    const birlestir = (yeni, eskiG) => yeni.map((v, i) => v == null ? (eskiG && eskiG[i] != null ? eskiG[i] : null) : v);
+    const bG = birlestir(getiri(d.benchmark.k), d.benchmark.g);
+    if (bG.every(x => x == null)) { raporlar.push('### Sektör ısı (§333) — ⏭ benchmark hiçbir ufukta hesaplanamadı'); return; }
+    let yazilan = 0; const eksik = [];
+    const yeniSektorler = d.sektorler.map(s => {
+      const ham = getiri(s.k);
+      if (ham.every(x => x == null)) { eksik.push(s.k); return s; }
+      if (ham[0] != null) yazilan++;                          /* 1G tazelendiyse sayilir */
+      return { k: s.k, ad: s.ad, g: birlestir(ham, s.g) };
+    });
+    if (yazilan < d.sektorler.length * 0.7) {
+      raporlar.push('### Sektör ısı (§333) — ⏭ yalnız ' + yazilan + '/' + d.sektorler.length + ' sektör hesaplanabildi, dosya KORUNDU (eksik: ' + eksik.join(', ') + ')');
+      return;
+    }
+    d.tarih = sonGun; d.guncelleme = bugun;
+    d.benchmark = { k: d.benchmark.k, ad: d.benchmark.ad, g: bG };
+    d.sektorler = yeniSektorler;
+    d.capalar = { son: sonGun, '1G': capalar['1G'], '1H': capalar['1H'], '1A': capalar['1A'], '3A': capalar['3A'] };
+    d.kaynak = 'BIST resmi kapanislari (endeks-arsiv.json) — §333 otomatik';
+    await yaz(dosya, d);
+    degisenler.push('sektör ısı (' + yazilan + ' sektör)');
+    const enIyi = yeniSektorler.filter(s => s.g && s.g[3] != null).sort((a, b) => b.g[3] - a.g[3])[0];
+    raporlar.push('### Sektör ısı + rotasyon (§333) — ✓ ' + sonGun + ' · ' + yazilan + '/' + d.sektorler.length + ' sektör' +
+      '\n- çapalar: 1G ' + capalar['1G'] + ' · 1H ' + capalar['1H'] + ' · 1A ' + capalar['1A'] + ' · 3A ' + capalar['3A'] +
+      '\n- XU100 (1G/1H/1A/3A): ' + bG.join(' · ') +
+      (enIyi ? '\n- 3A lideri: ' + enIyi.k + ' %' + enIyi.g[3] : '') +
+      (eksik.length ? '\n- ⚠ eski satırı korunanlar: ' + eksik.join(', ') : '') +
+      (sapma.length ? '\n- ⚠ çapa sapması: ' + sapma.join(' · ') : ''));
+  } catch (e) { raporlar.push('### Sektör ısı (§333) — ✗ ' + String(e && e.message || e).slice(0, 90)); }
+}
+
 async function makroTakvim() {
   const dosya = 'makro-takvim.json';
   try {
@@ -2031,7 +2228,10 @@ async function bultenKesif() {
     /* SS330: sicil noktasi ARTIK BURADA — arsiv az once bugunun XKTUM'unu yazdi,
        yani ayni kosuda gun sonu getirisi hesaplanabilir. */
     if (ister('fiyat')) await sicilSeriEkle();   /* §291 · §330 sirasi */
+    /* SS333: sektor de arsivden okur — ayni sira kurali (SS330). */
+    if (ister('endeks') || ister('hepsi')) await olcKos('Sektör ısı (§333)', ()=>sektorTazele());
     await olcKos('Hazine ihale (§314)', ()=>hmbIhale());   /* SS326 */
+    await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
   }
