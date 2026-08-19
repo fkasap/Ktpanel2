@@ -360,8 +360,58 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
     if (karantina.has(k)) return;                      /* karantinadaki fiyata DOKUNMA */
     if (f[k] && x[fiyatAlan] !== f[k].fiyat) { x[fiyatAlan] = f[k].fiyat; n++; }
   });
-  if (karantina.size) d._karantina = { kodlar: [...karantina], tarih: bugun,
-    not: 'Fiyat referansla ±%25 üstü ayrıştı — kurumsal işlem (bedelsiz/bölünme) olası. Pay adedi ve referans fiyat birlikte elle güncellenene dek fiyat tazelenmez.' };
+  /* ── SS328 KURUMSAL ISLEM: OTOMATIK YENIDEN OLCEKLEME (19 Agu) ────────────
+     ARIZA (kullanici sicilde yakaladi): ORGE 5:1 bolundu (13 Agu 110,70 →
+     16 Agu 22,80 — Fintables ham seriyle dogrulandi). Karantina fiyati
+     dondurdu ama SICIL p0'i 108,80'de kaldi; panelin canli katmani karantinayi
+     bilmedigi icin 22,64 / 108,80 = -%79 SAHTE dusus yazdi ve %2,5 agirlikla
+     modelden ~2 puan goturdu. Ekranda "model -1,08%" gorundu; gercek +3,08%.
+     KULLANICI KURALI: "hicbir sey elle guncellenmeyecek."
+     COZUM: bolunme/bedelsiz tespit edilince p0 (ve varsa referans fiyat)
+     OTOMATIK yeniden olceklenir — oran = yeni_fiyat / eski_referans.
+     Getiri bu sayede DEGISMEZ: hisse 5'e bolundugunde hem fiyat hem taban
+     5'e bolunur, oran korunur. Yuvarlama yok, tahmin yok: oranin kendisi
+     kullanilir (bedelsizde 1/1,5 gibi tam sayi olmayan oranlar da dogru calisir).
+     Emniyet: oran yalnizca [0,05 – 0,95] veya [1,05 – 20] araliginda uygulanir
+     (gunluk normal hareket ±%25'i asamaz zaten; asiri degerler kaynak arizasidir).
+     Karantina KALKMADI ama anlami degisti: artik "elle bak" degil,
+     "olceklendi, bir sonraki kosuda normal akar" demek. */
+  const olcekli = [];
+  if (karantina.size) {
+    liste.forEach(x => {
+      const k = x[kodAlan];
+      if (!karantina.has(k) || !f[k] || !x[fiyatAlan]) return;
+      const oran = f[k].fiyat / x[fiyatAlan];
+      if (!(oran > 0.05 && oran < 0.95) && !(oran > 1.05 && oran < 20)) return;
+      /* SS328b YAN ETKI DUZELTMESI (ayni oturumda yakalandi): ilk yazim yalniz
+         p0'i olcekliyordu. AMA bu fonksiyon multiple.json'da da kosuyor ve
+         orada `adet` (pay adedi) var — carpanlar fiyat×adet ile hesaplanir.
+         Fiyati 1/5'e cekip adedi birakmak piyasa degerini 1/5'e dusururdu:
+         141 hissenin EV/EBITDA'si bozulurdu. Eski karantina, fiyata HIC
+         dokunmayarak bunu farkinda olmadan engelliyordu — yani "duzeltme"
+         calisan bir korumayi kaldirip yerine sessiz bir hata koyacakti.
+         DOGRUSU: bolunmede fiyat ×oran ise ADET ÷oran olur (piyasa degeri
+         SABIT kalir; muhasebe kimligi budur).
+         DERS: BIR FONKSIYONU DEGISTIRMEDEN ONCE ONU KIM CAGIRIYOR DIYE BAK. */
+      ['p0', 'ref_fiyat', 'kurulus_fiyat'].forEach(alan => {
+        if (typeof x[alan] === 'number' && x[alan] > 0) x[alan] = +(x[alan] * oran).toFixed(4);
+      });
+      ['adet', 'pay_adedi', 'lot'].forEach(alan => {
+        if (typeof x[alan] === 'number' && x[alan] > 0) x[alan] = Math.round(x[alan] / oran);
+      });
+      x[fiyatAlan] = f[k].fiyat;               /* fiyat da artik guncellenir */
+      x._kurumsal = { tarih: bugun, oran: +oran.toFixed(4) };
+      olcekli.push(k + ' ×' + oran.toFixed(3));
+    });
+  }
+  if (olcekli.length) {
+    d._kurumsal_islem = { tarih: bugun, kayitlar: olcekli,
+      not: 'Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328).' };
+    aykiriSonuc.mesaj = (aykiriSonuc.mesaj || '') + ' → OTOMATIK ÖLÇEKLENDİ: ' + olcekli.join(' · ');
+  }
+  const kalanKarantina = [...karantina].filter(k => !olcekli.some(o => o.startsWith(k + ' ')));
+  if (kalanKarantina.length) d._karantina = { kodlar: kalanKarantina, tarih: bugun,
+    not: 'Fiyat referansla ±%25 üstü ayrıştı ama ölçekleme aralığı dışında — kaynak arızası olabilir, fiyat tazelenmedi.' };
   else delete d._karantina;
   if (n || karantina.size) {
     d.fiyat_tarihi = f[kapsanan[0]].tarih;
