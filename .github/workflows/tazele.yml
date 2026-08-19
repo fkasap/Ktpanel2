@@ -44,7 +44,12 @@ concurrency:
 jobs:
   tazele:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # SS326: 15 -> 20 dk. 19 Agu aksami is tavana carpip IPTAL oldu ve
+    # "operation was canceled" hicbir teshis birakmadi. Iki katmanli koruma:
+    # (1) tazele.mjs kendi 11 dk BUTCESINI tutar ve asarsa kalan katmanlari
+    #     atlayip raporu YAZAR (yesil biter, eksikler gorunur);
+    # (2) bu tavan yalniz son emniyet supabi - normalde ULASILMAZ.
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -73,7 +78,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'   # SS326: Node 20 deprecation uyarisi (Actions zaten 24'e zorluyordu)
 
       # npm ci LOCK DOSYASI ister; yoksa düşer. İlk kurulumda lock yok.
       # continue-on-error: bağımlılık kurulmasa bile FİYAT ve ENDEKS katmanları
