@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819s';   // SS335b tablo secicisi duzeltildi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260819t';   // SS336 birlesik kronolojik takvim   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8693,9 +8693,12 @@ function megaCapTazele(){
    tek sahip hala index.html).
    Tarih cozumu: "24 Tem" / "~20-22 Agu" bicimleri ay adindan okunur; yil
    yakinlik kuralindan turer (Ara->Oca gecisi icin +-6 ay penceresi). */
-function kritikTakvimSadelestir(){
+function kritikTakvimSadelestir(zorla){
   const kart=document.getElementById('kritikTakvimKart'); if(!kart) return;
-  if(kart.dataset.sadeBagli) return; kart.dataset.sadeBagli='1';
+  if(kart.dataset.sadeBagli && !zorla) return; kart.dataset.sadeBagli='1';
+  /* SS336: birlesik liste kurulunca yeniden cagrilir — eski katlama temizlenir */
+  [...kart.querySelectorAll('tr[data-katla]')].forEach(x=>x.remove());
+  [...kart.querySelectorAll('tr[data-gecmis]')].forEach(x=>{ x.style.display=''; delete x.dataset.gecmis; });
   const AYK={'oca':0,'şub':1,'sub':1,'mar':2,'nis':3,'may':4,'haz':5,'tem':6,'ağu':7,'agu':7,'eyl':8,'eki':9,'kas':10,'ara':11};
   const bugun=new Date(); bugun.setHours(0,0,0,0);
   /* SS335b SECICI DUZELTMESI (canli olcum): elle takvim .kv DEGIL,
@@ -8725,6 +8728,7 @@ function kritikTakvimSadelestir(){
      (tarayici onu tablonun DISINA atar ve duzen bozulur). */
   const kolon=(gecmis[0].children.length)||2;
   const tr=document.createElement('tr');
+  tr.dataset.katla='1';
   const td=document.createElement('td');
   td.colSpan=kolon;
   td.style.cssText='cursor:pointer;padding:4px 0 6px;font-size:10px;color:var(--mm2)';
@@ -8740,31 +8744,60 @@ function kritikTakvimSadelestir(){
 }
 
 async function makroTakvimRender(){
-  /* SS319-D DUZELTME (19 Agu aksami, canli olcum): ilk surum $('takvimBody')
-     hedefliyordu - O ID SAYFADA YOK (koddaki ESKI bir yorumdan okumustum;
-     gercek kaplar bistTakvim/globalTakvim/kazancCanli cikti). Render sessizce
-     donuyor, bolum HICBIR YERE cizilmiyordu. DERS: YORUM DEGIL, DOM KANITTIR.
-     Kap artik index'te statik: kritik takvim kartinda, elle tablonun ve "~"
-     dipnotunun ALTINDA - elle satirlara dokunulmaz. */
-  const kap=document.getElementById('makroOto'); if(!kap) return;
+  /* ── SS336 GERCEK BIRLESIK TAKVIM (19 Agu, kullanici: "yine iki ayri takvim
+     gibi durmuyor mu") ────────────────────────────────────────────────────
+     SS319 otomatik olaylari AYRI kapta, AYRI baslikla ciziyordu; SS335 gecmisi
+     katlayinca bile kart iki blok halinde okunuyordu. ARTIK otomatik olaylar
+     ELLE TABLONUN ICINE, ayni <tr> bicimiyle ve KRONOLOJIK sirada giriyor.
+     Elle satirlar SILINMEZ (SS112 — sahibi index.html), yalniz siralamaya
+     katilirlar. Idempotent: her kosuda data-oto satirlari once temizlenir. */
+  const kart=document.getElementById('kritikTakvimKart');
+  const tablo=kart?kart.querySelector('table.cal'):null;
+  if(!tablo) return;
   try{
     const r=await fetch('/makro-takvim.json',{cache:'no-store'});
     if(!r.ok) return;
     const d=await r.json();
     const simdi=Date.now()-2*3600e3;
-    const gel=(d.olaylar||[]).filter(x=>Date.parse(x.t)>=simdi).slice(0,12);
+    const gel=(d.olaylar||[]).filter(x=>Date.parse(x.t)>=simdi).slice(0,14);
     if(!gel.length) return;
+    const eskiKap=document.getElementById('makroOto'); if(eskiKap) eskiKap.remove();
+    [...tablo.querySelectorAll('tr[data-oto]')].forEach(x=>x.remove());
     const ayK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-    const gunK=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
-    const fmt=(iso)=>{const t=new Date(new Date(iso).toLocaleString('en-US',{timeZone:'Europe/Istanbul'}));
-      return t.getDate()+' '+ayK[t.getMonth()]+' '+gunK[t.getDay()]+' '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');};
-    kap.innerHTML='<div style="border-top:1px dashed var(--line2);margin-top:8px;padding-top:6px">'+
-      '<div class="lbl" style="margin-bottom:4px">KÜRESEL MAKRO <span class="thin" style="font-weight:400">(ForexFactory · otomatik §319 · saatler TSİ)</span></div>'+
-      gel.map(x=>'<div class="kv"><span class="k"><b>'+fmt(x.t)+'</b> · '+x.ulke+
-        (x.etki==='High'?' <span class="tag" style="background:var(--down)">YÜKSEK</span>':'')+
-        '</span><span class="sub" style="font-size:10px;text-align:right">'+x.olay+
-        ((x.beklenti||x.onceki)?(' <span class="thin">· bek '+(x.beklenti||'—')+' / önc '+(x.onceki||'—')+'</span>'):'')+
-        '</span></div>').join('')+'</div>';
+    const tsi=(iso)=>new Date(new Date(iso).toLocaleString('en-US',{timeZone:'Europe/Istanbul'}));
+    gel.forEach(x=>{
+      const t=tsi(x.t);
+      const tr=document.createElement('tr');
+      tr.dataset.oto='1'; tr.dataset.zaman=t.getTime();
+      const s1=document.createElement('td');
+      s1.innerHTML='<span class="thin" style="font-size:10.5px">'+t.getDate()+' '+ayK[t.getMonth()]+
+        ' <span style="opacity:.7">'+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')+'</span></span>';
+      const s2=document.createElement('td');
+      s2.innerHTML='<span style="font-size:11px">'+esc(x.olay)+'</span> <span class="thin" style="font-size:9.5px">· '+esc(x.ulke)+
+        (x.etki==='High'?' <span class="tag" style="background:var(--down);font-size:8px">YÜKSEK</span>':'')+
+        ((x.beklenti||x.onceki)?(' · bek '+esc(x.beklenti||'—')+' / önc '+esc(x.onceki||'—')):'')+'</span>';
+      tr.appendChild(s1); tr.appendChild(s2);
+      tablo.appendChild(tr);
+    });
+    const AYK={'oca':0,'şub':1,'sub':1,'mar':2,'nis':3,'may':4,'haz':5,'tem':6,'ağu':7,'agu':7,'eyl':8,'eki':9,'kas':10,'ara':11};
+    const bugun=new Date(); bugun.setHours(0,0,0,0);
+    const tumu=[...tablo.querySelectorAll('tr')];
+    tumu.forEach(tr=>{
+      if(tr.dataset.zaman) return;
+      const ilk=tr.children[0]; if(!ilk){ tr.dataset.zaman=0; return; }
+      const t=(ilk.textContent||'').trim().toLocaleLowerCase('tr');
+      const m=t.match(/(\d{1,2})\s*[-–]?\s*(\d{1,2})?\s*(oca|şub|sub|mar|nis|may|haz|tem|ağu|agu|eyl|eki|kas|ara)/);
+      if(!m){ tr.dataset.zaman=0; return; }
+      const gun=+(m[2]||m[1]), ay=AYK[m[3]];
+      if(!isFinite(gun)||ay==null){ tr.dataset.zaman=0; return; }
+      let dd=new Date(bugun.getFullYear(),ay,gun);
+      const fa=(dd-bugun)/2.6e9;
+      if(fa>6) dd=new Date(bugun.getFullYear()-1,ay,gun);
+      if(fa<-6) dd=new Date(bugun.getFullYear()+1,ay,gun);
+      tr.dataset.zaman=dd.getTime();
+    });
+    tumu.filter(x=>+x.dataset.zaman>0).sort((a,b)=>(+a.dataset.zaman)-(+b.dataset.zaman)).forEach(x=>tablo.appendChild(x));
+    try{ kritikTakvimSadelestir(true); }catch(e){}
   }catch(e){}
 }
 
