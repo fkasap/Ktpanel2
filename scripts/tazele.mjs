@@ -1798,7 +1798,7 @@ async function hazineTakvimOto() {
     /* SS334e SURUM DAMGASI: slug kilidi tek basina yeterli DEGIL — ayristirici
        duzeldiginde ayni duyuru YENIDEN islenmeli, yoksa bozuk cikti dosyada
        kalir (bu tam olarak yasandi). Kilit artik slug + ayristirici surumu. */
-    const AYR_SURUM = 'v4';   /* SS334f: gercek PDF duzenine gore yeniden yazildi */
+    const AYR_SURUM = 'v5';   /* SS334g: bitisik metin destegi */
     if (d._kaynak_slug === enYeni.slug && d._ayristirici === AYR_SURUM) {
       raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: ' + enYeni.tarih + ' · ' + (d.donem || '?') + ')'); return; }
 
@@ -1823,7 +1823,15 @@ async function hazineTakvimOto() {
        "Ihale / Yeniden ihrac", "Ihale / Ilk ihrac" veya "Dogrudan Satis".
        Artik TEK REGEX tum satiri yakalar; parca kaymasi imkansiz. */
     const T = '(\\d{1,2}\\.\\d{1,2}\\.\\d{4})';
-    const satirRx = new RegExp(T + '\\s+' + T + '\\s+' + T + '\\s+(.+?)\\s+(\\d+)\\s*(Y[\u0131i]l|A\\s*y)\\s*/\\s*\\d+\\s*G[\u00fcu]n\\s*(\u0130hale[^0-9]{0,24}|Do[\u011fg]rudan Sat[\u0131i][\u015fs])', 'gi');
+    /* SS334g BITISIK METIN (canli kosu olcumu): pdf-parse bu belgede sutunlari
+       BITISTIRIYOR — ham metinde "5.08.20264.47154.476" gibi. Onceki regex
+       tarihler arasinda BOSLUK sart kosuyordu ve yalniz bosluklu kalan (Ekim)
+       satirlarini yakalayabildi: 7/19. Artik tum ayiraclar \s* (sifir veya
+       daha fazla) — hem bosluklu hem bitisik bicim calisir.
+       Tarih deseni \d{1,2}.\d{1,2}.\d{4} oldugu icin bitisik sayi dizileri
+       ("20264.4715") yanlislikla tarih olarak okunamaz: yil 4 hane alinir,
+       kalan parca ikinci tarih desenine uymadigi icin eslesme duser. */
+    const satirRx = new RegExp(T + '\\s*' + T + '\\s*' + T + '\\s*(.+?)\\s*(\\d+)\\s*(Y[\u0131i]l|A\\s*y)\\s*/\\s*\\d+\\s*G[\u00fcu]n\\s*(\u0130hale[^0-9]{0,24}|Do[\u011fg]rudan Sat[\u0131i][\u015fs])', 'gi');
     const isoCevir = (t) => { const p = t.split('.'); return p[2] + '-' + p[1].padStart(2, '0') + '-' + p[0].padStart(2, '0'); };
     const ihraclar = [];
     let mm;
@@ -1881,8 +1889,12 @@ async function hazineTakvimOto() {
     try {
       const basM = metin.match(/\(Milyar[^)]*\)\s*((?:[A-Z\u00c7\u011e\u0130\u00d6\u015e\u00dca-z\u00e7\u011f\u0131\u00f6\u015f\u00fc]+\s+20\d{2}\s*(?:\(\d\))?\s*){2,4})/);
       const aylarBul = basM ? basM[1].split(/20\d{2}\s*(?:\(\d\))?\s*/).map(x => x.trim()).filter(x => AYLAR.includes(x)) : [];
-      const servisM = metin.match(/\u0130\u00e7 Bor\u00e7 Servisi\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/);
-      const borcM = metin.match(/\u0130\u00e7 Bor\u00e7lanma\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/);
+      /* SS334g: bitisik sayilar — "554,9616,3595,8". Turkce bicimde ondalik
+         TEK hanedir (milyar TL, virgulden sonra 1 basamak), bu yuzden
+         (\d{1,4},\d) deseni uc sayiyi bitisikken bile dogru ayirir. */
+      const S3 = '\\s*(\\d{1,4},\\d)\\s*(\\d{1,4},\\d)\\s*(\\d{1,4},\\d)';
+      const servisM = metin.match(new RegExp('\u0130\u00e7 Bor\u00e7 Servisi' + S3));
+      const borcM = metin.match(new RegExp('\u0130\u00e7 Bor\u00e7lanma' + S3));
       const sy = (t) => { const v = parseFloat(String(t).replace(/\./g, '').replace(',', '.')); return isFinite(v) ? v : null; };
       if (aylarBul.length === 3 && servisM && borcM) {
         aylarBul.forEach((a, k) => {
