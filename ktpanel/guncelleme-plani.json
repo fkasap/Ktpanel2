@@ -280,6 +280,15 @@
    "son": "otomatik",
    "kaynak": "tazele.mjs §314 — HMB WP-API (portal/v2/posts) + duyuru PDF (pdf-parse)",
    "_314": "18 Agu: kullanici onayiyla acilan TAM OTOMATIK katman (⭐ kural istisnasi onaylandi). Kumulatif defter — duyuru slug'la bir kez islenir. limit 7 gun: ihale olmayan haftalar olabilir."
+  },
+  {
+   "ad": "Küresel makro takvim",
+   "dosya": "makro-takvim.json",
+   "siklik": "gunluk",
+   "limit_gun": 8,
+   "son": "otomatik",
+   "kaynak": "tazele.mjs §319 — ForexFactory/FairEconomy haftalık JSON (High + majör Medium)",
+   "_319": "19 Agu: kullanici onayiyla acilan TAM OTOMATIK katman (⭐ istisna). Haftalik pencere, arsiv tutmaz. Kaynak limiti 5dk/2 istek — kosu basina 1 cekim, parse hatasi dosyayi KORUR."
   }
  ],
  "bilanco_sezonu_aylar": [

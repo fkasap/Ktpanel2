@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819b';   // SS315 sinyal + SS316b ima + SS318 aofm onbellek + SS317
+const KTP_SURUM = '20260819c';   // SS319 kuresel makro takvim + SS315-318
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7272,6 +7272,7 @@ async function boot(){
     ['Takvim satırları (§245)', takvimSatirlari],
     ['Equity', pyInit],
     ['Sukuk Sinyali', sinyalRender],   /* SS315 */
+    ['Makro Takvim', makroTakvimRender],   /* SS319 */
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],
@@ -8446,6 +8447,37 @@ function likiditeRender(){
        POZİTİF/KARIŞIK/NÖTR — BIST'teki sayısal skordan farklı, ikisi de desteklenir)
      · BEKLENENLER  → Finnhub (§168'de pencere bölününce mega-cap'ler gelmeye başladı)
    İkisi tek listede, tarihe göre; hangisinin ne olduğu rozetle ayrılır. */
+/* SS319 KURESEL MAKRO TAKVIM RENDER - makro-takvim.json'dan (Actions haftalik
+   yazar). Elle yazilmis TR-yerel makro satirlarina DOKUNULMAZ (PPK/TUIK oradaki
+   el emegi); bu bolum onlarin ALTINA kendi kabinda cizilir. SS173 dersi:
+   kap bir kez yaratilir, icerik innerHTML= ile DEGISTIRILIR (idempotent).
+   Saatler dosyada UTC — burada TSI'ye cevrilir. Gecmis olaylar (2 saatten
+   eski) dusurulur; takvim ileriye bakar. */
+async function makroTakvimRender(){
+  const tb=$('takvimBody'); if(!tb) return;
+  try{
+    const r=await fetch('/makro-takvim.json',{cache:'no-store'});
+    if(!r.ok) return;
+    const d=await r.json();
+    const simdi=Date.now()-2*3600e3;
+    const gel=(d.olaylar||[]).filter(x=>Date.parse(x.t)>=simdi).slice(0,12);
+    if(!gel.length) return;
+    let kap=document.getElementById('makroOto');
+    if(!kap){ kap=document.createElement('div'); kap.id='makroOto'; tb.appendChild(kap); }
+    const ayK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const gunK=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+    const fmt=(iso)=>{const t=new Date(new Date(iso).toLocaleString('en-US',{timeZone:'Europe/Istanbul'}));
+      return t.getDate()+' '+ayK[t.getMonth()]+' '+gunK[t.getDay()]+' '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');};
+    kap.innerHTML='<div style="border-top:1px dashed var(--line2);margin-top:8px;padding-top:6px">'+
+      '<div class="lbl" style="margin-bottom:4px">KÜRESEL MAKRO <span class="thin" style="font-weight:400">(ForexFactory · otomatik §319 · saatler TSİ)</span></div>'+
+      gel.map(x=>'<div class="kv"><span class="k"><b>'+fmt(x.t)+'</b> · '+x.ulke+
+        (x.etki==='High'?' <span class="tag" style="background:var(--down)">YÜKSEK</span>':'')+
+        '</span><span class="sub" style="font-size:10px;text-align:right">'+x.olay+
+        ((x.beklenti||x.onceki)?(' <span class="thin">· bek '+(x.beklenti||'—')+' / önc '+(x.onceki||'—')+'</span>'):'')+
+        '</span></div>').join('')+'</div>';
+  }catch(e){}
+}
+
 function globalTakvimRender(){
   const el=$('globalTakvim'); if(!el) return;
   const ABD=new Set(['GOOGL','TSLA','INTC','TXN','TSM','NFLX','JPM','MSFT','META','AAPL','AMZN',
