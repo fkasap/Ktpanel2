@@ -1218,12 +1218,18 @@ async function ozelGorevler(){
     const prompt='Sen KTPanel\u0027in baş stratejistisin. Görev: '+G.tarif+'\n'+
       'Kurallar: 4-6 paragraf; her paragraf <b style="color:#0E5A3A">Kısa Başlık:</b> ile başlasın, paragraflar <br><br> ile ayrılsın; '+
       'rakam ve olayları SADECE aşağıdaki içerikten al, uydurma; son paragraf pencerenin kritik günleri + risk yönetimi cümlesi olsun; '+
-      'multi-asset fon yöneticisi tonu; Türkçe; KISA TUT: toplam 180-280 kelime, 4-5 paragraf — SON PARAGRAFI MUTLAKA TAMAMLA, yarım cümle bırakma; mevcut metnin uslubunu koru; YALNIZCA HTML döndür.\n\n'+
+      /* SS337b KELIME SINIRI (kullanici: "yine kelime siniri var mi"): 180-280
+       kelime, SS321'de takvimle esit yukseklige getirilen kartin ancak yarisini
+       dolduruyordu. Takvim birlesince (SS336) kaynak da zenginlesti — yorum
+       artik 5-7 paragrafa yayilabilir. Ust sinir yine VAR: sinirsiz metin
+       token maliyetini ve okunabilirligi bozar; SON PARAGRAFI TAMAMLA kurali
+       aynen korunur (yarim cumle en kotu ciktidir). */
+      'multi-asset fon yöneticisi tonu; Türkçe; UZUNLUK: toplam 380-520 kelime, 5-7 paragraf — SON PARAGRAFI MUTLAKA TAMAMLA, yarım cümle bırakma; mevcut metnin uslubunu koru; YALNIZCA HTML döndür.\n\n'+
       /* SS337: birlesik takvim (SS336) ile kaynak metin ~1700 karakteri asti;
        1600'lik kirpma tam olarak YAKLASAN satirlari kesiyordu (once elle
        gecmis olaylar geldigi icin). 2600'e cikarildi. */
       '(A) KAYNAK VERİ ('+G.veriLbl+'):\n'+veri.slice(0,2600)+'\n\n(B) PANEL CANLI ÖZETLERİ:\n'+baglam+'\n\n(C) MEVCUT METİN (üslup örneği):\n'+mevcut;
-    const metin=await aiCagir(prompt, 2000);
+    const metin=await aiCagir(prompt, 3000);   /* SS337b: 520 kelimelik HTML icin tavan yukseltildi */
     if(!metin){ kayit('Özel görev '+G.ad+': AI erişilemedi'); continue; }
     if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Özel görev '+G.ad+': yanıt kesildi — basılmadı, sonraki turda kısaltılmış denenir'); continue; }
     const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
