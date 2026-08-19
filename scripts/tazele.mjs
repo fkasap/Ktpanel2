@@ -1990,7 +1990,15 @@ async function bultenKesif() {
   if (ister('fiyat')) {
     await fiyatTazele('multiple.json', 'Multiple fiyatları', 'k', 'fiyat', 'hisseler');
     await fiyatTazele('track.json', 'Model sicili', 't', 'p', 'holdings');
-    await sicilSeriEkle();   /* §291 */
+    /* SS330: sicilSeriEkle BURADAN ALINDI — endeks arsivinden SONRAYA tasindi.
+       OLCULEN ARIZA (19 Agu kosusu): "Model sicili serisi (SS291) — ⏭ 2026-08-19
+       icin XKTUM arsivde yok; satir yazilmadi". Sebep SIRA: sicil, XKTUM'u
+       endeks-arsiv.json'dan okuyor ama o dosyayi dolduran endeksKapanisTazele
+       ZINCIRDE 30 SATIR SONRA kosuyordu. Yani her kosuda sicil, O GUNUN
+       endeksini goremiyor; nokta ancak ERTESI gun yazilabiliyordu — kullanicinin
+       "her gun sonu hesaplansin" istegi tam burada tikaniyordu.
+       DERS: BIR KATMAN BASKA KATMANIN CIKTISINI OKUYORSA, ZINCIRDE ONDAN
+       SONRA GELMELI. Bagimlilik sirasi tesadufe birakilmaz (SS310'un Node ikizi). */
     await cdsTazele();
   }
   if (ister('risk')) {
@@ -2020,6 +2028,9 @@ async function bultenKesif() {
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */
+    /* SS330: sicil noktasi ARTIK BURADA — arsiv az once bugunun XKTUM'unu yazdi,
+       yani ayni kosuda gun sonu getirisi hesaplanabilir. */
+    if (ister('fiyat')) await sicilSeriEkle();   /* §291 · §330 sirasi */
     await olcKos('Hazine ihale (§314)', ()=>hmbIhale());   /* SS326 */
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
