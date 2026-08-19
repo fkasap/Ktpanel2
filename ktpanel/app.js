@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819h';   // SS320b rozet tarihi · SS315b IMA fallback · SS323 tembel denetim
+const KTP_SURUM = '20260819i';   // SS320c egri arka plana · SS318b onbellek imzasi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7274,7 +7274,7 @@ async function boot(){
     ['Equity', pyInit],
     ['Sukuk Sinyali', sinyalRender],   /* SS315 */
     ['Makro Takvim', makroTakvimRender],   /* SS319 */
-    ['Eğri Görseli', egriGorselRender],   /* SS320 */
+    ['Eğri Görseli', egriGorselArka],   /* SS320c: boot'u BEKLETMEZ */
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],
@@ -8504,6 +8504,13 @@ function egriSvgUret(noktalar, renk, tepeEtiket){
     '<text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">'+noktalar[Math.floor(noktalar.length/2)].x+'</text>'+
     '<text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">'+noktalar[sonI].x+'</text></svg>';
 }
+/* SS320c (19 Agu, SS312 ikinci avi): "yavas modul: Egri Gorseli 12388 ms" —
+   kendi eklediğim kart boot'u 1 sn'den 14 sn'ye cikardi, SS318'in kazanimini
+   yedim. Sebep: EVDS egri ucu yavas ve ben onu boot zincirine AWAIT'li koydum.
+   Cozum SS318 ile ayni desen: cizim ARKA PLANDA, boot beklemez. Statik SVG'ler
+   kapta durdugu icin ara sürede kart BOS KALMAZ — eski gorunum, sonra canli.
+   DERS: YAVAS UCU OLAN HER YENI MODUL, DOGDUGU GUN ARKA PLANA KONUR. */
+async function egriGorselArka(){ egriGorselRender(); }
 async function egriGorselRender(){
   const trKap=document.getElementById('egriTRKap'), usKap=document.getElementById('egriUSKap');
   if(!trKap&&!usKap) return;
@@ -8781,7 +8788,12 @@ function aofmOnbellekBas(){
   try{
     const c=JSON.parse(localStorage.getItem('ktp_aofm_cache_v1')||'null'); if(!c)return;
     Object.entries(c).forEach(([id,v])=>{const e=$(id);
-      if(e&&v&&v.html){e.innerHTML=v.html.replace('\u00b7 canl\u0131','\u00b7 son bilinen');if(v.title)e.title=v.title+' \u00b7 \u00f6nbellek';}});
+      if(e&&v&&v.html){
+        /* SS318b: yaniltma yok — onbellekten basilan deger 'son bilinen' etiketi
+           tasir; canli cekim gelince innerHTML tumden degisir ve etiket kalkar. */
+        e.innerHTML=v.html+' <span class="thin" style="font-size:9px">\u00b7 son bilinen</span>';
+        if(v.title)e.title=v.title+' \u00b7 \u00f6nbellek';
+      }});
   }catch(e){}
 }
 async function aofmHizli(){
@@ -8789,8 +8801,17 @@ async function aofmHizli(){
   const t0=Date.now();
   loadAOFM().then(()=>{
     try{
+      /* SS318b OLCUM DUZELTMESI: ilk surum '· canli' METNINI ariyordu, hep 0
+         hucre buldu. Sebep canli olcumle bulundu — canlilik isigini ekleyen kod
+         (.ldot) thin span'in ICERIGINI degistiriyor ve o metni SILIYOR:
+         '%40,00 <span class="thin"><span class="ldot"></span></span>'.
+         Artik METNE degil ANLAMA bakilir: hucrede rakam varsa deger gelmistir.
+         DERS: BIR DEGERIN VARLIGINI SUSLEMESINDEN DEGIL KENDISINDEN ANLA. */
       const c={};
-      document.querySelectorAll('[id$="Live"]').forEach(e=>{if(/\u00b7 canl\u0131/.test(e.innerHTML))c[e.id]={html:e.innerHTML,title:e.title||''};});
+      document.querySelectorAll('[id$="Live"]').forEach(e=>{
+        const t=(e.textContent||'').trim();
+        if(/\d/.test(t)) c[e.id]={html:e.innerHTML,title:e.title||''};
+      });
       if(Object.keys(c).length)localStorage.setItem('ktp_aofm_cache_v1',JSON.stringify(c));
       console.log('[KTPanel] SS318 AOFM canli '+(Date.now()-t0)+' ms (arka plan) \u00b7 '+Object.keys(c).length+' hucre onbellege alindi');
     }catch(e){}
