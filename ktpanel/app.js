@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819g';   // SS322 Ebu komsu veri koprusu · SS321 · SS320
+const KTP_SURUM = '20260819h';   // SS320b rozet tarihi · SS315b IMA fallback · SS323 tembel denetim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7352,7 +7352,13 @@ async function boot(){
     ['Küresel endeksler','kuresel1'],['Sektör ısı haritası','heatBody'],['Sektör rotasyon','rotBody'],
     ['Yabancı akış','yabanciBody'],['Risk iştahı','riskBaroSkor'],['Halka arz','halkaarzBody'],
     ['Guidance','guidanceListe'],['Katılım fon','katfonBody'],
-    ['Risk bütçesi','rbBody'],['Reel getiri','reelAtifBody'],
+    ['Risk bütçesi','rbBody'],
+    /* SS323: 'Reel getiri' TEMBEL isaretlendi. reelAtifRender omurgaInit icinde
+       tufeYukle().then() ile kosar - boot denetimi ondan ONCE olcuyor ve her
+       aciliste asilsiz "Bos/eksik" uyarisi basiyordu (kabin kendi yorumundaki
+       ders: 'bu ne zaman dolar' sorusu 'bu var mi'dan once gelir). Kap varligi
+       hala denetleniyor; DOLULUK sekme/asenkron sonrasi konusudur. */
+    ['Reel getiri','reelAtifBody', true],
     ['Getiri atfı','atifBody'],['Risk metrikleri','riskMetBody'],['Likidite','likiditeBody'],
     ['Model karnesi','fmKarneBody'],
     ['Endeksten ayrışma','ayrBody', true]        /* ← TEMBEL: t3 açılınca dolar */
@@ -7412,7 +7418,20 @@ async function sinyalRender(){
     if(rek!=null&&ex!=null) R.push({r:'',t:'TL',
       m:'REK '+trN(rek,1)+' \u00b7 ex-ante reel %'+trN(ex,1)+' \u2014 TL ta\u015f\u0131ma \u00e7\u0131palar\u0131 '+
         (ex>=3&&rek<115?'destekleyici (USD KS getiri de\u011fil SEPET karar\u0131d\u0131r)':'zay\u0131fl\u0131yor')});
-    if(window.PIYASA_IMA) R.push({r:'',t:'\u0130MA',m:'Piyasa forward dilimleri: '+window.PIYASA_IMA+' \u2014 patikanizla kiyaslayin (SS316b)'});
+    /* SS315b: IMA satiri Tahminler sekmesi ACILMADIYSA hic gorunmuyordu
+       (window.PIYASA_IMA'yi o ekran dolduruyor - canli turda 5 rozet yerine 4
+       cikmasinin sebebi buydu). Artik kart, degisken bossa forward'i KENDISI
+       hesaplar: ayni egriForward fonksiyonu, ayni ay-formati (§112: hesap tek
+       sahipli kalir, yalniz TETIKLEYICI ikiye cikar). Hesaplanan deger
+       degiskene YAZILMAZ - Tahminler ekrani kendi sahibi olarak kalir. */
+    let ima=window.PIYASA_IMA;
+    if(!ima){ try{
+      const fw=(typeof egriForward==='function')?egriForward(null):null;
+      if(fw&&fw.forward&&fw.forward.length){
+        ima=fw.forward.slice(0,3).map(x=>Math.round(x.bas*12)+'\u2192'+Math.round(x.bit*12)+' ay %'+trN(x.oran,2)).join(' \u00b7 ');
+      }
+    }catch(e){} }
+    if(ima) R.push({r:'',t:'\u0130MA',m:'Piyasa forward dilimleri: '+ima+' \u2014 patikanizla kiyaslayin (SS316b)'});
     const dm=(SON.guncelleme||'').slice(0,16);
     el.innerHTML=R.length?('<div class="card" style="margin-bottom:14px"><div class="lbl">SUKUK TAKT\u0130K S\u0130NYAL\u0130 <span class="thin" style="font-weight:400">(okuma \u2014 karar de\u011fil \u00b7 girdiler otomatik \u00b7 SS315)</span></div>'+
       R.map(x=>'<div class="kv"><span class="k" style="font-weight:700;'+(x.r==='up'?'color:var(--up)':x.r==='down'?'color:var(--down)':'')+'">'+x.t+'</span><span style="font-size:10.5px;text-align:right;max-width:78%">'+x.m+'</span></div>').join('')+
@@ -8497,7 +8516,17 @@ async function egriGorselRender(){
       const nok=Object.entries(j.vadeler).map(([k,v])=>({x:k,v:parseFloat(v.getiri),yil:(isFinite(v.kalanYil)&&v.kalanYil>0)?v.kalanYil:eY(k)}))
         .filter(n=>isFinite(n.v)).sort((a,b)=>a.yil-b.yil);
       const svg=egriSvgUret(nok,'#128A66',true);
-      if(svg&&trKap){trKap.innerHTML=svg;trOk=true;damga=(j.tarih||'').slice(0,10);}
+      /* SS320b: EVDS yaniti UST SEVIYE tarih tasimiyor - tarih HER VADENIN
+         icinde ve GG-AA-YYYY bicimli (canli olcum 19 Agu: "19-08-2026").
+         Ilk denememde j.tarih okundu, bos dondu ve rozet "TR·ABD  DE·JP" diye
+         eksik kuruldu. Duzeltme: en yaygin vade tarihi alinir, YYYY-AA-GG'ye
+         cevrilir. DERS: yanit semasi VARSAYILMAZ, tek bir alanı bile olculur. */
+      if(svg&&trKap){trKap.innerHTML=svg;trOk=true;
+        const tarihler=Object.values(j.vadeler).map(v=>v&&v.tarih).filter(Boolean);
+        const say={}; tarihler.forEach(t=>{say[t]=(say[t]||0)+1;});
+        const enCok=Object.entries(say).sort((x,y)=>y[1]-x[1])[0];
+        if(enCok){const p=enCok[0].split('-'); damga=(p.length===3&&p[2].length===4)?(p[2]+'-'+p[1]+'-'+p[0]):enCok[0];}
+      }
     }
   }catch(e){}
   try{
