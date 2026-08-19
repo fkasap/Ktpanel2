@@ -1663,6 +1663,31 @@ async function cdsTazele() {
    Low → alinmaz (gurultu). Saatler UTC'ye cevrilip yazilir; TSI'ye ceviri
    panelin isi (render). Dosya haftalik penceredir, arsiv tutmaz — takvim
    ileriye bakar. */
+/* ── SS326 SURE BUTCESI (19 Agu aksami: is 15 dk tavanina carpip IPTAL oldu) ──
+   ARIZA: GitHub Actions "The job has exceeded the maximum execution time of
+   15m0s" -> "The operation was canceled". Rapor yazilmisti ama is KIRMIZI.
+   TESHIS SORUNU: hangi katmanin sundugu GORULEMIYOR - Node tarafinda katman
+   basi sure logu YOKTU (tarayicida SS312 vardi, burada karsiligi yoktu).
+   Bu sarmalayici her katmani olcer, 60 sn'yi asani rapora YAZAR ve toplam
+   butce (11 dk) asilirsa KALAN KATMANLARI ATLAR - is yesil biter, eksikler
+   raporda acikca listelenir. Yarim veri > iptal edilmis kosu: iptal hicbir sey
+   yazmaz, atlama neyin eksik oldugunu SOYLER (SS179.3 ruhu). */
+const SURE_BASLA = Date.now();
+const SURE_BUTCE_MS = 11 * 60 * 1000;
+const sureRapor = [];
+let butceAsildi = false;
+async function olcKos(ad, fn) {
+  if (butceAsildi) { sureRapor.push('- ⏭ ' + ad + ' — süre bütçesi aşıldı, ATLANDI'); return; }
+  const t0 = Date.now();
+  try { await fn(); }
+  catch (e) { raporlar.push('### ' + ad + ' — ✗ ' + String(e && e.message || e).slice(0, 90)); }
+  finally {
+    const sn = Math.round((Date.now() - t0) / 1000);
+    if (sn >= 60) sureRapor.push('- ⏱ ' + ad + ' — ' + sn + ' sn');
+    if (Date.now() - SURE_BASLA > SURE_BUTCE_MS) butceAsildi = true;
+  }
+}
+
 async function makroTakvim() {
   const dosya = 'makro-takvim.json';
   try {
@@ -1906,7 +1931,7 @@ async function bultenKesif() {
     await riskTazele();
   }
   if (ister('fon')) {
-    await fonTazele();
+    await olcKos('Katılım fonları', ()=>fonTazele());   /* SS326 */
   }
   if (ister('hepsi') || ister('fiyat')) {
     /* §297 DEPO HIJYENI + KALEM TAZELIGI — dosya damgasi degil KALEM olculur.
@@ -1929,9 +1954,9 @@ async function bultenKesif() {
     await bilancoTetik();   /* §249a: hafta içi her koşuda */
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */
-    await hmbIhale();   /* §314 */
-    await makroTakvim();   /* §319 */
-    await bultenKesif();   /* §250k: günlük tarihsel için keşif */
+    await olcKos('Hazine ihale (§314)', ()=>hmbIhale());   /* SS326 */
+    await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
+    await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
   }
 
   raporlar.push(
@@ -1942,6 +1967,11 @@ async function bultenKesif() {
   /* Rapor REPO kökünde — iş akışı onu okuyup özete basıyor. Veri dizini
      alt klasörde olsa bile rapor yeri değişmez. */
   await fs.mkdir(path.join(process.cwd(), 'rapor'), { recursive: true });
+  if (sureRapor.length || butceAsildi) {
+    raporlar.push('### Süre bütçesi (§326)\n' + (sureRapor.join('\n') || '- tüm katmanlar 60 sn altında') +
+      (butceAsildi ? '\n- ⚠ TOPLAM BÜTÇE AŞILDI (11 dk) — kalan katmanlar ATLANDI. İş yeşil bitti; eksikler yukarıda listeli. Sonraki koşu kaldığı yerden tamamlar.' : '') +
+      '\n- toplam: ' + Math.round((Date.now() - SURE_BASLA) / 1000) + ' sn');
+  }
   await fs.writeFile(path.join(process.cwd(), 'rapor/son-tazeleme.md'), raporlar.join('\n\n'), 'utf8');
 
   const cikti = process.env.GITHUB_OUTPUT;
