@@ -187,9 +187,19 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'POST') {
-      const key = req.headers['x-write-key'] || '';
+      /* §331: HTTP baslıklarina Latin-1 disi karakter KONULAMAZ. Yazma anahtari
+         Turkce harf iceriyorsa tarayici fetch'i baslik kurulurken patlatir
+         ("String contains non ISO-8859-1 code point") ve istek HIC gitmez.
+         Panel bunu sessizce yutuyordu: kayit yerelde duruyor, buluta gitmiyor,
+         sonraki acilista cloudLoad eski bulut kopyasini geri yaziyor ve
+         kullanicinin gizledigi kart YENIDEN ONUNE cikiyordu (19 Agu, olculdu).
+         Istemci artik anahtari yuzde-kodlu gonderiyor; sunucu HER IKI bicimi
+         de kabul eder — eski ASCII anahtarlar aynen calisir. */
+      const keyHam = req.headers['x-write-key'] || '';
+      let key = keyHam;
+      try { key = decodeURIComponent(keyHam); } catch (e) { key = keyHam; }
       if (!WRITE) { res.status(503).json({ error: 'Yazma anahtarı sunucuda tanımlı değil (KTPANEL_WRITE_KEY).' }); return; }
-      if (key !== WRITE) { res.status(403).json({ error: 'Yazma anahtarı geçersiz.' }); return; }
+      if (key !== WRITE && keyHam !== WRITE) { res.status(403).json({ error: 'Yazma anahtarı geçersiz.' }); return; }
       let body = '';
       for await (const c of req) body += c;
       const yeniVeri = JSON.parse(body); // geçerli JSON mu doğrula
