@@ -16,6 +16,7 @@
   "ATEKS",
   "ATSYH",
   "AVOD",
+  "AVTUR",
   "BAGFS",
   "BAKAB",
   "BERA",
@@ -72,6 +73,7 @@
   "GSDDE",
   "GSDHO",
   "GZNMI",
+  "HATEK",
   "HRKET",
   "HUNER",
   "HURGZ",
@@ -193,7 +195,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 191,
+ "sayi": 193,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -385,9 +387,11 @@
   "ISVEA": "2026-08-19",
   "ORZAX": "2026-08-19",
   "PENGD": "2026-08-19",
-  "YATAS": "2026-08-19"
+  "YATAS": "2026-08-19",
+  "AVTUR": "2026-08-19",
+  "HATEK": "2026-08-19"
  },
- "pencere_sayi": 129,
+ "pencere_sayi": 131,
  "dusen_son": [],
- "guncelleme": "2026-08-19 17:52 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-19 18:01 UTC — otomatik (KAP FR · kümülatif §299)"
 }
