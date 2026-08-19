@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819k';   // SS327 t23 Ebu evreninden cikti
+const KTP_SURUM = '20260819l';   // SS329 gun sonu otoritesi + SS329b yeniden tabanlama
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1513,7 +1513,14 @@ function trkBazUygula(){
   const b=trkBazOku(); if(!b||!TRK||!TRK.holdings) return false;
   TRK.inception=b.tarih; TRK.endeks_kapanis=b.endeks0; TRK.fiyat_tarihi=b.tarih;
   TRK.holdings.forEach(h=>{ if(b.p0[h.t]!=null) h.p0=b.p0[h.t]; });
-  TRK.__statik=(TRK.series||[]).filter(p=>p&&p.d>=b.tarih);
+  /* SS329b: sicil sifirlandiginda dosyadaki noktalar ESKI tabanli yuzdelerdi
+     ve grafik yanlis basliyordu. Artik yeni taban gununun degerine gore
+     YENIDEN TABANLANIR: y = (1+m)/(1+m_baz) - 1. Boylece Actions'in gun sonu
+     serisi, kullanicinin sectigi tabanda da dogru okunur (dosya bozulmaz). */
+  const ham=(TRK.series||[]).filter(p=>p&&p.d>=b.tarih);
+  const bazN=ham.find(p=>p.d===b.tarih)||ham[0]||null;
+  const yenidenTaban=(v,v0)=>(v==null||v0==null)?null:+(((1+v/100)/(1+v0/100)-1)*100).toFixed(3);
+  TRK.__statik=bazN?ham.map(p=>({d:p.d,model:yenidenTaban(p.model,bazN.model),endeks:yenidenTaban(p.endeks,bazN.endeks)})):ham;
   TRK.series=TRK.__statik.length?TRK.__statik.slice():[{d:b.tarih,model:0,endeks:0}];
   const el=$('trkKurulus');
   if(el){ const [y,m,g]=b.tarih.split('-');
@@ -3425,7 +3432,23 @@ function canliEnjekte(){
     const xkC = (m.end && m.end.XKTUM && m.end.XKTUM.p) ? m.end.XKTUM.p : null;
     const eg = (xkC && TRK.endeks_kapanis) ? (xkC/TRK.endeks_kapanis-1)*100 : null;
     const bugun=new Date().toISOString().slice(0,10);
-    const nokta={d:bugun,model:+(mg*100).toFixed(2),endeks:eg==null?null:+eg.toFixed(2),canli:true};
+    /* ── SS329 GUN SONU OTORITESI (19 Agu, kullanici karari) ──────────────────
+       "Hicbir sey elle guncellenmeyecek, getiriler her gun sonu hesaplanacak."
+       Actions ZATEN her gun sicilSeriEkle (SS291) ile modeli hesapliyor ve
+       track.json'a yaziyor — dogru sayi ORADA uretiliyor.
+       Tarayicidaki canli hesap ise p0'lari dosyadan okuyup KENDI hesabini
+       yapiyordu; ORGE 5:1 bolununce (p0 108,80 vs canli 22,64) model -%79'luk
+       sahte kayip yedi ve ekranda "-1,08%" gorundu. Ayni gun dosyadaki gun
+       sonu degeri +%3,08 idi. IKI HESAP = IKI GERCEK (SS112 ihlali).
+       YENI KURAL: GUN SONU DEGERI OTORITEDIR. Bugun icin dosyada kapanis
+       kaydi VARSA canli hesap onu EZMEZ — sadece gun ici gostergedir ve o gun
+       dosya yazana dek gecici olarak gorunur. Boylece bir kurumsal islem
+       gunu icinde bile sicil, Actions'in SS328 ile olceklenmis dogru
+       hesabina doner. */
+    const dosyaBugun=(TRK.__statik||TRK.series||[]).find(p=>p&&p.d===bugun&&p.canli!==true);
+    const nokta = dosyaBugun
+      ? Object.assign({}, dosyaBugun, {gunSonu:true})
+      : {d:bugun,model:+(mg*100).toFixed(2),endeks:eg==null?null:+eg.toFixed(2),canli:true};
     // ── Günlük birikim: noktayı buluta yaz (her açılışta günceller, gün değişince yeni satır) ──
     let bulutSeri=[]; try{ bulutSeri=JSON.parse(localStorage.getItem('trk_seri_v1')||'[]'); }catch(e){}
     const _bz=trkBazOku(); if(_bz) bulutSeri=bulutSeri.filter(x=>x&&x.d>=_bz.tarih);   // sıfırlama öncesi noktalar düşer (§108)
