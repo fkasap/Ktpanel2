@@ -1,5 +1,5 @@
 {
- "tarih": "2026-08-18",
+ "tarih": "2026-08-19",
  "kodlar": [
   "AGYO",
   "AKHAN",
@@ -52,6 +52,7 @@
   "IZMDC",
   "KATMR",
   "KLKIM",
+  "KLRHO",
   "KMPUR",
   "KNFRT",
   "KRONT",
@@ -110,7 +111,7 @@
   "VESTL",
   "YEOTK"
  ],
- "sayi": 108,
+ "sayi": 109,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -219,9 +220,10 @@
   "MDIAZ": "2026-08-18",
   "OBAMS": "2026-08-18",
   "SEKUR": "2026-08-18",
-  "TRGYO": "2026-08-18"
+  "TRGYO": "2026-08-18",
+  "KLRHO": "2026-08-19"
  },
- "pencere_sayi": 108,
+ "pencere_sayi": 47,
  "dusen_son": [],
- "guncelleme": "2026-08-18 22:11 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-19 06:11 UTC — otomatik (KAP FR · kümülatif §299)"
 }
