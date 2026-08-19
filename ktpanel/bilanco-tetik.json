@@ -32,8 +32,11 @@
   "BUCIM",
   "BVSAN",
   "BYDNR",
+  "CANTE",
+  "CLEBI",
   "COSMO",
   "CVKMD",
+  "DARDL",
   "DCTTR",
   "DENGE",
   "DESA",
@@ -48,6 +51,7 @@
   "EGGUB",
   "EGPRO",
   "EKOS",
+  "ELITE",
   "EMKEL",
   "ENDAE",
   "ENSRI",
@@ -92,6 +96,7 @@
   "IZMDC",
   "JANTS",
   "KATMR",
+  "KERVN",
   "KFEIN",
   "KGYO",
   "KLKIM",
@@ -196,7 +201,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 194,
+ "sayi": 199,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -391,9 +396,14 @@
   "YATAS": "2026-08-19",
   "AVTUR": "2026-08-19",
   "HATEK": "2026-08-19",
-  "EGPRO": "2026-08-19"
+  "EGPRO": "2026-08-19",
+  "CANTE": "2026-08-19",
+  "CLEBI": "2026-08-19",
+  "DARDL": "2026-08-19",
+  "ELITE": "2026-08-19",
+  "KERVN": "2026-08-19"
  },
- "pencere_sayi": 132,
+ "pencere_sayi": 137,
  "dusen_son": [],
- "guncelleme": "2026-08-19 18:05 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-19 18:17 UTC — otomatik (KAP FR · kümülatif §299)"
 }
