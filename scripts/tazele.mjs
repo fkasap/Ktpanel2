@@ -1855,12 +1855,55 @@ async function hazineTakvimOto() {
       return;
     }
     d.ihraclar = ihraclar.sort((a, b) => a.t.localeCompare(b.t));
-    d.donem = enYeni.baslik.replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü \-]/g, '').slice(0, 60);
+
+    /* ── SS334d PANELIN OKUDUGU HER ALAN YAZILMALI ──────────────────────────
+       Kullanici sordu: "strateji cikinca panelde ilgili yer guncellenecek mi?"
+       OLCULDU: hazineRender uc alan okuyor — donem (rozet), sonraki_aciklama
+       (bir sonraki yayin notu) ve finansman (aylik itfa/borclanma tablosu).
+       Ilk yazim yalniz ihraclar+donem yaziyordu: yeni strateji gelse bile rozet
+       altindaki "~25 Agustos (Eyl-Kas stratejisi)" notu ve HAZIRAN-AGUSTOS
+       finansman tablosu EKRANDA KALACAKTI — yeni takvimin yaninda eski donemin
+       rakamlari, en tehlikeli bayatlik turu (SS179.3).
+       DERS: BIR DOSYAYI OTOMATIKLESTIRIRKEN, ONU OKUYAN RENDER'IN TUKETTIGI
+       ALANLARIN TAMAMI YAZILIR — yarim yazilan dosya, yazilmamis dosyadan kotudur. */
+    const AYLAR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+    /* donem: baslikta "EYLÜL-KASIM" gibi gecer; iki ay adi + yil yakalanir */
+    const bas = enYeni.baslik.toLocaleUpperCase('tr');
+    const bulunanAylar = AYLAR.filter(a => bas.includes(a.toLocaleUpperCase('tr')));
+    const yilM = bas.match(/20\d{2}/);
+    if (bulunanAylar.length >= 2 && yilM) {
+      d.donem = bulunanAylar[0] + '–' + bulunanAylar[bulunanAylar.length - 1] + ' ' + yilM[0];
+      /* sonraki yayin: donemin SON ayindan bir sonraki ayin ~25'i */
+      const sonAyIdx = AYLAR.indexOf(bulunanAylar[bulunanAylar.length - 1]);
+      const sonrakiAy = AYLAR[(sonAyIdx + 1) % 12];
+      const s1 = AYLAR[(sonAyIdx + 1) % 12], s3 = AYLAR[(sonAyIdx + 3) % 12];
+      d.sonraki_aciklama = '~25 ' + sonrakiAy + ' (' + s1.slice(0, 3) + '–' + s3.slice(0, 3) + ' stratejisi)';
+    } else {
+      d.donem = enYeni.baslik.replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü \-]/g, '').slice(0, 60);
+      d.sonraki_aciklama = '—';   /* uydurma yok: baslik cozulemedi */
+    }
+
+    /* finansman: PDF'te "Aylik Ic Borclanma Programi" tablosu — ay + itfa +
+       borclanma (mlr TL). Cozulemezse alan SILINIR: panel "—" gosterir.
+       ESKI DONEMIN RAKAMINI BIRAKMAK YASAK. */
+    const fin = [];
+    for (const ay of AYLAR) {
+      const rx = new RegExp(ay + '[^0-9]{0,40}([0-9][0-9.,]{2,12})[^0-9]{0,25}([0-9][0-9.,]{2,12})', 'i');
+      const m = metin.match(rx);
+      if (!m) continue;
+      const sayi = (t) => { const v = parseFloat(String(t).replace(/\./g, '').replace(',', '.')); return isFinite(v) ? v : null; };
+      const itfa = sayi(m[1]), borc = sayi(m[2]);
+      if (itfa != null && borc != null && itfa > 10 && itfa < 5000 && borc > 10 && borc < 5000) fin.push({ ay, itfa, borclanma: borc });
+    }
+    if (fin.length >= 2) d.finansman = fin; else { delete d.finansman; }
+
     d.guncelleme = bugun; d._kaynak_slug = enYeni.slug; d._kaynak_pdf = enYeni.pdf[1];
     await yaz(dosya, d);
     degisenler.push('hazine ihraç takvimi (' + ihraclar.length + ')');
     const ks = ihraclar.filter(x => x.katilim).length;
     raporlar.push('### Hazine ihraç takvimi (§334) — ✓ ' + ihraclar.length + ' ihraç · ' + ks + ' kira sertifikası' +
+      '\n- dönem: ' + d.donem + ' · sonraki yayın: ' + d.sonraki_aciklama +
+      '\n- finansman tablosu: ' + (d.finansman ? (d.finansman.length + ' ay') : '⚠ ayrıştırılamadı, alan KALDIRILDI (panel — gösterir)') +
       '\n- kaynak: ' + enYeni.tarih + ' · ' + enYeni.baslik.slice(0, 70) +
       '\n' + ihraclar.slice(0, 6).map(x => '- ' + x.t + ' · ' + x.ad + (x.vade ? ' · ' + x.vade : '') + (x.katilim ? ' · KATILIM' : '')).join('\n'));
   } catch (e) { raporlar.push('### Hazine ihraç takvimi (§334) — ✗ ' + String(e && e.message || e).slice(0, 90)); }
