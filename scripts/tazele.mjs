@@ -1650,6 +1650,48 @@ async function cdsTazele() {
    gerçek metinle DOĞRULANSIN (§252n) — düzen farklıysa regex bir sonraki turda
    gerçeğe göre inceltilir, kör kalınmaz. Kayıt anahtarı slug: duyuru bir kez
    işlenir, defter KÜMÜLATİF büyür (§299 ailesi), pencere kayması yok. */
+/* ── SS319 KURESEL MAKRO TAKVIM — makro-takvim.json (haftalik pencere) ──────
+   Kullanici istegi (19 Agu): Piyasa'daki kritik takvimin KURESEL ayagi
+   otomatiklessin. KESIF OLCULDU: ForexFactory/FairEconomy kamuya acik
+   haftalik JSON yayinliyor (nfs.faireconomy.media/ff_calendar_thisweek.json)
+   — title/country/date(ET ofsetli ISO)/impact/forecast/previous. Gercek
+   cekimle sema dogrulandi (FOMC Tutanaklari, GBP CPI, AUD istihdam listede).
+   ISLETME KISITI (kaynagin kendi kurali): 5 dk'da 2 istek; asilirsa JSON
+   yerine "Request Denied" HTML doner → parse hatasi DOSYAYI KORUR (SS300
+   ruhu: bozuk cekim veri ezmez). Bizim ritim koşu basina 1 — guvenli.
+   FILTRE: High → tum ulkeler; Medium → yalniz USD/EUR/GBP/CNY/JPY/TRY;
+   Low → alinmaz (gurultu). Saatler UTC'ye cevrilip yazilir; TSI'ye ceviri
+   panelin isi (render). Dosya haftalik penceredir, arsiv tutmaz — takvim
+   ileriye bakar. */
+async function makroTakvim() {
+  const dosya = 'makro-takvim.json';
+  try {
+    const r = await fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36', 'accept': 'application/json' },
+      signal: AbortSignal.timeout(20000)
+    });
+    const ham = await r.text();
+    let liste;
+    try { liste = JSON.parse(ham); } catch (e) {
+      raporlar.push('### Küresel makro takvim (§319) — ⏭ kaynak JSON dönmedi (limit/HTML?): "' + ham.slice(0, 60).replace(/\s+/g, ' ') + '…" — DOSYA KORUNDU');
+      return;
+    }
+    if (!Array.isArray(liste) || !liste.length) { raporlar.push('### Küresel makro takvim (§319) — ⏭ boş liste, dosya korundu'); return; }
+    const MAJOR = new Set(['USD', 'EUR', 'GBP', 'CNY', 'JPY', 'TRY']);
+    const olaylar = liste.filter(x => x && x.impact === 'High' || (x.impact === 'Medium' && MAJOR.has(x.country)))
+      .map(x => {
+        const t = new Date(x.date);
+        return { t: isNaN(t) ? null : t.toISOString(), ulke: x.country, olay: String(x.title || '').slice(0, 80), etki: x.impact, beklenti: String(x.forecast || ''), onceki: String(x.previous || '') };
+      }).filter(x => x.t).sort((a, b) => a.t.localeCompare(b.t));
+    if (!olaylar.length) { raporlar.push('### Küresel makro takvim (§319) — ⏭ filtre sonrası 0 olay, dosya korundu'); return; }
+    await yaz(dosya, { guncelleme: new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (§319)', kaynak: 'ForexFactory/FairEconomy haftalık takvim JSON', olaylar });
+    degisenler.push('küresel makro takvim (' + olaylar.length + ' olay)');
+    const yuksek = olaylar.filter(x => x.etki === 'High');
+    raporlar.push('### Küresel makro takvim (§319) — ✓ ' + olaylar.length + ' olay (' + yuksek.length + ' yüksek etki)\n' +
+      yuksek.slice(0, 6).map(x => '- ' + x.t.slice(0, 16).replace('T', ' ') + 'Z · ' + x.ulke + ' · ' + x.olay).join('\n'));
+  } catch (e) { raporlar.push('### Küresel makro takvim (§319) — ✗ ' + String(e.message || e).slice(0, 80) + ' — dosya korundu'); }
+}
+
 async function hmbIhale() {
   const dosya = 'hazine-sonuc.json';
   try {
@@ -1888,6 +1930,7 @@ async function bultenKesif() {
     await endeksUyeTazele();   /* §250 */
     await endeksKapanisTazele();   /* §250a */
     await hmbIhale();   /* §314 */
+    await makroTakvim();   /* §319 */
     await bultenKesif();   /* §250k: günlük tarihsel için keşif */
   }
 
