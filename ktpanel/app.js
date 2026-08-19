@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819c';   // SS319 kuresel makro takvim + SS315-318
+const KTP_SURUM = '20260819d';   // SS319-D: makro takvim dogru kaba (takvimBody diye id yokmus)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8454,7 +8454,13 @@ function likiditeRender(){
    Saatler dosyada UTC — burada TSI'ye cevrilir. Gecmis olaylar (2 saatten
    eski) dusurulur; takvim ileriye bakar. */
 async function makroTakvimRender(){
-  const tb=$('takvimBody'); if(!tb) return;
+  /* SS319-D DUZELTME (19 Agu aksami, canli olcum): ilk surum $('takvimBody')
+     hedefliyordu - O ID SAYFADA YOK (koddaki ESKI bir yorumdan okumustum;
+     gercek kaplar bistTakvim/globalTakvim/kazancCanli cikti). Render sessizce
+     donuyor, bolum HICBIR YERE cizilmiyordu. DERS: YORUM DEGIL, DOM KANITTIR.
+     Kap artik index'te statik: kritik takvim kartinda, elle tablonun ve "~"
+     dipnotunun ALTINDA - elle satirlara dokunulmaz. */
+  const kap=document.getElementById('makroOto'); if(!kap) return;
   try{
     const r=await fetch('/makro-takvim.json',{cache:'no-store'});
     if(!r.ok) return;
@@ -8462,8 +8468,6 @@ async function makroTakvimRender(){
     const simdi=Date.now()-2*3600e3;
     const gel=(d.olaylar||[]).filter(x=>Date.parse(x.t)>=simdi).slice(0,12);
     if(!gel.length) return;
-    let kap=document.getElementById('makroOto');
-    if(!kap){ kap=document.createElement('div'); kap.id='makroOto'; tb.appendChild(kap); }
     const ayK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
     const gunK=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
     const fmt=(iso)=>{const t=new Date(new Date(iso).toLocaleString('en-US',{timeZone:'Europe/Istanbul'}));
