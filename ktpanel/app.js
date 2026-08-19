@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819n';   // SS331 bulut anahtar kodlama + sessiz yutma bitti
+const KTP_SURUM = '20260819p';   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -731,6 +731,45 @@ async function abdSekme(){
           rh+=rSatir('ICSA','Haftalık işsizlik başvurusu','bin',true,false);
           rh+=rSatir('UNRATE','İşsizlik oranı (aylık)','%',true,false);
           $('usRiskBody').innerHTML = rh||'<div class="sub">Risk serileri boş.</div>';
+        }
+        /* ── SS332 ABD BUYUME KARTI ── mega-cap derinlik kartinin yerine (19 Agu,
+           kullanici istegi: "eski, gerek yok"). O kart ELLE yazilmis 25 Tem
+           damgaliydi ve gecmis bilanco tarihlerini gelecekmis gibi anlatiyordu;
+           SS324 nobetcisi bayatligi gorunur kilmisti ama kok cozum kartin
+           kendisini CANLI bir olcume cevirmek.
+           OLCEK DISIPLINI (kullanicinin sarti): her satir kendi biriminde ve
+           birim ETIKETTE yazili — GSYH ceyreklik yillikandirilmis %, GDPNow %,
+           istihdam AYLIK DEGISIM (bin kisi; seviye 160 mn oldugu icin seviye
+           basmak anlamsiz), perakende y/y %, guven endeks, Sahm puan, egri puan.
+           Kaynak zaten cekiliyordu (api/market fred SERILER) — yeni uc YOK. */
+        if($('usBuyumeBody')){
+          const bSatir=(id,ad,birim,ters,vurgu,esik)=>{
+            const v=S[id]; if(!v)return '';
+            const f=v.fark;
+            const cls=f==null?'':((f>0)===ters?'down':'up'); const sgn=f!=null&&f>0?'+':'';
+            let deger;
+            if(birim==='%') deger='%'+trN(v.deger,2);
+            else if(birim==='binDegisim') deger=(v.fark!=null?((v.fark>0?'+':'')+trN(v.fark,0)+' bin'):'—');
+            else if(birim==='bin') deger=trN(v.deger/1000,0)+' bin';
+            else if(birim==='puan1') deger=trN(v.deger,1);
+            else deger=trN(v.deger,2);
+            const farkStr=(birim!=='binDegisim'&&f!=null)?' <span class="'+cls+'" style="font-size:10px">('+sgn+trN(f,2)+')</span>':'';
+            const bayrak=(esik&&esik(v))?' <span class="tag" style="background:var(--down);font-size:8.5px">EŞİK</span>':'';
+            return '<div class="kv"><span class="k">'+ad+'</span><span'+(vurgu?' style="font-weight:600"':'')+'>'+deger+farkStr+bayrak+' <span style="color:var(--muted);font-size:9px">'+v.tarih+'</span></span></div>';
+          };
+          let bh='';
+          bh+=bSatir('A191RL1Q225SBEA','Reel GSYH <span class="thin">çeyreklik · yıllıklandırılmış</span>','%',false,true);
+          bh+=bSatir('GDPNOW','GDPNow <span class="thin">Atlanta Fed · cari çeyrek canlı</span>','%',false,true);
+          bh+=bSatir('PAYEMS','Tarım dışı istihdam <span class="thin">aylık değişim</span>','binDegisim',false,false,
+            v=>v.fark!=null&&v.fark<100);
+          bh+=bSatir('RSAFS','Perakende satış <span class="thin">yıllık · nominal</span>','%',false,false);
+          bh+=bSatir('UMCSENT','Tüketici güveni <span class="thin">endeks · 1966=100</span>','puan1',false,false,
+            v=>v.deger<70);
+          bh+=bSatir('SAHMREALTIME','Sahm kuralı <span class="thin">resesyon eşiği 0,50</span>','puan2',true,false,
+            v=>v.deger>=0.5);
+          bh+=bSatir('T10Y3M','Getiri eğrisi 10Y−3A <span class="thin">puan</span>','puan2',false,false,
+            v=>v.deger<0);
+          $('usBuyumeBody').innerHTML = bh||'<div class="sub">Büyüme serileri boş.</div>';
         }
         // ---- Enflasyon kırılımı (yıllık %, ivmeli) ----
         if($('usEnfBody')){
@@ -8604,6 +8643,9 @@ async function egriGorselRender(){
        gelen YENI tarihle degistirilir — sembol bazli eslesme;
    (2) canli tarih yoksa ya da gecmisse satir "· gecti" damgasi alir ve
        rozet BAYAT'a doner. Bayatlik gizlenmez, GORUNUR olur. */
+/* SS332: MEGA-CAP karti kaldirildi (19 Agu) — bu nobetci artik hedefsiz kalir
+   ve sessizce doner. Kod SILINMEDI: kart geri gelirse tarih tazeleme mantigi
+   hazir; ayrica "bayat karti isaretle" deseni baska kartlara ornek. */
 function megaCapTazele(){
   const kart=[...document.querySelectorAll('.card')].find(c=>{
     const l=c.querySelector('.lbl'); return l&&/MEGA-CAP DER\u0130NL\u0130K/i.test(l.textContent);
@@ -8860,7 +8902,8 @@ async function kazancTakvimCanli(){
     /* §170: ham kayıtlar saklanır — GLOBAL kartı bunları "beklenenler" olarak
        kullanır. İki yerde ayrı ayrı çekmemek için tek fetch, iki tüketici. */
     window.KAZANC_ITEMS = j.items || [];
-    try{ megaCapTazele(); }catch(e){}   /* SS324: ayni fetch'in ikinci tuketicisi */
+    /* SS332: megaCapTazele emekli — kart ABD BUYUME ile degistirildi (fonksiyon
+       kaldirilmadi: kart geri gelirse diye durur, cagrilmaz). */
     try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
   }catch(e){}
 }
