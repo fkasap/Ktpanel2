@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819l';   // SS329 gun sonu otoritesi + SS329b yeniden tabanlama
+const KTP_SURUM = '20260819m';   // SS328b adet olcekleme + SS329c etiket durustlugu
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -3475,7 +3475,12 @@ function canliEnjekte(){
        durumunda hiç kalkmazdı. */
     try{ document.body.classList.remove('veri-bekliyor'); }catch(e){}
     const n=$('trkNote');
-    if(n)n.innerHTML='Son nokta <b class="up">CANLI</b> (Yahoo · '+bugun+'): model = Σ ağırlık × (canlı fiyat / kuruluş fiyatı), endeks = canlı XKTUM / '+trN(TRK.endeks_kapanis,0)+'. Önceki noktalar: damgalı kapanışlar + panelin her gün otomatik biriktirdiği noktalar (bulutta saklanır, cihazlar ortak); sicil disiplini (kuruluşta ilan edilen '+(TRK.sepet||'sepet')+', sabit ağırlık) aynen geçerli.'+(eksik?' <span class="thin">('+eksik+' hisse canlı gelmedi → damgalı fiyat)</span>':'');
+    /* SS329c: etiket ARTIK NOKTAYI ANLATIR. Gun sonu kaydi geldiginde "CANLI"
+       demek yanlis olurdu — kullanici ekranda hangi hesabi gordugunu bilmeli. */
+    if(n && nokta.gunSonu){
+      n.innerHTML='Son nokta <b class="up">GÜN SONU</b> ('+bugun+' kapanışı · Actions §291 hesabı): model ve endeks getirisi damgalı kapanışlarla sunucuda hesaplandı; kurumsal işlemler (bölünme/bedelsiz) §328 ile otomatik ölçeklenir. Gün içinde bu satır canlı fiyatla geçici olarak gösterilir, kapanış kaydı gelince yerini ona bırakır.';
+    }
+    else if(n)n.innerHTML='Son nokta <b class="up">CANLI</b> (Yahoo · '+bugun+'): model = Σ ağırlık × (canlı fiyat / kuruluş fiyatı), endeks = canlı XKTUM / '+trN(TRK.endeks_kapanis,0)+'. Önceki noktalar: damgalı kapanışlar + panelin her gün otomatik biriktirdiği noktalar (bulutta saklanır, cihazlar ortak); sicil disiplini (kuruluşta ilan edilen '+(TRK.sepet||'sepet')+', sabit ağırlık) aynen geçerli.'+(eksik?' <span class="thin">('+eksik+' hisse canlı gelmedi → damgalı fiyat)</span>':'');
   }
 }
 
