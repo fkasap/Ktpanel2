@@ -1795,7 +1795,12 @@ async function hazineTakvimOto() {
       pdf: ((p.content && p.content.rendered) || '').match(/href="([^"]+\.pdf[^"]*)"/i) }))
       .filter(x => x.slug && x.pdf).sort((a, b) => b.tarih.localeCompare(a.tarih))[0];
     if (!enYeni) { raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ PDF ekli duyuru yok'); return; }
-    if (d._kaynak_slug === enYeni.slug) { raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: ' + enYeni.tarih + ')'); return; }
+    /* SS334e SURUM DAMGASI: slug kilidi tek basina yeterli DEGIL — ayristirici
+       duzeldiginde ayni duyuru YENIDEN islenmeli, yoksa bozuk cikti dosyada
+       kalir (bu tam olarak yasandi). Kilit artik slug + ayristirici surumu. */
+    const AYR_SURUM = 'v4';   /* SS334f: gercek PDF duzenine gore yeniden yazildi */
+    if (d._kaynak_slug === enYeni.slug && d._ayristirici === AYR_SURUM) {
+      raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: ' + enYeni.tarih + ' · ' + (d.donem || '?') + ')'); return; }
 
     let pdfParse = null;
     try { pdfParse = (await import('pdf-parse')).default; }
@@ -1805,53 +1810,38 @@ async function hazineTakvimOto() {
     const pd = await pdfParse(Buffer.from(await pr.arrayBuffer()));
     const metin = String(pd.text || '').replace(/\s+/g, ' ');
 
-    /* satir bolme: her ihale tarihi yeni kayit baslatir */
-    const parcalar = metin.split(/(?=\d{2}\.\d{2}\.\d{4})/).filter(x => /^\d{2}\.\d{2}\.\d{4}/.test(x));
-    const isoCevir = (t) => { const p = t.split('.'); return p[2] + '-' + p[1] + '-' + p[0]; };
-    const ENST = [[/T[ÜU]FE/i, "TÜFE'ye Endeksli DT"], [/TLREF/i, "TLREF'e Endeksli DT"], [/kira sertifikas/i, 'Kira Sertifikası'],
-      [/de[ğg]i[şs]ken faizli/i, 'Değişken Faizli DT'], [/kuponsuz|hazine bonosu/i, 'Kuponsuz Devlet Tahvili'],
-      [/sabit kuponlu/i, 'Sabit Kuponlu DT'], [/ABD dolar|USD/i, 'USD Cinsi Kıymet'], [/alt[ıi]n/i, 'Altına Dayalı Kıymet']];
-    /* SS334b PENCERE SUZGECI (ilk testte yakalandi): metin her tarihte bolununce
-       ITFA tarihleri de "ihale" gibi gorunuyordu — 14.09.2031 sahte kayit
-       uretmisti. Strateji UC AYLIK bir programdir: ihale gunu bugunden en fazla
-       ~7 ay ileride, gecmise de 1 aydan fazla gitmez. Itfa (yillar sonrasi)
-       bu pencerede olamaz. Boylece tarih-tabanli bolme guvenli hale gelir. */
-    const bugunT = new Date(bugun + 'T00:00:00Z').getTime();
-    const ALT = bugunT - 31 * 864e5, UST = bugunT + 214 * 864e5;
+    /* ── SS334f GERCEK BELGEYE GORE YENIDEN YAZILDI (kullanici PDF'i verdi) ──
+       ONCEKI SURUM DOSYAYI BOZDU: tarih-bazli bolme kullaniyordu, oysa her
+       ihrac satiri UC ARDISIK TARIH tasir:
+         "8.06.2026 10.06.2026 9.06.2027 ABD Dolari Cinsi Devlet Tahvili
+          1 Yil / 364 Gun Dogrudan Satis"
+          ^ihale     ^valor     ^itfa    ^senet turu    ^vade      ^yontem
+       Bolme bunlari uc AYRI kayda dagitiyor, itfa tarihleri sahte ihrac
+       oluyordu (15+ satirlik takvim 3'e dusmustu).
+       OLCULEN INCELIKLER: (a) gunler TEK HANELI olabiliyor (8.06.2026),
+       (b) "8 A y / 238 Gun" — PDF "Ay"i BOSLUKLU cikariyor, (c) yontem
+       "Ihale / Yeniden ihrac", "Ihale / Ilk ihrac" veya "Dogrudan Satis".
+       Artik TEK REGEX tum satiri yakalar; parca kaymasi imkansiz. */
+    const T = '(\\d{1,2}\\.\\d{1,2}\\.\\d{4})';
+    const satirRx = new RegExp(T + '\\s+' + T + '\\s+' + T + '\\s+(.+?)\\s+(\\d+)\\s*(Y[\u0131i]l|A\\s*y)\\s*/\\s*\\d+\\s*G[\u00fcu]n\\s*(\u0130hale[^0-9]{0,24}|Do[\u011fg]rudan Sat[\u0131i][\u015fs])', 'gi');
+    const isoCevir = (t) => { const p = t.split('.'); return p[2] + '-' + p[1].padStart(2, '0') + '-' + p[0].padStart(2, '0'); };
     const ihraclar = [];
-    for (const p of parcalar) {
-      const t = p.match(/^(\d{2}\.\d{2}\.\d{4})/)[1];
-      const tms = new Date(isoCevir(t) + 'T00:00:00Z').getTime();
-      if (!(tms >= ALT && tms <= UST)) continue;              /* itfa/gecmis tarih — atla */
-      const govde = p.slice(0, 260);
-      const enst = ENST.find(([rx]) => rx.test(govde));
-      if (!enst) continue;
-      const vadeM = govde.match(/(\d{1,2})\s*(y[ıi]l|ay)/i);
-      const itfaM = govde.match(/\d{2}\.\d{2}\.\d{4}/g);
-      ihraclar.push({ t: isoCevir(t), ad: enst[1],
-        vade: vadeM ? (vadeM[1] + ' ' + (/ay/i.test(vadeM[2]) ? 'Ay' : 'Yıl')) : '',
-        /* SS334c ITFA: parcalama tarihte boldugu icin itfa BIR SONRAKI parcanin
-           BASINDA kalir (olculdu: parca "08.09.2026 5 Yil ... Ihraç " ile biter,
-           "14.09.2031 15.09.2026 2 Yil..." diye devam eder). Bu yuzden itfa
-           SIRADAKI parcanin ilk tarihidir — ve o tarih ihale penceresinin
-           DISINDA olmalidir (yillar sonrasi); pencere ici ise o bir sonraki
-           IHALEDIR, itfa degil ve bos birakilir (uydurma yok). */
-        itfa: (function(){
-          const sonraki = parcalar[parcalar.indexOf(p) + 1];
-          if (!sonraki) return '';
-          const m2 = sonraki.match(/^(\d{2}\.\d{2}\.\d{4})/);
-          if (!m2) return '';
-          const iso2 = isoCevir(m2[1]);
-          const ms2 = new Date(iso2 + 'T00:00:00Z').getTime();
-          return (ms2 > UST) ? iso2 : '';
-        })(),
-        yontem: /do[ğg]rudan sat/i.test(govde) ? 'Doğrudan Satış' : 'İhale / Yeniden',
-        katilim: /kira sertifikas/i.test(govde) });
+    let mm;
+    while ((mm = satirRx.exec(metin))) {
+      const ad = mm[4].replace(/\s+/g, ' ').trim();
+      if (ad.length < 6 || ad.length > 60) continue;              /* baslik/gurultu suzgeci */
+      ihraclar.push({
+        t: isoCevir(mm[1]), valor: isoCevir(mm[2]), itfa: isoCevir(mm[3]),
+        ad, vade: mm[5] + ' ' + (/a\s*y/i.test(mm[6]) ? 'Ay' : 'Y\u0131l'),
+        yontem: mm[7].replace(/\s+/g, ' ').trim(),
+        katilim: /kira sertifikas/i.test(ad)
+      });
     }
-    if (ihraclar.length < 3) {
+    if (ihraclar.length < 8) {
       raporlar.push('### Hazine ihraç takvimi (§334) — ⏭ PDF ayrıştırılamadı (' + ihraclar.length + ' satır), dosya KORUNDU' +
         '\n- kaynak: ' + enYeni.tarih + ' · ' + enYeni.baslik.slice(0, 70) +
-        '\n- ham (600): ' + metin.slice(0, 600));
+        '\n- yakalanan: ' + ihraclar.map(x => x.t + ' ' + x.ad).join(' · ') +
+        '\n- ham (1200): ' + metin.slice(0, 1200));
       return;
     }
     d.ihraclar = ihraclar.sort((a, b) => a.t.localeCompare(b.t));
@@ -1883,21 +1873,27 @@ async function hazineTakvimOto() {
       d.sonraki_aciklama = '—';   /* uydurma yok: baslik cozulemedi */
     }
 
-    /* finansman: PDF'te "Aylik Ic Borclanma Programi" tablosu — ay + itfa +
-       borclanma (mlr TL). Cozulemezse alan SILINIR: panel "—" gosterir.
-       ESKI DONEMIN RAKAMINI BIRAKMAK YASAK. */
+    /* SS334f FINANSMAN — gercek tablo: baslik satirinda aylar, altinda
+       "Ic Borc Servisi" (itfa) ve "Ic Borclanma" (borclanma) ucer sayi.
+       Onceki genel regex ("ay adi + iki sayi") yanlis eslesmeye acikti;
+       artik tablonun KENDI satir adlari kullanilir. */
     const fin = [];
-    for (const ay of AYLAR) {
-      const rx = new RegExp(ay + '[^0-9]{0,40}([0-9][0-9.,]{2,12})[^0-9]{0,25}([0-9][0-9.,]{2,12})', 'i');
-      const m = metin.match(rx);
-      if (!m) continue;
-      const sayi = (t) => { const v = parseFloat(String(t).replace(/\./g, '').replace(',', '.')); return isFinite(v) ? v : null; };
-      const itfa = sayi(m[1]), borc = sayi(m[2]);
-      if (itfa != null && borc != null && itfa > 10 && itfa < 5000 && borc > 10 && borc < 5000) fin.push({ ay, itfa, borclanma: borc });
-    }
+    try {
+      const basM = metin.match(/\(Milyar[^)]*\)\s*((?:[A-Z\u00c7\u011e\u0130\u00d6\u015e\u00dca-z\u00e7\u011f\u0131\u00f6\u015f\u00fc]+\s+20\d{2}\s*(?:\(\d\))?\s*){2,4})/);
+      const aylarBul = basM ? basM[1].split(/20\d{2}\s*(?:\(\d\))?\s*/).map(x => x.trim()).filter(x => AYLAR.includes(x)) : [];
+      const servisM = metin.match(/\u0130\u00e7 Bor\u00e7 Servisi\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/);
+      const borcM = metin.match(/\u0130\u00e7 Bor\u00e7lanma\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/);
+      const sy = (t) => { const v = parseFloat(String(t).replace(/\./g, '').replace(',', '.')); return isFinite(v) ? v : null; };
+      if (aylarBul.length === 3 && servisM && borcM) {
+        aylarBul.forEach((a, k) => {
+          const it = sy(servisM[k + 1]), bo = sy(borcM[k + 1]);
+          if (it != null && bo != null) fin.push({ ay: a, itfa: it, borclanma: bo });
+        });
+      }
+    } catch (e) {}
     if (fin.length >= 2) d.finansman = fin; else { delete d.finansman; }
 
-    d.guncelleme = bugun; d._kaynak_slug = enYeni.slug; d._kaynak_pdf = enYeni.pdf[1];
+    d.guncelleme = bugun; d._kaynak_slug = enYeni.slug; d._ayristirici = AYR_SURUM; d._kaynak_pdf = enYeni.pdf[1];
     await yaz(dosya, d);
     degisenler.push('hazine ihraç takvimi (' + ihraclar.length + ')');
     const ks = ihraclar.filter(x => x.katilim).length;
