@@ -161,7 +161,17 @@ async function yorumTuru(zorla){
 // değildir — Ebu yeniden yazarsa çizim/gösterge açıklamaları kaybolur. Ayrıca grafik
 // canvas'tir, kart verisi hash'i her fiyat değişiminde değişirdi ve not motoru
 // boşuna tetiklenip token yakardı.
-const SEKME_DISLA = ['t3','t4','t5','t6','t8','t9','t10','t11','t14','t20','t21'];   // §154: t22 kalktı — Endeksten Ayrışma Portföy (t3) içine taşındı, t3 zaten listede
+/* SS327 (19 Agu denetim turu): t23 Finansal Tablolar EVRENDEN CIKARILDI.
+   OLCULEN ARIZA: kart TEMBEL - tablo ancak kullanici sirket secip 'getir'
+   dedikten sonra dolar. Ebu bos karti yorumladi ve genel finans bilgisiyle
+   DOLDURMA yapti: 'nakit pozisyonundaki gerileme ile ticari alacaklardaki
+   ARTIS...' - ayni anda getirilen TOASO 2026/2C tablosunda ticari alacaklar
+   %2,3 AZALMISTI. Yorum akiciydi, dogru degildi.
+   Kart ayrica KULLANICIYA OZEL bir sorgu ekrani: her kullanici baska sirkete
+   bakar, tek bir 'not' kimin verisini anlattigini bilemez.
+   DERS (SS111'in kardesi): BOS/TEMBEL KARTA YORUM YAZILMAZ - veri gelmeden
+   uretilen cumle bilgi degil DOLDURMADIR. */
+const SEKME_DISLA = ['t3','t4','t5','t6','t8','t9','t10','t11','t14','t20','t21','t23'];   // §154: t22 kalktı — Endeksten Ayrışma Portföy (t3) içine taşındı, t3 zaten listede
 const SOGUMA_MS = 6*3600*1000;   // 6 saat: veri değişince aynı gün içinde tazelenebilir (20h fazla katıydı)
 const PARTI = 4;   // token güvenliği: 4 not × ~450 token
 
