@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819d';   // SS319-D: makro takvim dogru kaba (takvimBody diye id yokmus)
+const KTP_SURUM = '20260819e';   // SS320 egri gorseli TR+ABD canli · SS319-D
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -670,6 +670,7 @@ async function abdSekme(){
     const d=r.ok?await r.json():null;
     if(d&&d.ok&&d.seriler&&Object.values(d.seriler).some(v=>v)&&$('usFredBody')){
         const S=d.seriler;
+        window.US_FRED=S;   /* SS320: egri gorseli ayni veriyi OKUR - DOM kazimaz (SS304) */
         const satir=(id,ad,vurgu)=>{
           const v=S[id];
           if(!v)return '';
@@ -7273,6 +7274,7 @@ async function boot(){
     ['Equity', pyInit],
     ['Sukuk Sinyali', sinyalRender],   /* SS315 */
     ['Makro Takvim', makroTakvimRender],   /* SS319 */
+    ['Eğri Görseli', egriGorselRender],   /* SS320 */
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],
@@ -8453,6 +8455,67 @@ function likiditeRender(){
    kap bir kez yaratilir, icerik innerHTML= ile DEGISTIRILIR (idempotent).
    Saatler dosyada UTC — burada TSI'ye cevrilir. Gecmis olaylar (2 saatten
    eski) dusurulur; takvim ileriye bakar. */
+/* SS320 GETIRI EGRISI GORSELI - OTOMATIK (19 Agu, kullanici istegi: "eski
+   kalmis"). 27 Tem'de elle kodlanan 4 statik SVG'nin TR ve ABD panelleri
+   artik CANLI veriden ayni gorsel dille yeniden cizilir:
+   TR ← /api/evds2?mod=egri (sk-egri ile ayni uc; EGRI_CANLI ezilmez, yerel)
+   ABD ← window.US_FRED (abdSekme'nin fetch'i yazar) yoksa /api/market?mod=fred
+   DE/JP: canli kaynak YOK (Bundesbank/MoF kesfi = V2) - statikler durur,
+   rozet durumu DURUST soyler: "TR·ABD CANLI · DE·JP 27 TEM".
+   Statik SVG'ler kaplarin icinde YEDEK: veri gelmezse eski gorunum kalir ve
+   rozet guncellenmez - bayatlik gizlenmez, gorunur. */
+function egriSvgUret(noktalar, renk, tepeEtiket){
+  /* noktalar: [{x:etiket, v:getiri}] soldan saga - orijinal statik dille birebir:
+     viewBox 320x135, taban cizgi y=110, tavan y=20, esit araliklı x. */
+  if(!noktalar||noktalar.length<3) return null;
+  const vs=noktalar.map(n=>n.v);
+  const min=Math.min(...vs), max=Math.max(...vs), ar=(max-min)||1;
+  const X=(i)=>20+ i*(280/(noktalar.length-1));
+  const Y=(v)=>110-((v-min)/ar)*90;
+  const pts=noktalar.map((n,i)=>X(i).toFixed(1)+','+Y(n.v).toFixed(1)).join(' ');
+  const tepeI=vs.indexOf(max), sonI=noktalar.length-1;
+  return '<svg viewBox="0 0 320 135" style="width:100%;height:auto">'+
+    '<line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>'+
+    '<polyline points="'+pts+'" fill="none" stroke="'+renk+'" stroke-width="2.5" stroke-linejoin="round"/>'+
+    '<circle cx="'+X(tepeI).toFixed(1)+'" cy="'+Y(max).toFixed(1)+'" r="3.2" fill="'+renk+'"/>'+
+    '<circle cx="'+X(sonI).toFixed(1)+'" cy="'+Y(vs[sonI]).toFixed(1)+'" r="3.2" fill="'+renk+'"/>'+
+    '<text x="'+X(tepeI).toFixed(1)+'" y="'+(Y(max)-6).toFixed(1)+'" font-family="IBM Plex Mono" font-size="9" fill="'+renk+'" text-anchor="middle">%'+trN(max,1)+(tepeEtiket?' ('+noktalar[tepeI].x+')':'')+'</text>'+
+    '<text x="'+(X(sonI)-2).toFixed(1)+'" y="'+(Y(vs[sonI])+(vs[sonI]===max?14:-5)).toFixed(1)+'" font-family="IBM Plex Mono" font-size="9" fill="#63756C" text-anchor="end">%'+trN(vs[sonI],1)+'</text>'+
+    '<text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">'+noktalar[0].x+'</text>'+
+    '<text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">'+noktalar[Math.floor(noktalar.length/2)].x+'</text>'+
+    '<text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">'+noktalar[sonI].x+'</text></svg>';
+}
+async function egriGorselRender(){
+  const trKap=document.getElementById('egriTRKap'), usKap=document.getElementById('egriUSKap');
+  if(!trKap&&!usKap) return;
+  let trOk=false, usOk=false, damga='';
+  try{
+    const r=await fetch('/api/evds2?mod=egri',{cache:'no-store'});
+    const j=r.ok?await r.json():null;
+    if(j&&j.ok&&j.vadeler){
+      const eY=(k)=>{const m=String(k).toUpperCase().match(/^(\d+)\s*([AY])/);return m?(m[2]==='A'?+m[1]/12:+m[1]):99;};
+      const nok=Object.entries(j.vadeler).map(([k,v])=>({x:k,v:parseFloat(v.getiri),yil:(isFinite(v.kalanYil)&&v.kalanYil>0)?v.kalanYil:eY(k)}))
+        .filter(n=>isFinite(n.v)).sort((a,b)=>a.yil-b.yil);
+      const svg=egriSvgUret(nok,'#128A66',true);
+      if(svg&&trKap){trKap.innerHTML=svg;trOk=true;damga=(j.tarih||'').slice(0,10);}
+    }
+  }catch(e){}
+  try{
+    let S=window.US_FRED;
+    if(!S){const r=await fetch('/api/market?mod=fred');const d=r.ok?await r.json():null;if(d&&d.ok)S=d.seriler;}
+    if(S){
+      const sec=[['DGS3MO','3A'],['DGS2','2Y'],['DGS5','5Y'],['DGS10','10Y'],['DGS30','30Y']];
+      const nok=sec.map(([id,x])=>S[id]&&isFinite(S[id].deger)?{x,v:S[id].deger}:null).filter(Boolean);
+      const svg=egriSvgUret(nok,'#3D7BD9',false);
+      if(svg&&usKap){usKap.innerHTML=svg;usOk=true;}
+    }
+  }catch(e){}
+  const tag=document.getElementById('egriGorselTag');
+  if(tag&&(trOk||usOk)){
+    tag.textContent=(trOk&&usOk?'TR·ABD CANLI':trOk?'TR CANLI':'ABD CANLI')+(damga?' '+damga:'')+' · DE·JP 27 TEM';
+  }
+}
+
 async function makroTakvimRender(){
   /* SS319-D DUZELTME (19 Agu aksami, canli olcum): ilk surum $('takvimBody')
      hedefliyordu - O ID SAYFADA YOK (koddaki ESKI bir yorumdan okumustum;

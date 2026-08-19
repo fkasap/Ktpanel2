@@ -565,11 +565,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
 </div>
 <div class="card" style="margin-top:10px">
-  <div class="lbl">GETİRİ EĞRİSİ GÖRSELİ <span class="tag snap">4 ÜLKE KARŞILAŞTIRMASI · 27 TEM</span></div>
+  <div class="lbl">GETİRİ EĞRİSİ GÖRSELİ <span class="tag snap" id="egriGorselTag">4 ÜLKE KARŞILAŞTIRMASI · 27 TEM</span></div>
   <div class="grid g2" style="margin-top:8px;gap:16px">
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:var(--mm2);margin-bottom:2px">TÜRKİYE — ters (hörgüçlü)</div>
-      <svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Türkiye getiri eğrisi">
+      <div id="egriTRKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Türkiye getiri eğrisi">
         <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
         <polyline points="20,97.7 66.7,75.8 113.3,59.9 160,20 206.7,39.9 253.3,57.7 300,110" fill="none" stroke="#128A66" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="160" cy="20" r="3.2" fill="#128A66"/>
@@ -579,11 +579,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
         <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">3A</text>
         <text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">2Y</text>
         <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">10Y</text>
-      </svg>
+      </svg></div>
     </div>
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:var(--blue);margin-bottom:2px">ABD — normal (dik)</div>
-      <svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="ABD getiri eğrisi">
+      <div id="egriUSKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="ABD getiri eğrisi">
         <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
         <polyline points="20,110 90,78.2 160,72 230,54.1 300,20" fill="none" stroke="#3D7BD9" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="20" cy="110" r="3.2" fill="#3D7BD9"/>
@@ -593,7 +593,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
         <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">3A</text>
         <text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">5Y</text>
         <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">30Y</text>
-      </svg>
+      </svg></div>
     </div>
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:var(--purple);margin-bottom:2px">ALMANYA — normal (yatık)</div>
@@ -1661,7 +1661,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260819d"></script>
+<script src="/app.js?v=20260819e"></script>
 <script src="/ajan.js?v=20260817a"></script>
 </body>
 </html>
