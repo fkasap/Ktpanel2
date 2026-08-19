@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819a';   // SS317 ihrac sonuclari: takvim rozetleri + gerceklesen ihaleler blogu
+const KTP_SURUM = '20260819b';   // SS315 sinyal + SS316b ima + SS318 aofm onbellek + SS317
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -93,6 +93,7 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
     if(b.dataset.tab==='t15'){emtiaRender();}
     if(b.dataset.tab==='t16'){asyaRender();}
     if(b.dataset.tab==='t17'){abdSekme();}
+    if(b.dataset.tab==='t10'){sinyalRender();}   /* SS315: Fix Income acilinca tazele */
     if(b.dataset.tab==='t18'){avrupaSekme();}
     /* §163: kazancTakvimCanli §162'de #kazancCanli'ye yonlendirildi ama
        CAGIRANI KALMADI (eskiden takvimRender icinden cagriliyordu, o silindi).
@@ -637,7 +638,7 @@ async function avrupaSekme(){
 }
 
 async function abdSekme(){
-  console.log('[KTPanel] abdSekme çağrıldı, v=20260726b');
+  console.log('[KTPanel] abdSekme ('+KTP_SURUM+')');   /* fosil v=20260726b imzasi temizlendi */
   if(!$('usEndeksBody')){console.log('[KTPanel] usEndeksBody bulunamadı');return;}
   // ENDEKSLER — Yahoo (mevcut market API'sinden, ABD anahtarları)
   try{
@@ -6498,6 +6499,14 @@ function tahminCiz(){
   if(pe && P){
     const liste=ppkOku(), pat=ppkPatika(P.deger, liste);
     const fw=TAHMIN.egri;
+    /* SS316b: piyasa imasi degiskeni - AYNI fw hesabindan, gorunen notla AYNI
+       ay-formatinda yazilir (SS131: yil-ondalik okunmuyordu). Sinyal karti (SS315)
+       yalniz OKUR. Ilk deneme atamayi ternary icine virgul-operatoruyle gommustu;
+       parantez cok satirli zincirde acik kaldi ve sozdizimi kirildi - atama
+       ifade DISINA alindi (basit olan dogruydu). */
+    if(fw&&fw.forward&&fw.forward.length){
+      window.PIYASA_IMA=fw.forward.slice(0,3).map(x=>Math.round(x.bas*12)+'\u2192'+Math.round(x.bit*12)+' ay %'+F(x.oran,2)).join(' \u00b7 ');
+    }
     pe.innerHTML='<div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th style="width:96px">TOPLANTI</th>'+
       PPK_KOLLAR.map(k=>'<th>'+k+'bp</th>').join('')+
       '<th>BEKLENEN</th><th>BEL\u0130RS\u0130ZL\u0130K</th><th>FA\u0130Z</th></tr></thead><tbody>'+
@@ -7262,6 +7271,7 @@ async function boot(){
     ['Veri Tazeliği', planInit],
     ['Takvim satırları (§245)', takvimSatirlari],
     ['Equity', pyInit],
+    ['Sukuk Sinyali', sinyalRender],   /* SS315 */
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
     ['Yabancı Hisse evreni', yevrenInit],
@@ -7269,7 +7279,7 @@ async function boot(){
     ['TÜFE harcama grupları', ()=>setTimeout(hrcCek,5200)],
     ['Yİ-ÜFE detayı', ()=>setTimeout(ufeCek,5500)],
     /* §245: ['İnceleme AI', aiInit] KALDIRILDI — fonksiyon ölüydü, silindi. */
-    ['Canlı AOFM', loadAOFM],
+    ['Canlı AOFM', aofmHizli],   /* SS318 */
     ['Haftalık yorum panosu', ()=>setTimeout(yorumPano,2500)],
     ['Taktiksel duruş', ()=>setTimeout(taktikRender,2800)],
     ['ABD sekmesi', ()=>setTimeout(abdSekme,3000)],
@@ -7361,6 +7371,52 @@ async function boot(){
 boot();
 
 /* ---- Sukuk İhraç Takvimi ---- */
+/* SS315 SUKUK TAKTIK SINYALI - otonomi paketinin son halkasi (onay 18 Agu).
+   KARAR DEGIL OKUMA: dort eksende ortam rozetleri, her satirin kaynagi yaninda.
+   Girdilerin TUMU panelin kendi tek-sahip degiskenleri/dosyalari:
+   PPK agaci (kullanici TAKDIRI, ppkOku) · HMB ihale defteri (SS314 otomatik) ·
+   AOFM_SON / EXANTE / REK_SON (SS304 tek-sahip) · PIYASA_IMA (SS316b, Tahminler
+   acilinca ayni forward hesabindan dolar - format ikinci sahibi yok). */
+async function sinyalRender(){
+  const el=$('sukukSinyal'); if(!el)return;
+  try{
+    let SON={}; try{SON=await(await fetch('/hazine-sonuc.json',{cache:'no-store'})).json();}catch(e){}
+    const bloklar=[]; Object.values((SON&&SON.kayitlar)||{}).forEach(k=>(k.ihaleler||[]).forEach(A=>bloklar.push(Object.assign({t:k.tarih},A))));
+    bloklar.sort((a,b)=>(b.t||'').localeCompare(a.t||''));
+    const tufe=bloklar.find(b=>/T\u00dcFE/i.test(b.senet||'')&&b.bilesik);
+    const sabitler=bloklar.filter(b=>/Sabit/i.test(b.senet||'')&&b.bilesik);
+    const uzun=sabitler.length?sabitler.reduce((a,b)=>a.bilesik.gerceklesme<b.bilesik.gerceklesme?a:b):null;
+    const kisaAday=bloklar.filter(b=>b.bilesik&&!/T\u00dcFE/i.test(b.senet||''));
+    const kisa=kisaAday.length?kisaAday.reduce((a,b)=>a.bilesik.gerceklesme>b.bilesik.gerceklesme?a:b):null;
+    let topBp=null,kuyruk=0;
+    try{const L=ppkOku(); const pat=ppkPatika(0,L); topBp=Math.round(pat.reduce((x,y)=>x+y.beklenenBp,0));
+        L.forEach(t=>{kuyruk+=(+(t.p&&t.p['+100']||0))+(+(t.p&&t.p['+250']||0));});}catch(e){}
+    const aofm=Number.isFinite(AOFM_SON)?AOFM_SON:null;
+    const ex=(window.EXANTE&&isFinite(window.EXANTE.deger))?window.EXANTE.deger:null;
+    const rek=Number.isFinite(REK_SON)?REK_SON:null;
+    const terslik=(kisa&&uzun&&kisa!==uzun)?Math.round((kisa.bilesik.gerceklesme-uzun.bilesik.gerceklesme)*100):null;
+    const makas=(ex!=null&&tufe)?+(ex-tufe.bilesik.gerceklesme).toFixed(1):null;
+    const R=[];
+    if(topBp!=null) R.push({r:topBp<=-200?'up':'',t:'PAT\u0130KA',
+      m:'Takdiriniz \u03a3'+topBp+'bp \u2014 '+(topBp<=-200?'yumu\u015fama g\u00fc\u00e7l\u00fc: sabit kira kilidi lehine':'temkinli patika')+
+        (kuyruk>0?' \u00b7 art\u0131r\u0131m kuyru\u011fu %'+kuyruk+': sabit vade \u00f6l\u00e7\u00fcl\u00fc tutulur':'')});
+    if(terslik!=null) R.push({r:terslik>=300?'down':'',t:'E\u011eR\u0130',
+      m:'Ters '+terslik+'bp (%'+trN(kisa.bilesik.gerceklesme,1)+'\u2192%'+trN(uzun.bilesik.gerceklesme,1)+' \u00b7 '+(uzun.senet||'')+') \u2014 dezenflasyon '+
+        (terslik>=300?'DER\u0130N fiyatlanm\u0131\u015f: uzun sabit primli; patikaniz piyasadan g\u00fcvercin de\u011filse kilit pahal\u0131':'k\u0131smen fiyatl\u0131')});
+    if(makas!=null) R.push({r:makas>=2?'down':'up',t:'REEL',
+      m:'Ex-ante %'+trN(ex,1)+' \u2212 T\u00dcFE-endeksli ihra\u00e7 reeli %'+trN(tufe.bilesik.gerceklesme,2)+' = '+trN(makas,1)+' pt \u2192 enflasyon korumas\u0131 '+
+        (makas>=2?'PAHALI (nominal g\u00f6rece cazip)':'makul fiyatl\u0131')});
+    if(rek!=null&&ex!=null) R.push({r:'',t:'TL',
+      m:'REK '+trN(rek,1)+' \u00b7 ex-ante reel %'+trN(ex,1)+' \u2014 TL ta\u015f\u0131ma \u00e7\u0131palar\u0131 '+
+        (ex>=3&&rek<115?'destekleyici (USD KS getiri de\u011fil SEPET karar\u0131d\u0131r)':'zay\u0131fl\u0131yor')});
+    if(window.PIYASA_IMA) R.push({r:'',t:'\u0130MA',m:'Piyasa forward dilimleri: '+window.PIYASA_IMA+' \u2014 patikanizla kiyaslayin (SS316b)'});
+    const dm=(SON.guncelleme||'').slice(0,16);
+    el.innerHTML=R.length?('<div class="card" style="margin-bottom:14px"><div class="lbl">SUKUK TAKT\u0130K S\u0130NYAL\u0130 <span class="thin" style="font-weight:400">(okuma \u2014 karar de\u011fil \u00b7 girdiler otomatik \u00b7 SS315)</span></div>'+
+      R.map(x=>'<div class="kv"><span class="k" style="font-weight:700;'+(x.r==='up'?'color:var(--up)':x.r==='down'?'color:var(--down)':'')+'">'+x.t+'</span><span style="font-size:10.5px;text-align:right;max-width:78%">'+x.m+'</span></div>').join('')+
+      '<div class="sub" style="font-size:9px;margin-top:6px">Kaynak: PPK a\u011fac\u0131 (takdiriniz) \u00b7 HMB ihale defteri'+(dm?(' \u00b7 '+dm):'')+' \u00b7 EVDS. Rozet ortam okumas\u0131d\u0131r; pozisyon karar\u0131 risk b\u00fct\u00e7esiyle verilir.</div></div>'):'';
+  }catch(e){}
+}
+
 async function hazineRender(){
   const el=$('hazBody'); if(!el)return;
   try{
@@ -8587,6 +8643,31 @@ async function kazancTakvimCanli(){
 }
 
 /* ---- TCMB EVDS3 canlı makro ---- */
+/* SS318 AOFM ONBELLEGI - SS312 ilk avini vermisti: "yavas modul: Canli AOFM
+   12699 ms". Yavaslik EVDS API tarafinda; cozum beklemeyi kaldirmak:
+   (1) acilista SON BILINEN degerler localStorage'dan ANINDA basilir
+       ("· canli" rozeti "· son bilinen"e cevrilir - yaniltma yok),
+   (2) canli cekim ARKA PLANDA surer, gelince hucreleri VE onbellegi tazeler,
+   (3) boot artik AOFM'u beklemez - sure konsola ayri satirla yazilir. */
+function aofmOnbellekBas(){
+  try{
+    const c=JSON.parse(localStorage.getItem('ktp_aofm_cache_v1')||'null'); if(!c)return;
+    Object.entries(c).forEach(([id,v])=>{const e=$(id);
+      if(e&&v&&v.html){e.innerHTML=v.html.replace('\u00b7 canl\u0131','\u00b7 son bilinen');if(v.title)e.title=v.title+' \u00b7 \u00f6nbellek';}});
+  }catch(e){}
+}
+async function aofmHizli(){
+  aofmOnbellekBas();
+  const t0=Date.now();
+  loadAOFM().then(()=>{
+    try{
+      const c={};
+      document.querySelectorAll('[id$="Live"]').forEach(e=>{if(/\u00b7 canl\u0131/.test(e.innerHTML))c[e.id]={html:e.innerHTML,title:e.title||''};});
+      if(Object.keys(c).length)localStorage.setItem('ktp_aofm_cache_v1',JSON.stringify(c));
+      console.log('[KTPanel] SS318 AOFM canli '+(Date.now()-t0)+' ms (arka plan) \u00b7 '+Object.keys(c).length+' hucre onbellege alindi');
+    }catch(e){}
+  });
+}
 async function loadAOFM(){
   // 1) Anlık değerler — her seri BAĞIMSIZ istek (biri geçersizse diğerleri etkilenmez)
   const koyGrup=async(id,grup,adF,fmt)=>{
