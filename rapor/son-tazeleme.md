@@ -26,14 +26,14 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **tarih birliği**: tek tarih: 2026-08-19
 - ✓ **fiyat yasi (Multiple fiyatları)**: 2026-08-19 (0 is gunu — guncel)
 - ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): ORGE → pay adedi + referans fiyat ELLE güncellenmeli
-  - ORGE: -79.91%
+  - ORGE: -79.86%
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-19
 - ✓ **fiyat yasi (Model sicili)**: 2026-08-19 (0 is gunu — guncel)
 - ✓ **aykırı değer**: 1 hisse KARANTİNADA (±%25 aşımı — kurumsal işlem olası): ORGE → pay adedi + referans fiyat ELLE güncellenmeli
-  - ORGE: -79.91%
+  - ORGE: -79.86%
 
 ### Model sicili serisi (§291) — ⏭ 2026-08-19 icin XKTUM arsivde yok; satir yazilmadi (uydurma yok)
 
@@ -60,7 +60,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2026 fon fiyat + 1056 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009733259822> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008847941226> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -96,6 +96,14 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Hazine ihale sonuçları (§314) — ✓ defter 10 duyuru · yeni 0
 - yeni duyuru yok
 
+### Küresel makro takvim (§319) — ✓ 21 olay (8 yüksek etki)
+- 2026-08-17 12:30Z · CAD · CPI m/m
+- 2026-08-17 12:30Z · CAD · Median CPI y/y
+- 2026-08-17 12:30Z · CAD · Trimmed CPI y/y
+- 2026-08-18 06:00Z · GBP · Claimant Count Change
+- 2026-08-19 06:00Z · GBP · CPI y/y
+- 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
+
 ### Bülten keşfi (§250k) — ✓ thb202608181.zip indi · 276KB
 - içerik: thb202608181.csv
 - endeks izi: `thb202608181.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
@@ -108,4 +116,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (136 fiyat · 1 karantina) · Model sicili (38 fiyat · 1 karantina) · TR 5Y CDS (218.67 bp) · risk metrikleri (129) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (109 bekliyor) · endeks üyelikleri · endeks arşivi
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (126 fiyat · 1 karantina) · Model sicili (37 fiyat · 1 karantina) · TR 5Y CDS (218.67 bp) · risk metrikleri (139) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (109 bekliyor) · endeks üyelikleri · endeks arşivi · küresel makro takvim (21 olay)
