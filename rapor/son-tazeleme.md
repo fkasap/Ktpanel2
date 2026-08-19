@@ -56,7 +56,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2026 fon fiyat + 1056 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009783362350> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009783437678> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -72,10 +72,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-19 (referans 2026-08-19, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ✓ **borc defteri (§299)**: 193 kart bekliyor · en eski AGYO (1g)
+- ✓ **borc defteri (§299)**: 194 kart bekliyor · en eski AGYO (1g)
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 193 şirket kart bekliyor
-- pencere: 131 FR · yeni deftere giren: 2 (AVTUR, HATEK)
+### Bilanço tetiği (§299 kümülatif) — ✓ 194 şirket kart bekliyor
+- pencere: 132 FR · yeni deftere giren: 1 (EGPRO)
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 1 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATEKS, ATSYH, AVOD, AVTUR, BAGFS, BAKAB, BERA, BESLR …
@@ -101,10 +101,16 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Hazine ihale sonuçları (§314) — ✓ defter 10 duyuru · yeni 0
 - yeni duyuru yok
 
-### Hazine ihraç takvimi (§334) — ⏭ PDF ayrıştırılamadı (7 satır), dosya KORUNDU
+### Hazine ihraç takvimi (§334) — ✓ 22 ihraç · 5 kira sertifikası
+- dönem: Ağustos–Ekim 2026 · sonraki yayın: ~25 Kasım (Kas–Oca stratejisi)
+- finansman tablosu: 3 ay
 - kaynak: 2026-07-31 · Ağustos – Ekim 2026 İç Borçlanma Stratejisi
-- yakalanan: 2026-10-05 Sabit Kuponlu Devlet Tahvili · 2026-10-06 Altın Tahvili · 2026-10-06 Altına Dayalı Kira Sertifikası · 2026-10-12 TLREF'e Endeksli Devlet Tahvili · 2026-10-12 Sabit Kuponlu Devlet Tahvili · 2026-10-13 Kira Sertifikası · 2026-10-13 Sabit Kuponlu Devlet Tahvili
-- ham (1200):  BASIN VE HALKLA İLİŞKİLER MÜŞAVİRLİĞİ Tel: (312) 204 74 51 - 204 70 74 Faks: (312) 204 74 53 E-posta: basin@hmb.gov.tr Adres: İnönü Bulvarı No: 36 06510 Emek/Ankara -1- 31 Temmuz 2026 İÇ BORÇLANMA STRATEJİSİ AĞUSTOS – EKİM 2026 A. İÇ BORÇ ÖDEMELERİ Ağustos - Ekim 2026 döneminde yapılması öngörülen kesinleşmiş iç borç itfaları ile bu itfaların dağılımı aşağıda yer almaktadır: Piyasa Kamu (2) Toplam Ödeme 5.08.20264.47154.476 12.08.2026296.00337.548333.550 19.08.202653.7331.38155.114 21.08.2026202.3140202.314 26.08.2026705181886 TOPLAM 557.22639.115596.341 2.09.202642.40719.60362.010 9.09.202660.2283.33863.566 16.09.2026124.66621.272145.938 TOPLAM 227.30144.213271.514 7.10.2026226.5128.027234.539 14.10.202699.84514.886114.730 21.10.202646.3809.45755.837 TOPLAM 372.73732.370405.106 İç Borç Ödemeleri (1) Alıcılara Göre Dağılım (Milyon ₺) 2026 Yılı Ağustos Ayı 2026 Yılı Eylül Ayı 2026 Yılı Ekim Ayı (1) İhraç aşamasındaki alıcı dağılımı baz alınarak yapılacak ödemeleri göstermektedir. (2) Kamu kurumlarına rekabetçi olmayan teklif (ROT) ve doğrudan satış yoluyla yapılan ihraçlara ilişkin ödemeleri içermektedir. T.C. HAZİNE VE MALİYE BAKANLIĞI BASIN VE HALKLA İLİŞKİLER MÜŞAVİRLİĞİ Tel: (3
+- 2026-08-10 · Sabit Kuponlu Devlet Tahvili · 2 Yıl
+- 2026-08-10 · TLREFK'ye Endeksli Kira Sertifikası · 2 Yıl · KATILIM
+- 2026-08-11 · Hazine Bonosu · 6 Ay
+- 2026-08-11 · Sabit Kuponlu Devlet Tahvili · 5 Yıl
+- 2026-08-17 · Değişken Faizli Devlet Tahvili · 3 Yıl
+- 2026-08-17 · TLREF'e Endeksli Devlet Tahvili · 4 Yıl
 
 ### Küresel makro takvim (§319) — ✓ 21 olay (8 yüksek etki)
 - 2026-08-17 12:30Z · CAD · CPI m/m
@@ -126,6 +132,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (218.67 bp) · risk metrikleri (53) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (193 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
+**Sonuç:** TR 5Y CDS (218.67 bp) · risk metrikleri (29) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (194 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · hazine ihraç takvimi (22) · küresel makro takvim (21 olay)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**

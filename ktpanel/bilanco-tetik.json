@@ -46,6 +46,7 @@
   "ECOGR",
   "EDIP",
   "EGGUB",
+  "EGPRO",
   "EKOS",
   "EMKEL",
   "ENDAE",
@@ -195,7 +196,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 193,
+ "sayi": 194,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -389,9 +390,10 @@
   "PENGD": "2026-08-19",
   "YATAS": "2026-08-19",
   "AVTUR": "2026-08-19",
-  "HATEK": "2026-08-19"
+  "HATEK": "2026-08-19",
+  "EGPRO": "2026-08-19"
  },
- "pencere_sayi": 131,
+ "pencere_sayi": 132,
  "dusen_son": [],
- "guncelleme": "2026-08-19 18:01 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-19 18:05 UTC — otomatik (KAP FR · kümülatif §299)"
 }

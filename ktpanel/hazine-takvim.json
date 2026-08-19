@@ -1,46 +1,226 @@
 {
  "kaynak": "HMB İç Borçlanma Stratejisi (26 May 2026)",
- "donem": "Ağustos  Ekim 2026 İç Borçlanma Stratejisi",
+ "donem": "Ağustos–Ekim 2026",
  "guncelleme": "2026-08-19",
- "sonraki_aciklama": "~25 Ağustos (Eyl–Kas stratejisi)",
+ "sonraki_aciklama": "~25 Kasım (Kas–Oca stratejisi)",
  "finansman": [
   {
-   "ay": "Temmuz",
-   "itfa": 616.3,
-   "borclanma": 708.7
+   "ay": "Ağustos",
+   "itfa": 596.3,
+   "borclanma": 536.7
   },
   {
-   "ay": "Ağustos",
-   "itfa": 595.8,
-   "borclanma": 595.8
+   "ay": "Eylül",
+   "itfa": 271.5,
+   "borclanma": 257.9
+  },
+  {
+   "ay": "Ekim",
+   "itfa": 405.1,
+   "borclanma": 405.1
   }
  ],
  "ihraclar": [
   {
-   "t": "2026-10-14",
-   "ad": "Kira Sertifikası",
-   "vade": "5 Yıl",
-   "itfa": "",
+   "t": "2026-08-10",
+   "valor": "2026-08-12",
+   "itfa": "2028-03-15",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "2 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-10",
+   "valor": "2026-08-12",
+   "itfa": "2028-08-09",
+   "ad": "TLREFK'ye Endeksli Kira Sertifikası",
+   "vade": "2 Yıl",
    "yontem": "Doğrudan Satış",
    "katilim": true
   },
   {
-   "t": "2026-10-14",
-   "ad": "Sabit Kuponlu DT",
-   "vade": "9 Yıl",
-   "itfa": "",
-   "yontem": "İhale / Yeniden",
+   "t": "2026-08-11",
+   "valor": "2026-08-12",
+   "itfa": "2027-02-10",
+   "ad": "Hazine Bonosu",
+   "vade": "6 Ay",
+   "yontem": "İhale / Yeniden ihraç",
    "katilim": false
   },
   {
-   "t": "2027-02-10",
-   "ad": "Kuponsuz Devlet Tahvili",
-   "vade": "6 Ay",
-   "itfa": "",
-   "yontem": "İhale / Yeniden",
+   "t": "2026-08-11",
+   "valor": "2026-08-12",
+   "itfa": "2031-04-16",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "5 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-17",
+   "valor": "2026-08-19",
+   "itfa": "2030-01-02",
+   "ad": "Değişken Faizli Devlet Tahvili",
+   "vade": "3 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-17",
+   "valor": "2026-08-19",
+   "itfa": "2030-07-03",
+   "ad": "TLREF'e Endeksli Devlet Tahvili",
+   "vade": "4 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-18",
+   "valor": "2026-08-19",
+   "itfa": "2030-05-08",
+   "ad": "TÜFE'ye Endeksli Devlet Tahvili",
+   "vade": "4 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-18",
+   "valor": "2026-08-19",
+   "itfa": "2035-09-05",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "9 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-20",
+   "valor": "2026-08-21",
+   "itfa": "2027-08-20",
+   "ad": "ABD Doları Cinsi Devlet Tahvili",
+   "vade": "1 Yıl",
+   "yontem": "Doğrudan Satış",
+   "katilim": false
+  },
+  {
+   "t": "2026-08-20",
+   "valor": "2026-08-21",
+   "itfa": "2027-08-20",
+   "ad": "ABD Doları Cinsi Kira Sertifikası",
+   "vade": "1 Yıl",
+   "yontem": "Doğrudan Satış",
+   "katilim": true
+  },
+  {
+   "t": "2026-09-07",
+   "valor": "2026-09-09",
+   "itfa": "2027-05-12",
+   "ad": "Hazine Bonosu",
+   "vade": "8 Ay",
+   "yontem": "İhale / İlk ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-09-08",
+   "valor": "2026-09-09",
+   "itfa": "2028-09-06",
+   "ad": "Kira Sertifikası",
+   "vade": "2 Yıl",
+   "yontem": "Doğrudan Satış",
+   "katilim": true
+  },
+  {
+   "t": "2026-09-14",
+   "valor": "2026-09-16",
+   "itfa": "2028-09-13",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "2 Yıl",
+   "yontem": "İhale / İlk ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-09-14",
+   "valor": "2026-09-16",
+   "itfa": "2030-09-11",
+   "ad": "TLREF'e Endeksli Devlet Tahvili",
+   "vade": "4 Yıl",
+   "yontem": "İhale / İlk ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-09-15",
+   "valor": "2026-09-16",
+   "itfa": "2031-04-16",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "5 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-10-05",
+   "valor": "2026-10-07",
+   "itfa": "2028-09-13",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "2 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-10-06",
+   "valor": "2026-10-07",
+   "itfa": "2028-10-04",
+   "ad": "Altın Tahvili",
+   "vade": "2 Yıl",
+   "yontem": "Doğrudan Satış",
+   "katilim": false
+  },
+  {
+   "t": "2026-10-06",
+   "valor": "2026-10-07",
+   "itfa": "2028-10-04",
+   "ad": "Altına Dayalı Kira Sertifikası",
+   "vade": "2 Yıl",
+   "yontem": "Doğrudan Satış",
+   "katilim": true
+  },
+  {
+   "t": "2026-10-12",
+   "valor": "2026-10-14",
+   "itfa": "2030-09-11",
+   "ad": "TLREF'e Endeksli Devlet Tahvili",
+   "vade": "4 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-10-12",
+   "valor": "2026-10-14",
+   "itfa": "2031-04-16",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "5 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
+   "katilim": false
+  },
+  {
+   "t": "2026-10-13",
+   "valor": "2026-10-14",
+   "itfa": "2031-10-08",
+   "ad": "Kira Sertifikası",
+   "vade": "5 Yıl",
+   "yontem": "Doğrudan Satış",
+   "katilim": true
+  },
+  {
+   "t": "2026-10-13",
+   "valor": "2026-10-14",
+   "itfa": "2035-09-05",
+   "ad": "Sabit Kuponlu Devlet Tahvili",
+   "vade": "9 Yıl",
+   "yontem": "İhale / Yeniden ihraç",
    "katilim": false
   }
  ],
  "_kaynak_slug": "agustos-ekim-2026-ic-borclanma-stratejisi",
- "_kaynak_pdf": "https://ms.hmb.gov.tr/uploads/2026/07/Tr08-Agustos-Ekim-2026-Ic-Borclanma-Stratejisi-3bb4819136c1d61c.pdf"
+ "_kaynak_pdf": "https://ms.hmb.gov.tr/uploads/2026/07/Tr08-Agustos-Ekim-2026-Ic-Borclanma-Stratejisi-3bb4819136c1d61c.pdf",
+ "_ayristirici": "v5"
 }
