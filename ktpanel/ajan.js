@@ -224,6 +224,31 @@ function kartKesfet(veriSart){
       const idx=kartNotIdx.get(kart)||0; kartNotIdx.set(kart, idx+1);
       ad = idx===0 ? base : base+' ·n'+(idx+1);
       veri = kartVeri.get(kart)||'';
+      /* §322 KOMSU VERI KOPRUSU — bir notun girdisi bugune kadar YALNIZ kendi
+         kartinin metniydi. Kritik Takvim/GORUS ikilisi bunu kirdi: GORUS ayri
+         bir kart oldugu icin Ebu'ya giden paket bos kaliyordu ve yorum, yanindaki
+         takvimi GORMEDEN yaziliyordu (24 Tem penceresini anlatmaya devam etmesinin
+         sebebi buydu). Cozum genel: not, data-ebu-veri="<CSS secici>" ile BASKA
+         kaplarin metnini de girdi olarak ister. Secici HTML'de durur — yeni kart
+         eklenince ajan.js'e dokunmak gerekmez (§245 ruhu).
+         SS319 ile birlikte anlami buyuk: takvim kartinin icinde artik otomatik
+         KURESEL MAKRO bolumu de var, yani Ebu yaklasan FOMC/PMI/istihdam
+         satirlarini dogrudan okur. */
+      const ekSec=nt.dataset?nt.dataset.ebuVeri:null;
+      if(ekSec){
+        const parcalar=[];
+        ekSec.split(',').forEach(sc=>{
+          sc=sc.trim(); if(!sc) return;
+          document.querySelectorAll(sc).forEach(kap=>{
+            if(kap===nt||kap.contains(nt)) { /* kendi notunu girdi sayma */ }
+            const kop=kap.cloneNode(true);
+            kop.querySelectorAll('[data-ebu-veri],.note').forEach(x=>x.remove());
+            const m=(kop.textContent||'').replace(/\s+/g,' ').trim();
+            if(m) parcalar.push(m);
+          });
+        });
+        if(parcalar.length) veri=(veri?veri+' || ':'')+'[EK VERI] '+parcalar.join(' || ').slice(0,1600);
+      }
     } else {                                               // BÖLÜM NOTU (kart dışında)
       const base=(sonH3||sonH2||''); if(!base) return;
       const anahtarBase=base+' ·not';
