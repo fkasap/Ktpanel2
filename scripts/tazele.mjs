@@ -1676,12 +1676,28 @@ const SURE_BASLA = Date.now();
 const SURE_BUTCE_MS = 11 * 60 * 1000;
 const sureRapor = [];
 let butceAsildi = false;
+/* SS326b KATMAN ICI TAVAN (19 Agu, ayni aksam ikinci ders): SS326'nin butcesi
+   katmanlar ARASINDA olcuyordu — TEK BIR katman 13 dk surunce zincir onu
+   KESEMEDI. Artik her katmanin kendi tavani var (varsayilan 4 dk, Playwright'li
+   fon katmani 6 dk): tavan dolunca BEKLEME birakilir, rapora yazilir ve sonraki
+   katman baslar. Arka planda asili kalan is process'i tutmasin diye betik
+   sonunda process.exit(0) cagrilir (asagida).
+   DERS: BUTCE KATMANLAR ARASINDA DEGIL, HER KATMANIN ICINDE DE OLMALI. */
+const KATMAN_TAVAN_MS = { 'Katılım fonları': 6*60*1000 };
 async function olcKos(ad, fn) {
   if (butceAsildi) { sureRapor.push('- ⏭ ' + ad + ' — süre bütçesi aşıldı, ATLANDI'); return; }
   const t0 = Date.now();
-  try { await fn(); }
-  catch (e) { raporlar.push('### ' + ad + ' — ✗ ' + String(e && e.message || e).slice(0, 90)); }
+  const tavan = KATMAN_TAVAN_MS[ad] || 4*60*1000;
+  let zamanlayici;
+  try {
+    await Promise.race([
+      fn(),
+      new Promise((_, red) => { zamanlayici = setTimeout(() => red(new Error('KATMAN TAVANI ' + Math.round(tavan/60000) + ' dk aşıldı — bırakıldı')), tavan); })
+    ]);
+  }
+  catch (e) { raporlar.push('### ' + ad + ' — ✗ ' + String(e && e.message || e).slice(0, 110)); }
   finally {
+    clearTimeout(zamanlayici);
     const sn = Math.round((Date.now() - t0) / 1000);
     if (sn >= 60) sureRapor.push('- ⏱ ' + ad + ' — ' + sn + ' sn');
     if (Date.now() - SURE_BASLA > SURE_BUTCE_MS) butceAsildi = true;
@@ -1982,4 +1998,8 @@ async function bultenKesif() {
       `denetim=${denetimDustu ? 'basarisiz' : 'basarili'}\n`);
   }
   console.log(raporlar.join('\n\n'));
+  /* SS326b: rapor yazildi ve konsola basildi. Playwright/asili fetch gibi arka
+     plan isleri event loop'u tutup Actions'i bekletmesin diye betik BURADA
+     kesin biter. Kod 0 — veri yazildi, is yesil. */
+  setTimeout(() => process.exit(0), 250);
 })();
