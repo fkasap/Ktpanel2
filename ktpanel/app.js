@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819m';   // SS328b adet olcekleme + SS329c etiket durustlugu
+const KTP_SURUM = '20260819n';   // SS331 bulut anahtar kodlama + sessiz yutma bitti
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7206,12 +7206,27 @@ async function cloudSave(){
     if(boy>LIMIT*0.7&&$('wkeyMsg'))
       $('wkeyMsg').textContent='☁ yük '+Math.round(boy/1024)+' KB — sınıra yaklaşıyor';
   }catch(e){}
-  try{const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json','X-Write-Key':wkey},body:JSON.stringify(payload)});
+  /* §331: anahtar yuzde-kodlu gider (Latin-1 disi karakter basligi patlatiyordu;
+     ASCII anahtarlarda encodeURIComponent hicbir sey degistirmez -> geriye uyum). */
+  const wkeyBaslik = encodeURIComponent(wkey);
+  try{const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json','X-Write-Key':wkeyBaslik},body:JSON.stringify(payload)});
     let j=null; try{ j=await r.json(); }catch(e){}
     if($('wkeyMsg'))$('wkeyMsg').textContent = r.ok ? ('buluta kaydedildi \u2713'+(j&&j.kayit!=null?' ('+j.kayit+' kayıt)':''))
       : ((j&&j.error)? j.error.slice(0,60) : 'kayıt reddedildi (anahtar?)');
     window.KTP_BULUT_DURUM = r.ok ? '☁ senkron '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}) : '⚠ bulut yazılamadı';
-  }catch(e){}
+  }catch(e){
+    /* §331b SESSIZ YUTMA BITTI. Bos catch, veri kaybinin fark edilmedigi TEK
+       durumdur (§200b'nin kendi cumlesi) — fetch daha kurulmadan patlarsa
+       kullanici hicbir sey gormuyordu. Artik ekranda ve konsolda gorunur. */
+    const m='⚠ Bulut yazılamadı: '+String(e&&e.message||e).slice(0,90);
+    window.KTP_BULUT_DURUM=m;
+    try{ if($('wkeyMsg')) $('wkeyMsg').textContent=m;
+         const u=$('bulutUyari');
+         if(u){ u.style.display='block';
+           u.innerHTML='<b>⚠ Bulut yazılamadı.</b> Son değişikliğin YALNIZ bu tarayıcıda — sayfayı yenilersen geri gelebilir. <span class="thin">'+esc(String(e&&e.message||e).slice(0,110))+'</span>'; }
+    }catch(_){}
+    console.error('[KTPanel] cloudSave:', e);
+  }
 }
 function cloudSaveDebounced(){clearTimeout(_cloudTimer);_cloudTimer=setTimeout(cloudSave,900);}
 localStorage.setItem=function(k,v){_origSet(k,v);if(CLOUD_KEYS.indexOf(k)>=0)cloudSaveDebounced();};
