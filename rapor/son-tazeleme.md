@@ -41,7 +41,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (185 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2026 fon · AUM + yatırımcı sayısı köprüden (ham 2033 kayıt, sayfalamalı)
@@ -56,7 +56,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2026 fon fiyat + 1056 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008751721368> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009783820270> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -71,10 +71,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-19 (referans 2026-08-19, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ✓ **borc defteri (§299)**: 199 kart bekliyor · en eski AGYO (1g)
+- ✓ **borc defteri (§299)**: 200 kart bekliyor · en eski AGYO (1g)
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 199 şirket kart bekliyor
-- pencere: 137 FR · yeni deftere giren: 5 (CANTE, CLEBI, DARDL, ELITE, KERVN)
+### Bilanço tetiği (§299 kümülatif) — ✓ 200 şirket kart bekliyor
+- pencere: 138 FR · yeni deftere giren: 1 (DURDO)
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 1 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATEKS, ATSYH, AVOD, AVTUR, BAGFS, BAKAB, BERA, BESLR …
@@ -122,4 +122,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (218.67 bp) · risk metrikleri (137) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (199 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
+**Sonuç:** TR 5Y CDS (218.67 bp) · risk metrikleri (137) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (200 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)

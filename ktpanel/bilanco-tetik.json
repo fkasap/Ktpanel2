@@ -46,6 +46,7 @@
   "DMRGD",
   "DOAS",
   "DOKTA",
+  "DURDO",
   "ECOGR",
   "EDIP",
   "EGGUB",
@@ -201,7 +202,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 199,
+ "sayi": 200,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -401,9 +402,10 @@
   "CLEBI": "2026-08-19",
   "DARDL": "2026-08-19",
   "ELITE": "2026-08-19",
-  "KERVN": "2026-08-19"
+  "KERVN": "2026-08-19",
+  "DURDO": "2026-08-19"
  },
- "pencere_sayi": 137,
+ "pencere_sayi": 138,
  "dusen_son": [],
- "guncelleme": "2026-08-19 18:17 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-19 18:24 UTC — otomatik (KAP FR · kümülatif §299)"
 }
