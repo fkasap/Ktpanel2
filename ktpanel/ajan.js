@@ -1179,7 +1179,11 @@ async function haftalikYorumYaz(zorla){
    eklemek = OZEL_GOREVLER dizisine bir satır. */
 const OZEL_GOREVLER=[
   { ad:'TakvimGorus', veriLbl:'TAKVİM', hedefLbl:'GÖRÜŞ',
-    tarif:'1 aylık kritik olay takvimine istinaden GÖRÜŞ yaz: gerçekleşen olayları (✓ işaretli) sonuçlarıyla değerlendir, yaklaşan olayların portföy anlamını kur, olaylar arası bağlantıları göster.' }
+    tarif:'Kritik olay takvimine istinaden GÖRÜŞ yaz. AGIRLIK YAKLASAN OLAYLARDA: '+
+      'once onumuzdeki 72 saatin olaylarini (tarih+saat vererek) ve portfoy anlamini yaz, '+
+      'sonra haftanin geri kalanini; gecmis olaylara EN FAZLA bir paragraf ayir ve yalniz '+
+      'yaklasan olaylarla baglantisi varsa deginin. Takvimde saat bilgisi olan satirlar '+
+      'kuresel veri akisidir (ForexFactory) — bunlari mutlaka degerlendir.' }
 ];
 function kartByLbl(prefix){
   let bulunan=null;
@@ -1202,7 +1206,12 @@ async function ozelGorevler(){
     const hh=h32(veri), anah='__GOREV_'+G.ad+'__';
     const eski=kayitli[anah];
     if(eski&&eski.hash===hh) continue;                               // veri değişmedi
-    if(eski&&eski.ts&&(simdi-eski.ts)<SOGUMA_MS) continue;           // soğumada
+    /* SS337 SOGUMA AYRIMI: genel notlar icin 6 saat dogru (kart verileri gun
+       icinde az degisir) ama TAKVIM yorumu icin fazla katiydi — kullanici
+       takvimi birlestirdikten sonra yorum saatlerce eski olaylarda kaldi.
+       Ozel gorevlerde veri hash'i DEGISMISSE 90 dk yeter: takvim degistiyse
+       yorum bayattir; degismediyse zaten yukaridaki satir zaten geciyor. */
+    if(eski&&eski.ts&&(simdi-eski.ts)<90*60*1000) continue;          // soğumada (SS337: 90 dk)
     kayit('Özel görev '+G.ad+': kaynak veri değişti → yorum yazılıyor…');
     const baglam=kartKesfet().slice(0,10).map(K=>'• '+K.ad+': '+K.veri.slice(0,120)).join('\n');
     const mevcut=notMetni(nt).slice(0,1800);   // imza SOYULMUS (§110)
@@ -1210,7 +1219,10 @@ async function ozelGorevler(){
       'Kurallar: 4-6 paragraf; her paragraf <b style="color:#0E5A3A">Kısa Başlık:</b> ile başlasın, paragraflar <br><br> ile ayrılsın; '+
       'rakam ve olayları SADECE aşağıdaki içerikten al, uydurma; son paragraf pencerenin kritik günleri + risk yönetimi cümlesi olsun; '+
       'multi-asset fon yöneticisi tonu; Türkçe; KISA TUT: toplam 180-280 kelime, 4-5 paragraf — SON PARAGRAFI MUTLAKA TAMAMLA, yarım cümle bırakma; mevcut metnin uslubunu koru; YALNIZCA HTML döndür.\n\n'+
-      '(A) KAYNAK VERİ ('+G.veriLbl+'):\n'+veri.slice(0,1600)+'\n\n(B) PANEL CANLI ÖZETLERİ:\n'+baglam+'\n\n(C) MEVCUT METİN (üslup örneği):\n'+mevcut;
+      /* SS337: birlesik takvim (SS336) ile kaynak metin ~1700 karakteri asti;
+       1600'lik kirpma tam olarak YAKLASAN satirlari kesiyordu (once elle
+       gecmis olaylar geldigi icin). 2600'e cikarildi. */
+      '(A) KAYNAK VERİ ('+G.veriLbl+'):\n'+veri.slice(0,2600)+'\n\n(B) PANEL CANLI ÖZETLERİ:\n'+baglam+'\n\n(C) MEVCUT METİN (üslup örneği):\n'+mevcut;
     const metin=await aiCagir(prompt, 2000);
     if(!metin){ kayit('Özel görev '+G.ad+': AI erişilemedi'); continue; }
     if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Özel görev '+G.ad+': yanıt kesildi — basılmadı, sonraki turda kısaltılmış denenir'); continue; }
