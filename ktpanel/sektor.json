@@ -1,12 +1,12 @@
 {
- "tarih": "2026-08-17",
- "guncelleme": "2026-08-18",
+ "tarih": "2026-08-19",
+ "guncelleme": "2026-08-19",
  "benchmark": {
   "k": "XU100",
   "ad": "BIST 100",
   "g": [
-   -0.28,
-   2.32,
+   2.34,
+   2.47,
    1.08,
    0.73
   ]
@@ -22,8 +22,8 @@
    "k": "XKMYA",
    "ad": "Kimya / Petrol",
    "g": [
-    1.19,
-    5.32,
+    4.28,
+    7.79,
     14.12,
     13.86
    ]
@@ -32,8 +32,8 @@
    "k": "XGIDA",
    "ad": "Gıda / İçecek",
    "g": [
-    -0.11,
-    -5.9,
+    1.79,
+    0.74,
     -7.8,
     -0.53
    ]
@@ -42,8 +42,8 @@
    "k": "XMANA",
    "ad": "Madencilik",
    "g": [
-    2.55,
-    5.53,
+    1.76,
+    5.4,
     0.46,
     7.58
    ]
@@ -52,8 +52,8 @@
    "k": "XUSIN",
    "ad": "Sınai",
    "g": [
-    -0.14,
-    1.46,
+    2.49,
+    3.67,
     3.33,
     5.37
    ]
@@ -62,8 +62,8 @@
    "k": "XHOLD",
    "ad": "Holding",
    "g": [
-    -0.6,
-    -1.27,
+    1.38,
+    -0.02,
     3.89,
     10.28
    ]
@@ -72,8 +72,8 @@
    "k": "XELKT",
    "ad": "Elektrik",
    "g": [
-    0.6,
-    2.03,
+    1.53,
+    3.88,
     -4.27,
     -6.4
    ]
@@ -82,8 +82,8 @@
    "k": "XUHIZ",
    "ad": "Hizmetler",
    "g": [
-    -0.22,
-    -0.77,
+    1.47,
+    2.35,
     -3.41,
     -3.7
    ]
@@ -92,8 +92,8 @@
    "k": "XILTM",
    "ad": "İletişim",
    "g": [
-    -1.49,
-    -2.91,
+    0.53,
+    -0.89,
     -5.92,
     -5.85
    ]
@@ -102,8 +102,8 @@
    "k": "XINSA",
    "ad": "İnşaat",
    "g": [
-    -3.38,
-    -1.66,
+    1.96,
+    -1.63,
     -2.26,
     -6.24
    ]
@@ -112,8 +112,8 @@
    "k": "XUTEK",
    "ad": "Teknoloji",
    "g": [
-    -3.45,
-    4.32,
+    2.12,
+    -0.73,
     11.47,
     6.93
    ]
@@ -122,8 +122,8 @@
    "k": "XSGRT",
    "ad": "Sigorta",
    "g": [
-    -0.87,
-    -2.6,
+    1.9,
+    -0.98,
     -2.3,
     -5.37
    ]
@@ -132,8 +132,8 @@
    "k": "XTRZM",
    "ad": "Turizm",
    "g": [
-    -2.37,
-    -0.53,
+    2.21,
+    0.46,
     0.98,
     -7.26
    ]
@@ -142,8 +142,8 @@
    "k": "XGMYO",
    "ad": "GYO",
    "g": [
-    -0.11,
-    2.15,
+    1,
+    0.58,
     0.1,
     -2.62
    ]
@@ -152,8 +152,8 @@
    "k": "XUMAL",
    "ad": "Mali",
    "g": [
-    -0.39,
-    1.78,
+    1.72,
+    1.62,
     -1.84,
     1.85
    ]
@@ -162,20 +162,20 @@
    "k": "XBANK",
    "ad": "Banka",
    "g": [
-    -1.09,
-    2.03,
+    2.5,
+    0.78,
     -3.01,
     -5.7
    ]
   }
  ],
  "capalar": {
-  "son": "2026-08-17",
-  "1G": "2026-08-14",
-  "1H": "2026-08-10",
-  "1A": "2026-07-17",
-  "3A": "2026-05-18"
+  "son": "2026-08-19",
+  "1G": "2026-08-18",
+  "1H": "2026-08-12",
+  "1A": null,
+  "3A": null
  },
- "kaynak": "Fintables endeks_mumlar_gunluk_gh (BIST resmi kapanislari) — Claude kopru ile damgalandi",
+ "kaynak": "BIST resmi kapanislari (endeks-arsiv.json) — §333 otomatik",
  "not": "Yahoo 13 BIST sektor endeksine 1H/1A/3A serisi VERMIYOR (§115: 4 varyant denendi, hicbiri >=22 bar dondurmedi). 1G canli akar; 1H/1A/3A bu damgadan gelir. Rotasyon RS hesabi taban esleştirir (§114) — sektor damgaliysa benchmark da damgali kullanilir, karisik taban olmaz. §252t (10 Agu): capa tarihleri artik DOSYADA yazili (capalar alani) — hangi gune gore hesaplandigi sonradan sorgulanabilsin. 3A capasi 8 May HAFTA SONUNA denk geldi, en yakin islem gunu 11 May kullanildi."
 }
