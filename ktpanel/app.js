@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260818g';   // SS316 t25 kurtarma + SS313b chart yukleyici sigortasi
+const KTP_SURUM = '20260819a';   // SS317 ihrac sonuclari: takvim rozetleri + gerceklesen ihaleler blogu
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7365,6 +7365,36 @@ async function hazineRender(){
   const el=$('hazBody'); if(!el)return;
   try{
     const d=await (await fetch('/hazine-takvim.json',{cache:'no-store'})).json();
+    /* SS317 IHRAC SONUCLARI — kullanici istegi (19 Agu): SS314 defteri gorunur olsun.
+       Ayri sekme ACILMADI: takvim PLANI, defter GERCEKLESMEYI tutar — ikisi ayni
+       sorunun iki yarisi, ayni ekranda yasarlar (SS121: yeni dugme/panel/init yok).
+       Iki katman: (1) takvim satirina yesil rozet — tarih + enstruman-kelimesi
+       eslesirse gerceklesme yazilir; eslesme YOKSA rozet YOK (uydurma eslesme
+       yasak — ayni gun iki ihale olabilir, kelime kesisimi sart). (2) altta
+       kronolojik GERCEKLESEN IHALELER blogu (son 8 duyuru). */
+    let SON={};
+    try{ SON=await (await fetch('/hazine-sonuc.json',{cache:'no-store'})).json(); }catch(e){}
+    const sonKayit=Object.values((SON&&SON.kayitlar)||{}).sort((x,y)=>(y.tarih||'').localeCompare(x.tarih||''));
+    const ANAHTAR=['tüfe','tlref','sabit','değişken','kira','bono','kuponsuz','dolar','usd','altın'];
+    const kelime=(t)=>{t=(t||'').toLowerCase();return ANAHTAR.filter(k=>t.includes(k));};
+    const kullanilan=new Set();
+    const rozetBul=(tarih,ad)=>{
+      const adK=kelime(ad);
+      for(const k of sonKayit){
+        if(k.tarih!==tarih||!k.ihaleler)continue;
+        for(let i=0;i<k.ihaleler.length;i++){
+          const id=k.tarih+'#'+i; if(kullanilan.has(id))continue;
+          const A=k.ihaleler[i]; const sK=kelime(A.senet||'');
+          if(!adK.some(x=>sK.includes(x)))continue;
+          kullanilan.add(id);
+          if(A.bilesik) return '✓ bileşik %'+trN(A.bilesik.gerceklesme,2);
+          if(A.kira!=null) return '✓ kira %'+trN(A.kira,2);
+          if(A.tutar!=null) return '✓ '+trN(A.tutar/1e9,2)+' mlr '+(A.doviz||'');
+          return null;
+        }
+      }
+      return null;
+    };
     const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
     const trh=(s)=>{const p=s.split('-');return p[2]+' '+ay[parseInt(p[1])-1]+' '+p[0].slice(2);};
     const bugun=new Date().toISOString().slice(0,10);
@@ -7382,10 +7412,28 @@ async function hazineRender(){
         '<span style="font-family:var(--mono);font-size:10px;'+(bugunMu?'color:var(--mm2);font-weight:700':'')+'">'+trh(x.t)+(bugunMu?' ●':'')+'</span>'+
         '<span style="font-size:11px">'+x.ad+(x.katilim?' <span style="font-size:8px;background:var(--mm2);color:#fff;padding:1px 5px;border-radius:4px;vertical-align:1px">KATILIM</span>':'')+
         (/İLK/.test(x.yontem)?' <span style="font-size:8px;border:1px solid var(--mm2);color:var(--mm2);padding:0 4px;border-radius:4px">İLK</span>':'')+
-        ' <span class="thin" style="font-size:9px">· '+x.vade+' · itfa '+trh(x.itfa)+'</span></span>'+
+        ' <span class="thin" style="font-size:9px">· '+x.vade+' · itfa '+trh(x.itfa)+'</span>'+
+        (function(){const r=rozetBul(x.t,x.ad);return r?' <span style="font-size:9px;font-weight:700;color:var(--up,#0FA26B)">'+r+'</span>':'';})()+'</span>'+
         '<span class="thin" style="font-size:9px;text-align:right">'+x.yontem.replace(' / Yeniden','·Y').replace('İhale / İLK ihraç','İhale·İLK')+'</span></div>';
     }).join('');
-    el.innerHTML=rows||'<div class="sub">Takvim boş.</div>';
+    /* SS317: gerceklesen ihaleler blogu */
+    const cf=(x)=>x?('%'+trN(x.gerceklesme,2)+' <span class="thin" style="font-size:8.5px">(teklif %'+trN(x.teklif,2)+')</span>'):null;
+    const sonuclar=sonKayit.slice(0,8).map(k=>{
+      const satirlar=(k.ihaleler||[]).map(A=>{
+        const par=[];
+        if(A.bilesik)par.push('bileşik '+cf(A.bilesik));
+        if(A.donemsel)par.push('dönemsel '+cf(A.donemsel));
+        if(A.kira!=null)par.push('kira %'+trN(A.kira,2));
+        if(A.tutar!=null)par.push(trN(A.tutar/1e9,2)+' mlr '+(A.doviz||'')+(A.itfa?' · itfa '+A.itfa:''));
+        return '<div style="padding:3px 0 3px 10px;font-size:10.5px"><b>'+(A.senet||'?')+'</b>'+
+          (A.isin?' <span class="thin" style="font-family:var(--mono);font-size:9px">'+A.isin+'</span>':'')+
+          '<br><span style="font-size:10px">'+(par.join(' · ')||'—')+'</span></div>';
+      }).join('');
+      return '<div style="padding:6px 0;border-bottom:1px solid var(--line)">'+
+        '<span style="font-family:var(--mono);font-size:10px;color:var(--mm2);font-weight:700">'+trh(k.tarih)+'</span>'+satirlar+'</div>';
+    }).join('');
+    const sonucBlok=sonuclar?('<div style="margin-top:14px"><div class="lbl" style="font-size:10px">GERÇEKLEŞEN İHALELER <span class="thin" style="font-weight:400">(HMB duyuruları · otomatik §314 · '+(SON.sayi||sonKayit.length)+' kayıt)</span></div>'+sonuclar+'</div>'):'';
+    el.innerHTML=(rows||'<div class="sub">Takvim boş.</div>')+sonucBlok;
   }catch(e){el.innerHTML='<div class="sub">Hazine takvimi yüklenemedi.</div>';}
 }
 async function ihracRender(){
