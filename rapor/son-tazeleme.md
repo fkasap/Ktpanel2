@@ -41,7 +41,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (185 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2026 fon · AUM + yatırımcı sayısı köprüden (ham 2033 kayıt, sayfalamalı)
@@ -54,9 +54,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Fon akışı (§263) — ✓ 2025 fon · 2026-08-18 → 2026-08-19
 - giriş 71.60 mlr ₺ · çıkış -55.07 mlr ₺ · net 16.53 mlr ₺
 
+### TEFAS alan keşfi (bilgi)
+- uç: `/api/statistics/tefas/getFplFonList`
+- alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
+
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2026 fon fiyat + 1056 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009676559071> [Go Back]`
+- yakalanan JSON: 1 / toplam yanıt: 83 · sayfa: "Fon Getirileri - TEFAS Fon Bilgilendirme ve Karşılaştırma | " · gövde: `Görme engelliler için erişilebilirliği etkinleştirin Erişilebilirlik menüsünü açma Erişilebilir Gezinme Menüsünü Açın Ana içeriğe geç Ana Sayfa Fon Getirileri Fon Karşılaştır F` · uçlar: /api/statistics/tefas/getFplFonList (1047)
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -75,7 +79,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **borc defteri (§299)**: 191 kart bekliyor · en eski AGYO (1g)
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 191 şirket kart bekliyor
-- pencere: 129 FR · yeni deftere giren: 7 (BESLR, DITAS, GEREL, ISVEA, ORZAX, PENGD, YATAS)
+- pencere: 129 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 1 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATEKS, ATSYH, AVOD, BAGFS, BAKAB, BERA, BESLR, BIENY …
@@ -101,11 +105,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Hazine ihale sonuçları (§314) — ✓ defter 10 duyuru · yeni 0
 - yeni duyuru yok
 
-### Hazine ihraç takvimi (§334) — ✓ 3 ihraç · 1 kira sertifikası
-- kaynak: 2026-07-31 · Ağustos – Ekim 2026 İç Borçlanma Stratejisi
-- 2026-10-14 · Kira Sertifikası · 5 Yıl · KATILIM
-- 2026-10-14 · Sabit Kuponlu DT · 9 Yıl
-- 2027-02-10 · Kuponsuz Devlet Tahvili · 6 Ay
+### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: 2026-07-31)
 
 ### Küresel makro takvim (§319) — ✓ 21 olay (8 yüksek etki)
 - 2026-08-17 12:30Z · CAD · CPI m/m
@@ -127,6 +127,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (218.67 bp) · risk metrikleri (138) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (191 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · hazine ihraç takvimi (3) · küresel makro takvim (21 olay)
+**Sonuç:** TR 5Y CDS (218.67 bp) · risk metrikleri (136) · fon akışı (2025) · katılım fonları (46+akış) · bilanço tetiği (191 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
