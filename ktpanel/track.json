@@ -11,241 +11,245 @@
    "t": "MAVI",
    "w": 0.025,
    "p0": 39.98,
-   "p": 37.92
+   "p": 38.12
   },
   {
    "t": "ORGE",
    "w": 0.025,
-   "p0": 108.8,
-   "p": 113.1
+   "p0": 21.7792,
+   "p": 22.64,
+   "_kurumsal": {
+    "tarih": "2026-08-19",
+    "oran": 0.2002
+   }
   },
   {
    "t": "ARASE",
    "w": 0.025,
    "p0": 123.5,
-   "p": 119.6
+   "p": 120.8
   },
   {
    "t": "LMKDC",
    "w": 0.025,
    "p0": 23.04,
-   "p": 24.96
+   "p": 25.52
   },
   {
    "t": "TUPRS",
    "w": 0.025,
    "p0": 270.75,
-   "p": 388.25
+   "p": 395.5
   },
   {
    "t": "NTGAZ",
    "w": 0.025,
    "p0": 11.3,
-   "p": 10.67
+   "p": 10.81
   },
   {
    "t": "KTLEV",
    "w": 0.025,
    "p0": 54.2,
-   "p": 57.2
+   "p": 59
   },
   {
    "t": "KRONT",
    "w": 0.025,
    "p0": 23.84,
-   "p": 25.74
+   "p": 26
   },
   {
    "t": "GRSEL",
    "w": 0.025,
    "p0": 318,
-   "p": 339.75
+   "p": 328.5
   },
   {
    "t": "ELITE",
    "w": 0.025,
    "p0": 31.32,
-   "p": 29.02
+   "p": 29.5
   },
   {
    "t": "PLTUR",
    "w": 0.025,
    "p0": 22.42,
-   "p": 19.77
+   "p": 19.9
   },
   {
    "t": "MPARK",
    "w": 0.025,
    "p0": 413,
-   "p": 442.5
+   "p": 442.75
   },
   {
    "t": "GUBRF",
    "w": 0.025,
    "p0": 413.25,
-   "p": 461.75
+   "p": 471.75
   },
   {
    "t": "GOKNR",
    "w": 0.025,
    "p0": 23.84,
-   "p": 19.96
+   "p": 20
   },
   {
    "t": "KOTON",
    "w": 0.025,
    "p0": 13.8,
-   "p": 12.69
+   "p": 12.67
   },
   {
    "t": "BIMAS",
    "w": 0.025,
    "p0": 384.5,
-   "p": 410.5
+   "p": 416.5
   },
   {
    "t": "BAHKM",
    "w": 0.025,
    "p0": 115.5,
-   "p": 124.7
+   "p": 124.3
   },
   {
    "t": "SEKUR",
    "w": 0.025,
    "p0": 12,
-   "p": 9.74
+   "p": 10.3
   },
   {
    "t": "RGYAS",
    "w": 0.025,
    "p0": 198.2,
-   "p": 203
+   "p": 204.6
   },
   {
    "t": "FONET",
    "w": 0.025,
    "p0": 4.96,
-   "p": 5.18
+   "p": 5.43
   },
   {
    "t": "EUPWR",
    "w": 0.025,
    "p0": 90.55,
-   "p": 93.05
+   "p": 92.85
   },
   {
    "t": "DAPGM",
    "w": 0.025,
    "p0": 9.1,
-   "p": 8.56
+   "p": 8.55
   },
   {
    "t": "EGGUB",
    "w": 0.025,
    "p0": 97.25,
-   "p": 102.4
+   "p": 103.2
   },
   {
    "t": "BASGZ",
    "w": 0.025,
    "p0": 46.38,
-   "p": 44.2
+   "p": 44.34
   },
   {
    "t": "SAFKR",
    "w": 0.025,
    "p0": 20.44,
-   "p": 19.47
+   "p": 19.24
   },
   {
    "t": "ARDYZ",
    "w": 0.025,
    "p0": 66.05,
-   "p": 90.45
+   "p": 91.9
   },
   {
    "t": "EBEBK",
    "w": 0.025,
    "p0": 79.25,
-   "p": 80.9
+   "p": 80.55
   },
   {
    "t": "GOLTS",
    "w": 0.025,
    "p0": 311.7511398816109,
-   "p": 311
+   "p": 306.5
   },
   {
    "t": "ISDMR",
    "w": 0.025,
    "p0": 55.6,
-   "p": 52.3
+   "p": 53.35
   },
   {
    "t": "CIMSA",
    "w": 0.025,
    "p0": 45.82,
-   "p": 45.08
+   "p": 45.66
   },
   {
    "t": "ENJSA",
    "w": 0.025,
    "p0": 99.5,
-   "p": 108.4
+   "p": 111
   },
   {
    "t": "YUNSA",
    "w": 0.025,
    "p0": 8.96,
-   "p": 8.6
+   "p": 8.77
   },
   {
    "t": "KRDMD",
    "w": 0.025,
    "p0": 40.84,
-   "p": 45.68
+   "p": 45.78
   },
   {
    "t": "GRTHO",
    "w": 0.025,
    "p0": 245.5,
-   "p": 216.3
+   "p": 216.5
   },
   {
    "t": "AVPGY",
    "w": 0.025,
    "p0": 52.9,
-   "p": 51.15
+   "p": 51.3
   },
   {
    "t": "KONYA",
    "w": 0.025,
    "p0": 3772.5,
-   "p": 3645
+   "p": 3670
   },
   {
    "t": "CEMTS",
    "w": 0.025,
    "p0": 9.29,
-   "p": 8.96
+   "p": 8.97
   },
   {
    "t": "ASELS",
    "w": 0.025,
    "p0": 348.5,
-   "p": 392.25
+   "p": 403
   },
   {
    "t": "KARSN",
    "w": 0.025,
    "p0": 10.82,
-   "p": 9.36
+   "p": 9.34
   },
   {
    "t": "SUNTK",
    "w": 0.025,
    "p0": 34.5,
-   "p": 41.12
+   "p": 41.5
   }
  ],
  "series": [
@@ -313,14 +317,19 @@
    "d": "2026-08-18",
    "model": 1.338,
    "endeks": 7.804
+  },
+  {
+   "d": "2026-08-19",
+   "model": 2.879,
+   "endeks": 11.034
   }
  ],
  "not_sicil": "Model getirisi yalniz FIYAT TARIHI olan gunlerde kesindir; ara gunlerin model degeri onceki tazelemelerden korunur, bos olabilir. Endeks serisi her is gunu tam (endeks_mumlar_gunluk_gh). Bos model noktasi CIZILMEZ, uydurulmaz.",
- "_karantina": {
-  "kodlar": [
-   "ORGE"
-  ],
+ "_kurumsal_islem": {
   "tarih": "2026-08-19",
-  "not": "Fiyat referansla ±%25 üstü ayrıştı — kurumsal işlem (bedelsiz/bölünme) olası. Pay adedi ve referans fiyat birlikte elle güncellenene dek fiyat tazelenmez."
+  "kayitlar": [
+   "ORGE ×0.200"
+  ],
+  "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
  }
 }
