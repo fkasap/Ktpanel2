@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819t';   // SS336 birlesik kronolojik takvim   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260819u';   // SS336b tek katlama dugmesi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7355,7 +7355,7 @@ async function boot(){
     ['Takvim satırları (§245)', takvimSatirlari],
     ['Equity', pyInit],
     ['Sukuk Sinyali', sinyalRender],   /* SS315 */
-    ['Makro Takvim', async()=>{ await makroTakvimRender(); try{kritikTakvimSadelestir();}catch(e){} }],   /* SS319 + SS335 */
+    ['Makro Takvim', makroTakvimRender],   /* SS319 · SS336: katlama render'in SONUNDA, tek yerden */
     ['Eğri Görseli', egriGorselArka],   /* SS320c: boot'u BEKLETMEZ */
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
@@ -8695,9 +8695,13 @@ function megaCapTazele(){
    yakinlik kuralindan turer (Ara->Oca gecisi icin +-6 ay penceresi). */
 function kritikTakvimSadelestir(zorla){
   const kart=document.getElementById('kritikTakvimKart'); if(!kart) return;
-  if(kart.dataset.sadeBagli && !zorla) return; kart.dataset.sadeBagli='1';
-  /* SS336: birlesik liste kurulunca yeniden cagrilir — eski katlama temizlenir */
-  [...kart.querySelectorAll('tr[data-katla]')].forEach(x=>x.remove());
+  /* SS336b IKI DUGME KAZASI (canli): katlama iki yerden kuruluyordu (boot
+     baglantisi + render sonu) ve eski dugme temizlenmedigi icin ekranda IKI
+     "12 gecmis olay" satiri olustu; ustteki eski satir listesine bagliydi,
+     tiklaninca hicbir sey yapmiyordu. Artik dugme TEK ve KIMLIKLI:
+     her cagrida varsa kaldirilir, yeniden kurulur (idempotent) ve cagri
+     yalnizca makroTakvimRender sonunda yapilir. */
+  const eskiDug=kart.querySelector('#takvimKatlaDug'); if(eskiDug) eskiDug.remove();
   [...kart.querySelectorAll('tr[data-gecmis]')].forEach(x=>{ x.style.display=''; delete x.dataset.gecmis; });
   const AYK={'oca':0,'şub':1,'sub':1,'mar':2,'nis':3,'may':4,'haz':5,'tem':6,'ağu':7,'agu':7,'eyl':8,'eki':9,'kas':10,'ara':11};
   const bugun=new Date(); bugun.setHours(0,0,0,0);
@@ -8728,7 +8732,7 @@ function kritikTakvimSadelestir(zorla){
      (tarayici onu tablonun DISINA atar ve duzen bozulur). */
   const kolon=(gecmis[0].children.length)||2;
   const tr=document.createElement('tr');
-  tr.dataset.katla='1';
+  tr.id='takvimKatlaDug'; tr.dataset.katla='1';
   const td=document.createElement('td');
   td.colSpan=kolon;
   td.style.cssText='cursor:pointer;padding:4px 0 6px;font-size:10px;color:var(--mm2)';
