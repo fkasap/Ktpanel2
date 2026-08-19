@@ -1024,7 +1024,16 @@ async function _notMotoru(){
         (red>=2 ? 'BU SEFER HİÇ SAYI YAZMA — yüzde işareti, ondalık, oran hiç geçmesin. Yalnız yön ve anlam.'
                 : 'Yüzde/oran yazma; yön ve kompozisyon yeter.')) : '';
       return '### '+(i+1)+' ('+x.ad+')'+(x.canli?' [CANLI]':' [damgalı]')+redNot+
-        '\nGÜNCEL VERİ: '+x.veri.slice(0,420)+'\nMEVCUT NOT: '+
+        /* SS322b KIRPMA (19 Agu, olculdu): SS322 komsu veri koprusu calisiyordu
+           — GORUS notuna 1685 karakterlik paket ulasiyordu — ama prompt onu
+           420 KARAKTERE kirpiyordu. Kirpilan kisim tam olarak SS319'un
+           otomatik KURESEL MAKRO satirlariydi; Ebu bu yuzden hala Temmuz
+           olaylarini yaziyordu. Kopru kurmak yetmiyor, PAKETIN prompta
+           VARDIGINI da olcmek gerekiyormus.
+           Cozum hedefli: yalnizca [EK VERI] tasiyan kartlar 1500'e kadar
+           gonderilir (o kartlar bilerek zenginlestirildi); digerleri 420'de
+           kalir — token maliyeti bosuna buyumez. */
+        '\nGÜNCEL VERİ: '+x.veri.slice(0, /\[EK VERI\]/.test(x.veri) ? 1500 : 420)+'\nMEVCUT NOT: '+
         notMetni(x.nt).slice(0,650);
     }).join('\n\n');   // imza SOYULMUS (§110)
   const metin=await aiCagir(prompt, Math.min(2400, 200+parti.length*500));
