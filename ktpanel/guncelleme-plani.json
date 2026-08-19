@@ -50,9 +50,10 @@
    "ad": "Sektör ısı haritası + rotasyon",
    "dosya": "sektor.json",
    "siklik": "haftalik",
-   "son": "2026-08-10",
-   "kaynak": "Yahoo → /api/market",
-   "_245": "DAMGA §B2: otomasyon YOK, Fintables köprüsü ZORUNLU (komut: \"sektorleri tazele\"). son=\"otomatik\" idi → nöbetten muaftı. Oysa bu dosya eskidikçe RS ufukları da eskir."
+   "son": "otomatik",
+   "kaynak": "tazele.mjs §333 — endeks-arsiv.json (BIST resmi kapanışları)",
+   "_245": "DAMGA §B2: otomasyon YOK, Fintables köprüsü ZORUNLU (komut: \"sektorleri tazele\"). son=\"otomatik\" idi → nöbetten muaftı. Oysa bu dosya eskidikçe RS ufukları da eskir.",
+   "_333": "19 Agu: ELLE ritüelden OTOMATİĞE. Çapa hedeften >7 gün saparsa o ufuk atlanır, damgalı değer korunur."
   },
   {
    "ad": "KAP haber akışı",
@@ -137,8 +138,9 @@
    "ad": "Hazine ihraç takvimi",
    "dosya": "hazine-takvim.json",
    "siklik": "aylık (~25'i)",
-   "son": "2026-07-21",
-   "kaynak": "HMB İç Borçlanma Stratejisi PDF"
+   "son": "otomatik",
+   "kaynak": "tazele.mjs §334 — HMB WP-API + strateji PDF (pdf-parse)",
+   "_334": "19 Agu: ELLE ritüelden OTOMATİĞE. Yeni strateji slugu gelince yazar; ayrıştıramazsa dosya KORUNUR + ham metin rapora düşer."
   },
   {
    "ad": "İnceleme AI bilanço kartları",
