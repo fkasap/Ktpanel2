@@ -278,7 +278,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="sub" style="margin-bottom:6px">Günlük performans — yeşil güçlü, kırmızı zayıf, en iyiden en kötüye sıralı.</div>
     <div id="heatBody" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:6px"></div>
     <div class="lbl" style="margin-top:16px">SEKTÖR ROTASYONU <span class="thin" style="font-weight:400">(BIST 100'e göre göreceli güç · RS)</span></div>
-    <div class="sub" style="margin:2px 0 6px">RS = sektörün BIST 100'e karşı fazla/eksik getirisi. Kadran: <b style="color:var(--up)">LİDER</b> güçlü+hızlanıyor · <b style="color:var(--blue)">GÜÇLENİYOR</b> · <b style="color:#E8933B">ZAYIFLIYOR</b> · <b style="color:var(--down)">GERİDE</b>.</div>
+    <div class="sub" style="margin:2px 0 6px">RS = sektörün BIST 100'e karşı fazla/eksik getirisi. Kadran: <b style="color:var(--up)">LİDER</b> güçlü+hızlanıyor · <b style="color:var(--blue)">GÜÇLENİYOR</b> · <b style="color:#E8933B">ZAYIFLIYOR</b> · <b style="color:var(--down)">GERİDE</b>. <b>Kadran SEVİYEYİ değil İVMEYİ okur</b> — bu yüzden RS'leri yüksek bir sektör <b style="color:#E8933B">ZAYIFLIYOR</b> (güçlü ama hız kesiyor: 1H ivmesi 1A'nın altında), RS'leri negatif bir sektör <b style="color:var(--blue)">GÜÇLENİYOR</b> (geride ama açığı kapatıyor) çıkabilir. Rakamlarla kadran çelişmiyor; farklı soruları yanıtlıyorlar.</div>
     <div style="overflow-x:auto"><table><thead><tr><th>Sektör</th><th class="num">RS 1H</th><th class="num">RS 1A</th><th class="num">RS 3A</th><th>Kadran</th></tr></thead><tbody id="rotBody"></tbody></table>
   <div id="rotNot" style="margin-top:5px"></div></div>
   </div>
@@ -1219,7 +1219,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div id="ftBilanco" style="margin-top:10px"></div>
   <div id="ftGelir" style="margin-top:14px"></div>
   <div id="ftNot" style="margin-top:10px"></div>
-</div></div><div class="tab" id="t11"><h2>Equity <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
+</div></div><div class="tab" id="t11"><h2>EQUITY <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
 
 <h2 style="margin-top:22px">Analist Konsensüsü <span class="thin">(ticker yaz → pop-up · 55 hisse kapsamda)</span></h2>
 <input id="anaAra" type="text" placeholder="Ticker: THYAO, ASELS, TUPRS…" style="width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--mono);font-size:13px;box-sizing:border-box;text-transform:uppercase">
@@ -1664,7 +1664,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260819i"></script>
-<script src="/ajan.js?v=20260819i"></script>
+<script src="/app.js?v=20260819j"></script>
+<script src="/ajan.js?v=20260819j"></script>
 </body>
 </html>

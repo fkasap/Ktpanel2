@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819i';   // SS320c egri arka plana · SS318b onbellek imzasi
+const KTP_SURUM = '20260819j';   // SS324 mega-cap bayatlik nobetcisi · SS325 kadran notu
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8552,6 +8552,50 @@ async function egriGorselRender(){
   }
 }
 
+/* SS324 MEGA-CAP KARTI BAYATLIK NOBETCISI (19 Agu denetim turu bulgusu):
+   kart 25 Tem damgaliydi ve "MSFT (29 Tem Car · Fed gunu aksami)" diyordu —
+   GECMIS bir olayi GELECEKMIS gibi anlatiyordu. Veri yanlis degildi, ZAMANI
+   yanlisti; en tehlikeli bayatlik turu (SS179.3 ailesi).
+   COZUM iki katmanli, elle yazilan DEGERLENDIRME metnine dokunmadan:
+   (1) satirdaki tarih parantezi, Finnhub canli takviminden (KAZANC_ITEMS)
+       gelen YENI tarihle degistirilir — sembol bazli eslesme;
+   (2) canli tarih yoksa ya da gecmisse satir "· gecti" damgasi alir ve
+       rozet BAYAT'a doner. Bayatlik gizlenmez, GORUNUR olur. */
+function megaCapTazele(){
+  const kart=[...document.querySelectorAll('.card')].find(c=>{
+    const l=c.querySelector('.lbl'); return l&&/MEGA-CAP DER\u0130NL\u0130K/i.test(l.textContent);
+  });
+  if(!kart) return;
+  const it=window.KAZANC_ITEMS||[];
+  const ayK=['Oca','\u015eub','Mar','Nis','May','Haz','Tem','A\u011fu','Eyl','Eki','Kas','Ara'];
+  const gunK=['Paz','Pzt','Sal','\u00c7ar','Per','Cum','Cmt'];
+  const bugun=new Date(); bugun.setHours(0,0,0,0);
+  let tazeSayisi=0, gectiSayisi=0, enYakin=null;
+  kart.querySelectorAll('.kv').forEach(kv=>{
+    const kEl=kv.querySelector('.k'); if(!kEl) return;
+    const sembol=(kEl.textContent||'').trim().split(/\s/)[0];
+    if(!/^[A-Z]{1,5}$/.test(sembol)) return;
+    const sub=kEl.querySelector('.sub'); if(!sub) return;
+    const kayit=it.find(x=>x.sembol===sembol&&x.tarih);
+    if(kayit){
+      const d=new Date(kayit.tarih);
+      if(!isNaN(d)&&d>=bugun){
+        sub.textContent='('+d.getDate()+' '+ayK[d.getMonth()]+' '+gunK[d.getDay()]+(kayit.zaman?(' \u00b7 '+kayit.zaman):'')+')';
+        sub.style.color=''; tazeSayisi++;
+        if(!enYakin||d<enYakin) enYakin=d;
+        return;
+      }
+    }
+    if(!/ge\u00e7ti/.test(sub.textContent)){ sub.textContent=sub.textContent.replace(/\)$/,' \u00b7 ge\u00e7ti)'); }
+    sub.style.color='var(--down)'; gectiSayisi++;
+  });
+  const rozet=kart.querySelector('.tag');
+  if(rozet){
+    if(tazeSayisi){ rozet.textContent=(enYakin?('SONRAKI '+enYakin.getDate()+' '+ayK[enYakin.getMonth()]):'CANLI')+' \u00b7 FINNHUB+SHIBUI'; rozet.style.background=''; }
+    else if(gectiSayisi){ rozet.textContent='BAYAT \u00b7 TARIHLER GE\u00c7T\u0130 (25 TEM)'; rozet.style.background='var(--down)'; }
+  }
+}
+
 async function makroTakvimRender(){
   /* SS319-D DUZELTME (19 Agu aksami, canli olcum): ilk surum $('takvimBody')
      hedefliyordu - O ID SAYFADA YOK (koddaki ESKI bir yorumdan okumustum;
@@ -8773,6 +8817,7 @@ async function kazancTakvimCanli(){
     /* §170: ham kayıtlar saklanır — GLOBAL kartı bunları "beklenenler" olarak
        kullanır. İki yerde ayrı ayrı çekmemek için tek fetch, iki tüketici. */
     window.KAZANC_ITEMS = j.items || [];
+    try{ megaCapTazele(); }catch(e){}   /* SS324: ayni fetch'in ikinci tuketicisi */
     try{ if(typeof globalTakvimRender==='function') globalTakvimRender(); }catch(e){}
   }catch(e){}
 }
