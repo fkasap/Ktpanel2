@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820j';   // SS347 Ebu ceyreklik seri koprusu   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820l';   // SS349 yil yil varsayim + SS350 EV/EBITDA KAP'a bagli   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7857,45 +7857,117 @@ async function multipleInit(){
   // canlı fiyat daha önce geldiyse uygula
   if(MULTIPLE.hisseler)MULTIPLE.hisseler.forEach(h=>{ if(CANLI_FIYAT[h.k]!=null)h.fiyat=CANLI_FIYAT[h.k]; });
   const sel=$('mulTicker');
-  if(sel){sel.innerHTML=MULTIPLE.hisseler.map(h=>'<option value="'+h.k+'">'+h.k+(h.ad?' — '+h.ad:'')+'</option>').join('');sel.addEventListener('change',multipleRender);}
-  ['mulBuyume','mulMarj','mulCarpan'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',multipleRender);});
+  if(sel){sel.innerHTML=MULTIPLE.hisseler.map(h=>'<option value="'+h.k+'">'+h.k+(h.ad?' — '+h.ad:'')+'</option>').join('');
+    sel.addEventListener('change', mulTickerDegisti);}
+  mulGirdiBagla();
+  /* SS349b: eski tek-kutu dinleyicileri kalkti — mulGirdiBagla() yil yil kutulari baglar */
   multipleRender();
+}
+/* ── §350 EV/EBITDA KARTI KAP'A BAĞLANDI (20 Ağu, kullanıcı: "veriler eski
+   kalmış, artık KAP bilgilerini alabiliyoruz") ─────────────────────────────
+   ESKİ: multiple.json — Fintables snapshot'ı, elle tazelenen damgalı dosya.
+   YENİ: §339-345 zinciri son 4 çeyreği KAP'tan çekip ENFLASYON ENDEKSLİ
+   TTM üretir: ciro, FAVÖK ve son bilançodan net borç. Piyasa değeri canlı
+   fiyat × pay adedi (adet multiple.json'da kalıyor — KAP'ta pay adedi yok).
+   BAŞARISIZLIKTA snapshot'a düşer ve kartta HANGİ KAYNAK olduğu yazar:
+   sessizce eski veriyle devam etmez. */
+async function mulKapTTM(kod){
+  try{
+    if(typeof csDonemCek !== 'function') return null;
+    const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil=3', {cache:'no-store'});
+    const j = await r.json();
+    if(!j.ok || !(j.donemler||[]).length) return null;
+    const liste = j.donemler.slice(0, 6);          /* 4 çeyrek + katsayı için pay */
+    const ob = csOnbellekOku(); const veri = {};
+    for(const x of liste){
+      const a = kod+'|'+x.yil+'|'+x.donem;
+      if(ob[a] && ob[a].kalem){ veri[a]=ob[a]; continue; }
+      try{ const k = await csDonemCek(x.id); veri[a]=k; ob[a]=k; }catch(e){}
+    }
+    csOnbellekYaz(ob);
+    const dolu = liste.filter(x=>veri[kod+'|'+x.yil+'|'+x.donem]);
+    if(dolu.length < 4) return null;
+    const KAT = csEndeksKatsayilari(dolu, veri, kod);
+    const kat = (x)=>KAT[x.yil+'|'+x.donem]||1;
+    const al = (i,xbrl,tip)=>{ const v=csCeyrek(dolu,veri,kod,i,xbrl,tip);
+      return Number.isFinite(v.v) ? v.v*(v.endeksli?1:kat(dolu[i])) : null; };
+    /* TTM = son dört çeyreğin toplamı (endeksli, yani aynı parayla) */
+    let ciro=0, favok=0, eksik=0;
+    for(let i=0;i<4;i++){
+      const c=al(i,'ifrs-full_Revenue','akis');
+      const f=al(i,'ifrs-full_ProfitLossFromOperatingActivities','akis');
+      const am=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+      if(Number.isFinite(c)) ciro+=c; else eksik++;
+      if(Number.isFinite(f)&&Number.isFinite(am)) favok+=f+am; else eksik++;
+    }
+    if(eksik>2 || !(ciro>0) || !(favok>0)) return null;
+    const S=(...a)=>{let t=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){t+=z;v=true;}});return v?t:null;};
+    const borc = S(al(0,'kap-fr_CurrentBorowings','stok'), al(0,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'), al(0,'ifrs-full_LongtermBorrowings','stok'));
+    const likit = S(al(0,'ifrs-full_CashAndCashEquivalents','stok'), al(0,'kap-fr_CurrentFinancialInvestments','stok'));
+    const netBorc = (Number.isFinite(borc)&&Number.isFinite(likit)) ? borc-likit : null;
+    return { ciro, ebitda:favok, netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı' };
+  }catch(e){ return null; }
+}
+/* §350: ticker değişince önce KAP TTM denenir, sonra kart çizilir. */
+/* §349b: yıl yıl kutuları değişince anında yeniden hesapla */
+function mulGirdiBagla(){
+  ['mulB1','mulB2','mulB3','mulM1','mulM2','mulM3','mulCarpan'].forEach(id=>{
+    const e=$(id); if(e && !e.dataset.bagli){ e.dataset.bagli='1'; e.addEventListener('input', multipleRender); }
+  });
+}
+async function mulTickerDegisti(){
+  const kod = ($('mulTicker')||{}).value;
+  if($('mulKaynak')) $('mulKaynak').textContent = 'KAP okunuyor…';
+  window.MUL_KAP = null;
+  multipleRender();
+  try{ const t = await mulKapTTM(kod); if(t){ t.kod=kod; window.MUL_KAP=t; multipleRender(); } }catch(e){}
+  if(!window.MUL_KAP && $('mulKaynak')) $('mulKaynak').textContent = 'Fintables snapshot (KAP alınamadı)';
 }
 function multipleRender(){
   if(!MULTIPLE||!$('mulSnapshot'))return;
   const kod=$('mulTicker')?$('mulTicker').value:MULTIPLE.hisseler[0].k;
   const h=MULTIPLE.hisseler.find(x=>x.k===kod)||MULTIPLE.hisseler[0];
-  const mcap=h.fiyat*h.adet, ev=mcap+h.netBorc, carpan=ev/h.ebitda, marj=h.ebitda/h.ciro*100;
+  /* §350: KAP TTM varsa O kullanılır (bin TL tabanına çevrilir — multiple.json
+     bin TL cinsinden tutuyor), yoksa snapshot. Kaynak ekranda yazılı. */
+  const K = (window.MUL_KAP && window.MUL_KAP.kod===kod) ? window.MUL_KAP : null;
+  const ciroT = K ? K.ciro/1000 : h.ciro;          /* bin TL */
+  const ebitdaT = K ? K.ebitda/1000 : h.ebitda;
+  const netBorcT = K ? (Number.isFinite(K.netBorc)?K.netBorc/1000:h.netBorc) : h.netBorc;
+  const mcap=h.fiyat*h.adet, ev=mcap+netBorcT, carpan=ev/ebitdaT, marj=ebitdaT/ciroT*100;
+  if($('mulKaynak')) $('mulKaynak').textContent = K ? ('KAP canlı · TTM '+K.donem) : 'Fintables snapshot';
   $('mulSnapshot').innerHTML=
     '<div class="kv"><span class="k">Güncel fiyat</span><span class="num">'+trN(h.fiyat,2)+' ₺</span></div>'+
     '<div class="kv"><span class="k">Piyasa değeri</span><span class="num">'+trN(mcap/1000,1)+' mlr ₺</span></div>'+
-    '<div class="kv"><span class="k">+ Net borç</span><span class="num">'+trN(h.netBorc/1000,1)+' mlr ₺</span></div>'+
+    '<div class="kv"><span class="k">+ Net borç</span><span class="num">'+trN(netBorcT/1000,1)+' mlr ₺</span></div>'+
     '<div class="kv"><span class="k">= Firma değeri (EV)</span><span class="num"><b>'+trN(ev/1000,1)+' mlr ₺</b></span></div>'+
-    '<div class="kv"><span class="k">EBITDA (TTM)</span><span class="num">'+trN(h.ebitda/1000,1)+' mlr ₺</span></div>'+
+    '<div class="kv"><span class="k">EBITDA (TTM)</span><span class="num">'+trN(ebitdaT/1000,1)+' mlr ₺</span></div>'+
     '<div class="kv"><span class="k">EBITDA marjı</span><span class="num">%'+trN(marj,1)+'</span></div>'+
     '<div class="kv"><span class="k"><b>Mevcut EV/EBITDA</b></span><span class="num" style="color:var(--mm2);font-weight:700">'+trN(carpan,1)+'x</span></div>';
-  const g=parseFloat(($('mulBuyume')||{}).value)||0, dm=parseFloat(($('mulMarj')||{}).value)||0;
+  /* §349: her yıl KENDİ büyüme ve marj değişimini alır; ufuk 3 yıl.
+     Tek oranla 5 yıl uzatmak uzak yıllarda gerçekçi değildi. */
+  const B=[1,2,3].map(i=>parseFloat((($('mulB'+i)||{}).value))||0);
+  const DM=[1,2,3].map(i=>parseFloat((($('mulM'+i)||{}).value))||0);
   const ref=parseFloat(($('mulCarpan')||{}).value)||null;
-  let ciro=h.ciro, mm=marj, proj=[{t:0,ciro:h.ciro,m:marj,ebitda:h.ebitda,carpan:carpan}];
-  for(let t=1;t<=5;t++){ciro*=(1+g/100);mm+=dm;const eb=ciro*mm/100;proj.push({t,ciro,m:mm,ebitda:eb,carpan:eb>0?ev/eb:null});}
+  let ciro=ciroT, mm=marj, proj=[{t:0,ciro:ciroT,m:marj,ebitda:ebitdaT,carpan:carpan}];
+  for(let t=1;t<=3;t++){ciro*=(1+B[t-1]/100);mm+=DM[t-1];const eb=ciro*mm/100;proj.push({t,ciro,m:mm,ebitda:eb,carpan:eb>0?ev/eb:null,g:B[t-1],dm:DM[t-1]});}
   let refYil=null;
   const rows=proj.map(p=>{
     const altinda=ref&&p.carpan!=null&&p.carpan<=ref;
     if(altinda&&refYil===null&&p.t>0)refYil=p.t;
     const bg=altinda?'background:rgba(15,162,107,.12)':'';
     const cStr=p.carpan!=null?trN(p.carpan,1)+'x':'\u2014';
-    return '<tr style="'+bg+'"><td>'+(p.t===0?'Bugün':'Yıl '+p.t)+'</td><td class="num">'+trN(p.ciro/1000,0)+'</td><td class="num">%'+trN(p.m,1)+'</td><td class="num">'+trN(p.ebitda/1000,1)+'</td><td class="num" style="font-weight:600;color:var(--mm2)">'+cStr+'</td></tr>';
+    return '<tr style="'+bg+'"><td>'+(p.t===0?'Bugün':'Yıl '+p.t)+(p.t?' <span class="thin" style="font-size:9px">+%'+trN(p.g,0)+'</span>':'')+'</td><td class="num">'+trN(p.ciro/1000,0)+'</td><td class="num">%'+trN(p.m,1)+'</td><td class="num">'+trN(p.ebitda/1000,1)+'</td><td class="num" style="font-weight:600;color:var(--mm2)">'+cStr+'</td></tr>';
   }).join('');
-  const bugun=proj[0].carpan, son5=proj[5].carpan;
+  const bugun=proj[0].carpan, son5=proj[3].carpan;
   if($('mulSonuc'))$('mulSonuc').innerHTML=
     '<div class="lbl" style="margin-top:12px">EV SABİT · ÇARPAN ERİMESİ <span class="thin">(bugünkü EV korunur, EBITDA büyür)</span></div>'+
     '<table style="margin-top:4px"><tr><th>Dönem</th><th class="num">Ciro</th><th class="num">Marj</th><th class="num">EBITDA</th><th class="num">EV/EBITDA</th></tr>'+rows+'</table>'+
     '<div class="card" style="margin-top:10px"><div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap">'+
       '<div><span class="sub">Bugün</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--mm2)">'+trN(bugun,1)+'x</span></div>'+
-      '<div><span class="sub">5 yıl sonra</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+(son5!=null&&son5<bugun?'var(--up)':'var(--down)')+'">'+(son5!=null?trN(son5,1)+'x':'\u2014')+'</span></div>'+
-      (ref?'<div><span class="sub">'+trN(ref,1)+'x\'e iniş</span><br><span style="font-family:var(--mono);font-size:18px;font-weight:600">'+(refYil?refYil+'. yıl':'5+ yıl')+'</span></div>':'')+
+      '<div><span class="sub">3 yıl sonra</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+(son5!=null&&son5<bugun?'var(--up)':'var(--down)')+'">'+(son5!=null?trN(son5,1)+'x':'\u2014')+'</span></div>'+
+      (ref?'<div><span class="sub">'+trN(ref,1)+'x\'e iniş</span><br><span style="font-family:var(--mono);font-size:18px;font-weight:600">'+(refYil?refYil+'. yıl':'3+ yıl')+'</span></div>':'')+
     '</div></div>'+
-    '<div class="note">Mantık: bugünkü <b>firma değeri (EV) sabit</b> tutulur — piyasanın bugün biçtiği fiyat. EBITDA senin büyüme+marj varsayımınla ilerler, EV/EBITDA çarpanı buna göre <em>erir</em>. Soru "hedef fiyat" değil: <em>bugün pahalı görünen çarpan, büyümeyle kaç yılda makullüğe iner?</em> '+(ref?('Referans '+trN(ref,1)+'x\'e '+(refYil?refYil+'. yılda iniyor.':'5 yılda inmiyor — büyüme yetersiz ya da çarpan fazla yüksek.')):'Referans çarpan girersen hangi yıl altına indiğini yeşille vurgularım.')+' Snapshot '+MULTIPLE.fiyat_tarihi+'; büyüme/marj tahminleri senin. Basitleştirme: EV sabit varsayılır — gerçekte güçlü nakit üretimi net borcu azaltıp EV\u0027yi de bir miktar düşürür.</div>';
+    '<div class="note">Mantık: bugünkü <b>firma değeri (EV) sabit</b> tutulur — piyasanın bugün biçtiği fiyat. EBITDA senin büyüme+marj varsayımınla ilerler, EV/EBITDA çarpanı buna göre <em>erir</em>. Soru "hedef fiyat" değil: <em>bugün pahalı görünen çarpan, büyümeyle kaç yılda makullüğe iner?</em> '+(ref?('Referans '+trN(ref,1)+'x\'e '+(refYil?refYil+'. yılda iniyor.':'3 yılda inmiyor — büyüme yetersiz ya da çarpan fazla yüksek.')):'Referans çarpan girersen hangi yıl altına indiğini yeşille vurgularım.')+' Kaynak: '+(K?('KAP canlı, TTM '+K.donem+' — son dört çeyrek ENFLASYON ENDEKSLİ toplanır'):('Fintables snapshot '+MULTIPLE.fiyat_tarihi))+'; büyüme/marj tahminleri yıl yıl senin. Basitleştirme: EV sabit varsayılır — gerçekte güçlü nakit üretimi net borcu azaltıp EV\u0027yi de bir miktar düşürür.</div>';
 }
 
 /* ---- Sukuk / Tahvil Değerleme ---- */
@@ -9574,14 +9646,42 @@ async function csGetirCalis(){
   if(!kod){ if(d)d.textContent='ticker gir'; return; }
   if(d) d.textContent='dönem listesi alınıyor…'; if(T) T.innerHTML='';
   const yil = Math.ceil(adet/4)+1;
-  let liste=[];
+  /* §348 DÖNEM LİSTESİ ÖNBELLEĞİ + KAP SINIRLAMASINA DAYANIKLILIK (20 Ağu):
+     BIMAS denemesinde beş yıl da "fetch failed" döndü; TUPRS da aynı — yani
+     şirkete özel değil, KAP ucu bir süre reddediyor (bir saatte çok istek
+     attık, hız sınırı olası). Şirket kimliği (member/filter) çalışmaya devam
+     ediyordu, düşen yalnız listCompanyExcelMembers.
+     Dönem listesi ÇEYREKTE BİR değişir — 12 saat önbelleğe alınır. KAP
+     reddederse önbellekteki liste kullanılır ve durum çubuğu bunu SÖYLER.
+     Böylece sınırlama anında panel çalışmaya devam eder; sessizce boş
+     ekran göstermez. */
+  const DL_ANAHTAR = 'ktp_kap_donem_v1';
+  const dlOku = ()=>{ try{ return JSON.parse(localStorage.getItem(DL_ANAHTAR)||'{}'); }catch(e){ return {}; } };
+  const dlYaz = (o)=>{ try{ localStorage.setItem(DL_ANAHTAR, JSON.stringify(o)); }catch(e){} };
+  const dl = dlOku();
+  const dlKayit = dl[kod];
+  const TAZE = 12*3600*1000;
+  let liste=[], listeKaynak='canlı';
   try{
-    const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil='+yil, {cache:'no-store'});
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.err||'dönem listesi boş');
-    liste = (j.donemler||[]).slice(0, adet);
+    if(dlKayit && dlKayit.ts && (Date.now()-dlKayit.ts) < TAZE && (dlKayit.donemler||[]).length){
+      liste = dlKayit.donemler.slice(0, adet); listeKaynak='önbellek';
+    } else {
+      const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil='+yil, {cache:'no-store'});
+      const j = await r.json();
+      if(j.ok && (j.donemler||[]).length){
+        liste = j.donemler.slice(0, adet);
+        dl[kod] = { ts:Date.now(), unvan:j.unvan||null, donemler:j.donemler }; dlYaz(dl);
+      } else if(dlKayit && (dlKayit.donemler||[]).length){
+        liste = dlKayit.donemler.slice(0, adet); listeKaynak='önbellek (KAP yanıt vermedi)';
+      } else {
+        const hata = (j.hatalar && j.hatalar.length) ? j.hatalar[0] : (j.err||'dönem listesi boş');
+        throw new Error(/fetch failed/i.test(hata)
+          ? 'KAP dönem listesi ucu şu an yanıt vermiyor (hız sınırı olabilir) — birkaç dakika sonra tekrar deneyin'
+          : hata);
+      }
+    }
     if($('csTag')) $('csTag').textContent = kod+' · '+liste.length+' ÇEYREK';
-  }catch(e){ if(d)d.textContent='✗ '+String(e.message||e).slice(0,70); return; }
+  }catch(e){ if(d)d.textContent='✗ '+String(e.message||e).slice(0,90); return; }
   if(!liste.length){ if(d)d.textContent='✗ dönem bulunamadı'; return; }
 
   const ob = csOnbellekOku();
@@ -9591,7 +9691,7 @@ async function csGetirCalis(){
     if(ob[ank] && ob[ank].kalem) veri[ank]=ob[ank]; else eksik.push(x);
   });
   csTabloBas(kod, liste, veri);
-  if(!eksik.length){ if(d)d.textContent='✓ '+liste.length+' çeyrek (tümü önbellekten)'; return; }
+  if(!eksik.length){ if(d)d.textContent='✓ '+liste.length+' çeyrek (tümü önbellekten · dönem listesi: '+listeKaynak+')'; return; }
 
   let bitti=0; const hata=[];
   const kuyruk = eksik.slice();

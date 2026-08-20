@@ -1017,7 +1017,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </details>
 <div id="dcfBazNot" class="sub" style="margin-top:8px;font-style:italic"></div>
 <div class="note" style="margin-top:10px">DCF, hissenin <em>mutlak içsel değerini</em> tahmin eder — faktör modeli "benzerlerine göre ucuz mu" derken, DCF "gerçekte ne ediyor" der. Girdiler tahmindir; çıktı bu tahminlere çok duyarlıdır (özellikle WACC ve terminal büyüme). O yüzden tek sayıya değil, duyarlılık matrisindeki <em>aralığa</em> bak. TL için nominal değerler yüksektir (enflasyon); reel/dolar bazlı da hesaplayabilirsin, yeter ki FCF, WACC ve terminal aynı bazda olsun.</div>
-<h2 style="margin-top:24px">EV / EBITDA Çarpan Analizi <span class="thin">(3 yıllık · Fintables snapshot + manuel büyüme)</span></h2>
+<h2 style="margin-top:24px">EV / EBITDA Çarpan Analizi <span class="thin">(3 yıllık · <span id="mulKaynak">KAP canlı</span> + yıl yıl varsayım)</span></h2>
 <div class="card">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <div>
@@ -1027,8 +1027,21 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     </div>
     <div>
       <div class="lbl" style="margin-bottom:8px">VARSAYIMLAR <span class="thin">(manuel)</span></div>
-      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px">Ciro Büyümesi (%/yıl)</label><input id="mulBuyume" type="number" value="30" style="width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box">
-      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px" style="margin-top:8px">EBITDA Marj Değişimi (puan/yıl)</label><input id="mulMarj" type="number" value="0" style="width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box">
+      <!-- §349: yıl yıl varsayım (3 yıl). Tek oranla 5 yıl projeksiyonu, uzak
+           yıllarda gerçekçi değildi; kullanıcı her yıl için ayrı büyüme ve marj
+           değişimi girmek istedi. -->
+      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:3px">Ciro Büyümesi (%/yıl) — yıl yıl</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+        <div><span class="sub" style="font-size:9px">Yıl 1</span><input id="mulB1" type="number" value="30" style="width:100%;padding:5px 7px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box"></div>
+        <div><span class="sub" style="font-size:9px">Yıl 2</span><input id="mulB2" type="number" value="25" style="width:100%;padding:5px 7px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box"></div>
+        <div><span class="sub" style="font-size:9px">Yıl 3</span><input id="mulB3" type="number" value="20" style="width:100%;padding:5px 7px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box"></div>
+      </div>
+      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:3px">EBITDA Marj Değişimi (puan/yıl) — yıl yıl</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+        <div><span class="sub" style="font-size:9px">Yıl 1</span><input id="mulM1" type="number" value="0" style="width:100%;padding:5px 7px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box"></div>
+        <div><span class="sub" style="font-size:9px">Yıl 2</span><input id="mulM2" type="number" value="0" style="width:100%;padding:5px 7px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box"></div>
+        <div><span class="sub" style="font-size:9px">Yıl 3</span><input id="mulM3" type="number" value="0" style="width:100%;padding:5px 7px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box"></div>
+      </div>
       <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px" style="margin-top:8px">Referans Çarpan <span class="thin">makul seviye, ops.</span></label><input id="mulCarpan" type="number" placeholder="ör. 10 (ops.)" style="width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box">
     </div>
   </div>
@@ -1675,7 +1688,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260820j"></script>
-<script src="/ajan.js?v=20260820j"></script>
+<script src="/app.js?v=20260820l"></script>
+<script src="/ajan.js?v=20260820l"></script>
 </body>
 </html>
