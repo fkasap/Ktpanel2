@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820t';   // SS353 takvim yaris durumu   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820u';   // SS353b sessiz donus bitti + tekrar deneme   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8892,12 +8892,26 @@ async function makroTakvimRender(){
   const tablo=kart?kart.querySelector('table.cal'):null;
   if(!tablo) return;
   try{
-    const r=await fetch('/makro-takvim.json',{cache:'no-store'});
-    if(!r.ok) return;
+    /* §353b SESSİZ ERKEN DÖNÜŞ BİTTİ (20 Ağu, canlı): boot 550 ms'de bitiyor,
+       katlama düğmesi bile oluşmuyordu — yani fetch BAŞARISIZDI ve `return`
+       hiçbir iz bırakmıyordu. Elle çağırınca aynı fetch çalışıyordu, yani
+       boot anında bir yarış/erken çağrı sorunu var.
+       Artık: başarısızlık KONSOLA yazılır, bir kez 1,5 sn sonra TEKRAR denenir
+       ve dosya boşsa sebebi görünür. Sessiz return, üç turdur teşhisi
+       geciktiren şeydi. */
+    let r;
+    try{ r = await fetch('/makro-takvim.json',{cache:'no-store'}); }
+    catch(e){ console.warn('[KTPanel] §353b makro takvim fetch hatası:', e&&e.message); r=null; }
+    if(!r || !r.ok){
+      console.warn('[KTPanel] §353b makro takvim alınamadı'+(r?(' (HTTP '+r.status+')'):'')+' — 1,5 sn sonra tekrar denenecek');
+      if(!window.__mkTekrar){ window.__mkTekrar=1; setTimeout(()=>{ makroTakvimRender(); }, 1500); }
+      return;
+    }
     const d=await r.json();
     const simdi=Date.now()-2*3600e3;
     const gel=(d.olaylar||[]).filter(x=>Date.parse(x.t)>=simdi).slice(0,14);
-    if(!gel.length) return;
+    if(!gel.length){ console.warn('[KTPanel] §353b makro takvimde ileri tarihli olay yok ('+((d.olaylar||[]).length)+' kayıt, güncelleme '+(d.guncelleme||'?')+')'); return; }
+    console.log('[KTPanel] §353b makro takvim: '+gel.length+' olay tabloya ekleniyor');
     const eskiKap=document.getElementById('makroOto'); if(eskiKap) eskiKap.remove();
     [...tablo.querySelectorAll('tr[data-oto]')].forEach(x=>x.remove());
     const ayK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
