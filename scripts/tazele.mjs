@@ -2120,6 +2120,110 @@ async function sektorTazele() {
    hesaplanır; TSPB'nin resmî oranı referans olarak yanında durur.
    Bildirim göndermemiş şirket sıfır döner (AHSGY'de görüldü) — o kayıt ATLANIR,
    sıfır iskonto diye yazılmaz. */
+/* ── §366 MKK VAP — FON NAKIT AKIS (21 Agu, kullanicinin HAR'indan) ─────────
+   NE: MKK'nin Veri Analiz Platformu (VAP) resmi SAKLAMA verisi. Bizim §358-360
+   TEFAS turevi gunluk/haftalik akisin AYLIK ve RESMI ikizi; ayrica Kiymet Tipi
+   kirilimi ve 103 aylik tarihsel derinlik tasiyor.
+   MicroStrategy Library API — UC ADIM, SIFRESIZ (anonim "public" kullanicisi):
+     1) POST /api/auth/login {"loginMode":1,"username":"public","password":""}
+        -> X-MSTR-AuthToken yanit BASLIGINDA (govdede degil)
+     2) POST /api/dossiers/{DOSSIER}/instances {"filters":null,"persistViewState":true}
+        -> mid
+     3) GET  /api/dossiers/{DOSSIER}/instances/{mid}
+             ?includeTOC=true&includeShortcutInfo=true&resultFlag=3&checkPrompted=true
+   IKI TUZAK (canli olculdu, ikisi de sessiz):
+     · X-MSTR-ProjectID BASLIGI olmadan adim 2 -> HTTP 400
+     · resultFlag=3 olmadan adim 3 -> HTTP 200 ama `data` BOS gelir
+   VERININ YERI (ilk HAR'da bulunamamisti, ikinci HAR cozdu): hucreler
+   gvs.items[0].items[] icinde `rv` alanlarinda, SATIR SIRASIYLA duz dizi.
+   Ay etiketleri gts.col[0].es[].n icinde ("2025-08" bicimi).
+   Hucre sayisi = ay × olcu; DOGRULAMA olarak bu esitlik kontrol edilir.
+   DERS: BUYUK JSON'DA VERI YOKSA ANAHTAR ADINI DEGIL DEGER KALIBINI ARA
+   (uzun sayi dizisi yerine {"rv":...} tekrari aranarak bulundu). */
+async function vapFonAkis() {
+  const dosya = 'vap-fon-akis.json';
+  const T = 'https://mobil.vap.org.tr/MicroStrategyLibrary/api';
+  const PROJE = '0DDECAD844A1A9163420D5A4A08847F1';
+  const DOSSIER = '858A455540835F6D2FA8A48B4B836FB6';
+  try {
+    /* 1) anonim giris */
+    const L = await fetch(T + '/auth/login', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ loginMode: 1, username: 'public', password: '' }),
+      signal: AbortSignal.timeout(20000) });
+    const tok = L.headers.get('x-mstr-authtoken');
+    if (!tok) { raporlar.push('### VAP fon akışı (§366) — ⏭ giriş jetonu alınamadı (HTTP ' + L.status + ')'); return; }
+    const H = { 'content-type': 'application/json', 'accept': 'application/json',
+      'x-mstr-authtoken': tok, 'x-mstr-projectid': PROJE, 'x-requested-with': 'XMLHttpRequest' };
+
+    /* 2) ornek olustur */
+    const I = await fetch(T + '/dossiers/' + DOSSIER + '/instances', {
+      method: 'POST', headers: H, body: JSON.stringify({ filters: null, persistViewState: true }),
+      signal: AbortSignal.timeout(25000) });
+    if (!I.ok) { raporlar.push('### VAP fon akışı (§366) — ⏭ örnek HTTP ' + I.status); return; }
+    const ij = await I.json();
+    if (!ij || !ij.mid) { raporlar.push('### VAP fon akışı (§366) — ⏭ mid yok'); return; }
+
+    /* 3) veriyi cek — resultFlag=3 SART */
+    const R = await fetch(T + '/dossiers/' + DOSSIER + '/instances/' + ij.mid +
+      '?includeTOC=true&includeShortcutInfo=true&resultFlag=3&checkPrompted=true',
+      { headers: H, signal: AbortSignal.timeout(30000) });
+    if (!R.ok) { raporlar.push('### VAP fon akışı (§366) — ⏭ veri HTTP ' + R.status); return; }
+    const j = await R.json();
+
+    /* grid: gsi + gvs tasiyan ilk dugum */
+    const bul = (o) => {
+      if (o && typeof o === 'object') {
+        if (o.gsi && o.gvs) return o;
+        for (const v of Object.values(o)) { const r = bul(v); if (r) return r; }
+      }
+      return null;
+    };
+    const g = bul(j.data);
+    if (!g) { raporlar.push('### VAP fon akışı (§366) — ⏭ grid düğümü bulunamadı (yapı değişmiş olabilir)'); return; }
+
+    const olculer = ((g.gsi || {}).mx || []).map(m => m.n);
+    const aylar = (((g.gts || {}).col || [])[0] || {}).es || [];
+    const ayAd = aylar.map(e => e.n);
+    const hucre = ((((g.gvs || {}).items || [])[0] || {}).items || []).map(z => (z && Number.isFinite(z.rv)) ? z.rv : null);
+    if (!olculer.length || !ayAd.length || !hucre.length) {
+      raporlar.push('### VAP fon akışı (§366) — ⏭ boyut/hücre boş (ölçü ' + olculer.length + ' · ay ' + ayAd.length + ' · hücre ' + hucre.length + ')'); return;
+    }
+    /* DOGRULAMA: hucre sayisi = ay × olcu olmali; degilse siralama varsayimi yanlistir */
+    if (hucre.length !== ayAd.length * olculer.length) {
+      raporlar.push('### VAP fon akışı (§366) — ✗ hücre sayısı tutmadı: ' + hucre.length +
+        ' ≠ ' + ayAd.length + '×' + olculer.length + ' — sıralama varsayımı bozuldu, YAZILMADI'); 
+      denetimDustu = true; return;
+    }
+
+    const seri = ayAd.map((ay, i) => {
+      const k = { ay };
+      olculer.forEach((ad, m) => { k[ad] = hucre[i * olculer.length + m]; });
+      return k;
+    });
+    const son = seri[seri.length - 1] || {};
+    const D = {
+      guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
+      kaynak: 'MKK VAP · mobil.vap.org.tr (MicroStrategy Library, anonim erişim)',
+      dosya_adi: j.n || 'Fon Nakit Akış',
+      _yontem: 'Hücreler gvs.items[0].items[].rv içinde satır sırasıyla düz dizi; ay etiketleri gts.col[0].es[].n. Hücre sayısı = ay × ölçü eşitliği DOĞRULANIR, tutmazsa yazılmaz. Anonim erişim: loginMode 1, kullanıcı "public". X-MSTR-ProjectID başlığı ve resultFlag=3 ŞART.',
+      ay_sayisi: ayAd.length, olculer, son_ay: son.ay || null,
+      seri
+    };
+    await yaz(dosya, D);
+    degisenler.push('VAP fon akışı (' + ayAd.length + ' ay)');
+    const mlr = (v) => Number.isFinite(v) ? (v / 1e9).toFixed(1) : '—';
+    const degisim = olculer.find(o => /Değişim/i.test(o));
+    const tutar = olculer.find(o => /Dönem Sonu Fon Tutar/i.test(o));
+    raporlar.push('### VAP fon akışı (§366) — ✓ ' + ayAd.length + ' ay · son ' + (son.ay || '?') +
+      (tutar ? ('\n- toplam fon tutarı: ' + mlr(son[tutar]) + ' mlr ₺') : '') +
+      (degisim ? ('\n- son ay değişimi: ' + mlr(son[degisim]) + ' mlr ₺') : '') +
+      '\n- ölçüler: ' + olculer.join(' · '));
+  } catch (e) {
+    raporlar.push('### VAP fon akışı (§366) — ✗ ' + String(e && e.message || e).slice(0, 90));
+  }
+}
+
 async function gyoNav() {
   const dosya = 'gyo-nav.json';
   const T = 'https://tspbnad.matriksdata.com/api';
@@ -2749,6 +2853,7 @@ async function bultenKesif() {
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
+    await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
   }
 
