@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-08-20-o';   /* §338 mod=donemler */
+const _SURUM = 'kap-2026-08-20-p';   /* §338 donemler + §340 ham */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -882,6 +882,90 @@ export default async function handler(req, res){
 
      PARAMETRELER: kod (zorunlu) · yil (kac yil geriye, varsayilan 4, tavan 8)
      CIKTI: {oid, unvan, donemler:[{yil,donem,id}...]} — en yeni ustte. */
+  /* ── §340 mod=ham — TUM TABLOLARIN TUM SATIRLARI (20 Agu) ─────────────────
+     KOK SORUN: mod=tablo SABIT etiket listesiyle calisiyor (bilanco 15, gelir
+     18 kalem) ve NAKIT AKIS TABLOSU hic yok. Kullanici Excel modelindeki
+     metrikleri istiyor; FAVOK (amortisman), serbest nakit akisi (yatirim
+     harcamasi), faiz odemeleri gibi kalemler yalniz nakit akis tablosunda.
+
+     KAYNAK OLCUMU (canli, TUPRS 2026/2 id 1643116): bildirim sayfasinda BES
+     buyuk tablo var — Bilanco (595 satir), Kar/Zarar (142), Diger Kapsamli
+     Gelir (167), NAKIT AKIS dolayli yontem (419), Ozkaynak Degisim (140).
+     Her satirin basinda XBRL ETIKETI duruyor:
+       ifrs-full_CashFlowsFromUsedInOperatingActivities | ISLETME FAALIYET... | 132.366.363 | 15.012.559
+       kap-fr_ProfitLossForCashFlowStatement | Donem Kari (Zarari) | 50.272.473 | 11.981.560
+     XBRL KODU STANDARTTIR — Turkce etiket sirketten sirkete degisebilir ama
+     kod degismez. Eslestirme metne degil KODA dayanirsa sablon farki sorunu
+     buyuk olcude coker (§114'un bu ekrandaki cozumu).
+
+     BU MOD ham satirlari doner; SECIM ve METRIK panelde yapilir (tek sahip:
+     ayristirma burada, yorum orada). Cikti: {tablolar:[{ad, satirlar:[...]}]}
+     her satir {xbrl, etiket, degerler:[...]} — degerler sutun sirasiyla
+     (cari, onceki, cari3A, onceki3A ... raporun kendi duzeni). */
+  if (_mod === 'ham') {
+    const idH = String((req.query && req.query.id) || '').replace(/[^0-9]/g, '');
+    if (!idH) return res.status(400).json({ surum: _SURUM, ok: false, err: 'id gerekli' });
+    try {
+      const r = await fetch('https://www.kap.org.tr/tr/Bildirim/' + idH, {
+        headers: { 'user-agent': UA, 'accept': 'text/html', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' },
+        signal: AbortSignal.timeout(25000) });
+      if (!r.ok) return res.status(200).json({ surum: _SURUM, ok: false, id: idH, err: 'sayfa HTTP ' + r.status });
+      let h = await r.text();
+      const KACIS = { '\\u003c': '<', '\\u003e': '>', '\\"': '"', '\\n': ' ' };
+      h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
+      const birim = _birimBul(h);
+
+      /* Tablolari <table ...> ... </table> siniriyla ayikla; yalnizca 40+
+         satirli olanlar finansal tablodur (kucukler basluk/duzen tablosu). */
+      const tablolar = [];
+      const trSay = (blok) => (blok.match(/<tr[\s>]/g) || []).length;
+      let p = 0, koruma = 0;
+      while (koruma++ < 4000) {
+        const bas = h.indexOf('<table', p); if (bas < 0) break;
+        const son = h.indexOf('</table>', bas); if (son < 0) break;
+        const blok = h.slice(bas, son);
+        p = son + 8;
+        if (trSay(blok) < 40) continue;
+
+        /* Sutun basliklari: "Cari Dönem", "Önceki Dönem", "Cari Dönem 3 Aylık"… */
+        const basSatir = (blok.match(/<tr[\s\S]{0,3000}?<\/tr>/) || [''])[0];
+        const sutunlar = [...basSatir.matchAll(/>([^<>]{4,80}?)</g)].map(x => x[1].replace(/\s+/g, ' ').trim())
+          .filter(x => /Dönem|Period|Özkaynak/i.test(x)).slice(0, 8);
+
+        /* Tablo adi: XBRL kok etiketinden ya da ilk metinden */
+        const adM = blok.match(/(kap-fr|ifrs-full)_(StatementOfFinancialPosition|IncomeStatement|StatementOfCashFlows[A-Za-z]*|StatementOfOtherComprehensive[A-Za-z]*|StatementOfChangesInEquity)/);
+        const adHam = (blok.match(/>\s*(Finansal Durum Tablosu[^<]{0,40}|Kar veya Zarar Tablosu[^<]{0,30}|Nakit Ak[ıi]ş Tablosu[^<]{0,40}|Diğer Kapsamlı Gelir[^<]{0,40}|Özkaynak[^<]{0,40})</) || [])[1];
+        const ad = (adHam || (adM ? adM[2] : 'tablo')).replace(/\s+/g, ' ').trim();
+
+        /* Satirlar: her <tr> icinde ilk hucre XBRL kodu, sonra etiket, sonra sayilar */
+        const satirlar = [];
+        for (const tm of blok.matchAll(/<tr[\s\S]{0,6000}?<\/tr>/g)) {
+          const tr = tm[0];
+          const hucreler = [...tr.matchAll(/<t[dh][^>]*>([\s\S]{0,600}?)<\/t[dh]>/g)]
+            .map(x => x[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim());
+          if (!hucreler.length) continue;
+          const xbrl = (hucreler.find(x => /^(kap-fr|ifrs-full|tr-fr)_[A-Za-z0-9_]+$/.test(x)) || '').trim();
+          const sayilar = [];
+          hucreler.forEach(x => {
+            if (/^[\-(]?[\d.]{1,20}(,\d+)?\)?$/.test(x.replace(/\s/g, ''))) {
+              const v = _sayiCoz(x); if (v !== null) sayilar.push(v);
+            }
+          });
+          /* Etiket: XBRL ve sayi olmayan, harf iceren ILK hucre */
+          const etiket = (hucreler.find(x => x && x !== xbrl && /[A-Za-zÇĞİÖŞÜçğıöşü]/.test(x) && !/^[\d.,\-()]+$/.test(x)) || '').slice(0, 120);
+          if (!etiket && !sayilar.length) continue;
+          if (!xbrl && !sayilar.length) continue;
+          satirlar.push({ xbrl: xbrl || null, etiket, degerler: sayilar.slice(0, 6) });
+        }
+        if (satirlar.length >= 20) tablolar.push({ ad, sutunlar, satir: satirlar.length, satirlar });
+      }
+      return res.status(200).json({ surum: _SURUM, ok: tablolar.length > 0, id: idH,
+        birim, tabloSayisi: tablolar.length, tablolar });
+    } catch (e) {
+      return res.status(200).json({ surum: _SURUM, ok: false, id: idH, err: String(e && e.message || e).slice(0, 120) });
+    }
+  }
+
   if (_mod === 'donemler') {
     const kodD = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
     if (!kodD) return res.status(400).json({ surum: _SURUM, ok: false, err: 'kod gerekli' });
