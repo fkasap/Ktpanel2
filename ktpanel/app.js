@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820x';   // SS355 tablo okunabilirligi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820z';   // SS360 PYS canli akis + haftalik sekme   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -3949,8 +3949,57 @@ async function pysInit(){
     if(!r.ok) throw new Error('HTTP_'+r.status);
     PYS=await r.json();
   }catch(e){ $('pysB1').innerHTML='<div class="sub">pyssektor.json yüklenemedi: '+esc(String(e.message||e))+'</div>'; return; }
-  if($('pysDamga')) $('pysDamga').textContent=((PYS.kaynak||'').indexOf('Fintables')>=0?'FİNTABLES · ':'DAMGALI · ')+(PYS.guncelleme||'');   /* §248d */
-  if($('pysNot')) $('pysNot').innerHTML='Kaynak: '+esc(PYS.kaynak||'')+'. Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı. Döviz serbest fonların yıllık 269 mlr ₺ ile açık ara lider olması dolarizasyon talebinin kurumsal kanıtı.';
+  /* ── §360 CANLI AKIŞ BİNDİRMESİ (20 Ağu, kullanıcı: "haftalık sekmesi olacak
+     mı, günlük ve aylığın ortasında") ─────────────────────────────────────
+     pyssektor.json ELLE besleniyordu ve 13 gün eskiydi. fon-akis.json ise her
+     Actions koşusunda tazeleniyor ve §358/§359 ile PYŞ bazında 1G/1H/1A
+     pencereleri üretiyor. Burada CANLI olan ESKİNİN ÜZERİNE BİNDİRİLİR:
+       · pencere varsa → canlı veri, damga o günün tarihi
+       · pencere yoksa (ör. 1A henüz 22 iş günü birikmedi) → eski blok DURUR
+         ve damgası kendi tarihiyle görünür; uydurma yok.
+     Düğmeler PYS[blok] anahtarlarından üretildiği için 1H eklenince
+     "Haftalık" sekmesi Günlük ile Aylık ARASINDA kendiliğinden belirir. */
+  try{
+    const fr = await fetch('/fon-akis.json',{cache:'no-store'});
+    if(fr.ok){
+      const FA = await fr.json();
+      const mlr = (v)=> +(v/1e9).toFixed(2);
+      const koy = (blok, donem, liste)=>{
+        if(!liste || !liste.length) return false;
+        PYS[blok] = PYS[blok] || {};
+        PYS[blok][donem] = liste;
+        return true;
+      };
+      let canli = [];
+      /* 1G — §358 */
+      if(FA.pys && FA.pys.liste && FA.pys.liste.length){
+        if(koy('pys','1G', FA.pys.liste.slice(0,12).map(x=>[x.ad, mlr(x.net)]))) canli.push('1G');
+      }
+      if(FA.akis && FA.akis.fon){
+        const f = Object.keys(FA.akis.fon).map(k=>[k, mlr(FA.akis.fon[k])]).sort((a,b)=>b[1]-a[1]).slice(0,12);
+        if(f.length) koy('fon','1G', f);
+      }
+      /* 1H · 1A — §359 pencereleri */
+      const P = FA.pencereler || {};
+      ['1H','1A'].forEach(d=>{
+        const p = P[d]; if(!p) return;
+        if(p.pys && p.pys.length && koy('pys',d, p.pys.slice(0,12).map(x=>[x.ad, mlr(x.net)]))) canli.push(d);
+        if(p.fon && p.fon.length) koy('fon',d, p.fon.slice(0,12).map(x=>[x.k, mlr(x.net)]));
+      });
+      if(canli.length){
+        PYS.__canli = canli;
+        PYS.__canliGun = (FA.pys && FA.pys.gun) || (FA.akis && FA.akis.gun) || null;
+      }
+    }
+  }catch(e){ console.warn('[KTPanel] §360 canlı akış bindirilemedi:', e && e.message); }
+  if($('pysDamga')){
+    const c = PYS.__canli;
+    $('pysDamga').textContent = c
+      ? ('TEFAS · ACTIONS · '+(PYS.__canliGun||'')+' · '+c.join('/'))
+      : (((PYS.kaynak||'').indexOf('Fintables')>=0?'FİNTABLES · ':'DAMGALI · ')+(PYS.guncelleme||''));   /* §248d */
+  }
+  if($('pysNot')) $('pysNot').innerHTML='Kaynak: '+esc(PYS.kaynak||'')+'. Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı. Döviz serbest fonların yıllık 269 mlr ₺ ile açık ara lider olması dolarizasyon talebinin kurumsal kanıtı.'+
+    (PYS.__canli ? (' <b>§360:</b> Günlük/Haftalık pencereler <b>Actions\'ın TEFAS köprüsünden</b> türetiliyor (pay adedi × fiyat farkı, '+esc(PYS.__canliGun||'')+'). Aylık pencere 22 iş günü birikince açılır; o zamana dek damgalı blok görünür — yetersiz seriyle "aylık" demek yanıltıcı olurdu.') : '');
   pysCiz();
   spkCek();   /* §248b: AUM bloğu */
 }
@@ -3966,7 +4015,14 @@ function pysBar(hedefId, liste, birim){
 function pysDugme(id, blok, secili){
   const el=$(id); if(!el||!PYS) return;
   const D={'1G':'Günlük','1H':'Haftalık','1A':'Aylık','1Y':'Yıllık'};
-  const var_=Object.keys(PYS[blok]||{});
+  /* §360b DÜĞME SIRASI: Object.keys EKLENME sırasını korur; §360 canlı
+     pencereleri sonradan bindirdiği için 1H sona düşüyordu (1G, 1A, 1H).
+     Zaman ufkuna göre sıralanır — "Haftalık" Günlük ile Aylık ARASINDA. */
+  const SIRA=['1G','1H','1A','1Y'];
+  const var_=Object.keys(PYS[blok]||{}).sort((x,y)=>{
+    const a=SIRA.indexOf(x), b=SIRA.indexOf(y);
+    return (a<0?99:a)-(b<0?99:b);
+  });
   el.innerHTML=var_.map(d=>'<button class="pysd" data-b="'+blok+'" data-d="'+d+'" style="background:'+(d===secili?'var(--mm2)':'none')+';color:'+(d===secili?'#fff':'var(--muted)')+';border:1px solid var(--line);border-radius:4px;font-size:10px;padding:3px 10px;margin-right:4px;cursor:pointer;font-family:inherit">'+D[d]+'</button>').join('');
 }
 function pysCiz(){
@@ -10036,6 +10092,116 @@ function csSpark(seri, renk){
       yatay kaymada göz kaymasını engeller.
    Renk seçimi bilinçli olarak NÖTR: veri renkleri (negatif kırmızı, türetilmiş
    soluk, sparkline yeşil) anlam taşıyor; zemin onlarla yarışmamalı. */
+/* ── §357 GRAFİK BLOĞU (20 Ağu, kullanıcı: "birkaç grafik de güzel olurdu
+   en altta") ────────────────────────────────────────────────────────────────
+   Üç grafik, üçü de tablonun ZATEN gösterdiğini DEĞİL, tablodan okunması zor
+   olanı gösterir:
+   1) CİRO + FAVÖK ikili çubuk — büyüme ile kârlılığın birlikte seyri
+      (Excel modelindeki "Ciro q/q · FAVÖK q/q" grafiğinin karşılığı).
+   2) MARJ BANDI — brüt/FAVÖK/net marj üç çizgi; makas açılıyor mu daralıyor mu.
+   3) NET BORÇ / FAVÖK — kaldıraç eğilimi; sıfır çizgisi net nakde geçişi gösterir.
+   Hepsi SVG, harici kütüphane yok. En eski SOLDA (zaman yönü), tablo ise en
+   yeni solda — bu bilinçli: tabloda "son durum" önce gelir, grafikte "gidişat"
+   soldan sağa okunur. Eksen etiketleri yıl/çeyrek. */
+function csGrafikler(kod, liste, veri, KAT){
+  const kat=(x)=>KAT?(KAT[x.yil+'|'+x.donem]||1):1;
+  const al=(i,xbrl,tip)=>{ const r=csCeyrek(liste,veri,kod,i,xbrl,tip);
+    return Number.isFinite(r.v)? r.v*(r.endeksli?1:kat(liste[i])) : null; };
+  /* eski→yeni sırası */
+  const idx=liste.map((_,i)=>i).reverse();
+  const etiket=idx.map(i=>String(liste[i].yil).slice(2)+'/'+liste[i].donem);
+  const ciro=idx.map(i=>al(i,'ifrs-full_Revenue','akis'));
+  const favok=idx.map(i=>{ const f=al(i,'ifrs-full_ProfitLossFromOperatingActivities','akis'),
+    a=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+    return (Number.isFinite(f)&&Number.isFinite(a))? f+a : null; });
+  const brutM=idx.map(i=>{ const b=al(i,'ifrs-full_GrossProfit','akis'), c=al(i,'ifrs-full_Revenue','akis');
+    return (Number.isFinite(b)&&Number.isFinite(c)&&c)? b/c*100 : null; });
+  const favokM=idx.map((i,k)=>{ const c=ciro[k]; return (Number.isFinite(favok[k])&&Number.isFinite(c)&&c)? favok[k]/c*100 : null; });
+  const netM=idx.map(i=>{ const n=al(i,'ifrs-full_ProfitLossAttributableToOwnersOfParent','akis'), c=al(i,'ifrs-full_Revenue','akis');
+    return (Number.isFinite(n)&&Number.isFinite(c)&&c)? n/c*100 : null; });
+  const netBorcFavok=idx.map((i,k)=>{
+    const S=(...a)=>{let t=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){t+=z;v=true;}});return v?t:null;};
+    const b=S(al(i,'kap-fr_CurrentBorowings','stok'),al(i,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'),al(i,'ifrs-full_LongtermBorrowings','stok'));
+    const n=S(al(i,'ifrs-full_CashAndCashEquivalents','stok'),al(i,'kap-fr_CurrentFinancialInvestments','stok'));
+    if(!Number.isFinite(b)||!Number.isFinite(n)) return null;
+    /* TTM FAVÖK: bu çeyrek + önceki 3 (eski→yeni dizide k, k-1, k-2, k-3) */
+    let ttm=0, adet=0;
+    for(let j=k;j>k-4;j--){ if(j>=0 && Number.isFinite(favok[j])){ ttm+=favok[j]; adet++; } }
+    if(adet<4 || !(ttm>0)) return null;
+    return (b-n)/ttm;
+  });
+  const W=560, H=120, sol=42, sag=8, ust=10, alt=20;
+  const gW=W-sol-sag, gH=H-ust-alt;
+  const X=(k,n)=> sol + (n<=1?gW/2:(k/(n-1))*gW);
+  const eksenEt=(n)=>{ let o=''; const adim=Math.max(1,Math.ceil(n/6));
+    for(let k=0;k<n;k+=adim){ o+='<text x="'+X(k,n).toFixed(0)+'" y="'+(H-6)+'" font-size="8" fill="var(--muted)" text-anchor="middle" font-family="var(--mono)">'+etiket[k]+'</text>'; }
+    return o; };
+
+  /* 1) ikili çubuk: ciro (açık) + FAVÖK (koyu) */
+  const g1=(function(){
+    const g=ciro.filter(Number.isFinite); if(g.length<3) return '';
+    const mx=Math.max(...g, ...favok.filter(Number.isFinite), 0);
+    if(!(mx>0)) return '';
+    const n=ciro.length, bw=Math.max(3, gW/n*0.34);
+    let o='';
+    for(let k=0;k<n;k++){
+      const x=X(k,n);
+      if(Number.isFinite(ciro[k])){ const h=(ciro[k]/mx)*gH;
+        o+='<rect x="'+(x-bw-1).toFixed(1)+'" y="'+(ust+gH-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0,h).toFixed(1)+'" fill="var(--mm2)" opacity=".28" rx="1"/>'; }
+      if(Number.isFinite(favok[k])){ const h=(favok[k]/mx)*gH;
+        o+='<rect x="'+(x+1).toFixed(1)+'" y="'+(ust+gH-Math.max(0,h)).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0,Math.abs(h)).toFixed(1)+'" fill="var(--mm2)" opacity=".8" rx="1"/>'; }
+    }
+    o+='<line x1="'+sol+'" y1="'+(ust+gH)+'" x2="'+(W-sag)+'" y2="'+(ust+gH)+'" stroke="var(--line2)" stroke-width="1"/>';
+    o+='<text x="4" y="'+(ust+8)+'" font-size="8" fill="var(--muted)">'+trN(mx/1e9,mx/1e9>=100?0:1)+' mlr</text>';
+    return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+o+eksenEt(n)+'</svg>';
+  })();
+
+  /* 2) marj bandı: üç çizgi */
+  const cizgi=(dizi,renk,kalin)=>{
+    const p=dizi.map((v,k)=>({v,k})).filter(x=>Number.isFinite(x.v));
+    if(p.length<2) return '';
+    const hepsi=[].concat(brutM,favokM,netM).filter(Number.isFinite);
+    const mn=Math.min(...hepsi,0), mx=Math.max(...hepsi), ar=(mx-mn)||1;
+    const Y=(v)=> ust+gH - ((v-mn)/ar)*gH;
+    return '<polyline points="'+p.map(x=>X(x.k,dizi.length).toFixed(1)+','+Y(x.v).toFixed(1)).join(' ')+
+      '" fill="none" stroke="'+renk+'" stroke-width="'+(kalin||1.6)+'" stroke-linejoin="round"/>';
+  };
+  const g2=(function(){
+    if(favokM.filter(Number.isFinite).length<3) return '';
+    const hepsi=[].concat(brutM,favokM,netM).filter(Number.isFinite);
+    const mn=Math.min(...hepsi,0), mx=Math.max(...hepsi), ar=(mx-mn)||1;
+    const Y=(v)=> ust+gH - ((v-mn)/ar)*gH;
+    let o='';
+    if(mn<0) o+='<line x1="'+sol+'" y1="'+Y(0).toFixed(1)+'" x2="'+(W-sag)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--line2)" stroke-dasharray="3,3" stroke-width="1"/>';
+    o+=cizgi(brutM,'var(--mm2)',1.4)+cizgi(favokM,'#E8933B',1.8)+cizgi(netM,'var(--up)',1.4);
+    o+='<text x="4" y="'+(ust+8)+'" font-size="8" fill="var(--muted)">%'+trN(mx,0)+'</text>';
+    o+='<text x="4" y="'+(ust+gH)+'" font-size="8" fill="var(--muted)">%'+trN(mn,0)+'</text>';
+    return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+o+eksenEt(favokM.length)+'</svg>';
+  })();
+
+  /* 3) net borç / FAVÖK (TTM) */
+  const g3=(function(){
+    const p=netBorcFavok.map((v,k)=>({v,k})).filter(x=>Number.isFinite(x.v));
+    if(p.length<3) return '';
+    const g=p.map(x=>x.v), mn=Math.min(...g,0), mx=Math.max(...g,0), ar=(mx-mn)||1;
+    const Y=(v)=> ust+gH - ((v-mn)/ar)*gH;
+    const n=netBorcFavok.length, bw=Math.max(3, gW/n*0.5);
+    let o='<line x1="'+sol+'" y1="'+Y(0).toFixed(1)+'" x2="'+(W-sag)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--line2)" stroke-width="1"/>';
+    p.forEach(x=>{ const y=Y(x.v), y0=Y(0);
+      o+='<rect x="'+(X(x.k,n)-bw/2).toFixed(1)+'" y="'+Math.min(y,y0).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.abs(y-y0).toFixed(1)+
+        '" fill="'+(x.v<0?'var(--up)':'var(--down)')+'" opacity=".65" rx="1"/>'; });
+    o+='<text x="4" y="'+(ust+8)+'" font-size="8" fill="var(--muted)">'+trN(mx,1)+'x</text>';
+    o+='<text x="4" y="'+(ust+gH+2)+'" font-size="8" fill="var(--muted)">'+trN(mn,1)+'x</text>';
+    return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+o+eksenEt(n)+'</svg>';
+  })();
+
+  const kutu=(baslik,alt,svg)=> svg ? ('<div style="margin-top:14px"><div class="lbl" style="font-size:10px">'+baslik+
+    ' <span class="thin" style="font-weight:400;text-transform:none">'+alt+'</span></div>'+svg+'</div>') : '';
+  const hepsi = kutu('CİRO & FAVÖK','çeyreklik · açık: ciro · koyu: FAVÖK (geniş) · enflasyon endeksli', g1)+
+    kutu('MARJ BANDI','<span style="color:var(--mm2)">brüt</span> · <span style="color:#E8933B">FAVÖK</span> · <span style="color:var(--up)">net</span> — makas açılıyor mu', g2)+
+    kutu('NET BORÇ / FAVÖK (TTM)','sıfırın altı = net nakit · yeşil borçsuz, kırmızı kaldıraçlı', g3);
+  return hepsi ? ('<div style="margin-top:6px;border-top:1px solid var(--line);padding-top:4px">'+hepsi+'</div>') : '';
+}
 function csTabloBas(kod, liste, veri, hata){
   const T=$('csTablo'); if(!T) return;
   const YIL_TON = ['rgba(15,162,107,.045)','transparent'];   /* iki ton, dönüşümlü */
@@ -10065,9 +10231,22 @@ function csTabloBas(kod, liste, veri, hata){
       (yaklasik?';opacity:.72':'')+'" title=""'+(yaklasik?'kümülatif farkından türetildi — enflasyon düzeltmesi nedeniyle YAKLAŞIK':'raporun kendi sütunu')+'">'+
       (yaklasik?'≈':'')+trN(mlr, Math.abs(mlr)>=100?0:(Math.abs(mlr)>=1?1:2))+'</td>';
   };
-  const oran=(v,ek,i)=>{
-    const zemin=(i!=null)?hucreStil(i):'';
-    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted);'+zemin+'">—</td>';
+  /* §356 ISI HÜCRELERİ (20 Ağu): oran satırlarında değer, satırın KENDİ
+     min-max'ına göre renk yoğunluğu alır — yüksek marj koyu yeşil, düşük
+     açık, negatif kırmızı. Neden satır bazlı: brüt marj %25-40 bandında
+     gezerken net marj %2-6'da geziyor; ortak ölçek ikisini de düzleştirirdi.
+     Yoğunluk tavanı .28 — sayı okunabilirliği zemine feda edilmez. */
+  const isiZemin=(v, dizi)=>{
+    const g=dizi.filter(x=>Number.isFinite(x));
+    if(g.length<3 || !Number.isFinite(v)) return '';
+    const mn=Math.min(...g), mx=Math.max(...g), ar=(mx-mn)||1;
+    const t=(v-mn)/ar;                                   /* 0..1 */
+    if(v<0) return 'background:rgba(214,69,69,'+(0.10+0.18*(1-t)).toFixed(3)+')';
+    return 'background:rgba(15,162,107,'+(0.05+0.23*t).toFixed(3)+')';
+  };
+  const oran=(v,ek,i,dizi)=>{
+    const zemin = dizi ? isiZemin(v,dizi) : ((i!=null)?hucreStil(i):'');
+    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted);'+((i!=null)?hucreStil(i):'')+'">—</td>';
     return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px;'+zemin+(v<0?';color:var(--down)':'')+'">'+trN(v,1)+(ek||'')+'</td>';
   };
   let govde='';
@@ -10112,7 +10291,7 @@ function csTabloBas(kod, liste, veri, hata){
     const dizi = M.map(m=>m[ad]);
     const m0 = dizi.find(v=>Number.isFinite(v));
     govde += '<tr class="cs-satir"><td class="cs-ad">'+etiket+'</td>'+
-      dizi.map((v,i)=>bic(v,null,i)).join('')+
+      dizi.map((v,i)=>bic(v,null,i,(bic===oran?dizi:null))).join('')+
       '<td style="padding:1px 0 1px 8px">'+csSpark(dizi, (m0<0?'var(--down)':'var(--up)'))+'</td></tr>';
   });
   /* §355 CSS: yapışkan kalem sütunu + satır vurgusu. Stil TABLONUN İÇİNE
@@ -10131,6 +10310,7 @@ function csTabloBas(kod, liste, veri, hata){
     '<th class="cs-ad" style="text-align:left;font-size:9.5px;top:0;z-index:3">KALEM <span class="thin">(mlr ₺ · oranlar %)</span></th>'+bas+
     '<th style="text-align:left;padding:2px 0 2px 8px;font-size:9.5px">TREND <span class="thin">(eski→yeni)</span></th>'+
     '</tr></thead><tbody>'+govde+'</tbody></table>'+
+    (function(){ try{ return csGrafikler(kod, liste, veri, KAT); }catch(e){ console.warn('[KTPanel] §357 grafik:', e&&e.message); return ''; } })()+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
       'Birim: '+(birimler.join(', ')||'—')+' → ₺ tabani.'+
       ((endeksAcik && endekslenen>0) ? (' · <b style="color:var(--up)">ENFLASYON ENDEKSLI</b>: tum ceyrekler EN YENI RAPORUN PARASIYLA. TMS-29 geregi her rapor kendi donem sonu alim gucuyle yazilir; ham halde 15 ceyrek 15 farkli parayla olculur ve trend yaniltir. Katsayilar raporlarin kendi &quot;onceki donem&quot; sutunlarindan zincirlenir — dis veri yok. <span class="thin">'+endekslenen+' hucre cevrildi</span>') : (endeksAcik ? ' · <b style="color:var(--down)">⚠ ENDEKSLENEMEDI</b> — katsayi cikarilamadi (raporlarda "onceki donem" sutunu eksik olabilir); degerler HAM, ceyrekler farkli alim guclerinde.' : ' · <b style="color:#E8933B">HAM (raporun kendi parasi)</b> — ceyrekler farkli alim guclerinde.'))+
