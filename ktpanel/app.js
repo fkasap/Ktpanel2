@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821b';   // SS364b GYO fiyat kaynagi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821c';   // SS365 sektorel veriler + SS365b PY_GRUP   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -67,7 +67,7 @@ const KTP_SURUM = '20260821b';   // SS364b GYO fiyat kaynagi   // SS332 ABD buyu
   }catch(e){}
 })();   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
-const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23'];  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
+const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23','t26'];  /* §365b: t26 GYO NAV — listede olmayınca Equity alt çubuğu O SEKMEDE GİZLENİYORDU. §247b'de Yabancı Hisse'de birebir aynısı yaşanmış ve not düşülmüş; yeni Equity sekmesi ekleyen bu listeye de eklemeli (üç-yer kuralı §121: düğme + panel + ÜYELİK). */  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
   if(!hedef)return; // sekme paneli yoksa sessizce çık — nav'ı kilitleme
