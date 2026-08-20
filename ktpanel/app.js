@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820d';   // SS343 eski kart kalkti + SS344 sparkline   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820e';   // SS345 enflasyon endeksleme + SS343b kurulum onarimi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -105,16 +105,21 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
     if(b.dataset.tab==='t23' && !window.__ftKuruldu){
       window.__ftKuruldu = true;
       try{
-        const y = $('ftYil'), bu = new Date().getFullYear();
-        for(let k=bu; k>=bu-5; k--) y.innerHTML += '<option value="'+k+'">'+k+'</option>';
-        const g = $('ftGetir'); if(g) g.onclick = ftGetir;
-        /* §231 Rozete PANEL sürümü — API sürümü ilk çağrıda eklenir.
-           İkisi ayrı deploy edilebiliyor ve tutarsız kalabiliyorlar. */
-        try{ const tg=$('ftTag'); if(tg) tg.textContent = 'panel '+KTP_SURUM; }catch(e){}
-        const kd = $('ftKod'); if(kd) kd.addEventListener('keydown', ev=>{ if(ev.key==='Enter') ftGetir(); });
+        /* §343b KURULUM TEMIZLIGI (20 Agu, canli ariza): eski tek-donem karti
+           kaldirilinca (§343) bu blokta kalan `$('ftYil').innerHTML` satiri
+           NULL uzerine yazmaya calisti, TypeError firlatti ve catch'e dustu —
+           ONDAN SONRAKI satirlar (CEYREKLIK SERI dugme baglantilari) HIC
+           kosmadi. Kullanici "ticker girip seriyi getir diyorum hicbir sey
+           olmuyor" dedi; fonksiyon saglamdi, DUGME BAGLI DEGILDI.
+           DERS: BIR KARTI KALDIRIRKEN ONUN KURULUM KODUNU DA KALDIR —
+           tek try blogunda toplanan kurulumlar birbirini dusurur. */
+        /* §231 rozete panel sürümü — artık Çeyreklik Seri kartında */
+        try{ const tg=$('csTag'); if(tg) tg.textContent = 'panel '+KTP_SURUM; }catch(e){}
         /* SS339 CEYREKLIK SERI baglantilari — ayni tembel kurulumda */
         const cg = $('csGetir'); if(cg) cg.onclick = csGetirCalis;
         const ck = $('csKod'); if(ck) ck.addEventListener('keydown', ev=>{ if(ev.key==='Enter') csGetirCalis(); });
+        const ce = $('csEndeks');
+        if(ce) ce.onchange = function(){ window.CS_ENDEKS = ce.checked; if($('csKod').value) csGetirCalis(); };
         const ct = $('csTemizle');
         if(ct) ct.onclick = function(){
           try{ localStorage.removeItem(CS_ANAHTAR); if($('csDurum')) $('csDurum').textContent='önbellek temizlendi'; }
@@ -9499,7 +9504,8 @@ async function csDonemCek(id){
       if(!sr.xbrl || !sr.degerler || !sr.degerler.length) return;
       if(kalem[sr.xbrl]) return;                        /* ilk gecen kalir */
       const d = sr.degerler;
-      kalem[sr.xbrl] = { k: d[0]*carpan, c: (d.length>=4 && Number.isFinite(d[2])) ? d[2]*carpan : null };
+      kalem[sr.xbrl] = { k: d[0]*carpan, onceki: Number.isFinite(d[1]) ? d[1]*carpan : null,
+        c: (d.length>=4 && Number.isFinite(d[2])) ? d[2]*carpan : null };
     });
   });
   return { kalem, birim:(j.birim&&j.birim.ad)||null, carpan, tablo:(j.tablolar||[]).map(t=>t.ad), ts:Date.now() };
@@ -9560,6 +9566,45 @@ async function csGetirCalis(){
    'stok' kalemler (bilanço) dönem sonu değeridir, fark alınmaz.
    METRİKLER Excel modelinin omurgası; her biri kaynak kalemlerden türer ve
    girdisi eksikse hesaplanmaz (yarım metrik = yanlış metrik). */
+/* ── §345 ENFLASYON ENDEKSLEME (20 Ağu, Fintables ile çapraz doğrulamadan) ──
+   BULGU: KAP raporları TMS-29 gereği HER DÖNEM kendi dönem sonu alım gücüyle
+   yazılır. TUPRS 2025 yıllık raporunda hasılat 830,4 mlr; aynı dönem bugünkü
+   parayla 977 mlr (oran 1,1766 — 2024 için de 1,1775, yani AYNI katsayı).
+   Yani panel 15 çeyreği 15 FARKLI PARAYLA gösteriyordu; trend yanıltıcıydı.
+   ÇÖZÜM — zincirleme katsayı, dış veri KULLANMADAN:
+   Her raporun "önceki dönem" sütunu, o dönemin DAHA YENİ parayla ifadesidir.
+   k(t) = önceki_dönem_değeri(rapor t) / kümülatif_değer(rapor t-4çeyrek)
+   Katsayılar en yeni rapordan geriye zincirlenir; her dönem kendi katsayısıyla
+   çarpılır. Katsayı hesaplanamayan dönem ENDEKSLENMEZ ve öyle işaretlenir.
+   ÖLÇEK REFERANSI hasılattır (her şirkette var, işaret sorunu yok).
+   Kullanıcı istediğinde "raporun kendi parası" görünümüne dönebilir. */
+function csEndeksKatsayilari(liste, veri, kod){
+  const K = {};                                   /* 'yil|donem' -> katsayı */
+  liste.forEach(x=>{ K[x.yil+'|'+x.donem] = 1; });
+  /* en yeni rapordan geriye: her rapor bir önceki YILIN aynı dönemini taşır */
+  for(let i=0;i<liste.length;i++){
+    const x = liste[i];
+    const kayit = veri[kod+'|'+x.yil+'|'+x.donem];
+    const rev = kayit && kayit.kalem && kayit.kalem['ifrs-full_Revenue'];
+    if(!rev || !Number.isFinite(rev.onceki) || !Number.isFinite(rev.k)) continue;
+    const gecen = liste.find(y=>y.yil===x.yil-1 && y.donem===x.donem);
+    if(!gecen) continue;
+    const gk = veri[kod+'|'+gecen.yil+'|'+gecen.donem];
+    const grev = gk && gk.kalem && gk.kalem['ifrs-full_Revenue'];
+    if(!grev || !Number.isFinite(grev.k) || !grev.k) continue;
+    /* geçen yılın raporundaki değer -> bu raporun parasıyla ifadesi */
+    const oran = rev.onceki / grev.k;
+    if(!(oran > 0.5 && oran < 5)) continue;        /* akıl süzgeci */
+    K[gecen.yil+'|'+gecen.donem] = (K[x.yil+'|'+x.donem]||1) * oran;
+  }
+  /* aynı yıl içindeki ara dönemler: yıl bazlı katsayıyı miras alır */
+  liste.forEach(x=>{
+    if(K[x.yil+'|'+x.donem] !== 1) return;
+    const kardes = liste.filter(y=>y.yil===x.yil && K[y.yil+'|'+y.donem]!==1).map(y=>K[y.yil+'|'+y.donem]);
+    if(kardes.length) K[x.yil+'|'+x.donem] = kardes.reduce((a,b)=>a+b,0)/kardes.length;
+  });
+  return K;
+}
 function csCeyrek(liste, veri, kod, i, xbrl, tip){
   const x = liste[i], ank = kod+'|'+x.yil+'|'+x.donem;
   const kayit = veri[ank]; if(!kayit || !kayit.kalem) return {v:null};
@@ -9647,6 +9692,11 @@ function csSpark(seri, renk){
 }
 function csTabloBas(kod, liste, veri, hata){
   const T=$('csTablo'); if(!T) return;
+  /* SS345: endeks katsayilari — acikken her deger bugunku paraya cevrilir */
+  const endeksAcik = (window.CS_ENDEKS !== false);
+  const KAT = endeksAcik ? csEndeksKatsayilari(liste, veri, kod) : null;
+  const kat = (x)=> KAT ? (KAT[x.yil+'|'+x.donem]||1) : 1;
+  let endekslenen = 0;
   const ayD={1:'1Ç',2:'2Ç',3:'3Ç',4:'4Ç'};
   const bas = liste.map(x=>'<th style="text-align:right;padding:2px 5px;white-space:nowrap;font-size:9.5px">'+
     String(x.yil).slice(2)+'/'+ayD[x.donem]+'</th>').join('');
@@ -9668,7 +9718,12 @@ function csTabloBas(kod, liste, veri, hata){
   ['Gelir Tablosu','Bilanço','Nakit Akış'].forEach(grup=>{
     govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:7px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">'+grup.toLocaleUpperCase('tr')+'</td></tr>';
     CS_KALEM.filter(k=>k[2]===grup).forEach(([xbrl,etiket,,tip])=>{
-      const seri = liste.map((x,i)=>csCeyrek(liste,veri,kod,i,xbrl,tip));
+      const seri = liste.map((x,i)=>{
+        const r = csCeyrek(liste,veri,kod,i,xbrl,tip);
+        const c = kat(x);
+        if(Number.isFinite(r.v) && c!==1){ endekslenen++; return {v:r.v*c, turetilmis:r.turetilmis}; }
+        return r;
+      });
       const hucre = seri.map(r=>{
         if(r.turetilmis && Number.isFinite(r.v)) turetilenSayi++;
         return sayi(r.v, r.turetilmis);
@@ -9679,7 +9734,14 @@ function csTabloBas(kod, liste, veri, hata){
     });
   });
   /* türev metrikler */
-  const M = liste.map((x,i)=>csMetrikler(liste,veri,kod,i));
+  const M = liste.map((x,i)=>{
+    const m = csMetrikler(liste,veri,kod,i), c = kat(x);
+    if(c===1) return m;
+    /* oranlar katsayidan etkilenmez (pay ve payda ayni katsayi), TUTARLAR carpilir */
+    const o = Object.assign({}, m);
+    ['favok','finBorc','netBorc','snakit','isletmeSerm'].forEach(k=>{ if(Number.isFinite(o[k])) o[k]=o[k]*c; });
+    return o;
+  });
   govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:9px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">TÜREV METRİKLER</td></tr>';
   [['favok','FAVÖK',sayi],['favokMarj','FAVÖK Marjı %',oran],['brutMarj','Brüt Marj %',oran],['netMarj','Net Marj %',oran],
    ['finBorc','Finansal Borç',sayi],['netBorc','Net Borç',sayi],['snakit','Serbest Nakit Akışı',sayi],
@@ -9696,7 +9758,8 @@ function csTabloBas(kod, liste, veri, hata){
     '<th style="text-align:left;padding:2px 0 2px 8px;font-size:9.5px">TREND <span class="thin">(eski→yeni)</span></th>'+
     '</tr></thead><tbody>'+govde+'</tbody></table>'+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
-      'Birim raporun kendi beyanından: '+(birimler.join(', ')||'—')+(birimler.length>1?' <b style="color:var(--down)">⚠ karışık</b>':'')+' → tümü ₺ tabanına çevrildi.'+
+      'Birim: '+(birimler.join(', ')||'—')+' → ₺ tabani.'+
+      (endeksAcik ? (' · <b style="color:var(--up)">ENFLASYON ENDEKSLI</b>: tum ceyrekler EN YENI RAPORUN PARASIYLA. TMS-29 geregi her rapor kendi donem sonu alim gucuyle yazilir; ham halde 15 ceyrek 15 farkli parayla olculur ve trend yaniltir. Katsayilar raporlarin kendi &quot;onceki donem&quot; sutunlarindan zincirlenir — dis veri yok. <span class="thin">'+endekslenen+' hucre cevrildi</span>') : ' · <b style="color:#E8933B">HAM (raporun kendi parasi)</b> — ceyrekler farkli alim guclerinde.')+
       (turetilenSayi?(' · <b style="color:#E8933B">≈ işaretli '+turetilenSayi+' hücre YAKLAŞIK</b>: rapor çeyrek sütunu vermediği için kümülatif farkından türetildi. <b>Enflasyon muhasebesi (TMS-29)</b> her raporu kendi dönem sonu alım gücüne göre yeniden ifade ettiğinden bu fark birebir çeyrek değildir — ölçülen sapma TUPRS 2026/2\'de %4,7. İşaretsiz hücreler raporun kendi sütunundan, kesindir.'):'')+
       ' · FAVÖK = Esas faaliyet kârı + amortisman · Net borç = finansal borç − (nakit + finansal yatırım) · SNA = işletme nakit akışı − yatırım harcaması'+
       (hata&&hata.length?(' · <span style="color:var(--down)">alınamadı: '+hata.join(' · ')+'</span>'):'')+
