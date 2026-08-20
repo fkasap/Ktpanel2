@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-08-20-q';   /* §340b tani */
+const _SURUM = 'kap-2026-08-20-r';   /* §340c XBRL gruplama */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -930,50 +930,59 @@ export default async function handler(req, res){
           xbrlCevresi: (function () { const i = h.indexOf('ifrs-full_CashFlows'); return i >= 0 ? h.slice(Math.max(0, i - 300), i + 700) : null; })() });
       }
 
-      /* Tablolari <table ...> ... </table> siniriyla ayikla; yalnizca 40+
-         satirli olanlar finansal tablodur (kucukler basluk/duzen tablosu). */
-      const tablolar = [];
-      const trSay = (blok) => (blok.match(/<tr[\s>]/g) || []).length;
-      let p = 0, koruma = 0;
-      while (koruma++ < 4000) {
-        const bas = h.indexOf('<table', p); if (bas < 0) break;
-        const son = h.indexOf('</table>', bas); if (son < 0) break;
-        const blok = h.slice(bas, son);
-        p = son + 8;
-        if (trSay(blok) < 40) continue;
-
-        /* Sutun basliklari: "Cari Dönem", "Önceki Dönem", "Cari Dönem 3 Aylık"… */
-        const basSatir = (blok.match(/<tr[\s\S]{0,3000}?<\/tr>/) || [''])[0];
-        const sutunlar = [...basSatir.matchAll(/>([^<>]{4,80}?)</g)].map(x => x[1].replace(/\s+/g, ' ').trim())
-          .filter(x => /Dönem|Period|Özkaynak/i.test(x)).slice(0, 8);
-
-        /* Tablo adi: XBRL kok etiketinden ya da ilk metinden */
-        const adM = blok.match(/(kap-fr|ifrs-full)_(StatementOfFinancialPosition|IncomeStatement|StatementOfCashFlows[A-Za-z]*|StatementOfOtherComprehensive[A-Za-z]*|StatementOfChangesInEquity)/);
-        const adHam = (blok.match(/>\s*(Finansal Durum Tablosu[^<]{0,40}|Kar veya Zarar Tablosu[^<]{0,30}|Nakit Ak[ıi]ş Tablosu[^<]{0,40}|Diğer Kapsamlı Gelir[^<]{0,40}|Özkaynak[^<]{0,40})</) || [])[1];
-        const ad = (adHam || (adM ? adM[2] : 'tablo')).replace(/\s+/g, ' ').trim();
-
-        /* Satirlar: her <tr> icinde ilk hucre XBRL kodu, sonra etiket, sonra sayilar */
-        const satirlar = [];
-        for (const tm of blok.matchAll(/<tr[\s\S]{0,6000}?<\/tr>/g)) {
-          const tr = tm[0];
-          const hucreler = [...tr.matchAll(/<t[dh][^>]*>([\s\S]{0,600}?)<\/t[dh]>/g)]
-            .map(x => x[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim());
-          if (!hucreler.length) continue;
-          const xbrl = (hucreler.find(x => /^(kap-fr|ifrs-full|tr-fr)_[A-Za-z0-9_]+$/.test(x)) || '').trim();
-          const sayilar = [];
-          hucreler.forEach(x => {
-            if (/^[\-(]?[\d.]{1,20}(,\d+)?\)?$/.test(x.replace(/\s/g, ''))) {
-              const v = _sayiCoz(x); if (v !== null) sayilar.push(v);
-            }
-          });
-          /* Etiket: XBRL ve sayi olmayan, harf iceren ILK hucre */
-          const etiket = (hucreler.find(x => x && x !== xbrl && /[A-Za-zÇĞİÖŞÜçğıöşü]/.test(x) && !/^[\d.,\-()]+$/.test(x)) || '').slice(0, 120);
-          if (!etiket && !sayilar.length) continue;
-          if (!xbrl && !sayilar.length) continue;
-          satirlar.push({ xbrl: xbrl || null, etiket, degerler: sayilar.slice(0, 6) });
+      /* §340c TABLO SINIRI ARAMASI TERK EDILDI (olculdu): GWT sayfasinda
+         tablolar IC ICE giriyor (736 <table>); naif indexOf('</table>') ILK
+         kapanisi yakalayip yanlis blok uretiyordu — bu yuzden ilk surum SIFIR
+         tablo buldu. YENI YONTEM: sinir arama YOK. Tum <tr> satirlari sirayla
+         taranir; satirin XBRL kodu hangi tabloya ait oldugunu ZATEN soyler:
+           kap-fr_StatementOfFinancialPosition...  -> bilanco
+           ifrs-full_IncomeStatement / kap-fr_Profit... -> gelir
+           kap-fr_StatementOfCashFlowsIndirect...  -> nakit akis
+         Kok etiket (Statement*) gorulunce AKTIF TABLO degisir, sonraki
+         satirlar ona yazilir. Ic ice yapi bu yontemi hic etkilemez.
+         DERS: HTML sinirlarina degil, VERININ KENDI KIMLIGINE dayan. */
+      const TABLO_AD = [
+        [/StatementOfFinancialPosition/i, 'Bilanço'],
+        [/IncomeStatement|ProfitLoss(Abstract)?$/i, 'Gelir Tablosu'],
+        [/StatementOfCashFlows/i, 'Nakit Akış'],
+        [/OtherComprehensiveIncome/i, 'Diğer Kapsamlı Gelir'],
+        [/StatementOfChangesInEquity|Equity(Abstract)?$/i, 'Özkaynak Değişim']
+      ];
+      const gruplar = new Map();
+      let aktif = null;
+      let trSayac = 0;
+      for (const tm of h.matchAll(/<tr[\s\S]{0,20000}?<\/tr>/g)) {
+        trSayac++;
+        if (trSayac > 6000) break;                      /* koruma */
+        const tr = tm[0];
+        const hucreler = [...tr.matchAll(/<t[dh][^>]*>([\s\S]{0,900}?)<\/t[dh]>/g)]
+          .map(x => x[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim());
+        if (!hucreler.length) continue;
+        const xbrl = (hucreler.find(x => /^(kap-fr|ifrs-full|tr-fr)_[A-Za-z0-9_]+$/.test(x)) || '');
+        /* kok etiket mi? (Statement...Abstract) -> aktif tabloyu degistir */
+        if (xbrl) {
+          const ad = TABLO_AD.find(([rx]) => rx.test(xbrl));
+          if (ad && /Abstract|Statement[A-Za-z]*$/.test(xbrl) && hucreler.filter(x => /^[\-(]?[\d.]/.test(x)).length === 0) {
+            aktif = ad[1];
+            if (!gruplar.has(aktif)) gruplar.set(aktif, []);
+            continue;
+          }
+          if (!aktif && ad) { aktif = ad[1]; if (!gruplar.has(aktif)) gruplar.set(aktif, []); }
         }
-        if (satirlar.length >= 20) tablolar.push({ ad, sutunlar, satir: satirlar.length, satirlar });
+        if (!aktif) continue;
+        const sayilar = [];
+        hucreler.forEach(x => {
+          const t = x.replace(/\s/g, '');
+          if (/^[\-(]?[\d.]{1,20}(,\d+)?\)?$/.test(t)) { const v = _sayiCoz(x); if (v !== null) sayilar.push(v); }
+        });
+        const etiket = (hucreler.find(x => x && x !== xbrl && /[A-Za-zÇĞİÖŞÜçğıöşü]/.test(x) && !/^[\d.,\-()\s]+$/.test(x)) || '').slice(0, 120);
+        if (!etiket && !sayilar.length) continue;
+        if (!xbrl && !sayilar.length) continue;
+        gruplar.get(aktif).push({ xbrl: xbrl || null, etiket, degerler: sayilar.slice(0, 6) });
       }
+      const tablolar = [...gruplar.entries()]
+        .map(([ad, satirlar]) => ({ ad, satir: satirlar.length, satirlar }))
+        .filter(t => t.satir >= 5);
       return res.status(200).json({ surum: _SURUM, ok: tablolar.length > 0, id: idH,
         birim, tabloSayisi: tablolar.length, tablolar });
     } catch (e) {
