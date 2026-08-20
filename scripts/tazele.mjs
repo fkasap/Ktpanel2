@@ -2102,6 +2102,103 @@ async function sektorTazele() {
    5) PAY ADEDİ: ödenmiş sermaye (ifrs-full_IssuedCapital) nominal 1 TL
       varsayımıyla pay adedini verir. Nominal farklıysa değer sapar; bu yüzden
       `adet_kaynak:'sermaye'` diye işaretlenir, kesin sayılmaz. */
+/* ── §364 GYO NAV — TSPB RESMİ NAD SERVİSİ (20 Ağu, kullanıcı HAR'ından) ────
+   NEDEN: GYO'da ciro/FAVÖK anlamsızdır; değer ölçüsü NAV İSKONTOSUDUR. §361
+   faktör evreninde GYO'lar "eksik kalem" diye düşecekti — oysa kendi ölçüleri
+   var ve resmî kaynağı da bu servis.
+   KAYNAK (HAR'da ölçüldü): tspbnad.matriksdata.com
+     /api/base/getmembers/all            → 57 GYO (member_uid ↔ member_symbol)
+     /api/base/getperiods/all            → dönemler + isPublished bayrağı
+     /api/reports/getmemReport/{uid}/{dönem} → şirket bazlı NAD tablosu
+   ÇIKAN ALANLAR (Toplam Veriler bloğu):
+     t1 portföy · t4 borçlar · t5 NET AKTİF DEĞER · t6 ödenmiş sermaye
+     t7 PAY BAŞINA NAD · t8 İSKONTO/PRİM % · t9 borçluluk %
+   TSPB'nin kendi tanımı (raporun notunda): İskonto = (piyasa değeri / NAD) − 1
+   DİKKAT — GECİKME: son YAYIMLANMIŞ dönem 2025/12; 2026/06 hazır ama
+   isPublished=false. Yani t8 iskontosu O DÖNEMİN piyasa değerine göredir.
+   Panelde pay başına NAD ile CANLI fiyat kullanılıp bugünün iskontosu ayrıca
+   hesaplanır; TSPB'nin resmî oranı referans olarak yanında durur.
+   Bildirim göndermemiş şirket sıfır döner (AHSGY'de görüldü) — o kayıt ATLANIR,
+   sıfır iskonto diye yazılmaz. */
+async function gyoNav() {
+  const dosya = 'gyo-nav.json';
+  const T = 'https://tspbnad.matriksdata.com/api';
+  const uyku = (ms) => new Promise(r => setTimeout(r, ms));
+  try {
+    /* 1) Dönemler — en yeni YAYIMLANMIŞ olan */
+    const rp = await fetch(T + '/base/getperiods/all', { signal: AbortSignal.timeout(20000) });
+    if (!rp.ok) { raporlar.push('### GYO NAV (§364) — ⏭ dönem listesi HTTP ' + rp.status); return; }
+    const donemler = await rp.json();
+    const yayin = (Array.isArray(donemler) ? donemler : [])
+      .filter(d => d && d.period_isPublished && d.period_code === 'NAD')
+      .sort((a, b) => (b.period_orderNo || 0) - (a.period_orderNo || 0));
+    if (!yayin.length) { raporlar.push('### GYO NAV (§364) — ⏭ yayımlanmış dönem yok'); return; }
+    const donem = String(yayin[0].period_value);
+
+    /* 2) Üyeler */
+    const rm = await fetch(T + '/base/getmembers/all', { signal: AbortSignal.timeout(20000) });
+    if (!rm.ok) { raporlar.push('### GYO NAV (§364) — ⏭ üye listesi HTTP ' + rm.status); return; }
+    const uyeler = (await rm.json() || []).filter(m => m && m.member_uid && m.member_symbol);
+
+    /* 3) Şirket bazlı NAD — seri, TSPB'yi zorlamadan */
+    const kayitlar = {};
+    let bosBildirim = 0, dusen = 0;
+    for (const m of uyeler) {
+      try {
+        const rr = await fetch(T + '/reports/getmemReport/' + m.member_uid + '/' + donem, { signal: AbortSignal.timeout(20000) });
+        if (!rr.ok) { dusen++; await uyku(250); continue; }
+        const j = await rr.json();
+        const r0 = Array.isArray(j) ? j[0] : null;
+        const tot = r0 && (r0.report_segments || []).find(s => s && s.name === 'Toplam Veriler');
+        if (!tot) { dusen++; await uyku(250); continue; }
+        const say = (o) => (o && Number.isFinite(o.valueTl)) ? o.valueTl : null;
+        const nad = say(tot.t5), payNad = say(tot.t7);
+        /* Bildirim göndermemiş şirket her alanı 0 döndürür — kayıt YAZILMAZ */
+        if (!Number.isFinite(nad) || nad === 0 || !Number.isFinite(payNad) || payNad === 0) { bosBildirim++; await uyku(250); continue; }
+        kayitlar[m.member_symbol] = {
+          ad: m.member_name || null, uid: m.member_uid,
+          portfoy: say(tot.t1), finBorc: say(tot.t2), borc: say(tot.t4),
+          nad, sermaye: say(tot.t6), payNad,
+          iskonto: say(tot.t8), borcluluk: say(tot.t9)
+        };
+        await uyku(250);
+      } catch (e) { dusen++; await uyku(400); }
+    }
+    const n = Object.keys(kayitlar).length;
+    if (!n) { raporlar.push('### GYO NAV (§364) — ⏭ hiçbir şirket için veri alınamadı (dönem ' + donem + ')'); return; }
+
+    /* Sektör toplamı (TSPB'nin kendi "Tümü" kaydı) */
+    let sektor = null;
+    try {
+      const rt = await fetch(T + '/reports/getmemReport/all/' + donem, { signal: AbortSignal.timeout(20000) });
+      const jt = await rt.json();
+      const t0 = (Array.isArray(jt) ? jt[0] : null);
+      const tt = t0 && (t0.report_segments || []).find(s => s && s.name === 'Toplam Veriler');
+      if (tt) sektor = { nad: tt.t5 && tt.t5.valueTl, payNad: tt.t7 && tt.t7.valueTl,
+        iskonto: tt.t8 && tt.t8.valueTl, borcluluk: tt.t9 && tt.t9.valueTl };
+    } catch (e) {}
+
+    const isk = Object.values(kayitlar).map(x => x.iskonto).filter(Number.isFinite).sort((a, b) => a - b);
+    const D = {
+      guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
+      donem, donem_etiket: donem.slice(0, 4) + '/' + donem.slice(4),
+      kaynak: 'TSPB · tspbnad.matriksdata.com (resmî NAD tablosu)',
+      _yontem: 'İskonto = (piyasa değeri / NAD) − 1, TSPB tanımı; DÖNEM SONU piyasa değerine göre. Panel canlı fiyatla `fiyat/payNad − 1` ile GÜNCEL iskontoyu ayrıca hesaplar. Bildirim göndermemiş şirket kaydı YAZILMAZ (sıfır iskonto gibi görünmesin).',
+      sirket_sayisi: n, bos_bildirim: bosBildirim, sektor,
+      sirketler: kayitlar
+    };
+    await yaz(dosya, D);
+    degisenler.push('GYO NAV (' + n + ' şirket)');
+    raporlar.push('### GYO NAV (§364) — ✓ ' + n + ' şirket · dönem ' + D.donem_etiket +
+      (sektor && Number.isFinite(sektor.iskonto) ? ('\n- sektör iskontosu: %' + sektor.iskonto.toFixed(1) + ' · borçluluk %' + (sektor.borcluluk || 0).toFixed(1)) : '') +
+      (isk.length ? ('\n- en iskontolu: %' + isk[0].toFixed(1) + ' · medyan %' + isk[Math.floor(isk.length / 2)].toFixed(1) + ' · en primli %' + isk[isk.length - 1].toFixed(1)) : '') +
+      (bosBildirim ? ('\n- ' + bosBildirim + ' şirket o dönem bildirim göndermemiş (kayıt yazılmadı)') : '') +
+      (dusen ? ('\n- ' + dusen + ' istek düştü') : ''));
+  } catch (e) {
+    raporlar.push('### GYO NAV (§364) — ✗ ' + String(e && e.message || e).slice(0, 90));
+  }
+}
+
 async function faktorEvren() {
   const dosya = 'faktor-evren.json';
   /* §361b HIZ SINIRI (canlı ölçüm: 12/12 "dönem yok"; aynı uç tarayıcıdan tek
@@ -2623,6 +2720,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
+    await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
   }
 
