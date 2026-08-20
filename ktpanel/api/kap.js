@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-08-20-s';   /* §340d gercek yapi */
+const _SURUM = 'kap-2026-08-20-t';   /* §340e tekillestirme */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -981,8 +981,29 @@ export default async function handler(req, res){
         if (!gruplar.has(ad)) gruplar.set(ad, []);
         gruplar.get(ad).push({ xbrl, etiket, degerler: sayilar.slice(0, 6) });
       }
+      /* §340e TEKILLESTIRME + BOS SUZGECI (ilk tam cikti olculdu):
+         yanit IKI KAT sisikti — her tablo iki kez geliyordu (sayfada TR/EN
+         iki kopya). Imza = xbrl + degerler; AYNI imza ikinci kez gelirse
+         atlanir. Ozkaynak Degisim'de ayni xbrl mesru olarak tekrar eder
+         (Donem Basi/Sonu farkli sutunlarla) ama DEGERLERI farklidir, o yuzden
+         imzaya degerler de girer — mesru tekrarlar korunur.
+         BOS SATIRLAR: KAP sablonu yuzlerce kullanilmayan kalem tasiyor
+         (degerler:[]). Varsayilan olarak ATILIR; ?bos=1 ile istenebilir
+         (kalem kesfi icin). Ikisi birlikte yaniti ~%80 kucultur. */
+      const bosIste = String((req.query && req.query.bos) || '') === '1';
       const tablolar = [...gruplar.entries()]
-        .map(([ad, satirlar]) => ({ ad, satir: satirlar.length, satirlar }))
+        .map(([ad, satirlar]) => {
+          const gorulen = new Set();
+          const temiz = [];
+          for (const r of satirlar) {
+            if (!bosIste && (!r.degerler || !r.degerler.length)) continue;
+            const imza = (r.xbrl || r.etiket) + '|' + (r.degerler || []).join(',');
+            if (gorulen.has(imza)) continue;
+            gorulen.add(imza);
+            temiz.push(r);
+          }
+          return { ad, satir: temiz.length, satirlar: temiz };
+        })
         .filter(t => t.satir >= 3);
 
       /* §340d birim: "Sunum Para Birimi" satiri raporun kendi beyanidir */
