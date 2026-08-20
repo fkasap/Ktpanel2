@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820m';   // SS350b hiz + acilista KAP   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820n';   // SS350c birim duzeltmesi (milyon TL)   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7940,12 +7940,19 @@ function multipleRender(){
   if(!MULTIPLE||!$('mulSnapshot'))return;
   const kod=$('mulTicker')?$('mulTicker').value:MULTIPLE.hisseler[0].k;
   const h=MULTIPLE.hisseler.find(x=>x.k===kod)||MULTIPLE.hisseler[0];
-  /* §350: KAP TTM varsa O kullanılır (bin TL tabanına çevrilir — multiple.json
-     bin TL cinsinden tutuyor), yoksa snapshot. Kaynak ekranda yazılı. */
+  /* §350c BİRİM KAZASI (canlı, kullanıcı yakaladı): MERCN'de net borç
+     "1.523,9 mlr ₺" göründü — bin kat büyük. Sebep: multiple.json tutarları
+     MİLYON TL cinsinden saklıyor (AKFYE mcap 27.173 → ekranda /1000 ile
+     27,2 mlr), ben KAP'ın TL değerlerini BİNE bölüp "bin TL" sandım.
+     Doğru çevrim: TL / 1e6 = milyon TL. Kart zaten milyon tabanını /1000 ile
+     milyara çeviriyor.
+     DERS: HEDEF DOSYANIN BİRİMİNİ VARSAYMA — bir örnekle DOĞRULA
+     (mcap = fiyat × adet hesabı birimi ele veriyordu). */
   const K = (window.MUL_KAP && window.MUL_KAP.kod===kod) ? window.MUL_KAP : null;
-  const ciroT = K ? K.ciro/1000 : h.ciro;          /* bin TL */
-  const ebitdaT = K ? K.ebitda/1000 : h.ebitda;
-  const netBorcT = K ? (Number.isFinite(K.netBorc)?K.netBorc/1000:h.netBorc) : h.netBorc;
+  const MN = 1e6;                                   /* TL -> milyon TL */
+  const ciroT = K ? K.ciro/MN : h.ciro;
+  const ebitdaT = K ? K.ebitda/MN : h.ebitda;
+  const netBorcT = K ? (Number.isFinite(K.netBorc)?K.netBorc/MN:h.netBorc) : h.netBorc;
   const mcap=h.fiyat*h.adet, ev=mcap+netBorcT, carpan=ev/ebitdaT, marj=ebitdaT/ciroT*100;
   if($('mulKaynak')) $('mulKaynak').textContent = K ? ('KAP canlı · TTM '+K.donem) : 'Fintables snapshot';
   $('mulSnapshot').innerHTML=
