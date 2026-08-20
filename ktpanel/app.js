@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820w';   // SS354 JOLTS + petrol stoklari (FRED)   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820x';   // SS355 tablo okunabilirligi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10021,8 +10021,24 @@ function csSpark(seri, renk){
     '<polyline points="'+nokta+'" fill="none" stroke="'+renk+'" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>'+
     '<circle cx="'+X(son.i).toFixed(1)+'" cy="'+Y(son.v).toFixed(1)+'" r="2" fill="'+renk+'"/></svg>';
 }
+/* ── §355 TABLO OKUNABİLİRLİĞİ (20 Ağu, kullanıcı: "iç içe yazılar okumayı
+   zorlaştırıyor, sütun renkleri eklesek mi") ────────────────────────────────
+   Dört müdahale, hepsi okuma sorununun KÖKÜNE:
+   1) YAPIŞKAN KALEM SÜTUNU — tablo yatay kayarken kalem adı sabit kalır ve
+      kendi zeminine oturur. "İç içe geçme" hissinin asıl sebebi buydu:
+      kaydırınca sayılar adın üstünden geçiyordu.
+   2) YIL BLOKLARI — aynı yılın çeyrekleri aynı zemin tonunu paylaşır, yıl
+      değişince ton değişir ve sol kenarına ince çizgi düşer. Böylece "hangi
+      çeyrek hangi yıla ait" sorusu göz taramasıyla cevaplanır; 15 sütunda
+      tarih okumaya gerek kalmaz.
+   3) YAPIŞKAN BAŞLIK — uzun tabloda dönem etiketleri hep görünür.
+   4) SATIR VURGUSU — imleç satırda gezerken tüm satır hafifçe boyanır;
+      yatay kaymada göz kaymasını engeller.
+   Renk seçimi bilinçli olarak NÖTR: veri renkleri (negatif kırmızı, türetilmiş
+   soluk, sparkline yeşil) anlam taşıyor; zemin onlarla yarışmamalı. */
 function csTabloBas(kod, liste, veri, hata){
   const T=$('csTablo'); if(!T) return;
+  const YIL_TON = ['rgba(15,162,107,.045)','transparent'];   /* iki ton, dönüşümlü */
   /* SS345: endeks katsayilari — acikken her deger bugunku paraya cevrilir */
   const endeksAcik = (window.CS_ENDEKS !== false);
   const KAT = endeksAcik ? csEndeksKatsayilari(liste, veri, kod) : null;
@@ -10030,25 +10046,33 @@ function csTabloBas(kod, liste, veri, hata){
   const kat = (x)=> KAT ? (KAT[x.yil+'|'+x.donem]||1) : 1;
   let endekslenen = 0;
   const ayD={1:'1Ç',2:'2Ç',3:'3Ç',4:'4Ç'};
-  const bas = liste.map(x=>'<th style="text-align:right;padding:2px 5px;white-space:nowrap;font-size:9.5px">'+
+  /* §355: yıl blokları — aynı yıl aynı ton, yıl değişiminde sol kenar çizgisi */
+  const yillar=[...new Set(liste.map(x=>x.yil))];
+  const tonOf=(y)=>YIL_TON[yillar.indexOf(y)%2];
+  const yilBasi=(i)=> i===0 || liste[i].yil!==liste[i-1].yil;
+  const hucreStil=(i)=>'background:'+tonOf(liste[i].yil)+(yilBasi(i)?';border-left:1px solid var(--line2)':'');
+  const bas = liste.map((x,i)=>'<th style="text-align:right;padding:3px 5px;white-space:nowrap;font-size:9.5px;position:sticky;top:0;z-index:2;background:var(--bg);'+
+    (yilBasi(i)?'border-left:1px solid var(--line2);':'')+'">'+
     String(x.yil).slice(2)+'/'+ayD[x.donem]+'</th>').join('');
   const kayitlar = liste.map(x=>veri[kod+'|'+x.yil+'|'+x.donem]).filter(Boolean);
   const birimler = [...new Set(kayitlar.map(k=>k.birim).filter(Boolean))];
   let turetilenSayi = 0;
-  const sayi=(v,yaklasik)=>{
-    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted)">—</td>';
+  const sayi=(v,yaklasik,i)=>{
+    const zemin=(i!=null)?hucreStil(i):'';
+    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted);'+zemin+'">—</td>';
     const mlr = v/1e9;
-    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px'+(v<0?';color:var(--down)':'')+
-      (yaklasik?';opacity:.72':'')+'" title="'+(yaklasik?'kümülatif farkından türetildi — enflasyon düzeltmesi nedeniyle YAKLAŞIK':'raporun kendi sütunu')+'">'+
+    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px;'+zemin+(v<0?';color:var(--down)':'')+
+      (yaklasik?';opacity:.72':'')+'" title=""'+(yaklasik?'kümülatif farkından türetildi — enflasyon düzeltmesi nedeniyle YAKLAŞIK':'raporun kendi sütunu')+'">'+
       (yaklasik?'≈':'')+trN(mlr, Math.abs(mlr)>=100?0:(Math.abs(mlr)>=1?1:2))+'</td>';
   };
-  const oran=(v,ek)=>{
-    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted)">—</td>';
-    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px'+(v<0?';color:var(--down)':'')+'">'+trN(v,1)+(ek||'')+'</td>';
+  const oran=(v,ek,i)=>{
+    const zemin=(i!=null)?hucreStil(i):'';
+    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted);'+zemin+'">—</td>';
+    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px;'+zemin+(v<0?';color:var(--down)':'')+'">'+trN(v,1)+(ek||'')+'</td>';
   };
   let govde='';
   ['Gelir Tablosu','Bilanço','Nakit Akış'].forEach(grup=>{
-    govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:7px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">'+grup.toLocaleUpperCase('tr')+'</td></tr>';
+    govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:8px 0 3px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line);position:sticky;left:0;background:var(--bg)">'+grup.toLocaleUpperCase('tr')+'</td></tr>';
     CS_KALEM.filter(k=>k[2]===grup).forEach(([xbrl,etiket,,tip])=>{
       const seri = liste.map((x,i)=>{
         const r = csCeyrek(liste,veri,kod,i,xbrl,tip);
@@ -10057,12 +10081,12 @@ function csTabloBas(kod, liste, veri, hata){
         if(Number.isFinite(r.v) && c!==1){ endekslenen++; return {v:r.v*c, turetilmis:r.turetilmis}; }
         return r;
       });
-      const hucre = seri.map(r=>{
+      const hucre = seri.map((r,i)=>{
         if(r.turetilmis && Number.isFinite(r.v)) turetilenSayi++;
-        return sayi(r.v, r.turetilmis);
+        return sayi(r.v, r.turetilmis, i);
       }).join('');
       const s0 = seri.map(r=>r.v).find(v=>Number.isFinite(v));
-      govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+
+      govde += '<tr class="cs-satir"><td class="cs-ad">'+etiket+'</td>'+hucre+
         '<td style="padding:1px 0 1px 8px">'+csSpark(seri.map(r=>r.v), (s0<0?'var(--down)':'var(--mm2)'))+'</td></tr>';
     });
   });
@@ -10087,12 +10111,24 @@ function csTabloBas(kod, liste, veri, hata){
    ['ozkOran','Özkaynak/Aktif %',oran]].forEach(([ad,etiket,bic])=>{
     const dizi = M.map(m=>m[ad]);
     const m0 = dizi.find(v=>Number.isFinite(v));
-    govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+
-      dizi.map(v=>bic(v)).join('')+
+    govde += '<tr class="cs-satir"><td class="cs-ad">'+etiket+'</td>'+
+      dizi.map((v,i)=>bic(v,null,i)).join('')+
       '<td style="padding:1px 0 1px 8px">'+csSpark(dizi, (m0<0?'var(--down)':'var(--up)'))+'</td></tr>';
   });
-  T.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr>'+
-    '<th style="text-align:left;padding:2px 8px 2px 0;font-size:9.5px">KALEM <span class="thin">(mlr ₺ · oranlar %)</span></th>'+bas+
+  /* §355 CSS: yapışkan kalem sütunu + satır vurgusu. Stil TABLONUN İÇİNE
+     gömülür (kart yeniden çizildiğinde kaybolmasın diye) ve yalnız bu tabloyu
+     etkiler. */
+  const stil = '<style>'+
+    '#csTablo{max-height:78vh;overflow:auto}'+
+    '#csTablo table{border-collapse:separate;border-spacing:0}'+
+    '#csTablo .cs-ad{position:sticky;left:0;z-index:2;background:var(--bg);'+
+      'padding:3px 10px 3px 0;font-size:10.5px;white-space:nowrap;'+
+      'box-shadow:1px 0 0 var(--line2)}'+
+    '#csTablo .cs-satir:hover td{background:rgba(15,162,107,.09)!important}'+
+    '#csTablo thead th{background:var(--bg)}'+
+    '</style>';
+  T.innerHTML=stil+'<table style="width:100%;border-collapse:separate;border-spacing:0"><thead><tr>'+
+    '<th class="cs-ad" style="text-align:left;font-size:9.5px;top:0;z-index:3">KALEM <span class="thin">(mlr ₺ · oranlar %)</span></th>'+bas+
     '<th style="text-align:left;padding:2px 0 2px 8px;font-size:9.5px">TREND <span class="thin">(eski→yeni)</span></th>'+
     '</tr></thead><tbody>'+govde+'</tbody></table>'+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
