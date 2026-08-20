@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820v';   // SS353c tbody duzeltmesi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820w';   // SS354 JOLTS + petrol stoklari (FRED)   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -743,6 +743,15 @@ async function abdSekme(){
           rh+=rSatir('VIXCLS','VIX — risk iştahı','puan1',true,false);
           rh+=rSatir('ICSA','Haftalık işsizlik başvurusu','bin',true,false);
           rh+=rSatir('UNRATE','İşsizlik oranı (aylık)','%',true,false);
+          /* §354 İŞGÜCÜ TALEBİ + ENERJİ STOKLARI (20 Ağu, kullanıcı isteği):
+             takvim (§319) bu olayların TARİHİNİ ve BEKLENTİSİNİ veriyordu ama
+             ForexFactory GERÇEKLEŞEN değeri taşımıyor (alanlarında "actual" yok
+             — ölçüldü). Gerçekleşen için FRED doğru kaynak. */
+          rh+=rSatir('JTSJOL','JOLTS açık pozisyon — işgücü talebi','bin',true,false);
+          rh+=rSatir('JTSQUR','İstifa oranı — işçi güveni','%',true,false);
+          rh+=rSatir('WCESTUS1','Ham petrol stoku (EIA, haftalık)','bin',true,false);
+          rh+=rSatir('WPULEUS3','Rafineri kapasite kullanımı','%',true,false);
+          rh+=rSatir('DCOILWTICO','WTI spot','puan1',true,false);
           $('usRiskBody').innerHTML = rh||'<div class="sub">Risk serileri boş.</div>';
         }
         /* ── SS332 ABD BUYUME KARTI ── mega-cap derinlik kartinin yerine (19 Agu,
