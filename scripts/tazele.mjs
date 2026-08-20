@@ -2104,7 +2104,12 @@ async function sektorTazele() {
       `adet_kaynak:'sermaye'` diye işaretlenir, kesin sayılmaz. */
 async function faktorEvren() {
   const dosya = 'faktor-evren.json';
-  const PARTI_BOY = 12;                       /* ÖLÇÜM TURU: küçük başla */
+  /* §361b HIZ SINIRI (canlı ölçüm: 12/12 "dönem yok"; aynı uç tarayıcıdan tek
+     istekte ÇALIŞIYOR → sorun ardışık yük). Parti 12→6, bekleme 0,7→3 sn,
+     başarısız dönem listesi 1 kez tekrar denenir. Yavaş ama sağlam: 6 şirket
+     ~3 dk, evren 245/6 ≈ 41 koşuda döner (günde 3-4 koşuyla ~2 hafta).
+     Hız sınırı görülmezse parti kademeli büyütülür. */
+  const PARTI_BOY = 6;
   const TABAN = 'https://ktpanel.vercel.app/api/kap';
   const uyku = (ms) => new Promise(r => setTimeout(r, ms));
   let uyeler = [];
@@ -2149,16 +2154,35 @@ async function faktorEvren() {
 
   for (const kod of sira) {
     try {
-      const rd = await fetch(TABAN + '?mod=donemler&kod=' + kod + '&yil=2', { signal: AbortSignal.timeout(25000) });
-      const jd = await rd.json();
+      let jd = null;
+      for (let deneme = 0; deneme < 2; deneme++) {
+        try {
+          const rd = await fetch(TABAN + '?mod=donemler&kod=' + kod + '&yil=2', { signal: AbortSignal.timeout(25000) });
+          jd = await rd.json();
+          if (jd && jd.ok && (jd.donemler || []).length) break;
+        } catch (e) { jd = { err: String(e && e.message || e).slice(0, 30) }; }
+        if (deneme === 0) await uyku(2500);
+      }
       const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, 4) : [];
-      if (donemler.length < 2) { dusen++; notlar.push(kod + ':dönem yok'); await uyku(700); continue; }
+      if (donemler.length < 2) {
+        dusen++;
+        const sbp = (jd && (jd.err || (jd.hatalar && jd.hatalar[0]))) || 'liste boş';
+        notlar.push(kod + ':' + String(sbp).slice(0, 26));
+        await uyku(3000); continue;
+      }
 
       const kalemler = [];
       for (const dn of donemler) {
-        const rh = await fetch(TABAN + '?mod=ham&id=' + dn.disclosureIndex, { signal: AbortSignal.timeout(30000) });
+        /* §361b ALAN ADI HATASI (canlı ölçüm): mod=donemler çıktısı
+           {yil, donem, id, kod} döndürüyor — `disclosureIndex` DEĞİL. Kodum o
+           adı arıyordu, id=undefined ile istek atıyordu. Dönem listesi gelse
+           bile ham çekim patlardı. DERS: UCUN GERÇEK ÇIKTISINI GÖR, ALAN ADI
+           TAHMİN ETME. */
+        const bid = dn.id || dn.disclosureIndex;
+        if (!bid) { kalemler.push(null); continue; }
+        const rh = await fetch(TABAN + '?mod=ham&id=' + bid, { signal: AbortSignal.timeout(30000) });
         const jh = await rh.json();
-        if (!jh || !jh.ok) { kalemler.push(null); await uyku(500); continue; }
+        if (!jh || !jh.ok) { kalemler.push(null); await uyku(1200); continue; }
         const carpan = (jh.birim && jh.birim.carpan) || 1;
         const K = {};
         (jh.tablolar || []).forEach(t => (t.satirlar || []).forEach(sr => {
@@ -2166,8 +2190,8 @@ async function faktorEvren() {
           K[sr.xbrl] = { k: sr.degerler[0] * carpan,
             c: (sr.degerler.length >= 4 && isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null };
         }));
-        kalemler.push({ yil: dn.year || dn.yil, donem: dn.period || dn.donem, K });
-        await uyku(500);
+        kalemler.push({ yil: dn.yil || dn.year, donem: dn.donem || dn.period, K });
+        await uyku(1200);
       }
 
       const son = kalemler.find(x => x);
@@ -2205,10 +2229,10 @@ async function faktorEvren() {
       kayit.eksik = bosSay > 0;
       if (kayit.eksik) { eksikli++; notlar.push(kod + ':' + bosSay + ' ana kalem boş'); } else basarili++;
       D.sirketler[kod] = kayit;
-      await uyku(800);
+      await uyku(3000);
     } catch (e) {
       dusen++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 24));
-      await uyku(1000);
+      await uyku(3000);
     }
   }
 
