@@ -5,33 +5,53 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-08-20
-- ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-08-20 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-08-19
+- ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-08-19 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XK100 ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-08-19 dondurdu, dosyada 2026-08-20 var — 1 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-08-20
-- ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-08-20 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-08-19
+- ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-08-19 (1 is gunu — guncel)
 - ✓ **toplam**: 96.50 (hedef 96.5 ±3)
+
+### XKTUM ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-08-19 dondurdu, dosyada 2026-08-20 var — 1 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 39/39 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-08-20
-- ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-08-20 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-08-19
+- ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-08-19 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XKTMT ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-08-19 dondurdu, dosyada 2026-08-20 var — 1 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-08-20
-- ✓ **fiyat yasi (Multiple fiyatları)**: 2026-08-20 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-08-19
+- ✓ **fiyat yasi (Multiple fiyatları)**: 2026-08-19 (1 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Multiple fiyatları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-08-19 dondurdu, dosyada 2026-08-20 var — 1 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-08-20
-- ✓ **fiyat yasi (Model sicili)**: 2026-08-20 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-08-19
+- ✓ **fiyat yasi (Model sicili)**: 2026-08-19 (1 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Model sicili — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-08-19 dondurdu, dosyada 2026-08-20 var — 1 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### TR 5Y CDS — ✓ 220.28 bp · 2026-08-20 · +1.61
 - ✓ 3281 günlük seri · kaynak etiketi 2026-08-20 (hafta sonu doldurmalı)
@@ -63,7 +83,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009451037116> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009452158236> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -118,16 +138,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-19 06:00Z · GBP · CPI y/y
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
-### Bülten keşfi (§250k) — ✓ thb202608191.zip indi · 293KB
-- içerik: thb202608191.csv
-- endeks izi: `thb202608191.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
+### Faktör evreni (§361) — ✓ parti 12 · kapsam 0/245
+- bu turda: 0 tam · 0 eksik kalemli · 12 alınamadı
+- not: AKHAN:dönem yok · ALFAS:dönem yok · ALKIM:dönem yok · ALKLC:dönem yok · ALTNY:dönem yok · ALVES:dönem yok · BAKAB:dönem yok · BERA:dönem yok
+- ⚠ ÖLÇÜM TURU: parti 12 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
-### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202608191.csv
-- satır: 11845 · kolon: 57
+### Bülten keşfi (§250k) — ✓ thb202608181.zip indi · 276KB
+- içerik: thb202608181.csv
+- endeks izi: `thb202608181.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
+
+### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202608181.csv
+- satır: 11163 · kolon: 57
 - fiyat kolon adayları: ONCEKI KAPANIS FIYATI · ACILIS FIYATI · ACILIS SEANSI FIYATI · EN DUSUK FIYAT · EN YUKSEK FIYAT · KAPANIS FIYATI · KAPANIS SEANSI FIYATI · REFERANS FIYAT …
-- THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=301.25
-- örnek satır: `2026-08-19;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
+- THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=300.5
+- örnek satır: `2026-08-18;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.28 bp) · risk metrikleri (137) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
+**Sonuç:** TR 5Y CDS (220.28 bp) · risk metrikleri (130) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (0/245)
