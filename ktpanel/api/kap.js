@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-08-20-r';   /* §340c XBRL gruplama */
+const _SURUM = 'kap-2026-08-20-s';   /* §340d gercek yapi */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -930,61 +930,71 @@ export default async function handler(req, res){
           xbrlCevresi: (function () { const i = h.indexOf('ifrs-full_CashFlows'); return i >= 0 ? h.slice(Math.max(0, i - 300), i + 700) : null; })() });
       }
 
-      /* §340c TABLO SINIRI ARAMASI TERK EDILDI (olculdu): GWT sayfasinda
-         tablolar IC ICE giriyor (736 <table>); naif indexOf('</table>') ILK
-         kapanisi yakalayip yanlis blok uretiyordu — bu yuzden ilk surum SIFIR
-         tablo buldu. YENI YONTEM: sinir arama YOK. Tum <tr> satirlari sirayla
-         taranir; satirin XBRL kodu hangi tabloya ait oldugunu ZATEN soyler:
-           kap-fr_StatementOfFinancialPosition...  -> bilanco
-           ifrs-full_IncomeStatement / kap-fr_Profit... -> gelir
-           kap-fr_StatementOfCashFlowsIndirect...  -> nakit akis
-         Kok etiket (Statement*) gorulunce AKTIF TABLO degisir, sonraki
-         satirlar ona yazilir. Ic ice yapi bu yontemi hic etkilemez.
-         DERS: HTML sinirlarina degil, VERININ KENDI KIMLIGINE dayan. */
-      const TABLO_AD = [
-        [/StatementOfFinancialPosition/i, 'Bilanço'],
-        [/IncomeStatement|ProfitLoss(Abstract)?$/i, 'Gelir Tablosu'],
-        [/StatementOfCashFlows/i, 'Nakit Akış'],
-        [/OtherComprehensiveIncome/i, 'Diğer Kapsamlı Gelir'],
-        [/StatementOfChangesInEquity|Equity(Abstract)?$/i, 'Özkaynak Değişim']
-      ];
+      /* §340d GERCEK YAPIYA GORE (tani ciktisiyla olculdu, 20 Agu) ──────────
+         KAP bildirimi GWT ile uretilmis ve HTML'in KENDI KIMLIK ETIKETLERI var:
+           <table class="financial-table tbl_general_role_520003">   <- TABLO
+           <tr class="general_role_520003-row-2 data-input-row ...">  <- VERI SATIRI
+           <div class="gwt-Label taxonomy-field-name">ifrs-full_XXX|http://...</div>
+           <div class="gwt-Label multi-language-content content-tr">TURKCE ETIKET</div>
+         UC ONCEKI DENEMENIN HATALARI (hepsi olculdu):
+           v1: <table>...</table> sinir aramasi — tablolar IC ICE (1471 adet),
+               ilk </table> yanlis blok uretti -> 0 tablo.
+           v2: XBRL regex'i ^...$ ile bitiyordu; kod ROL URI'si tasiyor
+               ("ifrs-full_X|http://mkk...") -> hic eslesmedi.
+           v3: <tr>...</tr> non-greedy — VERI SATIRININ ICINDE baslik tablosu
+               var, es iç satirda kesiliyordu.
+         YENI YONTEM: satirlari "data-input-row" KONUMLARINDAN dilimle (bir
+         sonraki data-input-row'a ya da tablo sonuna kadar). Tablo kimligi
+         tbl_general_role_XXXXXX sinifindan; basligi tablonun ilk content-tr
+         metninden. Ic ice yapi tamamen onemsiz hale gelir.
+         DERS: KAYNAK KENDI KIMLIK ETIKETLERINI VERIYORSA, YAPIYI TAHMIN ETME. */
+      const ROL_AD = { '210015': 'Bilanço', '210000': 'Bilanço',
+        '310000': 'Gelir Tablosu', '320000': 'Gelir Tablosu',
+        '410000': 'Diğer Kapsamlı Gelir', '420000': 'Diğer Kapsamlı Gelir',
+        '520003': 'Nakit Akış', '520000': 'Nakit Akış', '510000': 'Nakit Akış',
+        '610000': 'Özkaynak Değişim', '620000': 'Özkaynak Değişim' };
+
+      /* 1) Tablo baslangic konumlari + rol */
+      const tabloBas = [...h.matchAll(/tbl_general_role_(\d+)/g)].map(m => ({ rol: m[1], poz: m.index }));
+      /* 2) Veri satiri konumlari */
+      const satirBas = [...h.matchAll(/<tr[^>]*class="[^"]*data-input-row[^"]*"/g)].map(m => ({ poz: m.index }));
+
+      const metinCoz = (parca, rx) => { const m = parca.match(rx); return m ? m[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() : ''; };
       const gruplar = new Map();
-      let aktif = null;
-      let trSayac = 0;
-      for (const tm of h.matchAll(/<tr[\s\S]{0,20000}?<\/tr>/g)) {
-        trSayac++;
-        if (trSayac > 6000) break;                      /* koruma */
-        const tr = tm[0];
-        const hucreler = [...tr.matchAll(/<t[dh][^>]*>([\s\S]{0,900}?)<\/t[dh]>/g)]
-          .map(x => x[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim());
-        if (!hucreler.length) continue;
-        const xbrl = (hucreler.find(x => /^(kap-fr|ifrs-full|tr-fr)_[A-Za-z0-9_]+$/.test(x)) || '');
-        /* kok etiket mi? (Statement...Abstract) -> aktif tabloyu degistir */
-        if (xbrl) {
-          const ad = TABLO_AD.find(([rx]) => rx.test(xbrl));
-          if (ad && /Abstract|Statement[A-Za-z]*$/.test(xbrl) && hucreler.filter(x => /^[\-(]?[\d.]/.test(x)).length === 0) {
-            aktif = ad[1];
-            if (!gruplar.has(aktif)) gruplar.set(aktif, []);
-            continue;
-          }
-          if (!aktif && ad) { aktif = ad[1]; if (!gruplar.has(aktif)) gruplar.set(aktif, []); }
-        }
-        if (!aktif) continue;
+      for (let k = 0; k < satirBas.length; k++) {
+        const bas = satirBas[k].poz;
+        const son = (k + 1 < satirBas.length) ? satirBas[k + 1].poz : Math.min(h.length, bas + 20000);
+        const parca = h.slice(bas, son);
+        /* hangi tabloya ait: kendinden ONCEKI son tablo basi */
+        let rol = null;
+        for (let t = tabloBas.length - 1; t >= 0; t--) { if (tabloBas[t].poz < bas) { rol = tabloBas[t].rol; break; } }
+        const ad = ROL_AD[rol] || ('Tablo ' + (rol || '?'));
+        const xbrlHam = metinCoz(parca, /taxonomy-field-name"[^>]*>([^<]{4,200})</);
+        const xbrl = xbrlHam ? xbrlHam.split('|')[0].trim() : null;
+        const etiket = metinCoz(parca, /content-tr"[^>]*>([^<]{1,160})</);
+        /* sayilar: hucre metinlerinden — Turkce bicim (1.234.567 / -1.234,5) */
         const sayilar = [];
-        hucreler.forEach(x => {
-          const t = x.replace(/\s/g, '');
-          if (/^[\-(]?[\d.]{1,20}(,\d+)?\)?$/.test(t)) { const v = _sayiCoz(x); if (v !== null) sayilar.push(v); }
-        });
-        const etiket = (hucreler.find(x => x && x !== xbrl && /[A-Za-zÇĞİÖŞÜçğıöşü]/.test(x) && !/^[\d.,\-()\s]+$/.test(x)) || '').slice(0, 120);
-        if (!etiket && !sayilar.length) continue;
-        if (!xbrl && !sayilar.length) continue;
-        gruplar.get(aktif).push({ xbrl: xbrl || null, etiket, degerler: sayilar.slice(0, 6) });
+        for (const sm of parca.matchAll(/>\s*(\(?-?[\d]{1,3}(?:\.\d{3})*(?:,\d+)?\)?)\s*</g)) {
+          const v = _sayiCoz(sm[1]); if (v !== null) sayilar.push(v);
+        }
+        if (!xbrl && !etiket) continue;
+        if (!gruplar.has(ad)) gruplar.set(ad, []);
+        gruplar.get(ad).push({ xbrl, etiket, degerler: sayilar.slice(0, 6) });
       }
       const tablolar = [...gruplar.entries()]
         .map(([ad, satirlar]) => ({ ad, satir: satirlar.length, satirlar }))
-        .filter(t => t.satir >= 5);
+        .filter(t => t.satir >= 3);
+
+      /* §340d birim: "Sunum Para Birimi" satiri raporun kendi beyanidir */
+      let birim2 = birim;
+      const bm = h.match(/Sunum Para Birimi<\/td>\s*<td[^>]*>([^<]{2,30})</);
+      if (bm) {
+        const bt = bm[1].replace(/\s+/g, ' ').trim();
+        const carpan = /1\.?000\.?000|milyon/i.test(bt) ? 1e6 : (/1\.?000|bin/i.test(bt) ? 1000 : 1);
+        birim2 = { ad: bt, carpan };
+      }
       return res.status(200).json({ surum: _SURUM, ok: tablolar.length > 0, id: idH,
-        birim, tabloSayisi: tablolar.length, tablolar });
+        birim: birim2, tabloSayisi: tablolar.length, tablolar });
     } catch (e) {
       return res.status(200).json({ surum: _SURUM, ok: false, id: idH, err: String(e && e.message || e).slice(0, 120) });
     }
