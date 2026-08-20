@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-07-31-n';
+const _SURUM = 'kap-2026-08-20-o';   /* §338 mod=donemler */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -861,6 +861,72 @@ export default async function handler(req, res){
         sayfadakiDigerBasliklar: adaylar,
         not:'hamHucreler = satırdaki ham metinler · cozulen = sayıya dönenler · kisitGecti = işaret/büyüklük kısıtı. sayfadakiDigerBasliklar = listede OLMAYAN başlıklar, şablona eklenebilir.' });
     }catch(e){ return res.status(200).json({ surum:_SURUM,  ok:false, id, hata:String(e.message||e).slice(0,140) }); }
+  }
+
+  /* ── §338 mod=donemler — SIRKET BAZLI DONEM LISTESI (20 Agu) ───────────────
+     KOK SORUN (olculdu): mod=fr TUM piyasanin bildirimlerini cekip sonra kod
+     suzuyordu ve KAP'in 2000 KAYIT TAVANINA takiliyordu. Kanit: hem dar
+     (8-9 Agu) hem genis (Tem-Ara) pencerede TAM 399 kayit dondu; listede
+     BIMAS/SISE vardi ama TUPRS, THYAO, GARAN, ASELS, EREGL, KCHOL YOKTU.
+     Yani buyuk sirketlerin finansallari bu yoldan HIC gorunmuyordu (bilanco
+     borc defterinin neden hep orta-kucuk isimlerle doldugunu da bu aciklar).
+
+     COZUM (kullanicinin verdigi KAP HAR dosyasindan cikti — gercek trafik):
+       1) GET /tr/api/member/filter/{TICKER}
+          -> [{companyCode, mkkMemberOid, title, permaLink}]
+       2) GET /tr/api/financialTable/listCompanyExcelMembers/{oid}/{yil}/T
+          -> o YILIN TUM donemleri: {stockCode, disclosureIndex, year, period}
+     Sirket bazli oldugu icin TAVAN YOK; dort yil = dort istek = ~16 ceyrek.
+     Donem tablolari mevcut mod=tablo ile cikarilir (olculdu: TUPRS 2024/2
+     id 1321133 -> 1,6 sn, sablon sanayi, temel "ceyreklik (rapor sutunu)").
+
+     PARAMETRELER: kod (zorunlu) · yil (kac yil geriye, varsayilan 4, tavan 8)
+     CIKTI: {oid, unvan, donemler:[{yil,donem,id}...]} — en yeni ustte. */
+  if (_mod === 'donemler') {
+    const kodD = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+    if (!kodD) return res.status(400).json({ surum: _SURUM, ok: false, err: 'kod gerekli' });
+    const yilSayi = Math.min(8, Math.max(1, parseInt((req.query && req.query.yil) || '4', 10) || 4));
+    const BAS = { 'user-agent': UA2, 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' };
+    try {
+      const mr = await fetch('https://www.kap.org.tr/tr/api/member/filter/' + encodeURIComponent(kodD),
+        { headers: BAS, signal: AbortSignal.timeout(12000) });
+      if (!mr.ok) return res.status(200).json({ surum: _SURUM, ok: false, err: 'member/filter HTTP ' + mr.status });
+      const mj = await mr.json();
+      const uye = Array.isArray(mj) ? mj[0] : null;
+      if (!uye || !uye.mkkMemberOid) return res.status(200).json({ surum: _SURUM, ok: false, err: 'kod bulunamadı: ' + kodD });
+
+      const buYil = new Date().getFullYear();
+      const yillar = []; for (let i = 0; i < yilSayi; i++) yillar.push(buYil - i);
+      const donemler = []; const hatalar = [];
+      /* Yillar PARALEL cekilir — dort istek, ~1 sn. */
+      const sonuc = await Promise.allSettled(yillar.map(y =>
+        fetch('https://www.kap.org.tr/tr/api/financialTable/listCompanyExcelMembers/' + uye.mkkMemberOid + '/' + y + '/T',
+          { headers: BAS, signal: AbortSignal.timeout(12000) })
+          .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
+          .then(arr => ({ y, arr: Array.isArray(arr) ? arr : [] }))
+      ));
+      sonuc.forEach((s, i) => {
+        if (s.status !== 'fulfilled') { hatalar.push(yillar[i] + ': ' + String(s.reason && s.reason.message || s.reason).slice(0, 40)); return; }
+        s.value.arr.forEach(x => {
+          if (!x || !x.disclosureIndex) return;
+          donemler.push({ yil: +x.year, donem: +x.period, id: String(x.disclosureIndex), kod: x.stockCode || kodD });
+        });
+      });
+      /* Ayni yil+donem birden fazla bildirim tasiyabilir (duzeltme/yeniden
+         ilan): EN BUYUK disclosureIndex en yenisidir, o kalir (§204 dersi). */
+      const enIyi = new Map();
+      donemler.forEach(d => {
+        const k = d.yil + '|' + d.donem;
+        const v = enIyi.get(k);
+        if (!v || +d.id > +v.id) enIyi.set(k, d);
+      });
+      const liste = [...enIyi.values()].sort((a, b) => (b.yil - a.yil) || (b.donem - a.donem));
+      return res.status(200).json({ surum: _SURUM, ok: liste.length > 0, kod: kodD,
+        oid: uye.mkkMemberOid, unvan: uye.title || null, companyCode: uye.companyCode || null,
+        yilSayi, adet: liste.length, donemler: liste, hatalar: hatalar.length ? hatalar : undefined });
+    } catch (e) {
+      return res.status(200).json({ surum: _SURUM, ok: false, err: String(e && e.message || e).slice(0, 120) });
+    }
   }
 
   if (_mod === 'tablo') {
