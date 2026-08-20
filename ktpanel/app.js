@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820f';   // SS345b onbellek sema surumu   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820h';   // SS345d yil sonu koprusu (bilanco)   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9588,30 +9588,76 @@ async function csGetirCalis(){
    ÖLÇEK REFERANSI hasılattır (her şirkette var, işaret sorunu yok).
    Kullanıcı istediğinde "raporun kendi parası" görünümüne dönebilir. */
 function csEndeksKatsayilari(liste, veri, kod){
-  const K = {};                                   /* 'yil|donem' -> katsayı */
-  liste.forEach(x=>{ K[x.yil+'|'+x.donem] = 1; });
-  /* en yeni rapordan geriye: her rapor bir önceki YILIN aynı dönemini taşır */
+  /* §345c ZİNCİR DÜZELTMESİ (canlı karşılaştırmadan): ilk sürüm yalnız YIL
+     bazlı oran kullanıyordu (rapor t'nin "önceki dönem" sütunu ÷ geçen yılın
+     aynı döneminin kümülatifi) ve ARDIŞIK çeyrekler arası düzeltmeyi
+     kaçırıyordu — 2026/1 katsayısı 1 sanılıyordu, oysa 2Ç raporu 1Ç'yi
+     %7 yukarı yeniden ifade ediyor. Sonuç: eski çeyrekler eksik endeksleniyordu
+     (2025/1 → 208 çıktı, doğrusu 222).
+     YENİ ZİNCİR — iki kaynak, ikisi de raporun kendi içinden:
+       (a) ARDIŞIK: rapor t'de kümülatif − çeyrek = bir önceki dönemin
+           kümülatifi, AMA t'nin parasıyla. Kendi raporundaki değere bölünce
+           o dönemin katsayısı çıkar.
+       (b) YIL BAZLI: t'nin "önceki dönem" sütunu ÷ geçen yıl aynı dönemin
+           kümülatifi — çeyrek sütunu olmayan raporlarda (4Ç) yedek yol.
+     Katsayılar en yeniden geriye çarpılarak taşınır. */
+  const K = {}; const anahtar = (x)=>x.yil+'|'+x.donem;
+  liste.forEach(x=>{ K[anahtar(x)] = null; });
+  if(!liste.length) return K;
+  K[anahtar(liste[0])] = 1;                        /* en yeni = referans para */
+  const kum = (x)=>{ const r=veri[kod+'|'+x.yil+'|'+x.donem]; const v=r&&r.kalem&&r.kalem['ifrs-full_Revenue']; return v&&Number.isFinite(v.k)?v.k:null; };
+  const cey = (x)=>{ const r=veri[kod+'|'+x.yil+'|'+x.donem]; const v=r&&r.kalem&&r.kalem['ifrs-full_Revenue']; return v&&Number.isFinite(v.c)?v.c:null; };
+  const onc = (x)=>{ const r=veri[kod+'|'+x.yil+'|'+x.donem]; const v=r&&r.kalem&&r.kalem['ifrs-full_Revenue']; return v&&Number.isFinite(v.onceki)?v.onceki:null; };
+  const gecerli = (o)=> Number.isFinite(o) && o>0.5 && o<5;
   for(let i=0;i<liste.length;i++){
-    const x = liste[i];
-    const kayit = veri[kod+'|'+x.yil+'|'+x.donem];
-    const rev = kayit && kayit.kalem && kayit.kalem['ifrs-full_Revenue'];
-    if(!rev || !Number.isFinite(rev.onceki) || !Number.isFinite(rev.k)) continue;
-    const gecen = liste.find(y=>y.yil===x.yil-1 && y.donem===x.donem);
-    if(!gecen) continue;
-    const gk = veri[kod+'|'+gecen.yil+'|'+gecen.donem];
-    const grev = gk && gk.kalem && gk.kalem['ifrs-full_Revenue'];
-    if(!grev || !Number.isFinite(grev.k) || !grev.k) continue;
-    /* geçen yılın raporundaki değer -> bu raporun parasıyla ifadesi */
-    const oran = rev.onceki / grev.k;
-    if(!(oran > 0.5 && oran < 5)) continue;        /* akıl süzgeci */
-    K[gecen.yil+'|'+gecen.donem] = (K[x.yil+'|'+x.donem]||1) * oran;
+    const x = liste[i], kx = K[anahtar(x)];
+    if(!Number.isFinite(kx)) continue;
+    /* (a) ardışık: bir önceki dönem (aynı yıl) */
+    if(x.donem > 1){
+      const p = liste.find(y=>y.yil===x.yil && y.donem===x.donem-1);
+      if(p && K[anahtar(p)]==null){
+        const kk = kum(x), cc = cey(x), pk = kum(p);
+        if(Number.isFinite(kk)&&Number.isFinite(cc)&&Number.isFinite(pk)&&pk){
+          const oran = (kk-cc)/pk;
+          if(gecerli(oran)) K[anahtar(p)] = kx*oran;
+        }
+      }
+    }
+    /* (c) §345d YIL SONU KÖPRÜSÜ — BİLANÇODAN: gelir tablosunda 4Ç'ye bağ yok
+       (2026 raporları 2025 yıllığını taşımaz) ve 4Ç katsayısı komşudan miras
+       kalıyordu: 2025 yıllık 889 çıktı, doğrusu 977. Ama BİLANÇONUN "önceki
+       dönem" sütunu HER ZAMAN 31 ARALIK'tır — yani geçen yılın 4Ç bilançosu,
+       bu raporun parasıyla. Toplam varlıklar üzerinden köprü kurulur. */
+    if(x.donem <= 2){
+      const y4 = liste.find(y=>y.yil===x.yil-1 && y.donem===4);
+      if(y4 && K[anahtar(y4)]==null){
+        const rx = veri[kod+'|'+x.yil+'|'+x.donem], r4 = veri[kod+'|'+y4.yil+'|'+y4.donem];
+        const ax = rx&&rx.kalem&&rx.kalem['ifrs-full_Assets'], a4 = r4&&r4.kalem&&r4.kalem['ifrs-full_Assets'];
+        if(ax && a4 && Number.isFinite(ax.onceki) && Number.isFinite(a4.k) && a4.k){
+          const oran = ax.onceki/a4.k;
+          if(gecerli(oran)) K[anahtar(y4)] = kx*oran;
+        }
+      }
+    }
+    /* (b) yıl bazlı: geçen yılın aynı dönemi */
+    const g = liste.find(y=>y.yil===x.yil-1 && y.donem===x.donem);
+    if(g && K[anahtar(g)]==null){
+      const ox = onc(x), gk = kum(g);
+      if(Number.isFinite(ox)&&Number.isFinite(gk)&&gk){
+        const oran = ox/gk;
+        if(gecerli(oran)) K[anahtar(g)] = kx*oran;
+      }
+    }
   }
-  /* aynı yıl içindeki ara dönemler: yıl bazlı katsayıyı miras alır */
-  liste.forEach(x=>{
-    if(K[x.yil+'|'+x.donem] !== 1) return;
-    const kardes = liste.filter(y=>y.yil===x.yil && K[y.yil+'|'+y.donem]!==1).map(y=>K[y.yil+'|'+y.donem]);
-    if(kardes.length) K[x.yil+'|'+x.donem] = kardes.reduce((a,b)=>a+b,0)/kardes.length;
-  });
+  /* boşta kalanlar: en yakın komşudan miras (yıl içi) */
+  for(let tur=0; tur<3; tur++){
+    liste.forEach((x,idx)=>{
+      if(Number.isFinite(K[anahtar(x)])) return;
+      const komsu = [liste[idx-1], liste[idx+1]].filter(y=>y&&Number.isFinite(K[anahtar(y)]));
+      if(komsu.length) K[anahtar(x)] = K[anahtar(komsu[0])];
+    });
+  }
+  liste.forEach(x=>{ if(!Number.isFinite(K[anahtar(x)])) K[anahtar(x)] = 1; });
   return K;
 }
 function csCeyrek(liste, veri, kod, i, xbrl, tip){
@@ -9627,6 +9673,14 @@ function csCeyrek(liste, veri, kod, i, xbrl, tip){
   const ok = veri[kod+'|'+onc.yil+'|'+onc.donem];
   const okl = ok && ok.kalem && ok.kalem[xbrl];
   if(!okl || !Number.isFinite(okl.k)) return {v:null};
+  /* §345c: iki kümülatif FARKLI paralarda — fark almadan ÖNCE her biri kendi
+     katsayısıyla bugüne çevrilir. Önceki sürüm ham farkı alıp sonra tek
+     katsayıyla çarpıyordu; 4Ç değerleri bu yüzden şişiyordu (≈305 çıktı,
+     doğrusu 242). */
+  if(window.CS_KAT){
+    const k1 = window.CS_KAT[x.yil+'|'+x.donem]||1, k2 = window.CS_KAT[onc.yil+'|'+onc.donem]||1;
+    if(k1!==1 || k2!==1) return {v: (kl.k*k1) - (okl.k*k2), turetilmis:true, yaklasik:true, endeksli:true};
+  }
   /* §342b ENFLASYON UYARISI (20 Agu, kullanici "veriler dogru mu" diye sordu,
      olculdu): TMS-29 altinda HER RAPOR kendi donem sonu ALIM GUCUNE gore
      yeniden ifade edilir. Ornek: TUPRS 2026 — 1C raporunda kumulatif ciro
@@ -9704,6 +9758,7 @@ function csTabloBas(kod, liste, veri, hata){
   /* SS345: endeks katsayilari — acikken her deger bugunku paraya cevrilir */
   const endeksAcik = (window.CS_ENDEKS !== false);
   const KAT = endeksAcik ? csEndeksKatsayilari(liste, veri, kod) : null;
+  window.CS_KAT = KAT;                     /* §345c: csCeyrek fark hesabında kullanır */
   const kat = (x)=> KAT ? (KAT[x.yil+'|'+x.donem]||1) : 1;
   let endekslenen = 0;
   const ayD={1:'1Ç',2:'2Ç',3:'3Ç',4:'4Ç'};
@@ -9730,6 +9785,7 @@ function csTabloBas(kod, liste, veri, hata){
       const seri = liste.map((x,i)=>{
         const r = csCeyrek(liste,veri,kod,i,xbrl,tip);
         const c = kat(x);
+        if(r.endeksli){ endekslenen++; return r; }          /* zaten çevrildi */
         if(Number.isFinite(r.v) && c!==1){ endekslenen++; return {v:r.v*c, turetilmis:r.turetilmis}; }
         return r;
       });
