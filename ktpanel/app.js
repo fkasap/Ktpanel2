@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820s';   // SS352 birim etiketi + ciro ondaligi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820t';   // SS353 takvim yaris durumu   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7365,10 +7365,21 @@ async function boot(){
     ['Multiple', multipleInit],
     ['Sukuk', sukukInit],
     ['Veri Tazeliği', planInit],
-    ['Takvim satırları (§245)', takvimSatirlari],
+    /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
+       takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
+       ondan önce bitince eklediği otomatik satırlar siliniyordu — kullanıcı
+       "kritik takvimde Actions verileri yok" dedi, veri hazırdı (7 olay),
+       tabloya girip SİLİNİYORDU. Artık ikisi ZİNCİRLİ: önce elle satırlar,
+       hemen ardından otomatik satırlar ve katlama.
+       DERS: AYNI DOM'A YAZAN İKİ MODÜL PARALEL KOŞAMAZ — sıra kurulur. */
+    ['Takvim satırları (§245)', async()=>{
+      await takvimSatirlari();
+      try{ await makroTakvimRender(); }catch(e){ console.warn('[KTPanel] §353 makro takvim:', e&&e.message); }
+    }],
     ['Equity', pyInit],
     ['Sukuk Sinyali', sinyalRender],   /* SS315 */
-    ['Makro Takvim', makroTakvimRender],   /* SS319 · SS336: katlama render'in SONUNDA, tek yerden */
+    /* §353: 'Makro Takvim' ayrı modül olarak KALDIRILDI — takvimSatirlari'nın
+       zincirine bağlandı (yukarıda). Ayrı koşarsa yarışı yeniden doğurur. */
     ['Eğri Görseli', egriGorselArka],   /* SS320c: boot'u BEKLETMEZ */
     ['Haberler', ()=>{if(!haberLoaded){haberLoaded=true;haberInit();}}],
     ['Earnings AI', incelemeInit],
