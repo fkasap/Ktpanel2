@@ -61,7 +61,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (186 gün)
-- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2028 fon · AUM + yatırımcı sayısı köprüden (ham 2035 kayıt, sayfalamalı)
@@ -83,7 +83,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009826605295> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009826646015> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -138,9 +138,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-19 06:00Z · GBP · CPI y/y
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 27/245
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 30/245
 - bu turda: 3 tam · 0 eksik kalemli · 3 alınamadı
-- not: DENGE:liste boş · EYGYO:2026: fetch failed · FONET:2026: fetch failed
+- not: DENGE:liste boş · FZLGY:2026: fetch failed · GEDZA:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 - §364b fiyat: 45/45 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
@@ -150,13 +150,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - en iskontolu: %-86.6 · medyan %-51.9 · en primli %1032.2
 - 9 şirket o dönem bildirim göndermemiş (kayıt yazılmadı)
 
-- §366c tür kırılımı: 14 tür × 8 ay · 100 satır dolu · 700 hücre eşlendi
+- §366c tür kırılımı: 14 tür × 8 ay · 100/168 satır · 700 hücre eşlendi · ⚠ KISMİ (yanıt sayfalı; ilk blok alındı)
 
-- en büyük türler (2026-07): GİRİŞİM SERMAYESİ YATIRIM FONU 0 mlr · KATILIM 0 mlr · HİSSE SENEDİ 0 mlr
+- en büyük türler (2026-07): SERBEST 6222 mlr · PARA PİYASASI 1839 mlr · GİRİŞİM SERMAYESİ YATIRIM FONU 475 mlr
 
 ### VAP fon akışı (§366) — ✓ 8 ay · son 2026-07
-- toplam fon tutarı: 0.2 mlr ₺
-- son ay değişimi: -0.0 mlr ₺
+- toplam fon tutarı: 181.1 mlr ₺
+- son ay değişimi: -5.5 mlr ₺
 - ölçüler: Dönem Başı Fon Adedi · Dönem Sonu Fon Adedi · Fon Adedi Değişim · Dönem Başı Fon Tutarı (TL) · Dönem Sonu Fon Tutarı (TL) · Dönem Başı Fon Sayısı · Dönem Sonu Fon Sayısı
 
 ### Bülten keşfi (§250k) — ✓ thb202608201.zip indi · 298KB
@@ -171,8 +171,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (27/245) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.28 bp) · risk metrikleri (137) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (30/245) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 81 sn
-- toplam: 140 sn
+- ⏱ Faktör evreni (§361) — 88 sn
+- toplam: 144 sn
