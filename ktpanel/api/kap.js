@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-08-20-t';   /* §340e tekillestirme */
+const _SURUM = 'kap-2026-08-20-u';   /* §338b seri cekim */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -1038,12 +1038,37 @@ export default async function handler(req, res){
       const yillar = []; for (let i = 0; i < yilSayi; i++) yillar.push(buYil - i);
       const donemler = []; const hatalar = [];
       /* Yillar PARALEL cekilir — dort istek, ~1 sn. */
-      const sonuc = await Promise.allSettled(yillar.map(y =>
-        fetch('https://www.kap.org.tr/tr/api/financialTable/listCompanyExcelMembers/' + uye.mkkMemberOid + '/' + y + '/T',
-          { headers: BAS, signal: AbortSignal.timeout(12000) })
-          .then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)))
-          .then(arr => ({ y, arr: Array.isArray(arr) ? arr : [] }))
-      ));
+      /* §338b SERI + TEKRAR DENEME (20 Agu, canli ariza): dort yil PARALEL
+         cekilince KAP dordunu de reddetti — "fetch failed" (ag seviyesi, HTTP
+         degil). member/filter ayni anda calisiyordu, yani host erisilebilir;
+         reddedilen es zamanli istek DEMETI. Ayrica listCompanyExcelMembers,
+         finansal tablo sayfasindan cagrildigi icin referer'i O sayfa olmali.
+         Artik: SIRAYLA, her istek arasi 250 ms, basarisizsa 1 kez tekrar.
+         Dort yil ~2-3 sn — kabul edilebilir, kirilgan degil.
+         DERS: PARALELLIK HIZ KAZANDIRIR AMA KAYNAK ONU BOT DAVRANISI SAYABILIR. */
+      const uyku = (ms) => new Promise(r => setTimeout(r, ms));
+      const yilCek = async (y) => {
+        const u = 'https://www.kap.org.tr/tr/api/financialTable/listCompanyExcelMembers/' + uye.mkkMemberOid + '/' + y + '/T';
+        for (let deneme = 0; deneme < 2; deneme++) {
+          try {
+            const r = await fetch(u, { headers: Object.assign({}, BAS,
+              { 'referer': 'https://www.kap.org.tr/tr/sirket-finansal-bilgileri/' + uye.mkkMemberOid }),
+              signal: AbortSignal.timeout(15000) });
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const arr = await r.json();
+            return { y, arr: Array.isArray(arr) ? arr : [] };
+          } catch (e) {
+            if (deneme === 1) throw e;
+            await uyku(600);
+          }
+        }
+      };
+      const sonuc = [];
+      for (const y of yillar) {
+        try { sonuc.push({ status: 'fulfilled', value: await yilCek(y) }); }
+        catch (e) { sonuc.push({ status: 'rejected', reason: e }); }
+        await uyku(250);
+      }
       sonuc.forEach((s, i) => {
         if (s.status !== 'fulfilled') { hatalar.push(yillar[i] + ': ' + String(s.reason && s.reason.message || s.reason).slice(0, 40)); return; }
         s.value.arr.forEach(x => {
