@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821d';   // SS365c Ebu kapsam disi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821e';   // SS366 MKK VAP fon buyuklugu   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -154,6 +154,8 @@ document.addEventListener('click',(e)=>{
   if(b.dataset.subtab==='sk-ihrac'&&!ihracLoaded){ihracLoaded=true;if(typeof ihracRender==='function')ihracRender();}
   // §124: Tahminler alt sekmesi — açılınca bir kez yüklenir (EVDS'e boşuna istek gitmesin)
   if(b.dataset.subtab==='mk-tahmin'&&!tahminLoaded){tahminLoaded=true;if(typeof tahminInit==='function')tahminInit();}
+  /* §366: MKK Fon Buyuklugu — acilinca bir kez yuklenir */
+  if(b.dataset.subtab==='sv-vap'){ try{ vapInit(); }catch(e){ console.warn('[KTPanel] §366:', e&&e.message); } }
 });
 (function(){const yb=document.getElementById('yardimTrigger');if(yb)yb.addEventListener('click',()=>{
   document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('act'));
@@ -9784,6 +9786,78 @@ window.csSeriOzet = async function(kod, adet){
    İkisi yan yana durur; aradaki fark, dönem sonundan bu yana fiyatın NAD'a
    göre nereye gittiğini söyler.
    Sıralama en iskontoludan başlar — GYO'da ucuzluk sıralaması budur. */
+/* ── §366 MKK VAP FON BÜYÜKLÜĞÜ KARTI (21 Ağu) ─────────────────────────────
+   vap-fon-akis.json (Actions §366) — MKK'nin resmî saklama verisi.
+   TASARIM: net değişim ÇUBUK, toplam büyüklük TABLODA sayı. İkisi farklı
+   doğada (biri AKIŞ biri STOK); aynı eksende gösterilirse akış kaybolur —
+   toplam 10 trilyon iken aylık değişim 181 milyar. */
+let VAPFON = null;
+async function vapInit(){
+  const T=$('vapTablo'); if(!T) return;
+  if(VAPFON){ vapCiz(); return; }
+  try{
+    const r=await fetch('/vap-fon-akis.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    VAPFON=await r.json();
+  }catch(e){
+    T.innerHTML='<div class="sub">vap-fon-akis.json yüklenemedi: '+esc(String(e.message||e))+
+      ' <span class="thin">(Actions §366 koşusunu bekliyor olabilir)</span></div>';
+    return;
+  }
+  vapCiz();
+}
+function vapCiz(){
+  const T=$('vapTablo'); if(!T||!VAPFON) return;
+  const seri=(VAPFON.seri||[]);
+  if(!seri.length){ T.innerHTML='<div class="sub">seri boş</div>'; return; }
+  const O=VAPFON.olculer||[];
+  const kDeg=O.find(x=>/Değişim/i.test(x))||O[0];
+  const kTut=O.find(x=>/Dönem Sonu Fon Tutar/i.test(x))||O[1];
+  const kAdet=O.find(x=>/Adedi/i.test(x))||O[2];
+  const son=seri[seri.length-1], ilk=seri[0];
+  if($('vapDamga')) $('vapDamga').textContent='MKK VAP · '+(VAPFON.son_ay||'');
+  const mlr=(v)=> Number.isFinite(v)? trN(v/1e9, Math.abs(v/1e9)>=1000?0:1) : '—';
+  const yillik=(Number.isFinite(son[kTut])&&Number.isFinite(ilk[kTut])&&ilk[kTut])?((son[kTut]/ilk[kTut]-1)*100):null;
+  const yilTop=seri.reduce((t,x)=> t+(Number.isFinite(x[kDeg])?x[kDeg]:0), 0);
+  if($('vapOzet')) $('vapOzet').innerHTML=
+    '<div style="display:flex;gap:22px;flex-wrap:wrap;align-items:baseline">'+
+      '<div><span class="sub">Toplam fon ('+esc(son.ay)+')</span><br><span style="font-family:var(--mono);font-size:21px;font-weight:700;color:var(--mm2)">'+mlr(son[kTut])+' mlr ₺</span></div>'+
+      '<div><span class="sub">Son ay net</span><br><span style="font-family:var(--mono);font-size:16px;font-weight:600;color:'+((son[kDeg]||0)<0?'var(--down)':'var(--up)')+'">'+((son[kDeg]||0)>0?'+':'')+mlr(son[kDeg])+' mlr</span></div>'+
+      (Number.isFinite(yillik)?('<div><span class="sub">12 ayda büyüme</span><br><span style="font-family:var(--mono);font-size:16px;font-weight:600;color:var(--up)">%'+trN(yillik,1)+'</span></div>'):'')+
+      '<div><span class="sub">12 ay toplam net</span><br><span style="font-family:var(--mono);font-size:16px">'+(yilTop>0?'+':'')+mlr(yilTop)+' mlr</span></div>'+
+    '</div>';
+  const dg=seri.map(x=>Number.isFinite(x[kDeg])?x[kDeg]:null);
+  const g=dg.filter(Number.isFinite);
+  if($('vapGrafik') && g.length>=3){
+    const W=560,H=130,sol=8,sag=8,ust=10,alt=22, gW=W-sol-sag, gH=H-ust-alt;
+    const mx=Math.max(...g,0), mn=Math.min(...g,0), ar=(mx-mn)||1;
+    const Y=(v)=> ust+gH-((v-mn)/ar)*gH;
+    const n=dg.length, bw=Math.max(6, gW/n*0.62);
+    let o='<line x1="'+sol+'" y1="'+Y(0).toFixed(1)+'" x2="'+(W-sag)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--line2)" stroke-width="1"/>';
+    dg.forEach((v,i)=>{
+      if(!Number.isFinite(v)) return;
+      const x=sol+(i+0.5)/n*gW, y=Y(v), y0=Y(0);
+      o+='<rect x="'+(x-bw/2).toFixed(1)+'" y="'+Math.min(y,y0).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(1,Math.abs(y-y0)).toFixed(1)+'" rx="1.5" fill="'+(v<0?'var(--down)':'var(--up)')+'" opacity=".78"/>';
+      if(i%2===0||n<=8) o+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" font-size="8" fill="var(--muted)" text-anchor="middle" font-family="var(--mono)">'+esc(String(seri[i].ay).slice(2))+'</text>';
+    });
+    $('vapGrafik').innerHTML='<div class="lbl" style="font-size:10px">AYLIK NET PARA AKIŞI <span class="thin" style="font-weight:400;text-transform:none">mlr ₺ · yeşil giriş, kırmızı çıkış</span></div>'+
+      '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+o+'</svg>';
+  }
+  T.innerHTML='<table style="width:100%;border-collapse:collapse">'+
+    '<thead><tr><th style="text-align:left">AY</th><th class="num">Net değişim <span class="thin">mlr ₺</span></th>'+
+    '<th class="num">Toplam fon <span class="thin">mlr ₺</span></th><th class="num">Fon adedi <span class="thin">mlr</span></th></tr></thead><tbody>'+
+    seri.slice().reverse().map(x=>{
+      const d=x[kDeg];
+      return '<tr><td style="font-family:var(--mono);font-size:10.5px">'+esc(String(x.ay))+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px'+(Number.isFinite(d)&&d<0?';color:var(--down)':'')+'">'+(Number.isFinite(d)&&d>0?'+':'')+mlr(d)+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px">'+mlr(x[kTut])+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px;color:var(--muted)">'+mlr(x[kAdet])+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  if($('vapNot')) $('vapNot').innerHTML=
+    'Kaynak: '+esc(VAPFON.kaynak||'MKK VAP')+' · veri kümesi <b>'+esc(VAPFON.dosya_adi||'')+'</b> · '+esc(String(VAPFON.ay_sayisi||0))+' ay. '+
+    'Bu <b>resmî saklama</b> verisidir; PYŞ Sektör sekmesindeki günlük/haftalık akış TEFAS pay adedi × fiyat farkından TÜRETİLİR. '+
+    'İkisi farklı yöntem ve sıklıkta olduğu için birebir örtüşmez — biri <b>kim topluyor</b>, diğeri <b>sektör ne kadar büyüdü</b> sorusunu cevaplar.';
+}
 let GYONAV = null;
 async function gyoNavInit(){
   const T = $('gyoTablo'); if(!T) return;

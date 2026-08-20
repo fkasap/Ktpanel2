@@ -989,6 +989,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
   <button class="subtab-btn act" data-subtab="sv-katfon" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Katılım Fonları</button>
   <button class="subtab-btn" data-subtab="sv-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
+  <button class="subtab-btn" data-subtab="sv-vap" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">MKK Fon Büyüklüğü</button>
 </div>
 <div id="sv-katfon" class="subtab-panel"><h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
 <div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
@@ -1030,6 +1031,18 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note">Kaynak: SPK Seryet (aylık bildirim). Boş görünen şirket o ayın bildirimini henüz göndermemiştir — uç, doluluk düşükse bir önceki aya kendiliğinden düşer. Katılım PYŞ'leri ● ile işaretli.</div>
 </div>
 </div>
+<!-- §366 MKK VAP — resmi saklama verisi. TEFAS turevi gunluk/haftalik akisin
+     AYLIK ve RESMI ikizi; sektorun toplam buyuklugu ve aylik net degisimi. -->
+<div id="sv-vap" class="subtab-panel" style="display:none"><h2>MKK Fon Büyüklüğü <span class="thin">(VAP · resmî saklama verisi · aylık)</span> <span class="tag snap" id="vapDamga">—</span></h2>
+<div class="card">
+  <div class="sub">Kaynak MKK Veri Analiz Platformu. <b>Dönem sonu fon tutarı</b> sektörün toplam büyüklüğü; <b>değişim</b> o ayki net para giriş/çıkışı. TEFAS türevi günlük akışla (PYŞ Sektör sekmesi) birlikte okunur: biri kim topluyor, bu ise sektör nereye gidiyor sorusunu cevaplar.</div>
+  <div id="vapOzet" style="margin-top:12px"></div>
+  <div id="vapGrafik" style="margin-top:14px"></div>
+  <div id="vapTablo" style="margin-top:14px"><div class="sub">yükleniyor…</div></div>
+  <div id="vapNot" class="note" style="margin-top:10px"></div>
+</div>
+</div>
+
 </div>
 <div class="tab" id="t8"><h2>Guidance <span class="thin">(şirket beklentileri · 2026 · Fintables + manuel)</span></h2>
 <input id="guidanceAra" type="text" placeholder="Şirket ara (kod veya isim)…" style="width:100%;max-width:340px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--sans);font-size:12px;background:var(--card);color:var(--text);box-sizing:border-box">
@@ -1709,7 +1722,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260821d"></script>
-<script src="/ajan.js?v=20260821d"></script>
+<script src="/app.js?v=20260821e"></script>
+<script src="/ajan.js?v=20260821e"></script>
 </body>
 </html>
