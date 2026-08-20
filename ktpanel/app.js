@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821a';   // SS364 GYO NAV   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821b';   // SS364b GYO fiyat kaynagi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9806,10 +9806,18 @@ function gyoNavCiz(){
   if(!kodlar.length){ T.innerHTML='<div class="sub">şirket kaydı yok</div>'; return; }
   if($('gyoDamga')) $('gyoDamga').textContent='TSPB · '+(GYONAV.donem_etiket||'');
   /* canlı fiyat bindirmesi — CANLI_FIYAT app.js'te dolu (§multipleInit) */
-  const fiyatOf=(k)=> (typeof CANLI_FIYAT!=='undefined' && CANLI_FIYAT && Number.isFinite(CANLI_FIYAT[k])) ? CANLI_FIYAT[k] : null;
+  /* §364b FİYAT KAYNAK SIRASI: önce dosyanın kendi fiyatı (Actions'ta NAD ile
+     AYNI ANDA çekildi — 45 GYO'nun tamamı), sonra panelin CANLI_FIYAT haritası
+     (yalnız multiple.json evrenini kapsıyor, GYO'ların çoğu orada yok). */
+  const fiyatOf=(k)=>{
+    const x=S[k];
+    if(x && Number.isFinite(x.fiyat) && x.fiyat>0) return x.fiyat;
+    return (typeof CANLI_FIYAT!=='undefined' && CANLI_FIYAT && Number.isFinite(CANLI_FIYAT[k])) ? CANLI_FIYAT[k] : null;
+  };
   const satirlar = kodlar.map(k=>{
     const x=S[k], f=fiyatOf(k);
-    const guncel = (Number.isFinite(f) && Number.isFinite(x.payNad) && x.payNad>0) ? (f/x.payNad-1)*100 : null;
+    const guncel = Number.isFinite(x.guncelIskonto) ? x.guncelIskonto
+      : ((Number.isFinite(f) && Number.isFinite(x.payNad) && x.payNad>0) ? (f/x.payNad-1)*100 : null);
     return { k, ad:x.ad, nad:x.nad, payNad:x.payNad, isk:x.iskonto, guncel, borcluluk:x.borcluluk, fiyat:f };
   }).sort((a,b)=>{
     const av=Number.isFinite(a.guncel)?a.guncel:(Number.isFinite(a.isk)?a.isk:9e9);
