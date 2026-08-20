@@ -1434,6 +1434,18 @@ async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
     }
     if(isFinite(pdMn) && pdMn > 0) ttmEk += '&pd=' + Math.round(pdMn);
   }catch(e){}
+  /* §347 ÇEYREKLİK SERİ EKİ (20 Agu, kullanici: "Ebu'yu son ceyrege baglayamaz
+     miyiz, bu tabloyu okusun"): app.js'teki csSeriOzet 8 ceyreklik ENFLASYON
+     ENDEKSLI seriyi (ciro/FAVOK/marj/net kar + net borc) metin olarak verir.
+     Kart prompt'una eklenir -> Ebu tek donem yerine TRENDI gorur.
+     Guvenlik: fonksiyon yoksa ya da bos donerse eski davranis aynen surer. */
+  let seriEk = '';
+  try{
+    if(typeof window.csSeriOzet === 'function'){
+      btn.textContent = 'seri…';
+      seriEk = (await window.csSeriOzet(kod, 8)) || '';
+    }
+  }catch(e){}
   const kutu = document.createElement('div');
   kutu.style.cssText = 'margin:6px 0 10px;padding:9px 11px;border-left:3px solid var(--mm2);background:var(--bg2);border-radius:0 6px 6px 0;font-size:11px;line-height:1.6;white-space:pre-wrap';
   btn.parentNode.appendChild(kutu);
@@ -1471,7 +1483,8 @@ async function bilancoTaslak(btn, kod, idler, donem, tarihIso){
     const r2 = await fetch('/api/ajanktp?mod=bilanco', {
       method:'POST', headers:{'content-type':'application/json'},
       body: JSON.stringify({ kod, donem, tarihIso, temel:met.temel, sablon:met.sablon,
-        metrikler:met.metrikler, isaretler:met.isaretler, birim:met.birim })
+        metrikler:met.metrikler, isaretler:met.isaretler, birim:met.birim,
+        seri: seriEk || undefined })   /* §347: 8 çeyreklik endeksli seri */
     });
     const j2 = await r2.json();
     if(!j2 || !j2.ok){ kutu.textContent = 'Yorum üretilemedi: '+((j2&&j2.err)||'bilinmeyen hata')+'\n\nMetrikler yine de alındı:\n'+JSON.stringify(met.metrikler,null,1); btn.disabled=false; btn.textContent=eski; return; }

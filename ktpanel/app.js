@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820h';   // SS345d yil sonu koprusu (bilanco)   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820j';   // SS347 Ebu ceyreklik seri koprusu   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9519,6 +9519,54 @@ async function csDonemCek(id){
   });
   return { kalem, birim:(j.birim&&j.birim.ad)||null, carpan, tablo:(j.tablolar||[]).map(t=>t.ad), ts:Date.now() };
 }
+/* ── §347 EBU KÖPRÜSÜ: çeyreklik seri özeti (20 Ağu, kullanıcı isteği) ──────
+   "Ebu'yu son çeyreğe bağlayamaz mıyız, bu tabloyu okusun."
+   Bilanço kartı yazılırken Ebu'ya TEK DÖNEMİN kalemleri gidiyordu; artık
+   isteyen 8 çeyreklik ENDEKSLİ seriyi de alabilir — trend, marj seyri ve
+   borç yönü kartın içine girer.
+   Tasarım: app.js veriyi ÜRETİR (tek sahip), ajan.js yalnız OKUR. Seri
+   önbellekte yoksa çekilir; çekilemezse boş string döner ve Ebu eskisi gibi
+   çalışır (bozulma yok). */
+window.csSeriOzet = async function(kod, adet){
+  try{
+    kod = String(kod||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+    if(!kod) return '';
+    adet = adet || 8;
+    const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil=3', {cache:'no-store'});
+    const j = await r.json();
+    if(!j.ok) return '';
+    const liste = (j.donemler||[]).slice(0, adet);
+    const ob = csOnbellekOku(); const veri = {}; const eksik = [];
+    liste.forEach(x=>{ const a=kod+'|'+x.yil+'|'+x.donem; if(ob[a]&&ob[a].kalem) veri[a]=ob[a]; else eksik.push(x); });
+    for(const x of eksik.slice(0,8)){
+      try{ const k = await csDonemCek(x.id); veri[kod+'|'+x.yil+'|'+x.donem]=k; ob[kod+'|'+x.yil+'|'+x.donem]=k; }catch(e){}
+    }
+    if(eksik.length) csOnbellekYaz(ob);
+    const dolu = liste.filter(x=>veri[kod+'|'+x.yil+'|'+x.donem]);
+    if(dolu.length < 3) return '';
+    const KAT = csEndeksKatsayilari(dolu, veri, kod);
+    const kat = (x)=>KAT[x.yil+'|'+x.donem]||1;
+    const al = (i,xbrl,tip)=>{ const v=csCeyrek(dolu,veri,kod,i,xbrl,tip); return Number.isFinite(v.v)? v.v*(v.endeksli?1:kat(dolu[i])) : null; };
+    const mn = (v)=> Number.isFinite(v) ? (v/1e9).toFixed(1) : '—';
+    const satir = dolu.map((x,i)=>{
+      const ciro=al(i,'ifrs-full_Revenue','akis'), nk=al(i,'ifrs-full_ProfitLossAttributableToOwnersOfParent','akis');
+      const faal=al(i,'ifrs-full_ProfitLossFromOperatingActivities','akis'), am=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+      const favok=(Number.isFinite(faal)&&Number.isFinite(am))?faal+am:null;
+      const marj=(Number.isFinite(favok)&&Number.isFinite(ciro)&&ciro)?(favok/ciro*100).toFixed(1):'—';
+      return String(x.yil).slice(2)+'/'+x.donem+'Ç: ciro '+mn(ciro)+' · FAVÖK '+mn(favok)+' (%'+marj+') · net '+mn(nk);
+    });
+    const son = dolu[0];
+    const nb = (function(){
+      const i=0, S=(...a)=>{let t=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){t+=z;v=true;}});return v?t:null;};
+      const b=S(al(i,'kap-fr_CurrentBorowings','stok'),al(i,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'),al(i,'ifrs-full_LongtermBorrowings','stok'));
+      const n=S(al(i,'ifrs-full_CashAndCashEquivalents','stok'),al(i,'kap-fr_CurrentFinancialInvestments','stok'));
+      return (Number.isFinite(b)&&Number.isFinite(n)) ? mn(b-n) : '—';
+    })();
+    return '\n[ÇEYREKLİK SERİ — enflasyon endeksli, mlr ₺, en yeni üstte]\n'+satir.join('\n')+
+      '\nNet borç ('+String(son.yil).slice(2)+'/'+son.donem+'Ç): '+nb+' mlr ₺ (eksi = net nakit)';
+  }catch(e){ return ''; }
+};
+
 async function csGetirCalis(){
   const kod = (($('csKod')&&$('csKod').value)||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
   const adet = parseInt(($('csAdet')&&$('csAdet').value)||'15',10)||15;
@@ -9647,6 +9695,29 @@ function csEndeksKatsayilari(liste, veri, kod){
         const oran = ox/gk;
         if(gecerli(oran)) K[anahtar(g)] = kx*oran;
       }
+    }
+  }
+  /* §345e ÇİFT YÖNLÜ ZİNCİR (canlı karşılaştırma): ilk sürüm katsayıyı yalnız
+     GERİYE taşıyordu (yeni rapordan eskiye). 2025/3'ün doğrudan köprüsü yok
+     (2026/3 raporu henüz yayımlanmadı) ve komşudan miras alınca 1,178 kaldı;
+     doğrusu 1,229 — ciro 260 çıktı, olması gereken 271.
+     Oysa ilişki TERSTEN de kurulabilir: rapor t'de (kümülatif − çeyrek) = bir
+     önceki dönemin kümülatifi, t'nin parasıyla. Önceki dönemin katsayısı
+     BİLİNİYORSA t'ninki türetilir:  kat(t) = kat(p) × kum(p) / (kum(t)−çeyrek(t)).
+     Zincir birkaç tur çevrilir ki boşluklar iki yönden de dolsun. */
+  for(let tur=0; tur<4; tur++){
+    for(let i=liste.length-1;i>=0;i--){
+      const x = liste[i];
+      if(Number.isFinite(K[anahtar(x)])) continue;
+      if(x.donem<=1) continue;
+      const p = liste.find(y=>y.yil===x.yil && y.donem===x.donem-1);
+      if(!p || !Number.isFinite(K[anahtar(p)])) continue;
+      const kk = kum(x), cc = cey(x), pk = kum(p);
+      if(!Number.isFinite(kk)||!Number.isFinite(cc)||!Number.isFinite(pk)||!pk) continue;
+      const taban = kk-cc;
+      if(!(taban>0)) continue;
+      const oran = pk/taban;
+      if(gecerli(oran)) K[anahtar(x)] = K[anahtar(p)]*oran;
     }
   }
   /* boşta kalanlar: en yakın komşudan miras (yıl içi) */
@@ -9808,6 +9879,10 @@ function csTabloBas(kod, liste, veri, hata){
     return o;
   });
   govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:9px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">TÜREV METRİKLER</td></tr>';
+  /* §346: FAVÖK satırına bileşen açıklaması — Fintables gibi kaynaklar farklı
+     tanım kullanabiliyor (yatırım faaliyeti gelirlerini de içeren "finansman
+     öncesi faaliyet kârı"). Bizim tanım: ESAS faaliyet kârı + amortisman.
+     Fark görülebilsin diye bileşenler dipnotta yazılı. */
   [['favok','FAVÖK',sayi],['favokMarj','FAVÖK Marjı %',oran],['brutMarj','Brüt Marj %',oran],['netMarj','Net Marj %',oran],
    ['finBorc','Finansal Borç',sayi],['netBorc','Net Borç',sayi],['snakit','Serbest Nakit Akışı',sayi],
    ['isletmeSerm','İşletme Sermayesi',sayi],['cariOran','Cari Oran',oran],['roe','ROE %',oran],['roa','ROA %',oran],
