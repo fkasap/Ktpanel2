@@ -2127,9 +2127,18 @@ async function faktorEvren() {
      Bilanço tetiğindekiler (yeni bildirim) EN ÖNE. */
   let tetikKodlar = [];
   try { const bt = await oku('bilanco-tetik.json'); tetikKodlar = bt.kodlar || []; } catch (e) {}
+  /* §361e YÖNTEM SÜRÜMÜ (20 Ağu): §361d ile TTM hesabı değişti ama ESKİ
+     yöntemle yazılmış kayıtlar dosyada duruyordu ve yaş sıralaması onları EN
+     SONA atıyordu — 41 tur boyunca yanlış kalacaklardı (AKHAN 3,81; doğrusu
+     11,22). Artık her kayıt hangi yöntemle yazıldığını taşır; sürümü eski
+     olanlar HİÇ ÇEKİLMEMİŞ gibi en öne alınır.
+     DERS: HESAP YÖNTEMİ DEĞİŞTİYSE ESKİ KAYITLAR DAMGALANIP ÖNE ALINMALI —
+     yoksa doğru kodla yanlış veri bir arada yaşar. */
+  const YONTEM = '361d';
   const yas = (k) => {
     const r = D.sirketler[k];
     if (!r || !r.ts) return 0;                      /* hiç çekilmemiş → en öncelikli */
+    if (r.y !== YONTEM) return 1;                   /* eski yöntem → hemen sonra */
     return new Date(r.ts).getTime();
   };
   const sira = uyeler.slice().sort((a, b) => {
@@ -2235,7 +2244,7 @@ async function faktorEvren() {
       const finBorc = S(stok('kvB'), stok('kvUV'), stok('uvB'));
       const likit = S(stok('nakit'), stok('finYat'));
       const kayit = {
-        ts: new Date().toISOString().slice(0, 19) + 'Z',
+        ts: new Date().toISOString().slice(0, 19) + 'Z', y: YONTEM,
         donem: son.yil + '/' + son.donem, ceyrek: kalemler.filter(x => x).length,
         ciro, brut, favok, netKar,
         ozk: stok('ozk'), aktif: stok('aktif'), donen: stok('donen'), kvY: stok('kvY'),
@@ -2262,7 +2271,9 @@ async function faktorEvren() {
   D._yontem = '§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki "çeyrek sütunlarını topla" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN\'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.';
   await yaz(dosya, D);
   degisenler.push('faktör evreni (' + D.kapsam + '/' + uyeler.length + ')');
+  const eskiYontem = Object.values(D.sirketler).filter(x => x.y !== YONTEM).length;
   raporlar.push('### Faktör evreni (§361) — ✓ parti ' + sira.length + ' · kapsam ' + D.kapsam + '/' + uyeler.length +
+    (eskiYontem ? (' · ⚠ ' + eskiYontem + ' kayıt eski yöntemle (sıraya öne alındı)') : '') +
     '\n- bu turda: ' + basarili + ' tam · ' + eksikli + ' eksik kalemli · ' + dusen + ' alınamadı' +
     (notlar.length ? ('\n- not: ' + notlar.slice(0, 8).join(' · ')) : '') +
     '\n- ⚠ ÖLÇÜM TURU: parti ' + PARTI_BOY + ' şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).');
