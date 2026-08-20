@@ -2141,10 +2141,16 @@ async function faktorEvren() {
      sonuç sessizce yanlış çıkar). Number.isFinite tip dönüşümü YAPMAZ.
      Bu blokta tüm kontroller Number.isFinite'e çevrildi.
      DERS: null KONTROLÜNDE isFinite DEĞİL Number.isFinite. */
-  const YONTEM = '361e';   /* §361f: isFinite düzeltmesi kayıtları da geçersiz kılar */
+  const YONTEM = '362';    /* §362: faktör değişkenleri eklendi — eski kayıtlar yeniden çekilir */
   const yas = (k) => {
     const r = D.sirketler[k];
-    if (r.y !== YONTEM) return -1;                  /* §361f: YANLIŞ veri, EKSİK veriden önce düzeltilir */
+    /* §361g NULL KONTROLÜ GERİ (canlı çöküş: "Cannot read properties of
+       undefined (reading 'y')"). §361f'de sıralamayı düzeltirken `!r`
+       kontrolünü düşürmüşüm; hiç çekilmemiş şirkette r undefined ve r.y
+       patlıyordu — MODÜLÜN TAMAMI düştü, o koşuda hiçbir kayıt yazılmadı.
+       DERS: BİR KOŞULU YENİDEN SIRALARKEN İÇİNDEKİ SAVUNMAYI TAŞI. */
+    if (!r) return 0;                               /* hiç çekilmemiş */
+    if (r.y !== YONTEM) return -1;                  /* yanlış/eski veri → EN ÖNCE düzeltilir */
     if (!r.ts) return 0;
     return new Date(r.ts).getTime();
   };
@@ -2163,7 +2169,21 @@ async function faktorEvren() {
     kvB: 'kap-fr_CurrentBorowings', kvUV: 'kap-fr_CurrentPortionOfNoncurrentBorrowings',
     uvB: 'ifrs-full_LongtermBorrowings', ozk: 'ifrs-full_Equity',
     aktif: 'ifrs-full_Assets', sermaye: 'ifrs-full_IssuedCapital',
-    donen: 'ifrs-full_CurrentAssets', kvY: 'ifrs-full_CurrentLiabilities'
+    donen: 'ifrs-full_CurrentAssets', kvY: 'ifrs-full_CurrentLiabilities',
+    /* §362 FAKTÖR DEĞİŞKENLERİ (kullanıcı: "amaç faktör metriklerini hesaplayan
+       değişkenlere ulaşma değil mi") — aynı ham çıktıdan okunur, EK İSTEK YOK:
+         isletmeNA + capex → serbest nakit akışı (değer: F/SNA · kalite: nakit üretimi)
+         isletmeNA + netKar → TAHAKKUK ORANI (Sloan): kâğıt kârı nakde dönüyor mu
+         odenenFaiz → faiz karşılama (güvenlik faktörü)
+         odenenTemettu → temettü verimi
+         stok/ticariAlacak → devir hızları, Beneish kanalları */
+    isletmeNA: 'ifrs-full_CashFlowsFromUsedInOperatingActivities',
+    capex: 'kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities',
+    odenenFaiz: 'ifrs-full_InterestPaidClassifiedAsFinancingActivities',
+    odenenTemettu: 'ifrs-full_DividendsPaidClassifiedAsFinancingActivities',
+    amortNA: 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense',
+    stok: 'ifrs-full_Inventories', ticariAlacak: 'ifrs-full_CurrentTradeReceivables',
+    ticariBorc: 'kap-fr_CurrentTradePayables'
   };
   let basarili = 0, eksikli = 0, dusen = 0;
   const notlar = [];
@@ -2247,6 +2267,18 @@ async function faktorEvren() {
       const S = (...a) => { let t = 0, v = false; a.forEach(z => { if (Number.isFinite(z)) { t += z; v = true; } }); return v ? t : null; };
 
       const ciro = akis('ciro'), faal = akis('faal'), am = akis('amort'), netKar = akis('netKar'), brut = akis('brut');
+      /* §362 GEÇEN YIL — büyüme faktörü. Değer ZATEN elimizde: TTM formülünde
+         kullandığımız `onceki` sütunu geçen yılın aynı kümülatifi. Bir önceki
+         TTM = geçen_yıl_yıllık + onceki − (ondan önceki) hesaplanamaz (üçüncü
+         bacak yok), o yüzden KÜMÜLATİF y/y kullanılır: cari kümülatif vs
+         geçen yıl aynı kümülatif — dönem eşleşmesi birebir, mevsimsellik yok. */
+      const yyOran = (kad) => {
+        const xb = AL[kad], a2 = araKl ? araKl.K[xb] : null;
+        if (!a2 || !Number.isFinite(a2.k) || !Number.isFinite(a2.onceki) || a2.onceki === 0) return null;
+        return +((a2.k / a2.onceki - 1) * 100).toFixed(1);
+      };
+      const isletmeNA = akis('isletmeNA'), capex = akis('capex');
+      const odFaiz = akis('odenenFaiz'), odTemettu = akis('odenenTemettu');
       const favok = (Number.isFinite(faal) && Number.isFinite(am)) ? faal + am : null;
       const finBorc = S(stok('kvB'), stok('kvUV'), stok('uvB'));
       const likit = S(stok('nakit'), stok('finYat'));
@@ -2257,6 +2289,14 @@ async function faktorEvren() {
         ozk: stok('ozk'), aktif: stok('aktif'), donen: stok('donen'), kvY: stok('kvY'),
         finBorc, likit,
         netBorc: (Number.isFinite(finBorc) && Number.isFinite(likit)) ? finBorc - likit : null,
+        /* §362 türev faktör girdileri */
+        isletmeNA, capex,
+        sna: (Number.isFinite(isletmeNA) && Number.isFinite(capex)) ? isletmeNA + capex : null,
+        tahakkuk: (Number.isFinite(netKar) && Number.isFinite(isletmeNA) && Number.isFinite(stok('aktif')) && stok('aktif'))
+          ? +(((netKar - isletmeNA) / stok('aktif')) * 100).toFixed(2) : null,
+        odFaiz, odTemettu,
+        stoklar: stok('stok'), ticariAlacak: stok('ticariAlacak'), ticariBorc: stok('ticariBorc'),
+        buyume: { ciro: yyOran('ciro'), netKar: yyOran('netKar'), brut: yyOran('brut') },
         adet: Number.isFinite(stok('sermaye')) ? Math.round(stok('sermaye')) : null,
         adet_kaynak: 'sermaye(nominal 1₺ varsayımı)'
       };
