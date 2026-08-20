@@ -83,7 +83,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009346207785> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008767286157> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -138,9 +138,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-19 06:00Z · GBP · CPI y/y
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 0/245
-- bu turda: 0 tam · 0 eksik kalemli · 6 alınamadı
-- not: AKHAN:giriş gerekli · ALFAS:giriş gerekli · ALKIM:giriş gerekli · ALKLC:giriş gerekli · ALTNY:giriş gerekli · ALVES:giriş gerekli
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 5/245
+- bu turda: 5 tam · 0 eksik kalemli · 1 alınamadı
+- not: ALVES:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Bülten keşfi (§250k) — ✓ thb202608201.zip indi · 298KB
@@ -155,4 +155,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.28 bp) · risk metrikleri (137) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (0/245)
+**Sonuç:** TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (5/245)
+
+### Süre bütçesi (§326)
+- ⏱ Faktör evreni (§361) — 78 sn
+- toplam: 106 sn
