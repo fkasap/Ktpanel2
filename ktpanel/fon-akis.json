@@ -59147,7 +59147,6 @@
   "HMG": "HSBC PORTFÖY YÖNETİMİ A.Ş.",
   "HML": "HEDEF PORTFÖY YÖNETİMİ A.Ş",
   "HMS": "HSBC PORTFÖY YÖNETİMİ A.Ş.",
-  "HNC": "HEDEF PORTFÖY YÖNETİMİ A.Ş",
   "HOA": "HSBC PORTFÖY YÖNETİMİ A.Ş.",
   "HOY": "HSBC PORTFÖY YÖNETİMİ A.Ş.",
   "HP3": "HEDEF PORTFÖY YÖNETİMİ A.Ş",
@@ -60166,6 +60165,7 @@
   "HMK": "HEDEF PORTFÖY",
   "HMT": "AZİMUT PORTFÖY",
   "HMV": "HEDEF PORTFÖY",
+  "HNC": "HEDEF PORTFÖY",
   "HNS": "HSBC PORTFÖY",
   "HPC": "ZİRAAT PORTFÖY",
   "HPF": "HEDEF PORTFÖY",
@@ -60782,5 +60782,875 @@
   "ZYD": "ZİRAAT PORTFÖY",
   "ZZL": "ZİRAAT PORTFÖY"
  },
- "guncelleme": "2026-08-20"
+ "guncelleme": "2026-08-20",
+ "pys": {
+  "gun": "2026-08-20",
+  "onceki": "2026-08-19",
+  "adet": 69,
+  "eslesmeyen": 9,
+  "liste": [
+   {
+    "ad": "AK",
+    "net": 11870732257,
+    "fon": 126
+   },
+   {
+    "ad": "TERA",
+    "net": 8904724919,
+    "fon": 11
+   },
+   {
+    "ad": "GARANTİ",
+    "net": 6645643728,
+    "fon": 128
+   },
+   {
+    "ad": "KUVEYT TÜRK",
+    "net": 3858274419,
+    "fon": 62
+   },
+   {
+    "ad": "AURA",
+    "net": 3253768316,
+    "fon": 10
+   },
+   {
+    "ad": "AKTİF",
+    "net": 2411462530,
+    "fon": 35
+   },
+   {
+    "ad": "PARDUS",
+    "net": 1789699498,
+    "fon": 65
+   },
+   {
+    "ad": "MT",
+    "net": 1564927670,
+    "fon": 11
+   },
+   {
+    "ad": "FİBA",
+    "net": 960114091,
+    "fon": 29
+   },
+   {
+    "ad": "NUROL",
+    "net": 886528040,
+    "fon": 27
+   },
+   {
+    "ad": "TEB",
+    "net": 678228885,
+    "fon": 67
+   },
+   {
+    "ad": "ZİRAAT",
+    "net": 661046436,
+    "fon": 86
+   },
+   {
+    "ad": "YAPI KREDİ",
+    "net": 390682165,
+    "fon": 113
+   },
+   {
+    "ad": "A1 CAPİTAL",
+    "net": 323510511,
+    "fon": 17
+   },
+   {
+    "ad": "EMAA BLUE ANONİM ŞİRKETİ",
+    "net": 262546006,
+    "fon": 14
+   },
+   {
+    "ad": "TRİVE",
+    "net": 127269429,
+    "fon": 2
+   },
+   {
+    "ad": "HSBC",
+    "net": 94418603,
+    "fon": 28
+   },
+   {
+    "ad": "HEDEF",
+    "net": 87083178,
+    "fon": 56
+   },
+   {
+    "ad": "İŞ",
+    "net": 72187518,
+    "fon": 159
+   },
+   {
+    "ad": "STATECH",
+    "net": 50071604,
+    "fon": 2
+   },
+   {
+    "ad": "ONE",
+    "net": 48894966,
+    "fon": 21
+   },
+   {
+    "ad": "GLOBAL MD",
+    "net": 37238984,
+    "fon": 16
+   },
+   {
+    "ad": "V ANONİM ŞİRKETİ",
+    "net": 27625307,
+    "fon": 1
+   },
+   {
+    "ad": "RE-PIE",
+    "net": 26882705,
+    "fon": 25
+   },
+   {
+    "ad": "QNB",
+    "net": 17946831,
+    "fon": 68
+   },
+   {
+    "ad": "BULLS ANONİM ŞİRKETİ",
+    "net": 16498746,
+    "fon": 13
+   },
+   {
+    "ad": "GOLDEN GLOBAL",
+    "net": 12887281,
+    "fon": 1
+   },
+   {
+    "ad": "KARE",
+    "net": 6938234,
+    "fon": 15
+   },
+   {
+    "ad": "ATA",
+    "net": 4566927,
+    "fon": 22
+   },
+   {
+    "ad": "VEGA ANONİM ŞİRKETİ",
+    "net": 435335,
+    "fon": 4
+   },
+   {
+    "ad": "ALLBATROSS",
+    "net": 0,
+    "fon": 9
+   },
+   {
+    "ad": "BULLS",
+    "net": 0,
+    "fon": 14
+   },
+   {
+    "ad": "DESTEK",
+    "net": 0,
+    "fon": 1
+   },
+   {
+    "ad": "FONMAP",
+    "net": 0,
+    "fon": 1
+   },
+   {
+    "ad": "H",
+    "net": 0,
+    "fon": 1
+   },
+   {
+    "ad": "LOGOS",
+    "net": 0,
+    "fon": 1
+   },
+   {
+    "ad": "AHLATCI",
+    "net": 0,
+    "fon": 1
+   },
+   {
+    "ad": "AZIMUT",
+    "net": 0,
+    "fon": 3
+   },
+   {
+    "ad": "İNCİR ANONİM ŞİRKETİ",
+    "net": -61754,
+    "fon": 1
+   },
+   {
+    "ad": "FONMAP ANONİM ŞİRKETİ",
+    "net": -257707,
+    "fon": 5
+   },
+   {
+    "ad": "ALLBATROSS ANONİM ŞİRKETİ",
+    "net": -428279,
+    "fon": 19
+   },
+   {
+    "ad": "PİRAMİT",
+    "net": -871694,
+    "fon": 4
+   },
+   {
+    "ad": "STRATEJİ",
+    "net": -5861830,
+    "fon": 16
+   },
+   {
+    "ad": "PİRAMİT ANONİM ŞİRKETİ",
+    "net": -7297000,
+    "fon": 6
+   },
+   {
+    "ad": "MEKSA",
+    "net": -14476200,
+    "fon": 6
+   },
+   {
+    "ad": "TRIVE",
+    "net": -20807983,
+    "fon": 8
+   },
+   {
+    "ad": "INVEO",
+    "net": -21771459,
+    "fon": 34
+   },
+   {
+    "ad": "NEO",
+    "net": -22860045,
+    "fon": 44
+   },
+   {
+    "ad": "TACİRLER",
+    "net": -24327014,
+    "fon": 21
+   },
+   {
+    "ad": "MARMARA CAPİTAL",
+    "net": -38791001,
+    "fon": 3
+   },
+   {
+    "ad": "OSMANLI",
+    "net": -45078279,
+    "fon": 18
+   },
+   {
+    "ad": "SPARTA",
+    "net": -47372537,
+    "fon": 7
+   },
+   {
+    "ad": "PERFORM",
+    "net": -53606815,
+    "fon": 10
+   },
+   {
+    "ad": "PHİLLİP",
+    "net": -59014383,
+    "fon": 11
+   },
+   {
+    "ad": "BV",
+    "net": -63556442,
+    "fon": 18
+   },
+   {
+    "ad": "ÜNLÜ",
+    "net": -71062042,
+    "fon": 16
+   },
+   {
+    "ad": "TRA",
+    "net": -78961666,
+    "fon": 21
+   },
+   {
+    "ad": "AHLATCI ANONİM ŞİRKETİ",
+    "net": -82248564,
+    "fon": 7
+   },
+   {
+    "ad": "İSTANBUL",
+    "net": -108885952,
+    "fon": 50
+   },
+   {
+    "ad": "MT ANONİM ŞİRKETİ",
+    "net": -134618895,
+    "fon": 11
+   },
+   {
+    "ad": "OYAK",
+    "net": -137769162,
+    "fon": 23
+   },
+   {
+    "ad": "ATL",
+    "net": -224916037,
+    "fon": 29
+   },
+   {
+    "ad": "ROTA",
+    "net": -263316544,
+    "fon": 55
+   },
+   {
+    "ad": "EMLAK KATILIM",
+    "net": -342347111,
+    "fon": 2
+   },
+   {
+    "ad": "AZİMUT",
+    "net": -379460637,
+    "fon": 127
+   },
+   {
+    "ad": "VAKIF KATILIM ANONİM ŞİRKETİ",
+    "net": -580212804,
+    "fon": 5
+   },
+   {
+    "ad": "DENİZ",
+    "net": -2797987208,
+    "fon": 133
+   },
+   {
+    "ad": "ALBARAKA",
+    "net": -4274039126,
+    "fon": 20
+   },
+   {
+    "ad": "PUSULA",
+    "net": -4355815367,
+    "fon": 19
+   }
+  ]
+ },
+ "pencereler": {
+  "1H": {
+   "taban": "2026-08-13",
+   "gun": "2026-08-20",
+   "adet": 2022,
+   "pys": [
+    {
+     "ad": "TERA",
+     "net": 22041410071,
+     "fon": 11
+    },
+    {
+     "ad": "ZİRAAT",
+     "net": 17564797512,
+     "fon": 86
+    },
+    {
+     "ad": "ALBARAKA",
+     "net": 10207088073,
+     "fon": 20
+    },
+    {
+     "ad": "PARDUS",
+     "net": 9998660923,
+     "fon": 65
+    },
+    {
+     "ad": "AK",
+     "net": 7746746098,
+     "fon": 126
+    },
+    {
+     "ad": "GARANTİ",
+     "net": 7537646832,
+     "fon": 130
+    },
+    {
+     "ad": "TEB",
+     "net": 5807012221,
+     "fon": 66
+    },
+    {
+     "ad": "AURA",
+     "net": 3461697962,
+     "fon": 10
+    },
+    {
+     "ad": "HEDEF",
+     "net": 3355842970,
+     "fon": 56
+    },
+    {
+     "ad": "KUVEYT TÜRK",
+     "net": 3165292266,
+     "fon": 62
+    },
+    {
+     "ad": "İŞ",
+     "net": 2652095713,
+     "fon": 159
+    },
+    {
+     "ad": "NUROL",
+     "net": 1383616300,
+     "fon": 27
+    },
+    {
+     "ad": "VAKIF KATILIM ANONİM ŞİRKETİ",
+     "net": 1361006255,
+     "fon": 5
+    },
+    {
+     "ad": "MT",
+     "net": 1349018470,
+     "fon": 11
+    },
+    {
+     "ad": "A1 CAPİTAL",
+     "net": 885369816,
+     "fon": 17
+    },
+    {
+     "ad": "AKTİF",
+     "net": 754698526,
+     "fon": 35
+    },
+    {
+     "ad": "VEGA ANONİM ŞİRKETİ",
+     "net": 402856089,
+     "fon": 4
+    },
+    {
+     "ad": "STATECH",
+     "net": 126933563,
+     "fon": 2
+    },
+    {
+     "ad": "TACİRLER",
+     "net": 117605311,
+     "fon": 21
+    },
+    {
+     "ad": "ONE",
+     "net": 113014600,
+     "fon": 21
+    },
+    {
+     "ad": "V ANONİM ŞİRKETİ",
+     "net": 96710610,
+     "fon": 1
+    },
+    {
+     "ad": "TRA",
+     "net": 94816591,
+     "fon": 21
+    },
+    {
+     "ad": "GLOBAL MD",
+     "net": 90942793,
+     "fon": 16
+    },
+    {
+     "ad": "GOLDEN GLOBAL",
+     "net": 74191142,
+     "fon": 1
+    },
+    {
+     "ad": "OYAK",
+     "net": 56606888,
+     "fon": 23
+    },
+    {
+     "ad": "EMAA BLUE ANONİM ŞİRKETİ",
+     "net": 53714544,
+     "fon": 13
+    },
+    {
+     "ad": "PHİLLİP",
+     "net": 51633038,
+     "fon": 11
+    },
+    {
+     "ad": "INVEO",
+     "net": 33022147,
+     "fon": 34
+    },
+    {
+     "ad": "SPARTA",
+     "net": 15626630,
+     "fon": 7
+    },
+    {
+     "ad": "AZIMUT",
+     "net": 6993406,
+     "fon": 3
+    },
+    {
+     "ad": "ALLBATROSS",
+     "net": 0,
+     "fon": 9
+    },
+    {
+     "ad": "DESTEK",
+     "net": 0,
+     "fon": 1
+    },
+    {
+     "ad": "FONMAP",
+     "net": 0,
+     "fon": 1
+    },
+    {
+     "ad": "H",
+     "net": 0,
+     "fon": 1
+    },
+    {
+     "ad": "LOGOS",
+     "net": 0,
+     "fon": 1
+    },
+    {
+     "ad": "AHLATCI",
+     "net": 0,
+     "fon": 1
+    },
+    {
+     "ad": "İNCİR ANONİM ŞİRKETİ",
+     "net": -64522,
+     "fon": 1
+    },
+    {
+     "ad": "PİRAMİT",
+     "net": -871694,
+     "fon": 4
+    },
+    {
+     "ad": "BV",
+     "net": -10202462,
+     "fon": 18
+    },
+    {
+     "ad": "FONMAP ANONİM ŞİRKETİ",
+     "net": -13370661,
+     "fon": 5
+    },
+    {
+     "ad": "ALLBATROSS ANONİM ŞİRKETİ",
+     "net": -27059432,
+     "fon": 19
+    },
+    {
+     "ad": "STRATEJİ",
+     "net": -29077948,
+     "fon": 16
+    },
+    {
+     "ad": "MEKSA",
+     "net": -36747755,
+     "fon": 6
+    },
+    {
+     "ad": "ATA",
+     "net": -38251345,
+     "fon": 22
+    },
+    {
+     "ad": "TRIVE",
+     "net": -46476219,
+     "fon": 8
+    },
+    {
+     "ad": "MARMARA CAPİTAL",
+     "net": -79223966,
+     "fon": 3
+    },
+    {
+     "ad": "RE-PIE",
+     "net": -98622977,
+     "fon": 25
+    },
+    {
+     "ad": "HSBC",
+     "net": -112619209,
+     "fon": 28
+    },
+    {
+     "ad": "KARE",
+     "net": -114434910,
+     "fon": 15
+    },
+    {
+     "ad": "BULLS ANONİM ŞİRKETİ",
+     "net": -116186459,
+     "fon": 13
+    },
+    {
+     "ad": "PİRAMİT ANONİM ŞİRKETİ",
+     "net": -141155116,
+     "fon": 6
+    },
+    {
+     "ad": "OSMANLI",
+     "net": -158244198,
+     "fon": 18
+    },
+    {
+     "ad": "MT ANONİM ŞİRKETİ",
+     "net": -197703972,
+     "fon": 11
+    },
+    {
+     "ad": "TRİVE",
+     "net": -219407343,
+     "fon": 2
+    },
+    {
+     "ad": "AHLATCI ANONİM ŞİRKETİ",
+     "net": -399703571,
+     "fon": 7
+    },
+    {
+     "ad": "DENİZ",
+     "net": -415910637,
+     "fon": 133
+    },
+    {
+     "ad": "BULLS",
+     "net": -425324844,
+     "fon": 14
+    },
+    {
+     "ad": "ÜNLÜ",
+     "net": -544619362,
+     "fon": 16
+    },
+    {
+     "ad": "QNB",
+     "net": -548001381,
+     "fon": 67
+    },
+    {
+     "ad": "PERFORM",
+     "net": -570056484,
+     "fon": 10
+    },
+    {
+     "ad": "NEO",
+     "net": -1093216360,
+     "fon": 44
+    },
+    {
+     "ad": "ROTA",
+     "net": -1418241672,
+     "fon": 55
+    },
+    {
+     "ad": "YAPI KREDİ",
+     "net": -1490823112,
+     "fon": 113
+    },
+    {
+     "ad": "EMLAK KATILIM",
+     "net": -1532150662,
+     "fon": 2
+    },
+    {
+     "ad": "İSTANBUL",
+     "net": -2290033809,
+     "fon": 50
+    },
+    {
+     "ad": "ATL",
+     "net": -3572229448,
+     "fon": 29
+    },
+    {
+     "ad": "AZİMUT",
+     "net": -3777409824,
+     "fon": 127
+    },
+    {
+     "ad": "FİBA",
+     "net": -4840122968,
+     "fon": 29
+    },
+    {
+     "ad": "PUSULA",
+     "net": -12584722314,
+     "fon": 19
+    }
+   ],
+   "fon": [
+    {
+     "k": "GAL",
+     "net": 62474750820
+    },
+    {
+     "k": "THF",
+     "net": 16403532829
+    },
+    {
+     "k": "DCB",
+     "net": 15853889088
+    },
+    {
+     "k": "PPJ",
+     "net": 14790246751
+    },
+    {
+     "k": "ZPR",
+     "net": 11701964878
+    },
+    {
+     "k": "RTI",
+     "net": 10466181642
+    },
+    {
+     "k": "ILH",
+     "net": 9399364459
+    },
+    {
+     "k": "TP2",
+     "net": 8875706161
+    },
+    {
+     "k": "DIP",
+     "net": 8407117851
+    },
+    {
+     "k": "AC2",
+     "net": 8278140950
+    },
+    {
+     "k": "GTL",
+     "net": 6889846968
+    },
+    {
+     "k": "PTE",
+     "net": 6531150895
+    },
+    {
+     "k": "ODN",
+     "net": 4523570490
+    },
+    {
+     "k": "GSO",
+     "net": 4509429590
+    },
+    {
+     "k": "YPT",
+     "net": 3764513271
+    },
+    {
+     "k": "MTL",
+     "net": 3266656302
+    },
+    {
+     "k": "KLU",
+     "net": 2561025217
+    },
+    {
+     "k": "HLL",
+     "net": 2279740356
+    },
+    {
+     "k": "HKJ",
+     "net": 2257586802
+    },
+    {
+     "k": "DOV",
+     "net": 2220623728
+    },
+    {
+     "k": "PPV",
+     "net": 1994026122
+    },
+    {
+     "k": "KHA",
+     "net": 1861737598
+    },
+    {
+     "k": "TZL",
+     "net": 1768520130
+    },
+    {
+     "k": "YLB",
+     "net": 1752892472
+    },
+    {
+     "k": "DAS",
+     "net": 1749712264
+    },
+    {
+     "k": "PNU",
+     "net": 1703128135
+    },
+    {
+     "k": "ZBJ",
+     "net": 1636572570
+    },
+    {
+     "k": "MT9",
+     "net": 1626716439
+    },
+    {
+     "k": "KSA",
+     "net": 1616177312
+    },
+    {
+     "k": "PTS",
+     "net": 1501027256
+    },
+    {
+     "k": "KPR",
+     "net": 1466866923
+    },
+    {
+     "k": "ZP8",
+     "net": 1347053458
+    },
+    {
+     "k": "VPA",
+     "net": 1340184848
+    },
+    {
+     "k": "CJD",
+     "net": 1260924439
+    },
+    {
+     "k": "ONS",
+     "net": 1253874537
+    },
+    {
+     "k": "TMV",
+     "net": 1195789240
+    },
+    {
+     "k": "PKV",
+     "net": 1124934001
+    },
+    {
+     "k": "KDV",
+     "net": 1026639418
+    },
+    {
+     "k": "YTY",
+     "net": 1009537598
+    },
+    {
+     "k": "YOZ",
+     "net": 978469711
+    }
+   ]
+  },
+  "1A": null
+ }
 }

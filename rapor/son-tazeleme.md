@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-20
 
-Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
+Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -36,19 +36,34 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 ### TR 5Y CDS — ✓ 220.28 bp · 2026-08-20 · +1.61
 - ✓ 3281 günlük seri · kaynak etiketi 2026-08-20 (hafta sonu doldurmalı)
 
+### Risk metrikleri — ✓ GEÇTİ
+- ✓ **kapsam**: 141/141 (%100)
+- ✓ **aykırı değer**: temiz (sınır ±%3)
+- ✓ **aykırı değer**: temiz (sınır ±%150)
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (186 gün)
+- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
+
 ### TEFAS genel bilgi (§253i) — ✓ 2028 fon · AUM + yatırımcı sayısı köprüden (ham 2035 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
-- getiri: 1058 fon ✓ · liste: 1049 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
+- getiri: 1058 fon ✓ · liste: 1048 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### Fon akışı — ℹ 973 fonun kurucusu fon adından türetildi (§279; mod=liste 1049 kayıt kapsıyordu, evren 2028)
+### Fon akışı — ℹ 974 fonun kurucusu fon adından türetildi (§279; mod=liste 1048 kayıt kapsıyordu, evren 2028)
+
+### Akış pencereleri (§359) — ✓ 1H hazır · arşiv 7 gün
+- 1H giriş: TERA 22.0 mlr · ZİRAAT 17.6 mlr · ALBARAKA 10.2 mlr
+
+### PYŞ bazında akış (§358) — ✓ 69 kurum · 2026-08-20 · 9 fon eşleşmedi
+- giriş: AK 11.87 mlr · TERA 8.90 mlr · GARANTİ 6.65 mlr
+- çıkış: DENİZ -2.80 mlr · ALBARAKA -4.27 mlr · PUSULA -4.36 mlr
 
 ### Fon akışı (§263) — ✓ 2023 fon · 2026-08-19 → 2026-08-20
 - giriş 75.09 mlr ₺ · çıkış -47.25 mlr ₺ · net 27.84 mlr ₺
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008760641533> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009451037116> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -59,7 +74,7 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
-- ✓ **seri guncelligi (track.series)**: 2026-08-19 (referans 2026-08-20, fark 1g)
+- ✓ **seri guncelligi (track.series)**: 2026-08-20 (referans 2026-08-20, fark 0g)
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-20 (referans 2026-08-20, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
@@ -67,13 +82,13 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
   - defter 221 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 221 şirket kart bekliyor
-- pencere: 114 FR · yeni deftere giren: 1 (KPTGY)
+- pencere: 114 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 2 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALARK, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATATR, ATEKS, ATSYH, AVHOL, AVOD, AVTUR, BAGFS …
 
-### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:244 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
-- ✓ üyelik uyumu XKTUM: 150/244 (tasarım gereği ilk 150)
+### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:245 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
+- ✓ üyelik uyumu XKTUM: 150/245 (tasarım gereği ilk 150)
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
@@ -90,9 +105,8 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - 3A lideri: XKMYA %13.86
 - ⚠ çapa sapması: 1A hedef 2026-07-21 → 2026-06-30 (21 gün geride) — ufuk ATLANDI, damgalı değer korundu · 3A hedef 2026-05-22 → 2026-04-30 (22 gün geride) — ufuk ATLANDI, damgalı değer korundu
 
-### Hazine ihale sonuçları (§314) — ✓ defter 11 duyuru · yeni 1
-- 2026-08-20 · 20 Ağustos 2026 Tarihinde Kurumsal Yatırımcılara Gerçekleşti
-  - ABD doları cinsi Devlet tahvili → 3,43 mlr USD · itfa 20 Ağustos 2027 · TRT200827F11
+### Hazine ihale sonuçları (§314) — ✓ defter 11 duyuru · yeni 0
+- yeni duyuru yok
 
 ### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: 2026-07-31 · Ağustos–Ekim 2026)
 
@@ -116,4 +130,4 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (135 fiyat) · Model sicili (39 fiyat) · TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · hazine ihale sonuçları (+1) · küresel makro takvim (21 olay)
+**Sonuç:** TR 5Y CDS (220.28 bp) · risk metrikleri (137) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
