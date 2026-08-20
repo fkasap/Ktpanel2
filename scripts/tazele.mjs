@@ -2153,8 +2153,19 @@ async function vapFonAkis() {
       signal: AbortSignal.timeout(20000) });
     const tok = L.headers.get('x-mstr-authtoken');
     if (!tok) { raporlar.push('### VAP fon akışı (§366) — ⏭ giriş jetonu alınamadı (HTTP ' + L.status + ')'); return; }
+    /* §366b ÇEREZ DE GEREKLİ (canlı: Actions'tan HTTP 401, tarayıcıdan 201).
+       HAR'da görüldü: Cookie iSession=<değer> ve X-MSTR-AuthToken <değer> AYNI.
+       Tarayıcı çerezi kendiliğinden taşır, Node fetch TAŞIMAZ — sunucu hem
+       başlığı hem çerezi istiyor. Set-Cookie varsa ondan alınır, yoksa jeton
+       iSession olarak kullanılır (ikisi aynı değer).
+       DERS: TARAYICIDA ÇALIŞIP SUNUCUDA 401 VERİYORSA İLK BAKILACAK YER ÇEREZ. */
+    const sc = (L.headers.getSetCookie ? L.headers.getSetCookie() : [L.headers.get('set-cookie')].filter(Boolean));
+    const cerez = (sc && sc.length)
+      ? sc.map(c => String(c).split(';')[0]).join('; ')
+      : ('iSession=' + tok);
     const H = { 'content-type': 'application/json', 'accept': 'application/json',
-      'x-mstr-authtoken': tok, 'x-mstr-projectid': PROJE, 'x-requested-with': 'XMLHttpRequest' };
+      'x-mstr-authtoken': tok, 'x-mstr-projectid': PROJE, 'x-requested-with': 'XMLHttpRequest',
+      'cookie': cerez };
 
     /* 2) ornek olustur */
     const I = await fetch(T + '/dossiers/' + DOSSIER + '/instances', {
