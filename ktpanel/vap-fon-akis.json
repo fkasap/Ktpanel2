@@ -1,0 +1,87 @@
+{
+ "guncelleme": "2026-08-20T23:18:36Z",
+ "kaynak": "MKK VAP · mobil.vap.org.tr (MicroStrategy Library, anonim erişim)",
+ "dosya_adi": "Fon Nakit Akış",
+ "_yontem": "Hücreler gvs.items[0].items[].rv içinde satır sırasıyla düz dizi; ay etiketleri gts.col[0].es[].n. Hücre sayısı = ay × ölçü eşitliği DOĞRULANIR, tutmazsa yazılmaz. Anonim erişim: loginMode 1, kullanıcı \"public\". X-MSTR-ProjectID başlığı ve resultFlag=3 ŞART.",
+ "ay_sayisi": 12,
+ "olculer": [
+  "Fon Tutarı Değişimi (TL)",
+  "Dönem Sonu Fon Tutarı (TL)",
+  "Dönem Sonu Fon Adedi"
+ ],
+ "son_ay": "2026-07",
+ "seri": [
+  {
+   "ay": "2025-08",
+   "Fon Tutarı Değişimi (TL)": 245007669820.26532,
+   "Dönem Sonu Fon Tutarı (TL)": 6839988001535.807,
+   "Dönem Sonu Fon Adedi": 5256267418356.958
+  },
+  {
+   "ay": "2025-09",
+   "Fon Tutarı Değişimi (TL)": 131966767492.80838,
+   "Dönem Sonu Fon Tutarı (TL)": 7179899640743.212,
+   "Dönem Sonu Fon Adedi": 5145321249181.528
+  },
+  {
+   "ay": "2025-10",
+   "Fon Tutarı Değişimi (TL)": 187058186157.82056,
+   "Dönem Sonu Fon Tutarı (TL)": 7575707504976.881,
+   "Dönem Sonu Fon Adedi": 5251166733419.181
+  },
+  {
+   "ay": "2025-11",
+   "Fon Tutarı Değişimi (TL)": 151343047173.8264,
+   "Dönem Sonu Fon Tutarı (TL)": 7850679497758.004,
+   "Dönem Sonu Fon Adedi": 5382991841605.919
+  },
+  {
+   "ay": "2025-12",
+   "Fon Tutarı Değişimi (TL)": 55137688755.364555,
+   "Dönem Sonu Fon Tutarı (TL)": 8174416256407.78,
+   "Dönem Sonu Fon Adedi": 6268800703374.158
+  },
+  {
+   "ay": "2026-01",
+   "Fon Tutarı Değişimi (TL)": 165695749165.24026,
+   "Dönem Sonu Fon Tutarı (TL)": 8768404691948.196,
+   "Dönem Sonu Fon Adedi": 6412378622811.564
+  },
+  {
+   "ay": "2026-02",
+   "Fon Tutarı Değişimi (TL)": 8326875751.238731,
+   "Dönem Sonu Fon Tutarı (TL)": 8889642663516.77,
+   "Dönem Sonu Fon Adedi": 6343750557362.5625
+  },
+  {
+   "ay": "2026-03",
+   "Fon Tutarı Değişimi (TL)": -562628807872.7783,
+   "Dönem Sonu Fon Tutarı (TL)": 8385775425061.267,
+   "Dönem Sonu Fon Adedi": 5798290888230.5625
+  },
+  {
+   "ay": "2026-04",
+   "Fon Tutarı Değişimi (TL)": 312396095289.0503,
+   "Dönem Sonu Fon Tutarı (TL)": 9038290480520.135,
+   "Dönem Sonu Fon Adedi": 6048714100326.8955
+  },
+  {
+   "ay": "2026-05",
+   "Fon Tutarı Değişimi (TL)": -54888350171.458374,
+   "Dönem Sonu Fon Tutarı (TL)": 9142581023008.045,
+   "Dönem Sonu Fon Adedi": 6137022226607.219
+  },
+  {
+   "ay": "2026-06",
+   "Fon Tutarı Değişimi (TL)": 106786162727.83359,
+   "Dönem Sonu Fon Tutarı (TL)": 9583134625515.312,
+   "Dönem Sonu Fon Adedi": 6335609931375.105
+  },
+  {
+   "ay": "2026-07",
+   "Fon Tutarı Değişimi (TL)": 181105814101.98294,
+   "Dönem Sonu Fon Tutarı (TL)": 10052110319559.645,
+   "Dönem Sonu Fon Adedi": 7788676337813.85
+  }
+ ]
+}

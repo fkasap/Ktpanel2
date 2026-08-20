@@ -83,7 +83,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009934877822> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008873148168> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -139,8 +139,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 24/245
-- bu turda: 3 tam · 0 eksik kalemli · 3 alınamadı
-- not: DENGE:liste boş · EKSUN:2026: fetch failed · ELITE:2026: fetch failed
+- bu turda: 0 tam · 0 eksik kalemli · 3 alınamadı
+- not: DENGE:liste boş · EKSUN:2026: fetch failed · ELITE:2026: fetch failed · ⏹ devre kesici: 3 ardışık hata, tur erken bitti
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 - §364b fiyat: 45/45 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
@@ -150,7 +150,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - en iskontolu: %-86.6 · medyan %-51.9 · en primli %1032.2
 - 9 şirket o dönem bildirim göndermemiş (kayıt yazılmadı)
 
-### VAP fon akışı (§366) — ⏭ örnek HTTP 401
+### VAP fon akışı (§366) — ✓ 12 ay · son 2026-07
+- toplam fon tutarı: 10052.1 mlr ₺
+- son ay değişimi: 181.1 mlr ₺
+- ölçüler: Fon Tutarı Değişimi (TL) · Dönem Sonu Fon Tutarı (TL) · Dönem Sonu Fon Adedi
 
 ### Bülten keşfi (§250k) — ✓ thb202608201.zip indi · 298KB
 - içerik: thb202608201.csv
@@ -164,8 +167,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (24/245) · GYO NAV (45 şirket)
-
-### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 78 sn
-- toplam: 138 sn
+**Sonuç:** TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (24/245) · GYO NAV (45 şirket) · VAP fon akışı (12 ay)
