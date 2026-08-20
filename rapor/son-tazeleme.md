@@ -61,7 +61,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
 - ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (186 gün)
-- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2028 fon · AUM + yatırımcı sayısı köprüden (ham 2035 kayıt, sayfalamalı)
@@ -81,13 +81,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Fon akışı (§263) — ✓ 2023 fon · 2026-08-19 → 2026-08-20
 - giriş 75.09 mlr ₺ · çıkış -47.25 mlr ₺ · net 27.84 mlr ₺
 
-### TEFAS alan keşfi (bilgi)
-- uç: `/api/statistics/tefas/getFplFonList`
-- alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
-
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 1 / toplam yanıt: 84 · sayfa: "Fon Getirileri - TEFAS Fon Bilgilendirme ve Karşılaştırma | " · gövde: `Görme engelliler için erişilebilirliği etkinleştirin Erişilebilirlik menüsünü açma Erişilebilir Gezinme Menüsünü Açın Ana içeriğe geç Ana Sayfa Fon Getirileri Fon Karşılaştır F` · uçlar: /api/statistics/tefas/getFplFonList (1048)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009452628860> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -142,7 +138,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-19 06:00Z · GBP · CPI y/y
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
-### Faktör evreni (§361) — ✗ Cannot read properties of undefined (reading 'y')
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 15/245 · ⚠ 10 kayıt eski yöntemle (sıraya öne alındı)
+- bu turda: 5 tam · 0 eksik kalemli · 1 alınamadı
+- not: ALVES:2026: fetch failed
+- ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Bülten keşfi (§250k) — ✓ thb202608201.zip indi · 298KB
 - içerik: thb202608201.csv
@@ -156,4 +155,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
+**Sonuç:** TR 5Y CDS (220.28 bp) · risk metrikleri (137) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (21 olay) · faktör evreni (15/245)
+
+### Süre bütçesi (§326)
+- ⏱ Faktör evreni (§361) — 85 sn
+- toplam: 117 sn
