@@ -2078,6 +2078,153 @@ async function sektorTazele() {
   } catch (e) { raporlar.push('### Sektör ısı (§333) — ✗ ' + String(e && e.message || e).slice(0, 90)); }
 }
 
+/* ── §361 FAKTÖR EVRENİ — KAP'TAN KADEMELİ TAZELEME (20 Ağu) ────────────────
+   SORUN (ölçüldü): faktör modeli "XKTUM evreni" diyor ama multiple.json ELLE
+   besleniyor ve 141 hisse taşıyor. XKTUM ise 245 üye (endeks-uyeler.json,
+   BIST resmî, her koşuda taze). Yani:
+     · 113 XKTUM üyesi modelde HİÇ YOK (evrenin %46'sı)
+     · KCHOL/THYAO/SISE/SAHOL gibi 9 hisse modelde VAR ama XKTUM üyesi DEĞİL
+   §340 ile artık her şirketin tam finansalları KAP'tan çekilebiliyor; evren
+   otomatik tazelenebilir.
+
+   TASARIM KARARLARI (hepsi bilinçli, çekinceler kullanıcıya söylendi):
+   1) KADEMELİ: KAP hız sınırı gerçek (bugün TUPRS/BIMAS'ta yaşandı). Her
+      koşuda EN ESKİ güncellenen PARTI_BOY şirket çekilir; bilanço tetiğinde
+      görünenler (taze bildirim) SIRAYA ÖNE alınır. Evren birkaç günde döner.
+   2) AYRI DOSYA: multiple.json'a DOKUNULMAZ. Panel bağlantısı veri
+      sağlamlaşınca yapılır — çalışan kart bozulmaz.
+   3) TTM HAM TOPLAM: son 4 çeyreğin çeyrek sütunları toplanır, enflasyon
+      endekslemesi UYGULANMAZ. Faktör modeli için önemli olan şirketler arası
+      GÖRELİ sıralama ve hepsi aynı yöntemle hesaplandığı için sıralama
+      bozulmaz. Dosyada `_yontem` ile yazılı.
+   4) ŞABLON FARKI: banka (ALBRK) ve GYO (AAGYO/AHSGY) XBRL kodları farklıdır;
+      kalemler boş gelirse şirket `eksik:true` işaretlenir — UYDURMA YOK.
+   5) PAY ADEDİ: ödenmiş sermaye (ifrs-full_IssuedCapital) nominal 1 TL
+      varsayımıyla pay adedini verir. Nominal farklıysa değer sapar; bu yüzden
+      `adet_kaynak:'sermaye'` diye işaretlenir, kesin sayılmaz. */
+async function faktorEvren() {
+  const dosya = 'faktor-evren.json';
+  const PARTI_BOY = 12;                       /* ÖLÇÜM TURU: küçük başla */
+  const TABAN = 'https://ktpanel.vercel.app/api/kap';
+  const uyku = (ms) => new Promise(r => setTimeout(r, ms));
+  let uyeler = [];
+  try {
+    const eu = await oku('endeks-uyeler.json');
+    uyeler = ((eu.uyeler || {}).XKTUM || []).slice();
+  } catch (e) {}
+  if (!uyeler.length) { raporlar.push('### Faktör evreni (§361) — ⏭ XKTUM üye listesi okunamadı'); return; }
+
+  let D = { guncelleme: null, evren: 'XKTUM', _yontem: '', sirketler: {} };
+  if (await varMi(dosya)) { try { D = await oku(dosya) || D; } catch (e) {} }
+  D.sirketler = D.sirketler || {};
+
+  /* Sıra: önce hiç çekilmemişler, sonra en eski çekilenler.
+     Bilanço tetiğindekiler (yeni bildirim) EN ÖNE. */
+  let tetikKodlar = [];
+  try { const bt = await oku('bilanco-tetik.json'); tetikKodlar = bt.kodlar || []; } catch (e) {}
+  const yas = (k) => {
+    const r = D.sirketler[k];
+    if (!r || !r.ts) return 0;                      /* hiç çekilmemiş → en öncelikli */
+    return new Date(r.ts).getTime();
+  };
+  const sira = uyeler.slice().sort((a, b) => {
+    const ta = tetikKodlar.includes(a) ? 0 : 1, tb = tetikKodlar.includes(b) ? 0 : 1;
+    if (ta !== tb) return ta - tb;
+    return yas(a) - yas(b);
+  }).slice(0, PARTI_BOY);
+
+  const AL = {
+    ciro: 'ifrs-full_Revenue', brut: 'ifrs-full_GrossProfit',
+    faal: 'ifrs-full_ProfitLossFromOperatingActivities',
+    amort: 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense',
+    netKar: 'ifrs-full_ProfitLossAttributableToOwnersOfParent',
+    nakit: 'ifrs-full_CashAndCashEquivalents', finYat: 'kap-fr_CurrentFinancialInvestments',
+    kvB: 'kap-fr_CurrentBorowings', kvUV: 'kap-fr_CurrentPortionOfNoncurrentBorrowings',
+    uvB: 'ifrs-full_LongtermBorrowings', ozk: 'ifrs-full_Equity',
+    aktif: 'ifrs-full_Assets', sermaye: 'ifrs-full_IssuedCapital',
+    donen: 'ifrs-full_CurrentAssets', kvY: 'ifrs-full_CurrentLiabilities'
+  };
+  let basarili = 0, eksikli = 0, dusen = 0;
+  const notlar = [];
+
+  for (const kod of sira) {
+    try {
+      const rd = await fetch(TABAN + '?mod=donemler&kod=' + kod + '&yil=2', { signal: AbortSignal.timeout(25000) });
+      const jd = await rd.json();
+      const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, 4) : [];
+      if (donemler.length < 2) { dusen++; notlar.push(kod + ':dönem yok'); await uyku(700); continue; }
+
+      const kalemler = [];
+      for (const dn of donemler) {
+        const rh = await fetch(TABAN + '?mod=ham&id=' + dn.disclosureIndex, { signal: AbortSignal.timeout(30000) });
+        const jh = await rh.json();
+        if (!jh || !jh.ok) { kalemler.push(null); await uyku(500); continue; }
+        const carpan = (jh.birim && jh.birim.carpan) || 1;
+        const K = {};
+        (jh.tablolar || []).forEach(t => (t.satirlar || []).forEach(sr => {
+          if (!sr.xbrl || !sr.degerler || !sr.degerler.length || K[sr.xbrl]) return;
+          K[sr.xbrl] = { k: sr.degerler[0] * carpan,
+            c: (sr.degerler.length >= 4 && isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null };
+        }));
+        kalemler.push({ yil: dn.year || dn.yil, donem: dn.period || dn.donem, K });
+        await uyku(500);
+      }
+
+      const son = kalemler.find(x => x);
+      if (!son) { dusen++; notlar.push(kod + ':tablo yok'); await uyku(700); continue; }
+      /* akış kalemleri: çeyrek sütunu varsa o, yoksa 1. dönemde kümülatif */
+      const akis = (kad) => {
+        let t = 0, n = 0;
+        for (const kl of kalemler) {
+          if (!kl) continue;
+          const v = kl.K[AL[kad]];
+          if (!v) continue;
+          const d = isFinite(v.c) ? v.c : (kl.donem === 1 ? v.k : null);
+          if (isFinite(d)) { t += d; n++; }
+        }
+        return n >= 3 ? t : null;                    /* 4 çeyreğin en az 3'ü gerekli */
+      };
+      const stok = (kad) => { const v = son.K[AL[kad]]; return v && isFinite(v.k) ? v.k : null; };
+      const S = (...a) => { let t = 0, v = false; a.forEach(z => { if (isFinite(z)) { t += z; v = true; } }); return v ? t : null; };
+
+      const ciro = akis('ciro'), faal = akis('faal'), am = akis('amort'), netKar = akis('netKar'), brut = akis('brut');
+      const favok = (isFinite(faal) && isFinite(am)) ? faal + am : null;
+      const finBorc = S(stok('kvB'), stok('kvUV'), stok('uvB'));
+      const likit = S(stok('nakit'), stok('finYat'));
+      const kayit = {
+        ts: new Date().toISOString().slice(0, 19) + 'Z',
+        donem: son.yil + '/' + son.donem, ceyrek: kalemler.filter(x => x).length,
+        ciro, brut, favok, netKar,
+        ozk: stok('ozk'), aktif: stok('aktif'), donen: stok('donen'), kvY: stok('kvY'),
+        finBorc, likit,
+        netBorc: (isFinite(finBorc) && isFinite(likit)) ? finBorc - likit : null,
+        adet: isFinite(stok('sermaye')) ? Math.round(stok('sermaye')) : null,
+        adet_kaynak: 'sermaye(nominal 1₺ varsayımı)'
+      };
+      const bosSay = ['ciro', 'favok', 'ozk', 'aktif'].filter(x => !isFinite(kayit[x])).length;
+      kayit.eksik = bosSay > 0;
+      if (kayit.eksik) { eksikli++; notlar.push(kod + ':' + bosSay + ' ana kalem boş'); } else basarili++;
+      D.sirketler[kod] = kayit;
+      await uyku(800);
+    } catch (e) {
+      dusen++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 24));
+      await uyku(1000);
+    }
+  }
+
+  D.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
+  D.evren = 'XKTUM';
+  D.uye_sayisi = uyeler.length;
+  D.kapsam = Object.keys(D.sirketler).length;
+  D._yontem = 'TTM = son 4 çeyreğin çeyrek sütunu toplamı (enflasyon endekslemesi YOK — göreli sıralama için yeterli, mutlak değer için panelde endeksleme var). Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.';
+  await yaz(dosya, D);
+  degisenler.push('faktör evreni (' + D.kapsam + '/' + uyeler.length + ')');
+  raporlar.push('### Faktör evreni (§361) — ✓ parti ' + sira.length + ' · kapsam ' + D.kapsam + '/' + uyeler.length +
+    '\n- bu turda: ' + basarili + ' tam · ' + eksikli + ' eksik kalemli · ' + dusen + ' alınamadı' +
+    (notlar.length ? ('\n- not: ' + notlar.slice(0, 8).join(' · ')) : '') +
+    '\n- ⚠ ÖLÇÜM TURU: parti ' + PARTI_BOY + ' şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).');
+}
+
 async function makroTakvim() {
   const dosya = 'makro-takvim.json';
   try {
@@ -2360,6 +2507,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihale (§314)', ()=>hmbIhale());   /* SS326 */
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
+    await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
   }
 
