@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820e';   // SS345 enflasyon endeksleme + SS343b kurulum onarimi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820f';   // SS345b onbellek sema surumu   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9425,9 +9425,18 @@ function ftRenk(n, tersMi){
       o sütun "—" kalır ve dipnotta sebebi yazar. Sessiz atlama yok.
    4) ŞABLON: bildirimin şablonu (sanayi/banka/sigorta) kayda yazılır; farklı
       şablonlar aynı seride karışırsa uyarı verilir (§114 karışık taban). */
-const CS_ANAHTAR = 'ktp_kap_ceyrek_v1';
+/* §345b ONBELLEK SEMA SURUMU (20 Agu, canli ariza): §345 endeksleme icin
+   kayitlara `onceki` alani eklendi ama ONBELLEKTEKI eski kayitlarda o alan
+   YOKTU — panel "tumu onbellekten" deyip eski semayi kullandi, katsayilar 1
+   kaldi ve degerler HAM gorundu (2025/2 ciro 183 gozuktu, dogrusu 241).
+   Dipnot "ENDEKSLI" diyordu: en kotu tur — yanlis etiketli veri.
+   COZUM: anahtar SEMA SURUMU tasir. Sema degisince anahtar degisir, eski
+   kayitlar kullanilmaz ve otomatik yeniden cekilir.
+   DERS: KAYIT SEMASI DEGISIYORSA ONBELLEK ANAHTARI DA DEGISMELI. */
+const CS_ANAHTAR = 'ktp_kap_ceyrek_v2';
 const CS_TAVAN = 400;                 /* önbellekteki azami çeyrek kaydı */
 function csOnbellekOku(){
+  try{ localStorage.removeItem('ktp_kap_ceyrek_v1'); }catch(e){}   /* §345b: eski şema temizliği */
   try{ return JSON.parse(localStorage.getItem(CS_ANAHTAR)||'{}'); }catch(e){ return {}; }
 }
 function csOnbellekYaz(o){
@@ -9759,7 +9768,7 @@ function csTabloBas(kod, liste, veri, hata){
     '</tr></thead><tbody>'+govde+'</tbody></table>'+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
       'Birim: '+(birimler.join(', ')||'—')+' → ₺ tabani.'+
-      (endeksAcik ? (' · <b style="color:var(--up)">ENFLASYON ENDEKSLI</b>: tum ceyrekler EN YENI RAPORUN PARASIYLA. TMS-29 geregi her rapor kendi donem sonu alim gucuyle yazilir; ham halde 15 ceyrek 15 farkli parayla olculur ve trend yaniltir. Katsayilar raporlarin kendi &quot;onceki donem&quot; sutunlarindan zincirlenir — dis veri yok. <span class="thin">'+endekslenen+' hucre cevrildi</span>') : ' · <b style="color:#E8933B">HAM (raporun kendi parasi)</b> — ceyrekler farkli alim guclerinde.')+
+      ((endeksAcik && endekslenen>0) ? (' · <b style="color:var(--up)">ENFLASYON ENDEKSLI</b>: tum ceyrekler EN YENI RAPORUN PARASIYLA. TMS-29 geregi her rapor kendi donem sonu alim gucuyle yazilir; ham halde 15 ceyrek 15 farkli parayla olculur ve trend yaniltir. Katsayilar raporlarin kendi &quot;onceki donem&quot; sutunlarindan zincirlenir — dis veri yok. <span class="thin">'+endekslenen+' hucre cevrildi</span>') : (endeksAcik ? ' · <b style="color:var(--down)">⚠ ENDEKSLENEMEDI</b> — katsayi cikarilamadi (raporlarda "onceki donem" sutunu eksik olabilir); degerler HAM, ceyrekler farkli alim guclerinde.' : ' · <b style="color:#E8933B">HAM (raporun kendi parasi)</b> — ceyrekler farkli alim guclerinde.'))+
       (turetilenSayi?(' · <b style="color:#E8933B">≈ işaretli '+turetilenSayi+' hücre YAKLAŞIK</b>: rapor çeyrek sütunu vermediği için kümülatif farkından türetildi. <b>Enflasyon muhasebesi (TMS-29)</b> her raporu kendi dönem sonu alım gücüne göre yeniden ifade ettiğinden bu fark birebir çeyrek değildir — ölçülen sapma TUPRS 2026/2\'de %4,7. İşaretsiz hücreler raporun kendi sütunundan, kesindir.'):'')+
       ' · FAVÖK = Esas faaliyet kârı + amortisman · Net borç = finansal borç − (nakit + finansal yatırım) · SNA = işletme nakit akışı − yatırım harcaması'+
       (hata&&hata.length?(' · <span style="color:var(--down)">alınamadı: '+hata.join(' · ')+'</span>'):'')+
