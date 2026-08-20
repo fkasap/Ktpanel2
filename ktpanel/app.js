@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821e';   // SS366 MKK VAP fon buyuklugu   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821f';   // SS366e fon turu kirilimi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9808,6 +9808,15 @@ async function vapInit(){
 }
 function vapCiz(){
   const T=$('vapTablo'); if(!T||!VAPFON) return;
+  /* §366e TÜR KIRILIMI (21 Ağu, kullanıcı: "fon türü bazında değişim
+     istiyorum"). Dosya artık iki seri taşıyor:
+       seri      → Ay × toplam (ilk grid)
+       tur_seri  → Ay × Fon Türü (ikinci grid, 14 tür)
+     Kart tür varsa ONU gösterir; yoksa toplam görünüme düşer.
+     ÇAPRAZ DOĞRULAMA: türlerin toplamı = genel toplam (canlıda 10.052,1 mlr
+     ile birebir tuttu). Bu kontrol ekranda da yapılır ve sapma varsa YAZILIR —
+     iki bağımsız grid birbirini onaylamalı. */
+  if((VAPFON.tur_seri||[]).length){ vapTurCiz(); return; }
   const seri=(VAPFON.seri||[]);
   if(!seri.length){ T.innerHTML='<div class="sub">seri boş</div>'; return; }
   const O=VAPFON.olculer||[];
@@ -9857,6 +9866,64 @@ function vapCiz(){
     'Kaynak: '+esc(VAPFON.kaynak||'MKK VAP')+' · veri kümesi <b>'+esc(VAPFON.dosya_adi||'')+'</b> · '+esc(String(VAPFON.ay_sayisi||0))+' ay. '+
     'Bu <b>resmî saklama</b> verisidir; PYŞ Sektör sekmesindeki günlük/haftalık akış TEFAS pay adedi × fiyat farkından TÜRETİLİR. '+
     'İkisi farklı yöntem ve sıklıkta olduğu için birebir örtüşmez — biri <b>kim topluyor</b>, diğeri <b>sektör ne kadar büyüdü</b> sorusunu cevaplar.';
+}
+/* §366e FON TÜRÜ GÖRÜNÜMÜ — büyüklük + aylık değişim, tür bazında. */
+function vapTurCiz(){
+  const T=$('vapTablo'); if(!T||!VAPFON) return;
+  const ts=VAPFON.tur_seri||[], O=VAPFON.olculer||[];
+  const kSonT=O.find(x=>/Dönem Sonu Fon Tutar/i.test(x));
+  const kBasT=O.find(x=>/Dönem Başı Fon Tutar/i.test(x));
+  const kSay=O.find(x=>/Dönem Sonu Fon Sayısı/i.test(x));
+  const aylar=[...new Set(ts.map(x=>x.ay))].sort().reverse();
+  const sonAy=aylar[0];
+  if($('vapDamga')) $('vapDamga').textContent='MKK VAP · '+sonAy+(VAPFON.tur_kismi?' · kısmi':'');
+  const mlr=(v)=> Number.isFinite(v)? trN(v/1e9, Math.abs(v/1e9)>=100?0:1) : '—';
+  const oAy=ts.filter(x=>x.ay===sonAy && Number.isFinite(x[kSonT]));
+  if(!oAy.length){ T.innerHTML='<div class="sub">son ay için tür verisi yok</div>'; return; }
+  const toplam=oAy.reduce((t,x)=>t+x[kSonT],0);
+  oAy.sort((a,b)=>b[kSonT]-a[kSonT]);
+  /* değişim: dönem sonu − dönem başı (AYNI satırdan, aynı para) */
+  const deg=(x)=> (Number.isFinite(x[kSonT])&&Number.isFinite(x[kBasT])) ? x[kSonT]-x[kBasT] : null;
+  const enBuyukDeg=Math.max(...oAy.map(x=>Math.abs(deg(x)||0)),1);
+  /* özet */
+  const genelToplam=(VAPFON.seri||[]).length ? (VAPFON.seri[VAPFON.seri.length-1]||{})[O.find(x=>/Dönem Sonu Fon Tutar/i.test(x))] : null;
+  const sapma=(Number.isFinite(genelToplam)&&genelToplam)?Math.abs(toplam/genelToplam-1)*100:null;
+  if($('vapOzet')) $('vapOzet').innerHTML=
+    '<div style="display:flex;gap:22px;flex-wrap:wrap;align-items:baseline">'+
+      '<div><span class="sub">Toplam fon ('+esc(sonAy)+')</span><br><span style="font-family:var(--mono);font-size:21px;font-weight:700;color:var(--mm2)">'+mlr(toplam)+' mlr ₺</span></div>'+
+      '<div><span class="sub">Tür sayısı</span><br><span style="font-family:var(--mono);font-size:16px">'+oAy.length+'</span></div>'+
+      '<div><span class="sub">En büyük pay</span><br><span style="font-family:var(--mono);font-size:16px;font-weight:600">'+esc(oAy[0].tur.replace(/ ŞEMSİYE FON[U]?$/i,''))+' <span class="thin">%'+trN(oAy[0][kSonT]/toplam*100,1)+'</span></span></div>'+
+      (Number.isFinite(sapma)?('<div><span class="sub">Toplamla uyum</span><br><span style="font-family:var(--mono);font-size:14px;color:'+(sapma<0.5?'var(--up)':'var(--down)')+'">'+(sapma<0.5?'✓ tutuyor':'⚠ %'+trN(sapma,1)+' sapma')+'</span></div>'):'')+
+    '</div>';
+  /* grafik: yatay paylar */
+  if($('vapGrafik')){
+    const enB=oAy[0][kSonT]||1;
+    $('vapGrafik').innerHTML='<div class="lbl" style="font-size:10px">TÜR BAZINDA BÜYÜKLÜK <span class="thin" style="font-weight:400;text-transform:none">'+esc(sonAy)+' · mlr ₺</span></div>'+
+      oAy.slice(0,10).map(x=>{
+        const p=(x[kSonT]/enB*100).toFixed(1), d=deg(x);
+        return '<div class="bar" style="margin:2px 0"><span class="bn" style="font-size:10px;width:170px">'+esc(x.tur.replace(/ ŞEMSİYE FON[U]?$/i,'').replace(/ YATIRIM FONU$/i,''))+'</span>'+
+          '<span class="bt"><span class="bf" style="width:'+p+'%"></span></span>'+
+          '<span class="bv">'+mlr(x[kSonT])+'</span>'+
+          '<span class="bk thin" style="font-size:9px;min-width:64px;text-align:right;color:'+(Number.isFinite(d)&&d<0?'var(--down)':'var(--up)')+'">'+(Number.isFinite(d)?((d>0?'+':'')+mlr(d)):'')+'</span></div>';
+      }).join('');
+  }
+  /* tablo: tüm türler + pay + aylık değişim */
+  T.innerHTML='<table style="width:100%;border-collapse:collapse">'+
+    '<thead><tr><th style="text-align:left">FON TÜRÜ</th><th class="num">Büyüklük <span class="thin">mlr ₺</span></th>'+
+    '<th class="num">Pay</th><th class="num">Ay içi değişim <span class="thin">mlr ₺</span></th><th class="num">Fon sayısı</th></tr></thead><tbody>'+
+    oAy.map(x=>{
+      const d=deg(x);
+      return '<tr><td style="font-size:10.5px">'+esc(x.tur)+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px">'+mlr(x[kSonT])+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px;color:var(--muted)">%'+trN(x[kSonT]/toplam*100,1)+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px'+(Number.isFinite(d)&&d<0?';color:var(--down)':(Number.isFinite(d)&&d>0?';color:var(--up)':''))+'">'+(Number.isFinite(d)?((d>0?'+':'')+mlr(d)):'—')+'</td>'+
+        '<td class="num" style="font-family:var(--mono);font-size:10.5px;color:var(--muted)">'+(Number.isFinite(x[kSay])?trN(x[kSay],0):'—')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  if($('vapNot')) $('vapNot').innerHTML=
+    'Kaynak: '+esc(VAPFON.kaynak||'MKK VAP')+' · '+esc(String(aylar.length))+' ay × '+esc(String((VAPFON.turler||[]).length))+' tür. '+
+    '<b>Ay içi değişim</b> = dönem sonu − dönem başı, AYNI satırdan alınır (aynı raporun parası). '+
+    (VAPFON.tur_kismi?('<b style="color:#E8933B">⚠ KISMİ:</b> yanıt sayfalı geldiği için '+esc(String((VAPFON.tur_seri||[]).length))+'/'+esc(String(VAPFON.tur_beklenen_satir||0))+' satır alındı; son aylar tam, eski aylar eksik olabilir. ') : '')+
+    'Bu <b>resmî saklama</b> verisidir; PYŞ Sektör sekmesindeki günlük akış TEFAS\'tan TÜRETİLİR — biri <b>kim topluyor</b>, bu ise <b>hangi türe akıyor</b> sorusunu cevaplar.';
 }
 let GYONAV = null;
 async function gyoNavInit(){
