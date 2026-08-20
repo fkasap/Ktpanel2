@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820r';   // SS351c carpan genis FAVOK (kullanici karari)   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820s';   // SS352 birim etiketi + ciro ondaligi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7993,12 +7993,12 @@ function multipleRender(){
     if(altinda&&refYil===null&&p.t>0)refYil=p.t;
     const bg=altinda?'background:rgba(15,162,107,.12)':'';
     const cStr=p.carpan!=null?trN(p.carpan,1)+'x':'\u2014';
-    return '<tr style="'+bg+'"><td>'+(p.t===0?'Bugün':'Yıl '+p.t)+(p.t?' <span class="thin" style="font-size:9px">+%'+trN(p.g,0)+'</span>':'')+'</td><td class="num">'+trN(p.ciro/1000,0)+'</td><td class="num">%'+trN(p.m,1)+'</td><td class="num">'+trN(p.ebitda/1000,1)+'</td><td class="num" style="font-weight:600;color:var(--mm2)">'+cStr+'</td></tr>';
+    return '<tr style="'+bg+'"><td>'+(p.t===0?'Bugün':'Yıl '+p.t)+(p.t?' <span class="thin" style="font-size:9px">+%'+trN(p.g,0)+'</span>':'')+'</td><td class="num">'+trN(p.ciro/1000, Math.abs(p.ciro/1000)>=100?0:1)+'</td><td class="num">%'+trN(p.m,1)+'</td><td class="num">'+trN(p.ebitda/1000,1)+'</td><td class="num" style="font-weight:600;color:var(--mm2)">'+cStr+'</td></tr>';
   }).join('');
   const bugun=proj[0].carpan, son5=proj[3].carpan;
   if($('mulSonuc'))$('mulSonuc').innerHTML=
     '<div class="lbl" style="margin-top:12px">EV SABİT · ÇARPAN ERİMESİ <span class="thin">(bugünkü EV korunur, EBITDA büyür)</span></div>'+
-    '<table style="margin-top:4px"><tr><th>Dönem</th><th class="num">Ciro</th><th class="num">Marj</th><th class="num">EBITDA</th><th class="num">EV/EBITDA</th></tr>'+rows+'</table>'+
+    '<table style="margin-top:4px"><tr><th>Dönem</th><th class="num">Ciro <span class="thin" style="font-weight:400">mlr ₺</span></th><th class="num">Marj</th><th class="num">EBITDA <span class="thin" style="font-weight:400">mlr ₺</span></th><th class="num">EV/EBITDA</th></tr>'+rows+'</table>'+
     '<div class="card" style="margin-top:10px"><div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap">'+
       '<div><span class="sub">Bugün</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--mm2)">'+trN(bugun,1)+'x</span></div>'+
       '<div><span class="sub">3 yıl sonra</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+(son5!=null&&son5<bugun?'var(--up)':'var(--down)')+'">'+(son5!=null?trN(son5,1)+'x':'\u2014')+'</span></div>'+
