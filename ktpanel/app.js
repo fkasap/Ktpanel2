@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820u';   // SS353b sessiz donus bitti + tekrar deneme   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820v';   // SS353c tbody duzeltmesi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8891,6 +8891,15 @@ async function makroTakvimRender(){
   const kart=document.getElementById('kritikTakvimKart');
   const tablo=kart?kart.querySelector('table.cal'):null;
   if(!tablo) return;
+  /* §353c GÖRÜNMEZ SATIRLAR (20 Ağu, konsol kanıtı: "7 olay tabloya ekleniyor"
+     yazıyordu ama ekranda yoktu). Sebep HTML kuralı: <tr> doğrudan <table>'ın
+     çocuğu OLAMAZ — tarayıcı DOM'da tutar (querySelectorAll bulur!) ama
+     RENDER ETMEZ. Satırlar <tbody> içine eklenmeli.
+     Bu yüzden dört tur boyunca "veri var, fonksiyon çalışıyor, satır yok"
+     çelişkisi yaşadık: ölçüm DOM'a bakıyordu, göz ekrana.
+     DERS: DOM'DA VAR OLMAK GÖRÜNÜR OLMAK DEĞİLDİR — tablo satırları için
+     tBodies[0] kullan. */
+  const govde = tablo.tBodies[0] || tablo;
   try{
     /* §353b SESSİZ ERKEN DÖNÜŞ BİTTİ (20 Ağu, canlı): boot 550 ms'de bitiyor,
        katlama düğmesi bile oluşmuyordu — yani fetch BAŞARISIZDI ve `return`
@@ -8928,7 +8937,7 @@ async function makroTakvimRender(){
         (x.etki==='High'?' <span class="tag" style="background:var(--down);font-size:8px">YÜKSEK</span>':'')+
         ((x.beklenti||x.onceki)?(' · bek '+esc(x.beklenti||'—')+' / önc '+esc(x.onceki||'—')):'')+'</span>';
       tr.appendChild(s1); tr.appendChild(s2);
-      tablo.appendChild(tr);
+      govde.appendChild(tr);
     });
     const AYK={'oca':0,'şub':1,'sub':1,'mar':2,'nis':3,'may':4,'haz':5,'tem':6,'ağu':7,'agu':7,'eyl':8,'eki':9,'kas':10,'ara':11};
     const bugun=new Date(); bugun.setHours(0,0,0,0);
@@ -8947,7 +8956,7 @@ async function makroTakvimRender(){
       if(fa<-6) dd=new Date(bugun.getFullYear()+1,ay,gun);
       tr.dataset.zaman=dd.getTime();
     });
-    tumu.filter(x=>+x.dataset.zaman>0).sort((a,b)=>(+a.dataset.zaman)-(+b.dataset.zaman)).forEach(x=>tablo.appendChild(x));
+    tumu.filter(x=>+x.dataset.zaman>0).sort((a,b)=>(+a.dataset.zaman)-(+b.dataset.zaman)).forEach(x=>govde.appendChild(x));
     try{ kritikTakvimSadelestir(true); }catch(e){}
   }catch(e){}
 }
