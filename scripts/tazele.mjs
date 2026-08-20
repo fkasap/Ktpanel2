@@ -1545,9 +1545,13 @@ async function fonAkisArsiv(meta, kurucu) {
     }
     if (!Object.keys(bugunKayit).length) return;
     a.gunler[bugun] = bugunKayit;
-    /* Son 15 gün tutulur — akış hesabı için 2 gün yeter, gerisi grafik payı */
+    /* §359 PENCERE 15 -> 26 GÜN (20 Ağu, kullanıcı: "haftalık da eklesek
+       bozulur mu"). Bozmaz — tam tersi, hesap için gereken zaten burada.
+       1G iki gün ister, 1H beş iş günü, 1A yirmi iki iş günü.
+       ÖLÇÜM: gün başına ~0,108 MB (1971 fon); 26 gün ≈ 2,8 MB. Kabul edilebilir
+       (repo dosyası, panel yalnız özetleri okuyor — ham günleri değil). */
     const gunler = Object.keys(a.gunler).sort();
-    while (gunler.length > 15) { delete a.gunler[gunler.shift()]; }
+    while (gunler.length > 26) { delete a.gunler[gunler.shift()]; }
     /* AKIŞ HESABI: bir önceki KAYITLI günle karşılaştır (hafta sonu boşluğu
        kendiliğinden atlanır — ardışık kayıt yoksa hesap yapılmaz). */
     const sonIki = Object.keys(a.gunler).sort().slice(-2);
@@ -1597,6 +1601,44 @@ async function fonAkisArsiv(meta, kurucu) {
         .map(ad => ({ ad, net: Math.round(pysTop[ad]), fon: pysAdet[ad] }))
         .sort((x, y) => y.net - x.net);
       a.pys = { gun: g1, onceki: g0, adet: pysListe.length, eslesmeyen, liste: pysListe };
+
+      /* ── §359 HAFTALIK + AYLIK PENCERELER ────────────────────────────────
+         Aynı yöntem, farklı taban gün: akış = (pay_son − pay_taban) × fiyat_son.
+         1H = 5 iş günü geriye, 1A = 22 iş günü geriye (yoksa en eski kayıt).
+         Taban gün YETERSİZSE pencere ÜRETİLMEZ — kısa seriyle "aylık" demek
+         yanıltıcı olurdu; panel o sekmeyi göstermez.
+         Fon ve tür kırılımları da aynı pencerelerde üretilir ki kart üç blokta
+         da Günlük/Haftalık/Aylık gösterebilsin. */
+      const tumGun = Object.keys(a.gunler).sort();
+      const pencere = (geriIsGunu) => {
+        const sonIdx = tumGun.length - 1;
+        const tabanIdx = sonIdx - geriIsGunu;
+        if (tabanIdx < 0) return null;
+        const gT = tumGun[tabanIdx], gS = tumGun[sonIdx];
+        const eT = a.gunler[gT], eS = a.gunler[gS];
+        const f = {}; let say = 0;
+        for (const k of Object.keys(eS)) {
+          if (!eT[k]) continue;
+          const v = (eS[k][0] - eT[k][0]) * eS[k][1];
+          if (!isFinite(v) || Math.abs(v) > 5e11) continue;
+          f[k] = Math.round(v); say++;
+        }
+        if (say < 100) return null;
+        const kur = {}, kurAdet = {};
+        for (const k of Object.keys(f)) {
+          const ad = kurucuAd(kurucuHar[k]); if (!ad) continue;
+          kur[ad] = (kur[ad] || 0) + f[k]; kurAdet[ad] = (kurAdet[ad] || 0) + 1;
+        }
+        return { taban: gT, gun: gS, adet: say,
+          pys: Object.keys(kur).map(ad => ({ ad, net: Math.round(kur[ad]), fon: kurAdet[ad] })).sort((x, y) => y.net - x.net),
+          fon: Object.keys(f).map(k => ({ k, net: f[k] })).sort((x, y) => y.net - x.net).slice(0, 40) };
+      };
+      a.pencereler = { '1H': pencere(5), '1A': pencere(22) };
+      const pAd = Object.keys(a.pencereler).filter(k => a.pencereler[k]);
+      raporlar.push('### Akış pencereleri (§359) — ' + (pAd.length ? ('✓ ' + pAd.join(', ') + ' hazır') : '⏭ henüz yeterli gün yok') +
+        ' · arşiv ' + tumGun.length + ' gün' +
+        (a.pencereler['1H'] ? ('\n- 1H giriş: ' + a.pencereler['1H'].pys.slice(0,3).map(x=>x.ad+' '+(x.net/1e9).toFixed(1)+' mlr').join(' · ')) : '') +
+        (a.pencereler['1A'] ? ('\n- 1A giriş: ' + a.pencereler['1A'].pys.slice(0,3).map(x=>x.ad+' '+(x.net/1e9).toFixed(1)+' mlr').join(' · ')) : ''));
       raporlar.push('### PYŞ bazında akış (§358) — ✓ ' + pysListe.length + ' kurum · ' + g1 +
         (eslesmeyen ? (' · ' + eslesmeyen + ' fon eşleşmedi') : '') +
         '\n- giriş: ' + pysListe.slice(0, 3).map(x => x.ad + ' ' + (x.net / 1e9).toFixed(2) + ' mlr').join(' · ') +
