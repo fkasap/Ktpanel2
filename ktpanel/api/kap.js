@@ -385,7 +385,7 @@ async function _bilancoAyristir(id){
    Her yanıt artık `surum` taşıyor. Beklenen sürümü görmüyorsan gerisini
    okumaya gerek yok.
    Bir sistemin HANGİ SÜRÜMÜNÜN koştuğu, çıktısının ilk satırında olmalı. */
-const _SURUM = 'kap-2026-08-20-p';   /* §338 donemler + §340 ham */
+const _SURUM = 'kap-2026-08-20-q';   /* §340b tani */
 
 export default async function handler(req, res){
   res.setHeader('X-KTPanel-Surum', _SURUM);
@@ -914,6 +914,21 @@ export default async function handler(req, res){
       const KACIS = { '\\u003c': '<', '\\u003e': '>', '\\"': '"', '\\n': ' ' };
       h = h.replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
       const birim = _birimBul(h);
+
+      /* §340b TANI MODU: ?mod=ham&tani=1 — escape cozumu sonrasi metnin
+         GERCEK yapisini raporlar. Ilk surum sifir tablo buldu ve nedenini
+         tahmin etmek yerine OLCUYORUZ (sayfa GWT tabanli, icerik escape'li). */
+      if (String((req.query && req.query.tani) || '') === '1') {
+        const say = (rx) => (h.match(rx) || []).length;
+        const ilkTable = h.indexOf('<table');
+        return res.status(200).json({ surum: _SURUM, ok: true, tani: true, id: idH,
+          uzunluk: h.length, birim,
+          sayimlar: { table: say(/<table/g), trBosluk: say(/<tr[\s>]/g), trDuz: say(/<tr/g),
+            td: say(/<td/g), xbrlIfrs: say(/ifrs-full_/g), xbrlKap: say(/kap-fr_/g),
+            escapeKalan: say(/\\u003[ce]/g), gwt: say(/gwt-Label/g) },
+          ilkTableCevresi: ilkTable >= 0 ? h.slice(ilkTable, ilkTable + 700) : null,
+          xbrlCevresi: (function () { const i = h.indexOf('ifrs-full_CashFlows'); return i >= 0 ? h.slice(Math.max(0, i - 300), i + 700) : null; })() });
+      }
 
       /* Tablolari <table ...> ... </table> siniriyla ayikla; yalnizca 40+
          satirli olanlar finansal tablodur (kucukler basluk/duzen tablosu). */
