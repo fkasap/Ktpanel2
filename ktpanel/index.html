@@ -1201,26 +1201,12 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 
 <div class="tab" id="t23"><h2>Finansal Tablolar <span class="thin">(KAP · bilançoda yatay, gelir tablosunda dikey analiz)</span></h2>
-<div class="card">
-  <div class="kart-bas"><span class="lbl">ŞİRKET SEÇ</span><span class="tag" id="ftTag">KAP</span></div>
-  <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
-    <input id="ftKod" placeholder="TOASO" maxlength="6" style="width:110px;text-transform:uppercase;font-family:var(--mono)">
-    <select id="ftYil" style="width:92px"></select>
-    <select id="ftDonem" style="width:130px">
-      <option value="1">1Ç · 3 Aylık</option>
-      <option value="2" selected>2Ç · 6 Aylık</option>
-      <option value="3">3Ç · 9 Aylık</option>
-      <option value="4">4Ç · Yıllık</option>
-    </select>
-    <button id="ftGetir">getir</button>
-    <span class="sub" id="ftDurum" style="font-size:10px"></span>
-  </div>
-  <div class="note">Veri doğrudan <b>KAP finansal rapor bildiriminden</b> okunur — aracı yok. Şirket ve dönem seçilir, panel o dönemin bildirimini bulup tabloyu çıkarır. <b>Birim raporun kendi beyanından okunur</b> (TL / bin TL / milyon TL) — varsayılmaz, tablonun üstünde yazar. Bulunamayan kalem <span class="thin">gri</span> gösterilir, sessizce atlanmaz.</div>
-  <div id="ftBilanco" style="margin-top:10px"></div>
-  <div id="ftGelir" style="margin-top:14px"></div>
-  <div id="ftNot" style="margin-top:10px"></div>
-</div>
-
+<!-- §343 ESKI TEK-DONEM KARTI KALDIRILDI (20 Agu, kullanici karari):
+     Ceyreklik Seri karti (SS339-342) ayni veriyi 15 ceyrek + tam kalem +
+     turev metriklerle veriyor; tek donem gosteren kart gereksiz kaldi.
+     ftGetir/ftKod/ftBilanco/ftGelir/ftNot kaplari SILINDI. app.js'teki
+     ftGetir fonksiyonu KORUNDU ama artik cagrilmiyor (olu kod degil: eski
+     kart bir gun geri istenirse tek satirla baglanir; SS324 deseni). -->
 <!-- SS339 CEYREKLIK SERI — 15 ceyrek yan yana. Kaynak: SS338 mod=donemler
      (sirket bazli, KAP 2000 tavani YOK) + mevcut mod=tablo ayristiricisi.
      Onbellek: gecmis ceyrekler DEGISMEZ, bir kez cekilir. -->
@@ -1688,7 +1674,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260820c"></script>
-<script src="/ajan.js?v=20260820c"></script>
+<script src="/app.js?v=20260820d"></script>
+<script src="/ajan.js?v=20260820d"></script>
 </body>
 </html>

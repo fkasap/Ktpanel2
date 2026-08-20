@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820c';   // SS342b enflasyon uyarisi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820d';   // SS343 eski kart kalkti + SS344 sparkline   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9622,6 +9622,29 @@ function csMetrikler(liste, veri, kod, i){
     ozkOran: (Number.isFinite(ozk)&&Number.isFinite(varlik)&&varlik) ? ozk/varlik*100 : null
   };
 }
+/* ── §344 SATIR İÇİ SPARKLINE (20 Ağu) ─────────────────────────────────────
+   15 çeyreklik seriyi satır satır okumak yerine TREND tek bakışta görünsün.
+   - Tablo en yeni SOLDA; sparkline ZAMAN YÖNÜNDE çizilir (eski solda, yeni
+     sağda) — aksi halde göz yanılır.
+   - Ölçek satırın KENDİ min-max'ı: mutlak büyüklükler kalemden kaleme yüz kat
+     değişiyor, ortak ölçek her şeyi düzleştirirdi.
+   - Negatife düşen seride SIFIR ÇİZGİSİ çizilir ("eksiye geçti mi" bir bakışta).
+   - Boş hücre atlanır, çizgi kırılmaz; 3 noktadan az veri varsa çizilmez. */
+function csSpark(seri, renk){
+  const p = seri.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
+  if(p.length < 3) return '';
+  const W=78, H=18, min=Math.min(...p.map(x=>x.v)), max=Math.max(...p.map(x=>x.v));
+  const ar = (max-min) || Math.abs(max) || 1;
+  const n = seri.length-1 || 1;
+  const X = (i)=> W - (i/n)*W;
+  const Y = (v)=> H-2 - ((v-min)/ar)*(H-4);
+  const nokta = p.map(x=>X(x.i).toFixed(1)+','+Y(x.v).toFixed(1)).join(' ');
+  const son = p[0];
+  const sifir = (min<0 && max>0) ? '<line x1="0" y1="'+Y(0).toFixed(1)+'" x2="'+W+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--line2)" stroke-width="0.7" stroke-dasharray="2,2"/>' : '';
+  return '<svg width="'+W+'" height="'+H+'" style="vertical-align:middle">'+sifir+
+    '<polyline points="'+nokta+'" fill="none" stroke="'+renk+'" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>'+
+    '<circle cx="'+X(son.i).toFixed(1)+'" cy="'+Y(son.v).toFixed(1)+'" r="2" fill="'+renk+'"/></svg>';
+}
 function csTabloBas(kod, liste, veri, hata){
   const T=$('csTablo'); if(!T) return;
   const ayD={1:'1Ç',2:'2Ç',3:'3Ç',4:'4Ç'};
@@ -9643,28 +9666,34 @@ function csTabloBas(kod, liste, veri, hata){
   };
   let govde='';
   ['Gelir Tablosu','Bilanço','Nakit Akış'].forEach(grup=>{
-    govde += '<tr><td colspan="'+(liste.length+1)+'" style="padding:7px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">'+grup.toLocaleUpperCase('tr')+'</td></tr>';
+    govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:7px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">'+grup.toLocaleUpperCase('tr')+'</td></tr>';
     CS_KALEM.filter(k=>k[2]===grup).forEach(([xbrl,etiket,,tip])=>{
-      const hucre = liste.map((x,i)=>{
-        const r = csCeyrek(liste,veri,kod,i,xbrl,tip);
+      const seri = liste.map((x,i)=>csCeyrek(liste,veri,kod,i,xbrl,tip));
+      const hucre = seri.map(r=>{
         if(r.turetilmis && Number.isFinite(r.v)) turetilenSayi++;
         return sayi(r.v, r.turetilmis);
       }).join('');
-      govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+'</tr>';
+      const s0 = seri.map(r=>r.v).find(v=>Number.isFinite(v));
+      govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+
+        '<td style="padding:1px 0 1px 8px">'+csSpark(seri.map(r=>r.v), (s0<0?'var(--down)':'var(--mm2)'))+'</td></tr>';
     });
   });
   /* türev metrikler */
   const M = liste.map((x,i)=>csMetrikler(liste,veri,kod,i));
-  govde += '<tr><td colspan="'+(liste.length+1)+'" style="padding:9px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">TÜREV METRİKLER</td></tr>';
+  govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:9px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">TÜREV METRİKLER</td></tr>';
   [['favok','FAVÖK',sayi],['favokMarj','FAVÖK Marjı %',oran],['brutMarj','Brüt Marj %',oran],['netMarj','Net Marj %',oran],
    ['finBorc','Finansal Borç',sayi],['netBorc','Net Borç',sayi],['snakit','Serbest Nakit Akışı',sayi],
    ['isletmeSerm','İşletme Sermayesi',sayi],['cariOran','Cari Oran',oran],['roe','ROE %',oran],['roa','ROA %',oran],
    ['ozkOran','Özkaynak/Aktif %',oran]].forEach(([ad,etiket,bic])=>{
+    const dizi = M.map(m=>m[ad]);
+    const m0 = dizi.find(v=>Number.isFinite(v));
     govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+
-      M.map(m=>bic(m[ad])).join('')+'</tr>';
+      dizi.map(v=>bic(v)).join('')+
+      '<td style="padding:1px 0 1px 8px">'+csSpark(dizi, (m0<0?'var(--down)':'var(--up)'))+'</td></tr>';
   });
   T.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr>'+
     '<th style="text-align:left;padding:2px 8px 2px 0;font-size:9.5px">KALEM <span class="thin">(mlr ₺ · oranlar %)</span></th>'+bas+
+    '<th style="text-align:left;padding:2px 0 2px 8px;font-size:9.5px">TREND <span class="thin">(eski→yeni)</span></th>'+
     '</tr></thead><tbody>'+govde+'</tbody></table>'+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
       'Birim raporun kendi beyanından: '+(birimler.join(', ')||'—')+(birimler.length>1?' <b style="color:var(--down)">⚠ karışık</b>':'')+' → tümü ₺ tabanına çevrildi.'+
