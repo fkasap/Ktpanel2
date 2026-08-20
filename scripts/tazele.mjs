@@ -2219,7 +2219,7 @@ async function vapFonAkis() {
       raporlar.push('### VAP fon akışı (§366) — ⏭ boyut boş (ölçü ' + olculer.length + ' · ay ' + ayAd.length + ')'); return;
     }
 
-    let seri = [], turSeri = [];
+    let seri = [], turSeri = [], D_kismi = false, D_beklenen = 0;
     if (turluMu) {
       /* HUCRE ESLEME `pi` ILE — tahmin yok: pi.left.ri satir indeksi,
          pi.top.ci sutun (olcu) indeksi. Satir indeksi ay×tur duzeninde. */
@@ -2234,10 +2234,16 @@ async function vapFonAkis() {
         /* metin degeri "331,939 M" gibi gelir; rv varsa onu, yoksa metni coz */
         let v = Number.isFinite(z.rv) ? z.rv : null;
         if (v === null && typeof z.v === 'string') {
-          const t = z.v.replace(/\./g, '').replace(',', '.').trim();
-          const m = t.match(/^(-?[\d.]+)\s*([MKB])?$/i);
+          /* §366d BİÇİM DÜZELTMESİ (canlı: Katılım fonu 0,4 mlr çıktı, gerçekte
+             ~400 mlr — BİN KAT küçük). VAP metni İNGİLİZ biçimi kullanıyor:
+             "331,939 M" → virgül BİNLİK ayracı, nokta ondalık. Ben Türkçe
+             sanıp virgülü ondalığa çevirmiştim.
+             DERS: SAYI BİÇİMİNİ DİLE GÖRE VARSAYMA — büyüklük testiyle doğrula
+             (bir fon türü milyar mertebesinde olmalı, milyon değil). */
+          const ham = z.v.replace(/\s/g, '');
+          const m = ham.match(/^(-?[\d,]+(?:\.\d+)?)([MKB])?$/i);
           if (m) {
-            const n = parseFloat(m[1]);
+            const n = parseFloat(m[1].replace(/,/g, ''));   /* virgül = binlik, at */
             const carp = { 'K': 1e3, 'M': 1e6, 'B': 1e9 }[(m[2] || '').toUpperCase()] || 1;
             if (isFinite(n)) v = n * carp;
           }
@@ -2253,8 +2259,17 @@ async function vapFonAkis() {
         olculer.forEach((ad, ci) => { const v = kutu[ri + '|' + ci]; k[ad] = v; if (Number.isFinite(v)) dolu++; });
         if (dolu) turSeri.push(k);
       }));
+      /* §366d KISMİ VERİ UYARISI: gvs.items SAYFALI gelir (blok başına ~100
+         satır) ve rw.row.tc gerçek satır sayısını söyler. Eksikse dosyaya
+         `kismi:true` yazılır ve rapor bunu SÖYLER — tam sanılıp üzerine
+         yorum kurulmasın. */
+      const beklenenSatir = ((g.rw || {}).row || {}).tc || (ayAd.length * turAd.length);
+      const kismi = turSeri.length < beklenenSatir;
+      D_kismi = kismi; D_beklenen = beklenenSatir;
       raporlar.push('- §366c tür kırılımı: ' + turAd.length + ' tür × ' + ayAd.length + ' ay · ' +
-        turSeri.length + ' satır dolu · ' + esli + ' hücre eşlendi' + (esssiz ? (' · ' + esssiz + ' konumsuz') : ''));
+        turSeri.length + '/' + beklenenSatir + ' satır · ' + esli + ' hücre eşlendi' +
+        (esssiz ? (' · ' + esssiz + ' konumsuz') : '') +
+        (kismi ? ' · ⚠ KISMİ (yanıt sayfalı; ilk blok alındı)' : ''));
     } else {
       const hucre = ((((g.gvs || {}).items || [])[0] || {}).items || []).map(z => (z && Number.isFinite(z.rv)) ? z.rv : null);
       if (hucre.length !== ayAd.length * olculer.length) {
@@ -2281,6 +2296,7 @@ async function vapFonAkis() {
       ay_sayisi: ayAd.length, olculer, son_ay: (turluMu ? ayAd[0] : (son.ay || null)),
       satir_boyut: satirBoyut, sutun_boyut: sutBoyut,
       turler: turAd, tur_seri: turSeri,
+      tur_kismi: D_kismi, tur_beklenen_satir: D_beklenen,
       seri
     };
     await yaz(dosya, D);
