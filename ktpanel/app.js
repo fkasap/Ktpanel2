@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820a';   // SS339 ceyreklik seri (KAP 15 ceyrek)   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820b';   // SS341 XBRL harita + SS342 metrik motoru   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9435,28 +9435,74 @@ function csOnbellekYaz(o){
     localStorage.setItem(CS_ANAHTAR, JSON.stringify(o));
   }catch(e){ console.warn('[KTPanel] §339 önbellek yazılamadı:', e && e.message); }
 }
-/* Tabloya basılacak kalem sırası — Excel modelinin omurgası */
-const CS_SATIR = [
-  ['ciro','Ciro','g'], ['brutKar','Brüt Kâr','g'], ['faaliyetKar','Faaliyet Kârı','g'],
-  ['finansGider','Finansman Gideri','g'], ['parasal','Parasal Kazanç/Kayıp','g'],
-  ['vergiOncesi','Vergi Öncesi Kâr','g'], ['netKar','Net Kâr','g'],
-  ['donenVarlik','Dönen Varlıklar','b'], ['nakit','Nakit ve Benzerleri','b'],
-  ['ticariAlacak','Ticari Alacaklar','b'], ['stoklar','Stoklar','b'],
-  ['duranVarlik','Duran Varlıklar','b'], ['toplamVarlik','Toplam Varlıklar','b'],
-  ['kisaVadeli','Kısa Vadeli Yük.','b'], ['kvFinansBorc','KV Finansal Borç','b'],
-  ['ticariBorc','Ticari Borçlar','b'], ['uzunVadeli','Uzun Vadeli Yük.','b'],
-  ['uvFinansBorc','UV Finansal Borç','b'], ['ozkaynak','Özkaynaklar','b']
+/* ── §341 XBRL KALEM HARITASI (20 Agu, mod=ham ciktisiyla dogrulandi) ───────
+   Kalem eslestirmesi METNE DEGIL XBRL KODUNA dayanir: Turkce etiket sirketten
+   sirkete degisir ("Hasilat"/"Satis Gelirleri"), kod DEGISMEZ.
+   SUTUN KURALI (TUPRS 2026/2 ciktisiyla olculdu):
+     Bilanco   -> degerler[0] = cari donem SONU (stok buyuklugu)
+     Gelir/DKG -> 4 sutun gelir: [kum.cari, kum.onceki, CEYREK.cari, ceyrek.onceki]
+                  ceyrek varsa degerler[2]; yoksa (1Ç/4Ç bazi raporlar) kumulatif
+                  saklanir ve CEYREKLIK PANELDE FARK ALINARAK turetilir — ve
+                  turetildigi EKRANDA GORUNUR (sessiz fark yasak).
+     Nakit akis-> yalniz kumulatif (YTD) gelir; ceyreklik hep farkla turetilir.
+   BIRIM: raporun kendi beyani (carpan) HER degere uygulanir — TUPRS "1.000 TL"
+   oldugu icin ham 386.420.235 aslinda 386,4 MLR TL'dir (ilk surumde "386,4 mn"
+   diye gosterilmisti, olcek hatasi buradan geliyordu). */
+const CS_KALEM = [
+  /* [xbrl, etiket, tablo, tip]  tip: 'akis' (ceyreklik anlamli) | 'stok' (donem sonu) */
+  ['ifrs-full_Revenue','Hasılat','Gelir Tablosu','akis'],
+  ['ifrs-full_CostOfSales','Satışların Maliyeti','Gelir Tablosu','akis'],
+  ['ifrs-full_GrossProfit','Brüt Kâr','Gelir Tablosu','akis'],
+  ['ifrs-full_AdministrativeExpense','Genel Yönetim Gid.','Gelir Tablosu','akis'],
+  ['kap-fr_MarketingExpense','Pazarlama Gid.','Gelir Tablosu','akis'],
+  ['ifrs-full_ProfitLossFromOperatingActivities','Esas Faaliyet Kârı','Gelir Tablosu','akis'],
+  ['ifrs-full_FinanceIncome','Finansman Geliri','Gelir Tablosu','akis'],
+  ['ifrs-full_FinanceCosts','Finansman Gideri','Gelir Tablosu','akis'],
+  ['ifrs-full_GainsLossesOnNetMonetaryPosition','Parasal Kazanç/Kayıp','Gelir Tablosu','akis'],
+  ['ifrs-full_ProfitLossBeforeTax','Vergi Öncesi Kâr','Gelir Tablosu','akis'],
+  ['ifrs-full_ProfitLoss','Dönem Kârı','Gelir Tablosu','akis'],
+  ['ifrs-full_ProfitLossAttributableToOwnersOfParent','Ana Ortaklık Payı','Gelir Tablosu','akis'],
+  ['ifrs-full_CashAndCashEquivalents','Nakit ve Benzerleri','Bilanço','stok'],
+  ['kap-fr_CurrentFinancialInvestments','Finansal Yatırımlar (KV)','Bilanço','stok'],
+  ['ifrs-full_CurrentTradeReceivables','Ticari Alacaklar','Bilanço','stok'],
+  ['ifrs-full_Inventories','Stoklar','Bilanço','stok'],
+  ['ifrs-full_CurrentAssets','Dönen Varlıklar','Bilanço','stok'],
+  ['ifrs-full_PropertyPlantAndEquipment','Maddi Duran Varlık','Bilanço','stok'],
+  ['ifrs-full_NoncurrentAssets','Duran Varlıklar','Bilanço','stok'],
+  ['ifrs-full_Assets','TOPLAM VARLIKLAR','Bilanço','stok'],
+  ['kap-fr_CurrentBorowings','KV Borçlanmalar','Bilanço','stok'],
+  ['kap-fr_CurrentPortionOfNoncurrentBorrowings','UV Borç. KV Kısmı','Bilanço','stok'],
+  ['kap-fr_CurrentTradePayables','Ticari Borçlar','Bilanço','stok'],
+  ['ifrs-full_CurrentLiabilities','KV Yükümlülükler','Bilanço','stok'],
+  ['ifrs-full_LongtermBorrowings','UV Borçlanmalar','Bilanço','stok'],
+  ['ifrs-full_NoncurrentLiabilities','UV Yükümlülükler','Bilanço','stok'],
+  ['ifrs-full_Equity','TOPLAM ÖZKAYNAK','Bilanço','stok'],
+  ['ifrs-full_IssuedCapital','Ödenmiş Sermaye','Bilanço','stok'],
+  ['ifrs-full_CashFlowsFromUsedInOperatingActivities','İşletme Nakit Akışı','Nakit Akış','akis'],
+  ['ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','Amortisman + İtfa','Nakit Akış','akis'],
+  ['kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities','Yatırım Harcaması','Nakit Akış','akis'],
+  ['ifrs-full_InterestPaidClassifiedAsFinancingActivities','Ödenen Faiz','Nakit Akış','akis'],
+  ['ifrs-full_DividendsPaidClassifiedAsFinancingActivities','Ödenen Temettü','Nakit Akış','akis'],
+  ['ifrs-full_IncreaseDecreaseInWorkingCapital','İşletme Serm. Değişimi','Nakit Akış','akis'],
+  ['ifrs-full_CashFlowsFromUsedInInvestingActivities','Yatırım Nakit Akışı','Nakit Akış','akis'],
+  ['ifrs-full_CashFlowsFromUsedInFinancingActivities','Finansman Nakit Akışı','Nakit Akış','akis']
 ];
 async function csDonemCek(id){
-  const r = await fetch('/api/kap?mod=tablo&id='+encodeURIComponent(id), {cache:'no-store'});
+  const r = await fetch('/api/kap?mod=ham&id='+encodeURIComponent(id), {cache:'no-store'});
   const j = await r.json();
-  if(!j || !j.ok) throw new Error((j&&j.err)||'tablo alınamadı');
+  if(!j || !j.ok) throw new Error((j&&j.err)||'ham tablo alınamadı');
+  const carpan = (j.birim && j.birim.carpan) || 1;
+  /* xbrl -> {k: kumulatif/donem-sonu, c: ceyrek|null} */
   const kalem = {};
-  ['bilanco','gelir'].forEach(bl=>{
-    ((j[bl]&&j[bl].kalemler)||[]).forEach(k=>{ if(k && k.ad && Number.isFinite(+k.cari)) kalem[k.ad]=+k.cari; });
+  (j.tablolar||[]).forEach(t=>{
+    (t.satirlar||[]).forEach(sr=>{
+      if(!sr.xbrl || !sr.degerler || !sr.degerler.length) return;
+      if(kalem[sr.xbrl]) return;                        /* ilk gecen kalir */
+      const d = sr.degerler;
+      kalem[sr.xbrl] = { k: d[0]*carpan, c: (d.length>=4 && Number.isFinite(d[2])) ? d[2]*carpan : null };
+    });
   });
-  return { kalem, sablon:j.sablon||null, temel:j.temel||null,
-    birim:(j.birim&&j.birim.ad)||null, carpan:(j.birim&&j.birim.carpan)||null, ts:Date.now() };
+  return { kalem, birim:(j.birim&&j.birim.ad)||null, carpan, tablo:(j.tablolar||[]).map(t=>t.ad), ts:Date.now() };
 }
 async function csGetirCalis(){
   const kod = (($('csKod')&&$('csKod').value)||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
@@ -9504,38 +9550,118 @@ async function csGetirCalis(){
   if(d) d.textContent='✓ '+Object.keys(veri).length+'/'+liste.length+' çeyrek'+(hata.length?(' · '+hata.length+' alınamadı'):'')+' · önbelleğe yazıldı';
   csTabloBas(kod, liste, veri, hata);
 }
+/* ── §342 ÇEYREKLİK TÜRETME + METRİK MOTORU ────────────────────────────────
+   ÇEYREKLİK KURALI (dürüstlük merkezli):
+     'akis' kalemler için önce raporun KENDİ çeyrek sütunu (c) denenir.
+     Yoksa aynı YIL içindeki bir önceki dönemin kümülatifinden FARK alınır
+     (4Ç = yıllık − 9A) ve satır "türetildi" işaretiyle gösterilir.
+     Yılın 1. dönemi zaten çeyrektir. Önceki dönem eksikse hücre BOŞ kalır —
+     tahmin YOK.
+   'stok' kalemler (bilanço) dönem sonu değeridir, fark alınmaz.
+   METRİKLER Excel modelinin omurgası; her biri kaynak kalemlerden türer ve
+   girdisi eksikse hesaplanmaz (yarım metrik = yanlış metrik). */
+function csCeyrek(liste, veri, kod, i, xbrl, tip){
+  const x = liste[i], ank = kod+'|'+x.yil+'|'+x.donem;
+  const kayit = veri[ank]; if(!kayit || !kayit.kalem) return {v:null};
+  const kl = kayit.kalem[xbrl]; if(!kl) return {v:null};
+  if(tip === 'stok') return {v: kl.k};
+  if(Number.isFinite(kl.c)) return {v: kl.c};
+  if(x.donem === 1) return {v: kl.k};
+  /* fark: aynı yılın bir önceki dönemi (liste en yeni→eski sıralı) */
+  const onc = liste.find(y => y.yil === x.yil && y.donem === x.donem-1);
+  if(!onc) return {v:null};
+  const ok = veri[kod+'|'+onc.yil+'|'+onc.donem];
+  const okl = ok && ok.kalem && ok.kalem[xbrl];
+  if(!okl || !Number.isFinite(okl.k)) return {v:null};
+  return {v: kl.k - okl.k, turetilmis:true};
+}
+function csMetrikler(liste, veri, kod, i){
+  const al = (xbrl,tip)=>csCeyrek(liste,veri,kod,i,xbrl,tip).v;
+  const ciro = al('ifrs-full_Revenue','akis');
+  const faal = al('ifrs-full_ProfitLossFromOperatingActivities','akis');
+  const amort = al('ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+  const netKar = al('ifrs-full_ProfitLossAttributableToOwnersOfParent','akis');
+  const brut = al('ifrs-full_GrossProfit','akis');
+  const isletmeNA = al('ifrs-full_CashFlowsFromUsedInOperatingActivities','akis');
+  const capex = al('kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities','akis');
+  const nakit = al('ifrs-full_CashAndCashEquivalents','stok');
+  const finYat = al('kap-fr_CurrentFinancialInvestments','stok');
+  const kvB = al('kap-fr_CurrentBorowings','stok');
+  const kvUV = al('kap-fr_CurrentPortionOfNoncurrentBorrowings','stok');
+  const uvB = al('ifrs-full_LongtermBorrowings','stok');
+  const donen = al('ifrs-full_CurrentAssets','stok');
+  const kvY = al('ifrs-full_CurrentLiabilities','stok');
+  const ozk = al('ifrs-full_Equity','stok');
+  const varlik = al('ifrs-full_Assets','stok');
+  const S = (...a)=>{ let t=0,v=false; a.forEach(x=>{ if(Number.isFinite(x)){t+=x;v=true;} }); return v?t:null; };
+  const favok = (Number.isFinite(faal)&&Number.isFinite(amort)) ? faal+amort : null;
+  const finBorc = S(kvB,kvUV,uvB);
+  const likit = S(nakit,finYat);
+  return {
+    favok,
+    favokMarj: (Number.isFinite(favok)&&Number.isFinite(ciro)&&ciro) ? favok/ciro*100 : null,
+    brutMarj: (Number.isFinite(brut)&&Number.isFinite(ciro)&&ciro) ? brut/ciro*100 : null,
+    netMarj: (Number.isFinite(netKar)&&Number.isFinite(ciro)&&ciro) ? netKar/ciro*100 : null,
+    finBorc,
+    netBorc: (Number.isFinite(finBorc)&&Number.isFinite(likit)) ? finBorc-likit : null,
+    snakit: (Number.isFinite(isletmeNA)&&Number.isFinite(capex)) ? isletmeNA+capex : null,
+    isletmeSerm: (Number.isFinite(donen)&&Number.isFinite(kvY)) ? donen-kvY : null,
+    cariOran: (Number.isFinite(donen)&&Number.isFinite(kvY)&&kvY) ? donen/kvY : null,
+    roe: (Number.isFinite(netKar)&&Number.isFinite(ozk)&&ozk) ? netKar/ozk*100 : null,
+    roa: (Number.isFinite(netKar)&&Number.isFinite(varlik)&&varlik) ? netKar/varlik*100 : null,
+    ozkOran: (Number.isFinite(ozk)&&Number.isFinite(varlik)&&varlik) ? ozk/varlik*100 : null
+  };
+}
 function csTabloBas(kod, liste, veri, hata){
   const T=$('csTablo'); if(!T) return;
   const ayD={1:'1Ç',2:'2Ç',3:'3Ç',4:'4Ç'};
-  const bas = liste.map(x=>'<th style="text-align:right;padding:2px 6px;white-space:nowrap;font-size:9.5px">'+
+  const bas = liste.map(x=>'<th style="text-align:right;padding:2px 5px;white-space:nowrap;font-size:9.5px">'+
     String(x.yil).slice(2)+'/'+ayD[x.donem]+'</th>').join('');
-  /* birim: kayıtların çoğunluğundan — karışıksa uyarı */
   const kayitlar = liste.map(x=>veri[kod+'|'+x.yil+'|'+x.donem]).filter(Boolean);
   const birimler = [...new Set(kayitlar.map(k=>k.birim).filter(Boolean))];
-  const sablonlar = [...new Set(kayitlar.map(k=>k.sablon).filter(Boolean))];
-  const kumulatif = liste.filter(x=>{ const k=veri[kod+'|'+x.yil+'|'+x.donem]; return k && k.temel && !/çeyreklik/i.test(k.temel); });
-  const satirlar = CS_SATIR.map(([ad,etiket])=>{
-    const hucre = liste.map(x=>{
-      const k=veri[kod+'|'+x.yil+'|'+x.donem];
-      const v=k&&k.kalem?k.kalem[ad]:undefined;
-      if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 6px;color:var(--muted)">—</td>';
-      const mn=v/1e6;
-      return '<td style="text-align:right;padding:2px 6px;font-family:var(--mono);font-size:10px'+(mn<0?';color:var(--down)':'')+'">'+
-        trN(mn, Math.abs(mn)>=1000?0:1)+'</td>';
-    }).join('');
-    return '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+'</tr>';
-  }).join('');
+  let turetilenSayi = 0;
+  const sayi=(v,ondalik)=>{
+    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted)">—</td>';
+    const mlr = v/1e9;
+    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px'+(v<0?';color:var(--down)':'')+'">'+
+      trN(mlr, Math.abs(mlr)>=100?0:(Math.abs(mlr)>=1?1:2))+'</td>';
+  };
+  const oran=(v,ek)=>{
+    if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted)">—</td>';
+    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px'+(v<0?';color:var(--down)':'')+'">'+trN(v,1)+(ek||'')+'</td>';
+  };
+  let govde='';
+  ['Gelir Tablosu','Bilanço','Nakit Akış'].forEach(grup=>{
+    govde += '<tr><td colspan="'+(liste.length+1)+'" style="padding:7px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">'+grup.toLocaleUpperCase('tr')+'</td></tr>';
+    CS_KALEM.filter(k=>k[2]===grup).forEach(([xbrl,etiket,,tip])=>{
+      const hucre = liste.map((x,i)=>{
+        const r = csCeyrek(liste,veri,kod,i,xbrl,tip);
+        if(r.turetilmis && Number.isFinite(r.v)) turetilenSayi++;
+        return sayi(r.v);
+      }).join('');
+      govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+'</tr>';
+    });
+  });
+  /* türev metrikler */
+  const M = liste.map((x,i)=>csMetrikler(liste,veri,kod,i));
+  govde += '<tr><td colspan="'+(liste.length+1)+'" style="padding:9px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">TÜREV METRİKLER</td></tr>';
+  [['favok','FAVÖK',sayi],['favokMarj','FAVÖK Marjı %',oran],['brutMarj','Brüt Marj %',oran],['netMarj','Net Marj %',oran],
+   ['finBorc','Finansal Borç',sayi],['netBorc','Net Borç',sayi],['snakit','Serbest Nakit Akışı',sayi],
+   ['isletmeSerm','İşletme Sermayesi',sayi],['cariOran','Cari Oran',oran],['roe','ROE %',oran],['roa','ROA %',oran],
+   ['ozkOran','Özkaynak/Aktif %',oran]].forEach(([ad,etiket,bic])=>{
+    govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+
+      M.map(m=>bic(m[ad])).join('')+'</tr>';
+  });
   T.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr>'+
-    '<th style="text-align:left;padding:2px 8px 2px 0;font-size:9.5px">KALEM <span class="thin">(mn ₺)</span></th>'+bas+
-    '</tr></thead><tbody>'+satirlar+'</tbody></table>'+
+    '<th style="text-align:left;padding:2px 8px 2px 0;font-size:9.5px">KALEM <span class="thin">(mlr ₺ · oranlar %)</span></th>'+bas+
+    '</tr></thead><tbody>'+govde+'</tbody></table>'+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
-      'Şablon: '+(sablonlar.join(', ')||'—')+(sablonlar.length>1?' <b style="color:var(--down)">⚠ karışık şablon — kalemler birebir karşılaştırılamaz</b>':'')+
-      ' · birim: '+(birimler.join(', ')||'—')+(birimler.length>1?' <b style="color:var(--down)">⚠ karışık birim</b>':'')+
-      (kumulatif.length?(' · <b style="color:#E8933B">'+kumulatif.length+' çeyrek KÜMÜLATİF sütundan</b> (fark alınmadı)'):'')+
+      'Birim raporun kendi beyanından: '+(birimler.join(', ')||'—')+(birimler.length>1?' <b style="color:var(--down)">⚠ karışık</b>':'')+' → tümü ₺ tabanına çevrildi.'+
+      (turetilenSayi?(' · <b style="color:#E8933B">'+turetilenSayi+' hücre kümülatiften TÜRETİLDİ</b> (rapor çeyrek sütunu vermiyor; 4Ç = yıllık − 9A)'):'')+
+      ' · FAVÖK = Esas faaliyet kârı + amortisman · Net borç = finansal borç − (nakit + finansal yatırım) · SNA = işletme nakit akışı − yatırım harcaması'+
       (hata&&hata.length?(' · <span style="color:var(--down)">alınamadı: '+hata.join(' · ')+'</span>'):'')+
     '</div>';
 }
-
 async function ftGetir(){
   const kod = ($('ftKod').value||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,6);
   const yil = parseInt($('ftYil').value)||new Date().getFullYear();
