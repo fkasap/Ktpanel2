@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820o';   // SS351 iki FAVOK tanimi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820p';   // SS351b carpan karti cekirdek FAVOK   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7904,20 +7904,32 @@ async function mulKapTTM(kod){
     const al = (i,xbrl,tip)=>{ const v=csCeyrek(dolu,veri,kod,i,xbrl,tip);
       return Number.isFinite(v.v) ? v.v*(v.endeksli?1:kat(dolu[i])) : null; };
     /* TTM = son dört çeyreğin toplamı (endeksli, yani aynı parayla) */
-    let ciro=0, favok=0, eksik=0;
+    /* §351b ÇARPAN KARTI ÇEKİRDEK FAVÖK'E GEÇTİ: geniş tanım "diğer faaliyet
+       gelirlerini" (kur farkı, reeskont) içerdiği için MERCN'de FAVÖK'ü %76
+       şişiriyordu ve çarpan o oranda UCUZ görünüyordu (7,7x yerine gerçekte
+       10,6x). Değerleme muhafazakâr tarafta durur: çarpan ÇEKİRDEK ile
+       hesaplanır, geniş tanım karşılaştırma satırında kalır. */
+    let ciro=0, favok=0, favokCek=0, eksik=0;
     for(let i=0;i<4;i++){
       const c=al(i,'ifrs-full_Revenue','akis');
       const f=al(i,'ifrs-full_ProfitLossFromOperatingActivities','akis');
       const am=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+      const br=al(i,'ifrs-full_GrossProfit','akis');
+      const pz=al(i,'kap-fr_MarketingExpense','akis');
+      const gy=al(i,'ifrs-full_AdministrativeExpense','akis');
+      const ar=al(i,'ifrs-full_ResearchAndDevelopmentExpense','akis');
       if(Number.isFinite(c)) ciro+=c; else eksik++;
       if(Number.isFinite(f)&&Number.isFinite(am)) favok+=f+am; else eksik++;
+      if(Number.isFinite(br)&&Number.isFinite(am))
+        favokCek += br + (Number.isFinite(pz)?pz:0) + (Number.isFinite(gy)?gy:0) + (Number.isFinite(ar)?ar:0) + am;
     }
     if(eksik>2 || !(ciro>0) || !(favok>0)) return null;
     const S=(...a)=>{let t=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){t+=z;v=true;}});return v?t:null;};
     const borc = S(al(0,'kap-fr_CurrentBorowings','stok'), al(0,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'), al(0,'ifrs-full_LongtermBorrowings','stok'));
     const likit = S(al(0,'ifrs-full_CashAndCashEquivalents','stok'), al(0,'kap-fr_CurrentFinancialInvestments','stok'));
     const netBorc = (Number.isFinite(borc)&&Number.isFinite(likit)) ? borc-likit : null;
-    return { ciro, ebitda:favok, netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı' };
+    return { ciro, ebitda:(favokCek>0?favokCek:favok), ebitdaGenis:favok, cekirdekVar:(favokCek>0),
+      netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı' };
   }catch(e){ return null; }
 }
 /* §350: ticker değişince önce KAP TTM denenir, sonra kart çizilir. */
@@ -7960,7 +7972,8 @@ function multipleRender(){
     '<div class="kv"><span class="k">Piyasa değeri</span><span class="num">'+trN(mcap/1000,1)+' mlr ₺</span></div>'+
     '<div class="kv"><span class="k">+ Net borç</span><span class="num">'+trN(netBorcT/1000,1)+' mlr ₺</span></div>'+
     '<div class="kv"><span class="k">= Firma değeri (EV)</span><span class="num"><b>'+trN(ev/1000,1)+' mlr ₺</b></span></div>'+
-    '<div class="kv"><span class="k">EBITDA (TTM)</span><span class="num">'+trN(ebitdaT/1000,1)+' mlr ₺</span></div>'+
+    '<div class="kv"><span class="k">EBITDA (TTM)'+((K&&K.cekirdekVar)?' <span class="thin" style="font-size:9px">çekirdek</span>':'')+'</span><span class="num">'+trN(ebitdaT/1000,1)+' mlr ₺</span></div>'+
+    ((K&&K.cekirdekVar&&Number.isFinite(K.ebitdaGenis))?('<div class="kv"><span class="k thin" style="font-size:10px">geniş tanımla (diğer gelirler dahil)</span><span class="num thin" style="font-size:10px">'+trN(K.ebitdaGenis/MN/1000,1)+' mlr ₺ · '+trN(ev/(K.ebitdaGenis/MN),1)+'x</span></div>'):'')+
     '<div class="kv"><span class="k">EBITDA marjı</span><span class="num">%'+trN(marj,1)+'</span></div>'+
     '<div class="kv"><span class="k"><b>Mevcut EV/EBITDA</b></span><span class="num" style="color:var(--mm2);font-weight:700">'+trN(carpan,1)+'x</span></div>';
   /* §349: her yıl KENDİ büyüme ve marj değişimini alır; ufuk 3 yıl.
@@ -7987,7 +8000,7 @@ function multipleRender(){
       '<div><span class="sub">3 yıl sonra</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+(son5!=null&&son5<bugun?'var(--up)':'var(--down)')+'">'+(son5!=null?trN(son5,1)+'x':'\u2014')+'</span></div>'+
       (ref?'<div><span class="sub">'+trN(ref,1)+'x\'e iniş</span><br><span style="font-family:var(--mono);font-size:18px;font-weight:600">'+(refYil?refYil+'. yıl':'3+ yıl')+'</span></div>':'')+
     '</div></div>'+
-    '<div class="note">Mantık: bugünkü <b>firma değeri (EV) sabit</b> tutulur — piyasanın bugün biçtiği fiyat. EBITDA senin büyüme+marj varsayımınla ilerler, EV/EBITDA çarpanı buna göre <em>erir</em>. Soru "hedef fiyat" değil: <em>bugün pahalı görünen çarpan, büyümeyle kaç yılda makullüğe iner?</em> '+(ref?('Referans '+trN(ref,1)+'x\'e '+(refYil?refYil+'. yılda iniyor.':'3 yılda inmiyor — büyüme yetersiz ya da çarpan fazla yüksek.')):'Referans çarpan girersen hangi yıl altına indiğini yeşille vurgularım.')+' Kaynak: '+(K?('KAP canlı, TTM '+K.donem+' — son dört çeyrek ENFLASYON ENDEKSLİ toplanır'):('Fintables snapshot '+MULTIPLE.fiyat_tarihi))+'; büyüme/marj tahminleri yıl yıl senin. Basitleştirme: EV sabit varsayılır — gerçekte güçlü nakit üretimi net borcu azaltıp EV\u0027yi de bir miktar düşürür.</div>';
+    '<div class="note">Mantık: bugünkü <b>firma değeri (EV) sabit</b> tutulur — piyasanın bugün biçtiği fiyat. EBITDA senin büyüme+marj varsayımınla ilerler, EV/EBITDA çarpanı buna göre <em>erir</em>. Soru "hedef fiyat" değil: <em>bugün pahalı görünen çarpan, büyümeyle kaç yılda makullüğe iner?</em> '+(ref?('Referans '+trN(ref,1)+'x\'e '+(refYil?refYil+'. yılda iniyor.':'3 yılda inmiyor — büyüme yetersiz ya da çarpan fazla yüksek.')):'Referans çarpan girersen hangi yıl altına indiğini yeşille vurgularım.')+' Kaynak: '+(K?('KAP canlı, TTM '+K.donem+' — son dört çeyrek ENFLASYON ENDEKSLİ toplanır'):('Fintables snapshot '+MULTIPLE.fiyat_tarihi))+'; büyüme/marj tahminleri yıl yıl senin. <b>FAVÖK tanımı: ÇEKİRDEK</b> (brüt kâr − pazarlama − genel yönetim − ArGe + amortisman) — raporun \'esas faaliyet kârı\' diğer faaliyet gelirlerini (kur farkı, reeskont) içerdiği için çarpanı ucuz gösteriyordu; muhafazakâr taraf seçildi. Basitleştirme: EV sabit varsayılır — gerçekte güçlü nakit üretimi net borcu azaltıp EV\u0027yi de bir miktar düşürür.</div>';
 }
 
 /* ---- Sukuk / Tahvil Değerleme ---- */
