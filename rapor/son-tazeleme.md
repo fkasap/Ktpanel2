@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-20
 
-Katman: `hepsi` · Veri dizini: `ktpanel`
+Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -36,14 +36,6 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### TR 5Y CDS — ✓ 220.28 bp · 2026-08-20 · +1.61
 - ✓ 3281 günlük seri · kaynak etiketi 2026-08-20 (hafta sonu doldurmalı)
 
-### Risk metrikleri — ✓ GEÇTİ
-- ✓ **kapsam**: 141/141 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%3)
-- ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (185 gün)
-- ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
-- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
-
 ### TEFAS genel bilgi (§253i) — ✓ 2028 fon · AUM + yatırımcı sayısı köprüden (ham 2035 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
@@ -56,7 +48,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2028 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009930519387> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587008760641533> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -71,11 +63,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-20 (referans 2026-08-20, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ⚠ **borc defteri (§299)**: 220 kart bekliyor · en eski AGYO (2g)
-  - defter 220 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
+- ⚠ **borc defteri (§299)**: 221 kart bekliyor · en eski AGYO (2g)
+  - defter 221 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 220 şirket kart bekliyor
-- pencere: 113 FR · yeni deftere giren: 0
+### Bilanço tetiği (§299 kümülatif) — ✓ 221 şirket kart bekliyor
+- pencere: 114 FR · yeni deftere giren: 1 (KPTGY)
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 2 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALARK, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATATR, ATEKS, ATSYH, AVHOL, AVOD, AVTUR, BAGFS …
@@ -85,21 +77,22 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
-### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-19
-- XKTUM 20277.61 · XKTMT 18756.52 · XK100 18853.84 · XU100 14458.98 · BISTTLREFK 4053.80007
-- arşiv: 614 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-20
+- XKTUM 20325.65 · XKTMT 18848.36 · XK100 18923.64 · XU100 14396.54 · BISTTLREFK 4058.22248
+- arşiv: 615 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
-### Model sicili serisi (§291) — ⏭ 2026-08-20 icin XKTUM arsivde yok; satir yazilmadi (uydurma yok)
+### Model sicili serisi (§291) — ✓ 2026-08-20 · model %2.789 / endeks %11.297
 
-### Sektör ısı + rotasyon (§333) — ✓ 2026-08-19 · 15/15 sektör
-- çapalar: 1G 2026-08-18 · 1H 2026-08-12 · 1A null · 3A null
-- XU100 (1G/1H/1A/3A): 2.34 · 2.47 · 1.08 · 0.73
+### Sektör ısı + rotasyon (§333) — ✓ 2026-08-20 · 15/15 sektör
+- çapalar: 1G 2026-08-19 · 1H 2026-08-13 · 1A null · 3A null
+- XU100 (1G/1H/1A/3A): -0.43 · 1.87 · 1.08 · 0.73
 - 3A lideri: XKMYA %13.86
-- ⚠ çapa sapması: 1A hedef 2026-07-20 → 2026-06-30 (20 gün geride) — ufuk ATLANDI, damgalı değer korundu · 3A hedef 2026-05-21 → 2026-04-30 (21 gün geride) — ufuk ATLANDI, damgalı değer korundu
+- ⚠ çapa sapması: 1A hedef 2026-07-21 → 2026-06-30 (21 gün geride) — ufuk ATLANDI, damgalı değer korundu · 3A hedef 2026-05-22 → 2026-04-30 (22 gün geride) — ufuk ATLANDI, damgalı değer korundu
 
-### Hazine ihale sonuçları (§314) — ✓ defter 10 duyuru · yeni 0
-- yeni duyuru yok
+### Hazine ihale sonuçları (§314) — ✓ defter 11 duyuru · yeni 1
+- 2026-08-20 · 20 Ağustos 2026 Tarihinde Kurumsal Yatırımcılara Gerçekleşti
+  - ABD doları cinsi Devlet tahvili → 3,43 mlr USD · itfa 20 Ağustos 2027 · TRT200827F11
 
 ### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: 2026-07-31 · Ağustos–Ekim 2026)
 
@@ -123,4 +116,4 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (140 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (220.28 bp) · risk metrikleri (137) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (220 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (21 olay)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (135 fiyat) · Model sicili (39 fiyat) · TR 5Y CDS (220.28 bp) · fon akışı (2023) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · hazine ihale sonuçları (+1) · küresel makro takvim (21 olay)

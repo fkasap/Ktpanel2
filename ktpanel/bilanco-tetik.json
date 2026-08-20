@@ -116,6 +116,7 @@
   "KMPUR",
   "KNFRT",
   "KORTS",
+  "KPTGY",
   "KRONT",
   "KRVGD",
   "KUTPO",
@@ -222,7 +223,7 @@
   "YYAPI",
   "ZEDUR"
  ],
- "sayi": 220,
+ "sayi": 221,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -443,9 +444,10 @@
   "SARKY": "2026-08-20",
   "TEZOL": "2026-08-20",
   "ULAS": "2026-08-20",
-  "YYAPI": "2026-08-20"
+  "YYAPI": "2026-08-20",
+  "KPTGY": "2026-08-20"
  },
- "pencere_sayi": 113,
+ "pencere_sayi": 114,
  "dusen_son": [],
- "guncelleme": "2026-08-20 08:50 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-20 15:46 UTC — otomatik (KAP FR · kümülatif §299)"
 }

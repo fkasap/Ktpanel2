@@ -309,8 +309,24 @@
      "itfa": "16 Haziran 2027"
     }
    ]
+  },
+  "20-agustos-2026-tarihinde-kurumsal-yatirimcilara-gerceklestirilen-abd-dolari-cin": {
+   "tarih": "2026-08-20",
+   "baslik": "20 Ağustos 2026 Tarihinde Kurumsal Yatırımcılara Gerçekleştirilen ABD Doları Cinsi Sabit Kuponlu Devlet İç Borçlanma Senedi (DİBS) ile ABD D",
+   "ek": null,
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "ABD doları cinsi Devlet tahvili",
+     "isin": "TRT200827F11",
+     "tutar": 3425415000,
+     "doviz": "USD",
+     "valor": "21 Ağustos 2026",
+     "itfa": "20 Ağustos 2027"
+    }
+   ]
   }
  },
- "guncelleme": "2026-08-20 08:50 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
- "sayi": 10
+ "guncelleme": "2026-08-20 15:46 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
+ "sayi": 11
 }
