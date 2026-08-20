@@ -252,7 +252,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <button data-tab="t16">Asya-Pasifik</button>
   <button data-tab="t18">Avrupa</button>
   <button data-tab="t17">ABD</button>
-  <button data-tab="t7">Haberler</button>
+  <button data-tab="t7">Haberler</button><button data-tab="t27">Sektörel Veriler</button>
 </nav>
 <nav class="tabs" id="pySubnav" aria-label="Equity bölümleri" style="display:none">
   <button data-tab="t11">Yönetim</button>
@@ -975,7 +975,63 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar 14 Tem tarihli CSV'den; Python modeli (v3.2) birebir çalıştırıldı, seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div></div>
 </div>
 
-</div><div class="tab" id="t8"><h2>Guidance <span class="thin">(şirket beklentileri · 2026 · Fintables + manuel)</span></h2>
+</div><!-- §365 SEKTÖREL VERİLER (21 Ağu, kullanıcı isteği): Katılım Fonları ve
+     PYŞ Sektör, Fix Income (Sukuk) altından buraya taşındı. İkisi de fon ve
+     sektör AKIŞ verisi; sukuk değerlemesiyle aynı çatıda durmaları §298'de
+     geçici bir yerleştirmeydi. Alt sekme mekanizması `.tab` kapsayıcısına
+     bağlı (app.js), o yüzden düğme+panel aynı .tab içindeyken taşıma
+     kendiliğinden çalışır. TAŞIMA YÖNTEMİ: panel sınırları DIV DENGESİYLE
+     bulundu; ilk denemede sekme başlangıcı aranarak kesilmiş ve Sukuk
+     sekmesinin KAPANIŞI da gitmişti (denge dağıldı).
+     NOT: bu yorumda ETİKET ADI GEÇMEZ — dosyanın kendi uyarısı: yorum içindeki
+     etiket benzeri metin sayaca takılıyor ve sahte dengesizlik üretiyor. -->
+<div class="tab" id="t27"><h2>Sektörel Veriler <span class="thin">(fon akışları · PYŞ dağıtım gücü)</span></h2>
+<div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
+  <button class="subtab-btn act" data-subtab="sv-katfon" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Katılım Fonları</button>
+  <button class="subtab-btn" data-subtab="sv-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
+</div>
+<div id="sv-katfon" class="subtab-panel"><h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
+<div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
+<!-- §263 GÜNLÜK FON AKIŞI. Formül: (pay_t − pay_t−1) × fiyat_t. Ham ΔAUM
+     KULLANILMAZ — o hem akıştan hem GETİRİDEN değişir ve 12 Ağu ölçümünde
+     ortalama %48 sapıyordu. Pay adedi getiriden etkilenmez.
+     Veri: TEFAS köprüsü (mod=gnl) → fon-akis.json, Actions sabah koşusunda.
+     Fintables GEREKMEZ. -->
+<div class="card" style="margin-bottom:14px">
+  <div class="lbl">GÜNLÜK FON AKIŞI <span class="thin" id="fonAkisTag">—</span></div>
+  <div id="fonAkisOzet" style="display:grid;grid-template-columns:repeat(3,minmax(110px,1fr));gap:10px;margin:8px 0"></div>
+  <div id="fonAkisBody"></div>
+  <div class="note" style="margin-top:8px">Net akış = <em>(tedavüldeki pay adedi değişimi) × birim pay fiyatı</em>. Pay adedi yalnız alım–satımla değişir; fonun getirisi bu sayıyı etkilemez. Ham portföy büyüklüğü değişimi <b>kullanılmaz</b> — o, akış ile getiriyi birbirine karıştırır.</div>
+</div>
+<div class="fonbar" style="margin-bottom:10px">
+  <label style="font-size:11.5px;color:var(--muted)">Sıralama dönemi:
+    <select id="katfonSort" style="margin-left:6px;padding:3px 7px;border:1px solid var(--line2);border-radius:5px;font-family:var(--sans);font-size:11.5px;background:var(--card);color:var(--text)">
+      <option value="1g">1 Gün</option><option value="1a">1 Aylık</option>
+      <option value="3a">3 Aylık</option>
+      <option value="ytd" selected>Yılbaşından (YTD)</option>
+      <option value="1y">1 Yıllık</option>
+      <option value="3y">3 Yıllık</option>
+    </select>
+  </label>
+</div>
+<div id="katfonBody"></div>
+<div class="note">Getiriler Fintables kapanış fiyatlarıyla <em>13 Tem itibarıyla</em> hesaplanmıştır (fon fiyatları T+1 gecikmeli). Her kategoride seçili döneme göre en yüksek getirili fon <em>vurgulanır</em>. YÜ = yıllık yönetim ücreti; KATILIM/SERBEST şemsiye türüdür. GOP ve KHP yeni fonlar olduğundan 6A/YTD verisi henüz oluşmamıştır. Disiplin: nominal getiriyi %32,11 TÜFE ile kıyasla — <em>reel</em> getiri asıl performanstır.</div>
+</div>
+<div id="sv-pys" class="subtab-panel" style="display:none"><h2>PYŞ Sektörü — Net Para Girişleri <span class="thin">(TEFAS türevi · mlr ₺)</span> <span class="tag snap" id="pysDamga">—</span></h2>
+<div class="card" style="margin-bottom:12px"><div class="lbl">PYŞ BAZINDA <span class="thin" id="pysD1"></span></div>
+  <div style="margin:6px 0 8px" id="pysBtn1"></div><div id="pysB1"></div></div>
+<div class="card" style="margin-bottom:12px"><div class="lbl">FON BAZINDA <span class="thin" id="pysD2"></span></div>
+  <div style="margin:6px 0 8px" id="pysBtn2"></div><div id="pysB2"></div></div>
+<div class="card"><div class="lbl">TÜR BAZINDA <span class="thin" id="pysD3"></span></div>
+  <div style="margin:6px 0 8px" id="pysBtn3"></div><div id="pysB3"></div>
+  <div class="note" id="pysNot"></div></div>
+<div class="card" style="margin-top:12px"><div class="lbl">PYŞ PORTFÖY BÜYÜKLÜKLERİ — SPK <span class="thin" id="spkDonem"></span> <span class="tag snap" id="spkDamga">yükleniyor…</span></div>
+  <div id="spkB" style="margin-top:8px"></div>
+  <div class="note">Kaynak: SPK Seryet (aylık bildirim). Boş görünen şirket o ayın bildirimini henüz göndermemiştir — uç, doluluk düşükse bir önceki aya kendiliğinden düşer. Katılım PYŞ'leri ● ile işaretli.</div>
+</div>
+</div>
+</div>
+<div class="tab" id="t8"><h2>Guidance <span class="thin">(şirket beklentileri · 2026 · Fintables + manuel)</span></h2>
 <input id="guidanceAra" type="text" placeholder="Şirket ara (kod veya isim)…" style="width:100%;max-width:340px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--sans);font-size:12px;background:var(--card);color:var(--text);box-sizing:border-box">
 <div id="guidanceListe" style="margin-top:12px"></div>
 <h2 style="margin-top:22px">Manuel Guidance Ekle <span class="thin">(cihazına kaydedilir)</span></h2>
@@ -1052,8 +1108,6 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <button class="subtab-btn act" data-subtab="sk-degerleme" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Değerleme</button>
   <button class="subtab-btn" data-subtab="sk-egri" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Getiri Eğrisi</button>
   <button class="subtab-btn" data-subtab="sk-ihrac" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">İhraç Takvimi</button>
-  <button class="subtab-btn" data-subtab="sk-katfon" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Katılım Fonları</button>
-  <button class="subtab-btn" data-subtab="sk-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
 </div>
 
 <div id="sk-degerleme" class="subtab-panel">
@@ -1144,51 +1198,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note" style="margin-top:10px">Kira sertifikası (sukuk) ihraç bildirimleri KAP'tan canlı çekilir — tertip ihraç belgeleri, ihraç tavanı onayları, dönemsel kâr payı ödemeleri. <b>Fon yöneticisi için değeri:</b> yeni ihraçlar birincil piyasa arzını, dönemsel ödemeler ise mevcut sukukların nakit akış takvimini gösterir. İhraç yoğunluğu, katılım bankalarının fonlama iştahının ve faizsiz sabit getirili arzının göstergesidir. Kod (örn. NURVK, EKTVK) ilgili ihraççının kira sertifikası sembolüdür.</div>
 </div>
 </div>
-<div id="sk-katfon" class="subtab-panel" style="display:none"><h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
-<div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
-<!-- §263 GÜNLÜK FON AKIŞI. Formül: (pay_t − pay_t−1) × fiyat_t. Ham ΔAUM
-     KULLANILMAZ — o hem akıştan hem GETİRİDEN değişir ve 12 Ağu ölçümünde
-     ortalama %48 sapıyordu. Pay adedi getiriden etkilenmez.
-     Veri: TEFAS köprüsü (mod=gnl) → fon-akis.json, Actions sabah koşusunda.
-     Fintables GEREKMEZ. -->
-<div class="card" style="margin-bottom:14px">
-  <div class="lbl">GÜNLÜK FON AKIŞI <span class="thin" id="fonAkisTag">—</span></div>
-  <div id="fonAkisOzet" style="display:grid;grid-template-columns:repeat(3,minmax(110px,1fr));gap:10px;margin:8px 0"></div>
-  <div id="fonAkisBody"></div>
-  <div class="note" style="margin-top:8px">Net akış = <em>(tedavüldeki pay adedi değişimi) × birim pay fiyatı</em>. Pay adedi yalnız alım–satımla değişir; fonun getirisi bu sayıyı etkilemez. Ham portföy büyüklüğü değişimi <b>kullanılmaz</b> — o, akış ile getiriyi birbirine karıştırır.</div>
-</div>
-<div class="fonbar" style="margin-bottom:10px">
-  <label style="font-size:11.5px;color:var(--muted)">Sıralama dönemi:
-    <select id="katfonSort" style="margin-left:6px;padding:3px 7px;border:1px solid var(--line2);border-radius:5px;font-family:var(--sans);font-size:11.5px;background:var(--card);color:var(--text)">
-      <option value="1g">1 Gün</option><option value="1a">1 Aylık</option>
-      <option value="3a">3 Aylık</option>
-      <option value="ytd" selected>Yılbaşından (YTD)</option>
-      <option value="1y">1 Yıllık</option>
-      <option value="3y">3 Yıllık</option>
-    </select>
-  </label>
-</div>
-<div id="katfonBody"></div>
-<div class="note">Getiriler Fintables kapanış fiyatlarıyla <em>13 Tem itibarıyla</em> hesaplanmıştır (fon fiyatları T+1 gecikmeli). Her kategoride seçili döneme göre en yüksek getirili fon <em>vurgulanır</em>. YÜ = yıllık yönetim ücreti; KATILIM/SERBEST şemsiye türüdür. GOP ve KHP yeni fonlar olduğundan 6A/YTD verisi henüz oluşmamıştır. Disiplin: nominal getiriyi %32,11 TÜFE ile kıyasla — <em>reel</em> getiri asıl performanstır.</div>
-</div>
 
-
-<!-- §298: PYŞ Sektör, Equity grubundan Fix Income (Sukuk sekmesi) altına taşındı —
-     §248 sk-katfon deseninin birebir tekrarı. İç id'ler (pysDamga/pysBtn1/pysB1..)
-     AYNEN korunur; pysInit dokunulmadan çalışır. Ebu notu: t10 SEKME_DISLA kapsamında. -->
-<div id="sk-pys" class="subtab-panel" style="display:none"><h2>PYŞ Sektörü — Net Para Girişleri <span class="thin">(TEFAS türevi · mlr ₺)</span> <span class="tag snap" id="pysDamga">—</span></h2>
-<div class="card" style="margin-bottom:12px"><div class="lbl">PYŞ BAZINDA <span class="thin" id="pysD1"></span></div>
-  <div style="margin:6px 0 8px" id="pysBtn1"></div><div id="pysB1"></div></div>
-<div class="card" style="margin-bottom:12px"><div class="lbl">FON BAZINDA <span class="thin" id="pysD2"></span></div>
-  <div style="margin:6px 0 8px" id="pysBtn2"></div><div id="pysB2"></div></div>
-<div class="card"><div class="lbl">TÜR BAZINDA <span class="thin" id="pysD3"></span></div>
-  <div style="margin:6px 0 8px" id="pysBtn3"></div><div id="pysB3"></div>
-  <div class="note" id="pysNot"></div></div>
-<div class="card" style="margin-top:12px"><div class="lbl">PYŞ PORTFÖY BÜYÜKLÜKLERİ — SPK <span class="thin" id="spkDonem"></span> <span class="tag snap" id="spkDamga">yükleniyor…</span></div>
-  <div id="spkB" style="margin-top:8px"></div>
-  <div class="note">Kaynak: SPK Seryet (aylık bildirim). Boş görünen şirket o ayın bildirimini henüz göndermemiştir — uç, doluluk düşükse bir önceki aya kendiliğinden düşer. Katılım PYŞ'leri ● ile işaretli.</div>
-</div>
-</div>
 
 </div>
 
