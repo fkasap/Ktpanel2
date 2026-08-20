@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820n';   // SS350c birim duzeltmesi (milyon TL)   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820o';   // SS351 iki FAVOK tanimi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9903,11 +9903,28 @@ function csMetrikler(liste, veri, kod, i){
   const ozk = al('ifrs-full_Equity','stok');
   const varlik = al('ifrs-full_Assets','stok');
   const S = (...a)=>{ let t=0,v=false; a.forEach(x=>{ if(Number.isFinite(x)){t+=x;v=true;} }); return v?t:null; };
+  /* §351 İKİ FAVÖK (20 Ağu, MERCN'de ölçüldü): "esas faaliyet kârı" KAP'ta
+     DİĞER FAALİYET GELİR/GİDERLERİNİ de içerir — MERCN 2026/2Ç'de bu kalem
+     162 mn ₺ (cironun %9,6'sı) ve büyük olasılıkla kur farkı/reeskont, yani
+     TEKRARLAMAYAN. Geniş tanım FAVÖK'ü 250 mn gösteriyordu; bağımsız kaynak
+     (diğer gelirleri hariç tutan) 142 mn diyor.
+     İkisi de meşru: GENİŞ = raporun esas faaliyet kârı + amortisman;
+     ÇEKİRDEK = brüt kâr − pazarlama − genel yönetim − ArGe + amortisman
+     (yalnız işin kendisi). Panel İKİSİNİ DE gösterir; hangisini kullanacağı
+     okuyanın kararıdır — tek sayı verip tanımı gizlemek yanıltıcı olurdu. */
+  const pazarlama = al('kap-fr_MarketingExpense','akis');
+  const genelYon = al('ifrs-full_AdministrativeExpense','akis');
+  const arge = al('ifrs-full_ResearchAndDevelopmentExpense','akis');
   const favok = (Number.isFinite(faal)&&Number.isFinite(amort)) ? faal+amort : null;
+  const favokCekirdek = (Number.isFinite(brut)&&Number.isFinite(amort))
+    ? brut + (Number.isFinite(pazarlama)?pazarlama:0) + (Number.isFinite(genelYon)?genelYon:0)
+          + (Number.isFinite(arge)?arge:0) + amort
+    : null;
   const finBorc = S(kvB,kvUV,uvB);
   const likit = S(nakit,finYat);
   return {
-    favok,
+    favok, favokCekirdek,
+    favokCekirdekMarj: (Number.isFinite(favokCekirdek)&&Number.isFinite(ciro)&&ciro) ? favokCekirdek/ciro*100 : null,
     favokMarj: (Number.isFinite(favok)&&Number.isFinite(ciro)&&ciro) ? favok/ciro*100 : null,
     brutMarj: (Number.isFinite(brut)&&Number.isFinite(ciro)&&ciro) ? brut/ciro*100 : null,
     netMarj: (Number.isFinite(netKar)&&Number.isFinite(ciro)&&ciro) ? netKar/ciro*100 : null,
@@ -9995,7 +10012,7 @@ function csTabloBas(kod, liste, veri, hata){
     if(c===1) return m;
     /* oranlar katsayidan etkilenmez (pay ve payda ayni katsayi), TUTARLAR carpilir */
     const o = Object.assign({}, m);
-    ['favok','finBorc','netBorc','snakit','isletmeSerm'].forEach(k=>{ if(Number.isFinite(o[k])) o[k]=o[k]*c; });
+    ['favok','favokCekirdek','finBorc','netBorc','snakit','isletmeSerm'].forEach(k=>{ if(Number.isFinite(o[k])) o[k]=o[k]*c; });
     return o;
   });
   govde += '<tr><td colspan="'+(liste.length+2)+'" style="padding:9px 0 2px;font-size:9.5px;font-weight:700;color:var(--mm2);border-bottom:1px solid var(--line)">TÜREV METRİKLER</td></tr>';
@@ -10003,7 +10020,8 @@ function csTabloBas(kod, liste, veri, hata){
      tanım kullanabiliyor (yatırım faaliyeti gelirlerini de içeren "finansman
      öncesi faaliyet kârı"). Bizim tanım: ESAS faaliyet kârı + amortisman.
      Fark görülebilsin diye bileşenler dipnotta yazılı. */
-  [['favok','FAVÖK',sayi],['favokMarj','FAVÖK Marjı %',oran],['brutMarj','Brüt Marj %',oran],['netMarj','Net Marj %',oran],
+  [['favok','FAVÖK (geniş)',sayi],['favokMarj','FAVÖK Marjı % (geniş)',oran],
+   ['favokCekirdek','FAVÖK (çekirdek)',sayi],['favokCekirdekMarj','FAVÖK Marjı % (çekirdek)',oran],['brutMarj','Brüt Marj %',oran],['netMarj','Net Marj %',oran],
    ['finBorc','Finansal Borç',sayi],['netBorc','Net Borç',sayi],['snakit','Serbest Nakit Akışı',sayi],
    ['isletmeSerm','İşletme Sermayesi',sayi],['cariOran','Cari Oran',oran],['roe','ROE %',oran],['roa','ROA %',oran],
    ['ozkOran','Özkaynak/Aktif %',oran]].forEach(([ad,etiket,bic])=>{
@@ -10021,7 +10039,7 @@ function csTabloBas(kod, liste, veri, hata){
       'Birim: '+(birimler.join(', ')||'—')+' → ₺ tabani.'+
       ((endeksAcik && endekslenen>0) ? (' · <b style="color:var(--up)">ENFLASYON ENDEKSLI</b>: tum ceyrekler EN YENI RAPORUN PARASIYLA. TMS-29 geregi her rapor kendi donem sonu alim gucuyle yazilir; ham halde 15 ceyrek 15 farkli parayla olculur ve trend yaniltir. Katsayilar raporlarin kendi &quot;onceki donem&quot; sutunlarindan zincirlenir — dis veri yok. <span class="thin">'+endekslenen+' hucre cevrildi</span>') : (endeksAcik ? ' · <b style="color:var(--down)">⚠ ENDEKSLENEMEDI</b> — katsayi cikarilamadi (raporlarda "onceki donem" sutunu eksik olabilir); degerler HAM, ceyrekler farkli alim guclerinde.' : ' · <b style="color:#E8933B">HAM (raporun kendi parasi)</b> — ceyrekler farkli alim guclerinde.'))+
       (turetilenSayi?(' · <b style="color:#E8933B">≈ işaretli '+turetilenSayi+' hücre YAKLAŞIK</b>: rapor çeyrek sütunu vermediği için kümülatif farkından türetildi. <b>Enflasyon muhasebesi (TMS-29)</b> her raporu kendi dönem sonu alım gücüne göre yeniden ifade ettiğinden bu fark birebir çeyrek değildir — ölçülen sapma TUPRS 2026/2\'de %4,7. İşaretsiz hücreler raporun kendi sütunundan, kesindir.'):'')+
-      ' · FAVÖK = Esas faaliyet kârı + amortisman · Net borç = finansal borç − (nakit + finansal yatırım) · SNA = işletme nakit akışı − yatırım harcaması'+
+      ' · FAVÖK (geniş) = esas faaliyet kârı + amortisman — diğer faaliyet gelir/giderlerini İÇERİR (kur farkı, reeskont gibi tekrarlamayan kalemler buraya düşer) · FAVÖK (çekirdek) = brüt kâr − pazarlama − genel yönetim − ArGe + amortisman, yalnız işin kendisi · Net borç = finansal borç − (nakit + finansal yatırım) · SNA = işletme nakit akışı − yatırım harcaması'+
       (hata&&hata.length?(' · <span style="color:var(--down)">alınamadı: '+hata.join(' · ')+'</span>'):'')+
     '</div>';
 }
