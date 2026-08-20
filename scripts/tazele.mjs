@@ -2134,11 +2134,18 @@ async function faktorEvren() {
      olanlar HİÇ ÇEKİLMEMİŞ gibi en öne alınır.
      DERS: HESAP YÖNTEMİ DEĞİŞTİYSE ESKİ KAYITLAR DAMGALANIP ÖNE ALINMALI —
      yoksa doğru kodla yanlış veri bir arada yaşar. */
-  const YONTEM = '361d';
+  /* §361f isFinite TUZAĞI (20 Ağu, BINHO'da yakalandı): global isFinite(null)
+     TRUE döner — null sayıya çevrilince 0 oluyor. BINHO'nun BOŞ cirosu "dolu"
+     sayıldı (eksik:false yazıldı) ve aritmetikte null sessizce 0 gibi davranıp
+     TTM hesabını da bozabilirdi (y.k + a.k − a.onceki'de bir bacak null ise
+     sonuç sessizce yanlış çıkar). Number.isFinite tip dönüşümü YAPMAZ.
+     Bu blokta tüm kontroller Number.isFinite'e çevrildi.
+     DERS: null KONTROLÜNDE isFinite DEĞİL Number.isFinite. */
+  const YONTEM = '361e';   /* §361f: isFinite düzeltmesi kayıtları da geçersiz kılar */
   const yas = (k) => {
     const r = D.sirketler[k];
-    if (!r || !r.ts) return 0;                      /* hiç çekilmemiş → en öncelikli */
-    if (r.y !== YONTEM) return 1;                   /* eski yöntem → hemen sonra */
+    if (r.y !== YONTEM) return -1;                  /* §361f: YANLIŞ veri, EKSİK veriden önce düzeltilir */
+    if (!r.ts) return 0;
     return new Date(r.ts).getTime();
   };
   const sira = uyeler.slice().sort((a, b) => {
@@ -2197,8 +2204,8 @@ async function faktorEvren() {
         (jh.tablolar || []).forEach(t => (t.satirlar || []).forEach(sr => {
           if (!sr.xbrl || !sr.degerler || !sr.degerler.length || K[sr.xbrl]) return;
           K[sr.xbrl] = { k: sr.degerler[0] * carpan,
-            onceki: isFinite(sr.degerler[1]) ? sr.degerler[1] * carpan : null,   /* §361d: TTM farkı için ŞART */
-            c: (sr.degerler.length >= 4 && isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null };
+            onceki: Number.isFinite(sr.degerler[1]) ? sr.degerler[1] * carpan : null,   /* §361d: TTM farkı için ŞART */
+            c: (sr.degerler.length >= 4 && Number.isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null };
         }));
         kalemler.push({ yil: dn.yil || dn.year, donem: dn.donem || dn.period, K });
         await uyku(1200);
@@ -2228,19 +2235,19 @@ async function faktorEvren() {
         /* son rapor YILLIK ise TTM doğrudan odur */
         if (son.donem === 4) {
           const v = son.K[xb];
-          return (v && isFinite(v.k)) ? v.k : null;
+          return (v && Number.isFinite(v.k)) ? v.k : null;
         }
         if (!araKl || !yillikKl) return null;
         const a = araKl.K[xb], y = yillikKl.K[xb];
         if (!a || !y) return null;
-        if (!isFinite(a.k) || !isFinite(a.onceki) || !isFinite(y.k)) return null;
+        if (!Number.isFinite(a.k) || !Number.isFinite(a.onceki) || !Number.isFinite(y.k)) return null;
         return y.k + a.k - a.onceki;
       };
-      const stok = (kad) => { const v = son.K[AL[kad]]; return v && isFinite(v.k) ? v.k : null; };
-      const S = (...a) => { let t = 0, v = false; a.forEach(z => { if (isFinite(z)) { t += z; v = true; } }); return v ? t : null; };
+      const stok = (kad) => { const v = son.K[AL[kad]]; return v && Number.isFinite(v.k) ? v.k : null; };
+      const S = (...a) => { let t = 0, v = false; a.forEach(z => { if (Number.isFinite(z)) { t += z; v = true; } }); return v ? t : null; };
 
       const ciro = akis('ciro'), faal = akis('faal'), am = akis('amort'), netKar = akis('netKar'), brut = akis('brut');
-      const favok = (isFinite(faal) && isFinite(am)) ? faal + am : null;
+      const favok = (Number.isFinite(faal) && Number.isFinite(am)) ? faal + am : null;
       const finBorc = S(stok('kvB'), stok('kvUV'), stok('uvB'));
       const likit = S(stok('nakit'), stok('finYat'));
       const kayit = {
@@ -2249,11 +2256,11 @@ async function faktorEvren() {
         ciro, brut, favok, netKar,
         ozk: stok('ozk'), aktif: stok('aktif'), donen: stok('donen'), kvY: stok('kvY'),
         finBorc, likit,
-        netBorc: (isFinite(finBorc) && isFinite(likit)) ? finBorc - likit : null,
-        adet: isFinite(stok('sermaye')) ? Math.round(stok('sermaye')) : null,
+        netBorc: (Number.isFinite(finBorc) && Number.isFinite(likit)) ? finBorc - likit : null,
+        adet: Number.isFinite(stok('sermaye')) ? Math.round(stok('sermaye')) : null,
         adet_kaynak: 'sermaye(nominal 1₺ varsayımı)'
       };
-      const bosSay = ['ciro', 'favok', 'ozk', 'aktif'].filter(x => !isFinite(kayit[x])).length;
+      const bosSay = ['ciro', 'favok', 'ozk', 'aktif'].filter(x => !Number.isFinite(kayit[x])).length;
       kayit.eksik = bosSay > 0;
       if (kayit.eksik) { eksikli++; notlar.push(kod + ':' + bosSay + ' ana kalem boş'); } else basarili++;
       D.sirketler[kod] = kayit;
