@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260819w';   // SS337b gorus uzunlugu   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820a';   // SS339 ceyreklik seri (KAP 15 ceyrek)   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -112,6 +112,14 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
            İkisi ayrı deploy edilebiliyor ve tutarsız kalabiliyorlar. */
         try{ const tg=$('ftTag'); if(tg) tg.textContent = 'panel '+KTP_SURUM; }catch(e){}
         const kd = $('ftKod'); if(kd) kd.addEventListener('keydown', ev=>{ if(ev.key==='Enter') ftGetir(); });
+        /* SS339 CEYREKLIK SERI baglantilari — ayni tembel kurulumda */
+        const cg = $('csGetir'); if(cg) cg.onclick = csGetirCalis;
+        const ck = $('csKod'); if(ck) ck.addEventListener('keydown', ev=>{ if(ev.key==='Enter') csGetirCalis(); });
+        const ct = $('csTemizle');
+        if(ct) ct.onclick = function(){
+          try{ localStorage.removeItem(CS_ANAHTAR); if($('csDurum')) $('csDurum').textContent='önbellek temizlendi'; }
+          catch(e){ if($('csDurum')) $('csDurum').textContent='temizlenemedi: '+(e&&e.message||''); }
+        };
       }catch(e){ console.warn('[KTPanel] t23 kurulum:', e); }
     }
     if(b.dataset.tab==='t1'&&!kazancYuklendi){kazancYuklendi=true;
@@ -9395,6 +9403,137 @@ function ftRenk(n, tersMi){
   if(n==null) return 'var(--muted)';
   const p = tersMi ? -n : n;
   return p > 0.05 ? 'var(--up)' : p < -0.05 ? 'var(--down)' : 'var(--ink)';
+}
+
+/* ── §339 ÇEYREKLİK SERİ — 15 çeyrek yan yana (20 Ağu) ─────────────────────
+   NEDEN: kullanıcı Excel modelindeki metrikleri panelde istiyor; hepsinin
+   tabanı çeyreklik kalem serisi. §338 ile şirket bazlı dönem listesi açıldı
+   (KAP 2000 tavanı sorunu bitti — TUPRS 14 dönem, ölçüldü).
+   TASARIM KARARLARI:
+   1) ÖNBELLEK ZORUNLU: geçmiş çeyrek DEĞİŞMEZ. Anahtar KOD|YIL|DONEM.
+      İlk çekim ~10-15 sn (paralel 3'lü), sonraki açılış ANINDA.
+   2) KÜMÜLATİF TÜRETME YOK: rapor "çeyreklik (rapor sütunu)" diyorsa değer
+      doğrudan çeyrektir; demiyorsa kayıt KÜMÜLATİF olarak ETİKETLENİR ve
+      öyle gösterilir. Fark alıp sessizce çeyreklik gibi sunmak, üzerine
+      metrik kurulacağı için en tehlikeli sessiz hata olurdu (§179.3).
+   3) KISMİ SONUÇ: her gelen çeyrek hemen tabloya basılır; bir dönem gelmezse
+      o sütun "—" kalır ve dipnotta sebebi yazar. Sessiz atlama yok.
+   4) ŞABLON: bildirimin şablonu (sanayi/banka/sigorta) kayda yazılır; farklı
+      şablonlar aynı seride karışırsa uyarı verilir (§114 karışık taban). */
+const CS_ANAHTAR = 'ktp_kap_ceyrek_v1';
+const CS_TAVAN = 400;                 /* önbellekteki azami çeyrek kaydı */
+function csOnbellekOku(){
+  try{ return JSON.parse(localStorage.getItem(CS_ANAHTAR)||'{}'); }catch(e){ return {}; }
+}
+function csOnbellekYaz(o){
+  try{
+    const anahtarlar=Object.keys(o);
+    if(anahtarlar.length>CS_TAVAN){
+      /* en eski yazılanları at — kayıtta ts var */
+      anahtarlar.sort((a,b)=>(o[a].ts||0)-(o[b].ts||0)).slice(0,anahtarlar.length-CS_TAVAN).forEach(k=>delete o[k]);
+    }
+    localStorage.setItem(CS_ANAHTAR, JSON.stringify(o));
+  }catch(e){ console.warn('[KTPanel] §339 önbellek yazılamadı:', e && e.message); }
+}
+/* Tabloya basılacak kalem sırası — Excel modelinin omurgası */
+const CS_SATIR = [
+  ['ciro','Ciro','g'], ['brutKar','Brüt Kâr','g'], ['faaliyetKar','Faaliyet Kârı','g'],
+  ['finansGider','Finansman Gideri','g'], ['parasal','Parasal Kazanç/Kayıp','g'],
+  ['vergiOncesi','Vergi Öncesi Kâr','g'], ['netKar','Net Kâr','g'],
+  ['donenVarlik','Dönen Varlıklar','b'], ['nakit','Nakit ve Benzerleri','b'],
+  ['ticariAlacak','Ticari Alacaklar','b'], ['stoklar','Stoklar','b'],
+  ['duranVarlik','Duran Varlıklar','b'], ['toplamVarlik','Toplam Varlıklar','b'],
+  ['kisaVadeli','Kısa Vadeli Yük.','b'], ['kvFinansBorc','KV Finansal Borç','b'],
+  ['ticariBorc','Ticari Borçlar','b'], ['uzunVadeli','Uzun Vadeli Yük.','b'],
+  ['uvFinansBorc','UV Finansal Borç','b'], ['ozkaynak','Özkaynaklar','b']
+];
+async function csDonemCek(id){
+  const r = await fetch('/api/kap?mod=tablo&id='+encodeURIComponent(id), {cache:'no-store'});
+  const j = await r.json();
+  if(!j || !j.ok) throw new Error((j&&j.err)||'tablo alınamadı');
+  const kalem = {};
+  ['bilanco','gelir'].forEach(bl=>{
+    ((j[bl]&&j[bl].kalemler)||[]).forEach(k=>{ if(k && k.ad && Number.isFinite(+k.cari)) kalem[k.ad]=+k.cari; });
+  });
+  return { kalem, sablon:j.sablon||null, temel:j.temel||null,
+    birim:(j.birim&&j.birim.ad)||null, carpan:(j.birim&&j.birim.carpan)||null, ts:Date.now() };
+}
+async function csGetirCalis(){
+  const kod = (($('csKod')&&$('csKod').value)||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+  const adet = parseInt(($('csAdet')&&$('csAdet').value)||'15',10)||15;
+  const d = $('csDurum'), T = $('csTablo');
+  if(!kod){ if(d)d.textContent='ticker gir'; return; }
+  if(d) d.textContent='dönem listesi alınıyor…'; if(T) T.innerHTML='';
+  const yil = Math.ceil(adet/4)+1;
+  let liste=[];
+  try{
+    const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil='+yil, {cache:'no-store'});
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.err||'dönem listesi boş');
+    liste = (j.donemler||[]).slice(0, adet);
+    if($('csTag')) $('csTag').textContent = kod+' · '+liste.length+' ÇEYREK';
+  }catch(e){ if(d)d.textContent='✗ '+String(e.message||e).slice(0,70); return; }
+  if(!liste.length){ if(d)d.textContent='✗ dönem bulunamadı'; return; }
+
+  const ob = csOnbellekOku();
+  const veri = {}; const eksik = [];
+  liste.forEach(x=>{
+    const ank = kod+'|'+x.yil+'|'+x.donem;
+    if(ob[ank] && ob[ank].kalem) veri[ank]=ob[ank]; else eksik.push(x);
+  });
+  csTabloBas(kod, liste, veri);
+  if(!eksik.length){ if(d)d.textContent='✓ '+liste.length+' çeyrek (tümü önbellekten)'; return; }
+
+  let bitti=0; const hata=[];
+  const kuyruk = eksik.slice();
+  const isci = async ()=>{
+    while(kuyruk.length){
+      const x = kuyruk.shift();
+      const ank = kod+'|'+x.yil+'|'+x.donem;
+      try{
+        const kayit = await csDonemCek(x.id);
+        veri[ank]=kayit; ob[ank]=kayit;
+      }catch(e){ hata.push(x.yil+'/'+x.donem+': '+String(e.message||e).slice(0,40)); }
+      bitti++;
+      if(d) d.textContent='çekiliyor… '+bitti+'/'+eksik.length+(hata.length?(' · '+hata.length+' hata'):'');
+      csTabloBas(kod, liste, veri, hata);
+    }
+  };
+  await Promise.all([isci(),isci(),isci()]);      /* 3'lü paralel — KAP'ı zorlamadan */
+  csOnbellekYaz(ob);
+  if(d) d.textContent='✓ '+Object.keys(veri).length+'/'+liste.length+' çeyrek'+(hata.length?(' · '+hata.length+' alınamadı'):'')+' · önbelleğe yazıldı';
+  csTabloBas(kod, liste, veri, hata);
+}
+function csTabloBas(kod, liste, veri, hata){
+  const T=$('csTablo'); if(!T) return;
+  const ayD={1:'1Ç',2:'2Ç',3:'3Ç',4:'4Ç'};
+  const bas = liste.map(x=>'<th style="text-align:right;padding:2px 6px;white-space:nowrap;font-size:9.5px">'+
+    String(x.yil).slice(2)+'/'+ayD[x.donem]+'</th>').join('');
+  /* birim: kayıtların çoğunluğundan — karışıksa uyarı */
+  const kayitlar = liste.map(x=>veri[kod+'|'+x.yil+'|'+x.donem]).filter(Boolean);
+  const birimler = [...new Set(kayitlar.map(k=>k.birim).filter(Boolean))];
+  const sablonlar = [...new Set(kayitlar.map(k=>k.sablon).filter(Boolean))];
+  const kumulatif = liste.filter(x=>{ const k=veri[kod+'|'+x.yil+'|'+x.donem]; return k && k.temel && !/çeyreklik/i.test(k.temel); });
+  const satirlar = CS_SATIR.map(([ad,etiket])=>{
+    const hucre = liste.map(x=>{
+      const k=veri[kod+'|'+x.yil+'|'+x.donem];
+      const v=k&&k.kalem?k.kalem[ad]:undefined;
+      if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 6px;color:var(--muted)">—</td>';
+      const mn=v/1e6;
+      return '<td style="text-align:right;padding:2px 6px;font-family:var(--mono);font-size:10px'+(mn<0?';color:var(--down)':'')+'">'+
+        trN(mn, Math.abs(mn)>=1000?0:1)+'</td>';
+    }).join('');
+    return '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+'</tr>';
+  }).join('');
+  T.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr>'+
+    '<th style="text-align:left;padding:2px 8px 2px 0;font-size:9.5px">KALEM <span class="thin">(mn ₺)</span></th>'+bas+
+    '</tr></thead><tbody>'+satirlar+'</tbody></table>'+
+    '<div class="sub" style="font-size:9px;margin-top:6px">'+
+      'Şablon: '+(sablonlar.join(', ')||'—')+(sablonlar.length>1?' <b style="color:var(--down)">⚠ karışık şablon — kalemler birebir karşılaştırılamaz</b>':'')+
+      ' · birim: '+(birimler.join(', ')||'—')+(birimler.length>1?' <b style="color:var(--down)">⚠ karışık birim</b>':'')+
+      (kumulatif.length?(' · <b style="color:#E8933B">'+kumulatif.length+' çeyrek KÜMÜLATİF sütundan</b> (fark alınmadı)'):'')+
+      (hata&&hata.length?(' · <span style="color:var(--down)">alınamadı: '+hata.join(' · ')+'</span>'):'')+
+    '</div>';
 }
 
 async function ftGetir(){
