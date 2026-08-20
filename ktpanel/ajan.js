@@ -171,7 +171,17 @@ async function yorumTuru(zorla){
    bakar, tek bir 'not' kimin verisini anlattigini bilemez.
    DERS (SS111'in kardesi): BOS/TEMBEL KARTA YORUM YAZILMAZ - veri gelmeden
    uretilen cumle bilgi degil DOLDURMADIR. */
-const SEKME_DISLA = ['t3','t4','t5','t6','t8','t9','t10','t11','t14','t20','t21','t23'];   // §154: t22 kalktı — Endeksten Ayrışma Portföy (t3) içine taşındı, t3 zaten listede
+const SEKME_DISLA = ['t3','t4','t5','t6','t8','t9','t10','t11','t14','t20','t21','t23','t26','t27'];
+/* §154: t22 kalktı — Endeksten Ayrışma Portföy (t3) içine taşındı, t3 zaten listede
+   §365c (21 Ağu, kullanıcı): t27 SEKTÖREL VERİLER ve t26 GYO NAV dışlandı.
+     t27 — Katılım Fonları + PYŞ Sektör buraya TAŞINDI (§365). Eskiden ikisi de
+       t10 (Sukuk) altındaydı ve t10 zaten dışlanmıştı; taşıma dışlamayı da
+       taşımalıydı, yoksa Ebu bir gecede kapsamına giren iki karta yorum
+       yazmaya başlardı. TAŞIMA = KAPSAMIN DA TAŞINMASI.
+     t26 — GYO NAV: TSPB'nin resmî NAD tablosu; yorum değil VERİ kartı, üstelik
+       45 satırlık tablo (not motoru satır kartları için değil).
+   ÜÇ-YER KURALI'nın ajan ayağı (§121): yeni sekme eklerken düğme + panel +
+   üyelik yetmez; kart yorumlanacak mı sorusunun cevabı da BURAYA yazılır. */
 const SOGUMA_MS = 6*3600*1000;   // 6 saat: veri değişince aynı gün içinde tazelenebilir (20h fazla katıydı)
 const PARTI = 4;   // token güvenliği: 4 not × ~450 token
 
