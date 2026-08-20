@@ -2182,43 +2182,105 @@ async function vapFonAkis() {
     if (!R.ok) { raporlar.push('### VAP fon akışı (§366) — ⏭ veri HTTP ' + R.status); return; }
     const j = await R.json();
 
-    /* grid: gsi + gvs tasiyan ilk dugum */
-    const bul = (o) => {
+    /* §366c FON TURU KIRILIMI (21 Agu, kullanici: "fon turu bazinda degisim
+       istiyorum"). Dosyada IKI grid var:
+         W6DCDACFE1… -> Ay × 3 olcu (TOPLAM, ilk surumun aldigi)
+         EA1D66EEC2… -> satirlar Ay × FON TURU, 7 olcu (ISTENEN)
+       Ikincisi 14 tur × 12 ay = 168 satir tasiyor ve hucrelerde `pi` KONUM
+       bilgisi var (pi.left.ri satir, pi.top.ci sutun) — eslesme TAHMINE degil
+       KAYNAGIN KENDI INDEKSINE dayanir.
+       Not: gvs.items sayfali gelir (100 satir/blok); tc satir sayisini soyler.
+       DERS: BIR SAYFADA TEK GRID VARSAYMA — gsi tasiyan TUM dugumleri tara. */
+    const gridler = [];
+    const tara = (o) => {
       if (o && typeof o === 'object') {
-        if (o.gsi && o.gvs) return o;
-        for (const v of Object.values(o)) { const r = bul(v); if (r) return r; }
+        if (o.gsi && o.gvs) gridler.push(o);
+        for (const v of Object.values(o)) tara(v);
       }
-      return null;
     };
-    const g = bul(j.data);
-    if (!g) { raporlar.push('### VAP fon akışı (§366) — ⏭ grid düğümü bulunamadı (yapı değişmiş olabilir)'); return; }
+    tara(j.data);
+    if (!gridler.length) { raporlar.push('### VAP fon akışı (§366) — ⏭ grid düğümü bulunamadı (yapı değişmiş olabilir)'); return; }
+    /* satirlarinda "Fon Türü" olan gridi sec; yoksa ilkine dus */
+    const turluGrid = gridler.find(x => (((x.gsi || {}).rows) || []).some(r => /Fon T[üu]r/i.test(r.n || '')));
+    const g = turluGrid || gridler[0];
+    const turluMu = !!turluGrid;
 
     const olculer = ((g.gsi || {}).mx || []).map(m => m.n);
-    const aylar = (((g.gts || {}).col || [])[0] || {}).es || [];
-    const ayAd = aylar.map(e => e.n);
-    const hucre = ((((g.gvs || {}).items || [])[0] || {}).items || []).map(z => (z && Number.isFinite(z.rv)) ? z.rv : null);
-    if (!olculer.length || !ayAd.length || !hucre.length) {
-      raporlar.push('### VAP fon akışı (§366) — ⏭ boyut/hücre boş (ölçü ' + olculer.length + ' · ay ' + ayAd.length + ' · hücre ' + hucre.length + ')'); return;
-    }
-    /* DOGRULAMA: hucre sayisi = ay × olcu olmali; degilse siralama varsayimi yanlistir */
-    if (hucre.length !== ayAd.length * olculer.length) {
-      raporlar.push('### VAP fon akışı (§366) — ✗ hücre sayısı tutmadı: ' + hucre.length +
-        ' ≠ ' + ayAd.length + '×' + olculer.length + ' — sıralama varsayımı bozuldu, YAZILMADI'); 
-      denetimDustu = true; return;
+    const satirBoyut = ((g.gsi || {}).rows || []).map(r => r.n);
+    const sutBoyut = ((g.gsi || {}).cols || []).map(c => c.n);
+    const gts = g.gts || {};
+    const esAl = (yon, ad) => {
+      const b = (gts[yon] || []).find(x => new RegExp(ad, 'i').test(x.n || ''));
+      return b ? (b.es || []).map(e => e.n) : [];
+    };
+    const ayAd = turluMu ? esAl('row', 'Ay') : ((((gts.col || [])[0] || {}).es || []).map(e => e.n));
+    const turAd = turluMu ? esAl('row', 'Fon T[üu]r') : [];
+    if (!olculer.length || !ayAd.length) {
+      raporlar.push('### VAP fon akışı (§366) — ⏭ boyut boş (ölçü ' + olculer.length + ' · ay ' + ayAd.length + ')'); return;
     }
 
-    const seri = ayAd.map((ay, i) => {
-      const k = { ay };
-      olculer.forEach((ad, m) => { k[ad] = hucre[i * olculer.length + m]; });
-      return k;
-    });
-    const son = seri[seri.length - 1] || {};
+    let seri = [], turSeri = [];
+    if (turluMu) {
+      /* HUCRE ESLEME `pi` ILE — tahmin yok: pi.left.ri satir indeksi,
+         pi.top.ci sutun (olcu) indeksi. Satir indeksi ay×tur duzeninde. */
+      const bloklar = ((g.gvs || {}).items || []);
+      const kutu = {};
+      let esli = 0, esssiz = 0;
+      bloklar.forEach(bl => (bl.items || []).forEach(z => {
+        const pi = z && z.pi;
+        if (!pi || !pi.left || !pi.top) { esssiz++; return; }
+        const ri = pi.left.ri, ci = pi.top.ci;
+        if (!Number.isFinite(ri) || !Number.isFinite(ci)) { esssiz++; return; }
+        /* metin degeri "331,939 M" gibi gelir; rv varsa onu, yoksa metni coz */
+        let v = Number.isFinite(z.rv) ? z.rv : null;
+        if (v === null && typeof z.v === 'string') {
+          const t = z.v.replace(/\./g, '').replace(',', '.').trim();
+          const m = t.match(/^(-?[\d.]+)\s*([MKB])?$/i);
+          if (m) {
+            const n = parseFloat(m[1]);
+            const carp = { 'K': 1e3, 'M': 1e6, 'B': 1e9 }[(m[2] || '').toUpperCase()] || 1;
+            if (isFinite(n)) v = n * carp;
+          }
+        }
+        kutu[ri + '|' + ci] = v;
+        esli++;
+      }));
+      const nTur = turAd.length || 1;
+      ayAd.forEach((ay, ai) => turAd.forEach((tur, ti) => {
+        const ri = ai * nTur + ti;
+        const k = { ay, tur };
+        let dolu = 0;
+        olculer.forEach((ad, ci) => { const v = kutu[ri + '|' + ci]; k[ad] = v; if (Number.isFinite(v)) dolu++; });
+        if (dolu) turSeri.push(k);
+      }));
+      raporlar.push('- §366c tür kırılımı: ' + turAd.length + ' tür × ' + ayAd.length + ' ay · ' +
+        turSeri.length + ' satır dolu · ' + esli + ' hücre eşlendi' + (esssiz ? (' · ' + esssiz + ' konumsuz') : ''));
+    } else {
+      const hucre = ((((g.gvs || {}).items || [])[0] || {}).items || []).map(z => (z && Number.isFinite(z.rv)) ? z.rv : null);
+      if (hucre.length !== ayAd.length * olculer.length) {
+        raporlar.push('### VAP fon akışı (§366) — ✗ hücre sayısı tutmadı: ' + hucre.length +
+          ' ≠ ' + ayAd.length + '×' + olculer.length + ' — sıralama varsayımı bozuldu, YAZILMADI');
+        denetimDustu = true; return;
+      }
+      seri = ayAd.map((ay, i) => {
+        const k = { ay };
+        olculer.forEach((ad, m) => { k[ad] = hucre[i * olculer.length + m]; });
+        return k;
+      });
+    }
+    if (turluMu && !turSeri.length) {
+      raporlar.push('### VAP fon akışı (§366) — ✗ tür kırılımında hiç hücre eşlenmedi, YAZILMADI');
+      denetimDustu = true; return;
+    }
+    const son = (seri.length ? seri[seri.length - 1] : (turSeri[0] || {}));
     const D = {
       guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
       kaynak: 'MKK VAP · mobil.vap.org.tr (MicroStrategy Library, anonim erişim)',
       dosya_adi: j.n || 'Fon Nakit Akış',
       _yontem: 'Hücreler gvs.items[0].items[].rv içinde satır sırasıyla düz dizi; ay etiketleri gts.col[0].es[].n. Hücre sayısı = ay × ölçü eşitliği DOĞRULANIR, tutmazsa yazılmaz. Anonim erişim: loginMode 1, kullanıcı "public". X-MSTR-ProjectID başlığı ve resultFlag=3 ŞART.',
-      ay_sayisi: ayAd.length, olculer, son_ay: son.ay || null,
+      ay_sayisi: ayAd.length, olculer, son_ay: (turluMu ? ayAd[0] : (son.ay || null)),
+      satir_boyut: satirBoyut, sutun_boyut: sutBoyut,
+      turler: turAd, tur_seri: turSeri,
       seri
     };
     await yaz(dosya, D);
@@ -2226,6 +2288,13 @@ async function vapFonAkis() {
     const mlr = (v) => Number.isFinite(v) ? (v / 1e9).toFixed(1) : '—';
     const degisim = olculer.find(o => /Değişim/i.test(o));
     const tutar = olculer.find(o => /Dönem Sonu Fon Tutar/i.test(o));
+    if (turluMu && tutar) {
+      const sonAy = ayAd[0];
+      const enler = turSeri.filter(x => x.ay === sonAy && Number.isFinite(x[tutar]))
+        .sort((a, b) => b[tutar] - a[tutar]).slice(0, 3);
+      if (enler.length) raporlar.push('- en büyük türler (' + sonAy + '): ' +
+        enler.map(x => x.tur.replace(/ ŞEMSİYE FON[U]?/i, '') + ' ' + (x[tutar] / 1e9).toFixed(0) + ' mlr').join(' · '));
+    }
     raporlar.push('### VAP fon akışı (§366) — ✓ ' + ayAd.length + ' ay · son ' + (son.ay || '?') +
       (tutar ? ('\n- toplam fon tutarı: ' + mlr(son[tutar]) + ' mlr ₺') : '') +
       (degisim ? ('\n- son ay değişimi: ' + mlr(son[degisim]) + ' mlr ₺') : '') +
