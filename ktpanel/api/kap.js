@@ -886,7 +886,7 @@ export default async function handler(req, res){
     const kodD = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
     if (!kodD) return res.status(400).json({ surum: _SURUM, ok: false, err: 'kod gerekli' });
     const yilSayi = Math.min(8, Math.max(1, parseInt((req.query && req.query.yil) || '4', 10) || 4));
-    const BAS = { 'user-agent': UA2, 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' };
+    const BAS = { 'user-agent': UA, 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' };
     try {
       const mr = await fetch('https://www.kap.org.tr/tr/api/member/filter/' + encodeURIComponent(kodD),
         { headers: BAS, signal: AbortSignal.timeout(12000) });
