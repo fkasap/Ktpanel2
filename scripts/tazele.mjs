@@ -2167,6 +2167,33 @@ async function gyoNav() {
     const n = Object.keys(kayitlar).length;
     if (!n) { raporlar.push('### GYO NAV (§364) — ⏭ hiçbir şirket için veri alınamadı (dönem ' + donem + ')'); return; }
 
+    /* ── §364b FİYAT DA BURADA ÇEKİLİR (kullanıcı: "fiyat yok diyor") ────────
+       Panel `CANLI_FIYAT`i yalnız multiple.json evreninden (141 hisse)
+       dolduruyor ve GYO'ların çoğu orada YOK — 45 GYO'dan sadece 5'i vardı
+       (AVPGY, EKGYO, KZBGY, RGYAS, SNGYO). Bu yüzden "güncel iskonto" sütunu
+       boş kalıyordu.
+       Fiyatı NAD ile AYNI YERDE çekmek doğrusu: veri ve fiyatı aynı damgayla
+       eşleşir, panel ayrı kaynak aramaz. Yahoo toplu uç zaten var (§176).
+       DERS: TÜRETİLMİŞ BİR ORAN GÖSTERECEKSEN İKİ BACAĞINI DA SEN GETİR. */
+    try {
+      const kodlar = Object.keys(kayitlar);
+      const fh = await yahooFiyat(kodlar, '.IS');
+      let fiyatli = 0;
+      for (const k of kodlar) {
+        const f = fh && fh[k];
+        if (f && Number.isFinite(f.fiyat) && f.fiyat > 0) {
+          kayitlar[k].fiyat = f.fiyat;
+          kayitlar[k].fiyat_tarih = f.tarih || null;
+          const pn = kayitlar[k].payNad;
+          if (Number.isFinite(pn) && pn > 0) kayitlar[k].guncelIskonto = +(((f.fiyat / pn) - 1) * 100).toFixed(1);
+          fiyatli++;
+        }
+      }
+      raporlar.push('- §364b fiyat: ' + fiyatli + '/' + kodlar.length + ' GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)');
+    } catch (e) {
+      raporlar.push('- §364b fiyat alınamadı: ' + String(e && e.message || e).slice(0, 50) + ' — TSPB oranı tek başına gösterilir');
+    }
+
     /* Sektör toplamı (TSPB'nin kendi "Tümü" kaydı) */
     let sektor = null;
     try {
@@ -2185,6 +2212,7 @@ async function gyoNav() {
       kaynak: 'TSPB · tspbnad.matriksdata.com (resmî NAD tablosu)',
       _yontem: 'İskonto = (piyasa değeri / NAD) − 1, TSPB tanımı; DÖNEM SONU piyasa değerine göre. Panel canlı fiyatla `fiyat/payNad − 1` ile GÜNCEL iskontoyu ayrıca hesaplar. Bildirim göndermemiş şirket kaydı YAZILMAZ (sıfır iskonto gibi görünmesin).',
       sirket_sayisi: n, bos_bildirim: bosBildirim, sektor,
+      fiyatli: Object.values(kayitlar).filter(x => Number.isFinite(x.fiyat)).length,
       sirketler: kayitlar
     };
     await yaz(dosya, D);
