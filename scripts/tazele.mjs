@@ -2109,12 +2109,14 @@ async function faktorEvren() {
      başarısız dönem listesi 1 kez tekrar denenir. Yavaş ama sağlam: 6 şirket
      ~3 dk, evren 245/6 ≈ 41 koşuda döner (günde 3-4 koşuyla ~2 hafta).
      Hız sınırı görülmezse parti kademeli büyütülür. */
-  /* §363 PARTİ 6 → 12 (20 Ağu, ölçümle): üç koşuda hız sınırı GÖRÜLMEDİ
-     (85-102 sn, tur başına 1 "fetch failed" ve o da tekrar denemeyle
-     toparlanıyor). Middleware muafiyeti (§361c) sonrası engel kalmadı.
-     12 şirket ≈ 3 dk; evren 245/12 ≈ 21 turda döner (günde 3-4 koşuyla
-     ~1 hafta). Hata oranı yükselirse geri alınır — ölçüm raporda. */
-  const PARTI_BOY = 12;
+  /* §363b PARTİ 12 → 6 GERİ ALINDI (ölçüm konuştu): 12'de 7/12 "fetch failed"
+     (parti 6'da 1/6 idi). Hız sınırı GERÇEK ve eşik 6 ile 12 arasında.
+     Büyütme denemesi bilinçliydi ve ölçümle geri alındı — tahminle değil.
+     DEVRE KESİCİ eklendi: üst üste 3 başarısızlıkta tur ERKEN BİTER. Boşuna
+     istek atmak hem süre yakar hem KAP'ı daha da kapatır; kalanlar zaten
+     sıradaki turda en önde. */
+  const PARTI_BOY = 6;
+  const ARDISIK_TAVAN = 3;
   const TABAN = 'https://ktpanel.vercel.app/api/kap';
   const uyku = (ms) => new Promise(r => setTimeout(r, ms));
   let uyeler = [];
@@ -2193,7 +2195,12 @@ async function faktorEvren() {
   let basarili = 0, eksikli = 0, dusen = 0;
   const notlar = [];
 
+  let ardisikHata = 0;
   for (const kod of sira) {
+    if (ardisikHata >= ARDISIK_TAVAN) {
+      notlar.push('⏹ devre kesici: ' + ARDISIK_TAVAN + ' ardışık hata, tur erken bitti');
+      break;
+    }
     try {
       let jd = null;
       for (let deneme = 0; deneme < 2; deneme++) {
@@ -2209,6 +2216,7 @@ async function faktorEvren() {
         dusen++;
         const sbp = (jd && (jd.err || (jd.hatalar && jd.hatalar[0]))) || 'liste boş';
         notlar.push(kod + ':' + String(sbp).slice(0, 26));
+        ardisikHata++;
         await uyku(3000); continue;
       }
 
@@ -2308,10 +2316,11 @@ async function faktorEvren() {
       const bosSay = ['ciro', 'favok', 'ozk', 'aktif'].filter(x => !Number.isFinite(kayit[x])).length;
       kayit.eksik = bosSay > 0;
       if (kayit.eksik) { eksikli++; notlar.push(kod + ':' + bosSay + ' ana kalem boş'); } else basarili++;
+      ardisikHata = 0;                              /* §363b: başarı zinciri sıfırlar */
       D.sirketler[kod] = kayit;
       await uyku(3000);
     } catch (e) {
-      dusen++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 24));
+      dusen++; ardisikHata++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 24));
       await uyku(3000);
     }
   }
