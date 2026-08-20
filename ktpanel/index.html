@@ -264,7 +264,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   
   <button data-tab="t8">Guidance</button>
   <button data-tab="t14">Earnings AI</button>
-  <button data-tab="t20">Halka Arzlar</button><button data-tab="t25">Yabancı Hisse</button><button data-tab="t23">Finansal Tablolar</button>
+  <button data-tab="t20">Halka Arzlar</button><button data-tab="t25">Yabancı Hisse</button><button data-tab="t23">Finansal Tablolar</button><button data-tab="t26">GYO NAV</button>
   </nav>
 <div class="tab act" id="t1"><h2>02 Borsa İstanbul Endeksleri <span class="thin">(canlı Yahoo · damgalı yedek)</span> <span class="tag" id="endDamga" style="font-weight:400">yükleniyor…</span></h2>
 <div class="card" style="padding:6px 10px">
@@ -1239,7 +1239,18 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
   <div class="note">Her çeyreğin <b>kendi bildirimi</b> KAP'tan ayrı ayrı okunur — kümülatiften türetme yok. Bildirim üç aylık sütun taşıyorsa çeyreklik değer doğrudan alınır; taşımıyorsa o çeyrek <span class="thin">kümülatif</span> etiketiyle gösterilir, sessizce fark alınmaz. Geçmiş çeyrekler değişmediği için bir kez çekilip <b>önbelleğe</b> yazılır; ikinci açılış anında gelir.</div>
   <div id="csTablo" style="margin-top:10px;overflow-x:auto"></div>
-</div></div><div class="tab" id="t11"><h2>EQUITY <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
+</div></div><!-- §364 GYO NAV — TSPB resmî NAD tablosu. GYO'da değer ölçüsü ciro/FAVÖK
+     değil NAV İSKONTOSUDUR; bu sekme onu gösterir. -->
+<div class="tab" id="t26">
+  <div class="card">
+    <div class="kart-bas"><span class="lbl">GYO NAV İSKONTOSU</span><span class="tag" id="gyoDamga">TSPB</span></div>
+    <div class="sub" style="margin-top:4px">Net Aktif Değer = portföy değeri − borçlar. <b>İskonto</b> = piyasa değeri / NAD − 1; eksi değer, hissenin varlık değerinin altında işlem gördüğünü söyler. TSPB oranı <b>dönem sonu</b> fiyatına göredir; panel ayrıca <b>canlı fiyatla</b> güncel iskontoyu hesaplar.</div>
+    <div id="gyoOzet" style="margin-top:10px"></div>
+    <div id="gyoTablo" style="margin-top:10px"><div class="sub">yükleniyor…</div></div>
+    <div id="gyoNot" class="note" style="margin-top:10px"></div>
+  </div>
+</div>
+<div class="tab" id="t11"><h2>EQUITY <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
 
 <h2 style="margin-top:22px">Analist Konsensüsü <span class="thin">(ticker yaz → pop-up · 55 hisse kapsamda)</span></h2>
 <input id="anaAra" type="text" placeholder="Ticker: THYAO, ASELS, TUPRS…" style="width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--mono);font-size:13px;box-sizing:border-box;text-transform:uppercase">
@@ -1688,7 +1699,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260820z"></script>
-<script src="/ajan.js?v=20260820z"></script>
+<script src="/app.js?v=20260821a"></script>
+<script src="/ajan.js?v=20260821a"></script>
 </body>
 </html>

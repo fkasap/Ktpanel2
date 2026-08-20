@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820z';   // SS360 PYS canli akis + haftalik sekme   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821a';   // SS364 GYO NAV   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -102,6 +102,7 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
     /* §218b t23 KURULUMU — sekme açılınca BİR KEZ. Yıl seçenekleri ve düğme
        bağlantısı burada kurulur. §163 dersi: varsayılan açık olmayan sekmede
        tembel kurulum sorunsuz, ama bir kereliğine yapıldığından emin ol. */
+    if(b.dataset.tab==='t26'){ try{ gyoNavInit(); }catch(e){ console.warn('[KTPanel] §364:', e&&e.message); } }
     if(b.dataset.tab==='t23' && !window.__ftKuruldu){
       window.__ftKuruldu = true;
       try{
@@ -9775,6 +9776,74 @@ window.csSeriOzet = async function(kod, adet){
   }catch(e){ return ''; }
 };
 
+/* ── §364 GYO NAV KARTI (20 Ağu) ───────────────────────────────────────────
+   TSPB'nin resmî NAD tablosunu (gyo-nav.json, §364 Actions) gösterir ve
+   ÜZERİNE CANLI FİYATI BİNDİRİR:
+     TSPB iskontosu → dönem sonu piyasa değerine göre (gecikmeli, referans)
+     güncel iskonto  → canlı fiyat / pay başına NAD − 1 (bugünkü resim)
+   İkisi yan yana durur; aradaki fark, dönem sonundan bu yana fiyatın NAD'a
+   göre nereye gittiğini söyler.
+   Sıralama en iskontoludan başlar — GYO'da ucuzluk sıralaması budur. */
+let GYONAV = null;
+async function gyoNavInit(){
+  const T = $('gyoTablo'); if(!T) return;
+  if(GYONAV){ gyoNavCiz(); return; }
+  try{
+    const r = await fetch('/gyo-nav.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    GYONAV = await r.json();
+  }catch(e){
+    T.innerHTML='<div class="sub">gyo-nav.json yüklenemedi: '+esc(String(e.message||e))+
+      ' <span class="thin">(Actions §364 ilk koşusunu bekliyor olabilir)</span></div>';
+    return;
+  }
+  gyoNavCiz();
+}
+function gyoNavCiz(){
+  const T=$('gyoTablo'); if(!T||!GYONAV) return;
+  const S=GYONAV.sirketler||{};
+  const kodlar=Object.keys(S);
+  if(!kodlar.length){ T.innerHTML='<div class="sub">şirket kaydı yok</div>'; return; }
+  if($('gyoDamga')) $('gyoDamga').textContent='TSPB · '+(GYONAV.donem_etiket||'');
+  /* canlı fiyat bindirmesi — CANLI_FIYAT app.js'te dolu (§multipleInit) */
+  const fiyatOf=(k)=> (typeof CANLI_FIYAT!=='undefined' && CANLI_FIYAT && Number.isFinite(CANLI_FIYAT[k])) ? CANLI_FIYAT[k] : null;
+  const satirlar = kodlar.map(k=>{
+    const x=S[k], f=fiyatOf(k);
+    const guncel = (Number.isFinite(f) && Number.isFinite(x.payNad) && x.payNad>0) ? (f/x.payNad-1)*100 : null;
+    return { k, ad:x.ad, nad:x.nad, payNad:x.payNad, isk:x.iskonto, guncel, borcluluk:x.borcluluk, fiyat:f };
+  }).sort((a,b)=>{
+    const av=Number.isFinite(a.guncel)?a.guncel:(Number.isFinite(a.isk)?a.isk:9e9);
+    const bv=Number.isFinite(b.guncel)?b.guncel:(Number.isFinite(b.isk)?b.isk:9e9);
+    return av-bv;
+  });
+  const sek = GYONAV.sektor||{};
+  if($('gyoOzet')) $('gyoOzet').innerHTML =
+    '<div style="display:flex;gap:20px;flex-wrap:wrap;align-items:baseline">'+
+      '<div><span class="sub">Sektör iskontosu</span><br><span style="font-family:var(--mono);font-size:20px;font-weight:700;color:'+((sek.iskonto||0)<0?'var(--up)':'var(--down)')+'">%'+trN(sek.iskonto||0,1)+'</span></div>'+
+      '<div><span class="sub">Sektör NAD</span><br><span style="font-family:var(--mono);font-size:15px">'+trN((sek.nad||0)/1000,1)+' mlr ₺</span></div>'+
+      '<div><span class="sub">Borçluluk</span><br><span style="font-family:var(--mono);font-size:15px">%'+trN(sek.borcluluk||0,1)+'</span></div>'+
+      '<div><span class="sub">Şirket</span><br><span style="font-family:var(--mono);font-size:15px">'+kodlar.length+'</span></div>'+
+    '</div>';
+  const hucre=(v,ek)=> Number.isFinite(v)
+    ? '<td class="num" style="font-family:var(--mono);font-size:10.5px'+(v<0?';color:var(--up)':';color:var(--down)')+'">'+(v>0?'+':'')+trN(v,1)+(ek||'')+'</td>'
+    : '<td class="num" style="color:var(--muted)">—</td>';
+  T.innerHTML='<table style="width:100%;border-collapse:collapse">'+
+    '<thead><tr><th style="text-align:left">KOD</th><th class="num">Pay NAD ₺</th><th class="num">Fiyat ₺</th>'+
+    '<th class="num">Güncel iskonto</th><th class="num">TSPB (dönem sonu)</th><th class="num">Borçluluk</th></tr></thead><tbody>'+
+    satirlar.map(x=>'<tr>'+
+      '<td style="font-family:var(--mono);font-size:10.5px"><b>'+esc(x.k)+'</b></td>'+
+      '<td class="num" style="font-family:var(--mono);font-size:10.5px">'+(Number.isFinite(x.payNad)?trN(x.payNad,2):'—')+'</td>'+
+      '<td class="num" style="font-family:var(--mono);font-size:10.5px">'+(Number.isFinite(x.fiyat)?trN(x.fiyat,2):'<span class="thin">canlı yok</span>')+'</td>'+
+      hucre(x.guncel,'%')+hucre(x.isk,'%')+
+      '<td class="num" style="font-family:var(--mono);font-size:10.5px;color:var(--muted)">'+(Number.isFinite(x.borcluluk)?'%'+trN(x.borcluluk,1):'—')+'</td>'+
+    '</tr>').join('')+'</tbody></table>';
+  if($('gyoNot')) $('gyoNot').innerHTML =
+    'Kaynak: '+esc(GYONAV.kaynak||'TSPB')+' · dönem <b>'+esc(GYONAV.donem_etiket||'')+'</b>. '+
+    '<b>Güncel iskonto</b> canlı fiyat ÷ pay başına NAD − 1 ile hesaplanır; TSPB sütunu dönem sonu fiyatına göredir, ikisi arasındaki fark o tarihten bu yana fiyatın NAD\'a göre hareketidir. '+
+    'Eksi = varlık değerinin altında, artı = primli. '+
+    (GYONAV.bos_bildirim ? ('<b>'+GYONAV.bos_bildirim+' şirket</b> o dönem bildirim göndermediği için listede yok — sıfır iskonto diye gösterilmedi. ') : '')+
+    'GYO\'da ciro/FAVÖK yerine bu ölçü kullanılır; faktör modelinde GYO\'ların "değer" bacağı budur.';
+}
 async function csGetirCalis(){
   const kod = (($('csKod')&&$('csKod').value)||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
   const adet = parseInt(($('csAdet')&&$('csAdet').value)||'15',10)||15;
