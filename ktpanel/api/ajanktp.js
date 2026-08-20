@@ -297,7 +297,11 @@ module.exports = async (req, res) => {
 DÖNEM: ${donem}
 TEMEL: ${temel}
 BİRİM: ${birim}${birim==='belirsiz' ? ' — RAPORDA BELİRTİLMEMİŞ. Tutarları yazarken birim belirsizliğini ÖZET içinde SÖYLE, uydurma.' : ' (raporun kendi beyanı)'}. Marjlar yüzde. y/y = geçen yılın aynı çeyreği.
-
+${g.seri ? `
+§347 ÇEYREKLİK SERİ (panelin KAP'tan çektiği 8 çeyrek, ENFLASYON ENDEKSLİ — tüm çeyrekler en yeni raporun parasıyla, yani birbiriyle KARŞILAŞTIRILABİLİR):
+${String(g.seri).slice(0, 1400)}
+BU SERİYİ KULLAN: tek çeyreğin rakamı değil TREND önemli — ciro/FAVÖK yönü, marj seyri, net borcun artıp azaldığı. Sıçrama varsa hangi çeyrekten itibaren başladığını SÖYLE. Seri endeksli olduğu için "enflasyon yüzünden arttı" demeden gerçek büyümeyi yorumlayabilirsin.
+` : ''}
 METRİKLER:
 ${JSON.stringify(g.metrikler, null, 1)}
 
