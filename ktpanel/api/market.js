@@ -185,6 +185,23 @@ async function fredModu(req, res){
     // Konjonktür & resesyon radarı
     ['T10Y3M','seviye'],['SAHMREALTIME','seviye'],['GDPNOW','seviye'],
     ['NFCI','seviye'],['PAYEMS','seviye'],['RSAFS','yillik'],['UMCSENT','seviye'],
+    /* §354 İŞGÜCÜ + ENERJİ STOKLARI (20 Ağu, kullanıcı isteği: "petrol, JOLTS,
+       PMI verileri Actions'ta görebilir miyiz").
+       ÖLÇÜM: ForexFactory takvimi (§319) bu olayların TARİHİNİ ve BEKLENTİSİNİ
+       veriyor ama GERÇEKLEŞEN değeri YOK (alanlar: title/country/date/impact/
+       forecast/previous — "actual" yok). Gerçekleşen için FRED doğru kaynak.
+       JTSJOL  : JOLTS açık pozisyon (bin kişi) — işgücü talebinin önden
+                 göstergesi; Fed'in yakından izlediği gevşeme ölçüsü.
+       JTSQUR  : istifa oranı — işçi güveni; ücret baskısıyla birlikte okunur.
+       WCESTUS1: ABD ham petrol stokları (bin varil, haftalık EIA) — takvimdeki
+                 "Crude Oil Inventories" olayının GERÇEKLEŞEN karşılığı.
+       WGTSTUS1: benzin stokları · WPULEUS3: rafineri kapasite kullanımı %
+       DCOILWTICO: WTI spot — stok/talep okumasının fiyat ayağı.
+       PMI NOTU: ISM ve S&P Global PMI serileri FRED'de LİSANSLI DEĞİL (telif
+       nedeniyle kaldırıldı). O yüzden PMI için takvimdeki beklenti/önceki
+       kullanılmaya devam edilir; uydurma seri eklenmez. */
+    ['JTSJOL','seviye'],['JTSQUR','seviye'],
+    ['WCESTUS1','seviye'],['WGTSTUS1','seviye'],['WPULEUS3','seviye'],['DCOILWTICO','seviye'],
     // Euro bölgesi 10Y tahvil getirileri (OECD serisi — ECB ağı kapalıyken sunucu yolu)
     ['IRLTLT01DEM156N','seviye'],['IRLTLT01ITM156N','seviye'],['IRLTLT01FRM156N','seviye']
   ];
