@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820l';   // SS349 yil yil varsayim + SS350 EV/EBITDA KAP'a bagli   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820m';   // SS350b hiz + acilista KAP   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7860,6 +7860,9 @@ async function multipleInit(){
   if(sel){sel.innerHTML=MULTIPLE.hisseler.map(h=>'<option value="'+h.k+'">'+h.k+(h.ad?' — '+h.ad:'')+'</option>').join('');
     sel.addEventListener('change', mulTickerDegisti);}
   mulGirdiBagla();
+  /* §350b: ilk açılışta seçili ticker için de KAP denenir — kullanıcı hiçbir
+     şey yapmadan güncel veriyi görsün. */
+  setTimeout(()=>{ try{ mulTickerDegisti(); }catch(e){} }, 1200);
   /* SS349b: eski tek-kutu dinleyicileri kalkti — mulGirdiBagla() yil yil kutulari baglar */
   multipleRender();
 }
@@ -7877,14 +7880,23 @@ async function mulKapTTM(kod){
     const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil=3', {cache:'no-store'});
     const j = await r.json();
     if(!j.ok || !(j.donemler||[]).length) return null;
-    const liste = j.donemler.slice(0, 6);          /* 4 çeyrek + katsayı için pay */
+    const liste = j.donemler.slice(0, 5);          /* 4 çeyrek + katsayı zinciri için 1 pay */
     const ob = csOnbellekOku(); const veri = {};
-    for(const x of liste){
-      const a = kod+'|'+x.yil+'|'+x.donem;
-      if(ob[a] && ob[a].kalem){ veri[a]=ob[a]; continue; }
-      try{ const k = await csDonemCek(x.id); veri[a]=k; ob[a]=k; }catch(e){}
+    /* §350b HIZ (kullanıcı "eski kalmış" dedi, ölçüldü: 18 sn sürüyordu ve
+       kart o süre boyunca snapshot gösteriyordu — kullanıcı beklemeden baktı).
+       Dönemler artık ÜÇLÜ PARALEL çekiliyor (§339'daki desen; KAP'ı zorlamayan
+       ölçü) ve önbellekte olanlar hiç istek üretmiyor. Tipik süre 18 sn → ~6 sn,
+       ikinci açılışta anında. */
+    const eksikDonem = liste.filter(x=>{ const a=kod+'|'+x.yil+'|'+x.donem;
+      if(ob[a]&&ob[a].kalem){ veri[a]=ob[a]; return false; } return true; });
+    if(eksikDonem.length){
+      const kuyruk = eksikDonem.slice();
+      const isci = async ()=>{ while(kuyruk.length){ const x=kuyruk.shift();
+        const a = kod+'|'+x.yil+'|'+x.donem;
+        try{ const k = await csDonemCek(x.id); veri[a]=k; ob[a]=k; }catch(e){} } };
+      await Promise.all([isci(),isci(),isci()]);
+      csOnbellekYaz(ob);
     }
-    csOnbellekYaz(ob);
     const dolu = liste.filter(x=>veri[kod+'|'+x.yil+'|'+x.donem]);
     if(dolu.length < 4) return null;
     const KAT = csEndeksKatsayilari(dolu, veri, kod);
@@ -7917,10 +7929,11 @@ function mulGirdiBagla(){
 }
 async function mulTickerDegisti(){
   const kod = ($('mulTicker')||{}).value;
-  if($('mulKaynak')) $('mulKaynak').textContent = 'KAP okunuyor…';
+  if($('mulKaynak')){ $('mulKaynak').textContent = '⏳ KAP okunuyor (birkaç saniye)…'; $('mulKaynak').style.color='var(--mm2)'; }
   window.MUL_KAP = null;
   multipleRender();
   try{ const t = await mulKapTTM(kod); if(t){ t.kod=kod; window.MUL_KAP=t; multipleRender(); } }catch(e){}
+  if($('mulKaynak')) $('mulKaynak').style.color='';
   if(!window.MUL_KAP && $('mulKaynak')) $('mulKaynak').textContent = 'Fintables snapshot (KAP alınamadı)';
 }
 function multipleRender(){
