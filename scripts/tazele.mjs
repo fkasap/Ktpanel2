@@ -2109,7 +2109,12 @@ async function faktorEvren() {
      başarısız dönem listesi 1 kez tekrar denenir. Yavaş ama sağlam: 6 şirket
      ~3 dk, evren 245/6 ≈ 41 koşuda döner (günde 3-4 koşuyla ~2 hafta).
      Hız sınırı görülmezse parti kademeli büyütülür. */
-  const PARTI_BOY = 6;
+  /* §363 PARTİ 6 → 12 (20 Ağu, ölçümle): üç koşuda hız sınırı GÖRÜLMEDİ
+     (85-102 sn, tur başına 1 "fetch failed" ve o da tekrar denemeyle
+     toparlanıyor). Middleware muafiyeti (§361c) sonrası engel kalmadı.
+     12 şirket ≈ 3 dk; evren 245/12 ≈ 21 turda döner (günde 3-4 koşuyla
+     ~1 hafta). Hata oranı yükselirse geri alınır — ölçüm raporda. */
+  const PARTI_BOY = 12;
   const TABAN = 'https://ktpanel.vercel.app/api/kap';
   const uyku = (ms) => new Promise(r => setTimeout(r, ms));
   let uyeler = [];
