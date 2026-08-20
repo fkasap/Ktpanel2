@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-20T21:55:15Z",
+ "guncelleme": "2026-08-20T22:02:05Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -174,7 +174,8 @@
    "eksik": false
   },
   "ALVES": {
-   "ts": "2026-08-20T21:35:13Z",
+   "ts": "2026-08-20T21:59:33Z",
+   "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
    "ciro": 12361362447,
@@ -188,12 +189,27 @@
    "finBorc": 4539657956,
    "likit": 126101106,
    "netBorc": 4413556850,
+   "isletmeNA": -18055620,
+   "capex": -583692090,
+   "sna": -601747710,
+   "tahakkuk": 0.74,
+   "odFaiz": -1374625857,
+   "odTemettu": null,
+   "stoklar": 3881615768,
+   "ticariAlacak": 3303579333,
+   "ticariBorc": 1606334845,
+   "buyume": {
+    "ciro": 49.4,
+    "netKar": -53.3,
+    "brut": 18.7
+   },
    "adet": 1600000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
   },
   "BAKAB": {
-   "ts": "2026-08-20T21:35:32Z",
+   "ts": "2026-08-20T21:59:46Z",
+   "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
    "ciro": 5943264854,
@@ -207,12 +223,27 @@
    "finBorc": 1079000121,
    "likit": 468662280,
    "netBorc": 610337841,
+   "isletmeNA": 337593132,
+   "capex": -108170997,
+   "sna": 229422135,
+   "tahakkuk": -4.5,
+   "odFaiz": -70853208,
+   "odTemettu": null,
+   "stoklar": 1119072120,
+   "ticariAlacak": 1588573246,
+   "ticariBorc": 1958943415,
+   "buyume": {
+    "ciro": 5,
+    "netKar": -128.6,
+    "brut": 8.3
+   },
    "adet": 72000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
   },
   "BERA": {
-   "ts": "2026-08-20T21:35:50Z",
+   "ts": "2026-08-20T21:59:59Z",
+   "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
    "ciro": 18847152208,
@@ -226,12 +257,27 @@
    "finBorc": 1175925793,
    "likit": 2151831970,
    "netBorc": -975906177,
+   "isletmeNA": -178722304,
+   "capex": null,
+   "sna": null,
+   "tahakkuk": -0.74,
+   "odFaiz": null,
+   "odTemettu": null,
+   "stoklar": 6076427311,
+   "ticariAlacak": 5301976201,
+   "ticariBorc": 2041210727,
+   "buyume": {
+    "ciro": -2.7,
+    "netKar": -77.5,
+    "brut": -12.8
+   },
    "adet": 683200000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
   },
   "BIENY": {
-   "ts": "2026-08-20T21:36:08Z",
+   "ts": "2026-08-20T22:00:12Z",
+   "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
    "ciro": 12725735536,
@@ -245,12 +291,27 @@
    "finBorc": 7291790216,
    "likit": 81286677,
    "netBorc": 7210503539,
+   "isletmeNA": 162470404,
+   "capex": -1084947883,
+   "sna": -922477479,
+   "tahakkuk": -2.53,
+   "odFaiz": -1091037220,
+   "odTemettu": null,
+   "stoklar": 4315463357,
+   "ticariAlacak": 8607725124,
+   "ticariBorc": 3501973339,
+   "buyume": {
+    "ciro": 12.4,
+    "netKar": -53.3,
+    "brut": 12.8
+   },
    "adet": 361000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
   },
   "BIMAS": {
-   "ts": "2026-08-20T21:36:24Z",
+   "ts": "2026-08-20T22:00:25Z",
+   "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
    "ciro": 761454515000,
@@ -264,6 +325,20 @@
    "finBorc": 62592510000,
    "likit": 30205373000,
    "netBorc": 32387137000,
+   "isletmeNA": 49356277000,
+   "capex": -19172063000,
+   "sna": 30184214000,
+   "tahakkuk": -5.4,
+   "odFaiz": null,
+   "odTemettu": -7499161000,
+   "stoklar": 70884869000,
+   "ticariAlacak": 42525418000,
+   "ticariBorc": 111496145000,
+   "buyume": {
+    "ciro": 9.9,
+    "netKar": 103.3,
+    "brut": 10.3
+   },
    "adet": 1200000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
