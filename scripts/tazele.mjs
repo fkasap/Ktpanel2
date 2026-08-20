@@ -1567,6 +1567,40 @@ async function fonAkisArsiv(meta, kurucu) {
         n++;
       }
       a.akis = { onceki: g0, gun: g1, adet: n, fon };
+
+      /* ── §358 PYŞ BAZINDA AKIŞ (20 Agu, kullanici: "PYS kartinda veri 13 gun
+         eski, TEFAS koprusu Actions'ta calisiyor, oradan turetelim") ────────
+         OLCULDU: fon-akis.json zaten (a) gunluk fon akisini (pay x fiyat farki)
+         ve (b) `kurucu` eslemesini tasiyor — 1966 fonun 1957'si esleniyor.
+         Eksik olan tek sey KURUM BAZINDA TOPLAM. Elle beslenen pyssektor.json
+         (10 Agu damgali) yerine bu blok her kosuda tazelenir.
+         AD NORMALIZASYONU SART: ayni kurum iki isimle geciyor —
+           "AK PORTFÖY YÖNETİMİ A.Ş." ve "AK PORTFÖY" ayri toplaniyordu
+           (+10,31 ve +1,60 mlr diye BOLUNMUS gorunuyordu; dogrusu +11,91).
+         Kural: "PORTFÖY/YÖNETİMİ/A.Ş." ekleri atilir, kalan ad kurumdur. */
+      const kurucuAd = (h) => String(h || '')
+        .toLocaleUpperCase('tr')
+        .replace(/\s*PORTF[ÖO]Y\s*Y[ÖO]NET[İI]M[İI]?\s*/g, ' ')
+        .replace(/\s*PORTF[ÖO]Y\s*/g, ' ')
+        .replace(/\s*A\.?\s*[ŞS]\.?\s*/g, ' ')
+        .replace(/\s+/g, ' ').trim();
+      const kurucuHar = a.kurucu || {};
+      const pysTop = {}, pysAdet = {};
+      let eslesmeyen = 0;
+      for (const kod of Object.keys(fon)) {
+        const ad = kurucuAd(kurucuHar[kod]);
+        if (!ad) { eslesmeyen++; continue; }
+        pysTop[ad] = (pysTop[ad] || 0) + fon[kod];
+        pysAdet[ad] = (pysAdet[ad] || 0) + 1;
+      }
+      const pysListe = Object.keys(pysTop)
+        .map(ad => ({ ad, net: Math.round(pysTop[ad]), fon: pysAdet[ad] }))
+        .sort((x, y) => y.net - x.net);
+      a.pys = { gun: g1, onceki: g0, adet: pysListe.length, eslesmeyen, liste: pysListe };
+      raporlar.push('### PYŞ bazında akış (§358) — ✓ ' + pysListe.length + ' kurum · ' + g1 +
+        (eslesmeyen ? (' · ' + eslesmeyen + ' fon eşleşmedi') : '') +
+        '\n- giriş: ' + pysListe.slice(0, 3).map(x => x.ad + ' ' + (x.net / 1e9).toFixed(2) + ' mlr').join(' · ') +
+        '\n- çıkış: ' + pysListe.slice(-3).map(x => x.ad + ' ' + (x.net / 1e9).toFixed(2) + ' mlr').join(' · '));
     }
     /* Kurucu eşlemesi arşivde tutulur — panel PYŞ bazında gruplayabilsin.
        Yalnız DOLU gelirse yazılır; liste ucu düşerse eski eşleme korunur. */
