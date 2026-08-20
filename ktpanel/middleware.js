@@ -100,6 +100,13 @@ export default async function middleware(req) {
   // üç koşuluk 401 bilmecesinin gerçek suçlusu TEFAS değil BU kapıydı).
   if (url.pathname === '/api/tefas') return;
 
+  // §361c: /api/kap da GİRİŞSİZ — aynı sınıf, aynı çözüm (§249j).
+  // Faktör evreni (§361) Actions'tan mod=donemler/mod=ham çağırıyor; çerezsiz
+  // geldiği için middleware "giriş gerekli" ile kesiyordu ve iki koşu boyunca
+  // sebep KAP hız sınırı sanıldı. KAP kamu verisi — bu uç da proxy.
+  // NOT: yalnız OKUMA modları muaf; yazan/kişisel uç yok (kap.js salt okur).
+  if (url.pathname === '/api/kap') return;
+
   // Vercel Cron muafiyeti (TÜM cron path'leri: /api/ajanktp, /api/data mail...):
   // Vercel, cron isteklerine Authorization: Bearer CRON_SECRET ekler.
   {
