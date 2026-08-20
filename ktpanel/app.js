@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260820b';   // SS341 XBRL harita + SS342 metrik motoru   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260820c';   // SS342b enflasyon uyarisi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9573,7 +9573,17 @@ function csCeyrek(liste, veri, kod, i, xbrl, tip){
   const ok = veri[kod+'|'+onc.yil+'|'+onc.donem];
   const okl = ok && ok.kalem && ok.kalem[xbrl];
   if(!okl || !Number.isFinite(okl.k)) return {v:null};
-  return {v: kl.k - okl.k, turetilmis:true};
+  /* §342b ENFLASYON UYARISI (20 Agu, kullanici "veriler dogru mu" diye sordu,
+     olculdu): TMS-29 altinda HER RAPOR kendi donem sonu ALIM GUCUNE gore
+     yeniden ifade edilir. Ornek: TUPRS 2026 — 1C raporunda kumulatif ciro
+     258,3 mlr; 2C raporunda 6 aylik 662,8 mlr. Fark 404,5 ÇIKAR ama raporun
+     KENDI 2C sutunu 386,4 diyor: %4,7 sapma. Cunku iki rapor FARKLI PARAYLA
+     olculmus. AYNI rapor icindeki sutunlar tutarlidir, FARKLI raporlar arasi
+     fark DEGILDIR.
+     Bu yuzden turetilen hucre YAKLASIKTIR ve ekranda "≈" ile gosterilir;
+     rapor kendi ceyrek sutununu veriyorsa O KULLANILIR (kesin deger).
+     DERS: ENFLASYON MUHASEBESINDE KUMULATIF FARKI CEYREK DEGILDIR. */
+  return {v: kl.k - okl.k, turetilmis:true, yaklasik:true};
 }
 function csMetrikler(liste, veri, kod, i){
   const al = (xbrl,tip)=>csCeyrek(liste,veri,kod,i,xbrl,tip).v;
@@ -9620,11 +9630,12 @@ function csTabloBas(kod, liste, veri, hata){
   const kayitlar = liste.map(x=>veri[kod+'|'+x.yil+'|'+x.donem]).filter(Boolean);
   const birimler = [...new Set(kayitlar.map(k=>k.birim).filter(Boolean))];
   let turetilenSayi = 0;
-  const sayi=(v,ondalik)=>{
+  const sayi=(v,yaklasik)=>{
     if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted)">—</td>';
     const mlr = v/1e9;
-    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px'+(v<0?';color:var(--down)':'')+'">'+
-      trN(mlr, Math.abs(mlr)>=100?0:(Math.abs(mlr)>=1?1:2))+'</td>';
+    return '<td style="text-align:right;padding:2px 5px;font-family:var(--mono);font-size:10px'+(v<0?';color:var(--down)':'')+
+      (yaklasik?';opacity:.72':'')+'" title="'+(yaklasik?'kümülatif farkından türetildi — enflasyon düzeltmesi nedeniyle YAKLAŞIK':'raporun kendi sütunu')+'">'+
+      (yaklasik?'≈':'')+trN(mlr, Math.abs(mlr)>=100?0:(Math.abs(mlr)>=1?1:2))+'</td>';
   };
   const oran=(v,ek)=>{
     if(!Number.isFinite(v)) return '<td style="text-align:right;padding:2px 5px;color:var(--muted)">—</td>';
@@ -9637,7 +9648,7 @@ function csTabloBas(kod, liste, veri, hata){
       const hucre = liste.map((x,i)=>{
         const r = csCeyrek(liste,veri,kod,i,xbrl,tip);
         if(r.turetilmis && Number.isFinite(r.v)) turetilenSayi++;
-        return sayi(r.v);
+        return sayi(r.v, r.turetilmis);
       }).join('');
       govde += '<tr><td style="padding:2px 8px 2px 0;font-size:10.5px;white-space:nowrap">'+etiket+'</td>'+hucre+'</tr>';
     });
@@ -9657,7 +9668,7 @@ function csTabloBas(kod, liste, veri, hata){
     '</tr></thead><tbody>'+govde+'</tbody></table>'+
     '<div class="sub" style="font-size:9px;margin-top:6px">'+
       'Birim raporun kendi beyanından: '+(birimler.join(', ')||'—')+(birimler.length>1?' <b style="color:var(--down)">⚠ karışık</b>':'')+' → tümü ₺ tabanına çevrildi.'+
-      (turetilenSayi?(' · <b style="color:#E8933B">'+turetilenSayi+' hücre kümülatiften TÜRETİLDİ</b> (rapor çeyrek sütunu vermiyor; 4Ç = yıllık − 9A)'):'')+
+      (turetilenSayi?(' · <b style="color:#E8933B">≈ işaretli '+turetilenSayi+' hücre YAKLAŞIK</b>: rapor çeyrek sütunu vermediği için kümülatif farkından türetildi. <b>Enflasyon muhasebesi (TMS-29)</b> her raporu kendi dönem sonu alım gücüne göre yeniden ifade ettiğinden bu fark birebir çeyrek değildir — ölçülen sapma TUPRS 2026/2\'de %4,7. İşaretsiz hücreler raporun kendi sütunundan, kesindir.'):'')+
       ' · FAVÖK = Esas faaliyet kârı + amortisman · Net borç = finansal borç − (nakit + finansal yatırım) · SNA = işletme nakit akışı − yatırım harcaması'+
       (hata&&hata.length?(' · <span style="color:var(--down)">alınamadı: '+hata.join(' · ')+'</span>'):'')+
     '</div>';
