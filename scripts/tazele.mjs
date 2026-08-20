@@ -2163,7 +2163,7 @@ async function faktorEvren() {
         } catch (e) { jd = { err: String(e && e.message || e).slice(0, 30) }; }
         if (deneme === 0) await uyku(2500);
       }
-      const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, 4) : [];
+      const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, 5) : [];   /* §361d: son yıllık (4Ç) mutlaka kapsansın */
       if (donemler.length < 2) {
         dusen++;
         const sbp = (jd && (jd.err || (jd.hatalar && jd.hatalar[0]))) || 'liste boş';
@@ -2188,6 +2188,7 @@ async function faktorEvren() {
         (jh.tablolar || []).forEach(t => (t.satirlar || []).forEach(sr => {
           if (!sr.xbrl || !sr.degerler || !sr.degerler.length || K[sr.xbrl]) return;
           K[sr.xbrl] = { k: sr.degerler[0] * carpan,
+            onceki: isFinite(sr.degerler[1]) ? sr.degerler[1] * carpan : null,   /* §361d: TTM farkı için ŞART */
             c: (sr.degerler.length >= 4 && isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null };
         }));
         kalemler.push({ yil: dn.yil || dn.year, donem: dn.donem || dn.period, K });
@@ -2196,17 +2197,35 @@ async function faktorEvren() {
 
       const son = kalemler.find(x => x);
       if (!son) { dusen++; notlar.push(kod + ':tablo yok'); await uyku(700); continue; }
-      /* akış kalemleri: çeyrek sütunu varsa o, yoksa 1. dönemde kümülatif */
+      /* §361d TTM YÖNTEMİ DEĞİŞTİ — ÇEYREK TOPLAMI YERİNE KÜMÜLATİF FARKI
+         (20 Ağu, Fintables ile çapraz doğrulamada yakalandı).
+         ÖNCEKİ YÖNTEM ÇÖKTÜ: "çeyrek sütununu topla" varsayımı, o sütunu
+         vermeyen şirketlerde kısmi toplam üretiyordu. ALKIM'ın gelir tablosu
+         (rol 310003) yalnız KÜMÜLATİF veriyor; sonuç TTM değil 6 aylık çıktı
+         (AKHAN dosyada 3,81 mlr; gerçek TTM 11,22 mlr — bağımsız kaynak).
+         YENİ YÖNTEM (klasik ve sağlam, HER şablonda çalışır):
+           TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif
+         Üç değerin ikisi TEK RAPORDAN gelir: ara dönem raporunun `k` (cari
+         kümülatif) ve `onceki` (geçen yılın aynı dönemi) sütunları. Üçüncüsü
+         son yıllık rapor (donem=4).
+         Ara dönem 4Ç ise (yıllık rapor son rapor) TTM = yıllık, fark gerekmez.
+         ENFLASYON: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla —
+         aradaki fark kalıyor. Göreli sıralama için kabul edilebilir; dosyada
+         `_yontem` ile yazılı. Eksik bacak varsa SONUÇ NULL — kısmi toplam yok. */
+      const yillikKl = kalemler.find(x => x && x.donem === 4);
+      const araKl = kalemler.find(x => x && x.donem !== 4) || null;
       const akis = (kad) => {
-        let t = 0, n = 0;
-        for (const kl of kalemler) {
-          if (!kl) continue;
-          const v = kl.K[AL[kad]];
-          if (!v) continue;
-          const d = isFinite(v.c) ? v.c : (kl.donem === 1 ? v.k : null);
-          if (isFinite(d)) { t += d; n++; }
+        const xb = AL[kad];
+        /* son rapor YILLIK ise TTM doğrudan odur */
+        if (son.donem === 4) {
+          const v = son.K[xb];
+          return (v && isFinite(v.k)) ? v.k : null;
         }
-        return n >= 3 ? t : null;                    /* 4 çeyreğin en az 3'ü gerekli */
+        if (!araKl || !yillikKl) return null;
+        const a = araKl.K[xb], y = yillikKl.K[xb];
+        if (!a || !y) return null;
+        if (!isFinite(a.k) || !isFinite(a.onceki) || !isFinite(y.k)) return null;
+        return y.k + a.k - a.onceki;
       };
       const stok = (kad) => { const v = son.K[AL[kad]]; return v && isFinite(v.k) ? v.k : null; };
       const S = (...a) => { let t = 0, v = false; a.forEach(z => { if (isFinite(z)) { t += z; v = true; } }); return v ? t : null; };
@@ -2240,7 +2259,7 @@ async function faktorEvren() {
   D.evren = 'XKTUM';
   D.uye_sayisi = uyeler.length;
   D.kapsam = Object.keys(D.sirketler).length;
-  D._yontem = 'TTM = son 4 çeyreğin çeyrek sütunu toplamı (enflasyon endekslemesi YOK — göreli sıralama için yeterli, mutlak değer için panelde endeksleme var). Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.';
+  D._yontem = '§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki "çeyrek sütunlarını topla" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN\'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.';
   await yaz(dosya, D);
   degisenler.push('faktör evreni (' + D.kapsam + '/' + uyeler.length + ')');
   raporlar.push('### Faktör evreni (§361) — ✓ parti ' + sira.length + ' · kapsam ' + D.kapsam + '/' + uyeler.length +
