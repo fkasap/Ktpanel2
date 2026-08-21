@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821m';   // SS370 KOPMA-sigma   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821n';   // SS370b dayanikli sigma   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9960,10 +9960,26 @@ const KOPMA_NOT = [
 function kopmaSigma(marjSeri, kapasite, coreFavok, rho){
   const m=(marjSeri||[]).map(x=>x.marj).filter(Number.isFinite);
   if(m.length<4) return null;
-  const ort=m.reduce((a,b)=>a+b,0)/m.length;
+  /* §370b DAYANIKLI σ (canlı: MERCN'de σ %37,7 çıktı, referans hesap %16,3).
+     Sebep TEK AYKIRI ÇEYREK: MERCN 1Ç26'da ciro 38 mn'ye düşmüş, marj uçmuş
+     ve klasik standart sapma bunu iki katına çıkarmış. Referans metin de aynı
+     sorunu görüp "3Ç25 muhasebe artığını çıkardım" demişti — ama ELLE.
+     ÇÖZÜM: MEDYAN + MAD (medyan mutlak sapma × 1,4826). Aykırı değere
+     dayanıklıdır ve ELLE TEMİZLİK GEREKTİRMEZ; hangi çeyreğin aykırı olduğu
+     da işaretlenir. Klasik sapma yine hesaplanır, ikisi ekranda karşılaştırılır.
+     DERS: 8 GÖZLEMDE TEK AYKIRI DEĞER σ'YI İKİYE KATLAR — dayanıklı ölçü şart. */
+  const sirali=m.slice().sort((a,b)=>a-b);
+  const med=(d)=>{ const k=d.slice().sort((x,y)=>x-y), n=k.length;
+    return n%2 ? k[(n-1)/2] : (k[n/2-1]+k[n/2])/2; };
+  const medyan=med(m);
+  const mad=med(m.map(x=>Math.abs(x-medyan)))*1.4826;
+  const ortK=m.reduce((a,b)=>a+b,0)/m.length;
+  const sdK=Math.sqrt(m.reduce((a,b)=>a+(b-ortK)*(b-ortK),0)/(m.length-1));
+  /* aykırı: medyandan 3 MAD uzak */
+  const aykiri=(marjSeri||[]).filter(x=>Number.isFinite(x.marj) && mad>0 && Math.abs(x.marj-medyan)>3*mad)
+    .map(x=>x.donem+' (%'+x.marj.toFixed(1)+')');
+  const ort=medyan, sd=(mad>0?mad:sdK);
   if(!(Math.abs(ort)>0.01)) return null;
-  const varr=m.reduce((a,b)=>a+(b-ort)*(b-ort),0)/(m.length-1);
-  const sd=Math.sqrt(varr);
   const cvCeyrek=Math.abs(sd/ort);
   const r=(rho==null?0.30:rho);
   /* yıllıklandırma: 4 çeyreğin toplamı, korelasyonlu → √(4 + 12ρ)/4 */
@@ -9971,7 +9987,9 @@ function kopmaSigma(marjSeri, kapasite, coreFavok, rho){
   const cvYil=cvCeyrek*yilCarpan;
   /* yalnız FAVÖK oynak; likidite ve capex sabit kabul → σ_K ölçeklenir */
   const pay=(Number.isFinite(coreFavok)&&Number.isFinite(kapasite)&&kapasite>0)?Math.min(1,Math.abs(coreFavok/kapasite)):1;
-  return { sigmaK: cvYil*pay, cvCeyrek, cvYil, ort, sd, n:m.length, rho:r };
+  const cvKlasik=Math.abs(sdK/ortK)*yilCarpan*pay;
+  return { sigmaK: cvYil*pay, cvCeyrek, cvYil, ort, sd, n:m.length, rho:r,
+    medyan, mad, ortKlasik:ortK, sdKlasik:sdK, sigmaKlasik:cvKlasik, aykiri };
 }
 const FEK_NOT = [
   { esik: 3.5, not: 5, ad: 'Kale',        renk: '#0FA26B' },
@@ -10089,7 +10107,7 @@ function fekCiz(){
             '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+trN(ks,2)+'σ</span></div>'+
             '<div><span class="sub">12 aylık sıkıntı olasılığı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">%'+trN(pd*100,1)+'</span></div>'+
             '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+'</span></div>'+
-            '<div><span class="sub">σ (yıllık, FAVÖK marjı)</span><br><span style="font-family:var(--mono);font-size:13px">%'+trN(sg.sigmaK*100,1)+' <span class="thin">'+sg.n+' çeyrek</span></span></div>'+
+            '<div><span class="sub">σ (yıllık, FAVÖK marjı)</span><br><span style="font-family:var(--mono);font-size:13px" title="medyan %'+trN(sg.medyan,1)+' · MAD %'+trN(sg.mad,1)+' · klasik σ %'+trN(sg.sigmaKlasik*100,1)+'">%'+trN(sg.sigmaK*100,1)+' <span class="thin">'+sg.n+' çeyrek · dayanıklı</span></span></div>'+
           '</div>'+
           '<table style="width:100%;border-collapse:collapse;font-size:10.5px">'+
             '<thead><tr><th style="text-align:left">REJİM</th><th class="num">λ</th><th class="num">Yük mn ₺</th><th class="num">DD</th><th class="num">PD</th></tr></thead><tbody>'+
@@ -10110,6 +10128,10 @@ function fekCiz(){
             'Tek rejimli naif bir DD %'+trN(_phi(-ddB)*100,1)+' gösterirdi — gerçek riskin '+trN(pd/_phi(-ddB),1)+' katı az. '+
             'Bu, kısa vadeli borç ağırlığının matematiksel imzasıdır.'+
           '</div>'+
+          ((sg.aykiri&&sg.aykiri.length)?('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">'+
+            'σ <b>medyan+MAD</b> ile hesaplandı (aykırı değere dayanıklı). Aykırı çeyrek: <b>'+esc(sg.aykiri.join(' · '))+
+            '</b> — klasik standart sapmayla σ %'+trN(sg.sigmaKlasik*100,1)+' olurdu, tek çeyrek ölçüyü şişiriyor.</div>'):
+            ('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">σ medyan+MAD ile; aykırı çeyrek yok (klasik σ %'+trN(sg.sigmaKlasik*100,1)+').</div>'))+
           '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK <span class="thin" style="font-weight:400;text-transform:none">p(kriz) × λ_kriz → KOPMA-σ</span></div>'+
           '<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr><th style="text-align:left">p \\ λ</th>'+
             lL.map(l=>'<th class="num">'+trN(l,2)+'</th>').join('')+'</tr></thead><tbody>'+
