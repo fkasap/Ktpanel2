@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821n';   // SS370b dayanikli sigma   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821s';   // SS372c ayrisma uyarisi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9948,6 +9948,33 @@ function _phiTers(p){ /* Acklam yaklaşımı — Φ⁻¹ */
   q=p-0.5; r=q*q;
   return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
 }
+/* ── §372 λ'YI REJİMDEN SEÇ — TCMB/BDDK KALİBRASYONU (21 Ağu) ──────────────
+   λ artık "yargı" değil REJİM seçimi. Sistem tabanı yayımlanmış serilerden:
+     λ_sistem = P(takip) × 1,0 + P(yapılandırma) × anapara talebi
+   Referans değerler (BDDK/TCMB, kaynak metinden):
+     Baz  : ticari TGA %2,3 + yapılandırma %5,2 × 0,15 → %3,1
+     10y  : TGA ortalaması %3,0 + %5,0 × 0,15         → ~%3,8
+     Kriz : 2020 TGA %6,4 + %12,0 × 0,30              → %10,0
+   FİRMA ÇARPANI faiz karşılamasından OTOMATİK: banka her firmaya aynı
+   davranmaz — karşılaması 6,8x olanla 1,1x olan aynı λ'yı almaz.
+   DÜRÜSTLÜK NOTU (kart üzerinde de yazılı): TGA "bankanın tahsil edemediği
+   kredi oranı", λ ise "firmanın borcunun yenilenmeme oranı" — İLİŞKİLİ AMA
+   AYNI ŞEY DEĞİL. Sistem tabanı veriden, firma çarpanı YARGIDIR ve λ'yı beş
+   kata kadar oynatır. Bu yüzden ham λ da ekranda gösterilir. */
+const LAMBDA_REJIM = {
+  'tcmb':  { ad:'TCMB baz (TGA %2,3 + yapılandırma)', lam:0.031, aciklama:'31.07.2026 ticari TGA %2,3 · yapılandırma %5,2 × 0,15' },
+  'ort10': { ad:'10 yıl ortalaması',                   lam:0.038, aciklama:'TGA 10y ort %3,0 · yapılandırma %5,0 × 0,15' },
+  'kriz':  { ad:'2020 krizi',                          lam:0.100, aciklama:'2020 TGA zirvesi %6,4 · yapılandırma %12 × 0,30' },
+  'elle10':{ ad:'Elle %10',  lam:0.10, aciklama:'sabit varsayım' },
+  'elle25':{ ad:'Elle %25',  lam:0.25, aciklama:'sabit varsayım (stres)' }
+};
+function lambdaFirmaCarpan(karsilama){
+  if(!Number.isFinite(karsilama)) return { c:1.0, ad:'karşılama bilinmiyor → sistem ortalaması' };
+  if(karsilama>3.0)  return { c:0.5, ad:'karşılama >3,0x → banka kovalar, firma seçer' };
+  if(karsilama>=1.5) return { c:1.0, ad:'karşılama 1,5–3,0x → sistem ortalaması' };
+  if(karsilama>=1.0) return { c:2.5, ad:'karşılama 1,0–1,5x → yakın izleme adayı' };
+  return { c:5.0, ad:'karşılama <1,0x → yapılandırma masasında' };
+}
 const KOPMA_NOT = [
   { esik: 3.0, not: 5, ad: 'Kale',        renk: '#0FA26B' },
   { esik: 2.0, not: 4, ad: 'Sağlam',      renk: '#3FB98A' },
@@ -10018,7 +10045,16 @@ async function fekHesapla(){
 function fekCiz(){
   const P=$('fekPano'); if(!P||!FEK_SON) return;
   const {kod,t}=FEK_SON;
-  const lam = parseFloat(($('fekLambda')||{}).value)||0.10;
+  /* §372: λ rejimden + firma çarpanından */
+  const rejK = String(($('fekLambda')||{}).value||'tcmb');
+  const rej = LAMBDA_REJIM[rejK] || LAMBDA_REJIM['tcmb'];
+  const _cf0 = (function(){
+    const cf = Number.isFinite(t.ebitdaCekirdek)?t.ebitdaCekirdek:t.ebitda;
+    const fz = Number.isFinite(t.odFaiz)?Math.abs(t.odFaiz):null;
+    return (Number.isFinite(cf)&&Number.isFinite(fz)&&fz>0) ? cf/fz : null;
+  })();
+  const fc = lambdaFirmaCarpan(_cf0);
+  const lam = Math.min(0.60, rej.lam * fc.c);
   const mn = 1e6;
   const S=(...a)=>{let x=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){x+=z;v=true;}});return v?x:null;};
   /* KAPASİTE */
@@ -10060,7 +10096,8 @@ function fekCiz(){
       '<div style="border:1px solid rgba(214,69,69,.3);background:rgba(214,69,69,.06);border-radius:10px;padding:12px 14px">'+
         '<div class="lbl" style="font-size:11px;margin-bottom:6px">YÜK</div>'+
         sat('Ödenen faiz (12 ay)', netFaiz, false, 'nakit akış tablosundan DOĞRUDAN — tahmin değil')+
-        sat('KV borç × λ '+(lam*100).toFixed(0)+'%', rollover, false, 'yenilenmeme riski: bankaların çevirmediği varsayılan pay')+
+        sat('KV borç × λ '+(lam*100).toFixed(1)+'%', rollover, false, rej.ad+' ('+(rej.lam*100).toFixed(1)+'%) × firma çarpanı '+fc.c+'x — '+fc.ad)+
+        '<div class="kv"><span class="k thin" style="font-size:9.5px">λ = '+esc(rej.ad)+' × '+fc.c+'x</span><span class="num thin" style="font-size:9.5px">'+esc(fc.ad.split(' → ')[0])+'</span></div>'+
         '<div class="kv"><span class="k thin" style="font-size:10px">KV finansal borç</span><span class="num thin" style="font-family:var(--mono);font-size:10px">'+mlrG(kvBorc)+' mn</span></div>'+
         '<div style="border-top:1px solid var(--line);margin-top:7px;padding-top:6px;display:flex;justify-content:space-between"><b style="font-size:11px">TOPLAM</b><b style="font-family:var(--mono);font-size:14px">'+mlrG(yuk)+' mn ₺</b></div>'+
       '</div>'+
@@ -10081,19 +10118,35 @@ function fekCiz(){
       '</div>'):'');
   /* ── §370 KOPMA-σ: aynı K ve L, olasılık diliyle ────────────────────── */
   try{
-    const p = Math.min(0.6, Math.max(0.02, parseFloat(($('fekPkriz')||{}).value)||0.20));
+    /* §372b p(kriz) TABAN ORANI: Türkiye'de kurumsal kredi tıkanması yaşanan
+       yıllar 1994, 2001, 2008-09, 2018-19 → 32 yılda 4 epizot ≈ %13.
+       Varsayılan %15 (taban oran + bugünkü sıkı ama gevşemeye dönen konjonktür).
+       %50 seçeneği 2001 ölçeğinde bir kriz beklentisidir. */
+    const p = Math.min(0.6, Math.max(0.02, parseFloat(($('fekPkriz')||{}).value)||0.15));
     const sg = kopmaSigma(t.marjSeri, kapasite, coreFavok, 0.30);
     const K2 = $('fekKopma');
     if(K2 && sg && Number.isFinite(kapasite) && kapasite>0 && Number.isFinite(netFaiz)){
-      const lamBaz=0.10, lamKriz=0.25;
+      /* §372: KOPMA-σ rejimleri de kalibre λ kullanır — baz TCMB tabanı,
+         kriz 2020 zirvesi; ikisi de firma çarpanıyla ölçeklenir. */
+      const lamBaz = Math.min(0.60, (LAMBDA_REJIM['tcmb'].lam)*fc.c);
+      const lamKriz = Math.min(0.60, (LAMBDA_REJIM['kriz'].lam)*fc.c);
       const yukOf=(l)=> S(netFaiz, Number.isFinite(kvBorc)?kvBorc*l:null);
       const DD=(L)=> (Number.isFinite(L)&&L>0) ? (Math.log(kapasite/L) + (0 - sg.sigmaK*sg.sigmaK/2)) / sg.sigmaK : null;
       const ddB=DD(yukOf(lamBaz)), ddK=DD(yukOf(lamKriz));
       if(Number.isFinite(ddB)&&Number.isFinite(ddK)){
         const pd = p*_phi(-ddK) + (1-p)*_phi(-ddB);
-        const ks = -_phiTers(pd);
+        /* §371 DOYGUNLUK TAVANI (4σ): ELITE ekranında 6,75σ ve "14.449 katı"
+           çıktı — ikisi de sıfıra bölme artığı. 4σ'nın ötesinde NORMAL DAĞILIM
+           VARSAYIMININ KENDİSİ model riskinden daha az güvenilir hale gelir;
+           orada sayı üretmek sahte kesinliktir. Metriğin bilgi taşıdığı aralık
+           kabaca FEK 0,8-3,0.
+           DERS: BIR MODELIN GECERLI ARALIGI VARSA EKRAN ONU BILMELI. */
+        const KS_TAVAN = 4.0;
+        const ksHam = -_phiTers(pd);
+        const doygun = !Number.isFinite(ksHam) || ksHam >= KS_TAVAN;
+        const ks = doygun ? KS_TAVAN : ksHam;
         const sev2 = KOPMA_NOT.find(x=>ks>=x.esik) || KOPMA_NOT[KOPMA_NOT.length-1];
-        const krizPay = (p*_phi(-ddK))/pd*100;
+        const krizPay = (pd>1e-9) ? (p*_phi(-ddK))/pd*100 : null;
         /* duyarlılık: p × λ_kriz ızgarası */
         const pL=[0.10,0.20,0.30,0.50], lL=[0.15,0.20,0.25,0.35];
         const izgara = pL.map(pp=>({ p:pp, hucre: lL.map(ll=>{
@@ -10104,8 +10157,8 @@ function fekCiz(){
         K2.innerHTML =
           '<div class="lbl" style="font-size:11px;margin:16px 0 6px">KOPMA-σ <span class="thin" style="font-weight:400;text-transform:none">nakit servis kopma mesafesi · iki rejimli</span></div>'+
           '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px">'+
-            '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+trN(ks,2)+'σ</span></div>'+
-            '<div><span class="sub">12 aylık sıkıntı olasılığı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">%'+trN(pd*100,1)+'</span></div>'+
+            '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+(doygun?'≥4,0σ':trN(ks,2)+'σ')+'</span></div>'+
+            '<div><span class="sub">12 ayda zorunlu finansman olayı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">'+(doygun?'&lt;%0,1':('%'+trN(pd*100,1)))+'</span></div>'+
             '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+'</span></div>'+
             '<div><span class="sub">σ (yıllık, FAVÖK marjı)</span><br><span style="font-family:var(--mono);font-size:13px" title="medyan %'+trN(sg.medyan,1)+' · MAD %'+trN(sg.mad,1)+' · klasik σ %'+trN(sg.sigmaKlasik*100,1)+'">%'+trN(sg.sigmaK*100,1)+' <span class="thin">'+sg.n+' çeyrek · dayanıklı</span></span></div>'+
           '</div>'+
@@ -10124,14 +10177,34 @@ function fekCiz(){
               '<td class="num" style="font-family:var(--mono)"><b>%'+trN(pd*100,1)+'</b></td></tr>'+
           '</tbody></table>'+
           '<div class="sub" style="font-size:10.5px;margin-top:8px;padding:7px 10px;background:rgba(232,147,59,.08);border-left:3px solid #E8933B">'+
-            'Toplam riskin <b>%'+trN(krizPay,0)+'\'ı</b> yalnız %'+trN(p*100,0)+' olasılıklı kriz dalından geliyor. '+
-            'Tek rejimli naif bir DD %'+trN(_phi(-ddB)*100,1)+' gösterirdi — gerçek riskin '+trN(pd/_phi(-ddB),1)+' katı az. '+
-            'Bu, kısa vadeli borç ağırlığının matematiksel imzasıdır.'+
+            (doygun
+              ? '<b>Ölçüm aralığı dışı.</b> Yük kapasiteye göre çok küçük; 4σ üzerinde normal dağılım varsayımı model riskinden daha az güvenilir olur, bu yüzden sayı üretilmez. Bu şirkette risk bilançoda değil — oraya bakmak yanlış yere fener tutmaktır. <span class="thin">Metriğin bilgi taşıdığı aralık kabaca FEK 0,8-3,0.</span>'
+              : ('Toplam riskin <b>%'+trN(krizPay,0)+' kadarı</b> yalnız %'+trN(p*100,0)+' olasılıklı kriz dalından geliyor. '+
+                 'Tek rejimli naif bir DD %'+trN(_phi(-ddB)*100,1)+' gösterirdi — gerçek riskin '+trN(pd/Math.max(_phi(-ddB),1e-9),1)+' katı az. '+
+                 'Bu, kısa vadeli borç ağırlığının matematiksel imzasıdır.'))+
           '</div>'+
           ((sg.aykiri&&sg.aykiri.length)?('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">'+
             'σ <b>medyan+MAD</b> ile hesaplandı (aykırı değere dayanıklı). Aykırı çeyrek: <b>'+esc(sg.aykiri.join(' · '))+
             '</b> — klasik standart sapmayla σ %'+trN(sg.sigmaKlasik*100,1)+' olurdu, tek çeyrek ölçüyü şişiriyor.</div>'):
             ('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">σ medyan+MAD ile; aykırı çeyrek yok (klasik σ %'+trN(sg.sigmaKlasik*100,1)+').</div>'))+
+          /* §372c AYRIŞMA UYARISI: FEK statik bir ORAN, KOPMA-σ ise
+             OYNAKLIĞI hesaba katan bir MESAFE. İkisi farklı not verebilir ve
+             bu bilgi taşır: düşük marj oynaklığı olan bir şirket, oranı
+             sınırda olsa bile kopmaya uzak olabilir (ve tersi).
+             Sessizce iki farklı not göstermek kafa karıştırır — sebebi yazılır. */
+          ((function(){
+            const fekNot = (FEK_NOT.find(x=>fek>=x.esik)||FEK_NOT[FEK_NOT.length-1]);
+            const vetoluNot = (vetolar.length && fekNot.not>2) ? 2 : fekNot.not;
+            if(!Number.isFinite(fek) || vetoluNot===sev2.not) return '';
+            const yon = sev2.not>vetoluNot ? 'daha İYİ' : 'daha KÖTÜ';
+            return '<div class="sub" style="font-size:10.5px;margin-top:8px;padding:7px 10px;background:var(--bg2);border-left:3px solid var(--mm2)">'+
+              '<b>İki ölçü ayrışıyor:</b> FEK '+vetoluNot+'/5, KOPMA-σ '+sev2.not+'/5 ('+yon+'). '+
+              'FEK statik bir <b>oran</b> — bugünkü kapasite yükü kaç kez karşılıyor. KOPMA-σ ise <b>mesafe</b> — '+
+              'oynaklık dikkate alındığında kopma noktasına kaç σ var. Marj oynaklığı düşük bir şirket (burada σ %'+trN(sg.sigmaK*100,1)+') '+
+              'oranı sınırda olsa bile kopmaya uzak durabilir; oynaklık yüksekse tersi olur. '+
+              (vetolar.length?'<b>Veto FEK\'i 2\'ye tavanladı</b> ama KOPMA-σ vetoyu görmez — likidite yapısı riskini yalnız FEK yakalıyor.':'')+
+              '</div>';
+          })())+
           '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK <span class="thin" style="font-weight:400;text-transform:none">p(kriz) × λ_kriz → KOPMA-σ</span></div>'+
           '<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr><th style="text-align:left">p \\ λ</th>'+
             lL.map(l=>'<th class="num">'+trN(l,2)+'</th>').join('')+'</tr></thead><tbody>'+
@@ -10153,6 +10226,8 @@ function fekCiz(){
     '<b>1,0 kopma noktasıdır.</b> Pay tekrarlanabilir nakit, payda borç servisi. '+
     '<b>λ</b> yenilenmeme katsayısı: asıl risk faiz değil <b>rollover</b> — faizi ödeyebilmek yetmez, KV borcu yeniden borçlanabilmek gerekir. λ\'yı değiştirip stres testi yapabilirsiniz. '+
     '<b>Vetolar</b> ortalama almaz: ödeme aczi zincirdir, tek ölümcül halka yeter. '+
+    '<b>Türkiye notu:</b> burada ölüm çoğu zaman iflasla değil <b>sulandırmayla</b> gelir — evergreening, KGF garantisi ve aile kefaleti nedeniyle firma nadiren ölür, özkaynak sahibi sık sık ölür (bedelli, varlık satışı, ortak enjeksiyonu). Bu yüzden KOPMA-σ\'nın ürettiği olasılık <b>P(iflas) değil P(zorunlu finansman olayı)</b> olarak okunur. '+
+    '<b>λ kalibrasyonu:</b> sistem tabanı BDDK/TCMB serilerinden (ticari TGA, yapılandırma oranı); <b>firma çarpanı ise YARGIDIR</b> ve λ\'yı beş kata kadar oynatır. TGA "bankanın tahsil edemediği kredi", λ "firmanın borcunun yenilenmemesi" — ilişkili ama aynı şey değil. '+
     '<b style="color:#E8933B">Sınırlar:</b> mevsimselliği görmez (bilanço tarihinin fotoğrafıdır), varlık kalitesini ölçmez (satılabilir arsası olanla olmayan aynı notu alır), λ ve bakım capex birer YARGIDIR — düğmeyi çevirmek notu bir kademe oynatabilir. Bu bir kusur değil, sayının nereye duyarlı olduğunu açıkça göstermesi asıl faydasıdır.';
 }
 let VAPFON = null;

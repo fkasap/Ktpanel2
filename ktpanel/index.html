@@ -1128,13 +1128,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:12px">
     <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">HİSSE</label>
       <input id="fekKod" placeholder="MERCN" maxlength="6" style="width:118px;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;text-transform:uppercase;font-family:var(--mono);font-size:12px"></div>
-    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">λ YENİLENMEME</label>
+    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">λ REJİM</label>
       <select id="fekLambda" style="padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-size:12px;font-family:var(--mono)">
-        <option value="0.10">Baz %10</option><option value="0.25">Stres %25</option><option value="0.05">İyimser %5</option>
+        <option value="tcmb" selected>TCMB baz %3,1</option><option value="ort10">10y ort %3,8</option><option value="kriz">2020 krizi %10</option><option value="elle10">Elle %10</option><option value="elle25">Elle %25</option>
       </select></div>
     <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">p(KRİZ)</label>
       <select id="fekPkriz" style="padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-size:12px;font-family:var(--mono)">
-        <option value="0.10">%10</option><option value="0.20" selected>%20</option><option value="0.30">%30</option><option value="0.50">%50</option>
+        <option value="0.10">%10</option><option value="0.15" selected>%15 taban</option><option value="0.20">%20</option><option value="0.30">%30</option><option value="0.50">%50</option>
       </select></div>
     <button id="fekHesapla" class="mini" style="padding:6px 14px;font-size:12px">skor kartı</button>
     <span id="fekDurum" class="sub" style="font-size:10.5px"></span>
@@ -1750,7 +1750,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260821n"></script>
-<script src="/ajan.js?v=20260821n"></script>
+<script src="/app.js?v=20260821s"></script>
+<script src="/ajan.js?v=20260821s"></script>
 </body>
 </html>
