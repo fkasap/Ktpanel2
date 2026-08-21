@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821i';   // SS369b FEK gevsek mod + gorunur sebep   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821j';   // SS369c ortak donem onbellegi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7959,6 +7959,41 @@ async function multipleInit(){
    fiyat × pay adedi (adet multiple.json'da kalıyor — KAP'ta pay adedi yok).
    BAŞARISIZLIKTA snapshot'a düşer ve kartta HANGİ KAYNAK olduğu yazar:
    sessizce eski veriyle devam etmez. */
+/* ── §369c ORTAK DÖNEM LİSTESİ ÖNBELLEĞİ (21 Ağu, canlı: FEK "dönem listesi
+   boş (2026: fetch failed)" verdi) ────────────────────────────────────────
+   §348'de bu önbellek EKLENMİŞTİ ama yalnız Çeyreklik Seri kartının içinde
+   duruyordu; mulKapTTM (EV/EBITDA ve FEK) her çağrıda KAP'ı yeniden yokluyor
+   ve hız sınırına takılıyordu. Aynı çözüm iki yerde ayrı yazılınca biri
+   güncellenmiyor — ORTAK yardımcıya çıkarıldı.
+   Dönem listesi ÇEYREKTE BİR değişir; 12 saat önbellek fazlasıyla güvenli.
+   KAP reddederse önbellekteki liste kullanılır ve kaynak SÖYLENİR.
+   DERS: AYNI ÇÖZÜMÜ İKİNCİ KEZ YAZIYORSAN ORTAK YERE TAŞI. */
+const KAP_DL_ANAHTAR = 'ktp_kap_donem_v1';
+async function kapDonemListesi(kod, yil){
+  const oku=()=>{ try{ return JSON.parse(localStorage.getItem(KAP_DL_ANAHTAR)||'{}'); }catch(e){ return {}; } };
+  const yaz=(o)=>{ try{ localStorage.setItem(KAP_DL_ANAHTAR, JSON.stringify(o)); }catch(e){} };
+  const dl=oku(), kayit=dl[kod], TAZE=12*3600*1000;
+  if(kayit && kayit.ts && (Date.now()-kayit.ts)<TAZE && (kayit.donemler||[]).length){
+    return { donemler:kayit.donemler, kaynak:'önbellek' };
+  }
+  try{
+    const r=await fetch('/api/kap?mod=donemler&kod='+encodeURIComponent(kod)+'&yil='+(yil||3), {cache:'no-store'});
+    const j=await r.json();
+    if(j && j.ok && (j.donemler||[]).length){
+      dl[kod]={ ts:Date.now(), unvan:j.unvan||null, donemler:j.donemler }; yaz(dl);
+      return { donemler:j.donemler, kaynak:'canlı' };
+    }
+    if(kayit && (kayit.donemler||[]).length)
+      return { donemler:kayit.donemler, kaynak:'önbellek (KAP yanıt vermedi)' };
+    const h=(j&&j.hatalar&&j.hatalar.length)?j.hatalar[0]:((j&&j.err)||'liste boş');
+    return { donemler:[], hata:/fetch failed/i.test(String(h))
+      ? 'KAP şu an yanıt vermiyor (hız sınırı) — birkaç dakika sonra tekrar deneyin'
+      : String(h) };
+  }catch(e){
+    if(kayit && (kayit.donemler||[]).length) return { donemler:kayit.donemler, kaynak:'önbellek (ağ hatası)' };
+    return { donemler:[], hata:String(e&&e.message||e).slice(0,60) };
+  }
+}
 async function mulKapTTM(kod, opt){
   /* §369b GEVŞEK MOD + GÖRÜNÜR SEBEP (21 Ağu, canlı: FEK bazı hisselerde
      "finansal tablo alınamadı" diyordu). İki kusur:
@@ -7972,10 +8007,9 @@ async function mulKapTTM(kod, opt){
   const gevsek = !!(opt && opt.gevsek);
   try{
     if(typeof csDonemCek !== 'function') return { hata:'csDonemCek yok' };
-    const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil=3', {cache:'no-store'});
-    const j = await r.json();
-    if(!j.ok || !(j.donemler||[]).length) return { hata:'dönem listesi boş'+(j.hatalar&&j.hatalar.length?(' ('+j.hatalar[0]+')'):'') };
-    const liste = j.donemler.slice(0, 5);          /* 4 çeyrek + katsayı zinciri için 1 pay */
+    const dl = await kapDonemListesi(kod, 3);       /* §369c: önbellekli */
+    if(!dl.donemler.length) return { hata: dl.hata || 'dönem listesi boş' };
+    const liste = dl.donemler.slice(0, 5);          /* 4 çeyrek + katsayı zinciri için 1 pay */
     const ob = csOnbellekOku(); const veri = {};
     /* §350b HIZ (kullanıcı "eski kalmış" dedi, ölçüldü: 18 sn sürüyordu ve
        kart o süre boyunca snapshot gösteriyordu — kullanıcı beklemeden baktı).
@@ -9785,10 +9819,9 @@ window.csSeriOzet = async function(kod, adet){
     kod = String(kod||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
     if(!kod) return '';
     adet = adet || 8;
-    const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil=3', {cache:'no-store'});
-    const j = await r.json();
-    if(!j.ok) return '';
-    const liste = (j.donemler||[]).slice(0, adet);
+    const dl = await kapDonemListesi(kod, 3);       /* §369c: ortak önbellek */
+    if(!dl.donemler.length) return '';
+    const liste = dl.donemler.slice(0, adet);
     const ob = csOnbellekOku(); const veri = {}; const eksik = [];
     liste.forEach(x=>{ const a=kod+'|'+x.yil+'|'+x.donem; if(ob[a]&&ob[a].kalem) veri[a]=ob[a]; else eksik.push(x); });
     for(const x of eksik.slice(0,8)){
