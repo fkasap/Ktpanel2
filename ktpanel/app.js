@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821j';   // SS369c ortak donem onbellegi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821k';   // SS369d hata nesnesi korumasi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8103,7 +8103,17 @@ async function mulTickerDegisti(){
   if($('mulKaynak')){ $('mulKaynak').textContent = '⏳ KAP okunuyor (birkaç saniye)…'; $('mulKaynak').style.color='var(--mm2)'; }
   window.MUL_KAP = null;
   multipleRender();
-  try{ const t = await mulKapTTM(kod); if(t){ t.kod=kod; window.MUL_KAP=t; multipleRender(); } }catch(e){}
+  /* §369d HATA NESNESİ VERİ SANILIYORDU (canlı: EV/EBITDA kartında "TTM
+     undefined" ve NaN). §369b'de mulKapTTM null yerine {hata:...} dönmeye
+     başladı — teşhis için doğru, ama boş olmayan nesne TRUTHY olduğu için
+     bu satır onu geçerli TTM sanıp MUL_KAP'a yazıyordu.
+     DERS: BİR FONKSİYONUN DÖNÜŞ SÖZLEŞMESİNİ DEĞİŞTİRİRSEN TÜM ÇAĞIRANLARI
+     GÖZDEN GEÇİR — null kontrolü artık yetmez. */
+  try{
+    const t = await mulKapTTM(kod);
+    if(t && !t.hata && Number.isFinite(t.ciro)){ t.kod=kod; window.MUL_KAP=t; multipleRender(); }
+    else if(t && t.hata && $('mulKaynak')) $('mulKaynak').textContent='Fintables snapshot ('+String(t.hata).slice(0,44)+')';
+  }catch(e){}
   if($('mulKaynak')) $('mulKaynak').style.color='';
   if(!window.MUL_KAP && $('mulKaynak')) $('mulKaynak').textContent = 'Fintables snapshot (KAP alınamadı)';
 }
