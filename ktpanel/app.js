@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821w';   // SS374 faiz dusus zinciri   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821x';   // SS375 elestiri paketi + SS376 nakde donusum   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9987,11 +9987,21 @@ const LAMBDA_REJIM = {
   'elle25':{ ad:'Elle %25',  lam:0.25, aciklama:'sabit varsayım (stres)' }
 };
 function lambdaFirmaCarpan(karsilama){
-  if(!Number.isFinite(karsilama)) return { c:1.0, ad:'karşılama bilinmiyor → sistem ortalaması' };
-  if(karsilama>3.0)  return { c:0.5, ad:'karşılama >3,0x → banka kovalar, firma seçer' };
-  if(karsilama>=1.5) return { c:1.0, ad:'karşılama 1,5–3,0x → sistem ortalaması' };
-  if(karsilama>=1.0) return { c:2.5, ad:'karşılama 1,0–1,5x → yakın izleme adayı' };
-  return { c:5.0, ad:'karşılama <1,0x → yapılandırma masasında' };
+  /* §375 SÜREKLİ ÇARPAN (eleştiri #5): basamak fonksiyonu EŞİK UÇURUMU
+     yaratıyordu — MERCN karşılaması 1,65x, eşik 1,50x; faiz %10 artsa çarpan
+     1,0'dan 2,5'e sıçrayıp notu bir kademe düşürüyordu. Tek çeyreklik gürültü
+     nota dönüşmemeli.
+     c = clamp(4,0 / karşılama, 0,5, 5,0) — 4,0 kalibrasyon noktası: karşılama
+     4x'te çarpan 1,0 (sistem ortalaması), 8x'te 0,5 (taban), 0,8x'te 5,0 (tavan).
+     DERS: EŞİKLİ FONKSİYON GİRDİ GÜRÜLTÜSÜNÜ NOT SIÇRAMASINA ÇEVİRİR. */
+  if(!Number.isFinite(karsilama) || karsilama<=0)
+    return { c:1.0, ad:'karşılama bilinmiyor → sistem ortalaması', surekli:false };
+  const c = Math.min(5.0, Math.max(0.5, 4.0/karsilama));
+  const ad = c<=0.6 ? 'çok güçlü karşılama → banka kovalar'
+    : c<1.2 ? 'güçlü/normal karşılama'
+    : c<2.5 ? 'zayıflayan karşılama → yakın izleme bölgesi'
+    : 'düşük karşılama → yapılandırma bölgesi';
+  return { c:+c.toFixed(2), ad:ad+' ('+trN(karsilama,2)+'x)', surekli:true };
 }
 const KOPMA_NOT = [
   { esik: 3.0, not: 5, ad: 'Kale',        renk: '#0FA26B' },
@@ -10081,6 +10091,17 @@ function fekCiz(){
   const serbestLik = Number.isFinite(t.likit) ? Math.max(0, t.likit - asgari) : null;
   const bakimCapex = Number.isFinite(t.amort) ? Math.abs(t.amort) : (Number.isFinite(t.capex)?Math.abs(t.capex)*0.5:null);
   const kapasite = S(coreFavok, serbestLik, Number.isFinite(bakimCapex)?-bakimCapex:null);
+  /* §376 NAKDE DÖNÜŞÜM ORANI (eleştiri #7 — "araca ekleyeceğim tek satır"):
+     çekirdek FAVÖK ÷ işletme faaliyetlerinden nakit akışı.
+     1,0'a yakınsa kâr NAKDE DÖNÜYOR. 2,0'ın üstündeyse numeratörün önemli
+     kısmı bir MUHASEBE İFADESİDİR ve bütün model onun üzerine kurulu.
+     Kâr artarken nakit azalıyorsa (işletme sermayesine gidiyorsa) FEK'in payı
+     gerçek değildir. Bu, kâr kalitesinin son sınavıdır — çekirdek FAVÖK
+     tanımı "diğer gelirleri" dışlar ama işletme sermayesi sızıntısını görmez. */
+  const isletmeNA = Number.isFinite(t.isletmeNA) ? t.isletmeNA : null;
+  const nakdeDonusum = (Number.isFinite(coreFavok)&&Number.isFinite(isletmeNA)&&isletmeNA>0)
+    ? coreFavok/isletmeNA : null;
+  const nakitSupheli = Number.isFinite(nakdeDonusum) && nakdeDonusum > 2.0;
   /* YÜK */
   const netFaiz = Number.isFinite(t.odFaiz) ? Math.abs(t.odFaiz) : null;
   /* §373 FAİZ TUTARLILIK DENETİMİ (EUPWR'da yakalandı): KV finansal borç
@@ -10172,6 +10193,13 @@ function fekCiz(){
       FEK_NOT.slice().reverse().map(x=>'<div style="text-align:center;border-radius:7px;padding:8px 4px;background:'+(sev&&sev.not===x.not?x.renk:'var(--bg2)')+';color:'+(sev&&sev.not===x.not?'#fff':'var(--muted)')+';font-weight:'+(sev&&sev.not===x.not?'700':'400')+'">'+
         '<div style="font-size:15px">'+x.not+'</div><div style="font-size:9.5px">'+esc(x.ad)+'</div></div>').join('')+
     '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>'))+
+    ((Number.isFinite(nakdeDonusum))?('<div style="margin-top:12px;border-left:3px solid '+(nakitSupheli?'#E8933B':'var(--mm2)')+';padding:8px 12px;background:'+(nakitSupheli?'rgba(232,147,59,.07)':'var(--bg2)')+'">'+
+      '<b style="font-size:11px'+(nakitSupheli?';color:#E8933B':'')+'">'+(nakitSupheli?'⚠ ':'')+'NAKDE DÖNÜŞÜM '+trN(nakdeDonusum,2)+'x</b>'+
+      '<div class="sub" style="font-size:10.5px;margin-top:3px">Çekirdek FAVÖK '+mlrG(coreFavok)+' mn ÷ işletme nakit akışı '+mlrG(isletmeNA)+' mn. '+
+      (nakitSupheli
+        ? '<b>2,0\'ın üstü:</b> kârın önemli kısmı nakde dönmüyor — numeratör büyük ölçüde bir muhasebe ifadesi olabilir ve FEK\'in payı gerçek değildir. Kâr artarken nakit azalıyorsa fark işletme sermayesine gitmiştir; oradan geri gelmez.'
+        : (nakdeDonusum<1.2 ? 'Kâr nakde dönüyor — payın kalitesi yüksek.' : 'Kabul edilebilir aralık; 2,0 üstü uyarı eşiğidir.'))+
+      '</div></div>'):'')+
     (faizSupheli?('<div style="margin-top:12px;border-left:3px solid #E8933B;padding:8px 12px;background:rgba(232,147,59,.07)">'+
       '<b style="font-size:11px;color:#E8933B">⚠ FAİZ KALEMİ ŞÜPHELİ</b>'+
       '<div class="sub" style="font-size:10.5px;margin-top:3px">'+
@@ -10192,6 +10220,16 @@ function fekCiz(){
        %50 seçeneği 2001 ölçeğinde bir kriz beklentisidir. */
     const p = Math.min(0.6, Math.max(0.02, parseFloat(($('fekPkriz')||{}).value)||0.15));
     const sg = kopmaSigma(t.marjSeri, kapasite, coreFavok, 0.30);
+    /* §375c MANŞET MUHAFAZAKÂR σ (eleştirinin en belirleyici maddesi):
+       MAD × 1,4826 çarpanı NORMALLİK altında σ'ya yakınsar; kalın kuyruklu
+       seride sistematik olarak AŞAĞI yanlıdır. Robust estimator dağılımın
+       MERKEZİNİ tahmin ederken doğrudur — biz dağılımın UCUNU ölçüyoruz.
+       Aykırı değeri atmak, modelin tam da ihtiyaç duyduğu bilgiyi atmak olur.
+       ÇÖZÜM: tek σ değil BANT; manşet MUHAFAZAKÂR uçtan (yüksek σ). Risk
+       metriğinde asimetrik davranmak meşrudur; iyimser uç yanında görünür.
+       DERS: DAĞILIMIN UCUNU ÖLÇERKEN DAYANIKLI TAHMİNCİ KULLANMA. */
+    const sgManset = sg ? Math.max(sg.sigmaK, Number.isFinite(sg.sigmaKlasik)?sg.sigmaKlasik:sg.sigmaK) : null;
+    const sgIyimser = sg ? Math.min(sg.sigmaK, Number.isFinite(sg.sigmaKlasik)?sg.sigmaKlasik:sg.sigmaK) : null;
     const K2 = $('fekKopma');
     if(K2 && sg && Number.isFinite(kapasite) && kapasite>0 && Number.isFinite(netFaiz)){
       /* §372: KOPMA-σ rejimleri de kalibre λ kullanır — baz TCMB tabanı,
@@ -10199,7 +10237,7 @@ function fekCiz(){
       const lamBaz = Math.min(0.60, (LAMBDA_REJIM['tcmb'].lam)*fc.c);
       const lamKriz = Math.min(0.60, (LAMBDA_REJIM['kriz'].lam)*fc.c);
       const yukOf=(l)=> S(netFaiz, Number.isFinite(kvBorc)?kvBorc*l:null);
-      const DD=(L)=> (Number.isFinite(L)&&L>0) ? (Math.log(kapasite/L) + (0 - sg.sigmaK*sg.sigmaK/2)) / sg.sigmaK : null;
+      const DD=(L, sgv)=>{ const sv=(sgv||sgManset); return (Number.isFinite(L)&&L>0&&sv>0) ? (Math.log(kapasite/L)+(0-sv*sv/2))/sv : null; };
       const ddB=DD(yukOf(lamBaz)), ddK=DD(yukOf(lamKriz));
       if(Number.isFinite(ddB)&&Number.isFinite(ddK)){
         const pd = p*_phi(-ddK) + (1-p)*_phi(-ddB);
@@ -10213,15 +10251,34 @@ function fekCiz(){
         const ksHam = -_phiTers(pd);
         const doygun = !Number.isFinite(ksHam) || ksHam >= KS_TAVAN;
         const ks = doygun ? KS_TAVAN : ksHam;
-        const sev2 = KOPMA_NOT.find(x=>ks>=x.esik) || KOPMA_NOT[KOPMA_NOT.length-1];
+        let sev2 = KOPMA_NOT.find(x=>ks>=x.esik) || KOPMA_NOT[KOPMA_NOT.length-1];
+        /* §375b VETO BİLEŞİĞE UYGULANIR (eleştirinin en haklı maddesi):
+           V2 tetikliyken FEK 2'ye tavanlanıyor ama hemen altında KOPMA-σ
+           "4/5 · Sağlam" YEŞİL yazıyordu. En yanıltıcı ekran buydu.
+           Gerekçe: likidite vetosu tam olarak σ'nın GÖREMEDİĞİ türden bir
+           olaydır. σ, FAVÖK'ün normal dalgalanmasını ölçer; nakit oranının
+           0,12 olması dağılımın neresinde olduğunla değil, ŞOKU EMECEK
+           TAMPONUN OLMAMASIYLA ilgilidir. İki ölçü ayrışmıyor — biri
+           diğerinin KÖR NOKTASINI gösteriyor.
+           DERS: BİR VETO BİR ÖLÇÜYÜ TAVANLIYORSA, AYNI RİSKİ GÖREMEYEN
+           DİĞER ÖLÇÜYÜ DE TAVANLAMALI. */
+        const kopmaVetolu = vetolar.length>0 && sev2.not>2;
+        if(kopmaVetolu) sev2 = KOPMA_NOT.find(x=>x.not===2);
         const krizPay = (pd>1e-9) ? (p*_phi(-ddK))/pd*100 : null;
         /* duyarlılık: p × λ_kriz ızgarası */
-        const pL=[0.10,0.20,0.30,0.50], lL=[0.15,0.20,0.25,0.35];
-        const izgara = pL.map(pp=>({ p:pp, hucre: lL.map(ll=>{
-          const d2=DD(yukOf(ll)); if(!Number.isFinite(d2)) return null;
-          const pd2=pp*_phi(-d2)+(1-pp)*_phi(-ddB);
+        /* §375d DUYARLILIK EKSENİ DEĞİŞTİ (eleştiri #3): λ × p ızgarası
+           bilgilendirici değildi — TCMB kalibrasyonundan sonra hiçbir hücre
+           notu değiştirmiyordu, üstelik mevcut çalışma noktası (λ 0,10)
+           taranan aralığın (0,15–0,35) DIŞINDA kalıyordu.
+           BELİRLEYİCİ DEĞİŞKEN σ. Izgara σ × p oldu: σ bandının iki ucu ve
+           arası taranır, mevcut manşet vurgulanır. */
+        const sgL = [sgIyimser, (sgIyimser+sgManset)/2, sgManset, sgManset*1.4].map(x=>+x.toFixed(4));
+        const pL=[0.10,0.15,0.20,0.30];
+        const izgara = pL.map(pp=>({ p:pp, hucre: sgL.map(sv=>{
+          const dB=DD(yukOf(lamBaz), sv), dK=DD(yukOf(lamKriz), sv);
+          if(!Number.isFinite(dB)||!Number.isFinite(dK)) return null;
+          const pd2=pp*_phi(-dK)+(1-pp)*_phi(-dB);
           const k2=-_phiTers(pd2);
-          /* §373: tavan ızgarada da geçerli — 28,34σ gibi sayılar sahte kesinlik */
           return (!Number.isFinite(k2)||k2>=KS_TAVAN) ? KS_TAVAN : k2;
         })}));
         K2.innerHTML =
@@ -10229,16 +10286,16 @@ function fekCiz(){
           '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px">'+
             '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+(doygun?'≥4,0σ':trN(ks,2)+'σ')+'</span></div>'+
             '<div><span class="sub">12 ayda zorunlu finansman olayı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">'+(doygun?'&lt;%0,1':('%'+trN(pd*100,1)))+'</span></div>'+
-            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+'</span></div>'+
-            '<div><span class="sub">σ (yıllık, FAVÖK marjı)</span><br><span style="font-family:var(--mono);font-size:13px" title="medyan %'+trN(sg.medyan,1)+' · MAD %'+trN(sg.mad,1)+' · klasik σ %'+trN(sg.sigmaKlasik*100,1)+'">%'+trN(sg.sigmaK*100,1)+' <span class="thin">'+sg.n+' çeyrek · dayanıklı</span></span></div>'+
+            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+(kopmaVetolu?' <span class="thin" style="font-size:10px">veto tavanı</span>':'')+'</span></div>'+
+            '<div><span class="sub">σ bandı (yıllık)</span><br><span style="font-family:var(--mono);font-size:13px" title="dayanıklı %'+trN(sg.sigmaK*100,1)+' · tam örnek %'+trN((sg.sigmaKlasik||sg.sigmaK)*100,1)+' — manşet MUHAFAZAKÂR uçtan">%'+trN(sgIyimser*100,1)+'–%'+trN(sgManset*100,1)+' <span class="thin">'+sg.n+' çeyrek · manşet %'+trN(sgManset*100,1)+'</span></span></div>'+
           '</div>'+
           '<table style="width:100%;border-collapse:collapse;font-size:10.5px">'+
             '<thead><tr><th style="text-align:left">REJİM</th><th class="num">λ</th><th class="num">Yük mn ₺</th><th class="num">DD</th><th class="num">PD</th></tr></thead><tbody>'+
-            '<tr><td>Baz — banka yeniler <span class="thin">(%'+trN((1-p)*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">0,10</td>'+
+            '<tr><td>Baz — banka yeniler <span class="thin">(%'+trN((1-p)*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">'+trN(lamBaz,3)+'</td>'+
               '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamBaz))+'</td>'+
               '<td class="num" style="font-family:var(--mono);color:'+(ddB>0?'var(--up)':'var(--down)')+'">'+(ddB>0?'+':'')+trN(ddB,2)+'σ</td>'+
               '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddB)*100,1)+'</td></tr>'+
-            '<tr><td>Kriz — yenilemez <span class="thin">(%'+trN(p*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">0,25</td>'+
+            '<tr><td>Kriz — yenilemez <span class="thin">(%'+trN(p*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">'+trN(lamKriz,3)+'</td>'+
               '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamKriz))+'</td>'+
               '<td class="num" style="font-family:var(--mono);color:'+(ddK>0?'var(--up)':'var(--down)')+'">'+(ddK>0?'+':'')+trN(ddK,2)+'σ</td>'+
               '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddK)*100,1)+'</td></tr>'+
@@ -10272,12 +10329,12 @@ function fekCiz(){
               'FEK statik bir <b>oran</b> — bugünkü kapasite yükü kaç kez karşılıyor. KOPMA-σ ise <b>mesafe</b> — '+
               'oynaklık dikkate alındığında kopma noktasına kaç σ var. Marj oynaklığı düşük bir şirket (burada σ %'+trN(sg.sigmaK*100,1)+') '+
               'oranı sınırda olsa bile kopmaya uzak durabilir; oynaklık yüksekse tersi olur. '+
-              (vetolar.length?'<b>Veto FEK\'i 2\'ye tavanladı</b> ama KOPMA-σ vetoyu görmez — likidite yapısı riskini yalnız FEK yakalıyor.':'')+
+              (vetolar.length?'<b>Veto her iki ölçüyü de 2\'ye tavanladı</b> — likidite vetosu σ\'nın göremediği türden bir risktir: σ FAVÖK\'ün dalgalanmasını ölçer, nakit tamponunun yokluğunu değil.':'')+
               '</div>';
           })())+
-          '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK <span class="thin" style="font-weight:400;text-transform:none">p(kriz) × λ_kriz → KOPMA-σ</span></div>'+
-          '<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr><th style="text-align:left">p \\ λ</th>'+
-            lL.map(l=>'<th class="num">'+trN(l,2)+'</th>').join('')+'</tr></thead><tbody>'+
+          '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK <span class="thin" style="font-weight:400;text-transform:none">p(kriz) × σ → KOPMA-σ · <b>σ belirleyici değişkendir</b>, λ ve p değil</span></div>'+
+          '<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr><th style="text-align:left">p \\ σ</th>'+
+            sgL.map(sv=>'<th class="num"'+(Math.abs(sv-sgManset)<1e-6?' style="color:var(--mm2)"':'')+'>%'+trN(sv*100,1)+'</th>').join('')+'</tr></thead><tbody>'+
             izgara.map(r=>'<tr'+(Math.abs(r.p-p)<0.01?' style="background:var(--bg2);font-weight:600"':'')+'><td style="font-family:var(--mono)">%'+trN(r.p*100,0)+'</td>'+
               r.hucre.map(v=>{
                 if(!Number.isFinite(v)) return '<td class="num">—</td>';
