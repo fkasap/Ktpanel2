@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821v';   // SS373c not bastirma   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821w';   // SS374 faiz dusus zinciri   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8073,10 +8073,27 @@ async function mulKapTTM(kod, opt){
     /* §369 FEK girdileri — hepsi ZATEN çekilen ham tablolardan, ek istek yok.
        Ödenen faiz NAKİT AKIŞ tablosundan DOĞRUDAN gelir (tahmin edilmez);
        KV finansal borç rollover riskinin tabanıdır. */
-    let amortTTM=0, faizTTM=0, capexTTM=0, aE=0, fE=0, cE=0;
+    let amortTTM=0, faizTTM=0, capexTTM=0, aE=0, fE=0, cE=0, faizKaynak=null;
     for(let i=0;i<4;i++){
       const a1=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
-      const f1=al(i,'ifrs-full_InterestPaidClassifiedAsFinancingActivities','akis');
+      /* §374 FAİZ DÜŞÜŞ ZİNCİRİ (BIMAS/EUPWR/ARDYZ üçünde de faiz bulunamadı
+         — sistematik). IAS 7 ödenen faizin İŞLETME ya da FİNANSMAN altında
+         raporlanmasına izin verir; ayrıca IFRS 16 kira faizleri ayrı satırda
+         durur. Tek satıra bakmak yanlış.
+         SIRA (en doğrudan → en vekil):
+           1) finansman: ödenen faiz          — nakit, kesin
+           2) işletme: ödenen faiz            — nakit, kesin
+           3) nakit akış mutabakatı: faiz gelir/gideri düzeltmesi — net, tahakkuk
+           4) gelir tablosu: finansman giderleri — GENİŞ vekil (kur farkı da içerir)
+         Hangi kaynaktan geldiği KAYDEDİLİR; vekil kullanıldıysa kart söyler. */
+      let f1=al(i,'ifrs-full_InterestPaidClassifiedAsFinancingActivities','akis');
+      let fK1='finansman';
+      if(!Number.isFinite(f1)){ f1=al(i,'ifrs-full_InterestPaidClassifiedAsOperatingActivities','akis'); fK1='işletme'; }
+      if(!Number.isFinite(f1)){ const d=al(i,'kap-fr_AdjustmentsForInterestIncomeAndExpenses','akis');
+        if(Number.isFinite(d)) { f1=d; fK1='mutabakat (net faiz)'; } }
+      if(!Number.isFinite(f1)){ const g=al(i,'ifrs-full_FinanceCosts','akis');
+        if(Number.isFinite(g)) { f1=g; fK1='gelir tablosu (finansman gideri — GENİŞ vekil)'; } }
+      if(Number.isFinite(f1) && !faizKaynak) faizKaynak=fK1;
       const c1=al(i,'kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities','akis');
       if(Number.isFinite(a1)){ amortTTM+=a1; aE++; }
       if(Number.isFinite(f1)){ faizTTM+=f1; fE++; }
@@ -8106,6 +8123,7 @@ async function mulKapTTM(kod, opt){
     return { ciro, ebitda:favok, ebitdaCekirdek:(favokCek>0?favokCek:null), cekirdekVar:(favokCek>0), marjSeri,
       netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı',
       /* §369 */ amort:(aE>=3?amortTTM:null), odFaiz:(fE>=3?faizTTM:null), capex:(cE>=3?capexTTM:null),
+      faizKaynak, faizCeyrek:fE,
       kvFinBorc, finBorc:borc, likit, kvY };
   }catch(e){ return null; }
 }
@@ -10079,6 +10097,7 @@ function fekCiz(){
      (IFRS 16 kira yükümlülükleri ve işletme altında raporlanan faiz). */
   const borcVar = Number.isFinite(t.finBorc) && t.finBorc > 0;
   const faizYok = borcVar && !Number.isFinite(netFaiz);
+  const faizVekil = Number.isFinite(netFaiz) && t.faizKaynak && t.faizKaynak!=='finansman';
   const faizSupheli = faizYok || (Number.isFinite(ortFaizOran) && ortFaizOran < 0.08);
   const kvBorc = Number.isFinite(t.kvFinBorc) ? t.kvFinBorc : null;
   const rollover = Number.isFinite(kvBorc) ? kvBorc*lam : null;
@@ -10127,7 +10146,9 @@ function fekCiz(){
       '<div style="font-size:26px;color:var(--muted);text-align:center">÷</div>'+
       '<div style="border:1px solid rgba(214,69,69,.3);background:rgba(214,69,69,.06);border-radius:10px;padding:12px 14px">'+
         '<div class="lbl" style="font-size:11px;margin-bottom:6px">YÜK</div>'+
-        sat('Ödenen faiz (12 ay)', netFaiz, false, 'nakit akış tablosundan DOĞRUDAN — tahmin değil')+
+        sat('Ödenen faiz (12 ay)'+(faizVekil?' <span class="thin" style="font-size:9px">vekil</span>':''), netFaiz, false,
+          t.faizKaynak? ('kaynak: '+t.faizKaynak) : 'nakit akış tablosundan DOĞRUDAN')+
+        (faizVekil?('<div class="kv"><span class="k thin" style="font-size:9.5px">faiz kaynağı</span><span class="num thin" style="font-size:9.5px">'+esc(String(t.faizKaynak))+'</span></div>'):'')+
         sat('KV borç × λ '+(lam*100).toFixed(1)+'%', rollover, false, rej.ad+' ('+(rej.lam*100).toFixed(1)+'%) × firma çarpanı '+fc.c+'x — '+fc.ad)+
         '<div class="kv"><span class="k thin" style="font-size:9.5px">λ = '+esc(rej.ad)+' × '+fc.c+'x</span><span class="num thin" style="font-size:9.5px">'+esc(fc.ad.split(' → ')[0])+'</span></div>'+
         '<div class="kv"><span class="k thin" style="font-size:10px">KV finansal borç</span><span class="num thin" style="font-family:var(--mono);font-size:10px">'+mlrG(kvBorc)+' mn</span></div>'+
