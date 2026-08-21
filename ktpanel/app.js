@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821k';   // SS369d hata nesnesi korumasi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821m';   // SS370 KOPMA-sigma   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7944,6 +7944,7 @@ async function multipleInit(){
     const fh=$('fekHesapla'); if(fh) fh.onclick=fekHesapla;
     const fk=$('fekKod'); if(fk) fk.addEventListener('keydown', ev=>{ if(ev.key==='Enter') fekHesapla(); });
     const fl=$('fekLambda'); if(fl) fl.onchange=()=>{ if(FEK_SON) fekCiz(); };
+    const fp=$('fekPkriz'); if(fp) fp.onchange=()=>{ if(FEK_SON) fekCiz(); };
   }catch(e){}
   /* §350b: ilk açılışta seçili ticker için de KAP denenir — kullanıcı hiçbir
      şey yapmadan güncel veriyi görsün. */
@@ -8009,7 +8010,10 @@ async function mulKapTTM(kod, opt){
     if(typeof csDonemCek !== 'function') return { hata:'csDonemCek yok' };
     const dl = await kapDonemListesi(kod, 3);       /* §369c: önbellekli */
     if(!dl.donemler.length) return { hata: dl.hata || 'dönem listesi boş' };
-    const liste = dl.donemler.slice(0, 5);          /* 4 çeyrek + katsayı zinciri için 1 pay */
+    /* §370: KOPMA-σ için FAVÖK marjı OYNAKLIĞI gerekiyor → 9 dönem (8 çeyrek
+       + katsayı zinciri payı). TTM yine ilk 4'ten hesaplanır. */
+    const derin = !!(opt && opt.seri);
+    const liste = dl.donemler.slice(0, derin ? 9 : 5);          /* 4 çeyrek + katsayı zinciri için 1 pay */
     const ob = csOnbellekOku(); const veri = {};
     /* §350b HIZ (kullanıcı "eski kalmış" dedi, ölçüldü: 18 sn sürüyordu ve
        kart o süre boyunca snapshot gösteriyordu — kullanıcı beklemeden baktı).
@@ -8085,7 +8089,21 @@ async function mulKapTTM(kod, opt){
        raporun kendi "esas faaliyet kârı + amortisman"ı. Çekirdek tanım
        karşılaştırma satırında kalır; ikisi arasındaki fark tekrarlamayan
        diğer faaliyet gelir/giderlerinin büyüklüğünü gösterir. */
-    return { ciro, ebitda:favok, ebitdaCekirdek:(favokCek>0?favokCek:null), cekirdekVar:(favokCek>0),
+    /* §370 ÇEYREKLİK FAVÖK MARJI SERİSİ — σ'nın kaynağı. Hisse volatilitesi
+       DEĞİL: BİST'te fiili dolaşım düşük, TMS-29 defteri yeniden ifade ediyor;
+       fiyat oynaklığı burada bilgi değil gürültü. Şirketin KENDİ kâr marjı
+       serisi daha dürüst bir belirsizlik ölçüsü. */
+    const marjSeri = [];
+    for(let i=0;i<dolu.length;i++){
+      const c1=al(i,'ifrs-full_Revenue','akis');
+      const b1=al(i,'ifrs-full_GrossProfit','akis');
+      const am1=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+      const pz1=al(i,'kap-fr_MarketingExpense','akis'), gy1=al(i,'ifrs-full_AdministrativeExpense','akis'), ar1=al(i,'ifrs-full_ResearchAndDevelopmentExpense','akis');
+      if(!Number.isFinite(c1)||!c1||!Number.isFinite(b1)||!Number.isFinite(am1)) continue;
+      const fk = b1 + (Number.isFinite(pz1)?pz1:0) + (Number.isFinite(gy1)?gy1:0) + (Number.isFinite(ar1)?ar1:0) + am1;
+      marjSeri.push({ donem: dolu[i].yil+'/'+dolu[i].donem, marj: +(fk/c1*100).toFixed(2) });
+    }
+    return { ciro, ebitda:favok, ebitdaCekirdek:(favokCek>0?favokCek:null), cekirdekVar:(favokCek>0), marjSeri,
       netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı',
       /* §369 */ amort:(aE>=3?amortTTM:null), odFaiz:(fE>=3?faizTTM:null), capex:(cE>=3?capexTTM:null),
       kvFinBorc, finBorc:borc, likit, kvY };
@@ -9893,6 +9911,68 @@ window.csSeriOzet = async function(kod, adet){
    DOĞRUDAN okunur — tahmin edilmez.
    VETOLAR: ödeme aczi zincirdir, ortalama değil — güçlü bir kalem ölümcül
    olanı maskeleyemesin diye tavan konur. */
+/* ── §370 KOPMA-σ — NAKİT SERVİS KOPMA MESAFESİ (21 Ağu) ───────────────────
+   Merton'ın Distance-to-Default FORMU korunur, ÜÇ GİRDİSİ değiştirilir:
+   1) VARLIK DEĞERİ yerine NAKİT KAPASİTESİ. Klasik DD varlıkların borcun
+      altına düşmesini ölçer; BİST'te şirket varlığı borcunu aştığı halde
+      ÖDEYEMEDİĞİ için ölür. K ve L, FEK'in payı ve paydasıdır — iki ölçü
+      aynı tabandan beslenir, biri oran biri olasılık verir.
+   2) HİSSE VOLATİLİTESİ yerine FAVÖK MARJI OYNAKLIĞI. Fiili dolaşım düşük,
+      TMS-29 defteri yeniden ifade ediyor; fiyat oynaklığı gürültü.
+   3) TEK DAĞILIM yerine İKİ REJİM. He-Xiong'un rollover kanalı: fonlama
+      koşulu sürekli değişken değil DURUM'dur — banka ya yeniler ya yenilemez.
+      Tek normal dağılım bu bimodalliği yakalayamaz ve KV borç ağırlıklı
+      şirketlerde bütün risk oradadır.
+   DD = [ln(K/L) + (μ − σ²/2)T] / (σ√T)
+   PD = p·Φ(−DD_kriz) + (1−p)·Φ(−DD_baz) ·  KOPMA-σ = −Φ⁻¹(PD)
+   p(kriz) MODELDEN GELMEZ, KULLANICIDAN GELİR — bu yüzden kaydırıcı var ve
+   duyarlılık tablosu cevabın parçası, opsiyonel değil. */
+function _phi(x){ /* standart normal BİRİKİMLİ — Abramowitz-Stegun 7.1.26 */
+  const t=1/(1+0.2316419*Math.abs(x));
+  const d=0.3989422804014327*Math.exp(-x*x/2);
+  let p=d*t*(0.319381530+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));
+  return x>0 ? 1-p : p;
+}
+function _phiTers(p){ /* Acklam yaklaşımı — Φ⁻¹ */
+  if(!(p>0&&p<1)) return NaN;
+  const a=[-39.69683028665376,220.9460984245205,-275.9285104469687,138.3577518672690,-30.66479806614716,2.506628277459239];
+  const b=[-54.47609879822406,161.5858368580409,-155.6989798598866,66.80131188771972,-13.28068155288572];
+  const c=[-0.007784894002430293,-0.3223964580411365,-2.400758277161838,-2.549732539343734,4.374664141464968,2.938163982698783];
+  const d=[0.007784695709041462,0.3224671290700398,2.445134137142996,3.754408661907416];
+  const pl=0.02425;
+  let q,r;
+  if(p<pl){ q=Math.sqrt(-2*Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if(p>1-pl){ q=Math.sqrt(-2*Math.log(1-p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q;
+  return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+}
+const KOPMA_NOT = [
+  { esik: 3.0, not: 5, ad: 'Kale',        renk: '#0FA26B' },
+  { esik: 2.0, not: 4, ad: 'Sağlam',      renk: '#3FB98A' },
+  { esik: 1.3, not: 3, ad: 'Dar emniyet', renk: '#9AA0A6' },
+  { esik: 0.5, not: 2, ad: 'Sınırda',     renk: '#E8933B' },
+  { esik: -1e9, not: 1, ad: 'Kırılgan',    renk: '#D64545' }
+];
+/* σ: çeyreklik marj serisinden. ρ = çeyrekler arası korelasyon (0,30 varsayım);
+   ρ=0 alınırsa σ düşer ve not BİR KADEME yükselebilir — duyarlılıkta gösterilir. */
+function kopmaSigma(marjSeri, kapasite, coreFavok, rho){
+  const m=(marjSeri||[]).map(x=>x.marj).filter(Number.isFinite);
+  if(m.length<4) return null;
+  const ort=m.reduce((a,b)=>a+b,0)/m.length;
+  if(!(Math.abs(ort)>0.01)) return null;
+  const varr=m.reduce((a,b)=>a+(b-ort)*(b-ort),0)/(m.length-1);
+  const sd=Math.sqrt(varr);
+  const cvCeyrek=Math.abs(sd/ort);
+  const r=(rho==null?0.30:rho);
+  /* yıllıklandırma: 4 çeyreğin toplamı, korelasyonlu → √(4 + 12ρ)/4 */
+  const yilCarpan=Math.sqrt(4+12*r)/4;
+  const cvYil=cvCeyrek*yilCarpan;
+  /* yalnız FAVÖK oynak; likidite ve capex sabit kabul → σ_K ölçeklenir */
+  const pay=(Number.isFinite(coreFavok)&&Number.isFinite(kapasite)&&kapasite>0)?Math.min(1,Math.abs(coreFavok/kapasite)):1;
+  return { sigmaK: cvYil*pay, cvCeyrek, cvYil, ort, sd, n:m.length, rho:r };
+}
 const FEK_NOT = [
   { esik: 3.5, not: 5, ad: 'Kale',        renk: '#0FA26B' },
   { esik: 2.5, not: 4, ad: 'Sağlam',      renk: '#3FB98A' },
@@ -9908,7 +9988,7 @@ async function fekHesapla(){
   if(D) D.textContent='KAP okunuyor…';
   if(P) P.innerHTML='';
   try{
-    const t = await mulKapTTM(kod, { gevsek:true });   /* §369b: FEK ciro/FAVÖK şartı aramaz */
+    const t = await mulKapTTM(kod, { gevsek:true, seri:true });   /* §369b gevşek · §370 marj serisi */
     if(!t || t.hata) throw new Error((t&&t.hata) || 'finansal tablo alınamadı');
     FEK_SON = { kod, t };
     fekCiz();
@@ -9981,6 +10061,71 @@ function fekCiz(){
       '<b style="font-size:11px;color:var(--down)">VETO TETİKLENDİ</b>'+
       vetolar.map(v=>'<div class="sub" style="font-size:10.5px;margin-top:3px"><b>'+v.k+'</b> · '+esc(v.ad)+' → <span style="font-family:var(--mono)">'+esc(v.deger)+'</span> · <b>'+esc(v.etki)+'</b></div>').join('')+
       '</div>'):'');
+  /* ── §370 KOPMA-σ: aynı K ve L, olasılık diliyle ────────────────────── */
+  try{
+    const p = Math.min(0.6, Math.max(0.02, parseFloat(($('fekPkriz')||{}).value)||0.20));
+    const sg = kopmaSigma(t.marjSeri, kapasite, coreFavok, 0.30);
+    const K2 = $('fekKopma');
+    if(K2 && sg && Number.isFinite(kapasite) && kapasite>0 && Number.isFinite(netFaiz)){
+      const lamBaz=0.10, lamKriz=0.25;
+      const yukOf=(l)=> S(netFaiz, Number.isFinite(kvBorc)?kvBorc*l:null);
+      const DD=(L)=> (Number.isFinite(L)&&L>0) ? (Math.log(kapasite/L) + (0 - sg.sigmaK*sg.sigmaK/2)) / sg.sigmaK : null;
+      const ddB=DD(yukOf(lamBaz)), ddK=DD(yukOf(lamKriz));
+      if(Number.isFinite(ddB)&&Number.isFinite(ddK)){
+        const pd = p*_phi(-ddK) + (1-p)*_phi(-ddB);
+        const ks = -_phiTers(pd);
+        const sev2 = KOPMA_NOT.find(x=>ks>=x.esik) || KOPMA_NOT[KOPMA_NOT.length-1];
+        const krizPay = (p*_phi(-ddK))/pd*100;
+        /* duyarlılık: p × λ_kriz ızgarası */
+        const pL=[0.10,0.20,0.30,0.50], lL=[0.15,0.20,0.25,0.35];
+        const izgara = pL.map(pp=>({ p:pp, hucre: lL.map(ll=>{
+          const d2=DD(yukOf(ll)); if(!Number.isFinite(d2)) return null;
+          const pd2=pp*_phi(-d2)+(1-pp)*_phi(-ddB);
+          return -_phiTers(pd2);
+        })}));
+        K2.innerHTML =
+          '<div class="lbl" style="font-size:11px;margin:16px 0 6px">KOPMA-σ <span class="thin" style="font-weight:400;text-transform:none">nakit servis kopma mesafesi · iki rejimli</span></div>'+
+          '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px">'+
+            '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+trN(ks,2)+'σ</span></div>'+
+            '<div><span class="sub">12 aylık sıkıntı olasılığı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">%'+trN(pd*100,1)+'</span></div>'+
+            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+'</span></div>'+
+            '<div><span class="sub">σ (yıllık, FAVÖK marjı)</span><br><span style="font-family:var(--mono);font-size:13px">%'+trN(sg.sigmaK*100,1)+' <span class="thin">'+sg.n+' çeyrek</span></span></div>'+
+          '</div>'+
+          '<table style="width:100%;border-collapse:collapse;font-size:10.5px">'+
+            '<thead><tr><th style="text-align:left">REJİM</th><th class="num">λ</th><th class="num">Yük mn ₺</th><th class="num">DD</th><th class="num">PD</th></tr></thead><tbody>'+
+            '<tr><td>Baz — banka yeniler <span class="thin">(%'+trN((1-p)*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">0,10</td>'+
+              '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamBaz))+'</td>'+
+              '<td class="num" style="font-family:var(--mono);color:'+(ddB>0?'var(--up)':'var(--down)')+'">'+(ddB>0?'+':'')+trN(ddB,2)+'σ</td>'+
+              '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddB)*100,1)+'</td></tr>'+
+            '<tr><td>Kriz — yenilemez <span class="thin">(%'+trN(p*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">0,25</td>'+
+              '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamKriz))+'</td>'+
+              '<td class="num" style="font-family:var(--mono);color:'+(ddK>0?'var(--up)':'var(--down)')+'">'+(ddK>0?'+':'')+trN(ddK,2)+'σ</td>'+
+              '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddK)*100,1)+'</td></tr>'+
+            '<tr style="background:var(--bg2)"><td><b>Karışım</b></td><td class="num"></td><td class="num"></td>'+
+              '<td class="num" style="font-family:var(--mono)"><b>'+trN(ks,2)+'σ</b></td>'+
+              '<td class="num" style="font-family:var(--mono)"><b>%'+trN(pd*100,1)+'</b></td></tr>'+
+          '</tbody></table>'+
+          '<div class="sub" style="font-size:10.5px;margin-top:8px;padding:7px 10px;background:rgba(232,147,59,.08);border-left:3px solid #E8933B">'+
+            'Toplam riskin <b>%'+trN(krizPay,0)+'\'ı</b> yalnız %'+trN(p*100,0)+' olasılıklı kriz dalından geliyor. '+
+            'Tek rejimli naif bir DD %'+trN(_phi(-ddB)*100,1)+' gösterirdi — gerçek riskin '+trN(pd/_phi(-ddB),1)+' katı az. '+
+            'Bu, kısa vadeli borç ağırlığının matematiksel imzasıdır.'+
+          '</div>'+
+          '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK <span class="thin" style="font-weight:400;text-transform:none">p(kriz) × λ_kriz → KOPMA-σ</span></div>'+
+          '<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr><th style="text-align:left">p \\ λ</th>'+
+            lL.map(l=>'<th class="num">'+trN(l,2)+'</th>').join('')+'</tr></thead><tbody>'+
+            izgara.map(r=>'<tr'+(Math.abs(r.p-p)<0.01?' style="background:var(--bg2);font-weight:600"':'')+'><td style="font-family:var(--mono)">%'+trN(r.p*100,0)+'</td>'+
+              r.hucre.map(v=>{
+                if(!Number.isFinite(v)) return '<td class="num">—</td>';
+                const n2=(KOPMA_NOT.find(x=>v>=x.esik)||KOPMA_NOT[4]);
+                return '<td class="num" style="font-family:var(--mono);color:'+n2.renk+'">'+trN(v,2)+'</td>';
+              }).join('')+'</tr>').join('')+
+          '</tbody></table>';
+      } else if(K2) K2.innerHTML='<div class="sub" style="margin-top:14px">KOPMA-σ: yük hesaplanamadı</div>';
+    } else if(K2){
+      K2.innerHTML='<div class="sub" style="margin-top:14px">KOPMA-σ hesaplanamadı — '+
+        (!sg?'FAVÖK marjı serisi yetersiz (en az 4 çeyrek gerekli)':'kapasite ya da faiz eksik')+'</div>';
+    }
+  }catch(e){ console.warn('[KTPanel] §370:', e&&e.message); }
   if($('fekDamga')) $('fekDamga').textContent='KAP · '+kod+' · '+(t.donem||'');
   if($('fekNot')) $('fekNot').innerHTML=
     '<b>1,0 kopma noktasıdır.</b> Pay tekrarlanabilir nakit, payda borç servisi. '+
