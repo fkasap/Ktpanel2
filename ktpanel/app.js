@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821u';   // SS373b bos kalem + faiz yok denetimi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821v';   // SS373c not bastirma   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10096,6 +10096,17 @@ function fekCiz(){
     if(nakitOran<0.20 && kvPay>0.70) vetolar.push({k:'V2', ad:'Nakit oran <0,20 VE KV borç payı >%70', deger:nakitOran.toFixed(2)+' · %'+(kvPay*100).toFixed(0), etki:'tavan 2'});
   }
   if(vetolar.length && sev && sev.not>2) sev=FEK_NOT.find(x=>x.not===2);
+  /* §373c NOT BASTIRMA (BIMAS'ta yakalandı): kart hem "faiz kalemi şüpheli,
+     yük hafife alınmış olabilir" diyor HEM DE 5/5 "Kale" notu veriyordu.
+     İkisi bir arada en kötü kombinasyon — uyarıyı okumayan mükemmel not görür.
+     · faiz HİÇ YOKSA (borcu olduğu halde): NOT VERİLMEZ. Girdi eksikken
+       çıkarılan sonuç bilgi değil gürültüdür.
+     · faiz VAR ama örtük oran düşükse: not TAVANLANIR (en fazla 3) ve sebep
+       yazılır — kısmi bilgi, kısmi güven.
+     DERS: BİR SONUCA GÜVENMİYORSAN ONU NOTLANDIRMA. Uyarı, notun yanında
+     değil YERİNE geçmeli. */
+  const notYok = faizYok;
+  if(!notYok && faizSupheli && sev && sev.not>3) sev=FEK_NOT.find(x=>x.not===3);
   const mlrG=(v)=> Number.isFinite(v) ? trN(v/mn, Math.abs(v/mn)>=1000?0:0) : '—';
   /* §373b BOŞ KALEM "+0" GÖRÜNÜYORDU (BIMAS'ta yakalandı): Math.abs(null)
      SIFIR döner ve Number.isFinite(0) true — yani hiç bulunamamış kalem
@@ -10123,7 +10134,14 @@ function fekCiz(){
         '<div style="border-top:1px solid var(--line);margin-top:7px;padding-top:6px;display:flex;justify-content:space-between"><b style="font-size:11px">TOPLAM</b><b style="font-family:var(--mono);font-size:14px">'+mlrG(yuk)+' mn ₺</b></div>'+
       '</div>'+
     '</div>'+
-    (Number.isFinite(fek)?(
+    (notYok?(
+    '<div style="text-align:center;margin-top:16px">'+
+      '<div style="display:inline-block;background:rgba(232,147,59,.10);border:1px dashed rgba(232,147,59,.5);border-radius:10px;padding:10px 26px">'+
+        '<div style="font-family:var(--mono);font-size:20px;font-weight:700;color:#E8933B">NOT VERİLEMEZ</div>'+
+        '<div class="sub" style="font-size:11px">faiz kalemi okunamadı — yük eksik hesaplanıyor</div>'+
+        (Number.isFinite(fek)?('<div class="sub" style="font-size:10px;margin-top:4px">ham oran '+trN(fek,2)+'x · <b>güvenilmez</b></div>'):'')+
+      '</div></div>'
+    ):(Number.isFinite(fek)?(
     '<div style="text-align:center;margin-top:16px">'+
       '<div style="display:inline-block;background:rgba(232,147,59,.12);border:1px solid rgba(232,147,59,.35);border-radius:10px;padding:10px 26px">'+
         '<div style="font-family:var(--mono);font-size:24px;font-weight:700;color:'+(sev?sev.renk:'var(--mm2)')+'">FEK = '+trN(fek,2)+'x</div>'+
@@ -10132,7 +10150,7 @@ function fekCiz(){
     '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:14px">'+
       FEK_NOT.slice().reverse().map(x=>'<div style="text-align:center;border-radius:7px;padding:8px 4px;background:'+(sev&&sev.not===x.not?x.renk:'var(--bg2)')+';color:'+(sev&&sev.not===x.not?'#fff':'var(--muted)')+';font-weight:'+(sev&&sev.not===x.not?'700':'400')+'">'+
         '<div style="font-size:15px">'+x.not+'</div><div style="font-size:9.5px">'+esc(x.ad)+'</div></div>').join('')+
-    '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>')+
+    '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>'))+
     (faizSupheli?('<div style="margin-top:12px;border-left:3px solid #E8933B;padding:8px 12px;background:rgba(232,147,59,.07)">'+
       '<b style="font-size:11px;color:#E8933B">⚠ FAİZ KALEMİ ŞÜPHELİ</b>'+
       '<div class="sub" style="font-size:10.5px;margin-top:3px">'+
