@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821t';   // SS373 faiz denetimi + izgara tavani   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821u';   // SS373b bos kalem + faiz yok denetimi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10074,7 +10074,12 @@ function fekCiz(){
      kalem EKSİK sayılır ve kart bunu SÖYLER — sessizce absürt sonuç üretmez.
      DERS: TÜRETİLMİŞ BİR SAYI SAÇMA GÖRÜNÜYORSA GİRDİYİ SORGULA. */
   const ortFaizOran = (Number.isFinite(netFaiz)&&Number.isFinite(t.finBorc)&&t.finBorc>0) ? (netFaiz/t.finBorc) : null;
-  const faizSupheli = Number.isFinite(ortFaizOran) && ortFaizOran < 0.08;
+  /* §373b: faiz HİÇ BULUNAMAMIŞSA da şüpheli — borcu olan şirket faiz öder.
+     BIMAS'ta yakalandı: 15.350 mn KV borç ama finansman satırında faiz yok
+     (IFRS 16 kira yükümlülükleri ve işletme altında raporlanan faiz). */
+  const borcVar = Number.isFinite(t.finBorc) && t.finBorc > 0;
+  const faizYok = borcVar && !Number.isFinite(netFaiz);
+  const faizSupheli = faizYok || (Number.isFinite(ortFaizOran) && ortFaizOran < 0.08);
   const kvBorc = Number.isFinite(t.kvFinBorc) ? t.kvFinBorc : null;
   const rollover = Number.isFinite(kvBorc) ? kvBorc*lam : null;
   const yuk = S(netFaiz, rollover);
@@ -10092,7 +10097,13 @@ function fekCiz(){
   }
   if(vetolar.length && sev && sev.not>2) sev=FEK_NOT.find(x=>x.not===2);
   const mlrG=(v)=> Number.isFinite(v) ? trN(v/mn, Math.abs(v/mn)>=1000?0:0) : '—';
-  const sat=(ad,v,eksi,ipucu)=> '<div class="kv" title="'+esc(ipucu||'')+'"><span class="k">'+ad+'</span><span class="num" style="font-family:var(--mono)'+(eksi?';color:var(--down)':'')+'">'+(eksi?'−':'+')+mlrG(Math.abs(v))+'</span></div>';
+  /* §373b BOŞ KALEM "+0" GÖRÜNÜYORDU (BIMAS'ta yakalandı): Math.abs(null)
+     SIFIR döner ve Number.isFinite(0) true — yani hiç bulunamamış kalem
+     "dolu ve sıfır" gibi basılıyordu. Boş ile sıfır AYNI ŞEY DEĞİLDİR:
+     biri "veri yok", diğeri "gerçekten ödememiş".
+     DERS: Math.abs/parseFloat GİBİ DÖNÜŞÜMLER null'I SESSİZCE SAYIYA ÇEVİRİR. */
+  const sat=(ad,v,eksi,ipucu)=> '<div class="kv" title="'+esc(ipucu||'')+'"><span class="k">'+ad+'</span><span class="num" style="font-family:var(--mono)'+(eksi?';color:var(--down)':'')+'">'+
+    (Number.isFinite(v) ? ((eksi?'−':'+')+mlrG(Math.abs(v))) : '<span style="color:var(--muted)">— yok</span>')+'</span></div>';
   P.innerHTML =
     '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center">'+
       '<div style="border:1px solid rgba(15,162,107,.3);background:rgba(15,162,107,.06);border-radius:10px;padding:12px 14px">'+
@@ -10124,7 +10135,10 @@ function fekCiz(){
     '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>')+
     (faizSupheli?('<div style="margin-top:12px;border-left:3px solid #E8933B;padding:8px 12px;background:rgba(232,147,59,.07)">'+
       '<b style="font-size:11px;color:#E8933B">⚠ FAİZ KALEMİ ŞÜPHELİ</b>'+
-      '<div class="sub" style="font-size:10.5px;margin-top:3px">Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '+
+      '<div class="sub" style="font-size:10.5px;margin-top:3px">'+
+      (faizYok
+        ? ('Finansal borç <b>'+mlrG(t.finBorc)+' mn</b> ama nakit akış tablosunun <b>finansman</b> bölümünde ödenen faiz satırı <b>YOK</b>. ')
+        : ('Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '))+
       'TL borçta bu oran gerçekçi değil — faiz büyük olasılıkla nakit akış tablosunda <b>işletme faaliyetleri</b> altında raporlanmış (IAS 7 buna izin verir) ve finansman satırından okunamıyor. '+
       '<b>Yük hafife alınmış olabilir; FEK ve KOPMA-σ olduğundan İYİ görünür.</b> Şirketin nakit akış tablosundaki faiz satırını elle doğrulayın.</div></div>'):'')+
     (vetolar.length?('<div style="margin-top:14px;border-left:3px solid var(--down);padding:8px 12px;background:rgba(214,69,69,.05)">'+
