@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821s';   // SS372c ayrisma uyarisi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821t';   // SS373 faiz denetimi + izgara tavani   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10065,6 +10065,16 @@ function fekCiz(){
   const kapasite = S(coreFavok, serbestLik, Number.isFinite(bakimCapex)?-bakimCapex:null);
   /* YÜK */
   const netFaiz = Number.isFinite(t.odFaiz) ? Math.abs(t.odFaiz) : null;
+  /* §373 FAİZ TUTARLILIK DENETİMİ (EUPWR'da yakalandı): KV finansal borç
+     1.339 mn ama ödenen faiz 26 mn görünüyordu — yıllık %2 örtük faiz, TL'de
+     imkânsız. Sebep: faiz NAKİT AKIŞ tablosunda FİNANSMAN yerine İŞLETME
+     faaliyetleri altında raporlanmış olabilir (şirket tercihi, IAS 7 izin
+     veriyor). Yük hafife alınınca FEK 84x gibi absürt bir sayı çıkıyor.
+     Örtük faiz oranı = ödenen faiz ÷ toplam finansal borç. %8'in altındaysa
+     kalem EKSİK sayılır ve kart bunu SÖYLER — sessizce absürt sonuç üretmez.
+     DERS: TÜRETİLMİŞ BİR SAYI SAÇMA GÖRÜNÜYORSA GİRDİYİ SORGULA. */
+  const ortFaizOran = (Number.isFinite(netFaiz)&&Number.isFinite(t.finBorc)&&t.finBorc>0) ? (netFaiz/t.finBorc) : null;
+  const faizSupheli = Number.isFinite(ortFaizOran) && ortFaizOran < 0.08;
   const kvBorc = Number.isFinite(t.kvFinBorc) ? t.kvFinBorc : null;
   const rollover = Number.isFinite(kvBorc) ? kvBorc*lam : null;
   const yuk = S(netFaiz, rollover);
@@ -10112,6 +10122,11 @@ function fekCiz(){
       FEK_NOT.slice().reverse().map(x=>'<div style="text-align:center;border-radius:7px;padding:8px 4px;background:'+(sev&&sev.not===x.not?x.renk:'var(--bg2)')+';color:'+(sev&&sev.not===x.not?'#fff':'var(--muted)')+';font-weight:'+(sev&&sev.not===x.not?'700':'400')+'">'+
         '<div style="font-size:15px">'+x.not+'</div><div style="font-size:9.5px">'+esc(x.ad)+'</div></div>').join('')+
     '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>')+
+    (faizSupheli?('<div style="margin-top:12px;border-left:3px solid #E8933B;padding:8px 12px;background:rgba(232,147,59,.07)">'+
+      '<b style="font-size:11px;color:#E8933B">⚠ FAİZ KALEMİ ŞÜPHELİ</b>'+
+      '<div class="sub" style="font-size:10.5px;margin-top:3px">Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '+
+      'TL borçta bu oran gerçekçi değil — faiz büyük olasılıkla nakit akış tablosunda <b>işletme faaliyetleri</b> altında raporlanmış (IAS 7 buna izin verir) ve finansman satırından okunamıyor. '+
+      '<b>Yük hafife alınmış olabilir; FEK ve KOPMA-σ olduğundan İYİ görünür.</b> Şirketin nakit akış tablosundaki faiz satırını elle doğrulayın.</div></div>'):'')+
     (vetolar.length?('<div style="margin-top:14px;border-left:3px solid var(--down);padding:8px 12px;background:rgba(214,69,69,.05)">'+
       '<b style="font-size:11px;color:var(--down)">VETO TETİKLENDİ</b>'+
       vetolar.map(v=>'<div class="sub" style="font-size:10.5px;margin-top:3px"><b>'+v.k+'</b> · '+esc(v.ad)+' → <span style="font-family:var(--mono)">'+esc(v.deger)+'</span> · <b>'+esc(v.etki)+'</b></div>').join('')+
@@ -10152,7 +10167,9 @@ function fekCiz(){
         const izgara = pL.map(pp=>({ p:pp, hucre: lL.map(ll=>{
           const d2=DD(yukOf(ll)); if(!Number.isFinite(d2)) return null;
           const pd2=pp*_phi(-d2)+(1-pp)*_phi(-ddB);
-          return -_phiTers(pd2);
+          const k2=-_phiTers(pd2);
+          /* §373: tavan ızgarada da geçerli — 28,34σ gibi sayılar sahte kesinlik */
+          return (!Number.isFinite(k2)||k2>=KS_TAVAN) ? KS_TAVAN : k2;
         })}));
         K2.innerHTML =
           '<div class="lbl" style="font-size:11px;margin:16px 0 6px">KOPMA-σ <span class="thin" style="font-weight:400;text-transform:none">nakit servis kopma mesafesi · iki rejimli</span></div>'+
@@ -10212,7 +10229,7 @@ function fekCiz(){
               r.hucre.map(v=>{
                 if(!Number.isFinite(v)) return '<td class="num">—</td>';
                 const n2=(KOPMA_NOT.find(x=>v>=x.esik)||KOPMA_NOT[4]);
-                return '<td class="num" style="font-family:var(--mono);color:'+n2.renk+'">'+trN(v,2)+'</td>';
+                return '<td class="num" style="font-family:var(--mono);color:'+n2.renk+'">'+(v>=KS_TAVAN?'≥4,0':trN(v,2))+'</td>';
               }).join('')+'</tr>').join('')+
           '</tbody></table>';
       } else if(K2) K2.innerHTML='<div class="sub" style="margin-top:14px">KOPMA-σ: yük hesaplanamadı</div>';
