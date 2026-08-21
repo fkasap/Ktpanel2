@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821h';   // SS369 FEK panosu   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821i';   // SS369b FEK gevsek mod + gorunur sebep   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7959,12 +7959,22 @@ async function multipleInit(){
    fiyat × pay adedi (adet multiple.json'da kalıyor — KAP'ta pay adedi yok).
    BAŞARISIZLIKTA snapshot'a düşer ve kartta HANGİ KAYNAK olduğu yazar:
    sessizce eski veriyle devam etmez. */
-async function mulKapTTM(kod){
+async function mulKapTTM(kod, opt){
+  /* §369b GEVŞEK MOD + GÖRÜNÜR SEBEP (21 Ağu, canlı: FEK bazı hisselerde
+     "finansal tablo alınamadı" diyordu). İki kusur:
+       (1) Bu fonksiyon EV/EBITDA kartı için yazıldı ve CİRO ile FAVÖK'ü
+           ZORUNLU tutuyordu; FEK'in ikisine de ihtiyacı yok (çekirdek FAVÖK,
+           faiz ve borç yeterli). Holding/GYO gibi hasılatı olmayan şirketler
+           bu yüzden eleniyordu.
+       (2) null dönüyordu — SEBEP GÖRÜNMÜYORDU. Bu gece defalarca gördük:
+           sessiz başarısızlık teşhisi geciktirir (§353b).
+     Artık opt.gevsek ile eşik düşer ve başarısızlıkta {hata:...} döner. */
+  const gevsek = !!(opt && opt.gevsek);
   try{
-    if(typeof csDonemCek !== 'function') return null;
+    if(typeof csDonemCek !== 'function') return { hata:'csDonemCek yok' };
     const r = await fetch('/api/kap?mod=donemler&kod='+kod+'&yil=3', {cache:'no-store'});
     const j = await r.json();
-    if(!j.ok || !(j.donemler||[]).length) return null;
+    if(!j.ok || !(j.donemler||[]).length) return { hata:'dönem listesi boş'+(j.hatalar&&j.hatalar.length?(' ('+j.hatalar[0]+')'):'') };
     const liste = j.donemler.slice(0, 5);          /* 4 çeyrek + katsayı zinciri için 1 pay */
     const ob = csOnbellekOku(); const veri = {};
     /* §350b HIZ (kullanıcı "eski kalmış" dedi, ölçüldü: 18 sn sürüyordu ve
@@ -7983,7 +7993,7 @@ async function mulKapTTM(kod){
       csOnbellekYaz(ob);
     }
     const dolu = liste.filter(x=>veri[kod+'|'+x.yil+'|'+x.donem]);
-    if(dolu.length < 4) return null;
+    if(dolu.length < (gevsek?2:4)) return { hata:dolu.length+'/'+liste.length+' dönem okunabildi (en az '+(gevsek?2:4)+' gerekli)' };
     const KAT = csEndeksKatsayilari(dolu, veri, kod);
     const kat = (x)=>KAT[x.yil+'|'+x.donem]||1;
     const al = (i,xbrl,tip)=>{ const v=csCeyrek(dolu,veri,kod,i,xbrl,tip);
@@ -8008,7 +8018,17 @@ async function mulKapTTM(kod){
       if(Number.isFinite(br)&&Number.isFinite(am))
         favokCek += br + (Number.isFinite(pz)?pz:0) + (Number.isFinite(gy)?gy:0) + (Number.isFinite(ar)?ar:0) + am;
     }
-    if(eksik>2 || !(ciro>0) || !(favok>0)) return null;
+    if(gevsek){
+      /* §369b KAPSAM TUZAĞI: `S` yardımcısı bu satırdan SONRA tanımlı —
+         burada çağrılsa çalışma anında patlardı (§UA2'deki aynı sınıf hata).
+         Kendi toplayıcısı kullanılıyor. */
+      const _s = (...a)=>{ let t=0,v=false; a.forEach(z=>{ if(Number.isFinite(z)){t+=z;v=true;} }); return v?t:null; };
+      const kvT = _s(al(0,'kap-fr_CurrentBorowings','stok'), al(0,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'));
+      if(!(favokCek>0) && !(favok>0) && !Number.isFinite(kvT))
+        return { hata:'ne FAVÖK ne borç okunabildi — şablon uyumsuz (banka/sigorta olabilir)' };
+    } else if(eksik>2 || !(ciro>0) || !(favok>0)){
+      return { hata:'ciro/FAVÖK eksik ('+eksik+' boş kalem) — banka/GYO şablonu olabilir' };
+    }
     const S=(...a)=>{let t=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){t+=z;v=true;}});return v?t:null;};
     const borc = S(al(0,'kap-fr_CurrentBorowings','stok'), al(0,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'), al(0,'ifrs-full_LongtermBorrowings','stok'));
     const likit = S(al(0,'ifrs-full_CashAndCashEquivalents','stok'), al(0,'kap-fr_CurrentFinancialInvestments','stok'));
@@ -9845,8 +9865,8 @@ async function fekHesapla(){
   if(D) D.textContent='KAP okunuyor…';
   if(P) P.innerHTML='';
   try{
-    const t = await mulKapTTM(kod);           /* §350: son 4 çeyrek, endeksli TTM */
-    if(!t) throw new Error('finansal tablo alınamadı (banka/GYO şablonu olabilir)');
+    const t = await mulKapTTM(kod, { gevsek:true });   /* §369b: FEK ciro/FAVÖK şartı aramaz */
+    if(!t || t.hata) throw new Error((t&&t.hata) || 'finansal tablo alınamadı');
     FEK_SON = { kod, t };
     fekCiz();
     if(D) D.textContent='✓ '+kod+' · TTM '+(t.donem||'');
