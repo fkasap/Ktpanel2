@@ -1117,7 +1117,29 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
 </div>
 <div id="mulSonuc"></div>
-</div><div class="tab" id="t10"><h2>Sukuk / Kira Sertifikası <span class="thin">(değerleme · ihraç takvimi)</span></h2>
+
+<!-- §369 FİNANSAL EMNİYET KATSAYISI (FEK) — köprü emniyet katsayısı mantığı:
+     taşıyabileceği yük ÷ üzerine binen yük. Pay: tekrarlanabilir nakit üretimi
+     + serbest likidite − bakım capex. Payda: net faiz yükü + yenilenmeme
+     riski (KV finansal borç × λ). 1,0 kopma noktası. -->
+<div class="card" style="margin-top:18px">
+  <div class="kart-bas"><span class="lbl">FİNANSAL EMNİYET KATSAYISI <span class="thin">(FEK · borç servisi dayanıklılığı)</span></span><span class="tag" id="fekDamga">KAP</span></div>
+  <div class="sub" style="margin-top:4px">Köprü mantığı: <b>taşıyabileceği yük ÷ üzerine binen yük</b>. Pay tekrarlanabilir nakit üretimi, payda borç servisi. <b>1,0 kopma noktası.</b> Kâr kalitesi ayrı puan değil, formülün içinde: <b>çekirdek FAVÖK</b> kullanılır — kur farkı ve tek seferlik gelirler gelecek yılın faizini ödemez.</div>
+  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:12px">
+    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">HİSSE</label>
+      <input id="fekKod" placeholder="MERCN" maxlength="6" style="width:118px;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;text-transform:uppercase;font-family:var(--mono);font-size:12px"></div>
+    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">λ YENİLENMEME</label>
+      <select id="fekLambda" style="padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-size:12px;font-family:var(--mono)">
+        <option value="0.10">Baz %10</option><option value="0.25">Stres %25</option><option value="0.05">İyimser %5</option>
+      </select></div>
+    <button id="fekHesapla" class="mini" style="padding:6px 14px;font-size:12px">skor kartı</button>
+    <span id="fekDurum" class="sub" style="font-size:10.5px"></span>
+  </div>
+  <div id="fekPano" style="margin-top:14px"></div>
+  <div id="fekNot" class="note" style="margin-top:10px"></div>
+</div>
+</div>
+<div class="tab" id="t10"><h2>Sukuk / Kira Sertifikası <span class="thin">(değerleme · ihraç takvimi)</span></h2>
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
   <button class="subtab-btn act" data-subtab="sk-degerleme" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Değerleme</button>
   <button class="subtab-btn" data-subtab="sk-egri" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Getiri Eğrisi</button>
@@ -1394,8 +1416,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="emtiaOzet" style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px;margin-bottom:6px"></div>
 <div id="emtiaOzetNot" class="sub" style="font-size:10px;margin-bottom:12px"></div>
 <div id="emtiaBody"><div class="sub">yükleniyor…</div></div>
-<div class="note" style="margin-top:12px"><b>Fon yöneticisi için okuma:</b> Emtialar üç kanaldan portföyü etkiler. <b>Enflasyon kanalı</b> — enerji ve tarım fiyatları TÜFE'ye doğrudan geçer; petrol yükselişi TCMB'nin dezenflasyon patikasını zorlar (kritik takvimde İran/enerji şoku notu). <b>Kur kanalı</b> — Türkiye net enerji ithalatçısı; Brent yükselişi cari açığı ve TL üzerindeki baskıyı artırır. <b>Sektör kanalı</b> — altın kuyumcu/perakende (kart harcamasında korunma kalemi), bakır/çelik inşaat ve sanayi, tahıl gıda üreticileri için girdi. Değerler canlı vadeli sözleşme (futures) fiyatlarıdır; renkler günün yönünü gösterir. Kaynak: Yahoo Finance, 15 dk gecikmeli olabilir.</div>
 </div>
+<div class="note" style="margin-top:12px"><b>Fon yöneticisi için okuma:</b> Emtialar üç kanaldan portföyü etkiler. <b>Enflasyon kanalı</b> — enerji ve tarım fiyatları TÜFE'ye doğrudan geçer; petrol yükselişi TCMB'nin dezenflasyon patikasını zorlar (kritik takvimde İran/enerji şoku notu). <b>Kur kanalı</b> — Türkiye net enerji ithalatçısı; Brent yükselişi cari açığı ve TL üzerindeki baskıyı artırır. <b>Sektör kanalı</b> — altın kuyumcu/perakende (kart harcamasında korunma kalemi), bakır/çelik inşaat ve sanayi, tahıl gıda üreticileri için girdi. Değerler canlı vadeli sözleşme (futures) fiyatlarıdır; renkler günün yönünü gösterir. Kaynak: Yahoo Finance, 15 dk gecikmeli olabilir.</div>
 <div class="tab" id="t16"><h2>Asya-Pasifik <span class="thin">(endeksler Yahoo · forex Twelve Data · Japonya makro BoJ — kripto Piyasa sekmesine taşındı)</span></h2>
 <div id="asyaEndeksOzet" style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px;margin-bottom:6px"></div>
 <div id="asyaOzetNot" class="sub" style="font-size:10px;margin-bottom:12px"></div>
@@ -1723,7 +1745,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260821g"></script>
-<script src="/ajan.js?v=20260821g"></script>
+<script src="/app.js?v=20260821h"></script>
+<script src="/ajan.js?v=20260821h"></script>
 </body>
 </html>

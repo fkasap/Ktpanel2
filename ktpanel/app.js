@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821g';   // SS366f ay gezinmesi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821h';   // SS369 FEK panosu   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7939,6 +7939,12 @@ async function multipleInit(){
   if(sel){sel.innerHTML=MULTIPLE.hisseler.map(h=>'<option value="'+h.k+'">'+h.k+(h.ad?' — '+h.ad:'')+'</option>').join('');
     sel.addEventListener('change', mulTickerDegisti);}
   mulGirdiBagla();
+  /* §369 FEK panosu bağlantıları */
+  try{
+    const fh=$('fekHesapla'); if(fh) fh.onclick=fekHesapla;
+    const fk=$('fekKod'); if(fk) fk.addEventListener('keydown', ev=>{ if(ev.key==='Enter') fekHesapla(); });
+    const fl=$('fekLambda'); if(fl) fl.onchange=()=>{ if(FEK_SON) fekCiz(); };
+  }catch(e){}
   /* §350b: ilk açılışta seçili ticker için de KAP denenir — kullanıcı hiçbir
      şey yapmadan güncel veriyi görsün. */
   setTimeout(()=>{ try{ mulTickerDegisti(); }catch(e){} }, 1200);
@@ -8006,13 +8012,29 @@ async function mulKapTTM(kod){
     const S=(...a)=>{let t=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){t+=z;v=true;}});return v?t:null;};
     const borc = S(al(0,'kap-fr_CurrentBorowings','stok'), al(0,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'), al(0,'ifrs-full_LongtermBorrowings','stok'));
     const likit = S(al(0,'ifrs-full_CashAndCashEquivalents','stok'), al(0,'kap-fr_CurrentFinancialInvestments','stok'));
+    /* §369 FEK girdileri — hepsi ZATEN çekilen ham tablolardan, ek istek yok.
+       Ödenen faiz NAKİT AKIŞ tablosundan DOĞRUDAN gelir (tahmin edilmez);
+       KV finansal borç rollover riskinin tabanıdır. */
+    let amortTTM=0, faizTTM=0, capexTTM=0, aE=0, fE=0, cE=0;
+    for(let i=0;i<4;i++){
+      const a1=al(i,'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense','akis');
+      const f1=al(i,'ifrs-full_InterestPaidClassifiedAsFinancingActivities','akis');
+      const c1=al(i,'kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities','akis');
+      if(Number.isFinite(a1)){ amortTTM+=a1; aE++; }
+      if(Number.isFinite(f1)){ faizTTM+=f1; fE++; }
+      if(Number.isFinite(c1)){ capexTTM+=c1; cE++; }
+    }
+    const kvFinBorc = S(al(0,'kap-fr_CurrentBorowings','stok'), al(0,'kap-fr_CurrentPortionOfNoncurrentBorrowings','stok'));
+    const kvY = al(0,'ifrs-full_CurrentLiabilities','stok');
     const netBorc = (Number.isFinite(borc)&&Number.isFinite(likit)) ? borc-likit : null;
     /* §351c KULLANICI KARARI (20 Ağu): çarpan GENİŞ tanımla hesaplanır —
        raporun kendi "esas faaliyet kârı + amortisman"ı. Çekirdek tanım
        karşılaştırma satırında kalır; ikisi arasındaki fark tekrarlamayan
        diğer faaliyet gelir/giderlerinin büyüklüğünü gösterir. */
     return { ciro, ebitda:favok, ebitdaCekirdek:(favokCek>0?favokCek:null), cekirdekVar:(favokCek>0),
-      netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı' };
+      netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı',
+      /* §369 */ amort:(aE>=3?amortTTM:null), odFaiz:(fE>=3?faizTTM:null), capex:(cE>=3?capexTTM:null),
+      kvFinBorc, finBorc:borc, likit, kvY };
   }catch(e){ return null; }
 }
 /* §350: ticker değişince önce KAP TTM denenir, sonra kart çizilir. */
@@ -9791,6 +9813,118 @@ window.csSeriOzet = async function(kod, adet){
    TASARIM: net değişim ÇUBUK, toplam büyüklük TABLODA sayı. İkisi farklı
    doğada (biri AKIŞ biri STOK); aynı eksende gösterilirse akış kaybolur —
    toplam 10 trilyon iken aylık değişim 181 milyar. */
+/* ── §369 FİNANSAL EMNİYET KATSAYISI (FEK) — 21 Ağu ────────────────────────
+   FEK = (çekirdek FAVÖK + serbest likidite − bakım capex)
+         ÷ (net faiz yükü + KV finansal borç × λ)
+   TASARIM GEREKÇESİ (her kalem bir tuzağı kapatıyor):
+   · ÇEKİRDEK FAVÖK, raporlanan değil. MERCN'de ölçüldü (§351): raporun "esas
+     faaliyet kârı" 233 mn, içinde 104 mn DİĞER net gelir (kur farkı, reeskont).
+     Borç servisi TEKRARLANABİLİR nakitle yapılır.
+   · SERBEST LİKİDİTE = nakit + KV finansal yatırım − asgari işletme nakdi
+     (ciro'nun %2'si). Kasadaki paranın bir kısmı çalışıyor, tamponda değil.
+   · BAKIM CAPEX ≈ amortisman. Büyüme capex'i İSTEĞE BAĞLI; sıkışan şirket
+     erteler. FEK hayatta kalmayı ölçer, büyümeyi değil.
+   · λ (yenilenmeme): asıl risk faiz değil ROLLOVER. Faizi ödeyebilmek yetmez,
+     KV borcu her 3-6 ayda YENİDEN borçlanabilmek gerekir.
+   VERİ: hepsi KAP'tan (§340 ham tablolar). Ödenen faiz NAKİT AKIŞ tablosundan
+   DOĞRUDAN okunur — tahmin edilmez.
+   VETOLAR: ödeme aczi zincirdir, ortalama değil — güçlü bir kalem ölümcül
+   olanı maskeleyemesin diye tavan konur. */
+const FEK_NOT = [
+  { esik: 3.5, not: 5, ad: 'Kale',        renk: '#0FA26B' },
+  { esik: 2.5, not: 4, ad: 'Sağlam',      renk: '#3FB98A' },
+  { esik: 1.75, not: 3, ad: 'Dar emniyet', renk: '#9AA0A6' },
+  { esik: 1.0, not: 2, ad: 'Sınırda',     renk: '#E8933B' },
+  { esik: -1e9, not: 1, ad: 'Kırılgan',    renk: '#D64545' }
+];
+let FEK_SON = null;
+async function fekHesapla(){
+  const kod = String(($('fekKod')||{}).value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+  const D=$('fekDurum'), P=$('fekPano');
+  if(!kod){ if(D)D.textContent='hisse kodu gerekli'; return; }
+  if(D) D.textContent='KAP okunuyor…';
+  if(P) P.innerHTML='';
+  try{
+    const t = await mulKapTTM(kod);           /* §350: son 4 çeyrek, endeksli TTM */
+    if(!t) throw new Error('finansal tablo alınamadı (banka/GYO şablonu olabilir)');
+    FEK_SON = { kod, t };
+    fekCiz();
+    if(D) D.textContent='✓ '+kod+' · TTM '+(t.donem||'');
+  }catch(e){
+    if(D) D.textContent='✗ '+String(e.message||e).slice(0,60);
+  }
+}
+function fekCiz(){
+  const P=$('fekPano'); if(!P||!FEK_SON) return;
+  const {kod,t}=FEK_SON;
+  const lam = parseFloat(($('fekLambda')||{}).value)||0.10;
+  const mn = 1e6;
+  const S=(...a)=>{let x=0,v=false;a.forEach(z=>{if(Number.isFinite(z)){x+=z;v=true;}});return v?x:null;};
+  /* KAPASİTE */
+  const coreFavok = Number.isFinite(t.ebitdaCekirdek) ? t.ebitdaCekirdek : t.ebitda;
+  const asgari = Number.isFinite(t.ciro) ? t.ciro*0.02 : 0;
+  const serbestLik = Number.isFinite(t.likit) ? Math.max(0, t.likit - asgari) : null;
+  const bakimCapex = Number.isFinite(t.amort) ? Math.abs(t.amort) : (Number.isFinite(t.capex)?Math.abs(t.capex)*0.5:null);
+  const kapasite = S(coreFavok, serbestLik, Number.isFinite(bakimCapex)?-bakimCapex:null);
+  /* YÜK */
+  const netFaiz = Number.isFinite(t.odFaiz) ? Math.abs(t.odFaiz) : null;
+  const kvBorc = Number.isFinite(t.kvFinBorc) ? t.kvFinBorc : null;
+  const rollover = Number.isFinite(kvBorc) ? kvBorc*lam : null;
+  const yuk = S(netFaiz, rollover);
+  const fek = (Number.isFinite(kapasite)&&Number.isFinite(yuk)&&yuk>0) ? kapasite/yuk : null;
+  /* NOT + VETOLAR */
+  let sev = Number.isFinite(fek) ? (FEK_NOT.find(x=>fek>=x.esik)||FEK_NOT[FEK_NOT.length-1]) : null;
+  const vetolar=[];
+  if(Number.isFinite(coreFavok)&&Number.isFinite(netFaiz)&&netFaiz>0){
+    const kars = coreFavok/netFaiz;
+    if(kars<1.0){ vetolar.push({k:'V1', ad:'Çekirdek FAVÖK / faiz < 1,0x', deger:kars.toFixed(2)+'x', etki:'tavan 2'}); }
+  }
+  if(Number.isFinite(t.likit)&&Number.isFinite(t.kvY)&&t.kvY>0&&Number.isFinite(kvBorc)&&Number.isFinite(t.finBorc)&&t.finBorc>0){
+    const nakitOran=t.likit/t.kvY, kvPay=kvBorc/t.finBorc;
+    if(nakitOran<0.20 && kvPay>0.70) vetolar.push({k:'V2', ad:'Nakit oran <0,20 VE KV borç payı >%70', deger:nakitOran.toFixed(2)+' · %'+(kvPay*100).toFixed(0), etki:'tavan 2'});
+  }
+  if(vetolar.length && sev && sev.not>2) sev=FEK_NOT.find(x=>x.not===2);
+  const mlrG=(v)=> Number.isFinite(v) ? trN(v/mn, Math.abs(v/mn)>=1000?0:0) : '—';
+  const sat=(ad,v,eksi,ipucu)=> '<div class="kv" title="'+esc(ipucu||'')+'"><span class="k">'+ad+'</span><span class="num" style="font-family:var(--mono)'+(eksi?';color:var(--down)':'')+'">'+(eksi?'−':'+')+mlrG(Math.abs(v))+'</span></div>';
+  P.innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center">'+
+      '<div style="border:1px solid rgba(15,162,107,.3);background:rgba(15,162,107,.06);border-radius:10px;padding:12px 14px">'+
+        '<div class="lbl" style="font-size:11px;margin-bottom:6px">KAPASİTE</div>'+
+        sat('Çekirdek FAVÖK (TTM)', coreFavok, false, 'brüt kâr − pazarlama − genel yönetim − ArGe + amortisman; diğer faaliyet gelirleri HARİÇ')+
+        sat('Serbest likidite', serbestLik, false, 'nakit + KV finansal yatırım − asgari işletme nakdi (ciro %2)')+
+        sat('Bakım capex', bakimCapex, true, 'amortisman kadar; büyüme capex\'i isteğe bağlı sayılır')+
+        '<div style="border-top:1px solid var(--line);margin-top:7px;padding-top:6px;display:flex;justify-content:space-between"><b style="font-size:11px">TOPLAM</b><b style="font-family:var(--mono);font-size:14px">'+mlrG(kapasite)+' mn ₺</b></div>'+
+      '</div>'+
+      '<div style="font-size:26px;color:var(--muted);text-align:center">÷</div>'+
+      '<div style="border:1px solid rgba(214,69,69,.3);background:rgba(214,69,69,.06);border-radius:10px;padding:12px 14px">'+
+        '<div class="lbl" style="font-size:11px;margin-bottom:6px">YÜK</div>'+
+        sat('Ödenen faiz (12 ay)', netFaiz, false, 'nakit akış tablosundan DOĞRUDAN — tahmin değil')+
+        sat('KV borç × λ '+(lam*100).toFixed(0)+'%', rollover, false, 'yenilenmeme riski: bankaların çevirmediği varsayılan pay')+
+        '<div class="kv"><span class="k thin" style="font-size:10px">KV finansal borç</span><span class="num thin" style="font-family:var(--mono);font-size:10px">'+mlrG(kvBorc)+' mn</span></div>'+
+        '<div style="border-top:1px solid var(--line);margin-top:7px;padding-top:6px;display:flex;justify-content:space-between"><b style="font-size:11px">TOPLAM</b><b style="font-family:var(--mono);font-size:14px">'+mlrG(yuk)+' mn ₺</b></div>'+
+      '</div>'+
+    '</div>'+
+    (Number.isFinite(fek)?(
+    '<div style="text-align:center;margin-top:16px">'+
+      '<div style="display:inline-block;background:rgba(232,147,59,.12);border:1px solid rgba(232,147,59,.35);border-radius:10px;padding:10px 26px">'+
+        '<div style="font-family:var(--mono);font-size:24px;font-weight:700;color:'+(sev?sev.renk:'var(--mm2)')+'">FEK = '+trN(fek,2)+'x</div>'+
+        '<div class="sub" style="font-size:11px">Not '+(sev?sev.not:'—')+' / 5 · '+(sev?esc(sev.ad):'')+'</div>'+
+      '</div></div>'+
+    '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:14px">'+
+      FEK_NOT.slice().reverse().map(x=>'<div style="text-align:center;border-radius:7px;padding:8px 4px;background:'+(sev&&sev.not===x.not?x.renk:'var(--bg2)')+';color:'+(sev&&sev.not===x.not?'#fff':'var(--muted)')+';font-weight:'+(sev&&sev.not===x.not?'700':'400')+'">'+
+        '<div style="font-size:15px">'+x.not+'</div><div style="font-size:9.5px">'+esc(x.ad)+'</div></div>').join('')+
+    '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>')+
+    (vetolar.length?('<div style="margin-top:14px;border-left:3px solid var(--down);padding:8px 12px;background:rgba(214,69,69,.05)">'+
+      '<b style="font-size:11px;color:var(--down)">VETO TETİKLENDİ</b>'+
+      vetolar.map(v=>'<div class="sub" style="font-size:10.5px;margin-top:3px"><b>'+v.k+'</b> · '+esc(v.ad)+' → <span style="font-family:var(--mono)">'+esc(v.deger)+'</span> · <b>'+esc(v.etki)+'</b></div>').join('')+
+      '</div>'):'');
+  if($('fekDamga')) $('fekDamga').textContent='KAP · '+kod+' · '+(t.donem||'');
+  if($('fekNot')) $('fekNot').innerHTML=
+    '<b>1,0 kopma noktasıdır.</b> Pay tekrarlanabilir nakit, payda borç servisi. '+
+    '<b>λ</b> yenilenmeme katsayısı: asıl risk faiz değil <b>rollover</b> — faizi ödeyebilmek yetmez, KV borcu yeniden borçlanabilmek gerekir. λ\'yı değiştirip stres testi yapabilirsiniz. '+
+    '<b>Vetolar</b> ortalama almaz: ödeme aczi zincirdir, tek ölümcül halka yeter. '+
+    '<b style="color:#E8933B">Sınırlar:</b> mevsimselliği görmez (bilanço tarihinin fotoğrafıdır), varlık kalitesini ölçmez (satılabilir arsası olanla olmayan aynı notu alır), λ ve bakım capex birer YARGIDIR — düğmeyi çevirmek notu bir kademe oynatabilir. Bu bir kusur değil, sayının nereye duyarlı olduğunu açıkça göstermesi asıl faydasıdır.';
+}
 let VAPFON = null;
 async function vapInit(){
   const T=$('vapTablo'); if(!T) return;
