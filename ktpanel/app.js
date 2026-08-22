@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821z';   // SS378 mevsimsellik arindirma   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822a';   // SS379 bayat sonuc temizligi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10092,7 +10092,12 @@ async function fekHesapla(){
   const D=$('fekDurum'), P=$('fekPano');
   if(!kod){ if(D)D.textContent='hisse kodu gerekli'; return; }
   if(D) D.textContent='KAP okunuyor…';
+  /* §379: yeni sorgu başlarken ESKİ kart hemen silinir — bekleme süresince
+     önceki şirketin verisi ekranda kalmasın. */
+  FEK_SON=null;
   if(P) P.innerHTML='';
+  const _k2=$('fekKopma'); if(_k2) _k2.innerHTML='';
+  if($('fekDamga')) $('fekDamga').textContent='KAP · okunuyor…';
   try{
     const t = await mulKapTTM(kod, { gevsek:true, seri:true });   /* §369b gevşek · §370 marj serisi */
     if(!t || t.hata) throw new Error((t&&t.hata) || 'finansal tablo alınamadı');
@@ -10100,7 +10105,19 @@ async function fekHesapla(){
     fekCiz();
     if(D) D.textContent='✓ '+kod+' · TTM '+(t.donem||'');
   }catch(e){
-    if(D) D.textContent='✗ '+String(e.message||e).slice(0,60);
+    /* §379 BAŞARISIZLIKTA ESKİ SONUÇ SİLİNMELİ (NTGAZ'da yakalandı):
+       çağrı düştüğünde pano ÖNCEKİ ŞİRKETİN kartını göstermeye devam
+       ediyordu — rozet "ELITE" derken kutuda "NTGAZ" yazıyordu. Kullanıcı
+       yanlış şirketin verisine bakıyor sanır; bu, hiç sonuç göstermemekten
+       çok daha tehlikeli.
+       DERS: BAŞARISIZ SORGU EKRANI TEMİZLEMELİ — bayat sonuç yeni sorgunun
+       cevabı gibi görünür. */
+    FEK_SON = null;
+    if(P) P.innerHTML='';
+    const K2=$('fekKopma'); if(K2) K2.innerHTML='';
+    if($('fekNot')) $('fekNot').innerHTML='';
+    if($('fekDamga')) $('fekDamga').textContent='KAP';
+    if(D) D.innerHTML='<span style="color:var(--down)">✗ '+esc(kod)+': '+esc(String(e.message||e).slice(0,90))+'</span>';
   }
 }
 function fekCiz(){
