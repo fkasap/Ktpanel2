@@ -530,11 +530,20 @@ Türkçe yaz. Kısa cümle kur.`;
       const r = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
         headers:{ 'x-api-key':KEY, 'anthropic-version':'2023-06-01', 'content-type':'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1600,
+          /* §388b MODEL SEÇİMİ — kontör: Haiku varsayılan (veri okuma, çarpan
+             hesabı, kart açma için fazlasıyla yeterli). Karmaşık akıl yürütme
+             gerektiren sorularda (neden/yorum/karşılaştır/analiz) Sonnet.
+             Fark yaklaşık 10 kat maliyet; her soruya Sonnet göndermek israf. */
+          model: (/neden|niçin|yorum|analiz|karşılaştır|değerlendir|tez|senaryo|riski|açıkla/i.test(soru) || soru.length > 220)
+            ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001',
+          max_tokens: 1200,
           system: sistem,
           messages: msg,
-          tools: [{ type:'web_search_20250305', name:'web_search', max_uses: 4 }]
+          /* §388b web araması yalnız GEREKTİĞİNDE: panel verisi soruların
+             çoğunu karşılıyor ve her aramanın maliyeti var. Güncel/dış bilgi
+             sinyali yoksa araç hiç verilmez — model panelle sınırlı kalır. */
+          tools: (/güncel|son durum|haber|bugün|dün|açıklan|piyasa nasıl|kaç oldu|ne kadar oldu|dünya|küresel|fed|abd|avrupa|çin|rusya|petrol|altın|kur/i.test(soru))
+            ? [{ type:'web_search_20250305', name:'web_search', max_uses: 3 }] : undefined
         }),
         signal: AbortSignal.timeout(110000) });
       const d = await r.json();
