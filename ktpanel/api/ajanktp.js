@@ -502,7 +502,19 @@ Türkçe yaz. Kısa cümle kur.`;
       '4) Özetteki sayılar YUVARLANMIŞTIR; kesin rakam gerekiyorsa kullanıcıyı ilgili karta yönlendir.\n' +
       '5) Sen yatırım danışmanı DEĞİLSİN. "Ne alayım/satayım" sorusuna tavsiye verme; bunun yerine karar için bakılacak verileri göster ve riskleri söyle.\n' +
       '6) Türkçe, kısa ve yoğun yaz. Gereksiz giriş cümlesi kurma. Sayıları Türkçe biçimde yaz (1.234,5).\n' +
-      '7) Bir ölçünün sınırını biliyorsan söyle (örn. FEK faizi nakit akıştan okur, bazı şirketlerde bulunamaz).\n\n' +
+      '7) Bir ölçünün sınırını biliyorsan söyle (örn. FEK faizi nakit akıştan okur, bazı şirketlerde bulunamaz).\n' +
+      '8) KART AÇ: cevabın SONUNA [KART:sekme:TICKER] yazarsan panel o sekmeyi açar ve tickerı doldurur.\n' +
+      '   Sekmeler: t9=Değerleme+FEK/KOPMA-σ · t23=Çeyreklik Seri · t26=GYO NAV · t27=Sektörel Veriler ·\n' +
+      '   t6=Faktör Model · t3=Portföy · t21=Teknik · t15=Commodity · t10=Sukuk · t7=Haberler.\n' +
+      '   Ticker gerekmiyorsa boş bırak: [KART:t27:]. Kullanıcıyı "şu karta bak" diye yollamak yerine KARTI AÇ.\n\n' +
+      'KISALTMA SÖZLÜĞÜ (panelin kendi terimleri — karıştırma):\n' +
+      '· FEK = FİNANSAL EMNİYET KATSAYISI (Fiyat/Kazanç DEĞİL). Kapasite ÷ Yük; 1,0 kopma noktası. Not 1-5.\n' +
+      '  Kapasite = çekirdek FAVÖK + serbest likidite − bakım capex · Yük = ödenen faiz + KV borç × λ\n' +
+      '· KOPMA-σ = nakit servis kopma mesafesi; iki rejimli Merton türevi. Çıktısı P(zorunlu finansman olayı).\n' +
+      '· λ = yenilenmeme katsayısı (rollover riski), TCMB/BDDK serilerinden kalibre.\n' +
+      '· ÇEKİRDEK FAVÖK = brüt kâr − pazarlama − genel yönetim − ArGe + amortisman (diğer faaliyet gelirleri HARİÇ)\n' +
+      '· GENİŞ FAVÖK = raporun esas faaliyet kârı + amortisman (diğer gelirleri İÇERİR)\n' +
+      '· F/K ve EV/FAVÖK ise standart çarpanlardır — bunları FEK ile karıştırma.\n\n' +
       (baglam ? ('KULLANICI ŞU AN: ' + baglam + '\n\n') : '') +
       'PANEL VERİSİ (özet):\n' + (ozet || '(özet gelmedi)');
 
@@ -520,7 +532,7 @@ Türkçe yaz. Kısa cümle kur.`;
           messages: msg,
           tools: [{ type:'web_search_20250305', name:'web_search', max_uses: 4 }]
         }),
-        signal: AbortSignal.timeout(55000) });
+        signal: AbortSignal.timeout(110000) });
       const d = await r.json();
       if(d && d.error) return res.status(200).json({ ok:false, err:String(d.error.message||'API hatası').slice(0,140) });
       /* yanıt metin + arama bloklarından oluşur; metinleri birleştir */
