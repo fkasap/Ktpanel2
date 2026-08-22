@@ -1,7 +1,11 @@
-# Tazeleme — 2026-08-21
+# Tazeleme — 2026-08-22
 
-Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
+Katman: `hepsi` · Veri dizini: `ktpanel`
 
+
+### XK100 ağırlıkları — §307 YEDEK DEVREDE: BIST bülteni 2026-08-21
+- Yahoo 2026-08-20 gün döndürdü (hedef 2026-08-21) → resmî bülten kullanıldı
+- kapsam 100/100 · dosya thb202608211.csv · satır biçimi {".E":100} · TÜM fiyatlar tek kaynaktan (§114)
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
@@ -9,11 +13,19 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-08-21 (0 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
+### XKTUM ağırlıkları — §307 YEDEK DEVREDE: BIST bülteni 2026-08-21
+- Yahoo 2026-08-20 gün döndürdü (hedef 2026-08-21) → resmî bülten kullanıldı
+- kapsam 150/150 · dosya thb202608211.csv · satır biçimi {".E":150} · TÜM fiyatlar tek kaynaktan (§114)
+
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 150/150 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-21
 - ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-08-21 (0 is gunu — guncel)
 - ✓ **toplam**: 96.50 (hedef 96.5 ±3)
+
+### XKTMT ağırlıkları — §307 YEDEK DEVREDE: BIST bülteni 2026-08-21
+- Yahoo 2026-08-20 gün döndürdü (hedef 2026-08-21) → resmî bülten kullanıldı
+- kapsam 39/39 · dosya thb202608211.csv · satır biçimi {".E":39} · TÜM fiyatlar tek kaynaktan (§114)
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 39/39 (%100)
@@ -21,11 +33,19 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-08-21 (0 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
+### Multiple fiyatları — §307 YEDEK DEVREDE: BIST bülteni 2026-08-21
+- Yahoo 2026-08-20 gün döndürdü (hedef 2026-08-21) → resmî bülten kullanıldı
+- kapsam 141/141 · dosya thb202608211.csv · satır biçimi {".E":141} · TÜM fiyatlar tek kaynaktan (§114)
+
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-08-21
 - ✓ **fiyat yasi (Multiple fiyatları)**: 2026-08-21 (0 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Model sicili — §307 YEDEK DEVREDE: BIST bülteni 2026-08-21
+- Yahoo 2026-08-20 gün döndürdü (hedef 2026-08-21) → resmî bülten kullanıldı
+- kapsam 40/40 · dosya thb202608211.csv · satır biçimi {".E":40} · TÜM fiyatlar tek kaynaktan (§114)
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
@@ -33,50 +53,42 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - ✓ **fiyat yasi (Model sicili)**: 2026-08-21 (0 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
 
-### TR 5Y CDS — ✓ 220.28 bp · 2026-08-20 · +1.61
-- ✓ 3281 günlük seri · kaynak etiketi 2026-08-20 (hafta sonu doldurmalı)
+### TR 5Y CDS — ✓ 220.34 bp · 2026-08-22 · +0.06
+- ✓ 3282 günlük seri · kaynak etiketi 2026-08-22 (hafta sonu doldurmalı)
 
-### TEFAS genel bilgi (§253i) — ✓ 2030 fon · AUM + yatırımcı sayısı köprüden (ham 2037 kayıt, sayfalamalı)
+### Risk metrikleri — ✓ GEÇTİ
+- ✓ **kapsam**: 141/141 (%100)
+- ✓ **aykırı değer**: temiz (sınır ±%3)
+- ✓ **aykırı değer**: temiz (sınır ±%150)
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (187 gün)
+- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
+- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
+
+### TEFAS genel bilgi (§253i) — ⏭ boş döndü
+- Playwright yedeği devrede.
 
 ### TEFAS köprü (bilgi)
 - getiri: 1058 fon ✓ · liste: 1048 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### Fon akışı — ℹ 974 fonun kurucusu fon adından türetildi (§279; mod=liste 1048 kayıt kapsıyordu, evren 2030)
-
-### Akış pencereleri (§359) — ✓ 1H hazır · arşiv 8 gün
-- 1H giriş: TERA 24.9 mlr · ZİRAAT 17.2 mlr · AK 12.0 mlr
-
-### PYŞ bazında akış (§358) — ✓ 69 kurum · 2026-08-21 · 9 fon eşleşmedi
-- giriş: TERA 8.14 mlr · İŞ 8.09 mlr · ZİRAAT 1.98 mlr
-- çıkış: DENİZ -4.91 mlr · TEB -5.45 mlr · YAPI KREDİ -8.40 mlr
-
-### Fon akışı (§263) — ✓ 2027 fon · 2026-08-20 → 2026-08-21
-- giriş 106.44 mlr ₺ · çıkış -110.98 mlr ₺ · net -4.54 mlr ₺
-
 ### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (2030 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009493316569> [Go Back]`
+- yol: yok
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587010141184203> [Go Back]`
 
-### Katılım fonları — ✓ GEÇTİ
-- ✓ **kapsam**: 46/46 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%2)
-- ✓ **dönem tutarlılığı**: temiz
-
-### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)
+### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
-- ✓ **seri guncelligi (track.series)**: 2026-08-20 (referans 2026-08-21, fark 1g)
-- ✓ **seri guncelligi (fon-akis)**: 2026-08-21 (referans 2026-08-21, fark 0g)
+- ✓ **seri guncelligi (track.series)**: 2026-08-21 (referans 2026-08-21, fark 0g)
+- ✓ **seri guncelligi (fon-akis)**: 2026-08-21 (referans 2026-08-22, fark 1g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ⚠ **borc defteri (§299)**: 221 kart bekliyor · en eski AGYO (3g)
-  - defter 221 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
+- ⚠ **borc defteri (§299)**: 222 kart bekliyor · en eski AGYO (4g)
+  - defter 222 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 221 şirket kart bekliyor
-- pencere: 4 FR · yeni deftere giren: 0
+### Bilanço tetiği (§299 kümülatif) — ✓ 222 şirket kart bekliyor
+- pencere: 1 FR · yeni deftere giren: 1 (CITAS)
 - kart yazılıp düşen: 0
-- en eski borç: AGYO · 3 gündür bekliyor
+- en eski borç: AGYO · 4 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALARK, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATATR, ATEKS, ATSYH, AVHOL, AVOD, AVTUR, BAGFS …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:245 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
@@ -110,9 +122,9 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - 2026-08-19 06:00Z · GBP · CPI y/y
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 39/245
-- bu turda: 3 tam · 0 eksik kalemli · 3 alınamadı
-- not: DENGE:liste boş · IDGYO:2026: fetch failed · IHEVA:2026: fetch failed
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 41/245
+- bu turda: 1 tam · 1 eksik kalemli · 4 alınamadı
+- not: CITAS:liste boş · DENGE:liste boş · IDGYO:1 ana kalem boş · IHLAS:2026: fetch failed · IHLGM:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 - §364b fiyat: 45/45 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
@@ -131,20 +143,20 @@ Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 - son ay değişimi: -5.5 mlr ₺
 - ölçüler: Dönem Başı Fon Adedi · Dönem Sonu Fon Adedi · Fon Adedi Değişim · Dönem Başı Fon Tutarı (TL) · Dönem Sonu Fon Tutarı (TL) · Dönem Başı Fon Sayısı · Dönem Sonu Fon Sayısı
 
-### Bülten keşfi (§250k) — ✓ thb202608201.zip indi · 298KB
-- içerik: thb202608201.csv
-- endeks izi: `thb202608201.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
+### Bülten keşfi (§250k) — ✓ thb202608211.zip indi · 298KB
+- içerik: thb202608211.csv
+- endeks izi: `thb202608211.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
 
-### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202608201.csv
-- satır: 12464 · kolon: 57
+### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202608211.csv
+- satır: 12465 · kolon: 57
 - fiyat kolon adayları: ONCEKI KAPANIS FIYATI · ACILIS FIYATI · ACILIS SEANSI FIYATI · EN DUSUK FIYAT · EN YUKSEK FIYAT · KAPANIS FIYATI · KAPANIS SEANSI FIYATI · REFERANS FIYAT …
-- THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=301.25
-- örnek satır: `2026-08-20;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
+- THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=301
+- örnek satır: `2026-08-21;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (133 fiyat) · Model sicili (39 fiyat) · TR 5Y CDS (220.28 bp) · fon akışı (2027) · katılım fonları (46+akış) · bilanço tetiği (221 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (22 olay) · faktör evreni (39/245) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (22 olay) · faktör evreni (41/245) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 89 sn
+- ⏱ Faktör evreni (§361) — 78 sn
 - toplam: 148 sn
