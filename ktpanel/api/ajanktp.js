@@ -473,6 +473,68 @@ Türkçe yaz. Kısa cümle kur.`;
         (onarildi ? ' ⚠ Model yanıtı KESİLDİ, JSON onarıldı — son alanlar eksik olabilir.' : '') });
   }
 
+  /* ── §385 SOHBET MODU — panel verisine soru-cevap + web araması (22 Ağu) ──
+     TASARIM: model panelin TÜM verisini görmez (onlarca JSON, pahalı ve yavaş).
+     Bunun yerine tarayıcı KOMPAKT ÖZET gönderir — her kaynaktan birkaç yüz
+     karakter. Model neyin nerede olduğunu görür; detay gerekirse ister.
+     WEB ARAMASI açık: panelde OLMAYAN bir şey sorulduğunda uydurmak yerine
+     bakar. Ama önce panele bakması söylenir — panel verisi önceliklidir,
+     çünkü o KAP/TCMB/TSPB gibi birincil kaynaklardan gelir.
+     SINIR: bu bir VERİ ERİŞİM aracıdır, yatırım danışmanı değil. "Ne alayım"
+     sorusuna cevap vermez; "şu verilere bak" der. */
+  if(mod === 'sohbet'){
+    const KEY = process.env.ANTHROPIC_API_KEY;
+    if(!KEY) return res.status(200).json({ ok:false, err:'ANTHROPIC_API_KEY yok' });
+    let g = {};
+    try{ g = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {}); }catch(e){}
+    const soru = String(g.soru||'').slice(0, 2000);
+    if(!soru) return res.status(200).json({ ok:false, err:'soru boş' });
+    const ozet = String(g.ozet||'').slice(0, 24000);
+    const baglam = String(g.baglam||'').slice(0, 500);
+    const gecmis = Array.isArray(g.gecmis) ? g.gecmis.slice(-8) : [];
+
+    const sistem =
+      'Sen Ebu\'sun — KTPanel\'in içindeki analiz yardımcısı. Kullanıcı Furkan, çok varlıklı bir fon yöneticisi gibi düşünür ve dayanak ister.\n\n' +
+      'KURALLAR:\n' +
+      '1) ÖNCE PANEL VERİSİNE BAK. Aşağıdaki özet panelin canlı verisidir (KAP, TCMB, TSPB, MKK, TEFAS gibi BİRİNCİL kaynaklardan). Cevap oradaysa oradan ver ve hangi karttan geldiğini söyle.\n' +
+      '2) Panelde YOKSA ve soru güncel bir bilgi gerektiriyorsa web araması yap. Aradığını söyle.\n' +
+      '3) ASLA UYDURMA. Veri yoksa "panelde bu yok" de. Sayı uydurmak en ağır hatadır.\n' +
+      '4) Özetteki sayılar YUVARLANMIŞTIR; kesin rakam gerekiyorsa kullanıcıyı ilgili karta yönlendir.\n' +
+      '5) Sen yatırım danışmanı DEĞİLSİN. "Ne alayım/satayım" sorusuna tavsiye verme; bunun yerine karar için bakılacak verileri göster ve riskleri söyle.\n' +
+      '6) Türkçe, kısa ve yoğun yaz. Gereksiz giriş cümlesi kurma. Sayıları Türkçe biçimde yaz (1.234,5).\n' +
+      '7) Bir ölçünün sınırını biliyorsan söyle (örn. FEK faizi nakit akıştan okur, bazı şirketlerde bulunamaz).\n\n' +
+      (baglam ? ('KULLANICI ŞU AN: ' + baglam + '\n\n') : '') +
+      'PANEL VERİSİ (özet):\n' + (ozet || '(özet gelmedi)');
+
+    const msg = [];
+    gecmis.forEach(x=>{ if(x && x.rol && x.metin) msg.push({ role: x.rol==='ben'?'user':'assistant', content: String(x.metin).slice(0,3000) }); });
+    msg.push({ role:'user', content: soru });
+
+    try{
+      const r = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
+        headers:{ 'x-api-key':KEY, 'anthropic-version':'2023-06-01', 'content-type':'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1600,
+          system: sistem,
+          messages: msg,
+          tools: [{ type:'web_search_20250305', name:'web_search', max_uses: 4 }]
+        }),
+        signal: AbortSignal.timeout(55000) });
+      const d = await r.json();
+      if(d && d.error) return res.status(200).json({ ok:false, err:String(d.error.message||'API hatası').slice(0,140) });
+      /* yanıt metin + arama bloklarından oluşur; metinleri birleştir */
+      const bloklar = (d && d.content) || [];
+      const metin = bloklar.filter(x=>x && x.type==='text').map(x=>x.text).join('\n').trim();
+      const aramalar = bloklar.filter(x=>x && (x.type==='server_tool_use'||x.type==='web_search_tool_result'))
+        .map(x=>(x.input && x.input.query) || null).filter(Boolean);
+      return res.status(200).json({ ok:true, metin: metin || '(boş yanıt)',
+        aramalar, kesildi: (d && d.stop_reason)==='max_tokens' });
+    }catch(e){
+      return res.status(200).json({ ok:false, err:String(e && e.message || e).slice(0,140) });
+    }
+  }
+
   if(mod === 'test'){
     const urlVar = !!process.env.UPSTASH_REDIS_REST_URL, tokVar = !!process.env.UPSTASH_REDIS_REST_TOKEN;
     const setR = await kvKomut(['SET','ktpanel_ping','pong-'+Date.now()]);
