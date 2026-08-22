@@ -72,7 +72,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009505816921> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009585837916> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -124,9 +124,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §383 arşive yazıldı: +10 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 49/245
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 51/245
 - bu turda: 2 tam · 0 eksik kalemli · 4 alınamadı
-- not: CITAS:liste boş · DENGE:liste boş · KMPUR:2026: fetch failed · KNFRT:2026: fetch failed
+- not: CITAS:liste boş · DENGE:liste boş · KRONT:2026: fetch failed · KRVGD:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
@@ -147,8 +147,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - en büyük türler (2026-07): SERBEST 6222 mlr · PARA PİYASASI 1839 mlr · GİRİŞİM SERMAYESİ YATIRIM FONU 475 mlr
 
 ### VAP fon akışı (§366) — ✓ 8 ay · son 2026-07
-- toplam fon tutarı: 181.1 mlr ₺
-- son ay değişimi: -5.5 mlr ₺
+- toplam fon tutarı: 10052.1 mlr ₺
+- son ay net değişimi: 469.0 mlr ₺ (dönem sonu − dönem başı, tüm türler)
 - ölçüler: Dönem Başı Fon Adedi · Dönem Sonu Fon Adedi · Fon Adedi Değişim · Dönem Başı Fon Tutarı (TL) · Dönem Sonu Fon Tutarı (TL) · Dönem Başı Fon Sayısı · Dönem Sonu Fon Sayısı
 
 ### Bülten keşfi (§250k) — ✓ thb202608211.zip indi · 298KB
@@ -163,9 +163,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (22 olay) · faktör evreni (49/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (22 olay) · faktör evreni (51/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 73 sn
+- ⏱ Faktör evreni (§361) — 78 sn
 - ⏱ KAP arşivi (§381) — 72 sn
-- toplam: 206 sn
+- toplam: 225 sn
