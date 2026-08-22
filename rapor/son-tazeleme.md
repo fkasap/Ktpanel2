@@ -72,7 +72,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587010141184203> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009113461786> [Go Back]`
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -86,7 +86,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
   - defter 222 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 222 şirket kart bekliyor
-- pencere: 1 FR · yeni deftere giren: 1 (CITAS)
+- pencere: 1 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 4 gündür bekliyor
 - ADESE, AGYO, AKHAN, AKYHO, ALARK, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATATR, ATEKS, ATSYH, AVHOL, AVOD, AVTUR, BAGFS …
@@ -122,10 +122,16 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-19 06:00Z · GBP · CPI y/y
 - 2026-08-19 18:00Z · USD · FOMC Meeting Minutes
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 41/245
-- bu turda: 1 tam · 1 eksik kalemli · 4 alınamadı
-- not: CITAS:liste boş · DENGE:liste boş · IDGYO:1 ana kalem boş · IHLAS:2026: fetch failed · IHLGM:2026: fetch failed
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 43/245
+- bu turda: 2 tam · 0 eksik kalemli · 4 alınamadı
+- not: CITAS:liste boş · DENGE:liste boş · IHYAY:2026: fetch failed · IMASM:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
+
+### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
+- AKHAN:dönem yok · ALFAS:dönem yok · ALKIM:dönem yok
+- öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
+- 3 düştü
+- ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
 - §364b fiyat: 45/45 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
 
@@ -155,8 +161,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (22 olay) · faktör evreni (41/245) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (22 olay) · faktör evreni (43/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 78 sn
-- toplam: 148 sn
+- ⏱ Faktör evreni (§361) — 75 sn
+- toplam: 176 sn
