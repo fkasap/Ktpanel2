@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821y';   // SS377 kosullu teshis + sinir + beklenen kayip   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821z';   // SS378 mevsimsellik arindirma   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10023,13 +10023,45 @@ function kopmaSigma(marjSeri, kapasite, coreFavok, rho){
      dayanıklıdır ve ELLE TEMİZLİK GEREKTİRMEZ; hangi çeyreğin aykırı olduğu
      da işaretlenir. Klasik sapma yine hesaplanır, ikisi ekranda karşılaştırılır.
      DERS: 8 GÖZLEMDE TEK AYKIRI DEĞER σ'YI İKİYE KATLAR — dayanıklı ölçü şart. */
-  const sirali=m.slice().sort((a,b)=>a-b);
+  /* §378 MEVSİMSELLİK TUZAĞI (BASGZ'de yakalandı: σ %76,4 — doğalgaz
+     dağıtımında kış çeyreği FAVÖK'ü patlatır, yaz çöker). Model bu DÜZENLİ
+     salınımı BELİRSİZLİK sanıyordu. Dipnot "mevsimselliği görmez" diyordu ama
+     aslında görüyor ve yanlış yorumluyordu — daha kötüsü.
+     TESPİT: aynı çeyrek numaralı gözlemler birbirine yakın ama komşu çeyrekler
+     uzaksa desen mevsimseldir. Ölçü: çeyrek-içi sapma ÷ toplam sapma.
+     0,6'nın altındaysa mevsimsel kabul edilir.
+     DÜZELTME: σ, çeyreklik marj yerine TTM (4 çeyreklik kayan) marjdan
+     hesaplanır — TTM mevsimsellikten ARINIKTIR. Nokta sayısı azalır (8 → 5),
+     bu da dürüstçe yazılır.
+     DERS: DÜZENLİ SALINIM RİSK DEĞİLDİR — belirsizlik ölçerken deseni ayır. */
+  let mevsimsel=false, mevsimOran=null, mKullan=m, mNot='çeyreklik';
+  if((marjSeri||[]).length>=6){
+    const ceyrekNo=(marjSeri||[]).map(x=>{ const p=String(x.donem||'').split('/'); return +p[1]||0; });
+    const grup={};
+    (marjSeri||[]).forEach((x,i)=>{ const c=ceyrekNo[i]; if(!c||!Number.isFinite(x.marj))return; (grup[c]=grup[c]||[]).push(x.marj); });
+    const sd=(d)=>{ if(d.length<2) return null; const o=d.reduce((a,b)=>a+b,0)/d.length;
+      return Math.sqrt(d.reduce((a,b)=>a+(b-o)*(b-o),0)/(d.length-1)); };
+    const ici=Object.values(grup).map(sd).filter(Number.isFinite);
+    const tum=sd(m);
+    if(ici.length>=2 && Number.isFinite(tum) && tum>0){
+      const iciOrt=ici.reduce((a,b)=>a+b,0)/ici.length;
+      mevsimOran=iciOrt/tum;
+      if(mevsimOran<0.6){
+        mevsimsel=true;
+        /* TTM marj: 4 çeyreklik kayan ortalama — mevsimsellikten arınık */
+        const ttm=[];
+        for(let i=0;i+3<m.length;i++) ttm.push((m[i]+m[i+1]+m[i+2]+m[i+3])/4);
+        if(ttm.length>=3){ mKullan=ttm; mNot='TTM kayan (mevsimsellik arındırıldı)'; }
+      }
+    }
+  }
+  const sirali=mKullan.slice().sort((a,b)=>a-b);
   const med=(d)=>{ const k=d.slice().sort((x,y)=>x-y), n=k.length;
     return n%2 ? k[(n-1)/2] : (k[n/2-1]+k[n/2])/2; };
-  const medyan=med(m);
-  const mad=med(m.map(x=>Math.abs(x-medyan)))*1.4826;
-  const ortK=m.reduce((a,b)=>a+b,0)/m.length;
-  const sdK=Math.sqrt(m.reduce((a,b)=>a+(b-ortK)*(b-ortK),0)/(m.length-1));
+  const medyan=med(mKullan);
+  const mad=med(mKullan.map(x=>Math.abs(x-medyan)))*1.4826;
+  const ortK=mKullan.reduce((a,b)=>a+b,0)/mKullan.length;
+  const sdK=Math.sqrt(mKullan.reduce((a,b)=>a+(b-ortK)*(b-ortK),0)/(mKullan.length-1));
   /* aykırı: medyandan 3 MAD uzak */
   const aykiri=(marjSeri||[]).filter(x=>Number.isFinite(x.marj) && mad>0 && Math.abs(x.marj-medyan)>3*mad)
     .map(x=>x.donem+' (%'+x.marj.toFixed(1)+')');
@@ -10044,7 +10076,8 @@ function kopmaSigma(marjSeri, kapasite, coreFavok, rho){
   const pay=(Number.isFinite(coreFavok)&&Number.isFinite(kapasite)&&kapasite>0)?Math.min(1,Math.abs(coreFavok/kapasite)):1;
   const cvKlasik=Math.abs(sdK/ortK)*yilCarpan*pay;
   return { sigmaK: cvYil*pay, cvCeyrek, cvYil, ort, sd, n:m.length, rho:r,
-    medyan, mad, ortKlasik:ortK, sdKlasik:sdK, sigmaKlasik:cvKlasik, aykiri };
+    medyan, mad, ortKlasik:ortK, sdKlasik:sdK, sigmaKlasik:cvKlasik, aykiri,
+    mevsimsel, mevsimOran, mNot, nKullanilan:mKullan.length };
 }
 const FEK_NOT = [
   { esik: 3.5, not: 5, ad: 'Kale',        renk: '#0FA26B' },
@@ -10338,6 +10371,7 @@ function fekCiz(){
                    : 'Baskın risk artık <b>rollover DEĞİL</b>: baz rejimin kendisi %'+trN(_phi(-ddB)*100,1)+' PD taşıyor. Sorun vade yapısından çok <b>FAALİYET OYNAKLIĞI</b> — yüksek σ\'da rejim ayrımı önemini yitirir, çünkü belirsizlik zaten dağılımın içindedir.')))+
           '</div>'+
           ((sg.aykiri&&sg.aykiri.length)?('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">'+
+            (sg.mevsimsel?('<b style="color:var(--mm2)">MEVSİMSELLİK ARINDIRILDI:</b> çeyrek-içi sapma ÷ toplam sapma = '+trN(sg.mevsimOran,2)+' (&lt;0,60 eşiği) — düzenli mevsimsel desen tespit edildi, σ <b>TTM kayan marjdan</b> hesaplandı. Çeyreklik seriyle σ çok daha yüksek çıkardı ama o BELİRSİZLİK DEĞİL, mevsimsel salınımdır. Nokta sayısı '+sg.n+' → '+sg.nKullanilan+'. '):'')+
             'σ manşeti <b>'+(Math.abs(sgManset-sg.sigmaK)<1e-9?'medyan+MAD (dayanıklı)':'tam örnek (klasik sapma)')+'</b> — MUHAFAZAKÂR uçtan. Bant %'+trN(sg.sigmaK*100,1)+'–%'+trN((sg.sigmaKlasik||sg.sigmaK)*100,1)+'. Aykırı çeyrek: <b>'+esc(sg.aykiri.join(' · '))+
             '</b>. Enflasyon muhasebesinde çeyreklik değerler kümülatif farkından üretildiği için bu bir <b>ölçüm bozulması</b> da olabilir, gerçek kuyruk da — ayrımı yapmadan σ seçimi bir yargıdır. Dayanıklı tahminci dağılımın MERKEZİ için doğrudur; biz UCUNU ölçüyoruz, o yüzden manşet yüksek uçtan.</div>'):
             ('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">σ manşeti <b>'+(Math.abs(sgManset-sg.sigmaK)<1e-9?'medyan+MAD':'tam örnek')+'</b> (muhafazakâr uç) · bant %'+trN(sg.sigmaK*100,1)+'–%'+trN((sg.sigmaKlasik||sg.sigmaK)*100,1)+' · aykırı çeyrek yok.</div>'))+
@@ -10382,7 +10416,7 @@ function fekCiz(){
     '<b>Vetolar</b> ortalama almaz: ödeme aczi zincirdir, tek ölümcül halka yeter. '+
     '<b>Türkiye notu:</b> burada ölüm çoğu zaman iflasla değil <b>sulandırmayla</b> gelir — evergreening, KGF garantisi ve aile kefaleti nedeniyle firma nadiren ölür, özkaynak sahibi sık sık ölür (bedelli, varlık satışı, ortak enjeksiyonu). Bu yüzden KOPMA-σ\'nın ürettiği olasılık <b>P(iflas) değil P(zorunlu finansman olayı)</b> olarak okunur. '+
     '<b>λ kalibrasyonu:</b> sistem tabanı BDDK/TCMB serilerinden (ticari TGA, yapılandırma oranı); <b>firma çarpanı ise YARGIDIR</b> ve λ\'yı beş kata kadar oynatır. TGA "bankanın tahsil edemediği kredi", λ "firmanın borcunun yenilenmemesi" — ilişkili ama aynı şey değil. '+
-    '<b style="color:#E8933B">Sınırlar:</b> mevsimselliği görmez (bilanço tarihinin fotoğrafıdır), varlık kalitesini ölçmez (satılabilir arsası olanla olmayan aynı notu alır), λ ve bakım capex birer YARGIDIR — düğmeyi çevirmek notu bir kademe oynatabilir. Bu bir kusur değil, sayının nereye duyarlı olduğunu açıkça göstermesi asıl faydasıdır.';
+    '<b style="color:#E8933B">Sınırlar:</b> mevsimselliği ARINDIRIR (düzenli desen tespit edilirse σ TTM kayan marjdan hesaplanır) ama bilanço kalemleri yine dönem sonu fotoğrafıdır, varlık kalitesini ölçmez (satılabilir arsası olanla olmayan aynı notu alır), λ ve bakım capex birer YARGIDIR — düğmeyi çevirmek notu bir kademe oynatabilir. Bu bir kusur değil, sayının nereye duyarlı olduğunu açıkça göstermesi asıl faydasıdır.';
 }
 let VAPFON = null;
 async function vapInit(){
