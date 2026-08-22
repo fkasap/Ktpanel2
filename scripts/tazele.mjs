@@ -2287,7 +2287,25 @@ async function vapFonAkis() {
       raporlar.push('### VAP fon akışı (§366) — ✗ tür kırılımında hiç hücre eşlenmedi, YAZILMADI');
       denetimDustu = true; return;
     }
-    const son = (seri.length ? seri[seri.length - 1] : (turSeri[0] || {}));
+    /* §366e RAPOR SATIRI TÜR KIRILIMINDA BOZULMUŞTU (22 Ağu, canlı):
+       tür grid'ine geçince `son` = turSeri[0] oluyordu, yani TEK BİR TÜRÜN
+       kaydı. Rapor "toplam fon tutarı 181,1 mlr" yazdı — gerçek 10.052 mlr.
+       Tür kırılımında son ayın TÜM TÜRLERİ toplanmalı.
+       DERS: BİR VERİ YAPISI DEĞİŞİNCE ONU ÖZETLEYEN SATIRI DA GÖZDEN GEÇİR. */
+    let son = (seri.length ? seri[seri.length - 1] : {});
+    if (turluMu && turSeri.length) {
+      const sonAy = ayAd[0];
+      const oAy = turSeri.filter(x => x.ay === sonAy);
+      son = { ay: sonAy };
+      olculer.forEach(o => {
+        const t = oAy.reduce((a, x) => a + (Number.isFinite(x[o]) ? x[o] : 0), 0);
+        if (t) son[o] = t;
+      });
+      /* net değişim: dönem sonu − dönem başı (aynı satırdan, aynı para) */
+      const kS = olculer.find(o => /Dönem Sonu Fon Tutar/i.test(o));
+      const kB = olculer.find(o => /Dönem Başı Fon Tutar/i.test(o));
+      if (kS && kB && Number.isFinite(son[kS]) && Number.isFinite(son[kB])) son._net = son[kS] - son[kB];
+    }
     const D = {
       guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
       kaynak: 'MKK VAP · mobil.vap.org.tr (MicroStrategy Library, anonim erişim)',
@@ -2313,7 +2331,8 @@ async function vapFonAkis() {
     }
     raporlar.push('### VAP fon akışı (§366) — ✓ ' + ayAd.length + ' ay · son ' + (son.ay || '?') +
       (tutar ? ('\n- toplam fon tutarı: ' + mlr(son[tutar]) + ' mlr ₺') : '') +
-      (degisim ? ('\n- son ay değişimi: ' + mlr(son[degisim]) + ' mlr ₺') : '') +
+      (Number.isFinite(son._net) ? ('\n- son ay net değişimi: ' + mlr(son._net) + ' mlr ₺ (dönem sonu − dönem başı, tüm türler)')
+        : (degisim ? ('\n- son ay değişimi: ' + mlr(son[degisim]) + ' mlr ₺') : '')) +
       '\n- ölçüler: ' + olculer.join(' · '));
   } catch (e) {
     raporlar.push('### VAP fon akışı (§366) — ✗ ' + String(e && e.message || e).slice(0, 90));
