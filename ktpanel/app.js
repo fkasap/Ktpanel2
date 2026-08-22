@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260821x';   // SS375 elestiri paketi + SS376 nakde donusum   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260821y';   // SS377 kosullu teshis + sinir + beklenen kayip   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10286,7 +10286,32 @@ function fekCiz(){
           '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px">'+
             '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+(doygun?'≥4,0σ':trN(ks,2)+'σ')+'</span></div>'+
             '<div><span class="sub">12 ayda zorunlu finansman olayı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">'+(doygun?'&lt;%0,1':('%'+trN(pd*100,1)))+'</span></div>'+
-            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+(kopmaVetolu?' <span class="thin" style="font-size:10px">veto tavanı</span>':'')+'</span></div>'+
+            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+(kopmaVetolu?' <span class="thin" style="font-size:10px">veto tavanı</span>':'')+'</span>'+
+              /* §377b SINIR MESAFESİ: bir sınıfın ORTASINDA olmakla KENARINDA
+                 olmak farklıdır. Alt sınıra kaç σ puanı kaldığı yazılır —
+                 σ'nın ne kadar artmasıyla notun düşeceği doğrudan görünür. */
+              (function(){
+                const alt = KOPMA_NOT.find(x=>x.not===sev2.not-1);
+                if(!alt || !Number.isFinite(sgManset)) return '';
+                let bul=null;
+                for(let ek=0.5; ek<=40; ek+=0.5){
+                  const sv=(sgManset*100+ek)/100;
+                  const d1=DD(yukOf(lamBaz),sv), d2=DD(yukOf(lamKriz),sv);
+                  if(!Number.isFinite(d1)||!Number.isFinite(d2)) break;
+                  const pdx=p*_phi(-d2)+(1-p)*_phi(-d1);
+                  const kx=-_phiTers(pdx);
+                  if(kx < sev2.esik){ bul=ek; break; }
+                }
+                return bul!==null
+                  ? ('<br><span class="thin" style="font-size:10px">sınır '+alt.not+'\'e <b>'+trN(bul,1)+' puan σ</b> mesafede'+(bul<=3?' — KENARDA':'')+'</span>')
+                  : '<br><span class="thin" style="font-size:10px">alt sınıra σ ile ulaşılmıyor</span>';
+              })()+'</div>'+
+            /* §377c BEKLENEN KAYIP: KOPMA-σ olasılığı verir, ŞİDDETİ vermez.
+               Zorunlu finansman olayı sıfır değer demek değil — iskontolu bir
+               bedelli mevcut ortağın değerinin kabaca üçte birini siler.
+               Beklenen kayıp = PD × sulandırma şiddeti. "Uzak dur" ile
+               "adil değerden şu kadar kes" arasındaki fark budur. */
+            '<div><span class="sub">Beklenen kayıp <span class="thin">(×%35 sulandırma)</span></span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+(pd*0.35>0.10?'var(--down)':'var(--muted)')+'">%'+trN(pd*35,1)+'</span></div>'+
             '<div><span class="sub">σ bandı (yıllık)</span><br><span style="font-family:var(--mono);font-size:13px" title="dayanıklı %'+trN(sg.sigmaK*100,1)+' · tam örnek %'+trN((sg.sigmaKlasik||sg.sigmaK)*100,1)+' — manşet MUHAFAZAKÂR uçtan">%'+trN(sgIyimser*100,1)+'–%'+trN(sgManset*100,1)+' <span class="thin">'+sg.n+' çeyrek · manşet %'+trN(sgManset*100,1)+'</span></span></div>'+
           '</div>'+
           '<table style="width:100%;border-collapse:collapse;font-size:10.5px">'+
@@ -10308,12 +10333,14 @@ function fekCiz(){
               ? '<b>Ölçüm aralığı dışı.</b> Yük kapasiteye göre çok küçük; 4σ üzerinde normal dağılım varsayımı model riskinden daha az güvenilir olur, bu yüzden sayı üretilmez. Bu şirkette risk bilançoda değil — oraya bakmak yanlış yere fener tutmaktır. <span class="thin">Metriğin bilgi taşıdığı aralık kabaca FEK 0,8-3,0.</span>'
               : ('Toplam riskin <b>%'+trN(krizPay,0)+' kadarı</b> yalnız %'+trN(p*100,0)+' olasılıklı kriz dalından geliyor. '+
                  'Tek rejimli naif bir DD %'+trN(_phi(-ddB)*100,1)+' gösterirdi — gerçek riskin '+trN(pd/Math.max(_phi(-ddB),1e-9),1)+' katı az. '+
-                 'Bu, kısa vadeli borç ağırlığının matematiksel imzasıdır.'))+
+                 (krizPay>=50
+                   ? 'Baskın risk <b>VADE YAPISI</b>: kısa vadeli borç ağırlığının matematiksel imzası. Rollover kanalı kapanırsa şirket hızla sıkışır.'
+                   : 'Baskın risk artık <b>rollover DEĞİL</b>: baz rejimin kendisi %'+trN(_phi(-ddB)*100,1)+' PD taşıyor. Sorun vade yapısından çok <b>FAALİYET OYNAKLIĞI</b> — yüksek σ\'da rejim ayrımı önemini yitirir, çünkü belirsizlik zaten dağılımın içindedir.')))+
           '</div>'+
           ((sg.aykiri&&sg.aykiri.length)?('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">'+
-            'σ <b>medyan+MAD</b> ile hesaplandı (aykırı değere dayanıklı). Aykırı çeyrek: <b>'+esc(sg.aykiri.join(' · '))+
-            '</b> — klasik standart sapmayla σ %'+trN(sg.sigmaKlasik*100,1)+' olurdu, tek çeyrek ölçüyü şişiriyor.</div>'):
-            ('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">σ medyan+MAD ile; aykırı çeyrek yok (klasik σ %'+trN(sg.sigmaKlasik*100,1)+').</div>'))+
+            'σ manşeti <b>'+(Math.abs(sgManset-sg.sigmaK)<1e-9?'medyan+MAD (dayanıklı)':'tam örnek (klasik sapma)')+'</b> — MUHAFAZAKÂR uçtan. Bant %'+trN(sg.sigmaK*100,1)+'–%'+trN((sg.sigmaKlasik||sg.sigmaK)*100,1)+'. Aykırı çeyrek: <b>'+esc(sg.aykiri.join(' · '))+
+            '</b>. Enflasyon muhasebesinde çeyreklik değerler kümülatif farkından üretildiği için bu bir <b>ölçüm bozulması</b> da olabilir, gerçek kuyruk da — ayrımı yapmadan σ seçimi bir yargıdır. Dayanıklı tahminci dağılımın MERKEZİ için doğrudur; biz UCUNU ölçüyoruz, o yüzden manşet yüksek uçtan.</div>'):
+            ('<div class="sub" style="font-size:10px;margin-top:6px;color:var(--muted)">σ manşeti <b>'+(Math.abs(sgManset-sg.sigmaK)<1e-9?'medyan+MAD':'tam örnek')+'</b> (muhafazakâr uç) · bant %'+trN(sg.sigmaK*100,1)+'–%'+trN((sg.sigmaKlasik||sg.sigmaK)*100,1)+' · aykırı çeyrek yok.</div>'))+
           /* §372c AYRIŞMA UYARISI: FEK statik bir ORAN, KOPMA-σ ise
              OYNAKLIĞI hesaba katan bir MESAFE. İkisi farklı not verebilir ve
              bu bilgi taşır: düşük marj oynaklığı olan bir şirket, oranı
