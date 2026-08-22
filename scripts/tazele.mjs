@@ -2470,7 +2470,11 @@ async function kapDonemler(kod, yil) {
    Bu yüzden ilk turlar yavaş, sonra neredeyse bedava. */
 async function kapArsiv() {
   const KLASOR = 'kap-arsiv';
-  const PARTI = 3;                    /* şirket/koşu — çeyrek başına istek olduğu için düşük */
+  /* §383b PARTİ 2 + UZUN BEKLEME: faktör evreni (§361) aynı koşuda KAP'ı
+     zaten kullanıyor; arşiv arkasından gelince "fetch failed" alıyordu.
+     Artık faktör ham tabloları arşive KENDİSİ yazıyor (§383), bu modül
+     yalnız ESKİ çeyrekleri tamamlıyor — az sayıda, yavaş, sabırlı. */
+  const PARTI = 2;
   const CEYREK_TAVAN = 15;
   const TABAN = 'https://ktpanel.vercel.app/api/kap';
   const uyku = (ms) => new Promise(r => setTimeout(r, ms));
@@ -2509,6 +2513,7 @@ async function kapArsiv() {
     raporlar.push('### KAP arşivi (§381) — ✓ TAM: ' + uyeler.length + ' şirket × ' + CEYREK_TAVAN + ' çeyrek');
     return;
   }
+  await new Promise(r => setTimeout(r, 30000));   /* §383b: KAP dinlensin */
   let eklenen = 0, yeniSirket = 0, dusen = 0;
   const notlar = [];
   for (const { kod, n: mevcut } of sira) {
@@ -2533,8 +2538,8 @@ async function kapArsiv() {
             eklenen++; buTur++;
           }
         } catch (e) {}
-        await uyku(1500);
-        if (buTur >= 6) break;                             /* koşu başına şirket sınırı */
+        await uyku(2500);
+        if (buTur >= 4) break;                             /* koşu başına şirket sınırı */
       }
       D.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
       D.ceyrek = Object.keys(D.donemler).length;
@@ -2644,7 +2649,7 @@ async function faktorEvren() {
     stok: 'ifrs-full_Inventories', ticariAlacak: 'ifrs-full_CurrentTradeReceivables',
     ticariBorc: 'kap-fr_CurrentTradePayables'
   };
-  let basarili = 0, eksikli = 0, dusen = 0;
+  let basarili = 0, eksikli = 0, dusen = 0, arsivYazilan = 0;
   const notlar = [];
 
   let ardisikHata = 0;
@@ -2685,6 +2690,28 @@ async function faktorEvren() {
             c: (sr.degerler.length >= 4 && Number.isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null };
         }));
         kalemler.push({ yil: dn.yil || dn.year, donem: dn.donem || dn.period, K });
+        /* §383 FAKTÖR ÇEKTİĞİNİ ARŞİVE DE YAZSIN (22 Ağu, canlı fail):
+           arşiv modülü ayrı ayrı çekmeye çalışıyor ve KAP'ı iki kez yoruyor —
+           "fetch failed" bundan. Oysa faktör evreni HAM TABLOYU ZATEN eline
+           alıyor; onu diske yazmak SIFIR ek istek demek.
+           Arşiv modülü artık yalnız EKSİK KALAN çeyrekleri tamamlar.
+           DERS: AYNI VERİYİ İKİ MODÜL ÇEKİYORSA BİRİ ÇEKSİN, DİĞERİ OKUSUN. */
+        try {
+          const ay = path.join(KOK, 'kap-arsiv');
+          await fs.mkdir(ay, { recursive: true });
+          const dosya = path.join(ay, kod + '.json');
+          let A = { kod, guncelleme: null, donemler: {} };
+          try { A = Object.assign(A, JSON.parse(await fs.readFile(dosya, 'utf8'))); } catch (e) {}
+          A.donemler = A.donemler || {};
+          const ank = (dn.yil || dn.year) + '/' + (dn.donem || dn.period);
+          if (!A.donemler[ank] && (jh.tablolar || []).length) {
+            A.donemler[ank] = { id: String(bid), birim: jh.birim || null, tablolar: jh.tablolar };
+            A.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
+            A.ceyrek = Object.keys(A.donemler).length;
+            await fs.writeFile(dosya, JSON.stringify(A), 'utf8');
+            arsivYazilan++;
+          }
+        } catch (e) {}
         await uyku(1200);
       }
 
@@ -2777,6 +2804,7 @@ async function faktorEvren() {
   await yaz(dosya, D);
   degisenler.push('faktör evreni (' + D.kapsam + '/' + uyeler.length + ')');
   const eskiYontem = Object.values(D.sirketler).filter(x => x.y !== YONTEM).length;
+  if (arsivYazilan) raporlar.push('- §383 arşive yazıldı: +' + arsivYazilan + ' çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)');
   raporlar.push('### Faktör evreni (§361) — ✓ parti ' + sira.length + ' · kapsam ' + D.kapsam + '/' + uyeler.length +
     (eskiYontem ? (' · ⚠ ' + eskiYontem + ' kayıt eski yöntemle (sıraya öne alındı)') : '') +
     '\n- bu turda: ' + basarili + ' tam · ' + eksikli + ' eksik kalemli · ' + dusen + ' alınamadı' +
