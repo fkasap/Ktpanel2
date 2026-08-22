@@ -2427,6 +2427,35 @@ async function gyoNav() {
   }
 }
 
+/* ── §382 KOŞU-İÇİ DÖNEM LİSTESİ ÖNBELLEĞİ (22 Ağu, canlı fail) ────────────
+   İlk arşiv koşusunda 3/3 "dönem yok" çıktı — AMA aynı koşuda faktör evreni
+   (§361) 43/245 ile sorunsuz çalışıyordu. Yani uç sağlamdı; sorun İKİ MODÜLÜN
+   AYNI LİSTEYİ AYRI AYRI ÇEKMESİYDİ. Faktör önce koşup KAP'ı yoruyor, arşiv
+   sınıra takılıyordu.
+   Bu Map, tek koşu boyunca paylaşılır: aynı şirketin dönem listesi ikinci kez
+   istendiğinde KAP'a GİDİLMEZ. Ayrıca yil parametresi normalize edilir —
+   arşiv yil=5 istiyordu, 15 çeyrek için yil=4 fazlasıyla yeter (4×4=16).
+   DERS: AYNI KOŞUDA İKİ MODÜL AYNI UCU ÇAĞIRIYORSA ARALARINDA ÖNBELLEK OLMALI. */
+const _DONEM_BELLEK = new Map();
+async function kapDonemler(kod, yil) {
+  const y = Math.min(4, Math.max(1, yil || 4));
+  const ank = kod + '|' + y;
+  if (_DONEM_BELLEK.has(ank)) return _DONEM_BELLEK.get(ank);
+  let sonuc = { ok: false, donemler: [] };
+  for (let deneme = 0; deneme < 2; deneme++) {
+    try {
+      const r = await fetch('https://ktpanel.vercel.app/api/kap?mod=donemler&kod=' + kod + '&yil=' + y,
+        { signal: AbortSignal.timeout(25000) });
+      const j = await r.json();
+      if (j && j.ok && (j.donemler || []).length) { sonuc = j; break; }
+      sonuc = j || sonuc;
+    } catch (e) { sonuc = { ok: false, donemler: [], err: String(e && e.message || e).slice(0, 40) }; }
+    if (deneme === 0) await new Promise(r => setTimeout(r, 2500));
+  }
+  _DONEM_BELLEK.set(ank, sonuc);
+  return sonuc;
+}
+
 /* ── §381 KAP HAM ARŞİVİ — 15 ÇEYREK, ŞİRKET BAŞINA TEK DOSYA (22 Ağu) ─────
    KULLANICI KARARI: ham tablo saklansın (ileride tüm kalemler lazım olacak),
    şirket başına EN FAZLA 15 ÇEYREK.
@@ -2468,8 +2497,13 @@ async function kapArsiv() {
   try { const bt = await oku('bilanco-tetik.json'); tetik = bt.kodlar || []; } catch (e) {}
   try { const eu = await oku('endeks-uyeler.json'); xk030 = (eu.uyeler || {}).XK030 || []; xk100 = (eu.uyeler || {}).XK100 || []; } catch (e) {}
   const oncelik = (k) => tetik.includes(k) ? 0 : (xk030.includes(k) ? 1 : (xk100.includes(k) ? 2 : 3));
+  /* §382b BELLEKTE OLANI TERCİH ET: faktör evreni (§361) bu koşuda zaten
+     bazı şirketlerin dönem listesini çekti. Arşiv onları seçerse liste
+     BEDAVA gelir — yeni KAP isteği yok. Aynı öncelik grubunda, listesi
+     bellekte olan şirket öne alınır. */
+  const bellekte = (k) => (_DONEM_BELLEK.has(k+'|4') || _DONEM_BELLEK.has(k+'|2')) ? 0 : 1;
   const sira = durum.filter(x => x.n < CEYREK_TAVAN)
-    .sort((a, b) => (oncelik(a.kod) - oncelik(b.kod)) || (a.n - b.n))
+    .sort((a, b) => (oncelik(a.kod) - oncelik(b.kod)) || (bellekte(a.kod) - bellekte(b.kod)) || (a.n - b.n))
     .slice(0, PARTI);
   if (!sira.length) {
     raporlar.push('### KAP arşivi (§381) — ✓ TAM: ' + uyeler.length + ' şirket × ' + CEYREK_TAVAN + ' çeyrek');
@@ -2479,10 +2513,9 @@ async function kapArsiv() {
   const notlar = [];
   for (const { kod, n: mevcut } of sira) {
     try {
-      const rd = await fetch(TABAN + '?mod=donemler&kod=' + kod + '&yil=5', { signal: AbortSignal.timeout(25000) });
-      const jd = await rd.json();
+      const jd = await kapDonemler(kod, 4);            /* §382: koşu-içi önbellek */
       const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, CEYREK_TAVAN) : [];
-      if (!donemler.length) { dusen++; notlar.push(kod + ':dönem yok'); await uyku(2500); continue; }
+      if (!donemler.length) { dusen++; notlar.push(kod + ':' + ((jd && (jd.err || (jd.hatalar||[])[0])) || 'dönem yok')); await uyku(2500); continue; }
       let D = { kod, unvan: jd.unvan || null, guncelleme: null, donemler: {} };
       try { D = Object.assign(D, JSON.parse(await fs.readFile(path.join(KOK, KLASOR, kod + '.json'), 'utf8'))); } catch (e) { yeniSirket++; }
       D.donemler = D.donemler || {};
@@ -2621,15 +2654,7 @@ async function faktorEvren() {
       break;
     }
     try {
-      let jd = null;
-      for (let deneme = 0; deneme < 2; deneme++) {
-        try {
-          const rd = await fetch(TABAN + '?mod=donemler&kod=' + kod + '&yil=2', { signal: AbortSignal.timeout(25000) });
-          jd = await rd.json();
-          if (jd && jd.ok && (jd.donemler || []).length) break;
-        } catch (e) { jd = { err: String(e && e.message || e).slice(0, 30) }; }
-        if (deneme === 0) await uyku(2500);
-      }
+      const jd = await kapDonemler(kod, 2);            /* §382: ortak koşu-içi önbellek */
       const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, 5) : [];   /* §361d: son yıllık (4Ç) mutlaka kapsansın */
       if (donemler.length < 2) {
         dusen++;
