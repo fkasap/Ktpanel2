@@ -2427,6 +2427,100 @@ async function gyoNav() {
   }
 }
 
+/* ── §381 KAP HAM ARŞİVİ — 15 ÇEYREK, ŞİRKET BAŞINA TEK DOSYA (22 Ağu) ─────
+   KULLANICI KARARI: ham tablo saklansın (ileride tüm kalemler lazım olacak),
+   şirket başına EN FAZLA 15 ÇEYREK.
+   NEDEN ŞİRKET BAŞINA TEK DOSYA: panel şu an bir şirketin 15 çeyreği için
+   KAP'a 15 AYRI İSTEK atıyor. Arşivle bu TEK istek olur ve KAP'a değil
+   GitHub'a gider — hız sınırı tamamen konu dışı kalır.
+   BOYUT (ölçüldü): bildirim başına ~23 KB → 245 şirket × 15 çeyrek ≈ 86 MB
+   düz, ~3-20 MB gzip. GitHub sınırlarının (repo 1 GB, dosya 100 MB) rahat
+   altında. Git geçmişi şişmez çünkü YAYIMLANMIŞ BİLDİRİM DEĞİŞMEZ — dosyaya
+   yalnız yeni çeyrek eklenir, eskiler dokunulmaz.
+   KADEMELİ: her koşuda az sayıda şirket; arşivde zaten olan dönem ATLANIR.
+   Bu yüzden ilk turlar yavaş, sonra neredeyse bedava. */
+async function kapArsiv() {
+  const KLASOR = 'kap-arsiv';
+  const PARTI = 3;                    /* şirket/koşu — çeyrek başına istek olduğu için düşük */
+  const CEYREK_TAVAN = 15;
+  const TABAN = 'https://ktpanel.vercel.app/api/kap';
+  const uyku = (ms) => new Promise(r => setTimeout(r, ms));
+  let uyeler = [];
+  try { const eu = await oku('endeks-uyeler.json'); uyeler = ((eu.uyeler || {}).XKTUM || []).slice(); } catch (e) {}
+  if (!uyeler.length) { raporlar.push('### KAP arşivi (§381) — ⏭ XKTUM listesi yok'); return; }
+
+  try { await fs.mkdir(path.join(KOK, KLASOR), { recursive: true }); } catch (e) {}
+  /* hangi şirketler eksik: dosyası yok ya da 15'ten az çeyrek içeriyor */
+  const durum = [];
+  for (const kod of uyeler) {
+    let n = 0;
+    try { const d = JSON.parse(await fs.readFile(path.join(KOK, KLASOR, kod + '.json'), 'utf8'));
+      n = Object.keys(d.donemler || {}).length; } catch (e) { n = 0; }
+    durum.push({ kod, n });
+  }
+  /* §381b ÖNCELİK SIRASI: tüm evren ~69 koşu-günü sürüyor. Alfabetik ya da
+     salt "en eksik" sırası, en çok bakılan şirketleri en sona atabilir.
+     Öncelik: (1) bilanço tetiğindekiler — yeni bildirim geldi, taze veri
+     değerli; (2) XK030 (en büyük 30, en çok bakılan); (3) XK100; (4) kalanlar.
+     Her grup içinde en eksik olan önce. Böylece arşiv "işe yarar" sırayla
+     dolar; tam tur bitmeden de kullanılabilir hale gelir. */
+  let tetik = [], xk030 = [], xk100 = [];
+  try { const bt = await oku('bilanco-tetik.json'); tetik = bt.kodlar || []; } catch (e) {}
+  try { const eu = await oku('endeks-uyeler.json'); xk030 = (eu.uyeler || {}).XK030 || []; xk100 = (eu.uyeler || {}).XK100 || []; } catch (e) {}
+  const oncelik = (k) => tetik.includes(k) ? 0 : (xk030.includes(k) ? 1 : (xk100.includes(k) ? 2 : 3));
+  const sira = durum.filter(x => x.n < CEYREK_TAVAN)
+    .sort((a, b) => (oncelik(a.kod) - oncelik(b.kod)) || (a.n - b.n))
+    .slice(0, PARTI);
+  if (!sira.length) {
+    raporlar.push('### KAP arşivi (§381) — ✓ TAM: ' + uyeler.length + ' şirket × ' + CEYREK_TAVAN + ' çeyrek');
+    return;
+  }
+  let eklenen = 0, yeniSirket = 0, dusen = 0;
+  const notlar = [];
+  for (const { kod, n: mevcut } of sira) {
+    try {
+      const rd = await fetch(TABAN + '?mod=donemler&kod=' + kod + '&yil=5', { signal: AbortSignal.timeout(25000) });
+      const jd = await rd.json();
+      const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, CEYREK_TAVAN) : [];
+      if (!donemler.length) { dusen++; notlar.push(kod + ':dönem yok'); await uyku(2500); continue; }
+      let D = { kod, unvan: jd.unvan || null, guncelleme: null, donemler: {} };
+      try { D = Object.assign(D, JSON.parse(await fs.readFile(path.join(KOK, KLASOR, kod + '.json'), 'utf8'))); } catch (e) { yeniSirket++; }
+      D.donemler = D.donemler || {};
+      let buTur = 0;
+      for (const dn of donemler) {
+        const anahtar = dn.yil + '/' + dn.donem;
+        if (D.donemler[anahtar]) continue;                 /* zaten arşivde — istek YOK */
+        const bid = dn.id || dn.disclosureIndex;
+        if (!bid) continue;
+        try {
+          const rh = await fetch(TABAN + '?mod=ham&id=' + bid, { signal: AbortSignal.timeout(30000) });
+          const jh = await rh.json();
+          if (jh && jh.ok && (jh.tablolar || []).length) {
+            D.donemler[anahtar] = { id: String(bid), birim: jh.birim || null, tablolar: jh.tablolar };
+            eklenen++; buTur++;
+          }
+        } catch (e) {}
+        await uyku(1500);
+        if (buTur >= 6) break;                             /* koşu başına şirket sınırı */
+      }
+      D.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
+      D.ceyrek = Object.keys(D.donemler).length;
+      await fs.writeFile(path.join(KOK, KLASOR, kod + '.json'), JSON.stringify(D), 'utf8');
+      notlar.push(kod + ':' + mevcut + '→' + D.ceyrek);
+      await uyku(2500);
+    } catch (e) { dusen++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 20)); await uyku(2500); }
+  }
+  const tamam = durum.filter(x => x.n >= CEYREK_TAVAN).length;
+  degisenler.push('KAP arşivi (+' + eklenen + ' çeyrek)');
+  raporlar.push('### KAP arşivi (§381) — ✓ +' + eklenen + ' çeyrek · ' + tamam + '/' + uyeler.length + ' şirket tam' +
+    (yeniSirket ? (' · ' + yeniSirket + ' yeni dosya') : '') +
+    (notlar.length ? ('\n- ' + notlar.slice(0, 6).join(' · ')) : '') +
+    '\n- öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)' +
+    (dusen ? ('\n- ' + dusen + ' düştü') : '') +
+    '\n- ⓘ Ham tablolar `' + KLASOR + '/<KOD>.json` içinde, şirket başına en fazla ' + CEYREK_TAVAN +
+    ' çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).');
+}
+
 async function faktorEvren() {
   const dosya = 'faktor-evren.json';
   /* §361b HIZ SINIRI (canlı ölçüm: 12/12 "dönem yok"; aynı uç tarayıcıdan tek
@@ -2948,6 +3042,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
+    await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
