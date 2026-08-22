@@ -1596,10 +1596,24 @@ function sohbetOzet(){
   const P=[]; const n=(v,h)=>Number.isFinite(v)?Number(v).toLocaleString('tr-TR',{maximumFractionDigits:h==null?1:h}):'—';
   const dene=(f)=>{ try{ f(); }catch(e){} };
 
+  /* §386 GERÇEK SAYILAR GÖNDERİLİR (canlı: "ASELS'in EV/EBITDA'sı kaç"
+     sorusuna cevap verilemedi çünkü özette YALNIZ KOD LİSTESİ vardı).
+     141 hisse × ~70 karakter ≈ 10 KB — kabul edilebilir maliyet, ve model
+     artık ÇARPANI KENDİSİ HESAPLAYABİLİR. EV/FAVÖK önceden hesaplanıp da
+     konur ki model aritmetik hatası yapmasın. */
   dene(()=>{ if(typeof MULTIPLE!=='undefined'&&MULTIPLE&&MULTIPLE.hisseler){
-    P.push('## ÇARPAN EVRENİ (multiple.json · '+(MULTIPLE.fiyat_tarihi||'')+')\n'+
-      MULTIPLE.hisseler.length+' hisse. Alanlar: fiyat, pay adedi, ciro, FAVÖK, net borç (milyon ₺).'+
-      ' Örnek kodlar: '+MULTIPLE.hisseler.slice(0,12).map(h=>h.k).join(', ')+'…'); } });
+    const sat=MULTIPLE.hisseler.map(h=>{
+      const f=(typeof CANLI_FIYAT!=='undefined'&&CANLI_FIYAT&&Number.isFinite(CANLI_FIYAT[h.k]))?CANLI_FIYAT[h.k]:h.fiyat;
+      const pd=(Number.isFinite(f)&&Number.isFinite(h.adet))?f*h.adet:null;          /* mn ₺ */
+      const ev=(Number.isFinite(pd)&&Number.isFinite(h.netBorc))?pd+h.netBorc:null;
+      const ee=(Number.isFinite(ev)&&Number.isFinite(h.ebitda)&&h.ebitda>0)?ev/h.ebitda:null;
+      const mj=(Number.isFinite(h.ebitda)&&Number.isFinite(h.ciro)&&h.ciro>0)?h.ebitda/h.ciro*100:null;
+      return h.k+' fiyat '+n(f,2)+' PD '+n(pd,0)+' netB '+n(h.netBorc,0)+' ciro '+n(h.ciro,0)+
+        ' FAVÖK '+n(h.ebitda,0)+' marj%'+n(mj)+' EV/FAVÖK '+(ee!=null?n(ee,1)+'x':'—');
+    });
+    P.push('## ÇARPAN EVRENİ — TÜM SAYILAR (multiple.json · fiyat '+(MULTIPLE.fiyat_tarihi||'')+' · tutarlar MİLYON ₺)\n'+
+      'EV/FAVÖK önceden hesaplandı (PD = canlı fiyat × pay adedi; EV = PD + net borç). Bu satırlardan doğrudan cevap ver.\n'+
+      sat.join('\n')); } });
 
   dene(()=>{ if(typeof GYONAV!=='undefined'&&GYONAV&&GYONAV.sirketler){
     const S=GYONAV.sirketler, ks=Object.keys(S);
@@ -1679,11 +1693,24 @@ async function sohbetGonder(){
     const b=document.getElementById('sbBekle'); if(b) b.remove();
     if(!j.ok){ akis.insertAdjacentHTML('beforeend','<div class="sb-ebu" style="color:var(--down)">✗ '+esc2(j.err||'hata')+'</div>'); }
     else{
+      /* §386c KART AÇMA: model cevabın sonuna [KART:t9:ASELS] bırakır; işaret
+         metinden ayıklanır, sekme açılır ve ticker doldurulur. Kullanıcıyı
+         "şu karta bak" diye yollamak yerine KARTI AÇMAK doğru davranış —
+         sohbetin panele gömülü olmasının asıl faydası bu. */
+      let metin=String(j.metin||''), kartIsaret=null;
+      metin=metin.replace(/\[KART:(t\d+):([A-Z0-9]*)\]/gi,(m,sek,tk)=>{ kartIsaret={sekme:sek.toLowerCase(),tk:(tk||'').toUpperCase()}; return ''; }).trim();
       const md=(x)=>esc2(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
-      akis.insertAdjacentHTML('beforeend','<div class="sb-ebu">'+md(j.metin)+
+      akis.insertAdjacentHTML('beforeend','<div class="sb-ebu">'+md(metin)+
+        (kartIsaret?('<div style="margin-top:8px"><button class="mini sbKartAc" data-sek="'+kartIsaret.sekme+'" data-tk="'+kartIsaret.tk+'" style="font-size:11px;padding:4px 10px">→ '+(kartIsaret.tk?kartIsaret.tk+' · ':'')+'kartı aç</button></div>'):'')+
         ((j.aramalar||[]).length?('<div class="thin" style="font-size:10px;margin-top:6px">🔎 web: '+esc2(j.aramalar.join(' · '))+'</div>'):'')+
         (j.kesildi?'<div class="thin" style="font-size:10px;color:#E8933B">⚠ yanıt uzunluk sınırında kesildi</div>':'')+'</div>');
-      SOHBET_GECMIS.push({rol:'ben',metin:soru},{rol:'ebu',metin:j.metin});
+      SOHBET_GECMIS.push({rol:'ben',metin:soru},{rol:'ebu',metin:metin});
+      /* düğmeyi bağla + tek kart varsa hemen aç */
+      akis.querySelectorAll('.sbKartAc:not([data-bagli])').forEach(b=>{
+        b.setAttribute('data-bagli','1');
+        b.onclick=()=>sohbetKartAc(b.dataset.sek, b.dataset.tk);
+      });
+      if(kartIsaret) setTimeout(()=>sohbetKartAc(kartIsaret.sekme, kartIsaret.tk), 400);
       if(SOHBET_GECMIS.length>12) SOHBET_GECMIS=SOHBET_GECMIS.slice(-12);
     }
   }catch(e){
@@ -1691,6 +1718,23 @@ async function sohbetGonder(){
     akis.insertAdjacentHTML('beforeend','<div class="sb-ebu" style="color:var(--down)">✗ '+esc2(String(e.message||e))+'</div>');
   }
   akis.scrollTop=akis.scrollHeight;
+}
+/* §386c sekmeyi aç + tickerı doldur + ilgili getirme düğmesini tetikle */
+function sohbetKartAc(sekme, tk){
+  try{
+    const b=document.querySelector('nav.tabs button[data-tab="'+sekme+'"]')||document.querySelector('#pySubnav button[data-tab="'+sekme+'"]');
+    if(b) b.click();
+    if(tk){
+      const alanlar={ t9:['fekKod','mulTicker'], t23:['csKod'], t21:['tkKod'], t3:['pfKod'] };
+      (alanlar[sekme]||['fekKod','csKod','mulTicker']).forEach(id=>{
+        const e=document.getElementById(id);
+        if(e){ if(e.tagName==='SELECT'){ e.value=tk; e.dispatchEvent(new Event('change')); } else { e.value=tk; } }
+      });
+    }
+    const p=document.getElementById('sbPanel');
+    if(p && window.innerWidth<=520) p.style.display='none';   /* mobilde paneli kapat ki kart görünsün */
+    setTimeout(()=>{ const h=document.querySelector('.tab.act'); if(h) h.scrollIntoView({behavior:'smooth',block:'start'}); },200);
+  }catch(e){ console.warn('[KTPanel] §386c kart:', e&&e.message); }
 }
 function sohbetAc(){
   const p=document.getElementById('sbPanel'); if(!p) return;

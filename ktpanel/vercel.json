@@ -20,7 +20,7 @@
    "maxDuration": 20
   },
   "api/ajanktp.js": {
-   "maxDuration": 45
+   "maxDuration": 120
   }
  },
  "crons": [
