@@ -1118,31 +1118,42 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div id="mulSonuc"></div>
 
-<!-- §369 FİNANSAL EMNİYET KATSAYISI (FEK) — köprü emniyet katsayısı mantığı:
-     taşıyabileceği yük ÷ üzerine binen yük. Pay: tekrarlanabilir nakit üretimi
-     + serbest likidite − bakım capex. Payda: net faiz yükü + yenilenmeme
-     riski (KV finansal borç × λ). 1,0 kopma noktası. -->
-<div class="card" style="margin-top:18px">
-  <div class="kart-bas"><span class="lbl">FİNANSAL EMNİYET KATSAYISI <span class="thin">(FEK · borç servisi dayanıklılığı)</span></span><span class="tag" id="fekDamga">KAP</span></div>
-  <div class="sub" style="margin-top:4px">Köprü mantığı: <b>taşıyabileceği yük ÷ üzerine binen yük</b>. Pay tekrarlanabilir nakit üretimi, payda borç servisi. <b>1,0 kopma noktası.</b> Kâr kalitesi ayrı puan değil, formülün içinde: <b>çekirdek FAVÖK</b> kullanılır — kur farkı ve tek seferlik gelirler gelecek yılın faizini ödemez.</div>
-  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:12px">
-    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">HİSSE</label>
-      <input id="fekKod" placeholder="MERCN" maxlength="6" style="width:118px;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;text-transform:uppercase;font-family:var(--mono);font-size:12px"></div>
-    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">λ REJİM</label>
-      <select id="fekLambda" style="padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-size:12px;font-family:var(--mono)">
+<!-- §369 FİNANSAL EMNİYET KATSAYISI (FEK) — köprü emniyet katsayısı:
+     taşıyabileceği yük ÷ üzerine binen yük. 1,0 kopma noktası.
+     §389: EV/EBITDA kartıyla AYNI KALIBA döküldü — h2 başlık + iki sütunlu
+     ızgara (solda hisse/girdi, sağda rejim varsayımları) + .card. Panelde
+     iki değerleme aracı yan yana duruyor; farklı görünmeleri okuma akışını
+     bozuyordu. -->
+<h2 style="margin-top:24px">Finansal Emniyet Katsayısı <span class="thin">(borç servisi dayanıklılığı · <span id="fekDamga">KAP</span>)</span></h2>
+<div class="card">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div class="lbl" style="margin-bottom:8px">HİSSE <span class="thin">(KAP canlı)</span></div>
+      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px">Hisse Kodu</label>
+      <input id="fekKod" placeholder="MERCN" maxlength="6" style="width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;text-transform:uppercase;box-sizing:border-box">
+      <div style="display:flex;gap:8px;align-items:center;margin-top:10px">
+        <button id="fekHesapla" class="mini" style="padding:6px 14px;font-size:12px">skor kartı</button>
+        <span id="fekDurum" class="sub" style="font-size:10.5px"></span>
+      </div>
+      <div class="sub" style="margin-top:10px;font-size:10.5px">Pay <b>tekrarlanabilir nakit üretimi</b>, payda <b>borç servisi</b>. Kâr kalitesi ayrı puan değil, formülün içinde: <b>çekirdek FAVÖK</b> kullanılır — kur farkı ve tek seferlik gelirler gelecek yılın faizini ödemez.</div>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom:8px">REJİM VARSAYIMLARI <span class="thin">(TCMB/BDDK kalibreli)</span></div>
+      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px">λ — Yenilenmeme Rejimi</label>
+      <select id="fekLambda" style="width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box">
         <option value="tcmb" selected>TCMB baz %3,1</option><option value="ort10">10y ort %3,8</option><option value="kriz">2020 krizi %10</option><option value="elle10">Elle %10</option><option value="elle25">Elle %25</option>
-      </select></div>
-    <div><label class="sub" style="font-size:10px;display:block;margin-bottom:3px">p(KRİZ)</label>
-      <select id="fekPkriz" style="padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-size:12px;font-family:var(--mono)">
+      </select>
+      <label style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;margin-top:8px">p(Kriz) — Fonlama Tıkanması Olasılığı</label>
+      <select id="fekPkriz" style="width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box">
         <option value="0.10">%10</option><option value="0.15" selected>%15 taban</option><option value="0.20">%20</option><option value="0.30">%30</option><option value="0.50">%50</option>
-      </select></div>
-    <button id="fekHesapla" class="mini" style="padding:6px 14px;font-size:12px">skor kartı</button>
-    <span id="fekDurum" class="sub" style="font-size:10.5px"></span>
+      </select>
+      <div class="sub" style="margin-top:10px;font-size:10.5px">λ sistem tabanı BDDK/TCMB serilerinden; firma çarpanı faiz karşılamasından <b>otomatik</b>. p(kriz) tarihsel taban oran: 32 yılda 4 epizot ≈ %13.</div>
+    </div>
   </div>
-  <div id="fekPano" style="margin-top:14px"></div>
-  <div id="fekKopma"></div>
-  <div id="fekNot" class="note" style="margin-top:10px"></div>
 </div>
+<div id="fekPano" style="margin-top:10px"></div>
+<div id="fekKopma"></div>
+<div id="fekNot" class="note" style="margin-top:10px"></div>
 </div>
 <div class="tab" id="t10"><h2>Sukuk / Kira Sertifikası <span class="thin">(değerleme · ihraç takvimi)</span></h2>
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
@@ -1750,8 +1761,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260822e"></script>
-<script src="/ajan.js?v=20260822e"></script>
+<script src="/app.js?v=20260822f"></script>
+<script src="/ajan.js?v=20260822f"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
