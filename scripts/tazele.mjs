@@ -2525,8 +2525,23 @@ async function kapArsiv() {
      BEDAVA gelir — yeni KAP isteği yok. Aynı öncelik grubunda, listesi
      bellekte olan şirket öne alınır. */
   const bellekte = (k) => (_DONEM_BELLEK.has(k+'|4') || _DONEM_BELLEK.has(k+'|2')) ? 0 : 1;
+  /* §384 BAŞARISIZLIK SAYACI (22 Ağu, canlı): CITAS ve DENGE her koşuda
+     öncelik listesinin başına çıkıp düşüyor ve SIRAYI TIKIYOR — arşiv üç
+     koşudur ilerleyemedi. Üst üste düşen şirket sıranın SONUNA atılır;
+     3 başarısızlıktan sonra bir süre hiç denenmez.
+     Sayaç dosyada tutulur (kap-arsiv/_durum.json) — koşular arası hafıza.
+     DERS: SÜREKLİ DÜŞEN BİR KAYIT KUYRUĞU KİLİTLER — geri çekilme şart. */
+  let SAY = {};
+  try { SAY = JSON.parse(await fs.readFile(path.join(KOK, KLASOR, '_durum.json'), 'utf8')) || {}; } catch (e) {}
+  const simdi = Date.now();
+  const cezali = (k) => {
+    const r = SAY[k];
+    if (!r) return 0;
+    if (r.n >= 3 && r.son && (simdi - r.son) < 6 * 3600 * 1000) return 2;   /* 6 saat dinlendir */
+    return r.n >= 2 ? 1 : 0;
+  };
   const sira = durum.filter(x => x.n < CEYREK_TAVAN)
-    .sort((a, b) => (oncelik(a.kod) - oncelik(b.kod)) || (bellekte(a.kod) - bellekte(b.kod)) || (a.n - b.n))
+    .sort((a, b) => (cezali(a.kod) - cezali(b.kod)) || (oncelik(a.kod) - oncelik(b.kod)) || (bellekte(a.kod) - bellekte(b.kod)) || (a.n - b.n))
     .slice(0, PARTI);
   if (!sira.length) {
     raporlar.push('### KAP arşivi (§381) — ✓ TAM: ' + uyeler.length + ' şirket × ' + CEYREK_TAVAN + ' çeyrek');
@@ -2539,7 +2554,12 @@ async function kapArsiv() {
     try {
       const jd = await kapDonemler(kod, 4);            /* §382: koşu-içi önbellek */
       const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, CEYREK_TAVAN) : [];
-      if (!donemler.length) { dusen++; notlar.push(kod + ':' + ((jd && (jd.err || (jd.hatalar||[])[0])) || 'dönem yok')); await uyku(2500); continue; }
+      if (!donemler.length) {
+        dusen++;
+        SAY[kod] = { n: ((SAY[kod] || {}).n || 0) + 1, son: simdi };
+        notlar.push(kod + ':' + ((jd && (jd.err || (jd.hatalar||[])[0])) || 'dönem yok') + ' (' + SAY[kod].n + '. kez)');
+        await uyku(2500); continue;
+      }
       let D = { kod, unvan: jd.unvan || null, guncelleme: null, donemler: {} };
       try { D = Object.assign(D, JSON.parse(await fs.readFile(path.join(KOK, KLASOR, kod + '.json'), 'utf8'))); } catch (e) { yeniSirket++; }
       D.donemler = D.donemler || {};
@@ -2563,10 +2583,13 @@ async function kapArsiv() {
       D.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
       D.ceyrek = Object.keys(D.donemler).length;
       await fs.writeFile(path.join(KOK, KLASOR, kod + '.json'), JSON.stringify(D), 'utf8');
+      delete SAY[kod];                                  /* §384: başarı sayacı sıfırlar */
       notlar.push(kod + ':' + mevcut + '→' + D.ceyrek);
       await uyku(2500);
     } catch (e) { dusen++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 20)); await uyku(2500); }
   }
+  try { await fs.writeFile(path.join(KOK, KLASOR, '_durum.json'), JSON.stringify(SAY), 'utf8'); } catch (e) {}
+  const bekleyen = Object.keys(SAY).filter(k => (SAY[k].n || 0) >= 3).length;
   const tamam = durum.filter(x => x.n >= CEYREK_TAVAN).length;
   degisenler.push('KAP arşivi (+' + eklenen + ' çeyrek)');
   raporlar.push('### KAP arşivi (§381) — ✓ +' + eklenen + ' çeyrek · ' + tamam + '/' + uyeler.length + ' şirket tam' +
@@ -2574,6 +2597,7 @@ async function kapArsiv() {
     (notlar.length ? ('\n- ' + notlar.slice(0, 6).join(' · ')) : '') +
     '\n- öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)' +
     (dusen ? ('\n- ' + dusen + ' düştü') : '') +
+    (bekleyen ? ('\n- ' + bekleyen + ' şirket 3+ kez düştü, 6 saat dinlendiriliyor (sırayı tıkamasın)') : '') +
     '\n- ⓘ Ham tablolar `' + KLASOR + '/<KOD>.json` içinde, şirket başına en fazla ' + CEYREK_TAVAN +
     ' çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).');
 }
