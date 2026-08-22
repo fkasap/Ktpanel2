@@ -1014,6 +1014,17 @@ export default async function handler(req, res){
         const carpan = /1\.?000\.?000|milyon/i.test(bt) ? 1e6 : (/1\.?000|bin/i.test(bt) ? 1000 : 1);
         birim2 = { ad: bt, carpan };
       }
+      /* §380 KALICI ÖNBELLEK — HIZ SINIRININ ASIL ÇÖZÜMÜ (22 Ağu).
+         YAYIMLANMIŞ BİR BİLDİRİM ASLA DEĞİŞMEZ: TUPRS'ın 2026/2Ç tablosu
+         bugün ne diyorsa bir yıl sonra da aynısını der. Oysa panel onu her
+         FEK, her EV/EBITDA, her Çeyreklik Seri çağrısında YENİDEN çekiyordu
+         ve hız sınırına asıl bu tekrar yol açıyordu.
+         Vercel edge cache 1 YIL tutar; aynı bildirim ikinci kez istendiğinde
+         istek KAP'a HİÇ GİTMEZ. Bildirim kimliği (id) değişmez bir anahtar
+         olduğu için bu güvenlidir — tarih ya da "son bildirim" gibi kayan bir
+         parametre olsaydı yapılamazdı.
+         DERS: HIZ SINIRINI AŞMAYA ÇALIŞMA — İSTEĞİ HİÇ YAPMA. */
+      res.setHeader('Cache-Control', 'public, s-maxage=31536000, stale-while-revalidate=86400, immutable');
       return res.status(200).json({ surum: _SURUM, ok: tablolar.length > 0, id: idH,
         birim: birim2, tabloSayisi: tablolar.length, tablolar });
     } catch (e) {
@@ -1085,6 +1096,10 @@ export default async function handler(req, res){
         if (!v || +d.id > +v.id) enIyi.set(k, d);
       });
       const liste = [...enIyi.values()].sort((a, b) => (b.yil - a.yil) || (b.donem - a.donem));
+      /* §380 DÖNEM LİSTESİ ÖNBELLEĞİ: çeyrekte bir değişir — 6 saat edge cache,
+         bir gün stale-while-revalidate. Bu uç en sık çağrılanı ve hız sınırına
+         ilk takılan; önbellek onu büyük ölçüde susturur. */
+      if (liste.length) res.setHeader('Cache-Control', 'public, s-maxage=21600, stale-while-revalidate=86400');
       return res.status(200).json({ surum: _SURUM, ok: liste.length > 0, kod: kodD,
         oid: uye.mkkMemberOid, unvan: uye.title || null, companyCode: uye.companyCode || null,
         yilSayi, adet: liste.length, donemler: liste, hatalar: hatalar.length ? hatalar : undefined });
