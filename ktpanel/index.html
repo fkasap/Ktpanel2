@@ -1750,7 +1750,29 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260822a"></script>
-<script src="/ajan.js?v=20260822a"></script>
+<script src="/app.js?v=20260822b"></script>
+<script src="/ajan.js?v=20260822b"></script>
+
+<!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
+     erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
+<button id="sbDugme" title="Ebu'ya sor" aria-label="Ebu'ya sor" style="position:fixed;right:18px;bottom:18px;z-index:900;width:52px;height:52px;border-radius:50%;border:none;background:var(--mm2);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)">☕</button>
+<div id="sbPanel" style="display:none;position:fixed;right:18px;bottom:80px;z-index:900;width:min(420px,calc(100vw - 36px));height:min(560px,calc(100vh - 120px));background:var(--bg);border:1px solid var(--line2);border-radius:14px;box-shadow:0 10px 34px rgba(0,0,0,.20);flex-direction:column;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--bg2)">
+    <div><b style="font-size:12.5px">Ebu</b> <span class="thin" style="font-size:10px">panel verisi + web araması</span></div>
+    <button id="sbKapat" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);line-height:1">×</button>
+  </div>
+  <div id="sbAkis" style="flex:1;overflow-y:auto;padding:12px 14px;font-size:12.5px;line-height:1.55">
+    <div class="sb-ebu">Panelin verisine sorabilirsin — <b>"en iskontolu GYO'lar"</b>, <b>"bu hafta hangi PYŞ'ye para girdi"</b>, <b>"MERCN'in FEK'i neden 2"</b> gibi. Panelde olmayan güncel bir şey sorarsan web'e bakarım. <span class="thin">Yatırım tavsiyesi vermem; veriyi ve riskleri gösteririm.</span></div>
+  </div>
+  <div style="display:flex;gap:6px;padding:10px;border-top:1px solid var(--line);background:var(--bg2)">
+    <textarea id="sbGiris" rows="1" placeholder="Sor… (Enter gönderir)" style="flex:1;resize:none;padding:8px 10px;border:1px solid var(--line2);border-radius:8px;font-family:inherit;font-size:12.5px;background:var(--bg);color:inherit"></textarea>
+    <button id="sbGonder" class="mini" style="padding:8px 14px;font-size:12px">Gönder</button>
+  </div>
+</div>
+<style>
+#sbAkis .sb-ben{background:var(--mm2);color:#fff;padding:8px 11px;border-radius:11px 11px 3px 11px;margin:8px 0 8px auto;max-width:85%;width:fit-content}
+#sbAkis .sb-ebu{background:var(--bg2);padding:9px 12px;border-radius:11px 11px 11px 3px;margin:8px 0;max-width:92%}
+@media(max-width:520px){#sbPanel{right:0;bottom:0;width:100vw;height:100vh;border-radius:0}}
+</style>
 </body>
 </html>

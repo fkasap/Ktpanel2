@@ -1581,3 +1581,129 @@ async function taslakOnayla(btn){
     btn.disabled = false;
   }
 }
+
+/* ══ §385 SOHBET KATMANI — panel verisine soru-cevap (22 Ağu) ══════════════
+   NEDEN ÖZET: panelde onlarca JSON var; hepsini modele göndermek pahalı ve
+   yavaş olurdu. Her kaynaktan birkaç yüz karakterlik özet çıkarılır ve
+   HEPSİ birden gönderilir — model neyin nerede olduğunu görür, çapraz
+   sorulara da cevap verebilir (tek turda, iki aşamalı çağrı olmadan).
+   VERİ TARAYICIDA ZATEN YÜKLÜ: panel açıldığında MULTIPLE, GYONAV, VAPFON
+   gibi küresel değişkenler doluyor. Sunucunun JSON'ları yeniden okuması
+   gereksiz olurdu; özet burada üretilip API'ye gönderilir.
+   DÜRÜSTLÜK: özet sayıları YUVARLIDIR ve bu modele söylenir — kesin rakam
+   isteyeni ilgili karta yönlendirir. */
+function sohbetOzet(){
+  const P=[]; const n=(v,h)=>Number.isFinite(v)?Number(v).toLocaleString('tr-TR',{maximumFractionDigits:h==null?1:h}):'—';
+  const dene=(f)=>{ try{ f(); }catch(e){} };
+
+  dene(()=>{ if(typeof MULTIPLE!=='undefined'&&MULTIPLE&&MULTIPLE.hisseler){
+    P.push('## ÇARPAN EVRENİ (multiple.json · '+(MULTIPLE.fiyat_tarihi||'')+')\n'+
+      MULTIPLE.hisseler.length+' hisse. Alanlar: fiyat, pay adedi, ciro, FAVÖK, net borç (milyon ₺).'+
+      ' Örnek kodlar: '+MULTIPLE.hisseler.slice(0,12).map(h=>h.k).join(', ')+'…'); } });
+
+  dene(()=>{ if(typeof GYONAV!=='undefined'&&GYONAV&&GYONAV.sirketler){
+    const S=GYONAV.sirketler, ks=Object.keys(S);
+    const d=ks.map(k=>({k,i:Number.isFinite(S[k].guncelIskonto)?S[k].guncelIskonto:S[k].iskonto,b:S[k].borcluluk}))
+      .filter(x=>Number.isFinite(x.i)).sort((a,b)=>a.i-b.i);
+    P.push('## GYO NAV (TSPB resmî · dönem '+(GYONAV.donem_etiket||'')+')\n'+
+      ks.length+' GYO. Sektör iskontosu %'+n((GYONAV.sektor||{}).iskonto)+', borçluluk %'+n((GYONAV.sektor||{}).borcluluk)+'.\n'+
+      'En iskontolu: '+d.slice(0,6).map(x=>x.k+' %'+n(x.i)).join(' · ')+'\n'+
+      'En primli: '+d.slice(-3).map(x=>x.k+' %'+n(x.i)).join(' · ')); } });
+
+  dene(()=>{ if(typeof VAPFON!=='undefined'&&VAPFON&&(VAPFON.tur_seri||[]).length){
+    const O=VAPFON.olculer||[], kS=O.find(x=>/Dönem Sonu Fon Tutar/i.test(x));
+    const sonAy=[...new Set(VAPFON.tur_seri.map(x=>x.ay))].sort().reverse()[0];
+    const o=VAPFON.tur_seri.filter(x=>x.ay===sonAy&&Number.isFinite(x[kS])).sort((a,b)=>b[kS]-a[kS]);
+    const top=o.reduce((a,x)=>a+x[kS],0);
+    P.push('## MKK FON BÜYÜKLÜĞÜ (resmî saklama · '+sonAy+')\n'+
+      'Toplam '+n(top/1e9,0)+' mlr ₺, '+o.length+' fon türü.\n'+
+      o.slice(0,6).map(x=>x.tur.replace(/ ŞEMSİYE FON[U]?$/i,'')+' '+n(x[kS]/1e9,0)+' mlr (%'+n(x[kS]/top*100)+')').join(' · ')); } });
+
+  dene(()=>{ if(typeof FONAKIS!=='undefined'&&FONAKIS){
+    const p=(FONAKIS.pencereler||{}); const par=[];
+    ['1G','1H','1A'].forEach(w=>{ const x=p[w]; if(x&&(x.pys||[]).length){
+      const s=x.pys.slice().sort((a,b)=>b.net-a.net);
+      par.push(w+' ('+(x.taban||'')+'→'+(x.gun||'')+'): giren '+s.slice(0,3).map(y=>y.kurucu+' +'+n(y.net/1e9)).join(', ')+
+        ' · çıkan '+s.slice(-2).map(y=>y.kurucu+' '+n(y.net/1e9)).join(', ')); } });
+    if(par.length) P.push('## PYŞ FON AKIŞI (TEFAS türevi · mlr ₺)\n'+par.join('\n')); } });
+
+  dene(()=>{ if(typeof FEK_SON!=='undefined'&&FEK_SON&&FEK_SON.t){
+    P.push('## SON FEK HESABI\n'+FEK_SON.kod+' · TTM '+(FEK_SON.t.donem||'')+
+      ' · çekirdek FAVÖK '+n((FEK_SON.t.ebitdaCekirdek||FEK_SON.t.ebitda)/1e6,0)+' mn'+
+      ' · ödenen faiz '+n(Math.abs(FEK_SON.t.odFaiz||0)/1e6,0)+' mn'+
+      ' · KV finansal borç '+n((FEK_SON.t.kvFinBorc||0)/1e6,0)+' mn'); } });
+
+  dene(()=>{ if(typeof KATFON!=='undefined'&&KATFON&&KATFON.kategoriler){
+    const t=[]; let top=0,ad=0;
+    KATFON.kategoriler.forEach(k=>{ const b=k.fonlar.reduce((a,f)=>a+(f.b||0),0);
+      t.push(k.ad+' '+n(b/1e9,0)+' mlr ('+k.fonlar.length+')'); top+=b; ad+=k.fonlar.length; });
+    P.push('## KATILIM FONLARI (TEFAS · '+(KATFON.fiyat_tarihi||'')+')\n'+
+      ad+' fon, toplam '+n(top/1e9,0)+' mlr ₺.\n'+t.join(' · ')); } });
+
+  dene(()=>{ const el=document.getElementById('cdsDeger'); if(el&&el.textContent.trim())
+    P.push('## TR 5Y CDS\n'+el.textContent.trim()); });
+
+  dene(()=>{ if(typeof CS_SON!=='undefined'&&CS_SON&&CS_SON.kod)
+    P.push('## AÇIK ÇEYREKLİK SERİ\n'+CS_SON.kod+' · '+((CS_SON.donemler||[]).length)+' çeyrek yüklü (enflasyon endeksli)'); });
+
+  P.push('## PANELDE AYRICA VAR (detay için kullanıcıyı yönlendir)\n'+
+    'Faktör Model (t6) · Portföy (t3) · Değerleme + FEK/KOPMA-σ (t9) · Teknik (t21) · Journal (t4) · '+
+    'Guidance (t8) · Earnings AI (t14) · Halka Arzlar (t20) · Yabancı Hisse (t25) · Finansal Tablolar/Çeyreklik Seri (t23) · '+
+    'GYO NAV (t26) · Sektörel Veriler: Katılım Fonları + PYŞ + MKK Fon (t27) · Sukuk (t10) · Commodity (t15) · '+
+    'ABD/Avrupa/Asya makro · Haberler (t7)');
+  return P.join('\n\n');
+}
+function sohbetBaglam(){
+  try{
+    const akt=document.querySelector('.tab.act');
+    const ad=akt?(akt.querySelector('h2')?akt.querySelector('h2').childNodes[0].textContent.trim():akt.id):'?';
+    const t=(document.getElementById('mulTicker')||{}).value||(document.getElementById('csKod')||{}).value||'';
+    return ad+(t?(' · seçili hisse: '+t):'');
+  }catch(e){ return ''; }
+}
+let SOHBET_GECMIS=[];
+async function sohbetGonder(){
+  const gir=document.getElementById('sbGiris'), akis=document.getElementById('sbAkis');
+  if(!gir||!akis) return;
+  const soru=String(gir.value||'').trim();
+  if(!soru) return;
+  gir.value='';
+  const esc2=(x)=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  akis.insertAdjacentHTML('beforeend','<div class="sb-ben">'+esc2(soru)+'</div>');
+  akis.insertAdjacentHTML('beforeend','<div class="sb-ebu" id="sbBekle"><span class="thin">düşünüyor…</span></div>');
+  akis.scrollTop=akis.scrollHeight;
+  try{
+    const r=await fetch('/api/ajanktp?mod=sohbet',{ method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ soru, ozet: sohbetOzet(), baglam: sohbetBaglam(), gecmis: SOHBET_GECMIS.slice(-6) }) });
+    const j=await r.json();
+    const b=document.getElementById('sbBekle'); if(b) b.remove();
+    if(!j.ok){ akis.insertAdjacentHTML('beforeend','<div class="sb-ebu" style="color:var(--down)">✗ '+esc2(j.err||'hata')+'</div>'); }
+    else{
+      const md=(x)=>esc2(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+      akis.insertAdjacentHTML('beforeend','<div class="sb-ebu">'+md(j.metin)+
+        ((j.aramalar||[]).length?('<div class="thin" style="font-size:10px;margin-top:6px">🔎 web: '+esc2(j.aramalar.join(' · '))+'</div>'):'')+
+        (j.kesildi?'<div class="thin" style="font-size:10px;color:#E8933B">⚠ yanıt uzunluk sınırında kesildi</div>':'')+'</div>');
+      SOHBET_GECMIS.push({rol:'ben',metin:soru},{rol:'ebu',metin:j.metin});
+      if(SOHBET_GECMIS.length>12) SOHBET_GECMIS=SOHBET_GECMIS.slice(-12);
+    }
+  }catch(e){
+    const b=document.getElementById('sbBekle'); if(b) b.remove();
+    akis.insertAdjacentHTML('beforeend','<div class="sb-ebu" style="color:var(--down)">✗ '+esc2(String(e.message||e))+'</div>');
+  }
+  akis.scrollTop=akis.scrollHeight;
+}
+function sohbetAc(){
+  const p=document.getElementById('sbPanel'); if(!p) return;
+  const acik=p.style.display!=='none';
+  p.style.display=acik?'none':'flex';
+  if(!acik){ const g=document.getElementById('sbGiris'); if(g) g.focus(); }
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  try{
+    const d=document.getElementById('sbDugme'); if(d) d.onclick=sohbetAc;
+    const k=document.getElementById('sbKapat'); if(k) k.onclick=sohbetAc;
+    const b=document.getElementById('sbGonder'); if(b) b.onclick=sohbetGonder;
+    const g=document.getElementById('sbGiris');
+    if(g) g.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sohbetGonder(); } });
+  }catch(e){}
+});
