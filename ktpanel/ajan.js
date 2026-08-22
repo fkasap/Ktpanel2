@@ -1657,6 +1657,36 @@ function sohbetOzet(){
   dene(()=>{ const el=document.getElementById('cdsDeger'); if(el&&el.textContent.trim())
     P.push('## TR 5Y CDS\n'+el.textContent.trim()); });
 
+  /* §387 MAKRO KARTLARI ÖZETE GİRER (canlı: "ABD'de TÜFE kaç" sorusuna panel
+     yerine WEB'e bakıldı — oysa ABD sekmesinde TÜFE, GSYH, Fed olasılıkları,
+     JOLTS, petrol stoku hepsi VAR).
+     Sebep: özet yalnız hisse/fon katmanlarını topluyordu. Makro kartları
+     DOM'da duruyor; metin olarak okunup özete konur.
+     SEKME AÇILMAMIŞSA kart boş olabilir — o durumda "sekme henüz
+     yüklenmedi" denir, model yine de kartın VARLIĞINI bilir ve kullanıcıyı
+     oraya yönlendirebilir ya da açtırabilir.
+     DERS: ÖZET KATMANI EKSİKSE MODEL PANELİ YOK SAYAR — kapsamı veri
+     kaynaklarıyla eşitle. */
+  const kartOku = (baslik, idler) => {
+    const par = [];
+    idler.forEach(id => {
+      const e = document.getElementById(id);
+      if (!e) return;
+      const t = (e.innerText || '').replace(/\s*\n\s*/g, ' · ').replace(/\s{2,}/g, ' ').trim();
+      if (t && t.length > 8 && !/yükleniyor/i.test(t)) par.push(t.slice(0, 900));
+    });
+    if (par.length) P.push('## ' + baslik + '\n' + par.join('\n'));
+    else P.push('## ' + baslik + '\n(sekme henüz açılmadı — veri panelde VAR, kullanıcıyı yönlendir ya da kartı aç)');
+  };
+  dene(()=>kartOku('ABD MAKRO (t17 · FRED/BLS canlı)',
+    ['usEnfBody','usGsyhBody','usFredBody','usRiskBody','usBuyumeBody','usEndeksBody','fedTufeVal','fomcSonraki','usBilancoBody']));
+  dene(()=>kartOku('AVRUPA (t18)', ['euEndeksBody','euMakroBody','euTahvilBody','ecbBody']));
+  dene(()=>kartOku('ASYA-PASİFİK (t16)', ['asyaEndeksBody','asyaMakroBody','cinBody']));
+  dene(()=>kartOku('TÜRKİYE MAKRO (t12/t2)', ['trEnfBody','trMakroBody','tcmbBody','egriBody','tlrefBody','makroKart']));
+  dene(()=>kartOku('KRİTİK TAKVİM', ['takvimTablo','makroTakvimBody']));
+  dene(()=>kartOku('EMTİA (t15)', ['emtiaOzet','emtiaBody']));
+  dene(()=>kartOku('SUKUK (t10)', ['skDegerlemeBody','skEgriBody','skIhracBody']));
+
   dene(()=>{ if(typeof CS_SON!=='undefined'&&CS_SON&&CS_SON.kod)
     P.push('## AÇIK ÇEYREKLİK SERİ\n'+CS_SON.kod+' · '+((CS_SON.donemler||[]).length)+' çeyrek yüklü (enflasyon endeksli)'); });
 
