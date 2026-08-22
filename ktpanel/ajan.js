@@ -1592,7 +1592,19 @@ async function taslakOnayla(btn){
    gereksiz olurdu; özet burada üretilip API'ye gönderilir.
    DÜRÜSTLÜK: özet sayıları YUVARLIDIR ve bu modele söylenir — kesin rakam
    isteyeni ilgili karta yönlendirir. */
-function sohbetOzet(){
+/* §388 SEÇİCİ ÖZET — KONTÖR TASARRUFU (22 Ağu, kullanıcı: "her soruda
+   kontörümü yiyor"). §386'da 141 hissenin TAMAMI + §387'de tüm makro
+   kartları her soruya ekleniyordu ≈ 12K token/soru.
+   ÇÖZÜM: soruya göre seç.
+   · Soruda hisse kodu geçiyorsa YALNIZ o hisselerin tam satırı + evren
+     istatistiği (medyan/uç değerler). Geçmiyorsa yalnız istatistik.
+   · Makro kartları yalnız soruda makro sözcüğü varsa.
+   · Fon/GYO katmanları yalnız ilgili sözcük varsa.
+   · Sekme haritası HER ZAMAN (kısa) — model neyin nerede olduğunu bilsin,
+     gerekirse kartı açsın ya da kullanıcıdan istesin.
+   Tipik soru ~1,5-3K token'a iner (%75-85 tasarruf).
+   DERS: "HEPSİNİ GÖNDER" KOLAY AMA PAHALI — soruyu okuyup seçmek beş kat ucuz. */
+function sohbetOzet(soru){
   const P=[]; const n=(v,h)=>Number.isFinite(v)?Number(v).toLocaleString('tr-TR',{maximumFractionDigits:h==null?1:h}):'—';
   const dene=(f)=>{ try{ f(); }catch(e){} };
 
@@ -1601,21 +1613,40 @@ function sohbetOzet(){
      141 hisse × ~70 karakter ≈ 10 KB — kabul edilebilir maliyet, ve model
      artık ÇARPANI KENDİSİ HESAPLAYABİLİR. EV/FAVÖK önceden hesaplanıp da
      konur ki model aritmetik hatası yapmasın. */
+  const S=String(soru||'').toLocaleUpperCase('tr');
+  const gecer=(...k)=>k.some(x=>S.includes(x.toLocaleUpperCase('tr')));
+  /* soruda geçen hisse kodları */
+  let hedefKod=[];
+  try{ if(typeof MULTIPLE!=='undefined'&&MULTIPLE&&MULTIPLE.hisseler)
+    hedefKod=MULTIPLE.hisseler.map(h=>h.k).filter(k=>new RegExp('\\b'+k+'\\b').test(S)); }catch(e){}
+  try{ if(typeof FEK_SON!=='undefined'&&FEK_SON&&FEK_SON.kod&&!hedefKod.includes(FEK_SON.kod)) hedefKod.push(FEK_SON.kod); }catch(e){}
+
   dene(()=>{ if(typeof MULTIPLE!=='undefined'&&MULTIPLE&&MULTIPLE.hisseler){
-    const sat=MULTIPLE.hisseler.map(h=>{
+    const tumu=MULTIPLE.hisseler.map(h=>{
       const f=(typeof CANLI_FIYAT!=='undefined'&&CANLI_FIYAT&&Number.isFinite(CANLI_FIYAT[h.k]))?CANLI_FIYAT[h.k]:h.fiyat;
       const pd=(Number.isFinite(f)&&Number.isFinite(h.adet))?f*h.adet:null;          /* mn ₺ */
       const ev=(Number.isFinite(pd)&&Number.isFinite(h.netBorc))?pd+h.netBorc:null;
       const ee=(Number.isFinite(ev)&&Number.isFinite(h.ebitda)&&h.ebitda>0)?ev/h.ebitda:null;
       const mj=(Number.isFinite(h.ebitda)&&Number.isFinite(h.ciro)&&h.ciro>0)?h.ebitda/h.ciro*100:null;
-      return h.k+' fiyat '+n(f,2)+' PD '+n(pd,0)+' netB '+n(h.netBorc,0)+' ciro '+n(h.ciro,0)+
-        ' FAVÖK '+n(h.ebitda,0)+' marj%'+n(mj)+' EV/FAVÖK '+(ee!=null?n(ee,1)+'x':'—');
+      return { k:h.k, ee, sat:h.k+' fiyat '+n(f,2)+' PD '+n(pd,0)+' netB '+n(h.netBorc,0)+' ciro '+n(h.ciro,0)+
+        ' FAVÖK '+n(h.ebitda,0)+' marj%'+n(mj)+' EV/FAVÖK '+(ee!=null?n(ee,1)+'x':'—') };
     });
-    P.push('## ÇARPAN EVRENİ — TÜM SAYILAR (multiple.json · fiyat '+(MULTIPLE.fiyat_tarihi||'')+' · tutarlar MİLYON ₺)\n'+
-      'EV/FAVÖK önceden hesaplandı (PD = canlı fiyat × pay adedi; EV = PD + net borç). Bu satırlardan doğrudan cevap ver.\n'+
-      sat.join('\n')); } });
+    const ev=tumu.map(x=>x.ee).filter(Number.isFinite).sort((a,b)=>a-b);
+    const med=ev.length?ev[Math.floor(ev.length/2)]:null;
+    const ist='## ÇARPAN EVRENİ (multiple.json · fiyat '+(MULTIPLE.fiyat_tarihi||'')+' · MİLYON ₺)\n'+
+      tumu.length+' hisse · EV/FAVÖK medyan '+(med!=null?n(med,1)+'x':'—')+
+      ' · en ucuz: '+tumu.filter(x=>Number.isFinite(x.ee)).sort((a,b)=>a.ee-b.ee).slice(0,5).map(x=>x.k+' '+n(x.ee,1)+'x').join(', ')+
+      ' · en pahalı: '+tumu.filter(x=>Number.isFinite(x.ee)).sort((a,b)=>b.ee-a.ee).slice(0,3).map(x=>x.k+' '+n(x.ee,1)+'x').join(', ');
+    if(hedefKod.length){
+      const sec=tumu.filter(x=>hedefKod.includes(x.k));
+      P.push(ist+'\n\nSORULAN HİSSELER (tam satır · EV/FAVÖK önceden hesaplandı):\n'+sec.map(x=>x.sat).join('\n'));
+    } else if(gecer('EN UCUZ','EN PAHALI','ÇARPAN','SIRALA','TARA','EV/FAVÖK','EV/EBITDA','LİSTE')){
+      P.push(ist+'\n\nTÜM EVREN:\n'+tumu.map(x=>x.sat).join('\n'));
+    } else {
+      P.push(ist+'\n(Belirli hisse sorulursa tam satırı gelir; kod yazması yeterli.)');
+    } } });
 
-  dene(()=>{ if(typeof GYONAV!=='undefined'&&GYONAV&&GYONAV.sirketler){
+  dene(()=>{ if(gecer('GYO','NAV','İSKONTO','GAYRIMENKUL','GAYRİMENKUL')&&typeof GYONAV!=='undefined'&&GYONAV&&GYONAV.sirketler){
     const S=GYONAV.sirketler, ks=Object.keys(S);
     const d=ks.map(k=>({k,i:Number.isFinite(S[k].guncelIskonto)?S[k].guncelIskonto:S[k].iskonto,b:S[k].borcluluk}))
       .filter(x=>Number.isFinite(x.i)).sort((a,b)=>a.i-b.i);
@@ -1624,7 +1655,7 @@ function sohbetOzet(){
       'En iskontolu: '+d.slice(0,6).map(x=>x.k+' %'+n(x.i)).join(' · ')+'\n'+
       'En primli: '+d.slice(-3).map(x=>x.k+' %'+n(x.i)).join(' · ')); } });
 
-  dene(()=>{ if(typeof VAPFON!=='undefined'&&VAPFON&&(VAPFON.tur_seri||[]).length){
+  dene(()=>{ if(gecer('FON','MKK','VAP','SEKTÖR','BÜYÜKLÜK','SERBEST','PARA PİYASASI')&&typeof VAPFON!=='undefined'&&VAPFON&&(VAPFON.tur_seri||[]).length){
     const O=VAPFON.olculer||[], kS=O.find(x=>/Dönem Sonu Fon Tutar/i.test(x));
     const sonAy=[...new Set(VAPFON.tur_seri.map(x=>x.ay))].sort().reverse()[0];
     const o=VAPFON.tur_seri.filter(x=>x.ay===sonAy&&Number.isFinite(x[kS])).sort((a,b)=>b[kS]-a[kS]);
@@ -1633,7 +1664,7 @@ function sohbetOzet(){
       'Toplam '+n(top/1e9,0)+' mlr ₺, '+o.length+' fon türü.\n'+
       o.slice(0,6).map(x=>x.tur.replace(/ ŞEMSİYE FON[U]?$/i,'')+' '+n(x[kS]/1e9,0)+' mlr (%'+n(x[kS]/top*100)+')').join(' · ')); } });
 
-  dene(()=>{ if(typeof FONAKIS!=='undefined'&&FONAKIS){
+  dene(()=>{ if(gecer('AKIŞ','PYŞ','PYS','GİRİŞ','ÇIKIŞ','PORTFÖY YÖNETİM','KURUCU')&&typeof FONAKIS!=='undefined'&&FONAKIS){
     const p=(FONAKIS.pencereler||{}); const par=[];
     ['1G','1H','1A'].forEach(w=>{ const x=p[w]; if(x&&(x.pys||[]).length){
       const s=x.pys.slice().sort((a,b)=>b.net-a.net);
@@ -1647,7 +1678,7 @@ function sohbetOzet(){
       ' · ödenen faiz '+n(Math.abs(FEK_SON.t.odFaiz||0)/1e6,0)+' mn'+
       ' · KV finansal borç '+n((FEK_SON.t.kvFinBorc||0)/1e6,0)+' mn'); } });
 
-  dene(()=>{ if(typeof KATFON!=='undefined'&&KATFON&&KATFON.kategoriler){
+  dene(()=>{ if(gecer('KATILIM','FAİZSİZ','KATFON','FON')&&typeof KATFON!=='undefined'&&KATFON&&KATFON.kategoriler){
     const t=[]; let top=0,ad=0;
     KATFON.kategoriler.forEach(k=>{ const b=k.fonlar.reduce((a,f)=>a+(f.b||0),0);
       t.push(k.ad+' '+n(b/1e9,0)+' mlr ('+k.fonlar.length+')'); top+=b; ad+=k.fonlar.length; });
@@ -1678,14 +1709,15 @@ function sohbetOzet(){
     if (par.length) P.push('## ' + baslik + '\n' + par.join('\n'));
     else P.push('## ' + baslik + '\n(sekme henüz açılmadı — veri panelde VAR, kullanıcıyı yönlendir ya da kartı aç)');
   };
-  dene(()=>kartOku('ABD MAKRO (t17 · FRED/BLS canlı)',
+  const makroSoz=gecer('TÜFE','ENFLASYON','FAİZ','FED','FOMC','GSYH','BÜYÜME','İŞSİZ','JOLTS','PETROL','MAKRO','TAHVİL','CDS','KUR','DOLAR','EURO','PPK','TCMB','ABD','AMERİKA','AVRUPA','ASYA','ÇİN','TAKVİM','VERİ');
+  if(makroSoz) dene(()=>kartOku('ABD MAKRO (t17 · FRED/BLS canlı)',
     ['usEnfBody','usGsyhBody','usFredBody','usRiskBody','usBuyumeBody','usEndeksBody','fedTufeVal','fomcSonraki','usBilancoBody']));
-  dene(()=>kartOku('AVRUPA (t18)', ['euEndeksBody','euMakroBody','euTahvilBody','ecbBody']));
-  dene(()=>kartOku('ASYA-PASİFİK (t16)', ['asyaEndeksBody','asyaMakroBody','cinBody']));
-  dene(()=>kartOku('TÜRKİYE MAKRO (t12/t2)', ['trEnfBody','trMakroBody','tcmbBody','egriBody','tlrefBody','makroKart']));
-  dene(()=>kartOku('KRİTİK TAKVİM', ['takvimTablo','makroTakvimBody']));
-  dene(()=>kartOku('EMTİA (t15)', ['emtiaOzet','emtiaBody']));
-  dene(()=>kartOku('SUKUK (t10)', ['skDegerlemeBody','skEgriBody','skIhracBody']));
+  if(makroSoz) dene(()=>kartOku('AVRUPA (t18)', ['euEndeksBody','euMakroBody','euTahvilBody','ecbBody']));
+  if(makroSoz) dene(()=>kartOku('ASYA-PASİFİK (t16)', ['asyaEndeksBody','asyaMakroBody','cinBody']));
+  if(makroSoz) dene(()=>kartOku('TÜRKİYE MAKRO (t12/t2)', ['trEnfBody','trMakroBody','tcmbBody','egriBody','tlrefBody','makroKart']));
+  if(makroSoz) dene(()=>kartOku('KRİTİK TAKVİM', ['takvimTablo','makroTakvimBody']));
+  if(makroSoz) dene(()=>kartOku('EMTİA (t15)', ['emtiaOzet','emtiaBody']));
+  if(makroSoz) dene(()=>kartOku('SUKUK (t10)', ['skDegerlemeBody','skEgriBody','skIhracBody']));
 
   dene(()=>{ if(typeof CS_SON!=='undefined'&&CS_SON&&CS_SON.kod)
     P.push('## AÇIK ÇEYREKLİK SERİ\n'+CS_SON.kod+' · '+((CS_SON.donemler||[]).length)+' çeyrek yüklü (enflasyon endeksli)'); });
@@ -1718,7 +1750,7 @@ async function sohbetGonder(){
   akis.scrollTop=akis.scrollHeight;
   try{
     const r=await fetch('/api/ajanktp?mod=sohbet',{ method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify({ soru, ozet: sohbetOzet(), baglam: sohbetBaglam(), gecmis: SOHBET_GECMIS.slice(-6) }) });
+      body: JSON.stringify({ soru, ozet: sohbetOzet(soru), baglam: sohbetBaglam(), gecmis: SOHBET_GECMIS.slice(-6) }) });
     const j=await r.json();
     const b=document.getElementById('sbBekle'); if(b) b.remove();
     if(!j.ok){ akis.insertAdjacentHTML('beforeend','<div class="sb-ebu" style="color:var(--down)">✗ '+esc2(j.err||'hata')+'</div>'); }
