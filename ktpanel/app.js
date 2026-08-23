@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822f';   // SS389 FEK gorunum birligi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822g';   // SS390 bakim capex uclu karar   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8124,6 +8124,19 @@ async function mulKapTTM(kod, opt){
       netBorc, donem:dolu[0].yil+'/'+dolu[0].donem+'Ç', kaynak:'KAP canlı',
       /* §369 */ amort:(aE>=3?amortTTM:null), odFaiz:(fE>=3?faizTTM:null), capex:(cE>=3?capexTTM:null),
       faizKaynak, faizCeyrek:fE,
+      /* §390b CİRO BÜYÜMESİ — bakım capex kararının üçüncü kuralı buna bakar
+         ("büyümeyen şirket kapasite eklemiyordur"). Veri ZATEN elimizde:
+         her raporun `onceki` sütunu geçen yılın aynı kümülatifi. Kümülatif
+         y/y kullanılır — dönem eşleşmesi birebir, mevsimsellik sorunu yok. */
+      buyume: (function(){
+        try{
+          const c0=al(0,'ifrs-full_Revenue','akis');
+          const cO=(function(){ const d=dolu[0]; const K=d&&d.K&&d.K['ifrs-full_Revenue'];
+            return (K&&Number.isFinite(K.onceki))?K.onceki:null; })();
+          if(Number.isFinite(c0)&&Number.isFinite(cO)&&cO>0) return { ciro:+((c0/cO-1)*100).toFixed(1) };
+        }catch(e){}
+        return { ciro:null };
+      })(),
       kvFinBorc, finBorc:borc, likit, kvY };
   }catch(e){ return null; }
 }
@@ -10139,7 +10152,44 @@ function fekCiz(){
   const coreFavok = Number.isFinite(t.ebitdaCekirdek) ? t.ebitdaCekirdek : t.ebitda;
   const asgari = Number.isFinite(t.ciro) ? t.ciro*0.02 : 0;
   const serbestLik = Number.isFinite(t.likit) ? Math.max(0, t.likit - asgari) : null;
-  const bakimCapex = Number.isFinite(t.amort) ? Math.abs(t.amort) : (Number.isFinite(t.capex)?Math.abs(t.capex)*0.5:null);
+  /* §390 BAKIM CAPEX — VEKİLDEN ÜÇLÜ KARARA (22 Ağu) ─────────────────────
+   SORUN: KAP'ta "bakım" ve "büyüme" capex AYRI DEĞİL — nakit akış tablosunda
+   tek satır ("MDV ve MODV alımları"). Çatı onarımıyla yeni üretim hattı aynı
+   yerde. Muhasebe standardı ayrımı zorunlu tutmuyor.
+   ESKİ VEKİL: bakım ≈ amortisman. Teorik dayanağı var (varlık tabanını yerinde
+   tutmak uzun vadede yıpranma kadar harcamak demektir) ama üç yerde zayıf:
+     · ENFLASYON: amortisman tarihî maliyetten, gerçek yenileme maliyetinin
+       ALTINDA kalır → bakım küçük görünür, FEK iyi çıkar.
+     · VARLIK YAŞI: yeni yatırım yapmışta gerçek ihtiyaç amortismanın altında,
+       eskimiş tesiste üstünde.
+     · SEKTÖR: yazılım/şerefiye itfası nakit çıkışı gerektirmez, vekil fazla
+       ceza keser.
+   YENİ KARAR (her ikisi de elimizde: t.amort ve t.capex):
+     1) capex YOKSA → amortisman (eski vekil, mecburen)
+     2) capex ≤ amortisman → capex'in KENDİSİ. Şirket yıpranma kadar bile
+        harcamıyorsa büyüme yatırımı yok demektir; hepsi bakımdır.
+     3) capex > amortisman → BÜYÜME AYIRIMI: fazlalık büyümeye atfedilir,
+        bakım = amortisman. Ama ciro BÜYÜMÜYORSA (y/y < %5 reel) bu varsayım
+        çürür — büyümeyen şirket kapasite eklemiyordur, capex'in tamamı
+        bakım/yenileme sayılır.
+   MUHAFAZAKÂR TARAF: kararsız kalınırsa YÜKSEK olan seçilir; bakım capex'i
+   az göstermek FEK'i olduğundan iyi gösterir.
+   DERS: AYRIM VERİDE YOKSA VEKİL KULLAN AMA VEKİLİN NEREDE ÇÜRÜDÜĞÜNÜ SÖYLE. */
+  const _amo = Number.isFinite(t.amort) ? Math.abs(t.amort) : null;
+  const _cpx = Number.isFinite(t.capex) ? Math.abs(t.capex) : null;
+  const _ciroBuyume = (t.buyume && Number.isFinite(t.buyume.ciro)) ? t.buyume.ciro : null;
+  let bakimCapex = null, capexNot = '';
+  if (!Number.isFinite(_cpx)) {
+    bakimCapex = _amo; capexNot = 'capex okunamadı → amortisman vekili';
+  } else if (!Number.isFinite(_amo)) {
+    bakimCapex = _cpx; capexNot = 'amortisman yok → capex\'in tamamı';
+  } else if (_cpx <= _amo) {
+    bakimCapex = _cpx; capexNot = 'capex ≤ amortisman → tamamı bakım (büyüme yatırımı yok)';
+  } else if (Number.isFinite(_ciroBuyume) && _ciroBuyume < 5) {
+    bakimCapex = _cpx; capexNot = 'ciro büyümüyor (%' + trN(_ciroBuyume,1) + ') → capex\'in tamamı bakım/yenileme sayıldı';
+  } else {
+    bakimCapex = _amo; capexNot = 'capex ' + trN(_cpx/1e6,0) + ' > amortisman → fazlası BÜYÜME, bakım = amortisman';
+  }
   const kapasite = S(coreFavok, serbestLik, Number.isFinite(bakimCapex)?-bakimCapex:null);
   /* §376 NAKDE DÖNÜŞÜM ORANI (eleştiri #7 — "araca ekleyeceğim tek satır"):
      çekirdek FAVÖK ÷ işletme faaliyetlerinden nakit akışı.
@@ -10211,7 +10261,9 @@ function fekCiz(){
         '<div class="lbl" style="font-size:11px;margin-bottom:6px">KAPASİTE</div>'+
         sat('Çekirdek FAVÖK (TTM)', coreFavok, false, 'brüt kâr − pazarlama − genel yönetim − ArGe + amortisman; diğer faaliyet gelirleri HARİÇ')+
         sat('Serbest likidite', serbestLik, false, 'nakit + KV finansal yatırım − asgari işletme nakdi (ciro %2)')+
-        sat('Bakım capex', bakimCapex, true, 'amortisman kadar; büyüme capex\'i isteğe bağlı sayılır')+
+        sat('Bakım capex', bakimCapex, true, capexNot)+
+        '<div class="kv"><span class="k thin" style="font-size:9.5px">'+esc(capexNot)+'</span><span class="num thin" style="font-size:9.5px">'+
+          (Number.isFinite(_cpx)?('capex '+mlrG(_cpx)):'')+(Number.isFinite(_amo)?(' · amort '+mlrG(_amo)):'')+'</span></div>'+
         '<div style="border-top:1px solid var(--line);margin-top:7px;padding-top:6px;display:flex;justify-content:space-between"><b style="font-size:11px">TOPLAM</b><b style="font-family:var(--mono);font-size:14px">'+mlrG(kapasite)+' mn ₺</b></div>'+
       '</div>'+
       '<div style="font-size:26px;color:var(--muted);text-align:center">÷</div>'+
