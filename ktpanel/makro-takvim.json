@@ -1,180 +1,132 @@
 {
- "guncelleme": "2026-08-22 21:59 UTC — otomatik (§319)",
+ "guncelleme": "2026-08-23 07:52 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
-   "t": "2026-08-17T12:30:00.000Z",
-   "ulke": "CAD",
+   "t": "2026-08-24T18:00:00.000Z",
+   "ulke": "USD",
+   "olay": "Treasury Sec Bessent Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-08-25T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "CB Consumer Confidence",
+   "etki": "Medium",
+   "beklenti": "90.3",
+   "onceki": "90.8"
+  },
+  {
+   "t": "2026-08-26T01:30:00.000Z",
+   "ulke": "AUD",
    "olay": "CPI m/m",
    "etki": "High",
-   "beklenti": "0.4%",
-   "onceki": "-0.4%"
+   "beklenti": "0.9%",
+   "onceki": "-0.1%"
   },
   {
-   "t": "2026-08-17T12:30:00.000Z",
-   "ulke": "CAD",
-   "olay": "Median CPI y/y",
-   "etki": "High",
-   "beklenti": "2.0%",
-   "onceki": "1.9%"
-  },
-  {
-   "t": "2026-08-17T12:30:00.000Z",
-   "ulke": "CAD",
-   "olay": "Trimmed CPI y/y",
-   "etki": "High",
-   "beklenti": "1.8%",
-   "onceki": "1.8%"
-  },
-  {
-   "t": "2026-08-18T06:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "Claimant Count Change",
-   "etki": "High",
-   "beklenti": "16.5K",
-   "onceki": "6.7K"
-  },
-  {
-   "t": "2026-08-18T06:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "Average Earnings Index 3m/y",
-   "etki": "Medium",
-   "beklenti": "4.0%",
-   "onceki": "4.3%"
-  },
-  {
-   "t": "2026-08-19T06:00:00.000Z",
-   "ulke": "GBP",
+   "t": "2026-08-26T01:30:00.000Z",
+   "ulke": "AUD",
    "olay": "CPI y/y",
    "etki": "High",
-   "beklenti": "2.9%",
-   "onceki": "2.6%"
+   "beklenti": "3.3%",
+   "onceki": "3.8%"
   },
   {
-   "t": "2026-08-19T07:10:00.000Z",
-   "ulke": "EUR",
-   "olay": "ECB President Lagarde Speaks",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-08-19T10:15:00.000Z",
-   "ulke": "EUR",
-   "olay": "ECB President Lagarde Speaks",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-08-19T18:00:00.000Z",
-   "ulke": "USD",
-   "olay": "FOMC Meeting Minutes",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-08-19T18:30:00.000Z",
-   "ulke": "USD",
-   "olay": "President Trump Speaks",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-08-20T01:30:00.000Z",
+   "t": "2026-08-26T01:30:00.000Z",
    "ulke": "AUD",
-   "olay": "Employment Change",
+   "olay": "Trimmed Mean CPI m/m",
    "etki": "High",
-   "beklenti": "11.7K",
-   "onceki": "76.3K"
+   "beklenti": "0.3%",
+   "onceki": "0.3%"
   },
   {
-   "t": "2026-08-20T01:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "Unemployment Rate",
-   "etki": "High",
-   "beklenti": "4.4%",
-   "onceki": "4.4%"
-  },
-  {
-   "t": "2026-08-20T12:30:00.000Z",
+   "t": "2026-08-26T12:30:00.000Z",
    "ulke": "USD",
-   "olay": "Philly Fed Manufacturing Index",
-   "etki": "Medium",
-   "beklenti": "24.1",
-   "onceki": "41.4"
+   "olay": "Core PCE Price Index m/m",
+   "etki": "High",
+   "beklenti": "0.2%",
+   "onceki": "0.1%"
   },
   {
-   "t": "2026-08-20T12:30:00.000Z",
+   "t": "2026-08-26T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Prelim GDP q/q",
+   "etki": "High",
+   "beklenti": "1.5%",
+   "onceki": "1.5%"
+  },
+  {
+   "t": "2026-08-26T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Prelim GDP Price Index q/q",
+   "etki": "Medium",
+   "beklenti": "6.2%",
+   "onceki": "6.2%"
+  },
+  {
+   "t": "2026-08-27T12:30:00.000Z",
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "210K",
-   "onceki": "209K"
+   "beklenti": "208K",
+   "onceki": "206K"
   },
   {
-   "t": "2026-08-21T06:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "Retail Sales m/m",
+   "t": "2026-08-27T23:30:00.000Z",
+   "ulke": "JPY",
+   "olay": "Tokyo Core CPI y/y",
    "etki": "Medium",
-   "beklenti": "-0.5%",
-   "onceki": "1.0%"
+   "beklenti": "1.8%",
+   "onceki": "1.9%"
   },
   {
-   "t": "2026-08-21T07:15:00.000Z",
-   "ulke": "EUR",
-   "olay": "French Flash Manufacturing PMI",
-   "etki": "Medium",
-   "beklenti": "50.1",
-   "onceki": "50.0"
+   "t": "2026-08-28T12:30:00.000Z",
+   "ulke": "CAD",
+   "olay": "GDP m/m",
+   "etki": "High",
+   "beklenti": "0.2%",
+   "onceki": "0.3%"
   },
   {
-   "t": "2026-08-21T07:15:00.000Z",
-   "ulke": "EUR",
-   "olay": "French Flash Services PMI",
-   "etki": "Medium",
-   "beklenti": "49.4",
-   "onceki": "49.8"
-  },
-  {
-   "t": "2026-08-21T07:30:00.000Z",
-   "ulke": "EUR",
-   "olay": "German Flash Manufacturing PMI",
-   "etki": "Medium",
-   "beklenti": "52.1",
-   "onceki": "52.2"
-  },
-  {
-   "t": "2026-08-21T07:30:00.000Z",
-   "ulke": "EUR",
-   "olay": "German Flash Services PMI",
-   "etki": "Medium",
-   "beklenti": "50.1",
-   "onceki": "49.6"
-  },
-  {
-   "t": "2026-08-21T08:30:00.000Z",
-   "ulke": "GBP",
-   "olay": "Flash Manufacturing PMI",
-   "etki": "Medium",
-   "beklenti": "51.6",
-   "onceki": "52.8"
-  },
-  {
-   "t": "2026-08-21T08:30:00.000Z",
-   "ulke": "GBP",
-   "olay": "Flash Services PMI",
-   "etki": "Medium",
-   "beklenti": "51.8",
-   "onceki": "51.8"
-  },
-  {
-   "t": "2026-08-21T23:00:00.000Z",
+   "t": "2026-08-28T14:00:00.000Z",
    "ulke": "USD",
-   "olay": "President Trump Speaks",
+   "olay": "Fed Chairman Warsh Speaks",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-08-28T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "Prelim Benchmark Payrolls Revision",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": "-911K"
+  },
+  {
+   "t": "2026-08-28T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "Revised UoM Consumer Sentiment",
    "etki": "Medium",
+   "beklenti": "51.0",
+   "onceki": "51.0"
+  },
+  {
+   "t": "2026-08-28T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "Revised UoM Inflation Expectations",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": "4.3%"
+  },
+  {
+   "t": "2026-08-28T16:15:00.000Z",
+   "ulke": "All",
+   "olay": "Jackson Hole Symposium",
+   "etki": "High",
    "beklenti": "",
    "onceki": ""
   }
