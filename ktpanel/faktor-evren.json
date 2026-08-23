@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-23T07:53:44Z",
+ "guncelleme": "2026-08-23T09:27:48Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -1974,8 +1974,76 @@
    "adet": 112000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
+  },
+  "MARBL": {
+   "ts": "2026-08-23T09:27:07Z",
+   "y": "362",
+   "donem": "2026/2",
+   "ceyrek": 5,
+   "ciro": 3546983045,
+   "brut": 1417194721,
+   "favok": 440293940,
+   "netKar": -45536239,
+   "ozk": 2622022924,
+   "aktif": 4670389837,
+   "donen": 2340256555,
+   "kvY": 1518634541,
+   "finBorc": 1181613895,
+   "likit": 210439965,
+   "netBorc": 971173930,
+   "isletmeNA": 360644720,
+   "capex": -142605039,
+   "sna": 218039681,
+   "tahakkuk": -8.7,
+   "odFaiz": -157381553,
+   "odTemettu": null,
+   "stoklar": 1492348108,
+   "ticariAlacak": 396561638,
+   "ticariBorc": 405146167,
+   "buyume": {
+    "ciro": 20.8,
+    "netKar": -64.9,
+    "brut": 15.1
+   },
+   "adet": 228600000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "eksik": false
+  },
+  "MCARD": {
+   "ts": "2026-08-23T09:27:17Z",
+   "y": "362",
+   "donem": "2026/2",
+   "ceyrek": 2,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "netKar": null,
+   "ozk": 2734812336,
+   "aktif": 8956301068,
+   "donen": 6843757805,
+   "kvY": 5825460106,
+   "finBorc": 640795537,
+   "likit": 3517988670,
+   "netBorc": -2877193133,
+   "isletmeNA": null,
+   "capex": null,
+   "sna": null,
+   "tahakkuk": null,
+   "odFaiz": null,
+   "odTemettu": null,
+   "stoklar": 11660147,
+   "ticariAlacak": 3135299262,
+   "ticariBorc": 3454323546,
+   "buyume": {
+    "ciro": 30.3,
+    "netKar": -31.5,
+    "brut": 19.8
+   },
+   "adet": 92600000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "eksik": true
   }
  },
  "uye_sayisi": 245,
- "kapsam": 58
+ "kapsam": 60
 }

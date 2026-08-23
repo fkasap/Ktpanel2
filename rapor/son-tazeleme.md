@@ -50,9 +50,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### TEFAS köprü (bilgi)
 - getiri: 1058 fon ✓ · liste: 1048 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
+### TEFAS alan keşfi (bilgi)
+- uç: `/api/statistics/tefas/getFplFonList`
+- alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
+
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009012199144> [Go Back]`
+- yakalanan JSON: 1 / toplam yanıt: 85 · sayfa: "Fon Getirileri - TEFAS Fon Bilgilendirme ve Karşılaştırma | " · gövde: `Görme engelliler için erişilebilirliği etkinleştirin Erişilebilirlik menüsünü açma Erişilebilir Gezinme Menüsünü Açın Ana içeriğe geç Ana Sayfa Fon Getirileri Fon Karşılaştır F` · uçlar: /api/statistics/tefas/getFplFonList (1048)
 
 ### Katılım fonları — ✓ GETİRİ-MODU: 36/46 fonun 5 dönem getirisi + fiyat/1G yazıldı (AUM/akış önceki turdan)
 
@@ -102,15 +106,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-26 12:30Z · USD · Prelim GDP q/q
 - 2026-08-28 12:30Z · CAD · GDP m/m
 
-- §383 arşive yazıldı: +10 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
+- §383 arşive yazıldı: +7 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 58/245
-- bu turda: 2 tam · 0 eksik kalemli · 4 alınamadı
-- not: CITAS:liste boş · DENGE:liste boş · MARBL:2026: fetch failed · MCARD:2026: fetch failed
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 60/245
+- bu turda: 1 tam · 1 eksik kalemli · 4 alınamadı
+- not: CITAS:liste boş · DENGE:liste boş · MCARD:2 ana kalem boş · MEGMT:2026: fetch failed · MEKAG:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
-- MARBL:2026: fetch failed (1. kez) · MCARD:2026: fetch failed (1. kez)
+- MEGMT:2026: fetch failed (1. kez) · MEKAG:2026: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -143,9 +147,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (58/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.34 bp) · katılım fonları (getiri-modu 36) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (60/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 75 sn
+- ⏱ Faktör evreni (§361) — 71 sn
 - ⏱ KAP arşivi (§381) — 72 sn
-- toplam: 210 sn
+- toplam: 214 sn
