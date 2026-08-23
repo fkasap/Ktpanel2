@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822k';   // SS393 aykiri listesi + DD tavani   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822m';   // SS394 doygunluk esikleri hizalandi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10394,10 +10394,25 @@ function fekCiz(){
            orada sayı üretmek sahte kesinliktir. Metriğin bilgi taşıdığı aralık
            kabaca FEK 0,8-3,0.
            DERS: BIR MODELIN GECERLI ARALIGI VARSA EKRAN ONU BILMELI. */
+        /* §394 DOYGUNLUK EŞİKLERİ HİZALANDI (CIMSA'da yakalandı: KOPMA-σ
+           "risk bilançoda değil" derken FEK aynı ekranda "Dar emniyet 3/5"
+           diyordu). Sebep: FEK'in eşiği 10x, KOPMA-σ'nınki 4σ — FARKLI
+           ÖLÇEKLER, farklı yerlerde devreye giriyorlardı.
+           ORTAK ÖLÇÜT: yük/kapasite oranı. Yük kapasitenin %10'undan büyükse
+           borç servisi HÂLÂ bir konudur ve KOPMA-σ "risk yok" diyemez —
+           4σ'yı aşsa bile "ölçüm dışı" metni basılmaz, sayı gösterilir.
+           CIMSA'da yük/kapasite %15,5: FEK'in not vermesi doğru, KOPMA-σ'nın
+           susması yanlıştı.
+           DERS: İKİ ÖLÇÜ AYNI EKRANDAYSA DOYGUNLUK EŞİKLERİ AYNI BÜYÜKLÜĞE
+           BAKMALI — yoksa biri "risk yok" derken diğeri not verir. */
+        const yukOran = (Number.isFinite(kapasite)&&kapasite>0&&Number.isFinite(yuk)) ? yuk/kapasite : null;
+        const yukOnemsiz = Number.isFinite(yukOran) && yukOran < 0.10;
         const KS_TAVAN = 4.0;
         const ksHam = -_phiTers(pd);
-        const doygun = !Number.isFinite(ksHam) || ksHam >= KS_TAVAN;
-        const ks = doygun ? KS_TAVAN : ksHam;
+        /* §394: 4σ'yı aşsa bile yük önemliyse "ölçüm dışı" DEME */
+        const doygun = (!Number.isFinite(ksHam) || ksHam >= KS_TAVAN) && yukOnemsiz;
+        const tavanli = Number.isFinite(ksHam) && ksHam >= KS_TAVAN;
+        const ks = tavanli ? KS_TAVAN : ksHam;
         let sev2 = KOPMA_NOT.find(x=>ks>=x.esik) || KOPMA_NOT[KOPMA_NOT.length-1];
         /* §375b VETO BİLEŞİĞE UYGULANIR (eleştirinin en haklı maddesi):
            V2 tetikliyken FEK 2'ye tavanlanıyor ama hemen altında KOPMA-σ
@@ -10485,7 +10500,11 @@ function fekCiz(){
               '<td class="num" style="font-family:var(--mono)"><b>%'+trN(pd*100,1)+'</b></td></tr>'+
           '</tbody></table>'+
           '<div class="sub" style="font-size:10.5px;margin-top:8px;padding:7px 10px;background:rgba(232,147,59,.08);border-left:3px solid #E8933B">'+
-            (doygun
+            ((tavanli && !doygun)
+              ? ('<b>Kopma mesafesi 4σ üzerinde</b> ama yük kapasitenin <b>%'+trN(yukOran*100,1)+'</b>\'i — borç servisi hâlâ bir konudur, "risk yok" denemez. '+
+                 'σ o kadar düşük ki (%'+trN(sgManset*100,1)+') model geniş bir güvenlik payı görüyor; bu, oynaklığın düşük olmasından, yükün küçük olmasından değil. '+
+                 'FEK oranına ve faiz kaleminin doğruluğuna bakın.')
+              : doygun
               ? '<b>Ölçüm aralığı dışı.</b> Yük kapasiteye göre çok küçük; 4σ üzerinde normal dağılım varsayımı model riskinden daha az güvenilir olur, bu yüzden sayı üretilmez. Bu şirkette risk bilançoda değil — oraya bakmak yanlış yere fener tutmaktır. <span class="thin">Metriğin bilgi taşıdığı aralık kabaca FEK 0,8-3,0.</span>'
               : ('Toplam riskin <b>%'+trN(krizPay,0)+' kadarı</b> yalnız %'+trN(p*100,0)+' olasılıklı kriz dalından geliyor. '+
                  'Tek rejimli naif bir DD %'+trN(_phi(-ddB)*100,1)+' gösterirdi — gerçek riskin '+trN(pd/Math.max(_phi(-ddB),1e-9),1)+' katı az. '+
