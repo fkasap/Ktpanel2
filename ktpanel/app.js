@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822j';   // SS392c ayrisma nihai not   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822k';   // SS393 aykiri listesi + DD tavani   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10076,8 +10076,17 @@ function kopmaSigma(marjSeri, kapasite, coreFavok, rho){
   const ortK=mKullan.reduce((a,b)=>a+b,0)/mKullan.length;
   const sdK=Math.sqrt(mKullan.reduce((a,b)=>a+(b-ortK)*(b-ortK),0)/(mKullan.length-1));
   /* aykırı: medyandan 3 MAD uzak */
-  const aykiri=(marjSeri||[]).filter(x=>Number.isFinite(x.marj) && mad>0 && Math.abs(x.marj-medyan)>3*mad)
-    .map(x=>x.donem+' (%'+x.marj.toFixed(1)+')');
+  /* §393 AYKIRI LİSTESİ KULLANILAN SERİDEN (NTGAZ'da yakalandı: 8 çeyreğin
+     6'sı "aykırı" listelendi — tanım gereği imkânsız). Sebep: mevsimsellik
+     arındırılınca σ TTM serisinden hesaplanıyor ama aykırı tespiti hâlâ
+     ÇEYREKLİK seriye bakıyordu. TTM çok düzgün olduğu için MAD küçülüyor,
+     çeyrekliklerin neredeyse hepsi 3 MAD dışında kalıyor — elmayla armut.
+     Mevsimsel seride "aykırı çeyrek" kavramı zaten anlamsız: sapmanın
+     kaynağı mevsim, aykırılık değil.
+     DERS: BİR EŞİĞİ HANGİ SERİDEN HESAPLADIYSAN O SERİYE UYGULA. */
+  const aykiri = mevsimsel ? [] :
+    (marjSeri||[]).filter(x=>Number.isFinite(x.marj) && mad>0 && Math.abs(x.marj-medyan)>3*mad)
+      .map(x=>x.donem+' (%'+x.marj.toFixed(1)+')');
   const ort=medyan, sd=(mad>0?mad:sdK);
   if(!(Math.abs(ort)>0.01)) return null;
   const cvCeyrek=Math.abs(sd/ort);
@@ -10465,11 +10474,11 @@ function fekCiz(){
             '<thead><tr><th style="text-align:left">REJİM</th><th class="num">λ</th><th class="num">Yük mn ₺</th><th class="num">DD</th><th class="num">PD</th></tr></thead><tbody>'+
             '<tr><td>Baz — banka yeniler <span class="thin">(%'+trN((1-p)*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">'+trN(lamBaz,3)+'</td>'+
               '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamBaz))+'</td>'+
-              '<td class="num" style="font-family:var(--mono);color:'+(ddB>0?'var(--up)':'var(--down)')+'">'+(ddB>0?'+':'')+trN(ddB,2)+'σ</td>'+
+              '<td class="num" style="font-family:var(--mono);color:'+(ddB>0?'var(--up)':'var(--down)')+'">'+(Math.abs(ddB)>=10?((ddB>0?'≥+':'≤−')+'10σ'):((ddB>0?'+':'')+trN(ddB,2)+'σ'))+'</td>'+
               '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddB)*100,1)+'</td></tr>'+
             '<tr><td>Kriz — yenilemez <span class="thin">(%'+trN(p*100,0)+')</span></td><td class="num" style="font-family:var(--mono)">'+trN(lamKriz,3)+'</td>'+
               '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamKriz))+'</td>'+
-              '<td class="num" style="font-family:var(--mono);color:'+(ddK>0?'var(--up)':'var(--down)')+'">'+(ddK>0?'+':'')+trN(ddK,2)+'σ</td>'+
+              '<td class="num" style="font-family:var(--mono);color:'+(ddK>0?'var(--up)':'var(--down)')+'">'+(Math.abs(ddK)>=10?((ddK>0?'≥+':'≤−')+'10σ'):((ddK>0?'+':'')+trN(ddK,2)+'σ'))+'</td>'+
               '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddK)*100,1)+'</td></tr>'+
             '<tr style="background:var(--bg2)"><td><b>Karışım</b></td><td class="num"></td><td class="num"></td>'+
               '<td class="num" style="font-family:var(--mono)"><b>'+trN(ks,2)+'σ</b></td>'+
