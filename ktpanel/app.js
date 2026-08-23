@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822h';   // SS391 FEK doygunluk + kosullu faiz cezasi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822i';   // SS392 faiz cezasi tutarliligi + doviz bandi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10219,7 +10219,12 @@ function fekCiz(){
   const borcVar = Number.isFinite(t.finBorc) && t.finBorc > 0;
   const faizYok = borcVar && !Number.isFinite(netFaiz);
   const faizVekil = Number.isFinite(netFaiz) && t.faizKaynak && t.faizKaynak!=='finansman';
-  const faizSupheli = faizYok || (Number.isFinite(ortFaizOran) && ortFaizOran < 0.08);
+  /* §392b DÖVİZ KREDİSİ BANDI (JANTS: örtük faiz %7,8 — TL için düşük ama
+     İHRACATÇIDA EUR/USD kredisi için NORMAL). Eşik sessizce TL varsayıyordu.
+     %4-9 bandı "döviz kredisi olabilir" diye AYRI işaretlenir; %4 altı hâlâ
+     şüpheli (o kadar ucuz kredi yok). */
+  const dovizBandi = Number.isFinite(ortFaizOran) && ortFaizOran >= 0.04 && ortFaizOran < 0.09;
+  const faizSupheli = faizYok || (Number.isFinite(ortFaizOran) && ortFaizOran < 0.09);
   const kvBorc = Number.isFinite(t.kvFinBorc) ? t.kvFinBorc : null;
   const rollover = Number.isFinite(kvBorc) ? kvBorc*lam : null;
   const yuk = S(netFaiz, rollover);
@@ -10330,12 +10335,13 @@ function fekCiz(){
         : (nakdeDonusum<1.2 ? 'Kâr nakde dönüyor — payın kalitesi yüksek.' : 'Kabul edilebilir aralık; 2,0 üstü uyarı eşiğidir.'))+
       '</div></div>'):'')+
     (faizSupheli?('<div style="margin-top:12px;border-left:3px solid #E8933B;padding:8px 12px;background:rgba(232,147,59,.07)">'+
-      '<b style="font-size:11px;color:#E8933B">⚠ FAİZ KALEMİ ŞÜPHELİ</b>'+
+      '<b style="font-size:11px;color:#E8933B">⚠ '+(dovizBandi?'FAİZ ORANI DÜŞÜK — DÖVİZ KREDİSİ Mİ?':'FAİZ KALEMİ ŞÜPHELİ')+'</b>'+
       '<div class="sub" style="font-size:10.5px;margin-top:3px">'+
       (faizYok
         ? ('Finansal borç <b>'+mlrG(t.finBorc)+' mn</b> ama nakit akış tablosunun <b>finansman</b> bölümünde ödenen faiz satırı <b>YOK</b>. ')
-        : ('Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '))+
-      'TL borçta bu oran gerçekçi değil — faiz büyük olasılıkla nakit akış tablosunda <b>işletme faaliyetleri</b> altında raporlanmış (IAS 7 buna izin verir) ve finansman satırından okunamıyor. '+
+        : ('Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '+
+           (dovizBandi ? '<b>TL kredisi için düşük ama DÖVİZ kredisi için normaldir</b> — ihracatçı ya da döviz gelirli şirketlerde beklenen bant. Borç kompozisyonuna bakın; ağırlıklı dövizse bu uyarıyı yok sayabilirsiniz. ' : '')))+
+      (dovizBandi ? '' : 'TL borçta bu oran gerçekçi değil — faiz büyük olasılıkla nakit akış tablosunda <b>işletme faaliyetleri</b> altında raporlanmış (IAS 7 buna izin verir) ve finansman satırından okunamıyor. ')+
       (faizEtkili
         ? '<b>Yük hafife alınmış olabilir; FEK ve KOPMA-σ olduğundan İYİ görünür.</b> Şirketin nakit akış tablosundaki faiz satırını elle doğrulayın. <b>Not 3\'e tavanlandı.</b>'
         : '<b>Ama sonucu değiştirmiyor:</b> faiz 10 katına çıksa bile FEK yüksek kalıyor — yük kapasiteye göre önemsiz. Bu yüzden not CEZALANDIRILMADI, yalnız bilgi olarak işaretlendi.')+
@@ -10396,6 +10402,15 @@ function fekCiz(){
            DİĞER ÖLÇÜYÜ DE TAVANLAMALI. */
         const kopmaVetolu = vetolar.length>0 && sev2.not>2;
         if(kopmaVetolu) sev2 = KOPMA_NOT.find(x=>x.not===2);
+        /* §392 FAİZ CEZASI HER İKİ ÖLÇÜYE (JANTS: FEK 3/5 ama KOPMA-σ 5/5 —
+           aynı şüpheli faiz FEK'i cezalandırıp KOPMA-σ'yı muaf tutuyordu).
+           Girdi güvenilmezse HER İKİ çıktı da güvenilmez; birini tavanlayıp
+           diğerini bırakmak kullanıcıyı hangisine inanacağı konusunda ortada
+           bırakır.
+           DERS: BİR GİRDİ ŞÜPHELİYSE ONU KULLANAN TÜM ÇIKTILAR AYNI ŞEKİLDE
+           İŞARETLENİR. */
+        const kopmaFaizli = faizSupheli && faizEtkili && sev2.not>3;
+        if(kopmaFaizli) sev2 = KOPMA_NOT.find(x=>x.not===3);
         const krizPay = (pd>1e-9) ? (p*_phi(-ddK))/pd*100 : null;
         /* duyarlılık: p × λ_kriz ızgarası */
         /* §375d DUYARLILIK EKSENİ DEĞİŞTİ (eleştiri #3): λ × p ızgarası
@@ -10418,7 +10433,7 @@ function fekCiz(){
           '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px">'+
             '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+(doygun?'≥4,0σ':trN(ks,2)+'σ')+'</span></div>'+
             '<div><span class="sub">12 ayda zorunlu finansman olayı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">'+(doygun?'&lt;%0,1':('%'+trN(pd*100,1)))+'</span></div>'+
-            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+(kopmaVetolu?' <span class="thin" style="font-size:10px">veto tavanı</span>':'')+'</span>'+
+            '<div><span class="sub">Not</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600;color:'+sev2.renk+'">'+sev2.not+'/5 · '+esc(sev2.ad)+(kopmaVetolu?' <span class="thin" style="font-size:10px">veto tavanı</span>':(kopmaFaizli?' <span class="thin" style="font-size:10px">faiz tavanı</span>':''))+'</span>'+
               /* §377b SINIR MESAFESİ: bir sınıfın ORTASINDA olmakla KENARINDA
                  olmak farklıdır. Alt sınıra kaç σ puanı kaldığı yazılır —
                  σ'nın ne kadar artmasıyla notun düşeceği doğrudan görünür. */
