@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822g';   // SS390 bakim capex uclu karar   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822h';   // SS391 FEK doygunluk + kosullu faiz cezasi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10245,8 +10245,28 @@ function fekCiz(){
        yazılır — kısmi bilgi, kısmi güven.
      DERS: BİR SONUCA GÜVENMİYORSAN ONU NOTLANDIRMA. Uyarı, notun yanında
      değil YERİNE geçmeli. */
-  const notYok = faizYok;
-  if(!notYok && faizSupheli && sev && sev.not>3) sev=FEK_NOT.find(x=>x.not===3);
+  /* §391 FEK DOYGUNLUĞU + KOŞULLU FAİZ CEZASI (ASELS'te yakalandı) ────────
+     İKİ HATA:
+     (a) FEK 53,32x diye bir sayı basılıyordu. KOPMA-σ aynı durumu doğru
+         okuyup "ölçüm aralığı dışı" diyor ama FEK sayı üretmeye devam
+         ediyordu. Yük kapasitenin %1,9'u iken oranın kesinliği sahte:
+         payda küçüldükçe oran patlar, bilgi taşımaz. 10x üstü DOYGUN.
+     (b) Faiz şüpheli diye not 3'e TAVANLANMIŞTI. Ama yük zaten önemsizse
+         faiz on kat yanlış olsa bile sonuç değişmez — ceza yersiz.
+         Tavan yalnız faizin SONUCU DEĞİŞTİREBİLECEĞİ durumda uygulanır:
+         faiz 10 katına çıksa FEK 3'ün altına düşüyor mu? Düşmüyorsa ceza yok.
+     DERS: BİR UYARI SONUCU DEĞİŞTİRMİYORSA CEZAYA DÖNÜŞMEMELİ. */
+  const FEK_DOYGUN = 10;
+  const fekDoygun = Number.isFinite(fek) && fek >= FEK_DOYGUN;
+  const notYok = faizYok && !fekDoygun;   /* yük önemsizse faiz eksikliği de önemsiz */
+  /* faiz cezası: faiz 10× olsaydı not düşer miydi? */
+  let faizEtkili = false;
+  if(faizSupheli && Number.isFinite(kapasite) && Number.isFinite(yuk) && yuk>0){
+    const yukStres = yuk + (Number.isFinite(netFaiz) ? netFaiz*9 : (Number.isFinite(t.finBorc)? t.finBorc*0.25 : 0));
+    const fekStres = kapasite/yukStres;
+    faizEtkili = fekStres < 3.5;          /* stres altında not düşüyorsa uyarı ANLAMLI */
+  }
+  if(!notYok && faizSupheli && faizEtkili && sev && sev.not>3) sev=FEK_NOT.find(x=>x.not===3);
   const mlrG=(v)=> Number.isFinite(v) ? trN(v/mn, Math.abs(v/mn)>=1000?0:0) : '—';
   /* §373b BOŞ KALEM "+0" GÖRÜNÜYORDU (BIMAS'ta yakalandı): Math.abs(null)
      SIFIR döner ve Number.isFinite(0) true — yani hiç bulunamamış kalem
@@ -10285,6 +10305,13 @@ function fekCiz(){
         '<div class="sub" style="font-size:11px">faiz kalemi okunamadı — yük eksik hesaplanıyor</div>'+
         (Number.isFinite(fek)?('<div class="sub" style="font-size:10px;margin-top:4px">ham oran '+trN(fek,2)+'x · <b>güvenilmez</b></div>'):'')+
       '</div></div>'
+    ):(fekDoygun?(
+    '<div style="text-align:center;margin-top:16px">'+
+      '<div style="display:inline-block;background:rgba(15,162,107,.10);border:1px solid rgba(15,162,107,.35);border-radius:10px;padding:10px 26px">'+
+        '<div style="font-family:var(--mono);font-size:20px;font-weight:700;color:#0FA26B">FEK ≥ 10x · ÖLÇÜM DIŞI</div>'+
+        '<div class="sub" style="font-size:11px">yük kapasitenin %'+trN(yuk/kapasite*100,1)+'\'i — borç servisi risk unsuru değil</div>'+
+        '<div class="sub" style="font-size:10px;margin-top:4px">ham oran '+trN(fek,1)+'x · <b>payda küçüldükçe oran patlar, bilgi taşımaz</b></div>'+
+      '</div></div>'
     ):(Number.isFinite(fek)?(
     '<div style="text-align:center;margin-top:16px">'+
       '<div style="display:inline-block;background:rgba(232,147,59,.12);border:1px solid rgba(232,147,59,.35);border-radius:10px;padding:10px 26px">'+
@@ -10292,9 +10319,9 @@ function fekCiz(){
         '<div class="sub" style="font-size:11px">Not '+(sev?sev.not:'—')+' / 5 · '+(sev?esc(sev.ad):'')+'</div>'+
       '</div></div>'+
     '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:14px">'+
-      FEK_NOT.slice().reverse().map(x=>'<div style="text-align:center;border-radius:7px;padding:8px 4px;background:'+(sev&&sev.not===x.not?x.renk:'var(--bg2)')+';color:'+(sev&&sev.not===x.not?'#fff':'var(--muted)')+';font-weight:'+(sev&&sev.not===x.not?'700':'400')+'">'+
+      FEK_NOT.slice().reverse().map(x=>'<div style="text-align:center;border-radius:7px;padding:8px 4px;background:'+((sev&&sev.not===x.not)?x.renk:'var(--bg2)')+';color:'+(sev&&sev.not===x.not?'#fff':'var(--muted)')+';font-weight:'+(sev&&sev.not===x.not?'700':'400')+'">'+
         '<div style="font-size:15px">'+x.not+'</div><div style="font-size:9.5px">'+esc(x.ad)+'</div></div>').join('')+
-    '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>'))+
+    '</div>'):'<div class="sub" style="margin-top:14px">FEK hesaplanamadı — gerekli kalemlerden biri eksik (ödenen faiz ya da KV borç bulunamadı).</div>')))+
     ((Number.isFinite(nakdeDonusum))?('<div style="margin-top:12px;border-left:3px solid '+(nakitSupheli?'#E8933B':'var(--mm2)')+';padding:8px 12px;background:'+(nakitSupheli?'rgba(232,147,59,.07)':'var(--bg2)')+'">'+
       '<b style="font-size:11px'+(nakitSupheli?';color:#E8933B':'')+'">'+(nakitSupheli?'⚠ ':'')+'NAKDE DÖNÜŞÜM '+trN(nakdeDonusum,2)+'x</b>'+
       '<div class="sub" style="font-size:10.5px;margin-top:3px">Çekirdek FAVÖK '+mlrG(coreFavok)+' mn ÷ işletme nakit akışı '+mlrG(isletmeNA)+' mn. '+
@@ -10309,7 +10336,10 @@ function fekCiz(){
         ? ('Finansal borç <b>'+mlrG(t.finBorc)+' mn</b> ama nakit akış tablosunun <b>finansman</b> bölümünde ödenen faiz satırı <b>YOK</b>. ')
         : ('Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '))+
       'TL borçta bu oran gerçekçi değil — faiz büyük olasılıkla nakit akış tablosunda <b>işletme faaliyetleri</b> altında raporlanmış (IAS 7 buna izin verir) ve finansman satırından okunamıyor. '+
-      '<b>Yük hafife alınmış olabilir; FEK ve KOPMA-σ olduğundan İYİ görünür.</b> Şirketin nakit akış tablosundaki faiz satırını elle doğrulayın.</div></div>'):'')+
+      (faizEtkili
+        ? '<b>Yük hafife alınmış olabilir; FEK ve KOPMA-σ olduğundan İYİ görünür.</b> Şirketin nakit akış tablosundaki faiz satırını elle doğrulayın. <b>Not 3\'e tavanlandı.</b>'
+        : '<b>Ama sonucu değiştirmiyor:</b> faiz 10 katına çıksa bile FEK yüksek kalıyor — yük kapasiteye göre önemsiz. Bu yüzden not CEZALANDIRILMADI, yalnız bilgi olarak işaretlendi.')+
+      '</div></div>'):'')+
     (vetolar.length?('<div style="margin-top:14px;border-left:3px solid var(--down);padding:8px 12px;background:rgba(214,69,69,.05)">'+
       '<b style="font-size:11px;color:var(--down)">VETO TETİKLENDİ</b>'+
       vetolar.map(v=>'<div class="sub" style="font-size:10.5px;margin-top:3px"><b>'+v.k+'</b> · '+esc(v.ad)+' → <span style="font-family:var(--mono)">'+esc(v.deger)+'</span> · <b>'+esc(v.etki)+'</b></div>').join('')+
