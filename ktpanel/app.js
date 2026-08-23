@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822i';   // SS392 faiz cezasi tutarliligi + doviz bandi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822j';   // SS392c ayrisma nihai not   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10495,9 +10495,15 @@ function fekCiz(){
              sınırda olsa bile kopmaya uzak olabilir (ve tersi).
              Sessizce iki farklı not göstermek kafa karıştırır — sebebi yazılır. */
           ((function(){
-            const fekNot = (FEK_NOT.find(x=>fek>=x.esik)||FEK_NOT[FEK_NOT.length-1]);
-            const vetoluNot = (vetolar.length && fekNot.not>2) ? 2 : fekNot.not;
-            if(!Number.isFinite(fek) || vetoluNot===sev2.not) return '';
+            /* §392c AYRIŞMA NİHAİ NOTLARI KARŞILAŞTIRIR (JANTS'ta yakalandı:
+               uyarı "FEK 5/5, KOPMA-σ 3/5" dedi ama ekranda FEK 3/5 yazıyordu).
+               Sebep: ham notu (fek değerinden türetilen) kullanıyordu; veto ve
+               faiz cezasından SONRAKİ nihai not `sev` içinde zaten hesaplı.
+               İkisi eşitleşmişse uyarı HİÇ çıkmamalı — ayrışma yok demektir.
+               DERS: BİR KARŞILAŞTIRMA GÖSTERİYORSAN EKRANDAKİ SAYILARI
+               KARŞILAŞTIR, ARA DEĞERLERİ DEĞİL. */
+            const vetoluNot = (sev && Number.isFinite(sev.not)) ? sev.not : null;
+            if(!Number.isFinite(fek) || fekDoygun || vetoluNot===null || vetoluNot===sev2.not) return '';
             const yon = sev2.not>vetoluNot ? 'daha İYİ' : 'daha KÖTÜ';
             return '<div class="sub" style="font-size:10.5px;margin-top:8px;padding:7px 10px;background:var(--bg2);border-left:3px solid var(--mm2)">'+
               '<b>İki ölçü ayrışıyor:</b> FEK '+vetoluNot+'/5, KOPMA-σ '+sev2.not+'/5 ('+yon+'). '+
