@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822m';   // SS394 doygunluk esikleri hizalandi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260822n';   // SS394b NaN korumasi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10411,7 +10411,14 @@ function fekCiz(){
         const ksHam = -_phiTers(pd);
         /* §394: 4σ'yı aşsa bile yük önemliyse "ölçüm dışı" DEME */
         const doygun = (!Number.isFinite(ksHam) || ksHam >= KS_TAVAN) && yukOnemsiz;
-        const tavanli = Number.isFinite(ksHam) && ksHam >= KS_TAVAN;
+        /* §394b NaN GERİ GELDİ (CIMSA'da yakalandı: "NaNσ · 1/5 Kırılgan").
+           PD sıfıra çok yaklaşınca Φ⁻¹(0) NaN döner. Eski kod bunu
+           `!Number.isFinite(ksHam)` ile yakalayıp tavana çekiyordu; §394'te
+           `doygun`u ikiye bölerken bu koruma `tavanli`ye taşınmadı ve NaN
+           doğrudan ekrana düştü — üstelik "1/5 Kırılgan" gibi TERS bir not
+           üretti (aslında risk çok DÜŞÜK olduğu için PD sıfırlanmıştı).
+           DERS: BİR KOŞULU İKİYE BÖLERKEN İÇİNDEKİ HER KORUMAYI DAĞIT. */
+        const tavanli = !Number.isFinite(ksHam) || ksHam >= KS_TAVAN;
         const ks = tavanli ? KS_TAVAN : ksHam;
         let sev2 = KOPMA_NOT.find(x=>ks>=x.esik) || KOPMA_NOT[KOPMA_NOT.length-1];
         /* §375b VETO BİLEŞİĞE UYGULANIR (eleştirinin en haklı maddesi):
