@@ -39,7 +39,10 @@ const BAS = { 'User-Agent': UA, 'Accept': 'application/json', 'Accept-Encoding':
 const HARITA = {
   ciro:      ['Revenues', 'RevenueFromContractWithCustomerExcludingAssessedTax',
               'RevenueFromContractWithCustomerIncludingAssessedTax', 'SalesRevenueNet'],
+  /* §398d: WMT gibi perakendeciler GrossProfit ETİKETİ KULLANMAZ — satılan
+     malın maliyetini ayrı verir. brüt = ciro − CostOfRevenue ile türetilir. */
   brut:      ['GrossProfit'],
+  satisMal:  ['CostOfGoodsAndServicesSold', 'CostOfRevenue', 'CostOfGoodsSold'],
   faalKar:   ['OperatingIncomeLoss'],
   netKar:    ['NetIncomeLoss', 'ProfitLoss'],
   amort:     ['DepreciationDepletionAndAmortization', 'DepreciationAndAmortization',
@@ -68,7 +71,7 @@ const HARITA = {
   payAdedi:  ['CommonStockSharesOutstanding', 'WeightedAverageNumberOfDilutedSharesOutstanding']
 };
 
-const AKIS = new Set(['ciro','brut','faalKar','netKar','amort','satisGid','arge',
+const AKIS = new Set(['ciro','brut','satisMal','faalKar','netKar','amort','satisGid','arge',
   'isletmeNA','capex','odFaiz','faizGid','temettu']);
 
 async function getJ(url) {
@@ -107,6 +110,39 @@ async function gercekler(cik) {
 /* Bir kalemin kayıtlarını çıkar. AKIŞ kalemlerinde ÇEYREKLİK olanı seç:
    start-end farkı 80-100 gün arasındaysa çeyrek, değilse kümülatif/yıllık.
    STOK kalemlerinde `end` yeterli. */
+/* §398c NAKİT AKIŞ TABLOSU YTD GELİR (canlı: isletmeNA/capex/odFaiz çoğu
+   çeyrekte null çıktı). ABD'de nakit akış tablosu YIL BAŞINDAN İTİBAREN
+   birikimli raporlanır: Q1'de 3 aylık, Q2'de 6 aylık, Q3'te 9 aylık, 10-K'da
+   12 aylık. Yani 80-100 günlük çeyrek süzgeci bunları ELİYOR.
+   ÇÖZÜM: YTD kayıtlarından ARDIŞIK FARK ile çeyreklik üret. Mali yıl başlangıcı
+   `start` alanından bilinir; aynı `start` değerini paylaşan kayıtlar aynı yılın
+   YTD serisidir.
+   NOT: Bu, KAP'ta §345'te yaptığımız kümülatif farkının ABD karşılığı — ama
+   ORADA enflasyon düzeltmesi gerekiyordu, BURADA gerekmiyor. Fark doğrudan
+   alınabilir. */
+function ytdCeyreklik(kayitlar) {
+  const yilGrup = {};
+  kayitlar.forEach(x => {
+    if (!x.start || !x.end || !Number.isFinite(x.val)) return;
+    (yilGrup[x.start] = yilGrup[x.start] || []).push(x);
+  });
+  const cikti = [];
+  Object.values(yilGrup).forEach(g => {
+    g.sort((a, b) => (a.end < b.end ? -1 : 1));
+    let oncekiDeger = 0, oncekiBitis = null;
+    g.forEach(x => {
+      const gun = (new Date(x.end) - new Date(x.start)) / 864e5;
+      cikti.push({
+        start: oncekiBitis || x.start, end: x.end,
+        val: x.val - oncekiDeger,
+        form: x.form, filed: x.filed, _ytdTuretilmis: !!oncekiBitis, _ytdGun: Math.round(gun)
+      });
+      oncekiDeger = x.val; oncekiBitis = x.end;
+    });
+  });
+  return cikti;
+}
+
 function kalemCek(facts, adlar, akisMi) {
   const us = (facts && facts.facts && facts.facts['us-gaap']) || {};
   for (const ad of adlar) {
@@ -114,21 +150,44 @@ function kalemCek(facts, adlar, akisMi) {
     if (!blok || !blok.units) continue;
     const birim = blok.units.USD || blok.units.shares || Object.values(blok.units)[0];
     if (!Array.isArray(birim) || !birim.length) continue;
-    const kayitlar = birim.filter(x => {
-      if (!x || !Number.isFinite(x.val) || !x.end) return false;
-      if (!akisMi) return true;
-      if (!x.start) return false;
+    if (!akisMi) {
+      const k = birim.filter(x => x && Number.isFinite(x.val) && x.end);
+      if (k.length) return { etiket: ad, kayitlar: k };
+      continue;
+    }
+    /* 1) doğrudan çeyreklik kayıt var mı (gelir tablosu genelde böyle) */
+    const dogrudan = birim.filter(x => {
+      if (!x || !Number.isFinite(x.val) || !x.end || !x.start) return false;
       const gun = (new Date(x.end) - new Date(x.start)) / 864e5;
-      return gun >= 80 && gun <= 100;      /* çeyrek penceresi */
+      return gun >= 80 && gun <= 100;
     });
-    if (kayitlar.length) return { etiket: ad, kayitlar };
+    if (dogrudan.length >= 4) return { etiket: ad, kayitlar: dogrudan, kaynak: 'çeyreklik' };
+    /* 2) §398c: yoksa YTD farkından türet (nakit akış tablosu) */
+    const ytd = birim.filter(x => {
+      if (!x || !Number.isFinite(x.val) || !x.end || !x.start) return false;
+      const gun = (new Date(x.end) - new Date(x.start)) / 864e5;
+      return gun >= 80 && gun <= 380;
+    });
+    if (ytd.length) {
+      const t = ytdCeyreklik(ytd).filter(x => { const g = (new Date(x.end) - new Date(x.start)) / 864e5; return g >= 60 && g <= 110; });
+      if (t.length) return { etiket: ad, kayitlar: t, kaynak: 'YTD farkı' };
+    }
+    if (dogrudan.length) return { etiket: ad, kayitlar: dogrudan, kaynak: 'çeyreklik (kısmi)' };
   }
   return null;
 }
 
-/* dönem anahtarı: bitiş tarihinden mali çeyrek etiketi üret */
+/* §398b DÖNEM ETİKETİ BİTİŞ TARİHİNDEN (canlı: "2027/Q1" İKİ KEZ çıktı —
+   2026-04-30 ve 2025-04-30 için). Sebep: companyfacts'teki `fy`/`fp` alanları
+   DOSYALAMA bağlamına göre gelir, DÖNEM bağlamına göre değil. Aynı 10-Q'da
+   cari çeyrek ve geçen yılın aynı çeyreği bulunur; ikisi de dosyanın fy/fp'sini
+   taşır. fy/fp'ye GÜVENİLEMEZ.
+   DERS: BİR ALAN "DOSYA" BAĞLAMINI Mİ "DÖNEM" BAĞLAMINI MI TAŞIYOR, ÖLÇ. */
 function donemAnahtar(k) {
-  return (k.fy && k.fp && k.fp !== 'FY') ? (k.fy + '/' + k.fp) : (k.end || '');
+  const d = new Date(k.end);
+  if (isNaN(d)) return k.end || '';
+  const ay = d.getUTCMonth() + 1, yil = d.getUTCFullYear();
+  return yil + '/' + String(ay).padStart(2, '0');    /* takvim bazlı, tekrarsız */
 }
 
 async function tabloModu(req, res) {
@@ -167,6 +226,9 @@ async function tabloModu(req, res) {
     });
     /* türev metrikler — KAP tarafındakiyle AYNI tanımlar (§342, §351) */
     const S = (...a) => { let x = 0, v = false; a.forEach(z => { if (Number.isFinite(z)) { x += z; v = true; } }); return v ? x : null; };
+    /* §398d brüt kâr türetme: etiket yoksa ciro − satılan malın maliyeti */
+    if (!Number.isFinite(satir.brut) && Number.isFinite(satir.ciro) && Number.isFinite(satir.satisMal))
+      satir.brut = satir.ciro - satir.satisMal;
     satir.favokGenis = (Number.isFinite(satir.faalKar) && Number.isFinite(satir.amort)) ? satir.faalKar + satir.amort : null;
     satir.favokCekirdek = (Number.isFinite(satir.brut) && Number.isFinite(satir.amort))
       ? satir.brut - (Number.isFinite(satir.satisGid) ? satir.satisGid : 0) - (Number.isFinite(satir.arge) ? satir.arge : 0) + satir.amort : null;
@@ -183,7 +245,7 @@ async function tabloModu(req, res) {
   /* TTM: son 4 çeyreğin toplamı — ENFLASYON DÜZELTMESİ GEREKMEZ (EDGAR'ın
      KAP'a göre asıl avantajı; §345'in tüm zinciri burada gereksiz) */
   const ttm = {};
-  ['ciro', 'brut', 'faalKar', 'netKar', 'amort', 'isletmeNA', 'capex', 'odFaiz', 'faizGid', 'favokGenis', 'favokCekirdek', 'sna'].forEach(kad => {
+  ['ciro', 'brut', 'satisMal', 'faalKar', 'netKar', 'amort', 'isletmeNA', 'capex', 'odFaiz', 'faizGid', 'favokGenis', 'favokCekirdek', 'sna'].forEach(kad => {
     const d = seri.slice(0, 4).map(x => x[kad]).filter(Number.isFinite);
     ttm[kad] = d.length >= 3 ? d.reduce((a, b) => a + b, 0) : null;
   });
@@ -197,7 +259,7 @@ async function tabloModu(req, res) {
     surum: _SURUM, ok: true, ticker: tc.ticker, cik: tc.cik, unvan: tc.unvan,
     kaynak: 'SEC EDGAR · XBRL companyfacts',
     ceyrek: seri.length, son_donem: son.donem || null, son_bitis: son.bitis || null,
-    _not: 'Değerler USD. Çeyreklik kayıtlar start-end farkı 80-100 gün olanlardan seçilir; kümülatif satırlar ELENİR. Enflasyon düzeltmesi GEREKMEZ (US-GAAP tarihî maliyet). TTM = son 4 çeyreğin ham toplamı.',
+    _not: 'Değerler USD. Dönem etiketi BİTİŞ TARİHİNDEN üretilir (fy/fp alanları dosya bağlamını taşır, dönem bağlamını değil — §398b). Gelir tablosu doğrudan çeyreklik gelir; NAKİT AKIŞ tablosu YTD gelir ve ardışık farkla çeyrekliğe çevrilir (§398c). Brüt kâr etiketi yoksa ciro − satılan malın maliyeti ile türetilir (§398d). Enflasyon düzeltmesi GEREKMEZ. TTM = son 4 çeyreğin ham toplamı. UYARI: mali yılın SON çeyreği (Q4) ayrı 10-Q ile gelmez, 10-K içindedir; o çeyrek seride EKSİK görünebilir.',
     ttm, seri
   });
 }
