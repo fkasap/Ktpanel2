@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260824b';   // SS399 fm.json 24 Agu (215 hisse) + t6 damgasi meta.tarih'ten canli   // SS398 risk butcesi tutarlilik
+const KTP_SURUM = '20260824c';   // SS400 fm dislama listesi (kullanici vetosu, bulutta)   // SS399 fm 24 Agu + canli damga   // SS398 risk butcesi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1550,9 +1550,26 @@ function fmwGeriYukle(){
   let n=0; FMF.forEach(k=>{ const e=$('fmw'+k); if(e&&s[k]!=null&&isFinite(s[k])){ e.value=s[k]; n++; } });
   return n>0;
 }
+/* ── §400 DIŞLAMA LİSTESİ (kullanıcı vetosu) ── kantitatif sıralamaya kalitatif
+   veto: × ile hisse SEÇİMDEN ÖNCE elenir, yedek (tampon) kendiliğinden üstten
+   girer — ayrı bir "yedek çek" mekaniği YOK, seçim döngüsü zaten sıradakini alır.
+   Kalıcılık: fm_disla_v1, CLOUD_KEYS'te (§265 bilanço-yoksay emsali: cihazlar
+   arası taşınmalı). Dışlama TICKER bazlıdır — fm.json yenilense de yaşar; evren
+   dışına düşen isim çipte (evren dışı) etiketiyle görünür, sessizce kaybolmaz.
+   KARNE'YE DOKUNMAZ: karne modelin kendini kanıtlama testidir (tüm evren, eşit
+   ağırlık, "slider'dan bağımsız sabit referans") — kullanıcı vetosu ölçüme
+   karışırsa test modeli değil kullanıcıyı ölçer. Resmî sicil (track) de ayrı. */
+const FM_DISLA_KEY='fm_disla_v1';
+function fmDislaOku(){ try{ const x=JSON.parse(localStorage.getItem(FM_DISLA_KEY)||'[]');
+  return Array.isArray(x)?x.map(t=>String(t).toUpperCase()):[]; }catch(e){ return []; } }
+function fmDislaYaz(a){ try{ localStorage.setItem(FM_DISLA_KEY, JSON.stringify(a)); }catch(e){} }
+function fmDislaEkle(t){ const a=fmDislaOku(), u=String(t).toUpperCase();
+  if(!a.includes(u)){ a.push(u); fmDislaYaz(a); } fmRender(); }
+function fmDislaGeriAl(t){ const u=String(t).toUpperCase();
+  fmDislaYaz(fmDislaOku().filter(x=>x!==u)); fmRender(); }
 async function fmInit(){
   try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}
-  catch(e){$('fmBody').innerHTML='<tr><td colspan="10" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
+  catch(e){$('fmBody').innerHTML='<tr><td colspan="11" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
   $('fmUni').textContent=FM.meta.uni;$('fmRanked').textContent=FM.meta.ranked;$('fmTopN').textContent='Top '+FM.meta.topn;
   /* §399 DAMGA CANLI — Altın Kural 6: tarih ELLE YAZILMAZ, fm.json meta.tarih'ten
      okunur. 14 Tem damgası 41 gün bayat kalmıştı; artık dosya yenilenince başlık,
@@ -1717,18 +1734,32 @@ function fmRender(){
     return {t:r.t,s:r.s,f:r.f,n:r.n,score:sc};
   }).filter(Boolean);
   rows.sort((a,b)=>b.score-a.score);
+  /* §400: dışlananlar SEÇİMDEN ÖNCE düşer — sıradaki isim (yedek) kendiliğinden girer */
+  const disla=new Set(fmDislaOku());
+  const aktif=rows.filter(r=>!disla.has(r.t));
   const sel=[],cnt={};
-  for(const r of rows){
+  for(const r of aktif){
     if(sel.length>=FM.meta.topn)break;
     if((cnt[r.s]||0)>=FM.meta.maxnames)continue;
     sel.push(r);cnt[r.s]=(cnt[r.s]||0)+1;
   }
   const wts=fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s));
   const zf=v=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+v.toFixed(2)+'</td>';
-  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td></tr>').join('');
+  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek üstten girer" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
+  /* §400: × düğmesi satır tıklamasını YUTMALI — yoksa çıkarırken detay kartı açılır */
+  document.querySelectorAll('#fmBody .fmCikar').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();fmDislaEkle(b.dataset.t);}));
+  const evren=new Set(rows.map(r=>r.t));
+  const db=$('fmDislaBar');
+  if(db){ const L=fmDislaOku();
+    db.innerHTML=!L.length?'' :
+      '<span style="color:var(--down);font-weight:600">DIŞLANAN · '+L.length+':</span> '+
+      L.map(t=>'<span style="display:inline-block;border:1px solid var(--line2);border-radius:10px;padding:1px 7px;margin:2px 3px 0 0">'+t+(evren.has(t)?'':' <span style="color:var(--muted)">(evren dışı)</span>')+' <a href="#" class="fmGeriAl" data-t="'+t+'" style="text-decoration:none;color:var(--mm2)" title="modele geri al">↩</a></span>').join('')+
+      ' <a href="#" id="fmDislaTemizle" style="color:var(--muted);font-size:10px">tümünü geri al</a>';
+    db.querySelectorAll('.fmGeriAl').forEach(x=>x.addEventListener('click',ev=>{ev.preventDefault();fmDislaGeriAl(x.dataset.t);}));
+    const tm=db.querySelector('#fmDislaTemizle'); if(tm)tm.addEventListener('click',ev=>{ev.preventDefault();fmDislaYaz([]);fmRender();}); }
   const inSel=new Set(sel.map(r=>r.t));
-  const buf=rows.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
+  const buf=aktif.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
   $('fmBuffer').textContent='Tampon bölge / izleme listesi (26–40 bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
   const sw={};sel.forEach((r,i)=>sw[r.s]=(sw[r.s]||0)+wts[i]);
   const mx=Math.max.apply(null,Object.values(sw));
@@ -7264,7 +7295,10 @@ const CLOUD_KEYS=['__sil_guidance_v1','poz_v1','journal_v1','guidance_v1','ktp_s
      kullanici 29 sirketin hepsinin kartini yazmak istemez. Gizlenenler
      kod+donem kapsaminda burada tutulur. Cihazlar arasi tasinmali — yoksa
      her cihazda ayni sirketleri tek tek gizlemek gerekir. */
-  'ktp_bilanco_yoksay_v1'];   // sukuk + model sicili de buluta
+  'ktp_bilanco_yoksay_v1',
+  /* §400 FM DIŞLAMA LİSTESİ: kullanıcı vetosu, §265 emsali — cihazlar arası
+     taşınmalı; yoksa her cihazda aynı isimleri tek tek çıkarmak gerekir. */
+  'fm_disla_v1'];   // sukuk + model sicili de buluta
 const _origSet=localStorage.setItem.bind(localStorage);
 const _origGet=localStorage.getItem.bind(localStorage);
 let _cloudTimer;

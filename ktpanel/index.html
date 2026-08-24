@@ -975,9 +975,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note">Ağırlıkların toplamı 1 olmak zorunda değil — motor <em>mevcut faktörlere göre satır bazında yeniden normalize eder</em> (BLOK 7 mantığın). Bir faktörü kapatmak için 0 yaz. Not: kutucuklar keşif içindir; <em>izlenen resmi portföy</em> her zaman varsayılan ağırlıklar + rebalance tamponuyla kurulur.</div>
 </div>
 <div class="card" style="margin-top:10px;padding:6px 10px">
-  <table aria-label="Faktör model portföyü"><thead><tr><th class="num">#</th><th>Hisse</th><th>Sektör</th><th class="num">VAL</th><th class="num">GRW</th><th class="num">QLT</th><th class="num">MOM</th><th class="num">LRK</th><th class="num">Skor</th><th class="num">Ağırlık</th></tr></thead><tbody id="fmBody"><tr><td colspan="10" style="color:var(--muted)">Yükleniyor…</td></tr></tbody></table>
+  <table aria-label="Faktör model portföyü"><thead><tr><th class="num">#</th><th>Hisse</th><th>Sektör</th><th class="num">VAL</th><th class="num">GRW</th><th class="num">QLT</th><th class="num">MOM</th><th class="num">LRK</th><th class="num">Skor</th><th class="num">Ağırlık</th><th class="num" title="modelden çıkar">×</th></tr></thead><tbody id="fmBody"><tr><td colspan="11" style="color:var(--muted)">Yükleniyor…</td></tr></tbody></table>
   <div class="sub" id="fmBuffer" style="margin-top:6px"></div>
-  <div class="sub" style="margin-top:4px;color:var(--mm2)">Satıra tıkla → hissenin metrik düzeyinde teşhis kartı açılır.</div>
+  <div class="sub" id="fmDislaBar" style="margin-top:6px"></div>
+  <div class="sub" style="margin-top:4px;color:var(--mm2)">Satıra tıkla → hissenin metrik düzeyinde teşhis kartı açılır. <b>×</b> → hisse modelden çıkar, yedek üstten girer; liste kaydedilir ve cihazlar arası taşınır.</div>
 </div>
 <div class="card" id="fmDetCard" style="margin-top:10px;display:none">
   <div class="lbl" id="fmDetTitle">HİSSE DETAYI</div>
@@ -1775,8 +1776,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260824b"></script>
-<script src="/ajan.js?v=20260824b"></script>
+<script src="/app.js?v=20260824c"></script>
+<script src="/ajan.js?v=20260824c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
