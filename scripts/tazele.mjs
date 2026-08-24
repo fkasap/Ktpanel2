@@ -973,9 +973,79 @@ async function fonTazele() {
       if (n2) yol = 'ağ-dinleme (yeni site, ' + n2 + ' fon)';
     }
     if (Object.keys(meta).length && globalThis.__tefasGetiri) yol = 'vercel-köprüsü (' + Object.keys(meta).length + ' fon fiyat + ' + Object.keys(globalThis.__tefasGetiri).length + ' getiri)';
+    globalThis.__tefasYol = yol;   /* §410b: damgada GERÇEK kanal adı yazsın */
     raporlar.push('### TEFAS çekim tanısı (bilgi)\n- yol: ' + yol + '\n- ' + hamNot);
     Object.keys(meta).forEach(k => fiyat[k] = meta[k].p);
     globalThis.__tefasMeta = meta;
+
+    /* ══ §410 KONSOL TOPLAYICI DOSYASI — son basamak, KAPSAM KORUMALI ══
+       TEFAS erişim tablosu (24 Ağu ölçümleri): Vercel IP bağlantı düzeyinde
+       engelli · Actions runner TSPD JS meydan okumasında eleniyor · otomasyonla
+       sürülen tarayıcı davranış düzeyinde reddediliyor · BindHistoryInfo 404
+       (yeni sitede kaldırılmış) · sayfalı uç pencere başına ~600 kayıtta 429.
+       Geriye TEK meşru yol kalıyor: kullanıcının KENDİ elle gezdiği oturumu
+       (arac/tefas-konsol.js → tefas-tam-<tarih>.json → arac/gelen/).
+       Bu, otomasyon kuralının ÖLÇÜLMÜŞ istisnasıdır (swap stoku emsali).
+
+       İKİ KAPI — ikisi de geçilmeden veri kullanılmaz:
+       1) TAZELİK: dosya bugünün tarihini taşımalı. Bayat dosya sessizce
+          kullanılmaz, raporda söylenir (§301 ruhu).
+       2) KAPSAM: konsol dosyası, arşivde BUGÜN için zaten yazılı kayıttan
+          DAHA AZ fon taşıyorsa KULLANILMAZ. 24 Ağu'da tam bu oldu: sabah
+          koşusu 2030 fon yazmıştı, konsol 429 yüzünden 1900'de kalmıştı —
+          iyi veriyi eksikle ezmek en sinsi kayıptır (§112 tek sahip +
+          §300 "veri kaybı olmayan arızada kırmızı yanmaz" ikizi).
+       ÇAPRAZ DENETİM (24 Ağu): 1893 ortak fonda fiyat farkı 0, pay farkı 0 —
+       konsol yolu bağımsız kaynakla bit bit mutabık. */
+    if (!Object.keys(meta).length || !globalThis.__tefasGetiri) {
+      try {
+        const gelenDizin = 'ktpanel/arac/gelen';
+        let dosyalar = [];
+        try { dosyalar = (await fs.readdir(path.join(KOK, gelenDizin))).filter(f => /^tefas-tam-.*\.json$/i.test(f)).sort(); } catch (e) {}
+        if (dosyalar.length) {
+          const kv = await oku(path.join(gelenDizin, dosyalar[dosyalar.length - 1]));
+          const bugunISO = new Date().toISOString().slice(0, 10);
+          const aum = Array.isArray(kv && kv.aum) ? kv.aum.filter(x => x && x.fonKodu && x.tedPaySayisi != null) : [];
+          /* tekilleştir: iki betik üst üste koşarsa mükerrer gelir (24 Ağu: 2100 kayıt → 1900 tekil) */
+          const tek = {}; aum.forEach(x => { tek[x.fonKodu] = x; });
+          const nTek = Object.keys(tek).length;
+          if (kv.tarih !== bugunISO) {
+            raporlar.push('- §410 konsol dosyası BAYAT (' + kv.tarih + ') — kullanılmadı; taze al: ktpanel/arac/tefas-konsol.js');
+          } else if (!nTek) {
+            raporlar.push('- §410 konsol dosyası boş/eksik alanlı — kullanılmadı');
+          } else {
+            /* kapsam kapısı: arşivde bugün için yazılı kayıt sayısı */
+            let mevcutBugun = 0;
+            try {
+              const ar = await oku('fon-arsiv.json');
+              mevcutBugun = Object.keys((ar.gunler && ar.gunler[bugunISO]) || {}).length;
+            } catch (e) {}
+            if (mevcutBugun > nTek) {
+              raporlar.push('- §410 konsol dosyası KISMİ (' + nTek + ' fon) — arşivde bugün zaten ' + mevcutBugun +
+                ' fon var, iyi veri eksikle EZİLMEDİ (kapsam kapısı)');
+            } else {
+              Object.keys(tek).forEach(k => {
+                const x = tek[k], p = Number(x.fiyat);
+                if (!isFinite(p) || p <= 0) return;
+                const a = Number(x.portfoyBuyukluk);
+                meta[k] = { p, aum: isFinite(a) && a > 0 ? a : null,
+                            ys: Number(x.kisiSayisi) || null, pay: Number(x.tedPaySayisi) || null };
+                fiyat[k] = p;
+              });
+              if (Array.isArray(kv.getiri) && kv.getiri.length) {
+                const G = globalThis.__tefasGetiri || {};
+                kv.getiri.forEach(x => { if (x && x.fonKodu) G[x.fonKodu] = x; });
+                globalThis.__tefasGetiri = G;
+              }
+              globalThis.__tefasMeta = meta;
+              globalThis.__tefasYol = 'konsol toplayıcı (elle · §410)';
+              raporlar.push('- §410 KONSOL DOSYASI KULLANILDI: ' + nTek + ' fon (fiyat+AUM+pay+yatırımcı) · ' +
+                ((kv.getiri || []).length) + ' getiri · ' + kv.tarih + ' — elle toplanmış, damgalı katman');
+            }
+          }
+        }
+      } catch (e) { raporlar.push('- §410 konsol dosyası okunamadı: ' + String(e && e.message || e).slice(0, 70)); }
+    }
   } catch (e) {
     raporlar.push(`### Katılım fonları — ✗ TEFAS erişimi düştü\n- ${String(e.message || e).slice(0, 140)}`);
     denetimDustu = true;
@@ -1130,7 +1200,10 @@ async function fonTazele() {
 
   d.fiyat_tarihi = bugun;
   d.akis_tarihi = bugun;
-  d.guncelleme = `${bugun} — otomatik (GitHub Actions · TEFAS BindHistoryInfo: fiyat+AUM+yatırımcı${dunKayit ? '+akış' : '; akış arşiv doldukça'})`;
+  /* §410b: 'BindHistoryInfo' ölü uç (24 Ağu: HTTP 404, yeni sitede kaldırılmış).
+     Damga artık GERÇEK yolu yazar — hangi kanaldan geldiği okunabilir olmalı. */
+  const _yolAd = globalThis.__tefasYol || 'TEFAS';
+  d.guncelleme = `${bugun} — otomatik (GitHub Actions · ${_yolAd}: fiyat+AUM+yatırımcı${dunKayit ? '+akış' : '; akış arşiv doldukça'})`;
   await yaz(dosya, d);
   degisenler.push(`katılım fonları (${n}${dunKayit ? '+akış' : ''})`);
   return n;
