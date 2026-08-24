@@ -820,6 +820,46 @@ async function fonTazele() {
           raporlar.push('- §408 TEFAS: sayfada chunk yok (' + chunkYollari.length + ') ve inline jeton yok — runner farklı HTML görüyor (TANI satırına bak)');
         }
       } catch (e) { raporlar.push('- §408 TEFAS: sayfa/jeton aşaması hata — ' + String(e && e.message || e).slice(0, 60)); }
+      /* §412 HENÜZ DENENMEMİŞ YOL: API'yi DOĞRUDAN, bilinen jetonla çağır.
+         §408 zinciri "önce sayfadan jeton sök, sonra API" kuruluydu; sayfa hep
+         kabuk geldiği için API'ye HİÇ İSTEK ATILMADI — kör nokta.
+         Jeton STATİK bir uygulama anahtarı: sitenin herkese açık ön-yüz
+         paketine gömülü, her ziyaretçide aynı (HAR ile iki kez doğrulandı).
+         Kullanmak sahtecilik değil, istemci sözleşmesi. Çerez TAKLİDİ YOK.
+         SORU: API ucu TSPD çerezini mi istiyor, yoksa Bearer yetiyor mu?
+         Yetiyorsa TEFAS bulut Actions'ta TAM OTOMATİĞE döner. */
+      if (!jeton) {
+        const YEDEK_JETON = 'ST-tefaswebwse3irfmSBj4iRAzGPbAlS94Se';   /* HAR 24 Ağu; rotasyona tabi */
+        try {
+          const r = await fetch('https://www.tefas.gov.tr/api/funds/fonGnlBlgSiraliGetir', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + YEDEK_JETON,
+                       'Accept': 'application/json, text/javascript, */*; q=0.01',
+                       'User-Agent': TF_BAS['User-Agent'],
+                       'Origin': 'https://www.tefas.gov.tr',
+                       'Referer': 'https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT' },
+            body: JSON.stringify({ fonTipi: 'YAT', fonKodu: null, aramaMetni: null, fonTurKod: null,
+              fonGrubu: null, sfonTurKod: null,
+              basTarih: bugun.replace(/-/g, ''), bitTarih: bugun.replace(/-/g, ''),
+              basSira: 1, bitSira: 50, fonTurAciklama: null, dil: 'TR', kurucuKod: null }),
+            signal: AbortSignal.timeout(25000)
+          });
+          const gv = await r.text();
+          raporlar.push('- §412 API DOĞRUDAN TEST: HTTP ' + r.status + ' · boy ' + gv.length +
+            ' · ilk80: ' + gv.slice(0, 80).replace(/\s+/g, ' '));
+          if (r.ok && gv.trim()[0] === '{') {
+            const d = JSON.parse(gv);
+            if (Array.isArray(d.resultList) && d.resultList.length) {
+              jeton = YEDEK_JETON;
+              raporlar.push('- §412 ✓ API ÇEREZSİZ ÇALIŞIYOR — ' + d.resultList.length + '/' + (d.toplamSayi || '?') +
+                ' fon geldi. TEFAS bulut Actions\'ta TAM OTOMATİĞE dönebilir!');
+            }
+          }
+        } catch (e) {
+          raporlar.push('- §412 API doğrudan test: ' + String((e && e.message) || e).slice(0, 70));
+        }
+      }
       if (jeton) {
         const G408 = JSON.parse("{\"dil\":\"TR\",\"fonTipi\":\"YAT\",\"kurucuKodu\":null,\"sfonTurKod\":null,\"fonTurAciklama\":null,\"islem\":1,\"fonTurKod\":null,\"fonGrubu\":null,\"donemGetiri1a\":\"1\",\"donemGetiri3a\":\"1\",\"donemGetiri6a\":\"1\",\"donemGetiri1y\":\"1\",\"donemGetiriyb\":\"1\",\"donemGetiri3y\":\"1\",\"donemGetiri5y\":\"1\",\"basTarih\":null,\"bitTarih\":null,\"calismaTipi\":2,\"getiriOrani\":\"1\"}");
         const d = await tfDogrudan('fonGetiriBazliBilgiGetir', G408, { 'Authorization': 'Bearer ' + jeton });
