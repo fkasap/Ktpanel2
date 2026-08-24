@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260824a';   // SS398 risk butcesi: tutarlilik denetimi + kapsam disi agirlik tavani   // SS397b takvim duzeltmesi
+const KTP_SURUM = '20260824b';   // SS399 fm.json 24 Agu (215 hisse) + t6 damgasi meta.tarih'ten canli   // SS398 risk butcesi tutarlilik
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1554,6 +1554,15 @@ async function fmInit(){
   try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}
   catch(e){$('fmBody').innerHTML='<tr><td colspan="10" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
   $('fmUni').textContent=FM.meta.uni;$('fmRanked').textContent=FM.meta.ranked;$('fmTopN').textContent='Top '+FM.meta.topn;
+  /* §399 DAMGA CANLI — Altın Kural 6: tarih ELLE YAZILMAZ, fm.json meta.tarih'ten
+     okunur. 14 Tem damgası 41 gün bayat kalmıştı; artık dosya yenilenince başlık,
+     karne notları ve footer kendiliğinden döner. meta.tarih yoksa (eski şema)
+     mevcut metin DURUR — sessiz yanlış yerine bilinen eski. Tek sahip: bu blok. */
+  try{ if(FM.meta&&FM.meta.tarih){ const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const p=String(FM.meta.tarih).split('-');
+    if(p.length===3){ const kisa=parseInt(p[2],10)+' '+AY[parseInt(p[1],10)-1];
+      const u=$('fmDamga'); if(u)u.textContent=kisa+' '+p[0];
+      document.querySelectorAll('.fmDamgaKisa').forEach(e=>{e.textContent=kisa;}); } } }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
   $('fmReset').addEventListener('click',()=>{FMF.forEach(k=>$('fmw'+k).value=FMW_DEF[k]);

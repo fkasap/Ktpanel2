@@ -943,11 +943,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 
 
-</div><div class="tab" id="t6"><h2>09 Faktör Model <span class="thin">(Faktor_Basit v3.2 · evren: XKTUM · veri: Universe CSV · 14 Tem 2026)</span></h2>
+</div><div class="tab" id="t6"><h2>09 Faktör Model <span class="thin">(Faktor_Basit v3.2 · evren: XKTUM · veri: Universe CSV · <span id="fmDamga">14 Tem 2026</span>)</span></h2>
 <div class="card" style="margin-bottom:10px">
-  <div class="lbl">MODEL KARNESİ <span class="thin">(14 Tem snapshot → bugün · canlı doğrulama)</span> <span class="ldot"></span></div>
+  <div class="lbl">MODEL KARNESİ <span class="thin">(<span class="fmDamgaKisa">14 Tem</span> snapshot → bugün · canlı doğrulama)</span> <span class="ldot"></span></div>
   <div id="fmKarneBody"><div class="sub">hesaplanıyor…</div></div>
-  <div class="note" style="font-size:10px">Modelin <b>kendini kanıtlama testi:</b> kompozit skora göre (eşit ağırlık) ilk 10 ile son 10 hissenin, model üretim tarihinden (14 Tem) bugüne <em>gerçekleşen</em> ortalama getirisi — güncel fiyat Yahoo'dan canlı çekilir. <b>Makas pozitifse</b> yüksek skor gerçekten kazandırıyor demektir; kalıcı negatifse ya faktör rejimi döndü ya model tazelenmeli. Not: skorların kendisi 14 Tem fotoğrafıdır — yeniden üretim ayrı iştir (istenirse Fintables verisiyle yapılır); bu kart üretmeden <em>ölçer</em>.</div>
+  <div class="note" style="font-size:10px">Modelin <b>kendini kanıtlama testi:</b> kompozit skora göre (eşit ağırlık) ilk 10 ile son 10 hissenin, model üretim tarihinden (<span class="fmDamgaKisa">14 Tem</span>) bugüne <em>gerçekleşen</em> ortalama getirisi — güncel fiyat Yahoo'dan canlı çekilir. <b>Makas pozitifse</b> yüksek skor gerçekten kazandırıyor demektir; kalıcı negatifse ya faktör rejimi döndü ya model tazelenmeli. Not: skorların kendisi <span class="fmDamgaKisa">14 Tem</span> fotoğrafıdır — yeniden üretim ayrı iştir (istenirse Fintables verisiyle yapılır); bu kart üretmeden <em>ölçer</em>.</div>
 </div>
 <div class="grid mac" id="fmChips">
   <div class="card"><div class="lbl">Evren (likit)</div><div class="val" id="fmUni">—</div><div class="sub">XKTUM · mcap ≥ 2 mlr ₺</div></div>
@@ -986,7 +986,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div class="grid g2" style="margin-top:10px">
   <div class="card"><div class="lbl">SEKTÖR AĞIRLIKLARI</div><div id="fmSec"></div></div>
-  <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar 14 Tem tarihli CSV'den; Python modeli (v3.2) birebir çalıştırıldı, seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div></div>
+  <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar <span class="fmDamgaKisa">14 Tem</span> tarihli CSV'den; Python modeli (v3.2) birebir çalıştırıldı, seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div></div>
 </div>
 
 </div><!-- §365 SEKTÖREL VERİLER (21 Ağu, kullanıcı isteği): Katılım Fonları ve
@@ -1773,10 +1773,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="card" style="margin-top:10px;padding:6px 10px">
   <table aria-label="Haber akışı"><thead><tr><th style="width:70px">Tarih</th><th style="width:64px">Hisse</th><th style="width:52px">Tip</th><th>Bildirim</th><th style="width:40px"></th></tr></thead><tbody id="haberBody"></tbody></table>
 </div>
-</div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
+</div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260824a"></script>
-<script src="/ajan.js?v=20260824a"></script>
+<script src="/app.js?v=20260824b"></script>
+<script src="/ajan.js?v=20260824b"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
