@@ -749,7 +749,14 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="kv"><span class="k">Tüketici güveni</span><span id="yGuven">—</span></div></div>
   </div>
 </div>
-<div class="card" style="margin-top:12px">
+<!-- §397 EBU KAPSAMI DIŞI (23 Ağu): Bu kart ELLE yazılan haftalık analizdir.
+     Ebu gece koşusunda data-ebu="hayir" taşımayan kartlara not üretiyor ve
+     buradaki analizi ÜZERİNE YAZIYORDU — kullanıcı "haftalık not kayboldu"
+     dediğinde sebebi buydu: HTML'de duruyor ama JS eziyordu.
+     Etiket (yorumHafta) statik kaldığı için yeni, gövde eski görünüyordu;
+     bu çelişki teşhisi kolaylaştırdı.
+     DERS: ELLE YAZILAN İÇERİK OTOMATİK ÜRETİMİN KAPSAMINDA OLMAMALI. -->
+<div class="card" data-ebu="hayir" style="margin-top:12px">
   <div class="lbl">HAFTALIK ARAŞTIRMA NOTU <span class="tag snap" id="yorumHafta">24–30 AĞU · REPO REJİMİ DÖNDÜ</span></div>
   <div class="note" style="line-height:1.75;max-height:560px;overflow:auto">
 <div style="margin:0 0 12px"><b style="color:var(--ink);font-size:12px">1 · HAFTANIN OLAYI: ÖRTÜLÜ SIKILAŞMA BİTTİ</b><br>TCMB, 1 Mart'ta ara verdiği <b>bir hafta vadeli repo ihalelerine 23 Ağustos'ta yeniden başladı</b> (Duyuru 2026-35). Panelin aylardır "rejim riski" diye işaret ettiği senaryo gerçekleşti. Mekanizma: fonlama gecelik pencereden (koridor tavanı <b>%40</b>) politika faizine (<b>%37</b>) kayar; <b>AOFM ~300bp düşer — PPK toplanmadan, karar açıklanmadan.</b> Beş buçuk aylık olağanüstü duruş kapanıyor. Mart'taki adım kur oynaklığına karşı alınmıştı (aynı gün TL uzlaşmalı vadeli döviz satımı başlatıldı); geri alınması TCMB'nin <b>kur tarafında rahatladığını</b> söylüyor. <b>Sonraki PPK 10 Eylül</b> — bu hafta faiz kararı yok ama fiili faiz zaten düşüyor.</div>
@@ -764,7 +771,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note" style="font-size:9px;opacity:.7">Üstteki canlı pano panelin EVDS + BIST verilerinden otomatik doldurulur. Araştırma notu, bu verilerden hareketle yazılmış çok senaryolu bir analizdir — damgalı güncellemede (özellikle PPK sonrası) elle tazelenir. Senaryolar ve olasılıklar analitik çerçevedir, kesin öngörü değildir. Yatırım tavsiyesi değildir.</div>
 </div>
 <h2 style="margin-top:22px">Varlık Sınıfı Taktiksel Duruş <span class="thin">(sentezin pozisyon karşılığı · benchmark'a göre ağırlık)</span></h2>
-<div class="card">
+<div class="card" data-ebu="hayir">
   <div class="lbl">TAKTİKSEL DAĞILIM <span class="tag" id="taktikTag2">24 AĞU · REPO REJİMİ DÖNDÜ</span></div>
   <div id="taktikBody2" style="margin-top:10px"></div>
   <div class="note" style="margin-top:10px">Yukarıdaki sentezin <b>pozisyon karşılığı</b>: "ne oluyor" analizini "nasıl konumlanmalı" kararına çevirir. Her varlık sınıfı için benchmark'a göre ağırlık görüşü + dayanak + onu çürütecek tetik. Canlı sinyallere bağlı (carry, AOFM, TÜFE, REK, model alfa); bir kısmı otomatik ayarlanır.<br><br>
@@ -1768,8 +1775,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260823b"></script>
-<script src="/ajan.js?v=20260823b"></script>
+<script src="/app.js?v=20260823c"></script>
+<script src="/ajan.js?v=20260823c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
