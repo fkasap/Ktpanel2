@@ -45,8 +45,15 @@ const HARITA = {
   satisMal:  ['CostOfGoodsAndServicesSold', 'CostOfRevenue', 'CostOfGoodsSold'],
   faalKar:   ['OperatingIncomeLoss'],
   netKar:    ['NetIncomeLoss', 'ProfitLoss'],
+  /* §398f AMORTİSMAN — bazı şirketler ETİKET DEĞİŞTİRİR ya da 10-Q'da HİÇ
+     VERMEZ (WMT: DepreciationDepletionAndAmortization 2019'da, DepreciationAnd
+     Amortization da 2019'da kesiliyor; sonrası yalnız 10-K'da). Zincir uzun
+     tutuldu; bulunamazsa FAVÖK null kalır ve `_uyari` alanında SÖYLENİR —
+     sessizce faaliyet kârını FAVÖK sanmak yerine. */
   amort:     ['DepreciationDepletionAndAmortization', 'DepreciationAndAmortization',
-              'DepreciationAmortizationAndAccretionNet'],
+              'DepreciationAmortizationAndAccretionNet', 'DepreciationNonproduction',
+              'Depreciation', 'AmortizationOfIntangibleAssets',
+              'DepreciationAmortizationAndAccretionNetExcludingAmortizationOfDebtIssuanceCosts'],
   satisGid:  ['SellingGeneralAndAdministrativeExpense', 'GeneralAndAdministrativeExpense'],
   arge:      ['ResearchAndDevelopmentExpense'],
   isletmeNA: ['NetCashProvidedByUsedInOperatingActivities',
@@ -270,6 +277,13 @@ async function tabloModu(req, res) {
     kaynak: 'SEC EDGAR · XBRL companyfacts',
     ceyrek: seri.length, son_donem: son.donem || null, son_bitis: son.bitis || null,
     _not: 'Değerler USD. Dönem etiketi BİTİŞ TARİHİNDEN üretilir (fy/fp alanları dosya bağlamını taşır, dönem bağlamını değil — §398b). Gelir tablosu doğrudan çeyreklik gelir; NAKİT AKIŞ tablosu YTD gelir ve ardışık farkla çeyrekliğe çevrilir (§398c). Brüt kâr etiketi yoksa ciro − satılan malın maliyeti ile türetilir (§398d). Enflasyon düzeltmesi GEREKMEZ. TTM = son 4 çeyreğin ham toplamı. UYARI: mali yılın SON çeyreği (Q4) ayrı 10-Q ile gelmez, 10-K içindedir; o çeyrek seride EKSİK görünebilir.',
+    _uyari: (function(){
+      const u = [];
+      if (!Number.isFinite(ttm.amort)) u.push('AMORTİSMAN bulunamadı — bu şirket 10-Q\'da ayrı XBRL etiketiyle vermiyor olabilir (WMT gibi). FAVÖK hesaplanamadı; faaliyet kârı FAVÖK YERİNE KULLANILMADI. Yıllık değer için 10-K dönemine bakın.');
+      if (!Number.isFinite(ttm.odFaiz) && !Number.isFinite(ttm.faizGid)) u.push('ÖDENEN FAİZ bulunamadı — FEK hesabı için gerekli.');
+      if (!Number.isFinite(ttm.brut)) u.push('BRÜT KÂR bulunamadı (GrossProfit etiketi yok ve satılan mal maliyeti de okunamadı).');
+      return u.length ? u : null;
+    })(),
     ttm, seri
   });
 }
