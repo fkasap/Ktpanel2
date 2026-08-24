@@ -199,9 +199,18 @@ export const KURALLAR = {
     try { for (const f of readdirSync('ktpanel/api').filter(x => /\.(js|mjs|html|htm|css)$/i.test(x)))
       if (!API_BEYAZ.has(f)) h.push('api/ BEYAZ LISTE DISI: ' + f +
         (/\.(js|mjs)$/i.test(f) ? ' (slot yakar, §7.3)' : ' (kopya — sürüklenme riski)')); } catch (e) {}
-    return { ad: 'ikiz dosya', gecti: !h.length,
-      mesaj: h.length ? h.join(' · ') : 'temiz',
-      detay: h.length ? 'sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi' : null };
+    /* §407b KOK YETIM KOPYA BEKCISI: 24 Agu'da ktpanel/ KOKUNDE yetim bir
+       edgar.js bulundu (api/'dekinin ESKI -a surumu; index.html'den referans 0,
+       bir kez silinip yukleme setiyle GERI gelmis). api/ bekcisi koku gormuyordu
+       — ayni sinif kaza, bir klasor otede. UYARI seviyesi (is kirmizi yanmaz):
+       yetim kopya slot yakmaz ama surtuklenme riski ayni (§335). */
+    const KOK_BEYAZ = new Set(['app.js', 'ajan.js', 'mail.js', 'middleware.js']);
+    const ku = [];
+    try { for (const f of readdirSync('ktpanel').filter(x => /\.(js|mjs)$/i.test(x)))
+      if (!KOK_BEYAZ.has(f)) ku.push('KOK YETIM: ktpanel/' + f + ' (hicbir yerden yuklenmiyor — sil)'); } catch (e) {}
+    return { ad: 'ikiz dosya', gecti: !h.length, uyari: ku.length > 0,
+      mesaj: (h.length ? h.join(' · ') : 'temiz') + (ku.length ? ' · ' + ku.join(' · ') : ''),
+      detay: h.length ? 'sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi' : (ku.length ? 'kok beyaz liste: app/ajan/mail/middleware' : null) };
   },
 
   /* ── FIYAT YASI (§301): tarih birligi KOR NOKTASININ kapanisi.

@@ -752,10 +752,10 @@ async function fonTazele() {
       'Referer': 'https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
       'X-Requested-With': 'XMLHttpRequest'
     };
-    const tfDogrudan = async (uc, govde) => {
+    const tfDogrudan = async (uc, govde, ekBas) => {
       try {
         const r = await fetch('https://www.tefas.gov.tr/api/funds/' + uc, {
-          method: 'POST', headers: TF_BAS, body: JSON.stringify(govde || {}),
+          method: 'POST', headers: Object.assign({}, TF_BAS, ekBas || {}), body: JSON.stringify(govde || {}),
           signal: AbortSignal.timeout(25000) });
         if (!r.ok) return null;
         const t = await r.text();
@@ -771,19 +771,63 @@ async function fonTazele() {
       l2 = rl.ok ? await rl.json() : { error: 'HTTP_' + rl.status };
     } catch (e) { g2 = g2 || { error: String(e.message || e).slice(0, 80) }; }
 
-    /* §401: köprü boş/hatalı döndüyse DOĞRUDAN dene */
+    /* §408 DOĞRUDAN ÇEKİM v2 (24 Ağu, HAR ölçümüyle): TEFAS erişim mimarisi
+       değişti — (1) her API çağrısı Authorization: Bearer istiyor ve jeton
+       sitenin KENDİ ön-yüz paketine gömülü (common-*.js chunk, herkese aynı
+       statik değer → kullanmak oturum taklidi DEĞİL, istemci sözleşmesinin
+       parçası; build'de değişebilir → koda GÖMÜLMEZ, her koşuda sökülür),
+       (2) getiri ucu yenilendi: api/funds/fonGetiriBazliBilgiGetir.
+       Bot-koruma çerezleri (wid/zid/xid) taklit EDİLMEZ — sayfa/chunk bile
+       reddedilirse ORADA DURULUR (§401 etik çizgisi aynen). Son basamak:
+       kullanıcı HAR'ı (§409) — yalnız AYNI GÜN taze ise, bayat sessiz kullanılmaz. */
     if (!g2 || !Array.isArray(g2.veri) || !g2.veri.length) {
-      const d = await tfDogrudan('fonGnlBlgSiraliGetir',
-        { fontip: 'YAT', sfontur: '', kurucukod: '', fongrup: '', bastarih: 'Başlangıç', bittarih: 'Bitiş',
-          fonturkod: '', fonunvantip: '', strperiod: '1,1,1,1,1,1,1', islemdurum: '1' });
-      const dz = d && (d.data || d.veri || (Array.isArray(d) ? d : null));
-      if (Array.isArray(dz) && dz.length) {
-        g2 = { veri: dz.map(x => ({ fonKodu: x.FONKODU || x.fonKodu, ...x })), n: dz.length, _yol: 'doğrudan (Actions runner)' };
-        raporlar.push('- §401 TEFAS getiri: Vercel köprüsü düştü, DOĞRUDAN çekim başarılı (' + dz.length + ' fon)');
-      } else {
-        raporlar.push('- §401 TEFAS getiri: hem köprü hem doğrudan çekim başarısız — TEFAS güvenlik duvarı her iki IP bloğunu da engelliyor olabilir');
+      let jeton = null;
+      try {
+        const sayfa = await fetch('https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
+          { headers: { 'User-Agent': TF_BAS['User-Agent'], 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
+        const html = await sayfa.text();
+        if (html.includes('Request Rejected')) {
+          raporlar.push('- §408 TEFAS: sayfa isteği WAF tarafından reddedildi (runner IP) — jeton sökülmedi, burada duruldu');
+        } else {
+          const chunkYollari = [...html.matchAll(/\/_next\/static\/chunks\/[A-Za-z0-9._-]+\.js/g)].map(m => m[0]).slice(0, 25);   /* nezaket tavanı */
+          for (const cy of chunkYollari) {
+            try {
+              const jr = await fetch('https://www.tefas.gov.tr' + cy, { headers: { 'User-Agent': TF_BAS['User-Agent'] }, signal: AbortSignal.timeout(25000) });
+              const m = (await jr.text()).match(/ST-tefasweb[A-Za-z0-9]{10,}/);
+              if (m) { jeton = m[0]; break; }
+            } catch (e) {}
+          }
+          if (!jeton) raporlar.push('- §408 TEFAS: chunk taramasında jeton bulunamadı (' + chunkYollari.length + ' aday) — uç sözleşmesi yine değişmiş olabilir');
+        }
+      } catch (e) { raporlar.push('- §408 TEFAS: sayfa/jeton aşaması hata — ' + String(e && e.message || e).slice(0, 60)); }
+      if (jeton) {
+        const G408 = JSON.parse("{\"dil\":\"TR\",\"fonTipi\":\"YAT\",\"kurucuKodu\":null,\"sfonTurKod\":null,\"fonTurAciklama\":null,\"islem\":1,\"fonTurKod\":null,\"fonGrubu\":null,\"donemGetiri1a\":\"1\",\"donemGetiri3a\":\"1\",\"donemGetiri6a\":\"1\",\"donemGetiri1y\":\"1\",\"donemGetiriyb\":\"1\",\"donemGetiri3y\":\"1\",\"donemGetiri5y\":\"1\",\"basTarih\":null,\"bitTarih\":null,\"calismaTipi\":2,\"getiriOrani\":\"1\"}");
+        const d = await tfDogrudan('fonGetiriBazliBilgiGetir', G408, { 'Authorization': 'Bearer ' + jeton });
+        const dz = d && (d.resultList || d.data || null);
+        if (Array.isArray(dz) && dz.length) {
+          g2 = { veri: dz.map(x => ({ fonKodu: x.fonKodu || x.FONKODU, ...x })), n: dz.length, _yol: 'doğrudan v2 (Bearer, Actions runner)' };
+          raporlar.push('- §408 TEFAS getiri: yeni uç + canlı jetonla DOĞRUDAN çekim başarılı (' + dz.length + ' fon)');
+        } else {
+          raporlar.push('- §408 TEFAS getiri: jeton bulundu ama uç reddetti — bot-koruma çerez katmanı; burada duruldu');
+        }
       }
+      /* §409: son basamak — kullanıcı HAR'ı */
+      if (!g2 || !Array.isArray(g2.veri) || !g2.veri.length) {
+        try {
+          const hv = await oku('ktpanel/tefas-har-veri.json');
+          const bugun = new Date().toISOString().slice(0, 10);
+          if (hv && hv.tarih === bugun && Array.isArray(hv.getiri) && hv.getiri.length) {
+            g2 = { veri: hv.getiri.map(x => ({ fonKodu: x.fonKodu, ...x })), n: hv.getiri.length, _yol: 'HAR (elle · §409)' };
+            raporlar.push('- §409 TEFAS getiri: HAR içe-aktarımı kullanıldı (' + hv.getiri.length + ' fon · ' + hv.tarih + ') — elle katman, damgalı');
+          } else if (hv && hv.tarih) {
+            raporlar.push('- §409 TEFAS: HAR dosyası BAYAT (' + hv.tarih + ') — sessizce kullanılmadı; taze al: node ktpanel/arac/tefas-har-isle.mjs <dosya.har>');
+          }
+        } catch (e) {}
+      }
+      if (!g2 || !Array.isArray(g2.veri) || !g2.veri.length)
+        raporlar.push('- §408 TEFAS getiri: köprü + doğrudan v2 + HAR — üçü de yok; katman yazılmayacak');
     }
+
     if (!l2 || !Array.isArray(l2.veri || l2.data)) {
       const d2 = await tfDogrudan('fonProfilDtyGetir', { fontip: 'YAT', kurucukod: '', fongrup: '', islemdurum: '1' });
       const dz2 = d2 && (d2.data || d2.veri || (Array.isArray(d2) ? d2 : null));
