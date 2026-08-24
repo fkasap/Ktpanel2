@@ -3,6 +3,174 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "WMT",
+   "ad": "Walmart",
+   "donem": "FY27 2Ç (31 Tem)",
+   "tarih": "20 Ağu 2026",
+   "tarih_iso": "2026-08-20",
+   "sablon": "abd",
+   "skor": "KARIŞIK",
+   "ozet": "Büyük EPS beat'i ama kalitesi sorgulanıyor: düz. EPS 0,81$ (beklenti 0,73, +%11) ve rehberlik YÜKSELTİLDİ; fakat faaliyet kârındaki +%28,8'in içinde 750 bps'lik TARİFE İADESİ var, GAAP net kâr −%9,4 ve ABD LFL +%2,6 ile beklentinin (3,5) altında. Hisse −%9 — piyasa rakamı değil kaliteyi fiyatladı. E-ticaret +%23, reklam +%38: kârın yeni motoru mağaza değil platform.",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "187,9 mlr $ (net satış 186,1)",
+     "cc": "beklenti 186,8 → aşıldı",
+     "yoy": "+%5,9 (sabit kurla +%5,1)"
+    },
+    {
+     "ad": "Brüt marj",
+     "deger": "%25,4",
+     "cc": "+96 bps y/y",
+     "yoy": "sürücü TARİFE İADELERİ; fiyat yatırımı + yakıt kısmen dengeledi"
+    },
+    {
+     "ad": "Faaliyet kârı / marj",
+     "deger": "9,38 mlr $ · %5,0",
+     "cc": "+%28,8 GAAP · düz. cc +%17,4",
+     "yoy": "içinde 750 bps NET tarife iadesi — altta yatan büyüme %7-10 bandının üst ucu"
+    },
+    {
+     "ad": "Net kâr / marj",
+     "deger": "6,37 mlr $ · %3,4",
+     "cc": "GAAP EPS 0,80 (geçen yıl 0,88) · düz. 0,81 vs 0,73",
+     "yoy": "GAAP −%9,4 · düz. +%19,1"
+    },
+    {
+     "ad": "FCF",
+     "deger": "derlenmedi",
+     "cc": "—",
+     "yoy": "bülten ekinde; yakıtta FY27 için +2 mlr $ ek maliyet varsayımı"
+    },
+    {
+     "ad": "Segment dağılımı",
+     "deger": "WMT US 125,2 · Int'l 35,2 mlr $",
+     "cc": "US faaliyet +%20,6 · eComm +%24",
+     "yoy": "US +%3,5 · Int'l +%12,8 (cc +7,9) · e-ticaret global +%23 · reklam +%38 (Connect +%43) · marketplace +%50"
+    }
+   ],
+   "onemli": [
+    "BEAT'İN KALİTESİ DÜŞÜK — MSFT kartının ayna hali: orada tek seferlik kalemler DÜZELTİLİNCE de beat vardı; burada +%17'lik düz. faaliyet büyümesinin 750 bps'i tarife iadesi ve GAAP net kâr −%9,4. Hisse −%9: rakam değil kalite fiyatlandı.",
+    "TÜKETİCİ K-ŞEKİLLİ: ABD LFL +2,6 beklentinin (3,5) altında — 80 bps ilaç fiyat tavanı etkisi; yönetim düşük gelirlinin trade-off yaptığını, Haziran'da yakıt baskısını söyledi. HD'nin 'geniş tabanlı talep'iyle yan yana okunmalı: dayanıklılık var ama gelir dilimine göre ayrışıyor.",
+    "KÂRIN YENİ MOTORU PERAKENDE DEĞİL: altta yatan kâr büyümesinin ~yarısı üyelik + reklam + marketplace'ten. Faaliyet kârının gelirden hızlı büyüme iddiası bu üçlüye dayanıyor — mağaza comps'una bağımlılık azalıyor."
+   ],
+   "guidance": "YÜKSELTİLDİ: FY27 net satış +%4-5 (önceki 3,5-4,5), düz. EPS 2,80-2,87$ (önceki 2,75-2,85). 3Ç: satış +%3-3,75, düz. faaliyet +%2-4, EPS 0,62-0,64$ — Flipkart Big Billion Days zamanlaması 3Ç büyümesine >100 bps yük. 2Ç+3Ç faaliyet büyümesi birlikte ~%10/çeyrek okunmalı (yönetim).",
+   "kaynak": "AV EARNINGS (0,81/0,73 · +%11 sürpriz · 20 Ağu pre-market) + şirket bülteni (corporate.walmart.com Q2 FY27) + CNBC. NOT: AV 20 Ağu'da 'reportedEPS: None' dönüyordu — §184/§353 gecikme deseni doğrulandı, 24 Ağu itibarıyla işlenmiş.",
+   "tez": "Panel kapsamında DEĞİL (BIST evreni). Okuma: (1) ABD tüketicisi harcıyor ama aşağı dilim fiyat arıyor — Fed indirim patikası tezini destekler; (2) tarife iadesi kaleminin marjları tek seferlik şişirmesi, ABD perakende kârlılığında 3Ç'den itibaren baz etkisi yaratır; (3) BIST tarafında BIM/Mağazacılık kıyası için 'trafik-öncülüğünde LFL' teması ortak."
+  },
+  {
+   "kod": "HD",
+   "ad": "Home Depot",
+   "donem": "FY26 2Ç (2 Ağu)",
+   "tarih": "18 Ağu 2026",
+   "tarih_iso": "2026-08-18",
+   "sablon": "abd",
+   "skor": "POZİTİF",
+   "ozet": "Beklenti serisi kırıldı: düz. EPS 4,92$ (beklenti 4,71, +%4,5) — önceki dört çeyreğin üçü eksi sürprizdi. Satış 47,9 mlr$ (+%5,7), LFL +%1,7 (ABD +%1,3), 16 kategorinin 13'ü pozitif. Talep geniş tabanlı ama KÜÇÜK projelerle; büyük faiz-duyarlı projeler hâlâ baskıda. FY26 rehberliği TEYİT (IEEPA tarife iadeleri dahil).",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "47,9 mlr $",
+     "cc": "şirket: 'beklentilerimizi aştı'",
+     "yoy": "+%5,7 · LFL +%1,7 (ABD +%1,3)"
+    },
+    {
+     "ad": "Brüt marj",
+     "deger": "derlenmedi",
+     "cc": "—",
+     "yoy": "bülten tablosunda; bu çekimde alınmadı"
+    },
+    {
+     "ad": "Faaliyet kârı / marj",
+     "deger": "6,83 mlr $ · %14,3",
+     "cc": "—",
+     "yoy": "+%4,3 — gelirden yavaş: marjda hafif seyrelme (SRS amortismanı 125 mn dahil)"
+    },
+    {
+     "ad": "Net kâr / marj",
+     "deger": "4,76 mlr $ · %9,9",
+     "cc": "GAAP EPS 4,79 (4,58'den) · düz. 4,92 vs 4,71",
+     "yoy": "+%4,7 · düz. EPS +%5,1"
+    },
+    {
+     "ad": "FCF",
+     "deger": "açıklanmadı",
+     "cc": "—",
+     "yoy": "capex rehberliği: satışların ~%2,5'i (FY26)"
+    },
+    {
+     "ad": "Segment dağılımı",
+     "deger": "tek faaliyet segmenti",
+     "cc": "—",
+     "yoy": "kırılım LFL ile: 13/16 ticari kategori pozitif · Kuzey ve Batı ABD güçlü"
+    }
+   ],
+   "onemli": [
+    "SERİ KIRILDI: AV kaydına göre son dört çeyreğin üçü eksi sürprizdi (−0,2 ile −2,3 arası); bu çeyrek +%4,5 ile net beat ve rehberlik teyidi geldi. Perakende tarafında beklenti yönetimi normale dönüyor.",
+    "TALEBİN ŞEKLİ: müşteri KÜÇÜK projelerde — CFO 'geniş tabanlı talep, küçük projeler' dedi; büyük iskonto/borçlanma gerektiren projeler faiz baskısında. Konut faizine duyarlılık sürüyor: Fed patikası HD için doğrudan katalizör.",
+    "TARİFE İKİ YÖNLÜ: FY26 rehberliği IEEPA tarife İADELERİNİ içeriyor — plansız yakıt/enerji/girdi maliyetlerini kısmen dengeliyor. WMT'de aynı kalem beat'in kalitesini bozdu; HD'de rehberlik dengesi olarak sunuldu."
+   ],
+   "guidance": "FY26 TEYİT: düz. EPS yatay ile +%4 (14,69$ tabanı) · capex ~%2,5/satış · IEEPA tarife iadeleri dahil. Düz. faaliyet marjı rehberliği satın alınan maddi olmayan amortismanın ~40 bps etkisini dışlıyor.",
+   "kaynak": "AV EARNINGS (4,92/4,71 · +%4,5 · 18 Ağu pre-market) + şirket bülteni (ir.homedepot.com 8-K, 18 Ağu) + çağrı özetleri. Brüt marj/FCF bülten ekinde — bu çekimde derlenmedi.",
+   "tez": "Panel kapsamında DEĞİL (BIST evreni). Okuma: HD+WMT aynı hafta beat = ABD tüketicisi dayanıklı (ABD sekmesi perakende/JOLTS kartlarıyla aynı yön); ama HD'nin 'büyük proje yok' mesajı konut-faiz kanalının hâlâ sıkı olduğunu söylüyor — Fed indirimi gecikirse ABD çevrim hisselerinde tavan, gelirse HD tipi isimlerde kaldıraç."
+  },
+  {
+   "kod": "CSCO",
+   "ad": "Cisco Systems",
+   "donem": "FY26 4Ç (25 Tem)",
+   "tarih": "12 Ağu 2026",
+   "tarih_iso": "2026-08-12",
+   "sablon": "abd",
+   "skor": "POZİTİF",
+   "ozet": "Rekor kapanış + sipariş süper döngüsü: 4Ç gelir 17,3 mlr$ (+%18), non-GAAP EPS 1,22$ (+%23) — rehberlik üst bandının üstü. Asıl hikâye siparişlerde: toplam +%35, networking +%40 (8. ardışık çift haneli çeyrek), AI altyapı siparişi çeyrekte 4 mlr$, FY26'da 9,3 mlr$ (FY25'in 4,5 katı) → FY27'de ~7,5 mlr$ AI geliri hedefi. Buna rağmen hisse ertesi gün marj endişesiyle düştü.",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "17,3 mlr $",
+     "cc": "rehberlik üst bandı aşıldı",
+     "yoy": "+%18 · FY26: 63+ mlr $ (+%12)"
+    },
+    {
+     "ad": "Brüt marj",
+     "deger": "derlenmedi",
+     "cc": "—",
+     "yoy": "bülten ekinde; AI donanım karışımı marj tartışmasının merkezi"
+    },
+    {
+     "ad": "Faaliyet kârı / marj",
+     "deger": "GAAP %24,7 · non-GAAP %35,9",
+     "cc": "FAVÖK açıklanmıyor — faaliyet marjı kullanıldı (standart)",
+     "yoy": "FY26 faaliyet verimliliği: 30 yılın en yüksek çalışan-başına metrikleri (şirket)"
+    },
+    {
+     "ad": "Net kâr / marj",
+     "deger": "GAAP 3,9 mlr $ · %22,5",
+     "cc": "EPS GAAP 0,97 (+%52) · non-GAAP 1,22 (+%23)",
+     "yoy": "GAAP +%51"
+    },
+    {
+     "ad": "FCF",
+     "deger": "FY26 sermaye getirisi 12,7 mlr $ = FCF'in %99'u",
+     "cc": "4Ç'de 3,2 mlr $ getiri",
+     "yoy": "temettü 0,42$/pay (21 Eki ödeme)"
+    },
+    {
+     "ad": "Segment dağılımı",
+     "deger": "ürün geliri +%24",
+     "cc": "—",
+     "yoy": "networking +%28 · güvenlik +%14 · işbirliği +%12"
+    }
+   ],
+   "onemli": [
+    "SİPARİŞ SÜPER DÖNGÜSÜ — gelirden önce gelen gösterge: toplam ürün siparişleri +%35 (hyperscaler HARİÇ +%25, yani genişlik var), networking +%40 ile sekiz ardışık çift haneli çeyrek. AI altyapı siparişi FY26'da 9,3 mlr$ — bir yılda 4,5 kat.",
+    "REKORA SATIŞ: 13 Ağu'da hisse marj endişesiyle düştü — AI donanım karışımı brüt marjı seyreltiyor. 'Gelir kalitesi vs büyüme hızı' gerginliği; NVDA tedarik zincirinin ikinci halkası olarak yeniden fiyatlanıyor.",
+    "AI GELİRİ ARTIK RAKAMLA REHBERLİKTE: FY26'da ~4 mlr$ AI geliri teslim edildi, FY27 hedefi 7,5 mlr$ — tema vaatten gelir kalemi olmaya geçti. 26 Ağu NVDA raporu bu zincirin ana halkası: hyperscaler capex teyidi CSCO siparişlerinin öncü göstergesi."
+   ],
+   "guidance": "FY27: GAAP EPS 4,00-4,06$ · AI altyapı geliri ~7,5 mlr $ · 1Ç FY27 vergi varsayımları GAAP ~%15 / non-GAAP ~%18,5.",
+   "kaynak": "Şirket bülteni (investor.cisco.com / SEC 8-K, 12 Ağu) + earnings call özetleri + Motley Fool transkript. AV bu kart için ÇEKİLMEDİ (kota tasarrufu) — §184 gereği birkaç gün içinde AV ile çapraz denetim yapılabilir.",
+   "tez": "Panel kapsamında DEĞİL (BIST evreni). Okuma: AI capex teması hyperscaler'dan ağ katmanına yayılıyor — 'AI ticareti genişliyor mu' sorusunun olumlu veri noktası. 26 Ağu NVDA sonucu bu kartın öncülünü test edecek; risk barometresi 70'teyken pozisyon boyutu disiplini notu geçerli."
+  },
+  {
    "kod": "LOGO",
    "ad": "Logo Yazılım",
    "donem": "2Ç26 (6A)",
@@ -3283,7 +3451,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-07 — LOGO 2Ç26 (3,0: marj kalesi sağlam, reel büyüme yok) eklendi. 52 kart.",
+ "guncelleme": "2026-08-24 — ABD geç-sezon turu: WMT FY27 2Ç (KARIŞIK: beat var, kalitesi tarife iadesi) + HD FY26 2Ç (POZİTİF: seri kırıldı) + CSCO FY26 4Ç (POZİTİF: sipariş süper döngüsü) eklendi. 55 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."

@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260824c';   // SS400 fm dislama listesi (kullanici vetosu, bulutta)   // SS399 fm 24 Agu + canli damga   // SS398 risk butcesi
+const KTP_SURUM = '20260824d';   // SS401 ABD kartlari: WMT+HD+CSCO · WMT izleme setine   // SS400 dislama   // SS399 fm 24 Agu   // SS398 risk butcesi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9264,7 +9264,7 @@ function globalTakvimRender(){
   const el=$('globalTakvim'); if(!el) return;
   const ABD=new Set(['GOOGL','TSLA','INTC','TXN','TSM','NFLX','JPM','MSFT','META','AAPL','AMZN',
     'NVDA','AMD','CSCO','HD','IBM','NOW','ORCL','CRM','ADBE','QCOM','MU','AVGO','ASML','PLTR',
-    'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ']);
+    'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ','WMT']);   /* §401: WMT eklendi — FY27 2Ç kartı yazıldı, takvimde 'açıklandı' görünsün. İkinci (dışlama) sete GEREKMEZ: regex 4-5 harf, WMT 3 harf. */
   const K=(typeof INC_KARTLAR!=='undefined'&&INC_KARTLAR)?INC_KARTLAR:[];
   const aciklanan=K.filter(k=>ABD.has(k.kod)).map(k=>({
     kod:k.kod, iso:k.tarih_iso||'', tarih:k.tarih||'', skor:k.skor, durum:'açıklandı'}));
