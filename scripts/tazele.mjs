@@ -727,39 +727,44 @@ async function fonTazele() {
     } catch (e) {
       raporlar.push('### TEFAS genel bilgi (§253i) — ⏭ ' + String(e && e.message || e).slice(0, 70));
     }
+    /* §401b KAPSAM DÜZELTMESİ (canlı: "tfDogrudan is not defined"): yardımcı
+       try bloğunun İÇİNDE tanımlanmıştı, kullanıldığı yer dışında kalıyordu.
+       Artık try'dan ÖNCE, aynı fonksiyon kapsamında.
+       DERS: BİR YARDIMCIYI KULLANACAĞIN HER DALIN GÖREBİLECEĞİ YERDE TANIMLA —
+       try/catch bloğu da bir kapsamdır.
+       §401 DOĞRUDAN TEFAS YEDEĞİ (23 Ağu, üç koşudur "Request Rejected"):
+       TEFAS'ın F5 güvenlik duvarı VERCEL IP BLOĞUNU engelledi — köprü hem
+       Actions'tan hem tarayıcıdan "fetch failed" veriyor, yani kaynak bazlı
+       blok, hız sınırı değil.
+       ÇÖZÜM: GitHub runner'dan DOĞRUDAN denemek. Bu bir dolanma DEĞİL —
+       proxy zinciri kurmuyoruz, IP döndürmüyoruz; sadece farklı bir meşru
+       istemciden aynı kamuya açık ucu çağırıyoruz. TEFAS runner IP'lerini de
+       engellerse orada dururuz.
+       SIRA: önce Vercel köprüsü (çalışıyorsa tercih — başlıklar orada
+       doğrulanmış), düşerse doğrudan.
+       DERS: KÖPRÜ TEK NOKTA ARIZASIDIR — kamuya açık kaynağa ikinci bir
+       meşru yol bırak. */
+    const TF_BAS = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
+      'Accept': 'application/json, text/javascript, */*; q=0.01',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Origin': 'https://www.tefas.gov.tr',
+      'Referer': 'https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
+      'X-Requested-With': 'XMLHttpRequest'
+    };
+    const tfDogrudan = async (uc, govde) => {
+      try {
+        const r = await fetch('https://www.tefas.gov.tr/api/funds/' + uc, {
+          method: 'POST', headers: TF_BAS, body: JSON.stringify(govde || {}),
+          signal: AbortSignal.timeout(25000) });
+        if (!r.ok) return null;
+        const t = await r.text();
+        if (!t || t.trim()[0] !== '{' && t.trim()[0] !== '[') return null;   /* "Request Rejected" HTML döner */
+        return JSON.parse(t);
+      } catch (e) { return null; }
+    };
     let g2 = null, l2 = null;
     try {
-      /* §401 DOĞRUDAN TEFAS YEDEĞİ (23 Ağu, üç koşudur "Request Rejected"):
-         TEFAS'ın F5 güvenlik duvarı VERCEL IP BLOĞUNU engelledi — köprü hem
-         Actions'tan hem tarayıcıdan "fetch failed" veriyor, yani kaynak bazlı
-         blok, hız sınırı değil.
-         ÇÖZÜM: GitHub runner'dan DOĞRUDAN denemek. Bu bir dolanma DEĞİL —
-         proxy zinciri kurmuyoruz, IP döndürmüyoruz; sadece farklı bir meşru
-         istemciden aynı kamuya açık ucu çağırıyoruz. TEFAS runner IP'lerini de
-         engellerse orada dururuz.
-         SIRA: önce Vercel köprüsü (çalışıyorsa tercih — başlıklar orada
-         doğrulanmış), düşerse doğrudan.
-         DERS: KÖPRÜ TEK NOKTA ARIZASIDIR — kamuya açık kaynağa ikinci bir
-         meşru yol bırak. */
-      const TF_BAS = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Origin': 'https://www.tefas.gov.tr',
-        'Referer': 'https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
-        'X-Requested-With': 'XMLHttpRequest'
-      };
-      const tfDogrudan = async (uc, govde) => {
-        try {
-          const r = await fetch('https://www.tefas.gov.tr/api/funds/' + uc, {
-            method: 'POST', headers: TF_BAS, body: JSON.stringify(govde || {}),
-            signal: AbortSignal.timeout(25000) });
-          if (!r.ok) return null;
-          const t = await r.text();
-          if (!t || t.trim()[0] !== '{' && t.trim()[0] !== '[') return null;   /* "Request Rejected" HTML döner */
-          return JSON.parse(t);
-        } catch (e) { return null; }
-      };
       const rg = await fetch('https://ktpanel.vercel.app/api/tefas?mod=getiri&tip=YAT', { signal: AbortSignal.timeout(25000) });
       g2 = await rg.json().catch(() => ({ error: 'HTTP_' + rg.status + '_govdesiz' }));   /* §249i: hata gövdesi de okunur — v alanı köprü sürümünü söyler */
       const rl = await fetch('https://ktpanel.vercel.app/api/tefas?mod=liste', { signal: AbortSignal.timeout(25000) });
