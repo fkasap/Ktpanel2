@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260823g';   // SS400b fiyat sunucudan   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260824e';   // SS407 CATAL BIRLESTIRME: SS403 risk taban/tavan + SS404 fm canli damga + SS405 dislama + SS406 WMT (g-tabani ustune)   // SS400b fiyat sunucudan
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1552,10 +1552,27 @@ function fmwGeriYukle(){
   let n=0; FMF.forEach(k=>{ const e=$('fmw'+k); if(e&&s[k]!=null&&isFinite(s[k])){ e.value=s[k]; n++; } });
   return n>0;
 }
+/* ── §405 DIŞLAMA LİSTESİ — kalitatif veto; SEÇİM ÖNCESİ filtre, yedek üstten
+   girer. fm_disla_v1 CLOUD_KEYS'te (§265 emsali). KARNE ve sicil veto DIŞI. */
+const FM_DISLA_KEY='fm_disla_v1';
+function fmDislaOku(){ try{ const x=JSON.parse(localStorage.getItem(FM_DISLA_KEY)||'[]');
+  return Array.isArray(x)?x.map(t=>String(t).toUpperCase()):[]; }catch(e){ return []; } }
+function fmDislaYaz(a){ try{ localStorage.setItem(FM_DISLA_KEY, JSON.stringify(a)); }catch(e){} }
+function fmDislaEkle(t){ const a=fmDislaOku(), u=String(t).toUpperCase();
+  if(!a.includes(u)){ a.push(u); fmDislaYaz(a); } fmRender(); }
+function fmDislaGeriAl(t){ const u=String(t).toUpperCase();
+  fmDislaYaz(fmDislaOku().filter(x=>x!==u)); fmRender(); }
 async function fmInit(){
   try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}
-  catch(e){$('fmBody').innerHTML='<tr><td colspan="10" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
+  catch(e){$('fmBody').innerHTML='<tr><td colspan="11" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
   $('fmUni').textContent=FM.meta.uni;$('fmRanked').textContent=FM.meta.ranked;$('fmTopN').textContent='Top '+FM.meta.topn;
+  /* §404 DAMGA CANLI — Altın Kural 6: tarih ELLE YAZILMAZ, fm.json meta.tarih'ten
+     okunur. meta.tarih yoksa (eski şema) metin DURUR. Tek sahip: bu blok. */
+  try{ if(FM.meta&&FM.meta.tarih){ const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    const p=String(FM.meta.tarih).split('-');
+    if(p.length===3){ const kisa=parseInt(p[2],10)+' '+AY[parseInt(p[1],10)-1];
+      const u=$('fmDamga'); if(u)u.textContent=kisa+' '+p[0];
+      document.querySelectorAll('.fmDamgaKisa').forEach(e=>{e.textContent=kisa;}); } } }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
   $('fmReset').addEventListener('click',()=>{FMF.forEach(k=>$('fmw'+k).value=FMW_DEF[k]);
@@ -1710,18 +1727,32 @@ function fmRender(){
     return {t:r.t,s:r.s,f:r.f,n:r.n,score:sc};
   }).filter(Boolean);
   rows.sort((a,b)=>b.score-a.score);
+  /* §405: dışlananlar SEÇİMDEN ÖNCE düşer — yedek kendiliğinden girer */
+  const disla=new Set(fmDislaOku());
+  const aktif=rows.filter(r=>!disla.has(r.t));
   const sel=[],cnt={};
-  for(const r of rows){
+  for(const r of aktif){
     if(sel.length>=FM.meta.topn)break;
     if((cnt[r.s]||0)>=FM.meta.maxnames)continue;
     sel.push(r);cnt[r.s]=(cnt[r.s]||0)+1;
   }
   const wts=fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s));
   const zf=v=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+v.toFixed(2)+'</td>';
-  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td></tr>').join('');
+  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek üstten girer" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
+  /* §405: × satır tıklamasını YUTAR — yoksa çıkarırken detay kartı açılır */
+  document.querySelectorAll('#fmBody .fmCikar').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();fmDislaEkle(b.dataset.t);}));
+  const evren=new Set(rows.map(r=>r.t));
+  const db=$('fmDislaBar');
+  if(db){ const L=fmDislaOku();
+    db.innerHTML=!L.length?'' :
+      '<span style="color:var(--down);font-weight:600">DIŞLANAN · '+L.length+':</span> '+
+      L.map(t=>'<span style="display:inline-block;border:1px solid var(--line2);border-radius:10px;padding:1px 7px;margin:2px 3px 0 0">'+t+(evren.has(t)?'':' <span style="color:var(--muted)">(evren dışı)</span>')+' <a href="#" class="fmGeriAl" data-t="'+t+'" style="text-decoration:none;color:var(--mm2)" title="modele geri al">↩</a></span>').join('')+
+      ' <a href="#" id="fmDislaTemizle" style="color:var(--muted);font-size:10px">tümünü geri al</a>';
+    db.querySelectorAll('.fmGeriAl').forEach(x=>x.addEventListener('click',ev=>{ev.preventDefault();fmDislaGeriAl(x.dataset.t);}));
+    const tm=db.querySelector('#fmDislaTemizle'); if(tm)tm.addEventListener('click',ev=>{ev.preventDefault();fmDislaYaz([]);fmRender();}); }
   const inSel=new Set(sel.map(r=>r.t));
-  const buf=rows.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
+  const buf=aktif.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
   $('fmBuffer').textContent='Tampon bölge / izleme listesi (26–40 bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
   const sw={};sel.forEach((r,i)=>sw[r.s]=(sw[r.s]||0)+wts[i]);
   const mx=Math.max.apply(null,Object.values(sw));
@@ -5253,11 +5284,20 @@ function riskButceHesap(){
   const te = Math.sqrt((betaP-1)*(betaP-1)*sm*sm + idioP2)*100;
 
   // Bütçe ihlalleri
+  /* §403a AĞIRLIK TAVANI TÜM POZİSYONLARA BAKAR — kapsam dışı dahil. Ağırlık saf
+     bir ağırlık kuralıdır, vol/beta GEREKTİRMEZ; eski döngü yalnız kal (risk.json
+     kapsamı) üzerindeydi, kapsam dışı bir isim %30 olsa ihlal ÜRETMİYORDU (§179.3
+     sınıfı sessiz eksik denetim). x.wT tabloda kullanılmaya devam ediyor. */
   const ihlal = [];
+  hisseler.forEach(p=>{
+    const kod=p.kod.toUpperCase();
+    const wTp = toplamVarlik ? deger(p)/toplamVarlik*100 : 0;
+    if(wTp > A.maxAgirlik)
+      ihlal.push({kod, tip:'ağırlık', deger:wTp, tavan:A.maxAgirlik,
+        not:'toplam varlığın %'+trN(wTp,1)+'\u0027i — tavan %'+A.maxAgirlik+
+            (MRISK[kod]?'':' · (risk kapsamı dışı)')});
+  });
   kal.forEach(x=>{
-    if(x.wT*100 > A.maxAgirlik)
-      ihlal.push({kod:x.kod, tip:'ağırlık', deger:x.wT*100, tavan:A.maxAgirlik,
-        not:'toplam varlığın %'+trN(x.wT*100,1)+'\u0027i — tavan %'+A.maxAgirlik});
     if(x.ctrPay > A.maxCtrPay)
       ihlal.push({kod:x.kod, tip:'risk katkısı', deger:x.ctrPay, tavan:A.maxCtrPay,
         not:'portföy riskinin %'+trN(x.ctrPay,1)+'\u0027ini tek başına taşıyor — tavan %'+A.maxCtrPay});
@@ -5266,8 +5306,18 @@ function riskButceHesap(){
     ihlal.push({kod:'PORTFÖY', tip:'volatilite', deger:volP, tavan:A.maxVol,
       not:'yıllık vol %'+trN(volP,1)+' — tavan %'+A.maxVol});
 
+  /* §403b BÜTÇE TUTARLILIK — ihlal ile tutarsızlık AYRI arıza sınıfları:
+     N pozisyonla tek isim ağırlığının matematiksel TABANI (100−nakit%)/N,
+     risk payının tabanı 100/N (eşit risk katkısı sınırı). Tavan tabanın
+     altındaysa ihlal listesi YAPISAL gürültüdür (§300 gerekçesi). */
+  const N=hisseler.length;
+  const nakitP = toplamVarlik ? nakit/toplamVarlik*100 : 0;
+  const tabanW = N ? (100-nakitP)/N : 0;
+  const tabanC = N ? 100/N : 0;
   return {bos:false, A, kal, betaP, volP, volNaif, cesitKazanc, te, ihlal, negatif, disi,
-          riskliToplam, toplamVarlik, nakitOran: toplamVarlik?nakit/toplamVarlik*100:0,
+          riskliToplam, toplamVarlik, nakitOran: nakitP,
+          tabanW, tabanC, N,
+          tutarsizW: A.maxAgirlik < tabanW-0.05, tutarsizC: A.maxCtrPay < tabanC-0.05,
           ctrToplam: kal.reduce((s,x)=>s+x.ctr,0)};
 }
 
@@ -5297,6 +5347,15 @@ function riskButceRender(){
    : '<div class="card" style="padding:9px 12px;margin-bottom:8px;border-left:3px solid var(--mm2)">'+
      '<div class="lbl" style="color:var(--mm2)">BÜTÇE İÇİNDE</div>'+
      '<div class="sub" style="font-size:11px;margin-top:3px">Ağırlık, risk katkısı ve volatilite tavanlarının hepsi sağlanıyor.</div></div>';
+  /* §403b: tutarsızlık kutusu ihlalin ÜSTÜNDE — okuma sırası önce yapı, sonra
+     sürüklenme. SARI, kırmızı değil: kaybı olmayan arızada iş kırmızı yakılmaz. */
+  const tutKutu=(R.tutarsizW||R.tutarsizC)
+   ? '<div class="card" style="padding:9px 12px;margin-bottom:8px;border-left:3px solid var(--warn,#c9a227)">'+
+     '<div class="lbl" style="color:var(--warn,#c9a227)">BÜTÇE TUTARSIZ — tavan, matematiksel tabanın altında</div>'+
+     (R.tutarsizW?'<div style="font-size:11.5px;margin-top:4px">'+R.N+' pozisyon + %'+trN(R.nakitOran,1)+' nakitle tek isim ağırlığının tabanı <b>%'+trN(R.tabanW,1)+'</b> — %'+R.A.maxAgirlik+' tavanı HİÇBİR portföyle sağlanamaz. Ya tavanı yükselt ya isim sayısını en az <b>'+Math.ceil((100-R.nakitOran)/R.A.maxAgirlik)+'</b>\u0027e çıkar.</div>':'')+
+     (R.tutarsizC?'<div style="font-size:11.5px;margin-top:4px">Risk payı tabanı (eşit katkı) <b>%'+trN(R.tabanC,1)+'</b> — %'+R.A.maxCtrPay+' tavanı yapısal olarak sağlanamaz.</div>':'')+
+     '<div class="sub" style="font-size:10.5px;margin-top:4px">Alttaki kırmızı listede bu tavanlara bağlı satırlar yapısal gürültü içerebilir; gerçek sürüklenme sinyali tutarlı tavanlardadır.</div></div>'
+   : '';
 
   const ozet='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-bottom:10px">'+
     '<div class="card" style="padding:7px 11px"><div class="lbl">PORTFÖY VOLÜ</div><div class="val" style="font-size:16px">%'+trN(R.volP,1)+'</div><div class="sub">yıllık · tek-faktör</div></div>'+
@@ -5333,7 +5392,7 @@ function riskButceRender(){
       '. Piyasa volü fazla yüksek girilmiş — %30,5 altına indir.</div>':'')+
     (R.disi.length? '<div class="sub" style="font-size:10.5px;margin-top:4px">Kapsam dışı (risk.json\u0027da yok, hesaba girmedi): '+R.disi.join(', ')+'</div>':'');
 
-  el.innerHTML = ayar + ihlalKutu + ozet + tablo + uyari;
+  el.innerHTML = ayar + tutKutu+ihlalKutu + ozet + tablo + uyari;
   rbBagla();
 }
 function rbBagla(){
@@ -7215,7 +7274,9 @@ const CLOUD_KEYS=['__sil_guidance_v1','poz_v1','journal_v1','guidance_v1','ktp_s
      kullanici 29 sirketin hepsinin kartini yazmak istemez. Gizlenenler
      kod+donem kapsaminda burada tutulur. Cihazlar arasi tasinmali — yoksa
      her cihazda ayni sirketleri tek tek gizlemek gerekir. */
-  'ktp_bilanco_yoksay_v1'];   // sukuk + model sicili de buluta
+  'ktp_bilanco_yoksay_v1',
+  /* §405 FM DIŞLAMA: kullanıcı vetosu — cihazlar arası taşınır (§265 emsali). */
+  'fm_disla_v1'];   // sukuk + model sicili de buluta
 const _origSet=localStorage.setItem.bind(localStorage);
 const _origGet=localStorage.getItem.bind(localStorage);
 let _cloudTimer;
@@ -9187,7 +9248,7 @@ function globalTakvimRender(){
   const el=$('globalTakvim'); if(!el) return;
   const ABD=new Set(['GOOGL','TSLA','INTC','TXN','TSM','NFLX','JPM','MSFT','META','AAPL','AMZN',
     'NVDA','AMD','CSCO','HD','IBM','NOW','ORCL','CRM','ADBE','QCOM','MU','AVGO','ASML','PLTR',
-    'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ']);
+    'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ','WMT']);   /* §406: WMT — kartı yazıldı, takvimde görünsün. Dışlama setine gerekmez (regex 4-5 harf). */
   const K=(typeof INC_KARTLAR!=='undefined'&&INC_KARTLAR)?INC_KARTLAR:[];
   const aciklanan=K.filter(k=>ABD.has(k.kod)).map(k=>({
     kod:k.kod, iso:k.tarih_iso||'', tarih:k.tarih||'', skor:k.skor, durum:'açıklandı'}));
