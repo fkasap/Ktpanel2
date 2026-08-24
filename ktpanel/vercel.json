@@ -21,6 +21,9 @@
   },
   "api/ajanktp.js": {
    "maxDuration": 120
+  },
+  "api/edgar.js": {
+   "maxDuration": 60
   }
  },
  "crons": [
