@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260822n';   // SS394b NaN korumasi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260823a';   // SS395 repo rejimi yeniden acildi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -6299,7 +6299,9 @@ function zincirCiz(z){
       // gösteriyordu. NOT TABLOYLA ÇELİŞİYORDU (§111'in aynısı, bu sefer ben yaptım).
       // KÖK NEDEN: kural fazla genelleştirilmişti. "Sterilizasyon > fonlama ⇒ taban"
       // bağıntısı ancak HAFTALIK REPO KANALI AÇIKKEN geçerli. TCMB Mart'tan beri
-      // haftalık repo ihalelerini askıya almış; fonlama gecelik pencereden yapılıyor
+      // haftalık repo ihalelerini askıya almıştı; fonlama gecelik pencereden yapılıyordu
+      // (§395: 23 Ağu 2026'da ihaleler yeniden açıldı — kural AOFM'ye baktığı için
+      //  rejim değişimini kendiliğinden yakalar, metin sabitlenmemiştir)
       // ve oran koridorun TAVANINA yapışıyor.
       // YENİ KURAL: anlatı varsayılan değil ÖLÇÜLEN farka dayanır. Önce farkın
       // İŞARETİNE bakılır, sonra sebep yorumlanır. Ölçüm anlatıyı belirler, tersi değil.
@@ -6357,7 +6359,8 @@ function zincirCiz(z){
    BUGÜNKÜ ÖLÇÜM NE SÖYLÜYOR: politika %37, AOFM %40,00, TLREF %39,91, piyasa
    repo %39,89. Koridor tavanı politika+300bp = %40. AOFM TAM TAVANDA.
    Yani fonlama politika faizinden DEĞİL, gecelik pencereden yapılıyor
-   (haftalık repo ihaleleri Mart'tan beri askıda). Bunun sonucu kritik:
+   (haftalık repo ihaleleri Mart-Ağustos 2026 arası askıdaydı; §395: 23 Ağu'da
+   YENİDEN AÇILDI, aşağıdaki tanı o dönemin fotoğrafıdır). Bunun sonucu kritik:
    POLİTİKA FAİZİ ŞU AN FİİLEN BAĞLAYICI DEĞİL.
 
    DOĞRU ÇIPA KORİDORDUR, politika faizi değil:
@@ -6435,7 +6438,15 @@ function repoCiz(){
     '</tbody></table></div>'+
     '<div class="note" style="margin-top:9px">'+
     (marj.tavanda
-      ? '<b style="color:var(--down)">Kritik:</b> AOFM koridor tavanına yapışık, yani <b>politika faizi şu an fiilen bağlayıcı değil</b>. Bu tablo, TCMB’nin koridoru politika faiziyle <em>birlikte</em> indireceği varsayımına dayanır — tarihsel davranış budur ama garanti değildir. <b>Rejim riski:</b> haftalık repo ihaleleri yeniden açılırsa fonlama politika faizine kayar ve AOFM <b>bir anda ~'+F(marj.aofmBp,0)+'bp düşer</b>; PPK hiç indirim yapmasa bile fonun getirisi o kadar geriler. Bu, faiz tahmininden bağımsız ve daha büyük bir risktir.'
+      ? '<b style="color:var(--down)">Kritik:</b> AOFM koridor tavanına yapışık, yani <b>politika faizi şu an fiilen bağlayıcı değil</b>. Bu tablo, TCMB’nin koridoru politika faiziyle <em>birlikte</em> indireceği varsayımına dayanır — tarihsel davranış budur ama garanti değildir. '+
+        /* §395 REJİM RİSKİ GERÇEKLEŞTİ (23 Ağu 2026, Duyuru 2026-35): panel
+           aylardır "haftalık repo yeniden açılırsa AOFM bir anda ~300bp düşer"
+           diye uyarıyordu. TCMB 1 Mart'ta ara verdiği ihalelere yeniden başladı.
+           Metin artık geleceği değil GERÇEKLEŞEN OLAYI anlatmalı; AOFM henüz
+           tavanda görünüyorsa bu VERİ GECİKMESİDİR, rejim değil.
+           DERS: BİR RİSK GERÇEKLEŞTİĞİNDE UYARIYI HABERE ÇEVİR — "olursa" diyen
+           metin, olduktan sonra yanlış bilgi hâline gelir. */
+        '<b style="color:var(--up)">⚠ REJİM DEĞİŞTİ (23 Ağu 2026):</b> TCMB haftalık repo ihalelerine <b>yeniden başladı</b> (Duyuru 2026-35). Panelin uyardığı senaryo gerçekleşti: fonlama gecelik pencereden politika faizine kayacak ve AOFM <b>~'+F(marj.aofmBp,0)+'bp düşecek</b> — PPK hiç toplanmadan. AOFM hâlâ tavanda görünüyorsa bu <b>veri gecikmesidir</b>; EVDS serisi birkaç iş günü içinde yeni rejimi yansıtır. Fon getirisi buna göre gerileyecek.'
       : '<b>Rejim:</b> fonlama ağırlıklı olarak politika faizinden yapılıyor; marj dar, geçişkenlik yüksek. PPK kararı fon getirisine neredeyse birebir yansır.')+
     ' <b>Marjlar ölçülmüştür, varsayılmamıştır:</b> AOFM +'+F(marj.aofmBp,0)+'bp · TLREF +'+F(marj.tlrefBp,0)+'bp · piyasa +'+F(marj.piyBp,0)+'bp (politika faizine göre, bugünkü veriden). Rejim değişirse bu marjlar da değişir.</div>';
 }
