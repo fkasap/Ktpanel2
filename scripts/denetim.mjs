@@ -184,13 +184,21 @@ export const KURALLAR = {
      sinir) hem surtuklenme riskidir (duzeltme yanlis kopyada yasar). */
   ikizDosya() {
     /* platts.js: §251b mesru 11. fonksiyon (S&P koprusu) — kota 11/12, tek slot kaldi */
-    const API_BEYAZ = new Set(['ajanktp.js', 'bddk.js', 'data.js', 'evds2.js', 'kap.js',
+    const API_BEYAZ = new Set(['ajanktp.js', 'bddk.js', 'data.js', 'evds2.js', 'kap.js', 'edgar.js',
       'katfon.js', 'market.js', 'platts.js', 'tcmb.js', 'tefas.js', 'usnews.js']);
     const h = [];
     try { for (const f of readdirSync('.'))
       if (/\.(js|html)$/.test(f)) h.push('KOKTE KOD: ' + f); } catch (e) {}
-    try { for (const f of readdirSync('ktpanel/api').filter(x => x.endsWith('.js')))
-      if (!API_BEYAZ.has(f)) h.push('api/ BEYAZ LISTE DISI: ' + f + ' (slot yakar, §7.3)'); } catch (e) {}
+    /* SS335 KAPSAM BOSLUGU (19 Agu, ucuncu kaza): bekci yalniz .js bakiyordu.
+       app.js api/'ye dusunce yakalandi — ama ayni gun index.html de dustu ve
+       GORULMEDI. Kopya index.html slot yakmaz, fakat SURTUKLENME riski aynidir:
+       yanlis kopyayi duzenlemek panelde "degisiklik gorunmuyor" saatleri demek
+       (bu kaza uc kez yasandi, ucunde de yukleme sirasinda yanlis klasordeydi).
+       Artik api/ altinda BEYAZ LISTE DISI her kod/sayfa dosyasi yakalanir;
+       _lib/ klasoru ve uzantisiz girdiler dokunulmaz kalir. */
+    try { for (const f of readdirSync('ktpanel/api').filter(x => /\.(js|mjs|html|htm|css)$/i.test(x)))
+      if (!API_BEYAZ.has(f)) h.push('api/ BEYAZ LISTE DISI: ' + f +
+        (/\.(js|mjs)$/i.test(f) ? ' (slot yakar, §7.3)' : ' (kopya — sürüklenme riski)')); } catch (e) {}
     return { ad: 'ikiz dosya', gecti: !h.length,
       mesaj: h.length ? h.join(' · ') : 'temiz',
       detay: h.length ? 'sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi' : null };
