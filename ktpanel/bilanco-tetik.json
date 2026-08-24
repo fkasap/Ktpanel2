@@ -13,6 +13,7 @@
   "ALVES",
   "ANELE",
   "ARSAN",
+  "ARSNF",
   "ASTOR",
   "ATATR",
   "ATEKS",
@@ -224,7 +225,7 @@
   "YYAPI",
   "ZEDUR"
  ],
- "sayi": 222,
+ "sayi": 223,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -447,9 +448,10 @@
   "ULAS": "2026-08-20",
   "YYAPI": "2026-08-20",
   "KPTGY": "2026-08-20",
-  "CITAS": "2026-08-22"
+  "CITAS": "2026-08-22",
+  "ARSNF": "2026-08-24"
  },
- "pencere_sayi": 0,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-08-24 11:29 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-24 15:52 UTC — otomatik (KAP FR · kümülatif §299)"
 }

@@ -1,6 +1,6 @@
 # Tazeleme — 2026-08-24
 
-Katman: `hepsi` · Veri dizini: `ktpanel`
+Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
@@ -36,74 +36,52 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### TR 5Y CDS — ✓ 220.34 bp · 2026-08-23 · +0.06
 - ✓ 3283 günlük seri · kaynak etiketi 2026-08-24 (hafta sonu doldurmalı)
 
-### Risk metrikleri — ✓ GEÇTİ
-- ✓ **kapsam**: 141/141 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%3)
-- ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (187 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
-- ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
-
-### TEFAS genel bilgi (§253i) — ✓ 2030 fon · AUM + yatırımcı sayısı köprüden (ham 2037 kayıt, sayfalamalı)
+### TEFAS genel bilgi (§253i) — ⏭ boş döndü · fetch failed
+- Playwright yedeği devrede.
 
 ### TEFAS köprü (bilgi)
-- getiri: 1058 fon ✓ · liste: 1048 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
-
-### Fon akışı — ℹ 973 fonun kurucusu fon adından türetildi (§279; mod=liste 1048 kayıt kapsıyordu, evren 2030)
-
-### Akış pencereleri (§359) — ✓ 1H hazır · arşiv 9 gün
-- 1H giriş: TERA 23.8 mlr · GARANTİ 13.5 mlr · ZİRAAT 12.4 mlr
-
-### PYŞ bazında akış (§358) — ✓ 69 kurum · 2026-08-24 · 20 fon eşleşmedi
-- giriş: YAPI KREDİ 16.75 mlr · TERA 10.21 mlr · GARANTİ 9.41 mlr
-- çıkış: PUSULA -2.84 mlr · AK -5.06 mlr · İŞ -8.10 mlr
-
-### Fon akışı (§263) — ✓ 2029 fon · 2026-08-21 → 2026-08-24
-- giriş 113.35 mlr ₺ · çıkış -78.27 mlr ₺ · net 35.08 mlr ₺
+- getiri ucu: {"error":"fetch failed"}
 
 ### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (2030 fon fiyat + 1058 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009103101672> [Go Back]`
+- yol: yok
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009725330460> [Go Back]`
 
-### Katılım fonları — ✓ GEÇTİ
-- ✓ **kapsam**: 46/46 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%2)
-- ✓ **dönem tutarlılığı**: temiz
+### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)
+- Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.
 
-### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)
-
-### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
-- ✓ **ikiz dosya**: temiz
+### Depo hijyeni + kalem tazeligi (§297) — ✗ KALDI
+- ✗ **ikiz dosya**: api/ BEYAZ LISTE DISI: edgar.js (slot yakar, §7.3)
+  - sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi
 - ✓ **seri guncelligi (track.series)**: 2026-08-21 (referans 2026-08-24, fark 3g)
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-24 (referans 2026-08-24, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
-- ⚠ **borc defteri (§299)**: 222 kart bekliyor · en eski AGYO (6g)
-  - defter 222 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
+- ⚠ **borc defteri (§299)**: 223 kart bekliyor · en eski AGYO (6g)
+  - defter 223 koda cikti (esik 200) — dusum mekanizmasi calismiyor olabilir: inceleme-ai.json okunabiliyor mu?
 
-### Bilanço tetiği (§299 kümülatif) — ✓ 222 şirket kart bekliyor
-- pencere: 0 FR · yeni deftere giren: 0
+### Bilanço tetiği (§299 kümülatif) — ✓ 223 şirket kart bekliyor
+- pencere: 1 FR · yeni deftere giren: 1 (ARSNF)
 - kart yazılıp düşen: 0
 - en eski borç: AGYO · 6 gündür bekliyor
-- ADESE, AGYO, AKHAN, AKYHO, ALARK, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ASTOR, ATATR, ATEKS, ATSYH, AVHOL, AVOD, AVTUR, BAGFS …
+- ADESE, AGYO, AKHAN, AKYHO, ALARK, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, ANELE, ARSAN, ARSNF, ASTOR, ATATR, ATEKS, ATSYH, AVHOL, AVOD, AVTUR …
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:245 · XK100:100 · XK050:50 · XK030:30 · XSRDK:24 · XKTMT:39
 - ✓ üyelik uyumu XKTUM: 150/245 (tasarım gereği ilk 150)
 - ✓ üyelik uyumu XK100: 100/100 (tam kapsam)
 - ✓ üyelik uyumu XKTMT: 39/39 (tam kapsam)
 
-### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-21
-- XKTUM 20521.84 · XKTMT 19074 · XK100 19069.78 · XU100 14514.82 · BISTTLREFK 4071.51162
-- arşiv: 616 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
+### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-08-24
+- XKTUM 20422.39 · XKTMT 18801.5 · XK100 19012.24 · XU100 14501.49 · BISTTLREFK 4075.61661
+- arşiv: 617 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
-### Model sicili serisi (§291) — ⏭ 2026-08-24 icin XKTUM arsivde yok; satir yazilmadi (uydurma yok)
+### Model sicili serisi (§291) — ✓ 2026-08-24 · model %3.435 / endeks %11.826
 
-### Sektör ısı + rotasyon (§333) — ✓ 2026-08-21 · 15/15 sektör
-- çapalar: 1G 2026-08-20 · 1H 2026-08-14 · 1A null · 3A null
-- XU100 (1G/1H/1A/3A): 0.82 · 2.42 · 1.08 · 0.73
-- 3A lideri: XKMYA %13.86
-- ⚠ çapa sapması: 1A hedef 2026-07-22 → 2026-06-30 (22 gün geride) — ufuk ATLANDI, damgalı değer korundu · 3A hedef 2026-05-23 → 2026-04-30 (23 gün geride) — ufuk ATLANDI, damgalı değer korundu
+### Sektör ısı + rotasyon (§333) — ✓ 2026-08-24 · 15/15 sektör
+- çapalar: 1G 2026-08-21 · 1H 2026-08-17 · 1A null · 3A 2026-05-26
+- XU100 (1G/1H/1A/3A): -0.09 · 2.61 · 1.08 · 6.14
+- 3A lideri: XKMYA %29.32
+- ⚠ çapa sapması: 1A hedef 2026-07-25 → 2026-06-30 (25 gün geride) — ufuk ATLANDI, damgalı değer korundu
 
 ### Hazine ihale sonuçları (§314) — ✓ defter 11 duyuru · yeni 0
 - yeni duyuru yok
@@ -120,13 +98,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §383 arşive yazıldı: +10 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 68/245
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 70/245
 - bu turda: 2 tam · 0 eksik kalemli · 4 alınamadı
-- not: CITAS:liste boş · DENGE:liste boş · ONCSM:2026: fetch failed · OSTIM:2026: fetch failed
+- not: CITAS:liste boş · DENGE:liste boş · OZGYO:2026: fetch failed · PENGD:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
-- ONCSM:2026: fetch failed (1. kez) · OSTIM:2026: fetch failed (1. kez)
+- OZGYO:2026: fetch failed (1. kez) · PENGD:2026: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -159,9 +137,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (132 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (220.34 bp) · fon akışı (2029) · katılım fonları (46+akış) · bilanço tetiği (222 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (68/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (136 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (220.34 bp) · bilanço tetiği (223 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (70/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+
+⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
 
 ### Süre bütçesi (§326)
 - ⏱ Faktör evreni (§361) — 79 sn
 - ⏱ KAP arşivi (§381) — 72 sn
-- toplam: 201 sn
+- toplam: 205 sn

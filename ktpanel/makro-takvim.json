@@ -1,9 +1,9 @@
 {
- "guncelleme": "2026-08-24 11:30 UTC — otomatik (§319)",
+ "guncelleme": "2026-08-24 15:52 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
-   "t": "2026-08-24T18:00:00.000Z",
+   "t": "2026-08-24T17:00:00.000Z",
    "ulke": "USD",
    "olay": "Treasury Sec Bessent Speaks",
    "etki": "Medium",
