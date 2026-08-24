@@ -999,10 +999,24 @@ async function fonTazele() {
        konsol yolu bağımsız kaynakla bit bit mutabık. */
     if (!Object.keys(meta).length || !globalThis.__tefasGetiri) {
       try {
-        const gelenDizin = 'ktpanel/arac/gelen';
-        let dosyalar = [];
-        try { dosyalar = (await fs.readdir(path.join(KOK, gelenDizin))).filter(f => /^tefas-tam-.*\.json$/i.test(f)).sort(); } catch (e) {}
-        if (dosyalar.length) {
+        /* §410c YOL DÜZELTMESİ (canlı ölçüm): KOK zaten 'ktpanel' — içeride
+           tekrar 'ktpanel/' yazınca yol 'ktpanel/ktpanel/arac/gelen' oldu;
+           readdir hata verdi, catch yuttu, blok TEK KELİME ETMEDEN geçti
+           (raporda §410 satırı hiç çıkmadı — en sinsi tür).
+           DERS: KOK'E GÖRE YOL YAZ — oku('fon-arsiv.json') deseni. */
+        const gelenDizin = 'arac/gelen';
+        /* §410c SESSİZ CATCH YASAK: arama yapan blok BULAMADIĞINI da söyler.
+           Eski halde catch yutuyordu ve tüm mesajlar if(dosyalar.length)
+           içindeydi → arıza görünmezdi (§179.3 sınıfı). */
+        let dosyalar = [], dizinNot = '';
+        try {
+          dosyalar = (await fs.readdir(path.join(KOK, gelenDizin)))
+            .filter(f => /^tefas-tam-.*\.json$/i.test(f)).sort();
+        } catch (e) { dizinNot = 'okunamadı (' + String((e && e.code) || e).slice(0, 30) + ')'; }
+        if (!dosyalar.length) {
+          raporlar.push('- §410 konsol dosyası YOK: ' + gelenDizin + '/tefas-tam-*.json ' +
+            (dizinNot || 'bulunamadı') + ' — üretmek için: ktpanel/arac/tefas-konsol.js');
+        } else {
           const kv = await oku(path.join(gelenDizin, dosyalar[dosyalar.length - 1]));
           const bugunISO = new Date().toISOString().slice(0, 10);
           const aum = Array.isArray(kv && kv.aum) ? kv.aum.filter(x => x && x.fonKodu && x.tedPaySayisi != null) : [];
