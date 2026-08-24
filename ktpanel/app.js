@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260823d';   // SS397b takvim duzeltmesi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260824a';   // SS398 risk butcesi: tutarlilik denetimi + kapsam disi agirlik tavani   // SS397b takvim duzeltmesi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -5251,11 +5251,20 @@ function riskButceHesap(){
   const te = Math.sqrt((betaP-1)*(betaP-1)*sm*sm + idioP2)*100;
 
   // Bütçe ihlalleri
+  /* §398a AĞIRLIK TAVANI TÜM POZİSYONLARA BAKAR — kapsam dışı dahil.
+     Ağırlık saf bir ağırlık kuralıdır, vol/beta GEREKTİRMEZ. Eskiden döngü
+     yalnız `kal` (risk.json kapsamı) üzerindeydi; kapsam dışı bir isim toplam
+     varlığın %30\u0027u olsa ağırlık ihlali ÜRETMİYORDU — sessiz eksik denetim
+     sınıfı (§179.3 ruhu: eksik olan görünmezse en tehlikelisidir). */
   const ihlal = [];
+  hisseler.forEach(p=>{
+    const kodU = p.kod.toUpperCase();
+    const wTa = toplamVarlik ? deger(p)/toplamVarlik : 0;
+    if(wTa*100 > A.maxAgirlik)
+      ihlal.push({kod:kodU, tip:'ağırlık', deger:wTa*100, tavan:A.maxAgirlik,
+        not:'toplam varlığın %'+trN(wTa*100,1)+'\u0027i — tavan %'+A.maxAgirlik});
+  });
   kal.forEach(x=>{
-    if(x.wT*100 > A.maxAgirlik)
-      ihlal.push({kod:x.kod, tip:'ağırlık', deger:x.wT*100, tavan:A.maxAgirlik,
-        not:'toplam varlığın %'+trN(x.wT*100,1)+'\u0027i — tavan %'+A.maxAgirlik});
     if(x.ctrPay > A.maxCtrPay)
       ihlal.push({kod:x.kod, tip:'risk katkısı', deger:x.ctrPay, tavan:A.maxCtrPay,
         not:'portföy riskinin %'+trN(x.ctrPay,1)+'\u0027ini tek başına taşıyor — tavan %'+A.maxCtrPay});
@@ -5264,7 +5273,30 @@ function riskButceHesap(){
     ihlal.push({kod:'PORTFÖY', tip:'volatilite', deger:volP, tavan:A.maxVol,
       not:'yıllık vol %'+trN(volP,1)+' — tavan %'+A.maxVol});
 
-  return {bos:false, A, kal, betaP, volP, volNaif, cesitKazanc, te, ihlal, negatif, disi,
+  /* §398b BÜTÇE TUTARLILIK DENETİMİ — ihlal ile tutarsızlık AYRI arıza sınıfları.
+     N pozisyonla tek isim ağırlık tavanının MATEMATİKSEL TABANI (100−nakit)/N\u0027dir:
+     8 isim + %0,8 nakitle taban %12,4 — %9 tavan HİÇBİR portföyle sağlanamaz ve
+     ihlal kutusu yapısal olarak hep dolu kalır; gerçek sürüklenme alarmının değeri
+     düşer (§300 gerekçesi: nöbetçi her hıçkırıkta bağırırsa kimse dinlemez).
+     Risk payının tabanı 100/N\u0027dir (eşit risk katkısı sınırı — ERC). Tutarsızlık
+     KIRMIZI DEĞİL sarıdır: kaybı olmayan arızada iş kırmızı yakılmaz. */
+  const tutarsiz = [];
+  const nakitYuzde = toplamVarlik ? nakit/toplamVarlik*100 : 0;
+  if(hisseler.length){
+    const tabanW = (100 - nakitYuzde) / hisseler.length;
+    if(A.maxAgirlik < tabanW - 0.05)
+      tutarsiz.push({tip:'ağırlık', taban:tabanW,
+        not:hisseler.length+' pozisyonla %'+trN(A.maxAgirlik,1)+' ağırlık tavanı sağlanamaz — matematiksel taban %'+trN(tabanW,1)+
+        '. Ya tavanı yükselt ya isim sayısını en az '+Math.ceil((100-nakitYuzde)/A.maxAgirlik)+'\u0027e çıkar.'});
+  }
+  if(kal.length){
+    const tabanC = 100 / kal.length;
+    if(A.maxCtrPay < tabanC - 0.05)
+      tutarsiz.push({tip:'risk payı', taban:tabanC,
+        not:kal.length+' isimle %'+trN(A.maxCtrPay,1)+' risk payı tavanı sağlanamaz — eşit risk katkısında bile pay %'+trN(tabanC,1)+' olur.'});
+  }
+
+  return {bos:false, A, kal, betaP, volP, volNaif, cesitKazanc, te, ihlal, tutarsiz, negatif, disi,
           riskliToplam, toplamVarlik, nakitOran: toplamVarlik?nakit/toplamVarlik*100:0,
           ctrToplam: kal.reduce((s,x)=>s+x.ctr,0)};
 }
@@ -5286,6 +5318,16 @@ function riskButceRender(){
 
   if(R.bos){ el.innerHTML=ayar+'<div class="sub">Risk bütçesi için risk.json kapsamında en az bir hisse pozisyonu gerekir.'+
     (R.disi&&R.disi.length?' Kapsam dışı: '+R.disi.join(', ')+'.':'')+'</div>'; rbBagla(); return; }
+
+  /* §398b: tutarsızlık kutusu ihlal kutusunun ÜSTÜNDE — okuma sırası önce yapı,
+     sonra sürüklenme. Sarı (#D99A2B): kırmızı ihlalden görsel olarak ayrışır. */
+  const tutarsizKutu = (R.tutarsiz && R.tutarsiz.length)
+   ? '<div class="card" style="padding:9px 12px;margin-bottom:8px;border-left:3px solid #D99A2B">'+
+     '<div class="lbl" style="color:#B47E1E">BÜTÇE TUTARSIZ · '+R.tutarsiz.length+'</div>'+
+     R.tutarsiz.map(i=>'<div style="font-size:11.5px;margin-top:4px">'+i.not+'</div>').join('')+
+     '<div class="sub" style="font-size:10.5px;margin-top:4px">Tutarsız tavan yapısal ihlal üretir — aşağıdaki listeyi okurken sürüklenmeyi yapıdan ayır.</div>'+
+     '</div>'
+   : '';
 
   const ihlalKutu = R.ihlal.length
    ? '<div class="card" style="padding:9px 12px;margin-bottom:8px;border-left:3px solid var(--down)">'+
@@ -5331,7 +5373,7 @@ function riskButceRender(){
       '. Piyasa volü fazla yüksek girilmiş — %30,5 altına indir.</div>':'')+
     (R.disi.length? '<div class="sub" style="font-size:10.5px;margin-top:4px">Kapsam dışı (risk.json\u0027da yok, hesaba girmedi): '+R.disi.join(', ')+'</div>':'');
 
-  el.innerHTML = ayar + ihlalKutu + ozet + tablo + uyari;
+  el.innerHTML = ayar + tutarsizKutu + ihlalKutu + ozet + tablo + uyari;
   rbBagla();
 }
 function rbBagla(){
