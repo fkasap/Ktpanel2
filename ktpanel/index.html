@@ -943,11 +943,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 
 
-</div><div class="tab" id="t6"><h2>09 Faktör Model <span class="thin">(Faktor_Basit v3.2 · evren: XKTUM · veri: Universe CSV · <span id="fmDamga">14 Tem 2026</span>)</span></h2>
+</div><div class="tab" id="t6"><h2>09 Faktör Model <span class="thin">(Faktor_Basit v3.2 · evren: XKTUM · veri: Universe CSV · 14 Tem 2026)</span></h2>
 <div class="card" style="margin-bottom:10px">
-  <div class="lbl">MODEL KARNESİ <span class="thin">(<span class="fmDamgaKisa">14 Tem</span> snapshot → bugün · canlı doğrulama)</span> <span class="ldot"></span></div>
+  <div class="lbl">MODEL KARNESİ <span class="thin">(14 Tem snapshot → bugün · canlı doğrulama)</span> <span class="ldot"></span></div>
   <div id="fmKarneBody"><div class="sub">hesaplanıyor…</div></div>
-  <div class="note" style="font-size:10px">Modelin <b>kendini kanıtlama testi:</b> kompozit skora göre (eşit ağırlık) ilk 10 ile son 10 hissenin, model üretim tarihinden (<span class="fmDamgaKisa">14 Tem</span>) bugüne <em>gerçekleşen</em> ortalama getirisi — güncel fiyat Yahoo'dan canlı çekilir. <b>Makas pozitifse</b> yüksek skor gerçekten kazandırıyor demektir; kalıcı negatifse ya faktör rejimi döndü ya model tazelenmeli. Not: skorların kendisi <span class="fmDamgaKisa">14 Tem</span> fotoğrafıdır — yeniden üretim ayrı iştir (istenirse Fintables verisiyle yapılır); bu kart üretmeden <em>ölçer</em>.</div>
+  <div class="note" style="font-size:10px">Modelin <b>kendini kanıtlama testi:</b> kompozit skora göre (eşit ağırlık) ilk 10 ile son 10 hissenin, model üretim tarihinden (14 Tem) bugüne <em>gerçekleşen</em> ortalama getirisi — güncel fiyat Yahoo'dan canlı çekilir. <b>Makas pozitifse</b> yüksek skor gerçekten kazandırıyor demektir; kalıcı negatifse ya faktör rejimi döndü ya model tazelenmeli. Not: skorların kendisi 14 Tem fotoğrafıdır — yeniden üretim ayrı iştir (istenirse Fintables verisiyle yapılır); bu kart üretmeden <em>ölçer</em>.</div>
 </div>
 <div class="grid mac" id="fmChips">
   <div class="card"><div class="lbl">Evren (likit)</div><div class="val" id="fmUni">—</div><div class="sub">XKTUM · mcap ≥ 2 mlr ₺</div></div>
@@ -975,10 +975,9 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note">Ağırlıkların toplamı 1 olmak zorunda değil — motor <em>mevcut faktörlere göre satır bazında yeniden normalize eder</em> (BLOK 7 mantığın). Bir faktörü kapatmak için 0 yaz. Not: kutucuklar keşif içindir; <em>izlenen resmi portföy</em> her zaman varsayılan ağırlıklar + rebalance tamponuyla kurulur.</div>
 </div>
 <div class="card" style="margin-top:10px;padding:6px 10px">
-  <table aria-label="Faktör model portföyü"><thead><tr><th class="num">#</th><th>Hisse</th><th>Sektör</th><th class="num">VAL</th><th class="num">GRW</th><th class="num">QLT</th><th class="num">MOM</th><th class="num">LRK</th><th class="num">Skor</th><th class="num">Ağırlık</th><th class="num" title="modelden çıkar">×</th></tr></thead><tbody id="fmBody"><tr><td colspan="11" style="color:var(--muted)">Yükleniyor…</td></tr></tbody></table>
+  <table aria-label="Faktör model portföyü"><thead><tr><th class="num">#</th><th>Hisse</th><th>Sektör</th><th class="num">VAL</th><th class="num">GRW</th><th class="num">QLT</th><th class="num">MOM</th><th class="num">LRK</th><th class="num">Skor</th><th class="num">Ağırlık</th></tr></thead><tbody id="fmBody"><tr><td colspan="10" style="color:var(--muted)">Yükleniyor…</td></tr></tbody></table>
   <div class="sub" id="fmBuffer" style="margin-top:6px"></div>
-  <div class="sub" id="fmDislaBar" style="margin-top:6px"></div>
-  <div class="sub" style="margin-top:4px;color:var(--mm2)">Satıra tıkla → hissenin metrik düzeyinde teşhis kartı açılır. <b>×</b> → hisse modelden çıkar, yedek üstten girer; liste kaydedilir ve cihazlar arası taşınır.</div>
+  <div class="sub" style="margin-top:4px;color:var(--mm2)">Satıra tıkla → hissenin metrik düzeyinde teşhis kartı açılır.</div>
 </div>
 <div class="card" id="fmDetCard" style="margin-top:10px;display:none">
   <div class="lbl" id="fmDetTitle">HİSSE DETAYI</div>
@@ -987,7 +986,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div class="grid g2" style="margin-top:10px">
   <div class="card"><div class="lbl">SEKTÖR AĞIRLIKLARI</div><div id="fmSec"></div></div>
-  <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar <span class="fmDamgaKisa">14 Tem</span> tarihli CSV'den; Python modeli (v3.2) birebir çalıştırıldı, seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div></div>
+  <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar 14 Tem tarihli CSV'den; Python modeli (v3.2) birebir çalıştırıldı, seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div></div>
 </div>
 
 </div><!-- §365 SEKTÖREL VERİLER (21 Ağu, kullanıcı isteği): Katılım Fonları ve
@@ -1291,6 +1290,16 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 
 <div class="tab" id="t23"><h2>Finansal Tablolar <span class="thin">(KAP · bilançoda yatay, gelir tablosunda dikey analiz)</span></h2>
+<!-- §399 İKİ ALT SEKME (23 Ağu, kullanıcı isteği): Yerli Şirketler (KAP ·
+     Çeyreklik Seri) ve Yabancı Şirketler (SEC EDGAR). Aynı sekmede iki farklı
+     kaynak; alt sekme mekanizması .tab kapsayıcısına bağlı (§365'te öğrenildi),
+     düğme+panel aynı .tab içinde olduğu sürece kendiliğinden çalışır. -->
+<div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
+  <button class="subtab-btn act" data-subtab="ft-yerli" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Yerli Şirketler <span class="thin" style="font-weight:400">KAP</span></button>
+  <button class="subtab-btn" data-subtab="ft-yabanci" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Yabancı Şirketler <span class="thin" style="font-weight:400">SEC EDGAR</span></button>
+</div>
+
+<div id="ft-yerli" class="subtab-panel">
 <!-- §343 ESKI TEK-DONEM KARTI KALDIRILDI (20 Agu, kullanici karari):
      Ceyreklik Seri karti (SS339-342) ayni veriyi 15 ceyrek + tam kalem +
      turev metriklerle veriyor; tek donem gosteren kart gereksiz kaldi.
@@ -1316,8 +1325,29 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
   <div class="note">Her çeyreğin <b>kendi bildirimi</b> KAP'tan ayrı ayrı okunur — kümülatiften türetme yok. Bildirim üç aylık sütun taşıyorsa çeyreklik değer doğrudan alınır; taşımıyorsa o çeyrek <span class="thin">kümülatif</span> etiketiyle gösterilir, sessizce fark alınmaz. Geçmiş çeyrekler değişmediği için bir kez çekilip <b>önbelleğe</b> yazılır; ikinci açılış anında gelir.</div>
   <div id="csTablo" style="margin-top:10px;overflow-x:auto"></div>
-</div></div><!-- §364 GYO NAV — TSPB resmî NAD tablosu. GYO'da değer ölçüsü ciro/FAVÖK
-     değil NAV İSKONTOSUDUR; bu sekme onu gösterir. -->
+</div>
+</div>
+
+<div id="ft-yabanci" class="subtab-panel" style="display:none">
+  <div class="card">
+    <div class="kart-bas"><span class="lbl">ÇEYREKLİK SERİ — YABANCI <span class="thin">(SEC EDGAR · XBRL)</span></span><span class="tag" id="edgTag">EDGAR</span></div>
+    <div class="sub" style="margin-top:4px">ABD'de işlem gören şirketlerin resmî bildirimleri (10-Q/10-K). <b>Enflasyon düzeltmesi gerekmez</b> — US-GAAP tarihî maliyet esaslıdır; çeyreklik ve kümülatif kayıtlar kaynağın kendi tarih alanlarıyla ayrışır. Değerler <b>USD</b>.</div>
+    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:12px">
+      <div><label class="sub" style="font-size:10px;display:block;margin-bottom:2px">TICKER</label>
+        <input id="edgKod" placeholder="AAPL" maxlength="8" style="width:110px;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;text-transform:uppercase;font-family:var(--mono);font-size:12px"></div>
+      <div><label class="sub" style="font-size:10px;display:block;margin-bottom:2px">ÇEYREK</label>
+        <select id="edgAdet" style="padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-size:12px;font-family:var(--mono)">
+          <option value="8">8</option><option value="12" selected>12</option><option value="16">16</option><option value="20">20</option>
+        </select></div>
+      <button id="edgGetir" class="mini" style="padding:6px 14px;font-size:12px">getir</button>
+      <span id="edgDurum" class="sub" style="font-size:10.5px"></span>
+    </div>
+    <div id="edgUyari" style="margin-top:10px"></div>
+    <div id="edgTablo" style="margin-top:12px"></div>
+    <div id="edgNot" class="note" style="margin-top:10px"></div>
+  </div>
+</div>
+</div>
 <div class="tab" id="t26">
   <div class="card">
     <div class="kart-bas"><span class="lbl">GYO NAV İSKONTOSU</span><span class="tag" id="gyoDamga">TSPB</span></div>
@@ -1774,10 +1804,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="card" style="margin-top:10px;padding:6px 10px">
   <table aria-label="Haber akışı"><thead><tr><th style="width:70px">Tarih</th><th style="width:64px">Hisse</th><th style="width:52px">Tip</th><th>Bildirim</th><th style="width:40px"></th></tr></thead><tbody id="haberBody"></tbody></table>
 </div>
-</div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
+</div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · 14 Tem), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260824d"></script>
-<script src="/ajan.js?v=20260824d"></script>
+<script src="/app.js?v=20260823e"></script>
+<script src="/ajan.js?v=20260823e"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

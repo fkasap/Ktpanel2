@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260824d';   // SS401 ABD kartlari: WMT+HD+CSCO · WMT izleme setine   // SS400 dislama   // SS399 fm 24 Agu   // SS398 risk butcesi
+const KTP_SURUM = '20260823e';   // SS399 EDGAR alt sekmesi   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -156,6 +156,8 @@ document.addEventListener('click',(e)=>{
   if(b.dataset.subtab==='mk-tahmin'&&!tahminLoaded){tahminLoaded=true;if(typeof tahminInit==='function')tahminInit();}
   /* §366: MKK Fon Buyuklugu — acilinca bir kez yuklenir */
   if(b.dataset.subtab==='sv-vap'){ try{ vapInit(); }catch(e){ console.warn('[KTPanel] §366:', e&&e.message); } }
+  /* §399 EDGAR: alt sekme açılınca girişe odaklan */
+  if(b.dataset.subtab==='ft-yabanci'){ try{ const e=$('edgKod'); if(e) setTimeout(()=>e.focus(),120); }catch(x){} }
 });
 (function(){const yb=document.getElementById('yardimTrigger');if(yb)yb.addEventListener('click',()=>{
   document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('act'));
@@ -1550,36 +1552,10 @@ function fmwGeriYukle(){
   let n=0; FMF.forEach(k=>{ const e=$('fmw'+k); if(e&&s[k]!=null&&isFinite(s[k])){ e.value=s[k]; n++; } });
   return n>0;
 }
-/* ── §400 DIŞLAMA LİSTESİ (kullanıcı vetosu) ── kantitatif sıralamaya kalitatif
-   veto: × ile hisse SEÇİMDEN ÖNCE elenir, yedek (tampon) kendiliğinden üstten
-   girer — ayrı bir "yedek çek" mekaniği YOK, seçim döngüsü zaten sıradakini alır.
-   Kalıcılık: fm_disla_v1, CLOUD_KEYS'te (§265 bilanço-yoksay emsali: cihazlar
-   arası taşınmalı). Dışlama TICKER bazlıdır — fm.json yenilense de yaşar; evren
-   dışına düşen isim çipte (evren dışı) etiketiyle görünür, sessizce kaybolmaz.
-   KARNE'YE DOKUNMAZ: karne modelin kendini kanıtlama testidir (tüm evren, eşit
-   ağırlık, "slider'dan bağımsız sabit referans") — kullanıcı vetosu ölçüme
-   karışırsa test modeli değil kullanıcıyı ölçer. Resmî sicil (track) de ayrı. */
-const FM_DISLA_KEY='fm_disla_v1';
-function fmDislaOku(){ try{ const x=JSON.parse(localStorage.getItem(FM_DISLA_KEY)||'[]');
-  return Array.isArray(x)?x.map(t=>String(t).toUpperCase()):[]; }catch(e){ return []; } }
-function fmDislaYaz(a){ try{ localStorage.setItem(FM_DISLA_KEY, JSON.stringify(a)); }catch(e){} }
-function fmDislaEkle(t){ const a=fmDislaOku(), u=String(t).toUpperCase();
-  if(!a.includes(u)){ a.push(u); fmDislaYaz(a); } fmRender(); }
-function fmDislaGeriAl(t){ const u=String(t).toUpperCase();
-  fmDislaYaz(fmDislaOku().filter(x=>x!==u)); fmRender(); }
 async function fmInit(){
   try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}
-  catch(e){$('fmBody').innerHTML='<tr><td colspan="11" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
+  catch(e){$('fmBody').innerHTML='<tr><td colspan="10" style="color:var(--down)">fm.json yüklenemedi.</td></tr>';return;}
   $('fmUni').textContent=FM.meta.uni;$('fmRanked').textContent=FM.meta.ranked;$('fmTopN').textContent='Top '+FM.meta.topn;
-  /* §399 DAMGA CANLI — Altın Kural 6: tarih ELLE YAZILMAZ, fm.json meta.tarih'ten
-     okunur. 14 Tem damgası 41 gün bayat kalmıştı; artık dosya yenilenince başlık,
-     karne notları ve footer kendiliğinden döner. meta.tarih yoksa (eski şema)
-     mevcut metin DURUR — sessiz yanlış yerine bilinen eski. Tek sahip: bu blok. */
-  try{ if(FM.meta&&FM.meta.tarih){ const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-    const p=String(FM.meta.tarih).split('-');
-    if(p.length===3){ const kisa=parseInt(p[2],10)+' '+AY[parseInt(p[1],10)-1];
-      const u=$('fmDamga'); if(u)u.textContent=kisa+' '+p[0];
-      document.querySelectorAll('.fmDamgaKisa').forEach(e=>{e.textContent=kisa;}); } } }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
   $('fmReset').addEventListener('click',()=>{FMF.forEach(k=>$('fmw'+k).value=FMW_DEF[k]);
@@ -1734,32 +1710,18 @@ function fmRender(){
     return {t:r.t,s:r.s,f:r.f,n:r.n,score:sc};
   }).filter(Boolean);
   rows.sort((a,b)=>b.score-a.score);
-  /* §400: dışlananlar SEÇİMDEN ÖNCE düşer — sıradaki isim (yedek) kendiliğinden girer */
-  const disla=new Set(fmDislaOku());
-  const aktif=rows.filter(r=>!disla.has(r.t));
   const sel=[],cnt={};
-  for(const r of aktif){
+  for(const r of rows){
     if(sel.length>=FM.meta.topn)break;
     if((cnt[r.s]||0)>=FM.meta.maxnames)continue;
     sel.push(r);cnt[r.s]=(cnt[r.s]||0)+1;
   }
   const wts=fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s));
   const zf=v=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+v.toFixed(2)+'</td>';
-  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek üstten girer" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
+  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
-  /* §400: × düğmesi satır tıklamasını YUTMALI — yoksa çıkarırken detay kartı açılır */
-  document.querySelectorAll('#fmBody .fmCikar').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();fmDislaEkle(b.dataset.t);}));
-  const evren=new Set(rows.map(r=>r.t));
-  const db=$('fmDislaBar');
-  if(db){ const L=fmDislaOku();
-    db.innerHTML=!L.length?'' :
-      '<span style="color:var(--down);font-weight:600">DIŞLANAN · '+L.length+':</span> '+
-      L.map(t=>'<span style="display:inline-block;border:1px solid var(--line2);border-radius:10px;padding:1px 7px;margin:2px 3px 0 0">'+t+(evren.has(t)?'':' <span style="color:var(--muted)">(evren dışı)</span>')+' <a href="#" class="fmGeriAl" data-t="'+t+'" style="text-decoration:none;color:var(--mm2)" title="modele geri al">↩</a></span>').join('')+
-      ' <a href="#" id="fmDislaTemizle" style="color:var(--muted);font-size:10px">tümünü geri al</a>';
-    db.querySelectorAll('.fmGeriAl').forEach(x=>x.addEventListener('click',ev=>{ev.preventDefault();fmDislaGeriAl(x.dataset.t);}));
-    const tm=db.querySelector('#fmDislaTemizle'); if(tm)tm.addEventListener('click',ev=>{ev.preventDefault();fmDislaYaz([]);fmRender();}); }
   const inSel=new Set(sel.map(r=>r.t));
-  const buf=aktif.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
+  const buf=rows.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
   $('fmBuffer').textContent='Tampon bölge / izleme listesi (26–40 bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
   const sw={};sel.forEach((r,i)=>sw[r.s]=(sw[r.s]||0)+wts[i]);
   const mx=Math.max.apply(null,Object.values(sw));
@@ -5291,20 +5253,11 @@ function riskButceHesap(){
   const te = Math.sqrt((betaP-1)*(betaP-1)*sm*sm + idioP2)*100;
 
   // Bütçe ihlalleri
-  /* §398a AĞIRLIK TAVANI TÜM POZİSYONLARA BAKAR — kapsam dışı dahil.
-     Ağırlık saf bir ağırlık kuralıdır, vol/beta GEREKTİRMEZ. Eskiden döngü
-     yalnız `kal` (risk.json kapsamı) üzerindeydi; kapsam dışı bir isim toplam
-     varlığın %30\u0027u olsa ağırlık ihlali ÜRETMİYORDU — sessiz eksik denetim
-     sınıfı (§179.3 ruhu: eksik olan görünmezse en tehlikelisidir). */
   const ihlal = [];
-  hisseler.forEach(p=>{
-    const kodU = p.kod.toUpperCase();
-    const wTa = toplamVarlik ? deger(p)/toplamVarlik : 0;
-    if(wTa*100 > A.maxAgirlik)
-      ihlal.push({kod:kodU, tip:'ağırlık', deger:wTa*100, tavan:A.maxAgirlik,
-        not:'toplam varlığın %'+trN(wTa*100,1)+'\u0027i — tavan %'+A.maxAgirlik});
-  });
   kal.forEach(x=>{
+    if(x.wT*100 > A.maxAgirlik)
+      ihlal.push({kod:x.kod, tip:'ağırlık', deger:x.wT*100, tavan:A.maxAgirlik,
+        not:'toplam varlığın %'+trN(x.wT*100,1)+'\u0027i — tavan %'+A.maxAgirlik});
     if(x.ctrPay > A.maxCtrPay)
       ihlal.push({kod:x.kod, tip:'risk katkısı', deger:x.ctrPay, tavan:A.maxCtrPay,
         not:'portföy riskinin %'+trN(x.ctrPay,1)+'\u0027ini tek başına taşıyor — tavan %'+A.maxCtrPay});
@@ -5313,30 +5266,7 @@ function riskButceHesap(){
     ihlal.push({kod:'PORTFÖY', tip:'volatilite', deger:volP, tavan:A.maxVol,
       not:'yıllık vol %'+trN(volP,1)+' — tavan %'+A.maxVol});
 
-  /* §398b BÜTÇE TUTARLILIK DENETİMİ — ihlal ile tutarsızlık AYRI arıza sınıfları.
-     N pozisyonla tek isim ağırlık tavanının MATEMATİKSEL TABANI (100−nakit)/N\u0027dir:
-     8 isim + %0,8 nakitle taban %12,4 — %9 tavan HİÇBİR portföyle sağlanamaz ve
-     ihlal kutusu yapısal olarak hep dolu kalır; gerçek sürüklenme alarmının değeri
-     düşer (§300 gerekçesi: nöbetçi her hıçkırıkta bağırırsa kimse dinlemez).
-     Risk payının tabanı 100/N\u0027dir (eşit risk katkısı sınırı — ERC). Tutarsızlık
-     KIRMIZI DEĞİL sarıdır: kaybı olmayan arızada iş kırmızı yakılmaz. */
-  const tutarsiz = [];
-  const nakitYuzde = toplamVarlik ? nakit/toplamVarlik*100 : 0;
-  if(hisseler.length){
-    const tabanW = (100 - nakitYuzde) / hisseler.length;
-    if(A.maxAgirlik < tabanW - 0.05)
-      tutarsiz.push({tip:'ağırlık', taban:tabanW,
-        not:hisseler.length+' pozisyonla %'+trN(A.maxAgirlik,1)+' ağırlık tavanı sağlanamaz — matematiksel taban %'+trN(tabanW,1)+
-        '. Ya tavanı yükselt ya isim sayısını en az '+Math.ceil((100-nakitYuzde)/A.maxAgirlik)+'\u0027e çıkar.'});
-  }
-  if(kal.length){
-    const tabanC = 100 / kal.length;
-    if(A.maxCtrPay < tabanC - 0.05)
-      tutarsiz.push({tip:'risk payı', taban:tabanC,
-        not:kal.length+' isimle %'+trN(A.maxCtrPay,1)+' risk payı tavanı sağlanamaz — eşit risk katkısında bile pay %'+trN(tabanC,1)+' olur.'});
-  }
-
-  return {bos:false, A, kal, betaP, volP, volNaif, cesitKazanc, te, ihlal, tutarsiz, negatif, disi,
+  return {bos:false, A, kal, betaP, volP, volNaif, cesitKazanc, te, ihlal, negatif, disi,
           riskliToplam, toplamVarlik, nakitOran: toplamVarlik?nakit/toplamVarlik*100:0,
           ctrToplam: kal.reduce((s,x)=>s+x.ctr,0)};
 }
@@ -5358,16 +5288,6 @@ function riskButceRender(){
 
   if(R.bos){ el.innerHTML=ayar+'<div class="sub">Risk bütçesi için risk.json kapsamında en az bir hisse pozisyonu gerekir.'+
     (R.disi&&R.disi.length?' Kapsam dışı: '+R.disi.join(', ')+'.':'')+'</div>'; rbBagla(); return; }
-
-  /* §398b: tutarsızlık kutusu ihlal kutusunun ÜSTÜNDE — okuma sırası önce yapı,
-     sonra sürüklenme. Sarı (#D99A2B): kırmızı ihlalden görsel olarak ayrışır. */
-  const tutarsizKutu = (R.tutarsiz && R.tutarsiz.length)
-   ? '<div class="card" style="padding:9px 12px;margin-bottom:8px;border-left:3px solid #D99A2B">'+
-     '<div class="lbl" style="color:#B47E1E">BÜTÇE TUTARSIZ · '+R.tutarsiz.length+'</div>'+
-     R.tutarsiz.map(i=>'<div style="font-size:11.5px;margin-top:4px">'+i.not+'</div>').join('')+
-     '<div class="sub" style="font-size:10.5px;margin-top:4px">Tutarsız tavan yapısal ihlal üretir — aşağıdaki listeyi okurken sürüklenmeyi yapıdan ayır.</div>'+
-     '</div>'
-   : '';
 
   const ihlalKutu = R.ihlal.length
    ? '<div class="card" style="padding:9px 12px;margin-bottom:8px;border-left:3px solid var(--down)">'+
@@ -5413,7 +5333,7 @@ function riskButceRender(){
       '. Piyasa volü fazla yüksek girilmiş — %30,5 altına indir.</div>':'')+
     (R.disi.length? '<div class="sub" style="font-size:10.5px;margin-top:4px">Kapsam dışı (risk.json\u0027da yok, hesaba girmedi): '+R.disi.join(', ')+'</div>':'');
 
-  el.innerHTML = ayar + tutarsizKutu + ihlalKutu + ozet + tablo + uyari;
+  el.innerHTML = ayar + ihlalKutu + ozet + tablo + uyari;
   rbBagla();
 }
 function rbBagla(){
@@ -7295,10 +7215,7 @@ const CLOUD_KEYS=['__sil_guidance_v1','poz_v1','journal_v1','guidance_v1','ktp_s
      kullanici 29 sirketin hepsinin kartini yazmak istemez. Gizlenenler
      kod+donem kapsaminda burada tutulur. Cihazlar arasi tasinmali — yoksa
      her cihazda ayni sirketleri tek tek gizlemek gerekir. */
-  'ktp_bilanco_yoksay_v1',
-  /* §400 FM DIŞLAMA LİSTESİ: kullanıcı vetosu, §265 emsali — cihazlar arası
-     taşınmalı; yoksa her cihazda aynı isimleri tek tek çıkarmak gerekir. */
-  'fm_disla_v1'];   // sukuk + model sicili de buluta
+  'ktp_bilanco_yoksay_v1'];   // sukuk + model sicili de buluta
 const _origSet=localStorage.setItem.bind(localStorage);
 const _origGet=localStorage.getItem.bind(localStorage);
 let _cloudTimer;
@@ -8035,6 +7952,12 @@ async function multipleInit(){
   if(sel){sel.innerHTML=MULTIPLE.hisseler.map(h=>'<option value="'+h.k+'">'+h.k+(h.ad?' — '+h.ad:'')+'</option>').join('');
     sel.addEventListener('change', mulTickerDegisti);}
   mulGirdiBagla();
+  /* §399 EDGAR baglantilari */
+  try{
+    const g=$('edgGetir'); if(g) g.onclick=edgGetir;
+    const k=$('edgKod'); if(k) k.addEventListener('keydown',ev=>{ if(ev.key==='Enter'){ev.preventDefault(); edgGetir();} });
+    const a2=$('edgAdet'); if(a2) a2.onchange=()=>{ if(EDG) edgGetir(); };
+  }catch(e){}
   /* §369 FEK panosu bağlantıları */
   try{
     const fh=$('fekHesapla'); if(fh) fh.onclick=fekHesapla;
@@ -9264,7 +9187,7 @@ function globalTakvimRender(){
   const el=$('globalTakvim'); if(!el) return;
   const ABD=new Set(['GOOGL','TSLA','INTC','TXN','TSM','NFLX','JPM','MSFT','META','AAPL','AMZN',
     'NVDA','AMD','CSCO','HD','IBM','NOW','ORCL','CRM','ADBE','QCOM','MU','AVGO','ASML','PLTR',
-    'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ','WMT']);   /* §401: WMT eklendi — FY27 2Ç kartı yazıldı, takvimde 'açıklandı' görünsün. İkinci (dışlama) sete GEREKMEZ: regex 4-5 harf, WMT 3 harf. */
+    'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ']);
   const K=(typeof INC_KARTLAR!=='undefined'&&INC_KARTLAR)?INC_KARTLAR:[];
   const aciklanan=K.filter(k=>ABD.has(k.kod)).map(k=>({
     kod:k.kod, iso:k.tarih_iso||'', tarih:k.tarih||'', skor:k.skor, durum:'açıklandı'}));
@@ -10904,6 +10827,108 @@ function gyoNavCiz(){
     'Eksi = varlık değerinin altında, artı = primli. '+
     (GYONAV.bos_bildirim ? ('<b>'+GYONAV.bos_bildirim+' şirket</b> o dönem bildirim göndermediği için listede yok — sıfır iskonto diye gösterilmedi. ') : '')+
     'GYO\'da ciro/FAVÖK yerine bu ölçü kullanılır; faktör modelinde GYO\'ların "değer" bacağı budur.';
+}
+/* ── §399 EDGAR ÇEYREKLİK SERİ (23 Ağu) ────────────────────────────────────
+   Yabancı Şirketler alt sekmesi. Çeyreklik Seri (KAP) ile AYNI görünüm:
+   yapışkan kalem sütunu, yıl blokları, ısı hücreleri, sparkline.
+   FARK: enflasyon endekslemesi YOK (US-GAAP tarihî maliyet) ve değerler USD.
+   Kaynağın uyarıları (`_uyari`) kartta gösterilir — eksik kalem sessiz
+   geçilmez (§373c dersi). */
+let EDG = null;
+async function edgGetir(){
+  const kod = String(($('edgKod')||{}).value||'').toUpperCase().replace(/[^A-Z.-]/g,'').slice(0,8);
+  const n = parseInt(($('edgAdet')||{}).value)||12;
+  const D=$('edgDurum'), T=$('edgTablo'), U=$('edgUyari');
+  if(!kod){ if(D)D.textContent='ticker gerekli'; return; }
+  if(D) D.textContent='EDGAR okunuyor…';
+  if(T) T.innerHTML=''; if(U) U.innerHTML='';
+  EDG=null;
+  try{
+    const r=await fetch('/api/edgar?mod=tablo&t='+encodeURIComponent(kod)+'&n='+n,{cache:'no-store'});
+    const j=await r.json();
+    if(!j||!j.ok) throw new Error((j&&j.err)||'veri alınamadı');
+    EDG=j;
+    if(D) D.innerHTML='✓ '+esc(j.ticker)+' · '+esc(j.unvan||'')+' · '+j.ceyrek+' çeyrek · son '+esc(j.son_donem||'');
+    if($('edgTag')) $('edgTag').textContent='EDGAR · '+esc(j.ticker);
+    edgCiz();
+  }catch(e){
+    if(D) D.innerHTML='<span style="color:var(--down)">✗ '+esc(kod)+': '+esc(String(e.message||e).slice(0,120))+'</span>';
+    if($('edgTag')) $('edgTag').textContent='EDGAR';
+  }
+}
+function edgCiz(){
+  const T=$('edgTablo'), U=$('edgUyari'); if(!T||!EDG) return;
+  const S=(EDG.seri||[]).slice().reverse();          /* en eski solda — zaman yönü */
+  if(!S.length){ T.innerHTML='<div class="sub">seri boş</div>'; return; }
+  if(U && (EDG._uyari||[]).length)
+    U.innerHTML='<div style="border-left:3px solid #E8933B;padding:8px 12px;background:rgba(232,147,59,.07)">'+
+      '<b style="font-size:11px;color:#E8933B">⚠ EKSİK KALEM</b>'+
+      EDG._uyari.map(x=>'<div class="sub" style="font-size:10.5px;margin-top:3px">'+esc(x)+'</div>').join('')+'</div>';
+  const mlr=(v)=> Number.isFinite(v) ? trN(v/1e9, Math.abs(v/1e9)>=100?1:2) : '—';
+  const yuz=(v)=> Number.isFinite(v) ? trN(v,1) : '—';
+  /* kalem grupları — KAP tarafındaki csKalem yapısıyla aynı mantık */
+  const GRUP=[
+    ['GELİR TABLOSU', [
+      ['ciro','Hasılat',mlr],['satisMal','Satılan Malın Maliyeti',mlr],['brut','BRÜT KÂR',mlr],
+      ['satisGid','Satış, Genel ve Yönetim Gid.',mlr],['arge','Ar-Ge',mlr],
+      ['faalKar','FAALİYET KÂRI',mlr],['amort','Amortisman',mlr],
+      ['favokGenis','FAVÖK (geniş)',mlr],['favokCekirdek','FAVÖK (çekirdek)',mlr],
+      ['netKar','NET KÂR',mlr]]],
+    ['MARJLAR %', [
+      ['brutMarj','Brüt marj',yuz],['favokMarj','FAVÖK marjı',yuz],['netMarj','Net marj',yuz]]],
+    ['NAKİT AKIŞ', [
+      ['isletmeNA','İşletme faaliyetleri',mlr],['capex','Yatırım harcaması',mlr],
+      ['sna','SERBEST NAKİT AKIŞI',mlr],['odFaiz','Ödenen faiz',mlr],['temettu','Ödenen temettü',mlr]]],
+    ['BİLANÇO', [
+      ['nakit','Nakit ve benzerleri',mlr],['kvYatirim','KV finansal yatırım',mlr],
+      ['stok','Stoklar',mlr],['alacak','Ticari alacaklar',mlr],
+      ['donen','Dönen varlıklar',mlr],['aktif','TOPLAM AKTİF',mlr],
+      ['kvYuk','KV yükümlülükler',mlr],['kvBorc','KV finansal borç',mlr],
+      ['uvBorc','UV finansal borç',mlr],['finBorc','Finansal borç',mlr],
+      ['netBorc','NET BORÇ',mlr],['ozkaynak','ÖZKAYNAK',mlr]]]
+  ];
+  const yil=(d)=>String(d||'').split('/')[0];
+  let bas='<tr><th style="text-align:left;position:sticky;left:0;background:var(--bg);z-index:2;min-width:190px">KALEM</th>';
+  S.forEach((x,i)=>{
+    const ilkYil = i===0 || yil(S[i-1].donem)!==yil(x.donem);
+    bas+='<th class="num" style="font-family:var(--mono);font-size:10px;white-space:nowrap'+(ilkYil?';border-left:2px solid var(--line2)':'')+'">'+esc(x.donem)+'</th>';
+  });
+  bas+='<th class="num" style="font-family:var(--mono);font-size:10px;border-left:2px solid var(--mm2);color:var(--mm2)">TTM</th></tr>';
+  let govde='';
+  GRUP.forEach(([grupAd,kalemler])=>{
+    govde+='<tr><td colspan="'+(S.length+2)+'" style="background:var(--bg2);font-weight:700;font-size:10px;letter-spacing:.6px;color:var(--muted);padding:5px 8px;position:sticky;left:0">'+esc(grupAd)+'</td></tr>';
+    kalemler.forEach(([k,ad,bic])=>{
+      const dizi=S.map(x=>x[k]).filter(Number.isFinite);
+      if(!dizi.length) return;                      /* hiç veri yoksa satırı hiç basma */
+      const vurgu=/^[A-ZÜÖÇŞİĞ ]+$/.test(ad.replace(/[().,%]/g,'').trim());
+      /* ısı: yalnız marj satırlarında, satırın kendi min-max'ına göre (§356) */
+      const isi = (grupAd==='MARJLAR %');
+      const mn=Math.min(...dizi), mx=Math.max(...dizi), ar=(mx-mn)||1;
+      govde+='<tr class="cs-satir"><td style="position:sticky;left:0;background:var(--bg);z-index:1;font-size:10.5px'+(vurgu?';font-weight:700':'')+'">'+esc(ad)+'</td>';
+      S.forEach((x,i)=>{
+        const v=x[k];
+        const ilkYil = i===0 || yil(S[i-1].donem)!==yil(x.donem);
+        let st='font-family:var(--mono);font-size:10.5px'+(ilkYil?';border-left:2px solid var(--line2)':'')+(vurgu?';font-weight:600':'');
+        if(isi && Number.isFinite(v)){
+          const p=(v-mn)/ar, a=(0.05+p*0.23).toFixed(3);
+          st+=';background:'+(v<0?('rgba(214,69,69,'+a+')'):('rgba(15,162,107,'+a+')'));
+        }
+        if(Number.isFinite(v)&&v<0) st+=';color:var(--down)';
+        govde+='<td class="num" style="'+st+'">'+bic(v)+'</td>';
+      });
+      const t=(EDG.ttm||{})[k];
+      govde+='<td class="num" style="font-family:var(--mono);font-size:10.5px;border-left:2px solid var(--mm2);color:var(--mm2)'+(vurgu?';font-weight:700':'')+'">'+bic(t)+'</td></tr>';
+    });
+  });
+  T.innerHTML='<div style="overflow:auto;max-height:560px"><table style="width:100%;border-collapse:collapse;font-size:10.5px">'+
+    '<thead style="position:sticky;top:0;background:var(--bg);z-index:3">'+bas+'</thead><tbody>'+govde+'</tbody></table></div>';
+  if($('edgNot')) $('edgNot').innerHTML=
+    'Kaynak: <b>'+esc(EDG.kaynak||'SEC EDGAR')+'</b> · CIK '+esc(EDG.cik||'')+' · değerler <b>milyar USD</b> (marjlar %). '+
+    'Gelir tablosu doğrudan çeyreklik gelir; <b>nakit akış tablosu YTD</b> raporlanır ve ardışık farkla çeyrekliğe çevrilir. '+
+    'Brüt kâr etiketi yoksa hasılat − satılan malın maliyeti ile türetilir. '+
+    '<b>Enflasyon düzeltmesi yoktur</b> — KAP tarafındaki TMS-29 zinciri burada gerekmez. '+
+    'TTM = son 4 çeyreğin toplamı; stok kalemler son dönem sonu. '+
+    'Mali yılın son çeyreği ayrı 10-Q ile gelmez (10-K içindedir), seride eksik görünebilir.';
 }
 async function csGetirCalis(){
   const kod = (($('csKod')&&$('csKod').value)||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
