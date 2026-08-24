@@ -24,7 +24,7 @@
      ?mod=ham&t=WMT&n=12   → ham XBRL kalemleri (n çeyrek)
    ══════════════════════════════════════════════════════════════════════════ */
 
-const _SURUM = 'edgar-2026-08-23-d';
+const _SURUM = 'edgar-2026-08-23-e';
 
 /* SEC User-Agent ZORUNLU — iletişim bilgisi içermeli, yoksa 403 döner.
    Bu bir nezaket kuralı değil, teknik şart. */
@@ -292,6 +292,9 @@ async function tabloModu(req, res) {
   });
   const son = seri[0] || {};
   ['finBorc', 'likit', 'netBorc', 'ozkaynak', 'aktif', 'donen', 'kvYuk', 'kvBorc', 'payAdedi'].forEach(k => { ttm[k] = son[k]; });
+  /* §400b: fiyat + pay adedi aynı çağrıda */
+  const _fiyat = await fiyatCek(tc.ticker);
+  if (_fiyat && Number.isFinite(_fiyat.adet) && _fiyat.adet > 1e6) ttm.payAdedi = _fiyat.adet;
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   /* 10-Q/10-K yayımlandıktan sonra DEĞİŞMEZ → uzun edge cache (§380 dersi) */
@@ -301,6 +304,7 @@ async function tabloModu(req, res) {
     kaynak: 'SEC EDGAR · XBRL companyfacts',
     ceyrek: seri.length, son_donem: son.donem || null, son_bitis: son.bitis || null,
     _not: 'Değerler USD. Dönem etiketi BİTİŞ TARİHİNDEN üretilir (fy/fp alanları dosya bağlamını taşır, dönem bağlamını değil — §398b). Gelir tablosu doğrudan çeyreklik gelir; NAKİT AKIŞ tablosu YTD gelir ve ardışık farkla çeyrekliğe çevrilir (§398c). Brüt kâr etiketi yoksa ciro − satılan malın maliyeti ile türetilir (§398d). Enflasyon düzeltmesi GEREKMEZ. TTM = son 4 çeyreğin ham toplamı. UYARI: mali yılın SON çeyreği (Q4) ayrı 10-Q ile gelmez, 10-K içindedir; o çeyrek seride EKSİK görünebilir.',
+    fiyat: _fiyat,
     _uyari: (function(){
       const u = [];
       if (!Number.isFinite(ttm.amort)) u.push('AMORTİSMAN bulunamadı — bu şirket 10-Q\'da ayrı XBRL etiketiyle vermiyor olabilir (WMT gibi). FAVÖK hesaplanamadı; faaliyet kârı FAVÖK YERİNE KULLANILMADI. Yıllık değer için 10-K dönemine bakın.');
@@ -329,6 +333,31 @@ async function araModu(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'public, s-maxage=86400');
   return res.status(200).json({ surum: _SURUM, ok: true, q, adet: bul.length, sonuclar: bul.slice(0, 25) });
+}
+
+/* §400b FİYAT SUNUCUDAN ÇEKİLİR (canlı: "Fiyat alınamadı" — tarayıcıdan
+   Yahoo'ya doğrudan istek CORS'a takılıyor). Panelin market.js köprüsü BIST
+   için `.IS` eklediğinden ABD sembollerine uymuyor; EDGAR ucu kendi fiyat
+   kanalını taşır. Aynı çağrıda temeller + fiyat döner, panel tek istek atar.
+   DERS: TARAYICIDAN ÜÇÜNCÜ TARAF API'YE DOĞRUDAN GİTME — CORS duvarı var;
+   köprü zaten kurduğun ucun içinde olmalı. */
+async function fiyatCek(ticker) {
+  try {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' +
+      encodeURIComponent(ticker) + '?interval=1d&range=5d',
+      { headers: { 'User-Agent': 'Mozilla/5.0 (KTPanel/1.0)' }, signal: AbortSignal.timeout(12000) });
+    if (!r.ok) return null;
+    const j = await r.json();
+    const m = j && j.chart && j.chart.result && j.chart.result[0] && j.chart.result[0].meta;
+    if (!m) return null;
+    return {
+      fiyat: Number.isFinite(m.regularMarketPrice) ? m.regularMarketPrice : null,
+      paraBirimi: m.currency || 'USD',
+      borsa: m.fullExchangeName || m.exchangeName || null,
+      /* Yahoo pay adedini de verir — EDGAR'ın kapak sayfası alanından DAHA GÜNCEL */
+      adet: Number.isFinite(m.sharesOutstanding) ? m.sharesOutstanding : null
+    };
+  } catch (e) { return null; }
 }
 
 module.exports = async (req, res) => {
