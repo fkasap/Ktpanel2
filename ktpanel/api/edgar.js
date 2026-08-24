@@ -24,7 +24,7 @@
      ?mod=ham&t=WMT&n=12   → ham XBRL kalemleri (n çeyrek)
    ══════════════════════════════════════════════════════════════════════════ */
 
-const _SURUM = 'edgar-2026-08-23-a';
+const _SURUM = 'edgar-2026-08-23-d';
 
 /* SEC User-Agent ZORUNLU — iletişim bilgisi içermeli, yoksa 403 döner.
    Bu bir nezaket kuralı değil, teknik şart. */
@@ -150,8 +150,19 @@ function ytdCeyreklik(kayitlar) {
   return cikti;
 }
 
+/* §398g EN GÜNCEL ETİKETİ SEÇ, İLK BULUNANI DEĞİL (AAPL'de yakalandı: son
+   dönem 2018/09 çıktı — SEKİZ YIL eski, üstelik uyarısız).
+   Sebep: Apple `Revenues` etiketini 2018'de bıraktı, sonrasında
+   `RevenueFromContractWithCustomerExcludingAssessedTax` kullanıyor. Benim
+   zincirim ilk bulduğunu alıyordu ve `Revenues` listede önce olduğu için
+   eski seri dönüyordu.
+   US-GAAP taksonomisi zaman içinde DEĞİŞİR; şirketler etiket göç ettirir.
+   ÇÖZÜM: tüm alternatifleri dene, EN YENİ `end` tarihine sahip olanı seç.
+   DERS: BİR DÜŞÜŞ ZİNCİRİNDE "İLK BULUNAN" DEĞİL "EN GÜNCEL OLAN" DOĞRUDUR —
+   taksonomi göçü sessizce eski veri döndürür. */
 function kalemCek(facts, adlar, akisMi) {
   const us = (facts && facts.facts && facts.facts['us-gaap']) || {};
+  const adaylar = [];
   for (const ad of adlar) {
     const blok = us[ad];
     if (!blok || !blok.units) continue;
@@ -159,7 +170,7 @@ function kalemCek(facts, adlar, akisMi) {
     if (!Array.isArray(birim) || !birim.length) continue;
     if (!akisMi) {
       const k = birim.filter(x => x && Number.isFinite(x.val) && x.end);
-      if (k.length) return { etiket: ad, kayitlar: k };
+      if (k.length) adaylar.push({ etiket: ad, kayitlar: k, kaynak: 'stok' });
       continue;
     }
     /* 1) doğrudan çeyreklik kayıt var mı (gelir tablosu genelde böyle) */
@@ -188,10 +199,23 @@ function kalemCek(facts, adlar, akisMi) {
     turetilmis.forEach(x => { havuz[x.end] = x; });            /* önce türetilmiş */
     dogrudan.forEach(x => { havuz[x.end] = x; });              /* doğrudan ÜSTÜNE yazar */
     const birlesik = Object.values(havuz);
-    if (birlesik.length) return { etiket: ad, kayitlar: birlesik,
-      kaynak: (turetilmis.length && dogrudan.length) ? 'çeyreklik + YTD farkı' : (turetilmis.length ? 'YTD farkı' : 'çeyreklik') };
+    if (birlesik.length) adaylar.push({ etiket: ad, kayitlar: birlesik,
+      kaynak: (turetilmis.length && dogrudan.length) ? 'çeyreklik + YTD farkı' : (turetilmis.length ? 'YTD farkı' : 'çeyreklik') });
   }
-  return null;
+  if (!adaylar.length) return null;
+  /* §398g: en yeni bitiş tarihine sahip aday kazanır */
+  adaylar.forEach(a => { a._sonBitis = a.kayitlar.reduce((m, x) => (x.end > m ? x.end : m), ''); });
+  adaylar.sort((a, b) => (a._sonBitis < b._sonBitis ? 1 : -1));
+  const kazanan = adaylar[0];
+  /* eski etiketin kayıtları da eklenir (tarihsel derinlik) — çakışmada yeni kazanır */
+  if (adaylar.length > 1) {
+    const havuz2 = {};
+    adaylar.slice(1).forEach(a => a.kayitlar.forEach(x => { havuz2[x.end] = x; }));
+    kazanan.kayitlar.forEach(x => { havuz2[x.end] = x; });
+    kazanan.kayitlar = Object.values(havuz2);
+    kazanan.etiket += ' (+' + (adaylar.length - 1) + ' eski etiket birleşti)';
+  }
+  return kazanan;
 }
 
 /* §398b DÖNEM ETİKETİ BİTİŞ TARİHİNDEN (canlı: "2027/Q1" İKİ KEZ çıktı —
