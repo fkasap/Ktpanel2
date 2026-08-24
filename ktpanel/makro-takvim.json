@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-24 16:31 UTC — otomatik (§319)",
+ "guncelleme": "2026-08-24 16:45 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -39,7 +39,7 @@
    "ulke": "AUD",
    "olay": "Trimmed Mean CPI m/m",
    "etki": "High",
-   "beklenti": "0.3%",
+   "beklenti": "0.4%",
    "onceki": "0.3%"
   },
   {
