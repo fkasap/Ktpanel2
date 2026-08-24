@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260823e';   // SS399 EDGAR alt sekmesi   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260823f';   // SS400 t25 kaldirildi + EDGAR carpanlari   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -67,7 +67,7 @@ const KTP_SURUM = '20260823e';   // SS399 EDGAR alt sekmesi   // SS332 ABD buyum
   }catch(e){}
 })();   // §252d/e/g/h/j/k/l/m/p — birim hatalari, bulutUyari, egri sapma, XKTMT etiketi, SERIT
 
-const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t25','t23','t26'];  /* §365b: t26 GYO NAV — listede olmayınca Equity alt çubuğu O SEKMEDE GİZLENİYORDU. §247b'de Yabancı Hisse'de birebir aynısı yaşanmış ve not düşülmüş; yeni Equity sekmesi ekleyen bu listeye de eklemeli (üç-yer kuralı §121: düğme + panel + ÜYELİK). */  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
+const PY_GRUP=['t11','t3','t9','t21','t4','t6','t8','t14','t20','t23','t26'];  /* §365b: t26 GYO NAV — listede olmayınca Equity alt çubuğu O SEKMEDE GİZLENİYORDU. §247b'de Yabancı Hisse'de birebir aynısı yaşanmış ve not düşülmüş; yeni Equity sekmesi ekleyen bu listeye de eklemeli (üç-yer kuralı §121: düğme + panel + ÜYELİK). */  /* §298: PYŞ Sektör Fix Income (t10) altına taşındı (sk-pys paneli) — üç-yer kuralı (§121): düğme t10 alt-navında, üyelik BURADAN çıktı, ajan SEKME_DISLA t10'u zaten kapsıyor */  /* §248: t5 Sukuk'a taşındı (sk-katfon), t26 PYŞ Sektör eklendi */ /* §247b: t25 Yabancı Hisse eklendi — listede olmayınca alt çubuk sekmede GİZLENİYORDU */ // Portföy Yönetimi alt-nav grubu (t5 Katılım Fonları dahil)
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
   const hedef=document.getElementById(b.dataset.tab);
   if(!hedef)return; // sekme paneli yoksa sessizce çık — nav'ı kilitleme
@@ -10922,6 +10922,60 @@ function edgCiz(){
   });
   T.innerHTML='<div style="overflow:auto;max-height:560px"><table style="width:100%;border-collapse:collapse;font-size:10.5px">'+
     '<thead style="position:sticky;top:0;background:var(--bg);z-index:3">'+bas+'</thead><tbody>'+govde+'</tbody></table></div>';
+  /* §400 ÇARPANLAR — eski Yabancı Hisse sekmesinin (t25) ölçüleri buraya taşındı.
+     FARK: orası Koyfin'den gelen STATİK snapshot'tı; burada TTM temeller EDGAR'dan
+     CANLI, fiyat Yahoo'dan CANLI geliyor.
+     PAY ADEDİ: EDGAR'ın `CommonStockSharesOutstanding` alanı bazen boş ya da
+     bayat (kapak sayfasından gelir). Yoksa çarpanlar hesaplanmaz ve SÖYLENİR —
+     uydurma yok (§373c dersi). */
+  (async function(){
+    const C=$('edgCarpan'); if(!C||!EDG) return;
+    const t=EDG.ttm||{}, son=(EDG.seri||[])[0]||{};
+    let fiyat=null, fKaynak='';
+    try{
+      const r=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(EDG.ticker)+'?range=1d&interval=1d',{cache:'no-store'});
+      const j=await r.json();
+      const m=j&&j.chart&&j.chart.result&&j.chart.result[0]&&j.chart.result[0].meta;
+      if(m&&Number.isFinite(m.regularMarketPrice)){ fiyat=m.regularMarketPrice; fKaynak='Yahoo canlı'; }
+    }catch(e){}
+    const adet = Number.isFinite(son.payAdedi)&&son.payAdedi>1e6 ? son.payAdedi : null;
+    const pd = (Number.isFinite(fiyat)&&Number.isFinite(adet)) ? fiyat*adet : null;
+    const ev = (Number.isFinite(pd)&&Number.isFinite(t.netBorc)) ? pd+t.netBorc : null;
+    const O=(a,b)=> (Number.isFinite(a)&&Number.isFinite(b)&&b>0) ? a/b : null;
+    const oran = {
+      'EV/FAVÖK': O(ev,t.favokGenis), 'EV/Satış': O(ev,t.ciro), 'F/K': O(pd,t.netKar),
+      'P/SNA': O(pd,t.sna), 'PD/DD': O(pd,t.ozkaynak),
+      'Net Borç/FAVÖK': O(t.netBorc,t.favokGenis),
+      'ROE %': (Number.isFinite(t.netKar)&&Number.isFinite(t.ozkaynak)&&t.ozkaynak>0)?(t.netKar/t.ozkaynak*100):null,
+      'Brüt marj %': (Number.isFinite(t.brut)&&t.ciro)?(t.brut/t.ciro*100):null,
+      'FAVÖK marjı %': (Number.isFinite(t.favokGenis)&&t.ciro)?(t.favokGenis/t.ciro*100):null,
+      'Net marj %': (Number.isFinite(t.netKar)&&t.ciro)?(t.netKar/t.ciro*100):null,
+      'SNA marjı %': (Number.isFinite(t.sna)&&t.ciro)?(t.sna/t.ciro*100):null,
+      'Cari oran': O(son.donen,son.kvYuk)
+    };
+    const mlr2=(v)=> Number.isFinite(v)?trN(v/1e9,1):'—';
+    const kut=(ad,v,ek)=> '<div style="min-width:104px"><div class="sub" style="font-size:9.5px">'+esc(ad)+'</div>'+
+      '<div style="font-family:var(--mono);font-size:14px;font-weight:600'+(Number.isFinite(v)&&v<0?';color:var(--down)':'')+'">'+
+      (Number.isFinite(v)?(trN(v, Math.abs(v)>=100?0:(Math.abs(v)>=10?1:2))+(ek||'')):'—')+'</div></div>';
+    C.innerHTML =
+      '<div class="lbl" style="font-size:11px;margin:16px 0 8px">ÇARPANLAR <span class="thin" style="font-weight:400;text-transform:none">TTM temeller EDGAR · fiyat '+(fKaynak||'alınamadı')+'</span></div>'+
+      (pd===null
+        ? '<div class="sub" style="padding:8px 12px;background:var(--bg2);border-left:3px solid #E8933B;font-size:10.5px">'+
+          '<b>Çarpanlar hesaplanamadı.</b> '+(!Number.isFinite(fiyat)?'Fiyat alınamadı. ':'')+
+          (!Number.isFinite(adet)?'Pay adedi EDGAR\'da yok ya da bayat (kapak sayfası alanı) — piyasa değeri kurulamıyor. ':'')+
+          'Oran uydurmak yerine boş bırakıldı; sağdaki mutlak büyüklükler geçerli.</div>'
+        : '<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px">'+
+          kut('Fiyat',fiyat,' $')+kut('Piyasa değeri',pd/1e9,' mlr$')+kut('+ Net borç',(t.netBorc||0)/1e9,' mlr$')+
+          kut('= Firma değeri',ev/1e9,' mlr$')+'</div>')+
+      '<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">'+
+        Object.entries(oran).map(([ad,v])=>kut(ad,v,/%$/.test(ad)?'':'x')).join('')+
+      '</div>'+
+      '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">'+
+        kut('Ciro TTM',(t.ciro||0)/1e9,' mlr$')+kut('FAVÖK TTM',(t.favokGenis||0)/1e9,' mlr$')+
+        kut('Net kâr TTM',(t.netKar||0)/1e9,' mlr$')+kut('SNA TTM',(t.sna||0)/1e9,' mlr$')+
+        kut('Net borç',(t.netBorc||0)/1e9,' mlr$')+kut('Özkaynak',(t.ozkaynak||0)/1e9,' mlr$')+
+      '</div>';
+  })();
   if($('edgNot')) $('edgNot').innerHTML=
     'Kaynak: <b>'+esc(EDG.kaynak||'SEC EDGAR')+'</b> · CIK '+esc(EDG.cik||'')+' · değerler <b>milyar USD</b> (marjlar %). '+
     'Gelir tablosu doğrudan çeyreklik gelir; <b>nakit akış tablosu YTD</b> raporlanır ve ardışık farkla çeyrekliğe çevrilir. '+
