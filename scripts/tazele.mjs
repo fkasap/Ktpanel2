@@ -783,21 +783,41 @@ async function fonTazele() {
     if (!g2 || !Array.isArray(g2.veri) || !g2.veri.length) {
       let jeton = null;
       try {
+        /* §408b TANI TURU: "0 aday" ölçüldü — HAR'da sayfada 6 chunk VAR ve jeton
+           common-*.js'te. Runner'a farklı HTML gelmiş olmalı. Bu tur ne gördüğünü
+           RAPORA yazdırıyoruz + üç kurtarma: (1) jeton doğrudan HTML'de mi (inline),
+           (2) chunk regex GENİŞ (yol ayıracı dahil), (3) tam-URL de dene.
+           Tarayıcı başlıkları da eklendi — WAF UA-only isteği yumuşak sayfayla
+           geçiştiriyor olabilir. */
         const sayfa = await fetch('https://www.tefas.gov.tr/tr/fon-getirileri?fundType=YAT',
-          { headers: { 'User-Agent': TF_BAS['User-Agent'], 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
+          { headers: { 'User-Agent': TF_BAS['User-Agent'], 'Accept': 'text/html,application/xhtml+xml',
+            'Accept-Language': 'tr-TR,tr;q=0.9', 'Referer': 'https://www.tefas.gov.tr/' },
+            signal: AbortSignal.timeout(25000) });
         const html = await sayfa.text();
-        if (html.includes('Request Rejected')) {
-          raporlar.push('- §408 TEFAS: sayfa isteği WAF tarafından reddedildi (runner IP) — jeton sökülmedi, burada duruldu');
-        } else {
-          const chunkYollari = [...html.matchAll(/\/_next\/static\/chunks\/[A-Za-z0-9._-]+\.js/g)].map(m => m[0]).slice(0, 25);   /* nezaket tavanı */
-          for (const cy of chunkYollari) {
+        const dogrudanTok = html.match(/ST-tefasweb[A-Za-z0-9]{10,}/);
+        const chunkYollari = [...html.matchAll(/\/_next\/static\/chunks\/[A-Za-z0-9._\/-]+?\.js/g)].map(m => m[0]);
+        /* TANI: durum + boy + Rejected? + chunk sayısı + inline jeton + HTML başı */
+        raporlar.push('- §408b TANI: HTTP ' + sayfa.status + ' · boy ' + html.length +
+          ' · Rejected:' + (html.includes('Request Rejected') ? 'EVET' : 'hayır') +
+          ' · chunk:' + chunkYollari.length + ' · inlineJeton:' + (dogrudanTok ? 'VAR' : 'yok') +
+          ' · baş120: ' + html.slice(0, 120).replace(/\s+/g, ' '));
+        if (dogrudanTok) {
+          jeton = dogrudanTok[0];
+          raporlar.push('- §408 TEFAS: jeton doğrudan HTML içinde bulundu (inline)');
+        } else if (!html.includes('Request Rejected') && chunkYollari.length) {
+          const uniq = [...new Set(chunkYollari)].slice(0, 30);
+          for (const cy of uniq) {
             try {
               const jr = await fetch('https://www.tefas.gov.tr' + cy, { headers: { 'User-Agent': TF_BAS['User-Agent'] }, signal: AbortSignal.timeout(25000) });
               const m = (await jr.text()).match(/ST-tefasweb[A-Za-z0-9]{10,}/);
-              if (m) { jeton = m[0]; break; }
+              if (m) { jeton = m[0]; raporlar.push('- §408 TEFAS: jeton ' + cy.split('/').pop() + ' chunk\'ında bulundu'); break; }
             } catch (e) {}
           }
-          if (!jeton) raporlar.push('- §408 TEFAS: chunk taramasında jeton bulunamadı (' + chunkYollari.length + ' aday) — uç sözleşmesi yine değişmiş olabilir');
+          if (!jeton) raporlar.push('- §408 TEFAS: ' + uniq.length + ' chunk tarandı, jeton yok — TANI satırındaki HTML başına bak');
+        } else if (html.includes('Request Rejected')) {
+          raporlar.push('- §408 TEFAS: sayfa WAF tarafından reddedildi (runner IP) — burada duruldu');
+        } else {
+          raporlar.push('- §408 TEFAS: sayfada chunk yok (' + chunkYollari.length + ') ve inline jeton yok — runner farklı HTML görüyor (TANI satırına bak)');
         }
       } catch (e) { raporlar.push('- §408 TEFAS: sayfa/jeton aşaması hata — ' + String(e && e.message || e).slice(0, 60)); }
       if (jeton) {
