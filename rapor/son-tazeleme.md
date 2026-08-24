@@ -47,9 +47,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### TEFAS genel bilgi (§253i) — ⏭ boş döndü · fetch failed
 - Playwright yedeği devrede.
 
-- §408b TANI: HTTP 200 · boy 5775 · Rejected:hayır · chunk:0 · inlineJeton:yok · baş120: <!DOCTYPE html> <html><head> <meta http-equiv="Pragma" content="no-cache"/> <meta http-equiv="Expires" content="-1"/>
+- §408b TANI: HTTP 200 · boy 6021 · Rejected:hayır · chunk:0 · inlineJeton:yok · baş120: <!DOCTYPE html> <html><head> <meta http-equiv="Pragma" content="no-cache"/> <meta http-equiv="Expires" content="-1"/>
 
 - §408 TEFAS: sayfada chunk yok (0) ve inline jeton yok — runner farklı HTML görüyor (TANI satırına bak)
+
+- §412 API doğrudan test: fetch failed
 
 - §408 TEFAS getiri: köprü + doğrudan v2 + HAR — üçü de yok; katman yazılmayacak
 
@@ -58,7 +60,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009728660220> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009652559145> [Go Back]`
+
+- §410 konsol dosyası KISMİ (1900 fon) — arşivde bugün zaten 2030 fon var, iyi veri eksikle EZİLMEDİ (kapsam kapısı)
 
 ### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)
 - Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.
@@ -110,13 +114,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-08-26 12:30Z · USD · Prelim GDP q/q
 - 2026-08-28 12:30Z · CAD · GDP m/m
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 84/245
-- bu turda: 0 tam · 0 eksik kalemli · 3 alınamadı
-- not: CITAS:liste boş · DENGE:liste boş · SMART:2026: fetch failed · ⏹ devre kesici: 3 ardışık hata, tur erken bitti
+- §383 arşive yazıldı: +10 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
+
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 86/245
+- bu turda: 2 tam · 0 eksik kalemli · 4 alınamadı
+- not: CITAS:liste boş · DENGE:liste boş · SOKE:2026: fetch failed · SRVGY:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
-- SMART:2026: fetch failed (2. kez) · AKHAN:2026: fetch failed (1. kez)
+- SOKE:2026: fetch failed (1. kez) · SRVGY:2026: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -149,10 +155,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.34 bp) · bilanço tetiği (224 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (84/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.34 bp) · bilanço tetiği (224 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (86/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
 
 ### Süre bütçesi (§326)
-- ⏱ KAP arşivi (§381) — 73 sn
-- toplam: 155 sn
+- ⏱ Faktör evreni (§361) — 77 sn
+- ⏱ KAP arşivi (§381) — 71 sn
+- toplam: 200 sn
