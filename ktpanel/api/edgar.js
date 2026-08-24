@@ -161,18 +161,28 @@ function kalemCek(facts, adlar, akisMi) {
       const gun = (new Date(x.end) - new Date(x.start)) / 864e5;
       return gun >= 80 && gun <= 100;
     });
-    if (dogrudan.length >= 4) return { etiket: ad, kayitlar: dogrudan, kaynak: 'çeyreklik' };
-    /* 2) §398c: yoksa YTD farkından türet (nakit akış tablosu) */
-    const ytd = birim.filter(x => {
+    /* §398e DOĞRUDAN + YTD BİRLEŞTİRİLİR (canlı: nakit akış kalemleri hâlâ
+       null çıktı). Sebep: mali yılın İLK çeyreğinde YTD penceresi = çeyrek
+       penceresi (WMT'de 2026-02-01→2026-04-30, 89 gün). Yani her yılın Q1'i
+       "doğrudan çeyreklik" görünüyor, sayı >= 4 oluyor ve YTD dalına HİÇ
+       girilmiyordu — Q2/Q3/Q4 sonsuza kadar boş kalıyordu.
+       ÇÖZÜM: ikisini birleştir, aynı `end` için doğrudan olanı tercih et.
+       DERS: BİR DALIN "YETERLİ VERİ VAR" KONTROLÜ, DİĞER DALIN GEREKTİĞİ
+       DURUMU MASKELEYEBİLİR — kapsamı dönem bazında ölç, sayı bazında değil. */
+    const ytdHam = birim.filter(x => {
       if (!x || !Number.isFinite(x.val) || !x.end || !x.start) return false;
       const gun = (new Date(x.end) - new Date(x.start)) / 864e5;
       return gun >= 80 && gun <= 380;
     });
-    if (ytd.length) {
-      const t = ytdCeyreklik(ytd).filter(x => { const g = (new Date(x.end) - new Date(x.start)) / 864e5; return g >= 60 && g <= 110; });
-      if (t.length) return { etiket: ad, kayitlar: t, kaynak: 'YTD farkı' };
-    }
-    if (dogrudan.length) return { etiket: ad, kayitlar: dogrudan, kaynak: 'çeyreklik (kısmi)' };
+    const turetilmis = ytdHam.length
+      ? ytdCeyreklik(ytdHam).filter(x => { const g = (new Date(x.end) - new Date(x.start)) / 864e5; return g >= 60 && g <= 110; })
+      : [];
+    const havuz = {};
+    turetilmis.forEach(x => { havuz[x.end] = x; });            /* önce türetilmiş */
+    dogrudan.forEach(x => { havuz[x.end] = x; });              /* doğrudan ÜSTÜNE yazar */
+    const birlesik = Object.values(havuz);
+    if (birlesik.length) return { etiket: ad, kayitlar: birlesik,
+      kaynak: (turetilmis.length && dogrudan.length) ? 'çeyreklik + YTD farkı' : (turetilmis.length ? 'YTD farkı' : 'çeyreklik') };
   }
   return null;
 }
