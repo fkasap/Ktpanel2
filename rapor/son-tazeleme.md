@@ -52,14 +52,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009725949324> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587010157612207> [Go Back]`
 
 ### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)
 - Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.
 
-### Depo hijyeni + kalem tazeligi (§297) — ✗ KALDI
-- ✗ **ikiz dosya**: api/ BEYAZ LISTE DISI: edgar.js (slot yakar, §7.3)
-  - sil ya da ktpanel/ altina tasi — bu kaza uc kez yasandi
+### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
+- ✓ **ikiz dosya**: temiz
 - ✓ **seri guncelligi (track.series)**: 2026-08-24 (referans 2026-08-24, fark 0g)
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-24 (referans 2026-08-24, fark 0g)
 
@@ -106,13 +105,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §383 arşive yazıldı: +10 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 72/245
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 74/245
 - bu turda: 2 tam · 0 eksik kalemli · 4 alınamadı
-- not: CITAS:liste boş · DENGE:liste boş · PLTUR:2026: fetch failed · POLHO:2026: fetch failed
+- not: CITAS:liste boş · DENGE:liste boş · QUAGR:2026: fetch failed · RALYH:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
-- PLTUR:2026: fetch failed (1. kez) · POLHO:2026: fetch failed (1. kez)
+- QUAGR:2026: fetch failed (1. kez) · RALYH:2026: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -145,11 +144,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (220.34 bp) · risk metrikleri (136) · bilanço tetiği (223 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (72/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (220.34 bp) · bilanço tetiği (223 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (74/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 78 sn
+- ⏱ Faktör evreni (§361) — 74 sn
 - ⏱ KAP arşivi (§381) — 72 sn
-- toplam: 198 sn
+- toplam: 193 sn
