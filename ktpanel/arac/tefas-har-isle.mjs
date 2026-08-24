@@ -38,7 +38,7 @@ const cikti = {
   _kaynak: 'HAR (kullanıcı tarayıcısı — elle, meşru istisna §408/§409)',
   _uretim: 'arac/tefas-har-isle.mjs',
   tarih,
-  getiri: getiri.map(x => al(x, ['fonKodu','fonUnvan','fonTurAciklama','tefasDurum','getiri1a','getiri3a','getiri6a','getiri1y','getiriyb','getiri3y','getiri5y'])),
+  getiri: getiri.map(x => al(x, ['fonKodu','fonUnvan','fonTurAciklama','tefasDurum','getiri1a','getiri3a','getiri6a','getiri1y','getiriyb','getiri3y','getiri5y','riskDegeri'])),
   liste: (liste || []).map(x => al(x, ['fonKod','unvan','kurucuKod','kurucuAd','durum']))
 };
 writeFileSync('ktpanel/tefas-har-veri.json', JSON.stringify(cikti));
