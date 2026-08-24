@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260823f';   // SS400 t25 kaldirildi + EDGAR carpanlari   // SS332 ABD buyume karti (mega-cap emekli)
+const KTP_SURUM = '20260823g';   // SS400b fiyat sunucudan   // SS332 ABD buyume karti (mega-cap emekli)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10931,14 +10931,11 @@ function edgCiz(){
   (async function(){
     const C=$('edgCarpan'); if(!C||!EDG) return;
     const t=EDG.ttm||{}, son=(EDG.seri||[])[0]||{};
-    let fiyat=null, fKaynak='';
-    try{
-      const r=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(EDG.ticker)+'?range=1d&interval=1d',{cache:'no-store'});
-      const j=await r.json();
-      const m=j&&j.chart&&j.chart.result&&j.chart.result[0]&&j.chart.result[0].meta;
-      if(m&&Number.isFinite(m.regularMarketPrice)){ fiyat=m.regularMarketPrice; fKaynak='Yahoo canlı'; }
-    }catch(e){}
-    const adet = Number.isFinite(son.payAdedi)&&son.payAdedi>1e6 ? son.payAdedi : null;
+    /* §400b: fiyat ARTIK SUNUCUDAN gelir (CORS duvarı yok) */
+    const F=EDG.fiyat||{};
+    const fiyat = Number.isFinite(F.fiyat) ? F.fiyat : null;
+    const fKaynak = fiyat!==null ? ('Yahoo · '+(F.borsa||'')) : '';
+    const adet = Number.isFinite(t.payAdedi)&&t.payAdedi>1e6 ? t.payAdedi : null;
     const pd = (Number.isFinite(fiyat)&&Number.isFinite(adet)) ? fiyat*adet : null;
     const ev = (Number.isFinite(pd)&&Number.isFinite(t.netBorc)) ? pd+t.netBorc : null;
     const O=(a,b)=> (Number.isFinite(a)&&Number.isFinite(b)&&b>0) ? a/b : null;
