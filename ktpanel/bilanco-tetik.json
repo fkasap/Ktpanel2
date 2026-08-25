@@ -1,9 +1,10 @@
 {
- "tarih": "2026-08-24",
+ "tarih": "2026-08-25",
  "kodlar": [
   "ADESE",
   "AGYO",
   "AKHAN",
+  "AKSFA",
   "AKYHO",
   "ALARK",
   "ALFAS",
@@ -226,7 +227,7 @@
   "YYAPI",
   "ZEDUR"
  ],
- "sayi": 224,
+ "sayi": 225,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -451,9 +452,10 @@
   "KPTGY": "2026-08-20",
   "CITAS": "2026-08-22",
   "ARSNF": "2026-08-24",
-  "INALR": "2026-08-24"
+  "INALR": "2026-08-24",
+  "AKSFA": "2026-08-25"
  },
- "pencere_sayi": 2,
+ "pencere_sayi": 3,
  "dusen_son": [],
- "guncelleme": "2026-08-24 19:43 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-25 06:31 UTC — otomatik (KAP FR · kümülatif §299)"
 }
