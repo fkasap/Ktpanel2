@@ -1,96 +1,118 @@
-# Otomatik Tazeleme — Kurulum
+# Otomatik Tazeleme — Kurulum & İşleyiş
 
-Bir kez yapılır. Sonrası kendi kendine döner.
+Kurulum bir kez yapılır. Bu dosya hem kurulumu hem **günlük işleyişi** anlatır.
 
-## 1 · Dosyaları repo'ya koy
+---
+
+## 1 · Dosya düzeni
 
 ```
 .github/workflows/tazele.yml     ← zamanlayıcı + iş tanımı
 scripts/tazele.mjs               ← çek · hesapla · denetle · yaz
-scripts/denetim.mjs              ← kural seti
-xk100.json · xktum.json · xktmt.json   ← pay adedi biçimine geçirildi
+scripts/denetim.mjs              ← kural seti (bekçiler)
+ktpanel/arac/                    ← elle çalıştırılan araçlar
+ktpanel/arac/gelen/              ← TEFAS konsol çıktısı buraya
 ```
 
-## 2 · package.json'a ekle
+## 2 · package.json
 
 ```json
-{
-  "name": "ktpanel",
-  "private": true,
-  "type": "commonjs",
-  "devDependencies": { "playwright": "^1.48.0" }
-}
+{ "name": "ktpanel", "private": true, "type": "commonjs",
+  "devDependencies": { "playwright": "^1.48.0" } }
 ```
 
-**`"type"` DEĞİŞMEYECEK.** `api/*.js` dosyaları `require()` kullanıyor; `"module"` yapılırsa hepsi kırılır. Tazeleme betikleri `.mjs` uzantılı olduğu için Node onları `package.json`'dan bağımsız olarak ESM sayar.
+**`"type"` DEĞİŞMEYECEK.** `api/*.js` `require()` kullanıyor; `"module"`
+yapılırsa hepsi kırılır. Tazeleme betikleri `.mjs` olduğu için Node onları
+`package.json`'dan bağımsız ESM sayar.
 
 Playwright yalnız fon katmanında kuruluyor — diğer koşularda atlanıyor.
 
-## 3 · Actions iznini aç
+## 3 · Actions izni
 
 `Settings → Actions → General → Workflow permissions` → **Read and write**
 
-Bu, botun commit atabilmesi için gerekli. Vercel repo'ya bağlı olduğu için commit deploy'u kendiliğinden tetikler; ek kimlik bilgisi **gerekmiyor**.
-
-## 4 · Elle bir kez çalıştır
-
-`Actions → Veri Tazele → Run workflow` → katman: `hepsi`
-
-İş özetinde denetim raporu görünür. Kırmızıysa veri yazılmamıştır, rapor sebebi söyler.
+Bot commit atabilsin diye gerekli. Vercel repo'ya bağlı olduğundan commit
+deploy'u kendiliğinden tetikler; ek kimlik bilgisi gerekmiyor.
 
 ---
 
 ## Zamanlama
 
-| Ne zaman | Ne yapar |
-|---|---|
-| Hafta içi 18:10 TSİ | Fiyat katmanı — BIST kapanışından ~40 dk sonra |
-| Cumartesi 07:00 TSİ | Haftalık kalemler |
-| Elle | `workflow_dispatch` ile istediğin zaman |
+| Ne zaman | Katman | Neden o saat |
+|---|---|---|
+| Hafta içi **09:10** TSİ | `fon` | TEFAS önceki günü sabah yayınlar (§249n) |
+| Hafta içi **18:10** TSİ | `fiyat` | BIST kapanışından ~40 dk sonra |
+| Cumartesi **07:00** TSİ | haftalık kalemler | — |
+| Elle | seçilebilir | `Actions → Veri Tazele → Run workflow` |
 
----
+Elle koşuda katman seçilir: `hepsi | fiyat | endeks | risk | fon`.
+Tek katman sınanacaksa **hepsi seçme** — hem hızlı biter hem rapor okunur olur.
 
-## Değişen mimari — çarpan/fiyat ayrışması
-
-**Önce:** `xk100.json` ağırlık tutuyordu (`ASELS: %20,23`) → fiyat içine gömülü, her gün bayatlıyordu.
-
-**Sonra:** pay adedi tutuyor (`ASELS: 1.175.568.000`) → sunucu her gün Yahoo'dan fiyatı çekip ağırlığı **kendisi hesaplıyor**.
-
-Doğrulandı: pay adedinden ima edilen fiyat, gerçek fiyatı ortalama **%0,5** sapmayla tutuyor.
-
-`multiple.json` ve `track.json` zaten doğru yapıdaydı — bileşenler sabit, yalnız fiyat tazeleniyor.
-
-### İş yükü
-
-```
-elle tazeleme:  438/yıl  →  ~32/yıl
-```
-
-Kalan 32: analist konsensüsü (aylık 12) · pay adedi ve bilanço kalemleri (çeyreklik) · beklenen bilanço takvimi (çeyreklik). Hepsi Fintables istiyor, hepsi seyrek.
+Koşu **11 dakikalık bütçe** tutar; aşarsa kalan katmanları atlar ve bunu
+raporlar (sessizce yarım kalmaz).
 
 ---
 
 ## Denetim — en önemli kısım
 
-Denetimden geçmeyen veri **commit edilmez.** İş kırmızı yanar, bildirim gider.
-
-Kurallar 29 Temmuz'da yakalanan üç sessiz hatadan türedi:
+**Denetimden geçmeyen veri commit edilmez.** İş kırmızı yanar, bildirim gider.
 
 | Kural | Neyi yakalar | Gerçek vaka |
 |---|---|---|
-| **kapsam** | eksik kayıt | model portföyde 11 hisse eski fiyatta kalmıştı → 29/40 |
-| **tarih birliği** | karışık tarihli hesap | aynı vakada 2 farklı fiyat tarihi |
-| **aykırı değer** | dağıtım/bölünme | MPE tek günde −%3,57 (kâr payı) |
-| **dönem tutarlılığı** | çapa hatası | YTD < 3A olması |
-| **toplam** | yanlış normalize | XKTUM 96,5 yerine 100 çıkarsa |
-| **bayatlık** | tazelenemeyen kayıt | analist hedeflerinde 4 bayat → SNGYO'da sahte %238 |
+| kapsam | eksik kayıt | model portföyde 11 hisse eski fiyatta → 29/40 |
+| tarih birliği | karışık tarihli hesap | aynı vakada 2 farklı fiyat tarihi |
+| aykırı değer | dağıtım/bölünme | MPE tek günde −%3,57 (kâr payı) |
+| dönem tutarlılığı | çapa hatası | YTD < 3A olması |
+| toplam | yanlış normalize | XKTUM 96,5 yerine 100 çıkarsa |
+| bayatlık | tazelenemeyen kayıt | analist hedeflerinde 4 bayat → SNGYO'da sahte %238 |
+| ikiz dosya + kök yetim | sürüklenen kopya | `ktpanel/edgar.js` (api'nin eski kopyası) — §407b |
 
-Üçü de "veri geldi" diyordu ve üçü de sessizce yanlıştı. **Eski veri, eksik veriden tehlikelidir** — çünkü görünmez: bir sayı vardır, makul durur, hesaba girer.
+**Eski veri, eksik veriden tehlikelidir** — çünkü görünmez: bir sayı vardır,
+makul durur, hesaba girer.
+
+### Kırmızı mı sarı mı (§413)
+
+TEFAS düştüğünde iş artık **koşulsuz kırmızı yanmıyor**:
+- arşivde bugünün verisi **varsa** → sarı (uyarı satırı, iş yeşil biter)
+- arşivde **yoksa** → kırmızı (gerçek kayıp, bildirim gitmeli)
+
+Gerekçe §300: *veri kaybı olmayan arızada iş kırmızı yakılmaz* — yoksa alarm
+gürültüye döner ve gerçek kayıp günü gözden kaçar.
 
 ---
 
-## Otomatikleşmeyen — ve olmaması gereken
+## Koşu raporunu okuma
 
-Bilanço kartları · tezler · taktiksel duruş · Ebu yorumları.
+Rapor iki yere yazılır: Actions iş özeti + `rapor/son-tazeleme.md`.
 
-Bunlar yargı işi. Bugünkü kartların değeri rakamlarda değildi: ARENA'daki 120 günlük gecikme deseni, TOASO'da FAVÖK düşerken faaliyet kârının artmasının amortismandan gelmesi, META'da FCF'in 784 milyon dolara inmesi. Betik bunları yazamaz.
+Bakılacak satırlar:
+- **`yol:`** — fon verisi hangi kanaldan geldi (`vercel-köprüsü` /
+  `doğrudan v2` / `konsol toplayıcı (elle · §410)`)
+- **fon sayısı** — 2000 civarı normal; belirgin düşükse köprü kısmi çalışmış
+- **`§4xx` satırları** — o turda çalışan özel bloklar kendi durumlarını söyler
+- **denetim özeti** — hangi katman geçti/kaldı
+
+Beklenen bir satır **hiç çıkmamışsa**, "sorun yok" demek değildir; önce
+*blok çalıştı mı* sorulur (§410c'nin dersi: sessiz catch arızayı görünmez yapar).
+
+---
+
+## Elle kalan iş — güncel tablo
+
+| Kalem | Kim yapar | Ne zaman |
+|---|---|---|
+| Guidance · analist · halka arz · fm.json | **Claude** (Fintables/Koyfin) | çeyreklik / aylık / sezon sonrası |
+| Swap stoku (`rezerv.json`) | kullanıcı | Perşembe TCMB yayını sonrası |
+| TEFAS konsol dosyası | Claude (tarayıcıdan) | yalnız köprü düştüğü gün |
+| Bilanço kartları · tezler · yorumlar | **yargı işi** | otomatikleşmeyecek |
+
+Detay ve gerekçeler: `OTOMASYON.md`.
+
+---
+
+## Sorun çıkarsa
+
+1. `rapor/son-tazeleme.md` — koşunun kendi anlatımı
+2. Actions log — hangi adımda düştü
+3. `KTPANEL-BAKIM.md` — aynı arıza daha önce yaşandıysa dersi orada
+4. Deploy sorunuysa: `DEPLOY.md` (rozet kontrolü)

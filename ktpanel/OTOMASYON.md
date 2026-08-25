@@ -1,99 +1,128 @@
 # Tam Otomasyon — Nerede Duruyoruz
 
-**31 Temmuz 2026.** 33 katmanın durumu, kalanların gerçek engeli, ve önümüzdeki tek büyük düğüm.
+**Güncelleme: 25 Ağustos 2026.** (Önceki sürüm 31 Temmuz'da yazılmıştı ve
+merkezindeki soru — "KAP sunucudan açılır mı" — o günden beri ÇÖZÜLDÜ.)
 
 ---
 
-## ✓ ÇÖZÜLDÜ — 13 katman
+## ✓ ÇÖZÜLDÜ — GitHub Actions'ta kendi kendine dönüyor
 
-**Zaten canlı (7):** kur çipleri · küresel endeksler · VIX/DXY/Brent · yabancı akış+carry · net rezerv · TCMB faizi · sukuk arşivi
+**Canlı akan (tarayıcıdan, damgasız):** kur çipleri · küresel endeksler ·
+VIX/DXY/Brent · yabancı akış+carry · net rezerv · TCMB faizi · sukuk arşivi ·
+BIST endeksleri · sektör ısı haritası · KAP haber akışı
 
-**GitHub Actions'ta otomatik (6):** XK100 · XKTUM · XKTMT ağırlıkları · multiple fiyatları · model sicili · risk metrikleri (vol/beta)
+**Actions koşusunda (cron):** XK100/XKTUM/XKTMT ağırlıkları · multiple
+fiyatları · model sicili · risk metrikleri (vol/beta) · endeks arşivi ·
+CDS · bilanço tetiği · GYO NAV · hazine ihale sonuçları · fon akışı ·
+katılım fonları
 
-Hafta içi 18:10, cumartesi 07:00. Denetimden geçmeyen katman **yazılmaz**, iş kırmızı yanar.
+### 🔓 KAP DÜĞÜMÜ ÇÖZÜLDÜ (§338-§365, 20-21 Ağu)
+
+31 Temmuz'daki "tek büyük düğüm" şuydu: *beş katman bilanço kalemlerine
+takılıyor, Fintables'a bağımlıyız, KAP sunucudan açılır mı bilmiyoruz.*
+**Ölçüldü ve açıldı.** `api/kap.js` finansal rapor uçlarını okuyor;
+`faktor-evren.json` KAP'tan kademeli doluyor (25 Ağu: 94/245).
+
+Zincirin bedeli beş turluk hata dizisiydi ve hepsi **sessizce yanlış veri**
+sınıfındaydı (yanlış alan adı · middleware kapısı · TTM kısmi toplamı ·
+isFinite tuzağı · düşen null savunması). Bu yüzden kural: **panel sağlamlaşana
+kadar bağlanmaz** — model hâlâ `fm.json`'dan besleniyor, `faktor-evren.json`
+paralel koşuyor. Bağlama eşiği: kapsam ~150-200 + banka/GYO şablon sınavı.
+
+### 🔓 ABD BİLANÇOSU — EDGAR (§398-401, 23-24 Ağu)
+
+KAP motorunun ABD'ye taşınması: `api/edgar.js`. SEC EDGAR company-facts
+uçları; TMS-29 sorunu yok, çeyrek/kümülatif ayrımı `start/end` ile
+kendiliğinden geliyor. Yabancı Hisse sekmesini besliyor.
 
 ---
 
-## ◐ SUNUCUDAN ERİŞİLEBİLİR — 14 katman
+## ⚠ TEFAS — ERİŞİM REJİMİ DEĞİŞTİ (§408-§412, 24-25 Ağu)
 
-KAP · EVDS · BDDK · Yahoo · FRED üzerinden zaten canlı akıyor ya da akabilir. Bunlar için ek iş yok; sorun çıkarsa akış tarafındadır.
+**Bu, otomasyonun en zorlu dosyası. Kod eksiği YOK — kapı kapalı.**
 
----
+Beş yol ölçüldü, hepsi canlı:
 
-## ✗ ENGELLİ — 6 katman
-
-Hepsi **aynı tek şeye** takılıyor: bilanço kalemleri.
-
-| Katman | Ne gerekiyor |
+| Yol | Sonuç |
 |---|---|
-| Faktör modeli | ciro · FAVÖK · net borç · özkaynak (çeyreklik) |
-| Multiple (EV/EBITDA) | aynı kalemler |
-| Guidance | şirket hedefleri (KAP metin) |
-| Pay adedi | serbest dolaşım (çeyreklik) |
-| BIST beklenen takvim | geçmiş açıklama tarihleri |
-| Analist konsensüsü | aracı kurum hedefleri |
+| Vercel köprüsü (`api/tefas`) | **DALGALI** — bazen "fetch failed", bazen çalışır |
+| Actions runner, düz fetch | TSPD JS meydan okuması: 200 döner ama 6 KB kabuk |
+| Actions runner, API doğrudan | bağlantı düzeyi ret ("fetch failed") |
+| Playwright (runner, headless) | JSON yakalayamıyor |
+| Otomasyonla sürülen tarayıcı | davranış tespiti → "Request Rejected" |
+| Kullanıcının kendi tarayıcısı | **ÇALIŞIYOR** — 2038/2038 fon |
 
-İlk beşi bilanço verisi. Şu an Fintables'tan alıyorum — ama **Fintables'ın kaynağı KAP.**
+**Sonuç:** TEFAS bulut IP'lerini (Vercel, GitHub Actions) tanıyıp kesiyor.
+Çizgi baştan çizildi ve korunuyor: **bot koruma taklidi ve IP gizleme YOK.**
+
+**Mimari — iki katmanlı savunma:**
+1. Köprü çalışırsa veri otomatik akar (25 Ağu'da dört koşuda çalıştı;
+   kapsam 1891 → 2004 → 2010 → 2018 diye toparlandı).
+2. Köprü düşerse `arac/gelen/tefas-tam-*.json` devreye girer —
+   `arac/tefas-konsol.js` ile kullanıcının kendi tarayıcısından toplanır.
+   İki kapı: **tazelik** (bugün olmalı) + **kapsam** (arşivdekinden az olamaz).
+
+**Kalıcı tam otomasyon için gereken:** TEFAS'ın kabul ettiği bir adresten
+koşan runner (yerli VPS ya da evde sürekli açık cihaz + self-hosted runner).
+Karar kullanıcıda; köprünün güvenilirliği birkaç gün ölçülüyor.
 
 ---
 
-## ▸ TEK BÜYÜK DÜĞÜM: KAP yapısal veri
+## ◐ CLAUDE OTURUMUNDA TAZELENEN — 4 katman
 
-Eğer KAP'ın finansal rapor uçları sunucudan erişilebiliyorsa, **beş katman birden** çözülür ve geriye yalnız analist konsensüsü kalır.
+Fintables MCP **yalnız Claude oturumunda** çalışır; Actions bunları kendi
+çekemez. Doğası gereği "Claude ile tazelenir" sınıfı:
 
-Sandbox'tan `kap.org.tr`'ye erişemiyorum. Yoklama sunucudan yapılmalı:
+| Katman | Sıklık | Kaynak |
+|---|---|---|
+| Guidance | çeyreklik (sezon sonrası) | Fintables `guidance` |
+| Analist konsensüsü | aylık | Fintables aracı kurum hedefleri (1 YIL penceresi — §252v) |
+| Halka arzlar | olay bazlı | Fintables `halka_arzlar` |
+| Faktör modeli (fm.json) | çeyreklik | Koyfin CSV → `arac/fm-isle.py` |
 
-```
-/api/kap?mod=yokla&kod=TOASO
-```
+---
 
-Beş aday uç dener, her biri için **HTTP kodu + içerik tipi + yanıt başlangıcı** döndürür.
+## ✗ MEŞRU ELLE İSTİSNALAR — 2 kalem
 
-**Okuma:**
-- `200` + `application/json` → o uç kullanılabilir, Fintables bağımlılığı kırılır
-- `403` / `404` → bot koruması ya da uç yok
-- Hepsi düşerse → KAP yolu kapalı, Fintables kalır
+1. **Swap stoku** (`rezerv.json`) — EVDS'de YOK, TCMB haftalık basın
+   açıklamasında. Perşembe yayını sonrası "rezervleri güncelle". §245k.
+   Nöbetçi limiti 13 gün (§245p: yayın Perşembe, veri önceki Cuma'ya ait).
+2. **TEFAS konsol dosyası** — yukarıdaki tablonun sonucu. Köprü düştüğü
+   günlerde. §410.
 
-Bu, TEFAS'ta (§145-148) ve Finnhub'da (§167) işe yarayan desen: **tahmin etmek yerine ölçmek.**
+İstisna listesine ekleme kuralı: **önce ÖLÇÜM** (kanal denendi ve yok),
+sonra günlüğe gerekçe. Sayı ya sabit kalır ya düşer — asla artmaz.
 
 ---
 
 ## ✗ OTOMATİKLEŞMEYECEK — ve olmamalı
 
-Bilanço kartları · tezler · taktiksel duruş · risk uyarıları.
+Bilanço kartları · tezler · taktiksel duruş · risk uyarıları · Ebu yorumları.
 
-31 Temmuz'da yazılan kartların değeri **rakamlarda değildi:**
+Bunlar yargı işi. Kartların değeri rakamlarda değil, **hangi soruyu
+sorduğunda**:
 
-- **ARENA** — rakamlar sıradan, asıl bulgu 120 günlük gecikme deseni. Dokuz çeyrek 36-42 gün, sonra dördü birden 120+. Betik "anomali" der; *"bu şirket evrenden çıkmalı"* diyemez.
-- **TOASO** — FAVÖK −%33 ama faaliyet kârı +%214. Sebep amortismanın −%63'ü. Aynı gün **CWENE'de tam tersi** vardı. İkisini yan yana koyup "aynı makasın iki ucu" demek yargı.
-- **TSKB** — karşılık 11,8 kat sıçradı, panik yaratacak rakam. Ama altı aylıkta geçen yılın **altında**. Çeyreklik bakan yanılır.
-- **META** — gelir +%28, EPS −%13. Asıl hikâye manşette değil FCF'te: 784 milyon dolar, capex ikiye katlanmış, fark borçla kapanıyor.
-
-Bunları otomatikleştirmek daha çok kod yazmak değil — **hangi soruyu soracağını bilmek.**
+- **WMT (§401)** — EPS beat +%11 ama faaliyet büyümesinin 750 bps'i tarife
+  iadesi, GAAP net kâr −%9,4. "Beat'in kalitesi" sorusu betikte yok.
+- **CSCO (§401)** — rekor sonuç + hisse düşüşü. Sipariş +%35 ama AI donanım
+  karışımı marjı seyreltiyor. Gerilimi görmek yargı.
+- **TOASO** — FAVÖK −%33, faaliyet kârı +%214; sebep amortismanın −%63'ü.
+  Aynı gün CWENE'de tam tersi. İkisini yan yana koymak yargı.
+- **ARENA** — rakamlar sıradan, asıl bulgu 120 günlük gecikme deseni.
+  Betik "anomali" der; *"bu şirket evrenden çıkmalı"* diyemez.
 
 ---
 
-## BUGÜNÜN DERSİ
+## BUGÜNÜN DERSİ — sessiz hatalar
 
 Yakalanan hataların çoğu, bir sistemin *"çalışıyorum"* derken çalışmamasıydı:
 
-| Ne | Ne kadardır |
+| Ne | Nasıl görüldü |
 |---|---|
-| Sukuk akışı middleware'e takılıyordu | 3 gün |
-| Sicil karşılaştırması hiç çalışmıyordu | bilinmiyor |
-| Upstash bağlı bile değil | bilinmiyor |
-| XKTUM ağırlıkları %38 yanlış yazılacaktı | ilk koşuda yakalandı |
+| Sukuk akışı middleware'e takılıyordu (3 gün) | teşhis satırı |
+| §410 konsol zinciri hiç koşmadı (yol hatası + sessiz catch) | **beklenen rapor satırının HİÇ ÇIKMAMASI** |
+| Çekmece fm tarihini plandan okuyordu | aynı gerçek için panelde iki tarih |
+| Faktör modeli AKHAN'ı %66 eksik ciroyla skorlayacaktı | paralel koşu + imza kıyası |
 
-Dördü de sessizdi. Görülmesini sağlayan şey her seferinde aynı oldu: **bir teşhis satırı.**
-
-Tam otomasyon bunları görmez. Otomatikleşmesi gereken şey veri; görülmesi gereken şey **verinin gerçekten geldiği.**
-
----
-
-## SIRADAKİ ADIM
-
-1. `api/kap.js`'i deploy et
-2. `ktpanel.vercel.app/api/kap?mod=yokla&kod=TOASO` adresini aç
-3. Çıktıyı bana gönder
-
-Bir uç bile `200 + json` dönerse, önümüzdeki hafta beş katmanı birden otomatikleştiririz.
+**Otomatikleşmesi gereken şey veri; görülmesi gereken şey verinin gerçekten
+geldiği.** Sessiz catch yasak — arama yapan her blok bulamadığını da söyler.

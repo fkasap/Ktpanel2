@@ -1,71 +1,79 @@
 # KTPanel — Deploy Listesi
-**31 Temmuz 2026** · panel `20260731-p` · api `kap-2026-07-31-f`
+
+> **SÜRÜM NUMARASI BU DOSYAYA YAZILMAZ.** Bir zamanlar yazıyordu (`20260731-p`)
+> ve 25 gün bayat kaldı — talimatı izleyen kişi doğru deploy'u yanlış sanardı.
+> §399/§415'in dersi: *tarihi/sürümü gösteren yer, kaynağından beslenmeli.*
+> Güncel sürüm **her zaman canlı rozetten** okunur (aşağıya bak).
 
 ---
 
-## ▸ BEŞ DOSYA, HEPSİ BİRDEN
+## ▸ NE DEĞİŞTİYSE O YÜKLENİR — ama bağlı olanlar BİRLİKTE
 
-Bunlar birbirine bağlı. Ayrı ayrı yüklersen arada tutarsız durum oluşur — bugün bunu altı kez yaşadık.
+Her teslimatta beş dosyanın hepsi değişmez. Kural şu: **birbirine bağlı
+olanlar aynı commit'te gider**, yoksa arada tutarsız durum oluşur.
+
+| Değişen | Yanında ZORUNLU giden | Neden |
+|---|---|---|
+| `app.js` | `index.html` | sürüm damgası üçlüsü (KTP_SURUM + iki `?v=`) |
+| `ajan.js` | `index.html` | aynı — `?v=` damgası |
+| `api/*.js` | — | bağımsız; kendi `SURUM` alanını taşır |
+| veri (`*.json`) | — | bağımsız; panel `cache:no-store` okur |
+
+**Dosya yerleri**
 
 | Dosya | Nereye |
 |---|---|
-| `api/kap.js` | `ktpanel/api/` |
-| `api/ajanktp.js` | `ktpanel/api/` |
-| `app.js` | `ktpanel/` |
-| `ajan.js` | `ktpanel/` |
-| `index.html` | `ktpanel/` |
+| `app.js` · `ajan.js` · `index.html` · `mail.js` · `middleware.js` | `ktpanel/` |
+| `api/*.js` (kap · edgar · tefas · katfon · evds2 · bddk · tcmb · market · data · platts · usnews · ajanktp) | `ktpanel/api/` |
+| `tazele.mjs` · `denetim.mjs` | `scripts/` |
+| `tazele.yml` | `.github/workflows/` |
+| araçlar (`fm-isle.py` · `tefas-konsol.js` · `tefas-har-isle.mjs`) | `ktpanel/arac/` |
+| konsol çıktısı (`tefas-tam-*.json`) | `ktpanel/arac/gelen/` |
+| tüm veri dosyaları | `ktpanel/` |
+
+⚠ **API kotası 12/12 DOLU** (Vercel Hobby sınırı). Yeni yetenek ancak
+mevcut bir uca `?mod=` eklenerek ya da `api/_lib` içine konularak gelir.
+Yeni `api/*.js` dosyası AÇILAMAZ.
 
 ---
 
-## ▸ DEPLOY DOĞRULAMASI — artık tek bakışta
+## ▸ DEPLOY DOĞRULAMASI — tek bakış
 
-Portföy Yönetimi → **Finansal Tablolar** sekmesini aç. Sağ üstteki rozet:
+**EQUITY → Finansal Tablolar** sekmesini aç. Sol üstteki rozet:
 
 ```
-panel 20260731-p · api kap-2026-07-31-f
+panel 20260825a        ← app.js'teki KTP_SURUM ile AYNI olmalı
 ```
 
-**Bu ikisini görmüyorsan gerisini denemeye gerek yok.** Rozet ilk açılışta yalnız panel sürümünü gösterir; bir arama yapınca API sürümü eklenir.
+Arama yapınca API sürümü de eklenir. Ayrıca her API yanıtı `surum` taşır:
 
-Ayrıca her API yanıtı `surum` alanı taşır:
 ```
-ktpanel.vercel.app/api/kap?mod=fr&gun=7
-→ { "surum": "kap-2026-07-31-f", ... }
+ktpanel.vercel.app/api/kap?mod=fr&gun=7   → { "surum": "kap-2026-08-..." }
+ktpanel.vercel.app/api/edgar?...          → { "surum": "edgar-2026-08-23-e" }
 ```
+
+**Rozet eski sürümü gösteriyorsa gerisini denemeye gerek yok** — ya yükleme
+eksik ya Vercel henüz deploy etmemiş (1-2 dk).
+
+Konsol hatası kontrolü: F12 → Console. Temiz olmalı; kırmızı satır varsa
+`index.html` ile `app.js` sürümleri ayrışmıştır (ilk şüpheli budur).
 
 ---
 
-## ▸ BU TURDA NE DEĞİŞTİ
+## ▸ YÜKLEMEDEN SONRA ÜÇ KONTROL
 
-**Birim artık rapordan okunuyor** — TL / bin TL / milyon TL. Sabit "bin TL" varsayımı küçük şirketleri bin kat büyük gösteriyordu (BORSK: 77,7 milyar yerine 77,7 milyon).
-
-**Üst sınır birime bağlandı** — sabit `1e9` sınırı, TL cinsinden rapor veren şirketlerin geçerli verisini reddediyordu. BORSK'u ben kırmıştım.
-
-**Başlık ayrımı** — `Finansal Rapor` / `Faaliyet Raporu` / `Sorumluluk Beyanı` üçü de aynı sınıfta geliyor ama yalnız birincisinde tablo var. Artık doğru bildirim doğrudan seçiliyor.
-
-**Satır sınırı** — ayrıştırıcı etiketten sonra `</tr>`'ye kadar okuyor; önce 3000 karakter alıp alttaki satırın rakamlarını karıştırıyordu.
-
-**Taslak → onay → Earnings AI** zinciri kuruldu. Skor onayda giriliyor, kart anında görünüyor.
+1. **Rozet** — `panel <yeni sürüm>` ✓
+2. **Veri Durumu çekmecesi** (başlıkta) — kırmızı `GÜNCELLE` satırı beklenmedik
+   bir yerde çıkmamalı. Kalemin tarihi `·dosya` etiketi taşıyorsa tarih
+   dosyadan geliyordur; taşımıyorsa `guncelleme-plani.json`'dan (elle) gelir.
+3. **Değişen sekme** — ne yüklediysen onu aç, gözle doğrula.
 
 ---
 
-## ▸ SONRA TEST
+## ▸ YÜKLEME SIRASI (kritik)
 
-**1 · Finansal Tablolar** — TOASO / 2026 / 2Ç → getir. Bilanço yatay, gelir tablosu dikey gelmeli, birim tablonun altında yazmalı.
-
-**2 · Teşhis** — CANTE hâlâ düşerse:
-```
-ktpanel.vercel.app/api/kap?mod=teshis&kod=CANTE&gun=15
-```
-`birim`, `ustSinir`, her etiketin `redSebebi` ve `sayfadakiDigerBasliklar` dönecek.
-
-**3 · Nöbet** — Ebu panelinde "taslak" düğmesi. Kart önizlemesi, skor kutusu, onayla.
-
----
-
-## ▸ AÇIK KALEMLER
-
-- **CANTE / GENIL** — hangi şablonu kullandıkları belirsiz; teşhis çıktısı gerekiyor
-- **Ağustos dalgası (~10–29 Ağu)** — faktör modeli · guidance · multiple birlikte tazelenmeli
-- **Sentetik XKTUM** — `track.json` gerçek XKTUM bazlı, canlı taraf XU100; taban farklı
-- **Otomatik tazeleme** — GitHub Actions'ta altı katman dönüyor, dokunmaya gerek yok
+- Kod dosyaları **koşu sırasında yüklenmez** — Actions çalışırken push atmak
+  çakışma üretir. Koşunun bitmesini bekle.
+- `scripts/tazele.mjs` değiştiyse: **önce yükle, sonra tetikle.** Ters sıra
+  bir turu eski kodla boşa harcatır (24 Ağu'da iki kez yaşandı).
+- Silme işleri (yetim dosya vb.) yükleme bittikten **sonra** yapılır.
