@@ -1,17 +1,17 @@
 {
- "guncelleme": "2026-08-10",
+ "guncelleme": "2026-08-25",
  "hisseler": [
   {
    "k": "AKFYE",
    "kurum": 2,
    "hedef": 27.5,
-   "son": "2026-05-08"
+   "son": "2026-08-14"
   },
   {
    "k": "ALKIM",
    "kurum": 1,
    "hedef": 23.0,
-   "son": "2026-07-03"
+   "son": "2026-08-20"
   },
   {
    "k": "ALKLC",
@@ -23,8 +23,8 @@
   {
    "k": "ASELS",
    "kurum": 23,
-   "hedef": 426.79,
-   "son": "2026-08-05"
+   "hedef": 442.66,
+   "son": "2026-08-24"
   },
   {
    "k": "ATAKP",
@@ -36,13 +36,13 @@
    "k": "AVPGY",
    "kurum": 6,
    "hedef": 93.32,
-   "son": "2026-06-25"
+   "son": "2026-08-11"
   },
   {
    "k": "BIMAS",
    "kurum": 27,
-   "hedef": 559.5,
-   "son": "2026-08-10"
+   "hedef": 492.88,
+   "son": "2026-08-18"
   },
   {
    "k": "BORSK",
@@ -64,34 +64,33 @@
   },
   {
    "k": "CWENE",
-   "kurum": 1,
-   "hedef": 44.85,
-   "son": "2026-01-22",
-   "bayat": true
+   "kurum": 2,
+   "hedef": 52.43,
+   "son": "2026-08-17"
   },
   {
    "k": "EBEBK",
    "kurum": 5,
-   "hedef": 102.68,
-   "son": "2026-08-07"
+   "hedef": 104.88,
+   "son": "2026-08-20"
   },
   {
    "k": "EKGYO",
    "kurum": 16,
-   "hedef": 31.89,
-   "son": "2026-07-29"
+   "hedef": 32.54,
+   "son": "2026-08-17"
   },
   {
    "k": "ENJSA",
-   "kurum": 10,
-   "hedef": 139.92,
-   "son": "2026-07-28"
+   "kurum": 11,
+   "hedef": 143.15,
+   "son": "2026-08-11"
   },
   {
    "k": "EREGL",
    "kurum": 22,
-   "hedef": 45.89,
-   "son": "2026-08-10"
+   "hedef": 46.11,
+   "son": "2026-08-11"
   },
   {
    "k": "EUPWR",
@@ -108,8 +107,8 @@
   {
    "k": "GLRMK",
    "kurum": 6,
-   "hedef": 288.21,
-   "son": "2026-06-23"
+   "hedef": 286.37,
+   "son": "2026-08-19"
   },
   {
    "k": "GOKNR",
@@ -126,9 +125,9 @@
   },
   {
    "k": "GRSEL",
-   "kurum": 1,
-   "hedef": 422.0,
-   "son": "2026-07-13"
+   "kurum": 2,
+   "hedef": 493.0,
+   "son": "2026-08-18"
   },
   {
    "k": "GRTHO",
@@ -140,7 +139,7 @@
    "k": "HOROZ",
    "kurum": 1,
    "hedef": 87.92,
-   "son": "2026-07-27"
+   "son": "2026-08-12"
   },
   {
    "k": "HRKET",
@@ -152,19 +151,19 @@
    "k": "ISDMR",
    "kurum": 1,
    "hedef": 66.6,
-   "son": "2026-04-30"
+   "son": "2026-08-11"
   },
   {
    "k": "KARSN",
    "kurum": 1,
    "hedef": 18.53,
-   "son": "2026-05-13"
+   "son": "2026-08-17"
   },
   {
    "k": "KBORU",
-   "kurum": 1,
-   "hedef": 48.86,
-   "son": "2026-06-25"
+   "kurum": 2,
+   "hedef": 44.93,
+   "son": "2026-08-11"
   },
   {
    "k": "KCAER",
@@ -181,26 +180,26 @@
   {
    "k": "KOTON",
    "kurum": 5,
-   "hedef": 25.5,
-   "son": "2026-07-01"
+   "hedef": 23.48,
+   "son": "2026-08-14"
   },
   {
    "k": "KRDMD",
-   "kurum": 15,
-   "hedef": 46.03,
-   "son": "2026-07-27"
+   "kurum": 17,
+   "hedef": 51.05,
+   "son": "2026-08-18"
   },
   {
    "k": "LKMNH",
    "kurum": 4,
-   "hedef": 27.0,
-   "son": "2026-07-27"
+   "hedef": 25.15,
+   "son": "2026-08-18"
   },
   {
    "k": "LMKDC",
    "kurum": 2,
-   "hedef": 46.74,
-   "son": "2026-07-27"
+   "hedef": 42.75,
+   "son": "2026-08-11"
   },
   {
    "k": "MAVI",
@@ -211,14 +210,14 @@
   {
    "k": "MEDTR",
    "kurum": 2,
-   "hedef": 42.75,
-   "son": "2026-05-11"
+   "hedef": 39.25,
+   "son": "2026-08-17"
   },
   {
    "k": "MGROS",
    "kurum": 29,
-   "hedef": 923.35,
-   "son": "2026-08-10"
+   "hedef": 917.34,
+   "son": "2026-08-14"
   },
   {
    "k": "MPARK",
@@ -242,37 +241,37 @@
    "k": "ORGE",
    "kurum": 1,
    "hedef": 198.9,
-   "son": "2026-07-27"
+   "son": "2026-08-14"
   },
   {
    "k": "PGSUS",
    "kurum": 26,
-   "hedef": 280.17,
-   "son": "2026-08-04"
+   "hedef": 269.94,
+   "son": "2026-08-13"
   },
   {
    "k": "RGYAS",
    "kurum": 7,
-   "hedef": 292.03,
-   "son": "2026-07-27"
+   "hedef": 300.6,
+   "son": "2026-08-14"
   },
   {
    "k": "SAHOL",
    "kurum": 17,
-   "hedef": 159.96,
-   "son": "2026-07-28"
+   "hedef": 159.26,
+   "son": "2026-08-13"
   },
   {
    "k": "SELEC",
    "kurum": 9,
-   "hedef": 125.24,
-   "son": "2026-07-01"
+   "hedef": 153.67,
+   "son": "2026-08-18"
   },
   {
    "k": "SISE",
    "kurum": 16,
-   "hedef": 63.62,
-   "son": "2026-07-28"
+   "hedef": 62.63,
+   "son": "2026-08-17"
   },
   {
    "k": "SNGYO",
@@ -290,9 +289,9 @@
   },
   {
    "k": "TCELL",
-   "kurum": 28,
-   "hedef": 158.77,
-   "son": "2026-07-28"
+   "kurum": 27,
+   "hedef": 158.85,
+   "son": "2026-08-14"
   },
   {
    "k": "THYAO",
@@ -302,43 +301,42 @@
   },
   {
    "k": "TKNSA",
-   "kurum": 5,
-   "hedef": 38.24,
+   "kurum": 4,
+   "hedef": 37.63,
    "son": "2026-08-06"
   },
   {
    "k": "TOASO",
    "kurum": 23,
-   "hedef": 417.2,
-   "son": "2026-08-04"
+   "hedef": 415.28,
+   "son": "2026-08-10"
   },
   {
    "k": "TUPRS",
-   "kurum": 22,
-   "hedef": 366.77,
-   "son": "2026-08-05"
+   "kurum": 23,
+   "hedef": 370.87,
+   "son": "2026-08-12"
   },
   {
    "k": "ULKER",
    "kurum": 17,
-   "hedef": 180.88,
-   "son": "2026-08-10"
+   "hedef": 170.26,
+   "son": "2026-08-19"
   },
   {
    "k": "YATAS",
    "kurum": 6,
-   "hedef": 61.95,
-   "son": "2026-06-25"
+   "hedef": 57.51,
+   "son": "2026-08-20"
   },
   {
    "k": "YEOTK",
    "kurum": 1,
-   "hedef": 74.21,
-   "son": "2026-05-14",
-   "duzeltildi": "bedelsiz 2026-07-31 (x2,3380) icin duzeltildi; ham hedef 173,50"
+   "hedef": 74.2,
+   "son": "2026-05-14"
   }
  ],
  "_kaynak": "Fintables hisse_senedi_araci_kurum_hedef_fiyatlari · pencere SON 1 YIL (2025-08-10..) · hedef = kurum ortalamasi, kurum = DISTINCT araci kurum sayisi",
  "_pencere_notu": "§252v: pencere 1 YIL olarak KORUNDU. 6 aylik pencere daha taze gorunur ama kurum sayilarini dusurur (ASELS 23->18, THYAO 30->22) — bu TAZELEME degil METODOLOJI DARALTMASI olurdu. Panelin kurum sayilariyla Fintables 1-yil sorgusu BIREBIR tuttu, pencere dogrulandi.",
- "_duzeltme": ""
+ "_duzeltme": "2026-08-25: 55/55 hisse tazelendi (onceki 10 Agu). Pencere 1 YIL (>= 2025-08-25) — §252v geregi KORUNDU. 28 hissede hedef/kurum degisti. 4 hisse son 6 ayda raporsuz -> bayat:true (hedefi eskidir, guncel fiyatla kiyaslanmamalidir). Kaynak: Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat)."
 }

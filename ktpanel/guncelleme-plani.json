@@ -114,14 +114,14 @@
    "ad": "Halka arzlar",
    "dosya": "halkaarz.json",
    "siklik": "olay",
-   "son": "2026-07-17",
+   "son": "2026-08-25",
    "kaynak": "Fintables halka_arzlar"
   },
   {
    "ad": "Guidance",
    "dosya": "guidance.json",
    "siklik": "ceyreklik",
-   "son": "2026-07-17",
+   "son": "2026-08-25",
    "kaynak": "Fintables guidance",
    "sezon": true
   },
@@ -218,7 +218,7 @@
    "ad": "Analist konsensüsü (hedef fiyat)",
    "dosya": "analist.json",
    "siklik": "aylik",
-   "son": "2026-08-10",
+   "son": "2026-08-25",
    "kaynak": "analist.json — Fintables hisse_senedi_araci_kurum_hedef_fiyatlari. Son 6 ayin hedef fiyat ORTALAMASI (yayin_tarihi >= bugun-180g). Sorgu: GROUP BY hisse, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat). Son 6 ayda raporu olmayan hisse \"bayat\":true isaretlenir — hedefi eskidir, guncel fiyatla kiyaslanmamalidir.",
    "sezon": true
   },
