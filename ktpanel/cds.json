@@ -1,16 +1,12 @@
 {
- "guncelleme": "2026-08-24",
- "deger": 220.34,
- "tarih": "2026-08-23",
- "etiketTarih": "2026-08-24",
- "onceki": 220.28,
- "degisim": 0.06,
- "adet": 3283,
+ "guncelleme": "2026-08-25",
+ "deger": 220.5,
+ "tarih": "2026-08-25",
+ "etiketTarih": "2026-08-25",
+ "onceki": 220.34,
+ "degisim": 0.16,
+ "adet": 3284,
  "seri": [
-  [
-   "2026-04-22",
-   228.39
-  ],
   [
    "2026-04-23",
    233.12
@@ -486,6 +482,10 @@
   [
    "2026-08-24",
    220.34
+  ],
+  [
+   "2026-08-25",
+   220.5
   ]
  ],
  "kaynak": "worldgovernmentbonds.com · TR 5Y CDS (5 Years, SYMBOL 13)",
