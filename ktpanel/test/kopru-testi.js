@@ -8,6 +8,17 @@
    §92 (üç kart birden boşaldı), §95-97 (ECB kesintisi), §101 (alan adı uyuşmazlığı)
    — dördü de kullanıcı gözüyle yakalandı, sistemle değil. Bu dosya o boşluğu kapatır.
 
+   §417 GÜNCELLEME (25 Agu 2026): iki yeni uç eklendi (edgar · platts) ve
+     katfon SINIFLANDIRMASI düzeltildi.
+     · katfon kritik:true idi ve ok:false görünce KIRMIZI yakıyordu — oysa
+       ok:false BEKLENEN durum (canlı çekim §147-148'de bilerek kapatıldı,
+       panel katfon.json'dan besleniyor). ARTIK kapali:true → bilgi sayılıyor.
+     · platts CANLI TARAMADA BOZUK BULUNDU: HTTP 502, "SPG_KEY doğrudan Bearer
+       kabul edilmedi — token akışı (client credentials) gerekebilir". Testte
+       olmadığı için SESSİZCE bozulmuştu. Panelde kullanılmıyor, kritik değil.
+     · edgar (ABD bilanço, §398) da testin dışındaydı.
+     DERS: YENİ UÇ AÇILDIĞINDA TESTE DE EKLENİR — eklenmeyen uç, izlenmeyen uçtur.
+
    §286 GÜNCELLEME (13 Agu 2026): test 29 Tem'den beri güncellenmemişti ve
    aradan geçen sürede altı yeni uç kuruldu, bir doğrulayıcı da yanlıştı.
      · mod=fiyat DOĞRULAYICISI KIRIKTI — d.fiyat/d.fiyatlar arıyordu ama uç
@@ -200,8 +211,17 @@ const UCLAR = [
         return 'HARİTA EKSİĞİ: tanınmayan VKŞ kodu — '+d.bilinmeyenKodlar.join(', ');
       return true; } },
 
-  { ad:'katfon · TEFAS', yol:'/api/katfon?k=KLU,KTV,AIS', kritik:true, dogrula:d=>{
-      if(d.ok===false) return 'ok:false — '+(d.err||'')+' (TEFAS API değişmiş olabilir — §60 vakası)';
+  /* §417 SINIFLANDIRMA DÜZELTMESİ (25 Agu, canlı ölçüm): bu uç kritik:true idi
+     ve ok:false görünce testi KIRMIZI yakıyordu. Ama ok:false BEKLENEN durum:
+     §147-148'de TEFAS bot koruması yüzünden canlı çekim BİLEREK kapatıldı;
+     panel veriyi katfon.json'dan okuyor ve kart sağlam çalışıyor. Uç kendi
+     durumunu {kapali:true} ile dürüstçe söylüyor — bu iyi tasarımdır, arıza
+     değil. Kapalı kapıyı hata saymak, gerçek arızaların da ciddiyetini düşürür
+     (app.js'teki aynı gerekçe: "kapanmış bir kapının önünde nöbet tutmak").
+     ARTIK: kapali:true → BİLGİ · ok:false ama kapali değil → gerçek arıza. */
+  { ad:'katfon · TEFAS', yol:'/api/katfon?k=KLU,KTV,AIS', kritik:false, dogrula:d=>{
+      if(d.kapali) return true;   /* bilinçli kapalı — panel katfon.json'dan besleniyor */
+      if(d.ok===false) return 'ok:false ve kapali DEĞİL — beklenmedik: '+(d.err||'');
       const it = d.items||{};
       const n = Object.keys(it).length;
       if(n===0) return 'hiç fon çözülemedi';
@@ -220,6 +240,30 @@ const UCLAR = [
       const x = L[0];
       if(x.tedPaySayisi == null) return 'tedPaySayisi YOK — günlük fon akışı (§263) hesaplanamaz';
       if(!(Number(x.fiyat) > 0)) return 'fiyat pozitif değil';
+      return true; } },
+
+  /* §417 EKLENEN UÇLAR — test 13 Agu'dan beri güncellenmemişti; aradan geçen
+     sürede İKİ yeni uç kuruldu ve ikisi de testin DIŞINDAydı. platts 25 Agu'da
+     canlı taramada HTTP 502 / "SPG_KEY doğrudan Bearer kabul edilmedi" ile
+     bozuk bulundu — SESSİZCE bozulmuştu, ne kadardır bilinmiyor. Testin
+     varlık sebebi tam bu (§60/§92/§95-101 sınıfı). */
+  { ad:'edgar · ABD bilanço (§398)', yol:'/api/edgar?ticker=AAPL', kritik:false, dogrula:d=>{
+      if(d.ok===false) return 'ok:false — '+(d.err||'');
+      const K = Object.keys(d||{});
+      if(!K.length) return 'boş yanıt';
+      /* şema kaynaktan okunur, hatırlanmaz (§116): ciro/donem/veri hangi adla
+         gelirse gelsin, en az bir dolu alan bekliyoruz */
+      const dolu = K.filter(k=>d[k]!=null && !['surum','ok'].includes(k));
+      if(!dolu.length) return 'yalnız surum/ok döndü — veri alanı yok';
+      return true; } },
+
+  /* platts KEŞİF ucudur: panelde HİÇBİR YERDE kullanılmıyor (app.js/ajan.js/
+     tazele.mjs = 0 referans), S&P abonelik kapsamını ölçmek için yazıldı.
+     kritik:false ve bozuk olması paneli etkilemez — ama testte GÖRÜNSÜN ki
+     bir gün kullanılmak istendiğinde durumu bilinsin. */
+  { ad:'platts · S&P (keşif ucu)', yol:'/api/platts', kritik:false, dogrula:d=>{
+      if(d.hata) return 'HTTP hata: '+String(d.hata)+' · '+String(d.tani||'').slice(0,70);
+      if(d.error) return String(d.error).slice(0,70);
       return true; } },
 
   /* §286f TR 5Y CDS (§253). Dokuz kaynak denendikten sonra worldgovernmentbonds
