@@ -301,3 +301,270 @@ NOT MOTORU: kart verisinin hash'i degisince o kartin .note'unu AI'ya yeniden
 yazdirir (degisim yoksa istek YOK — maliyet sifir). Ajan notlari localStorage
 'ajan_notlar'; statik HTML metni fabrika ayaridir, sifirla butonuyla donulur.
 
+
+<!-- 2026-08-25: BAKIM-EK-*.md damga bolumleri buraya tasindi (18 dosya -> 0) -->
+
+# DAMGA CIZELGESINE
+# ===========================================================================
+## GUNCELLENEN
+- analist 25A ✓ · guidance 25A ✓ · halkaarz 25A ✓ · fm cekmece damgasi CANLI
+## ALTIN KURALLARA EKLER
+- SEMA DEGISTIGINDE OKUYUCULARI DA GEZ (§415).
+- TAZELEME METODOLOJI DARALTMASI DEGILDIR — pencere/kapsam degistirmeden tazele (§252v).
+## SURUM IZI (panel)
+20260824e -> 20260825a (§415 cekmece ic ice sema).
+
+# DAMGA CIZELGESINE
+# ===========================================================================
+## ALTIN KURALLARA EKLER
+- BIR KURAL YAZMAK ONU HER DALDA UYGULAMAK DEGILDIR — yeni dalda "bu dalin
+  kayip tanimi ne" diye sorulur (§413).
+- VERI KAYBI OLMAYAN ARIZADA IS KIRMIZI YANMAZ (§300'un TEFAS dalinda uygulanmasi).
+## GUNCELLENEN
+- Workflow aksiyonlari v5 (Node 24 tabanli) — deprecation uyarisi kapandi.
+- Kok yetim edgar.js: SILINDI ✓
+
+# DAMGA CIZELGESINE (KTPANEL-DAMGA.md)
+# ===========================================================================
+## GUNCELLENEN
+- TEFAS: sunucudan otomatik cekim OLU (5 yol da olculdu) → KONSOL TOPLAYICI
+  (elle, gunluk ritüel, kapsam kapili). Otomasyon kuralinin IKINCI olculmus
+  istisnasi (swap stoku emsali).
+## ALTIN KURALLARA EKLER
+- IKI TOPLAYICI AYNI KOTAYI PAYLASIR — uzun betikte kilit sart.
+- "HEP AYNI SAYIDA" DURAN HATA KOTADIR, backoff'u uzatma, YONTEMI degistir.
+- ELLE KATMAN IYI VERIYI EZEMEZ — tazelik + KAPSAM kapisi birlikte.
+- DAMGADA KANAL ADI SABIT YAZILMAZ.
+- SOZDIZIMI TEMIZ ≠ CALISIR (tanimsiz degisken kapsam denetimiyle yakalanir).
+
+# DAMGA CIZELGESINE EKLENECEKLER (KTPANEL-DAMGA.md)
+# ===========================================================================
+## GUNCELLENEN SATIRLAR
+- TEFAS getiri: kopru OLU (Vercel IP blok) · dogrudan v2 + HAR zinciri (§408/409).
+  Fon AKISI (AUM/pay) ucu HENUZ v2'de YOK — siradaki HAR fon buyukluk
+  sayfasindan alinirsa eslenir (ACIK KALEM).
+- Faktor modeli t6: dislama listesi CANLI (bulut) · damga meta.tarih'ten.
+- Yetim kok edgar.js: GitHub'dan SILINECEK (bekci artik uyarir).
+## ALTIN KURALLARA EKLER
+- ISE BASLARKEN TABAN DAMGASI OLCULUR — iki sohbet ayni tabandan calismaz.
+- BOLUM NUMARASI: once repodaki EN YUKSEK numarayi olc, sonra ac.
+- YAMAYI DOSYANIN KENDI DESENINE YAZ.
+## SURUM IZI (panel)
+20260823g (catal ucu) -> 20260824e (§407 birlestirme: 403+404+405+406 g ustune).
+
+# DAMGA CIZELGESINE EKLENECEKLER (KTPANEL-DAMGA.md)
+# ===========================================================================
+## GUNCELLENEN SATIRLAR
+- Earnings AI @t14: 24A ✓ — WMT/HD/CSCO eklendi (55 kart). SIRADAKI:
+  NVDA 26 Agu CARSAMBA kapanis sonrasi (2C FY27, rehberlik ~91 mlr$ ±2,
+  konsensus 93-95) — haftanin makas olayi; CRM ayni hafta.
+- CSCO karti: AV capraz denetimi ACIK (birkac gun icinde, §184).
+## ALTIN KURALLARA EKLER
+- ETIKET SOZLUGU DOSYADAN OKUNUR — yeni skor etiketi uydurulmaz.
+- AYNI ISIMLI IKI LISTE AYNI LISTE DEGILDIR — degistirmeden once kuyrugu say.
+## SURUM IZI (panel)
+20260824a (§398) -> b (§399) -> c (§400) -> d (§401 WMT izleme + kartlar).
+
+# DAMGA CIZELGESINE EKLENECEKLER (KTPANEL-DAMGA.md)
+# ===========================================================================
+
+## YENI KART/KATMAN SATIRLARI
+- FEK + KOPMA-σ (t9 Degerleme altinda) · KAP canli · borc servisi dayanikliligi
+  · veto sistemi · iki rejimli DD · beklenen kayip · duyarlilik izgarasi
+- MKK Fon Buyuklugu (t27 alt sekme) · vap-fon-akis.json · 14 fon turu × ay
+  · ay gezinmesi · resmi saklama verisi
+- SOHBET (sag alt yuzen dugme) · Ebu'nun ikinci modu · panel ozeti + web
+  aramasi + kart acma protokolu [KART:tXX:TICKER]
+- kap-arsiv/<KOD>.json · ham tablolar · 15 ceyrek · faktorden BEDAVA doluyor
+
+## ALTIN KURALLARA EKLER
+- HIZ SINIRINI ASMAYA CALISMA — ISTEGI HIC YAPMA (edge cache + arsiv).
+- AYNI VERIYI IKI MODUL CEKIYORSA BIRI CEKSIN, DIGERI OKUSUN.
+- AYNI COZUMU IKINCI KEZ YAZIYORSAN ORTAK YERE TASI.
+- BIR FONKSIYONUN DONUS SOZLESMESINI DEGISTIRIRSEN TUM CAGIRANLARI GOZDEN GECIR.
+- BIR KOSULU IKIYE BOLERKEN ICINDEKI HER KORUMAYI DAGIT.
+- Math.abs/parseFloat GIBI DONUSUMLER null'I SESSIZCE SAYIYA CEVIRIR.
+- BIR MODELIN GECERLI ARALIGI VARSA EKRAN ONU BILMELI (4σ · 10x tavanlari).
+- IKI OLCU AYNI EKRANDAYSA DOYGUNLUK ESIKLERI AYNI BUYUKLUGE BAKMALI.
+- BIR GIRDI SUPHELIYSE ONU KULLANAN TUM CIKTILAR AYNI SEKILDE ISARETLENIR.
+- BIR UYARI SONUCU DEGISTIRMIYORSA CEZAYA DONUSMEMELI.
+- BIR SONUCA GUVENMIYORSAN ONU NOTLANDIRMA (uyari notun YERINE gecer).
+- TURETILMIS BIR SAYI SACMA GORUNUYORSA GIRDIYI SORGULA.
+- DUZENLI SALINIM RISK DEGILDIR — mevsimselligi belirsizlikten ayir.
+- DAGILIMIN UCUNU OLCERKEN DAYANIKLI TAHMINCI KULLANMA (MAD kuyruk icin yanli).
+- ESIKLI FONKSIYON GIRDI GURULTUSUNU NOT SICRAMASINA CEVIRIR — sureklilestir.
+- BIR ESIGI HANGI SERIDEN HESAPLADIYSAN O SERIYE UYGULA.
+- BASARISIZ SORGU EKRANI TEMIZLEMELI — bayat sonuc yeni cevap gibi gorunur.
+- ELLE YAZILAN ICERIK OTOMATIK URETIMIN KAPSAMINDA OLMAMALI (data-ebu="hayir").
+- BIR RISK GERCEKLESTIGINDE UYARIYI HABERE CEVIR.
+- SAYI BICIMINI DILE GORE VARSAYMA — buyukluk testiyle dogrula.
+- BUYUK JSON'DA VERI YOKSA ANAHTAR ADINI DEGIL DEGER KALIBINI ARA.
+- TARAYICIDA CALISIP SUNUCUDA 401 VERIYORSA ILK BAKILACAK YER CEREZ.
+- BIR SAYFADA TEK GRID VARSAYMA.
+- OZET KATMANI EKSIKSE MODEL PANELI YOK SAYAR (sohbet kapsamini kaynaklarla esitle).
+- "HEPSINI GONDER" KOLAY AMA PAHALI — soruyu okuyup sec.
+- AYRIM VERIDE YOKSA VEKIL KULLAN AMA VEKILIN NEREDE CURUDUGUNU SOYLE.
+- SUREKLI DUSEN BIR KAYIT KUYRUGU KILITLER — geri cekilme sart.
+- KAYIT VARDI, OKUMADIM (bu blokta UC kez: §361c · §367 · §369c).
+
+## SURUM IZI (panel)
+20260821a (§364 GYO NAV) → b (§364b fiyat) → c (§365 Sektorel Veriler) →
+d (§365c Ebu kapsam) → e (§366 MKK VAP) → f (§366e tur kirilimi) →
+g (§366f ay gezinmesi) → h (§369 FEK) → i (§369b gevsek) → j (§369c onbellek) →
+k (§369d hata nesnesi) → m (§370 KOPMA-σ) → n (§370b dayanikli σ) →
+p (§371+§372) → r (§372b) → s (§372c ayrisma) → t (§373 faiz denetimi) →
+u (§373b bos kalem) → v (§373c not bastirma) → w (§374 faiz zinciri) →
+x (§375 elestiri paketi) → y (§377) → z (§378 mevsimsellik) →
+20260822a (§379 bayat sonuc) → b (§385 sohbet) → c (§386 gercek sayilar) →
+d (§387 makro) → e (§388 secici ozet) → f (§389 gorunum) → g (§390 capex) →
+h (§391 doygunluk) → i (§392 faiz tutarliligi) → j (§392c) → k (§393) →
+m (§394 esik hizalama) → n (§394b NaN) →
+20260823a (§395 repo rejimi) → b (§396 haftalik not) → c (§397 Ebu disi) →
+d (§397b takvim).
+api/kap.js: §380 edge cache (mod=ham 1 yil · mod=donemler 6 saat).
+api/ajanktp.js: §385 sohbet modu · §386b sozluk+kart · §388b model secimi.
+scripts/tazele.mjs: §366 VAP → §381 arsiv → §382 kosu-ici onbellek →
+  §383 faktor arsive yazar → §384 basarisizlik sayaci.
+vercel.json: ajanktp maxDuration 45 → 120 (sohbet + web aramasi).
+
+## ACIK KALEMLER
+- FAKTOR EVRENI PANELE HALA BAGLANMADI (bilincli). Kapsam 64/245.
+  GYO'lar icin cozum hazir (§364 NAV iskontosu); BANKA (ALBRK) sablonu henuz
+  siraya girmedi.
+- KAP ARSIVI: 20 dosya. Kosu basina +8-10 ceyrek (faktorden bedava).
+  XK030 ~10 gunde, tum evren ~33 gunde dolar. Panel arsive HENUZ BAGLANMADI —
+  baglaninca bir sirket icin 15 istek 1'e iner.
+- VAP TUR KIRILIMI KISMI: 100/168 satir (yanit sayfali). Son 7 ay tam, eski
+  aylar eksik. Dosyada `tur_kismi:true` ile isaretli.
+- ARSIV MODULUNUN KENDI CEKIMI hala hiz sinirina takiliyor ("fetch failed").
+  Onemi yok — asil is faktor evreninde bedava yapiliyor.
+- TEFAS BOT KORUMASI (24 Agu kosusu): "Request Rejected" — katilim fonlari
+  31/46 (%67), esik %95. Gecici gorunuyor; ust uste tekrarlarsa kopruye
+  bekleme/tekrar deneme eklenmeli.
+- CEKIRDEK FAVOK DOGRULAMASI: MERCN 556 mn hala elle dogrulanmadi. Zincirin
+  basinda duruyor (karsilama -> firma carpani -> λ -> yuk), yani hata AYNI
+  YONDE IKI KEZ carpiliyor.
+- FEK "bilgi tasidigi aralik 0,8-3,0" metni ile 10x doygunluk esigi arasinda
+  kucuk bir metin uyumsuzlugu var (LMKDC/CIMSA'da goruldu). Sonucu etkilemiyor.
+- STOKASTIK BARIYER ve USD BAZLI σ SERISI: elestiride onerildi, YAPILMADI.
+  Ikisi birlikte yapilmali (biri digerini dengeliyor); USD seri KAP'tan gelmiyor.
+
+# DAMGA CIZELGESINE EKLENECEKLER (KTPANEL-DAMGA.md)
+# ===========================================================================
+
+## YENI KART/KATMAN SATIRLARI
+- CEYREKLIK SERI (t23) · KAP mod=ham · 15 ceyrek · tam bilanco+gelir+nakit akis
+  + 14 turev metrik · ENFLASYON ENDEKSLI · onbellek ktp_kap_ceyrek_v2
+- GYO NAV (t26) · gyo-nav.json · TSPB resmi NAD · 45 sirket · fiyat Actions'ta
+- SEKTOREL VERILER (t27) · Katilim Fonlari + PYS Sektor (t10'dan tasindi)
+- PYS akisi · fon-akis.json `pys` + `pencereler` · 1G/1H (1A gun birikince)
+- Faktor evreni · faktor-evren.json · XKTUM 245 uye · kademeli · PANEL BAGLI DEGIL
+- ABD Risk kartina: JOLTS, istifa orani, ham petrol stoku, rafineri kullanimi, WTI
+
+## ALTIN KURALLARA EKLER
+- DOM'DA VAR OLMAK GORUNUR OLMAK DEGILDIR (<tr> icin tBodies[0]).
+- null KONTROLUNDE isFinite DEGIL Number.isFinite.
+- KAYIT SEMASI DEGISIYORSA ONBELLEK ANAHTARI DA DEGISMELI.
+- HESAP YONTEMI DEGISTIYSE ESKI KAYITLAR DAMGALANIP ONE ALINMALI.
+- ENFLASYON MUHASEBESINDE KUMULATIF FARKI CEYREK DEGILDIR.
+- TURETILMIS ORAN GOSTERECEKSEN IKI BACAGINI DA SEN GETIR.
+- HEDEF DOSYANIN BIRIMINI VARSAYMA — bir ornekle DOGRULA.
+- UCUN GERCEK CIKTISINI GOR, ALAN ADI TAHMIN ETME.
+- TASIMA = KAPSAMIN DA TASINMASI (dugme + panel + uyelik + ajan kapsami).
+- SESSIZ RETURN TESHISI GECIKTIRIR — her erken cikis iz birakmali.
+- YORUMDA ETIKET ADI GECMEZ (denetim sayaci sahte dengesizlik uretir).
+- PARALELLIK BOT SAYILABILIR — kaynak reddediyorsa seri + gecikmeli dene.
+
+## SURUM IZI (panel)
+20260820a (§339) → b (§341+§342) → c (§342b) → d (§343+§344) → e (§345) →
+f (§345b) → g (§345c) → h (§345d) → i (§345e) → j (§347) → k (§348) →
+l (§349+§350) → m (§350b) → n (§350c) → o (§351) → p/r (§351b/c) → s (§352) →
+t (§353) → u (§353b) → v (§353c) → w (§354) → x (§355) → y (§356+§357) →
+z (§360) → 20260821a (§364) → b (§364b) → c (§365+§365b) → d (§365c).
+api/kap.js: kap-2026-08-20-o (§338) → p/q/r/s (§340 denemeleri) → t (§340e) →
+u (§338b seri cekim).
+middleware.js: §361c (/api/kap muafiyeti).
+scripts/tazele.mjs: §358 → §359 → §361 → §361b/d/e/f/g → §362 → §363/b → §364/b.
+
+## ACIK KALEMLER (takvimli)
+- FAKTOR EVRENI PANELE BAGLANMADI (bilincli). Iki kosul: (a) kapsam ~150-200
+  sirket (su an 21/245, turda 6, ~2 hafta), (b) banka/GYO sablon sinavi.
+  GYO'lar icin cozum HAZIR (§364 NAV iskontosu); BANKA (ALBRK) henuz siraya
+  girmedi — XBRL kodlari farkli, ayri harita gerekebilir.
+- GYO NAV donem gecikmesi: son YAYIMLANMIS 2025/12; 2026/06 hazir ama
+  isPublished=false. Yayimlaninca kendiliginden gecer.
+- TDGYO/PEKGY/IDGYO gibi asiri primli gorunenler icin ESIK karari (faktore
+  baglarken).
+- PMI gerceklesen degeri: FRED'de lisansli degil, alternatif kaynak arastirilmadi.
+- §359 1A penceresi ~22 is gunu birikince acilir (su an arsiv 7 gun).
+- WMT 2026/2C: Alpha Vantage 20 Agu'da reportedEPS "None" — bilancolar birkac
+  saat/gun sonra isleniyor.
+- ONERI (kullaniciya sunuldu, karar bekliyor): Qwen 3.8 ile KAP bildirim
+  ozetleri (gunde 200+ bildirim okunmuyor) ve yedek AI saglayici. YARGI
+  gerektiren isler (portfoy yorumu, celiski denetimi) Claude'da kalir.
+
+# DAMGA CIZELGESINE EKLENECEKLER (KTPANEL-DAMGA.md)
+# ===========================================================================
+
+## YENI KART/KATMAN SATIRLARI
+- hazine-sonuc.json  · son: OTOMATIK (18:10 kosusu) · kaynak: HMB WP-API
+  (portal/v2/posts) + duyuru PDF/govde (§314, pdf-parse) · KUMULATIF —
+  duyuru slug'la BIR KEZ islenir · limit 7g (ihalesiz haftalar olabilir)
+- sektor.json        · son: 2026-08-17 kapanisi (18 Agu damgalandi) ·
+  Fintables endeks_mumlar_gunluk_gh · Claude koprusu · UTC+1 seans kurali
+- bist-takvim.json   · son: 2026-08-18 · Fintables yayinlanma_tarihi ·
+  8 beklenen / 32 gerceklesen / 7 GECIKEN (SPK sinir notu iceride)
+- /lib/lightweight-charts.standalone.production.js · 5.2.0 · npm'den eve
+  alindi (§313) — CDN bagimliligi YOK (api/_lib'e degil STATIK alana!)
+- makro-takvim.json · son: OTOMATIK (her kosu) · kaynak: ForexFactory/
+  FairEconomy haftalik JSON (§319) · High tum ulkeler + Medium majorler ·
+  haftalik pencere, arsiv YOK · kaynak limiti 5dk/2 istek (kosu basina 1)
+
+## ALTIN KURALLARA EKLER
+- MONOTONLUK (§300): zaman serisi yalniz ILERI akar; kaynak geri giderse
+  veri degil rapor uretilir. Fiyat katmanlarinda canli.
+- FIYAT YASI (§301): dosya tazeligi ayri, FIYATIN yasi ayri olculur;
+  birlikte eskime artik gorunur (is gunu, hep uyari).
+- FETCH TAVANI (§311): sayfadaki her fetch 25 sn tavanli (tek sahip sarim);
+  kendi signal'i olan aynen gecer.
+- YEDEK SIRASI (§307): fiyatta Yahoo birincil, BIST bulteni kosullu yedek;
+  yedek girerse katmanin TUMU tek kaynaktan (§114). Yahoo 5+ is gunu
+  donarsa oncelik TERSINE cevrilebilir — karar olcume bagli, acik kalem.
+- TLS PIN TAKVIMI (§309): bddk pini 15 KAS 2026'da sertifikayla birlikte
+  KIRILACAK — hata mesajindaki yeni parmak izi BDDK_PIN'e yapistirilir.
+
+## YENI OTOMATIK KATMANLAR (19 Agu — elle ritual BITTI)
+- sektor.json     · SS333 · endeks-arsiv.json'dan · capa sapmasi >7 gun ise
+  o ufuk atlanir, damgali deger korunur
+- hazine-takvim.json · SS334 v5 · HMB WP-API + strateji PDF · esik 8 ihrac ·
+  surum damgali kilit (_ayristirici) · panelin okudugu TUM alanlar yazilir
+- makro-takvim.json · SS319 · ForexFactory haftalik JSON
+- hazine-sonuc.json · SS314 · HMB ihale sonuclari (muhurlu)
+
+## SURUM IZI (panel)
+20260817a→b (§298) → 20260818a (§302) → b (§303) → c (§304) → d (§310) →
+e (§311) → f (§312+§313) → g (§316 t25 + §313b) → 20260819a (§317 + sekme
+adlari) → b (§315+§316b+§318) → c (§319) → d (§319-D kap) → e (§320 egri) →
+f (§321 hizalama) → g (§322 Ebu koprusu · ajan.js cache-buster da bump'landi).
+TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
+16:23'te tazelendi, egri gorseli TR·ABD canli. scripts/tazele.mjs zinciri: §291→297→299/300/301→
+305/307/308→314 V1→V2→V2.1→V2.2 (her surum bir onceki kosunun OLCUMUNDEN).
+
+## ACIK KALEMLER (takvimli)
+- Cmt 07:00: §306 kopru testinin ILK kosusu (CRON_SECRET eklendiyse)
+- ~25 Agu Sali: HMB Eyl-Kas ic borclanma stratejisi → hazine-takvim.json
+  rituel (Claude koprusu isler)
+- 1 Eyl: fm.json + guidance.json sezon acilisi (bilincli ⏸ suruyor)
+- 15 Kas: bddk TLS pin yenileme (takvimli kirilma)
+- §315-§337 TAMAMLANDI ve CANLI DOGRULANDI (19 Agu). ham_ozet MUHURLENDI.
+- ACIK RISK: /api/data POST'u kutuyu BIRLESTIRMEZ, DEGISTIRIR — eksik paket
+  kalani siler. Emniyet yalniz "tamamen bos"u durduruyor (§331 notu).
+- SIRADAKI ADAY (kullanici erteledi): Merkez Bankalari karti — TCMB/Fed/ECB/BoJ
+  faizleri ve koridor/AOFM panelde ZATEN canli akiyor, tablo onlari okumuyor;
+  "son karar" sutunu seri gecmisinden turetilebilir. BOK/BoE kaynaksiz (damgali
+  kalir), "siradaki toplanti" kural tabanli takvimle dolar.
+- ACIK/OPSIYONEL: (a) DE/JP egri canli kaynagi (Bundesbank/JGB kesfi) — §320
+  V2; (b) sinyal sicili (§315 okumalarinin tarihe karsi kaydi, ⭐ onay ister);
+  (c) Ebu'ya §315 rozetlerini girdi vermek (data-ebu-veri ile tek satir).
+- 20 Agu Per: USD KS sonucu → takvim rozeti kendiliginden yeserecek
+- abdSekme fosil imzasi temizlendi (KTP_SURUM'a baglandi)
