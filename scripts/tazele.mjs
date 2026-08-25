@@ -1102,8 +1102,25 @@ async function fonTazele() {
     }
   } catch (e) {
     raporlar.push(`### Katılım fonları — ✗ TEFAS erişimi düştü\n- ${String(e.message || e).slice(0, 140)}`);
-    denetimDustu = true;
+    if (await tefasKayipMi()) denetimDustu = true;   /* §413 */
   } finally { await browser.close(); }
+
+  /* ── §413 KIRMIZI/SARI AYRIMI ── §300'ün kendi kuralı: VERİ KAYBI OLMAYAN
+     ARIZADA İŞ KIRMIZI YAKILMAZ. TEFAS düştüğünde iki AYRI durum var:
+       (a) arşivde BUGÜNÜN verisi YOK  → gerçek kayıp, KIRMIZI (bildirim gelsin)
+       (b) arşivde BUGÜNÜN verisi VAR  → tazeleyemedik ama panel eksik değil,
+           SARI (uyarı satırı; iş yeşil biter, alarm enflasyonu olmaz)
+     24-25 Ağu'da (b) üst üste yaşandı: köprü akşam düştü, sabah koşusunun
+     yazdığı veri yerindeydi, yine de iş kırmızı yandı ve bildirim geldi. */
+  const tefasKayipMi = async () => {
+    try {
+      const ar = await oku('fon-arsiv.json');
+      const n = Object.keys((ar.gunler && ar.gunler[bugun]) || {}).length;
+      if (n) { raporlar.push('- §413 not: arşivde bugün (' + bugun + ') zaten ' + n +
+        ' fon yazılı — TEFAS tazelenemedi ama VERİ KAYBI YOK, iş sarı (kırmızı değil)'); return false; }
+    } catch (e) {}
+    return true;
+  };
 
   const kapsanan = kodlar.filter(k => fiyat[k]);
   /* §249k GETİRİ-MODU: yeni liste ucu fiyat değil KİMLİK verdi (ölçüldü) —
@@ -1164,7 +1181,7 @@ async function fonTazele() {
   }
   if (!kapsanan.length) {
     raporlar.push('### Katılım fonları — ✗ TEFAS eşleşme SIFIR (v4)\n- Ağ dinleme JSON yakalayamadı ya da alanlar eşleşmedi — üstteki tanı satırı uç listesini söylüyor; katman yazılmadı.');
-    denetimDustu = true;
+    if (await tefasKayipMi()) denetimDustu = true;   /* §413 */
     return null;
   }
 
