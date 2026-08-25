@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260824e';   // SS407 CATAL BIRLESTIRME: SS403 risk taban/tavan + SS404 fm canli damga + SS405 dislama + SS406 WMT (g-tabani ustune)   // SS400b fiyat sunucudan
+const KTP_SURUM = '20260825a';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8683,7 +8683,12 @@ window.tazelikHesap = (function(){
         const r = await fetch('/'+f, {cache:'no-store'});
         if(!r.ok) return;
         const j = await r.json();
-        const d = j.guncelleme || j.tarih || j.fiyat_tarihi || null;
+        /* §415 İÇ İÇE ŞEMA: fm.json tarihini meta.tarih'te tutar (kök alan YOK).
+           Eski hal kökte bulamayıp plana düşüyordu → fm.json 24 Ağu'ya
+           tazelendiği halde çekmece "14 Tem · GÜNCELLE" gösteriyordu:
+           TAZE VERİ, BAYAT ETİKET (§399'un çekmece ikizi). Tek sahip: dosya. */
+        const d = j.guncelleme || j.tarih || j.fiyat_tarihi ||
+                  (j.meta && (j.meta.tarih || j.meta.guncelleme)) || null;
         if(d) t[f] = d;
       }catch(e){}
     }));
