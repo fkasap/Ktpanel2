@@ -52,7 +52,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5   # SS414: Node 20 deprecation - v5 Node 24 tabanli
 
       # §252x KATMAN ARTIK CRON'A GÖRE SEÇİLİYOR.
       # ÖNCE: `--katman="${{ github.event.inputs.katman || 'hepsi' }}"` —
@@ -76,7 +76,7 @@ jobs:
           echo "katman=$K" >> $GITHUB_OUTPUT
           echo "seçilen katman: $K   (schedule='$SCH' · input='$IN')"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5   # SS414
         with:
           node-version: '22'   # SS326: Node 20 deprecation uyarisi (Actions zaten 24'e zorluyordu)
 
