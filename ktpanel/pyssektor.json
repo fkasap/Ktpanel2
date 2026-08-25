@@ -1,280 +1,311 @@
 {
- "guncelleme": "2026-08-10",
- "kaynak": "Fintables gunluk_fon_degerleri · 1G = TEK GUN 2026-08-07 (son TAM gun; 10 Agu yarim, 1377/2472 kayit). 1A = 2026-07-09..2026-08-07, 30 gun toplami. Uc blok da AYNI pencereden turetildi.",
+ "guncelleme": "2026-08-25",
+ "kaynak": "Fintables gunluk_fon_degerleri (canlı sorgu · reçete §248a)",
  "pys": {
   "1G": [
    [
-    "Tera",
-    9.34
-   ],
-   [
-    "Azi̇mut",
-    3.42
+    "Ak",
+    15.54
    ],
    [
     "Zi̇raat",
-    2.73
-   ],
-   [
-    "Pusula",
-    2.57
-   ],
-   [
-    "Albaraka",
-    2.39
-   ],
-   [
-    "Pardus",
-    0.99
+    5.35
    ],
    [
     "Deni̇z",
-    0.88
+    3.8
    ],
    [
-    "Akti̇f",
-    0.35
+    "Albaraka",
+    3.7
    ],
    [
-    "Garanti̇ Emeklilik",
-    0.26
+    "Azi̇mut",
+    3.51
+   ],
+   [
+    "Qnb",
+    1.81
+   ],
+   [
+    "Tera",
+    1.59
+   ],
+   [
+    "Pusula",
+    1.21
+   ],
+   [
+    "V",
+    0.77
    ],
    [
     "Neo",
-    0.16
+    0.64
+   ],
+   [
+    "Akti̇f",
+    0.55
+   ],
+   [
+    "Hsbc",
+    0.45
    ]
   ],
   "1A": [
    [
-    "Yapi Kredi̇",
-    28.07
+    "Tera",
+    89.38
    ],
    [
     "Zi̇raat",
-    25.79
-   ],
-   [
-    "Tera",
-    22.7
-   ],
-   [
-    "İş",
-    22.18
-   ],
-   [
-    "Deni̇z",
-    17.48
-   ],
-   [
-    "Garanti̇",
-    16.59
+    40.54
    ],
    [
     "Ak",
-    14.19
+    32.68
    ],
    [
-    "Atlas",
-    13.96
+    "Yapi Kredi̇",
+    32.4
    ],
    [
-    "V",
-    12.02
+    "Albaraka",
+    30.77
    ],
    [
-    "Azi̇mut",
-    5.48
+    "Deni̇z",
+    25.95
+   ],
+   [
+    "Garanti̇",
+    14.68
+   ],
+   [
+    "Pardus",
+    7.72
+   ],
+   [
+    "Aura",
+    3.89
+   ],
+   [
+    "Akti̇f",
+    3.29
+   ],
+   [
+    "A1 Capi̇tal",
+    2.5
+   ],
+   [
+    "Hsbc",
+    1.77
    ]
   ]
  },
  "fon": {
   "1G": [
    [
-    "TLY",
-    6.5
+    "PIP",
+    "Garanti — İkinci Para Piyasası Serbest",
+    8.21
+   ],
+   [
+    "TZV",
+    "Ziraat — Kısa Vadeli Borçlanma",
+    8.0
+   ],
+   [
+    "THF",
+    "Tera — Hisse Senedi (HSY)",
+    5.24
+   ],
+   [
+    "ZBJ",
+    "Ziraat — Başak Para Piyasası",
+    5.09
+   ],
+   [
+    "PUR",
+    "Ak — Birinci Para Piyasası Serbest",
+    5.03
+   ],
+   [
+    "GTL",
+    "Garanti — Birinci Para Piyasası",
+    4.97
    ],
    [
     "YPT",
-    6.03
+    "Yapı Kredi — Para Piyasası Serbest",
+    4.41
    ],
    [
-    "GJH",
-    5.69
+    "URM",
+    "Ak — ÖPY Altıncı Serbest (Döviz) Özel",
+    3.86
    ],
    [
-    "DIP",
-    5.3
-   ],
-   [
-    "KHP",
-    5.25
-   ],
-   [
-    "KNI",
-    3.75
-   ],
-   [
-    "ONK",
-    2.69
-   ],
-   [
-    "RTI",
-    2.48
-   ],
-   [
-    "ZPR",
-    2.44
-   ],
-   [
-    "PIP",
-    2.17
-   ],
-   [
-    "TI1",
-    2.16
-   ],
-   [
-    "FI5",
-    1.84
+    "UCP",
+    "Ak — Üçüncü Para Piyasası Serbest",
+    3.8
    ]
   ],
   "1A": [
    [
     "GAL",
-    63.24
+    "Garanti — İkinci Para Piyasası",
+    63.98
    ],
    [
-    "GTL",
-    28.03
+    "THF",
+    "Tera — Hisse Senedi (HSY)",
+    38.6
    ],
    [
-    "KPR",
-    27.88
-   ],
-   [
-    "YLB",
-    19.9
-   ],
-   [
-    "TI1",
-    18.32
-   ],
-   [
-    "ZBJ",
-    16.14
-   ],
-   [
-    "ODN",
-    13.64
-   ],
-   [
-    "PNU",
-    12.95
+    "RTI",
+    "Albaraka — Türk İkinci Kısa Vadeli Katılım Serbest",
+    31.23
    ],
    [
     "TP2",
-    12.63
+    "Tera — Para Piyasası",
+    21.57
    ],
    [
-    "VK6",
-    11.56
+    "YVD",
+    "Yapı Kredi — İkinci Para Piyasası",
+    20.33
    ],
    [
-    "PCS",
-    10.85
+    "YLB",
+    "Yapı Kredi — Para Piyasası",
+    19.29
    ],
    [
-    "YOZ",
-    10.7
+    "ODN",
+    "Ak — Ondördüncü Serbest (Döviz)",
+    17.86
+   ],
+   [
+    "GTL",
+    "Garanti — Birinci Para Piyasası",
+    15.35
+   ],
+   [
+    "DLY",
+    "Deniz — Para Piyasası",
+    13.98
+   ],
+   [
+    "PNU",
+    "Pusula — İkinci Para Piyasası",
+    13.96
    ]
   ]
  },
  "tur": {
   "1G": [
    [
-    "Serbest Para Piyasası",
-    23.62
-   ],
-   [
-    "Para Piyasası",
-    5.1
-   ],
-   [
     "Kısa Vadeli",
-    1.4
+    10.83
    ],
    [
-    "Serbest Hisse",
-    0.56
+    "Kısa Vadeli Borçlanma Araçları",
+    10.28
    ],
    [
-    "Hisse Senedi Yoğun",
-    0.41
+    "Döviz Fon",
+    9.02
    ],
    [
-    "Mutlak Getiri Hedefli",
-    0.23
-   ],
-   [
-    "Teknoloji",
-    0.18
-   ],
-   [
-    "Serbest İst. Arbitraj",
-    0.14
+    "Serbest Katılım Fonları",
+    5.29
    ],
    [
     "Yerli Hisse",
-    0.13
+    3.6
    ],
    [
-    "Tematik",
-    0.12
+    "Hisse Senedi Yoğun",
+    3.12
+   ],
+   [
+    "Emtia Fonları",
+    0.61
+   ],
+   [
+    "Kira Sertifikaları - Kısa Vadeli",
+    0.59
+   ],
+   [
+    "Tematik Hisse",
+    0.59
+   ],
+   [
+    "Kira Sertifikaları",
+    0.58
+   ],
+   [
+    "Serbest Katılım Döviz Fonlar",
+    0.55
+   ],
+   [
+    "Endeks Temalı Fonlar",
+    0.49
    ]
   ],
   "1A": [
    [
     "Para Piyasası",
-    217.01
+    136.6
    ],
    [
-    "Serbest Hisse",
-    9.47
+    "Kısa Vadeli",
+    41.37
+   ],
+   [
+    "Kısa Vadeli Borçlanma Araçları",
+    16.41
    ],
    [
     "Kira Sertifikaları",
-    7.72
+    3.84
    ],
    [
-    "Kira Sert. - Kısa Vadeli",
-    7.7
+    "Kira Sertifikaları - Kısa Vadeli",
+    3.81
    ],
    [
-    "Serbest Para Piyasası",
-    6.84
+    "Mutlak Getiri Hedefli",
+    3.14
    ],
    [
-    "Borçlanma Ar. - Özel Sektör",
+    "Serbest Hisse",
+    2.65
+   ],
+   [
+    "Serbest İstatistiksel Arbitraj Fonları",
     1.37
    ],
    [
-    "Kısa Vadeli Borçlanma Ar.",
-    1.04
+    "Endeks Temalı Fonlar",
+    0.74
    ],
    [
-    "OKS",
-    0.94
-   ],
-   [
-    "Serbest İst. Arbitraj",
-    0.64
+    "Borçlanma Araçları - Özel Sektör",
+    0.62
    ],
    [
     "Tarım - Gıda",
-    0.24
+    0.48
+   ],
+   [
+    "Sağlık - İlaç",
+    0.27
    ]
   ]
  },
- "damga_gunu": "2026-08-07",
- "_okuma_notu": "DIKKAT — uc blok KARSILASTIRILABILIR DEGILDIR, toplamlarini kiyaslama. fon blogu TEK FON net akisi; pys blogu o kurumun TUM fonlarinin NETI; tur blogu kategori NETI. Bir fon +63 alirken ayni kurumun digerleri -59 verirse kurum neti +4 cikar — bu CELISKI DEGIL. Ornek (4 Agu): GAL +63,28 idi ve o gun piyasadaki en buyuk tek fon girisiydi (brut girisin %43u); ayni fon 31 Tem'de -70,13 vermisti. GAL kurumsal nakit tasiyan bir arac, gidis-donus yapar."
+ "damga_gunu": "2026-08-25",
+ "_okuma_notu": "1G = 25 Ağu damga günü · 1A = 26 Tem–25 Ağu. fon_tipi='mutual' (emeklilik/BYF hariç). Kategori taksonomisi Fintables'ın, TEFAS şemsiyesinden farklı. 1G PYŞ lideri AK +15,54 mlr — aynı gün Actions fon akışı raporuyla BİREBİR tuttu (çapraz denetim ✓). 1A'da TERA +89,4 mlr ile açık ara önde: tek fon (THF, hisse senedi yoğun) 38,6 mlr çekmiş — konsantre bir akış, PYŞ sıralamasını tek başına taşıyor."
 }
