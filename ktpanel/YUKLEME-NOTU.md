@@ -1,10 +1,12 @@
 # 25 Agu 2026 — DOKUMANTASYON TAZELEME
 
 ## YUKLE
-  DEPLOY.md      -> ktpanel/           (uzerine yaz)
-  OTOMASYON.md   -> ktpanel/           (uzerine yaz)
-  KURULUM.md     -> ktpanel/           (uzerine yaz)
-  BENIOKU.md     -> ktpanel/arac/gelen/   ← DIKKAT: YENI YER
+  DEPLOY.md       -> ktpanel/            (uzerine yaz)
+  OTOMASYON.md    -> ktpanel/            (uzerine yaz)
+  KURULUM.md      -> ktpanel/            (uzerine yaz)
+  pys-tazele.md   -> ktpanel/arac/       (uzerine yaz)
+  pyssektor.json  -> ktpanel/            (uzerine yaz — VERI TAZELENDI)
+  BENIOKU.md      -> ktpanel/arac/gelen/    ← DIKKAT: YENI YER
 ## SIL
   ktpanel/BENIOKU.md        (kokteki eski kopya — yeri yanlisti)
   ktpanel/SILINECEK-DOSYALAR.md  (birlestirme talimatiydi, isi bitti)
@@ -61,3 +63,26 @@ Tek dosyada birlesseydi 300+ satirlik bir metinde her seferinde dogru
 bolumu aramak gerekirdi. Birlestirme YAPILDI ama dogru yerde: 18 BAKIM-EK
 -> KTPANEL-BAKIM.md (ayni soruya cevap veren dosyalar birlestirildi).
 Capraz referanslar eklendi: her dosya digerine yol gosteriyor.
+
+
+### arac/pys-tazele.md — recete SAGLAMDI, iki OLCULMUS kural eklendi
+25 Agu'da receteyi uygulayarak pyssektor.json'u tazeledim (10 Agu -> 25 Agu,
+damga gunu 7 Agu -> 25 Agu). Kosarken IKI HATA cikti, ikisi de receteye yazildi:
+  KURAL 6 — PYS JOIN SUTUNU: portfoy_yonetim_sirketleri tablosunda
+    'portfoy_yonetim_sirketi_id' YOK; dogru sutun '..._kodu' (BEF1901 bicimi).
+    Recetenin eski hali '_id' diyordu, sorgu HATA veriyordu.
+  KURAL 7 — NULL AKIS TUZAGI (TNA kaniti): bazi fonlarin
+    gunluk_nakit_giris_cikisi BOS gelir ve ORDER BY DESC'te EN USTE oturur —
+    liste basinda bos satir. Satir bazli sorgulara IS NOT NULL sart.
+    (SUM'li sorgularda sorun yok, NULL'lari atliyor.)
+Ayrica receteye CAPRAZ DENETIM adimi eklendi.
+
+### pyssektor.json — 15 gun bayatti, tazelendi
+6 blok yeniden uretildi (pys/fon/tur x 1G/1A). Damga gunu 25 Agu.
+CAPRAZ DENETIM ✓: PYS 1G lideri AK +15,54 mlr — ayni gunku Actions fon akisi
+raporuyla BIREBIR tuttu. Iki bagimsiz kaynak (Fintables SQL + TEFAS koprusu)
+ayni sonucu verdi.
+OKUMA: 1A'da TERA +89,4 mlr ile acik ara onde ve bunun 38,6 mlr'i TEK FONDAN
+(THF, hisse senedi yogun) geliyor — konsantre akis, PYS siralamasini tek
+basina tasiyor. Tur tarafinda 1A: Para Piyasasi +136,6 mlr (nakit tarafi
+agir basiyor), 1G'de Kisa Vadeli + Doviz Fon one cikiyor.
