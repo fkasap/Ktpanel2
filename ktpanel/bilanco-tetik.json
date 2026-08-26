@@ -1,5 +1,5 @@
 {
- "tarih": "2026-08-25",
+ "tarih": "2026-08-26",
  "kodlar": [
   "ADESE",
   "AGYO",
@@ -35,6 +35,7 @@
   "BRKSN",
   "BRMEN",
   "BUCIM",
+  "BURCE",
   "BVSAN",
   "BYDNR",
   "CANTE",
@@ -227,7 +228,7 @@
   "YYAPI",
   "ZEDUR"
  ],
- "sayi": 225,
+ "sayi": 226,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -453,9 +454,10 @@
   "CITAS": "2026-08-22",
   "ARSNF": "2026-08-24",
   "INALR": "2026-08-24",
-  "AKSFA": "2026-08-25"
+  "AKSFA": "2026-08-25",
+  "BURCE": "2026-08-26"
  },
- "pencere_sayi": 3,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-08-25 16:08 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-26 10:51 UTC — otomatik (KAP FR · kümülatif §299)"
 }
