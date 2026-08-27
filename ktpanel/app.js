@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260827a';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
+const KTP_SURUM = '20260827b';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1487,7 +1487,26 @@ async function marketCek(){
     if(mk) window.__marketKapsam={istenen:ekKod.length, donen:mk.hisAdet||null, kirpilan:mk.hisKirpildi||0};
     if(mk&&mk.data){window.__market=mk.data;renderKuresel();emtiaRender();
       const rb=(id,k,dec)=>{const d=mk.data[k];if(d&&d.p!=null&&$(id)){const s=d.chg>=0?'+':'';$(id).innerHTML=trN(d.p,dec)+' <span class="sub'+(d.chg>=0?'':' down')+'" style="display:inline">'+s+'%'+trN(d.chg,2)+'</span>';}};
-      rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);renderRiskBaro();
+      rb('vixV','vix',2);rb('dxyV','dxy',2);rb('brentV','brent',2);
+      /* §421 ABD TAHVİL FAİZLERİ CANLI (FRED · DGS10/DGS30). 30Y bültenin
+         çekirdek göstergesi: 19 yılın zirvesi %5,34'ten Hazine geri alımıyla
+         %5,15'e. Seviye + 10Y'ye göre EĞİM birlikte okunur — eğim açılıyorsa
+         piyasa uzun vadede enflasyon/borç riski fiyatlıyor demektir. */
+      try{
+        /* ŞEMA CANLI ÖLÇÜLDÜ: FRED yanıtı {ok,kaynak,alinma,seriler:{DGS10:{deger,tarih,fark}}}
+           — ilk yazımda fr.data varsayılmıştı, YOK. 25 Ağu: DGS10 %4,64 · DGS30 %5,17. */
+        const fr = await (await fetch('/api/market?mod=fred',{cache:'no-store'})).json();
+        const S = (fr&&fr.seriler)||{};
+        const al = k => (S[k]&&isFinite(S[k].deger)) ? S[k].deger : null;
+        const y10=al('DGS10'), y30=al('DGS30');
+        const bas=(id,v,ek)=>{ if(v!=null&&isFinite(v)&&$(id)) $(id).innerHTML='%'+trN(v,2)+' <span class="sub" style="display:inline">'+ek+'</span>'; };
+        bas('us10y', y10, 'FRED · canlı');
+        if(y10!=null&&y30!=null){
+          const egim=Math.round((y30-y10)*100);
+          bas('us30y', y30, 'eğim '+(egim>0?'+':'')+egim+'bp');
+        } else bas('us30y', y30, 'FRED · canlı');
+      }catch(e){}
+      renderRiskBaro();
     /* §270b Fed kartındaki enerji satırına CANLI Brent eklenir — sabit "102$"
        yerine güncel seviye. Veri yoksa etiket boş kalır, iddia edilmez. */
     /* §282 AVRUPA MEGA-CAP CANLI FİYAT. Kart 27 Tem'den beri elle ve donmuş;
@@ -9533,6 +9552,26 @@ async function loadAOFM(){
     koyGrup('rezervLive','bie_abres2','Toplam',x=>trN(x/1000,1))
   ]);
   karneRezervCanli();
+  /* §421 GÖSTERGE TAHVİL (2Y bileşik) — Promise.all DİZİSİNİN İÇİNE değil,
+     bittikten SONRA çağrılır (dizi öğesi ifade olmalı; IIFE oraya konunca
+     "Unexpected token ;" verdi — node --check yakaladı, gönderilmedi).
+     Bültenlerin beşinde de geçen gösterge; haftanın en çarpıcı hareketi
+     burada: %40,87 → %37, 150bp gevşeme (TCMB normalleşmesinin piyasa izi).
+     Panelde getiri eğrisi VARDI ama 2Y tek satır görünmüyordu.
+     Kaynak: /api/evds2?mod=egri — eğrinin kendi 2Y noktası (yeni çağrı YOK). */
+  (async()=>{ try{
+    /* ŞEMA CANLI ÖLÇÜLDÜ: {ok,tur,kaynak,vadeler:{'6A','9A','1Y','2Y',...}}
+       her biri {getiri,tarih,isin,itfa,kalanYil}. 27 Ağu: 2Y %39,61
+       (TRT190728T18, kalan 1,9 yıl). İlk yazımda d.dibs/noktalar varsayılmıştı — YOK. */
+    const d=await (await fetch('/api/evds2?mod=egri',{cache:'no-store'})).json();
+    const V=(d&&d.vadeler)||null;
+    if(!V||!$('gosterge2y')) return;
+    const n=V['2Y']||V['3Y']||V['1Y'];
+    if(!n||!isFinite(n.getiri)) return;
+    const etiket = V['2Y'] ? '2Y' : (V['3Y']?'3Y':'1Y');
+    $('gosterge2y').innerHTML='%'+trN(n.getiri,2)+' <span class="thin" style="font-size:9px">· '+etiket+
+      (n.kalanYil?' ·'+trN(n.kalanYil,1)+'y kalan':'')+' · eğriden · canlı</span>';
+  }catch(e){} })();
   // 2) TÜFE  // 2) TÜFE: endeks serisinden yıllık + aylık değişim (ay-eşleştirmeli, veri gecikmesine dayanıklı)
   try{
     const r=await fetch('/api/evds2?grup=bie_tukfiy2025&adFiltre=Genel&gun=600&full=1');

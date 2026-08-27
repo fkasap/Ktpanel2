@@ -595,3 +595,14 @@ TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
 ### ACIK
 - Gosterge 2Y · ABD 30Y · Brent satiri · uc yerde farkli ons altin degeri.
 
+## §421 (27 Agu 2026)
+### GUNCELLENEN
+- Global Risk Barometresi: ABD 30Y eklendi + 10Y CANLIYA baglandi (statikti).
+- Fonlama Rejimi karti: gosterge tahvil (2Y bilesik) eklendi.
+- Panel surumu 20260827a -> 20260827b.
+### ALTIN KURALLARA EKLER
+- "GORUNMUYOR" ILE "YOK" AYNI SEY DEGILDIR — once kaynaga sorulur (Brent vakasi).
+- YANIT SEMASI HATIRLANMAZ, CAGRILIP OKUNUR (FRED .seriler / egri .vadeler).
+### ACIK
+- TCMB net YP pozisyonu (bultenlerin 3/5'inde) — Rezerv Karnesi'ne satir olabilir.
+

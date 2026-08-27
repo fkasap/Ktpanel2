@@ -299,7 +299,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div><div class="lbl" style="margin:0">VIX (korku)</div><div class="val" id="vixV">16,72 <span class="sub" style="display:inline">+%0,78</span></div></div>
     <div><div class="lbl" style="margin:0">DXY (dolar)</div><div class="val" id="dxyV">100,77 <span class="sub" style="display:inline">+%0,15</span></div></div>
     <div><div class="lbl" style="margin:0">Brent</div><div class="val" id="brentV">77,81 <span class="sub down" style="display:inline">−%2,80</span></div></div>
-    <div><div class="lbl" style="margin:0">ABD 10Y</div><div class="val">%4,71 <span class="sub" style="display:inline">FRED 23 Tem</span></div></div>
+    <!-- §421 ABD 10Y SATIRI DA STATİKTİ (CDS'in ikizi, §253d): id yoktu, app.js
+     dokunamıyordu. Artık canlı + 30Y eklendi. GEREKÇE: 20-27 Ağu hazine
+     bültenlerinin BEŞİNDE DE 30Y geçiyor (%5,34 → 5,20 → 5,25 → 5,28 → 5,15);
+     ABD borç krizinin ve "Hazine morfini" tartışmasının ana göstergesi.
+     Seri (DGS30) market.js'te ZATEN çekiliyordu, ekrana basılmıyordu. -->
+    <div><div class="lbl" style="margin:0">ABD 10Y</div><div class="val" id="us10y">%4,71 <span class="sub" style="display:inline">FRED</span></div></div>
+    <div><div class="lbl" style="margin:0">ABD 30Y <span class="thin">(borç barometresi)</span></div><div class="val" id="us30y">— <span class="sub" style="display:inline">yükleniyor</span></div></div>
     <!-- §253d BU SATIR STATIKTI VE ID'SI YOKTU — app.js ona hic dokunamiyordu.
      Risk baromertesindeki CDS duzeltilirken bu kopya 206'da kalmisti; ayni
      ekranda iki farkli CDS gorunuyordu (§241: ayni deger iki yerde). Artik
@@ -448,6 +454,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="kv"><span class="k">Koridor (borç alma – verme)</span><span>%35,50 – %40,00</span></div>
     <div class="kv"><span class="k">AOFM — efektif fonlama</span><span class="down" style="font-weight:600" id="aofmLive">≈%40,00</span></div>
     <div class="kv"><span class="k">TLREF — piyasa gecelik <span class="thin">(politika faizine makas)</span></span><span style="font-weight:600" id="tlrefLive">—</span></div>
+    <div class="kv"><span class="k">Gösterge tahvil <span class="thin">(2Y bileşik · piyasa fiyatlaması)</span></span><span style="font-weight:600" id="gosterge2y">—</span></div>
     <div class="kv"><span class="k">TCMB Net Fonlama (mlr ₺)</span><span id="fonMiktar">—</span></div>
     <div class="kv"><span class="k">Haftalık repo ihaleleri</span><span style="color:var(--up)"><b>23 Ağu 2026'da YENİDEN AÇILDI</b></span></div>
     <div class="kv"><span class="k">Fonlama kanalı</span><span>Gecelik (üst bant) O/N</span></div>
@@ -1797,8 +1804,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260827a"></script>
-<script src="/ajan.js?v=20260827a"></script>
+<script src="/app.js?v=20260827b"></script>
+<script src="/ajan.js?v=20260827b"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

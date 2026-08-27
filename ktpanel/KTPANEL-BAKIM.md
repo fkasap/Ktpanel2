@@ -6,6 +6,69 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-25
 
 
+# BAKIM EK — §421 (27 Agu 2026)
+
+## §421 HAZINE BULTENI HAFTALIK TARAMASI → IKI GOSTERGE EKLENDI
+
+YONTEM: iktisatbank hazine bulteninin 20-21-24-26-27 Agu sayilari tarandi
+(arsiv tarayicidan gezildi), her veri noktasi panelle KARSILASTIRILDI.
+Bultenlerin BESINDE DE gecen gostergeler "cekirdek" sayildi.
+
+### EKLENEN 1 — ABD 30Y TAHVIL (+ 10Y canliya baglandi)
+Bultenlerin 5/5'inde geciyor: %5,34 (19 yilin zirvesi) → 5,20 → 5,25 →
+5,28 → 5,15. ABD borc krizinin ve "Hazine morfini" tartismasinin ana
+gostergesi (kamu borcu 40 trilyon $'i asti, yillik faiz gideri ~1,1-1,2 tn).
+BULGU: DGS30 market.js'te ZATEN cekiliyordu (DGS2/5/10/30), ekrana
+BASILMIYORDU. Ustelik ABD 10Y satiri da STATIKTI — id'si yoktu, app.js
+dokunamiyordu (§253d CDS vakasinin IKIZI: ayni kartta iki farkli yasam).
+Artik ikisi de canli; 30Y satiri 10Y'ye gore EGIM de gosteriyor
+(25 Agu: 10Y %4,64 · 30Y %5,17 → +53bp). Egim aciliyorsa piyasa uzun
+vadede enflasyon/borc riski fiyatliyor demektir.
+
+### EKLENEN 2 — GOSTERGE TAHVIL (2Y bilesik)
+Bultenlerin 5/5'inde geciyor ve HAFTANIN EN CARPICI HAREKETI burada:
+21 Agu %40,87 → 27 Agu %39,61 (-126bp); bulten 26 Agu'da "1 yil vadeli
+bilesik 150bp gevseyerek %37'ye geldi" diyor. TCMB normallesmesinin
+piyasadaki EN NET izi.
+BULGU: panelde getiri egrisi VARDI (8 DIBS + 9 sukuk) ve 2Y noktasi
+egrinin ICINDEYDI — ama tek satirlik gosterge YOKTU. Yeni cagri
+ACILMADI, mevcut /api/evds2?mod=egri yanitindan okunuyor.
+27 Agu: %39,61 · TRT190728T18 · 1,9 yil kalan.
+
+### YANLIS ALARM DUZELTMESI — BRENT
+Ilk taramada "Commodity tablosunda WTI var, Brent yok" denmisti. OLCUM:
+brent EMTIA listesinde DE var, market.js sembol haritasinda DA var
+(BZ=F) ve CANLI CALISIYOR — 27 Agu %85,52 (-%2,64), bultenin 86-87$
+ifadesiyle birebir tutuyor. Tarama aninda tabloda gorunmemesi o anki
+render/kaydirma meselesiymis. PANELDE EKSIK YOK.
+DERS: "gorunmuyor" ile "yok" ayni sey degildir — once KAYNAGA sorulur
+(§419'daki platts'in tersi: orada da "spg" eslesmesi yanlis alarmdi).
+
+### SEMA KAZASI — GONDERILMEDEN YAKALANDI (iki kez)
+1) FRED yaniti {ok,kaynak,alinma,seriler:{DGS10:{deger,tarih,fark}}} —
+   ilk yazimda fr.data varsayilmisti, YOK.
+2) Egri yaniti {vadeler:{'6A','9A','1Y','2Y',...}} her biri
+   {getiri,tarih,isin,itfa,kalanYil} — ilk yazimda d.dibs/d.noktalar
+   varsayilmisti, YOK.
+Ikisi de tarayicidan CANLI cagrilarak duzeltildi.
+Ayrica IIFE, Promise.all DIZISININ ICINE konunca "Unexpected token ;"
+verdi — node --check yakaladi, dizinin DISINA alindi.
+DERS (ucuncu kez bu hafta): YANIT SEMASI HATIRLANMAZ, CAGRILIP OKUNUR
+(§116 · §420'deki .KAPANIS/.ORAN vakasinin kardesi).
+
+### HALA EKLENMEYEN (karar bekliyor)
+TCMB NET YP POZISYONU: bultenlerin 3/5'inde geciyor (51,2 → 51,4 → 53,6
+mlr $; savas oncesi 70, dipte 8,2). Panelde Rezerv Karnesi VAR ve net
+rezerv gosteriyor ama "net YP pozisyonu" AYRI bir buyukluk. EVDS'de
+mevcut; eklenirse Rezerv Karnesi'ne satir olur.
+
+### BULTENIN ATLADIGI, PANELIN GORDUGU (panel onde)
+- Sukuk-DIBS makasi: bultende HIC yok; panelde "fiilen parite" olcumu var.
+- Fon akisi / PYS dagilimi: bulten yalniz "para piyasasi fonlarina %10
+  stopaj" haberini veriyor; panel akisin KENDISINI olcuyor (2030 fon).
+- TCMB rejim tezi: panel bunu AYLAR ONCE "rejim riski" diye isaret
+  etmisti; bulten 24 Agu'da gerceklestigini yaziyor.
+
 # BAKIM EK — §420 (27 Agu 2026)
 
 ## §420 TLREF FONLAMA REJIMI KARTINDA — SOZ VERILEN, GOSTERILMEYEN VERI
