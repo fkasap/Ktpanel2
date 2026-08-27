@@ -152,7 +152,17 @@ jobs:
           git rm -r --cached node_modules --ignore-unmatch -q || true
           git add -A
           git commit -m "veri: ${{ steps.tazele.outputs.ozet }}"
-          git push
+          # §418 PUSH ÇAKIŞMASI (25 Agu, canlı): koşu sürerken kullanıcı beş
+          # silme commit'i atınca uzak dal ilerledi, bot push'u REDDEDİLDİ ve
+          # adım exit 1 verdi. Rapor baştan sona YEŞİLDİ, denetim düşmemişti —
+          # yani iş kırmızı yandı ama sebebi denetim değil YARIŞTI. Akşamın
+          # tüm verisi (2030 fon, akış, CDS, GYO NAV) yazılamadan gitti.
+          # ÇÖZÜM: reddedilirse uzak dalı üstüne yeniden diz ve TEKRAR dene.
+          # --autostash: çalışma ağacında artık kalmışsa rebase'i bloklamasın.
+          if ! git push; then
+            echo "push reddedildi (uzak dal ilerlemiş) — rebase ile yeniden deneniyor"
+            git pull --rebase --autostash origin main && git push
+          fi
           echo "✓ commit atıldı — Vercel deploy'u tetiklendi"
 
       - name: Değişiklik yok
