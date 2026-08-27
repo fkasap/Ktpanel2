@@ -949,11 +949,24 @@ function ajanDurumSeridi(){
   }catch(e){}
 }
 async function aiCagir(prompt, maxTok){
+  /* §424 SUNUCU ZAMAN AŞIMI ÖLÇÜLDÜ (27 Agu): /api/market?mod=ai proxy'si
+     ~25 sn'de "The operation was aborted due to timeout" döndürüyor.
+     ÖLÇÜM: 1400 tok → 5,8 sn ✓ · 2300 tok → 25 sn ✗ (zaman aşımı).
+     Haftalık yorum 2300 token istiyordu → HER SEFERİNDE düşüyordu ve
+     hata SESSİZDİ: kullanıcı "buton çalışmıyor" görüyordu, sebebi değil.
+     Artık istemci tarafında da 30 sn sınır var ve hata KONUŞUYOR. */
+  const ZAMAN_ASIMI=30000;
   try{
+    const kesici=new AbortController();
+    const zt=setTimeout(()=>kesici.abort(), ZAMAN_ASIMI);
     const sr=await fetch('/api/market?mod=ai',{ method:'POST',
       headers:{'content-type':'application/json'},
-      body:JSON.stringify({prompt, max_tokens:maxTok||500}) });
+      body:JSON.stringify({prompt, max_tokens:maxTok||500}), signal:kesici.signal });
+    clearTimeout(zt);
     const sd=sr.ok?await sr.json():null;
+    if(sd&&sd.ok===false&&/timeout|aborted/i.test(String(sd.err||''))){
+      kayit('AI zaman aşımı — istek çok uzun (max_tokens '+(maxTok||500)+'). Küçült.');
+      window.AJAN_SON_STOP='timeout'; return null; }
     if(sd&&sd.ok&&sd.metin){ window.AJAN_SON_STOP=sd.stop||''; return sd.metin; }
     if(sd&&sd.err&&sd.err!=='sunucu-anahtari-yok'){ window.AJAN_SUNUCU_HATA=ajanHataOzet(sd.err,sd.err,0); kayit('Sunucu AI: '+sd.err); ajanDurumSeridi(); }   /* §254 */
   }catch(e){}
@@ -1189,8 +1202,21 @@ async function haftalikYorumYaz(zorla, kip){
     'Aşağıda (A) panelin şu anki canlı kart özetleri, (B) örnek yapı olarak mevcut haftalık yorum var. '+
     'Yeni yorumu yaz: 5-7 numaralı bölüm (0\u0027dan başlayan başlıklar), her bölüm <div style="background:#F0F7F4;border-left:3px solid #177245;border-radius:0 6px 6px 0;padding:11px 13px;margin:0 0 14px"><b style="color:#177245;font-size:12px">N · BAŞLIK</b><br>metin</div> kalıbında; '+
     'her bölümün sonunda <b>Portföy çevirisi:</b> cümlesi; rakamları SADECE canlı verilerden al, uydurma; multi-asset fon yöneticisi tonu; Türkçe; toplam 350-500 kelime — SON BÖLÜMÜ MUTLAKA TAMAMLA. YALNIZCA HTML döndür, başka hiçbir şey yazma.\n\n(A) ÇEKİRDEK GÖSTERGELER — haftanın omurgası; TEK TEK SAYMA, aralarındaki BAĞI kur:\n'+cekirdek+'\n\n(A2) PANEL KART ÖZETLERİ:\n'+ozet+'\n\n(B) MEVCUT YORUM (yapı örneği):\n'+mevcut;
-  const metin=await aiCagir(prompt, 2300);
-  if(!metin){ kayit('Haftalık yorum: AI erişilemedi'); return; }
+  /* §424b İKİ PARÇALI ÜRETİM. Tek çağrıda 5 bölüm × 400 kelime = 2300 token
+     isteniyordu ve sunucu 25 sn'de kesiyordu. Artık bölüm 1-3 ve 4-5 AYRI
+     çağrılarla üretilip birleştiriliyor: her biri ~1300 token / ~6 sn.
+     Toplam süre benzer, ama HİÇBİRİ zaman aşımına girmiyor.
+     İkinci parça düşerse birinci yine basılır — yarım ama TAZE, ve bunu
+     rapor eder (sessiz yarım kalma yok). */
+  const kelimeAyar=(s,hedef)=>s.replace('toplam 350-500 kelime','toplam '+hedef+' kelime');
+  const p1=kelimeAyar(prompt,'220-280').replace('YALNIZCA HTML döndür','YALNIZCA 1., 2. ve 3. BÖLÜMLERİ yaz, HTML döndür');
+  const m1=await aiCagir(p1, 1400);
+  if(!m1){ kayit('Haftalık yorum: AI erişilemedi (1. parça)'); return; }
+  const p2=kelimeAyar(prompt,'160-220').replace('YALNIZCA HTML döndür','YALNIZCA 4. ve 5. BÖLÜMLERİ yaz, HTML döndür')
+                 +'\n\n(ZATEN YAZILAN 1-3. BÖLÜMLER — TEKRARLAMA):\n'+m1.slice(0,1200);
+  const m2=await aiCagir(p2, 1300);
+  if(!m2) kayit('Haftalık yorum: 2. parça alınamadı — 1-3. bölümler basıldı');
+  const metin=m1+(m2||'');
   if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Haftalık yorum: yanıt kesildi — basılmadı'); return; }
   const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
   if(html.length<300){ kayit('Haftalık yorum: yanıt kısa, uygulanmadı'); return; }
@@ -1231,7 +1257,7 @@ async function haftalikYorumYaz(zorla, kip){
       'GÖZLENEBİLİR olay, tek cümle. Kanıtın yoksa duruşu DEĞİŞTİRME — süreklilik değerlidir.\n'+
       'YALNIZCA JSON döndür, başka hiçbir şey yazma:\n'+
       '{"poz1":{"durus":"","teze":"","dayanak":[],"risk":[],"tetik":""},"poz2":{...},"poz3":{...},"poz4":{...}}';
-    const tm=await aiCagir(tp, 1600);
+    const tm=await aiCagir(tp, 1200);   /* §424: 25 sn sınırı — 1600 riskli */
     if(tm){
       const jm=tm.match(/\{[\s\S]*\}/);
       if(jm){

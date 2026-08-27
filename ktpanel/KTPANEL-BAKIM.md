@@ -56,6 +56,53 @@ Beklenen: kart govdesi 5-7 bolumlu yeni yorumla dolar, ETIKET "24–30 AGU ·
 cikar. Pazartesi sabahlari otomatik yenilenir (hafta kimligi kontrolu
 §246b'de zaten dogru).
 
+# BAKIM EK — §424 (27 Agu 2026, aksam)
+
+## §424 HAFTALIK YORUM YAZILMIYORDU: SUNUCU 25 SN'DE KESIYOR
+
+SIKAYET: "Haftalik arastirma notu degismedi." Buton basiliyor, panoda
+"Haftalik yorum yaziliyor…" cikiyor, SONRASI YOK — ne sonuc ne hata.
+
+TESHIS ZINCIRI (canli olcum, tarayicidan):
+ 1. __HAFTALIK__ kaydi YOK, ajan_taktik YOK → yazici hic tamamlanmiyor.
+ 2. ajan.js saglam yukleniyor (HTTP 200, 113 KB, sozdizimi temiz).
+    Fonksiyonlar modul kapsaminda — disaridan cagrilamiyor, bu NORMAL.
+ 3. ajanNot'ta TAZE AI ciktisi var → API tarafi CALISIYOR.
+    Yani sorun AI erisiminde degil, BU cagrida.
+ 4. Uc kisa test: 500 tok → 2,0 sn ✓ · 2300 tok (kisa prompt) → 1,2 sn ✓
+    → max_tokens tek basina sorun DEGIL.
+ 5. GERCEK BOYUTLA test: 6,4 KB prompt + 2300 tok →
+    HTTP 200 · 25,2 sn · {"ok":false,"err":"The operation was aborted
+    due to timeout"}  ← KOK NEDEN BULUNDU.
+ ARA BULGU: ilk denemede hata "Your credit balance is too low" idi;
+ kullanici kredi yukledi, ardindan gercek sinir (zaman asimi) gorundu.
+ IKI AYRI ARIZA UST USTEYDI — biri digerini maskeliyordu.
+
+KOK NEDEN: /api/market?mod=ai proxy'sinde ~25 sn zaman asimi var. Haftalik
+yorum tek cagrida 5 bolum × ~400 kelime (2300 token) istiyordu; uretim
+25 sn'yi asiyor ve istek KESILIYOR. aiCagir bu dali loglamiyordu →
+kullanici "buton calismiyor" goruyordu, SEBEBINI degil.
+OLCULEN SINIR: 1400 tok → 5,8 sn ✓ · 2300 tok (gercek prompt) → 25 sn ✗
+
+COZUM:
+ a) §424 aiCagir'a AbortController (30 sn) + KONUSAN hata: zaman asiminda
+    "AI zaman asimi — istek cok uzun (max_tokens N). Kucult." loglaniyor.
+    Sessiz dal kapandi.
+ b) §424b IKI PARCALI URETIM: bolum 1-3 (1400 tok, hedef 220-280 kelime)
+    ve bolum 4-5 (1300 tok, 160-220 kelime) AYRI cagrilarla uretilip
+    birlestiriliyor. Ikinci parca duserse birinci YINE BASILIR ve durum
+    raporlanir — yarim ama TAZE, sessiz yarim kalma yok.
+    Ikinci cagriya "zaten yazilan 1-3. bolumler" veriliyor (tekrar onleme).
+ c) Taktik cagrisi 1600 → 1200 token (ayni sinirin altinda kalsin).
+SURE BUTCESI: eski 1×2300 = 25 sn (asiyor) → yeni 1400+1300+1200 ≈ 16 sn.
+
+DERS-1: IKI ARIZA UST USTE BINEBILIR — ilki cozulunce ikincisi gorunur.
+"Kredi bitti" duzeltilmeseydi zaman asimi hic ortaya cikmayacakti.
+DERS-2: SESSIZ DAL BIRAKMA. aiCagir'in timeout dali log basmiyordu; bu
+hafta ucuncu kez ayni sinif (§410c sessiz catch · §422 hedef eleman yok).
+DERS-3: UZUN URETIMI BOL. Sunucu sinirlari uretim UZUNLUGUNA baglidir;
+tek dev cagri yerine iki orta cagri hem gecer hem yarim kalirsa kurtarilir.
+
 # BAKIM EK — §422-§423 (27 Agu 2026)
 
 ## §423 TAKTIKSEL DURUS DINAMIKLESTI + AYLIK KIP

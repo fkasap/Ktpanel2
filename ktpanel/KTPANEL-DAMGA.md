@@ -631,3 +631,14 @@ TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
   bicim garantisi panelde kalir (§423).
 - AI'A "KANITIN YOKSA DEGISTIRME" DENIR — yoksa her tur gurultu uretir.
 
+## §424 (27 Agu 2026)
+### GUNCELLENEN
+- Haftalik yorum: IKI PARCALI uretim (1400+1300 tok) — sunucunun 25 sn
+  zaman asimina takilmiyor. Taktik cagrisi 1200 tok.
+- aiCagir: 30 sn AbortController + konusan zaman asimi hatasi.
+- Panel surumu 20260827d -> 20260827e.
+### ALTIN KURALLARA EKLER
+- SUNUCU SINIRI URETIM UZUNLUGUNA BAGLIDIR — tek dev cagri yerine iki orta
+  cagri (hem gecer hem yarim kalirsa kurtarilir).
+- IKI ARIZA UST USTE BINEBILIR: ilki cozulunce ikincisi gorunur.
+
