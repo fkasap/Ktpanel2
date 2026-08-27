@@ -6,6 +6,57 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-25
 
 
+# BAKIM EK — §420 (27 Agu 2026)
+
+## §420 TLREF FONLAMA REJIMI KARTINDA — SOZ VERILEN, GOSTERILMEYEN VERI
+
+TETIKLEYICI: Iktisatbank hazine bulteni (27 Agu) panel verileriyle
+karsilastirildi. Bultendeki her veri noktasi tek tek arandi.
+BULUNAN: TLREF panelde HIC GOSTERILMIYORDU — ama Fonlama Rejimi kartinin
+KENDI NOTU aylardir "TLREF'in politika faizine yakinsamasi (KARTTA CANLI)"
+diye izlenecekler arasinda gosteriyordu. Yani not bir satiri tarif ediyordu,
+o satir hicbir zaman EKLENMEMISTI. Seri EVDS'de zaten cekiliyordu
+(api/_lib/tlref.js + evds2 koprusu) — boru hatti DOLU, ekran BOS.
+DERS: KARTIN KENDI METNI BIR GOSTERGE VAAT EDIYORSA, O GOSTERGE VAR MI DIYE
+BAKILIR. Notlar kodu tarif eder ama kodu DOGRULAMAZ; ikisi ayrisabilir
+(§415'in metin ikizi: orada tarih iki yerde farkliydi, burada gosterge
+notta var ekranda yok).
+
+EKLENEN: "TLREF — piyasa gecelik (politika faizine makas)" satiri, AOFM'nin
+hemen altina. Deger + makas birlikte gosteriliyor, RENKLI:
+  makas <= -25bp YESIL (piyasa politika faizinin ALTINDA fonlaniyor —
+    bolluk / ortulu gevseme) · >= +25bp KIRMIZI (sikisiklik) · arasi NOTR.
+OKUMA: TLREF piyasanin FIILI gecelik maliyeti, politika faizi TCMB'nin
+ILAN ETTIGI. Makas rejimin gercek yerini soyler. 23 Agu'da haftalik repo
+yeniden acilinca TLREF politika faizine yakinsadi: 25 Agu %36,90, makas
+-10bp (bulten 27 Agu icin %36,84 = -16bp diyor, bir gunluk farkla tutarli).
+Mart-Agustos arasi ortulu SIKILASMA doneminde bu makas ARTI tarafta ve
+genisti; simdi kapandi — kartin "ortulu indirim" tezi ekranda OLCULEBILIR
+hale geldi.
+
+## SERI KODU KAZASI — CANLI OLCUMLE YAKALANDI
+Ilk yazimda TP.BISTTLREF.KAPANIS kullanildi. Yamayi gondermeden once canli
+denendi: o seri ENDEKS dondurüyor (6600,1326), faiz DEGIL. Kartta
+"%6600,13 (+656313bp)" yazacakti — gulunc ama SESSIZ olmayan bir hata
+(sayi absurt oldugu icin fark edilirdi; asil tehlike absurt OLMAYANLAR).
+DOGRUSU: TP.BISTTLREF.ORAN → %36,9008 (25 Agu). Grup taramasiyla teyit:
+bie_bisttlref grubu da .ORAN'a cozuyor.
+DERS: SERI KODU HATIRLANMAZ, CAGRILIP DONEN DEGER OKUNUR (§116). Ad mantikli
+gorunmesi degerin dogru oldugunu GOSTERMEZ.
+
+## BULTEN KARSILASTIRMASI — panelde OLMAYAN kalan iki kalem (acik)
+  - Gosterge tahvil (2Y bilesik): bulten "%40'in hemen altini test etti,
+    dort ay sonra ilk kez" diyor. Panelde getiri egrisi VAR (9 sukuk + 8
+    DIBS) ve 2Y noktasi egrinin ICINDE — ama tek satirlik gosterge YOK.
+  - ABD 30Y tahvil faizi (%5,17): panelde ABD 10Y var (%4,71), 30Y yok.
+  - Brent: risk barometresinde geciyor ama Commodity tablosunda WTI
+    listeleniyor (81,42), Brent degeri gorunmuyor. Turkiye icin Brent daha
+    alakali (ithalat fiyatlamasi Brent uzerinden).
+  - UYUSMAZLIK NOTU: gram altin panel 7.116 TL / bulten 7.150 TL; ons altin
+    panel basligi 4.598 · Commodity tablosu 4.659 · bulten 4.630. UC AYRI
+    YERDE UC FARKLI ONS DEGERI — zaman damgasi farki olabilir ama tek
+    gercek icin tek sayi kurali (§112) geregi INCELENMELI.
+
 # BAKIM EK — §419 (26 Agu 2026)
 
 ## §419 PLATTS UCU EMEKLIYE AYRILDI — KOTA 12/12 → 11/12

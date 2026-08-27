@@ -583,3 +583,15 @@ TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
 - Workflow: push reddedilirse rebase + yeniden dene (§418).
 - API kotasi: 12/12 → 11/12 — platts kaldirildi, BIR SLOT ACIK.
 
+## §420 (27 Agu 2026)
+### GUNCELLENEN
+- Fonlama Rejimi karti: TLREF canli + politika faizine MAKAS (renkli).
+- Panel surumu 20260825a -> 20260827a.
+### ALTIN KURALLARA EKLER
+- KARTIN KENDI METNI BIR GOSTERGE VAAT EDIYORSA, O GOSTERGE VAR MI DIYE BAKILIR
+  (not kodu tarif eder, DOGRULAMAZ).
+- SERI KODU HATIRLANMAZ, CAGRILIP DONEN DEGER OKUNUR — ad mantikli gorunmesi
+  degerin dogru oldugunu gostermez (.KAPANIS endeks, .ORAN faiz).
+### ACIK
+- Gosterge 2Y · ABD 30Y · Brent satiri · uc yerde farkli ons altin degeri.
+

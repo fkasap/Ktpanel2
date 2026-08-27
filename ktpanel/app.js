@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260825a';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
+const KTP_SURUM = '20260827a';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9507,6 +9507,27 @@ async function loadAOFM(){
   };
   await Promise.all([
     koy('aofmLive','TP.APIFON4',x=>{AOFM_SON=x;return '%'+trN(x,2);}),
+    /* §420 TLREF FONLAMA REJİMİ KARTINDA: kartın kendi notu aylardır
+       "TLREF'in politika faizine yakınsaması (kartta canlı)" diye İZLENECEK
+       gösteriyordu ama satır HİÇ EKLENMEMİŞTİ — söz verilen, gösterilmeyen
+       veri. Seri EVDS'de zaten çekiliyordu (TP.BISTTLREF.KAPANIS), boru
+       hattı doluydu, ekrana çıkmıyordu.
+       MAKAS ANLAMI: TLREF piyasanın fiilî gecelik maliyeti, politika faizi
+       TCMB'nin ilan ettiği. Makas EKSİ ise piyasa politika faizinin ALTINDA
+       fonlanıyor (bolluk/örtülü gevşeme), ARTI ise üstünde (sıkışıklık).
+       23 Ağu'da haftalık repo yeniden açılınca TLREF politika faizine
+       yakınsadı — 27 Ağu bülteni %36,84 diyor, politika %37: −16bp. */
+    /* SERİ KODU CANLI ÖLÇÜLDÜ (§116): ilk yazımda TP.BISTTLREF.KAPANIS
+       kullanılmıştı — o seri ENDEKS döndürüyor (6600,13), faiz değil;
+       kartta "%6600 (+656313bp)" yazacaktı. Doğrusu .ORAN: %36,90 (25 Ağu),
+       27 Ağu bülteninin %36,84'üyle bir günlük farkla tutarlı.
+       DERS: seri kodu HATIRLANMAZ, çağrılıp DÖNEN DEĞER OKUNUR. */
+    koy('tlrefLive','TP.BISTTLREF.ORAN',x=>{
+      const POL = (typeof POLITIKA_FAIZ!=='undefined' && POLITIKA_FAIZ) ? POLITIKA_FAIZ : 37.00;
+      const bp=Math.round((x-POL)*100);
+      const renk = bp<=-25 ? 'var(--up)' : (bp>=25 ? 'var(--down)' : 'var(--mm2)');
+      return '%'+trN(x,2)+' <span style="color:'+renk+';font-weight:600">('+(bp>0?'+':'')+bp+'bp)</span>';
+    }),
     koy('fonMiktar','TP.APIFON3',x=>trN(x/1000,1)+(x<0?' <span class="thin" style="font-size:9px">(net çekiş)</span>':'')),
     koyGrup('rekLive','bie_rktufey','',x=>{REK_SON=x;return trN(x,1);}),
     koyGrup('rezervLive','bie_abres2','Toplam',x=>trN(x/1000,1))
