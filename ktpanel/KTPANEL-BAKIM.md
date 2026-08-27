@@ -56,6 +56,39 @@ Beklenen: kart govdesi 5-7 bolumlu yeni yorumla dolar, ETIKET "24–30 AGU ·
 cikar. Pazartesi sabahlari otomatik yenilenir (hafta kimligi kontrolu
 §246b'de zaten dogru).
 
+# BAKIM EK — §424c (27 Agu 2026, aksam)
+
+## §424c "cekirdek is not defined" — TANIM KAYBOLDU, KULLANIM KALDI
+
+BELIRTI: buton basiliyor, panoda "Haftalik yorum yaziliyor…" cikiyor,
+SONRASI HIC YOK. Kullanici: "degismedi bu?"
+TESHIS: tarayicida unhandledrejection dinleyicisi kuruldu ve tiklandi:
+    REJ: cekirdek is not defined
+KOK NEDEN: §422b'de eklenen `cekirdek` TANIMI, sonraki turda repo
+geri alinirken (git checkout) KAYBOLDU; ama onu KULLANAN iki yer
+(prompt (A) bolumu + taktik cagrisi) yamayla geri gelmisti. Tanimsiz
+degiskene erisim → REDDEDILEN PROMISE → hata SESSIZ (async fonksiyonun
+reddi yakalanmiyordu, pano yalnizca "yaziliyor…" gosteriyordu).
+node --check TEMIZ diyordu — cunku sozdizimi gecerli; eksik olan
+CALISMA ZAMANI tanimiydi.
+COZUM: cekirdek tanimi haftalikYorumYaz icine geri kondu; uc kullanim
+noktasinin da AYNI KAPSAMDA oldugu programatik dogrulandi.
+
+DERS-1: TANIM ILE KULLANIM AYRI YAMALARDA GELIYORSA IKISI DE DOGRULANIR.
+"Sozdizimi temiz" tanimin VAR oldugunu GOSTERMEZ (§420'nin kardesi: orada
+seri kodu yanlisti, burada degisken hic yok).
+DERS-2: ASYNC REDDI SESSIZDIR. Bu hafta DORDUNCU sessiz ariza sinifi:
+sessiz catch (§410c) · olmayan hedef eleman (§422) · loglanmayan zaman
+asimi (§424) · simdi yakalanmayan promise reddi.
+YAPILACAK (acik): ajan.js'e genel bir unhandledrejection dinleyicisi
+konsun ve kayit() ile panoya dussun — bir daha ayni korlukte kalmayalim.
+
+## NOT — "VARLIK SINIFI KARTININ ALTINA YENI KART" MESELESI
+Canli DOM sayimi: "Yukaridaki sentezin pozisyon karsiligi…" notu panelde
+BIR KEZ geciyor (sentezNotuSayisi=1). Bu blok index.html'de FABRIKA
+icerigidir (taktikBody2'nin hemen altindaki <div class="note">), yeni
+eklenmedi ve kopyalanmadi. Gorunurlugu artmis olabilir ama yeni kart YOK.
+
 # BAKIM EK — §424 (27 Agu 2026, aksam)
 
 ## §424 HAFTALIK YORUM YAZILMIYORDU: SUNUCU 25 SN'DE KESIYOR

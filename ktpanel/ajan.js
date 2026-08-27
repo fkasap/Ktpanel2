@@ -1197,6 +1197,22 @@ async function haftalikYorumYaz(zorla, kip){
   }
   kayit('Haftalık yorum yazılıyor (panel verilerinden)…');
   const ozet=kartKesfet().slice(0,26).map(K=>'• '+K.ad+': '+K.veri.slice(0,150)).join('\n');
+  /* §424c CEKIRDEK TANIMI GERI KONDU. §422b'de eklenmisti ama son turda repo
+     geri alinirken KAYBOLDU; kullanimi (taktik prompt'u) kaldi → calisma
+     zamaninda "cekirdek is not defined" ile REDDEDILEN PROMISE, hata SESSIZ
+     kaldi (pano yalnizca "yaziliyor..." gosterdi). Tarayicidan
+     unhandledrejection dinleyerek yakalandi.
+     DERS: TANIM ILE KULLANIM AYRI YAMALARDA GELIYORSA IKISI DE DOGRULANIR —
+     "sozdizimi temiz" tanimin VAR oldugunu gostermez. */
+  const cekEl=(id)=>{ const e=$(id); return e?(e.textContent||'').replace(/\s+/g,' ').trim():null; };
+  const cekirdek=[
+    ['Politika faizi / AOFM', cekEl('aofmLive')],
+    ['TLREF (politika faizine makas)', cekEl('tlrefLive')],
+    ['Gosterge tahvil 2Y', cekEl('gosterge2y')],
+    ['ABD 10Y', cekEl('us10y')], ['ABD 30Y (egim)', cekEl('us30y')],
+    ['TR 5Y CDS', cekEl('glbCds')], ['VIX', cekEl('vixV')],
+    ['DXY', cekEl('dxyV')], ['Brent', cekEl('brentV')]
+  ].filter(x=>x[1]&&x[1].length>1).map(x=>'• '+x[0]+': '+x[1]).join('\n');
   const mevcut=(ym.textContent||'').replace(/\s+/g,' ').trim().slice(0,2200);
   const prompt='Sen KTPanel\u0027in baş stratejistisin. Görevin: paneldeki CANLI verilerden haftalık portföy-yönetimi yorumu yazmak. '+
     'Aşağıda (A) panelin şu anki canlı kart özetleri, (B) örnek yapı olarak mevcut haftalık yorum var. '+
