@@ -8,14 +8,14 @@
    §92 (üç kart birden boşaldı), §95-97 (ECB kesintisi), §101 (alan adı uyuşmazlığı)
    — dördü de kullanıcı gözüyle yakalandı, sistemle değil. Bu dosya o boşluğu kapatır.
 
-   §417 GÜNCELLEME (25 Agu 2026): iki yeni uç eklendi (edgar · platts) ve
+   §417 GÜNCELLEME (25 Agu 2026): edgar ucu eklendi ve
      katfon SINIFLANDIRMASI düzeltildi.
      · katfon kritik:true idi ve ok:false görünce KIRMIZI yakıyordu — oysa
        ok:false BEKLENEN durum (canlı çekim §147-148'de bilerek kapatıldı,
        panel katfon.json'dan besleniyor). ARTIK kapali:true → bilgi sayılıyor.
-     · platts CANLI TARAMADA BOZUK BULUNDU: HTTP 502, "SPG_KEY doğrudan Bearer
-       kabul edilmedi — token akışı (client credentials) gerekebilir". Testte
-       olmadığı için SESSİZCE bozulmuştu. Panelde kullanılmıyor, kritik değil.
+     · platts CANLI TARAMADA BOZUK BULUNDU (HTTP 502, S&P kimlik akışı
+       değişmiş) ve §419'da UÇ TAMAMEN KALDIRILDI — panelde 0 referansı vardı
+       ve amacı olan BDI'yı zaten veremezdi (BDI Baltic Exchange'in).
      · edgar (ABD bilanço, §398) da testin dışındaydı.
      DERS: YENİ UÇ AÇILDIĞINDA TESTE DE EKLENİR — eklenmeyen uç, izlenmeyen uçtur.
 
@@ -255,15 +255,6 @@ const UCLAR = [
          gelirse gelsin, en az bir dolu alan bekliyoruz */
       const dolu = K.filter(k=>d[k]!=null && !['surum','ok'].includes(k));
       if(!dolu.length) return 'yalnız surum/ok döndü — veri alanı yok';
-      return true; } },
-
-  /* platts KEŞİF ucudur: panelde HİÇBİR YERDE kullanılmıyor (app.js/ajan.js/
-     tazele.mjs = 0 referans), S&P abonelik kapsamını ölçmek için yazıldı.
-     kritik:false ve bozuk olması paneli etkilemez — ama testte GÖRÜNSÜN ki
-     bir gün kullanılmak istendiğinde durumu bilinsin. */
-  { ad:'platts · S&P (keşif ucu)', yol:'/api/platts', kritik:false, dogrula:d=>{
-      if(d.hata) return 'HTTP hata: '+String(d.hata)+' · '+String(d.tani||'').slice(0,70);
-      if(d.error) return String(d.error).slice(0,70);
       return true; } },
 
   /* §286f TR 5Y CDS (§253). Dokuz kaynak denendikten sonra worldgovernmentbonds
