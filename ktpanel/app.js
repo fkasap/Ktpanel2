@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260827g';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
+const KTP_SURUM = '20260827h';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7945,12 +7945,21 @@ function taktikRender(){
     if(AT&&AT.v&&typeof AT.v==='object'){
       varliklar.forEach(v=>{
         const y=AT.v[v.kod]; if(!y) return;
+        /* §425b ŞABLON KORUMASI — kartın BİÇİMİ paneldedir, ajan yalnız İÇERİK
+           yazar. Yine de uzun metin düzeni bozabilir; sert sınırlar burada:
+           tez ≤600 krkt · madde ≤120 krkt · en fazla 4 madde (kart iki sütun,
+           4 satır tasarlandı). Ajan daha uzun yazarsa KIRPILIR, kart bozulmaz.
+           Duruş sözlüğü zaten ajan.js'te denetleniyor; renk buradan TÜRETİLİR
+           (ajan renk gönderemez). Sınıf adı, benchmark, sütun başlıkları,
+           TETİK satırı FABRİKADAN gelir — ajan bunlara DOKUNAMAZ. */
+        const kirp=(s,n)=>{ s=String(s||'').replace(/<[^>]*>/g,'').trim();
+          return s.length>n ? s.slice(0,n-1).replace(/\s+\S*$/,'')+'…' : s; };
         if(y.durus){ v.durus=y.durus;
           v.renk = /AŞIRI ÜSTÜ|ÜSTÜ/.test(y.durus)?'#0FA26B':(/ALTI/.test(y.durus)?'#D64545':'#8896A5'); }
-        if(y.teze) v.teze=y.teze;
-        if(Array.isArray(y.dayanak)&&y.dayanak.length) v.dayanak=y.dayanak.slice(0,5);
-        if(Array.isArray(y.risk)&&y.risk.length) v.risk=y.risk.slice(0,5);
-        if(y.tetik) v.tetik=y.tetik;
+        if(y.teze) v.teze=kirp(y.teze,600);
+        if(Array.isArray(y.dayanak)&&y.dayanak.length) v.dayanak=y.dayanak.slice(0,4).map(x=>kirp(x,120)).filter(Boolean);
+        if(Array.isArray(y.risk)&&y.risk.length) v.risk=y.risk.slice(0,4).map(x=>kirp(x,120)).filter(Boolean);
+        if(y.tetik) v.tetik=kirp(y.tetik,220);
         v._ajan=true;
       });
       const tg2=$('taktikTag2');
