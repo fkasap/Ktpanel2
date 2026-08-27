@@ -56,6 +56,65 @@ Beklenen: kart govdesi 5-7 bolumlu yeni yorumla dolar, ETIKET "24–30 AGU ·
 cikar. Pazartesi sabahlari otomatik yenilenir (hafta kimligi kontrolu
 §246b'de zaten dogru).
 
+# BAKIM EK — §422-§423 (27 Agu 2026)
+
+## §423 TAKTIKSEL DURUS DINAMIKLESTI + AYLIK KIP
+
+ISTEK: "Haftalik Arastirma Notu'nu Ebu paneldeki TUM verilerden haftalik VE
+aylik doldursun; haftalik yoruma gore Varlik Sinifi Taktiksel Durusu da
+guncellensin — kartlar dinamik olsun."
+
+### §423 AJAN TAKTIK KATMANI (app.js)
+Taktiksel durus dizisi (varliklar[]) FABRIKA hali olarak KALDI; ustune
+localStorage'daki ajan_taktik BINDIRILIYOR. Bindirme alan alan: durus, teze,
+dayanak[], risk[], tetik. Renk durustan TURETILIYOR (USTU yesil / ALTI
+kirmizi / NOTR gri) — ajan renk uydurmaz.
+NEDEN JSON, NEDEN HTML DEGIL: kartin alanlari ZATEN yapisal. AI'dan HTML
+istemek §397'nin "ajan govdeyi ezdi" kazasini davet eder; JSON isteyip
+PANEL render ederse BICIM GARANTIDIR, yalniz ICERIK degisir.
+SOZLUK DENETIMI: durus yalniz {AŞIRI ÜSTÜ, ÜSTÜ, NÖTR, ALTI, AŞIRI ALTI}
+olabilir; sozluk disi deger gelen sinif ATILIR (fabrika durusu korunur).
+Birim test: 4 gecerli → 4 kabul · "POZİTİF" → atildi · bos → atildi.
+KAYNAK AYRIMI (§111): ajan yazdiysa baslikta "🤖 ajan" damgasi cikar —
+hangi durusun elle hangisinin ajan oldugu KARISMAZ.
+GERI DONUS: "⌫ taktigi sifirla" butonu ajan_taktik'i siler, fabrika geri gelir.
+
+### §423b AYLIK KIP
+haftalikYorumYaz(zorla, kip) — kip='ay' 4 haftalik pencereyi okur, etiketi
+"AĞUSTOS 2026 · AYLIK" yazar. AYRI KAYIT ANAHTARI: __AYLIK__ ve __HAFTALIK__
+birbirini EZMEZ; geri yuklemede EN YENI ts kazanir. Iki buton: "📝 haftalik"
+ve "🗓 aylik".
+
+### §423c TAKTIK TURETIMI — AYRI CAGRI
+Yorum yazildiktan SONRA ikinci bir AI cagrisi durusları JSON ister.
+UC SEBEP: (1) cikti JSON olmali, (2) tek cagrida ikisi de istenirse biri
+kisalir, (3) taktik basarisiz olsa bile YORUM DURUR.
+PROMPT DISIPLINI: "Kanitin yoksa durusu DEGISTIRME — sureklilik degerlidir"
+maddesi kondu; yoksa AI her hafta duruş değiştirip gurultu uretir.
+Her madde SOMUT olmali (rakam/kart adi icersin), 90 karakter siniri.
+
+## §422 HAFTALIK YAZICI: HEDEF ELEMAN HIC YOKTU
+SIKAYET: "Kartin ALTINA yaziyor ama ICINI guncellemiyor."
+KOK NEDEN: ajan.js DORT yerde $('yorumMetin') ariyordu; index.html'de bu id
+SIFIR kez geciyordu. haftalikYorumYaz'in ilk satiri `if(!ym) return;` —
+buton basiliyor, log dusuyor, AI CAGRILMIYOR bile. Yazici OLUYDU.
+"Altina yaziyor" gorunumu: komsu kartlara genel not motoru not dusuyordu.
+IKINCI KATMAN: kartta data-ebu="hayir" (§397'de BILEREK kondu — Ebu elle
+yazilan analizi eziyordu). Iki koruma ust uste binince yazici felc olmustu.
+COZUM: (a) id="yorumMetin" eklendi, data-ebu="hayir" KALDI (genel motor hala
+dokunmaz, yalniz ozel yazici yazar — kural korundu, kapsam daraltildi).
+(b) §422b CEKIRDEK GOSTERGE BESLEMESI: prompt (A) bolumunde AOFM · TLREF
+makasi · gosterge 2Y · ABD 10Y/30Y egimi · CDS · VIX · DXY · Brent ETIKETLI
+veriliyor ve "TEK TEK SAYMA, aralarindaki BAGI kur" deniyor — §421 bulten
+taramasinin dersi (bulten nedensel anlati kurar, liste degil).
+(c) §422c ETIKET DE YAZILIR: hafta araligi KODDAN (Pzt-Paz), baslik yorumun
+1. bolum basligindan. §397'nin "etiket yeni govde eski" celiskisi ARTIK
+OLUSAMAZ. Birim test: 27 Agu Per → "24–30 AGU" · 31 Agu Pzt → "31 Agu–6 EYL".
+UYGULAMA NOTU: capa dort kez tutmadi — "(A) CANLI VERILER" uzun BIRLESIK
+dizenin ORTASINDAYDI (basinda tirnak yok) + Turkce İ + \n kacisi. Cozum:
+dosyadan KONUM okuyup (find + offset) kesmek.
+DERS: UZUN DIZE ORTASINDA CAPA ARANMAZ — konum bazli kesim daha saglam.
+
 # BAKIM EK — §421 (27 Agu 2026)
 
 ## §421 HAZINE BULTENI HAFTALIK TARAMASI → IKI GOSTERGE EKLENDI

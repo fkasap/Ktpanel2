@@ -233,6 +233,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <button id="ajanYorumBtn" class="btn" style="font-size:10px">✎ şimdi yorumla</button>
     <button id="ajanSifirlaBtn" class="btn" style="font-size:10px">⌫ notları sıfırla</button>
     <button id="ajanHaftalikBtn" class="btn" style="font-size:10px">📝 haftalık yorumu yaz</button>
+    <!-- §423 aylık kip: aynı yazıcı, kip='ay' — 4 haftalık pencere, ay odaklı başlıklar,
+         AYRI kayıt (__AYLIK__), haftalığı EZMEZ. Taktik duruş ikisinde de türetilir. -->
+    <button id="ajanAylikBtn" class="btn" style="font-size:10px">🗓 aylık yorumu yaz</button>
+    <button id="ajanTaktikSifirla" class="btn" style="font-size:10px" title="taktiksel duruşu fabrika hâline döndür">⌫ taktiği sıfırla</button>
     <input id="ajanKey" type="password" placeholder="Yerel anahtar (opsiyonel — Vercel ANTHROPIC_API_KEY varsa gerek yok)" style="flex:1;min-width:200px;font-size:10px;padding:5px 8px;border:1px solid var(--line);border-radius:6px">
     <button id="ajanKeyBtn" class="btn" style="font-size:10px">kaydet</button>
   </div>
@@ -1814,8 +1818,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260827c"></script>
-<script src="/ajan.js?v=20260827c"></script>
+<script src="/app.js?v=20260827d"></script>
+<script src="/ajan.js?v=20260827d"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

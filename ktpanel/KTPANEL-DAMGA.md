@@ -616,3 +616,18 @@ TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
   buton calisiyor gorunur, log duser, hicbir sey olmaz (§422).
 - UZUN DIZE ORTASINDA CAPA ARANMAZ — konum bazli kesim daha saglam.
 
+## §422-§423 (27 Agu 2026)
+### GUNCELLENEN
+- Haftalik Arastirma Notu: yazici CANLANDI (hedef id yoktu), cekirdek gosterge
+  beslemesi, etiket govdeyle birlikte yenileniyor.
+- AYLIK KIP eklendi (🗓 aylik yorumu yaz) — ayri kayit, haftaligi ezmez.
+- Taktiksel Durus: ajan JSON bindirmesi (fabrika korunur, ⌫ ile geri alinir),
+  "🤖 ajan" damgasi, sozluk disi durus ATILIR.
+- Panel surumu 20260827b -> 20260827d.
+### ALTIN KURALLARA EKLER
+- BIR FONKSIYON "return" ILE SESSIZCE CIKIYORSA HEDEFI VAR MI DIYE BAKILIR.
+- UZUN DIZE ORTASINDA CAPA ARANMAZ — konum bazli kesim.
+- AI'DAN BICIM DEGIL ICERIK ISTE: yapisal kart icin JSON iste, HTML degil —
+  bicim garantisi panelde kalir (§423).
+- AI'A "KANITIN YOKSA DEGISTIRME" DENIR — yoksa her tur gurultu uretir.
+

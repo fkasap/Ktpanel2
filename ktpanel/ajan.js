@@ -830,8 +830,12 @@ function hizliGeriYukle(){
     kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
-    if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html;
-      if(k.__HAFTALIK__.etiket&&$('yorumHafta')) $('yorumHafta').textContent=k.__HAFTALIK__.etiket;   /* §422c */
+    /* §423d EN YENİ KAYIT KAZANIR: haftalık ve aylık AYRI anahtarlarda tutulur;
+       geri yüklemede hangisi daha yeniyse o basılır (ikisi de ⌫ ile korunur). */
+    const HK=k.__HAFTALIK__, AK=k.__AYLIK__;
+    const secili = (AK&&HK) ? ((AK.ts||0)>(HK.ts||0)?AK:HK) : (AK||HK);
+    if(ym&&secili&&secili.html){ ym.innerHTML=secili.html;
+      if(secili.etiket&&$('yorumHafta')) $('yorumHafta').textContent=secili.etiket;   /* §422c */
       n++; }
     if(k.__GUNDEM__&&k.__GUNDEM__.html&&$('ajanNot')){
       $('ajanNot').innerHTML='<div style="font-size:12px;line-height:1.6">'+k.__GUNDEM__.html.replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div>'+
@@ -859,8 +863,12 @@ async function notlariGeriYukle(){
     kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
-    if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html;
-      if(k.__HAFTALIK__.etiket&&$('yorumHafta')) $('yorumHafta').textContent=k.__HAFTALIK__.etiket;   /* §422c */
+    /* §423d EN YENİ KAYIT KAZANIR: haftalık ve aylık AYRI anahtarlarda tutulur;
+       geri yüklemede hangisi daha yeniyse o basılır (ikisi de ⌫ ile korunur). */
+    const HK=k.__HAFTALIK__, AK=k.__AYLIK__;
+    const secili = (AK&&HK) ? ((AK.ts||0)>(HK.ts||0)?AK:HK) : (AK||HK);
+    if(ym&&secili&&secili.html){ ym.innerHTML=secili.html;
+      if(secili.etiket&&$('yorumHafta')) $('yorumHafta').textContent=secili.etiket;   /* §422c */
       n++; }
     const bugun=bugunStr();
     Object.keys(k).forEach(anah=>{
@@ -1151,10 +1159,16 @@ async function _notMotoru(){
 }
 
 /* ═══ HAFTALIK YORUM GÖREVİ — mk-yorum sayfasını panel verileriyle yazar ═══ */
-async function haftalikYorumYaz(zorla){
+async function haftalikYorumYaz(zorla, kip){
+  /* §423b KİP: 'hafta' (varsayılan) | 'ay'. Aylık kip 4 haftalık pencereyi
+     okur, bölüm başlıklarını AY odaklı ister ve etiketi "AĞUSTOS 2026 ·
+     AYLIK" yazar. İkisi AYNI kayıt anahtarını kullanmaz: __HAFTALIK__ ve
+     __AYLIK__ ayrı — biri diğerini ezmez, ikisi de ⌫ ile geri alınabilir. */
+  const AYLIK = (kip==='ay');
   const ym=$('yorumMetin'); if(!ym) return;
   let kayitli={}; try{ kayitli=JSON.parse(localStorage.getItem('ajan_notlar')||'{}'); }catch(e){}
-  const son=kayitli.__HAFTALIK__;
+  const ANAH = AYLIK ? '__AYLIK__' : '__HAFTALIK__';
+  const son=kayitli[ANAH];
   if(!zorla){
     /* §246b PAZARTESİ TETİĞİ DÜZELTİLDİ. Eski şart: 'son yazımdan 5+ gün
        geçtiyse'. FOMC/olay sonrası hafta İÇİ elle tazeleme yapılınca (Çar/Per)
@@ -1192,10 +1206,49 @@ async function haftalikYorumYaz(zorla){
   const paz422=new Date(pzt422); paz422.setDate(pzt422.getDate()+6);
   const ayniAy=pzt422.getMonth()===paz422.getMonth();
   const arali=pzt422.getDate()+(ayniAy?'':' '+AY422[pzt422.getMonth()])+'–'+paz422.getDate()+' '+AY422[paz422.getMonth()].toUpperCase();
+  const AYADI=['OCAK','ŞUBAT','MART','NİSAN','MAYIS','HAZİRAN','TEMMUZ','AĞUSTOS','EYLÜL','EKİM','KASIM','ARALIK'];
+  const bandi = AYLIK ? (AYADI[bug422.getMonth()]+' '+bug422.getFullYear()+' · AYLIK') : arali;
   const yh=$('yorumHafta');
   if(yh){ const bas=(html.match(/<b[^>]*>\s*1\s*·\s*([^<]{4,60})/i)||[])[1];
-    yh.textContent=arali+(bas?' · '+bas.trim().toUpperCase().slice(0,34):''); }
-  kayitli.__HAFTALIK__={ html:ym.innerHTML, etiket:(yh?yh.textContent:''), ts:Date.now(), saat:saat() };
+    yh.textContent=bandi+(bas?' · '+bas.trim().toUpperCase().slice(0,34):''); }
+  kayitli[ANAH]={ html:ym.innerHTML, etiket:(yh?yh.textContent:''), kip:(AYLIK?'ay':'hafta'), ts:Date.now(), saat:saat() };
+
+  /* ══ §423c TAKTİK DURUŞ TÜRETİMİ ══ Yorum yazıldıktan SONRA, AYNI verilerle
+     dört varlık sınıfının duruşu istenir. Ayrı çağrı çünkü: (1) çıktı JSON
+     olmalı (kart yapısal), (2) yorum uzun — tek çağrıda ikisi de istenirse
+     biri kısalır, (3) taktik başarısız olsa bile yorum DURUR.
+     ÇIKTI SÖZLEŞMESİ: {poz1..poz4:{durus,teze,dayanak[],risk[],tetik}}
+     Panel bunu fabrika dizisinin ÜSTÜNE bindirir (§423). */
+  try{
+    const tp='Sen bir çok varlıklı fon yöneticisisin. Aşağıdaki haftalık/aylık sentez ve canlı '+
+      'göstergelerden hareketle DÖRT varlık sınıfının TAKTİKSEL DURUŞUNU belirle.\n\n'+
+      'SENTEZ:\n'+(ym.textContent||'').slice(0,2600)+'\n\nÇEKİRDEK GÖSTERGELER:\n'+cekirdek+'\n\n'+
+      'SINIFLAR: poz1=Yerli Hisse (BIST, vs XKTUM/XK100) · poz2=Yabancı Hisse (vs S&P500/MSCI) · '+
+      'poz3=Altın · poz4=TL/Sabit Getirili\n\n'+
+      'KURALLAR: durus yalnız şunlardan biri: "AŞIRI ÜSTÜ","ÜSTÜ","NÖTR","ALTI","AŞIRI ALTI". '+
+      'teze 2-4 cümle, DEĞİŞTİYSE "X→Y" diye başla ve SEBEBİNİ yaz. dayanak ve risk 3-4 madde, '+
+      'her madde SOMUT (rakam/kart adı içersin), 90 karakteri geçme. tetik: duruşu değiştirecek '+
+      'GÖZLENEBİLİR olay, tek cümle. Kanıtın yoksa duruşu DEĞİŞTİRME — süreklilik değerlidir.\n'+
+      'YALNIZCA JSON döndür, başka hiçbir şey yazma:\n'+
+      '{"poz1":{"durus":"","teze":"","dayanak":[],"risk":[],"tetik":""},"poz2":{...},"poz3":{...},"poz4":{...}}';
+    const tm=await aiCagir(tp, 1600);
+    if(tm){
+      const jm=tm.match(/\{[\s\S]*\}/);
+      if(jm){
+        const v=JSON.parse(jm[0]);
+        const gecerli=['AŞIRI ÜSTÜ','ÜSTÜ','NÖTR','ALTI','AŞIRI ALTI'];
+        let n=0;
+        Object.keys(v).forEach(k=>{ const o=v[k];
+          if(!o||!gecerli.includes(String(o.durus||'').trim())){ delete v[k]; return; }  /* sözlük dışı duruş ATILIR */
+          o.durus=String(o.durus).trim(); n++; });
+        if(n){
+          localStorage.setItem('ajan_taktik', JSON.stringify({v, etiket:(yh?yh.textContent:bandi), ts:Date.now()}));
+          if(typeof taktikRender==='function') taktikRender();
+          kayit('Taktiksel duruş güncellendi ('+n+'/4 sınıf · 🤖 ajan)');
+        } else kayit('Taktik: geçerli duruş dönmedi — fabrika duruşu korundu');
+      }
+    }
+  }catch(e){ kayit('Taktik türetimi atlandı: '+String(e.message||e).slice(0,50)); }
   notKaydet(kayitli);
   kayit('Haftalık yorum panel verilerinden yeniden yazıldı 🤖');
 }
@@ -1390,7 +1443,14 @@ function basla(){
   const b1=$('ajanTurBtn'); if(b1) b1.addEventListener('click',()=>veriTuru());
   const b2=$('ajanYorumBtn'); if(b2) b2.addEventListener('click',()=>yorumTuru(true));
   const b3=$('ajanSifirlaBtn'); if(b3) b3.addEventListener('click',notlariSifirla);
-  const b4=$('ajanHaftalikBtn'); if(b4) b4.addEventListener('click',()=>haftalikYorumYaz(true));
+  const b4=$('ajanHaftalikBtn'); if(b4) b4.addEventListener('click',()=>haftalikYorumYaz(true,'hafta'));
+  /* §423 aylık kip + taktik sıfırlama */
+  const b5=$('ajanAylikBtn'); if(b5) b5.addEventListener('click',()=>haftalikYorumYaz(true,'ay'));
+  const b6=$('ajanTaktikSifirla'); if(b6) b6.addEventListener('click',()=>{
+    try{ localStorage.removeItem('ajan_taktik'); }catch(e){}
+    if(typeof taktikRender==='function') taktikRender();
+    kayit('Taktiksel duruş FABRİKA hâline döndürüldü (ajan bindirmesi silindi)');
+  });
   setTimeout(()=>haftalikYorumYaz(false), 40000);
   setTimeout(notlariGeriYukle, 400);
   setTimeout(hizliGeriYukle, 9000);   // canlılar dolduktan sonra ikinci geçiş — geç kalan hiçbir kart kalmasın

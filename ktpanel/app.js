@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260827c';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
+const KTP_SURUM = '20260827d';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -7929,10 +7929,40 @@ function taktikRender(){
   ];
 ;
 
+  /* ══ §423 AJAN TAKTİK KATMANI ══ Bu dizi FABRİKA hâlidir (elle yazıldı,
+     ölçümlere dayanır). Ajan haftalık/aylık yorumu yazdığında duruşları da
+     GÜNCELLEYEBİLİR: ajan_taktik anahtarında {kod:{durus,teze,dayanak[],
+     risk[],tetik,ts}} tutulur, fabrika üstüne BİNDİRİLİR.
+     NEDEN JSON, NEDEN HTML DEĞİL: kartın alanları zaten yapısal (duruş,
+     tez, dayanak[4], risk[4], tetik). AI'dan HTML istemek §397'nin
+     "ajan gövdeyi ezdi" kazasını davet eder; JSON isteyip PANEL render
+     ederse biçim garantidir, yalnız İÇERİK değişir.
+     GERİ DÖNÜŞ: ajan_taktik silinince fabrika duruşu geri gelir (⌫).
+     ROZET: ajan yazdıysa başlıkta "🤖 ajan" damgası çıkar — hangi duruşun
+     elle hangisinin ajan olduğu KARIŞMAZ (§111 kaynak ayrımı). */
+  try{
+    const AT=JSON.parse(localStorage.getItem('ajan_taktik')||'null');
+    if(AT&&AT.v&&typeof AT.v==='object'){
+      varliklar.forEach(v=>{
+        const y=AT.v[v.kod]; if(!y) return;
+        if(y.durus){ v.durus=y.durus;
+          v.renk = /AŞIRI ÜSTÜ|ÜSTÜ/.test(y.durus)?'#0FA26B':(/ALTI/.test(y.durus)?'#D64545':'#8896A5'); }
+        if(y.teze) v.teze=y.teze;
+        if(Array.isArray(y.dayanak)&&y.dayanak.length) v.dayanak=y.dayanak.slice(0,5);
+        if(Array.isArray(y.risk)&&y.risk.length) v.risk=y.risk.slice(0,5);
+        if(y.tetik) v.tetik=y.tetik;
+        v._ajan=true;
+      });
+      const tg2=$('taktikTag2');
+      if(tg2&&AT.etiket) tg2.textContent=AT.etiket;
+    }
+  }catch(e){}
+
   const html=varliklar.map(v=>
     '<div style="border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:10px;border-left:3px solid '+v.renk+'">'+
     '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px">'+
-      '<span style="font-weight:700;font-size:13px">'+v.ad+' <span class="sub" style="font-weight:400;font-size:9px">vs '+v.benchmark+'</span></span>'+
+      '<span style="font-weight:700;font-size:13px">'+v.ad+' <span class="sub" style="font-weight:400;font-size:9px">vs '+v.benchmark+'</span>'+
+        (v._ajan?' <span class="sub" style="font-weight:400;font-size:9px;color:var(--mm2)">🤖 ajan</span>':'')+'</span>'+
       rozet(v.durus)+
     '</div>'+
     '<div class="sub" style="font-size:10.5px;line-height:1.55;margin-bottom:7px">'+v.teze+'</div>'+
