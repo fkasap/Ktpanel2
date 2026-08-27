@@ -796,12 +796,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="card" data-ebu="hayir">
   <div class="lbl">TAKTİKSEL DAĞILIM <span class="tag" id="taktikTag2">24 AĞU · REPO REJİMİ DÖNDÜ</span></div>
   <div id="taktikBody2" style="margin-top:10px"></div>
-  <div class="note" style="margin-top:10px">Yukarıdaki sentezin <b>pozisyon karşılığı</b>: "ne oluyor" analizini "nasıl konumlanmalı" kararına çevirir. Her varlık sınıfı için benchmark'a göre ağırlık görüşü + dayanak + onu çürütecek tetik. Canlı sinyallere bağlı (carry, AOFM, TÜFE, REK, model alfa); bir kısmı otomatik ayarlanır.<br><br>
-    <b style="color:var(--ink)">Bu hafta iki duruş DEĞİŞTİ, sebebi aynı: repo rejimi.</b><br>
-    <b>TL / sabit getiri: ÜSTÜ → NÖTR.</b> Aylardır dayanak "carry cazip + fonlama koridor tavanında" idi. 23 Ağustos'ta haftalık repo yeniden açıldı; AOFM ~300bp düşecek ve <b>carry'nin kaynağı zayıflıyor.</b> Politika faizi %37'de sabit ama fiili getiri geriliyor — pozisyonun dayanağı ortadan kalkmasa da inceldi. <em>Çürütücü tetik:</em> TLREF politika faizine inmez ya da TCMB koridoru daraltırsa duruş yeniden ÜSTÜ'ye döner.<br>
-    <b>Altın: NÖTR → NÖTR/ÜSTÜ eğilimli.</b> İki yeni dayanak: yastık altı tebliğinin kaldırılması fiziki altını piyasa araçlarına itebilir; ve TL reel faizinin örtülü olarak düşmesi altının fırsat maliyetini azaltır. Panelin eski "yüksek küresel reel faiz tavan koyar" tezi fiyat tarafından zaten çürütülmüştü. <em>Çürütücü tetik:</em> Fed Eylül'de indirim yapmaz ve dolar güçlenirse.<br>
-    <b>Korunan duruşlar:</b> Yerli hisse <b>NÖTR</b> — repo rejimi kaldıraçlı şirketler lehine (FEK taramasında MERCN/ARDYZ/KONKA en çok rahatlayanlar) ama bilanço kuyruğunda 222 şirket var, seçicilik şart. Yabancı hisse <b>ALTI</b> — dayanak değişmedi. <b>GYO seçici ÜSTÜ:</b> sektör iskontosu −%48,4 ve faiz düşerse kapanma teması güçlenir; ZERGY (−%86,6, borçluluk %13,2) ve OZGYO (−%83,5, borçluluk %3) düşük kaldıraçla en iskontolular.<br><br>
-    <b>Haftanın sınavları:</b> TLREF'in yakınsaması (her gün) · para piyasası fonlarından çıkış olup olmadığı (PYŞ akış kartı) · hafta tam (24–28 Ağu), takvimde veri yok — fiyatlamayı repo rejimi sürükler. Sonraki büyük veri <b>3 Eylül TÜFE</b>, sonraki karar <b>10 Eylül PPK</b>. Yatırım tavsiyesi değildir.</div>
+  <!-- §425 STATİK SENTEZ NOTU KALDIRILDI (27 Agu, kullanıcı isteği).
+     Bu blok elle yazılmış düzyazıydı ve YUKARIDAKİ KARTLARIN SÖYLEDİĞİNİ
+     TEKRARLIYORDU ("TL/sabit getiri ÜSTÜ→NÖTR", "Altın NÖTR/ÜSTÜ eğilimli"
+     gibi). §423 ile kartlar DİNAMİK oldu: duruşlar ajanla değişiyor.
+     Statik metin kalsaydı kartlar dönerken bu paragraf ESKİ kalırdı —
+     aynı gerçek için iki farklı anlatı (§415/§422c ile aynı sınıf hata).
+     Tek gerçek tek yerde: duruşlar KARTLARDA. -->
 </div>
 </div>
 
@@ -1818,8 +1819,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260827f"></script>
-<script src="/ajan.js?v=20260827f"></script>
+<script src="/app.js?v=20260827g"></script>
+<script src="/ajan.js?v=20260827g"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
