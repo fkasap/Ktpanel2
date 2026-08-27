@@ -183,9 +183,12 @@ export const KURALLAR = {
      fonksiyonlari icerir — yabanci dosya hem Vercel slotu yakar (§7.3, 12
      sinir) hem surtuklenme riskidir (duzeltme yanlis kopyada yasar). */
   ikizDosya() {
-    /* platts.js: §251b mesru 11. fonksiyon (S&P koprusu) — kota 11/12, tek slot kaldi */
+    /* §419 platts.js KALDIRILDI (26 Agu): 0 referans (app/ajan/index/tazele
+       hicbiri cagirmiyordu) · HTTP 502, S&P kimlik akisi degismis · amaci olan
+       BDI'yi zaten VEREMEZDI (BDI Baltic Exchange'in, Platts'in degil).
+       Kota 12/12 -> 11/12: BIR SLOT ACILDI. Icerik git gecmisinde duruyor. */
     const API_BEYAZ = new Set(['ajanktp.js', 'bddk.js', 'data.js', 'evds2.js', 'kap.js', 'edgar.js',
-      'katfon.js', 'market.js', 'platts.js', 'tcmb.js', 'tefas.js', 'usnews.js']);
+      'katfon.js', 'market.js', 'tcmb.js', 'tefas.js', 'usnews.js']);
     const h = [];
     try { for (const f of readdirSync('.'))
       if (/\.(js|html)$/.test(f)) h.push('KOKTE KOD: ' + f); } catch (e) {}
