@@ -6,6 +6,56 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-25
 
 
+# BAKIM EK — §422 (27 Agu 2026)
+
+## §422 HAFTALIK YORUM YAZICISI: HEDEF ELEMAN HIC YOKTU
+
+SIKAYET: "Ebu haftalik yorum kartinin ALTINA yaziyor ama ICINI
+guncellemiyor. Bunu bir turlu beceremedik."
+KOK NEDEN (olculdu): ajan.js DORT yerde $('yorumMetin') ariyordu
+(haftalikYorumYaz + iki geri yukleme + bir dislama satiri), index.html'de
+bu id SIFIR kez geciyordu. haftalikYorumYaz'in ILK SATIRI:
+    const ym=$('yorumMetin'); if(!ym) return;
+Yani buton basiliyor, "Haftalik yorum yaziliyor..." logu dusuyor, AI
+CAGRILMIYOR bile — fonksiyon sessizce cikiyordu. Yazici OLUYDU.
+"Altina yaziyor" gorunumunun sebebi: komsu kartlara genel not motoru not
+dusuyordu; bu kartin GOVDESI elle yazilmis halde donuyordu.
+IKINCI KATMAN: kartta data-ebu="hayir" var (§397'de BILEREK konmus —
+Ebu elle yazilan analizi eziyordu). Iki koruma ust uste binince yazici
+tamamen felc olmustu: biri hedefi yok etti, digeri zaten dokunmuyordu.
+
+COZUM (uc parca):
+ a) Kart govdesine id="yorumMetin" verildi — hedef DOGDU.
+    data-ebu="hayir" KALDI: genel not motoru hala dokunmaz, yalniz OZEL
+    haftalik yazici yazar. §397'nin kurali korundu, KAPSAMI daraltildi.
+ b) §422b CEKIRDEK GOSTERGE BESLEMESI: prompt yalniz kart ozetlerini
+    veriyordu, cikti "su kart sunu diyor" listesine donuyordu. Hazine
+    bulteni taramasinin (§421) dersi: bulten NEDENSEL ANLATI kuruyor —
+    birkac cekirdek gosterge alip aralarindaki BAGI kuruyor. Artik prompt
+    (A) bolumunde AOFM · TLREF makasi · gosterge 2Y · ABD 10Y/30Y egimi ·
+    CDS · VIX · DXY · Brent ETIKETLI olarak veriliyor ve "TEK TEK SAYMA,
+    aralarindaki BAGI kur" deniyor. Kart ozetleri (A2)'ye indi.
+ c) §422c ETIKET DE YAZILIR: hafta araligi KODDAN hesaplaniyor (Pzt-Paz)
+    ve govdeyle BIRLIKTE yenileniyor; basligi da yorumun 1. bolum
+    basligindan turetiyor. §397'nin "etiket yeni, govde eski" celiskisi
+    artik OLUSAMAZ — ikisi tek yazimda degisir. Geri yuklemede de etiket
+    birlikte basiliyor (iki nokta).
+BIRIM TEST (hafta etiketi): 27 Agu Per → "24–30 AGU" · 31 Agu Pzt →
+"31 Agu–6 EYL" (ay gecisi dogru) · 30 Agu Paz → "24–30 AGU".
+
+UYGULAMA NOTU — DORT KEZ CAPA TUTMADI: prompt dizesindeki "(A) CANLI
+VERILER" bir uzun BIRLESIK dizenin ORTASINDAYDI (basinda tirnak yok);
+ayrica Turkce İ ve \n kacisi arama dizelerini bozdu. Cozum: dosyadan
+KONUM okuyup (find + offset) kesmek. DERS: uzun dize ortasinda capa
+aranmaz — konum bazli kesim daha saglam (§410c'nin kardesi).
+
+## SIRADAKI ADIM (kullanici testi)
+Panel yuklendikten sonra "📝 haftalik yorumu yaz" butonuna basilacak.
+Beklenen: kart govdesi 5-7 bolumlu yeni yorumla dolar, ETIKET "24–30 AGU ·
+<1. bolum basligi>" olur, altta "🤖 ajan tarafindan ... yazildi" imzasi
+cikar. Pazartesi sabahlari otomatik yenilenir (hafta kimligi kontrolu
+§246b'de zaten dogru).
+
 # BAKIM EK — §421 (27 Agu 2026)
 
 ## §421 HAZINE BULTENI HAFTALIK TARAMASI → IKI GOSTERGE EKLENDI

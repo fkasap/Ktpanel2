@@ -830,7 +830,9 @@ function hizliGeriYukle(){
     kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
-    if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html; n++; }
+    if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html;
+      if(k.__HAFTALIK__.etiket&&$('yorumHafta')) $('yorumHafta').textContent=k.__HAFTALIK__.etiket;   /* §422c */
+      n++; }
     if(k.__GUNDEM__&&k.__GUNDEM__.html&&$('ajanNot')){
       $('ajanNot').innerHTML='<div style="font-size:12px;line-height:1.6">'+k.__GUNDEM__.html.replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div>'+
         '<div class="sub" style="font-size:9px;margin-top:4px">🤖Ebu · son üretim</div>';
@@ -857,7 +859,9 @@ async function notlariGeriYukle(){
     kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
-    if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html; n++; }
+    if(ym&&k.__HAFTALIK__&&k.__HAFTALIK__.html){ ym.innerHTML=k.__HAFTALIK__.html;
+      if(k.__HAFTALIK__.etiket&&$('yorumHafta')) $('yorumHafta').textContent=k.__HAFTALIK__.etiket;   /* §422c */
+      n++; }
     const bugun=bugunStr();
     Object.keys(k).forEach(anah=>{
       if(!anah.startsWith('__GUN2_')) return;
@@ -1170,14 +1174,28 @@ async function haftalikYorumYaz(zorla){
   const prompt='Sen KTPanel\u0027in baş stratejistisin. Görevin: paneldeki CANLI verilerden haftalık portföy-yönetimi yorumu yazmak. '+
     'Aşağıda (A) panelin şu anki canlı kart özetleri, (B) örnek yapı olarak mevcut haftalık yorum var. '+
     'Yeni yorumu yaz: 5-7 numaralı bölüm (0\u0027dan başlayan başlıklar), her bölüm <div style="background:#F0F7F4;border-left:3px solid #177245;border-radius:0 6px 6px 0;padding:11px 13px;margin:0 0 14px"><b style="color:#177245;font-size:12px">N · BAŞLIK</b><br>metin</div> kalıbında; '+
-    'her bölümün sonunda <b>Portföy çevirisi:</b> cümlesi; rakamları SADECE canlı verilerden al, uydurma; multi-asset fon yöneticisi tonu; Türkçe; toplam 350-500 kelime — SON BÖLÜMÜ MUTLAKA TAMAMLA. YALNIZCA HTML döndür, başka hiçbir şey yazma.\n\n(A) CANLI VERİLER:\n'+ozet+'\n\n(B) MEVCUT YORUM (yapı örneği):\n'+mevcut;
+    'her bölümün sonunda <b>Portföy çevirisi:</b> cümlesi; rakamları SADECE canlı verilerden al, uydurma; multi-asset fon yöneticisi tonu; Türkçe; toplam 350-500 kelime — SON BÖLÜMÜ MUTLAKA TAMAMLA. YALNIZCA HTML döndür, başka hiçbir şey yazma.\n\n(A) ÇEKİRDEK GÖSTERGELER — haftanın omurgası; TEK TEK SAYMA, aralarındaki BAĞI kur:\n'+cekirdek+'\n\n(A2) PANEL KART ÖZETLERİ:\n'+ozet+'\n\n(B) MEVCUT YORUM (yapı örneği):\n'+mevcut;
   const metin=await aiCagir(prompt, 2300);
   if(!metin){ kayit('Haftalık yorum: AI erişilemedi'); return; }
   if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Haftalık yorum: yanıt kesildi — basılmadı'); return; }
   const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
   if(html.length<300){ kayit('Haftalık yorum: yanıt kısa, uygulanmadı'); return; }
   ym.innerHTML=temizle(html,true)+'<div class="sub" style="font-size:9px;margin-top:6px">🤖 ajan tarafından panel verilerinden yazıldı · '+saat()+' · ⌫ ile fabrika yorumuna dönülür</div>';
-  kayitli.__HAFTALIK__={ html:ym.innerHTML, ts:Date.now(), saat:saat() };
+  /* §422c ETİKET DE YAZILIR. §397'nin dersi: "etiket statik kaldığı için yeni,
+     gövde eski görünüyordu" — o çelişki teşhisi kolaylaştırmıştı ama kalıcı
+     hâli yanıltıcıdır. Artık hafta aralığı KODDAN hesaplanıyor (Pzt-Paz) ve
+     gövdeyle BİRLİKTE yenileniyor; ikisi ayrışamaz. Başlık, yorumun 1. bölüm
+     başlığından türetilir — yani etiket gövdenin ÖZETİ olur, bağımsız değil. */
+  const AY422=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const bug422=new Date(), pzt422=new Date(bug422);
+  pzt422.setDate(bug422.getDate()-((bug422.getDay()+6)%7));
+  const paz422=new Date(pzt422); paz422.setDate(pzt422.getDate()+6);
+  const ayniAy=pzt422.getMonth()===paz422.getMonth();
+  const arali=pzt422.getDate()+(ayniAy?'':' '+AY422[pzt422.getMonth()])+'–'+paz422.getDate()+' '+AY422[paz422.getMonth()].toUpperCase();
+  const yh=$('yorumHafta');
+  if(yh){ const bas=(html.match(/<b[^>]*>\s*1\s*·\s*([^<]{4,60})/i)||[])[1];
+    yh.textContent=arali+(bas?' · '+bas.trim().toUpperCase().slice(0,34):''); }
+  kayitli.__HAFTALIK__={ html:ym.innerHTML, etiket:(yh?yh.textContent:''), ts:Date.now(), saat:saat() };
   notKaydet(kayitli);
   kayit('Haftalık yorum panel verilerinden yeniden yazıldı 🤖');
 }

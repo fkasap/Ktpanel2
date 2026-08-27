@@ -606,3 +606,13 @@ TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
 ### ACIK
 - TCMB net YP pozisyonu (bultenlerin 3/5'inde) — Rezerv Karnesi'ne satir olabilir.
 
+## §422 (27 Agu 2026)
+### GUNCELLENEN
+- Haftalik Arastirma Notu karti: yazici CANLANDI (id="yorumMetin" eklendi),
+  cekirdek gosterge beslemesi, etiket govdeyle birlikte yenileniyor.
+- Panel surumu 20260827b -> 20260827c.
+### ALTIN KURALLARA EKLER
+- BIR FONKSIYON "return" ILE SESSIZCE CIKIYORSA HEDEFI VAR MI DIYE BAKILIR —
+  buton calisiyor gorunur, log duser, hicbir sey olmaz (§422).
+- UZUN DIZE ORTASINDA CAPA ARANMAZ — konum bazli kesim daha saglam.
+
