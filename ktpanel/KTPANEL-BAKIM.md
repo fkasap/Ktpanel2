@@ -6,6 +6,77 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-25
 
 
+# BAKIM EK — §419 (26 Agu 2026)
+
+## §419 PLATTS UCU EMEKLIYE AYRILDI — KOTA 12/12 → 11/12
+OLCUM: KULLANIM app.js 0 · ajan.js 0 · index.html 0 · tazele.mjs 0 referans
+(app/index'teki "spg" eslesmeleri YANLIS ALARM: spGau = gram altin
+sparkline'i). Veri dosyasi da uretilmemis. DURUM: HTTP 502 · "SPG_KEY
+dogrudan Bearer kabul edilmedi — token akisi gerekebilir".
+AMAC: kullanici BDI (Baltic Dry Index) icin yazdirmisti. ANCAK BDI Baltic
+Exchange'in (SGX) TESCILLI endeksi, Platts'in DEGIL — uc calissaydi bile
+BDI'yi VEREMEZDI. Platts yalniz kendi freight degerlendirmelerini
+verebilirdi, o da abonelik kapsamina bagli (kapsam hic olculmedi).
+YAN OLCUM: BDI vekili BDRY (Breakwave Dry Bulk Shipping ETF) Yahoo'da
+CALISIYOR (15,06 USD, 76 bar) — navlun gostergesi istenirse ucretsiz ve
+API slotu YAKMADAN kurulabilir. ^BDIY gibi endeks sembolleri Yahoo'da YOK.
+KARAR: uc kaldirildi; icerik git gecmisinde. Geri istenirse tercihen
+api/_lib altina modul olarak (slot yakmadan).
+BIRLIKTE TEMIZLENEN (tek basina silmek YETMEZ): denetim.mjs API_BEYAZ
+listesi · kopru-testi.js girdisi (§417'de yeni eklenmisti; silinen uca test
+birakmak her Cumartesi bos alarm uretirdi).
+DERS: BIR DOSYAYI SILMEK, ONA ATIF YAPAN HER YERI DE GEZMEKTIR. Ayni gun
+ucuncu kez ayni sinif: yetim edgar.js (§407b) · cekmecenin bayat plan kaydi
+(§415) · platts atiflari.
+
+## MEVZUAT SEKMESI — YAPILMADI (bilincli karar)
+SPK API'si olculdu: mevzuat.spk.gov.tr/api/Search/All acik, kimlik istemiyor,
+tek cagrida 388 kayit (~134 KB kirpilmis). CORS KAPALI → Actions cekmeliydi.
+Kapsam daraltildi: PYS + yatirim fonlari + emeklilik fonlari mevzuati ve
+rehberleri = 21 kayit (III-52.1 · III-55.1 · portfoy saklama · performans
+sunum · II-14.2 · BYF · GYF · GSYF · emeklilik yonetmeligi + 2 rehber).
+IPTAL GEREKCESI (olcumle): indekste REHBERLERIN TARIHI YOK — ne Resmi Gazete
+ne guncelleme tarihi. Tebliglerdeki tarih ILK YAYIM (cogu 2013); sonraki
+degisiklikler indekste GORUNMUYOR. Asil risk olan SESSIZ DEGISIKLIK
+(rehbere yeni portfoy sinirlamasi, fon toplam gider orani degisikligi)
+indeks nobetcisiyle YAKALANAMAZ. Ayrica 21 belgeyi tabloda listelemek SPK'nin
+kendi sitesini tekrarlamak olurdu; yilda bir iki kez degisen sekme OLU
+AGIRLIKTIR ve tazelik nobetcisi bosuna durter (§300).
+ILERIDE ISTENIRSE degerli olan TEK parca: haftalik PDF PARMAK IZI nobetcisi
+(21 PDF, yalniz hash, ~25 satir; degisirse Claude okur ve kart yazar).
+DERS: BIR KAYNAGIN ACIK OLMASI IZLENMEYE DEGER OLMASI DEMEK DEGILDIR — once
+"degisikligi YAKALAYABILIYOR MUYUM" diye sorulur.
+
+# BAKIM EK — §417-§418 (25 Agu 2026, aksam)
+
+## §418 PUSH CAKISMASI — kosu yesil, is KIRMIZI
+OLCUM: 18:52-18:56 kosusu bastan sona YESIL rapor uretti (2030 fon · akis
++14,70 mlr · katilim 46/46 · CDS 220,5 · GYO NAV 45) ve raporun sonunda
+"⚠ bir katman gecemedi" satiri YOKTU — denetimDustu FALSE. Buna ragmen is
+exit 1 verdi. KOK NEDEN: kosu surerken kullanici BES silme commit'i atti;
+bot push'a geldiginde uzak dal ILERLEMISTI → push REDDEDILDI. Annotation
+yalniz "exit code 1" dedi, ::error:: mesaji YOKTU. KANIT: o aksama ait TEK
+BIR ktpanel-bot commit'i yok.
+COZUM: push reddedilirse `git pull --rebase --autostash origin main && git push`.
+DOGRULAMA (19:11 kosusu): bot commit'i d189355 DUSTU, veri geri geldi. ✓
+DERS-1: KIRMIZI ≠ DENETIM DUSTU — rapor yesilken sebep denetim DISINDA aranir.
+DERS-2: KOSU SURERKEN PUSH ATMA (ayni gun DEPLOY.md'ye yazilan kural, ayni
+gun ihlal edilip dogrulandi).
+
+## §417 KOPRU TESTI: UC EKSIKTI, BIR SINIFLANDIRMA YANLISTI
+Test 13 Agu'dan (§286) beri guncellenmemisti. CANLI TARAMA (29 uc):
+saglam — market (15/15) · evds2 (8 mod) · kap · tcmb · bddk · usnews · data ·
+ajanktp · tefas mod=gnl · CDS. Bozuk — platts (HTTP 502). Beklenen —
+katfon ok:false (canli cekim §147-148'de bilerek kapatildi, panel
+katfon.json'dan besleniyor).
+DEGISIKLIK: katfon kritik:true → false (kapali:true artik BILGI) · edgar
+eklendi. Gerekce app.js'in kendi yorumu: "kapanmis bir kapinin onunde nobet
+tutmaya devam etmek, panelin diger uyarilarinin ciddiyetini azaltir".
+KRITIK BULGU — CRON_SECRET TANIMLIYMIS: test her Cumartesi KOSUYOR ve YESIL
+veriyordu. Platts'i kacirmasinin sebebi secret eksikligi DEGIL, ucun LISTEDE
+HIC OLMAMASI. "Test yesil" ile "sistem saglam" ayni sey degil.
+DERS: YENI UC ACILDIGINDA TESTE DE EKLENIR — eklenmeyen uc, izlenmeyen uctur.
+
 <!-- §298-§416: 17-25 Agu 2026 kayitlari. Daha once 18 ayri BAKIM-EK-*.md
      dosyasindaydi; 25 Agu'da bu dosyaya BIRLESTIRILDI. En yeni ustte.
      Kumulatif zincirlerde yalniz en kapsayici surum alindi. -->

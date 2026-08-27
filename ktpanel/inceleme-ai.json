@@ -3,6 +3,63 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "NVDA",
+   "ad": "NVIDIA",
+   "donem": "FY27 2Ç (26 Tem)",
+   "tarih": "26 Ağu 2026",
+   "tarih_iso": "2026-08-26",
+   "sablon": "abd",
+   "skor": "POZİTİF",
+   "ozet": "Beş çeyrektir üst üste beat ve bu sefer rehberlik de aştı: ciro 96,2 mlr $ (konsensüs 92,07 → +%4,5), düz. EPS 2,22 $ (2,09 → +%6,3), y/y +%106. 3Ç rehberliği 108 mlr $ ile konsensüsün (103,8) ÜSTÜNDE ve FY28 için ilk kez ~%70 büyüme telaffuz edildi. AMA marj patikası AŞAĞI çevrildi: 2Ç %75,0 → 3Ç %74 → 4Ç DİP %71-72, sebep bellek maliyetleri. Rekor çeyrek + inen marj = kartın gerginliği.",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "96,2 mlr $",
+     "cc": "konsensüs 92,07 → +%4,5 aşıldı; şirket rehberliği 91,0 ±%2 idi",
+     "yoy": "+%106 · çeyreklik +%18 (dördüncü ardışık hızlanma)"
+    },
+    {
+     "ad": "Brüt marj",
+     "deger": "%75,0 (GAAP=non-GAAP)",
+     "cc": "rehberlik %74,9/75,0 → tam isabet",
+     "yoy": "bir yıl önce %72,5 → +250 bps; ama patika tersine döndü (aşağıya bak)"
+    },
+    {
+     "ad": "Faaliyet kârı / marj",
+     "deger": "63,7 mlr $ · %66,2 (GAAP)",
+     "cc": "FAVÖK açıklanmıyor — faaliyet kârı kullanıldı (standart)",
+     "yoy": "çeyreklik +%19"
+    },
+    {
+     "ad": "Net kâr / marj",
+     "deger": "59,7 mlr $ · %62,1 (GAAP)",
+     "cc": "GAAP EPS 2,46 $ · düz. EPS 2,22 $ (konsensüs 2,09)",
+     "yoy": "+%126 — ciro büyümesinin (+%106) ÜSTÜNDE, kaldıraç çalışıyor"
+    },
+    {
+     "ad": "FCF",
+     "deger": "açıklanmadı (bültende ayrı kalem yok)",
+     "cc": "—",
+     "yoy": "çeyrekte 26,0 mlr $ hissedara döndü (geri alım+temettü) · kalan yetki ~99 mlr $ · temettü 0,25 $/pay, 1 Eki ödeme"
+    },
+    {
+     "ad": "Segment dağılımı",
+     "deger": "Veri Merkezi 89,0 mlr $ = cironun %92,5'i",
+     "cc": "Edge Computing 7,20 mlr $ (+%27,5 y/y)",
+     "yoy": "VM +%117 y/y, +%18 çeyreklik · ACIE +%138 y/y (hyperscaler'dan HIZLI) · Blackwell Ultra rampası"
+    }
+   ],
+   "onemli": [
+    "MARJ PATİKASI AŞAĞI ÇEVRİLDİ — kartın asıl haberi bu: 2Ç %75,0, 3Ç rehberliği %74, 4Ç DİBİ %71-72. Sebep bellek maliyetleri ve yönetim 'önceki beklentileri aştı, gelecek yıla doğru daha da yükseliyor' dedi. CSCO kartında (§401) yazdığımız 'AI donanım karışımı marjı seyreltiyor' gerginliğinin en büyük ölçekte doğrulanması. Rekor ciro ile inen marj aynı sayfada.",
+    "TALEP TEK MÜŞTERİDEN ÇIKTI — ACIE (AI bulut/kurumsal/egemen) +%138 ile hyperscaler'dan hızlı büyüdü; Huang 'geçen yıl tek bir lab inşa ediyordu, bugün paralel ölçeklenen çok sayıda frontier lab var' dedi. Bu, 'AI talebi birkaç müşteriye bağımlı' tezinin en güçlü karşı verisi. Tedarik taahhütleri 279 mlr $'a çıktı (çoğu Vera Rubin için bellek) — talep sözleşmeye bağlanmış durumda.",
+    "ÇİN SIFIR VARSAYILMAYA DEVAM: 3Ç rehberliğine Çin veri merkezi hesaplama geliri YİNE sıfır konuldu; 2Ç'de Hopper sevkiyatı VM gelirinin %1'inin altındaydı. Yani 108 mlr $'lık rehberlik Çin OLMADAN kuruluyor — potansiyel yukarı opsiyon, aşağı risk değil.",
+    "FY28 İÇİN ~%70 BÜYÜME TELAFFUZU ve 'arz kısıtlı' vurgusu: talep teslim edilebilenden 'çok daha yüksek'. Bernstein'ın hesabına göre bu, önceki 1 trilyon $'lık üç yıllık görünüme ~200 mlr $ eklenmesi demek. AWS ile 2 mn ek GPU anlaşması ve Vera Rubin'in 'tarihindeki en hızlı rampa' iddiası bunu destekliyor."
+   ],
+   "guidance": "3Ç FY27: ciro 108,0 mlr $ ±%2 (konsensüs 103,8 → ÜSTÜNDE) · brüt marj %74,0 ±50bp · faaliyet gideri GAAP ~9,2 / non-GAAP ~9,0 mlr $ · Çin VM hesaplama geliri SIFIR varsayıldı. 4Ç marj DİBİ %71-72 (bellek maliyeti). FY27 vergi oranı %16-18. FY28 ÖN GÖRÜNÜM: ~%70 ciro büyümesi, arz kısıtlı.",
+   "kaynak": "Şirket bülteni (nvidianews.nvidia.com · SEC 8-K q2fy27pr.htm, 26 Ağu kapanış sonrası) + kazanç çağrısı özetleri. AV EARNINGS bu kart için ÇEKİLMEDİ — §184/§353 deseni: açıklama günü ve ertesi gün AV 'reportedEPS: None' döner (WMT'de birebir yaşandı). Çapraz denetim birkaç gün içinde yapılabilir.",
+   "tez": "Panel kapsamında DEĞİL (BIST evreni). Okuma: (1) AI capex döngüsü YAVAŞLAMIYOR — 108 mlr $ rehberliği ve 279 mlr $ tedarik taahhüdü, CSCO'nun sipariş süper döngüsü tezini (§401) doğruluyor; zincirin ana halkası teyit verdi. (2) Ama KÂRLILIK TARAFI DÖNÜYOR: bellek maliyeti marjı 4Ç'de %71-72'ye indiriyor — bu, bellek üreticileri lehine bir servet transferi ve AI donanım zincirinde değerin nereye kaydığını gösteriyor. (3) BIST tarafında doğrudan karşılık yok; dolaylı okuma küresel risk iştahı (barometre 70'te açgözlülük) ve teknoloji ağırlıklı endekslerin yönü. Hisse geçmişte beş beat'in dördünde SATILDI — beklenti çıtası rakamdan yüksek."
+  },
+  {
    "kod": "WMT",
    "ad": "Walmart",
    "donem": "FY27 2Ç (31 Tem)",
@@ -3451,7 +3508,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-24 — ABD geç-sezon turu: WMT FY27 2Ç (KARIŞIK: beat var, kalitesi tarife iadesi) + HD FY26 2Ç (POZİTİF: seri kırıldı) + CSCO FY26 4Ç (POZİTİF: sipariş süper döngüsü) eklendi. 55 kart.",
+ "guncelleme": "2026-08-26 — NVDA FY27 2Ç kartı (POZİTİF: rehberlik aşıldı, 3Ç 108 mlr, FY28 ~%70; ama marj patikası 4Ç'de %71-72'ye iniyor). 56 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."

@@ -568,3 +568,18 @@ TUMU CANLI DOGRULANDI (19 Agu 16:2x): §319 12 satir ciziyor, Ebu gorusu
   (c) Ebu'ya §315 rozetlerini girdi vermek (data-ebu-veri ile tek satir).
 - 20 Agu Per: USD KS sonucu → takvim rozeti kendiliginden yeserecek
 - abdSekme fosil imzasi temizlendi (KTP_SURUM'a baglandi)
+
+## §417-§419 (25-26 Agu 2026)
+### ALTIN KURALLARA EKLER
+- KIRMIZI ≠ DENETIM DUSTU: rapor yesilken is kirmizysa sebep denetim disinda
+  aranir (push cakismasi, kota, adim hatasi).
+- YENI UC ACILDIGINDA KOPRU TESTINE DE EKLENIR — eklenmeyen uc, izlenmeyen uctur.
+- KAPANMIS KAPI ARIZA DEGILDIR: bilincli kapatilmis uc testte kritik sayilmaz.
+- BIR DOSYAYI SILMEK, ONA ATIF YAPAN HER YERI GEZMEKTIR (beyaz liste, test, cagri).
+- BIR KAYNAGIN ACIK OLMASI IZLENMEYE DEGER OLMASI DEMEK DEGILDIR — once
+  "degisikligi yakalayabiliyor muyum" sorulur (mevzuat karari, §419).
+### GUNCELLENEN
+- Kopru testi: 29 → 30 uc (edgar eklendi, platts cikti, katfon kritik:false).
+- Workflow: push reddedilirse rebase + yeniden dene (§418).
+- API kotasi: 12/12 → 11/12 — platts kaldirildi, BIR SLOT ACIK.
+
