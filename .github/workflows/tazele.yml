@@ -33,6 +33,10 @@ on:
         description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy)'
         required: false
         default: 'hepsi'
+      fonkod:
+        description: 'Fon portföy evrenine eklenecek fon kodu/kodları (örn. KPU,ZPB) — §429'
+        required: false
+        default: ''
 
 permissions:
   contents: write           # commit atabilmek için
@@ -139,7 +143,7 @@ jobs:
       - name: Tazele
         id: tazele
         continue-on-error: true
-        run: node scripts/tazele.mjs --katman="${{ steps.sec.outputs.katman }}"
+        run: node scripts/tazele.mjs --katman="${{ steps.sec.outputs.katman }}" --fonkod="${{ github.event.inputs.fonkod }}"
         env:
           TZ: Europe/Istanbul
 
