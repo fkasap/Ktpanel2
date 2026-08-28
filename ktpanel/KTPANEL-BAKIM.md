@@ -6,6 +6,56 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §427–§428 (28 Agu 2026)
+
+## §427 KATFON "AYNI GUN" KOSULU TAKVIMDEN VERIYE TASINDI (tazele.mjs)
+
+CANLI ZINCIR: GitHub 27 Agu aksam cron'unu 9 saat geciktirdi (bkz. GitHub
+26 Agu Actions olayi — tetik islemcisi DB doygunlugu; concurrency grubu
+kullananlar daha uzun etkilendi). Kosu 28 Agu 03:22'de (TZ=Europe/Istanbul)
+calisti, fiyat_tarihi=28 yazdi; TEFAS o saatte 27'nin fiyatini veriyordu.
+Ogle 13:52 gercek 28 kosusu (#175) "ayni gun tekrar" sayildi -> 1G
+HESAPLANMADI, f.yu 28'e ilerledi -> panelde bir gun 28 fiyati + 27 getirisi.
+KOK: §266 kosulu `fiyat_tarihi === bugun` — KOSU tarihi ile VERI tarihi
+ayrisinca kirildi. §266'nin kendi ilkesi ("iki olcum arasindaki GERCEK fark")
+dogruydu, kod zamani takvimden olcuyordu.
+COZUM: gelen fiyat vektoru dosyadaki f.yu ile karsilastirilir; fonlarin >%90'i
+birebir ayniysa tekrar kosu, degistiyse yeni fiyat gunu — saat kac olursa
+olsun. Olculemezse (ilk kosu) eski takvim kosuluna duser. Rapor satiri artik
+"fiyat vektoru degismedi: 46/46 ayni" ya da "46/46 fonda fiyat degisti"
+yazar — karar gerekcesiyle gorunur.
+DERS: KAYNAGA BAGLI OLMAYAN OLCUT SEC. Kopru tarih dondurmuyor; dondurse de
+gecikmis cron + TZ ciftinde yine yanilirdi. Verinin kendisi degismis mi?
+sorusu her kanalda ayni cevabi verir.
+
+## §428 BILANCO BORC DEFTERI: 226 -> 67 (EVREN SUZGECI) + DUSUM NEDEN SIFIR
+
+OLCULDU: bilanco-tetik.json 226 kod, inceleme-ai.json 57 kart, kesisim BOS.
+IKI AYRI KOK:
+(1) EVREN: sunucu defteri KAP'taki HER FR bildirimini topluyordu (tum BIST).
+    226'nin yalniz 67'si katilim evreninde (XKTUM u XK100 u XKTMT). Tarayici
+    nobeti §219'dan beri evrene suzuyor; sunucu suzmuyordu -> iki sayac farkli
+    seyi sayiyordu. ADESE/AGYO/AKSFA... panelin borcu degil.
+    COZUM (yapildi): defter evrene suzuldu; kartli kodlar evrene dahil.
+    Evren disi 159 kod SILINMEDI — evren_disi listesinde ilk_gorulme'siyle
+    saklanir (§245k), sonraki kosuda defterin parcasi olarak okunur, evrene
+    girerse yasiyla doner. Uyelik dosyasi okunamazsa suzme yapilmaz (eski
+    davranis) — eksik evren yuzunden borc gorunmez olmasin.
+    BEKLENEN ILK RAPOR: "67 sirket kart bekliyor (katilim evreni · evren disi
+    159 sakli, §428)" · en eski 10 gun (AKHAN, ALTNY, ALVES, BIMAS, BINHO).
+(2) DUSUM (YAPILMADI — karar gerek): dusum tek kanit tanir: inceleme-ai.json
+    kartlari. O dosyadaki 57 kart TAMAMEN ABD (CRM, NVDA, WMT...). Onaylanan
+    BIST kartlari §222 geregi BULUTA gider (Redis, ktp_taslak_kart_v1,
+    PROFIL BAZLI, oturum arkasinda). "Kalici olunca dosyaya islenir" adimi
+    hic islememis. Actions oturum cerezi olmadan bulutu okuyamaz; anahtar
+    kisisel oldugu icin "tum kartlar" diye tek kume de yok.
+    SECENEKLER: (a) ktp_taslak_kart_v1 + ktp_bilanco_yoksay_v1 ORTAK anahtar
+    yapilir ve data.js'e CRON_SECRET'li salt-okur uc eklenir; tazele.mjs
+    kartli kumesine bulutu ekler. (b) Kartlari dosyaya isleme ritueli (elle,
+    haftalik). (c) Sunucu defterini sayac olmaktan cikar, yalniz pencere
+    tutar; borc muhasebesi tarayicida kalir. Karar kullanicinin.
+DEPLOY: scripts/tazele.mjs (kok, panel surumu degismez).
+
 # BAKIM EK — §426 (28 Agu 2026)
 
 ## §426 KARA KUTU: YAKALANMAYAN HATALAR ARTIK PANOYA DUSER (§424c'nin acik isi)

@@ -46,6 +46,7 @@
 | HKMA kartlari @t16 | aylik bulten (~ay ortasi) | 27T (Haz bulteni) |
 | Earnings AI @t14 + GLOBAL @t1 | bilanco aciklaninca — SIRADAKI: 29T GARAN+MSFT/META, 30T AAPL/AMZN/YKBNK, 31T PCE | 28T (ANHYT·PASEU·AKBNK·TAVHL·BMSTL) |
 | BIST-YEREL bilanco karti @t1 | TR bilanco/takvim degisikligi | 27T |
+| Bilanco borc defteri (bilanco-tetik.json) | §428: EVRENE SUZULDU (67 bekliyor · 159 evren disi sakli). DUSUM YAPISAL SIFIR: BIST kartlari BULUTTA (profil bazli), inceleme-ai.json'da degil — karar bekliyor (a/b/c §428) | 28A §428 |
 | Gundem Ozeti @t7 | buyuk gundem donusu | 27T |
 | Ulke kredi notu @mk-para | Moody's/Fitch/S&P olayi | 27T (Moody's 24T teyidi Takvim+KrediNotu kartlarina islendi) |
 | Fonlama rejimi @mk-para | PPK karari — siradaki 10 Eyl | 23T (dogru) |
