@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260828b';   // SS426 kara kutu (unhandledrejection -> pano)
+const KTP_SURUM = '20260828c';   // SS429 fon portfoy dagilimi alt sekmesi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -154,6 +154,8 @@ document.addEventListener('click',(e)=>{
   if(b.dataset.subtab==='sk-ihrac'&&!ihracLoaded){ihracLoaded=true;if(typeof ihracRender==='function')ihracRender();}
   // §124: Tahminler alt sekmesi — açılınca bir kez yüklenir (EVDS'e boşuna istek gitmesin)
   if(b.dataset.subtab==='mk-tahmin'&&!tahminLoaded){tahminLoaded=true;if(typeof tahminInit==='function')tahminInit();}
+  /* §429: Fon portföy dağılımı — açılınca bir kez yüklenir */
+  if(b.dataset.subtab==='sv-fonpd'){ try{ fonpdInit(); }catch(e){ console.warn('[KTPanel] §429:', e&&e.message); } }
   /* §366: MKK Fon Buyuklugu — acilinca bir kez yuklenir */
   if(b.dataset.subtab==='sv-vap'){ try{ vapInit(); }catch(e){ console.warn('[KTPanel] §366:', e&&e.message); } }
   /* §399 EDGAR: alt sekme açılınca girişe odaklan */
@@ -10104,6 +10106,86 @@ window.csSeriOzet = async function(kod, adet){
    İkisi yan yana durur; aradaki fark, dönem sonundan bu yana fiyatın NAD'a
    göre nereye gittiğini söyler.
    Sıralama en iskontoludan başlar — GYO'da ucuzluk sıralaması budur. */
+
+/* ── §429 FON PORTFÖY DAĞILIMI (28 Ağu) ─────────────────────────────────────
+   Veri: fon-portfoy.json (Actions §429). fonlar[KOD].donemler['YYYY-MM'] =
+   { baslik, hisse:[{kod,agirlik,deger,nominal}], islem:{alis:{KOD:{deger}},satis:{...}} }
+   Ağırlık = FTD% (fon toplam değerine göre). Tablo: son N dönem sütunu, Δ son ay
+   ve Δ N ay (puan), yeni giren / çıkan işaretli, son ayın net alımı (₺ mn).
+   Evren kartı: son ayda tüm fonların net alım/satım toplamı ve fon sayısı. */
+let FONPD=null, fonpdYuklendi=false;
+async function fonpdInit(){
+  if(fonpdYuklendi) return; fonpdYuklendi=true;
+  try{
+    const r=await fetch('/fon-portfoy.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    FONPD=await r.json();
+  }catch(e){ const t=$('fonpdTablo'); if(t) t.innerHTML='<div class="sub">fon-portfoy.json okunamadı — Actions §429 katmanı henüz koşmamış olabilir ('+((e&&e.message)||e)+')</div>'; return; }
+  const sec=$('fonpdSec'); if(!sec) return;
+  const fonlar=Object.keys(FONPD.fonlar||{}).sort();
+  if(!fonlar.length){ $('fonpdTablo').innerHTML='<div class="sub">depoda henüz rapor yok — ilk Cumartesi koşusundan sonra dolar (evren: '+Object.keys(FONPD.evren||{}).length+' fon)</div>'; return; }
+  sec.innerHTML=fonlar.map(k=>{ const f=FONPD.fonlar[k]; const n=Object.keys(f.donemler||{}).length; return '<option value="'+k+'">'+k+' — '+String(f.ad||'').replace(/^[A-Z0-9]+-/,'').slice(0,60)+' ('+n+' ay)</option>'; }).join('');
+  $('fonpdDamga').textContent=FONPD.guncelleme?('depo '+FONPD.guncelleme+' · '+fonlar.length+' fon'):'—';
+  ['fonpdSec','fonpdAy','fonpdSira'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',fonpdRender); });
+  fonpdRender(); fonpdEvrenRender();
+}
+function fonpdRender(){
+  const kod=$('fonpdSec').value, N=parseInt($('fonpdAy').value||'4'), sira=$('fonpdSira').value;
+  const F=FONPD.fonlar[kod]; if(!F){ return; }
+  const donemler=Object.keys(F.donemler).sort().slice(-N);   // eski → yeni
+  const son=donemler[donemler.length-1], onc=donemler[donemler.length-2], ilk=donemler[0];
+  const D=F.donemler[son];
+  const B=D.baslik||{};
+  const mn=v=>v==null?'—':(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1});
+  $('fonpdOzet').innerHTML=[
+    ['Fon toplam değeri', B.fonToplamDegeri!=null?mn(B.fonToplamDegeri)+' mn ₺':'—'],
+    ['Aylık getiri', B.aylikGetiri!=null?(B.aylikGetiri>0?'+':'')+B.aylikGetiri.toLocaleString('tr-TR')+'%':'—'],
+    ['Hisse payı (ay ort.)', B.hisseOrtYuzde!=null?'%'+B.hisseOrtYuzde.toLocaleString('tr-TR'):'—'],
+    ['Hisse devir hızı', B.hisseDevirHizi!=null?B.hisseDevirHizi.toLocaleString('tr-TR'):'—'],
+    ['Hisse sayısı', String((D.hisse||[]).length)]
+  ].map(([l,v])=>'<div class="card" style="padding:8px 10px"><div class="lbl" style="font-size:9px">'+l+'</div><div style="font-size:15px;font-weight:700;margin-top:2px">'+v+'</div></div>').join('');
+  $('fonpdTag').textContent=son.replace('-','/')+' · '+donemler.length+' dönem · yayın '+((D.kaynak&&D.kaynak.yayin)||'?');
+  // hisse × dönem matrisi
+  const M={}; donemler.forEach(dn=>{ (F.donemler[dn].hisse||[]).forEach(h=>{ (M[h.kod]=M[h.kod]||{})[dn]=h.agirlik; }); });
+  const netAl=(dn,k)=>{ const I=F.donemler[dn].islem||{}; const a=(I.alis&&I.alis[k]&&I.alis[k].deger)||0, s=(I.satis&&I.satis[k]&&I.satis[k].deger)||0; return (a||s)?(a-s):null; };
+  let satirlar=Object.keys(M).map(k=>{
+    const w=M[k][son]||0, wo=onc?(M[k][onc]||0):null, wi=(M[k][ilk]||0);
+    const d1=onc?+(w-wo).toFixed(2):null, dN=donemler.length>1?+(w-wi).toFixed(2):null;
+    const net=netAl(son,k);
+    const durum=!M[k][son]?'çıktı':(onc&&M[k][onc]==null?'yeni':'');
+    return {k,w,d1,dN,net,durum};
+  });
+  satirlar=satirlar.filter(r=>r.w||r.durum==='çıktı');
+  satirlar.sort((a,b)=> sira==='degisim'?((b.d1||0)-(a.d1||0)) : sira==='net'?((b.net||0)-(a.net||0)) : (b.w-a.w));
+  const pp=v=>v==null?'<span class="sub">—</span>':'<span class="'+(v>0.05?'up':v<-0.05?'down':'')+'">'+(v>0?'+':'')+v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+'</span>';
+  const kolon=donemler.map(dn=>'<th style="text-align:right">'+dn.slice(2).replace('-','/')+'</th>').join('');
+  let html='<table class="tbl"><thead><tr><th>Hisse</th>'+kolon+'<th style="text-align:right">Δ son ay</th><th style="text-align:right">Δ '+(donemler.length-1)+' ay</th><th style="text-align:right">Ay içi net (mn ₺)</th><th></th></tr></thead><tbody>';
+  satirlar.forEach(r=>{
+    const hucre=donemler.map(dn=>'<td style="text-align:right;font-variant-numeric:tabular-nums">'+(M[r.k][dn]!=null?M[r.k][dn].toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}):'<span class="sub">·</span>')+'</td>').join('');
+    const ok=r.d1==null?'':(r.d1>0.25?'▲':r.d1<-0.25?'▼':'▬');
+    const etiket=r.durum==='yeni'?'<span class="tag" style="background:var(--ok-bg,#e6f4ea);color:var(--ok,#1a7f37)">YENİ</span>':r.durum==='çıktı'?'<span class="tag" style="background:var(--bad-bg,#fdecea);color:var(--bad,#b42318)">ÇIKTI</span>':ok;
+    html+='<tr><td><b>'+r.k+'</b></td>'+hucre+'<td style="text-align:right">'+pp(r.d1)+'</td><td style="text-align:right">'+pp(r.dN)+'</td><td style="text-align:right">'+(r.net==null?'<span class="sub">—</span>':'<span class="'+(r.net>0?'up':'down')+'">'+(r.net>0?'+':'')+(r.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</span>')+'</td><td>'+etiket+'</td></tr>';
+  });
+  const topW=satirlar.reduce((a,r)=>a+r.w,0);
+  html+='</tbody><tfoot><tr><td>Toplam hisse</td>'+donemler.map(dn=>'<td style="text-align:right"><b>'+(F.donemler[dn].hisseToplam&&F.donemler[dn].hisseToplam.ftd!=null?F.donemler[dn].hisseToplam.ftd.toLocaleString('tr-TR',{minimumFractionDigits:2}):'—')+'</b></td>').join('')+'<td colspan="4"></td></tr></tfoot></table>';
+  $('fonpdTablo').innerHTML=html;
+}
+function fonpdEvrenRender(){
+  const fonlar=Object.keys(FONPD.fonlar||{}); if(!fonlar.length) return;
+  // son ortak dönem: her fonun en son dönemi içinden en sık olan
+  const sayac={}; fonlar.forEach(k=>{ const d=Object.keys(FONPD.fonlar[k].donemler).sort().pop(); if(d) sayac[d]=(sayac[d]||0)+1; });
+  const son=Object.keys(sayac).sort().pop(); if(!son) return;
+  const agg={}; let fonSay=0;
+  fonlar.forEach(k=>{ const D=FONPD.fonlar[k].donemler[son]; if(!D) return; fonSay++;
+    const I=D.islem||{}; const kodlar=new Set([...Object.keys(I.alis||{}),...Object.keys(I.satis||{})]);
+    kodlar.forEach(h=>{ const a=(I.alis&&I.alis[h]&&I.alis[h].deger)||0, s=(I.satis&&I.satis[h]&&I.satis[h].deger)||0; const n=a-s; const r=agg[h]=agg[h]||{net:0,alan:0,satan:0}; r.net+=n; if(n>0) r.alan++; else if(n<0) r.satan++; });
+  });
+  const L=Object.entries(agg).sort((a,b)=>b[1].net-a[1].net);
+  const alan=L.filter(x=>x[1].net>0).slice(0,10), satan=L.filter(x=>x[1].net<0).slice(-10).reverse();
+  $('fonpdEvrenTag').textContent=son.replace('-','/')+' · '+fonSay+' fon';
+  const tbl=(rows,bas)=>'<table class="tbl"><thead><tr><th>'+bas+'</th><th style="text-align:right">Net (mn ₺)</th><th style="text-align:right">Fon</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td><b>'+k+'</b></td><td style="text-align:right" class="'+(v.net>0?'up':'down')+'">'+(v.net>0?'+':'')+(v.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</td><td style="text-align:right">'+(v.net>0?v.alan:v.satan)+'</td></tr>').join('')+'</tbody></table>';
+  $('fonpdEvren').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'+tbl(alan,'En çok alınan')+tbl(satan,'En çok satılan')+'</div>';
+}
 /* ── §366 MKK VAP FON BÜYÜKLÜĞÜ KARTI (21 Ağu) ─────────────────────────────
    vap-fon-akis.json (Actions §366) — MKK'nin resmî saklama verisi.
    TASARIM: net değişim ÇUBUK, toplam büyüklük TABLODA sayı. İkisi farklı

@@ -6,6 +6,60 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §429 (28 Agu 2026)
+
+## §429 FON PORTFOY DAGILIMI — Sektorel Veriler > alt sekme (kullanici istegi)
+
+ISTEK: katilim hisse yogun + katilim serbest hisse fonlarinin tuttugu hisseler;
+fon secilir, agirlik artmis mi azalmis mi en az 4 ay gorunur. Actions ile.
+
+KESIF (iki HAR + ornek PDF):
+  - KAP fon sayfasi listesi: /tr/api/disclosure/filter/FILTERYFBF/<uyeOid>/.../365
+  - KAP rota tablosu JS'ten cikti (44 uc): api/disclosure/funds/byCriteria (tum
+    fonlar tek POST, members/byCriteria'nin fon ikizi), api/fund/criteria,
+    api/file/download/<objId>, api/BildirimPdf ...
+  - Bildirim sayfasi (/tr/Bildirim/<index>) Next.js payload'inda
+    attachments[{objId,fileName:"KPU_2026.07.pdf"}]; HTML tablo BOS KABUK,
+    veri yalniz PDF'te (Infleks/iText, 120 sayfa, 950x1200 pt).
+  - PDF yapisi: I tanitici · II performans (NAV, pay, aylik getiri, hisse ort %,
+    devir hizi) · III FON PORTFOY DEGERI TABLOSU > HISSE SENETLERI (kod, nominal,
+    alis F/T, borsa F, toplam deger, grup%, FPD%, FTD%) > GRUP TOPLAMI ·
+    IV toplam deger · V/VI ay ici islemler: A) HISSE SENETLERI(SATISLAR)/(ALISLAR)
+    satir satir (kod, tarih, fiyat, tutar, nominal).
+  - Ayni kod birden cok satir (lot) + NEGATIF satir = T+2 bekleyen satis -> kod
+    bazinda NETLENIR.
+  - Chrome HAR indirme govdesini EKSIK yazar (326/340 KB, bas kopuk) — PDF'in
+    kendisi istendi. DERS: HAR akis icin, dosya icin degil.
+
+YAPILAN:
+  scripts/fonportfoy-pdf.mjs — ayristirici (test edilebilir modul).
+    pdftotext -layout metnini okur. basligiOku / hisseleriOku / islemleriOku /
+    denetle. MUTABAKAT (KPU 2026/07): 33 hisse, FTD toplami 87,81 = GRUP TOPLAMI;
+    alis 164,1 mn = 164.051.550,98; satis 197,1 mn = 197.087.687,21. Birebir.
+  scripts/tazele.mjs fonPortfoy() — katman 'fonportfoy' (hepsi'de dahil).
+    Evren: fon-portfoy.json.evren_elle (kullanici) U TEFAS unvani (KATILIM ^
+    (HISSE SENEDI v SERBEST), borclanma/kira/ppf/altin/doviz haric); otomatik
+    evren dosyaya CACHE'lenir. KAP: funds/byCriteria, yoksa members/byCriteria;
+    summary 'Portfoy Dagilim' ^ stockCode evrende. Ilk kosu 400 gun (13 rapor/fon),
+    sonra 45 gun; tur tavani 40 PDF. Denetimden dusen YAZILMAZ.
+    pdftotext yoksa katman soyleyip atlar (workflow poppler-utils kurar).
+  .github/workflows/tazele.yml — poppler adimi (hepsi/fonportfoy kosulunda).
+  ktpanel/fon-portfoy.json — TOHUM: kullanicinin yukledigi KPU 2026/07 (kaynak.not
+    'ORNEK'); ilk Actions kosusu KAP'tan yeniden ceker, ustune yazar.
+  index.html/app.js — t27 alt sekme sv-fonpd: fon secici, 4/6/12 donem, hisse x
+    donem matrisi, delta son ay / delta N ay (puan), YENI/CIKTI etiketi, ay ici net
+    alim (alis-satis, mn TL); evren karti: son ayda en cok alinan/satilan + fon
+    sayisi. Sahte DOM testi: 35 satir, ozet dogru, evren karti dogru.
+
+OKUMA KURALI (ekranda da yazili): agirlik farki FIYAT hareketinden de etkilenir,
+net alim etkilenmez. Agirlik dusup net alim pozitifse fon dususe ALARAK karsilik
+vermistir. Tek fon gurultu, cok fon ayni yonde = akim.
+
+BILINMEYEN (ilk kosuda olculecek): funds/byCriteria govde semasi members ile ayni
+varsayildi; degilse rapor "ilk kayit ornegi"ni basar, oradan duzeltilir.
+DEPLOY: scripts/tazele.mjs · scripts/fonportfoy-pdf.mjs · .github/workflows/
+tazele.yml · ktpanel/{index.html, app.js, fon-portfoy.json} (surum 20260828c).
+
 # BAKIM EK — §427–§428 (28 Agu 2026)
 
 ## §427 KATFON "AYNI GUN" KOSULU TAKVIMDEN VERIYE TASINDI (tazele.mjs)

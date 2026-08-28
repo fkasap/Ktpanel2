@@ -1027,7 +1027,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
   <button class="subtab-btn act" data-subtab="sv-katfon" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Katılım Fonları</button>
   <button class="subtab-btn" data-subtab="sv-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
-  <button class="subtab-btn" data-subtab="sv-vap" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">MKK Fon Büyüklüğü</button>
+  <button class="subtab-btn" data-subtab="sv-vap" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">MKK Fon Büyüklüğü</button><button class="subtab-btn" data-subtab="sv-fonpd" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Fon Portföy Dağılımı</button>
 </div>
 <div id="sv-katfon" class="subtab-panel"><h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
 <div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
@@ -1079,6 +1079,35 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div id="vapGrafik" style="margin-top:14px"></div>
   <div id="vapTablo" style="margin-top:14px"><div class="sub">yükleniyor…</div></div>
   <div id="vapNot" class="note" style="margin-top:10px"></div>
+</div>
+<!-- §429 FON PORTFÖY DAĞILIMI (28 Ağu, kullanıcı isteği). Kaynak: KAP aylık
+     "Portföy Dağılım Raporu" PDF'i → Actions (Cumartesi hepsi / elle fonportfoy)
+     → fon-portfoy.json. Ağırlık = fon toplam değerine göre (FTD %). Ay sonu
+     fotoğrafı, ~10 gün gecikmeli; yön aracıdır, zamanlama aracı değil. -->
+<div id="sv-fonpd" class="subtab-panel" style="display:none"><h2>Fon Portföy Dağılımı <span class="thin">(katılım hisse fonları · KAP aylık rapor · ağırlık ve ay içi alım-satım)</span> <span class="tag snap" id="fonpdDamga">—</span></h2>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 12px">
+    <label class="sub" style="font-weight:600">Fon</label>
+    <select id="fonpdSec" style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:inherit;min-width:260px"></select>
+    <label class="sub" style="font-weight:600;margin-left:10px">Dönem</label>
+    <select id="fonpdAy" style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:inherit">
+      <option value="4">4 ay</option><option value="6">6 ay</option><option value="12">12 ay</option>
+    </select>
+    <label class="sub" style="font-weight:600;margin-left:10px">Sırala</label>
+    <select id="fonpdSira" style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:inherit">
+      <option value="agirlik">ağırlığa göre</option><option value="degisim">son ay değişimine göre</option><option value="net">ay içi net alıma göre</option>
+    </select>
+  </div>
+  <div id="fonpdOzet" style="display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:10px;margin-bottom:12px"></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="lbl">HİSSE AĞIRLIKLARI — AY SONU, FON TOPLAM DEĞERİNE GÖRE (%) <span class="thin" id="fonpdTag">—</span></div>
+    <div id="fonpdTablo" style="margin-top:8px"><div class="sub">yükleniyor…</div></div>
+    <div class="note" style="margin-top:8px">Ağırlık, fonun <em>toplam değerine</em> göredir (hisse dışı varlıklar payı kadar toplam 100'ün altında kalır). Δ sütunları yüzde <em>puan</em> farkıdır. Ay içi net = o ayın rapor edilen alış − satış işlem tutarı (₺ mn); ağırlık farkı fiyat hareketinden de etkilenir, net alım etkilenmez — ikisi birlikte okunur: ağırlık düşüp net alım pozitifse fon fiyat düşüşüne <em>alarak</em> karşılık vermiştir.</div>
+  </div>
+  <div class="card">
+    <div class="lbl">EVREN GENELİ — SON AYDA EN ÇOK ALINAN / SATILAN HİSSELER <span class="thin" id="fonpdEvrenTag">—</span></div>
+    <div id="fonpdEvren" style="margin-top:8px"></div>
+    <div class="note" style="margin-top:8px">Tek fonun hareketi gürültüdür; birden çok fonun aynı yönde hareketi akımdır. "Fon" sütunu o hissede aynı yönde işlem yapan fon sayısıdır.</div>
+  </div>
 </div>
 </div>
 
@@ -1819,8 +1848,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260828b"></script>
-<script src="/ajan.js?v=20260828b"></script>
+<script src="/app.js?v=20260828c"></script>
+<script src="/ajan.js?v=20260828c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
