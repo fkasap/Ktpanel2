@@ -3,6 +3,63 @@
  "aciklama": "Earnings AI — yeni yayımlanan bilançoların Claude incelemesi. İş akışı: bilanço çıkınca 'X'i incele' de → BIST için Fintables, ABD için Alpha Vantage'tan çeyreklik veriler çekilir, kart üretilir, bu dosyaya eklenir, tek dosya deploy. KART STANDARDI: net kâr & EPS (ÇÇ+YoY), gelir, marjlar, önemli kalemler, varsa guidance, portföy tezi. Finans-dışı şirketlerde EBITDA ve EBITDA marjı (ÇÇ+YoY) zorunlu metriktir; banka/sigorta gibi finansal şirketlerde EBITDA anlamlı olmadığından yerine sektörel marj kullanılır (banka: NII/net marj, sigorta: teknik marj). Kartlar kalıcı arşivdir.",
  "kartlar": [
   {
+   "kod": "CRM",
+   "ad": "Salesforce",
+   "donem": "FY27 2Ç (31 Tem)",
+   "tarih": "26 Ağu 2026",
+   "tarih_iso": "2026-08-26",
+   "sablon": "abd",
+   "skor": "POZİTİF",
+   "ozet": "Manşet EPS 5,90 $ (beklenti 3,27 → %80 beat) ve hisse +%11 — ama bu rakam YANILTICI: net kârın 2,6 mlr $'ı, yani %74'ü Anthropic hissesindeki DEĞERLEME kazancı, nakit değil. Kartın bulgusu şu: o kalem ÇIKARILINCA tablo kötüleşmiyor, İYİLEŞİYOR — faaliyet kârı 0,93 mlr $'a inerken FCF 1,10 mlr $ ile onun ÜSTÜNDE (FCF/kâr %119). Yani asıl iş nakit üretiyor. Ciro +%11 (11,35 mlr $), FY27 rehberliği yukarı (46,1-46,4 mlr $), Agentforce ARR 1,5 mlr $ (+%240), cRPO 33,5 mlr $ konsensüsün üstünde.",
+   "metrikler": [
+    {
+     "ad": "Ciro",
+     "deger": "11,35 mlr $",
+     "cc": "konsensüs 11,33 → hafif aşıldı",
+     "yoy": "+%11 · FY27 rehberliği 45,9-46,2 → 46,1-46,4 mlr $ YUKARI çekildi"
+    },
+    {
+     "ad": "Brüt marj",
+     "deger": "derlenmedi (bülten ekinde)",
+     "cc": "—",
+     "yoy": "yazılım tarafında yapısal olarak yüksek; bu çekimde alınmadı"
+    },
+    {
+     "ad": "Faaliyet kârı / marj",
+     "deger": "derlenmedi",
+     "cc": "FAVÖK açıklanmıyor — TTM faaliyet kârı ~9,4 mlr $ (Trefis)",
+     "yoy": "düz. EPS 5,90 vs beklenti 3,27 (+%80); geçen yıl aynı çeyrek 2,91"
+    },
+    {
+     "ad": "Net kâr / marj",
+     "deger": "3,53 mlr $ · %31,1",
+     "cc": "GAAP EPS 4,29 $ · içinde 2,60 mlr $ Anthropic değerleme kazancı",
+     "yoy": "+%87 (1,89 mlr $'dan) — AMA kazanç kalemi hariç ~0,93 mlr $"
+    },
+    {
+     "ad": "FCF",
+     "deger": "1,10 mlr $ · marj %9,7",
+     "cc": "AV CASH_FLOW: işletme 1,269 − capex 0,171. Konsensüs 643 mn → +%71 aşıldı",
+     "yoy": "+%81 y/y · FCF/net kâr %31, ama Anthropic hariç %119 · capex cironun %1,5'i (varlık-hafif)"
+    },
+    {
+     "ad": "Segment dağılımı",
+     "deger": "Agentforce ARR 1,5 mlr $ (+%240)",
+     "cc": "cRPO 33,5 mlr $ vs konsensüs 33,22",
+     "yoy": "AI+Data ARR 4 mlr $'a yaklaşıyor · entegrasyon/analitik lisanslarında 'rüzgâr ve oynaklık' (CFO)"
+    }
+   ],
+   "onemli": [
+    "BEAT'İN KALİTESİ — ÜÇÜNCÜ KEZ AYNI SORU: WMT'de tarife iadesi (750bps), NVDA'da FCF/net kâr %36, şimdi CRM'de net kârın %74'ü Anthropic değerleme kazancı. Üç ayrı sektörde üst üste manşet-altı ayrışma. FARK ŞU: CRM'de kalem çıkarılınca tablo BOZULMUYOR — faaliyet kârı 0,93 mlr $, FCF 1,10 mlr $, yani nakit kârı AŞIYOR (%119). WMT'de tersi olmuştu (GAAP net kâr −%9,4). Aynı desen, zıt sonuç.",
+    "NAKİT MEVSİMSELLİĞİ TUZAĞI: FCF 1Ç'deki 6,56 mlr $'dan 1,10 mlr $'a düştü (−%83) — ama bu bozulma DEĞİL, Salesforce'ta 1Ç tahsilat zirvesidir (yıllık faturalama Ocak-Şubat'ta toplanır). Yıllık bağlam: FY26'da işletme nakit akışı 15,0 mlr $, capex 594 mn, FCF 14,4 mlr $. Çeyrekliği yıllığa bakmadan okumak yanıltır.",
+    "SEYRELTME MALİYETİ GÖRÜNMEZ AMA BÜYÜK: çeyrekte 906 mn $ hisse bazlı ödeme = üretilen FCF'in %83'ü. Şirket 84 mn $ geri alım + 364 mn $ temettü dağıttı; yani geri alım SBC'yi karşılamıyor, net hisse sayısı baskısı sürüyor. FY26'da SBC 3,51 mlr $ idi.",
+    "ANTHROPIC BAĞLANTISI İKİ YÖNLÜ: hem kâra 2,6 mlr $ değerleme kazancı yazdı, hem 'Claudeforce' ortaklığı duyuruldu (pilot müşteriler erişimde, beta gelecek ay). Alphabet ve Microsoft da aynı çeyrekte Anthropic kaynaklı kazanç bildirdi — bu, kâr kalemi olarak SEKTÖR GENELİNE yayılan bir kalem hâline geliyor; tekrarlanabilir değil, izlenmeli."
+   ],
+   "guidance": "FY27 ciro 46,1-46,4 mlr $ (önceki 45,9-46,2 → YUKARI). 3Ç FY27: ciro 11,42-11,50 mlr $, düz. EPS 3,42-3,44 $. Fin satın alması (3,6 mlr $) 3Ç'de kapanması bekleniyor — planlanandan erken. VA sözleşmesi 1,6 mlr $.",
+   "kaynak": "CNBC + Investing.com (26 Ağu kapanış sonrası) · NAKİT AKIŞI: Alpha Vantage CASH_FLOW çeyrek 2026-07-31 (işletme 1,269 · capex 0,171 · net kâr 3,526 · SBC 0,906 · temettü 0,364 · geri alım 0,084 mlr $) — §184 dersi gereği bu kez AV ÇEKİLDİ. Brüt/faaliyet marjı bülten ekinde, bu çekimde derlenmedi.",
+   "tez": "Panel kapsamında DEĞİL (BIST evreni). Okuma: (1) AI yazılım tarafında talep GERÇEK ve nakde dönüyor — Agentforce +%240, cRPO beklentinin üstünde; NVDA'nın donanım tarafındaki 'stokta bağlanan nakit' sorununun tersi. (2) 'Beat kalitesi' üçlemesi (WMT/NVDA/CRM) bir tema oluşturdu: 2026 bilançolarında manşet kâr giderek daha çok faaliyet DIŞI kalemden besleniyor — tarife iadesi, portföy değerlemesi. Kartları okurken ilk soru 'bu kâr nereden geldi' olmalı. (3) BIST tarafında doğrudan karşılık yok; dolaylı okuma: yazılım/AI harcaması dayanıklı, teknoloji ağırlıklı küresel endeksler için destekleyici."
+  },
+  {
    "kod": "NVDA",
    "ad": "NVIDIA",
    "donem": "FY27 2Ç (26 Tem)",
@@ -3508,7 +3565,7 @@
    "tarih_iso": "2026-07-14"
   }
  ],
- "guncelleme": "2026-08-27 — NVDA kartı DÜZELTİLDİ: AV CASH_FLOW ile gerçek FCF (21,40 mlr $, 1Ç'ye göre −%56) eklendi; skor POZİTİF → KARIŞIK (gelir tablosu güçlü, nakit tablosu zayıf). 56 kart.",
+ "guncelleme": "2026-08-27 — CRM FY27 2Ç kartı (POZİTİF: %80 beat ama kârın %74'ü Anthropic değerlemesi; kalem hariç FCF/kâr %119 — nakit tarafı sağlam). NVDA kartı AV CASH_FLOW ile düzeltildi. 57 kart.",
  "bekleyen": "YURT İÇİ: KSTUR 2Ç26 (28 Tem 18:32, KAP 1637921 — endeks dışı, kart yok) · GARAN 29 Tem · YKBNK 30 Tem · BIGEN ve DSTKF (24 Tem, kart yok) — 'incele' de. Büyük sanayi ağustos başı. YURT DIŞI: MSFT-META 29 Tem · AAPL-AMZN 30 Tem · TSLA/IBM/NOW 2Ç26 (kart yok).",
  "_kart_standardi": "ABD kartlarinda ZORUNLU metrik seti: (1) Ciro +y/y (2) Brut marj (3) Faaliyet kari VE marji (4) Net kar VE marji + EPS/beklenti (5) FCF + capex (6) Segment ciro dagilimi. FAVOK ayrica aciklanmiyorsa faaliyet marji kullanilir ve BELIRTILIR. Bir kalem kaynakta YOKSA \"aciklanmadi\" yazilir, TAHMIN EDILMEZ.",
  "_kaynak_sirasi": "ABD kartlari icin: (1) Alpha Vantage once — EARNINGS (EPS/beklenti/surpriz), INCOME_STATEMENT (ciro/brut/faaliyet/net), EARNINGS_ESTIMATES (ileri tahmin). (2) Web — EKSIKLER icin (FCF, capex, segment, rehberlik) ve TEYIT icin; birincil kaynak sirket bulteni, tutmazsa BULTEN kazanir. ISTISNA: aciklama gunu ve ertesi gun AV GEC ISLER (MSFT 4C: reportedEPS None, yillik satir uc ceyrek topluyordu). O pencerede bulten birincil; AV bir-iki gun sonra CAPRAZ DENETIM icin."
