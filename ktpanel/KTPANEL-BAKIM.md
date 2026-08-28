@@ -6,6 +6,30 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §429c (29 Agu 2026)
+
+## §429c ILK CANLI KOSU (#178) IKI YANLIS VARSAYIMI OLCTU
+
+1) EVREN 0: otomatik evren TEFAS unvanindan __akisMeta uzerinden okunuyordu;
+   fon katmani (§263) isini bitirince __akisMeta = null yapiyor (satir ~946).
+   Regex dogruydu, sozluk YOKTU. Cozum: unvanlar ayri sozlukte (__fonUnvan)
+   yasar, null'lanmaz. DERS: baskasinin temizledigi global'e yaslanma — kendi
+   kopyani al (§401b "kapsam" dersinin global hali).
+2) KAP SEMASI: funds/byCriteria kaydi {publishDate, fundCode, kapTitle,
+   disclosureClass, disclosureType:'FON', summary...} — stockCode DEGIL fundCode.
+   Ayrica 400 gunluk tek pencere 2000 kayitta KESILDI (tavan). Cozum: 30 gunluk
+   pencereler, 2000 gelirse pencere yarilanir (7 gune kadar); konu suzgeci
+   subjectList=[8aca490d...] (HAR'daki FILTERYFBF yolunun ikinci kimligi =
+   Portfoy Dagilim Raporu konusu), reddederse suzgecsiz. Kod alani
+   fundCode|stockCode|fonKodu; index disclosureIndex|index|disclosureId.
+   Donem: listede year/donem yoksa summary'den ("2026 / 7.Ay"), o da yoksa
+   PDF basligi (Temmuz-2026) ASIL KAYNAK; liste ile celisirse PDF kazanir ve
+   rapora yazilir. PDF basligindaki fon kodu istekle uyusmazsa ATLANIR.
+   Ayni disclosureIndex iki kez islenmez.
+Rapor satiri artik istek sayisi + tavan daralmasini yazar.
+Ilk gercek olcum: bir sonraki elle kosu (katman fonportfoy).
+DEPLOY: scripts/tazele.mjs.
+
 # BAKIM EK — §429b (28 Agu 2026)
 
 ## §429b FON KODU GIRISI + AY AY ALIS/SATIS GORUNUMU
