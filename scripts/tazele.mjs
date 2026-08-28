@@ -3604,9 +3604,10 @@ async function bultenKesif() {
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
-    if (ister('fonportfoy') || ister('hepsi')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());   /* §429: KAP aylık PDF */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
   }
+  /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
+  if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
 
   raporlar.push(
     `\n---\n**Sonuç:** ${degisenler.length ? degisenler.join(' · ') : 'değişiklik yok'}` +
