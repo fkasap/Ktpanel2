@@ -6,6 +6,26 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §429b (28 Agu 2026)
+
+## §429b FON KODU GIRISI + AY AY ALIS/SATIS GORUNUMU
+
+ISTEK NETLESTI: "fon kodunu ben girecegim, KAP'tan otomatik ceksin, alim-satim
+en az 3 ay gorunsun, tarihsel biriksin."
+SINIR: panel statik, KAP'a giden Actions; tarayicidan yazilan kod Actions'a
+ulasamaz (§428 bulut dersi). Sir gerektirmeyen yol: Actions "Run workflow"
+formuna yeni `fonkod` girisi (virgullu). tazele --fonkod=... -> evren_elle'ye
+KALICI eklenir; deposu bos fon varsa pencere 400 gun (13 rapor), yeni fonlar
+kuyrukta ONCE. 5 dk sonra panel listesinde belirir.
+EKRAN: Gorunum secici — agirlik (%) · net alim · alis · satis (hepsi mn TL,
+hisse x ay). Islem gorunumlerinde son sutun N ayin TOPLAMI (birikimli alim).
+YENI/CIKTI etiketi yalniz agirlik gorunumunde (islemde anlamsiz).
+BIRIKIM: tavan YOK (fon-ay ~10 KB); "en fazla 3 ay" istegi gorunum penceresiyle
+karsilanir (4/6/12), veri silinmez.
+Sahte DOM testi (net gorunumu): 29 satir, KTLEV -45,5 · TUPRS +22,1 · BIMAS -10,7.
+DEPLOY: scripts/tazele.mjs · .github/workflows/tazele.yml · ktpanel/{index.html,
+app.js} (surum 20260828d).
+
 # BAKIM EK — §429 (28 Agu 2026)
 
 ## §429 FON PORTFOY DAGILIMI — Sektorel Veriler > alt sekme (kullanici istegi)

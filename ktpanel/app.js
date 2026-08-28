@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260828c';   // SS429 fon portfoy dagilimi alt sekmesi
+const KTP_SURUM = '20260828d';   // SS429b fon kodu girisi + ay ay alis/satis gorunumu
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10126,7 +10126,7 @@ async function fonpdInit(){
   if(!fonlar.length){ $('fonpdTablo').innerHTML='<div class="sub">depoda henüz rapor yok — ilk Cumartesi koşusundan sonra dolar (evren: '+Object.keys(FONPD.evren||{}).length+' fon)</div>'; return; }
   sec.innerHTML=fonlar.map(k=>{ const f=FONPD.fonlar[k]; const n=Object.keys(f.donemler||{}).length; return '<option value="'+k+'">'+k+' — '+String(f.ad||'').replace(/^[A-Z0-9]+-/,'').slice(0,60)+' ('+n+' ay)</option>'; }).join('');
   $('fonpdDamga').textContent=FONPD.guncelleme?('depo '+FONPD.guncelleme+' · '+fonlar.length+' fon'):'—';
-  ['fonpdSec','fonpdAy','fonpdSira'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',fonpdRender); });
+  ['fonpdSec','fonpdAy','fonpdSira','fonpdGor'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',fonpdRender); });
   fonpdRender(); fonpdEvrenRender();
 }
 function fonpdRender(){
@@ -10145,29 +10145,39 @@ function fonpdRender(){
     ['Hisse sayısı', String((D.hisse||[]).length)]
   ].map(([l,v])=>'<div class="card" style="padding:8px 10px"><div class="lbl" style="font-size:9px">'+l+'</div><div style="font-size:15px;font-weight:700;margin-top:2px">'+v+'</div></div>').join('');
   $('fonpdTag').textContent=son.replace('-','/')+' · '+donemler.length+' dönem · yayın '+((D.kaynak&&D.kaynak.yayin)||'?');
-  // hisse × dönem matrisi
-  const M={}; donemler.forEach(dn=>{ (F.donemler[dn].hisse||[]).forEach(h=>{ (M[h.kod]=M[h.kod]||{})[dn]=h.agirlik; }); });
+  // hisse × dönem matrisi — görünüme göre: ağırlık (%) ya da ay içi alış/satış/net (mn ₺)
+  const gor=($('fonpdGor')&&$('fonpdGor').value)||'agirlik';
   const netAl=(dn,k)=>{ const I=F.donemler[dn].islem||{}; const a=(I.alis&&I.alis[k]&&I.alis[k].deger)||0, s=(I.satis&&I.satis[k]&&I.satis[k].deger)||0; return (a||s)?(a-s):null; };
-  let satirlar=Object.keys(M).map(k=>{
-    const w=M[k][son]||0, wo=onc?(M[k][onc]||0):null, wi=(M[k][ilk]||0);
-    const d1=onc?+(w-wo).toFixed(2):null, dN=donemler.length>1?+(w-wi).toFixed(2):null;
+  const islemDeg=(dn,k,tip)=>{ const I=F.donemler[dn].islem||{}; const v=I[tip]&&I[tip][k]&&I[tip][k].deger; return v?v:null; };
+  const M={}; donemler.forEach(dn=>{ (F.donemler[dn].hisse||[]).forEach(h=>{ (M[h.kod]=M[h.kod]||{})[dn]=h.agirlik; }); });
+  const W={};   // görünüm matrisi
+  if(gor==='agirlik'){ Object.keys(M).forEach(k=>W[k]=M[k]); }
+  else { donemler.forEach(dn=>{ const I=F.donemler[dn].islem||{}; new Set([...Object.keys(I.alis||{}),...Object.keys(I.satis||{})]).forEach(k=>{ const v=gor==='net'?netAl(dn,k):islemDeg(dn,k,gor); if(v!=null){ (W[k]=W[k]||{})[dn]=+(v/1e6).toFixed(1); } }); }); }
+  const bas=$('fonpdBaslik'); if(bas){ const t=$('fonpdTag'); bas.firstChild.textContent={agirlik:'HİSSE AĞIRLIKLARI — AY SONU, FON TOPLAM DEĞERİNE GÖRE (%) ',net:'AY İÇİ NET ALIM (alış − satış · mn ₺) — hisse × ay ',alis:'AY İÇİ ALIŞLAR (mn ₺) — hisse × ay ',satis:'AY İÇİ SATIŞLAR (mn ₺) — hisse × ay '}[gor]; }
+  let satirlar=Object.keys(W).map(k=>{
+    const w=W[k][son]||0, wo=onc?(W[k][onc]||0):null, wi=(W[k][ilk]||0);
+    const d1=onc?+(w-wo).toFixed(2):null;
+    /* ağırlıkta Δ N ay = ilk→son fark; işlem görünümünde N ayın TOPLAMI (birikimli alım) */
+    const dN=gor==='agirlik'?(donemler.length>1?+(w-wi).toFixed(2):null):+donemler.reduce((t,dn)=>t+(W[k][dn]||0),0).toFixed(1);
     const net=netAl(son,k);
-    const durum=!M[k][son]?'çıktı':(onc&&M[k][onc]==null?'yeni':'');
+    const durum=gor!=='agirlik'?'':(!M[k]||!M[k][son]?'çıktı':(onc&&M[k][onc]==null?'yeni':''));
     return {k,w,d1,dN,net,durum};
   });
-  satirlar=satirlar.filter(r=>r.w||r.durum==='çıktı');
-  satirlar.sort((a,b)=> sira==='degisim'?((b.d1||0)-(a.d1||0)) : sira==='net'?((b.net||0)-(a.net||0)) : (b.w-a.w));
+  satirlar=satirlar.filter(r=>r.w||r.durum==='çıktı'||(gor!=='agirlik'&&r.dN));
+  satirlar.sort((a,b)=> sira==='degisim'?((b.d1||0)-(a.d1||0)) : sira==='net'?((b.net||0)-(a.net||0)) : (gor==='agirlik'?(b.w-a.w):(Math.abs(b.dN||0)-Math.abs(a.dN||0))));
   const pp=v=>v==null?'<span class="sub">—</span>':'<span class="'+(v>0.05?'up':v<-0.05?'down':'')+'">'+(v>0?'+':'')+v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+'</span>';
   const kolon=donemler.map(dn=>'<th style="text-align:right">'+dn.slice(2).replace('-','/')+'</th>').join('');
-  let html='<table class="tbl"><thead><tr><th>Hisse</th>'+kolon+'<th style="text-align:right">Δ son ay</th><th style="text-align:right">Δ '+(donemler.length-1)+' ay</th><th style="text-align:right">Ay içi net (mn ₺)</th><th></th></tr></thead><tbody>';
+  const dNBas=gor==='agirlik'?('Δ '+(donemler.length-1)+' ay'):(donemler.length+' ay toplam');
+  let html='<table class="tbl"><thead><tr><th>Hisse</th>'+kolon+'<th style="text-align:right">Δ son ay</th><th style="text-align:right">'+dNBas+'</th><th style="text-align:right">Son ay net (mn ₺)</th><th></th></tr></thead><tbody>';
+  const fmtH=v=>gor==='agirlik'?v.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}):'<span class="'+(v>0?'up':v<0?'down':'')+'">'+(v>0&&gor==='net'?'+':'')+v.toLocaleString('tr-TR',{maximumFractionDigits:1})+'</span>';
   satirlar.forEach(r=>{
-    const hucre=donemler.map(dn=>'<td style="text-align:right;font-variant-numeric:tabular-nums">'+(M[r.k][dn]!=null?M[r.k][dn].toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}):'<span class="sub">·</span>')+'</td>').join('');
+    const hucre=donemler.map(dn=>'<td style="text-align:right;font-variant-numeric:tabular-nums">'+(W[r.k]&&W[r.k][dn]!=null?fmtH(W[r.k][dn]):'<span class="sub">·</span>')+'</td>').join('');
     const ok=r.d1==null?'':(r.d1>0.25?'▲':r.d1<-0.25?'▼':'▬');
     const etiket=r.durum==='yeni'?'<span class="tag" style="background:var(--ok-bg,#e6f4ea);color:var(--ok,#1a7f37)">YENİ</span>':r.durum==='çıktı'?'<span class="tag" style="background:var(--bad-bg,#fdecea);color:var(--bad,#b42318)">ÇIKTI</span>':ok;
     html+='<tr><td><b>'+r.k+'</b></td>'+hucre+'<td style="text-align:right">'+pp(r.d1)+'</td><td style="text-align:right">'+pp(r.dN)+'</td><td style="text-align:right">'+(r.net==null?'<span class="sub">—</span>':'<span class="'+(r.net>0?'up':'down')+'">'+(r.net>0?'+':'')+(r.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</span>')+'</td><td>'+etiket+'</td></tr>';
   });
   const topW=satirlar.reduce((a,r)=>a+r.w,0);
-  html+='</tbody><tfoot><tr><td>Toplam hisse</td>'+donemler.map(dn=>'<td style="text-align:right"><b>'+(F.donemler[dn].hisseToplam&&F.donemler[dn].hisseToplam.ftd!=null?F.donemler[dn].hisseToplam.ftd.toLocaleString('tr-TR',{minimumFractionDigits:2}):'—')+'</b></td>').join('')+'<td colspan="4"></td></tr></tfoot></table>';
+  if(gor==='agirlik') html+='</tbody><tfoot><tr><td>Toplam hisse</td>'+donemler.map(dn=>'<td style="text-align:right"><b>'+(F.donemler[dn].hisseToplam&&F.donemler[dn].hisseToplam.ftd!=null?F.donemler[dn].hisseToplam.ftd.toLocaleString('tr-TR',{minimumFractionDigits:2}):'—')+'</b></td>').join('')+'<td colspan="4"></td></tr></tfoot></table>'; else html+='</tbody></table>';
   $('fonpdTablo').innerHTML=html;
 }
 function fonpdEvrenRender(){
