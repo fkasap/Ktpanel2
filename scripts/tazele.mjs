@@ -2494,36 +2494,66 @@ async function fonPortfoy() {
   const SUBJ = '8aca490d502e34b801502e380044002b';
   const kodAl = b => String(b.fundCode || b.stockCode || b.fonKodu || '').toUpperCase().trim();
   const idxAl = b => b.disclosureIndex || b.index || b.disclosureId || null;
-  const pdMi = b => /PORTF[ÖO]Y\s*DA[ĞG]ILIM/i.test(String(b.summary || '') + ' ' + String(b.title || '') + ' ' + String(b.subject || ''));
-  let liste = [], yol = '', ornek = null, hamToplam = 0, istekSay = 0, kesik = 0;
-  const cek = async (uc, from, to, subj) => {
+  const oidAl = b => b.mkkMemberOid || b.memberOid || b.fundOid || (b.disclosureDetail && b.disclosureDetail.fundOid) || null;
+  const pdMi = b => /PORTF[ÖO]Y\s*DA[ĞG]ILIM/i.test(String(b.subject || '') + ' ' + String(b.summary || '') + ' ' + String(b.title || ''));
+  /* §429e (canlı #182): konu süzgeçli tarama 15.886 kayıt gördü, evrenin 9 fonunu
+     YAKALAYAMADI — raporlar ayın ilk 10 gününde yığılıyor, 7 günlük pencere bile
+     2000 tavanına çarpıyor, kesilen dilimde kalıyorlar. Tüm piyasayı taramak yanlış
+     yol. İKİ AŞAMA: (A) KAP üye kimliği (mkkMemberOid) bilinen fon → fon bazında TEK
+     istek, 400 gün, mkkMemberOidList=[oid] (ilk HAR'daki FILTERYFBF yolu da bu
+     kimlikle çalışıyordu). (B) Kimliği bilinmeyen fon → pencereli tarama, pencere
+     1 güne kadar daralır, yol boyunca evren fonlarının kimliği HASAT edilir ve
+     dosyaya yazılır; sonraki koşu A'dan gider. Toplam istek tavanı 140. */
+  let liste = [], yol = '', ornek = null, hamToplam = 0, istekSay = 0, kesik = 0, hasat = 0;
+  const cek = async (uc, from, to, subj, oids) => {
     const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/' + uc + '/byCriteria', { method: 'POST', headers: H,
-      body: JSON.stringify({ fromDate: iso(from), toDate: iso(to), mkkMemberOidList: [], subjectList: subj ? [SUBJ] : [] }), signal: AbortSignal.timeout(30000) });
+      body: JSON.stringify({ fromDate: iso(from), toDate: iso(to), mkkMemberOidList: oids || [], subjectList: subj ? [SUBJ] : [] }), signal: AbortSignal.timeout(30000) });
     istekSay++;
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    const j = await r.json(); return Array.isArray(j) ? j : (j.items || j.data || []);
+    const j = await r.json(); const items = Array.isArray(j) ? j : (j.items || j.data || []);
+    const out = items.map(b => b.disclosureBasic || b);
+    if (!ornek && out[0]) ornek = JSON.stringify(out[0]).slice(0, 600);
+    /* kimlik hasadı: evren fonuna ait her kayıt */
+    out.forEach(b => { const k = kodAl(b), o = oidAl(b); if (k && o && d.evren[k] && !d.evren[k].oid) { d.evren[k].oid = o; hasat++; } });
+    return out;
   };
-  for (const uc of ['funds', 'members']) {
-    for (const subj of [true, false]) {
-      try {
-        const bulunan = [];
-        let to = simdi, adim = 30 * GUN, ham = 0;
-        while (to > simdi - pencereGun * GUN && istekSay < 60) {
-          const from = Math.max(to - adim, simdi - pencereGun * GUN);
-          const items = await cek(uc, from, to, subj);
-          ham += items.length; hamToplam += items.length;
-          if (!ornek && items[0]) ornek = JSON.stringify(items[0]).slice(0, 320);
-          if (items.length >= 2000 && adim > 7 * GUN) { adim = Math.floor(adim / 2); kesik++; continue; }   /* tavan: pencereyi daralt, aynı 'to' ile tekrar */
-          items.map(b => b.disclosureBasic || b).forEach(b => { if (pdMi(b) && evrenKod.includes(kodAl(b))) bulunan.push(b); });
-          to = from; await uyku(300);
-        }
-        if (bulunan.length) { liste = bulunan; yol = uc + (subj ? '+konu' : ''); break; }
-        raporlar.push('- §429 KAP ' + uc + '/byCriteria' + (subj ? ' (konu süzgeçli)' : '') + ': ' + ham + ' kayıt, evrende portföy raporu 0');
-      } catch (e) { raporlar.push('- §429 KAP ' + uc + '/byCriteria' + (subj ? ' (konu süzgeçli)' : '') + ': ' + String(e.message || e).slice(0, 70)); }
-    }
-    if (liste.length) break;
+  const kabul = b => pdMi(b) && evrenKod.includes(kodAl(b));
+  const bas = simdi - pencereGun * GUN;
+  /* (A) kimliği bilinen fonlar — fon başına tek istek */
+  const oidli = evrenKod.filter(k => d.evren[k].oid);
+  for (const k of oidli) {
+    try { const items = await cek('funds', bas, simdi, true, [d.evren[k].oid]); hamToplam += items.length; items.filter(kabul).forEach(b => liste.push(b)); }
+    catch (e) { raporlar.push('- §429 ' + k + ' (oid) : ' + String(e.message || e).slice(0, 60)); }
+    await uyku(250);
   }
-  if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt)' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); await yaz(dosya, d); return; }
+  if (oidli.length) yol = 'funds+oid(' + oidli.length + ')';
+  /* (B) kimliksizler — pencereli tarama, 1 güne kadar daralır */
+  const oidsiz = evrenKod.filter(k => !d.evren[k].oid);
+  if (oidsiz.length) {
+    let to = simdi, adim = 30 * GUN, ham = 0;
+    try {
+      while (to > bas && istekSay < 140) {
+        const from = Math.max(to - adim, bas);
+        const items = await cek('funds', from, to, true);
+        ham += items.length; hamToplam += items.length;
+        if (items.length >= 2000 && adim > 1 * GUN) { adim = Math.max(GUN, Math.floor(adim / 2)); kesik++; continue; }
+        items.filter(kabul).forEach(b => liste.push(b));
+        to = from;
+        if (items.length < 400 && adim < 30 * GUN) adim = Math.min(30 * GUN, adim * 2);   /* seyrek bölgede pencereyi geri büyüt */
+        await uyku(250);
+      }
+    } catch (e) { raporlar.push('- §429 tarama: ' + String(e.message || e).slice(0, 60)); }
+    yol += (yol ? ' + ' : '') + 'tarama(' + oidsiz.length + ' fon, ' + ham + ' kayıt' + (to > bas ? ', ' + Math.round((to - bas) / GUN) + ' gün TARANAMADI' : '') + ')';
+    /* hasat edilen kimlikler için hemen A yolu — tarama kaçırdıysa bu yakalar */
+    for (const k of oidsiz) {
+      if (!d.evren[k].oid || istekSay >= 150) continue;
+      try { const items = await cek('funds', bas, simdi, true, [d.evren[k].oid]); hamToplam += items.length; items.filter(kabul).forEach(b => liste.push(b)); } catch (e) {}
+      await uyku(250);
+    }
+  }
+  if (hasat) raporlar.push('- §429e KAP üye kimliği hasat edildi: ' + hasat + ' fon (dosyaya yazıldı; sonraki koşu fon bazında sorgular)');
+  await yaz(dosya, d);   /* kimlikler kalıcı olsun — rapor listesi boş dönse bile */
+  if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · kimlikli ' + evrenKod.filter(k => d.evren[k].oid).length + ' · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt · yol: ' + yol + ')' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); return; }
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
   const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index) islenmisIdx.add(String(x.kaynak.index)); }));
