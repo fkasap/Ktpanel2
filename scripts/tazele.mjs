@@ -1216,7 +1216,24 @@ async function fonTazele() {
      ikincisinin yapacak işi yoktur.
      NOT: bu, §252z'nin (tarih sürekliliği) aynı ailesi — iki ölçüm arasındaki
      GERÇEK zaman farkı sıfırsa, getiri de tanımsızdır. */
-  const _ayniGun = String(d.fiyat_tarihi || '') === String(bugun);
+  /* §427 (28 Ağu) TEKRAR KOŞU ARTIK VERİDEN ÖLÇÜLÜYOR, TAKVİMDEN DEĞİL.
+     CANLI: GitHub 27 Ağu akşam cron'unu 9 saat geciktirdi -> koşu 28 Ağu
+     03:22'de (TZ=Europe/Istanbul) çalıştı ve fiyat_tarihi=28 yazdı; TEFAS o
+     saatte hâlâ 27'nin fiyatını veriyordu. Öğlen 13:52'deki gerçek 28 koşusu
+     "aynı gün" sayıldı, 1G HESAPLANMADI, fiyat 28'e ilerledi -> panelde bir
+     gün boyunca 28'in fiyatı + 27'nin getirisi. Koşu tarihi ile veri tarihi
+     ayrışınca eski koşul kırılıyordu.
+     ÖLÇÜT: gelen fiyat vektörü dosyadakiyle aynıysa (fonların >%90'ında birebir)
+     tekrar koşudur; değiştiyse yeni fiyat günüdür — saat kaç olursa olsun.
+     Eşleşme ölçülemezse (ilk koşu / boş) eski takvim koşuluna düşülür. */
+  const _ayniGun = (() => {
+    let ayni = 0, farkli = 0;
+    fonlar.forEach(f => { const y = fiyat[f.k]; if (!y || !f.yu) return; (Math.abs(y / f.yu - 1) < 1e-9 ? ayni++ : farkli++); });
+    const n = ayni + farkli;
+    globalThis.__katfonAyniGun = { ayni, farkli, n };
+    if (!n) return String(d.fiyat_tarihi || '') === String(bugun);
+    return farkli === 0 || ayni / n > 0.9;
+  })();
   let n = 0;
   fonlar.forEach(f => {
     const yeni = fiyat[f.k]; if (!yeni) return;
@@ -1230,7 +1247,9 @@ async function fonTazele() {
     f.g[0] = +((yeni / eski - 1) * 100).toFixed(4);
     f.yu = yeni; n++;
   });
-  if (_ayniGun) raporlar.push('### Katılım fonları — ℹ aynı gün tekrar koşu: fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266)');
+  { const k = globalThis.__katfonAyniGun || {};
+    if (_ayniGun) raporlar.push('### Katılım fonları — ℹ tekrar koşu (fiyat vektörü değişmedi: ' + (k.ayni||0) + '/' + (k.n||0) + ' aynı): fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266/§427)');
+    else if (k.n) raporlar.push('- §427 yeni fiyat günü: ' + k.farkli + '/' + k.n + ' fonda fiyat değişti — 1G ve akış hesaplandı'); }
   /* §249: AUM + yatırımcı canlı; AKIŞ = Δpay × fiyat (dünkü pay arşivden).
      Arşiv yoksa ilk koşu akışı null bırakır ve temeli atar — uydurma yok. */
   const meta = globalThis.__tefasMeta || {};
@@ -1333,7 +1352,8 @@ async function bilancoTetik() {
     try {
       if (await varMi(dosya)) {
         const d = await oku(dosya);
-        eskiKodlar = Array.isArray(d.kodlar) ? d.kodlar.filter(k => /^[A-Z]{4,6}$/.test(String(k))) : [];
+        eskiKodlar = [...(Array.isArray(d.kodlar) ? d.kodlar : []), ...(Array.isArray(d.evren_disi) ? d.evren_disi : [])]   /* §428: saklı liste de defterin parçası */
+          .filter(k => /^[A-Z]{4,6}$/.test(String(k)));
         ilkGorulme = (d.ilk_gorulme && typeof d.ilk_gorulme === 'object') ? { ...d.ilk_gorulme } : {};
       }
     } catch (e) { raporlar.push('- ⚠ eski tetik dosyası okunamadı, defter sıfırdan kuruluyor: ' + String(e.message || e).slice(0, 60)); }
@@ -1353,14 +1373,36 @@ async function bilancoTetik() {
     const yeniGelenler = pencere.filter(k => !eskiKodlar.includes(k));
     const dusenler = kartli ? [...birlesikSet].filter(k => kartli.has(k)).sort() : [];
     dusenler.forEach(k => { birlesikSet.delete(k); delete ilkGorulme[k]; });
-    const kodlar = [...birlesikSet].sort();
-    kodlar.forEach(k => { if (!ilkGorulme[k]) ilkGorulme[k] = bugun; });
+    /* §428 (28 Ağu) DEFTER EVRENE SÜZÜLDÜ. ÖLÇÜLDÜ: 226 borcun yalnız 67'si
+       katılım evreninde (XKTUM ∪ XK100 ∪ XKTMT). Sunucu defteri KAP'taki HER FR
+       bildirimini topluyordu; tarayıcıdaki nöbet (§219) ise evrene süzüyor —
+       iki sayaç farklı şeyi sayıyordu, "226 kart bekliyor" panelin gerçek
+       borcu değildi. Evren dışı kodlar SİLİNMEZ (§245k): ayrı listede durur,
+       ilk_gorulme korunur; evrene sonradan girerse borç yaşıyla birlikte
+       ana deftere döner. Kartı olan kodlar (inceleme-ai.json) evrene dahildir.
+       Üyelik dosyası okunamazsa süzme YAPILMAZ (eski davranış) — eksik evren
+       yüzünden borç görünmez olmasın. */
+    let evren = null;
+    try {
+      const E = new Set();
+      for (const f of ['xktum.json', 'xk100.json', 'xktmt.json']) {
+        const u = (await oku(f)).uyeler || {};
+        Object.keys(u).forEach(k => E.add(String(k).toUpperCase()));
+      }
+      if (kartli) kartli.forEach(k => E.add(k));
+      if (E.size > 50) evren = E;
+    } catch (e) { raporlar.push('- ⚠ §428 üyelik dosyası okunamadı, evren süzgeci uygulanmadı: ' + String(e.message || e).slice(0, 60)); }
+    const hepsiKod = [...birlesikSet].sort();
+    hepsiKod.forEach(k => { if (!ilkGorulme[k]) ilkGorulme[k] = bugun; });
+    const kodlar = evren ? hepsiKod.filter(k => evren.has(k)) : hepsiKod;
+    const evrenDisi = evren ? hepsiKod.filter(k => !evren.has(k)) : [];
 
     /* 4) Borcun yaşı — en eski bekleyen kaç gündür defterde */
     const yas = k => Math.round((new Date(bugun) - new Date(ilkGorulme[k])) / GUN);
     const enEski = kodlar.length ? kodlar.slice().sort((a, b) => yas(b) - yas(a))[0] : null;
 
     await yaz(dosya, { tarih: bugun, kodlar, sayi: kodlar.length, ilk_gorulme: ilkGorulme,
+      evren_disi: evrenDisi, evren_disi_sayi: evrenDisi.length,   /* §428: saklanır, sayılmaz */
       pencere_sayi: pencere.length, dusen_son: dusenler,
       guncelleme: new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC — otomatik (KAP FR · kümülatif §299)' });
 
@@ -1373,6 +1415,7 @@ async function bilancoTetik() {
     } catch (e) { raporlar.push('- ⚠ borç defteri denetimi koşmadı: ' + String(e.message || e).slice(0, 60)); }
 
     raporlar.push('### Bilanço tetiği (§299 kümülatif) — ✓ ' + kodlar.length + ' şirket kart bekliyor' +
+      (evren ? ' (katılım evreni · evren dışı ' + evrenDisi.length + ' saklı, §428)' : '') +
       '\n- pencere: ' + pencere.length + ' FR · yeni deftere giren: ' + yeniGelenler.length +
       (yeniGelenler.length ? ' (' + yeniGelenler.slice(0, 10).join(', ') + (yeniGelenler.length > 10 ? ' …' : '') + ')' : '') +
       '\n- ' + (kartli ? ('kart yazılıp düşen: ' + dusenler.length +
