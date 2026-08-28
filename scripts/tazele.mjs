@@ -2456,6 +2456,11 @@ async function fonPortfoy() {
   let P; try { P = await import('./fonportfoy-pdf.mjs'); } catch (e) { raporlar.push('### Fon portföy dağılımı (§429) — ✗ ayrıştırıcı modülü yüklenemedi: ' + String(e.message || e).slice(0, 80)); return; }
   let d = (await varMi(dosya)) ? await oku(dosya) : { evren: {}, evren_elle: [], fonlar: {} };
   d.evren = d.evren || {}; d.fonlar = d.fonlar || {}; d.evren_elle = Array.isArray(d.evren_elle) ? d.evren_elle : [];
+  /* §429b KULLANICI KODU: Actions formundaki --fonkod (virgüllü) evren_elle'ye
+     KALICI eklenir; o fon bu turda çekilir (ilk kez görülüyorsa 400 gün geriye). */
+  const elleYeni = String(arg('fonkod') || '').toUpperCase().split(/[,\s;]+/).map(x => x.trim()).filter(x => /^[A-Z0-9]{2,5}$/.test(x));
+  elleYeni.forEach(k => { if (!d.evren_elle.includes(k)) d.evren_elle.push(k); });
+  if (elleYeni.length) raporlar.push('- §429b elle eklenen fon: ' + elleYeni.join(', '));
   /* 1) EVREN */
   const meta = globalThis.__akisMeta || {};
   let otoN = 0;
@@ -2475,7 +2480,8 @@ async function fonPortfoy() {
   const iso = t => new Date(t).toISOString().slice(0, 10);
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu',
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
-  const pencereGun = ilkKosu ? 400 : 45;
+  const yeniFonVar = evrenKod.some(k => !d.fonlar[k]);   /* §429b: deposu boş fon varsa geriye bak */
+  const pencereGun = (ilkKosu || yeniFonVar) ? 400 : 45;
   let liste = [], yol = '', ornek = null;
   for (const uc of ['funds', 'members']) {
     try {
@@ -2503,7 +2509,8 @@ async function fonPortfoy() {
   });
   /* aynı (kod,dönem) için en son yayın kazanır */
   const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + i.donem; if (!tekil[k] || tekil[k].index < i.index) tekil[k] = i; });
-  const sira = Object.values(tekil).sort((a, b) => (b.donem > a.donem ? 1 : -1)).slice(0, 40);
+  /* §429b: deposu boş (yeni eklenen) fonlar ÖNCE, sonra yeni dönemden eskiye */
+  const sira = Object.values(tekil).sort((a, b) => ((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || (b.donem > a.donem ? 1 : -1)).slice(0, 40);
   let yazildi = 0, dusen = [], hata = [];
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fonpd-'));
   for (const is of sira) {
