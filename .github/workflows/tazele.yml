@@ -30,7 +30,7 @@ on:
   workflow_dispatch:        # elle tetikleme (Actions sekmesinden)
     inputs:
       katman:
-        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon)'
+        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy)'
         required: false
         default: 'hepsi'
 
@@ -104,6 +104,13 @@ jobs:
       # §252x: koşul artık SEÇİLEN katmana bakıyor. Önceden github.event.inputs'a
       # bakıyordu ve scheduled koşuda o hep '' olduğundan Playwright HER koşuda
       # kuruluyordu — sabah fon koşusunda gerekli, ama endeks/risk koşusunda değil.
+      # §429 fon portföy dağılımı: KAP PDF'ini pdftotext -layout ile metne çevirir.
+      # Yalnız hepsi/fonportfoy koşularında (Cumartesi + elle); ~10 sn.
+      - name: poppler (yalnız fon portföy katmanı · §429)
+        if: contains(steps.sec.outputs.katman, 'fonportfoy') || contains(steps.sec.outputs.katman, 'hepsi')
+        continue-on-error: true
+        run: sudo apt-get install -y -q poppler-utils >/dev/null && pdftotext -v 2>&1 | head -1
+
       - name: Playwright (yalnız fon katmanı)
         if: contains(steps.sec.outputs.katman, 'fon') || contains(steps.sec.outputs.katman, 'hepsi')
         continue-on-error: true
