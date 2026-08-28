@@ -40,7 +40,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%3)
 - ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (191 gün)
+- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (192 gün)
 - ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1692 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
@@ -63,7 +63,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2031 fon fiyat + 1059 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587009454012205> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587010225074073> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -74,14 +74,14 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
-- ✓ **seri guncelligi (track.series)**: 2026-08-27 (referans 2026-08-28, fark 1g)
+- ✓ **seri guncelligi (track.series)**: 2026-08-28 (referans 2026-08-28, fark 0g)
 - ✓ **seri guncelligi (fon-akis)**: 2026-08-28 (referans 2026-08-28, fark 0g)
 
 ### Bilanço borç defteri — ✓ GEÇTİ
 - ✓ **borc defteri (§299)**: 67 kart bekliyor · en eski AKHAN (10g)
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 67 şirket kart bekliyor (katılım evreni · evren dışı 161 saklı, §428)
-- pencere: 2 FR · yeni deftere giren: 2 (AVGYO, BALAT)
+- pencere: 2 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AKHAN · 10 gündür bekliyor
 - AKHAN, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, BERA, BIENY, BIMAS, BINHO, BUCIM, BURCE, CANTE, CELHA, CVKMD, DCTTR, EGGUB, EGPRO, ELITE, EUPWR …
@@ -120,12 +120,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - §383 arşive yazıldı: +25 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 100/245
-- bu turda: 4 tam · 1 eksik kalemli · 1 alınamadı
-- not: BINHO:1 ana kalem boş · BUCIM:2026: fetch failed
+- bu turda: 5 tam · 0 eksik kalemli · 1 alınamadı
+- not: EGGUB:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/245 şirket tam
-- BUCIM:2026: fetch failed (1. kez) · BERA:2026: fetch failed (1. kez)
+- EGGUB:2026: fetch failed (1. kez) · BUCIM:2026: fetch failed (2. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -146,6 +146,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - son ay net değişimi: 469.0 mlr ₺ (dönem sonu − dönem başı, tüm türler)
 - ölçüler: Dönem Başı Fon Adedi · Dönem Sonu Fon Adedi · Fon Adedi Değişim · Dönem Başı Fon Tutarı (TL) · Dönem Sonu Fon Tutarı (TL) · Dönem Başı Fon Sayısı · Dönem Sonu Fon Sayısı
 
+- §429 KAP funds/byCriteria: 2000 kayıt, evrende portföy raporu 0
+
+- §429 KAP members/byCriteria: 2000 kayıt, evrende portföy raporu 0
+
+### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren 1 fon)
+- ilk kayıt örneği: `{"publishDate":"28.08.2026 20:26:35","fundCode":"APYKF","kapTitle":"ALBARAKA PORTFÖY YÖNETİMİ A.Ş. İKİNCİ KİRA SERTİFİKALARI KATILIM GİRİŞİM SERMAYESİ YATIRIM FONU","isOldKap":false,"disclosureClass":"ODA","disclosureType":"FON","disclosureCategory":null,"summary":"Fon portföyümüzde bulunan Alves Ka`
+
 ### Bülten keşfi (§250k) — ✓ thb202608271.zip indi · 302KB
 - içerik: thb202608271.csv
 - endeks izi: `thb202608271.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
@@ -158,9 +165,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (128 fiyat) · Model sicili (38 fiyat) · TR 5Y CDS (218.03 bp) · fon akışı (2031) · katılım fonları (46+akış) · bilanço tetiği (67 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (100/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (218.03 bp) · risk metrikleri (135) · fon akışı (2031) · katılım fonları (46+akış) · bilanço tetiği (67 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (100/245) · KAP arşivi (+0 çeyrek) · GYO NAV (45 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
 - ⏱ Faktör evreni (§361) — 100 sn
-- ⏱ KAP arşivi (§381) — 73 sn
-- toplam: 229 sn
+- ⏱ KAP arşivi (§381) — 72 sn
+- toplam: 233 sn
