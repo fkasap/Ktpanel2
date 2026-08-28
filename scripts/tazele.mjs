@@ -720,6 +720,7 @@ async function fonTazele() {
         nA++;
       }
       if (nA) { globalThis.__akisMeta = meta; }   /* §263: liste (kurucuAd) çekildikten SONRA yazılır */
+      if (nA) { const U = {}; Object.keys(meta).forEach(k => { if (meta[k].unvan) U[k] = meta[k].unvan; }); globalThis.__fonUnvan = U; }   /* §429c: __akisMeta 946'da null'lanıyor; unvan ayrı yaşar */
       if (nA) raporlar.push('### TEFAS genel bilgi (§253i) — ✓ ' + nA + ' fon · AUM + yatırımcı sayısı köprüden'
         + ' (ham ' + dizi.length + ' kayıt, sayfalamalı)');
       else raporlar.push('### TEFAS genel bilgi (§253i) — ⏭ boş döndü'
@@ -2462,7 +2463,9 @@ async function fonPortfoy() {
   elleYeni.forEach(k => { if (!d.evren_elle.includes(k)) d.evren_elle.push(k); });
   if (elleYeni.length) raporlar.push('- §429b elle eklenen fon: ' + elleYeni.join(', '));
   /* 1) EVREN */
-  const meta = globalThis.__akisMeta || {};
+  /* §429c CANLI: __akisMeta fon katmanının sonunda null'lanıyor (satır ~946) -> evren hep 0 çıktı. Unvan sözlüğü ayrı (__fonUnvan). */
+  const UNV = globalThis.__fonUnvan || {};
+  const meta = {}; Object.keys(UNV).forEach(k => meta[k] = { unvan: UNV[k] });
   let otoN = 0;
   Object.keys(meta).forEach(k => {
     const u = String(meta[k].unvan || '').toUpperCase().replace(/İ/g, 'I');
@@ -2482,35 +2485,60 @@ async function fonPortfoy() {
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const yeniFonVar = evrenKod.some(k => !d.fonlar[k]);   /* §429b: deposu boş fon varsa geriye bak */
   const pencereGun = (ilkKosu || yeniFonVar) ? 400 : 45;
-  let liste = [], yol = '', ornek = null;
+  /* §429c KAP ŞEMASI (canlı #178): funds/byCriteria kaydı {publishDate, fundCode,
+     kapTitle, disclosureClass, disclosureType:'FON', summary, ...} — stockCode YOK,
+     fundCode VAR. 400 günlük tek pencere 2000 kayıtta KESİLDİ (tavan). Artık 30
+     günlük pencereler; hâlâ 2000 gelirse pencere yarılanır (7 güne kadar).
+     Konu süzgeci: HAR'daki FILTERYFBF yolunun ikinci kimliği (Portföy Dağılım
+     Raporu konusu) subjectList'e verilir; uç reddederse süzgeçsiz denenir. */
+  const SUBJ = '8aca490d502e34b801502e380044002b';
+  const kodAl = b => String(b.fundCode || b.stockCode || b.fonKodu || '').toUpperCase().trim();
+  const idxAl = b => b.disclosureIndex || b.index || b.disclosureId || null;
+  const pdMi = b => /PORTF[ÖO]Y\s*DA[ĞG]ILIM/i.test(String(b.summary || '') + ' ' + String(b.title || '') + ' ' + String(b.subject || ''));
+  let liste = [], yol = '', ornek = null, hamToplam = 0, istekSay = 0, kesik = 0;
+  const cek = async (uc, from, to, subj) => {
+    const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/' + uc + '/byCriteria', { method: 'POST', headers: H,
+      body: JSON.stringify({ fromDate: iso(from), toDate: iso(to), mkkMemberOidList: [], subjectList: subj ? [SUBJ] : [] }), signal: AbortSignal.timeout(30000) });
+    istekSay++;
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json(); return Array.isArray(j) ? j : (j.items || j.data || []);
+  };
   for (const uc of ['funds', 'members']) {
-    try {
-      const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/' + uc + '/byCriteria', { method: 'POST', headers: H,
-        body: JSON.stringify({ fromDate: iso(simdi - pencereGun * GUN), toDate: iso(simdi), mkkMemberOidList: [], subjectList: [] }), signal: AbortSignal.timeout(30000) });
-      if (!r.ok) { raporlar.push('- §429 KAP ' + uc + '/byCriteria HTTP ' + r.status); continue; }
-      const j = await r.json(); const items = Array.isArray(j) ? j : (j.items || j.data || []);
-      if (!ornek && items[0]) ornek = JSON.stringify(items[0]).slice(0, 300);
-      const f = items.map(b => b.disclosureBasic || b).filter(b => /PORTF[ÖO]Y DA[ĞG]ILIM/i.test(String(b.summary || b.title || '')) &&
-        evrenKod.includes(String(b.stockCode || '').toUpperCase().trim()));
-      if (f.length) { liste = f; yol = uc; break; }
-      raporlar.push('- §429 KAP ' + uc + '/byCriteria: ' + items.length + ' kayıt, evrende portföy raporu 0');
-    } catch (e) { raporlar.push('- §429 KAP ' + uc + '/byCriteria: ' + String(e.message || e).slice(0, 70)); }
+    for (const subj of [true, false]) {
+      try {
+        const bulunan = [];
+        let to = simdi, adim = 30 * GUN, ham = 0;
+        while (to > simdi - pencereGun * GUN && istekSay < 60) {
+          const from = Math.max(to - adim, simdi - pencereGun * GUN);
+          const items = await cek(uc, from, to, subj);
+          ham += items.length; hamToplam += items.length;
+          if (!ornek && items[0]) ornek = JSON.stringify(items[0]).slice(0, 320);
+          if (items.length >= 2000 && adim > 7 * GUN) { adim = Math.floor(adim / 2); kesik++; continue; }   /* tavan: pencereyi daralt, aynı 'to' ile tekrar */
+          items.map(b => b.disclosureBasic || b).forEach(b => { if (pdMi(b) && evrenKod.includes(kodAl(b))) bulunan.push(b); });
+          to = from; await uyku(300);
+        }
+        if (bulunan.length) { liste = bulunan; yol = uc + (subj ? '+konu' : ''); break; }
+        raporlar.push('- §429 KAP ' + uc + '/byCriteria' + (subj ? ' (konu süzgeçli)' : '') + ': ' + ham + ' kayıt, evrende portföy raporu 0');
+      } catch (e) { raporlar.push('- §429 KAP ' + uc + '/byCriteria' + (subj ? ' (konu süzgeçli)' : '') + ': ' + String(e.message || e).slice(0, 70)); }
+    }
+    if (liste.length) break;
   }
-  if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon)' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); await yaz(dosya, d); return; }
+  if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt)' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); await yaz(dosya, d); return; }
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
+  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index) islenmisIdx.add(String(x.kaynak.index)); }));
   liste.forEach(b => {
-    const kod = String(b.stockCode).toUpperCase().trim();
-    const yil = b.year, ay = b.donem; if (!yil || !ay) return;
-    const donem = yil + '-' + String(ay).padStart(2, '0');
-    const varolan = d.fonlar[kod] && d.fonlar[kod].donemler && d.fonlar[kod].donemler[donem];
-    if (varolan && varolan.kaynak && varolan.kaynak.index === b.disclosureIndex) return;
-    isler.push({ kod, donem, index: b.disclosureIndex, yayin: b.publishDate });
+    const kod = kodAl(b), index = idxAl(b); if (!kod || !index) return;
+    if (islenmisIdx.has(String(index))) return;   /* aynı bildirim iki kez işlenmez */
+    let donem = null;
+    if (b.year && b.donem) donem = b.year + '-' + String(b.donem).padStart(2, '0');
+    else { const m = String(b.summary || '').match(/(\d{4})\s*\/\s*(\d{1,2})\s*\.?\s*Ay/i); if (m) donem = m[1] + '-' + m[2].padStart(2, '0'); }
+    isler.push({ kod, donem, index, yayin: b.publishDate });   /* donem null ise PDF başlığından alınır */
   });
-  /* aynı (kod,dönem) için en son yayın kazanır */
-  const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + i.donem; if (!tekil[k] || tekil[k].index < i.index) tekil[k] = i; });
+  /* aynı (kod,dönem) için en son yayın kazanır; dönemi bilinmeyenler ayrı tutulur */
+  const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + (i.donem || ('idx' + i.index)); if (!tekil[k] || String(tekil[k].index) < String(i.index)) tekil[k] = i; });
   /* §429b: deposu boş (yeni eklenen) fonlar ÖNCE, sonra yeni dönemden eskiye */
-  const sira = Object.values(tekil).sort((a, b) => ((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || (b.donem > a.donem ? 1 : -1)).slice(0, 40);
+  const sira = Object.values(tekil).sort((a, b) => ((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || (String(b.donem || '') > String(a.donem || '') ? 1 : -1)).slice(0, 40);
   let yazildi = 0, dusen = [], hata = [];
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fonpd-'));
   for (const is of sira) {
@@ -2526,9 +2554,14 @@ async function fonPortfoy() {
       const txt = cp.execSync('pdftotext -layout "' + pf + '" -', { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] });
       const r = P.raporuAyristir(txt);
       if (!r.denetim.gecti) { dusen.push(is.kod + ' ' + is.donem + ': ' + r.denetim.sorun.join('; ')); await uyku(400); continue; }
+      const donemPdf = r.baslik.donem;   /* PDF 'Temmuz-2026' başlığı — asıl kaynak */
+      if (donemPdf && is.donem && donemPdf !== is.donem) hata.push(is.kod + ': liste dönemi ' + is.donem + ' ≠ PDF ' + donemPdf + ' (PDF alındı)');
+      const donemK = donemPdf || is.donem;
+      if (!donemK) { hata.push(is.kod + ' idx' + is.index + ': dönem çözülemedi'); await uyku(400); continue; }
+      if (r.baslik.kod && r.baslik.kod !== is.kod) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }
       const F = d.fonlar[is.kod] || (d.fonlar[is.kod] = { ad: d.evren[is.kod] ? d.evren[is.kod].ad : is.kod, donemler: {} });
       F.ad = r.baslik.ad || F.ad;
-      F.donemler[is.donem] = {
+      F.donemler[donemK] = {
         baslik: r.baslik,
         hisse: r.hisse.map(h => ({ kod: h.kod, agirlik: h.agirlik, deger: h.deger, nominal: h.nominal })),
         hisseToplam: r.hisseToplam,
