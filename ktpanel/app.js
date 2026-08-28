@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260827h';   // SS415 cekmece ic ice sema (meta.tarih) + plan kayitlari tazelendi
+const KTP_SURUM = '20260828a';   // SS425 swap stoku + Haz portfoy + trend sozlugu
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2504,7 +2504,7 @@ function yabanciRender(){
     // Aradaki açıklık kendi başına bilgi: piyasanın fiyatladığı dezenflasyondur.
     '<div class="kv"><span class="k">Carry getirisi <span class="thin">(reel faiz · iki bakış)</span></span><span id="yabCarryVal">'+
       reelFaizSatiri(RF)+'</span></div>'+
-    '<div class="note">Skor üç bileşenden: <em>aylık portföy akışı</em> (hisse+tahvil net; Nis +4,05 / May −3,07 kesin ödemeler dengesi, diğer aylar eğilim), <em>swap hariç net rezerv trendi</em> (dar carry parası girince şişer, çıkınca erir — Oca zirvesi 85,7→Haz dibi 28 mlr sert carry çıkışıydı) ve <em>carry getirisi</em>. Bugünkü okuma: para tümüyle çıkmadı ama <em>oynak ve seçici</em> — hisseden tahvile kaydı, dar carry rezerv toparlanmasıyla ılımlı dönüyor. Kesin rakam değil, <em>yön işareti</em>; ödemeler dengesi ayda bir, menkul kıymet haftalık tazelenir.</div>';
+    '<div class="note">Skor üç bileşenden: <em>aylık portföy akışı</em> (hisse+tahvil net; koyu çubuklar kesin ödemeler dengesi, soluk çubuklar eğilim tahmini), <em>swap hariç net rezerv trendi</em> (dar carry parası girince şişer, çıkınca erir — Oca zirvesi 85,7→Haz dibi 28 mlr sert carry çıkışıydı) ve <em>carry getirisi</em>. Bugünkü okuma: para tümüyle çıkmadı ama <em>oynak ve seçici</em> — hisseden tahvile kaydı, dar carry rezerv toparlanmasıyla ılımlı dönüyor. Kesin rakam değil, <em>yön işareti</em>; ödemeler dengesi ayda bir, menkul kıymet haftalık tazelenir.</div>';
   /* §259c YENİDEN ÇİZİMDEN SONRA CANLI DEĞERİ GERİ BAS. Bu fonksiyon kartı
      JSON'dan komple kuruyor; exAnteHesapla → yabCarryTazele → yabanciRender
      zinciri kullanıcı Tahminler sekmesini açınca tetikleniyor ve canlı akış

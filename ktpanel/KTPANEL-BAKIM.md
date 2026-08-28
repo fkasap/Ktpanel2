@@ -3,8 +3,39 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-08-25
+Son güncelleme: 2026-08-28
 
+
+# BAKIM EK — §425 (28 Agu 2026)
+
+## §425 IKI ELLE KATMAN UC HAFTA GEC: SWAP STOKU + AYLIK PORTFOY
+
+SIKAYET YOK — damga taramasi yakaladi: rezerv.json 18 gun (10 Agu), yabanci.json
+aylik blok 17 gun (11 Agu). Arada UC Persembe yayini (13/20/27 Agu) ve BIR
+odemeler dengesi (12 Agu, Haziran) gecmisti. Panel kendini uyariyordu ama
+uyari uc hafta okunmadi — "KAYIT VARDI, OKUMADIM" sinifinin ELLE-KATMAN hali.
+
+ISLENEN (web, TCMB haftalik bulten + odemeler dengesi):
+  rezerv.json  swapStoku 13,4 -> 11,0  (21 Agu: net 66,9 − swap haric 55,9)
+               seri: 31T 13,4 · 14A 12,8 · 21A 11,0 — swap yukumlulugu ERIYOR,
+               swap haric net 40,8 -> 55,9 (+15,1 mlr / 3 hafta). Brut 188,4;
+               haftalik +4,9'un tamami ALTIN degerlemesi (+5,9), doviz −0,9.
+               OKUMA: rezerv artisi kaliteli (swap haric) ama son hafta FIYAT
+               etkisi; TCMB doviz alimi surdu (Nisan'dan beri 39 mlr+).
+  yabanci.json Haz portfoy 1,5 tahmin -> 2,54 KESIN (hisse+fon 2,92 · DIBS
+               1,19 · Genel Hukumet eurobond −0,90). 2026 kumulatif +2,8.
+               rezerv.guncel 46,8 -> 55,9.
+
+YAN BULGU (kod hatasi): yabanci.json rezerv.trend = "güçlü" yaziliydi.
+app.js yabanciRender: rezervS = trend==='toparlanıyor'?65 : 'eriyor'?30 : 50.
+"güçlü" sozlukte YOK -> rezerv bileseni (agirlik %25) HEP NOTR ve renk sinifi
+"down" (esitlik tutmadigi icin) — skor 3-4 puan eksik, rezerv satiri KIRMIZI
+gorunuyordu. Duzeltme: trend="toparlanıyor". Kural DAMGA'ya §0 olarak yazildi.
+AYRICA Altin Kural 3 ihlali: yabanci karti statik notunda "Nis +4,05 / May
+−3,07" rakamlari vardi -> rakamsizlastirildi (koyu/soluk cubuk anlatimi).
+
+SIRADAKI: 3 Eyl Per (28 Agu haftasi rezerv) · 11 Eyl Per (Tem odemeler dengesi).
+DEPLOY: rezerv.json · yabanci.json · app.js · index.html (surum 20260828a).
 
 # BAKIM EK — §422 (27 Agu 2026)
 

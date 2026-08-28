@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-11",
+ "guncelleme": "2026-08-28",
  "kaynak": "TCMB Ödemeler Dengesi (aylık portföy) + Haftalık Menkul Kıymet İst. + swap hariç net rezerv",
  "aylik": [
   {
@@ -29,14 +29,16 @@
   },
   {
    "ay": "Haz",
-   "portfoy": 1.5,
-   "kesin": false
+   "portfoy": 2.54,
+   "kesin": true,
+   "_not": "TCMB Odemeler Dengesi Haz 2026 (12 Agu yayini): portfoy net giris 2.537 mn$ — hisse+fon 2.920 · DIBS 1.185 · yurt disi tahvil: banka +462, diger +375, Genel Hukumet −896. Cari acik 4.194 (bekl. 4.918), yillik 38,9 mlr. Onceki tahmin 1,5 idi."
   },
   {
    "ay": "Tem",
    "portfoy": 1.2,
    "kesin": false,
-   "kismi": true
+   "kismi": true,
+   "_not": "KISMI — Temmuz odemeler dengesi ~11 Eyl yayinlanir; o zaman kesinlesir."
   }
  ],
  "hafta_son": {
@@ -80,15 +82,17 @@
  ],
  "hafta_not": "Hisse: Haz'da güçlü (466→203mn) → Tem'de DURDU (11→33→38mn). Tahvil: 6 haftadır kesintisiz alım; 10 Tem REKOR haftası — DİBS 1,23 mlr + ÖST 1,34 mlr = tek haftada ~2,5 mlr $ carry girişi (13 Şub'dan beri en yüksek), 17 Tem'de normalleşme.",
  "rezerv": {
-  "guncel": 46.8,
+  "guncel": 55.9,
   "dip": 28,
   "zirve": 85.7,
-  "trend": "güçlü",
-  "not": "Swap hariç net. YALNIZCA İLK ÇİZİM YEDEĞİ — app.js canlı EVDS net rezerv eksi rezerv.json.swapStoku ile kendi hesaplar ve üstüne yazar; trend etiketi de orada HESAPLANIR (>=40 güçlü, >=35 toparlanıyor, altı zayıf). §261: 11 Ağu 37,7 -> 46,8 (net 60,2 - swap 13,4). Bu alan panelin gösterdiği değerden GERİ KALIRSA sorun DEĞİLDİR: canlı hesap üstüne yazar. Elle tutmaya çalışma, yalnız rezerv.json ile aynı yayına dayanmasına dikkat et."
+  "trend": "toparlanıyor",
+  "not": "Swap hariç net. YALNIZCA İLK ÇİZİM YEDEĞİ — app.js canlı EVDS net rezerv eksi rezerv.json.swapStoku ile kendi hesaplar. §425 (28 Agu): trend degeri \"güçlü\" idi; yabanciRender skor motoru yalniz toparlanıyor/eriyor taniyor, \"güçlü\" NOTR (50) sayiliyordu — rezerv bileseni 25 puanlik agirligiyla hep notr kaliyordu. SOZLUK: toparlanıyor · eriyor · (diger her sey notr).",
+  "etiket": "21 Agu haftasi"
  },
  "carry": {
   "not": "Damgali reel_faiz=7.9 KALDIRILDI. Yeniden uretilemiyordu ve iki ayri buyuklukle karistiriliyordu: EX-ANTE reel (politika vs BEKLENEN enflasyon, TCMB cipasi, ~%10,5) ve EX-POST reel (AOFM vs GERCEKLESEN TUFE, fonun fiilen kazandigi, Fisher ile ~%6,0). Ikisi ayri sorularin cevabidir, karistirilmamali. §112: bir buyuklugun tek sahibi olur.",
   "sahip": "app.js — §127 window.EXANTE (ex-ante) ve §128 canli Fisher (ex-post). Bu dosya SAHIP DEGIL."
  },
- "_haftalik_not": "§261 (11 Ağu): hafta_son + hafta_seri blokları CANLI UÇTAN geliyor (/api/evds2?mod=yab · EVDS bie_mknethar M7/M8/M12). app.js yabHaftaCanliYaz() ile basar ve yeniden çizimden sonra geri koyar. Buradaki değerler yalnız İLK ÇİZİM yedeğidir ve elle tazelenmesi GEREKMEZ. Elle kalan tek blok: aylik (ödemeler dengesi, ayda bir)."
+ "_haftalik_not": "§261 (11 Ağu): hafta_son + hafta_seri blokları CANLI UÇTAN geliyor (/api/evds2?mod=yab · EVDS bie_mknethar M7/M8/M12). app.js yabHaftaCanliYaz() ile basar ve yeniden çizimden sonra geri koyar. Buradaki değerler yalnız İLK ÇİZİM yedeğidir ve elle tazelenmesi GEREKMEZ. Elle kalan tek blok: aylik (ödemeler dengesi, ayda bir).",
+ "_aylik_not": "§425 (28 Agu): Haz KESIN 2,54 (odemeler dengesi). SIRADAKI: Tem verisi 11 Eyl Per. Bu blok ELLE; hafta_son/hafta_seri canli uctan (§259/261)."
 }

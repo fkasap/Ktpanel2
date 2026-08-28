@@ -1,14 +1,38 @@
 {
- "guncelleme": "2026-08-10",
+ "guncelleme": "2026-08-28",
  "kaynak": "TCMB haftalık basın açıklaması (web) — swap stoku bileşeni EVDS'de yok (yurt dışı ikili swap, ağırlıkla Katar)",
- "swapStoku": 13.4,
+ "swapStoku": 11.0,
  "webDogrulama": {
-  "tarih": "31-07-2026",
-  "brut": 164.4,
-  "net": 54.2,
-  "swapHaricNet": 40.8,
-  "not": "swapStoku = net − swapHaricNet = 54,2 − 40,8 = 13,4. Kaynak: TCMB Haftalik Para ve Banka Istatistikleri, 31 Tem haftasi (6 Agu Persembe yayini). Onceki: 24 Tem haftasi net 51,1 − swap haric 38,3 = 12,8. Brut 162,6 -> 164,4 (+1,842 mlr; 1,415 doviz + 0,427 altin).",
-  "_252u": "10 Agu: 6 Agu yayini islendi (dosyanin kendi uyarisi \"SIRADAKI: 31 Tem haftasi verisi 6 Agu Persembe yayinlanir\" diyordu, kacmisti — 4 gun gecikmeyle kapatildi). SIRADAKI: 7 Agu haftasi verisi 13 Agu Persembe yayinlanir. DOGRULAMA IZI: panelin karneBrut alani zaten 164,4 gosteriyordu (EVDS canli), yani brut rakam TCMB yayini ile TUTTU — swap bileseni geride kalmisti."
+  "tarih": "21-08-2026",
+  "brut": 188.4,
+  "net": 66.9,
+  "swapHaricNet": 55.9,
+  "not": "swapStoku = net − swapHaricNet = 66,9 − 55,9 = 11,0. Kaynak: TCMB Haftalik Para ve Banka Istatistikleri, 21 Agu haftasi (27 Agu Persembe yayini). Onceki: 14 Agu haftasi net 67,14 − swap haric 54,3 = 12,8 · 7 Agu haftasi swap haric 50,4 (+9,4 haftalik, altin etkisi ~6,2 haric +5,6). Brut 183,5 -> 188,4 (+4,949 mlr; doviz −0,938 · altin +5,886 — artis ALTIN DEGERLEMESI, doviz bacagi geriledi).",
+  "seri": [
+   {
+    "h": "31 Tem",
+    "net": 54.2,
+    "swapHaric": 40.8,
+    "swap": 13.4
+   },
+   {
+    "h": "7 Agu",
+    "swapHaric": 50.4
+   },
+   {
+    "h": "14 Agu",
+    "net": 67.14,
+    "swapHaric": 54.3,
+    "swap": 12.8
+   },
+   {
+    "h": "21 Agu",
+    "net": 66.9,
+    "swapHaric": 55.9,
+    "swap": 11.0
+   }
+  ],
+  "_425": "28 Agu: 13 + 20 + 27 Agu yayinlari UC HAFTA gec islendi (18 gun bayat). Swap stoku 13,4 -> 11,0: yurt disi swap yukumlulugu ERIYOR, swap haric net ayni donemde 40,8 -> 55,9 (+15,1 mlr, 3 haftada). SIRADAKI: 28 Agu haftasi verisi 3 Eyl Persembe yayinlanir."
  },
  "aciklama": "Swap stoku yavaş değişen bir kalemdir (yurt dışı MB ikili anlaşmaları, ağırlıkla Katar ~15 mlr limit). Haftalık net rezerv hareketi ağırlıkla kur+bilançodan gelir. Bu dosya 'rezervleri güncelle' komutuyla web'den tazelenir; ara zamanlarda swap hariç net = canlı net − swapStoku olarak hesaplanır (net EVDS'den canlı)."
 }

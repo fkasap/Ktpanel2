@@ -6,6 +6,9 @@
 # CRON DUZENI (§252x): hafta ici 09:10 fon · 18:10 endeks,fiyat,fon · Cmt 07:00 hepsi(risk dahil)
 
 ## ALTIN KURALLAR
+0. ETIKET SOZLUGU KODDAN OKUNUR (§425): bir JSON alani kodda esitlikle
+   karsilastiriliyorsa (trend==='toparlanıyor') sozluk disi deger SESSIZCE notr
+   olur. Elle yazmadan once tuketiciyi grep'le.
 1. Panelde GORELI ZAMAN IFADESI YASAK: "bu gece / bugun / yarin" yazilmaz —
    mutlak tarih yazilir (Moody's "bu gece ~23:30" vakasi, 3 gun bayat kaldi).
 2. Damga tarihi = icerigin dogrulandigi gun. Icerik dogrulanmadan damga tazelenmez.
@@ -58,7 +61,7 @@
 | Gunluk fon akisi | OTOMATIK — fon-akis.json, Actions sabah kosusu. Formul (pay_t - pay_t-1) x fiyat. Ham DAUM KULLANILMAZ (%48 sapar) (§263) | 12A ✓ |
 | Katfon 1G + akis | ⚠ AYNI GUN IKINCI KOSU sifirliyordu — koruma eklendi (§266). Rapor 'ayni gun tekrar kosu' derse 1G korunmus demektir | 12A ✓ |
 | Tazelik hesabi | TEK SAHIP: window.tazelikHesap. ajan.js kendi kopyasini KULLANMIYOR artik (§261). Cekmece ile nobet AYRISAMAZ; fark yalniz ESIKTE (Ebu yaklasti'yi da uyarir) | 11A ✓ |
-| Yabanci AYLIK blogu | ELLE — odemeler dengesi, ayda bir. Haftalik kisim CANLI (§259/261) | 11A |
+| Yabanci AYLIK blogu | ELLE — odemeler dengesi, ayda bir. Haz KESIN 2,54 islendi · Siradaki: Tem verisi 11 Eyl Per. Haftalik kisim CANLI (§259/261) | 28A §425 |
 | Yabanci haftalik akis | ARTIK OTOMATIK — /api/evds2?mod=yab (bie_mknethar M7/M8/M12). Panelde 'EVDS canli' yazmiyorsa uc dusmus (§259) | 11A ✓ |
 | TR 5Y CDS (barometre) | ARTIK OTOMATIK — /api/tcmb?cds=1 · worldgovernmentbonds. 'canli' yazmiyorsa uc dusmus (§253). Eski 206 YANLISTI, 34 puan sapma | 10A ✓ |
 | Kart harcamalari (kart.js) | ARTIK OTOMATIK ay secimi — ayin son gozlemi ay sonuna <7 gun ise ay KAPANDI sayilir (§260). Onceki hal bir ay GERIDEYDI | 11A ✓ |
@@ -67,7 +70,7 @@
 | Bilanco karti birimi | Sayfa beyan etmezse CAPRAZ DOGRULAMA (ciro/TTM ya da PD/DD). Kart 'birim belirsiz' diyorsa ikisi de tutmamis (§255/257) | 11A ✓ |
 | Beta cipasi (risk.json) | ARTIK OTOMATIK — XKTUM (BIST resmi arsiv). Rapor 'XU100.IS' derse arsiv tohumu bozulmus demektir (§252y) | 10A ✓ |
 | Sektor rotasyonu (sektor.json) | Fintables endeks mumlari · capalar dosyada yazili | 10A §252w |
-| Swap stoku (rezerv.json) | TCMB haftalik yayin, PERSEMBE. Sıradaki: 13 Agu (7 Agu haftasi) | 10A §252v |
+| Swap stoku (rezerv.json) | TCMB haftalik yayin, PERSEMBE. Son: 21 Agu haftasi (27 Agu yayini) swap 11,0 · Siradaki: 3 Eyl (28 Agu haftasi) | 28A §425 |
 | Faktor modeli (fm.json) | ⏸ ~1 EYLUL'e ERTELENDI — 2C sezonu bitmeden yarim evren. arac/fm-isle.py HAZIR. Evren karari (147 vs 215) o zaman verilecek | 14T |
 | Guidance (guidance.json) | ⏸ ayni gerekce — sirketler 2C ile beklenti revize ediyor | 17T |
 | Endeks pay_adedi (xktum/xk100/xktmt.json) | HER BEDELSIZ/SERMAYE ARTIRIMINDA — ceyreklik YETMEZ. 9 Agu'da 10 gunde 3 bedelsiz kacti (KTLEV x3,33 uc dosyada birden) | 10A §252b |
@@ -87,7 +90,7 @@
 | Is | son veri | siradaki |
 |---|---|---|
 | Yabanci akis yabanci.json (hafta_seri'ye ekle) | 17T haftasi | 30T yayini |
-| Rezerv karnesi @mk-para (swap haric net) | canli 46,5 · ⚠ swap stoku 24T (18 gunluk), panel kendi uyariyor | 13A Per yayini |
+| Rezerv karnesi @mk-para (swap haric net) | 21 Agu: swap haric 55,9 · swap 11,0 (§425) | 3 Eyl Per yayini |
 | Katfon akis/AUM gomulu (Fintables) @t5 | 24T | hafta ici herhangi gun |
 | Katfon donem getirileri (1A..3Y damgali taban) | 21T | haftalik (Fintables'tan hesaplanabilir) |
 | Makroihtiyati @mk-banka: YP mevduat + kredi hacmi (BDDK haftalik) | Tem basi | Cuma yayini |
