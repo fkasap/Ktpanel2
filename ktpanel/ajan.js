@@ -37,6 +37,33 @@ function kayit(msg){
 }
 function durum(t){ const el=$('ajanDurum'); if(el) el.textContent=t; }
 
+/* ── §426 KARA KUTU: yakalanmayan hatalar panoya düşer ──
+   Bu hafta dört sessiz arıza sınıfı (§410c catch · §422 hedef yok · §424
+   zaman aşımı · §424c promise reddi) ortak paydada birleşti: kod düştü,
+   ekran "çalışıyor" gösterdi. Bundan sonra yakalanmayan her promise reddi
+   ve her senkron hata Ebu panosunda ⚠ satırı olur; durum şeridindeki
+   "…yazılıyor" da "⚠ hata" olur ki sonsuz bekleme görünmesin.
+   window.__KTP_HATALAR: son 20 hata (uzaktan teşhis için, konsoldan okunur). */
+window.__KTP_HATALAR = window.__KTP_HATALAR || [];
+(function(){
+  let sonMsg='', sonZaman=0;
+  function esc(t){ return String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+  function bildir(kaynak, err){
+    const e = err && err.reason !== undefined ? err.reason : err;
+    const msg = (e && e.message) ? e.message : String(e);
+    const yer = (e && e.stack) ? ((e.stack.match(/at (\w+)/)||[])[1]||'') : '';
+    const simdi = Date.now();
+    window.__KTP_HATALAR.unshift({t:new Date().toISOString(), kaynak, msg, yer, stack:e&&e.stack});
+    if(window.__KTP_HATALAR.length>20) window.__KTP_HATALAR.pop();
+    if(msg===sonMsg && simdi-sonZaman<5000) return;   // aynı hata seli panoyu doldurmasın
+    sonMsg=msg; sonZaman=simdi;
+    kayit('⚠ '+kaynak+': '+esc(msg.slice(0,140))+(yer?' ('+esc(yer)+')':''));
+    const d=$('ajanDurum'); if(d && /yor…|yor\.\.\./.test(d.textContent)) durum('⚠ hata — panoya bak');
+  }
+  window.addEventListener('unhandledrejection', ev=>bildir('REJ', ev));
+  window.addEventListener('error', ev=>{ if(ev && ev.error) bildir('HATA', ev.error); else if(ev && ev.message) bildir('HATA', ev.message); });
+})();
+
 /* ── VERİ TURU: mevcut canlı fonksiyonları tazele ── */
 async function veriTuru(el){
   if(AJAN.calisiyor) return; AJAN.calisiyor=true;

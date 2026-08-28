@@ -6,6 +6,26 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §426 (28 Agu 2026)
+
+## §426 KARA KUTU: YAKALANMAYAN HATALAR ARTIK PANOYA DUSER (§424c'nin acik isi)
+
+NE: ajan.js'e window 'unhandledrejection' + 'error' dinleyicisi. Yakalanan
+hata kayit() ile Ebu panosuna "⚠ REJ: <mesaj> (<fonksiyon>)" olarak duser;
+durum seridi "…yaziliyor" diyorsa "⚠ hata — panoya bak" olur (sonsuz bekleme
+gorunumu biter). window.__KTP_HATALAR son 20 hatayi yigin iziyle tutar —
+uzaktan teshiste konsoldan tek satirla okunur.
+KORUMALAR: ayni mesaj 5 sn icinde tekrarlarsa pano BASTIRILIR (12 satirlik
+pano bir hata seliyle dolmasin) ama hafizaya yine yazilir; mesaj HTML-kacisli
+(kayit innerHTML kullaniyor, hata metninde '<' olabilir); 140 karakter tavani.
+YERI: durum() tanimindan hemen sonra, ilk async cagridan ONCE — dinleyici
+gec kurulursa acilistaki hatalar kacar.
+TEST (simulasyon): ReferenceError x2 (ikincisi bastirildi) + TypeError'da
+'<b>' kacisi + durum sifirlamasi — 3/3 dogru.
+NE DEGISMEZ: hata yine olusur; fark, kullanicinin "buton calismiyor" yerine
+hata satirini yapistirabilmesi. Teshis bir turdan sifir tura iner.
+DEPLOY: ajan.js · app.js · index.html (surum 20260828b).
+
 # BAKIM EK — §425 (28 Agu 2026)
 
 ## §425 IKI ELLE KATMAN UC HAFTA GEC: SWAP STOKU + AYLIK PORTFOY

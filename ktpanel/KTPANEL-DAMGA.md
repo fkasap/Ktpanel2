@@ -281,6 +281,9 @@ ONEMLI: panele veri besleyen HER dosya guncelleme-plani.json'da OLMALI —
 kayitta olmayan dosya sessizce eskir (28 Tem'e kadar 6 dosya boyleydi).
 
 ## F) YASAYAN AJAN (ajan.js — runtime katmani)
+KARA KUTU (§426): yakalanmayan promise reddi/senkron hata -> pano '⚠ REJ/HATA: ...'
+satiri + durum seridi '⚠ hata'. Uzaktan teshis: konsolda window.__KTP_HATALAR (son 20).
+KONTROL: bir buton 'yaziliyor…'da takili kaldiysa ONCE panoya bak, tur harcama.
 Panel acikken: 10 dk'da bir GOREVLER listesindeki canli fonksiyonlari tazeler
 (pozFiyatOto/katfonCanli/tlFaizKart/yabCanli/kkoKart/fmKarne/atifRender),
 30 dk'da bir AJAN GUNDEM NOTU yazar (Haberler t7 basindaki kart).
