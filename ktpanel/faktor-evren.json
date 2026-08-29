@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-29T00:02:57Z",
+ "guncelleme": "2026-08-29T10:58:47Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -1024,7 +1024,7 @@
    "eksik": false
   },
   "FZLGY": {
-   "ts": "2026-08-21T06:22:13Z",
+   "ts": "2026-08-29T10:57:24Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1092,7 +1092,7 @@
    "eksik": false
   },
   "GEREL": {
-   "ts": "2026-08-21T06:22:47Z",
+   "ts": "2026-08-29T10:57:41Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1126,7 +1126,7 @@
    "eksik": false
   },
   "GESAN": {
-   "ts": "2026-08-21T12:27:09Z",
+   "ts": "2026-08-29T10:57:57Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1160,7 +1160,7 @@
    "eksik": false
   },
   "GLRMK": {
-   "ts": "2026-08-21T12:27:25Z",
+   "ts": "2026-08-29T10:58:14Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1194,7 +1194,7 @@
    "eksik": false
   },
   "GOLTS": {
-   "ts": "2026-08-21T12:27:41Z",
+   "ts": "2026-08-29T10:58:30Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
