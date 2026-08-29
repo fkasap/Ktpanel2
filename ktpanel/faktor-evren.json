@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-28T20:56:48Z",
+ "guncelleme": "2026-08-29T00:02:57Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -752,7 +752,7 @@
    "eksik": false
   },
   "EGGUB": {
-   "ts": "2026-08-20T23:12:00Z",
+   "ts": "2026-08-29T00:01:28Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -786,7 +786,7 @@
    "eksik": false
   },
   "EGPRO": {
-   "ts": "2026-08-20T23:12:13Z",
+   "ts": "2026-08-29T00:01:45Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -854,7 +854,7 @@
    "eksik": false
   },
   "ELITE": {
-   "ts": "2026-08-20T23:31:39Z",
+   "ts": "2026-08-29T00:02:02Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -888,7 +888,7 @@
    "eksik": false
   },
   "EUPWR": {
-   "ts": "2026-08-20T23:31:55Z",
+   "ts": "2026-08-29T00:02:20Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -956,7 +956,7 @@
    "eksik": false
   },
   "FONET": {
-   "ts": "2026-08-20T23:38:47Z",
+   "ts": "2026-08-29T00:02:37Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -990,7 +990,7 @@
    "eksik": false
   },
   "FORMT": {
-   "ts": "2026-08-20T23:39:03Z",
+   "ts": "2026-08-29T00:02:54Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
