@@ -1,10 +1,10 @@
 {
- "guncelleme": "2026-08-29",
+ "guncelleme": "2026-08-31",
  "kaynak": "BIST resmî (hisse_endeks_katilim_ds.csv)",
- "bist_damga": "31/08/2026",
+ "bist_damga": "01/09/2026",
  "sayim": {
   "XK030EA": 30,
-  "XKTUM": 245,
+  "XKTUM": 246,
   "XK100": 100,
   "XK050": 50,
   "XK030": 30,
@@ -167,6 +167,7 @@
    "IMASM",
    "INGRM",
    "INTEM",
+   "INTET",
    "ISDMR",
    "IZFAS",
    "IZINV",

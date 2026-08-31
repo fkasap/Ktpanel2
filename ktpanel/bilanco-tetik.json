@@ -1,5 +1,5 @@
 {
- "tarih": "2026-08-29",
+ "tarih": "2026-08-31",
  "kodlar": [
   "AKHAN",
   "ALFAS",
@@ -298,7 +298,9 @@
   "AKSFA": "2026-08-25",
   "BURCE": "2026-08-26",
   "AVGYO": "2026-08-28",
-  "BALAT": "2026-08-28"
+  "BALAT": "2026-08-28",
+  "MERKO": "2026-08-31",
+  "OZRDN": "2026-08-31"
  },
  "evren_disi": [
   "ADESE",
@@ -401,6 +403,7 @@
   "MEKAG",
   "MEKMD",
   "MERIT",
+  "MERKO",
   "MIATK",
   "MNDRS",
   "MNDTR",
@@ -416,6 +419,7 @@
   "OSTIM",
   "OZGYO",
   "OZKGY",
+  "OZRDN",
   "PALMU",
   "PAMEL",
   "PAPIL",
@@ -463,8 +467,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 161,
+ "evren_disi_sayi": 163,
  "pencere_sayi": 2,
  "dusen_son": [],
- "guncelleme": "2026-08-29 10:57 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-08-31 18:34 UTC — otomatik (KAP FR · kümülatif §299)"
 }

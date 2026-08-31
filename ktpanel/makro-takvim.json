@@ -1,134 +1,190 @@
 {
- "guncelleme": "2026-08-29 10:57 UTC — otomatik (§319)",
+ "guncelleme": "2026-08-31 18:34 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
-   "t": "2026-08-24T17:00:00.000Z",
-   "ulke": "USD",
-   "olay": "Treasury Sec Bessent Speaks",
+   "t": "2026-08-31T06:29:00.000Z",
+   "ulke": "EUR",
+   "olay": "German Prelim CPI m/m",
    "etki": "Medium",
+   "beklenti": "0.3%",
+   "onceki": "0.8%"
+  },
+  {
+   "t": "2026-09-01T09:00:00.000Z",
+   "ulke": "EUR",
+   "olay": "Core CPI Flash Estimate y/y",
+   "etki": "Medium",
+   "beklenti": "2.5%",
+   "onceki": "2.5%"
+  },
+  {
+   "t": "2026-09-01T09:00:00.000Z",
+   "ulke": "EUR",
+   "olay": "CPI Flash Estimate y/y",
+   "etki": "Medium",
+   "beklenti": "3.3%",
+   "onceki": "2.9%"
+  },
+  {
+   "t": "2026-09-01T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "ISM Manufacturing PMI",
+   "etki": "High",
+   "beklenti": "55.2",
+   "onceki": "55.6"
+  },
+  {
+   "t": "2026-09-01T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "ISM Manufacturing Prices",
+   "etki": "Medium",
+   "beklenti": "71.2",
+   "onceki": "71.1"
+  },
+  {
+   "t": "2026-09-01T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "JOLTS Job Openings",
+   "etki": "Medium",
+   "beklenti": "7.33M",
+   "onceki": "7.36M"
+  },
+  {
+   "t": "2026-09-02T01:30:00.000Z",
+   "ulke": "AUD",
+   "olay": "GDP q/q",
+   "etki": "High",
+   "beklenti": "0.3%",
+   "onceki": "0.3%"
+  },
+  {
+   "t": "2026-09-02T02:00:00.000Z",
+   "ulke": "NZD",
+   "olay": "Official Cash Rate",
+   "etki": "High",
+   "beklenti": "2.75%",
+   "onceki": "2.50%"
+  },
+  {
+   "t": "2026-09-02T02:00:00.000Z",
+   "ulke": "NZD",
+   "olay": "RBNZ Monetary Policy Statement",
+   "etki": "High",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-08-25T14:00:00.000Z",
+   "t": "2026-09-02T02:00:00.000Z",
+   "ulke": "NZD",
+   "olay": "RBNZ Rate Statement",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-09-02T03:00:00.000Z",
+   "ulke": "NZD",
+   "olay": "RBNZ Press Conference",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-09-02T12:15:00.000Z",
    "ulke": "USD",
-   "olay": "CB Consumer Confidence",
+   "olay": "ADP Non-Farm Employment Change",
    "etki": "Medium",
-   "beklenti": "90.3",
-   "onceki": "90.8"
+   "beklenti": "47K",
+   "onceki": "44K"
   },
   {
-   "t": "2026-08-26T01:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "CPI m/m",
+   "t": "2026-09-02T13:45:00.000Z",
+   "ulke": "CAD",
+   "olay": "BOC Rate Statement",
    "etki": "High",
-   "beklenti": "0.9%",
-   "onceki": "-0.1%"
+   "beklenti": "",
+   "onceki": ""
   },
   {
-   "t": "2026-08-26T01:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "CPI y/y",
+   "t": "2026-09-02T13:45:00.000Z",
+   "ulke": "CAD",
+   "olay": "Overnight Rate",
    "etki": "High",
-   "beklenti": "3.3%",
-   "onceki": "3.8%"
+   "beklenti": "2.25%",
+   "onceki": "2.25%"
   },
   {
-   "t": "2026-08-26T01:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "Trimmed Mean CPI m/m",
+   "t": "2026-09-02T14:30:00.000Z",
+   "ulke": "CAD",
+   "olay": "BOC Press Conference",
    "etki": "High",
-   "beklenti": "0.4%",
-   "onceki": "0.3%"
+   "beklenti": "",
+   "onceki": ""
   },
   {
-   "t": "2026-08-26T12:30:00.000Z",
-   "ulke": "USD",
-   "olay": "Core PCE Price Index m/m",
-   "etki": "High",
-   "beklenti": "0.2%",
-   "onceki": "0.1%"
-  },
-  {
-   "t": "2026-08-26T12:30:00.000Z",
-   "ulke": "USD",
-   "olay": "Prelim GDP q/q",
-   "etki": "High",
-   "beklenti": "1.5%",
-   "onceki": "1.5%"
-  },
-  {
-   "t": "2026-08-26T12:30:00.000Z",
-   "ulke": "USD",
-   "olay": "Prelim GDP Price Index q/q",
-   "etki": "Medium",
-   "beklenti": "6.2%",
-   "onceki": "6.2%"
-  },
-  {
-   "t": "2026-08-27T12:30:00.000Z",
+   "t": "2026-09-03T12:30:00.000Z",
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "208K",
-   "onceki": "206K"
+   "beklenti": "205K",
+   "onceki": "203K"
   },
   {
-   "t": "2026-08-27T23:30:00.000Z",
-   "ulke": "JPY",
-   "olay": "Tokyo Core CPI y/y",
+   "t": "2026-09-03T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "ISM Services PMI",
    "etki": "Medium",
-   "beklenti": "1.8%",
-   "onceki": "1.9%"
+   "beklenti": "54.1",
+   "onceki": "54.1"
   },
   {
-   "t": "2026-08-28T12:30:00.000Z",
+   "t": "2026-09-04T08:50:00.000Z",
+   "ulke": "GBP",
+   "olay": "BOE Gov Bailey Speaks",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-09-04T12:30:00.000Z",
    "ulke": "CAD",
-   "olay": "GDP m/m",
+   "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "0.2%",
-   "onceki": "0.3%"
+   "beklenti": "15.8K",
+   "onceki": "75.1K"
   },
   {
-   "t": "2026-08-28T14:00:00.000Z",
-   "ulke": "USD",
-   "olay": "Fed Chairman Warsh Speaks",
+   "t": "2026-09-04T12:30:00.000Z",
+   "ulke": "CAD",
+   "olay": "Unemployment Rate",
    "etki": "High",
-   "beklenti": "",
-   "onceki": ""
+   "beklenti": "6.4%",
+   "onceki": "6.4%"
   },
   {
-   "t": "2026-08-28T14:00:00.000Z",
+   "t": "2026-09-04T12:30:00.000Z",
    "ulke": "USD",
-   "olay": "Prelim Benchmark Payrolls Revision",
+   "olay": "Average Hourly Earnings m/m",
    "etki": "High",
-   "beklenti": "",
-   "onceki": "-911K"
+   "beklenti": "0.3%",
+   "onceki": "0.1%"
   },
   {
-   "t": "2026-08-28T14:00:00.000Z",
+   "t": "2026-09-04T12:30:00.000Z",
    "ulke": "USD",
-   "olay": "Revised UoM Consumer Sentiment",
-   "etki": "Medium",
-   "beklenti": "51.0",
-   "onceki": "51.0"
-  },
-  {
-   "t": "2026-08-28T14:00:00.000Z",
-   "ulke": "USD",
-   "olay": "Revised UoM Inflation Expectations",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": "4.3%"
-  },
-  {
-   "t": "2026-08-28T16:15:00.000Z",
-   "ulke": "All",
-   "olay": "Jackson Hole Symposium",
+   "olay": "Non-Farm Employment Change",
    "etki": "High",
-   "beklenti": "",
-   "onceki": ""
+   "beklenti": "55K",
+   "onceki": "-23K"
+  },
+  {
+   "t": "2026-09-04T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Unemployment Rate",
+   "etki": "High",
+   "beklenti": "4.1%",
+   "onceki": "4.1%"
   }
  ]
 }
