@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-31 18:34 UTC — otomatik (§319)",
+ "guncelleme": "2026-08-31 20:48 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -39,7 +39,7 @@
    "ulke": "USD",
    "olay": "ISM Manufacturing Prices",
    "etki": "Medium",
-   "beklenti": "71.2",
+   "beklenti": "70.5",
    "onceki": "71.1"
   },
   {
@@ -95,7 +95,7 @@
    "ulke": "USD",
    "olay": "ADP Non-Farm Employment Change",
    "etki": "Medium",
-   "beklenti": "47K",
+   "beklenti": "48K",
    "onceki": "44K"
   },
   {
@@ -135,7 +135,7 @@
    "ulke": "USD",
    "olay": "ISM Services PMI",
    "etki": "Medium",
-   "beklenti": "54.1",
+   "beklenti": "54.2",
    "onceki": "54.1"
   },
   {
@@ -151,7 +151,7 @@
    "ulke": "CAD",
    "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "15.8K",
+   "beklenti": "15.1K",
    "onceki": "75.1K"
   },
   {
