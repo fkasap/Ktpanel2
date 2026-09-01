@@ -1,10 +1,10 @@
 {
- "guncelleme": "2026-08-31",
+ "guncelleme": "2026-09-01",
  "kaynak": "BIST resmî (hisse_endeks_katilim_ds.csv)",
- "bist_damga": "01/09/2026",
+ "bist_damga": "02/09/2026",
  "sayim": {
   "XK030EA": 30,
-  "XKTUM": 246,
+  "XKTUM": 247,
   "XK100": 100,
   "XK050": 50,
   "XK030": 30,
@@ -82,6 +82,7 @@
    "BIMAS",
    "BINBN",
    "BINHO",
+   "BKRGY",
    "BMSTL",
    "BORSK",
    "BOSSA",

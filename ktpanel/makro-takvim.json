@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-31 20:48 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-01 18:25 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -95,7 +95,7 @@
    "ulke": "USD",
    "olay": "ADP Non-Farm Employment Change",
    "etki": "Medium",
-   "beklenti": "48K",
+   "beklenti": "47K",
    "onceki": "44K"
   },
   {
