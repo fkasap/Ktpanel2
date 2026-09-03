@@ -1,5 +1,5 @@
 {
- "tarih": "2026-09-02",
+ "tarih": "2026-09-03",
  "kodlar": [
   "AKHAN",
   "ALFAS",
@@ -11,6 +11,7 @@
   "BIENY",
   "BIMAS",
   "BINHO",
+  "BRLSM",
   "BUCIM",
   "BURCE",
   "CANTE",
@@ -69,7 +70,7 @@
   "YATAS",
   "YEOTK"
  ],
- "sayi": 67,
+ "sayi": 68,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -302,7 +303,9 @@
   "MERKO": "2026-08-31",
   "OZRDN": "2026-08-31",
   "MEPET": "2026-08-31",
-  "KUVVA": "2026-09-01"
+  "KUVVA": "2026-09-01",
+  "BRLSM": "2026-09-03",
+  "TGSAS": "2026-09-03"
  },
  "evren_disi": [
   "ADESE",
@@ -450,6 +453,7 @@
   "TARFN",
   "TATEN",
   "TBORG",
+  "TGSAS",
   "TIMUR",
   "TMSN",
   "TNZTP",
@@ -471,8 +475,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 165,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 166,
+ "pencere_sayi": 3,
  "dusen_son": [],
- "guncelleme": "2026-09-02 18:37 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-03 18:34 UTC — otomatik (KAP FR · kümülatif §299)"
 }
