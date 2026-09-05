@@ -1268,8 +1268,8 @@
    }
   }
  },
- "guncelleme": "2026-08-31",
+ "guncelleme": "2026-09-05",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(131 fon, 17150 kayıt)",
+ "yol": "tarama(131 fon, 18321 kayıt)",
  "pencereGun": 400
 }
