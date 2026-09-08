@@ -1,19 +1,11 @@
 {
- "guncelleme": "2026-09-07 19:07 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-08 18:35 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
    "t": "2026-09-08T13:15:00.000Z",
    "ulke": "GBP",
    "olay": "Monetary Policy Report Hearings",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-09-09T17:00:00.000Z",
-   "ulke": "EUR",
-   "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""
