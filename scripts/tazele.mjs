@@ -2483,7 +2483,10 @@ async function fonPortfoy() {
   const iso = t => new Date(t).toISOString().slice(0, 10);
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu',
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
-  const yeniFonVar = evrenKod.some(k => !d.fonlar[k]);   /* §429b: deposu boş fon varsa geriye bak */
+  /* §429k KALICI İSTİSNA: görüntü-PDF'li fonlar hiç işlenemez; işaretsiz kalınca
+     geriye-bakışı sürekli tam pencereye kilitliyordu (canlı #209). */
+  d.basarisiz = d.basarisiz || {};
+  const yeniFonVar = evrenKod.some(k => !d.fonlar[k] && !d.basarisiz[k]);
   const pencereGun = (ilkKosu || yeniFonVar) ? 400 : 45;
   /* §429c KAP ŞEMASI (canlı #178): funds/byCriteria kaydı {publishDate, fundCode,
      kapTitle, disclosureClass, disclosureType:'FON', summary, ...} — stockCode YOK,
@@ -2563,6 +2566,7 @@ async function fonPortfoy() {
     let donem = null;
     if (b.year && b.donem) donem = b.year + '-' + String(b.donem).padStart(2, '0');
     else { const m = String(b.summary || '').match(/(\d{4})\s*\/\s*(\d{1,2})\s*\.?\s*Ay/i); if (m) donem = m[1] + '-' + m[2].padStart(2, '0'); }
+    if (d.basarisiz[kod]) return;   /* §429k kalıcı istisna */
     isler.push({ kod, donem, index, yayin: b.publishDate });   /* donem null ise PDF başlığından alınır */
   });
   /* aynı (kod,dönem) için en son yayın kazanır; dönemi bilinmeyenler ayrı tutulur */
@@ -2590,6 +2594,7 @@ async function fonPortfoy() {
         if (objler.length > 1) await uyku(250);
       }
       const buf = { length: toplamB };
+      if (txt.replace(/\s+/g, '').length < 200) { d.basarisiz[is.kod] = { sebep: 'PDF metin katmanı yok', tarih: bugun }; hata.push(is.kod + ' ' + is.donem + ': PDF metin katmanı yok — KALICI istisna işaretlendi'); await uyku(300); continue; }
       const r = P.raporuAyristir(txt);
       if (!r.denetim.gecti) { dusen.push(is.kod + ' ' + is.donem + ': ' + r.denetim.sorun.join('; ')); await uyku(400); continue; }
       const donemPdf = r.baslik.donem;   /* PDF 'Temmuz-2026' başlığı — asıl kaynak */
@@ -2614,7 +2619,7 @@ async function fonPortfoy() {
   d._yontem = 'KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.';
   await yaz(dosya, d);
   const fonSay = Object.keys(d.fonlar).length, donemSay = Object.values(d.fonlar).reduce((a, f) => a + Object.keys(f.donemler || {}).length, 0);
-  raporlar.push('### Fon portföy dağılımı (§429) — ' + (yazildi ? '✓ ' : '⏭ ') + yazildi + ' rapor işlendi · evren ' + evrenKod.length + ' fon (oto +' + otoN + ') · depo ' + fonSay + ' fon / ' + donemSay + ' dönem · KAP yolu: ' + yol + ' · pencere ' + pencereGun + ' gün' +
+  raporlar.push('### Fon portföy dağılımı (§429) — ' + (yazildi ? '✓ ' : '⏭ ') + yazildi + ' rapor işlendi · evren ' + evrenKod.length + ' fon (oto +' + otoN + ') · depo ' + fonSay + ' fon / ' + donemSay + ' dönem · KAP yolu: ' + yol + ' · pencere ' + pencereGun + ' gün' + (Object.keys(d.basarisiz||{}).length ? ' · kalıcı istisna ' + Object.keys(d.basarisiz).length + ' fon' : '') +
     (sira.length > yazildi ? '\n- bu turda hedef ' + sira.length + ' (tur tavanı 120; kalan sonraki koşuda)' : '') +
     (dusen.length ? '\n- ⚠ denetimden düşen (yazılmadı): ' + dusen.slice(0, 5).join(' · ') : '') +
     (hata.length ? '\n- ⚠ hata (ilk 3, tanılı): ' + hata.slice(0, 3).join('\n  · ') + (hata.length > 3 ? '\n  …+' + (hata.length - 3) : '') : ''));

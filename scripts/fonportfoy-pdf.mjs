@@ -13,6 +13,7 @@
    Şablon değişirse ayrıştırıcı SESSİZCE değil GÜRÜLTÜLÜ düşer (denetim). */
 
 const sayi = s => { if (s == null) return null; const t = String(s).trim().replace(/\./g, '').replace(',', '.'); const v = parseFloat(t); return isFinite(v) ? v : null; };
+const sayiUS = s => { if (s == null) return null; const v = parseFloat(String(s).trim().replace(/,/g, '')); return isFinite(v) ? v : null; };   /* §429k şablon B: 1,055,848.95 */
 
 const AYLAR = { ocak: 1, şubat: 2, subat: 2, mart: 3, nisan: 4, mayıs: 5, mayis: 5, haziran: 6, temmuz: 7, ağustos: 8, agustos: 8, eylül: 9, eylul: 9, ekim: 10, kasım: 11, kasim: 11, aralık: 12, aralik: 12 };
 
@@ -20,7 +21,8 @@ export function basligiOku(metin) {
   const bas = metin.slice(0, 6000);
   const ad = (bas.match(/A-\)Fonun Adı\s*:\s*([^\n]+)/) || [])[1];
   const kod = (bas.match(/^\s*([A-Z0-9]{2,5})-/m) || [])[1];
-  const donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
+  let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
+  if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
   let donem = null;
   if (donemM) { const a = AYLAR[donemM[1].toLowerCase()]; if (a) donem = donemM[2] + '-' + String(a).padStart(2, '0'); }
   const al = (re) => sayi((bas.match(re) || [])[1]);
@@ -76,6 +78,19 @@ export function hisseleriOku(metin) {
     r.grup += sayi(m[8]); r.fpd += sayi(m[9]); r.ftd += sayi(m[10]);
     r.borsaFiyat = sayi(m[6]); r.satir++;
   }
+  /* §429k ŞABLON B (canlı: TLZ/KLH — ATA/eski nesil üretici): satır biçimi
+     'KOD İHRAÇÇI 116,155.00 1,055,848.95 4.55%' — ABD sayı biçimi, para birimi
+     ve tarih sütunu yok, TEK yüzde (fon toplam değerine göre okunur). Birincil
+     kalıp 0 satır verdiyse denenir; toplam satırı yoksa ağırlık aklıyla geçer. */
+  if (satir === 0) {
+    const reB = /^\s*([A-Z0-9]{3,6})\s+.+?\s+([\d,]+\.\d{2})\s+([\d,]+\.\d{2})\s+([\d.]+)\s*%\s*$/gm;
+    let mb; while ((mb = reB.exec(blok))) {
+      satir++;
+      const k = mb[1];
+      const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'B' });
+      r.nominal += sayiUS(mb[2]); r.deger += sayiUS(mb[3]); r.ftd += sayiUS(mb[4]); r.grup += sayiUS(mb[4]); r.satir++;
+    }
+  }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
   /* §429i teşhis: HİSSE bloğunda kod gibi başlayıp regex'e OTURMAYAN satırlar
      (IVF/PUK %93-95 vakasının kimliği bir sonraki koşuda görünsün) */
@@ -88,7 +103,7 @@ export function hisseleriOku(metin) {
   }
   const gt = metin.slice(i2, i2 + 400).match(/GRUP TOPLAMI\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})/);
   const toplam = gt ? { deger: sayi(gt[2]), grup: sayi(gt[3]), fpd: sayi(gt[4]), ftd: sayi(gt[5]) } : null;
-  const liste = Object.values(kod).map(r => ({ kod: r.kod, pb: r.pb, nominal: +r.nominal.toFixed(2), deger: +r.deger.toFixed(2),
+  const liste = Object.values(kod).map(r => ({ kod: r.kod, pb: r.pb, sablon: r.sablon, nominal: +r.nominal.toFixed(2), deger: +r.deger.toFixed(2),
     agirlik: +r.ftd.toFixed(2), portfoyIci: +r.grup.toFixed(2), borsaFiyat: r.borsaFiyat, satir: r.satir }))
     .filter(r => Math.abs(r.deger) > 0.5)
     .sort((a, b) => b.agirlik - a.agirlik);
@@ -115,15 +130,16 @@ export function islemleriOku(metin) {
 export function denetle(hisse) {
   const sorun = [];
   if (hisse.liste.length < 3) sorun.push('kod sayısı ' + hisse.liste.length + ' < 3' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
+  const sablonB = hisse.liste.some(r => r.sablon === 'B');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
-  if (Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
+  if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ''));
   const cokParali = hisse.liste.some(r => r.pb && r.pb !== 'TL');
   if (hisse.toplam && !cokParali) {
     const degT = hisse.liste.reduce((a, r) => a + r.deger, 0);
     const fark = Math.abs(degT - hisse.toplam.deger) / hisse.toplam.deger;
     if (fark > 0.001) sorun.push('değer toplamı ' + degT.toFixed(0) + ' ≠ GRUP TOPLAMI ' + hisse.toplam.deger.toFixed(0));
-  } else if (!hisse.toplam && Math.abs(grupT - 100) > 0.5) sorun.push('GRUP TOPLAMI yok ve grup % ' + grupT.toFixed(1) + ' — çifte belirsizlik');   /* §429i: toplam satırı yoksa grup%≈100 mutabakat sayılır */
+  } else if (!sablonB && !hisse.toplam && Math.abs(grupT - 100) > 0.5) sorun.push('GRUP TOPLAMI yok ve grup % ' + grupT.toFixed(1) + ' — çifte belirsizlik');   /* §429i: toplam satırı yoksa grup%≈100 mutabakat sayılır */
   /* §429g çok paralı fonda değer kıyası anlamsız (GRUP TOPLAMI TL bazlı yazılabiliyor);
      onun yerine ağırlık aklı: FTD toplamı (0, 105] aralığında olmalı. */
   if (cokParali) { const ftdT = hisse.liste.reduce((a, r) => a + r.ftd*0 + r.portfoyIci*0, 0); }
