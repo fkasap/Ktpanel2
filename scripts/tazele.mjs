@@ -2469,23 +2469,12 @@ async function fonPortfoy() {
   let otoN = 0;
   Object.keys(meta).forEach(k => {
     const u = String(meta[k].unvan || '').toUpperCase().replace(/İ/g, 'I');
-    /* §429h (canlı #206): KKC gibi hisse İÇERMEYEN döviz serbestler evrene
-       girip 'HİSSE SENETLERİ bölümü yok' hatası üretiyordu. Kullanıcının
-       tarifi 'hisse yoğun + serbest HİSSE': SERBEST ancak adında HISSE
-       varsa otomatik girer. Elle eklenenler (evren_elle) her zaman girer. */
-    if (/KATILIM/.test(u) && (/HISSE SENEDI/.test(u) || (/SERBEST/.test(u) && /HISSE/.test(u))) && !/BORCLANMA|KIRA SERT|PARA PIYASASI|ALTIN|KIYMETLI|DOVIZ|EUROBOND/.test(u)) {
+    if (/KATILIM/.test(u) && (/HISSE SENEDI/.test(u) || /SERBEST/.test(u)) && !/BORCLANMA|KIRA SERT|PARA PIYASASI|ALTIN|KIYMETLI|DOVIZ|EUROBOND/.test(u)) {
       if (!d.evren[k]) otoN++;
       d.evren[k] = { ad: String(meta[k].unvan).trim(), kaynak: 'tefas-oto', tur: /SERBEST/.test(u) ? 'serbest' : 'hisse-yogun' };
     }
   });
   d.evren_elle.forEach(k => { k = String(k).toUpperCase(); if (!d.evren[k]) d.evren[k] = { ad: k, kaynak: 'elle', tur: '?' }; });
-  /* §429h eski geniş kuralla girmiş otomatik kayıtları temizle (elle olanlar korunur; kayıt silinmez, pasif listesine taşınır) */
-  d.evren_pasif = d.evren_pasif || {};
-  Object.keys(d.evren).forEach(k => {
-    const v = d.evren[k]; if (v.kaynak !== 'tefas-oto' || d.evren_elle.includes(k)) return;
-    const u = String(v.ad || '').toUpperCase().replace(/İ/g, 'I');
-    if (!(/KATILIM/.test(u) && (/HISSE SENEDI/.test(u) || (/SERBEST/.test(u) && /HISSE/.test(u))) && !/BORCLANMA|KIRA SERT|PARA PIYASASI|ALTIN|KIYMETLI|DOVIZ|EUROBOND/.test(u))) { d.evren_pasif[k] = v; delete d.evren[k]; }
-  });
   const evrenKod = Object.keys(d.evren).sort();
   if (!evrenKod.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ evren boş (TEFAS unvanı gelmedi, evren_elle de yok)'); await yaz(dosya, d); return; }
   /* 2) KAP LİSTESİ — pencere: ilk koşu 400 gün, sonra 45 */
@@ -2495,7 +2484,7 @@ async function fonPortfoy() {
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu',
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const yeniFonVar = evrenKod.some(k => !d.fonlar[k]);   /* §429b: deposu boş fon varsa geriye bak */
-  const pencereGun = (ilkKosu || yeniFonVar) ? 150 : 45;   /* §431: 133 fonluk evrende 400 gün = ~1700 PDF/17MB JSON — taşar. 150 gün ≈ 5 rapor/fon, 'en az 4 ay' isteğini karşılar */
+  const pencereGun = (ilkKosu || yeniFonVar) ? 400 : 45;
   /* §429c KAP ŞEMASI (canlı #178): funds/byCriteria kaydı {publishDate, fundCode,
      kapTitle, disclosureClass, disclosureType:'FON', summary, ...} — stockCode YOK,
      fundCode VAR. 400 günlük tek pencere 2000 kayıtta KESİLDİ (tavan). Artık 30
@@ -2528,21 +2517,7 @@ async function fonPortfoy() {
     out.forEach(b => { const k = kodAl(b), o = oidAl(b); if (k && o && d.evren[k] && !d.evren[k].oid) { d.evren[k].oid = o; hasat++; } });
     return out;
   };
-  /* §429f TEŞHİS (canlı #183: 15.886 rapor, evren 0, tavan yok): kod eşleşmesi
-     sorgulanıyor. KAP fundCode ≠ TEFAS kodu olabilir. Unvan eşlemesi yedek yol:
-     TEFAS unvanı (varsa) ile kapTitle normalize edilip karşılaştırılır. */
-  const norm = t => String(t || '').toUpperCase().replace(/İ/g, 'I').replace(/[^A-Z0-9]+/g, ' ').replace(/\b(A S|AS|TL|FONU|FON|HISSE SENEDI YOGUN)\b/g, ' ').replace(/\s+/g, ' ').trim();
-  const evrenUnvan = {}; evrenKod.forEach(k => { const u = (UNV[k] || (d.evren[k] && d.evren[k].kaynak !== 'elle' && d.evren[k].ad) || ''); if (u) evrenUnvan[norm(u)] = k; });
-  const gorulenKod = new Set(), ilginc = [];
-  const kabul = b => {
-    const k = kodAl(b); if (k) gorulenKod.add(k);
-    if (pdMi(b) && ilginc.length < 8 && /KUVEYT|KATILIM/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && /HISSE|SERBEST/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I'))) ilginc.push(k + '=' + String(b.kapTitle || '').slice(0, 60));
-    if (!pdMi(b)) return false;
-    if (evrenKod.includes(k)) return true;
-    const kk = evrenKod.find(e => d.evren[e].kapKod === k); if (kk) { b.__evrenKod = kk; return true; }
-    const eş = evrenUnvan[norm(b.kapTitle)]; if (eş) { b.__evrenKod = eş; return true; }
-    return false;
-  };
+  const kabul = b => pdMi(b) && evrenKod.includes(kodAl(b));
   const bas = simdi - pencereGun * GUN;
   /* (A) kimliği bilinen fonlar — fon başına tek istek */
   const oidli = evrenKod.filter(k => d.evren[k].oid);
@@ -2578,14 +2553,12 @@ async function fonPortfoy() {
   }
   if (hasat) raporlar.push('- §429e KAP üye kimliği hasat edildi: ' + hasat + ' fon (dosyaya yazıldı; sonraki koşu fon bazında sorgular)');
   await yaz(dosya, d);   /* kimlikler kalıcı olsun — rapor listesi boş dönse bile */
-  raporlar.push('- §429f teşhis: listede ' + gorulenKod.size + ' farklı fon kodu · evrenden görülen: ' + (evrenKod.filter(k => gorulenKod.has(k)).join(',') || 'HİÇBİRİ') + (ilginc.length ? ' · katılım/kuveyt hisse örnekleri: ' + ilginc.join(' | ') : ''));
   if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · kimlikli ' + evrenKod.filter(k => d.evren[k].oid).length + ' · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt · yol: ' + yol + ')' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); return; }
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
   const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index) islenmisIdx.add(String(x.kaynak.index)); }));
   liste.forEach(b => {
-    const kod = b.__evrenKod || kodAl(b), index = idxAl(b); if (!kod || !index) return;
-    if (b.__evrenKod && kodAl(b) && d.evren[kod] && !d.evren[kod].kapKod) d.evren[kod].kapKod = kodAl(b);   /* §429f: KAP kodu farklıysa öğren */
+    const kod = kodAl(b), index = idxAl(b); if (!kod || !index) return;
     if (islenmisIdx.has(String(index))) return;   /* aynı bildirim iki kez işlenmez */
     let donem = null;
     if (b.year && b.donem) donem = b.year + '-' + String(b.donem).padStart(2, '0');
@@ -2595,20 +2568,28 @@ async function fonPortfoy() {
   /* aynı (kod,dönem) için en son yayın kazanır; dönemi bilinmeyenler ayrı tutulur */
   const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + (i.donem || ('idx' + i.index)); if (!tekil[k] || String(tekil[k].index) < String(i.index)) tekil[k] = i; });
   /* §429b: deposu boş (yeni eklenen) fonlar ÖNCE, sonra yeni dönemden eskiye */
-  const sira = Object.values(tekil).sort((a, b) => (((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || ((String(b.donem || '') > String(a.donem || '')) ? 1 : -1)))  .slice(0, 120);   /* §431: 133 fon × 5 dönem geri doldurma ~6 koşuda biter */
+  const sira = Object.values(tekil).sort((a, b) => ((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || (String(b.donem || '') > String(a.donem || '') ? 1 : -1)).slice(0, 40);
   let yazildi = 0, dusen = [], hata = [];
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fonpd-'));
   for (const is of sira) {
     try {
       const rh = await fetch('https://www.kap.org.tr/tr/Bildirim/' + is.index, { headers: { 'user-agent': H['user-agent'], 'accept': 'text/html' }, signal: AbortSignal.timeout(20000) });
       const html = await rh.text();
-      const obj = (html.match(/api\/file\/download\/([0-9a-f]{20,40})/) || [])[1];
-      if (!obj) { hata.push(is.kod + ' ' + is.donem + ': ek bulunamadı (HTTP ' + rh.status + ')'); await uyku(400); continue; }
-      const rp = await fetch('https://www.kap.org.tr/tr/api/file/download/' + obj, { headers: { 'user-agent': H['user-agent'] }, signal: AbortSignal.timeout(40000) });
-      if (!rp.ok) { hata.push(is.kod + ' ' + is.donem + ': PDF HTTP ' + rp.status); await uyku(400); continue; }
-      const buf = Buffer.from(await rp.arrayBuffer());
-      const pf = path.join(tmp, is.kod + '-' + is.donem + '.pdf'); await fs.writeFile(pf, buf);
-      const txt = cp.execSync('pdftotext -layout "' + pf + '" -', { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] });
+      /* §429j ÇOKLU EK (IVF canlı vakası: belge başı 'VII-PORTFÖYDEN SATIŞLAR' —
+         rapor parçalara bölünmüş, ilk ek işlem parçası olabiliyor). Sayfadaki
+         TÜM ekler (en fazla 4) indirilir, metinleri sayfa sırasıyla birleştirilir. */
+      const objler = [...new Set([...html.matchAll(/api\/file\/download\/([0-9a-f]{20,40})/g)].map(m => m[1]))].slice(0, 4);
+      if (!objler.length) { hata.push(is.kod + ' ' + is.donem + ': ek bulunamadı (HTTP ' + rh.status + ')'); await uyku(400); continue; }
+      let txt = '', toplamB = 0, obj = objler[0];
+      for (const o of objler) {
+        const rp = await fetch('https://www.kap.org.tr/tr/api/file/download/' + o, { headers: { 'user-agent': H['user-agent'] }, signal: AbortSignal.timeout(40000) });
+        if (!rp.ok) continue;
+        const buf = Buffer.from(await rp.arrayBuffer()); toplamB += buf.length;
+        const pf = path.join(tmp, is.kod + '-' + is.donem + '-' + o.slice(-6) + '.pdf'); await fs.writeFile(pf, buf);
+        try { txt += '\n' + cp.execSync('pdftotext -layout "' + pf + '" -', { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }); } catch (e2) {}
+        if (objler.length > 1) await uyku(250);
+      }
+      const buf = { length: toplamB };
       const r = P.raporuAyristir(txt);
       if (!r.denetim.gecti) { dusen.push(is.kod + ' ' + is.donem + ': ' + r.denetim.sorun.join('; ')); await uyku(400); continue; }
       const donemPdf = r.baslik.donem;   /* PDF 'Temmuz-2026' başlığı — asıl kaynak */
@@ -2618,22 +2599,15 @@ async function fonPortfoy() {
       if (r.baslik.kod && r.baslik.kod !== is.kod) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }
       const F = d.fonlar[is.kod] || (d.fonlar[is.kod] = { ad: d.evren[is.kod] ? d.evren[is.kod].ad : is.kod, donemler: {} });
       F.ad = r.baslik.ad || F.ad;
-      /* §431 SIKILAŞTIRMA: nominal ve işlem sayacı atılır, değerler tam ₺'ye
-         yuvarlanır (dönem ~3 KB; 133 fon × 6 dönem ≈ 2-3 MB — panel çekebilir). */
-      const kirp = o => { const out = {}; Object.keys(o || {}).forEach(k => { out[k] = { deger: Math.round(o[k].deger) }; }); return out; };
       F.donemler[donemK] = {
         baslik: r.baslik,
-        hisse: r.hisse.map(h => ({ kod: h.kod, agirlik: h.agirlik, deger: Math.round(h.deger) })),
+        hisse: r.hisse.map(h => ({ kod: h.kod, agirlik: h.agirlik, deger: h.deger, nominal: h.nominal })),
         hisseToplam: r.hisseToplam,
-        islem: { alis: kirp(r.islem.alis), satis: kirp(r.islem.satis) },
-        kaynak: { index: is.index, objId: obj, yayin: is.yayin, islendi: bugun }
+        islem: r.islem,
+        kaynak: { index: is.index, objId: obj, yayin: is.yayin, pdfBoyut: buf.length, islendi: bugun }
       };
-      /* §431 BUDAMA: fon başına son 6 dönem kalır — kullanıcı kuralı 'en fazla
-         3 ay biriktir'; 6, görünüm penceresi (4) + iki yedek. Silinen dönem
-         KAP'ta duruyor, kayıp değil — gerekirse pencereyle geri çekilir. */
-      const dk = Object.keys(F.donemler).sort(); dk.slice(0, Math.max(0, dk.length - 6)).forEach(x => delete F.donemler[x]);
       yazildi++; await uyku(500);
-    } catch (e) { hata.push(is.kod + ' ' + is.donem + ': ' + String(e.message || e).slice(0, 220)); await uyku(400); }   /* §429g tanılı mesaj kesilmesin */
+    } catch (e) { hata.push(is.kod + ' ' + is.donem + ': ' + String(e.message || e).slice(0, 220)); await uyku(400); }   /* §429g: tanılı mesaj (belge başı örneği) kesilmesin */
   }
   try { await fs.rm(tmp, { recursive: true, force: true }); } catch (e) {}
   d.guncelleme = bugun; d.yol = yol; d.pencereGun = pencereGun;

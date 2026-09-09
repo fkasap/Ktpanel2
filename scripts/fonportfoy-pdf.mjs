@@ -45,8 +45,9 @@ export function hisseleriOku(metin) {
   const m0 = metin.match(/(?:[IVX]+\s*[-–.]\s*)?FON\s*PORTF[ÖO]Y\s*DE[ĞG]ER[İI]\s*TABLOSU/);
   if (!m0) throw new Error('portföy tablosu başlığı yok · belge başı: "' + ornek() + '"');
   const i0 = m0.index;
-  const i1 = metin.indexOf('HİSSE SENETLERİ', i0);
-  if (i1 < 0) throw new Error('HİSSE SENETLERİ bölümü yok · belge başı: "' + ornek() + '"');
+  const m1 = metin.slice(i0).match(/H[İI]SSE\s*SENE[TD][Lİİ]?[EİI]?R?[İI]?/);
+  if (!m1) throw new Error('HİSSE SENETLERİ bölümü yok · belge başı: "' + ornek() + '"');
+  const i1 = i0 + m1.index;
   /* §429i: eski nesil şablonda GRUP TOPLAMI satırı yok (ELZ/TLZ canlı vakası).
      Bölüm sonu: GRUP TOPLAMI ya da bir sonraki bölüm başlığı; toplam satırı
      yoksa mutabakat grup %'lerin kendi içinden yapılır (denetle'de). */
@@ -60,7 +61,8 @@ export function hisseleriOku(metin) {
   /* §429g: IVF/PUK canlı vakası — dövizli hisse satırları (USD/EUR) 'TL'
      sabitine takılıp atlanıyor, toplam %93-95'te kalıp denetimden düşüyordu.
      Para birimi artık grup; kod bazında kayda para birimi de yazılır. */
-  const re = /^\s*([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+([\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d{6,}\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  /* §429j: alış fiyatı NEGATİF ve çok haneli olabilir (IVF canlı: ASELS -0,055199 — temettü düzeltmeli maliyet) */
+  const re = /^\s*([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d{6,}\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   const kod = {};
   let m, satir = 0;
   while ((m = re.exec(blok))) {
@@ -80,8 +82,9 @@ export function hisseleriOku(metin) {
   const tuketilen = new Set(); let mm; const re2 = new RegExp(re.source, 'gm');
   while ((mm = re2.exec(blok))) tuketilen.add(mm.index);
   const kacak = [];
-  for (const sm of blok.matchAll(/^\s*[A-Z0-9]{3,6}\s+(?:TL|USD|EUR|GBP|CHF|JPY)\s+[^\n]{20,}$/gm)) {
-    if (!tuketilen.has(sm.index) && kacak.length < 3) kacak.push(sm[0].replace(/\s+/g, ' ').trim().slice(0, 140));
+  for (const sm of blok.matchAll(/^\s*[A-Z0-9]{3,6}\s+[^\n]{20,}$/gm)) {
+    const say = (sm[0].match(/-?[\d.]+,\d/g) || []).length;
+    if (say >= 3 && !tuketilen.has(sm.index) && kacak.length < 3) kacak.push(sm[0].replace(/\s+/g, ' ').trim().slice(0, 150));
   }
   const gt = metin.slice(i2, i2 + 400).match(/GRUP TOPLAMI\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})/);
   const toplam = gt ? { deger: sayi(gt[2]), grup: sayi(gt[3]), fpd: sayi(gt[4]), ftd: sayi(gt[5]) } : null;
@@ -111,7 +114,7 @@ export function islemleriOku(metin) {
 
 export function denetle(hisse) {
   const sorun = [];
-  if (hisse.liste.length < 3) sorun.push('kod sayısı ' + hisse.liste.length + ' < 3');   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
+  if (hisse.liste.length < 3) sorun.push('kod sayısı ' + hisse.liste.length + ' < 3' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ''));
