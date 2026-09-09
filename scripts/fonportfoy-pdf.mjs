@@ -15,7 +15,7 @@
 const sayi = s => { if (s == null) return null; const t = String(s).trim().replace(/\./g, '').replace(',', '.'); const v = parseFloat(t); return isFinite(v) ? v : null; };
 const sayiUS = s => { if (s == null) return null; const v = parseFloat(String(s).trim().replace(/,/g, '')); return isFinite(v) ? v : null; };   /* §429k şablon B: 1,055,848.95 */
 
-const AYLAR = { ocak: 1, şubat: 2, subat: 2, mart: 3, nisan: 4, mayıs: 5, mayis: 5, haziran: 6, temmuz: 7, ağustos: 8, agustos: 8, eylül: 9, eylul: 9, ekim: 10, kasım: 11, kasim: 11, aralık: 12, aralik: 12 };
+const AYLAR = { ocak: 1, subat: 2, mart: 3, nisan: 4, mayis: 5, haziran: 6, temmuz: 7, agustos: 8, eylul: 9, ekim: 10, kasim: 11, aralik: 12 };   /* §429m: yalnız ASCII anahtar, girdi katlanır */
 
 export function basligiOku(metin) {
   const bas = metin.slice(0, 6000);
@@ -24,7 +24,10 @@ export function basligiOku(metin) {
   let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
   if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
   let donem = null;
-  if (donemM) { const a = AYLAR[donemM[1].toLowerCase()]; if (a) donem = donemM[2] + '-' + String(a).padStart(2, '0'); }
+  /* §429m: 'EKİM'.toLowerCase() JS'te 'eki̇m' (i + birleşik nokta) verir, sözlükle eşleşmez —
+     TEMMUZ geçip EKİM/NİSAN düşüyordu (canlı #212). ASCII katlama. */
+  const kat = t => String(t).replace(/İ/g, 'I').replace(/I/g, 'i').replace(/Ç/g, 'c').replace(/Ğ/g, 'g').replace(/Ö/g, 'o').replace(/Ş/g, 's').replace(/Ü/g, 'u').toLowerCase().replace(/[çğıöşü]/g, c => ({ç:'c',ğ:'g',ı:'i',ö:'o',ş:'s',ü:'u'}[c]));
+  if (donemM) { const a = AYLAR[kat(donemM[1])]; if (a) donem = donemM[2] + '-' + String(a).padStart(2, '0'); }
   const al = (re) => sayi((bas.match(re) || [])[1]);
   return {
     kod: kod || null, ad: ad ? ad.trim() : null, donem,
@@ -91,6 +94,17 @@ export function hisseleriOku(metin) {
       r.nominal += sayiUS(mb[2]); r.deger += sayiUS(mb[3]); r.ftd += sayiUS(mb[4]); r.grup += sayiUS(mb[4]); r.satir++;
     }
   }
+  /* §429m ŞABLON C (canlı ELZ): 'KOD AD 5.000,00 1.116.000,00 %0,22' — Türk sayı
+     biçimi, yüzde ÖNEKLİ, tek yüzde. B gibi ağırlık aklıyla geçer. */
+  if (satir === 0) {
+    const reC = /^\s*([A-Z0-9]{3,6})\s+.+?\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+%\s*([\d.]+,\d+)\s*$/gm;
+    let mc; while ((mc = reC.exec(blok))) {
+      satir++;
+      const k = mc[1];
+      const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'C' });
+      r.nominal += sayi(mc[2]); r.deger += sayi(mc[3]); r.ftd += sayi(mc[4]); r.grup += sayi(mc[4]); r.satir++;
+    }
+  }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
   /* §429i teşhis: HİSSE bloğunda kod gibi başlayıp regex'e OTURMAYAN satırlar
      (IVF/PUK %93-95 vakasının kimliği bir sonraki koşuda görünsün) */
@@ -131,7 +145,7 @@ export function denetle(hisse) {
   const sorun = [];
   /* §429l: KLH canlı vakası — tek hisseli fon (FZLGY %99) meşru; taban 1 */
   if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
-  const sablonB = hisse.liste.some(r => r.sablon === 'B');
+  const sablonB = hisse.liste.some(r => r.sablon === 'B' || r.sablon === 'C');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ''));
