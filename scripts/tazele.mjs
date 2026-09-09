@@ -2655,7 +2655,7 @@ async function fonPortfoy() {
       if (donemPdf && is.donem && donemPdf !== is.donem) hata.push(is.kod + ': liste dönemi ' + is.donem + ' ≠ PDF ' + donemPdf + ' (PDF alındı)');
       const donemK = donemPdf || is.donem;
       if (!donemK) { hata.push(is.kod + ' idx' + is.index + ': dönem çözülemedi · belge başı: "' + txt.replace(/\s+/g, ' ').trim().slice(0, 100) + '"'); await uyku(400); continue; }
-      if (r.baslik.kod && r.baslik.kod !== is.kod) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }
+      if (r.baslik.kod && !/^[IVX]+$/.test(r.baslik.kod) && r.baslik.kod !== is.kod && !(d.evren[is.kod] && d.evren[is.kod].kapKod === r.baslik.kod)) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }   /* §429r: Roma rakamı ('II-PERFORMANS') fon kodu değildir */
       const F = d.fonlar[is.kod] || (d.fonlar[is.kod] = { ad: d.evren[is.kod] ? d.evren[is.kod].ad : is.kod, donemler: {} });
       F.ad = r.baslik.ad || F.ad;
       F.donemler[donemK] = {

@@ -50,7 +50,12 @@ export function hisseleriOku(metin) {
   const ornek = () => metin.replace(/\s+/g, ' ').trim().slice(0, 120);
   if (metin.replace(/\s+/g, '').length < 200) throw new Error('PDF metin katmanı yok (görüntü tabanlı olabilir) — bu belge ayrıştırılamaz');
   const m0 = metin.match(/(?:[IVX]+\s*[-–.]\s*)?FON\s*PORTF[ÖO]Y\s*DE[ĞG]ER[İI]\s*TABLOSU/);
-  if (!m0) throw new Error('portföy tablosu başlığı yok · belge başı: "' + ornek() + '"');
+  if (!m0) {
+    /* §429r: şablon E (Yapı Kredi 'AYLIK RAPOR' vb.) — bir sonraki koşu kalıbı göstersin */
+    const hi = metin.search(/H[İI]SSE\s*SENE/i);
+    const cevre = hi >= 0 ? metin.slice(hi, hi + 260).replace(/\s+/g, ' ') : '(HİSSE SENE… hiç geçmiyor)';
+    throw new Error('portföy tablosu başlığı yok · belge başı: "' + ornek() + '" · HİSSE çevresi: "' + cevre + '"');
+  }
   const i0 = m0.index;
   const m1 = metin.slice(i0).match(/H[İI]SSE\s*SENE[TD][Lİİ]?[EİI]?R?[İI]?/);
   if (!m1) throw new Error('HİSSE SENETLERİ bölümü yok · belge başı: "' + ornek() + '"');
@@ -133,7 +138,7 @@ export function hisseleriOku(metin) {
     agirlik: +r.ftd.toFixed(2), portfoyIci: +r.grup.toFixed(2), borsaFiyat: r.borsaFiyat, satir: r.satir }))
     .filter(r => Math.abs(r.deger) > 0.5)
     .sort((a, b) => b.agirlik - a.agirlik);
-  return { liste, toplam, satirSayisi: satir, kacak };
+  return { liste, toplam, satirSayisi: satir, kacak, blokBasi: blok.replace(/\s+/g, ' ').slice(0, 260) };
 }
 
 /* Ay içi işlemler: satışlar ve alışlar, kod bazında toplam */
@@ -156,11 +161,11 @@ export function islemleriOku(metin) {
 export function denetle(hisse) {
   const sorun = [];
   /* §429l: KLH canlı vakası — tek hisseli fon (FZLGY %99) meşru; taban 1 */
-  if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
+  if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak.slice(0, 2).join('" | "') + '"' : ' · bölümde aday satır da yok · BLOK BAŞI: "' + String(hisse.blokBasi || '').slice(0, 220) + '"'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
   const sablonB = hisse.liste.some(r => r.sablon === 'B' || r.sablon === 'C' || r.sablon === 'D');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
-    (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ''));
+    (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIRLAR: "' + hisse.kacak.slice(0, 3).join('" | "') + '"' : ''));
   const cokParali = hisse.liste.some(r => r.pb && r.pb !== 'TL');
   if (hisse.toplam && !cokParali) {
     const degT = hisse.liste.reduce((a, r) => a + r.deger, 0);
