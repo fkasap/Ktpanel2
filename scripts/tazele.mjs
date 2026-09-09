@@ -2496,6 +2496,10 @@ async function fonPortfoy() {
   /* §429k KALICI İSTİSNA: görüntü-PDF'li fonlar hiç işlenemez; işaretsiz kalınca
      geriye-bakışı sürekli tam pencereye kilitliyordu (canlı #209). */
   d.basarisiz = d.basarisiz || {};
+  /* §429o TEK SEFERLİK AF: 14 istisna, çoklu-ek (§429j) ÖNCESİNDE 'metin katmanı yok'
+     damgası yemişti — çoğu ilk eki boş olan parçalı rapordu. Bir kez sıfırlanır,
+     yeniden denenir; gerçekten görüntü olanlar yeniden damgalanır. */
+  if (!d._af429o) { const n0 = Object.keys(d.basarisiz).length; d.basarisiz = {}; d._af429o = bugun; if (n0) raporlar.push('- §429o af: ' + n0 + ' kalıcı istisna sıfırlandı, çoklu-ek ile yeniden denenecek'); }
   const yeniFonVar = evrenKod.some(k => !d.fonlar[k] && !d.basarisiz[k]);
   const pencereGun = (ilkKosu || yeniFonVar) ? 150 : 45;   /* §431 (bu tabana 2. kez): 150 gün ≈ 5 rapor/fon; 400 taşıyordu */
   /* §429c KAP ŞEMASI (canlı #178): funds/byCriteria kaydı {publishDate, fundCode,
@@ -2610,7 +2614,7 @@ async function fonPortfoy() {
       /* §429j ÇOKLU EK (IVF canlı vakası: belge başı 'VII-PORTFÖYDEN SATIŞLAR' —
          rapor parçalara bölünmüş, ilk ek işlem parçası olabiliyor). Sayfadaki
          TÜM ekler (en fazla 4) indirilir, metinleri sayfa sırasıyla birleştirilir. */
-      const objler = [...new Set([...html.matchAll(/api\/file\/download\/([0-9a-f]{20,40})/g)].map(m => m[1]))].slice(0, 4);
+      const objler = [...new Set([...html.matchAll(/api\/file\/download\/([0-9a-f]{20,40})/g)].map(m => m[1]))].slice(0, 8);   /* §429o: IVF tablo parçası 4. ekten sonra olabilir */
       if (!objler.length) { hata.push(is.kod + ' ' + is.donem + ': ek bulunamadı (HTTP ' + rh.status + ')'); await uyku(400); continue; }
       let txt = '', toplamB = 0, obj = objler[0];
       for (const o of objler) {

@@ -23,7 +23,8 @@ export function basligiOku(metin) {
   const kod = (bas.match(/^\s*([A-Z0-9]{2,5})-/m) || [])[1];
   let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
   if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);
-  if (!donemM) donemM = bas.match(/\b([A-ZÇĞİÖŞÜ]{4,8})\s+(20\d\d)\s+(?:PORTF|1-|I-)/);   /* §429n ELZ: 'NİSAN 2026 1- FONU' */   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
+  if (!donemM) donemM = bas.match(/\b([A-ZÇĞİÖŞÜ]{4,8})\s+(20\d\d)\s+(?:PORTF|1-|I-)/);   /* §429n ELZ: 'NİSAN 2026 1- FONU' */
+  if (!donemM) { const yx = bas.match(/\b(20\d\d)\s+([A-ZÇĞİÖŞÜ]{4,8})\s+PORTF/); if (yx) donemM = [yx[0], yx[2], yx[1]]; }   /* §429o TLZ: 'FON 2026 AĞUSTOS PORTFÖY' (yıl önde) */   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
   let donem = null;
   /* §429m: 'EKİM'.toLowerCase() JS'te 'eki̇m' (i + birleşik nokta) verir, sözlükle eşleşmez —
      TEMMUZ geçip EKİM/NİSAN düşüyordu (canlı #212). ASCII katlama. */
