@@ -129,7 +129,8 @@ export function islemleriOku(metin) {
 
 export function denetle(hisse) {
   const sorun = [];
-  if (hisse.liste.length < 3) sorun.push('kod sayısı ' + hisse.liste.length + ' < 3' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
+  /* §429l: KLH canlı vakası — tek hisseli fon (FZLGY %99) meşru; taban 1 */
+  if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
   const sablonB = hisse.liste.some(r => r.sablon === 'B');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +

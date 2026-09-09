@@ -2596,11 +2596,21 @@ async function fonPortfoy() {
       const buf = { length: toplamB };
       if (txt.replace(/\s+/g, '').length < 200) { d.basarisiz[is.kod] = { sebep: 'PDF metin katmanı yok', tarih: bugun }; hata.push(is.kod + ' ' + is.donem + ': PDF metin katmanı yok — KALICI istisna işaretlendi'); await uyku(300); continue; }
       const r = P.raporuAyristir(txt);
-      if (!r.denetim.gecti) { dusen.push(is.kod + ' ' + is.donem + ': ' + r.denetim.sorun.join('; ')); await uyku(400); continue; }
+      if (!r.denetim.gecti) {
+        dusen.push(is.kod + ' ' + is.donem + ': ' + r.denetim.sorun.join('; '));
+        /* §429l: aynı fon bir koşuda 2. kez 'aday satır da yok' ile düşerse hisse
+           tablosu görüntü gömülüdür (RBH) — kalıcı istisna, kuyruk meşgul edilmez */
+        if (/aday satır da yok/.test(r.denetim.sorun.join(' '))) {
+          globalThis.__fpSayac = globalThis.__fpSayac || {};
+          globalThis.__fpSayac[is.kod] = (globalThis.__fpSayac[is.kod] || 0) + 1;
+          if (globalThis.__fpSayac[is.kod] >= 2) d.basarisiz[is.kod] = { sebep: 'hisse tablosu ayrıştırılamıyor (görüntü gömülü olabilir)', tarih: bugun };
+        }
+        await uyku(400); continue;
+      }
       const donemPdf = r.baslik.donem;   /* PDF 'Temmuz-2026' başlığı — asıl kaynak */
       if (donemPdf && is.donem && donemPdf !== is.donem) hata.push(is.kod + ': liste dönemi ' + is.donem + ' ≠ PDF ' + donemPdf + ' (PDF alındı)');
       const donemK = donemPdf || is.donem;
-      if (!donemK) { hata.push(is.kod + ' idx' + is.index + ': dönem çözülemedi'); await uyku(400); continue; }
+      if (!donemK) { hata.push(is.kod + ' idx' + is.index + ': dönem çözülemedi · belge başı: "' + txt.replace(/\s+/g, ' ').trim().slice(0, 100) + '"'); await uyku(400); continue; }
       if (r.baslik.kod && r.baslik.kod !== is.kod) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }
       const F = d.fonlar[is.kod] || (d.fonlar[is.kod] = { ad: d.evren[is.kod] ? d.evren[is.kod].ad : is.kod, donemler: {} });
       F.ad = r.baslik.ad || F.ad;
