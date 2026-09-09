@@ -37,29 +37,40 @@ export function basligiOku(metin) {
 
 /* Ay sonu hisse portföyü */
 export function hisseleriOku(metin) {
-  const i0 = metin.indexOf('III-FON PORTFÖY DEĞERİ TABLOSU');
-  if (i0 < 0) throw new Error('III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok');
+  /* §429g: başlık esnetildi (roman rakamı/boşluk türevleri) ve HATA MESAJI
+     artık belgenin ilk satırlarını taşır — 116 PDF'lik sessiz düşüşün
+     (canlı #205) kimliği bir sonraki koşuda kendiliğinden görünsün. */
+  const ornek = () => metin.replace(/\s+/g, ' ').trim().slice(0, 120);
+  const m0 = metin.match(/(?:[IVX]+\s*[-–.]\s*)?FON\s*PORTF[ÖO]Y\s*DE[ĞG]ER[İI]\s*TABLOSU/);
+  if (!m0) throw new Error('portföy tablosu başlığı yok · belge başı: "' + ornek() + '"');
+  const i0 = m0.index;
   const i1 = metin.indexOf('HİSSE SENETLERİ', i0);
-  if (i1 < 0) throw new Error('HİSSE SENETLERİ bölümü yok');
+  if (i1 < 0) throw new Error('HİSSE SENETLERİ bölümü yok · belge başı: "' + ornek() + '"');
   const i2 = metin.indexOf('GRUP TOPLAMI', i1);
   if (i2 < 0) throw new Error('GRUP TOPLAMI satırı yok');
   const blok = metin.slice(i1, i2);
   /* Satır: kod TL ... nominal alışF alışT [no] borsaF toplam grup fpd ftd */
-  const re = /^\s*([A-Z0-9]{3,6})\s+TL\s+.*?(-?[\d.]+,\d{2})\s+([\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d{6,}\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  /* §429g: IVF/PUK canlı vakası — dövizli hisse satırları (USD/EUR) 'TL'
+     sabitine takılıp atlanıyor, toplam %93-95'te kalıp denetimden düşüyordu.
+     Para birimi artık grup; kod bazında kayda para birimi de yazılır. */
+  const re = /^\s*([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+([\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d{6,}\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   const kod = {};
   let m, satir = 0;
   while ((m = re.exec(blok))) {
     satir++;
     const k = m[1];
-    const r = kod[k] || (kod[k] = { kod: k, nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0 });
-    r.nominal += sayi(m[2]); r.deger += sayi(m[6]);
-    r.grup += sayi(m[7]); r.fpd += sayi(m[8]); r.ftd += sayi(m[9]);
-    r.borsaFiyat = sayi(m[5]); r.satir++;
+    const r = kod[k] || (kod[k] = { kod: k, pb: m[2], nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0 });
+    if (m[2] !== 'TL') r.pb = m[2];
+    /* §429g grup haritası (pb eklenince kaydı): 1 kod · 2 pb · 3 nominal ·
+       4 alışF · 5 alışT · 6 borsaF · 7 toplamDeğer · 8 grup% · 9 fpd% · 10 ftd% */
+    r.nominal += sayi(m[3]); r.deger += sayi(m[7]);
+    r.grup += sayi(m[8]); r.fpd += sayi(m[9]); r.ftd += sayi(m[10]);
+    r.borsaFiyat = sayi(m[6]); r.satir++;
   }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
   const gt = metin.slice(i2, i2 + 400).match(/GRUP TOPLAMI\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})/);
   const toplam = gt ? { deger: sayi(gt[2]), grup: sayi(gt[3]), fpd: sayi(gt[4]), ftd: sayi(gt[5]) } : null;
-  const liste = Object.values(kod).map(r => ({ kod: r.kod, nominal: +r.nominal.toFixed(2), deger: +r.deger.toFixed(2),
+  const liste = Object.values(kod).map(r => ({ kod: r.kod, pb: r.pb, nominal: +r.nominal.toFixed(2), deger: +r.deger.toFixed(2),
     agirlik: +r.ftd.toFixed(2), portfoyIci: +r.grup.toFixed(2), borsaFiyat: r.borsaFiyat, satir: r.satir }))
     .filter(r => Math.abs(r.deger) > 0.5)
     .sort((a, b) => b.agirlik - a.agirlik);
@@ -88,11 +99,17 @@ export function denetle(hisse) {
   if (hisse.liste.length < 5) sorun.push('kod sayısı ' + hisse.liste.length + ' < 5');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)');
-  if (hisse.toplam) {
+  const cokParali = hisse.liste.some(r => r.pb && r.pb !== 'TL');
+  if (hisse.toplam && !cokParali) {
     const degT = hisse.liste.reduce((a, r) => a + r.deger, 0);
     const fark = Math.abs(degT - hisse.toplam.deger) / hisse.toplam.deger;
     if (fark > 0.001) sorun.push('değer toplamı ' + degT.toFixed(0) + ' ≠ GRUP TOPLAMI ' + hisse.toplam.deger.toFixed(0));
-  } else sorun.push('GRUP TOPLAMI satırı okunamadı');
+  } else if (!hisse.toplam) sorun.push('GRUP TOPLAMI satırı okunamadı');
+  /* §429g çok paralı fonda değer kıyası anlamsız (GRUP TOPLAMI TL bazlı yazılabiliyor);
+     onun yerine ağırlık aklı: FTD toplamı (0, 105] aralığında olmalı. */
+  if (cokParali) { const ftdT = hisse.liste.reduce((a, r) => a + r.ftd*0 + r.portfoyIci*0, 0); }
+  const ftdT = hisse.liste.reduce((a, r) => a + (r.agirlik || 0), 0);
+  if (!(ftdT > 0 && ftdT <= 105)) sorun.push('FTD ağırlık toplamı ' + ftdT.toFixed(1) + ' (0-105 dışı)');
   return { gecti: sorun.length === 0, sorun };
 }
 
