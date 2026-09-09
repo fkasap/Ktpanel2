@@ -410,9 +410,17 @@ async function ecosModu(req, res){
       if(!r.ok){ TANI.push(stat+': HTTP '+r.status); return null; }
       const j=await r.json();
       if(j.RESULT){ TANI.push(stat+': '+(j.RESULT.CODE||'')+' '+String(j.RESULT.MESSAGE||'').slice(0,60)); return null; }
-      const rows=j.StatisticSearch && j.StatisticSearch.row;
+      let rows=j.StatisticSearch && j.StatisticSearch.row;
       if(!Array.isArray(rows)||!rows.length){ TANI.push(stat+': satır yok'); return null; }
-      return rows.map(x=>({t:x.TIME, v:parseFloat(x.DATA_VALUE)})).filter(x=>isFinite(x.v));
+      /* §432d: '*AA' gibi kodları ECOS JOKER sayıp TÜM kalemleri döndürebiliyor
+         (canlı: ihracat +%64 "yıllık" — farklı mal gruplarının satırları
+         üst üste binmişti, büyüklük testi yakaladı). Yanıt her zaman istenen
+         kalemle SÜZÜLÜR; süzgeç boş bırakırsa süzgeçsiz kullanılır (bazı
+         tablolar ITEM_CODE1 alanını doldurmaz). */
+      const suz=rows.filter(x=>String(x.ITEM_CODE1||'')===String(item));
+      if(suz.length) rows=suz; else if(rows.some(x=>x.ITEM_CODE1)) { TANI.push(stat+'/'+item+': kalem süzgeci 0 satır ('+rows.length+' ham)'); return null; }
+      const map={}; rows.forEach(x=>{ map[x.TIME]={t:x.TIME, v:parseFloat(x.DATA_VALUE)}; });   /* aynı ay tekrarı ezilir */
+      return Object.values(map).filter(x=>isFinite(x.v)).sort((a,b)=>String(a.t)<String(b.t)?-1:1);
     }catch(e){ TANI.push(stat+': '+String((e&&e.message)||e).slice(0,60)); return null; }
   };
   const S={};
@@ -440,7 +448,7 @@ async function ecosModu(req, res){
   if(rez&&rez.length>=2){ const n=v=> v>1e8 ? v/1e6 : v>1e5 ? v/1e3 : v;   /* bin$/mn$ -> mlr$ sezgisel ölçek */
     const a=rez[rez.length-1], b=rez[rez.length-2];
     S.rezerv={mlrUsd:+n(a.v).toFixed(1), ay:a.t, aylikFark:+(n(a.v)-n(b.v)).toFixed(1)}; }
-  const ihr = await cek('403Y001','M',ay(eski),ay(simdi),'*AA',30);
+  const ihr = await cek('403Y001','M',ay(eski),ay(simdi),'*AA',3000);   /* §432d: joker tüm kalemleri döndürürse süzgece yetecek kadar satır iste */
   if(ihr&&ihr.length>=13){ const a=ihr[ihr.length-1], b=ihr[ihr.length-13], c=ihr[ihr.length-4];
     S.ihracat={yoy:+(100*(a.v/b.v-1)).toFixed(1), ceyrekYoY:+(100*(c.v/ihr[ihr.length-16>=0?ihr.length-16:0].v-1)).toFixed(1), ay:a.t}; }
   else if(ihr) TANI.push('403Y001: '+ihr.length+' ay');
