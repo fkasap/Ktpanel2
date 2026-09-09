@@ -2484,7 +2484,7 @@ async function fonPortfoy() {
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu',
     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const yeniFonVar = evrenKod.some(k => !d.fonlar[k]);   /* §429b: deposu boş fon varsa geriye bak */
-  const pencereGun = (ilkKosu || yeniFonVar) ? 400 : 45;
+  const pencereGun = (ilkKosu || yeniFonVar) ? 150 : 45;   /* §431: 133 fonluk evrende 400 gün = ~1700 PDF/17MB JSON — taşar. 150 gün ≈ 5 rapor/fon, 'en az 4 ay' isteğini karşılar */
   /* §429c KAP ŞEMASI (canlı #178): funds/byCriteria kaydı {publishDate, fundCode,
      kapTitle, disclosureClass, disclosureType:'FON', summary, ...} — stockCode YOK,
      fundCode VAR. 400 günlük tek pencere 2000 kayıtta KESİLDİ (tavan). Artık 30
@@ -2584,7 +2584,7 @@ async function fonPortfoy() {
   /* aynı (kod,dönem) için en son yayın kazanır; dönemi bilinmeyenler ayrı tutulur */
   const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + (i.donem || ('idx' + i.index)); if (!tekil[k] || String(tekil[k].index) < String(i.index)) tekil[k] = i; });
   /* §429b: deposu boş (yeni eklenen) fonlar ÖNCE, sonra yeni dönemden eskiye */
-  const sira = Object.values(tekil).sort((a, b) => ((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || (String(b.donem || '') > String(a.donem || '') ? 1 : -1)).slice(0, 40);
+  const sira = Object.values(tekil).sort((a, b) => (((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || ((String(b.donem || '') > String(a.donem || '')) ? 1 : -1)))  .slice(0, 120);   /* §431: 133 fon × 5 dönem geri doldurma ~6 koşuda biter */
   let yazildi = 0, dusen = [], hata = [];
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fonpd-'));
   for (const is of sira) {
@@ -2607,13 +2607,20 @@ async function fonPortfoy() {
       if (r.baslik.kod && r.baslik.kod !== is.kod) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }
       const F = d.fonlar[is.kod] || (d.fonlar[is.kod] = { ad: d.evren[is.kod] ? d.evren[is.kod].ad : is.kod, donemler: {} });
       F.ad = r.baslik.ad || F.ad;
+      /* §431 SIKILAŞTIRMA: nominal ve işlem sayacı atılır, değerler tam ₺'ye
+         yuvarlanır (dönem ~3 KB; 133 fon × 6 dönem ≈ 2-3 MB — panel çekebilir). */
+      const kirp = o => { const out = {}; Object.keys(o || {}).forEach(k => { out[k] = { deger: Math.round(o[k].deger) }; }); return out; };
       F.donemler[donemK] = {
         baslik: r.baslik,
-        hisse: r.hisse.map(h => ({ kod: h.kod, agirlik: h.agirlik, deger: h.deger, nominal: h.nominal })),
+        hisse: r.hisse.map(h => ({ kod: h.kod, agirlik: h.agirlik, deger: Math.round(h.deger) })),
         hisseToplam: r.hisseToplam,
-        islem: r.islem,
-        kaynak: { index: is.index, objId: obj, yayin: is.yayin, pdfBoyut: buf.length, islendi: bugun }
+        islem: { alis: kirp(r.islem.alis), satis: kirp(r.islem.satis) },
+        kaynak: { index: is.index, objId: obj, yayin: is.yayin, islendi: bugun }
       };
+      /* §431 BUDAMA: fon başına son 6 dönem kalır — kullanıcı kuralı 'en fazla
+         3 ay biriktir'; 6, görünüm penceresi (4) + iki yedek. Silinen dönem
+         KAP'ta duruyor, kayıp değil — gerekirse pencereyle geri çekilir. */
+      const dk = Object.keys(F.donemler).sort(); dk.slice(0, Math.max(0, dk.length - 6)).forEach(x => delete F.donemler[x]);
       yazildi++; await uyku(500);
     } catch (e) { hata.push(is.kod + ' ' + is.donem + ': ' + String(e.message || e).slice(0, 70)); await uyku(400); }
   }
