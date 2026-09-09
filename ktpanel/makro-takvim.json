@@ -1,11 +1,19 @@
 {
- "guncelleme": "2026-09-09 10:28 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-09 13:18 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
    "t": "2026-09-08T13:15:00.000Z",
    "ulke": "GBP",
    "olay": "Monetary Policy Report Hearings",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-09-10T01:15:00.000Z",
+   "ulke": "USD",
+   "olay": "President Trump Speaks",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""

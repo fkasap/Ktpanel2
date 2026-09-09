@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-09T10:31:47Z",
+ "guncelleme": "2026-09-09T13:21:43Z",
  "donem": "202512",
  "donem_etiket": "2025/12",
  "kaynak": "TSPB · tspbnad.matriksdata.com (resmî NAD tablosu)",
@@ -25,9 +25,9 @@
    "payNad": 40.25260323294799,
    "iskonto": 9.260014179656872,
    "borcluluk": 9.77,
-   "fiyat": 59.55,
+   "fiyat": 59.45,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 47.9
+   "guncelIskonto": 47.7
   },
   "AKFGY": {
    "ad": "AKFEN GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -40,9 +40,9 @@
    "payNad": 8.569128534000617,
    "iskonto": -70.00861884843079,
    "borcluluk": 18.97,
-   "fiyat": 2.63,
+   "fiyat": 2.65,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -69.3
+   "guncelIskonto": -69.1
   },
   "AKMGY": {
    "ad": "AKMERKEZ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -55,9 +55,9 @@
    "payNad": 257.3475371135681,
    "iskonto": -27.090811863026133,
    "borcluluk": 18.55,
-   "fiyat": 251.75,
+   "fiyat": 252,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -2.2
+   "guncelIskonto": -2.1
   },
   "AKSGY": {
    "ad": "AKİŞ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -70,9 +70,9 @@
    "payNad": 18.465817035610765,
    "iskonto": -61.17149874184893,
    "borcluluk": 17.44,
-   "fiyat": 9.94,
+   "fiyat": 9.99,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -46.2
+   "guncelIskonto": -45.9
   },
   "ALGYO": {
    "ad": "ALARKO GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -85,9 +85,9 @@
    "payNad": 7.666578531006605,
    "iskonto": -44.9558889544705,
    "borcluluk": 35.04,
-   "fiyat": 3.74,
+   "fiyat": 3.79,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -51.2
+   "guncelIskonto": -50.6
   },
   "ASGYO": {
    "ad": "ASCE GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -100,9 +100,9 @@
    "payNad": 49.213844056145675,
    "iskonto": -78.2987892841378,
    "borcluluk": 15.72,
-   "fiyat": 11.39,
+   "fiyat": 11.44,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -76.9
+   "guncelIskonto": -76.8
   },
   "ATAGY": {
    "ad": "ATA GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -115,9 +115,9 @@
    "payNad": 14.242539894736842,
    "iskonto": 8.688479122466397,
    "borcluluk": 18.07,
-   "fiyat": 9.93,
+   "fiyat": 10.07,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -30.3
+   "guncelIskonto": -29.3
   },
   "AGYO": {
    "ad": "ATAKULE GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -130,9 +130,9 @@
    "payNad": 22.054491922989293,
    "iskonto": -67.89769619394448,
    "borcluluk": 13.07,
-   "fiyat": 7.36,
+   "fiyat": 7.48,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -66.6
+   "guncelIskonto": -66.1
   },
   "AVGYO": {
    "ad": "AVRASYA GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -145,9 +145,9 @@
    "payNad": 25.55232690860215,
    "iskonto": -62.86052525100872,
    "borcluluk": 10.73,
-   "fiyat": 17.86,
+   "fiyat": 16.69,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -30.1
+   "guncelIskonto": -34.7
   },
   "AVPGY": {
    "ad": "AVRUPAKENT GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -160,9 +160,9 @@
    "payNad": 99.8225600275,
    "iskonto": -51.91467741683189,
    "borcluluk": 21.23,
-   "fiyat": 55,
+   "fiyat": 55.7,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -44.9
+   "guncelIskonto": -44.2
   },
   "BEGYO": {
    "ad": "BATI EGE GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -190,7 +190,7 @@
    "payNad": -0.47464417,
    "iskonto": -1678.0242281286214,
    "borcluluk": 116.77,
-   "fiyat": 8.02,
+   "fiyat": 8.03,
    "fiyat_tarih": "2026-09-09"
   },
   "DGGYO": {
@@ -204,9 +204,9 @@
    "payNad": 41.51618914744432,
    "iskonto": -23.451548293284684,
    "borcluluk": 29.68,
-   "fiyat": 33.8,
+   "fiyat": 33.6,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -18.6
+   "guncelIskonto": -19.1
   },
   "EGEGY": {
    "ad": "EGEYAPI AVRUPA GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -219,9 +219,9 @@
    "payNad": 33.270455605,
    "iskonto": -21.732361260220866,
    "borcluluk": 21.45,
-   "fiyat": 27.16,
+   "fiyat": 27.22,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -18.4
+   "guncelIskonto": -18.2
   },
   "EKGYO": {
    "ad": "EMLAK KONUT GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -234,9 +234,9 @@
    "payNad": 51.344195804260444,
    "iskonto": -61.30039688273543,
    "borcluluk": 48.87,
-   "fiyat": 22.04,
+   "fiyat": 22.38,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -57.1
+   "guncelIskonto": -56.4
   },
   "EYGYO": {
    "ad": "EYG GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -249,9 +249,9 @@
    "payNad": 4.537680002421428,
    "iskonto": -16.477142549109814,
    "borcluluk": 28.77,
-   "fiyat": 2.63,
+   "fiyat": 2.65,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -42
+   "guncelIskonto": -41.6
   },
   "FZLGY": {
    "ad": "FUZUL GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -264,9 +264,9 @@
    "payNad": 5.8267220104,
    "iskonto": 121.05053196309599,
    "borcluluk": 59.53,
-   "fiyat": 8.19,
+   "fiyat": 8.4,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 40.6
+   "guncelIskonto": 44.2
   },
   "HLGYO": {
    "ad": "HALK GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -279,9 +279,9 @@
    "payNad": 14.544193022395833,
    "iskonto": -76.48546059080952,
    "borcluluk": 29.63,
-   "fiyat": 4.66,
+   "fiyat": 4.72,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -68
+   "guncelIskonto": -67.5
   },
   "KZBGY": {
    "ad": "KIZILBÜK GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -294,9 +294,9 @@
    "payNad": 18.047819460803666,
    "iskonto": -81.88146769141945,
    "borcluluk": 36.99,
-   "fiyat": 1.89,
+   "fiyat": 1.91,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -89.5
+   "guncelIskonto": -89.4
   },
   "KGYO": {
    "ad": "KORAY GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -309,9 +309,9 @@
    "payNad": 7.96957008,
    "iskonto": -37.135881236896026,
    "borcluluk": 48.15,
-   "fiyat": 11.57,
+   "fiyat": 10.93,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 45.2
+   "guncelIskonto": 37.1
   },
   "KZGYO": {
    "ad": "KUZUGRUP GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -339,9 +339,9 @@
    "payNad": 3.2101093575757575,
    "iskonto": -12.46404134586605,
    "borcluluk": 10.31,
-   "fiyat": 3.33,
+   "fiyat": 3.36,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 3.7
+   "guncelIskonto": 4.7
   },
   "KLGYO": {
    "ad": "KİLER GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -354,9 +354,9 @@
    "payNad": 24.72747787670251,
    "iskonto": -75.37152785914402,
    "borcluluk": 23.08,
-   "fiyat": 4.87,
+   "fiyat": 4.91,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -80.3
+   "guncelIskonto": -80.1
   },
   "MRGYO": {
    "ad": "MARTI GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -369,9 +369,9 @@
    "payNad": 7.321449091225737,
    "iskonto": -78.69274264476476,
    "borcluluk": 0,
-   "fiyat": 1.7,
+   "fiyat": 1.78,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -76.8
+   "guncelIskonto": -75.7
   },
   "MHRGY": {
    "ad": "MHR GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -384,9 +384,9 @@
    "payNad": 8.069204516727126,
    "iskonto": -71.99228256868302,
    "borcluluk": 0.01,
-   "fiyat": 2.26,
+   "fiyat": 2.28,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -72
+   "guncelIskonto": -71.7
   },
   "NUGYO": {
    "ad": "NUROL GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -399,9 +399,9 @@
    "payNad": 19.66668959111132,
    "iskonto": -43.559387823882545,
    "borcluluk": 3.62,
-   "fiyat": 9.29,
+   "fiyat": 9.37,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -52.8
+   "guncelIskonto": -52.4
   },
   "PAGYO": {
    "ad": "PANORA GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -414,9 +414,9 @@
    "payNad": 174.64369511494252,
    "iskonto": -54.79367294190682,
    "borcluluk": 8.97,
-   "fiyat": 137.7,
+   "fiyat": 139.3,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -21.2
+   "guncelIskonto": -20.2
   },
   "PSGYO": {
    "ad": "PASİFİK GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -444,9 +444,9 @@
    "payNad": 1.6176806546900002,
    "iskonto": 678.8929145854543,
    "borcluluk": 18.75,
-   "fiyat": 10.8,
+   "fiyat": 10.77,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 567.6
+   "guncelIskonto": 565.8
   },
   "RYGYO": {
    "ad": "REYSAŞ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -459,9 +459,9 @@
    "payNad": 46.730264665,
    "iskonto": -55.06124317817407,
    "borcluluk": 7.57,
-   "fiyat": 45.5,
+   "fiyat": 45.6,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -2.6
+   "guncelIskonto": -2.4
   },
   "SRVGY": {
    "ad": "SERVET GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -474,9 +474,9 @@
    "payNad": 12.257558639076922,
    "iskonto": -74.79106491769802,
    "borcluluk": 12.08,
-   "fiyat": 2.51,
+   "fiyat": 2.55,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -79.5
+   "guncelIskonto": -79.2
   },
   "SURGY": {
    "ad": "SUR TATİL EVLERİ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -489,9 +489,9 @@
    "payNad": 134.7513780477612,
    "iskonto": -67.34727270514097,
    "borcluluk": 14.44,
-   "fiyat": 30.42,
+   "fiyat": 30.94,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -77.4
+   "guncelIskonto": -77
   },
   "SNGYO": {
    "ad": "SİNPAŞ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -504,7 +504,7 @@
    "payNad": 18.4281490495,
    "iskonto": -75.36377642808799,
    "borcluluk": 18.53,
-   "fiyat": 3.29,
+   "fiyat": 3.3,
    "fiyat_tarih": "2026-09-09",
    "guncelIskonto": -82.1
   },
@@ -519,9 +519,9 @@
    "payNad": 135.86883871,
    "iskonto": -48.25892333557872,
    "borcluluk": 16.22,
-   "fiyat": 94.35,
+   "fiyat": 94.8,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -30.6
+   "guncelIskonto": -30.2
   },
   "TDGYO": {
    "ad": "TREND GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -534,9 +534,9 @@
    "payNad": 3.354543115942029,
    "iskonto": 1032.1959112555446,
    "borcluluk": 0.36,
-   "fiyat": 18.19,
+   "fiyat": 18.3,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 442.2
+   "guncelIskonto": 445.5
   },
   "TSGYO": {
    "ad": "TSKB GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -549,9 +549,9 @@
    "payNad": 9.590481071461538,
    "iskonto": -28.992091749551907,
    "borcluluk": 11.39,
-   "fiyat": 5.97,
+   "fiyat": 5.99,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -37.8
+   "guncelIskonto": -37.5
   },
   "VKGYO": {
    "ad": "VAKIF GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -564,9 +564,9 @@
    "payNad": 8.071781045510146,
    "iskonto": -76.7089817055217,
    "borcluluk": 19.08,
-   "fiyat": 1.95,
+   "fiyat": 1.96,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -75.8
+   "guncelIskonto": -75.7
   },
   "VRGYO": {
    "ad": "VERA KONSEPT GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -579,9 +579,9 @@
    "payNad": 6.217278365853659,
    "iskonto": -61.397900194059105,
    "borcluluk": 35.71,
-   "fiyat": 1.8,
+   "fiyat": 1.82,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -71
+   "guncelIskonto": -70.7
   },
   "YGGYO": {
    "ad": "YENİ GİMAT GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -594,9 +594,9 @@
    "payNad": 105.69648017939815,
    "iskonto": 15.53837913308589,
    "borcluluk": 3.16,
-   "fiyat": 221.3,
+   "fiyat": 221.7,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 109.4
+   "guncelIskonto": 109.8
   },
   "ZERGY": {
    "ad": "ZERAY GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -609,9 +609,9 @@
    "payNad": 71.81414264057508,
    "iskonto": -86.25618904983844,
    "borcluluk": 13.49,
-   "fiyat": 9.9,
+   "fiyat": 10.38,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -86.2
+   "guncelIskonto": -85.5
   },
   "ZRGYO": {
    "ad": "ZİRAAT GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -624,9 +624,9 @@
    "payNad": 16.89359038375497,
    "iskonto": 38.0405199265677,
    "borcluluk": 15.66,
-   "fiyat": 19.54,
+   "fiyat": 19.57,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 15.7
+   "guncelIskonto": 15.8
   },
   "OZKGY": {
    "ad": "ÖZAK GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -639,7 +639,7 @@
    "payNad": 45.89571416703296,
    "iskonto": -69.43069684254354,
    "borcluluk": 14.88,
-   "fiyat": 13.39,
+   "fiyat": 13.41,
    "fiyat_tarih": "2026-09-09",
    "guncelIskonto": -70.8
   },
@@ -669,9 +669,9 @@
    "payNad": 1.1014751333333332,
    "iskonto": 230.46592608808788,
    "borcluluk": 69.48,
-   "fiyat": 2.91,
+   "fiyat": 2.85,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": 164.2
+   "guncelIskonto": 158.7
   },
   "ISGYO": {
    "ad": "İŞ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",
@@ -684,7 +684,7 @@
    "payNad": 53.051256735332466,
    "iskonto": -60.585288102941746,
    "borcluluk": 13.51,
-   "fiyat": 25.22,
+   "fiyat": 25.18,
    "fiyat_tarih": "2026-09-09",
    "guncelIskonto": -52.5
   },
@@ -699,9 +699,9 @@
    "payNad": 7.782215528923066,
    "iskonto": -33.180981936649125,
    "borcluluk": 11.45,
-   "fiyat": 3.67,
+   "fiyat": 3.71,
    "fiyat_tarih": "2026-09-09",
-   "guncelIskonto": -52.8
+   "guncelIskonto": -52.3
   }
  }
 }
