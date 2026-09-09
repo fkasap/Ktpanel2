@@ -2530,7 +2530,20 @@ async function fonPortfoy() {
     out.forEach(b => { const k = kodAl(b), o = oidAl(b); if (k && o && d.evren[k] && !d.evren[k].oid) { d.evren[k].oid = o; hasat++; } });
     return out;
   };
-  const kabul = b => pdMi(b) && evrenKod.includes(kodAl(b));
+  /* §429f (bu tabana taşındı — kopya ayrışmasında kaybolmuştu): unvan eşlemesi
+     (KAP fundCode ≠ TEFAS kodu olan fonlar için) + kapKod öğrenme + teşhis. */
+  const norm = tt => String(tt || '').toUpperCase().replace(/İ/g, 'I').replace(/[^A-Z0-9]+/g, ' ').replace(/\b(A S|AS|TL|FONU|FON|HISSE SENEDI YOGUN)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  const evrenUnvan = {}; evrenKod.forEach(k => { const u = (UNV[k] || (d.evren[k] && d.evren[k].kaynak !== 'elle' && d.evren[k].ad) || ''); if (u) evrenUnvan[norm(u)] = k; });
+  const gorulenKod = new Set(), ilginc = [];
+  const kabul = b => {
+    const k = kodAl(b); if (k) gorulenKod.add(k);
+    if (pdMi(b) && !evrenKod.includes(k) && ilginc.length < 12 && /KATILIM/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && /HISSE/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && !ilginc.some(x => x.startsWith(k + '='))) ilginc.push(k + '=' + String(b.kapTitle || '').slice(0, 55));
+    if (!pdMi(b)) return false;
+    if (evrenKod.includes(k)) return true;
+    const kk = evrenKod.find(e => d.evren[e].kapKod === k); if (kk) { b.__evrenKod = kk; return true; }
+    const eş = evrenUnvan[norm(b.kapTitle)]; if (eş) { b.__evrenKod = eş; return true; }
+    return false;
+  };
   const bas = simdi - pencereGun * GUN;
   /* (A) kimliği bilinen fonlar — fon başına tek istek */
   const oidli = evrenKod.filter(k => d.evren[k].oid);
@@ -2566,12 +2579,17 @@ async function fonPortfoy() {
   }
   if (hasat) raporlar.push('- §429e KAP üye kimliği hasat edildi: ' + hasat + ' fon (dosyaya yazıldı; sonraki koşu fon bazında sorgular)');
   await yaz(dosya, d);   /* kimlikler kalıcı olsun — rapor listesi boş dönse bile */
+  { const gorulmeyen = evrenKod.filter(k => !gorulenKod.has(k) && !d.basarisiz[k] && !(d.evren[k].kapKod && gorulenKod.has(d.evren[k].kapKod)));
+    raporlar.push('- §429f teşhis: listede ' + gorulenKod.size + ' farklı fon kodu · evrenden görülen: ' + (evrenKod.length - gorulmeyen.length) + '/' + evrenKod.length +
+      (gorulmeyen.length ? '\n- §429n GÖRÜLMEYEN (' + gorulmeyen.length + ', ' + pencereGun + ' günde KAP listesinde yok): ' + gorulmeyen.map(k => k + '=' + String((d.evren[k] && d.evren[k].ad) || '').slice(0, 28)).join(' · ') : '') +
+      (ilginc.length ? '\n- §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): ' + ilginc.join(' | ') : '')); }
   if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · kimlikli ' + evrenKod.filter(k => d.evren[k].oid).length + ' · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt · yol: ' + yol + ')' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); return; }
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
   const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index) islenmisIdx.add(String(x.kaynak.index)); }));
   liste.forEach(b => {
-    const kod = kodAl(b), index = idxAl(b); if (!kod || !index) return;
+    const kod = b.__evrenKod || kodAl(b), index = idxAl(b); if (!kod || !index) return;
+    if (b.__evrenKod && kodAl(b) && d.evren[kod] && !d.evren[kod].kapKod) d.evren[kod].kapKod = kodAl(b);   /* §429f: KAP kodu farklıysa öğren */
     if (islenmisIdx.has(String(index))) return;   /* aynı bildirim iki kez işlenmez */
     let donem = null;
     if (b.year && b.donem) donem = b.year + '-' + String(b.donem).padStart(2, '0');
@@ -2613,7 +2631,7 @@ async function fonPortfoy() {
         if (/aday satır da yok/.test(r.denetim.sorun.join(' '))) {
           globalThis.__fpSayac = globalThis.__fpSayac || {};
           globalThis.__fpSayac[is.kod] = (globalThis.__fpSayac[is.kod] || 0) + 1;
-          if (globalThis.__fpSayac[is.kod] >= 2) d.basarisiz[is.kod] = { sebep: 'hisse tablosu ayrıştırılamıyor (görüntü gömülü olabilir)', tarih: bugun };
+          if (globalThis.__fpSayac[is.kod] >= 2 && !(d.fonlar[is.kod] && Object.keys(d.fonlar[is.kod].donemler || {}).length)) d.basarisiz[is.kod] = { sebep: 'hisse tablosu ayrıştırılamıyor (görüntü gömülü olabilir)', tarih: bugun };   /* §429n */
         }
         await uyku(400); continue;
       }

@@ -22,7 +22,8 @@ export function basligiOku(metin) {
   const ad = (bas.match(/A-\)Fonun Adı\s*:\s*([^\n]+)/) || [])[1];
   const kod = (bas.match(/^\s*([A-Z0-9]{2,5})-/m) || [])[1];
   let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
-  if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
+  if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);
+  if (!donemM) donemM = bas.match(/\b([A-ZÇĞİÖŞÜ]{4,8})\s+(20\d\d)\s+(?:PORTF|1-|I-)/);   /* §429n ELZ: 'NİSAN 2026 1- FONU' */   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
   let donem = null;
   /* §429m: 'EKİM'.toLowerCase() JS'te 'eki̇m' (i + birleşik nokta) verir, sözlükle eşleşmez —
      TEMMUZ geçip EKİM/NİSAN düşüyordu (canlı #212). ASCII katlama. */
@@ -67,7 +68,7 @@ export function hisseleriOku(metin) {
      sabitine takılıp atlanıyor, toplam %93-95'te kalıp denetimden düşüyordu.
      Para birimi artık grup; kod bazında kayda para birimi de yazılır. */
   /* §429j: alış fiyatı NEGATİF ve çok haneli olabilir (IVF canlı: ASELS -0,055199 — temettü düzeltmeli maliyet) */
-  const re = /^\s*([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d{6,}\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  const re = /^\s*([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   const kod = {};
   let m, satir = 0;
   while ((m = re.exec(blok))) {
@@ -103,6 +104,16 @@ export function hisseleriOku(metin) {
       const k = mc[1];
       const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'C' });
       r.nominal += sayi(mc[2]); r.deger += sayi(mc[3]); r.ftd += sayi(mc[4]); r.grup += sayi(mc[4]); r.satir++;
+    }
+  }
+  /* §429n ŞABLON D (canlı KHJ/KLH): 'KOD AD 45.000,00 692.100,00 4,75%' — Türk sayı, yüzde SONEKLİ */
+  if (satir === 0) {
+    const reD = /^\s*([A-Z0-9]{3,6})\s+.+?\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d+)\s*%\s*$/gm;
+    let md; while ((md = reD.exec(blok))) {
+      satir++;
+      const k = md[1];
+      const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'D' });
+      r.nominal += sayi(md[2]); r.deger += sayi(md[3]); r.ftd += sayi(md[4]); r.grup += sayi(md[4]); r.satir++;
     }
   }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
@@ -145,7 +156,7 @@ export function denetle(hisse) {
   const sorun = [];
   /* §429l: KLH canlı vakası — tek hisseli fon (FZLGY %99) meşru; taban 1 */
   if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ' · bölümde aday satır da yok'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
-  const sablonB = hisse.liste.some(r => r.sablon === 'B' || r.sablon === 'C');
+  const sablonB = hisse.liste.some(r => r.sablon === 'B' || r.sablon === 'C' || r.sablon === 'D');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIR ÖRNEĞİ: "' + hisse.kacak[0] + '"' : ''));
