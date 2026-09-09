@@ -2517,7 +2517,21 @@ async function fonPortfoy() {
     out.forEach(b => { const k = kodAl(b), o = oidAl(b); if (k && o && d.evren[k] && !d.evren[k].oid) { d.evren[k].oid = o; hasat++; } });
     return out;
   };
-  const kabul = b => pdMi(b) && evrenKod.includes(kodAl(b));
+  /* §429f TEŞHİS (canlı #183: 15.886 rapor, evren 0, tavan yok): kod eşleşmesi
+     sorgulanıyor. KAP fundCode ≠ TEFAS kodu olabilir. Unvan eşlemesi yedek yol:
+     TEFAS unvanı (varsa) ile kapTitle normalize edilip karşılaştırılır. */
+  const norm = t => String(t || '').toUpperCase().replace(/İ/g, 'I').replace(/[^A-Z0-9]+/g, ' ').replace(/\b(A S|AS|TL|FONU|FON|HISSE SENEDI YOGUN)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  const evrenUnvan = {}; evrenKod.forEach(k => { const u = (UNV[k] || (d.evren[k] && d.evren[k].kaynak !== 'elle' && d.evren[k].ad) || ''); if (u) evrenUnvan[norm(u)] = k; });
+  const gorulenKod = new Set(), ilginc = [];
+  const kabul = b => {
+    const k = kodAl(b); if (k) gorulenKod.add(k);
+    if (pdMi(b) && ilginc.length < 8 && /KUVEYT|KATILIM/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && /HISSE|SERBEST/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I'))) ilginc.push(k + '=' + String(b.kapTitle || '').slice(0, 60));
+    if (!pdMi(b)) return false;
+    if (evrenKod.includes(k)) return true;
+    const kk = evrenKod.find(e => d.evren[e].kapKod === k); if (kk) { b.__evrenKod = kk; return true; }
+    const eş = evrenUnvan[norm(b.kapTitle)]; if (eş) { b.__evrenKod = eş; return true; }
+    return false;
+  };
   const bas = simdi - pencereGun * GUN;
   /* (A) kimliği bilinen fonlar — fon başına tek istek */
   const oidli = evrenKod.filter(k => d.evren[k].oid);
@@ -2553,12 +2567,14 @@ async function fonPortfoy() {
   }
   if (hasat) raporlar.push('- §429e KAP üye kimliği hasat edildi: ' + hasat + ' fon (dosyaya yazıldı; sonraki koşu fon bazında sorgular)');
   await yaz(dosya, d);   /* kimlikler kalıcı olsun — rapor listesi boş dönse bile */
+  raporlar.push('- §429f teşhis: listede ' + gorulenKod.size + ' farklı fon kodu · evrenden görülen: ' + (evrenKod.filter(k => gorulenKod.has(k)).join(',') || 'HİÇBİRİ') + (ilginc.length ? ' · katılım/kuveyt hisse örnekleri: ' + ilginc.join(' | ') : ''));
   if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · kimlikli ' + evrenKod.filter(k => d.evren[k].oid).length + ' · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt · yol: ' + yol + ')' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); return; }
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
   const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index) islenmisIdx.add(String(x.kaynak.index)); }));
   liste.forEach(b => {
-    const kod = kodAl(b), index = idxAl(b); if (!kod || !index) return;
+    const kod = b.__evrenKod || kodAl(b), index = idxAl(b); if (!kod || !index) return;
+    if (b.__evrenKod && kodAl(b) && d.evren[kod] && !d.evren[kod].kapKod) d.evren[kod].kapKod = kodAl(b);   /* §429f: KAP kodu farklıysa öğren */
     if (islenmisIdx.has(String(index))) return;   /* aynı bildirim iki kez işlenmez */
     let donem = null;
     if (b.year && b.donem) donem = b.year + '-' + String(b.donem).padStart(2, '0');
