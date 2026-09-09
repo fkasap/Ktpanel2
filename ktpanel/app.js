@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260909a';   // SS432 Kore ECOS canli
+const KTP_SURUM = '20260909b';   // SS432c Kore: 10Y + ihracat + cip + rezerv
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1128,6 +1128,11 @@ async function krMakro(){
     if(S.usdkrw){ hh+='<div class="kv"><span class="k">USD/KRW</span><span>'+S.usdkrw.deger.toLocaleString('tr-TR',{maximumFractionDigits:1})+
       ' <span class="'+(S.usdkrw.aylikYuzde>0?'down':'up')+'">('+(S.usdkrw.aylikYuzde>0?'+':'')+S.usdkrw.aylikYuzde+'% aylık'+(S.usdkrw.aylikYuzde>0?' — won zayıflıyor':'')+')</span></span></div>'; }
     if(S.tufe){ hh+='<div class="kv"><span class="k">TÜFE (yıllık)</span><span>%'+S.tufe.yoy.toLocaleString('tr-TR')+' <span class="thin">('+String(S.tufe.ay).slice(0,4)+'/'+String(S.tufe.ay).slice(4)+')</span></span></div>'; }
+    const ayF=t=>String(t).slice(0,4)+'/'+String(t).slice(4);
+    if(S.y10){ hh+='<div class="kv"><span class="k">10Y hazine</span><span>%'+S.y10.deger.toLocaleString('tr-TR')+' <span class="'+(S.y10.aylikFarkBp>0?'down':'up')+'">('+(S.y10.aylikFarkBp>0?'+':'')+S.y10.aylikFarkBp+'bp aylık)</span> <span class="thin">'+ayF(S.y10.ay)+'</span></span></div>'; }
+    if(S.ihracat){ hh+='<div class="kv"><span class="k">İhracat değer endeksi</span><span class="'+(S.ihracat.yoy>0?'up':'down')+'">'+(S.ihracat.yoy>0?'+':'')+'%'+S.ihracat.yoy.toLocaleString('tr-TR')+' yıllık <span class="thin">'+ayF(S.ihracat.ay)+' — küresel talep kanaryası</span></span></div>'; }
+    if(S.cip){ hh+='<div class="kv"><span class="k">Çip ihracatı ('+S.cip.etiket+')</span><span class="'+(S.cip.yoy>0?'up':'down')+'">'+(S.cip.yoy>0?'+':'')+'%'+S.cip.yoy.toLocaleString('tr-TR')+' yıllık <span class="thin">'+ayF(S.cip.ay)+'</span></span></div>'; }
+    if(S.rezerv){ hh+='<div class="kv"><span class="k">Döviz rezervi</span><span>'+S.rezerv.mlrUsd.toLocaleString('tr-TR')+' mlr $ <span class="'+(S.rezerv.aylikFark>=0?'up':'down')+'">('+(S.rezerv.aylikFark>0?'+':'')+S.rezerv.aylikFark.toLocaleString('tr-TR')+' aylık)</span> <span class="thin">'+ayF(S.rezerv.ay)+'</span></span></div>'; }
     hh+='<div class="note" style="font-size:10px;margin-top:6px">Canlı · BOK ECOS'+(d.tani?' · eksik: '+d.tani.join(' | '):'')+'</div>';
     el.innerHTML=hh;
   }catch(e){ el.innerHTML='<div class="sub">ECOS hatası: '+String((e&&e.message)||e).slice(0,80)+'</div>'; }
