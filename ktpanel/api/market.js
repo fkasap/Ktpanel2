@@ -387,6 +387,24 @@ async function ecosModu(req, res){
   /* §432b KEŞİF KAPISI: ?mod=ecos&kesif=721Y001 -> o tablonun kalem listesi
      (StatisticItemList) anahtar SUNUCUDA kalarak döner. Yeni seri eklerken
      ITEM_CODE'lar buradan okunur; kullanıcı anahtarı hiç görmez/taşımaz. */
+  /* §432f TABLO KİMLİĞİ SORGUSU: ?mod=ecos&tablolar=403 -> kodu bu önekle
+     başlayan tabloların RESMİ ADLARI (StatisticTableList). Canlı ders: 403Y001
+     için "ihracat değer endeksi" varsayımı bileşen tutarlılık testinden düştü
+     (toplam +64 iken en büyük bileşen +4,6 olamaz) — tablo adı tahmin edilmez,
+     SORULUR. */
+  if(req.query.tablolar){
+    const on=String(req.query.tablolar).replace(/[^0-9A-Za-z]/g,'').slice(0,8);
+    try{
+      const r=await fetch('https://ecos.bok.or.kr/api/StatisticTableList/'+KEY+'/json/kr/1/1000/'+(on.length>=7?on:''),
+        {signal:AbortSignal.timeout(20000),headers:{'User-Agent':'Mozilla/5.0 (KTPanel)'}});
+      const j=await r.json();
+      if(j.RESULT) return res.status(200).json({ok:false, err:(j.RESULT.CODE||'')+' '+(j.RESULT.MESSAGE||'')});
+      let rows=(j.StatisticTableList&&j.StatisticTableList.row)||[];
+      if(on.length<7) rows=rows.filter(x=>String(x.STAT_CODE||'').startsWith(on));
+      return res.status(200).json({ok:true, onek:on, adet:rows.length,
+        tablolar: rows.map(x=>({kod:x.STAT_CODE, ad:x.STAT_NAME, periyot:x.CYCLE, aranabilir:x.SRCH_YN}))});
+    }catch(e){ return res.status(200).json({ok:false, err:String((e&&e.message)||e).slice(0,100)}); }
+  }
   if(req.query.kesif){
     const tablo=String(req.query.kesif).replace(/[^0-9A-Za-z]/g,'').slice(0,10);
     try{
