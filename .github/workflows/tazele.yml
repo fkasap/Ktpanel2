@@ -17,13 +17,16 @@ name: Veri Tazele
 on:
   schedule:
     # Hafta içi 18:10 TSİ (15:10 UTC) — BIST kapanışından ~40 dk sonra
+    # §430b (9 Eyl): NOT — GitHub cron'u İSTEK saatidir, garanti değil; 4-9 Eyl
+    # ölçümünde koşular 3-6 saat gecikti. Saat değişikliği gecikmeyi çözmez.
     - cron: '10 15 * * 1-5'
     # Hafta içi 09:10 TSİ (06:10 UTC) — §249n SABAH KOŞUSU, YALNIZ FON katmanı.
     # Fon fiyatı SABAH ilan edilir ve DÜNÜN değerlemesidir; akşam koşusu hep bir
     # gün geriden gelir. Bu koşu dünkü getiriyi aynı gün panele düşürür.
     # NOT: §249n 5 Ağu'da günlüğe "eklendi" diye yazılmıştı ama DOSYAYA HİÇ
     # GİRMEMİŞTİ — 10 Ağu tam okumasında yakalandı (§252x).
-    - cron: '10 6 * * 1-5'
+    # §430b: kullanıcı isteğiyle 09:10 -> 09:30 TSİ (06:30 UTC)
+    - cron: '30 6 * * 1-5'
     # Cumartesi 07:00 TSİ — haftalık kalemler (risk metrikleri dahil;
     # vol ve beta 1 yıllık pencereden hesaplanır, günlük oynaması anlamsız)
     - cron: '0 4 * * 6'
@@ -72,7 +75,7 @@ jobs:
           IN="${{ github.event.inputs.katman }}"
           SCH="${{ github.event.schedule }}"
           if   [ -n "$IN" ];                 then K="$IN"                # elle tetikleme
-          elif [ "$SCH" = "10 6 * * 1-5" ];  then K="fon"                # 09:10 sabah
+          elif [ "$SCH" = "30 6 * * 1-5" ];  then K="fon"                # 09:30 sabah (§430b)
           elif [ "$SCH" = "10 15 * * 1-5" ]; then K="endeks,fiyat,fon"   # 18:10 akşam (risk YOK)
           elif [ "$SCH" = "0 4 * * 6" ];     then K="hepsi"              # cumartesi (risk DAHİL)
           else                                    K="hepsi"              # bilinmeyen -> eski davranış
