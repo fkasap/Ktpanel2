@@ -5,90 +5,15 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "AC1": {
-   "ad": "PARDUS PORTFÖY KISA VADELİ KATILIM SERBEST FONU",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "AL4": {
-   "ad": "ALBARAKA PORTFÖY ALBARAKA TÜRK KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "AL5": {
-   "ad": "ALBARAKA PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "AL6": {
-   "ad": "ALBARAKA PORTFÖY VAKIF KATILIM KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "AL7": {
-   "ad": "ALBARAKA PORTFÖY İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "BDA": {
-   "ad": "YAPI KREDİ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "BKO": {
-   "ad": "AZİMUT PORTFÖY BİRİNCİ KATILIM SERBEST ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "BKY": {
-   "ad": "YAPI KREDİ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "BVK": {
-   "ad": "BULLS PORTFÖY VOLTRAN KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "CKS": {
-   "ad": "İŞ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "DEI": {
-   "ad": "ALLBATROSS PORTFÖY DEMİR KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "DK1": {
-   "ad": "KUVEYT TÜRK PORTFÖY DÜNYA KATILIM BANKASI KISA VADELİ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "DKH": {
    "ad": "DENİZ PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "DKL": {
-   "ad": "DENİZ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "DNK": {
-   "ad": "TACİRLER PORTFÖY DENGE KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "ELZ": {
    "ad": "ASTRA PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "EZM": {
-   "ad": "KUVEYT TÜRK PORTFÖY EZM KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "FS3": {
    "ad": "ONE PORTFÖY KATILIM HİSSE SENEDİ SERBEST FON (HİSSE SENEDİ YOĞUN FON)",
@@ -100,11 +25,6 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "GUK": {
-   "ad": "GARANTİ PORTFÖY GÜMÜŞ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "HFI": {
    "ad": "HEDEF PORTFÖY İKİNCİ KATILIM HİSSE SENEDİ SERBEST FON (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
@@ -114,11 +34,6 @@
    "ad": "AHLATCI PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "HFY": {
-   "ad": "ALBARAKA PORTFÖY HAYAT FİNANS KISA VADELİ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "HKH": {
    "ad": "HEDEF PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
@@ -130,83 +45,13 @@
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
-  "HML": {
-   "ad": "HEDEF PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "IVF": {
    "ad": "İSTANBUL PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "KAC": {
-   "ad": "EMLAK KATILIM PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "KBP": {
    "ad": "KUVEYT TÜRK PORTFÖY PY KATILIM HİSSE SENEDİ SERBEST ÖZEL FON (HİSSE SENEDİ YOĞUN FON)",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KBZ": {
-   "ad": "KUVEYT TÜRK PORTFÖY SBZ KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDK": {
-   "ad": "KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ-ABD DOLARI) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDL": {
-   "ad": "KUVEYT TÜRK PORTFÖY BEŞİNCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDO": {
-   "ad": "İŞ PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDS": {
-   "ad": "KUVEYT TÜRK PORTFÖY YEDİNCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDT": {
-   "ad": "GARANTİ PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDV": {
-   "ad": "KUVEYT TÜRK PORTFÖY DOKUZUNCU KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KDZ": {
-   "ad": "KUVEYT TÜRK PORTFÖY SEKİZINCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KEI": {
-   "ad": "KUVEYT TÜRK PORTFÖY KATILIM EMEKLİLİK İKİNCİ KATILIM SERBEST ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KEO": {
-   "ad": "KUVEYT TÜRK PORTFÖY KATILIM EMEKLİLİK BİRİNCİ KATILIM SERBEST ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KEU": {
-   "ad": "KUVEYT TÜRK PORTFÖY ONUNCU KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KFZ": {
-   "ad": "KUVEYT TÜRK PORTFÖY KFZ KATILIM SERBEST ÖZEL FON",
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
@@ -235,73 +80,8 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "KHU": {
-   "ad": "KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ-AVRO) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KJK": {
-   "ad": "KUVEYT TÜRK PORTFÖY KUVEYT TÜRK YABANCI KATILIM SERBEST ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KKB": {
-   "ad": "KUVEYT TÜRK PORTFÖY EKAS KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KKC": {
-   "ad": "KARE PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KKE": {
-   "ad": "KUVEYT TÜRK PORTFÖY USTA KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KKL": {
-   "ad": "ALLBATROSS PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KKT": {
-   "ad": "KUVEYT TÜRK PORTFÖY İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "KLH": {
    "ad": "ATLAS PORTFÖY KATILIM HİSSE SENEDİ SERBEST FON (HİSSE SENEDİ YOĞUN FON)",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KLL": {
-   "ad": "KUVEYT TÜRK PORTFÖY TLL KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KLS": {
-   "ad": "ALLBATROSS PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KMA": {
-   "ad": "KUVEYT TÜRK PORTFÖY KMA KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KMT": {
-   "ad": "KUVEYT TÜRK PORTFÖY KAM KATILIM SERBEST (TL) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KNS": {
-   "ad": "KUVEYT TÜRK PORTFÖY NKS KATILIM SERBEST (TL) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KOB": {
-   "ad": "KUVEYT TÜRK PORTFÖY KUVEYT TÜRK KATILIM BANKASI ÖZEL BANKACILIK KATILIM SERBEST ÖZEL FON",
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
@@ -315,78 +95,18 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "KPD": {
-   "ad": "KUVEYT TÜRK PORTFÖY KAR PAYI ÖDEYEN KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KSC": {
-   "ad": "KUVEYT TÜRK PORTFÖY ASC KATILIM SERBEST (DÖVİZ) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KSL": {
-   "ad": "ALBARAKA PORTFÖY İKİNCİ KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KSM": {
-   "ad": "ALBARAKA PORTFÖY İKİNCİ KATILIM SERBEST (DÖVİZ-ABD DOLARI) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "KST": {
    "ad": "ALLBATROSS PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "KSV": {
-   "ad": "KUVEYT TÜRK PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "KTI": {
    "ad": "AZİMUT PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "KTR": {
-   "ad": "KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "KTS": {
    "ad": "KUVEYT TÜRK PORTFÖY KATILIM HİSSE SENEDİ SERBEST FON (HİSSE SENEDİ YOĞUN FON)",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KTT": {
-   "ad": "KUVEYT TÜRK PORTFÖY DÖRDÜNCÜ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KTU": {
-   "ad": "KUVEYT TÜRK PORTFÖY NEOVA KATILIM SERBEST (TL) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KVA": {
-   "ad": "KUVEYT TÜRK PORTFÖY KTYMD KISA VADELİ KATILIM SERBEST ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KVK": {
-   "ad": "HEDEF PORTFÖY KATILIM İSTATİSTİKSEL ARBİTRAJ SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "KVR": {
-   "ad": "ATLAS PORTFÖY KISA VADELİ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "MJE": {
-   "ad": "ALBARAKA PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON",
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
@@ -405,11 +125,6 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "NKA": {
-   "ad": "NEO PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "NKM": {
    "ad": "NEO PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
@@ -420,55 +135,10 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "NKV": {
-   "ad": "KUVEYT TÜRK PORTFÖY NKV KATILIM SERBEST ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "NME": {
-   "ad": "NUROL PORTFÖY MERCAN KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "NVK": {
-   "ad": "INVEO PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "NZU": {
-   "ad": "NUROL PORTFÖY ZÜMRÜT KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "OFA": {
-   "ad": "OYAK PORTFÖY TÜRKİYE FİNANS KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "OFK": {
-   "ad": "OYAK PORTFÖY TÜRKİYE FİNANS KATILIM SERBEST (DÖVİZ-ABD DOLARI) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "OHK": {
    "ad": "OYAK PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "OTK": {
-   "ad": "OYAK PORTFÖY BİRİNCİ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "PBK": {
-   "ad": "ASTRA PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "PDE": {
-   "ad": "PUSULA PORTFÖY DENGE KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "PHK": {
    "ad": "PHİLLİP PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
@@ -485,48 +155,18 @@
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
-  "PKL": {
-   "ad": "PUSULA PORTFÖY KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "PUK": {
    "ad": "PUSULA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "PVK": {
-   "ad": "ALBARAKA PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "PYH": {
-   "ad": "AZİMUT PORTFÖY 10.0 KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "RBH": {
    "ad": "ALBARAKA PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "RBR": {
-   "ad": "RE-PIE  PORTFÖY BİRİNCİ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "RKH": {
    "ad": "RE-PIE PORTFÖY KATILIM HİSSE SENEDİ SERBEST (TL) FON (HİSSE SENEDİ YOĞUN FON)",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "RKV": {
-   "ad": "RE-PIE PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ROY": {
-   "ad": "ROTA PORTFÖY BİRİNCİ KATILIM SERBEST FON",
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
@@ -534,16 +174,6 @@
    "ad": "ROTA PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "RPU": {
-   "ad": "ALBARAKA PORTFÖY ÜÇÜNCÜ KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "RTI": {
-   "ad": "ALBARAKA PORTFÖY ALBARAKA TÜRK İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "TIL": {
    "ad": "İŞ PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
@@ -555,65 +185,15 @@
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "TRU": {
-   "ad": "TERA PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "URD": {
-   "ad": "ALBARAKA PORTFÖY ÜÇÜNCÜ KATILIM SERBEST (DÖVİZ-ABD DOLARI) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "VHS": {
    "ad": "VAKIF KATILIM PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
   },
-  "VKI": {
-   "ad": "ALBARAKA PORTFÖY VAKIF KATILIM İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
   "YHK": {
    "ad": "YAPI KREDİ PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "ZAD": {
-   "ad": "KUVEYT TÜRK PORTFÖY SEPET HESAP KATILIM SERBEST (DÖVİZ) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZDK": {
-   "ad": "ZİRAAT PORTFÖY ÖPY DÖRDÜNCÜ KATILIM SERBEST (DÖVİZ-ABD DOLARI) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZK1": {
-   "ad": "ZİRAAT PORTFÖY BAŞAK KATILIM SERBEST (DÖVİZ-AMERİKAN DOLARI) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZK2": {
-   "ad": "ZİRAAT PORTFÖY BAŞAK KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZKK": {
-   "ad": "ZİRAAT PORTFÖY ESSA KATILIM SERBEST (DÖVİZ-AVRO) ÖZEL FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZP6": {
-   "ad": "ZİRAAT PORTFÖY SEDEF KATILIM SERBEST (DÖVİZ - AMERİKAN DOLARI) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZP9": {
-   "ad": "ZİRAAT PORTFÖY AKİK KATILIM SERBEST (DÖVİZ-AVRO) FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   },
   "ZPE": {
    "ad": "ZİRAAT PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ YOĞUN FON)",
@@ -622,11 +202,6 @@
   },
   "ZPJ": {
    "ad": "ZİRAAT PORTFÖY KATILIM HİSSE SENEDİ SERBEST (TL) FON (HİSSE SENEDİ YOĞUN FON)",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
-  },
-  "ZSK": {
-   "ad": "ZİRAAT PORTFÖY SSA KATILIM SERBEST (DÖVİZ) ÖZEL FON",
    "kaynak": "tefas-oto",
    "tur": "serbest"
   },
@@ -659,11 +234,6 @@
    "ad": "V PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
-  },
-  "OPU": {
-   "ad": "ASTRA PORTFÖY ÜÇÜNCÜ KATILIM SERBEST FON",
-   "kaynak": "tefas-oto",
-   "tur": "serbest"
   }
  },
  "evren_elle": [
@@ -1433,10 +1003,905 @@
      }
     }
    }
+  },
+  "PUK": {
+   "ad": "PUK-PUSULA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HSY)",
+   "donemler": {
+    "2026-06": {
+     "baslik": {
+      "kod": "PUK",
+      "ad": "PUK-PUSULA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HSY)",
+      "donem": "2026-06",
+      "fonToplamDegeri": 1170287408.24,
+      "paySayisi": 1063185393,
+      "payFiyati": 1.100737,
+      "aylikGetiri": 8.21,
+      "hisseOrtYuzde": 91.41,
+      "hisseDevirHizi": 0.88
+     },
+     "hisse": [
+      {
+       "kod": "GUNDG",
+       "agirlik": 9.91,
+       "deger": 116007440
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 8.34,
+       "deger": 97560333
+      },
+      {
+       "kod": "PASEU",
+       "agirlik": 7.6,
+       "deger": 88979422
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 4.55,
+       "deger": 53190720
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 4.53,
+       "deger": 53031378
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 4.35,
+       "deger": 50929630
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 4.24,
+       "deger": 49595000
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 4.2,
+       "deger": 49115000
+      },
+      {
+       "kod": "ALVES",
+       "agirlik": 4.07,
+       "deger": 47660250
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 3.78,
+       "deger": 44274000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 3.71,
+       "deger": 43433775
+      },
+      {
+       "kod": "CVKMD",
+       "agirlik": 3.63,
+       "deger": 42491737
+      },
+      {
+       "kod": "SELEC",
+       "agirlik": 3.58,
+       "deger": 41940000
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 3.46,
+       "deger": 40448000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 3.39,
+       "deger": 39690000
+      },
+      {
+       "kod": "IZFAS",
+       "agirlik": 2.89,
+       "deger": 33825000
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 2.54,
+       "deger": 29735600
+      },
+      {
+       "kod": "BETAE",
+       "agirlik": 2.08,
+       "deger": 24300000
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 1.46,
+       "deger": 17030000
+      },
+      {
+       "kod": "DCTTR",
+       "agirlik": 1.22,
+       "deger": 14333000
+      },
+      {
+       "kod": "AHSGY",
+       "agirlik": 1.2,
+       "deger": 13993000
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 0.58,
+       "deger": 6766000
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 0.18,
+       "deger": 2070000
+      }
+     ],
+     "hisseToplam": {
+      "deger": 1000399284.7,
+      "grup": 100,
+      "fpd": 85.64,
+      "ftd": 85.49
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1629840,
+      "objId": "4028328c9f0a0859019f41bffd7c6a2e",
+      "yayin": "08.07.2026 18:31:42",
+      "islendi": "2026-09-09"
+     }
+    },
+    "2026-07": {
+     "baslik": {
+      "kod": "PUK",
+      "ad": "PUK-PUSULA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HSY)",
+      "donem": "2026-07",
+      "fonToplamDegeri": 1537591153.6,
+      "paySayisi": 1311896231,
+      "payFiyati": 1.172037,
+      "aylikGetiri": 6.48,
+      "hisseOrtYuzde": 83.43,
+      "hisseDevirHizi": 0.6
+     },
+     "hisse": [
+      {
+       "kod": "PASEU",
+       "agirlik": 11.64,
+       "deger": 178918825
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 10.21,
+       "deger": 157029186
+      },
+      {
+       "kod": "DCTTR",
+       "agirlik": 8.17,
+       "deger": 125557915
+      },
+      {
+       "kod": "GUNDG",
+       "agirlik": 6.84,
+       "deger": 105146668
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 5.14,
+       "deger": 79042980
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 5.11,
+       "deger": 78586605
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 4.62,
+       "deger": 71084390
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 4.31,
+       "deger": 66149700
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 4.25,
+       "deger": 65246678
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 4.23,
+       "deger": 65051359
+      },
+      {
+       "kod": "IZFAS",
+       "agirlik": 4.23,
+       "deger": 65000000
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 3.93,
+       "deger": 60384723
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 2.74,
+       "deger": 42149600
+      },
+      {
+       "kod": "CVKMD",
+       "agirlik": 2.69,
+       "deger": 41375836
+      },
+      {
+       "kod": "SELEC",
+       "agirlik": 2.6,
+       "deger": 40044000
+      },
+      {
+       "kod": "ALVES",
+       "agirlik": 2.55,
+       "deger": 39207300
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 2.53,
+       "deger": 38857000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 2.37,
+       "deger": 36422900
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 2.01,
+       "deger": 30904800
+      },
+      {
+       "kod": "AHSGY",
+       "agirlik": 1.25,
+       "deger": 19240804
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 1.25,
+       "deger": 19227000
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 0.46,
+       "deger": 7004000
+      }
+     ],
+     "hisseToplam": {
+      "deger": 1431632269.31,
+      "grup": 100,
+      "fpd": 88.43,
+      "ftd": 93.13
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1643429,
+      "objId": "4028328d9f52dddc019fd102e21309f5",
+      "yayin": "05.08.2026 12:09:00",
+      "islendi": "2026-09-09"
+     }
+    },
+    "2026-08": {
+     "baslik": {
+      "kod": "PUK",
+      "ad": "PUK-PUSULA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HSY)",
+      "donem": "2026-08",
+      "fonToplamDegeri": 1675907620.03,
+      "paySayisi": 1307674249,
+      "payFiyati": 1.281594,
+      "aylikGetiri": 9.35,
+      "hisseOrtYuzde": 84.65,
+      "hisseDevirHizi": 0.68
+     },
+     "hisse": [
+      {
+       "kod": "KTLEV",
+       "agirlik": 8.2,
+       "deger": 137387741
+      },
+      {
+       "kod": "GUNDG",
+       "agirlik": 7.84,
+       "deger": 131420744
+      },
+      {
+       "kod": "PASEU",
+       "agirlik": 7.47,
+       "deger": 125132630
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 5.48,
+       "deger": 91923606
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 5.09,
+       "deger": 85284000
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 4.95,
+       "deger": 82971825
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 4.77,
+       "deger": 79896199
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 4.04,
+       "deger": 67756161
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 3.83,
+       "deger": 64180900
+      },
+      {
+       "kod": "SELEC",
+       "agirlik": 3.36,
+       "deger": 56361500
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 3.34,
+       "deger": 55964140
+      },
+      {
+       "kod": "IZFAS",
+       "agirlik": 3.26,
+       "deger": 54650750
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 3.07,
+       "deger": 51459311
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 2.62,
+       "deger": 43898742
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 2.23,
+       "deger": 37307800
+      },
+      {
+       "kod": "AHGAZ",
+       "agirlik": 1.94,
+       "deger": 32557937
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 1.6,
+       "deger": 26762304
+      },
+      {
+       "kod": "NETCD",
+       "agirlik": 1.45,
+       "deger": 24440373
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 1.34,
+       "deger": 22423846
+      },
+      {
+       "kod": "GENIL",
+       "agirlik": 1.33,
+       "deger": 22325655
+      },
+      {
+       "kod": "CVKMD",
+       "agirlik": 1.02,
+       "deger": 17162575
+      },
+      {
+       "kod": "AHSGY",
+       "agirlik": 1.01,
+       "deger": 16847086
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 0.9,
+       "deger": 14973358
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 0.89,
+       "deger": 14985694
+      },
+      {
+       "kod": "ALVES",
+       "agirlik": 0.69,
+       "deger": 11515680
+      },
+      {
+       "kod": "EGGUB",
+       "agirlik": 0.68,
+       "deger": 11411680
+      },
+      {
+       "kod": "BRLSM",
+       "agirlik": 0.45,
+       "deger": 7588800
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 0.04,
+       "deger": 674450
+      }
+     ],
+     "hisseToplam": {
+      "deger": 1389265486.21,
+      "grup": 100,
+      "fpd": 74.62,
+      "ftd": 82.89
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1660308,
+      "objId": "4028328c9f52dc4001a08090809d2ed1",
+      "yayin": "08.09.2026 17:11:30",
+      "islendi": "2026-09-09"
+     }
+    }
+   }
   }
  },
  "guncelleme": "2026-09-09",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(133 fon, 9116 kayıt)",
- "pencereGun": 150
+ "yol": "tarama(47 fon, 9130 kayıt)",
+ "pencereGun": 150,
+ "evren_pasif": {
+  "AC1": {
+   "ad": "PARDUS PORTFÖY KISA VADELİ KATILIM SERBEST FONU",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "AL4": {
+   "ad": "ALBARAKA PORTFÖY ALBARAKA TÜRK KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "AL5": {
+   "ad": "ALBARAKA PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "AL6": {
+   "ad": "ALBARAKA PORTFÖY VAKIF KATILIM KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "AL7": {
+   "ad": "ALBARAKA PORTFÖY İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "BDA": {
+   "ad": "YAPI KREDİ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "BKO": {
+   "ad": "AZİMUT PORTFÖY BİRİNCİ KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "BKY": {
+   "ad": "YAPI KREDİ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "BVK": {
+   "ad": "BULLS PORTFÖY VOLTRAN KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "CKS": {
+   "ad": "İŞ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "DEI": {
+   "ad": "ALLBATROSS PORTFÖY DEMİR KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "DK1": {
+   "ad": "KUVEYT TÜRK PORTFÖY DÜNYA KATILIM BANKASI KISA VADELİ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "DKL": {
+   "ad": "DENİZ PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "DNK": {
+   "ad": "TACİRLER PORTFÖY DENGE KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "EZM": {
+   "ad": "KUVEYT TÜRK PORTFÖY EZM KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "GUK": {
+   "ad": "GARANTİ PORTFÖY GÜMÜŞ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "HFY": {
+   "ad": "ALBARAKA PORTFÖY HAYAT FİNANS KISA VADELİ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "HML": {
+   "ad": "HEDEF PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KAC": {
+   "ad": "EMLAK KATILIM PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KBZ": {
+   "ad": "KUVEYT TÜRK PORTFÖY SBZ KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDK": {
+   "ad": "KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ-ABD DOLARI) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDL": {
+   "ad": "KUVEYT TÜRK PORTFÖY BEŞİNCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDO": {
+   "ad": "İŞ PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDS": {
+   "ad": "KUVEYT TÜRK PORTFÖY YEDİNCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDT": {
+   "ad": "GARANTİ PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDV": {
+   "ad": "KUVEYT TÜRK PORTFÖY DOKUZUNCU KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KDZ": {
+   "ad": "KUVEYT TÜRK PORTFÖY SEKİZINCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KEI": {
+   "ad": "KUVEYT TÜRK PORTFÖY KATILIM EMEKLİLİK İKİNCİ KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KEO": {
+   "ad": "KUVEYT TÜRK PORTFÖY KATILIM EMEKLİLİK BİRİNCİ KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KEU": {
+   "ad": "KUVEYT TÜRK PORTFÖY ONUNCU KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KFZ": {
+   "ad": "KUVEYT TÜRK PORTFÖY KFZ KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KHU": {
+   "ad": "KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ-AVRO) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KJK": {
+   "ad": "KUVEYT TÜRK PORTFÖY KUVEYT TÜRK YABANCI KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KKB": {
+   "ad": "KUVEYT TÜRK PORTFÖY EKAS KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KKC": {
+   "ad": "KARE PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KKE": {
+   "ad": "KUVEYT TÜRK PORTFÖY USTA KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KKL": {
+   "ad": "ALLBATROSS PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KKT": {
+   "ad": "KUVEYT TÜRK PORTFÖY İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KLL": {
+   "ad": "KUVEYT TÜRK PORTFÖY TLL KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KLS": {
+   "ad": "ALLBATROSS PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KMA": {
+   "ad": "KUVEYT TÜRK PORTFÖY KMA KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KMT": {
+   "ad": "KUVEYT TÜRK PORTFÖY KAM KATILIM SERBEST (TL) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KNS": {
+   "ad": "KUVEYT TÜRK PORTFÖY NKS KATILIM SERBEST (TL) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KOB": {
+   "ad": "KUVEYT TÜRK PORTFÖY KUVEYT TÜRK KATILIM BANKASI ÖZEL BANKACILIK KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KPD": {
+   "ad": "KUVEYT TÜRK PORTFÖY KAR PAYI ÖDEYEN KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KSC": {
+   "ad": "KUVEYT TÜRK PORTFÖY ASC KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KSL": {
+   "ad": "ALBARAKA PORTFÖY İKİNCİ KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KSM": {
+   "ad": "ALBARAKA PORTFÖY İKİNCİ KATILIM SERBEST (DÖVİZ-ABD DOLARI) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KSV": {
+   "ad": "KUVEYT TÜRK PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KTR": {
+   "ad": "KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KTT": {
+   "ad": "KUVEYT TÜRK PORTFÖY DÖRDÜNCÜ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KTU": {
+   "ad": "KUVEYT TÜRK PORTFÖY NEOVA KATILIM SERBEST (TL) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KVA": {
+   "ad": "KUVEYT TÜRK PORTFÖY KTYMD KISA VADELİ KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KVK": {
+   "ad": "HEDEF PORTFÖY KATILIM İSTATİSTİKSEL ARBİTRAJ SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "KVR": {
+   "ad": "ATLAS PORTFÖY KISA VADELİ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "MJE": {
+   "ad": "ALBARAKA PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "NKA": {
+   "ad": "NEO PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "NKV": {
+   "ad": "KUVEYT TÜRK PORTFÖY NKV KATILIM SERBEST ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "NME": {
+   "ad": "NUROL PORTFÖY MERCAN KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "NVK": {
+   "ad": "INVEO PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "NZU": {
+   "ad": "NUROL PORTFÖY ZÜMRÜT KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "OFA": {
+   "ad": "OYAK PORTFÖY TÜRKİYE FİNANS KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "OFK": {
+   "ad": "OYAK PORTFÖY TÜRKİYE FİNANS KATILIM SERBEST (DÖVİZ-ABD DOLARI) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "OTK": {
+   "ad": "OYAK PORTFÖY BİRİNCİ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "PBK": {
+   "ad": "ASTRA PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "PDE": {
+   "ad": "PUSULA PORTFÖY DENGE KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "PKL": {
+   "ad": "PUSULA PORTFÖY KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "PVK": {
+   "ad": "ALBARAKA PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "PYH": {
+   "ad": "AZİMUT PORTFÖY 10.0 KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "RBR": {
+   "ad": "RE-PIE  PORTFÖY BİRİNCİ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "RKV": {
+   "ad": "RE-PIE PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ROY": {
+   "ad": "ROTA PORTFÖY BİRİNCİ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "RPU": {
+   "ad": "ALBARAKA PORTFÖY ÜÇÜNCÜ KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "RTI": {
+   "ad": "ALBARAKA PORTFÖY ALBARAKA TÜRK İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "TRU": {
+   "ad": "TERA PORTFÖY KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "URD": {
+   "ad": "ALBARAKA PORTFÖY ÜÇÜNCÜ KATILIM SERBEST (DÖVİZ-ABD DOLARI) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "VKI": {
+   "ad": "ALBARAKA PORTFÖY VAKIF KATILIM İKİNCİ KISA VADELİ KATILIM SERBEST (TL) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZAD": {
+   "ad": "KUVEYT TÜRK PORTFÖY SEPET HESAP KATILIM SERBEST (DÖVİZ) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZDK": {
+   "ad": "ZİRAAT PORTFÖY ÖPY DÖRDÜNCÜ KATILIM SERBEST (DÖVİZ-ABD DOLARI) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZK1": {
+   "ad": "ZİRAAT PORTFÖY BAŞAK KATILIM SERBEST (DÖVİZ-AMERİKAN DOLARI) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZK2": {
+   "ad": "ZİRAAT PORTFÖY BAŞAK KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZKK": {
+   "ad": "ZİRAAT PORTFÖY ESSA KATILIM SERBEST (DÖVİZ-AVRO) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZP6": {
+   "ad": "ZİRAAT PORTFÖY SEDEF KATILIM SERBEST (DÖVİZ - AMERİKAN DOLARI) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZP9": {
+   "ad": "ZİRAAT PORTFÖY AKİK KATILIM SERBEST (DÖVİZ-AVRO) FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "ZSK": {
+   "ad": "ZİRAAT PORTFÖY SSA KATILIM SERBEST (DÖVİZ) ÖZEL FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  },
+  "OPU": {
+   "ad": "ASTRA PORTFÖY ÜÇÜNCÜ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
+  }
+ }
 }
