@@ -2538,12 +2538,15 @@ async function fonPortfoy() {
      (KAP fundCode ≠ TEFAS kodu olan fonlar için) + kapKod öğrenme + teşhis. */
   const norm = tt => String(tt || '').toUpperCase().replace(/İ/g, 'I').replace(/[^A-Z0-9]+/g, ' ').replace(/\b(A S|AS|TL|FONU|FON|HISSE SENEDI YOGUN)\b/g, ' ').replace(/\s+/g, ' ').trim();
   const evrenUnvan = {}; evrenKod.forEach(k => { const u = (UNV[k] || (d.evren[k] && d.evren[k].kaynak !== 'elle' && d.evren[k].ad) || ''); if (u) evrenUnvan[norm(u)] = k; });
-  const gorulenKod = new Set(), ilginc = [];
+  const gorulenKod = new Set(), ilginc = [], redOrnek = {}, kabulSay = {};
   const kabul = b => {
     const k = kodAl(b); if (k) gorulenKod.add(k);
+    /* §429p TEŞHİS (canlı #215: 40 görülen, 9 kuyrukta): evren fonunun kaydı
+       neden reddedildi? İlk örnek fon başına saklanır, rapora basılır. */
+    if (k && evrenKod.includes(k) && !pdMi(b) && !redOrnek[k]) redOrnek[k] = 'subject=' + String(b.subject || '').slice(0, 30) + ' · summary=' + String(b.summary || '').slice(0, 30) + ' · class=' + String(b.disclosureClass || '') + ' · idx=' + (idxAl(b) || '?');
     if (pdMi(b) && !evrenKod.includes(k) && ilginc.length < 12 && /KATILIM/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && /HISSE/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && !ilginc.some(x => x.startsWith(k + '='))) ilginc.push(k + '=' + String(b.kapTitle || '').slice(0, 55));
     if (!pdMi(b)) return false;
-    if (evrenKod.includes(k)) return true;
+    if (evrenKod.includes(k)) { kabulSay[k] = (kabulSay[k] || 0) + 1; return true; }
     const kk = evrenKod.find(e => d.evren[e].kapKod === k); if (kk) { b.__evrenKod = kk; return true; }
     const eş = evrenUnvan[norm(b.kapTitle)]; if (eş) { b.__evrenKod = eş; return true; }
     return false;
@@ -2584,6 +2587,9 @@ async function fonPortfoy() {
   if (hasat) raporlar.push('- §429e KAP üye kimliği hasat edildi: ' + hasat + ' fon (dosyaya yazıldı; sonraki koşu fon bazında sorgular)');
   await yaz(dosya, d);   /* kimlikler kalıcı olsun — rapor listesi boş dönse bile */
   { const gorulmeyen = evrenKod.filter(k => !gorulenKod.has(k) && !d.basarisiz[k] && !(d.evren[k].kapKod && gorulenKod.has(d.evren[k].kapKod)));
+    const kabulSiz = evrenKod.filter(k => gorulenKod.has(k) && !kabulSay[k]);
+    raporlar.push('- §429p kabul dağılımı: ' + Object.keys(kabulSay).length + ' fon kabul (' + Object.entries(kabulSay).map(([k, v]) => k + ':' + v).join(' ') + ')' +
+      (kabulSiz.length ? '\n- §429p GÖRÜLDÜ AMA KABUL 0 (' + kabulSiz.length + '): ' + kabulSiz.slice(0, 6).map(k => k + ' [' + (redOrnek[k] || 'kayıt pdMi geçti?') + ']').join(' | ') + (kabulSiz.length > 6 ? ' …+' + (kabulSiz.length - 6) : '') : ''));
     raporlar.push('- §429f teşhis: listede ' + gorulenKod.size + ' farklı fon kodu · evrenden görülen: ' + (evrenKod.length - gorulmeyen.length) + '/' + evrenKod.length +
       (gorulmeyen.length ? '\n- §429n GÖRÜLMEYEN (' + gorulmeyen.length + ', ' + pencereGun + ' günde KAP listesinde yok): ' + gorulmeyen.map(k => k + '=' + String((d.evren[k] && d.evren[k].ad) || '').slice(0, 28)).join(' · ') : '') +
       (ilginc.length ? '\n- §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): ' + ilginc.join(' | ') : '')); }
@@ -2601,6 +2607,7 @@ async function fonPortfoy() {
     if (d.basarisiz[kod]) return;   /* §429k kalıcı istisna */
     isler.push({ kod, donem, index, yayin: b.publishDate });   /* donem null ise PDF başlığından alınır */
   });
+  raporlar.push('- §429p kuyruk: liste ' + liste.length + ' kayıt · daha önce işlenmiş ' + islenmisIdx.size + ' idx · iş ' + isler.length);
   /* aynı (kod,dönem) için en son yayın kazanır; dönemi bilinmeyenler ayrı tutulur */
   const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + (i.donem || ('idx' + i.index)); if (!tekil[k] || String(tekil[k].index) < String(i.index)) tekil[k] = i; });
   /* §429b: deposu boş (yeni eklenen) fonlar ÖNCE, sonra yeni dönemden eskiye */
