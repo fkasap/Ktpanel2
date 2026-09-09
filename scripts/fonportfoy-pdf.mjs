@@ -49,7 +49,11 @@ export function hisseleriOku(metin) {
      (canlı #205) kimliği bir sonraki koşuda kendiliğinden görünsün. */
   const ornek = () => metin.replace(/\s+/g, ' ').trim().slice(0, 120);
   if (metin.replace(/\s+/g, '').length < 200) throw new Error('PDF metin katmanı yok (görüntü tabanlı olabilir) — bu belge ayrıştırılamaz');
-  const m0 = metin.match(/(?:[IVX]+\s*[-–.]\s*)?FON\s*PORTF[ÖO]Y\s*DE[ĞG]ER[İI]\s*TABLOSU/);
+  let m0 = metin.match(/(?:[IVX]+\s*[-–.]\s*)?FON\s*PORTF[ÖO]Y\s*DE[ĞG]ER[İI]\s*TABLOSU/);
+  /* §429u ŞABLON F (YHK — Yapı Kredi 'AYLIK RAPOR'): tablo başlığı 'Isin Kodu Vade
+     İhraçcı Nominal Değeri Rayiç Değeri %' + 'A) HİSSE SENETLERİ :' → satır
+     'AAGYO TREAGVR00014 Ağaoğlu … nominal rayiç %'. */
+  if (!m0) { const mf = metin.match(/Isin\s*Kodu[\s\S]{0,200}?A\)\s*HİSSE SENETLERİ/); if (mf) m0 = { index: mf.index }; }
   if (!m0) {
     /* §429r: şablon E (Yapı Kredi 'AYLIK RAPOR' vb.) — bir sonraki koşu kalıbı göstersin */
     const hi = metin.search(/H[İI]SSE\s*SENE/i);
@@ -65,10 +69,29 @@ export function hisseleriOku(metin) {
   /* §429i: eski nesil şablonda GRUP TOPLAMI satırı yok (ELZ/TLZ canlı vakası).
      Bölüm sonu: GRUP TOPLAMI ya da bir sonraki bölüm başlığı; toplam satırı
      yoksa mutabakat grup %'lerin kendi içinden yapılır (denetle'de). */
-  let i2 = metin.indexOf('GRUP TOPLAMI', i1);
-  if (i2 < 0) {
-    const m2 = metin.slice(i1 + 20).match(/\n\s*(YATIRIM FON|BORSA YATIRIM|KAMU |ÖZEL |KİRA SERT|VADELİ|TERS REPO|PARA PİYASASI|DÖVİZ|KIYMETLİ|[IVX]+\s*[-–.]\s*[A-ZĞÜŞİÖÇ])/);
-    i2 = m2 ? i1 + 20 + m2.index : Math.min(metin.length, i1 + 20000);
+  /* §429u (KCV canlı: grup % 57-72, okunamayan satır yok): hisseler alt gruplara
+     bölünüp her birine ayrı GRUP TOPLAMI yazılabiliyor; blok ilk toplamda kesilince
+     ikinci grup kayboluyordu. Blok artık bir sonraki ANA bölüme kadar; GRUP TOPLAMI
+     satırları toplanır. */
+  /* Bölüm başlığı = satırın TAMAMI başlık olan çizgi (KPU'da 'DÖVİZ İHRAÇCI VADE' sütun
+     başlığı yanlışlıkla bölüm sonu sayılmıştı — §429u regresyon dersi). */
+  const BASLIK = /^[ \t]*(YATIRIM FON[A-ZİI]*|BORSA YATIRIM FON[A-ZİI]*|KAMU [A-ZİĞÜŞÖÇ ]+|ÖZEL SEKTÖR[A-ZİĞÜŞÖÇ ]*|KİRA SERTİFİKA[A-ZİĞÜŞÖÇ ]*|VADELİ [A-ZİĞÜŞÖÇ ]+|TERS REPO[A-ZİĞÜŞÖÇ ]*|PARA PİYASASI[A-ZİĞÜŞÖÇ ]*|[IVX]+[ \t]*[-–.][ \t]*[A-ZĞÜŞİÖÇ][A-ZĞÜŞİÖÇ ]+)[ \t]*$/m;
+  const sonrasi = metin.slice(i1 + 20, i1 + 80000);
+  const mb = sonrasi.match(BASLIK);
+  const anaSon = mb ? i1 + 20 + mb.index : Math.min(metin.length, i1 + 20000);
+  /* GRUP TOPLAMI zinciri: ana bölüm sonuna kadar olan tüm grup toplamlarını kapsa */
+  /* Zincir kuralı: g_k'dan g_{k+1}'e YALNIZ aradaki büyük-harf başlık satırları hisseyle
+     ilgiliyse (HİSSE/HISSE/PAY içeriyorsa, ya da hiç başlık yoksa) geçilir; başka
+     varlık sınıfı başlığı (YATIRIM FONU, KİRA SERTİFİKASI...) görülürse durulur. */
+  let i2 = anaSon;
+  const gPoz = []; { let g = metin.indexOf('GRUP TOPLAMI', i1); while (g >= 0 && g < anaSon) { gPoz.push(g); g = metin.indexOf('GRUP TOPLAMI', g + 12); } }
+  const satirSonuOf = pos => { const e = metin.indexOf('\n', pos + 12); return e > 0 ? e + 1 : pos + 12; };
+  const kolonSoz = /İHRAÇ|NOM[İI]NAL|F[İI]YAT|TAR[İI]H|DE[ĞG]ER|VADE|DÖV[İI]Z|ORAN|TOPLAM|KIYMET|KOD|GRUP/;
+  const baskaSinif = ara => ara.split('\n').some(l => { const t = l.trim(); if (t.length < 6 || /\d/.test(t) || kolonSoz.test(t)) return false; const harf = t.replace(/[^A-ZĞÜŞİÖÇ]/g, ''); if (harf.length < 6 || harf !== t.replace(/[^A-ZĞÜŞİÖÇ]/g, '') || t !== t.toUpperCase()) return false; return !/H[İI]SSE|PAY/.test(t); });
+  if (gPoz.length) {
+    let k = 0;
+    while (k + 1 < gPoz.length && !baskaSinif(metin.slice(satirSonuOf(gPoz[k]), gPoz[k + 1]))) k++;
+    i2 = Math.min(satirSonuOf(gPoz[k]), anaSon);
   }
   const blok = metin.slice(i1, i2);
   /* Satır: kod TL ... nominal alışF alışT [no] borsaF toplam grup fpd ftd */
@@ -137,6 +160,15 @@ export function hisseleriOku(metin) {
       r.nominal += sayi(me[2]); r.deger += sayi(me[3]); r.ftd += sayi(me[4]); r.grup += sayi(me[4]); r.borsaFiyat = sayi(me[5]); r.satir++;
     }
   }
+  if (satir === 0) {
+    const reF = /^\s*([A-Z0-9]{3,6})\s+TR[A-Z0-9]{10}\s+.+?\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d+)\s*%?\s*$/gm;
+    let mf2; while ((mf2 = reF.exec(blok))) {
+      satir++;
+      const k = mf2[1];
+      const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'F' });
+      r.nominal += sayi(mf2[2]); r.deger += sayi(mf2[3]); r.ftd += sayi(mf2[4]); r.grup += sayi(mf2[4]); r.satir++;
+    }
+  }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
   /* §429i teşhis: HİSSE bloğunda kod gibi başlayıp regex'e OTURMAYAN satırlar
      (IVF/PUK %93-95 vakasının kimliği bir sonraki koşuda görünsün) */
@@ -147,8 +179,12 @@ export function hisseleriOku(metin) {
     const say = (sm[0].match(/-?[\d.]+,\d/g) || []).length;
     if (say >= 3 && !tuketilen.has(sm.index) && kacak.length < 3) kacak.push(sm[0].replace(/\s+/g, ' ').trim().slice(0, 150));
   }
-  const gt = metin.slice(i2, i2 + 400).match(/GRUP TOPLAMI\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})/);
-  const toplam = gt ? { deger: sayi(gt[2]), grup: sayi(gt[3]), fpd: sayi(gt[4]), ftd: sayi(gt[5]) } : null;
+  let toplam = null; const gorulenGT = new Set();
+  for (const gt of blok.matchAll(/GRUP TOPLAMI\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})/g)) {
+    const imza = gt.slice(1).join('|'); if (gorulenGT.has(imza)) continue; gorulenGT.add(imza);   /* KPU: aynı toplam satırı sayfa geçişinde tekrarlanıyor */
+    toplam = toplam || { deger: 0, grup: 0, fpd: 0, ftd: 0, adet: 0 };
+    toplam.deger += sayi(gt[2]); toplam.grup += sayi(gt[3]); toplam.fpd += sayi(gt[4]); toplam.ftd += sayi(gt[5]); toplam.adet++;
+  }
   const liste = Object.values(kod).map(r => ({ kod: r.kod, pb: r.pb, sablon: r.sablon, nominal: +r.nominal.toFixed(2), deger: +r.deger.toFixed(2),
     agirlik: +r.ftd.toFixed(2), portfoyIci: +r.grup.toFixed(2), borsaFiyat: r.borsaFiyat, satir: r.satir }))
     .filter(r => Math.abs(r.deger) > 0.5)
@@ -179,7 +215,8 @@ export function denetle(hisse) {
   if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak.slice(0, 2).join('" | "') + '"' : ' · bölümde aday satır da yok · BLOK BAŞI: "' + String(hisse.blokBasi || '').slice(0, 220) + '"'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
   const sablonB = hisse.liste.some(r => r.sablon && r.sablon !== 'A');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
-  if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
+  const grupHedef = (hisse.toplam && hisse.toplam.adet > 1) ? hisse.toplam.grup : 100;   /* §429u: çok gruplu fonda hedef = grup toplamlarının toplamı */
+  if (!sablonB && Math.abs(grupT - grupHedef) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (' + grupHedef + '±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIRLAR: "' + hisse.kacak.slice(0, 3).join('" | "') + '"' : ''));
   const cokParali = hisse.liste.some(r => r.pb && r.pb !== 'TL');
   if (hisse.toplam && !cokParali) {
