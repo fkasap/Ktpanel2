@@ -427,6 +427,29 @@ async function ecosModu(req, res){
   if(cpi&&cpi.length>=13){ const a=cpi[cpi.length-1], b=cpi[cpi.length-13];
     S.tufe={yoy:+(100*(a.v/b.v-1)).toFixed(2), ay:a.t}; }
   else if(cpi) TANI.push('901Y009: '+cpi.length+' ay — YoY için 13 gerek');
+  /* §432c KEŞİFLE DOĞRULANMIŞ EK SERİLER (9 Eyl — kalem kodları kullanıcının
+     kesif çıktısından okundu, tahmin değil):
+     721Y001/M/5050000 국고채(10년) 10Y hazine · 732Y001/M/99 합계 rezerv toplamı ·
+     403Y001/M/*AA ihracat DEĞER ENDEKSİ toplamı (dolar tutarı DEĞİL — YoY'si
+     büyümeyi verir, kartta öyle etiketlenir). Çip: 반도체 kalemi ilk 200'de
+     yoktu; üç aday sırayla denenir, gelen etiketiyle döner. */
+  const y10 = await cek('721Y001','M',ay(eski),ay(simdi),'5050000',20);
+  if(y10&&y10.length>=2){ const a=y10[y10.length-1], b=y10[y10.length-2];
+    S.y10={deger:a.v, ay:a.t, aylikFarkBp:+((a.v-b.v)*100).toFixed(0)}; }
+  const rez = await cek('732Y001','M',ay(eski),ay(simdi),'99',20);
+  if(rez&&rez.length>=2){ const n=v=> v>1e8 ? v/1e6 : v>1e5 ? v/1e3 : v;   /* bin$/mn$ -> mlr$ sezgisel ölçek */
+    const a=rez[rez.length-1], b=rez[rez.length-2];
+    S.rezerv={mlrUsd:+n(a.v).toFixed(1), ay:a.t, aylikFark:+(n(a.v)-n(b.v)).toFixed(1)}; }
+  const ihr = await cek('403Y001','M',ay(eski),ay(simdi),'*AA',30);
+  if(ihr&&ihr.length>=13){ const a=ihr[ihr.length-1], b=ihr[ihr.length-13], c=ihr[ihr.length-4];
+    S.ihracat={yoy:+(100*(a.v/b.v-1)).toFixed(1), ceyrekYoY:+(100*(c.v/ihr[ihr.length-16>=0?ihr.length-16:0].v-1)).toFixed(1), ay:a.t}; }
+  else if(ihr) TANI.push('403Y001: '+ihr.length+' ay');
+  for(const [kod,ad] of [['308111AA','yarı iletken'],['3081AA','bilgisayar-elektronik-optik'],['308AA','elektrik-elektronik']]){
+    const cip = await cek('403Y001','M',ay(eski),ay(simdi),kod,30);
+    if(cip&&cip.length>=13){ const a=cip[cip.length-1], b=cip[cip.length-13];
+      S.cip={yoy:+(100*(a.v/b.v-1)).toFixed(1), ay:a.t, etiket:ad, kod}; break; }
+  }
+  if(!S.cip) TANI.push('çip kalemi: 3 aday da boş (308111AA/3081AA/308AA) — kesif&n=500 ile 반도체 aranmalı');
   const ok=Object.keys(S).length>0;
   return res.status(200).json({ok, kaynak:'BOK ECOS', alinma:new Date().toISOString(),
     seriler: ok?S:null, tani: TANI.length?TANI:undefined, err: ok?undefined:'hiçbir seri gelmedi — tani alanına bak'});
