@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260828d';   // SS429b fon kodu girisi + ay ay alis/satis gorunumu
+const KTP_SURUM = '20260909a';   // SS432 Kore ECOS canli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1092,6 +1092,7 @@ async function asyaRender(){
   }catch(e){if($('asyaForexBody'))$('asyaForexBody').innerHTML='<div class="sub">Forex hatası.</div>';}
   jpMakro();
   hkMakro();
+  krMakro();   /* §432 */
 }
 
 /* ---- Kripto (Finnhub) — Piyasa sekmesi, küresel endekslerin altı ---- */
@@ -1112,6 +1113,24 @@ async function kriptoRender(){
       el.innerHTML=kh;
     }else{ el.innerHTML='<div class="sub">Kripto verisi alınamadı.</div>'; }
   }catch(e){ el.innerHTML='<div class="sub">Kripto hatası.</div>'; }
+}
+
+/* ---- §432 Güney Kore Makro (BOK ECOS canlı) ---- */
+async function krMakro(){
+  const el=$('krMakroBody'); if(!el)return;
+  try{
+    const r=await fetch('/api/market?mod=ecos');
+    const d=r.ok?await r.json():null;
+    if(!(d&&d.ok&&d.seriler)){ el.innerHTML='<div class="sub">ECOS: '+((d&&(d.err||'veri alınamadı'))||'veri alınamadı')+(d&&d.tani?' · '+d.tani.join(' | '):'')+'</div>'; return; }
+    const S=d.seriler; let hh='';
+    if(S.faiz){ hh+='<div class="kv"><span class="k">Politika faizi</span><span style="font-weight:600">%'+S.faiz.deger.toLocaleString('tr-TR')+
+      (S.faiz.oncekiSeviye!=null?' <span class="thin">(önceki %'+S.faiz.oncekiSeviye.toLocaleString('tr-TR')+' · değişim '+String(S.faiz.sonDegisimTarihi||'').slice(0,8)+')</span>':'')+'</span></div>'; }
+    if(S.usdkrw){ hh+='<div class="kv"><span class="k">USD/KRW</span><span>'+S.usdkrw.deger.toLocaleString('tr-TR',{maximumFractionDigits:1})+
+      ' <span class="'+(S.usdkrw.aylikYuzde>0?'down':'up')+'">('+(S.usdkrw.aylikYuzde>0?'+':'')+S.usdkrw.aylikYuzde+'% aylık'+(S.usdkrw.aylikYuzde>0?' — won zayıflıyor':'')+')</span></span></div>'; }
+    if(S.tufe){ hh+='<div class="kv"><span class="k">TÜFE (yıllık)</span><span>%'+S.tufe.yoy.toLocaleString('tr-TR')+' <span class="thin">('+String(S.tufe.ay).slice(0,4)+'/'+String(S.tufe.ay).slice(4)+')</span></span></div>'; }
+    hh+='<div class="note" style="font-size:10px;margin-top:6px">Canlı · BOK ECOS'+(d.tani?' · eksik: '+d.tani.join(' | '):'')+'</div>';
+    el.innerHTML=hh;
+  }catch(e){ el.innerHTML='<div class="sub">ECOS hatası: '+String((e&&e.message)||e).slice(0,80)+'</div>'; }
 }
 
 /* ---- Japonya Makro (BoJ canlı) ---- */

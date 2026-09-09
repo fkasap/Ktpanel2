@@ -6,90 +6,27 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
-# BAKIM EK — §431 (9 Eyl 2026)
+# BAKIM EK — §432 (9 Eyl 2026)
 
-## §431 OLCEK: 133 FONLUK EVREN ICIN PENCERE/BUDAMA/SIKILASTIRMA
+## §432 KORE KARTI CANLIYA BAGLANDI (ECOS_KEY alindi — §53'un sozu tutuldu)
 
-Depo olcumu (9 Eyl): otomatik evren 133 fon (§429c calisti), tarama 17.503
-rapor gezdi, 1 eslesme (PKD 2025-07). IKI SONUC:
-(1) KAP fundCode cogunlukla TEFAS kodundan FARKLI (BHE ornegi; PKD tesaduf).
-    Cozum depoda degil: §429f (unvan normalize eslemesi + kapKod ogrenme)
-    scripts/tazele.mjs'te HAZIR ama repoya YUKLENMEMIS (repo §429e'de).
-(2) Olcek: 133 fon x 13 ay ~ 1700 PDF ve ~17 MB JSON — panel ceker ama
-    kullanici cekemez. Kullanicinin "en fazla 3 ay biriktir" talimati hakliydi.
-YAPILAN: geri doldurma 400 -> 150 gun (~5 rapor/fon) · fon basina SON 6 donem
-(eskisi budanir; KAP'ta durdugu icin kayip sayilmaz, §252v'nin istisnasi:
-kaynak kalici arsiv) · kayit sikilastirma (nominal ve islem sayaci atilir,
-degerler tam TL) — donem ~3 KB, dosya hedefi 2-3 MB · tur tavani 40 -> 120
-(geri doldurma ~6 kosuda biter) · siralama karsilastiricisinda oncelik
-parantezi (|| ile ?: karisiyordu).
-DEPLOY: scripts/tazele.mjs (once §429f'yi de iceren BU dosya yuklenmeli).
+27 Tem §53: kart damgali kuruldu, "ECOS key alirsan canlaniriz" notu dusuldu.
+9 Eyl: kullanici ECOS_KEY'i Vercel env'e koydu. YAPILAN:
+  api/market.js mod=ecos (yeni dosya YOK — kota 11/12 korunur). Seriler:
+    722Y001/D/0101000 politika faizi (son degisim tarihi/onceki seviye ile) ·
+    731Y001/D/0000001 USD/KRW (aylik %) · 901Y009/M/0 TUFE endeksi -> YoY
+    SUNUCUDA hesaplanir (12 ay onceye bolme).
+  UYARI: seri kodlari hafizadan — ILK ACILIS OLCER. Gelmeyen seri karta
+  "eksik: ..." diye yazilir (ECB modundaki TANI deseni); RESULT.CODE/MESSAGE
+  aynen tasinir. Kart UYDURMAZ.
+  app.js krMakro() (Asya sekmesi acilisinda) · index.html'e BOK CANLI karti
+  (damgali kartlar BAGLAM olarak kalir).
+NOT: bu not K2 (repo) kopyasina yazildi; §427-431 notlari ayri pakette —
+iki BAKIM kopyasi var, YUKLERKEN EN YENISI kazansin: bu dosya §432 iceriyor
+ama §427-431'i icermiyorsa oteki paketteki BAKIM ile BIRLESTIRILMELI.
+DEPLOY: ktpanel/{api/market.js, app.js, index.html} (surum 20260909a).
 
-# BAKIM EK — §430b (9 Eyl 2026)
-
-## §430b SABAH CRON'U 09:30'A ALINDI (kullanici karari: GitHub cron kalsin)
-
-Kullanici §430 Vercel tetigini istemedi ("actions otomatik guncelliyordu"),
-sabah 09:30 / aksam 18:10 GitHub cron'uyla devam karari verdi. Yapilan:
-sabah cron '10 6' -> '30 6' (09:30 TSI); katman haritasindaki eslesme AYNI
-ANDA guncellendi (harita schedule METNIYLE eslesir — metin degisip harita
-kalirsa kosu 'hepsi'ye duser, §252x'in tersi tuzak). Aksam 18:10 zaten oyle.
-ACIK KAYIT: bu degisiklik GECIKMEYI COZMEZ — 4-9 Eyl olcumu 3-6 saat sapma
-gosteriyor ve saat secimiyle ilgisi yok. §430 (Vercel tetigi) dosyalari
-depoda degil ama bu gunlukte tarifli; gecikme dayanilmaz olursa kurulum
-5 dakika. GitHub tarafinda beklenti: 09:30 istegi fiilen 10:00-15:00 arasi.
-DEPLOY: .github/workflows/tazele.yml.
-
-# BAKIM EK — §430 (9 Eyl 2026)
-
-## §430 ZAMANLAMA VERCEL'E TASINDI — GITHUB CRON YEDEK
-
-OLCUM (4-9 Eyl, kosu listesi): sabah 09:10 cron'u 14:11-15:23 arasi, aksam
-18:10 cron'u 21:19-22:06 arasi geldi; 9 Eyl sabahi 12:50'ye dek HIC gelmedi.
-Agustos sonunda 9-11 saatlik uclar (§427 canli vakasi) 3-6 saatlik KRONIK
-gecikmeye yerlesti. Sabah fon fiyati 5 saat gecikirse katman islevsiz.
-KARAR: cron bir SOZ degil ISTEK. Zamanlayici artik Vercel (dakikligi kanitli:
-mail cronlari aylardir saniyesinde). GitHub'in kendi cronlari YEDEK kalir —
-§427 tekrar kosuyu VERIDEN ayirt ettigi icin cifte kosu zararsiz.
-YAPILAN:
-  api/data.js mod=tetik (§430): CRON_SECRET'li Vercel cron istegi ya da
-    oturumlu kullanici -> GitHub workflow_dispatch (tazele.yml, inputs.katman,
-    istege fonkod). Token'i kod TASIMAZ, env'den okur.
-  vercel.json crons +3: 06:10 UTC hafta ici (fon) · 15:10 UTC hafta ici
-    (endeks,fiyat,fon) · 04:00 UTC Cmt (hepsi) — GitHub cronlariyla birebir.
-KULLANICI YAPACAK (tek seferlik):
-  1. github.com/settings/personal-access-tokens -> Fine-grained token:
-     Repository access: YALNIZ Ktpanel2 · Permissions: Actions = Read and write.
-  2. Vercel -> Project -> Settings -> Environment Variables:
-     GITHUB_TOKEN = <token>  (Production). Redeploy.
-  3. Test: panele girip  /api/data?mod=tetik&katman=fon  acilir; {ok:1} donmeli
-     ve Actions'ta "Manually run" kosu belirmeli. (CRON_SECRET zaten env'de.)
-NOT: workflow_dispatch kosulari listede "Manually run" gorunur — bundan sonra
-gunluk kosularin cogu bu etiketi tasiyacak, sasirtmasin.
-DEPLOY: ktpanel/api/data.js · ktpanel/vercel.json.
-
-# BAKIM EK — §429c–e (29 Agu 2026)
-
-## §429e TUM PIYASAYI TARAMA YANLIS YOL — FON BAZINDA KIMLIK (canli #182)
-Konu suzgecli tarama 15.886 kayit gordu, 9 fonu yakalayamadi: raporlar ayin ilk
-10 gununde yigiliyor, 7 gunluk pencere bile 2000 tavanina carpiyor, evren
-fonlari kesilen dilimde kaliyor. 60 istek 66 bin kayit, sonuc sifir.
-COZUM iki asama: (A) KAP uye kimligi (mkkMemberOid) bilinen fon -> fon basina
-TEK istek, mkkMemberOidList=[oid], 400 gun (ilk HAR'daki FILTERYFBF yolu da bu
-kimlikle calisiyordu). (B) kimliksiz fon -> pencereli tarama 1 gune kadar
-daralir, evren fonlarinin kimligi HASAT edilip dosyaya yazilir (rapor listesi
-bos donse bile), hemen A yoluna gecilir. Istek tavani 140. Ornek kayit artik
-600 karakter (kimlik alaninin adi orada gorulecek: mkkMemberOid|memberOid|fundOid).
-DERS: 'her seyi cek, sonra suz' sadece kucuk evrende calisir; hedef belliyken
-hedefe sor. Kullanicinin ekledigi 9 fon: KPU KPC KCV KTS KTM YHK MAC NNF TZD.
-
-
-## §429d KATMAN CAGRISI YANLIS BLOKTAYDI (canli #181)
---katman=fonportfoy tek basina kostu, 43 sn, "degisiklik yok": cagri
-`if (ister('hepsi')||ister('fiyat'))` blogunun ICINDEYDI. Disari alindi;
-ister('fonportfoy') zaten hepsi'de de true. DERS: yeni katmani mevcut bir
-kosulun altina yazma; kendi kosulunu KOK seviyede kur.
-
+# BAKIM EK — §429c (29 Agu 2026)
 
 ## §429c ILK CANLI KOSU (#178) IKI YANLIS VARSAYIMI OLCTU
 
