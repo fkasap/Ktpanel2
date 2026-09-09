@@ -419,7 +419,16 @@ async function ecosModu(req, res){
          tablolar ITEM_CODE1 alanını doldurmaz). */
       const suz=rows.filter(x=>String(x.ITEM_CODE1||'')===String(item));
       if(suz.length) rows=suz; else if(rows.some(x=>x.ITEM_CODE1)) { TANI.push(stat+'/'+item+': kalem süzgeci 0 satır ('+rows.length+' ham)'); return null; }
-      const map={}; rows.forEach(x=>{ map[x.TIME]={t:x.TIME, v:parseFloat(x.DATA_VALUE)}; });   /* aynı ay tekrarı ezilir */
+      /* §432e (canlı: ihracat +%64 süzgece rağmen): aynı kalem ITEM_CODE2/3 ile
+         ALT-VARYANTLARA ayrılabiliyor (orijinal/arındırılmış, tutar/miktar);
+         ay-bazlı tekilleştirme iki varyantı karıştırıp oranı bozuyordu.
+         En çok satırı olan alt-varyant seçilir; birden fazlaysa TANI'ya yazılır. */
+      const altKey=x=>String(x.ITEM_CODE2||'')+'|'+String(x.ITEM_CODE3||'');
+      const gruplar={}; rows.forEach(x=>{ (gruplar[altKey(x)]=gruplar[altKey(x)]||[]).push(x); });
+      const anahtarlar=Object.keys(gruplar);
+      if(anahtarlar.length>1){ anahtarlar.sort((a,b)=>gruplar[b].length-gruplar[a].length); rows=gruplar[anahtarlar[0]];
+        TANI.push(stat+'/'+item+': '+anahtarlar.length+' alt-varyant, baskın seçildi ('+anahtarlar[0]+', '+rows.length+' satır)'); }
+      const map={}; rows.forEach(x=>{ map[x.TIME]={t:x.TIME, v:parseFloat(x.DATA_VALUE)}; });
       return Object.values(map).filter(x=>isFinite(x.v)).sort((a,b)=>String(a.t)<String(b.t)?-1:1);
     }catch(e){ TANI.push(stat+': '+String((e&&e.message)||e).slice(0,60)); return null; }
   };
@@ -448,10 +457,15 @@ async function ecosModu(req, res){
   if(rez&&rez.length>=2){ const n=v=> v>1e8 ? v/1e6 : v>1e5 ? v/1e3 : v;   /* bin$/mn$ -> mlr$ sezgisel ölçek */
     const a=rez[rez.length-1], b=rez[rez.length-2];
     S.rezerv={mlrUsd:+n(a.v).toFixed(1), ay:a.t, aylikFark:+(n(a.v)-n(b.v)).toFixed(1)}; }
-  const ihr = await cek('403Y001','M',ay(eski),ay(simdi),'*AA',3000);   /* §432d: joker tüm kalemleri döndürürse süzgece yetecek kadar satır iste */
-  if(ihr&&ihr.length>=13){ const a=ihr[ihr.length-1], b=ihr[ihr.length-13], c=ihr[ihr.length-4];
-    S.ihracat={yoy:+(100*(a.v/b.v-1)).toFixed(1), ceyrekYoY:+(100*(c.v/ihr[ihr.length-16>=0?ihr.length-16:0].v-1)).toFixed(1), ay:a.t}; }
-  else if(ihr) TANI.push('403Y001: '+ihr.length+' ay');
+  const ihr = await cek('403Y001','M',ay(eski),ay(simdi),'*AA',3000);
+  if(ihr&&ihr.length>=13){ const a=ihr[ihr.length-1], b=ihr[ihr.length-13];
+    const yoy=+(100*(a.v/b.v-1)).toFixed(1);
+    /* §432e BÜYÜKLÜK TESTİ KAPISI: Kore toplam ihracatı %40'ı normal dünyada
+       aşmaz; aşan değer VERİ HATASIDIR ve yayınlanmaz. Yanlış kanarya,
+       kanaryasızlıktan tehlikeli. */
+    if(Math.abs(yoy)<=40) S.ihracat={yoy, ay:a.t, sonDeger:a.v, gecenYil:b.v};
+    else TANI.push('403Y001 büyüklük testi: yoy %'+yoy+' (>|40|) — YAYINLANMADI · son='+a.v+' ('+a.t+') 12ay önce='+b.v+' ('+b.t+')');
+  } else if(ihr) TANI.push('403Y001: '+ihr.length+' ay');
   for(const [kod,ad] of [['308111AA','yarı iletken'],['3081AA','bilgisayar-elektronik-optik'],['308AA','elektrik-elektronik']]){
     const cip = await cek('403Y001','M',ay(eski),ay(simdi),kod,30);
     if(cip&&cip.length>=13){ const a=cip[cip.length-1], b=cip[cip.length-13];
