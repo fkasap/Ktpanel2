@@ -659,6 +659,11 @@
    "ad": "V PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞUN FON)",
    "kaynak": "tefas-oto",
    "tur": "hisse-yogun"
+  },
+  "OPU": {
+   "ad": "ASTRA PORTFÖY ÜÇÜNCÜ KATILIM SERBEST FON",
+   "kaynak": "tefas-oto",
+   "tur": "serbest"
   }
  },
  "evren_elle": [
@@ -1273,8 +1278,8 @@
    }
   }
  },
- "guncelleme": "2026-09-07",
+ "guncelleme": "2026-09-09",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(132 fon, 16975 kayıt)",
+ "yol": "tarama(133 fon, 17503 kayıt)",
  "pencereGun": 400
 }

@@ -1,5 +1,5 @@
 {
- "tarih": "2026-09-08",
+ "tarih": "2026-09-09",
  "kodlar": [
   "AKHAN",
   "ALFAS",
@@ -306,7 +306,8 @@
   "KUVVA": "2026-09-01",
   "BRLSM": "2026-09-03",
   "TGSAS": "2026-09-03",
-  "BALSU": "2026-09-08"
+  "BALSU": "2026-09-08",
+  "VEYAS": "2026-09-09"
  },
  "evren_disi": [
   "ADESE",
@@ -473,12 +474,13 @@
   "VBTYZ",
   "VERUS",
   "VESTL",
+  "VEYAS",
   "YAPRK",
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 167,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 168,
+ "pencere_sayi": 2,
  "dusen_son": [],
- "guncelleme": "2026-09-08 18:35 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-09 09:44 UTC — otomatik (KAP FR · kümülatif §299)"
 }

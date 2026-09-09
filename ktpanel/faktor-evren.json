@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-08T18:37:26Z",
+ "guncelleme": "2026-09-09T09:46:19Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -514,7 +514,7 @@
    "eksik": false
   },
   "CELHA": {
-   "ts": "2026-08-28T20:55:58Z",
+   "ts": "2026-09-09T09:45:03Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -582,7 +582,7 @@
    "eksik": false
   },
   "CVKMD": {
-   "ts": "2026-08-28T20:56:14Z",
+   "ts": "2026-09-09T09:45:20Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -650,7 +650,7 @@
    "eksik": true
   },
   "DCTTR": {
-   "ts": "2026-08-28T20:56:31Z",
+   "ts": "2026-09-09T09:45:37Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -752,14 +752,14 @@
    "eksik": false
   },
   "EGGUB": {
-   "ts": "2026-08-29T00:01:28Z",
+   "ts": "2026-09-09T09:45:48Z",
    "y": "362",
    "donem": "2026/2",
-   "ceyrek": 5,
-   "ciro": 3745729467,
-   "brut": 2141508854,
-   "favok": 2066734025,
-   "netKar": 660090031,
+   "ceyrek": 2,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "netKar": null,
    "ozk": 10197551900,
    "aktif": 12679154974,
    "donen": 2154330918,
@@ -767,12 +767,12 @@
    "finBorc": 1362430236,
    "likit": 1566116709,
    "netBorc": -203686473,
-   "isletmeNA": 1744623098,
-   "capex": -1373912960,
-   "sna": 370710138,
-   "tahakkuk": -8.55,
-   "odFaiz": 8125637,
-   "odTemettu": -222501763,
+   "isletmeNA": null,
+   "capex": null,
+   "sna": null,
+   "tahakkuk": null,
+   "odFaiz": null,
+   "odTemettu": null,
    "stoklar": 18268329,
    "ticariAlacak": 265483576,
    "ticariBorc": 435295708,
@@ -783,7 +783,7 @@
    },
    "adet": 100000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "eksik": true
   },
   "EGPRO": {
    "ts": "2026-08-29T00:01:45Z",
