@@ -2512,7 +2512,12 @@ async function fonPortfoy() {
   const kodAl = b => String(b.fundCode || b.stockCode || b.fonKodu || '').toUpperCase().trim();
   const idxAl = b => b.disclosureIndex || b.index || b.disclosureId || null;
   const oidAl = b => b.mkkMemberOid || b.memberOid || b.fundOid || (b.disclosureDetail && b.disclosureDetail.fundOid) || null;
-  const pdMi = b => /PORTF[ÖO]Y\s*DA[ĞG]ILIM/i.test(String(b.subject || '') + ' ' + String(b.summary || '') + ' ' + String(b.title || ''));
+  /* §429q (canlı #216): 32 fon 'subject=Portföy Dağılım Raporu' ile REDDEDİLİYORDU —
+     aynı görünen metin farklı Unicode biçimindeydi (ö/ğ/ı ayrıştırılmış: harf +
+     birleşik aksan). Süzgeç artık NFKD-normalize + aksan soyma + İ/ı katlama sonrası
+     ASCII kalıpla bakar. Kurucular arası tek fark yazım biçimiydi. */
+  const ascii = s => String(s || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/İ/g, 'I').replace(/ı/g, 'i').replace(/[ĞğŞşÇçÖöÜü]/g, c => ({Ğ:'G',ğ:'g',Ş:'S',ş:'s',Ç:'C',ç:'c',Ö:'O',ö:'o',Ü:'U',ü:'u'}[c])).toUpperCase();
+  const pdMi = b => /PORTFOY\s*DAGILIM/.test(ascii(String(b.subject || '') + ' ' + String(b.summary || '') + ' ' + String(b.title || '')));
   /* §429e (canlı #182): konu süzgeçli tarama 15.886 kayıt gördü, evrenin 9 fonunu
      YAKALAYAMADI — raporlar ayın ilk 10 gününde yığılıyor, 7 günlük pencere bile
      2000 tavanına çarpıyor, kesilen dilimde kalıyorlar. Tüm piyasayı taramak yanlış
@@ -2536,7 +2541,7 @@ async function fonPortfoy() {
   };
   /* §429f (bu tabana taşındı — kopya ayrışmasında kaybolmuştu): unvan eşlemesi
      (KAP fundCode ≠ TEFAS kodu olan fonlar için) + kapKod öğrenme + teşhis. */
-  const norm = tt => String(tt || '').toUpperCase().replace(/İ/g, 'I').replace(/[^A-Z0-9]+/g, ' ').replace(/\b(A S|AS|TL|FONU|FON|HISSE SENEDI YOGUN)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  const norm = tt => ascii(tt).replace(/[^A-Z0-9]+/g, ' ').replace(/\b(A S|AS|TL|FONU|FON|HISSE SENEDI YOGUN)\b/g, ' ').replace(/\s+/g, ' ').trim();
   const evrenUnvan = {}; evrenKod.forEach(k => { const u = (UNV[k] || (d.evren[k] && d.evren[k].kaynak !== 'elle' && d.evren[k].ad) || ''); if (u) evrenUnvan[norm(u)] = k; });
   const gorulenKod = new Set(), ilginc = [], redOrnek = {}, kabulSay = {};
   const kabul = b => {
@@ -2544,7 +2549,7 @@ async function fonPortfoy() {
     /* §429p TEŞHİS (canlı #215: 40 görülen, 9 kuyrukta): evren fonunun kaydı
        neden reddedildi? İlk örnek fon başına saklanır, rapora basılır. */
     if (k && evrenKod.includes(k) && !pdMi(b) && !redOrnek[k]) redOrnek[k] = 'subject=' + String(b.subject || '').slice(0, 30) + ' · summary=' + String(b.summary || '').slice(0, 30) + ' · class=' + String(b.disclosureClass || '') + ' · idx=' + (idxAl(b) || '?');
-    if (pdMi(b) && !evrenKod.includes(k) && ilginc.length < 12 && /KATILIM/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && /HISSE/.test(String(b.kapTitle || '').toUpperCase().replace(/İ/g, 'I')) && !ilginc.some(x => x.startsWith(k + '='))) ilginc.push(k + '=' + String(b.kapTitle || '').slice(0, 55));
+    if (pdMi(b) && !evrenKod.includes(k) && ilginc.length < 12 && /KATILIM/.test(ascii(b.kapTitle)) && /HISSE/.test(ascii(b.kapTitle)) && !ilginc.some(x => x.startsWith(k + '='))) ilginc.push(k + '=' + String(b.kapTitle || '').slice(0, 55));
     if (!pdMi(b)) return false;
     if (evrenKod.includes(k)) { kabulSay[k] = (kabulSay[k] || 0) + 1; return true; }
     const kk = evrenKod.find(e => d.evren[e].kapKod === k); if (kk) { b.__evrenKod = kk; return true; }
