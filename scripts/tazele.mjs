@@ -2469,12 +2469,22 @@ async function fonPortfoy() {
   let otoN = 0;
   Object.keys(meta).forEach(k => {
     const u = String(meta[k].unvan || '').toUpperCase().replace(/İ/g, 'I');
-    if (/KATILIM/.test(u) && (/HISSE SENEDI/.test(u) || /SERBEST/.test(u)) && !/BORCLANMA|KIRA SERT|PARA PIYASASI|ALTIN|KIYMETLI|DOVIZ|EUROBOND/.test(u)) {
+    /* §429h (bu tabana 2. kez — ilk uygulama yanlış kopyaya gitmişti, canlı #211
+       kanıtı: hepsi koşusu geniş regex'le 86 fonu geri ekledi, KKC sınıfı 40
+       slotu yaktı, 0 rapor işlendi): SERBEST ancak adında HISSE varsa girer. */
+    if (/KATILIM/.test(u) && (/HISSE SENEDI/.test(u) || (/SERBEST/.test(u) && /HISSE/.test(u))) && !/BORCLANMA|KIRA SERT|PARA PIYASASI|ALTIN|KIYMETLI|DOVIZ|EUROBOND/.test(u)) {
       if (!d.evren[k]) otoN++;
       d.evren[k] = { ad: String(meta[k].unvan).trim(), kaynak: 'tefas-oto', tur: /SERBEST/.test(u) ? 'serbest' : 'hisse-yogun' };
     }
   });
   d.evren_elle.forEach(k => { k = String(k).toUpperCase(); if (!d.evren[k]) d.evren[k] = { ad: k, kaynak: 'elle', tur: '?' }; });
+  /* §429h temizlik: geniş kuralla girmiş otomatik kayıtlar pasife taşınır (silinmez); elle olanlar korunur */
+  d.evren_pasif = d.evren_pasif || {};
+  Object.keys(d.evren).forEach(k => {
+    const v = d.evren[k]; if (v.kaynak !== 'tefas-oto' || d.evren_elle.includes(k)) return;
+    const u2 = String(v.ad || '').toUpperCase().replace(/İ/g, 'I');
+    if (!(/KATILIM/.test(u2) && (/HISSE SENEDI/.test(u2) || (/SERBEST/.test(u2) && /HISSE/.test(u2))) && !/BORCLANMA|KIRA SERT|PARA PIYASASI|ALTIN|KIYMETLI|DOVIZ|EUROBOND/.test(u2))) { d.evren_pasif[k] = v; delete d.evren[k]; }
+  });
   const evrenKod = Object.keys(d.evren).sort();
   if (!evrenKod.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ evren boş (TEFAS unvanı gelmedi, evren_elle de yok)'); await yaz(dosya, d); return; }
   /* 2) KAP LİSTESİ — pencere: ilk koşu 400 gün, sonra 45 */
