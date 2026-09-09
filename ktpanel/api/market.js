@@ -475,15 +475,21 @@ async function ecosModu(req, res){
   if(rez&&rez.length>=2){ const n=v=> v>1e8 ? v/1e6 : v>1e5 ? v/1e3 : v;   /* bin$/mn$ -> mlr$ sezgisel ölçek */
     const a=rez[rez.length-1], b=rez[rez.length-2];
     S.rezerv={mlrUsd:+n(a.v).toFixed(1), ay:a.t, aylikFark:+(n(a.v)-n(b.v)).toFixed(1)}; }
-  const ihr = await cek('403Y001','M',ay(eski),ay(simdi),'*AA',3000);
-  if(ihr&&ihr.length>=13){ const a=ihr[ihr.length-1], b=ihr[ihr.length-13];
+  /* §432g İHRACAT NİHAİ KAYNAK: 901Y118 "수출입 총괄" (gümrük, dolar tutarı) —
+     kalemler keşifle doğrulandı: T002 ihracat · T004 ithalat. 403Y001 macerasının
+     dersi BAKIM'da: bileşen tutarlılık testi (parça +4,6 iken bütün +64 olamaz)
+     tablo kimliği yanlışını yakaladı; kimlik SORULDU (tablolar=901), bulundu.
+     Ölçek: bin$ -> mlr$ sezgisel (rezervdekiyle aynı). Kapı (±%40) korunur. */
+  const olcek = v => v>1e8 ? v/1e6 : v>1e5 ? v/1e3 : v;
+  const exp = await cek('901Y118','M',ay(eski),ay(simdi),'T002',30);
+  const imp = await cek('901Y118','M',ay(eski),ay(simdi),'T004',30);
+  if(exp&&exp.length>=13){ const a=exp[exp.length-1], b=exp[exp.length-13];
     const yoy=+(100*(a.v/b.v-1)).toFixed(1);
-    /* §432e BÜYÜKLÜK TESTİ KAPISI: Kore toplam ihracatı %40'ı normal dünyada
-       aşmaz; aşan değer VERİ HATASIDIR ve yayınlanmaz. Yanlış kanarya,
-       kanaryasızlıktan tehlikeli. */
-    if(Math.abs(yoy)<=40) S.ihracat={yoy, ay:a.t, sonDeger:a.v, gecenYil:b.v};
-    else TANI.push('403Y001 büyüklük testi: yoy %'+yoy+' (>|40|) — YAYINLANMADI · son='+a.v+' ('+a.t+') 12ay önce='+b.v+' ('+b.t+')');
-  } else if(ihr) TANI.push('403Y001: '+ihr.length+' ay');
+    if(Math.abs(yoy)<=40){
+      S.ihracat={yoy, ay:a.t, mlrUsd:+olcek(a.v).toFixed(1)};
+      if(imp&&imp.length){ const i2=imp.find(x=>x.t===a.t); if(i2) S.ihracat.dengeMlr=+(olcek(a.v)-olcek(i2.v)).toFixed(1); }
+    } else TANI.push('901Y118 büyüklük testi: yoy %'+yoy+' — YAYINLANMADI · son='+a.v+' ('+a.t+') 12ay önce='+b.v);
+  } else if(exp) TANI.push('901Y118: '+exp.length+' ay');
   for(const [kod,ad] of [['308111AA','yarı iletken'],['3081AA','bilgisayar-elektronik-optik'],['308AA','elektrik-elektronik']]){
     const cip = await cek('403Y001','M',ay(eski),ay(simdi),kod,30);
     if(cip&&cip.length>=13){ const a=cip[cip.length-1], b=cip[cip.length-13];
