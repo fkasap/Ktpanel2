@@ -384,6 +384,21 @@ async function ecosModu(req, res){
   res.setHeader('Access-Control-Allow-Origin', '*');
   const KEY = process.env.ECOS_KEY;
   if(!KEY) return res.status(200).json({ok:false, err:'ECOS_KEY env yok — Vercel Settings > Environment Variables', seriler:null});
+  /* §432b KEŞİF KAPISI: ?mod=ecos&kesif=721Y001 -> o tablonun kalem listesi
+     (StatisticItemList) anahtar SUNUCUDA kalarak döner. Yeni seri eklerken
+     ITEM_CODE'lar buradan okunur; kullanıcı anahtarı hiç görmez/taşımaz. */
+  if(req.query.kesif){
+    const tablo=String(req.query.kesif).replace(/[^0-9A-Za-z]/g,'').slice(0,10);
+    try{
+      const r=await fetch('https://ecos.bok.or.kr/api/StatisticItemList/'+KEY+'/json/kr/1/'+(req.query.n?Math.min(500,parseInt(req.query.n)||200):200)+'/'+tablo,
+        {signal:AbortSignal.timeout(14000),headers:{'User-Agent':'Mozilla/5.0 (KTPanel)'}});
+      const j=await r.json();
+      if(j.RESULT) return res.status(200).json({ok:false, tablo, err:(j.RESULT.CODE||'')+' '+(j.RESULT.MESSAGE||'')});
+      const rows=(j.StatisticItemList&&j.StatisticItemList.row)||[];
+      return res.status(200).json({ok:true, tablo, adet:rows.length,
+        kalemler: rows.map(x=>({kod:x.ITEM_CODE, ad:x.ITEM_NAME, periyot:x.CYCLE, bas:x.START_TIME, son:x.END_TIME}))});
+    }catch(e){ return res.status(200).json({ok:false, tablo, err:String((e&&e.message)||e).slice(0,100)}); }
+  }
   const TANI=[];
   const gun = d => d.toISOString().slice(0,10).replace(/-/g,'');
   const ay  = d => d.toISOString().slice(0,7).replace('-','');
