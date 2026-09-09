@@ -76,7 +76,8 @@ export function hisseleriOku(metin) {
      sabitine takılıp atlanıyor, toplam %93-95'te kalıp denetimden düşüyordu.
      Para birimi artık grup; kod bazında kayda para birimi de yazılır. */
   /* §429j: alış fiyatı NEGATİF ve çok haneli olabilir (IVF canlı: ASELS -0,055199 — temettü düzeltmeli maliyet) */
-  const re = /^\s*([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:\d+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  /* §429t: 'KUL ' öneki (KCV) isteğe bağlı · taahhüt no alt çizgili olabilir (MPS '80_100_5') */
+  const re = /^\s*(?:KUL\s+)?([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   const kod = {};
   let m, satir = 0;
   while ((m = re.exec(blok))) {

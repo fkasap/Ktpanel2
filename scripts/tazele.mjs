@@ -2667,7 +2667,7 @@ async function fonPortfoy() {
       };
       { const F2 = d.fonlar[is.kod]; const dk = Object.keys(F2.donemler).sort(); dk.slice(0, Math.max(0, dk.length - 6)).forEach(x => delete F2.donemler[x]); }   /* §431 budama: son 6 dönem */
       yazildi++; await uyku(500);
-    } catch (e) { hata.push(is.kod + ' ' + is.donem + ': ' + String(e.message || e).slice(0, 220)); await uyku(400); }   /* §429g: tanılı mesaj (belge başı örneği) kesilmesin */
+    } catch (e) { hata.push(is.kod + ' ' + is.donem + ': ' + String(e.message || e).slice(0, 460)); await uyku(400); }   /* §429g: tanılı mesaj (belge başı örneği) kesilmesin */
   }
   try { await fs.rm(tmp, { recursive: true, force: true }); } catch (e) {}
   d.guncelleme = bugun; d.yol = yol; d.pencereGun = pencereGun;
