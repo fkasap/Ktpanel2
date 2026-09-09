@@ -371,6 +371,52 @@ async function hkmaModu(req, res){
 }
 
 
+// ═══ §432 ECOS modu — Güney Kore makro (BOK, ECOS_KEY env ile) ═══
+// Kullanıcı 9 Eyl'de ECOS_KEY aldı (27 Tem §53'te karta "key alırsan bağlarız"
+// notu düşülmüştü). ECOS = BOK'un FRED'i (ecos.bok.or.kr, 100.000+ seri).
+// URL kalıbı: /api/StatisticSearch/{KEY}/json/kr/1/{N}/{STAT}/{CYCLE}/{BAS}/{SON}/{ITEM}
+// SERİLER (kod hafızadan — İLK KOŞU ÖLÇER, gelmeyeni kart söyler, uydurmaz):
+//   722Y001/D/0101000  BOK politika faizi (günlük)
+//   731Y001/D/0000001  USD/KRW alış-satış ortası (günlük)
+//   901Y009/M/0        TÜFE endeksi (aylık) → YoY burada hesaplanır
+async function ecosModu(req, res){
+  res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=21600');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const KEY = process.env.ECOS_KEY;
+  if(!KEY) return res.status(200).json({ok:false, err:'ECOS_KEY env yok — Vercel Settings > Environment Variables', seriler:null});
+  const TANI=[];
+  const gun = d => d.toISOString().slice(0,10).replace(/-/g,'');
+  const ay  = d => d.toISOString().slice(0,7).replace('-','');
+  const simdi=new Date(), eski=new Date(Date.now()-420*86400000);
+  const cek = async (stat, cyc, bas, son, item, n) => {
+    const u='https://ecos.bok.or.kr/api/StatisticSearch/'+KEY+'/json/kr/1/'+n+'/'+stat+'/'+cyc+'/'+bas+'/'+son+'/'+item;
+    try{
+      const r=await fetch(u,{signal:AbortSignal.timeout(14000),headers:{'User-Agent':'Mozilla/5.0 (KTPanel)'}});
+      if(!r.ok){ TANI.push(stat+': HTTP '+r.status); return null; }
+      const j=await r.json();
+      if(j.RESULT){ TANI.push(stat+': '+(j.RESULT.CODE||'')+' '+String(j.RESULT.MESSAGE||'').slice(0,60)); return null; }
+      const rows=j.StatisticSearch && j.StatisticSearch.row;
+      if(!Array.isArray(rows)||!rows.length){ TANI.push(stat+': satır yok'); return null; }
+      return rows.map(x=>({t:x.TIME, v:parseFloat(x.DATA_VALUE)})).filter(x=>isFinite(x.v));
+    }catch(e){ TANI.push(stat+': '+String((e&&e.message)||e).slice(0,60)); return null; }
+  };
+  const S={};
+  const faiz = await cek('722Y001','D',gun(eski),gun(simdi),'0101000',5000);
+  if(faiz&&faiz.length){ const a=faiz[faiz.length-1], degisimIdx=[...faiz].reverse().findIndex(x=>x.v!==a.v);
+    S.faiz={deger:a.v, tarih:a.t, oncekiSeviye: degisimIdx>0?faiz[faiz.length-1-degisimIdx].v:null,
+      sonDegisimTarihi: degisimIdx>0?faiz[faiz.length-degisimIdx].t:null}; }
+  const kur = await cek('731Y001','D',gun(new Date(Date.now()-40*86400000)),gun(simdi),'0000001',60);
+  if(kur&&kur.length){ const a=kur[kur.length-1], b=kur.length>21?kur[kur.length-22]:kur[0];
+    S.usdkrw={deger:a.v, tarih:a.t, aylikYuzde:+(100*(a.v/b.v-1)).toFixed(2)}; }
+  const cpi = await cek('901Y009','M',ay(eski),ay(simdi),'0',30);
+  if(cpi&&cpi.length>=13){ const a=cpi[cpi.length-1], b=cpi[cpi.length-13];
+    S.tufe={yoy:+(100*(a.v/b.v-1)).toFixed(2), ay:a.t}; }
+  else if(cpi) TANI.push('901Y009: '+cpi.length+' ay — YoY için 13 gerek');
+  const ok=Object.keys(S).length>0;
+  return res.status(200).json({ok, kaynak:'BOK ECOS', alinma:new Date().toISOString(),
+    seriler: ok?S:null, tani: TANI.length?TANI:undefined, err: ok?undefined:'hiçbir seri gelmedi — tani alanına bak'});
+}
+
 // ═══ ECB modu — Euro bölgesi makro (key GEREKMEZ, SDMX csvdata) ═══
 // Yanıt ASC sıralı CSV; TIME_PERIOD/OBS_VALUE kolon indeksi dataflow'a göre DEĞİŞİR
 // → header'dan dinamik bulunur (FM:8/9, ICP:7/8, ILM:7/8 — ölçüldü, 27 Tem test).
@@ -510,6 +556,7 @@ module.exports = async (req, res) => {
   if(req.query.mod==='fred') return fredModu(req, res);
   if(req.query.mod==='boj') return bojModu(req, res);
   if(req.query.mod==='hkma') return hkmaModu(req, res);
+  if(req.query.mod==='ecos') return ecosModu(req, res);   /* §432 Kore */
   if(req.query.mod==='ecb') return ecbModu(req, res);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
