@@ -844,6 +844,144 @@
       "pdfBoyut": 72395,
       "islendi": "2026-08-31"
      }
+    },
+    "2026-04": {
+     "baslik": {
+      "kod": "PKD",
+      "ad": "PKD-PUSULA PORTFÖY İKİNCİ DENGE KATILIM SERBEST FON",
+      "donem": "2026-04",
+      "fonToplamDegeri": 14975293.2,
+      "paySayisi": 17414353,
+      "payFiyati": 0.85994,
+      "aylikGetiri": 1.12,
+      "hisseOrtYuzde": 84.17,
+      "hisseDevirHizi": 1.8
+     },
+     "hisse": [
+      {
+       "kod": "TUPRS",
+       "agirlik": 32.58,
+       "deger": 4878000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 19.84,
+       "deger": 2970800
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 12.84,
+       "deger": 1922148
+      }
+     ],
+     "hisseToplam": {
+      "deger": 9770948,
+      "grup": 100,
+      "fpd": 77.01,
+      "ftd": 65.26
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1604978,
+      "objId": "4028328c9d7b22d2019e17941c666f92",
+      "yayin": "11.05.2026 18:11:49",
+      "islendi": "2026-09-09"
+     }
+    },
+    "2026-05": {
+     "baslik": {
+      "kod": "PKD",
+      "ad": "PKD-PUSULA PORTFÖY İKİNCİ DENGE KATILIM SERBEST FON",
+      "donem": "2026-05",
+      "fonToplamDegeri": 14753607.85,
+      "paySayisi": 16941436,
+      "payFiyati": 0.870859,
+      "aylikGetiri": 1.27,
+      "hisseOrtYuzde": 76.29,
+      "hisseDevirHizi": 0.08
+     },
+     "hisse": [
+      {
+       "kod": "TUPRS",
+       "agirlik": 25.62,
+       "deger": 3779200
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 18.64,
+       "deger": 2750000
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 12.12,
+       "deger": 1788300
+      }
+     ],
+     "hisseToplam": {
+      "deger": 8317500,
+      "grup": 100,
+      "fpd": 69.41,
+      "ftd": 56.38
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1611827,
+      "objId": "4028328d9e2771a1019e87d5e14a07e7",
+      "yayin": "02.06.2026 13:19:39",
+      "islendi": "2026-09-09"
+     }
+    },
+    "2026-06": {
+     "baslik": {
+      "kod": "PKD",
+      "ad": "PKD-PUSULA PORTFÖY İKİNCİ DENGE KATILIM SERBEST FON",
+      "donem": "2026-06",
+      "fonToplamDegeri": 14783406.44,
+      "paySayisi": 16698886,
+      "payFiyati": 0.885293,
+      "aylikGetiri": 1.66,
+      "hisseOrtYuzde": 66.59,
+      "hisseDevirHizi": 0.06
+     },
+     "hisse": [
+      {
+       "kod": "TUPRS",
+       "agirlik": 24.62,
+       "deger": 3640000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 19.47,
+       "deger": 2877875
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 12.11,
+       "deger": 1791000
+      }
+     ],
+     "hisseToplam": {
+      "deger": 8308875,
+      "grup": 100,
+      "fpd": 63.47,
+      "ftd": 56.2
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1629844,
+      "objId": "4028328c9f0a0859019f41bffedc6a56",
+      "yayin": "08.07.2026 18:31:43",
+      "islendi": "2026-09-09"
+     }
     }
    }
   },
@@ -1470,7 +1608,7 @@
  },
  "guncelleme": "2026-09-09",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(47 fon, 9130 kayıt)",
+ "yol": "tarama(47 fon, 9142 kayıt)",
  "pencereGun": 150,
  "evren_pasif": {
   "AC1": {
