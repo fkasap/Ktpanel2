@@ -66,14 +66,14 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2036 fon fiyat + 1064 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587010752878408> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587012010620078> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%2)
 - ✓ **dönem tutarlılığı**: temiz
 
-- §427 yeni fiyat günü: 46/46 fonda fiyat değişti — 1G ve akış hesaplandı
+### Katılım fonları — ℹ tekrar koşu (fiyat vektörü değişmedi: 46/46 aynı): fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266/§427)
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
@@ -85,7 +85,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
   - 60 kod 21 gunden uzun suredir kartsiz: AKHAN, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, BERA, BIENY, BIMAS, BINHO, BUCIM, CANTE …
 
 ### Bilanço tetiği (§299 kümülatif) — ✓ 68 şirket kart bekliyor (katılım evreni · evren dışı 168 saklı, §428)
-- pencere: 2 FR · yeni deftere giren: 1 (VEYAS)
+- pencere: 2 FR · yeni deftere giren: 0
 - kart yazılıp düşen: 0
 - en eski borç: AKHAN · 22 gündür bekliyor ⚠
 - AKHAN, ALFAS, ALKIM, ALKLC, ALTNY, ALVES, BERA, BIENY, BIMAS, BINHO, BRLSM, BUCIM, BURCE, CANTE, CELHA, CVKMD, DCTTR, EGGUB, EGPRO, ELITE …
@@ -122,14 +122,13 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-09-11 06:00Z · GBP · GDP m/m
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 101/247
-- bu turda: 3 tam · 1 eksik kalemli · 2 alınamadı
-- not: EGGUB:2 ana kalem boş · EGPRO:2026: fetch failed · ELITE:2026: fetch failed
+- bu turda: 6 tam · 0 eksik kalemli · 0 alınamadı
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
-### KAP arşivi (§381) — ✓ +0 çeyrek · 0/247 şirket tam
-- CELHA:2026: fetch failed (1. kez) · CVKMD:2026: fetch failed (1. kez)
+### KAP arşivi (§381) — ✓ +1 çeyrek · 0/247 şirket tam
+- EGPRO:5→6 · ELITE:2026: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
-- 2 düştü
+- 1 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
 - §364b fiyat: 46/46 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
@@ -158,17 +157,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=305
 - örnek satır: `2026-09-08;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
 
-### Fon portföy dağılımı (§429) — ⏭ 0 rapor işlendi · evren 133 fon (oto +1) · depo 2 fon / 2 dönem · KAP yolu: tarama(133 fon, 17503 kayıt) · pencere 400 gün
-- bu turda hedef 40 (tur tavanı 40; kalan sonraki koşuda)
-- ⚠ denetimden düşen (yazılmadı): DNK null: kod sayısı 0 < 5; grup % toplamı 0.00 (100±0,5 bekleniyordu); GRUP TOPLAMI satırı okunamadı · DNK null: kod sayısı 0 < 5; grup % toplamı 0.00 (100±0,5 bekleniyordu); GRUP TOPLAMI satırı okunamadı
-- ⚠ hata: TLZ null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · KKC null: HİSSE SENETLERİ bölümü yok · KHJ null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · KLH null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · AL4 null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok …+33
+- §429b elle eklenen fon: KPU, KPC, KCV, KTS, KTM, YHK, MAC, NNF, TZD
+
+- §429f teşhis: listede 1319 farklı fon kodu · evrenden görülen: AC1,AL4,AL5,AL6,AL7,BDA,BKY,BVK,CKS,DKH,DKL,DNK,ELZ,GKV,GUK,HFI,HFO,HFY,HKH,HML,IVF,KAC,KCV,KDL,KDO,KDT,KH1,KHC,KHJ,KKC,KKL,KLH,KLS,KPA,KPC,KPD,KPU,KSL,KSM,KST,KSV,KTI,KTM,KTR,KTS,KTT,KVK,KVR,MAC,MJE,MKA,MPS,MTK,NKA,NKM,NKT,NME,NNF,NVK,NZU,OHK,OTK,PBK,PDE,PHK,PKD,PKL,PUK,PVK,RBH,RBR,RKH,RKV,RPI,RPU,RTI,TIL,TLZ,TRU,TZD,URD,VHS,VKI,YHK,ZP6,ZP9,ZPE,ZPJ · katılım/kuveyt hisse örnekleri: DNK=TACİRLER PORTFÖY DENGE KATILIM SERBEST FON | KKC=KARE PORTFÖY KATILIM SERBEST (DÖVİZ-AVRO) FON | PVK=ALBARAKA PORTFÖY KISA VADELİ KATILIM SERBEST (TL) FON | PUK=PUSULA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ  | DNK=TACİRLER PORTFÖY DENGE KATILIM SERBEST FON | KHJ=ATLAS PORTFÖY KATILIM HİSSE SENEDİ FONU(HİSSE SENEDİ YOĞUN F | TLZ=ATA PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ YOĞ | PBK=ASTRA PORTFÖY BİRİNCİ KATILIM SERBEST (DÖVİZ) FON
+
+### Fon portföy dağılımı (§429) — ✓ 2 rapor işlendi · evren 133 fon (oto +0) · depo 3 fon / 4 dönem · KAP yolu: tarama(133 fon, 9116 kayıt) · pencere 150 gün
+- bu turda hedef 120 (tur tavanı 40; kalan sonraki koşuda)
+- ⚠ denetimden düşen (yazılmadı): IVF null: grup % toplamı 93.28 (100±0,5 bekleniyordu); değer toplamı 159455029 ≠ GRUP TOPLAMI 170949707 · PUK null: grup % toplamı 94.98 (100±0,5 bekleniyordu); değer toplamı 1376218480 ≠ GRUP TOPLAMI 1448952480
+- ⚠ hata: ELZ null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · PBK null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · AL4 null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · AL5 null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok · AL6 null: III-FON PORTFÖY DEĞERİ TABLOSU başlığı yok …+111
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (131 fiyat) · Model sicili (38 fiyat) · TR 5Y CDS (216.85 bp) · risk metrikleri (134) · fon akışı (2035) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (101/247) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (116 fiyat) · Model sicili (33 fiyat) · TR 5Y CDS (216.85 bp) · fon akışı (2035) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (16 olay) · faktör evreni (101/247) · KAP arşivi (+1 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (2 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 90 sn
-- ⏱ KAP arşivi (§381) — 72 sn
-- ⏱ Fon portföy dağılımı (§429) — 136 sn
-- toplam: 357 sn
+- ⏱ Faktör evreni (§361) — 106 sn
+- ⏱ KAP arşivi (§381) — 63 sn
+- ⏱ Fon portföy dağılımı (§429) — 224 sn
+- toplam: 446 sn

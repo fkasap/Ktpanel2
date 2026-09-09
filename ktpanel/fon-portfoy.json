@@ -1276,10 +1276,167 @@
      }
     }
    }
+  },
+  "DNK": {
+   "ad": "DNK-TACİRLER PORTFÖY DENGE KATILIM SERBEST FON",
+   "donemler": {
+    "2026-04": {
+     "baslik": {
+      "kod": "DNK",
+      "ad": "DNK-TACİRLER PORTFÖY DENGE KATILIM SERBEST FON",
+      "donem": "2026-04",
+      "fonToplamDegeri": 15589351.08,
+      "paySayisi": 9293324,
+      "payFiyati": 1.677478,
+      "aylikGetiri": 2.09,
+      "hisseOrtYuzde": 67.88,
+      "hisseDevirHizi": 0.92
+     },
+     "hisse": [
+      {
+       "kod": "MPARK",
+       "agirlik": 22.82,
+       "deger": 3558000
+      },
+      {
+       "kod": "YATAS",
+       "agirlik": 19.67,
+       "deger": 3066000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 6.81,
+       "deger": 1061000
+      },
+      {
+       "kod": "GEDZA",
+       "agirlik": 5.7,
+       "deger": 889200
+      },
+      {
+       "kod": "BRISA",
+       "agirlik": 5.42,
+       "deger": 845000
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 4.62,
+       "deger": 720300
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 4.39,
+       "deger": 684000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 4.32,
+       "deger": 672800
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 3.59,
+       "deger": 559500
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 2.5,
+       "deger": 389880
+      },
+      {
+       "kod": "CANTE",
+       "agirlik": 1.72,
+       "deger": 268500
+      }
+     ],
+     "hisseToplam": {
+      "deger": 12714180,
+      "grup": 100,
+      "fpd": 79.57,
+      "ftd": 81.56
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1604112,
+      "objId": "4028328d9d7b24c9019dfc5c756a720b",
+      "yayin": "11.05.2026 10:02:46",
+      "islendi": "2026-09-09"
+     }
+    },
+    "2026-05": {
+     "baslik": {
+      "kod": "DNK",
+      "ad": "DNK-TACİRLER PORTFÖY DENGE KATILIM SERBEST FON",
+      "donem": "2026-05",
+      "fonToplamDegeri": 13851200.75,
+      "paySayisi": 8021005,
+      "payFiyati": 1.726866,
+      "aylikGetiri": 2.94,
+      "hisseOrtYuzde": 65.41,
+      "hisseDevirHizi": 0.58
+     },
+     "hisse": [
+      {
+       "kod": "MPARK",
+       "agirlik": 16.35,
+       "deger": 2265000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 15.88,
+       "deger": 2200000
+      },
+      {
+       "kod": "YATAS",
+       "agirlik": 11.87,
+       "deger": 1644000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 11.46,
+       "deger": 1588000
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 6.39,
+       "deger": 884462
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 5.89,
+       "deger": 816000
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 3.97,
+       "deger": 550500
+      }
+     ],
+     "hisseToplam": {
+      "deger": 9947961.5,
+      "grup": 100,
+      "fpd": 72.39,
+      "ftd": 71.81
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "kaynak": {
+      "index": 1613751,
+      "objId": "4028328d9e2771a1019e8d37c09536b6",
+      "yayin": "05.06.2026 16:12:43",
+      "islendi": "2026-09-09"
+     }
+    }
+   }
   }
  },
  "guncelleme": "2026-09-09",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(133 fon, 17503 kayıt)",
- "pencereGun": 400
+ "yol": "tarama(133 fon, 9116 kayıt)",
+ "pencereGun": 150
 }
