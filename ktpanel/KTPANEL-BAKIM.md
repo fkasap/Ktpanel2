@@ -6,6 +6,25 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §433 (9 Eyl 2026)
+
+## §433 "FULL OTOMASYON" MERDIVENI — ASYA DAMGALI KARTLARI
+
+Kullanici ilkesi: full otomasyona yaklasmak. AYRIM: durum satirlari (faiz,
+koro, seviye) OTOMATIKLESIR; anlati (16 Tem KOSPI anatomisi) uretilemez,
+ARSIVDIR — silinmez, yasini tasir.
+BASAMAK 1 (yapildi): 4 Asya damgali karti guncelleme-plani.json'a alindi
+(BoJ Politika 35g · HKMA Okuma 45g · BOK & Piyasa 30g · Kore Okuma&Baglar
+30g). Nobet artik eskimeyi kendisi soyler — Okuma&Baglar (27 Tem) ve HKMA
+hemen/1 gunde dusecek, SISTEMIN CALISTIGININ KANITI.
+BASAMAK 2 (siradaki): koro satiri 4 canli uctan HESAPLANIR (boj/ecb/ecos +
+Fed takipcisi) — elle cumle kalmaz.
+BASAMAK 3: Ebu not motoru (§422) kv satirlarini da yeniden yazar; anlati
+paragraflari "arsiv" etiketiyle kuculur.
+DERS: otomasyona giden ilk adim veri cekmek degil, ESKIMEYI OLCULEBILIR
+kilmaktir — olcemedigin seyi otomatiklestirdigini iddia edemezsin.
+DEPLOY: ktpanel/guncelleme-plani.json.
+
 # BAKIM EK — §432 (9 Eyl 2026)
 
 ## §432 KORE KARTI CANLIYA BAGLANDI (ECOS_KEY alindi — §53'un sozu tutuldu)

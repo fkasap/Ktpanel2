@@ -291,6 +291,39 @@
    "son": "otomatik",
    "kaynak": "tazele.mjs §319 — ForexFactory/FairEconomy haftalık JSON (High + majör Medium)",
    "_319": "19 Agu: kullanici onayiyla acilan TAM OTOMATIK katman (⭐ istisna). Haftalik pencere, arsiv tutmaz. Kaynak limiti 5dk/2 istek — kosu basina 1 cekim, parse hatasi dosyayi KORUR."
+  },
+  {
+   "ad": "BoJ Politika kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-08-08",
+   "limit_gun": 35,
+   "kaynak": "BoJ toplantı takvimi (~6 haftada bir) — canlı satırlar /api/market?mod=boj; bu kart POLİTİKA anlatısı",
+   "_433": "§433: Asya damgalı kartları nöbete alındı — eskime artık otomatik görünür. Sıradaki basamak: koro satırının canlı hesaplanması."
+  },
+  {
+   "ad": "HKMA Okuma & Bölge Bağı kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-07-27",
+   "limit_gun": 45,
+   "kaynak": "Rejim anlatısı (currency board) — yavaş eskir; HIBOR/AB canlı"
+  },
+  {
+   "ad": "Kore BOK & Piyasa kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-09",
+   "limit_gun": 30,
+   "kaynak": "BOK toplantı takvimi + KOSPI olayları — canlı satırlar /api/market?mod=ecos"
+  },
+  {
+   "ad": "Kore Okuma & Bağlar kartı (koro dahil, damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-07-27",
+   "limit_gun": 30,
+   "kaynak": "Küresel koro + Kore rolü anlatısı — §433 basamak 2'de koro satırı canlıya taşınacak"
   }
  ],
  "bilanco_sezonu_aylar": [
