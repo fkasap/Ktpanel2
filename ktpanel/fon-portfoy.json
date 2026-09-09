@@ -1604,12 +1604,175 @@
      }
     }
    }
+  },
+  "IVF": {
+   "ad": "IVF-İSTANBULPORTFÖY KATILIM HİSSESENEDİ (TL) FONU(HSYF)",
+   "donemler": {
+    "2026-04": {
+     "baslik": {
+      "kod": "IVF",
+      "ad": "IVF-İSTANBULPORTFÖY KATILIM HİSSESENEDİ (TL) FONU(HSYF)",
+      "donem": "2026-04",
+      "fonToplamDegeri": 183857969.69,
+      "paySayisi": 28852906,
+      "payFiyati": 6.372251,
+      "aylikGetiri": 12.87,
+      "hisseOrtYuzde": 90,
+      "hisseDevirHizi": 0.37
+     },
+     "hisse": [
+      {
+       "kod": "EKGYO",
+       "agirlik": 8.29,
+       "deger": 15229220.58,
+       "nominal": 740001
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 6.97,
+       "deger": 12816403,
+       "nominal": 47293
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 6.41,
+       "deger": 11779344.4,
+       "nominal": 95923
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 6.25,
+       "deger": 11494678,
+       "nominal": 27352
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 5.94,
+       "deger": 10929312,
+       "nominal": 189745
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 5.87,
+       "deger": 10792532.5,
+       "nominal": 14555
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 4.84,
+       "deger": 8900812.8,
+       "nominal": 253440
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 4.6,
+       "deger": 8455717.44,
+       "nominal": 195192
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 4.15,
+       "deger": 7635712.5,
+       "nominal": 66397.5
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 4.06,
+       "deger": 7455999.2,
+       "nominal": 51922
+      },
+      {
+       "kod": "ARDYZ",
+       "agirlik": 3.94,
+       "deger": 7241350,
+       "nominal": 144250
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 3.76,
+       "deger": 6921644.25,
+       "nominal": 15563
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 3.64,
+       "deger": 6694753.2,
+       "nominal": 179484
+      },
+      {
+       "kod": "GRSEL",
+       "agirlik": 3.53,
+       "deger": 6481722,
+       "nominal": 21678
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 3.52,
+       "deger": 6465512.5,
+       "nominal": 517241
+      },
+      {
+       "kod": "EBEBK",
+       "agirlik": 3.38,
+       "deger": 6210556.4,
+       "nominal": 86498
+      },
+      {
+       "kod": "GRTHO",
+       "agirlik": 3.32,
+       "deger": 6104796,
+       "nominal": 23662
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 3.3,
+       "deger": 6064676,
+       "nominal": 11432
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 3.18,
+       "deger": 5852328.5,
+       "nominal": 30883
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 2.02,
+       "deger": 3716774.27,
+       "nominal": 441947
+      },
+      {
+       "kod": "FONET",
+       "agirlik": 2.01,
+       "deger": 3705861.78,
+       "nominal": 754758
+      }
+     ],
+     "hisseToplam": {
+      "deger": 170949707.32,
+      "grup": 100,
+      "fpd": 90.46,
+      "ftd": 92.98
+     },
+     "islem": {
+      "satis": {},
+      "alis": {}
+     },
+     "kaynak": {
+      "index": 1601895,
+      "objId": "4028328d9d7b24c8019dfdac80c21918",
+      "yayin": "06.05.2026 17:27:09",
+      "pdfBoyut": 110055,
+      "islendi": "2026-09-09"
+     }
+    }
+   }
   }
  },
  "guncelleme": "2026-09-09",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(47 fon, 9142 kayıt)",
- "pencereGun": 150,
+ "yol": "tarama(47 fon, 19536 kayıt)",
+ "pencereGun": 400,
  "evren_pasif": {
   "AC1": {
    "ad": "PARDUS PORTFÖY KISA VADELİ KATILIM SERBEST FONU",
