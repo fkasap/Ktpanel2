@@ -53,11 +53,13 @@ export function hisseleriOku(metin) {
   if (!m0) {
     /* §429r: şablon E (Yapı Kredi 'AYLIK RAPOR' vb.) — bir sonraki koşu kalıbı göstersin */
     const hi = metin.search(/H[İI]SSE\s*SENE/i);
-    const cevre = hi >= 0 ? metin.slice(hi, hi + 260).replace(/\s+/g, ' ') : '(HİSSE SENE… hiç geçmiyor)';
+    const ni = metin.search(/Nominal|NOM[İI]NAL/);
+    const cevre = ni >= 0 ? metin.slice(Math.max(0, ni - 120), ni + 220).replace(/\s+/g, ' ') : (hi >= 0 ? metin.slice(hi, hi + 260).replace(/\s+/g, ' ') : '(ne HİSSE ne Nominal geçiyor)');
     throw new Error('portföy tablosu başlığı yok · belge başı: "' + ornek() + '" · HİSSE çevresi: "' + cevre + '"');
   }
   const i0 = m0.index;
-  const m1 = metin.slice(i0).match(/H[İI]SSE\s*SENE[TD][Lİİ]?[EİI]?R?[İI]?/);
+  /* §429s: önce TAM 'HİSSE SENETLERİ' (MAC'ta gevşek kalıp 'HİSSE SENEDİ ALIMI' bölümüne takılıyordu), sonra gevşek */
+  const m1 = metin.slice(i0).match(/HİSSE SENETLERİ/) || metin.slice(i0).match(/H[İI]SSE\s*SENE[TD][Lİİ]?[EİI]?R?[İI]?/);
   if (!m1) throw new Error('HİSSE SENETLERİ bölümü yok · belge başı: "' + ornek() + '"');
   const i1 = i0 + m1.index;
   /* §429i: eski nesil şablonda GRUP TOPLAMI satırı yok (ELZ/TLZ canlı vakası).
@@ -122,6 +124,18 @@ export function hisseleriOku(metin) {
       r.nominal += sayi(md[2]); r.deger += sayi(md[3]); r.ftd += sayi(md[4]); r.grup += sayi(md[4]); r.satir++;
     }
   }
+  /* §429s ŞABLON E (canlı TZD/ZPE/ZPJ — Ziraat ailesi): '1 AEFES.E ANADOLU EFES 875.000,000
+     16.607.500,00 1,730564 17,692' — sıra no · KOD.E · ad · nominal(3 ond.) · rayiç değer ·
+     oran % (6 ond., fon toplamına göre) · birim alış fiyatı. */
+  if (satir === 0) {
+    const reE = /^\s*\d+\s+([A-Z0-9]{3,6})\.E\s+.+?\s+([\d.]+,\d{3})\s+([\d.]+,\d{2})\s+([\d.]+,\d{3,})\s+([\d.]+,\d+)\s*$/gm;
+    let me; while ((me = reE.exec(blok))) {
+      satir++;
+      const k = me[1];
+      const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'E' });
+      r.nominal += sayi(me[2]); r.deger += sayi(me[3]); r.ftd += sayi(me[4]); r.grup += sayi(me[4]); r.borsaFiyat = sayi(me[5]); r.satir++;
+    }
+  }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
   /* §429i teşhis: HİSSE bloğunda kod gibi başlayıp regex'e OTURMAYAN satırlar
      (IVF/PUK %93-95 vakasının kimliği bir sonraki koşuda görünsün) */
@@ -162,7 +176,7 @@ export function denetle(hisse) {
   const sorun = [];
   /* §429l: KLH canlı vakası — tek hisseli fon (FZLGY %99) meşru; taban 1 */
   if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak.slice(0, 2).join('" | "') + '"' : ' · bölümde aday satır da yok · BLOK BAŞI: "' + String(hisse.blokBasi || '').slice(0, 220) + '"'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
-  const sablonB = hisse.liste.some(r => r.sablon === 'B' || r.sablon === 'C' || r.sablon === 'D');
+  const sablonB = hisse.liste.some(r => r.sablon && r.sablon !== 'A');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
   if (!sablonB && Math.abs(grupT - 100) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (100±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIRLAR: "' + hisse.kacak.slice(0, 3).join('" | "') + '"' : ''));
