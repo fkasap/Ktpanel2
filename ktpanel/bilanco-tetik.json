@@ -307,7 +307,8 @@
   "BRLSM": "2026-09-03",
   "TGSAS": "2026-09-03",
   "BALSU": "2026-09-08",
-  "VEYAS": "2026-09-09"
+  "VEYAS": "2026-09-09",
+  "KAYSE": "2026-09-09"
  },
  "evren_disi": [
   "ADESE",
@@ -389,6 +390,7 @@
   "IZINV",
   "IZMDC",
   "KARCL",
+  "KAYSE",
   "KERVN",
   "KFEIN",
   "KGYO",
@@ -479,8 +481,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 168,
- "pencere_sayi": 2,
+ "evren_disi_sayi": 169,
+ "pencere_sayi": 3,
  "dusen_son": [],
- "guncelleme": "2026-09-09 13:18 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-09 15:14 UTC — otomatik (KAP FR · kümülatif §299)"
 }

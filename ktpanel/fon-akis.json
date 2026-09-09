@@ -173349,7 +173349,6 @@
   "PKV": "PARDUS PORTFÖY YÖNETİMİ A.Ş.",
   "PLR": "OSMANLI PORTFÖY YÖNETİMİ A.Ş.",
   "PMP": "PARDUS PORTFÖY YÖNETİMİ A.Ş.",
-  "PNU": "PUSULA PORTFÖY YÖNETİMİ A.Ş.",
   "PO9": "PARDUS PORTFÖY YÖNETİMİ A.Ş.",
   "POS": "PARDUS PORTFÖY YÖNETİMİ A.Ş.",
   "PP1": "PARDUS PORTFÖY YÖNETİMİ A.Ş.",
@@ -173373,7 +173372,6 @@
   "PRR": "INVEO PORTFÖY YÖNETİMİ A.Ş.",
   "PRU": "ALLBATROSS PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ",
   "PRV": "ASTRA PORTFÖY YÖNETİMİ A.Ş.",
-  "PRY": "PUSULA PORTFÖY YÖNETİMİ A.Ş.",
   "PSE": "ATLAS PORTFÖY YÖNETİMİ A.Ş.",
   "PSH": "DENİZ PORTFÖY YÖNETİMİ A.Ş",
   "PSL": "AZİMUT PORTFÖY YÖNETİMİ A.Ş.",
@@ -174356,6 +174354,7 @@
   "PLS": "DENİZ PORTFÖY",
   "PMG": "İŞ PORTFÖY",
   "PMH": "PARDUS PORTFÖY",
+  "PNU": "PUSULA PORTFÖY",
   "PO7": "PARDUS PORTFÖY",
   "PO8": "PARDUS PORTFÖY",
   "POB": "PARDUS PORTFÖY",
@@ -174368,6 +174367,7 @@
   "PPO": "PARDUS PORTFÖY",
   "PPU": "PARDUS PORTFÖY",
   "PRF": "AZİMUT PORTFÖY",
+  "PRY": "PUSULA PORTFÖY",
   "PSD": "İŞ PORTFÖY",
   "PSG": "AZİMUT PORTFÖY",
   "PSO": "İŞ PORTFÖY",
@@ -174647,7 +174647,7 @@
   "gun": "2026-09-09",
   "onceki": "2026-09-08",
   "adet": 69,
-  "eslesmeyen": 10,
+  "eslesmeyen": 9,
   "liste": [
    {
     "ad": "TERA",
@@ -174961,8 +174961,8 @@
    },
    {
     "ad": "PUSULA",
-    "net": -2261794181,
-    "fon": 18
+    "net": -2262377469,
+    "fon": 19
    },
    {
     "ad": "ALBARAKA",
@@ -175344,8 +175344,8 @@
     },
     {
      "ad": "PUSULA",
-     "net": -70419461425,
-     "fon": 18
+     "net": -70947570168,
+     "fon": 19
     }
    ],
    "fon": [
