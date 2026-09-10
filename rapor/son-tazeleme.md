@@ -9,19 +9,17 @@ Katman: `fonportfoy` · Veri dizini: `ktpanel`
 - §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
 - §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
 
-- §429p kuyruk: liste 198 kayıt · daha önce işlenmiş 101 idx · iş 65
+- §429p kuyruk: liste 198 kayıt · daha önce işlenmiş 117 idx · iş 49
 
-### Fon portföy dağılımı (§429) — ✓ 43 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 165 dönem · KAP yolu: tarama(47 fon, 6898 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
-- bu turda hedef 65 (tur tavanı 80; kalan sonraki koşuda)
-- ⚠ hata (ilk 3, tanılı): ELZ null: terminated
-  · KPC null: fetch failed
-  · KPU null: fetch failed
-  …+19
+### Fon portföy dağılımı (§429) — ✓ 47 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 165 dönem · KAP yolu: tarama(47 fon, 6898 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+- bu turda hedef 49 (tur tavanı 80; kalan sonraki koşuda)
+- ⚠ hata (ilk 3, tanılı): OHK null: fetch failed
+  · KLH null: fetch failed
 
 
 ---
-**Sonuç:** fon portföy (43 rapor)
+**Sonuç:** fon portföy (47 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Fon portföy dağılımı (§429) — 103 sn
-- toplam: 103 sn
+- ⏱ Fon portföy dağılımı (§429) — 66 sn
+- toplam: 66 sn
