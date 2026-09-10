@@ -18,7 +18,7 @@ const sayiUS = s => { if (s == null) return null; const v = parseFloat(String(s)
 const AYLAR = { ocak: 1, subat: 2, mart: 3, nisan: 4, mayis: 5, haziran: 6, temmuz: 7, agustos: 8, eylul: 9, ekim: 10, kasim: 11, aralik: 12 };   /* §429m: yalnız ASCII anahtar, girdi katlanır */
 
 export function basligiOku(metin) {
-  const bas = metin.slice(0, 6000);
+  const bas = metin.slice(0, 6000).match(/PORTF[ÖO]Y\s*DA[ĞG]ILIM|Fonun Adı|FONU TANITICI/) ? metin.slice(0, 6000) : metin.slice(0, 400000);   /* §434e IVF: ek sırası ters gelince başlık ilerde */
   const ad = (bas.match(/A-\)Fonun Adı\s*:\s*([^\n]+)/) || [])[1];
   const kod = (bas.match(/^\s*([A-Z0-9]{2,5})-/m) || [])[1];
   let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m) || bas.match(/\b([A-Za-zÇĞİÖŞÜçğıöşü]{3,8})\s*-\s*(20\d\d)\b/);   /* §434d PKD: 'Ağustos - 2026' */
@@ -87,7 +87,7 @@ export function hisseleriOku(metin) {
   const gPoz = []; { let g = metin.indexOf('GRUP TOPLAMI', i1); while (g >= 0 && g < anaSon) { gPoz.push(g); g = metin.indexOf('GRUP TOPLAMI', g + 12); } }
   const satirSonuOf = pos => { const e = metin.indexOf('\n', pos + 12); return e > 0 ? e + 1 : pos + 12; };
   const kolonSoz = /İHRAÇ|NOM[İI]NAL|F[İI]YAT|TAR[İI]H|DE[ĞG]ER|VADE|DÖV[İI]Z|ORAN|TOPLAM|KIYMET|KOD|GRUP/;
-  const sukukIzi = /Taahh[üu]t\s+S[öo]zle[şs]mesi|HAZ[İI]NE|TRD\d{6}T\d{2}|K[İI]RA SERT|SUKUK|BORÇLANMA/i;   /* §434d: IVF/KTS — ikinci GRUP TOPLAMI hazine kira sertifikasıydı */
+  const sukukIzi = /Taahh[üu]t\s+S[öo]zle[şs]mesi|HAZ[İI]NE|TRD\d{6}T\d{2}|K[İI]RA SERT|SUKUK|BORÇLANMA|\bF_[A-Z0-9]{3,6}\d{4}\b|VADEL[İI]/i;   /* §434e: PKD — VİOP vadeli (F_KRDMD0726) */   /* §434d: IVF/KTS — ikinci GRUP TOPLAMI hazine kira sertifikasıydı */
   const baskaSinif = ara => sukukIzi.test(ara) || ara.split('\n').some(l => { const t = l.trim(); if (t.length < 6 || /\d/.test(t) || kolonSoz.test(t)) return false; const harf = t.replace(/[^A-ZĞÜŞİÖÇ]/g, ''); if (harf.length < 6 || harf !== t.replace(/[^A-ZĞÜŞİÖÇ]/g, '') || t !== t.toUpperCase()) return false; return !/H[İI]SSE|PAY/.test(t); });
   if (gPoz.length) {
     let k = 0;
@@ -102,7 +102,7 @@ export function hisseleriOku(metin) {
   /* §429j: alış fiyatı NEGATİF ve çok haneli olabilir (IVF canlı: ASELS -0,055199 — temettü düzeltmeli maliyet) */
   /* §429t: 'KUL ' öneki (KCV) isteğe bağlı · taahhüt no alt çizgili olabilir (MPS '80_100_5') */
   /* §434c: yabancı hisse satırında piyasa eki (KCV: 'LLY US USD …') */
-  const re = /^\s*(?:KUL\s+)?([A-Z0-9]{3,6})(?:\s+[A-Z]{2})?\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  const re = /^\s*(?:KUL\s+)?([A-Z0-9][A-Z0-9.]{1,6})(?:\s+[A-Z]{2})?\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   const kod = {};
   let m, satir = 0;
   while ((m = re.exec(blok))) {
@@ -179,7 +179,7 @@ export function hisseleriOku(metin) {
   const tuketilen = new Set(); let mm; const re2 = new RegExp(re.source, 'gm');
   while ((mm = re2.exec(blok))) tuketilen.add(mm.index);
   const kacak = [];
-  for (const sm of blok.matchAll(/^\s*[A-Z0-9]{3,6}\s+[^\n]{20,}$/gm)) {
+  for (const sm of blok.matchAll(/^\s*(?:KUL\s+)?[A-Z0-9][A-Z0-9.]{1,6}(?:\s+[A-Z]{2})?\s+[^\n]{20,}$/gm)) {
     if (/^\s*GRUP\s+TOPLAMI/.test(sm[0])) continue;
     const say = (sm[0].match(/-?[\d.,]+[.,]\d/g) || []).length;
     if (say >= 3 && !tuketilen.has(sm.index) && kacak.length < 3) kacak.push(sm[0].replace(/\s+/g, ' ').trim().slice(0, 150));
