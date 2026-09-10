@@ -6,6 +6,28 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §437 (10 Eyl 2026)
+
+## §437 KAP ARSIVI HIZLI MOD — AYRISTIRICI ACTIONS'A TASINDI
+
+OLCUM: arsiv 90/246 sirket, 81'inde yalniz 5 ceyrek (faktor evreni yan urunu),
+15 ceyregi tam sirket SIFIR, 8+ tek sirket (EGGUB). §381 kosu basina 2 sirket
+(parti 2, Vercel koprusu, 2,5 sn aralik) -> evren yillar surer. Fon zinciri
+Actions'in KAP'a dogrudan 300+ istek/kosu atabildigini kanitladi; darbogaz KAP
+degil KOPRU.
+YAPILAN: kapHamAyristir() TAZELE ICINDE (kullanici karari: yeni .mjs yok) — kap.js mod=ham'in §340d-e ayristiricisinin
+birebir tasinmisi (ayni sema; sentetik test: birim bin TL, 3 satir, parantezli
+negatif). tazele kapArsiv(): HIZLI mod (YALNIZ --katman=kaparsiv; §437b kullanici karari: hepsi/Cumartesi yavas tempoda kalir, yavas dolum surer) ham
+sayfayi dogrudan KAP'tan ceker, yerelde ayristirir; parti 25, sirket basina 15
+ceyrek, 600 ms; 30 sn on-bekleme yok. Donem listesi koprude kaldi (hafif).
+Koprulu yavas yol korunur (hamAyristir yuklenemezse). Kok seviye kaparsiv
+katmani; workflow aciklamasina eklendi.
+BEKLENTI: ~10 elle kosu (ya da 3-4 Cumartesi) ile 246 x 15 dolar; §435
+arsiv-oncelik sayesinde Finansal Tablolar sekmesi KAP'a gitmeden acilir.
+RISK: KAP oturum/hiz siniri — §384 ceza sayaci korunuyor; dusen sirket sona
+atilir. Ilk kosuda eklenen/dusen orani olculecek.
+DEPLOY: scripts/tazele.mjs · .github/workflows/tazele.yml.
+
 # BAKIM EK — §435–§436 (10 Eyl 2026)
 
 ## §435 FINANSAL TABLOLAR: ARSIV-ONCELIK (sekme turu bulgusu)
