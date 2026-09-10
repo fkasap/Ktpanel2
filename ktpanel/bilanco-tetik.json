@@ -1,12 +1,11 @@
 {
- "tarih": "2026-09-09",
+ "tarih": "2026-09-10",
  "kodlar": [
   "AKHAN",
   "ALFAS",
   "ALKIM",
   "ALKLC",
   "ALTNY",
-  "ALVES",
   "BERA",
   "BIENY",
   "BIMAS",
@@ -70,7 +69,7 @@
   "YATAS",
   "YEOTK"
  ],
- "sayi": 68,
+ "sayi": 67,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -316,6 +315,7 @@
   "AKSFA",
   "AKYHO",
   "ALARK",
+  "ALVES",
   "ANELE",
   "ARSAN",
   "ARSNF",
@@ -481,8 +481,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 169,
- "pencere_sayi": 3,
+ "evren_disi_sayi": 170,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-09-09 18:31 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-10 06:34 UTC — otomatik (KAP FR · kümülatif §299)"
 }
