@@ -313,5 +313,13 @@ export function raporuAyristir(metin) {
     d = { gecti: true, sorun: [], not: 'hisse yok (varlık tablosu: ' + JSON.stringify(gr.varlik) + ')' };
   }
   const islem = islemleriOku(metin);   /* §434: varlık dağılımı isteğe bağlı, hisse denetimini etkilemez */
+  /* §434f: hisse payı MUTABAKATLI hisse tablosundan (gruplariOku sayfa tekrarında çift sayabiliyordu: NNF %190);
+     toplam 90-110 dışıysa dağılım TUTARSIZ damgalanır, ekran/risk kartı kullanmaz, dönem yeniden okunur. */
+  if (gr.varlik) {
+    if (hisse.liste.length) gr.varlik.hisse = +hisse.liste.reduce((a, r) => a + (r.agirlik || 0), 0).toFixed(2);
+    const toplamV = Object.keys(gr.varlik).filter(k => !k.startsWith('_')).reduce((a, k) => a + (gr.varlik[k] || 0), 0);
+    gr.varlik._toplam = +toplamV.toFixed(2);
+    if (toplamV < 90 || toplamV > 110 || Object.keys(gr.varlik).some(k => !k.startsWith('_') && gr.varlik[k] > 100.5)) gr.varlik._tutarsiz = true;
+  }
   return { baslik, hisse: hisse.liste, hisseToplam: hisse.toplam, islem, denetim: d, varlik: gr.varlik, gruplar: gr.gruplar, diger: gr.diger };
 }

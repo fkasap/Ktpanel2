@@ -2602,7 +2602,7 @@ async function fonPortfoy() {
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
   /* §434 GEÇİŞ: varlık alanı olmayan (eski) dönemler 'işlenmiş' sayılmaz → KAP'tan yeniden okunur (kaynak kalıcı, bedava) */
-  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index && ('varlik' in x)) islenmisIdx.add(String(x.kaynak.index)); }));
+  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index && ('varlik' in x) && !(x.varlik && (x.varlik._tutarsiz || (x.varlik.hisse || 0) > 100.5))) islenmisIdx.add(String(x.kaynak.index)); }));   /* §434f: tutarsız dağılım yeniden okunur */
   liste.forEach(b => {
     const kod = b.__evrenKod || kodAl(b), index = idxAl(b); if (!kod || !index) return;
     if (b.__evrenKod && kodAl(b) && d.evren[kod] && !d.evren[kod].kapKod) d.evren[kod].kapKod = kodAl(b);   /* §429f: KAP kodu farklıysa öğren */
