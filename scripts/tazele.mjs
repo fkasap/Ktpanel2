@@ -2602,7 +2602,7 @@ async function fonPortfoy() {
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
   /* §434 GEÇİŞ: varlık alanı olmayan (eski) dönemler 'işlenmiş' sayılmaz → KAP'tan yeniden okunur (kaynak kalıcı, bedava) */
-  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index && ('varlik' in x) && !(x.varlik && (x.varlik._tutarsiz || (x.varlik.hisse || 0) > 100.5))) islenmisIdx.add(String(x.kaynak.index)); }));   /* §434f: tutarsız dağılım yeniden okunur */
+  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index && ('varlik' in x) && !(x.varlik && (x.varlik._tutarsiz || (x.varlik.hisse || 0) > 100.5)) && !(x.kaynak && !x.kaynak.islemIz && x.islem && !Object.keys(x.islem.alis || {}).length && !Object.keys(x.islem.satis || {}).length)) islenmisIdx.add(String(x.kaynak.index)); }));   /* §434g: işlemi boş ve izsiz dönem bir kez yeniden okunur */   /* §434f: tutarsız dağılım yeniden okunur */
   liste.forEach(b => {
     const kod = b.__evrenKod || kodAl(b), index = idxAl(b); if (!kod || !index) return;
     if (b.__evrenKod && kodAl(b) && d.evren[kod] && !d.evren[kod].kapKod) d.evren[kod].kapKod = kodAl(b);   /* §429f: KAP kodu farklıysa öğren */
@@ -2670,7 +2670,7 @@ async function fonPortfoy() {
         islem: { alis: kirp(r.islem.alis), satis: kirp(r.islem.satis) },   /* §431 sıkılaştırma (bu tabana): işlem sayacı/nominal atılır */
         varlik: r.varlik || null,   /* §434: kategori bazlı FTD % + _portfoyDegeriYuzde/_hazirDeger/_alacak/_borc */
         diger: (r.diger || []).map(x => ({ kod: x.kod, kategori: x.kategori, agirlik: x.agirlik, deger: x.deger })),
-        kaynak: { index: is.index, objId: obj, yayin: is.yayin, pdfBoyut: buf.length, islendi: bugun }
+        kaynak: { index: is.index, objId: obj, yayin: is.yayin, islendi: bugun, ek: objler.length, metinUz: txt.length, islemIz: r.islem && r.islem._iz }   /* §434g teşhis izi */
       };
       { const F2 = d.fonlar[is.kod]; const dk = Object.keys(F2.donemler).sort(); dk.slice(0, Math.max(0, dk.length - 6)).forEach(x => delete F2.donemler[x]); }   /* §431 budama: son 6 dönem */
       yazildi++; await uyku(500);

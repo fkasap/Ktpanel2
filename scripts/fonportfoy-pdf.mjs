@@ -199,10 +199,17 @@ export function hisseleriOku(metin) {
 
 /* Ay içi işlemler: satışlar ve alışlar, kod bazında toplam */
 export function islemleriOku(metin) {
-  const bolum = (baslik) => {
-    const i = metin.indexOf(baslik); if (i < 0) return null;
-    const j = metin.indexOf('Toplamı:', i); if (j < 0) return null;
-    return metin.slice(i, j);
+  /* §434g: Ağustos 2026 raporlarında işlem bölümü boş okundu (KPU Nis-Tem dolu, Ağu 0) —
+     başlık birebir aranıyordu; artık toleranslı ('A) HİSSE SENETLERİ (ALIŞLAR)' boşluk/İ türevleri),
+     bölüm sonu 'Toplamı:' ya da bir sonraki harfli başlık. */
+  const bolum = (tip) => {
+    const re = new RegExp('[A-Z]\\)\\s*H[İI]SSE\\s*SENE[TD][Lİİ]?[EİI]?R?[İI]?\\s*\\(\\s*' + tip + '\\s*\\)', 'i');
+    const m = metin.match(re); if (!m) return null;
+    const i = m.index;
+    const kalan = metin.slice(i + m[0].length);
+    const j1 = kalan.search(/Toplam[ıi]\s*:/); const j2 = kalan.search(/\n\s*[B-Z]\)\s*[A-ZÇĞİÖŞÜ]/);
+    const j = (j1 >= 0 && (j2 < 0 || j1 < j2)) ? j1 : j2;
+    return j >= 0 ? kalan.slice(0, j) : kalan.slice(0, 200000);
   };
   const oku = (blok) => {
     const out = {}; if (!blok) return out;
@@ -211,7 +218,8 @@ export function islemleriOku(metin) {
     Object.values(out).forEach(r => { r.deger = +r.deger.toFixed(2); r.nominal = +r.nominal.toFixed(2); });
     return out;
   };
-  return { satis: oku(bolum('A) HİSSE SENETLERİ(SATIŞLAR)')), alis: oku(bolum('A) HİSSE SENETLERİ(ALIŞLAR)')) };
+  const bS = bolum('SATI[ŞS]LAR'), bA = bolum('ALI[ŞS]LAR');
+  return { satis: oku(bS), alis: oku(bA), _iz: { satisBolum: bS != null, alisBolum: bA != null, satisUz: bS ? bS.length : 0, alisUz: bA ? bA.length : 0 } };
 }
 
 
