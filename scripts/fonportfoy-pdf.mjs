@@ -161,12 +161,14 @@ export function hisseleriOku(metin) {
     }
   }
   if (satir === 0) {
-    const reF = /^\s*([A-Z0-9]{3,6})\s+TR[A-Z0-9]{10}\s+.+?\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d+)\s*%?\s*$/gm;
+    /* §434b: YHK sayıları ABD biçimi (400,000.00 · 0.72) — TR ve ABD birlikte kabul, biçim satırdan sezilir */
+    const reF = /^\s*([A-Z0-9]{3,6})\s+TR[A-Z0-9]{10}\s+.+?\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s*%?\s*$/gm;
+    const oku = v => /\.\d{2}$/.test(v) && /,\d{3}/.test(v) || (/\.\d{1,2}$/.test(v) && !/,/.test(v)) ? sayiUS(v) : sayi(v);
     let mf2; while ((mf2 = reF.exec(blok))) {
       satir++;
       const k = mf2[1];
       const r = kod[k] || (kod[k] = { kod: k, pb: 'TL', nominal: 0, deger: 0, grup: 0, fpd: 0, ftd: 0, borsaFiyat: null, satir: 0, sablon: 'F' });
-      r.nominal += sayi(mf2[2]); r.deger += sayi(mf2[3]); r.ftd += sayi(mf2[4]); r.grup += sayi(mf2[4]); r.satir++;
+      r.nominal += oku(mf2[2]); r.deger += oku(mf2[3]); r.ftd += oku(mf2[4]); r.grup += oku(mf2[4]); r.satir++;
     }
   }
   /* GRUP TOPLAMI satırı: nominal_toplam  deger_toplam  100,00  fpd  ftd */
@@ -176,7 +178,8 @@ export function hisseleriOku(metin) {
   while ((mm = re2.exec(blok))) tuketilen.add(mm.index);
   const kacak = [];
   for (const sm of blok.matchAll(/^\s*[A-Z0-9]{3,6}\s+[^\n]{20,}$/gm)) {
-    const say = (sm[0].match(/-?[\d.]+,\d/g) || []).length;
+    if (/^\s*GRUP\s+TOPLAMI/.test(sm[0])) continue;
+    const say = (sm[0].match(/-?[\d.,]+[.,]\d/g) || []).length;
     if (say >= 3 && !tuketilen.has(sm.index) && kacak.length < 3) kacak.push(sm[0].replace(/\s+/g, ' ').trim().slice(0, 150));
   }
   let toplam = null; const gorulenGT = new Set();
@@ -277,7 +280,7 @@ export function denetle(hisse) {
   if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak.slice(0, 2).join('" | "') + '"' : ' · bölümde aday satır da yok · BLOK BAŞI: "' + String(hisse.blokBasi || '').slice(0, 220) + '"'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
   const sablonB = hisse.liste.some(r => r.sablon && r.sablon !== 'A');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
-  const grupHedef = (hisse.toplam && hisse.toplam.adet > 1) ? hisse.toplam.grup : 100;   /* §429u: çok gruplu fonda hedef = grup toplamlarının toplamı */
+  const grupHedef = (hisse.toplam && hisse.toplam.grup) ? hisse.toplam.grup : 100;   /* §434b (KCV): grup % sütunu bazı kurucularda 100'e tamamlanmaz — hedef RAPORUN KENDİ toplam satırı */
   if (!sablonB && Math.abs(grupT - grupHedef) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (' + grupHedef + '±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIRLAR: "' + hisse.kacak.slice(0, 3).join('" | "') + '"' : ''));
   const cokParali = hisse.liste.some(r => r.pb && r.pb !== 'TL');

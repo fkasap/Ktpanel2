@@ -2617,7 +2617,10 @@ async function fonPortfoy() {
   /* aynı (kod,dönem) için en son yayın kazanır; dönemi bilinmeyenler ayrı tutulur */
   const tekil = {}; isler.forEach(i => { const k = i.kod + '|' + (i.donem || ('idx' + i.index)); if (!tekil[k] || String(tekil[k].index) < String(i.index)) tekil[k] = i; });
   /* §429b: deposu boş (yeni eklenen) fonlar ÖNCE, sonra yeni dönemden eskiye */
-  const sira = Object.values(tekil).sort((a, b) => ((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || (String(b.donem || '') > String(a.donem || '') ? 1 : -1)).slice(0, 120);   /* §431: tur tavanı 120 */
+  /* §434b: yeniden okuma (varlık geçişi) yükü KAP/pdftotext'i kesiyordu (#223: 73 terminated/fetch failed) —
+     hiç işlenmemiş dönem ÖNCE, yeniden okuma sonra; tur tavanı 80 */
+  const yenidenMi = i => Object.values(d.fonlar[i.kod] ? d.fonlar[i.kod].donemler : {}).some(x => x.kaynak && String(x.kaynak.index) === String(i.index));
+  const sira = Object.values(tekil).sort((a, b) => ((yenidenMi(a) ? 1 : 0) - (yenidenMi(b) ? 1 : 0)) || (((d.fonlar[a.kod] ? 1 : 0) - (d.fonlar[b.kod] ? 1 : 0)) || ((String(b.donem || '') > String(a.donem || '')) ? 1 : -1))).slice(0, 80);
   let yazildi = 0, dusen = [], hata = [];
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fonpd-'));
   for (const is of sira) {
@@ -2635,7 +2638,7 @@ async function fonPortfoy() {
         if (!rp.ok) continue;
         const buf = Buffer.from(await rp.arrayBuffer()); toplamB += buf.length;
         const pf = path.join(tmp, is.kod + '-' + is.donem + '-' + o.slice(-6) + '.pdf'); await fs.writeFile(pf, buf);
-        try { txt += '\n' + cp.execSync('pdftotext -layout "' + pf + '" -', { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }); } catch (e2) {}
+        try { txt += '\n' + cp.execSync('pdftotext -layout "' + pf + '" -', { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'], timeout: 90000 }); } catch (e2) { hata.push(is.kod + ' ' + (is.donem||'') + ': pdftotext ' + String(e2.signal || e2.code || e2.message).slice(0, 40)); }
         if (objler.length > 1) await uyku(250);
       }
       const buf = { length: toplamB };
@@ -2679,7 +2682,7 @@ async function fonPortfoy() {
   await yaz(dosya, d);
   const fonSay = Object.keys(d.fonlar).length, donemSay = Object.values(d.fonlar).reduce((a, f) => a + Object.keys(f.donemler || {}).length, 0);
   raporlar.push('### Fon portföy dağılımı (§429) — ' + (yazildi ? '✓ ' : '⏭ ') + yazildi + ' rapor işlendi · evren ' + evrenKod.length + ' fon (oto +' + otoN + ') · depo ' + fonSay + ' fon / ' + donemSay + ' dönem · KAP yolu: ' + yol + ' · pencere ' + pencereGun + ' gün' + (Object.keys(d.basarisiz||{}).length ? ' · kalıcı istisna ' + Object.keys(d.basarisiz).length + ' fon' : '') +
-    (sira.length > yazildi ? '\n- bu turda hedef ' + sira.length + ' (tur tavanı 120; kalan sonraki koşuda)' : '') +
+    (sira.length > yazildi ? '\n- bu turda hedef ' + sira.length + ' (tur tavanı 80; kalan sonraki koşuda)' : '') +
     (dusen.length ? '\n- ⚠ denetimden düşen (yazılmadı): ' + dusen.slice(0, 5).join(' · ') : '') +
     (hata.length ? '\n- ⚠ hata (ilk 3, tanılı): ' + hata.slice(0, 3).join('\n  · ') + (hata.length > 3 ? '\n  …+' + (hata.length - 3) : '') : ''));
   if (yazildi) degisenler.push('fon portföy (' + yazildi + ' rapor)');
