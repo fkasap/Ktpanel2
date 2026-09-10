@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260910b';   // SS434h islem ayi ayri secilir (kisa surum raporlar)
+const KTP_SURUM = '20260910c';   // SS435 finansal tablolar arsiv-oncelik
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8135,6 +8135,7 @@ async function multipleInit(){
    DERS: AYNI ÇÖZÜMÜ İKİNCİ KEZ YAZIYORSAN ORTAK YERE TAŞI. */
 const KAP_DL_ANAHTAR = 'ktp_kap_donem_v1';
 async function kapDonemListesi(kod, yil){
+  try{ await kapArsivYukle(kod); }catch(e){}   /* §435: şirket seçilince arşiv bir kez yüklenir; dönem kimlikleri csDonemCek'te önce buradan bulunur */
   const oku=()=>{ try{ return JSON.parse(localStorage.getItem(KAP_DL_ANAHTAR)||'{}'); }catch(e){ return {}; } };
   const yaz=(o)=>{ try{ localStorage.setItem(KAP_DL_ANAHTAR, JSON.stringify(o)); }catch(e){} };
   const dl=oku(), kayit=dl[kod], TAZE=12*3600*1000;
@@ -10057,9 +10058,27 @@ const CS_KALEM = [
   ['ifrs-full_CashFlowsFromUsedInInvestingActivities','Yatırım Nakit Akışı','Nakit Akış','akis'],
   ['ifrs-full_CashFlowsFromUsedInFinancingActivities','Finansman Nakit Akışı','Nakit Akış','akis']
 ];
+/* ── §435 ARŞİV-ÖNCELİK (10 Eyl): §381 KAP arşivi (kap-arsiv/<KOD>.json, 90 şirket, çeyrek
+   kayıtları /api/kap?mod=ham ile AYNI şemada) önce okunur; dönem kimliği arşivde varsa KAP'a
+   gidilmez (15 istek → 0). Arşivde yoksa eski yol. Sessiz değil: kaynak alanı 'arşiv'/'kap'. */
+window.__kapArsiv = window.__kapArsiv || { idx:{}, yuklenen:{} };
+async function kapArsivYukle(kod){
+  kod = String(kod||'').toUpperCase(); if(!kod || window.__kapArsiv.yuklenen[kod]!=null) return;
+  window.__kapArsiv.yuklenen[kod] = false;
+  try{
+    const r = await fetch('/kap-arsiv/'+kod+'.json', {cache:'no-store'});
+    if(!r.ok) return;
+    const j = await r.json(); const dn = j.donemler||{}; let n=0;
+    Object.keys(dn).forEach(k=>{ const d=dn[k]; if(d && d.id && d.tablolar){ window.__kapArsiv.idx[String(d.id)] = d; n++; } });
+    window.__kapArsiv.yuklenen[kod] = n;
+  }catch(e){}
+}
 async function csDonemCek(id){
-  const r = await fetch('/api/kap?mod=ham&id='+encodeURIComponent(id), {cache:'no-store'});
-  const j = await r.json();
+  let j = window.__kapArsiv.idx[String(id)] ? Object.assign({ ok:true, __kaynak:'arşiv' }, window.__kapArsiv.idx[String(id)]) : null;
+  if(!j){
+    const r = await fetch('/api/kap?mod=ham&id='+encodeURIComponent(id), {cache:'no-store'});
+    j = await r.json(); if(j) j.__kaynak='kap';
+  }
   if(!j || !j.ok) throw new Error((j&&j.err)||'ham tablo alınamadı');
   const carpan = (j.birim && j.birim.carpan) || 1;
   /* xbrl -> {k: kumulatif/donem-sonu, c: ceyrek|null} */
@@ -10073,7 +10092,7 @@ async function csDonemCek(id){
         c: (d.length>=4 && Number.isFinite(d[2])) ? d[2]*carpan : null };
     });
   });
-  return { kalem, birim:(j.birim&&j.birim.ad)||null, carpan, tablo:(j.tablolar||[]).map(t=>t.ad), ts:Date.now() };
+  return { kalem, birim:(j.birim&&j.birim.ad)||null, carpan, tablo:(j.tablolar||[]).map(t=>t.ad), ts:Date.now(), kaynak:j.__kaynak||'kap' };
 }
 /* ── §347 EBU KÖPRÜSÜ: çeyreklik seri özeti (20 Ağu, kullanıcı isteği) ──────
    "Ebu'yu son çeyreğe bağlayamaz mıyız, bu tabloyu okusun."
@@ -11364,7 +11383,8 @@ async function csGetirCalis(){
   };
   await Promise.all([isci(),isci(),isci()]);      /* 3'lü paralel — KAP'ı zorlamadan */
   csOnbellekYaz(ob);
-  if(d) d.textContent='✓ '+Object.keys(veri).length+'/'+liste.length+' çeyrek'+(hata.length?(' · '+hata.length+' alınamadı'):'')+' · önbelleğe yazıldı';
+  const arsivden = Object.values(veri).filter(v=>v&&v.kaynak==='arşiv').length;   /* §435 */
+  if(d) d.textContent='✓ '+Object.keys(veri).length+'/'+liste.length+' çeyrek'+(hata.length?(' · '+hata.length+' alınamadı'):'')+(arsivden?' · '+arsivden+' çeyrek KAP arşivinden (§381, tek istek)':'')+' · önbelleğe yazıldı';
   csTabloBas(kod, liste, veri, hata);
 }
 /* ── §342 ÇEYREKLİK TÜRETME + METRİK MOTORU ────────────────────────────────

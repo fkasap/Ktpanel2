@@ -6,6 +6,34 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §435–§436 (10 Eyl 2026)
+
+## §435 FINANSAL TABLOLAR: ARSIV-ONCELIK (sekme turu bulgusu)
+Sekme turu (21 sekme, otomatik tarama) t23'u "bos" sandi — degildi: talep uzerine
+calisan arac (sirket sec, 15 ceyregi KAP'tan tek tek cek). Asil acik §381'in notu:
+kap-arsiv/<KOD>.json (90 sirket, ceyrek kayitlari /api/kap?mod=ham ile AYNI sema)
+hazirken sekme hala KAP'a gidiyordu. YAPILAN: kapDonemListesi() sirket secilince
+arsivi bir kez yukler (kapArsivYukle), csDonemCek() donem kimligini once arsiv
+indeksinde arar; varsa KAP'a gitmez (15 istek -> 0). Durum satiri "N ceyrek KAP
+arsivinden" der; kaynak alani 'arşiv'/'kap' — sessiz degil. Arsivde yoksa eski yol.
+YANLIS ALARM DERSI: tarama sezgisi ".card <25 karakter = bos" KPI kutularini
+(GIRIS/CIKIS/NET, RSI...) bos saydi; tek tek dogrulandi, hepsi dolu.
+
+## §436 DAMGALI KARTLAR 44 GUNDE DONMUSTU — TAZELEME + NOBET (sekme turu)
+Piyasa barometre etiketi "10Y/CDS 27 TEM" (§421'den beri canli — etiket yalan
+soyluyordu), Makro TCMB "23 TEM: SABIT", Haberler gundem "27 TEM FOMC HAFTASI",
+Avrupa/DE-JP 27 TEM; Ebu notlari 44 gun. PPK BUGUN 10 Eyl 14:00 (yarin degil —
+web dogrulamali): AA anketi 24/25 sabit %37, yil sonu medyan %35, ilk indirim
+Ekim (23 Eki PPK), OVP 2026 TUFE %28,4. Fed 16-17 Eyl: piyasa %53-57 ARTIRIM
+(Hurmuz enerji soku; Temmuz 9-3 sabit, 3 uye artirim istedi) — TCMB ile TERS YON.
+YAPILAN: TCMB etiketi (bugunun toplantisi + beklenti), gundem karti (PPK/ECB/UFE
+gunu, Fed artirim fiyatlamasi, BOK ikinci artirim, HIBOR sikismasi, fon akisi
+donusu), barometre etiketi 'CANLI'. guncelleme-plani.json +3 kart (TCMB limit 1
+gun -> YARIN karar sonrasi tazeleme uyarisi; gundem 7 gun; barometre 30 gun).
+NOT: 14:00 karari sonrasi TCMB kartinin politika faizi/koridor satirlari ve
+etiketi elle tazelenmeli (nobet uyaracak); Ebu not motoru yorumu kendi yazar.
+DEPLOY: ktpanel/{app.js, index.html, guncelleme-plani.json} (surum 20260910c).
+
 # BAKIM EK — §434 (9 Eyl 2026)
 
 ## §434 FON PORTFOY: VARLIK DAGILIMI + DIGER KIYMETLER (kullanici istegi)

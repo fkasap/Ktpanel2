@@ -324,6 +324,30 @@
    "son": "2026-07-27",
    "limit_gun": 30,
    "kaynak": "Küresel koro + Kore rolü anlatısı — §433 basamak 2'de koro satırı canlıya taşınacak"
+  },
+  {
+   "ad": "TCMB Fonlama Rejimi kartı (damgalı satırlar)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-10",
+   "limit_gun": 1,
+   "kaynak": "PPK takvimi: 10 Eyl → 23 Eki → Aralık. Karar sonrası politika faizi/koridor satırları ve etiket TAZELENMELİ (§436)"
+  },
+  {
+   "ad": "Haberler Gündem Özeti kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-10",
+   "limit_gun": 7,
+   "kaynak": "Haftalık omurga — her Pazartesi ya da merkez bankası günü sonrası (§436)"
+  },
+  {
+   "ad": "Piyasa Global Risk Barometresi (damgalı bağlam)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-10",
+   "limit_gun": 30,
+   "kaynak": "Satırlar canlı (§421); yalnız etiket/okuma metni damgalı"
   }
  ],
  "bilanco_sezonu_aylar": [

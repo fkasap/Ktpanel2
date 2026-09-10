@@ -298,7 +298,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note">Buffett kuralı: "Başkaları açgözlüyken korkulu, korkuluyken açgözlü ol." VIX (küresel korku), TR CDS (ülke risk primi) ve BIST günlük momentumundan bileşik bir 0–100 skor; VIX ve BIST canlı, CDS ~15 Haz statik. Uçlar (0–25 / 75–100) çoğu zaman dönüş noktalarıdır — teyit ister, tek başına sinyal değildir.</div>
 </div>
 <div class="card" style="margin-top:10px">
-  <div class="lbl">GLOBAL RİSK BAROMETRESİ <span class="tag snap">VIX·DXY·BRENT CANLI · 10Y/CDS 27 TEM</span></div>
+  <div class="lbl">GLOBAL RİSK BAROMETRESİ <span class="tag snap">VIX·DXY·BRENT·10Y·30Y·CDS CANLI (§421)</span></div>
   <div class="grid mac" style="margin-bottom:6px">
     <div><div class="lbl" style="margin:0">VIX (korku)</div><div class="val" id="vixV">16,72 <span class="sub" style="display:inline">+%0,78</span></div></div>
     <div><div class="lbl" style="margin:0">DXY (dolar)</div><div class="val" id="dxyV">100,77 <span class="sub" style="display:inline">+%0,15</span></div></div>
@@ -453,7 +453,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <h2 style="margin-top:0">03 Türkiye — Para Politikası &amp; Likidite <span class="thin">(TCMB · efektif fonlama · rezervler · 23 Tem PPK sonrası)</span></h2>
 <div class="grid g2">
   <div class="card">
-    <div class="lbl">FONLAMA REJİMİ <span class="tag">SIKI DURUŞ</span> <span class="tag snap">23 TEM: SABİT</span></div>
+    <div class="lbl">FONLAMA REJİMİ <span class="tag">SIKI DURUŞ</span> <span class="tag snap">10 EYL PPK 14:00 · BEKL. SABİT %37 (24/25) · YIL SONU %35</span></div>
     <div class="kv"><span class="k">Politika faizi (1 hafta repo)</span><span>%37,00</span></div>
     <div class="kv"><span class="k">Koridor (borç alma – verme)</span><span>%35,50 – %40,00</span></div>
     <div class="kv"><span class="k">AOFM — efektif fonlama</span><span class="down" style="font-weight:600" id="aofmLive">≈%40,00</span></div>
@@ -1848,11 +1848,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   
 
 <div class="card">
-    <div class="lbl">GÜNDEM ÖZETİ <span class="tag snap">27 TEM · FOMC HAFTASI AÇILIŞI</span></div>
-    <div class="kv"><span class="k">Haftanın omurgası</span><span style="color:var(--mm2);font-weight:600">Salı AKBNK → Çarşamba FED (21:00) + MSFT/META → Perşembe AAPL/AMZN</span></div>
-    <div class="kv"><span class="k">Hafta sonu gelişmesi</span><span>Brent 102$ zirveden ~89-91$'a sert düzeltme — Fed artırım gerekçesi yumuşuyor</span></div>
-    <div class="kv"><span class="k">Asya'dan devir</span><span class="down">BOK 3,5 yılda ilk artırım (+25bp) · KOSPI hafta −%8,8 · bellek-zirvesi korkusu</span></div>
-    <div class="kv"><span class="k">İlk perde skoru</span><span>GOOGL beat (Anthropic-tuzağı gerçekleşti) · TSLA hacim-var-kâr-yok · INTC/TXN beat</span></div>
+    <div class="lbl">GÜNDEM ÖZETİ <span class="tag snap">10 EYL · PPK + ECB GÜNÜ · FED 16-17 EYL</span></div>
+    <div class="kv"><span class="k">Haftanın omurgası</span><span style="color:var(--mm2);font-weight:600">Perşembe: TCMB PPK 14:00 → ECB 15:15 → ABD ÜFE 15:30 · gelecek Çarşamba FED (piyasa %53-57 ARTIRIM fiyatlıyor)</span></div>
+    <div class="kv"><span class="k">Hafta sonu gelişmesi</span><span>Fed Temmuz'da 9-3 oyla sabit (3 üye artırım istedi); Hürmüz kaynaklı enerji şoku sürüyor — artırım kapıda, TCMB ise sabit/indirim patikasında: TERS YÖN</span></div>
+    <div class="kv"><span class="k">Asya'dan devir</span><span class="down">BOK 27 Ağu İKİNCİ artırım (%3,00) · won aylık +%5,6 · HIBOR gecelik %4,10 (+1,57 ay) — Asya dolar sıkışması</span></div>
+    <div class="kv"><span class="k">İlk perde skoru</span><span>Fon akışı Sal −56 mlr → Çar +29 mlr ₺ (ECB öncesi risk kısma bitti) · CDS 217 · XK100 18.446 · AA anketi: PPK sabit 24/25, ilk indirim Ekim</span></div>
     <div class="note">Hafta, dört-merkez korosu ile TCMB'nin ters patikası arasındaki gerilimle açılıyor. <b>Çarşamba yılın en yoğun 24 saati:</b> Fed kararı (sabit bekleniyor — asıl bilgi Warsh'ın Eylül tonu) + aynı akşam MSFT/META. AI capex rehberliği, Kore'den gelen bellek-zirvesi korkusunun hakemi olacak. İçeride <b>Salı AKBNK</b> banka tezinin ilk sınavı (bakılacak: net faiz marjı + karşılıklar). <b>Brent düzeltmesi</b> (102→~90$) hem TCMB'nin eylül alanını hem Fed'in artırım gerekçesini yumuşatıyor — kalıcılığı diplomatik habere bağlı. Katılım cephesinde akış güçlü: 486,5 mlr TL AUM, günde +3,6 mlr giriş. Duruş: dörtlü aynen (haftalık notta gerekçeli).</div>
   </div>
 </div>
@@ -1861,8 +1861,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260910b"></script>
-<script src="/ajan.js?v=20260910b"></script>
+<script src="/app.js?v=20260910c"></script>
+<script src="/ajan.js?v=20260910c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->
