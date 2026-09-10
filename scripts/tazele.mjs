@@ -3055,15 +3055,92 @@ async function kapDonemler(kod, yil) {
    yalnız yeni çeyrek eklenir, eskiler dokunulmaz.
    KADEMELİ: her koşuda az sayıda şirket; arşivde zaten olan dönem ATLANIR.
    Bu yüzden ilk turlar yavaş, sonra neredeyse bedava. */
+/* ── §437 KAP HAM TABLO AYRIŞTIRICISI (tazele içinde, ayrı dosya yok) ─────────────────────
+   ktpanel/api/kap.js mod=ham'ın §340d-e yönteminin birebir taşınmışı:
+   KAP bildirimi GWT ile üretilir; tablolar tbl_general_role_XXXXXX sınıfıyla,
+   veri satırları data-input-row konumlarıyla dilimlenir; XBRL kodu
+   taxonomy-field-name, Türkçe etiket content-tr, sayılar Türk biçimi.
+   İç içe tablo sorunu KONUM dilimlemesiyle aşılır (§340d dersi).
+   Çıktı /api/kap?mod=ham ile AYNI şema: { ok, birim:{ad,carpan}, tablolar:[{ad,satir,satirlar:[{xbrl,etiket,degerler}]}] }.
+   NEDEN BURADA: §381 arşivi Vercel köprüsü üzerinden 2 şirket/koşu dolduruyordu
+   (hız sınırı köprüde); fon zinciri Actions'ın KAP'a doğrudan 300+ istek/koşu
+   atabildiğini kanıtladı. Aynı sayfa, aynı ayrıştırma — sadece yol değişti. */
+const BIN_KALIP = /^-?\(?\d{1,3}(\.\d{3})*\)?$/;
+const sayiCoz = (t) => {
+  const ham = String(t).trim();
+  if (!BIN_KALIP.test(ham)) return null;
+  const eksi = /^\(/.test(ham) || /^-/.test(ham);
+  const n = parseFloat(ham.replace(/[()\-]/g, '').replace(/\./g, ''));
+  if (!isFinite(n)) return null;
+  if (ham.indexOf('.') < 0 && n < 1000) return null;
+  return eksi ? -n : n;
+};
+function birimBul(h) {
+  const bas = h.slice(0, 400000);
+  if (/Bin\s*T[Ll]|BinTL|\(Bin\s*TL\)|bin\s*Türk\s*Lirası/i.test(bas)) return { ad: 'bin TL', carpan: 1000 };
+  if (/Milyon\s*T[Ll]|\(Milyon\s*TL\)/i.test(bas)) return { ad: 'milyon TL', carpan: 1e6 };
+  if (/Tam\s*T[Ll]|tutarlar\s+Türk\s+Lirası|TL\s*olarak\s+gösteril/i.test(bas)) return { ad: 'TL', carpan: 1 };
+  return { ad: 'belirsiz', carpan: null };
+}
+const ROL_AD = { '210015': 'Bilanço', '210000': 'Bilanço', '310000': 'Gelir Tablosu', '320000': 'Gelir Tablosu',
+  '410000': 'Diğer Kapsamlı Gelir', '420000': 'Diğer Kapsamlı Gelir', '520003': 'Nakit Akış', '520000': 'Nakit Akış',
+  '510000': 'Nakit Akış', '610000': 'Özkaynak Değişim', '620000': 'Özkaynak Değişim' };
+function kapHamAyristir(htmlHam) {
+  const KACIS = { '\\u003c': '<', '\\u003e': '>', '\\"': '"', '\\n': ' ' };
+  const h = String(htmlHam || '').replace(/\\u003[ce]|\\"|\\n/g, m => KACIS[m] || m);
+  const birim = birimBul(h);
+  const tabloBas = [...h.matchAll(/tbl_general_role_(\d+)/g)].map(m => ({ rol: m[1], poz: m.index }));
+  const satirBas = [...h.matchAll(/<tr[^>]*class="[^"]*data-input-row[^"]*"/g)].map(m => ({ poz: m.index }));
+  const metinCoz = (parca, rx) => { const m = parca.match(rx); return m ? m[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() : null; };
+  const gruplar = new Map();
+  for (let k = 0; k < satirBas.length; k++) {
+    const bas = satirBas[k].poz;
+    const son = (k + 1 < satirBas.length) ? satirBas[k + 1].poz : Math.min(h.length, bas + 20000);
+    const parca = h.slice(bas, son);
+    let rol = null;
+    for (let t = tabloBas.length - 1; t >= 0; t--) { if (tabloBas[t].poz < bas) { rol = tabloBas[t].rol; break; } }
+    const ad = ROL_AD[rol] || ('Tablo ' + (rol || '?'));
+    const xbrlHam = metinCoz(parca, /taxonomy-field-name"[^>]*>([^<]{4,200})</);
+    const xbrl = xbrlHam ? xbrlHam.split('|')[0].trim() : null;
+    const etiket = metinCoz(parca, /content-tr"[^>]*>([^<]{1,160})</);
+    const sayilar = [];
+    for (const sm of parca.matchAll(/>\s*(\(?-?[\d]{1,3}(?:\.\d{3})*(?:,\d+)?\)?)\s*</g)) { const v = sayiCoz(sm[1]); if (v !== null) sayilar.push(v); }
+    if (!xbrl && !etiket) continue;
+    if (!gruplar.has(ad)) gruplar.set(ad, []);
+    gruplar.get(ad).push({ xbrl, etiket, degerler: sayilar.slice(0, 6) });
+  }
+  const tablolar = [...gruplar.entries()].map(([ad, satirlar]) => {
+    const gorulen = new Set(); const temiz = [];
+    for (const r of satirlar) {
+      if (!r.degerler || !r.degerler.length) continue;
+      const imza = (r.xbrl || r.etiket) + '|' + (r.degerler || []).join(',');
+      if (gorulen.has(imza)) continue; gorulen.add(imza); temiz.push(r);
+    }
+    return { ad, satir: temiz.length, satirlar: temiz };
+  }).filter(t => t.satir >= 3);
+  let birim2 = birim;
+  const bm = h.match(/Sunum Para Birimi<\/td>\s*<td[^>]*>([^<]{2,30})</);
+  if (bm) { const bt = bm[1].replace(/\s+/g, ' ').trim(); const carpan = /1\.?000\.?000|milyon/i.test(bt) ? 1e6 : (/1\.?000|bin/i.test(bt) ? 1000 : 1); birim2 = { ad: bt, carpan }; }
+  return { ok: tablolar.length > 0, birim: birim2, tabloSayisi: tablolar.length, tablolar };
+}
+
 async function kapArsiv() {
   const KLASOR = 'kap-arsiv';
   /* §383b PARTİ 2 + UZUN BEKLEME: faktör evreni (§361) aynı koşuda KAP'ı
      zaten kullanıyor; arşiv arkasından gelince "fetch failed" alıyordu.
      Artık faktör ham tabloları arşive KENDİSİ yazıyor (§383), bu modül
      yalnız ESKİ çeyrekleri tamamlıyor — az sayıda, yavaş, sabırlı. */
-  const PARTI = 2;
+  /* §437 HIZLI MOD (--katman=kaparsiv ya da hepsi): ham sayfa DOĞRUDAN KAP'tan
+     çekilir ve scripts/kap-ham.mjs ile Actions içinde ayrıştırılır — Vercel köprüsü
+     (hız sınırının asıl yeri) devre dışı. Parti 2 -> 25, şirket başına 15 çeyrek,
+     600 ms aralık. Fon zinciri aynı yoldan 300+ istek/koşu attı, kesinti görülmedi.
+     Dönem LİSTESİ hâlâ köprüden (hafif, 12 saat önbellekli). */
+  const HIZLI = KSET.has('kaparsiv');   /* §437b: kullanıcı kararı — YALNIZ açık istekle; hepsi/Cumartesi eski yavaş tempoda kalır */
+  const hamAyristir = kapHamAyristir;   /* §437: ayrıştırıcı bu dosyanın içinde (kullanıcı: ayrı .mjs yok) */
+  const PARTI = (HIZLI && hamAyristir) ? 25 : 2;
   const CEYREK_TAVAN = 15;
   const TABAN = 'https://ktpanel.vercel.app/api/kap';
+  const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36';
   const uyku = (ms) => new Promise(r => setTimeout(r, ms));
   let uyeler = [];
   try { const eu = await oku('endeks-uyeler.json'); uyeler = ((eu.uyeler || {}).XKTUM || []).slice(); } catch (e) {}
@@ -3115,7 +3192,7 @@ async function kapArsiv() {
     raporlar.push('### KAP arşivi (§381) — ✓ TAM: ' + uyeler.length + ' şirket × ' + CEYREK_TAVAN + ' çeyrek');
     return;
   }
-  await new Promise(r => setTimeout(r, 30000));   /* §383b: KAP dinlensin */
+  if (!HIZLI) await new Promise(r => setTimeout(r, 30000));   /* §383b: KAP dinlensin (köprü yolunda) */
   let eklenen = 0, yeniSirket = 0, dusen = 0;
   const notlar = [];
   for (const { kod, n: mevcut } of sira) {
@@ -3138,15 +3215,21 @@ async function kapArsiv() {
         const bid = dn.id || dn.disclosureIndex;
         if (!bid) continue;
         try {
-          const rh = await fetch(TABAN + '?mod=ham&id=' + bid, { signal: AbortSignal.timeout(30000) });
-          const jh = await rh.json();
+          let jh;
+          if (HIZLI && hamAyristir) {
+            const rh = await fetch('https://www.kap.org.tr/tr/Bildirim/' + bid, { headers: { 'user-agent': UA, 'accept': 'text/html', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' }, signal: AbortSignal.timeout(30000) });
+            jh = rh.ok ? hamAyristir(await rh.text()) : { ok: false };
+          } else {
+            const rh = await fetch(TABAN + '?mod=ham&id=' + bid, { signal: AbortSignal.timeout(30000) });
+            jh = await rh.json();
+          }
           if (jh && jh.ok && (jh.tablolar || []).length) {
             D.donemler[anahtar] = { id: String(bid), birim: jh.birim || null, tablolar: jh.tablolar };
             eklenen++; buTur++;
           }
         } catch (e) {}
-        await uyku(2500);
-        if (buTur >= 4) break;                             /* koşu başına şirket sınırı */
+        await uyku(HIZLI ? 600 : 2500);
+        if (buTur >= (HIZLI ? 15 : 4)) break;                             /* koşu başına şirket sınırı */
       }
       D.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
       D.ceyrek = Object.keys(D.donemler).length;
@@ -3713,6 +3796,7 @@ async function bultenKesif() {
   }
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
+  if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
 
   raporlar.push(
     `\n---\n**Sonuç:** ${degisenler.length ? degisenler.join(' · ') : 'değişiklik yok'}` +
