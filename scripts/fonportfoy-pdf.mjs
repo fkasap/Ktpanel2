@@ -21,7 +21,7 @@ export function basligiOku(metin) {
   const bas = metin.slice(0, 6000);
   const ad = (bas.match(/A-\)Fonun Adı\s*:\s*([^\n]+)/) || [])[1];
   const kod = (bas.match(/^\s*([A-Z0-9]{2,5})-/m) || [])[1];
-  let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
+  let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m) || bas.match(/\b([A-Za-zÇĞİÖŞÜçğıöşü]{3,8})\s*-\s*(20\d\d)\b/);   /* §434d PKD: 'Ağustos - 2026' */
   if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);
   if (!donemM) donemM = bas.match(/\b([A-ZÇĞİÖŞÜ]{4,8})\s+(20\d\d)\s+(?:PORTF|AYLIK|1-|I-)/);   /* §429n ELZ 'NİSAN 2026 1-' · §434c YHK 'NİSAN 2026 AYLIK' */
   if (!donemM) { const yx = bas.match(/\b(20\d\d)\s+([A-ZÇĞİÖŞÜ]{4,8})\s+PORTF/); if (yx) donemM = [yx[0], yx[2], yx[1]]; }   /* §429o TLZ: 'FON 2026 AĞUSTOS PORTFÖY' (yıl önde) */   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
@@ -87,7 +87,8 @@ export function hisseleriOku(metin) {
   const gPoz = []; { let g = metin.indexOf('GRUP TOPLAMI', i1); while (g >= 0 && g < anaSon) { gPoz.push(g); g = metin.indexOf('GRUP TOPLAMI', g + 12); } }
   const satirSonuOf = pos => { const e = metin.indexOf('\n', pos + 12); return e > 0 ? e + 1 : pos + 12; };
   const kolonSoz = /İHRAÇ|NOM[İI]NAL|F[İI]YAT|TAR[İI]H|DE[ĞG]ER|VADE|DÖV[İI]Z|ORAN|TOPLAM|KIYMET|KOD|GRUP/;
-  const baskaSinif = ara => ara.split('\n').some(l => { const t = l.trim(); if (t.length < 6 || /\d/.test(t) || kolonSoz.test(t)) return false; const harf = t.replace(/[^A-ZĞÜŞİÖÇ]/g, ''); if (harf.length < 6 || harf !== t.replace(/[^A-ZĞÜŞİÖÇ]/g, '') || t !== t.toUpperCase()) return false; return !/H[İI]SSE|PAY/.test(t); });
+  const sukukIzi = /Taahh[üu]t\s+S[öo]zle[şs]mesi|HAZ[İI]NE|TRD\d{6}T\d{2}|K[İI]RA SERT|SUKUK|BORÇLANMA/i;   /* §434d: IVF/KTS — ikinci GRUP TOPLAMI hazine kira sertifikasıydı */
+  const baskaSinif = ara => sukukIzi.test(ara) || ara.split('\n').some(l => { const t = l.trim(); if (t.length < 6 || /\d/.test(t) || kolonSoz.test(t)) return false; const harf = t.replace(/[^A-ZĞÜŞİÖÇ]/g, ''); if (harf.length < 6 || harf !== t.replace(/[^A-ZĞÜŞİÖÇ]/g, '') || t !== t.toUpperCase()) return false; return !/H[İI]SSE|PAY/.test(t); });
   if (gPoz.length) {
     let k = 0;
     while (k + 1 < gPoz.length && !baskaSinif(metin.slice(satirSonuOf(gPoz[k]), gPoz[k + 1]))) k++;
@@ -281,7 +282,9 @@ export function denetle(hisse) {
   if (hisse.liste.length < 1) sorun.push('kod sayısı 0' + (hisse.kacak && hisse.kacak.length ? ' · SATIR ÖRNEĞİ: "' + hisse.kacak.slice(0, 2).join('" | "') + '"' : ' · bölümde aday satır da yok · BLOK BAŞI: "' + String(hisse.blokBasi || '').slice(0, 220) + '"'));   /* §429i: PKD gerçekten 3 hisse tutuyor — 5 tabanı yanlış alarmdı */
   const sablonB = hisse.liste.some(r => r.sablon && r.sablon !== 'A');
   const grupT = hisse.liste.reduce((a, r) => a + r.portfoyIci, 0);
-  const grupHedef = (hisse.toplam && hisse.toplam.grup) ? hisse.toplam.grup : 100;   /* §434b (KCV): grup % sütunu bazı kurucularda 100'e tamamlanmaz — hedef RAPORUN KENDİ toplam satırı */
+  /* §434d: kabul edilen yorumlar — satır toplamı = raporun toplam satırı (tek grup 61,73 gibi) YA DA 100 (satır %'si toplam hisseye göre, gruplar ayrı 100 basıyor) */
+  const hedefler = [100]; if (hisse.toplam && hisse.toplam.grup) hedefler.push(hisse.toplam.grup);
+  const grupHedef = hedefler.reduce((en, h) => Math.abs(grupT - h) < Math.abs(grupT - en) ? h : en, hedefler[0]);
   if (!sablonB && Math.abs(grupT - grupHedef) > 0.5) sorun.push('grup % toplamı ' + grupT.toFixed(2) + ' (' + grupHedef + '±0,5 bekleniyordu)' +
     (hisse.kacak && hisse.kacak.length ? ' · OKUNAMAYAN SATIRLAR: "' + hisse.kacak.slice(0, 3).join('" | "') + '"' : ''));
   const cokParali = hisse.liste.some(r => r.pb && r.pb !== 'TL');
