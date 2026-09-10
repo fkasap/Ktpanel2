@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260910a';   // SS434f evren son-donem modu + tutarsiz dagilim suzgeci
+const KTP_SURUM = '20260910b';   // SS434h islem ayi ayri secilir (kisa surum raporlar)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10231,14 +10231,18 @@ function fonpdEvrenRender(){
   const sayac={}; fonlar.forEach(k=>{ const d=Object.keys(FONPD.fonlar[k].donemler).sort().pop(); if(d) sayac[d]=(sayac[d]||0)+1; });
   /* §434f: 'son dönem' = EN YAYGIN son ay */
   const son=Object.keys(sayac).sort((x,y)=>(sayac[y]-sayac[x])||(y>x?1:-1))[0]; if(!son) return;
+  /* §434h: işlem ayı ayrı seçilir — Ağustos 2026 raporlarının 29/33'ü işlem bölümü olmayan KISA sürümdü.
+     Alım/satım için fonların ≥%40'ında işlem verisi olan en son ay kullanılır; ağırlık/risk kartı 'son'da kalır. */
+  const donemSet=new Set(); fonlar.forEach(k=>Object.keys(FONPD.fonlar[k].donemler).forEach(dn=>donemSet.add(dn)));
+  let sonIslem=son; for(const dn of [...donemSet].sort().reverse()){ let dolu=0,top=0; fonlar.forEach(k=>{const D=FONPD.fonlar[k].donemler[dn]; if(!D) return; top++; const I=D.islem||{}; if(Object.keys(I.alis||{}).length||Object.keys(I.satis||{}).length) dolu++;}); if(top>=3&&dolu/top>=0.4){ sonIslem=dn; break; } }
   const agg={}; let fonSay=0;
-  fonlar.forEach(k=>{ const D=FONPD.fonlar[k].donemler[son]; if(!D) return; fonSay++;
+  fonlar.forEach(k=>{ const D=FONPD.fonlar[k].donemler[sonIslem]; if(!D) return; fonSay++;
     const I=D.islem||{}; const kodlar=new Set([...Object.keys(I.alis||{}),...Object.keys(I.satis||{})]);
     kodlar.forEach(h=>{ const a=(I.alis&&I.alis[h]&&I.alis[h].deger)||0, s=(I.satis&&I.satis[h]&&I.satis[h].deger)||0; const n=a-s; const r=agg[h]=agg[h]||{net:0,alan:0,satan:0}; r.net+=n; if(n>0) r.alan++; else if(n<0) r.satan++; });
   });
   const L=Object.entries(agg).sort((a,b)=>b[1].net-a[1].net);
   const alan=L.filter(x=>x[1].net>0).slice(0,10), satan=L.filter(x=>x[1].net<0).slice(-10).reverse();
-  $('fonpdEvrenTag').textContent=son.replace('-','/')+' · '+fonSay+' fon';
+  $('fonpdEvrenTag').textContent=sonIslem.replace('-','/')+' işlem · '+fonSay+' fon'+(sonIslem!==son?' (ağırlık/risk: '+son.replace('-','/')+' — o ayın raporlarının çoğu işlem bölümsüz kısa sürüm)':'');
   const tbl=(rows,bas)=>'<table class="tbl"><thead><tr><th>'+bas+'</th><th style="text-align:right">Net (mn ₺)</th><th style="text-align:right">Fon</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td><b>'+k+'</b></td><td style="text-align:right" class="'+(v.net>0?'up':'down')+'">'+(v.net>0?'+':'')+(v.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</td><td style="text-align:right">'+(v.net>0?v.alan:v.satan)+'</td></tr>').join('')+'</tbody></table>';
   let risk='';
   { const dl=[]; fonlar.forEach(k=>{ const ds=Object.keys(FONPD.fonlar[k].donemler).sort(); if(ds.length<2) return; const a2=FONPD.fonlar[k].donemler[ds[ds.length-1]].varlik, b2=FONPD.fonlar[k].donemler[ds[ds.length-2]].varlik; if(a2&&b2&&a2.hisse!=null&&b2.hisse!=null&&!a2._tutarsiz&&!b2._tutarsiz&&a2.hisse<=100.5&&b2.hisse<=100.5) dl.push([k,+(a2.hisse-b2.hisse).toFixed(2),a2.hisse,ds[ds.length-1]]); });
