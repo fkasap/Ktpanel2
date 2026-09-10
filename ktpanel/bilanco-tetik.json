@@ -308,7 +308,9 @@
   "TGSAS": "2026-09-03",
   "BALSU": "2026-09-08",
   "VEYAS": "2026-09-09",
-  "KAYSE": "2026-09-09"
+  "KAYSE": "2026-09-09",
+  "KPEKS": "2026-09-10",
+  "TKNKA": "2026-09-10"
  },
  "evren_disi": [
   "ADESE",
@@ -398,6 +400,7 @@
   "KLRHO",
   "KNFRT",
   "KORTS",
+  "KPEKS",
   "KPTGY",
   "KRVGD",
   "KUTPO",
@@ -460,6 +463,7 @@
   "TBORG",
   "TGSAS",
   "TIMUR",
+  "TKNKA",
   "TMSN",
   "TNZTP",
   "TRCAS",
@@ -481,8 +485,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 169,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 171,
+ "pencere_sayi": 4,
  "dusen_son": [],
- "guncelleme": "2026-09-10 08:32 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-10 18:22 UTC — otomatik (KAP FR · kümülatif §299)"
 }
