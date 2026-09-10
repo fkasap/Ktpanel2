@@ -23,7 +23,7 @@ export function basligiOku(metin) {
   const kod = (bas.match(/^\s*([A-Z0-9]{2,5})-/m) || [])[1];
   let donemM = bas.match(/^\s*([A-Za-zÇĞİÖŞÜçğıöşü]+)-(\d{4})\s*$/m);
   if (!donemM) donemM = bas.match(/([A-ZÇĞİÖŞÜ]{3,8})\s+(\d{4})\s+PORTF[ÖO]Y\s+DA[ĞG]ILIM/);
-  if (!donemM) donemM = bas.match(/\b([A-ZÇĞİÖŞÜ]{4,8})\s+(20\d\d)\s+(?:PORTF|1-|I-)/);   /* §429n ELZ: 'NİSAN 2026 1- FONU' */
+  if (!donemM) donemM = bas.match(/\b([A-ZÇĞİÖŞÜ]{4,8})\s+(20\d\d)\s+(?:PORTF|AYLIK|1-|I-)/);   /* §429n ELZ 'NİSAN 2026 1-' · §434c YHK 'NİSAN 2026 AYLIK' */
   if (!donemM) { const yx = bas.match(/\b(20\d\d)\s+([A-ZÇĞİÖŞÜ]{4,8})\s+PORTF/); if (yx) donemM = [yx[0], yx[2], yx[1]]; }   /* §429o TLZ: 'FON 2026 AĞUSTOS PORTFÖY' (yıl önde) */   /* §429k şablon B: 'TLZ TEMMUZ 2025 PORTFÖY DAĞILIM RAPORU' */
   let donem = null;
   /* §429m: 'EKİM'.toLowerCase() JS'te 'eki̇m' (i + birleşik nokta) verir, sözlükle eşleşmez —
@@ -100,7 +100,8 @@ export function hisseleriOku(metin) {
      Para birimi artık grup; kod bazında kayda para birimi de yazılır. */
   /* §429j: alış fiyatı NEGATİF ve çok haneli olabilir (IVF canlı: ASELS -0,055199 — temettü düzeltmeli maliyet) */
   /* §429t: 'KUL ' öneki (KCV) isteğe bağlı · taahhüt no alt çizgili olabilir (MPS '80_100_5') */
-  const re = /^\s*(?:KUL\s+)?([A-Z0-9]{3,6})\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  /* §434c: yabancı hisse satırında piyasa eki (KCV: 'LLY US USD …') */
+  const re = /^\s*(?:KUL\s+)?([A-Z0-9]{3,6})(?:\s+[A-Z]{2})?\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   const kod = {};
   let m, satir = 0;
   while ((m = re.exec(blok))) {
@@ -192,7 +193,7 @@ export function hisseleriOku(metin) {
     agirlik: +r.ftd.toFixed(2), portfoyIci: +r.grup.toFixed(2), borsaFiyat: r.borsaFiyat, satir: r.satir }))
     .filter(r => Math.abs(r.deger) > 0.5)
     .sort((a, b) => b.agirlik - a.agirlik);
-  return { liste, toplam, satirSayisi: satir, kacak, blokBasi: blok.replace(/\s+/g, ' ').slice(0, 260) };
+  return { liste, toplam, satirSayisi: satir, kacak, blokBasi: blok.replace(/\s+/g, ' ').slice(0, 260), blokSonu: blok.replace(/\s+/g, ' ').slice(-300) };
 }
 
 /* Ay içi işlemler: satışlar ve alışlar, kod bazında toplam */
@@ -241,7 +242,7 @@ export function gruplariOku(metin) {
   const kolon = /İHRAÇ|NOM[İI]NAL|F[İI]YAT|TAR[İI]H|VADE|ORAN|TOPLAM|KIYMET|GRUP|TEM[İI]NAT|BR[İI]M|GÜNLÜK/;
   const bas = [...sec.matchAll(GRUP_BASLIK)].map(m => ({ ad: m[1].trim(), i: m.index })).filter(x => x.ad.length <= 40 && !kolon.test(x.ad));   /* sütun başlığı satırları ('DÖVİZ İHRAÇCI VADE…') grup değildir */
   const gruplar = [], diger = [];
-  const satirRe = /^\s*(?:KUL\s+)?([A-Z0-9]{2,6}(?:-[A-Z]{2})?)\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  const satirRe = /^\s*(?:KUL\s+)?([A-Z0-9]{2,6}(?:-[A-Z]{2})?)(?:\s+[A-Z]{2})?\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
   for (let g = 0; g < bas.length; g++) {
     const blok = sec.slice(bas[g].i, g + 1 < bas.length ? bas[g + 1].i : sec.length);
     const altM = blok.match(/\n\s*(Y\.?Fonu[^\n]{0,20}|B\.?Y\.?F[^\n]{0,20}|[A-ZÇĞİÖŞÜ][a-zçğıöşü.]+ [A-ZÇĞİÖŞÜ][a-zçğıöşü]+)\s*\n/);
@@ -287,7 +288,7 @@ export function denetle(hisse) {
   if (hisse.toplam && !cokParali) {
     const degT = hisse.liste.reduce((a, r) => a + r.deger, 0);
     const fark = Math.abs(degT - hisse.toplam.deger) / hisse.toplam.deger;
-    if (fark > 0.001) sorun.push('değer toplamı ' + degT.toFixed(0) + ' ≠ GRUP TOPLAMI ' + hisse.toplam.deger.toFixed(0));
+    if (fark > 0.001) sorun.push('değer toplamı ' + degT.toFixed(0) + ' ≠ GRUP TOPLAMI ' + hisse.toplam.deger.toFixed(0) + (hisse.toplam.adet > 1 ? ' · ' + hisse.toplam.adet + ' toplam satırı · BLOK SONU: "' + String(hisse.blokSonu || '') + '"' : ''));
   } else if (!sablonB && !hisse.toplam && Math.abs(grupT - 100) > 0.5) sorun.push('GRUP TOPLAMI yok ve grup % ' + grupT.toFixed(1) + ' — çifte belirsizlik');   /* §429i: toplam satırı yoksa grup%≈100 mutabakat sayılır */
   /* §429g çok paralı fonda değer kıyası anlamsız (GRUP TOPLAMI TL bazlı yazılabiliyor);
      onun yerine ağırlık aklı: FTD toplamı (0, 105] aralığında olmalı. */
@@ -299,9 +300,15 @@ export function denetle(hisse) {
 
 export function raporuAyristir(metin) {
   const baslik = basligiOku(metin);
-  const hisse = hisseleriOku(metin);
-  const islem = islemleriOku(metin);
-  const d = denetle(hisse);
-  let gr = { varlik: null, gruplar: [], diger: [] }; try { gr = gruplariOku(metin); } catch (e) {}   /* §434: varlık dağılımı isteğe bağlı, hisse denetimini etkilemez */
+  let gr = { varlik: null, gruplar: [], diger: [] }; try { gr = gruplariOku(metin); } catch (e) {}
+  let hisse, d;
+  try { hisse = hisseleriOku(metin); d = denetle(hisse); }
+  catch (e) { hisse = { liste: [], toplam: null, kacak: [] }; d = { gecti: false, sorun: [String(e.message || e)] }; }
+  /* §434c (PKD canlı): hisse bölümü yok/boş ama varlık tablosu okunmuşsa (hisse grubu 0, diğer gruplar dolu)
+     bu ay HİSSE TUTMAYAN fon demektir — sıfır hisseyle GEÇERLİ. Uydurma yok: varlik.hisse yoksa geçilmez. */
+  if (!d.gecti && !hisse.liste.length && gr.varlik && (gr.varlik.hisse || 0) < 0.5 && Object.keys(gr.varlik).filter(k => !k.startsWith('_')).some(k => gr.varlik[k] > 50)) {
+    d = { gecti: true, sorun: [], not: 'hisse yok (varlık tablosu: ' + JSON.stringify(gr.varlik) + ')' };
+  }
+  const islem = islemleriOku(metin);   /* §434: varlık dağılımı isteğe bağlı, hisse denetimini etkilemez */
   return { baslik, hisse: hisse.liste, hisseToplam: hisse.toplam, islem, denetim: d, varlik: gr.varlik, gruplar: gr.gruplar, diger: gr.diger };
 }
