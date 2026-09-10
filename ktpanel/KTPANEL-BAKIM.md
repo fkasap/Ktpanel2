@@ -6,6 +6,33 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §434 (9 Eyl 2026)
+
+## §434 FON PORTFOY: VARLIK DAGILIMI + DIGER KIYMETLER (kullanici istegi)
+
+"Sadece hisse geliyor; tuttugu fonlar, vadedeki para da gelse?" — PDF'te hazir:
+III. tablo GRUPLAR halinde (HİSSE SENETLERİ · DİĞER/Y.Fonu · BYF · KİRA SERT ·
+KATILMA HESABI ...), her grubun GRUP TOPLAMI (FTD %). IV. tablo fon seviyesi:
+FON PORTFÖY DEĞERİ % · HAZIR DEĞERLER % · ALACAKLAR % · BORÇLAR %.
+OLCUM (KPU 2026/07): hisse 87,81 + fon 10,05 + nakit(net) 2,15 = 100,01.
+  Diger kiymetler: KPR 2,33 · PPC 2,22 · KSV 2,21 · PCU 2,16 · KKG-TL 1,13 (fon).
+  Nakit = 100 - portfoy degeri (hazir 0,03 + alacak 4,70 - borc 2,57) — fon TAM
+  yatirimda, T+2 alacak/borc netlesiyor.
+YAPILAN: fonportfoy-pdf.mjs gruplariOku() (grup basligi sozlugu; sutun basligi
+  satirlari 'DÖVİZ İHRAÇCI VADE' GRUP SAYILMAZ — ilk denemede hisse grubunu
+  parcalayip toplamini calmisti) · raporuAyristir varlik/gruplar/diger dondurur,
+  hisse denetimini ETKILEMEZ (try/catch) · tazele donem kaydina varlik + diger
+  · app.js: VARLIK DAGILIMI (kategori x donem, delta) + DIGER KIYMETLER matrisi
+  + evren kartinda RISK ISTAHI (hisse agirligini en cok artiran/azaltan fonlar,
+  evren ort.) · index.html iki bolum · GECIS: varlik alani olmayan eski donemler
+  islenmis sayilmaz, KAP'tan yeniden okunur (2 kosu / Cumartesi).
+SINIR: sablon B-F'de GRUP TOPLAMI/IV tablosu yoksa varlik null kalir; ekran
+  "henuz okunmadi" der, uydurmaz.
+OKUMA: evren ort. hisse %'si = katilim hisse fonlarinin risk istahi; dususu
+  akim tablosundan once gelen erken uyari.
+DEPLOY: scripts/{tazele.mjs, fonportfoy-pdf.mjs} · ktpanel/{app.js, index.html}
+  (surum 20260909e).
+
 # BAKIM EK — §433 (9 Eyl 2026)
 
 ## §433 "FULL OTOMASYON" MERDIVENI — ASYA DAMGALI KARTLARI

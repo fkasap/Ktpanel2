@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260909d';   // SS429m sv-fonpd sv-vap disina tasindi
+const KTP_SURUM = '20260909e';   // SS434 varlik dagilimi + diger kiymetler
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10203,6 +10203,27 @@ function fonpdRender(){
   const topW=satirlar.reduce((a,r)=>a+r.w,0);
   if(gor==='agirlik') html+='</tbody><tfoot><tr><td>Toplam hisse</td>'+donemler.map(dn=>'<td style="text-align:right"><b>'+(F.donemler[dn].hisseToplam&&F.donemler[dn].hisseToplam.ftd!=null?F.donemler[dn].hisseToplam.ftd.toLocaleString('tr-TR',{minimumFractionDigits:2}):'—')+'</b></td>').join('')+'<td colspan="4"></td></tr></tfoot></table>'; else html+='</tbody></table>';
   $('fonpdTablo').innerHTML=html;
+  /* §434 VARLIK DAĞILIMI + DİĞER KIYMETLER */
+  const vEl=$('fonpdVarlik'); if(vEl){
+    const KAT=[['hisse','Hisse'],['fon','Yatırım fonu'],['byf','BYF'],['sukuk','Kira sertifikası'],['nakit','Nakit (net)'],['repo','Ters repo'],['altin','Altın/kıymetli'],['doviz','Döviz'],['diger','Diğer']];
+    const var_=dn=>(F.donemler[dn]&&F.donemler[dn].varlik)||null;
+    if(!donemler.some(dn=>var_(dn))){ vEl.innerHTML='<div class="sub">bu fonun raporlarında varlık dağılımı henüz okunmadı (§434 sonrası koşularda dolar; eski dönemler Cumartesi koşusunda yeniden okunur)</div>'; }
+    else{
+      let vh='<table class="tbl"><thead><tr><th>Varlık sınıfı</th>'+donemler.map(dn=>'<th style="text-align:right">'+dn.slice(2).replace('-','/')+'</th>').join('')+'<th style="text-align:right">Δ son ay</th></tr></thead><tbody>';
+      KAT.forEach(([k,ad])=>{ const vals=donemler.map(dn=>{const v=var_(dn); return v&&v[k]!=null?v[k]:null;}); if(!vals.some(x=>x)) return;
+        const s2=vals.slice(-2); const dlt=(s2.length===2&&s2[0]!=null&&s2[1]!=null)?+(s2[1]-s2[0]).toFixed(2):null;
+        vh+='<tr><td><b>'+ad+'</b></td>'+vals.map(x=>'<td style="text-align:right">'+(x==null?'<span class="sub">·</span>':x.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}))+'</td>').join('')+'<td style="text-align:right">'+pp(dlt)+'</td></tr>'; });
+      vh+='</tbody></table>';
+      const sonV=var_(son); if(sonV&&sonV._hazirDeger!=null) vh+='<div class="sub" style="margin-top:6px">Nakit kırılımı ('+son.replace('-','/')+'): hazır değer %'+sonV._hazirDeger+' · alacak %'+(sonV._alacak!=null?sonV._alacak:'—')+' · borç %'+(sonV._borc!=null?sonV._borc:'—')+' → net %'+(sonV.nakit!=null?sonV.nakit:'—')+'. Portföy değeri %'+(sonV._portfoyDegeriYuzde!=null?sonV._portfoyDegeriYuzde:'—')+'.</div>';
+      vEl.innerHTML=vh;
+    }
+  }
+  const dEl=$('fonpdDiger'); if(dEl){
+    const DM={}; donemler.forEach(dn=>{ ((F.donemler[dn]&&F.donemler[dn].diger)||[]).forEach(x=>{ (DM[x.kod]=DM[x.kod]||{kategori:x.kategori})[dn]=x.agirlik; }); });
+    const kodlar=Object.keys(DM).sort((x,y)=>(DM[y][son]||0)-(DM[x][son]||0));
+    if(!kodlar.length) dEl.innerHTML='<div class="sub">hisse dışı kıymet yok ya da henüz okunmadı</div>';
+    else dEl.innerHTML='<table class="tbl"><thead><tr><th>Kıymet</th><th>Tür</th>'+donemler.map(dn=>'<th style="text-align:right">'+dn.slice(2).replace('-','/')+'</th>').join('')+'</tr></thead><tbody>'+kodlar.map(k=>'<tr><td><b>'+k+'</b></td><td class="sub">'+DM[k].kategori+'</td>'+donemler.map(dn=>'<td style="text-align:right">'+(DM[k][dn]!=null?DM[k][dn].toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}):'<span class="sub">·</span>')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+  }
 }
 function fonpdEvrenRender(){
   const fonlar=Object.keys(FONPD.fonlar||{}); if(!fonlar.length) return;
@@ -10218,7 +10239,12 @@ function fonpdEvrenRender(){
   const alan=L.filter(x=>x[1].net>0).slice(0,10), satan=L.filter(x=>x[1].net<0).slice(-10).reverse();
   $('fonpdEvrenTag').textContent=son.replace('-','/')+' · '+fonSay+' fon';
   const tbl=(rows,bas)=>'<table class="tbl"><thead><tr><th>'+bas+'</th><th style="text-align:right">Net (mn ₺)</th><th style="text-align:right">Fon</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td><b>'+k+'</b></td><td style="text-align:right" class="'+(v.net>0?'up':'down')+'">'+(v.net>0?'+':'')+(v.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</td><td style="text-align:right">'+(v.net>0?v.alan:v.satan)+'</td></tr>').join('')+'</tbody></table>';
-  $('fonpdEvren').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'+tbl(alan,'En çok alınan')+tbl(satan,'En çok satılan')+'</div>';
+  let risk='';
+  { const dl=[]; fonlar.forEach(k=>{ const ds=Object.keys(FONPD.fonlar[k].donemler).sort(); if(ds.length<2) return; const a2=FONPD.fonlar[k].donemler[ds[ds.length-1]].varlik, b2=FONPD.fonlar[k].donemler[ds[ds.length-2]].varlik; if(a2&&b2&&a2.hisse!=null&&b2.hisse!=null) dl.push([k,+(a2.hisse-b2.hisse).toFixed(2),a2.hisse,ds[ds.length-1]]); });
+    if(dl.length){ dl.sort((x,y)=>y[1]-x[1]); const ort=(dl.reduce((s,x)=>s+x[2],0)/dl.length).toFixed(1);
+      const li=r=>'<li><b>'+r[0]+'</b> '+(r[1]>0?'+':'')+r[1].toLocaleString('tr-TR')+' puan <span class="thin">(hisse %'+r[2].toLocaleString('tr-TR')+', '+r[3].slice(2).replace('-','/')+')</span></li>';
+      risk='<div style="margin-top:12px" class="lbl">RİSK İŞTAHI — HİSSE AĞIRLIĞINI EN ÇOK ARTIRAN / AZALTAN FONLAR <span class="thin">§434 · evren ort. hisse %'+ort+' · '+dl.length+' fon</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><ul style="margin:6px 0 0 16px;padding:0">'+dl.slice(0,5).map(li).join('')+'</ul><ul style="margin:6px 0 0 16px;padding:0">'+dl.slice(-5).reverse().map(li).join('')+'</ul></div>'; } }
+  $('fonpdEvren').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'+tbl(alan,'En çok alınan')+tbl(satan,'En çok satılan')+'</div>'+risk;
 }
 /* ── §366 MKK VAP FON BÜYÜKLÜĞÜ KARTI (21 Ağu) ─────────────────────────────
    vap-fon-akis.json (Actions §366) — MKK'nin resmî saklama verisi.
