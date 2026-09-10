@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260909e';   // SS434 varlik dagilimi + diger kiymetler
+const KTP_SURUM = '20260910a';   // SS434f evren son-donem modu + tutarsiz dagilim suzgeci
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10229,7 +10229,8 @@ function fonpdEvrenRender(){
   const fonlar=Object.keys(FONPD.fonlar||{}); if(!fonlar.length) return;
   // son ortak dönem: her fonun en son dönemi içinden en sık olan
   const sayac={}; fonlar.forEach(k=>{ const d=Object.keys(FONPD.fonlar[k].donemler).sort().pop(); if(d) sayac[d]=(sayac[d]||0)+1; });
-  const son=Object.keys(sayac).sort().pop(); if(!son) return;
+  /* §434f: 'son dönem' = EN YAYGIN son ay */
+  const son=Object.keys(sayac).sort((x,y)=>(sayac[y]-sayac[x])||(y>x?1:-1))[0]; if(!son) return;
   const agg={}; let fonSay=0;
   fonlar.forEach(k=>{ const D=FONPD.fonlar[k].donemler[son]; if(!D) return; fonSay++;
     const I=D.islem||{}; const kodlar=new Set([...Object.keys(I.alis||{}),...Object.keys(I.satis||{})]);
@@ -10240,7 +10241,7 @@ function fonpdEvrenRender(){
   $('fonpdEvrenTag').textContent=son.replace('-','/')+' · '+fonSay+' fon';
   const tbl=(rows,bas)=>'<table class="tbl"><thead><tr><th>'+bas+'</th><th style="text-align:right">Net (mn ₺)</th><th style="text-align:right">Fon</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td><b>'+k+'</b></td><td style="text-align:right" class="'+(v.net>0?'up':'down')+'">'+(v.net>0?'+':'')+(v.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</td><td style="text-align:right">'+(v.net>0?v.alan:v.satan)+'</td></tr>').join('')+'</tbody></table>';
   let risk='';
-  { const dl=[]; fonlar.forEach(k=>{ const ds=Object.keys(FONPD.fonlar[k].donemler).sort(); if(ds.length<2) return; const a2=FONPD.fonlar[k].donemler[ds[ds.length-1]].varlik, b2=FONPD.fonlar[k].donemler[ds[ds.length-2]].varlik; if(a2&&b2&&a2.hisse!=null&&b2.hisse!=null) dl.push([k,+(a2.hisse-b2.hisse).toFixed(2),a2.hisse,ds[ds.length-1]]); });
+  { const dl=[]; fonlar.forEach(k=>{ const ds=Object.keys(FONPD.fonlar[k].donemler).sort(); if(ds.length<2) return; const a2=FONPD.fonlar[k].donemler[ds[ds.length-1]].varlik, b2=FONPD.fonlar[k].donemler[ds[ds.length-2]].varlik; if(a2&&b2&&a2.hisse!=null&&b2.hisse!=null&&!a2._tutarsiz&&!b2._tutarsiz&&a2.hisse<=100.5&&b2.hisse<=100.5) dl.push([k,+(a2.hisse-b2.hisse).toFixed(2),a2.hisse,ds[ds.length-1]]); });
     if(dl.length){ dl.sort((x,y)=>y[1]-x[1]); const ort=(dl.reduce((s,x)=>s+x[2],0)/dl.length).toFixed(1);
       const li=r=>'<li><b>'+r[0]+'</b> '+(r[1]>0?'+':'')+r[1].toLocaleString('tr-TR')+' puan <span class="thin">(hisse %'+r[2].toLocaleString('tr-TR')+', '+r[3].slice(2).replace('-','/')+')</span></li>';
       risk='<div style="margin-top:12px" class="lbl">RİSK İŞTAHI — HİSSE AĞIRLIĞINI EN ÇOK ARTIRAN / AZALTAN FONLAR <span class="thin">§434 · evren ort. hisse %'+ort+' · '+dl.length+' fon</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><ul style="margin:6px 0 0 16px;padding:0">'+dl.slice(0,5).map(li).join('')+'</ul><ul style="margin:6px 0 0 16px;padding:0">'+dl.slice(-5).reverse().map(li).join('')+'</ul></div>'; } }
