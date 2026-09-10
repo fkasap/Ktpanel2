@@ -209,6 +209,68 @@ export function islemleriOku(metin) {
   return { satis: oku(bolum('A) HİSSE SENETLERİ(SATIŞLAR)')), alis: oku(bolum('A) HİSSE SENETLERİ(ALIŞLAR)')) };
 }
 
+
+/* ── §434 VARLIK DAĞILIMI + DİĞER KIYMETLER ────────────────────────────────
+   III. tablo gruplar hâlinde: HİSSE SENETLERİ · DİĞER/YATIRIM FONLARI · BYF · KİRA
+   SERTİFİKALARI · KATILMA HESABI … her grubun GRUP TOPLAMI (FTD %) var. IV. tabloda
+   fon seviyesi: FON PORTFÖY DEĞERİ % ve HAZIR DEĞERLER % (nakit).
+   KPU ölçümü: hisse 87,81 + diğer(fon) 10,05 = portföy 97,85 · hazır değerler ~2.
+   Fon kodları '-TL' ekli olabilir (KKG-TL); taahhüt no olmayabilir. */
+const GRUP_BASLIK = /^[ \t]*(HİSSE SENETLERİ|YATIRIM FON[A-ZİI ]*|BORSA YATIRIM[A-ZİI ]*|KİRA SERTİFİKA[A-ZİĞÜŞÖÇ ]*|KATILMA HESA[A-ZİĞÜŞÖÇ ]*|VADELİ MEVDUAT|TERS REPO[A-ZİĞÜŞÖÇ ]*|DİĞER|KAMU [A-ZİĞÜŞÖÇ ]+|ÖZEL SEKTÖR[A-ZİĞÜŞÖÇ ]*|ALTIN[A-ZİĞÜŞÖÇ ]*|DÖVİZ[A-ZİĞÜŞÖÇ ]*|YABANCI [A-ZİĞÜŞÖÇ ]+)[ \t]*$/gm;
+const kategoriBul = (baslik, altBaslik) => {
+  const t = (baslik + ' ' + (altBaslik || '')).toUpperCase().replace(/İ/g, 'I');
+  if (/HISSE/.test(t)) return 'hisse';
+  if (/BORSA YATIRIM|BYF|ETF/.test(t)) return 'byf';
+  if (/YATIRIM FON|Y\.FONU|FONU/.test(t)) return 'fon';
+  if (/KIRA SERT|SUKUK/.test(t)) return 'sukuk';
+  if (/KATILMA HESA|VADELI|MEVDUAT/.test(t)) return 'nakit';
+  if (/TERS REPO|REPO/.test(t)) return 'repo';
+  if (/ALTIN|KIYMETLI/.test(t)) return 'altin';
+  if (/DOVIZ/.test(t)) return 'doviz';
+  return 'diger';
+};
+export function gruplariOku(metin) {
+  const m0 = metin.match(/(?:[IVX]+\s*[-–.]\s*)?FON\s*PORTF[ÖO]Y\s*DE[ĞG]ER[İI]\s*TABLOSU/);
+  if (!m0) return { varlik: null, gruplar: [], diger: [] };
+  const a = m0.index;
+  const b = metin.slice(a).search(/\n\s*IV\s*[-–.]\s*FON\s*TOPLAM/);
+  const sec = metin.slice(a, b > 0 ? a + b : a + 60000);
+  const kolon = /İHRAÇ|NOM[İI]NAL|F[İI]YAT|TAR[İI]H|VADE|ORAN|TOPLAM|KIYMET|GRUP|TEM[İI]NAT|BR[İI]M|GÜNLÜK/;
+  const bas = [...sec.matchAll(GRUP_BASLIK)].map(m => ({ ad: m[1].trim(), i: m.index })).filter(x => x.ad.length <= 40 && !kolon.test(x.ad));   /* sütun başlığı satırları ('DÖVİZ İHRAÇCI VADE…') grup değildir */
+  const gruplar = [], diger = [];
+  const satirRe = /^\s*(?:KUL\s+)?([A-Z0-9]{2,6}(?:-[A-Z]{2})?)\s+(TL|USD|EUR|GBP|CHF|JPY)\s+.*?(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d+)\s+(\d\d\/\d\d\/\d\d)\s+(?:[\d_]+\s+)?([\d.]+,\d+)\s+(-?[\d.]+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s+(-?\d+,\d{2})\s*$/gm;
+  for (let g = 0; g < bas.length; g++) {
+    const blok = sec.slice(bas[g].i, g + 1 < bas.length ? bas[g + 1].i : sec.length);
+    const altM = blok.match(/\n\s*(Y\.?Fonu[^\n]{0,20}|B\.?Y\.?F[^\n]{0,20}|[A-ZÇĞİÖŞÜ][a-zçğıöşü.]+ [A-ZÇĞİÖŞÜ][a-zçğıöşü]+)\s*\n/);
+    const kategori = kategoriBul(bas[g].ad, altM && altM[1]);
+    let ftd = 0, fpd = 0, deger = 0, adet = 0; const gorulen = new Set();
+    for (const gt of blok.matchAll(/GRUP TOPLAMI\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})/g)) {
+      const imza = gt.slice(1).join('|'); if (gorulen.has(imza)) continue; gorulen.add(imza);
+      deger += sayi(gt[2]); fpd += sayi(gt[4]); ftd += sayi(gt[5]); adet++;
+    }
+    gruplar.push({ ad: bas[g].ad, kategori, ftd: +ftd.toFixed(2), fpd: +fpd.toFixed(2), deger: Math.round(deger), toplamSatiri: adet });
+    if (kategori !== 'hisse') {
+      const kod = {}; let m;
+      while ((m = satirRe.exec(blok))) { const k = m[1]; const r = kod[k] || (kod[k] = { kod: k, kategori, agirlik: 0, deger: 0 }); r.agirlik += sayi(m[10]); r.deger += sayi(m[7]); }
+      Object.values(kod).forEach(r => { if (Math.abs(r.deger) > 0.5) diger.push({ kod: r.kod, kategori: r.kategori, agirlik: +r.agirlik.toFixed(2), deger: Math.round(r.deger) }); });
+    }
+  }
+  /* IV. tablo: FON PORTFÖY DEĞERİ % · HAZIR DEĞERLER % */
+  const iv = b > 0 ? metin.slice(a + b, a + b + 3000) : '';
+  const pd = iv.match(/FON PORTF[ÖO]Y DE[ĞG]ER[İI]\s+([\d.]+,\d{2})\s+([\d.]+,\d{2})\s*%/);
+  const hd = iv.match(/HAZIR DE[ĞG]ERLER\s+(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d{2})\s*%/);
+  const al = iv.match(/ALACAKLAR\s+(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d{2})\s*%/);
+  const bo = iv.match(/BORÇLAR\s+(-?[\d.]+,\d{2})\s+(-?[\d.]+,\d{2})\s*%/);
+  const varlik = {};
+  gruplar.forEach(g => { if (g.ftd) varlik[g.kategori] = +((varlik[g.kategori] || 0) + g.ftd).toFixed(2); });
+  /* nakit = fon toplam değerinin portföy dışında kalan kısmı (hazır değer + alacak − borç); kırılım ayrıca */
+  if (pd) { varlik.nakit = +((varlik.nakit || 0) + (100 - sayi(pd[2]))).toFixed(2); varlik._portfoyDegeriYuzde = sayi(pd[2]); }
+  if (hd) varlik._hazirDeger = sayi(hd[2]);
+  if (al) varlik._alacak = sayi(al[2]);
+  if (bo) varlik._borc = sayi(bo[2]);
+  return { varlik: Object.keys(varlik).length ? varlik : null, gruplar, diger: diger.sort((x, y) => y.agirlik - x.agirlik) };
+}
+
 export function denetle(hisse) {
   const sorun = [];
   /* §429l: KLH canlı vakası — tek hisseli fon (FZLGY %99) meşru; taban 1 */
@@ -237,5 +299,6 @@ export function raporuAyristir(metin) {
   const hisse = hisseleriOku(metin);
   const islem = islemleriOku(metin);
   const d = denetle(hisse);
-  return { baslik, hisse: hisse.liste, hisseToplam: hisse.toplam, islem, denetim: d };
+  let gr = { varlik: null, gruplar: [], diger: [] }; try { gr = gruplariOku(metin); } catch (e) {}   /* §434: varlık dağılımı isteğe bağlı, hisse denetimini etkilemez */
+  return { baslik, hisse: hisse.liste, hisseToplam: hisse.toplam, islem, denetim: d, varlik: gr.varlik, gruplar: gr.gruplar, diger: gr.diger };
 }

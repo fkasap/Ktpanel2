@@ -2601,7 +2601,8 @@ async function fonPortfoy() {
   if (!liste.length) { raporlar.push('### Fon portföy dağılımı (§429) — ⏭ KAP listesinden evren raporu gelmedi (evren ' + evrenKod.length + ' fon · kimlikli ' + evrenKod.filter(k => d.evren[k].oid).length + ' · ' + istekSay + ' istek · ' + hamToplam + ' ham kayıt · yol: ' + yol + ')' + (ornek ? '\n- ilk kayıt örneği: `' + ornek.replace(/`/g, '') + '`' : '')); return; }
   /* 3) EKSİK (kod, dönem) çiftleri */
   const isler = [];
-  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index) islenmisIdx.add(String(x.kaynak.index)); }));
+  /* §434 GEÇİŞ: varlık alanı olmayan (eski) dönemler 'işlenmiş' sayılmaz → KAP'tan yeniden okunur (kaynak kalıcı, bedava) */
+  const islenmisIdx = new Set(); Object.values(d.fonlar).forEach(f => Object.values(f.donemler || {}).forEach(x => { if (x.kaynak && x.kaynak.index && ('varlik' in x)) islenmisIdx.add(String(x.kaynak.index)); }));
   liste.forEach(b => {
     const kod = b.__evrenKod || kodAl(b), index = idxAl(b); if (!kod || !index) return;
     if (b.__evrenKod && kodAl(b) && d.evren[kod] && !d.evren[kod].kapKod) d.evren[kod].kapKod = kodAl(b);   /* §429f: KAP kodu farklıysa öğren */
@@ -2656,13 +2657,16 @@ async function fonPortfoy() {
       const donemK = donemPdf || is.donem;
       if (!donemK) { hata.push(is.kod + ' idx' + is.index + ': dönem çözülemedi · belge başı: "' + txt.replace(/\s+/g, ' ').trim().slice(0, 100) + '"'); await uyku(400); continue; }
       if (r.baslik.kod && !/^[IVX]+$/.test(r.baslik.kod) && r.baslik.kod !== is.kod && !(d.evren[is.kod] && d.evren[is.kod].kapKod === r.baslik.kod)) { hata.push(is.kod + ': PDF başlığı ' + r.baslik.kod + ' — atlandı'); await uyku(400); continue; }   /* §429r: Roma rakamı ('II-PERFORMANS') fon kodu değildir */
+      const kirp = o => { const out = {}; Object.keys(o || {}).forEach(k => { out[k] = { deger: Math.round(o[k].deger) }; }); return out; };
       const F = d.fonlar[is.kod] || (d.fonlar[is.kod] = { ad: d.evren[is.kod] ? d.evren[is.kod].ad : is.kod, donemler: {} });
       F.ad = r.baslik.ad || F.ad;
       F.donemler[donemK] = {
         baslik: r.baslik,
         hisse: r.hisse.map(h => ({ kod: h.kod, agirlik: h.agirlik, deger: h.deger, nominal: h.nominal })),
         hisseToplam: r.hisseToplam,
-        islem: r.islem,
+        islem: { alis: kirp(r.islem.alis), satis: kirp(r.islem.satis) },   /* §431 sıkılaştırma (bu tabana): işlem sayacı/nominal atılır */
+        varlik: r.varlik || null,   /* §434: kategori bazlı FTD % + _portfoyDegeriYuzde/_hazirDeger/_alacak/_borc */
+        diger: (r.diger || []).map(x => ({ kod: x.kod, kategori: x.kategori, agirlik: x.agirlik, deger: x.deger })),
         kaynak: { index: is.index, objId: obj, yayin: is.yayin, pdfBoyut: buf.length, islendi: bugun }
       };
       { const F2 = d.fonlar[is.kod]; const dk = Object.keys(F2.donemler).sort(); dk.slice(0, Math.max(0, dk.length - 6)).forEach(x => delete F2.donemler[x]); }   /* §431 budama: son 6 dönem */
