@@ -9,20 +9,19 @@ Katman: `fonportfoy` · Veri dizini: `ktpanel`
 - §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
 - §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
 
-- §429p kuyruk: liste 198 kayıt · daha önce işlenmiş 67 idx · iş 99
+- §429p kuyruk: liste 198 kayıt · daha önce işlenmiş 101 idx · iş 65
 
-### Fon portföy dağılımı (§429) — ✓ 40 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 161 dönem · KAP yolu: tarama(47 fon, 6898 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
-- bu turda hedef 80 (tur tavanı 80; kalan sonraki koşuda)
-- ⚠ denetimden düşen (yazılmadı): KCV null: grup % toplamı 97.58 (100±0,5 bekleniyordu) · KCV null: grup % toplamı 89.33 (100±0,5 bekleniyordu) · PKD null: değer toplamı 8308875 ≠ GRUP TOPLAMI 16850475 · 2 toplam satırı · BLOK SONU: "0 F_KRDMD0726 TL F_KRDMD0726 450,00 41,360000 30/06/26 80105125 40,940000 1.842.300,00 0,00 0,00 0,00 F_TUPRS0726 TL F_TUPRS0726 160,00 225,700000 30/06/26 80105125 233,050000 3.728.800,00 0,00 0,00 0,00 GRUP TOPLAMI 675,00 8.541.600,00 0,00 0,00 0,00 GRUP TOPLAMI 675,00 8.541.600,00 0,00 0,00 0,00 "
-- ⚠ hata (ilk 3, tanılı): IVF idx1612637: dönem çözülemedi · belge başı: "VII-PORTFÖYDEN SATIŞLAR A) HİSSE SENETLERİ(SATIŞLAR) KIYMET İHRAÇÇI KURUM BANKA VADE IŞLEM TARIHI FI"
-  · IVF idx1624213: dönem çözülemedi · belge başı: "VII-PORTFÖYDEN SATIŞLAR A) HİSSE SENETLERİ(SATIŞLAR) KIYMET İHRAÇÇI KURUM BANKA VADE IŞLEM TARIHI FI"
-  · ELZ null: terminated
-  …+34
+### Fon portföy dağılımı (§429) — ✓ 43 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 165 dönem · KAP yolu: tarama(47 fon, 6898 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+- bu turda hedef 65 (tur tavanı 80; kalan sonraki koşuda)
+- ⚠ hata (ilk 3, tanılı): ELZ null: terminated
+  · KPC null: fetch failed
+  · KPU null: fetch failed
+  …+19
 
 
 ---
-**Sonuç:** fon portföy (40 rapor)
+**Sonuç:** fon portföy (43 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Fon portföy dağılımı (§429) — 135 sn
-- toplam: 135 sn
+- ⏱ Fon portföy dağılımı (§429) — 103 sn
+- toplam: 103 sn
