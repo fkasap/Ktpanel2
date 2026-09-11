@@ -329,9 +329,9 @@
    "ad": "TCMB Fonlama Rejimi kartı (damgalı satırlar)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-10",
-   "limit_gun": 1,
-   "kaynak": "PPK takvimi: 10 Eyl → 23 Eki → Aralık. Karar sonrası politika faizi/koridor satırları ve etiket TAZELENMELİ (§436)"
+   "son": "2026-09-11",
+   "limit_gun": 45,
+   "kaynak": "PPK takvimi: 10 Eyl SABİT %37 (§436b) → 22 Eki → Aralık. Karar sonrası satırlar/etiket tazelenir"
   },
   {
    "ad": "Haberler Gündem Özeti kartı (damgalı)",

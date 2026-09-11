@@ -6,6 +6,12 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §436b (11 Eyl 2026)
+## §436b PPK SONUCU ISLENDI: SABIT %37, koridor 35,5-40, siradaki 22 Eki, ozet 17 Eyl
+Beklentiyle birebir (AA anketi 24/25). TCMB karti etiketi guncellendi; nobet
+kaydi son=11 Eyl, limit 45 gun (22 Eki oncesi uyarir). Politika faizi satiri
+zaten %37,00. Ebu not motoru yorumu kendi yazar.
+
 # BAKIM EK — §437 (10 Eyl 2026)
 
 ## §437 KAP ARSIVI HIZLI MOD — AYRISTIRICI ACTIONS'A TASINDI
