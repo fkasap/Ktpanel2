@@ -72,7 +72,7 @@
 | Bilanco karti birimi | Sayfa beyan etmezse CAPRAZ DOGRULAMA (ciro/TTM ya da PD/DD). Kart 'birim belirsiz' diyorsa ikisi de tutmamis (§255/257) | 11A ✓ |
 | Beta cipasi (risk.json) | ARTIK OTOMATIK — XKTUM (BIST resmi arsiv). Rapor 'XU100.IS' derse arsiv tohumu bozulmus demektir (§252y) | 10A ✓ |
 | Sektor rotasyonu (sektor.json) | Fintables endeks mumlari · capalar dosyada yazili | 10A §252w |
-| Swap stoku (rezerv.json) | TCMB haftalik yayin, PERSEMBE. Son: 21 Agu haftasi (27 Agu yayini) swap 11,0 · Siradaki: 3 Eyl (28 Agu haftasi) | 28A §425 |
+| Swap stoku (rezerv.json) | TCMB haftalik yayin, PERSEMBE. Son: 4 Eyl haftasi (10 Eyl yayini) swap 12,2 · swap haric 53,4 · Siradaki: 17 Eyl (11 Eyl haftasi) | 11E §436c |
 | Faktor modeli (fm.json) | ⏸ ~1 EYLUL'e ERTELENDI — 2C sezonu bitmeden yarim evren. arac/fm-isle.py HAZIR. Evren karari (147 vs 215) o zaman verilecek | 14T |
 | Guidance (guidance.json) | ⏸ ayni gerekce — sirketler 2C ile beklenti revize ediyor | 17T |
 | Endeks pay_adedi (xktum/xk100/xktmt.json) | HER BEDELSIZ/SERMAYE ARTIRIMINDA — ceyreklik YETMEZ. 9 Agu'da 10 gunde 3 bedelsiz kacti (KTLEV x3,33 uc dosyada birden) | 10A §252b |

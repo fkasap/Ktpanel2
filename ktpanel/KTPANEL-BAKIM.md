@@ -6,7 +6,13 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
-# BAKIM EK — §436b (11 Eyl 2026)
+# BAKIM EK — §436b–c (11 Eyl 2026)
+## §436c REZERV: 28 Agu + 4 Eyl haftalari islendi
+swapStoku 11,0 -> 10,7 -> 12,2 (net 65,6 − swap haric 53,4). Brut 188,2 -> 184,2:
+altin −3,25 (fiyat), doviz −0,70; swap haric net 55,9 -> 53,4. Okuma: iki haftalik
+geri cekilme, cogu altin degerlemesi; swap kullanimi 1,5 mlr artti — Agustos'taki
+'organik toparlanma' hikayesi hafif golgelendi, kirilma degil. yabanci.json
+rezerv.guncel 53,4 (ilk cizim yedegi). Siradaki yayin 17 Eyl.
 ## §436b PPK SONUCU ISLENDI: SABIT %37, koridor 35,5-40, siradaki 22 Eki, ozet 17 Eyl
 Beklentiyle birebir (AA anketi 24/25). TCMB karti etiketi guncellendi; nobet
 kaydi son=11 Eyl, limit 45 gun (22 Eki oncesi uyarir). Politika faizi satiri
