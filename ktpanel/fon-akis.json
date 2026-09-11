@@ -189605,6 +189605,7 @@
   "PGD": "ASTRA PORTFÖY YÖNETİMİ A.Ş.",
   "PGS": "AZİMUT PORTFÖY YÖNETİMİ A.Ş.",
   "PHE": "PUSULA PORTFÖY YÖNETİMİ A.Ş.",
+  "PHF": "PİRAMİT PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ",
   "PHI": "PİRAMİT PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ",
   "PHK": "PHİLLİP PORTFÖY YÖNETİMİ A.Ş.",
   "PID": "PİRAMİT PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ",
@@ -190617,7 +190618,6 @@
   "PGE": "PARDUS PORTFÖY",
   "PGH": "PUSULA PORTFÖY",
   "PHB": "PUSULA PORTFÖY",
-  "PHF": "PİRAMİT PORTFÖY",
   "PHN": "PUSULA PORTFÖY",
   "PHS": "PERFORM PORTFÖY",
   "PHY": "PARDUS PORTFÖY",
@@ -190916,7 +190916,7 @@
   "gun": "2026-09-11",
   "onceki": "2026-09-10",
   "adet": 69,
-  "eslesmeyen": 11,
+  "eslesmeyen": 9,
   "liste": [
    {
     "ad": "TERA",
@@ -190966,7 +190966,7 @@
    {
     "ad": "NEO",
     "net": 196501750,
-    "fon": 43
+    "fon": 44
    },
    {
     "ad": "BULLS ANONİM ŞİRKETİ",
@@ -191251,7 +191251,7 @@
    {
     "ad": "PUSULA",
     "net": -7782632012,
-    "fon": 18
+    "fon": 19
    },
    {
     "ad": "AK",
@@ -191308,8 +191308,8 @@
     },
     {
      "ad": "NEO",
-     "net": 688943461,
-     "fon": 43
+     "net": 688943422,
+     "fon": 44
     },
     {
      "ad": "İSTANBUL",
@@ -191613,8 +191613,8 @@
     },
     {
      "ad": "PUSULA",
-     "net": -51073396875,
-     "fon": 18
+     "net": -51679574312,
+     "fon": 19
     }
    ],
    "fon": [
@@ -192077,8 +192077,8 @@
     },
     {
      "ad": "NEO",
-     "net": -2148175004,
-     "fon": 43
+     "net": -2353394033,
+     "fon": 44
     },
     {
      "ad": "ROTA",
@@ -192127,8 +192127,8 @@
     },
     {
      "ad": "PUSULA",
-     "net": -104143141965,
-     "fon": 18
+     "net": -103609495161,
+     "fon": 19
     }
    ],
    "fon": [

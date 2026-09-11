@@ -1,10 +1,10 @@
 {
- "guncelleme": "2026-09-11T08:14:56Z",
+ "guncelleme": "2026-09-11T18:27:36Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
   "AKHAN": {
-   "ts": "2026-09-07T18:23:43Z",
+   "ts": "2026-09-11T18:26:47Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 3,
@@ -38,7 +38,7 @@
    "eksik": false
   },
   "ALFAS": {
-   "ts": "2026-09-07T18:24:00Z",
+   "ts": "2026-09-11T18:27:03Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -72,7 +72,7 @@
    "eksik": false
   },
   "ALKIM": {
-   "ts": "2026-09-07T19:08:10Z",
+   "ts": "2026-09-11T18:27:19Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3302,7 +3302,7 @@
    "eksik": false
   },
   "YATAS": {
-   "ts": "2026-09-07T18:23:14Z",
+   "ts": "2026-09-11T18:26:17Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3336,14 +3336,14 @@
    "eksik": false
   },
   "YEOTK": {
-   "ts": "2026-09-07T18:23:31Z",
+   "ts": "2026-09-11T18:26:34Z",
    "y": "362",
    "donem": "2026/2",
-   "ceyrek": 5,
-   "ciro": 19442647958,
-   "brut": 5835288705,
-   "favok": 4080497075,
-   "netKar": 2261794471,
+   "ceyrek": 4,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "netKar": null,
    "ozk": 6046277920,
    "aktif": 29588473715,
    "donen": 16649552393,
@@ -3351,10 +3351,10 @@
    "finBorc": 9523346371,
    "likit": 3366416955,
    "netBorc": 6156929416,
-   "isletmeNA": 2203754103,
-   "capex": -4971559400,
-   "sna": -2767805297,
-   "tahakkuk": 0.2,
+   "isletmeNA": null,
+   "capex": null,
+   "sna": null,
+   "tahakkuk": null,
    "odFaiz": null,
    "odTemettu": null,
    "stoklar": 1997647430,
@@ -3367,7 +3367,7 @@
    },
    "adet": 355000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "eksik": true
   },
   "ZEDUR": {
    "ts": "2026-08-26T16:34:05Z",
