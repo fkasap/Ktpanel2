@@ -64,34 +64,34 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1410 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
-### TEFAS genel bilgi (§253i) — ✓ 1959 fon · AUM + yatırımcı sayısı köprüden (ham 2039 kayıt, sayfalamalı)
+### TEFAS genel bilgi (§253i) — ✓ 1994 fon · AUM + yatırımcı sayısı köprüden (ham 2039 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1064 fon ✓ · liste: 1052 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### Fon akışı — ℹ 948 fonun kurucusu fon adından türetildi (§279; mod=liste 1052 kayıt kapsıyordu, evren 1959)
+### Fon akışı — ℹ 958 fonun kurucusu fon adından türetildi (§279; mod=liste 1052 kayıt kapsıyordu, evren 1994)
 
 ### Akış pencereleri (§359) — ✓ 1H, 1A hazır · arşiv 23 gün
 - 1H giriş: TERA 80.3 mlr · KUVEYT TÜRK 22.1 mlr · ALBARAKA 10.8 mlr
-- 1A giriş: TERA 153.5 mlr · ALBARAKA 27.2 mlr · GARANTİ 26.9 mlr
+- 1A giriş: TERA 153.5 mlr · ALBARAKA 27.2 mlr · GARANTİ 26.8 mlr
 
-### PYŞ bazında akış (§358) — ✓ 68 kurum · 2026-09-11 · 9 fon eşleşmedi
+### PYŞ bazında akış (§358) — ✓ 69 kurum · 2026-09-11 · 19 fon eşleşmedi
 - giriş: TERA 17.40 mlr · KUVEYT TÜRK 3.20 mlr · GARANTİ 2.61 mlr
 - çıkış: ZİRAAT -7.53 mlr · AK -9.47 mlr · İŞ -22.65 mlr
 
-### Fon akışı (§263) — ✓ 1958 fon · 2026-09-10 → 2026-09-11
-- giriş 80.83 mlr ₺ · çıkış -104.36 mlr ₺ · net -23.53 mlr ₺
+### Fon akışı (§263) — ✓ 1993 fon · 2026-09-10 → 2026-09-11
+- giriş 80.85 mlr ₺ · çıkış -104.40 mlr ₺ · net -23.55 mlr ₺
 
 ### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (1959 fon fiyat + 1064 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587010734910589> [Go Back]`
+- yol: vercel-köprüsü (1994 fon fiyat + 1064 getiri)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587011542695340> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%2)
 - ✓ **dönem tutarlılığı**: temiz
 
-- §427 yeni fiyat günü: 46/46 fonda fiyat değişti — 1G ve akış hesaplandı
+### Katılım fonları — ℹ tekrar koşu (fiyat vektörü değişmedi: 46/46 aynı): fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266/§427)
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
@@ -140,12 +140,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-09-11 06:00Z · GBP · GDP m/m
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 101/246
-- bu turda: 4 tam · 0 eksik kalemli · 2 alınamadı
-- not: SOKE:2026: fetch failed · SRVGY:2026: fetch failed
+- bu turda: 5 tam · 0 eksik kalemli · 1 alınamadı
+- not: TMPOL:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/246 şirket tam
-- SARKY:2026: fetch failed (2. kez) · SDTTR:2026: fetch failed (2. kez)
+- SRVGY:2026: fetch failed (2. kez) · SUNTK:2026: fetch failed (2. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -182,21 +182,17 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
 - §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
 
-- §429p kuyruk: liste 198 kayıt · daha önce işlenmiş 98 idx · iş 68
+- §429p kuyruk: liste 198 kayıt · daha önce işlenmiş 121 idx · iş 45
 
-### Fon portföy dağılımı (§429) — ✓ 46 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 165 dönem · KAP yolu: tarama(47 fon, 6901 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
-- bu turda hedef 68 (tur tavanı 80; kalan sonraki koşuda)
-- ⚠ hata (ilk 3, tanılı): KPC null: fetch failed
-  · KPU null: fetch failed
-  · KPA null: fetch failed
-  …+19
+### Fon portföy dağılımı (§429) — ✓ 44 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 165 dönem · KAP yolu: tarama(47 fon, 6901 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+- bu turda hedef 45 (tur tavanı 80; kalan sonraki koşuda)
+- ⚠ hata (ilk 3, tanılı): OHK null: terminated
 
 
 ---
-**Sonuç:** TR 5Y CDS (218.53 bp) · risk metrikleri (134) · fon akışı (1958) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (17 olay) · faktör evreni (101/246) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (46 rapor)
+**Sonuç:** TR 5Y CDS (218.53 bp) · fon akışı (1993) · katılım fonları (46+akış) · bilanço tetiği (68 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (17 olay) · faktör evreni (101/246) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (44 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 100 sn
-- ⏱ KAP arşivi (§381) — 73 sn
-- ⏱ Fon portföy dağılımı (§429) — 112 sn
-- toplam: 348 sn
+- ⏱ Faktör evreni (§361) — 97 sn
+- ⏱ KAP arşivi (§381) — 71 sn
+- toplam: 277 sn
