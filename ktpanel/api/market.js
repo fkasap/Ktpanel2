@@ -150,6 +150,8 @@ async function fredModu(req, res){
        (§125): biri kurulun ilan ettiği, diğeri piyasada oluşan. Panel ikisini de
        gösterir ve aradaki farkı yazar. */
     ['DFEDTARL','seviye'],['DFEDTARU','seviye'],
+    /* §440 DE/JP eğri uçları (aylık OECD serileri, FRED): 3A bankalararası + 10Y devlet — eğri görseli DE·JP için canlı kısa/uzun uç */
+    ['IR3TIB01DEM156N','seviye'],['IRLTLT01DEM156N','seviye'],['IR3TIB01JPM156N','seviye'],['IRLTLT01JPM156N','seviye'],
     ['DFII10','seviye'],['BAMLH0A0HYM2','seviye'],['DTWEXBGS','seviye'],
     ['VIXCLS','seviye'],['ICSA','seviye'],['UNRATE','seviye'],
     /* Enflasyon kırılımı (endeks → yıllık %)
