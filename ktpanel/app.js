@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260913a';   // SS438 tarihli olay: damgali kartlar nobete girer
+const KTP_SURUM = '20260913b';   // SS440 DE/JP egri canli uc + makroihtiyati + etiketler
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9140,9 +9140,19 @@ async function egriGorselRender(){
       if(svg&&usKap){usKap.innerHTML=svg;usOk=true;}
     }
   }catch(e){}
+  /* §440 DE/JP: FRED aylık OECD serileri (3A bankalararası · 10Y). Sadece iki uç var — eğri
+     çizilmez (statik görsel şekil için kalır), altına CANLI satır: seviye, eğim, ay. */
+  let deOk=false, jpOk=false;
+  try{
+    let S=window.US_FRED; if(!S){const r=await fetch('/api/market?mod=fred');const d=r.ok?await r.json():null;if(d&&d.ok)S=d.seriler;}
+    const yaz=(id3,id10,kap)=>{ const el=document.getElementById(kap); if(!el||!S) return false; const k=S[id3], u=S[id10]; if(!(k&&u&&isFinite(k.deger)&&isFinite(u.deger))) return false;
+      const egim=Math.round((u.deger-k.deger)*100); const ay=String(u.tarih||'').slice(0,7);
+      el.innerHTML='canlı (FRED aylık'+(ay?' · '+ay:'')+'): 3A %'+trN(k.deger,2)+' · 10Y %'+trN(u.deger,2)+' · eğim <span class="'+(egim>=0?'up':'down')+'">'+(egim>=0?'+':'')+egim+'bp</span>'; return true; };
+    deOk=yaz('IR3TIB01DEM156N','IRLTLT01DEM156N','egriDECanli'); jpOk=yaz('IR3TIB01JPM156N','IRLTLT01JPM156N','egriJPCanli');
+  }catch(e){}
   const tag=document.getElementById('egriGorselTag');
   if(tag&&(trOk||usOk)){
-    tag.textContent=(trOk&&usOk?'TR·ABD CANLI':trOk?'TR CANLI':'ABD CANLI')+(damga?' '+damga:'')+' · DE·JP 27 TEM';
+    tag.textContent=(trOk&&usOk?'TR·ABD CANLI':trOk?'TR CANLI':'ABD CANLI')+(damga?' '+damga:'')+' · DE·JP '+((deOk&&jpOk)?'3A/10Y CANLI (AYLIK) · şekil 27 TEM':'27 TEM');
   }
 }
 

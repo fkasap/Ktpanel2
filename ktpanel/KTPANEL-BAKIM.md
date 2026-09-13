@@ -6,6 +6,30 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §440 (13 Eyl 2026)
+
+## §440 TAM TARAMA (alt sekmeler dahil, 30+ gun) — C SINIFI DUZELTMELERI
+Tarama 17 sekme + 15 alt sekme, 30 gunden eski tarih tasiyan 26 kart; uc sinif:
+A) mesru tarihsel seri (aylik cubuklar, ceyrekler, ihrac programi) — dokunulmaz;
+B) kaynak gecikmesi (FRED aylik, EVDS aylik alt seriler) — izlenir;
+C) bayat damgali metin — duzeltildi:
+ C1 MAKROIHTIYATI karti (1-3 Tem, 74 gun): 2026 adim zinciri yazildi (Oca YP
+    kredi/KMH · Mar istisna daraltma · 22 May buyume sinirlari: ihtiyac/tasit
+    %4->3, KMH %2->1, KOBI TL %5->4,5, KOBI disi %3->2 · 1 Tem ZK sadelesme).
+    Agu-Eyl: yeni adim YOK; OVP 8 Eyl "TL mevduat payi politikalari surer";
+    takibe donusum %2,9 (Tem). Nobete alindi (45 gun; KEA 3C26 Ekim basi).
+ C2 GETIRI EGRISI DE·JP (27 Tem statik): FRED aylik OECD serileri eklendi
+    (IR3TIB01DEM/JPM 3A · IRLTLT01DEM/JPM 10Y). Iki uc oldugu icin egri
+    CIZILMEZ — statik sekil kalir, altina canli satir: seviye/egim/ay. Rozet
+    "DE·JP 3A/10Y CANLI (AYLIK) · sekil 27 TEM". Durustluk: aylik seri, gunluk
+    degil; yaziyor.
+ C3 AVRUPA MEGA-CAP: fiyatlar §282'den beri zaten canliydi; tarama etiketi
+    kesik okumustu ("FIYAT CANLI · ARASTIRMA 27 TEM" dogru). Degisiklik yok.
+Taranamayan (tarayici koptu): Earnings AI, Halka Arzlar, Finansal Tablolar,
+GYO NAV — sonraki turda.
+DEPLOY: ktpanel/{index.html, app.js, api/market.js, guncelleme-plani.json}
+(surum 20260913b; §438-439 ile birlikte).
+
 # BAKIM EK — §439 (13 Eyl 2026)
 
 ## §439 SEKME TARAMASI (icerik) — BULGULAR VE DUZELTMELER

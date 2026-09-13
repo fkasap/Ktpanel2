@@ -364,6 +364,14 @@
    "son": "2026-09-13",
    "limit_gun": 10,
    "kaynak": "FOMC 15-16 Eyl (SEP+nokta) → 27-28 Eki. Karar sonrası tazelenir (§439)"
+  },
+  {
+   "ad": "Makroihtiyati & Kredi Koşulları kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-13",
+   "limit_gun": 45,
+   "kaynak": "TCMB makroihtiyati basın duyuruları + Kredi Eğilim Anketi (3Ç26 Ekim başı). Yeni adım/anket çıkınca tazelenir (§440)"
   }
  ],
  "bilanco_sezonu_aylar": [
