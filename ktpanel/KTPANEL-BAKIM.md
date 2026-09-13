@@ -6,6 +6,23 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §443 (13 Eyl 2026)
+
+## §443 EBU GUNLUK BAKIMI YENI TAKVIMI EZDI — TABLO PARMAK IZI
+"Tekrar bak": index.html'de takvim yeniden yazilmisti (sunucuda dogrulandi) ama
+ekranda ESKI 15 satir (tikli, "gerceklesti") duruyordu. KOK: gunlukBakim() sabah
+eski tabloyu isleyip gunun kaydini (__GUN2_..., html=tablonun tamami) yazmis;
+yukleme (hafizaYukle) "bugunun kaydi var" diye tablonun outerHTML'ini kayittan
+geri koyuyor — kaynak degismis olsa da. Yani deploy edilen HTML'i Ebu'nun
+hafizasi eziyordu; §112 (tek sahip index.html) bu yoldan delinmisti.
+COZUM: kayit, bakim ONCESI tablonun parmak izini tasir (satirlarin ilk hucre
+metni = tarihler + satir sayisi; ✓ eklemeleri ikinci hucrede, izi bozmaz).
+Yuklemede DOM'daki tablonun izi kayitla eslesmiyorsa kayit SILINIR, basilmaz,
+panoya yazilir; bakim yeni tabloyu ertesi turda isler. Imzasiz eski kayitlar da
+gecersiz (tek seferlik yeniden isleme). DERS: bir kaynagi baskasi onbellekliyorsa
+onbellegin gecerlilik anahtari KAYNAGIN KENDISI olmali, tarih degil.
+DEPLOY: ktpanel/ajan.js (+ §438-442 paketi).
+
 # BAKIM EK — §441–§442 (13 Eyl 2026)
 
 ## §441 REZERV KARNESI: EVDS "NET" ILE TCMB BULTENI CELISIYORDU — RESMI BIRINCIL

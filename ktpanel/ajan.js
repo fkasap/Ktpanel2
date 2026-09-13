@@ -909,7 +909,14 @@ async function notlariGeriYukle(){
       GUNLUK_BOLUMLER.forEach(b=>{
         bolumTablolari(b).forEach(T=>{
           const beklenen='__GUN2_'+b.replace(/\s/g,'')+'_'+T.ad.replace(/\s/g,'').slice(0,16)+'__';
-          if(beklenen===anah){ T.table.outerHTML=kayd.html; n++; }
+          if(beklenen!==anah) return;
+          /* §443 (13 Eyl canlı): index.html'deki takvim yeniden yazıldı, ama günün kaydı ESKİ tabloyu
+             (sabah bakımda işlenmiş) tümüyle geri koydu — yeni satırlar hiç görünmedi. Kaynak tablo
+             değiştiyse kayıt GEÇERSİZDİR: parmak izi (satırların ilk hücreleri) eşleşmiyorsa basılmaz,
+             kayıt silinir; bakım yeni tabloyu ertesi turda yeniden işler. */
+          const iz=tabloImza(T.table);
+          if(!kayd.imza||kayd.imza!==iz){ delete k[anah]; try{ localStorage.setItem('ajan_notlar',JSON.stringify(k)); }catch(e){} kayit('Günlük bakım '+T.ad+': kaynak tablo değişmiş, eski kayıt basılmadı (§443)'); return; }
+          T.table.outerHTML=kayd.html; n++;
         });
       });
     });
@@ -1414,6 +1421,10 @@ function bolumTablolari(prefix){
   });
   return sonuc;
 }
+/* §443 tablo parmak izi: her satırın ilk hücre metni (tarih) + satır sayısı. ✓/gerçekleşti eklemeleri
+   ikinci hücrede olduğu için iz değişmez; satır eklenip çıkınca değişir. */
+function tabloImza(tb){ try{ return [...tb.querySelectorAll('tr')].filter(tr=>!tr.dataset.oto&&tr.id!=='takvimKatlaDug').map(tr=>((tr.querySelector('td')||{}).textContent||'').replace(/\s+/g,' ').trim().slice(0,14)).join('|'); }catch(e){ return ''; } }
+function tabloImzaStatik(hedefler, satirlar){ try{ return satirlar.filter(tr=>!tr.dataset.oto&&tr.id!=='takvimKatlaDug').map(tr=>((tr.querySelector('td')||{}).textContent||'').replace(/\s+/g,' ').trim().slice(0,14)).join('|'); }catch(e){ return ''; } }
 function bugunStr(){ const d=new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
@@ -1469,7 +1480,7 @@ async function gunlukBakim(){
           satirlar[hd.idx].outerHTML=temizle(y.trim(),true); g++;   /* §292 */
         }
       });
-      kayitli[anah]={ gun:bugun, html:T.table.outerHTML, saat:saat() };
+      kayitli[anah]={ gun:bugun, html:T.table.outerHTML, saat:saat(), imza:tabloImzaStatik(hedefler, satirlar) };   /* §443: bakım ÖNCESİ tablonun parmak izi */
       notKaydet(kayitli);
       kayit('Günlük bakım '+T.ad+': '+g+'/'+hedefler.length+' geçmiş satır işlendi 🤖 (gelecek satırlar JS korumasında)');
     }
