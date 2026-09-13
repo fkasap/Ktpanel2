@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260913b';   // SS440 DE/JP egri canli uc + makroihtiyati + etiketler
+const KTP_SURUM = '20260913c';   // SS441 rezerv karnesi: resmi bulten birincil
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9854,8 +9854,20 @@ async function karneRezervCanli(){
            taşır — sayıyı okuyan kişi panoya bakmamış olabilir. */
         let stokYas=null; try{ stokYas=Math.round((Date.now()-new Date(gun+'T00:00:00').getTime())/86400000); }catch(e){}
         const bayat = (stokYas!=null && stokYas>10);
-        $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· net − swap '+trN(swapStoku,1)+' · canlı (stok '+gun+')</span>'+
-          (bayat?' <span style="color:#E8933B;font-size:9px;font-weight:600">\u26a0 stok '+stokYas+' günlük — "rezervleri güncelle"</span>':'');
+        /* §441 (13 Eyl tarama): EVDS 'net' AYLIK analitik bilançodan günlük kurla çevrilen bir seri; TCMB'nin
+           haftalık basın bülteninde ilan ettiği 'net uluslararası rezerv' ile TANIM/ZAMAN farkı var
+           (ölçüm: EVDS 60,4 · bülten 65,6 → swap hariç 48,2 vs resmi 53,4 — 5 mlr sapma). Resmi
+           bülten rakamı rezerv.json.webDogrulama'da (haftalık elle işlenir). 14 günden taze ise
+           BİRİNCİL o; EVDS aylık ikincil olarak yanına yazılır. Bülten bayatsa eski hesap + uyarı. */
+        const wd=rj.webDogrulama||{}; let wdYas=null; try{ const p=String(wd.tarih||'').split('-'); if(p.length===3) wdYas=Math.round((Date.now()-new Date(p[2]+'-'+p[1]+'-'+p[0]+'T00:00:00').getTime())/86400000); }catch(e){}
+        const resmi = (wd.net!=null && wd.swapHaricNet!=null && wdYas!=null && wdYas<=14);
+        if(resmi){
+          if($('karneNet')) $('karneNet').innerHTML=trN(wd.net,1)+' <span class="thin" style="font-size:8px">· TCMB haftalık bülten · '+wd.tarih+' · EVDS aylık '+trN(j.net.degerUSD,1)+'</span>';
+          $('karneSwapHaric').innerHTML=trN(wd.swapHaricNet,1)+' <span class="thin" style="font-size:8px">· TCMB bülteni ('+wd.tarih+') · swap stoku '+trN(swapStoku,1)+'</span>';
+        } else {
+          $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· EVDS net − swap '+trN(swapStoku,1)+' (stok '+gun+') · bülten '+(wdYas!=null?wdYas+' günlük':'yok')+'</span>'+
+            (bayat?' <span style="color:#E8933B;font-size:9px;font-weight:600">\u26a0 stok '+stokYas+' günlük — "rezervleri güncelle"</span>':'');
+        }
         $('karneSwapHaric').className='up';
       }catch(e){
         /* §245k: rezerv.json okunamazsa swap hariç hesaplanamaz — ama net

@@ -6,6 +6,36 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §441–§442 (13 Eyl 2026)
+
+## §441 REZERV KARNESI: EVDS "NET" ILE TCMB BULTENI CELISIYORDU — RESMI BIRINCIL
+Tarama: karne "net 60,4 (EVDS aylik, kur 48,4)" -> swap haric 48,2; TCMB bulteni
+net 65,6 / swap haric 53,4 (4 Eyl). EVDS serisi AYLIK analitik bilancodan gunluk
+kurla cevriliyor; bultenin haftalik "net uluslararasi rezerv"i ile tanim/zaman
+farki 5 mlr. Panel yanlis sayi gosteriyordu. COZUM: rezerv.json.webDogrulama
+(bulten, haftalik elle) 14 gunden tazeyse Net ve Swap haric satirlari ORADAN;
+EVDS aylik yanina kucuk yazilir. Bulten bayatsa eski hesap + uyari.
+## §442 KART KART TARAMA — YANLIS BULUNANLAR
+- PIYASA "Merkez Bankalari" tablosu: TCMB "sabit 23 Tem, siradaki 10 Eyl" (gecti),
+  ECB "%2,25 (17 Haz), siradaki 10-11 Eyl" (artik %2,50, 29 Eki), BOK "%2,75 (16
+  Tem)" (artik %3,00, 27 Agu), BoJ/BOK "siradaki —", BoE "Agustos". Ebu 18:48'de
+  bu tabloya bakip "siradaki TCMB karari 10 Eylul'de bekleniyor" yazmisti —
+  BAYAT TABLO EBU'YU DE YANILTIYOR. Tablo tazelendi (TCMB 10 Eyl sabit -> 22 Eki;
+  ECB 2,50 -> 29 Eki; BoJ sabit 31 Tem -> 17-18 Eyl; BOK 3,00 -> 22 Eki; BoE 17 Eyl).
+- PIYASA "Kritik Takvim" (24 Tem-24 Agu penceresi): tamamen gecmis, tum satirlar
+  tik'li. 13 Eyl-13 Eki ile yeniden yazildi (FOMC 15-16, ECB yururluk 16, PPK
+  ozeti/BoE/rezerv 17, BoJ 17-18, COST 24, PCE ~26, MU 30, NFP ~2 Eki, TUFE ~3,
+  KEA ~9, ABD TUFE ~14, PPK+BOK 22 Eki).
+- PORTFOY "Sok senaryosu": "en olumsuz ASELS +0,0 · en olumlu EREGL +0,0" — sok
+  secilmemisken anlamsiz cikti; bos durumda "senaryo secin" yazmali (ACIK).
+- HALKA ARZ tablosu: GUNCEL sutunu cogunlukla "—" (Pazar, Yahoo kapali olabilir;
+  hafta ici dogrulanacak) (ACIK).
+- GYO NAV "TSPB 2025/12": 2026/06 donemi yayimlanmis olabilir (ACIK, kaynak
+  kontrolu).
+- AVRUPA tahvil karti: Bund/BTP/OAT 2026-06 (FRED aylik, 3 ay gecikme) — dogru
+  etiketli ama ECB iki artirim sonrasi "risksiz cipa" eski; gunluk kaynak yok.
+DEPLOY: ktpanel/{index.html, app.js} (surum 20260913c) — §438-441 birlikte.
+
 # BAKIM EK — §440 (13 Eyl 2026)
 
 ## §440 TAM TARAMA (alt sekmeler dahil, 30+ gun) — C SINIFI DUZELTMELERI
