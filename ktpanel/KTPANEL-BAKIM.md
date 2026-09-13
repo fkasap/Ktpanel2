@@ -6,6 +6,34 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §439 (13 Eyl 2026)
+
+## §439 SEKME TARAMASI (icerik) — BULGULAR VE DUZELTMELER
+Tarama bu kez KART ICERIGINE bakti (etiket/deger tutarliligi). Bulgular:
+1) AVRUPA ECB karti: canli DFR %2,50 iken damgali satir "17 Haz %2,25 son hamle"
+   diyordu — ECB 10 Eyl'de +25bp %2,50 (Berlin, yururluk 16 Eyl; HICP %3,3,
+   enerji %14,3). Satir/etiket/siradaki (29 Eki) tazelendi. Canli ile damgali
+   ayni kartta CELISIYORDU — en tehlikeli eskime bicimi.
+2) FOMC TARIHI BENIM HATAM: §436 gundem/koro satirlarina "16-17 Eyl" yazmistim;
+   dogrusu 15-16 Eyl (ABD kartindaki canli takvim dogruydu). Duzeltildi.
+3) ABD Fed karti: "Eylul artirim olasiligi — 27 Tem olcumu ≈%82" 48 gun eskiydi
+   -> "%53-57 ARTIRIM (10 Eyl)".
+4) PIYASA: AOFM "≈%40" — ortulu sikilasma 23 Agu'da bitti, AOFM ≈%37.
+   "2C26 MEGA-CAP DALGASI" etiketi altinda 3C26 takvimi (COST 24 Eyl, MU 30 Eyl)
+   vardi -> etiket 3C26.
+5) MAKRO: "Net rezervler aylik 60,4 (10-09)" vs TCMB haftalik basin verisi 65,6
+   (4 Eyl) — 5 mlr FARK; EVDS serisi ile TCMB'nin "net rezerv" tanimi ayni
+   olmayabilir (ya da hafta kaymasi). ACIK: kaynak/tanim dogrulanacak; swap
+   haric net hesabi bu satira dayaniyor. "Toplam YP mevduat (Eyl )" ay etiketi
+   bos (biçim purozu). Makroihtiyati karti etiketi "1-3 TEM" (73 gun).
+6) EQUITY risk butcesi: "BUTCE TUTARSIZ — 8 pozisyon + %0 nakitle tek isim tabani
+   %12,5, tavan %9" — kod dogru uyariyor; kullanici parametresi (tavan ya da
+   isim sayisi) degismeli. Kod isi degil.
+7) Ebu 44-48 gunluk yorumlar (Makro/Haberler/Asya) hala ana metin — §433 basamak 3.
+YAPILAN: 1-4 (index.html) + ECB/Fed kartlari nobete (§438 tarihli olay).
+ACIK: 5 (rezerv tanimi), 6 (kullanici karari), 7.
+DEPLOY: ktpanel/{index.html, guncelleme-plani.json} (+ §438 app.js/index).
+
 # BAKIM EK — §438 (13 Eyl 2026)
 
 ## §438 NOBET 'OLAY' MUAFIYETI DAMGALI KARTLARI GORMUYORDU (Pazar taramasi)

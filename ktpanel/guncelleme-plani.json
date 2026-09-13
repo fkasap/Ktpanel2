@@ -348,6 +348,22 @@
    "son": "2026-09-10",
    "limit_gun": 30,
    "kaynak": "Satırlar canlı (§421); yalnız etiket/okuma metni damgalı"
+  },
+  {
+   "ad": "ECB & Politika kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-13",
+   "limit_gun": 30,
+   "kaynak": "ECB takvimi: 10 Eyl +25bp %2,50 → 29 Eki. Canlı DFR satırıyla çelişirse damgalı satır tazelenir (§439)"
+  },
+  {
+   "ad": "Fed & Politika kartı (damgalı)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-09-13",
+   "limit_gun": 10,
+   "kaynak": "FOMC 15-16 Eyl (SEP+nokta) → 27-28 Eki. Karar sonrası tazelenir (§439)"
   }
  ],
  "bilanco_sezonu_aylar": [
