@@ -6,6 +6,25 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §438 (13 Eyl 2026)
+
+## §438 NOBET 'OLAY' MUAFIYETI DAMGALI KARTLARI GORMUYORDU (Pazar taramasi)
+
+Tarama: surum 20260910c, JS hatasi sifir, rezerv/PPK/fon portfoy yerinde. Ama nobet
+"1 dosya tazelenmeli" derken BoJ (8 Agu+35), HKMA (27 Tem+45), Kore Okuma (27 Tem+30)
+suresi dolmustu. KOK: ajan.js:418 'olay' tipini nobetten MUAF tutuyor (takvimsiz
+sayiyor); §433/§436 kartlarinin hepsi 'olay' + limit_gun — kural onlari hic
+gormedi. §433 basamak 1 fiilen CALISMAMISTI: olcmeden "nobete alindi" demistim.
+IKINCI TUZAK: index.html'in dosya tarihi her deploy'da yenilenir; "YENI olan
+gecerli" kurali plandaki 'son'u ezer, kart hep TAZE gorunurdu.
+COZUM (app.js tazelikHesap.durum, tek sahip §261): 'olay' + son + limit_gun =
+TARIHLI OLAY -> takvimli hesap; dosya=index.html ise yalniz plandaki 'son'.
+Limitsiz olay (kredi notu) eskisi gibi muaf. Birim test: BoJ 36g/35 yaklasti,
+Kore Okuma 48g/30 yaklasti (Ebu bayat sayar -> uyarir), TCMB 2g/45 taze,
+kredi notu 'olay'. ajan.js DEGISMEDI (tek hesap, iki rapor korunuyor).
+DERS: bir mekanizmaya kayit eklemek yetmez — mekanizmanin o kaydi OKUDUGU olculur.
+DEPLOY: ktpanel/{app.js, index.html} (surum 20260913a).
+
 # BAKIM EK — §436b–c (11 Eyl 2026)
 ## §436c REZERV: 28 Agu + 4 Eyl haftalari islendi
 swapStoku 11,0 -> 10,7 -> 12,2 (net 65,6 − swap haric 53,4). Brut 188,2 -> 184,2:

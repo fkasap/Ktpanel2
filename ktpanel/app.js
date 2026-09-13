@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260910c';   // SS435 finansal tablolar arsiv-oncelik
+const KTP_SURUM = '20260913a';   // SS438 tarihli olay: damgali kartlar nobete girer
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8811,9 +8811,15 @@ window.tazelikHesap = (function(){
   function durum(k, sg, dosyaT, bugun, sezonCtx){
     const S = limitCoz(k.siklik, sg, k);
     if(S.anahtar === 'canli' || k.son === 'otomatik') return {tip:'canli'};
-    if(S.anahtar === 'olay') return {tip:'olay', tarih:k.son};
-    if(S.limit == null) return {tip:'tanimsiz', siklik:k.siklik};
-    const df = dosyaT[String(k.dosya||'')] || null;
+    /* §438 (13 Eyl) TARİHLİ OLAY: 'olay' tipli kayıt son + limit_gun taşıyorsa takvimli sayılır —
+       §433/§436 damgalı kartlar (BoJ/HKMA/Kore/TCMB/Gündem) 'olay' olduğu için nöbetten MUAF
+       kalıyor, "1 dosya tazelenmeli" derken üç kartın süresi dolmuştu. Ayrıca index.html'in dosya
+       tarihi her deploy'da yenilendiğinden o kartlarda YALNIZ plandaki 'son' geçerli. */
+    const tarihliOlay = S.anahtar === 'olay' && k.limit_gun && k.son && /^\d{4}/.test(String(k.son));
+    if(S.anahtar === 'olay' && !tarihliOlay) return {tip:'olay', tarih:k.son};
+    const limitTaban = tarihliOlay ? Number(k.limit_gun) : S.limit;
+    if(limitTaban == null) return {tip:'tanimsiz', siklik:k.siklik};
+    const df = (String(k.dosya||'') === 'index.html') ? null : (dosyaT[String(k.dosya||'')] || null);
     const pd = (k.son && /^\d{4}/.test(k.son)) ? new Date(k.son) : null;
     const dd = df ? new Date(df) : null;
     const d = (dd && (!pd || dd > pd)) ? dd : pd;      /* YENİ olan geçerli */
@@ -8821,13 +8827,13 @@ window.tazelikHesap = (function(){
     const gun = Math.floor((bugun - d) / 86400000);
     /* Sezon indirimi: yalnizca k.sezon isaretli katmanlarda ve YALNIZCA limiti
        DUSURUR (asla yukseltmez). sezonCtx verilmezse davranis eskisi gibi. */
-    let limit = S.limit, sez = false;
+    let limit = limitTaban, sez = false;
     const sc = sezonCtx || {};
     if(k.sezon && sc.sezonda && sc.sezonLimit != null && limit > sc.sezonLimit){
       limit = sc.sezonLimit; sez = true;
     }
     const tip = gun <= limit ? 'taze' : (gun <= limit*2 ? 'yaklasti' : 'bayat');
-    return {tip, gun, limit, sez, limitNormal:S.limit, tarih:d.toISOString().slice(0,10),
+    return {tip, gun, limit, sez, limitNormal:limitTaban, tarih:d.toISOString().slice(0,10),
             kaynak:(dd && (!pd || dd > pd)) ? 'dosya' : 'plan'};
   }
   /* Sezon baglamini plandan uretir — cagiranlarin ay hesabi kopyalamasina gerek yok */
