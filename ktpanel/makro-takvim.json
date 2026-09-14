@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-13 10:32 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-14 12:55 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -25,6 +25,14 @@
    "etki": "High",
    "beklenti": "1.9%",
    "onceki": "1.9%"
+  },
+  {
+   "t": "2026-09-14T15:15:00.000Z",
+   "ulke": "EUR",
+   "olay": "ECB President Lagarde Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
   },
   {
    "t": "2026-09-15T06:00:00.000Z",
@@ -71,7 +79,7 @@
    "ulke": "USD",
    "olay": "Federal Funds Rate",
    "etki": "High",
-   "beklenti": "",
+   "beklenti": "4.00%",
    "onceki": "3.75%"
   },
   {
@@ -177,6 +185,14 @@
    "etki": "Medium",
    "beklenti": "-0.2%",
    "onceki": "-0.5%"
+  },
+  {
+   "t": "2026-09-18T10:30:00.000Z",
+   "ulke": "EUR",
+   "olay": "ECB President Lagarde Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
   }
  ]
 }
