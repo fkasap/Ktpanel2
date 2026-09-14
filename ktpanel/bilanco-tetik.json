@@ -63,6 +63,7 @@
   "SUNTK",
   "SUWEN",
   "TEZOL",
+  "TKFEN",
   "TMPOL",
   "TUREX",
   "UCAYM",
@@ -70,7 +71,7 @@
   "YATAS",
   "YEOTK"
  ],
- "sayi": 68,
+ "sayi": 69,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -310,7 +311,8 @@
   "VEYAS": "2026-09-09",
   "KAYSE": "2026-09-09",
   "KPEKS": "2026-09-10",
-  "TKNKA": "2026-09-10"
+  "TKNKA": "2026-09-10",
+  "TKFEN": "2026-09-14"
  },
  "evren_disi": [
   "ADESE",
@@ -486,7 +488,7 @@
   "ZEDUR"
  ],
  "evren_disi_sayi": 171,
- "pencere_sayi": 0,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-09-14 12:55 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-14 19:50 UTC — otomatik (KAP FR · kümülatif §299)"
 }

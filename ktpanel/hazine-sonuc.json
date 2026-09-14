@@ -325,8 +325,52 @@
      "itfa": "20 Ağustos 2027"
     }
    ]
+  },
+  "14-eylul-2026-tarihinde-gerceklestirilen-ihalelerin-sonuclarina-iliskin-basin-du": {
+   "tarih": "2026-09-14",
+   "baslik": "14 Eylül 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İlişkin Basın Duyurusu",
+   "ek": "https://ms.hmb.gov.tr/uploads/2026/09/KAF_20260914_ihale_sonucu_2s_4TLREF-a2b3937d1bc89a66.pdf",
+   "dosyaAdi": "KAF_20260914_ihale_sonucu_2s_4TLREF-a2b3937d1bc89a66.pdf",
+   "ihaleler": [
+    {
+     "ihaleNo": "2892",
+     "isin": "TRT130928T38",
+     "senet": "Sabit Kuponlu Devlet Tahvili",
+     "donemsel": {
+      "teklif": 18.39,
+      "gerceklesme": 18.31
+     },
+     "basit": {
+      "teklif": 36.78,
+      "gerceklesme": 36.63
+     },
+     "bilesik": {
+      "teklif": 40.16,
+      "gerceklesme": 39.98
+     },
+     "kira": null
+    },
+    {
+     "ihaleNo": "2893",
+     "isin": "TRT110930T36",
+     "senet": "TLREF'e Endeksli Devlet Tahvili",
+     "donemsel": {
+      "teklif": 18.84,
+      "gerceklesme": 18.64
+     },
+     "basit": {
+      "teklif": 37.68,
+      "gerceklesme": 37.29
+     },
+     "bilesik": {
+      "teklif": 41.23,
+      "gerceklesme": 40.76
+     },
+     "kira": null
+    }
+   ]
   }
  },
- "guncelleme": "2026-09-14 12:55 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
- "sayi": 11
+ "guncelleme": "2026-09-14 19:50 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
+ "sayi": 12
 }
