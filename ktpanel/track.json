@@ -2,8 +2,8 @@
  "inception": "2026-07-14",
  "endeks": "XKTUM",
  "endeks_kapanis": 18262.59,
- "fiyat_tarihi": "2026-09-14",
- "guncelleme": "2026-09-14",
+ "fiyat_tarihi": "2026-09-15",
+ "guncelleme": "2026-09-15",
  "sepet": "Top-40 · eşit ağırlık (%2,5)",
  "metod": "Sicil sepeti, faktör sıralamasının ilk 40 hissesi ve eşit ağırlıktır. Gerekçe (süreklilik ilkesi): sıralamada 24↔28 gibi küçük yer değişimleri dar (Top-25) sepette hisse giriş-çıkışı yaratıp getiri serisini koparır; geniş sepet bu gürültüyü emer ve ölçülen şey işlem maliyeti değil faktörün kendisi olur. Kompozit: VALUE %25 · GROWTH %10 · QUALITY %30 · MOMENTUM %20 · LOW_RISK %15 (kuruluş ağırlıkları, 14 Tem 2026 kapanış bazı).",
  "holdings": [
@@ -11,13 +11,13 @@
    "t": "MAVI",
    "w": 0.025,
    "p0": 39.98,
-   "p": 37.52
+   "p": 35.94
   },
   {
    "t": "ORGE",
    "w": 0.025,
    "p0": 21.7792,
-   "p": 22.74,
+   "p": 22.5,
    "_kurumsal": {
     "tarih": "2026-08-19",
     "oran": 0.2002
@@ -27,229 +27,229 @@
    "t": "ARASE",
    "w": 0.025,
    "p0": 123.5,
-   "p": 120.2
+   "p": 114.6
   },
   {
    "t": "LMKDC",
    "w": 0.025,
    "p0": 23.04,
-   "p": 21.94
+   "p": 21.36
   },
   {
    "t": "TUPRS",
    "w": 0.025,
    "p0": 270.75,
-   "p": 415.75
+   "p": 412.5
   },
   {
    "t": "NTGAZ",
    "w": 0.025,
    "p0": 11.3,
-   "p": 11.25
+   "p": 11.09
   },
   {
    "t": "KTLEV",
    "w": 0.025,
    "p0": 54.2,
-   "p": 33.88
+   "p": 30.5
   },
   {
    "t": "KRONT",
    "w": 0.025,
    "p0": 23.84,
-   "p": 21.32
+   "p": 20.8
   },
   {
    "t": "GRSEL",
    "w": 0.025,
    "p0": 318,
-   "p": 295
+   "p": 293
   },
   {
    "t": "ELITE",
    "w": 0.025,
    "p0": 31.32,
-   "p": 25.08
+   "p": 24.56
   },
   {
    "t": "PLTUR",
    "w": 0.025,
    "p0": 22.42,
-   "p": 20.08
+   "p": 19.56
   },
   {
    "t": "MPARK",
    "w": 0.025,
    "p0": 413,
-   "p": 438.5
+   "p": 427.25
   },
   {
    "t": "GUBRF",
    "w": 0.025,
    "p0": 413.25,
-   "p": 478.75
+   "p": 461
   },
   {
    "t": "GOKNR",
    "w": 0.025,
    "p0": 23.84,
-   "p": 17.87
+   "p": 17.75
   },
   {
    "t": "KOTON",
    "w": 0.025,
    "p0": 13.8,
-   "p": 12.11
+   "p": 12.05
   },
   {
    "t": "BIMAS",
    "w": 0.025,
    "p0": 384.5,
-   "p": 429.75
+   "p": 415.75
   },
   {
    "t": "BAHKM",
    "w": 0.025,
    "p0": 115.5,
-   "p": 189
+   "p": 170.1
   },
   {
    "t": "SEKUR",
    "w": 0.025,
    "p0": 12,
-   "p": 9.4
+   "p": 8.81
   },
   {
    "t": "RGYAS",
    "w": 0.025,
    "p0": 198.2,
-   "p": 198.9
+   "p": 192.5
   },
   {
    "t": "FONET",
    "w": 0.025,
    "p0": 4.96,
-   "p": 4.43
+   "p": 4.26
   },
   {
    "t": "EUPWR",
    "w": 0.025,
    "p0": 90.55,
-   "p": 72
+   "p": 69.9
   },
   {
    "t": "DAPGM",
    "w": 0.025,
    "p0": 9.1,
-   "p": 7.8
+   "p": 7.6
   },
   {
    "t": "EGGUB",
    "w": 0.025,
    "p0": 97.25,
-   "p": 111.4
+   "p": 109.4
   },
   {
    "t": "BASGZ",
    "w": 0.025,
    "p0": 46.38,
-   "p": 45.28
+   "p": 43.74
   },
   {
    "t": "SAFKR",
    "w": 0.025,
    "p0": 20.44,
-   "p": 13.62
+   "p": 13
   },
   {
    "t": "ARDYZ",
    "w": 0.025,
    "p0": 66.05,
-   "p": 77.7
+   "p": 74.4
   },
   {
    "t": "EBEBK",
    "w": 0.025,
    "p0": 79.25,
-   "p": 82.35
+   "p": 82.5
   },
   {
    "t": "GOLTS",
    "w": 0.025,
    "p0": 311.7511398816109,
-   "p": 293
+   "p": 284.75
   },
   {
    "t": "ISDMR",
    "w": 0.025,
    "p0": 55.6,
-   "p": 60
+   "p": 61
   },
   {
    "t": "CIMSA",
    "w": 0.025,
    "p0": 45.82,
-   "p": 44.84
+   "p": 43.02
   },
   {
    "t": "ENJSA",
    "w": 0.025,
    "p0": 99.5,
-   "p": 114.3
+   "p": 112.8
   },
   {
    "t": "YUNSA",
    "w": 0.025,
    "p0": 8.96,
-   "p": 7.62
+   "p": 7.25
   },
   {
    "t": "KRDMD",
    "w": 0.025,
    "p0": 40.84,
-   "p": 45.5
+   "p": 44
   },
   {
    "t": "GRTHO",
    "w": 0.025,
    "p0": 245.5,
-   "p": 234.7
+   "p": 220.3
   },
   {
    "t": "AVPGY",
    "w": 0.025,
    "p0": 52.9,
-   "p": 58.2
+   "p": 56.8
   },
   {
    "t": "KONYA",
    "w": 0.025,
    "p0": 3772.5,
-   "p": 4300
+   "p": 4122.5
   },
   {
    "t": "CEMTS",
    "w": 0.025,
    "p0": 9.29,
-   "p": 8.72
+   "p": 8.51
   },
   {
    "t": "ASELS",
    "w": 0.025,
    "p0": 348.5,
-   "p": 372.5
+   "p": 377
   },
   {
    "t": "KARSN",
    "w": 0.025,
    "p0": 10.82,
-   "p": 14.33
+   "p": 13
   },
   {
    "t": "SUNTK",
    "w": 0.025,
    "p0": 34.5,
-   "p": 31.68
+   "p": 30.92
   }
  ],
  "series": [
@@ -412,6 +412,11 @@
    "d": "2026-09-14",
    "model": 0.193,
    "endeks": 6.491
+  },
+  {
+   "d": "2026-09-15",
+   "model": -3.003,
+   "endeks": 4.54
   }
  ],
  "not_sicil": "Model getirisi yalniz FIYAT TARIHI olan gunlerde kesindir; ara gunlerin model degeri onceki tazelemelerden korunur, bos olabilir. Endeks serisi her is gunu tam (endeks_mumlar_gunluk_gh). Bos model noktasi CIZILMEZ, uydurulmaz.",

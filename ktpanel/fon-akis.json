@@ -200513,6 +200513,10 @@
     8605496,
     66.009623
    ],
+   "PCS": [
+    11031872231,
+    0.61476
+   ],
    "PDC": [
     1084666311,
     0.18313
@@ -203103,7 +203107,7 @@
  "akis": {
   "onceki": "2026-09-14",
   "gun": "2026-09-15",
-  "adet": 2030,
+  "adet": 2031,
   "fon": {
    "AAL": 1953417,
    "AAS": -234213,
@@ -204489,6 +204493,7 @@
    "PCE": 60,
    "PCH": 0,
    "PCN": 0,
+   "PCS": -149764960,
    "PDC": 0,
    "PDD": -910,
    "PDE": 0,
@@ -205870,7 +205875,6 @@
   "PK1": "AHLATCI PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ",
   "PKD": "PUSULA PORTFÖY YÖNETİMİ A.Ş.",
   "PKF": "ATA PORTFÖY YÖNETİMİ A.Ş.",
-  "PKM": "PUSULA PORTFÖY YÖNETİMİ A.Ş.",
   "PKP": "ATA PORTFÖY YÖNETİMİ A.Ş.",
   "PKR": "ROTA PORTFÖY YÖNETİMİ A.Ş.",
   "PKT": "YAPI KREDİ PORTFÖY YÖNETİMİ A.Ş.",
@@ -206858,6 +206862,7 @@
   "PBY": "PARDUS PORTFÖY",
   "PCH": "PARDUS PORTFÖY",
   "PCN": "PERFORM PORTFÖY",
+  "PCS": "PUSULA PORTFÖY",
   "PDC": "PUSULA PORTFÖY",
   "PDE": "PUSULA PORTFÖY",
   "PDG": "PUSULA PORTFÖY",
@@ -206871,6 +206876,7 @@
   "PHY": "PARDUS PORTFÖY",
   "PKH": "DENİZ PORTFÖY",
   "PKL": "PUSULA PORTFÖY",
+  "PKM": "PUSULA PORTFÖY",
   "PKN": "PİRAMİT PORTFÖY",
   "PKU": "PARDUS PORTFÖY",
   "PKZ": "PUSULA PORTFÖY",
@@ -207166,7 +207172,7 @@
   "gun": "2026-09-15",
   "onceki": "2026-09-14",
   "adet": 70,
-  "eslesmeyen": 9,
+  "eslesmeyen": 10,
   "liste": [
    {
     "ad": "ALBARAKA",
@@ -207524,7 +207530,7 @@
   "1H": {
    "taban": "2026-09-08",
    "gun": "2026-09-15",
-   "adet": 2027,
+   "adet": 2028,
    "pys": [
     {
      "ad": "TERA",
@@ -208038,7 +208044,7 @@
   "1A": {
    "taban": "2026-08-14",
    "gun": "2026-09-15",
-   "adet": 2012,
+   "adet": 2013,
    "pys": [
     {
      "ad": "TERA",

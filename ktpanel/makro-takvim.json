@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-14 19:50 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-15 16:56 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -49,6 +49,14 @@
    "etki": "Medium",
    "beklenti": "3.9%",
    "onceki": "4.1%"
+  },
+  {
+   "t": "2026-09-15T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "Treasury Sec Bessent Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
   },
   {
    "t": "2026-09-16T06:00:00.000Z",
@@ -143,7 +151,7 @@
    "ulke": "USD",
    "olay": "Philly Fed Manufacturing Index",
    "etki": "Medium",
-   "beklenti": "28.9",
+   "beklenti": "31.3",
    "onceki": "47.4"
   },
   {
@@ -151,7 +159,7 @@
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "209K",
+   "beklenti": "208K",
    "onceki": "206K"
   },
   {
