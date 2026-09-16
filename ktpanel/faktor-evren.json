@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-16T18:49:10Z",
+ "guncelleme": "2026-09-16T19:01:12Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -2214,7 +2214,7 @@
    "eksik": false
   },
   "MOBTL": {
-   "ts": "2026-09-10T08:33:07Z",
+   "ts": "2026-09-16T18:59:52Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2248,7 +2248,7 @@
    "eksik": false
   },
   "OBAMS": {
-   "ts": "2026-09-10T08:33:24Z",
+   "ts": "2026-09-16T19:00:09Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2316,14 +2316,14 @@
    "eksik": false
   },
   "ONCSM": {
-   "ts": "2026-09-10T08:33:59Z",
+   "ts": "2026-09-16T19:00:39Z",
    "y": "362",
    "donem": "2026/2",
-   "ceyrek": 5,
-   "ciro": 734913288,
-   "brut": 427584412,
-   "favok": 293680277,
-   "netKar": 70637154,
+   "ceyrek": 2,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "netKar": null,
    "ozk": 505011304,
    "aktif": 911484921,
    "donen": 548968005,
@@ -2331,11 +2331,11 @@
    "finBorc": 178049407,
    "likit": 30095645,
    "netBorc": 147953762,
-   "isletmeNA": 98309597,
-   "capex": -76040249,
-   "sna": 22269348,
-   "tahakkuk": -3.04,
-   "odFaiz": -48290706,
+   "isletmeNA": null,
+   "capex": null,
+   "sna": null,
+   "tahakkuk": null,
+   "odFaiz": null,
    "odTemettu": null,
    "stoklar": 136019011,
    "ticariAlacak": 256090597,
@@ -2347,7 +2347,7 @@
    },
    "adet": 23850000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "eksik": true
   },
   "OSTIM": {
    "ts": "2026-08-24T15:52:59Z",
@@ -3404,7 +3404,7 @@
    "eksik": false
   },
   "BRLSM": {
-   "ts": "2026-09-10T08:33:42Z",
+   "ts": "2026-09-16T19:00:26Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,

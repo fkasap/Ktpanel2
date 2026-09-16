@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2029 fon fiyat + 1066 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587011586165402> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587011586657450> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 46/46 (%100)
@@ -120,12 +120,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-09-16 18:00Z · USD · Federal Funds Rate
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 104/247
-- bu turda: 4 tam · 1 eksik kalemli · 1 alınamadı
-- not: MCARD:2 ana kalem boş · MOBTL:2026: fetch failed
+- bu turda: 3 tam · 1 eksik kalemli · 2 alınamadı
+- not: ONCSM:2 ana kalem boş · PLTUR:2026: fetch failed · POLHO:2026: fetch failed
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/247 şirket tam
-- MERCN:2026: fetch failed (2. kez) · BINHO:2026: fetch failed (2. kez)
+- OBAMS:2026: fetch failed (2. kez) · ASELS:2026: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
@@ -162,15 +162,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
 - §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
 
-- §429p kuyruk: liste 228 kayıt · daha önce işlenmiş 140 idx · iş 35
+- §429p kuyruk: liste 228 kayıt · daha önce işlenmiş 140 idx · iş 33
 
 ### Fon portföy dağılımı (§429) — ✓ 30 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 168 dönem · KAP yolu: tarama(47 fon, 12222 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 
 
 ---
-**Sonuç:** TR 5Y CDS (226.67 bp) · risk metrikleri (141) · fon akışı (2028) · katılım fonları (46+akış) · bilanço tetiği (71 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (25 olay) · faktör evreni (104/247) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (30 rapor)
+**Sonuç:** TR 5Y CDS (226.67 bp) · fon akışı (2028) · katılım fonları (46+akış) · bilanço tetiği (71 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (25 olay) · faktör evreni (104/247) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (30 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 85 sn
-- ⏱ KAP arşivi (§381) — 74 sn
+- ⏱ Faktör evreni (§361) — 90 sn
+- ⏱ KAP arşivi (§381) — 72 sn
 - toplam: 246 sn
