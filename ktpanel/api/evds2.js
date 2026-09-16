@@ -327,6 +327,7 @@ module.exports = async (req, res) => {
   if (mod === 'egri')  return _egri(req, res);
   if (mod === 'kart')  return _kart(req, res);
   if (mod === 'rezerv') return rezervModu(req, res);
+  if (mod === 'seri')  return seriModu(req, res);   /* §444: hesap zinciri için TÜFE endeksi + kur geçmişi (beyaz liste) */
   if (mod === 'dvz') return dvzModu(req, res, { key: process.env.EVDS_KEY || req.query.key });
   if (mod === 'ecb') return ecbModu(req, res);   /* §275 — EVDS anahtarı GEREKMEZ */
   if (mod === 'yab') return yabModu(req, res, { key: process.env.EVDS_KEY || req.query.key });
@@ -502,6 +503,31 @@ module.exports.config = { maxDuration: 60 };
 // Brüt: bie_abres2 TP.AB.TOPLAM (altın+döviz, milyon USD, HAFTALIK) — makro kartla aynı seri
 // Net: analitik bilanço A02−A10 (bin TL, AYLIK), USD çevirimi CLIENT'ta (window.__usdtry)
 // Doğrulama: (A02−A10)/kur = 56,3 mlr$ (10 Tem damgalı ile tuttu, 2 mlr TL fark)
+
+/* ── §444 GENEL SERİ KAPISI (beyaz listeli) ────────────────────────────────
+   Hesap zinciri (Finansal Tablolar > Hesap Zinciri) iki yardımcı seriye muhtaç:
+   TP.FG.J0  TÜFE genel endeksi (aylık, 2003=100) — satın alma gücü taşıma
+   TP.DK.USD.A.YTL  USD/TRY alış (günlük) — dönem sonu kuru
+   Fintables'ın gösterdiği zincirle aynı iki kaynak. Başka seri kabul edilmez. */
+const SERI_BEYAZ = { 'TP.FG.J0': 'TÜFE genel endeksi (2003=100)', 'TP.DK.USD.A.YTL': 'USD/TRY alış (TCMB)' };
+async function seriModu(req, res){
+  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Cache-Control', 's-maxage=43200, stale-while-revalidate=86400');
+  const key = process.env.EVDS_KEY || req.query.key;
+  if (!key) return res.status(200).json({ ok:false, err:'EVDS_KEY yok' });
+  const kod = String(req.query.kod||''); if(!SERI_BEYAZ[kod]) return res.status(200).json({ ok:false, err:'seri beyaz listede değil' });
+  const bas = String(req.query.bas||'01-01-2023').replace(/[^0-9-]/g,'');
+  const bugun=new Date(); const bitis=String(bugun.getDate()).padStart(2,'0')+'-'+String(bugun.getMonth()+1).padStart(2,'0')+'-'+bugun.getFullYear();
+  const url='https://evds3.tcmb.gov.tr/igmevdsms-dis/series='+kod+'&startDate='+bas+'&endDate='+bitis+'&type=json';
+  try{
+    const r=await fetch(url,{headers:{'key':key,'Accept':'application/json','User-Agent':'Mozilla/5.0'},signal:AbortSignal.timeout(20000)});
+    const t=await r.text(); if(!(t.trim().startsWith('{')||t.trim().startsWith('['))) return res.status(200).json({ ok:false, err:'EVDS JSON değil' });
+    const j=JSON.parse(t); const alan=kod.replace(/\./g,'_');
+    const seri=(j.items||[]).map(x=>({t:x.Tarih, v:x[alan]!=null?parseFloat(String(x[alan]).replace(',','.')):null})).filter(x=>x.v!=null&&isFinite(x.v));
+    return res.status(200).json({ ok:seri.length>0, kod, ad:SERI_BEYAZ[kod], kaynak:'TCMB EVDS', alinma:new Date().toISOString(), n:seri.length, seri });
+  }catch(e){ return res.status(200).json({ ok:false, err:String(e&&e.message||e).slice(0,100) }); }
+}
+
 async function rezervModu(req, res){
   res.setHeader('Access-Control-Allow-Origin','*');
   const key = process.env.EVDS_KEY || req.query.key;
