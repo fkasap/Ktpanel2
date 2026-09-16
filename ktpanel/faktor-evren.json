@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-16T06:50:24Z",
+ "guncelleme": "2026-09-16T18:41:22Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -1840,7 +1840,7 @@
    "eksik": false
   },
   "LKMNH": {
-   "ts": "2026-09-10T06:34:59Z",
+   "ts": "2026-09-16T18:40:38Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3504,8 +3504,42 @@
    "adet": 334000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
+  },
+  "MAVI": {
+   "ts": "2026-09-16T18:40:22Z",
+   "y": "362",
+   "donem": "2026/2",
+   "ceyrek": 5,
+   "ciro": 47432652000,
+   "brut": 24641202000,
+   "favok": 9080257000,
+   "netKar": 1810466000,
+   "ozk": 15140684000,
+   "aktif": 32401601000,
+   "donen": 21468361000,
+   "kvY": 14769723000,
+   "finBorc": 6298734000,
+   "likit": 9484641000,
+   "netBorc": -3185907000,
+   "isletmeNA": 9659111000,
+   "capex": -2336538000,
+   "sna": 7322573000,
+   "tahakkuk": -24.22,
+   "odFaiz": -181600000,
+   "odTemettu": -1184720000,
+   "stoklar": 8074306000,
+   "ticariAlacak": 2783622000,
+   "ticariBorc": 8054205000,
+   "buyume": {
+    "ciro": -1.1,
+    "netKar": -33,
+    "brut": 2.3
+   },
+   "adet": 794512000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "eksik": false
   }
  },
- "uye_sayisi": 246,
- "kapsam": 103
+ "uye_sayisi": 247,
+ "kapsam": 104
 }

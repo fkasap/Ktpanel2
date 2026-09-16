@@ -43,6 +43,7 @@
   "KRONT",
   "LKMNH",
   "MAGEN",
+  "MAVI",
   "MCARD",
   "MEGMT",
   "MERCN",
@@ -72,7 +73,7 @@
   "YATAS",
   "YEOTK"
  ],
- "sayi": 70,
+ "sayi": 71,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -314,7 +315,9 @@
   "KPEKS": "2026-09-10",
   "TKNKA": "2026-09-10",
   "TKFEN": "2026-09-14",
-  "GUBRF": "2026-09-15"
+  "GUBRF": "2026-09-15",
+  "MAVI": "2026-09-16",
+  "OTTO": "2026-09-16"
  },
  "evren_disi": [
   "ADESE",
@@ -436,6 +439,7 @@
   "OFSYM",
   "ORZAX",
   "OSTIM",
+  "OTTO",
   "OZGYO",
   "OZKGY",
   "OZRDN",
@@ -489,8 +493,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 171,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 172,
+ "pencere_sayi": 3,
  "dusen_son": [],
- "guncelleme": "2026-09-16 06:48 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-16 18:40 UTC — otomatik (KAP FR · kümülatif §299)"
 }

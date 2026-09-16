@@ -1,10 +1,10 @@
 {
  "guncelleme": "2026-09-16",
  "kaynak": "BIST resmî (hisse_endeks_katilim_ds.csv)",
- "bist_damga": "16/09/2026",
+ "bist_damga": "17/09/2026",
  "sayim": {
   "XK030EA": 30,
-  "XKTUM": 246,
+  "XKTUM": 247,
   "XK100": 100,
   "XK050": 50,
   "XK030": 30,
@@ -219,6 +219,7 @@
    "MPARK",
    "NETAS",
    "NETCD",
+   "NETGL",
    "NTGAZ",
    "OBAMS",
    "OBASE",
