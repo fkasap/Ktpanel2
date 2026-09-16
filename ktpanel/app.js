@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260916a';   // SS444 hesap zinciri alt sekmesi
+const KTP_SURUM = '20260916b';   // SS444d TUFE tarih esleme + birlesik TUFE+USD
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10131,7 +10131,8 @@ function hzHesapla(S, tanim, carpan){
   return {ok:true, deger:top, girdiler:g, formul:tanim.formul};
 }
 async function hzSeri(kod, bas){ try{ const r=await fetch('/api/evds2?mod=seri&kod='+encodeURIComponent(kod)+'&bas='+bas,{cache:'no-store'}); const j=await r.json(); return (j&&j.ok)?j:null; }catch(e){ return null; } }
-function hzTufeAy(seri, yil, ay){ if(!seri) return null; const hedef=yil+'-'+String(ay).padStart(2,'0'); const x=seri.seri.find(p=>String(p.t).startsWith(hedef)); return x?{v:x.v,t:x.t}:null; }
+/* §444d: EVDS aylık tarihi '2026-6' (sıfırsız) — iki taraf da normalize edilir (canlı: 49 ay geldi, hiçbiri eşleşmedi) */
+function hzTufeAy(seri, yil, ay){ if(!seri) return null; const norm=t=>{const m=String(t).match(/^(\d{4})-(\d{1,2})/); return m?m[1]+'-'+String(+m[2]).padStart(2,'0'):String(t);}; const hedef=yil+'-'+String(ay).padStart(2,'0'); const x=seri.seri.find(p=>norm(p.t)===hedef); return x?{v:x.v,t:norm(x.t)}:null; }
 function hzKurGun(seri, yil, ay){ if(!seri) return null; const son=new Date(yil, ay, 0); const g=son.getDate(); for(let d=g; d>=g-10; d--){ const key=String(d).padStart(2,'0')+'-'+String(ay).padStart(2,'0')+'-'+yil; const x=seri.seri.find(p=>String(p.t)===key); if(x) return {v:x.v,t:x.t}; } return null; }
 async function hzKur(){
   const kod=(document.getElementById('hzKod').value||'').trim().toUpperCase(); const taban=document.getElementById('hzTaban').value, mod=document.getElementById('hzMod').value;
@@ -10144,7 +10145,7 @@ async function hzKur(){
   /* dönem anahtarı kaydın ANAHTARINDA ('2026/2'); kayıt içinde donem alanı yok */
   const donemler=Object.entries(ars.donemler).map(([k,D])=>({D:Object.assign({donem:k},D),a:hzDonemAnahtar({donem:k})})).filter(x=>x.a).sort((x,y)=>(x.a.yil-y.a.yil)||(x.a.c-y.a.c));
   const sonD=donemler[donemler.length-1];
-  if(taban!=='nominal'){ d.textContent='EVDS serileri…'; if(taban==='tufe'&&!HZ.tufe) HZ.tufe=await hzSeri('TP.FG.J0','01-01-2022'); if(taban==='usd'&&!HZ.kur) HZ.kur=await hzSeri('TP.DK.USD.A.YTL','01-01-2022'); }
+  if(taban!=='nominal'){ d.textContent='EVDS serileri…'; if((taban==='tufe'||taban==='tufe_usd')&&!HZ.tufe) HZ.tufe=await hzSeri('TP.FG.J0','01-01-2022'); if((taban==='usd'||taban==='tufe_usd')&&!HZ.kur) HZ.kur=await hzSeri('TP.DK.USD.A.YTL','01-01-2022'); }
   const hedefAy=sonD.a.c*3, hedefYil=sonD.a.yil; const tufeHedef=HZ.tufe?hzTufeAy(HZ.tufe,hedefYil,hedefAy):null;
   // dönem bazlı sözlük + kümülatif değerler
   const sozluk={}; donemler.forEach(x=>{ sozluk[x.a.key]={S:hzSatirSozlugu(x.D), carpan:(x.D.birim&&x.D.birim.carpan)||1, D:x.D, a:x.a}; });
@@ -10170,9 +10171,12 @@ async function hzKur(){
   // düzeltme
   const duzelt=(val, a)=>{ if(val==null) return {v:null}; if(taban==='nominal') return {v:val, adim:null};
     if(taban==='tufe'){ const kay=hzTufeAy(HZ.tufe,a.yil,a.c*3); if(!kay||!tufeHedef) return {v:null, hata:'TÜFE endeksi yok ('+a.yil+'/'+(a.c*3)+')'}; const oran=tufeHedef.v/kay.v; return {v:val*oran, adim:{tip:'TÜFE taşıma', seri:'TP.FG.J0', kaynak:kay, hedef:tufeHedef, oran}}; }
-    if(taban==='usd'){ const kur=hzKurGun(HZ.kur,a.yil,a.c*3); if(!kur) return {v:null, hata:'dönem sonu kuru yok'}; return {v:val/kur.v, adim:{tip:'USD dönüşümü', seri:'TP.DK.USD.A.YTL', kur}}; } return {v:val}; };
+    if(taban==='usd'){ const kur=hzKurGun(HZ.kur,a.yil,a.c*3); if(!kur) return {v:null, hata:'dönem sonu kuru yok'}; return {v:val/kur.v, adim:{tip:'USD dönüşümü', seri:'TP.DK.USD.A.YTL', kur}}; }
+    /* §444d BİRLEŞİK (videodaki zincir): önce son dönem satın alma gücüne taşı, sonra SON DÖNEM kuruyla USD */
+    if(taban==='tufe_usd'){ const kay=hzTufeAy(HZ.tufe,a.yil,a.c*3); if(!kay||!tufeHedef) return {v:null, hata:'TÜFE endeksi yok ('+a.yil+'/'+(a.c*3)+')'}; const oran=tufeHedef.v/kay.v; const kur=hzKurGun(HZ.kur,hedefYil,hedefAy); if(!kur) return {v:null, hata:'son dönem kuru yok'}; return {v:val*oran/kur.v, adim:{tip:'TÜFE taşıma', seri:'TP.FG.J0', kaynak:kay, hedef:tufeHedef, oran}, adim2:{tip:'USD dönüşümü (son dönem kuru)', seri:'TP.DK.USD.A.YTL', kur, ara:val*oran}}; }
+    return {v:val}; };
   // tablo
-  const fmt=v=>v==null?'—':(taban==='usd'?(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+' mn $':(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:0})+' mn ₺');
+  const fmt=v=>v==null?'—':((taban==='usd'||taban==='tufe_usd')?(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+' mn $':(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:0})+' mn ₺');
   let html='<table class="tbl"><thead><tr><th>Kalem</th>'+donemler.map(x=>'<th style="text-align:right">'+x.a.key+(mod==='ceyrek'?' Ç':'')+'</th>').join('')+'</tr></thead><tbody>';
   HZ.zincir={};
   HZ_TANIM.forEach(t=>{ html+='<tr><td><b>'+t.ad+'</b> <span class="sub">'+(t.tur==='stok'?'dönem sonu':'akış')+'</span></td>';
@@ -10200,7 +10204,8 @@ function hzZincirGoster(id){
   else h+='<div class="kv"><span class="k">2. Toplam</span><span><b>'+n(r.deger)+'</b>'+(r.not?' <span class="sub">'+r.not+'</span>':'')+'</span></div>';
   const dz=z.duzeltme;
   if(dz&&dz.adim){ if(dz.adim.tip==='TÜFE taşıma') h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' × '+dz.adim.hedef.v.toLocaleString('tr-TR')+' ('+dz.adim.hedef.t+') / '+dz.adim.kaynak.v.toLocaleString('tr-TR')+' ('+dz.adim.kaynak.t+') = <b>'+n(dz.v)+'</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>';
-    else h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' ÷ '+dz.adim.kur.v.toLocaleString('tr-TR',{maximumFractionDigits:4})+' (USD/TRY '+dz.adim.kur.t+') = <b>'+n(dz.v)+' $</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>'; }
+    else h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' ÷ '+dz.adim.kur.v.toLocaleString('tr-TR',{maximumFractionDigits:4})+' (USD/TRY '+dz.adim.kur.t+') = <b>'+n(dz.v)+' $</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>';
+    if(dz.adim2) h+='<div class="kv"><span class="k">4. '+dz.adim2.tip+'</span><span>'+n(dz.adim2.ara)+' ÷ '+dz.adim2.kur.v.toLocaleString('tr-TR',{maximumFractionDigits:4})+' (USD/TRY '+dz.adim2.kur.t+') = <b>'+n(dz.v)+' $</b> <span class="sub">· seri '+dz.adim2.seri+' · TCMB EVDS</span></span></div>'; }
   else if(dz&&dz.hata) h+='<div class="kv"><span class="k">3. Düzeltme</span><span class="sub">'+dz.hata+'</span></div>';
   h+='<div style="margin-top:8px;padding-top:6px;border-top:1px dashed var(--line)"><div class="lbl" style="font-size:9px">KÜNYE</div>'+
      '<div class="kv"><span class="k">Dönem</span><span>'+(D.donem||'?')+' · '+(D.ad||'')+'</span></div>'+
