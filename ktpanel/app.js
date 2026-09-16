@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260913c';   // SS441 rezerv karnesi: resmi bulten birincil
+const KTP_SURUM = '20260916a';   // SS444 hesap zinciri alt sekmesi
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10086,6 +10086,131 @@ const CS_KALEM = [
   ['ifrs-full_CashFlowsFromUsedInInvestingActivities','Yatırım Nakit Akışı','Nakit Akış','akis'],
   ['ifrs-full_CashFlowsFromUsedInFinancingActivities','Finansman Nakit Akışı','Nakit Akış','akis']
 ];
+
+/* ── §444 HESAP ZİNCİRİ ───────────────────────────────────────────────────
+   Girdi: kap-arsiv/<KOD>.json (dönemler[id] = {donem:'2026/2', tablolar:[{ad, satirlar:[{xbrl, etiket, degerler}]}], birim}).
+   1) Satır sözlüğü: XBRL kodu → değer (degerler[0] = cari dönem kümülatif; bilançoda dönem sonu).
+   2) Türetilmiş kalemler: her biri {ad, formul, girdiler:[{xbrl, etiket, deger, kaynak}], deger}.
+   3) Bağımsız çeyrek: Ç1 doğrudan; Ç2..Ç4 = kümülatif − bir önceki kümülatif (aynı yıl). Bilanço kalemleri
+      stok olduğu için çeyrekleme yapılmaz.
+   4) Düzeltme: TÜFE (EVDS TP.FG.J0, dönem sonu ayı → hedef ay) ve USD (EVDS TP.DK.USD.A.YTL, dönem sonu
+      günü). Her adım künyede: seri, iki tarih, iki değer, oran.
+   Kaynaklı olmayan hiçbir rakam gösterilmez. Eksik XBRL → "hesaplanamadı — <kod> yok". */
+const HZ_TANIM = [
+  { ad:'Hasılat', tur:'akis', formul:'Hasılat', bilesen:[['ifrs-full_Revenue','+']] },
+  { ad:'Brüt kâr', tur:'akis', formul:'Brüt kâr (rapor satırı)', bilesen:[['ifrs-full_GrossProfit','+']],
+    alternatif:{ formul:'Hasılat − Satışların maliyeti', bilesen:[['ifrs-full_Revenue','+'],['ifrs-full_CostOfSales','+']] } },
+  { ad:'Esas faaliyet kârı', tur:'akis', formul:'Esas faaliyet kârı (rapor satırı)', bilesen:[['ifrs-full_ProfitLossFromOperatingActivities','+']],
+    alternatif:{ formul:'Brüt kâr + Genel yönetim + Pazarlama + AR-GE + Diğer gelir + Diğer gider (giderler negatif)', bilesen:[['ifrs-full_GrossProfit','+'],['ifrs-full_AdministrativeExpense','+'],['kap-fr_MarketingExpense','+'],['ifrs-full_ResearchAndDevelopmentExpense','+?'],['ifrs-full_OtherIncome','+'],['ifrs-full_OtherExpenseByFunction','+']] } },
+  { ad:'FAVÖK', tur:'akis', formul:'Esas faaliyet kârı + Amortisman ve itfa', bilesen:[['ifrs-full_ProfitLossFromOperatingActivities','+'],['ifrs-full_DepreciationAndAmortisationExpense','+abs']] },
+  { ad:'Finansman öncesi faaliyet kârı', tur:'akis', formul:'Rapor satırı', bilesen:[['kap-fr_ProfitLossBeforeFinancingExpense','+']] },
+  { ad:'Net parasal pozisyon K/Z', tur:'akis', formul:'Rapor satırı (TMS 29)', bilesen:[['ifrs-full_GainsLossesOnNetMonetaryPosition','+']] },
+  { ad:'Net dönem kârı (ana ortaklık)', tur:'akis', formul:'Rapor satırı', bilesen:[['ifrs-full_ProfitLossAttributableToOwnersOfParent','+']], alternatif:{ formul:'Dönem kârı', bilesen:[['ifrs-full_ProfitLoss','+']] } },
+  { ad:'Nakit ve benzerleri', tur:'stok', formul:'Rapor satırı', bilesen:[['ifrs-full_CashAndCashEquivalents','+']] },
+  { ad:'Finansal borç (KV+UV)', tur:'stok', formul:'Kısa vadeli borçlanmalar + Uzun vadeli borçlanmalar', bilesen:[['kap-fr_CurrentBorowings','+'],['ifrs-full_LongtermBorrowings','+']] },
+  { ad:'Net borç', tur:'stok', formul:'Finansal borç − Nakit − Kısa vadeli finansal yatırımlar', bilesen:[['kap-fr_CurrentBorowings','+'],['ifrs-full_LongtermBorrowings','+'],['ifrs-full_CashAndCashEquivalents','-'],['kap-fr_CurrentFinancialInvestments','-?']] },
+  { ad:'Özkaynak (ana ortaklık)', tur:'stok', formul:'Rapor satırı', bilesen:[['ifrs-full_EquityAttributableToOwnersOfParent','+']] },
+  { ad:'Toplam varlıklar', tur:'stok', formul:'Rapor satırı', bilesen:[['ifrs-full_Assets','+']] },
+];
+const HZ_ORAN = [
+  { ad:'Brüt marj %', pay:'Brüt kâr', payda:'Hasılat' },
+  { ad:'Esas faaliyet marjı %', pay:'Esas faaliyet kârı', payda:'Hasılat' },
+  { ad:'Net marj %', pay:'Net dönem kârı (ana ortaklık)', payda:'Hasılat' },
+  { ad:'Net borç / Özkaynak', pay:'Net borç', payda:'Özkaynak (ana ortaklık)', oran:true },
+];
+let HZ = { arsiv:null, kod:null, tufe:null, kur:null };
+function hzSatirSozlugu(D){ const S={}; (D.tablolar||[]).forEach(t=>(t.satirlar||[]).forEach(s=>{ if(s.xbrl && s.degerler && s.degerler.length && S[s.xbrl]==null) S[s.xbrl]={deger:s.degerler[0], etiket:s.etiket, tablo:t.ad, degerler:s.degerler}; })); return S; }
+function hzDonemAnahtar(D){ const m=String(D.donem||'').match(/(\d{4})\/(\d)/); return m?{yil:+m[1],c:+m[2],key:m[1]+'/'+m[2]}:null; }
+function hzHesapla(S, tanim, carpan){
+  const g=[], eksik=[]; let top=0;
+  for(const [x,op] of tanim.bilesen){ const s=S[x]; const opsiyonel=op.endsWith('?'); const ab=op.includes('abs');
+    if(!s){ if(!opsiyonel) eksik.push(x); continue; }
+    let v=s.deger*carpan; if(ab) v=Math.abs(v); if(op.startsWith('-')) v=-v;
+    g.push({xbrl:x, etiket:s.etiket, deger:s.deger*carpan, katki:v, tablo:s.tablo}); top+=v; }
+  if(eksik.length) return {ok:false, eksik};
+  return {ok:true, deger:top, girdiler:g, formul:tanim.formul};
+}
+async function hzSeri(kod, bas){ try{ const r=await fetch('/api/evds2?mod=seri&kod='+encodeURIComponent(kod)+'&bas='+bas,{cache:'no-store'}); const j=await r.json(); return (j&&j.ok)?j:null; }catch(e){ return null; } }
+function hzTufeAy(seri, yil, ay){ if(!seri) return null; const hedef=yil+'-'+String(ay).padStart(2,'0'); const x=seri.seri.find(p=>String(p.t).startsWith(hedef)); return x?{v:x.v,t:x.t}:null; }
+function hzKurGun(seri, yil, ay){ if(!seri) return null; const son=new Date(yil, ay, 0); const g=son.getDate(); for(let d=g; d>=g-10; d--){ const key=String(d).padStart(2,'0')+'-'+String(ay).padStart(2,'0')+'-'+yil; const x=seri.seri.find(p=>String(p.t)===key); if(x) return {v:x.v,t:x.t}; } return null; }
+async function hzKur(){
+  const kod=(document.getElementById('hzKod').value||'').trim().toUpperCase(); const taban=document.getElementById('hzTaban').value, mod=document.getElementById('hzMod').value;
+  const d=document.getElementById('hzDurum'), T=document.getElementById('hzTablo'), K=document.getElementById('hzKunye');
+  if(!kod){ d.textContent='kod girin'; return; }
+  d.textContent='arşiv okunuyor…';
+  let ars=null; try{ const r=await fetch('/kap-arsiv/'+kod+'.json',{cache:'no-store'}); if(r.ok) ars=await r.json(); }catch(e){}
+  if(!ars||!ars.donemler||!Object.keys(ars.donemler).length){ d.textContent=''; T.innerHTML='<div class="sub">'+kod+' arşivde yok. Arşiv §381 Cumartesi koşularında dolar (öncelik: bilanço tetiği → XK030 → XK100); <b>kap-arsiv-oncelik.json</b> dosyasına kodu yazarsan bir sonraki koşu önce onu çeker.</div>'; return; }
+  HZ.arsiv=ars; HZ.kod=kod;
+  /* dönem anahtarı kaydın ANAHTARINDA ('2026/2'); kayıt içinde donem alanı yok */
+  const donemler=Object.entries(ars.donemler).map(([k,D])=>({D:Object.assign({donem:k},D),a:hzDonemAnahtar({donem:k})})).filter(x=>x.a).sort((x,y)=>(x.a.yil-y.a.yil)||(x.a.c-y.a.c));
+  const sonD=donemler[donemler.length-1];
+  if(taban!=='nominal'){ d.textContent='EVDS serileri…'; if(taban==='tufe'&&!HZ.tufe) HZ.tufe=await hzSeri('TP.FG.J0','01-01-2022'); if(taban==='usd'&&!HZ.kur) HZ.kur=await hzSeri('TP.DK.USD.A.YTL','01-01-2022'); }
+  const hedefAy=sonD.a.c*3, hedefYil=sonD.a.yil; const tufeHedef=HZ.tufe?hzTufeAy(HZ.tufe,hedefYil,hedefAy):null;
+  // dönem bazlı sözlük + kümülatif değerler
+  const sozluk={}; donemler.forEach(x=>{ sozluk[x.a.key]={S:hzSatirSozlugu(x.D), carpan:(x.D.birim&&x.D.birim.carpan)||1, D:x.D, a:x.a}; });
+  const kalemSonuc={}; // kalem → { key → sonuç }
+  HZ_TANIM.forEach(t=>{ kalemSonuc[t.ad]={}; donemler.forEach(x=>{ const P=sozluk[x.a.key]; let r=hzHesapla(P.S,t,P.carpan); if(!r.ok&&t.alternatif){ const r2=hzHesapla(P.S,t.alternatif,P.carpan); if(r2.ok) r=r2; } kalemSonuc[t.ad][x.a.key]=r; }); });
+  // bağımsız çeyrek (akış kalemleri)
+  const gosterilen={};
+  HZ_TANIM.forEach(t=>{ gosterilen[t.ad]={}; donemler.forEach((x,i)=>{ const r=kalemSonuc[t.ad][x.a.key]; if(!r.ok){ gosterilen[t.ad][x.a.key]=r; return; }
+    if(t.tur==='stok'||mod==='kumulatif'){ gosterilen[t.ad][x.a.key]=Object.assign({},r,{ceyrek:false}); return; }
+    if(x.a.c===1){ gosterilen[t.ad][x.a.key]=Object.assign({},r,{ceyrek:true, not:'Ç1 doğrudan'}); return; }
+    /* §444b ÖLÇÜLDÜ (EGGUB 2026/2): kümülatif farkı 1.257 mn, raporun kendi 3 aylık sütunu 1.188 mn —
+       TMS 29: 6 aylık rapor Haziran, Ç1 raporu Mart satın alma gücüyle; fark yöntemi enflasyonu karıştırır.
+       Tercih: raporun 3 aylık sütunu (degerler[2], aynı satın alma gücü) — tek bileşenli kalemlerde
+       doğrudan, çok bileşenlide bileşen bileşen; yoksa fark yöntemi + uyarı. */
+    const P=sozluk[x.a.key]; const ucAy=(xb)=>{ const s=P.S[xb]; return (s&&s.degerler&&s.degerler.length>=3&&s.degerler[2]!=null)?s.degerler[2]*P.carpan:null; };
+    const tanimK=t; const bil=(r.formul===(t.alternatif&&t.alternatif.formul)?t.alternatif:t).bilesen;
+    let ucToplam=0, ucTam=true, ucG=[];
+    for(const [xb,op] of bil){ const v=ucAy(xb); if(v==null){ if(op.endsWith('?')) continue; ucTam=false; break; } let k=v; if(op.includes('abs')) k=Math.abs(k); if(op.startsWith('-')) k=-k; ucToplam+=k; ucG.push({xbrl:xb, deger:v, katki:k, etiket:(P.S[xb]||{}).etiket, tablo:(P.S[xb]||{}).tablo}); }
+    if(ucTam&&ucG.length){ gosterilen[t.ad][x.a.key]={ok:true, deger:ucToplam, girdiler:ucG, formul:r.formul, ceyrek:true, not:'raporun 3 aylık sütunu (aynı satın alma gücü)', kumulatifBilgi:r.deger}; return; }
+    const onc=donemler.find(y=>y.a.yil===x.a.yil&&y.a.c===x.a.c-1); const ro=onc?kalemSonuc[t.ad][onc.a.key]:null;
+    if(!ro||!ro.ok){ gosterilen[t.ad][x.a.key]={ok:false, eksik:['3 aylık sütun yok ve önceki kümülatif dönem ('+x.a.yil+'/'+(x.a.c-1)+') arşivde yok']}; return; }
+    gosterilen[t.ad][x.a.key]={ok:true, deger:r.deger-ro.deger, girdiler:r.girdiler, formul:r.formul, ceyrek:true, kumulatif:r.deger, oncekiKumulatif:ro.deger, oncekiDonem:onc.a.key, uyari:'fark yöntemi: iki rapor farklı satın alma gücünde (TMS 29) — enflasyon payı içerir'}; }); });
+  // düzeltme
+  const duzelt=(val, a)=>{ if(val==null) return {v:null}; if(taban==='nominal') return {v:val, adim:null};
+    if(taban==='tufe'){ const kay=hzTufeAy(HZ.tufe,a.yil,a.c*3); if(!kay||!tufeHedef) return {v:null, hata:'TÜFE endeksi yok ('+a.yil+'/'+(a.c*3)+')'}; const oran=tufeHedef.v/kay.v; return {v:val*oran, adim:{tip:'TÜFE taşıma', seri:'TP.FG.J0', kaynak:kay, hedef:tufeHedef, oran}}; }
+    if(taban==='usd'){ const kur=hzKurGun(HZ.kur,a.yil,a.c*3); if(!kur) return {v:null, hata:'dönem sonu kuru yok'}; return {v:val/kur.v, adim:{tip:'USD dönüşümü', seri:'TP.DK.USD.A.YTL', kur}}; } return {v:val}; };
+  // tablo
+  const fmt=v=>v==null?'—':(taban==='usd'?(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+' mn $':(v/1e6).toLocaleString('tr-TR',{maximumFractionDigits:0})+' mn ₺');
+  let html='<table class="tbl"><thead><tr><th>Kalem</th>'+donemler.map(x=>'<th style="text-align:right">'+x.a.key+(mod==='ceyrek'?' Ç':'')+'</th>').join('')+'</tr></thead><tbody>';
+  HZ.zincir={};
+  HZ_TANIM.forEach(t=>{ html+='<tr><td><b>'+t.ad+'</b> <span class="sub">'+(t.tur==='stok'?'dönem sonu':'akış')+'</span></td>';
+    donemler.forEach(x=>{ const r=gosterilen[t.ad][x.a.key]; const id='hz_'+t.ad.replace(/[^a-zA-Z0-9]/g,'_')+'_'+x.a.key.replace('/','_');
+      if(!r.ok){ HZ.zincir[id]={ad:t.ad, donem:x.a.key, hata:r.eksik}; html+='<td style="text-align:right"><span class="sub" title="'+(r.eksik||[]).join(', ')+'">hesaplanamadı</span></td>'; return; }
+      const dz=duzelt(r.deger,x.a); HZ.zincir[id]={ad:t.ad, donem:x.a.key, sonuc:r, duzeltme:dz, taban, kaynakD:sozluk[x.a.key].D, birim:sozluk[x.a.key].D.birim};
+      html+='<td style="text-align:right"><a href="#" class="hzVal" data-id="'+id+'" style="text-decoration:underline dotted;color:inherit">'+fmt(dz.v)+'</a></td>'; }); html+='</tr>'; });
+  HZ_ORAN.forEach(o=>{ html+='<tr><td>'+o.ad+' <span class="sub">türetilmiş</span></td>'+donemler.map(x=>{ const p=gosterilen[o.pay]&&gosterilen[o.pay][x.a.key], q=gosterilen[o.payda]&&gosterilen[o.payda][x.a.key]; if(!(p&&p.ok&&q&&q.ok&&q.deger)) return '<td style="text-align:right"><span class="sub">—</span></td>'; const v=o.oran?p.deger/q.deger:100*p.deger/q.deger; return '<td style="text-align:right">'+v.toLocaleString('tr-TR',{maximumFractionDigits:o.oran?2:1})+(o.oran?'x':'%')+'</td>'; }).join('')+'</tr>'; });
+  html+='</tbody></table>';
+  T.innerHTML=html; K.innerHTML='<div class="sub">Bir rakama tıklayın → zinciri burada açılır.</div>';
+  document.getElementById('hzTag').textContent=donemler.length+' dönem · son '+sonD.a.key+' · birim '+((sonD.D.birim&&sonD.D.birim.ad)||'?')+(taban==='tufe'?' · TÜFE hedef '+(tufeHedef?tufeHedef.t:'yok'):'');
+  d.textContent='✓ '+donemler.length+' dönem arşivden';
+  T.querySelectorAll('.hzVal').forEach(a=>a.addEventListener('click',ev=>{ev.preventDefault(); hzZincirGoster(a.dataset.id);}));
+}
+function hzZincirGoster(id){
+  const z=HZ.zincir[id]; const K=document.getElementById('hzKunye'); if(!z) return;
+  const n=v=>v==null?'—':Number(v).toLocaleString('tr-TR',{maximumFractionDigits:0});
+  if(z.hata){ K.innerHTML='<div class="card" style="border-color:#E8933B"><div class="lbl">'+z.ad+' · '+z.donem+'</div><div class="sub">Hesaplanamadı — eksik: '+z.hata.join(', ')+'</div></div>'; return; }
+  const r=z.sonuc, D=z.kaynakD;
+  let h='<div class="card" style="border-color:var(--mm2)"><div class="lbl">'+z.ad+' · '+z.donem+(r.ceyrek?' · bağımsız çeyrek':'')+'</div>';
+  h+='<div class="kv"><span class="k">1. Formül</span><span>'+r.formul+'</span></div>';
+  h+='<div style="margin:4px 0 4px 12px">'+r.girdiler.map(g=>'<div class="kv"><span class="k"><code style="font-size:10px">'+g.xbrl+'</code> <span class="sub">'+(g.etiket||'')+'</span></span><span>'+n(g.deger)+' <span class="sub">→ katkı '+n(g.katki)+'</span></span></div>').join('')+'</div>';
+  if(r.ceyrek&&r.kumulatif!=null) h+='<div class="kv"><span class="k">2. Bağımsız çeyrek</span><span>'+n(r.kumulatif)+' (kümülatif '+z.donem+') − '+n(r.oncekiKumulatif)+' (kümülatif '+r.oncekiDonem+') = <b>'+n(r.deger)+'</b>'+(r.uyari?' <span style="color:#E8933B;font-size:10px">⚠ '+r.uyari+'</span>':'')+'</span></div>';
+  else if(r.ceyrek&&r.kumulatifBilgi!=null) h+='<div class="kv"><span class="k">2. Bağımsız çeyrek</span><span><b>'+n(r.deger)+'</b> <span class="sub">'+r.not+' · kümülatif '+n(r.kumulatifBilgi)+'</span></span></div>';
+  else h+='<div class="kv"><span class="k">2. Toplam</span><span><b>'+n(r.deger)+'</b>'+(r.not?' <span class="sub">'+r.not+'</span>':'')+'</span></div>';
+  const dz=z.duzeltme;
+  if(dz&&dz.adim){ if(dz.adim.tip==='TÜFE taşıma') h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' × '+dz.adim.hedef.v.toLocaleString('tr-TR')+' ('+dz.adim.hedef.t+') / '+dz.adim.kaynak.v.toLocaleString('tr-TR')+' ('+dz.adim.kaynak.t+') = <b>'+n(dz.v)+'</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>';
+    else h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' ÷ '+dz.adim.kur.v.toLocaleString('tr-TR',{maximumFractionDigits:4})+' (USD/TRY '+dz.adim.kur.t+') = <b>'+n(dz.v)+' $</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>'; }
+  else if(dz&&dz.hata) h+='<div class="kv"><span class="k">3. Düzeltme</span><span class="sub">'+dz.hata+'</span></div>';
+  h+='<div style="margin-top:8px;padding-top:6px;border-top:1px dashed var(--line)"><div class="lbl" style="font-size:9px">KÜNYE</div>'+
+     '<div class="kv"><span class="k">Dönem</span><span>'+(D.donem||'?')+' · '+(D.ad||'')+'</span></div>'+
+     '<div class="kv"><span class="k">Kaynak</span><span>KAP finansal rapor bildirimi <a href="https://www.kap.org.tr/tr/Bildirim/'+(D.id||'')+'" target="_blank">#'+(D.id||'?')+'</a>'+(D.yayin?' · yayın '+D.yayin:'')+'</span></div>'+
+     '<div class="kv"><span class="k">Para birimi</span><span>'+((D.birim&&D.birim.ad)||'?')+' (çarpan '+((D.birim&&D.birim.carpan)||1)+')'+(z.taban==='usd'?' → USD':z.taban==='tufe'?' → son dönem satın alma gücü':'')+'</span></div>'+
+     '<div class="kv"><span class="k">Tablo</span><span>'+[...new Set(r.girdiler.map(g=>g.tablo))].join(', ')+' · arşiv: kap-arsiv/'+HZ.kod+'.json (§381)</span></div></div></div>';
+  K.innerHTML=h; K.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.addEventListener('DOMContentLoaded',()=>{ const b=document.getElementById('hzGetir'); if(b) b.addEventListener('click',hzKur); const i=document.getElementById('hzKod'); if(i) i.addEventListener('keydown',e=>{ if(e.key==='Enter') hzKur(); }); ['hzTaban','hzMod'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('change',()=>{ if(HZ.arsiv) hzKur(); }); }); });
+
 /* ── §435 ARŞİV-ÖNCELİK (10 Eyl): §381 KAP arşivi (kap-arsiv/<KOD>.json, 90 şirket, çeyrek
    kayıtları /api/kap?mod=ham ile AYNI şemada) önce okunur; dönem kimliği arşivde varsa KAP'a
    gidilmez (15 istek → 0). Arşivde yoksa eski yol. Sessiz değil: kaynak alanı 'arşiv'/'kap'. */

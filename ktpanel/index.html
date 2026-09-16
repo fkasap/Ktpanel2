@@ -1343,7 +1343,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
      düğme+panel aynı .tab içinde olduğu sürece kendiliğinden çalışır. -->
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
   <button class="subtab-btn act" data-subtab="ft-yerli" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Yerli Şirketler <span class="thin" style="font-weight:400">KAP</span></button>
-  <button class="subtab-btn" data-subtab="ft-yabanci" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Yabancı Şirketler <span class="thin" style="font-weight:400">SEC EDGAR</span></button>
+  <button class="subtab-btn" data-subtab="ft-zincir" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Hesap Zinciri <span class="thin" style="font-weight:400">KAP arşivi · künye</span></button><button class="subtab-btn" data-subtab="ft-yabanci" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Yabancı Şirketler <span class="thin" style="font-weight:400">SEC EDGAR</span></button>
 </div>
 
 <div id="ft-yerli" class="subtab-panel">
@@ -1375,6 +1375,33 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div>
 
+<!-- §444 HESAP ZİNCİRİ (16 Eyl, kullanıcı isteği — Fintables demosu esinli): her türetilmiş rakam
+     tıklanınca formülüne, formülün her bileşeni KAP XBRL satırına (kod · etiket · bildirim no · dönem)
+     açılır; isteğe bağlı iki düzeltme adımı: TÜFE ile satın alma gücü taşıma (EVDS TP.FG.J0) ve
+     dönem sonu kuruyla USD (EVDS TP.DK.USD.A.YTL). Veri: kap-arsiv/<KOD>.json (§381). Uydurma yok:
+     satır arşivde yoksa kalem "hesaplanamadı" der ve eksik XBRL kodunu yazar. -->
+<div id="ft-zincir" class="subtab-panel" style="display:none">
+  <div class="card">
+    <div class="kart-bas"><span class="lbl">HESAP ZİNCİRİ — KAYNAĞINA KADAR İZLENEBİLİR RAKAMLAR <span class="thin">(KAP arşivi · XBRL · EVDS)</span></span><span class="tag snap" id="hzTag">arşiv</span></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 10px">
+      <input id="hzKod" placeholder="Hisse kodu (arşivde olan)" style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:inherit;width:190px;text-transform:uppercase">
+      <select id="hzTaban" style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:inherit">
+        <option value="nominal">Nominal TL (rapordaki)</option>
+        <option value="tufe">Satın alma gücü — son dönem TÜFE'siyle</option>
+        <option value="usd">USD — dönem sonu kuruyla</option>
+      </select>
+      <select id="hzMod" style="font-family:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:inherit">
+        <option value="ceyrek">Bağımsız çeyrek</option>
+        <option value="kumulatif">Kümülatif (rapordaki)</option>
+      </select>
+      <button id="hzGetir" style="font-family:inherit;font-size:12px;padding:5px 12px;border:1px solid var(--mm2);border-radius:6px;background:var(--mm2);color:#fff;cursor:pointer">Zinciri kur</button>
+      <span id="hzDurum" class="sub"></span>
+    </div>
+    <div id="hzTablo" style="overflow-x:auto"><div class="sub">Bir kod girin. Arşivde olmayan şirket için önce "Yerli Şirketler" sekmesinden seriyi getirin (arşive Cumartesi koşusu ekler) ya da <code>kap-arsiv-oncelik.json</code>'a kodu yazın.</div></div>
+    <div id="hzKunye" style="margin-top:10px"></div>
+    <div class="note" style="margin-top:8px;font-size:10px">Her rakam tıklanabilir: formül → bileşen XBRL satırları (kod · etiket · KAP bildirim no · dönem) → düzeltme adımları (TÜFE endeks oranı, kur ve serisi). Bağımsız çeyrek, kümülatif raporların farkıdır; 1. çeyrek doğrudan. FAVÖK yalnız nakit akış tablosunda amortisman varsa; yoksa "hesaplanamadı — ifrs-full_DepreciationAndAmortisationExpense yok" yazar. Bankalar/sigorta şirketleri farklı şablondadır, ilk sürüm kapsam dışı.</div>
+  </div>
+</div>
 <div id="ft-yabanci" class="subtab-panel" style="display:none">
   <div class="card">
     <div class="kart-bas"><span class="lbl">ÇEYREKLİK SERİ — YABANCI <span class="thin">(SEC EDGAR · XBRL)</span></span><span class="tag" id="edgTag">EDGAR</span></div>
@@ -1858,8 +1885,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20260913c"></script>
-<script src="/ajan.js?v=20260913c"></script>
+<script src="/app.js?v=20260916a"></script>
+<script src="/ajan.js?v=20260916a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

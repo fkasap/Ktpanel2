@@ -6,6 +6,42 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §444 (16 Eyl 2026)
+
+## §444 HESAP ZINCIRI — Finansal Tablolar > "Hesap Zinciri" alt sekmesi (kullanici istegi)
+ESIN: Fintables demosu (ekrembk, 16 Eyl): her rakam tiklaninca formul -> bilesen
+satirlari -> TUFE tasima -> USD donusumu -> kunye (donem, KAP bildirimi, yayin).
+BIZDE HAMMADDE HAZIRDI: kap-arsiv/<KOD>.json XBRL kodlu bilanco + gelir tablosu
+(§381), EVDS TUFE endeksi ve USD/TRY serisi, KAP bildirim numarasi.
+YAPILAN:
+  api/evds2.js mod=seri (beyaz liste: TP.FG.J0 TUFE endeksi 2003=100 aylik ·
+    TP.DK.USD.A.YTL gunluk kur; baska seri kabul edilmez; 12 sa onbellek).
+  app.js HZ_TANIM: 12 kalem (hasilat, brut kar, esas faaliyet kari, FAVOK,
+    finansman oncesi, net parasal pozisyon, net kar, nakit, finansal borc, net
+    borc, ozkaynak, toplam varlik) + 4 oran; her kalem XBRL bilesen listesi +
+    alternatif formul (rapor satiri yoksa hesapla). hzKur(): arsiv -> satir
+    sozlugu -> hesap -> bagimsiz ceyrek -> duzeltme -> tablo; hzZincirGoster():
+    formul, bilesenler (XBRL kod, etiket, deger, katki), ceyrekleme adimi,
+    duzeltme adimi (seri kodu, iki tarih/deger, oran), KUNYE (donem, KAP #,
+    para birimi/carpan, tablo, arsiv dosyasi).
+  §444b OLCUM (EGGUB 2026/2): kumulatif fark 1.257 mn, raporun 3 aylik sutunu
+    1.188 mn — TMS 29: iki rapor farkli satin alma gucunde; fark yontemi
+    enflasyonu karistiriyor. Tercih: raporun 3 aylik sutunu (degerler[2]),
+    yoksa fark + uyari. Fintables'in TUFE tasimasinin neden sart oldugunu
+    kendi verimizle olctuk.
+  §444c kap-arsiv-oncelik.json (yeni, kullanici duzenler): ["ASELS"] — arsiv
+    kuyrugunda her seyin onunde. ASELS arsivde yoktu (XK030'un 12/30'u var).
+  index.html: alt sekme "Hesap Zinciri" (ft-yerli ile ft-yabanci arasinda),
+    kod girisi, taban (nominal/TUFE/USD), mod (bagimsiz ceyrek/kumulatif).
+SINIR: FAVOK amortisman satiri yalniz nakit akis tablosunda (arsivde cogunlukla
+  yok) -> "hesaplanamadi — ifrs-full_DepreciationAndAmortisationExpense yok",
+  uydurma yok. Bankalar/sigorta sablonu kapsam disi. Kapsam = arsiv (90 sirket,
+  cogu 5 ceyrek) — yavas dolum kararin.
+SAHTE DOM TESTI: EGGUB 9 ceyrek, hasilat 2026/2 = 1.188 mn (rapor sutunu),
+  zincir kutusu KAP #1652862 kunyesiyle.
+DEPLOY: ktpanel/{index.html, app.js, api/evds2.js, kap-arsiv-oncelik.json},
+  scripts/tazele.mjs (surum 20260916a).
+
 # BAKIM EK — §443 (13 Eyl 2026)
 
 ## §443 EBU GUNLUK BAKIMI YENI TAKVIMI EZDI — TABLO PARMAK IZI
