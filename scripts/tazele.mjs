@@ -3164,7 +3164,11 @@ async function kapArsiv() {
   let tetik = [], xk030 = [], xk100 = [];
   try { const bt = await oku('bilanco-tetik.json'); tetik = bt.kodlar || []; } catch (e) {}
   try { const eu = await oku('endeks-uyeler.json'); xk030 = (eu.uyeler || {}).XK030 || []; xk100 = (eu.uyeler || {}).XK100 || []; } catch (e) {}
-  const oncelik = (k) => tetik.includes(k) ? 0 : (xk030.includes(k) ? 1 : (xk100.includes(k) ? 2 : 3));
+  /* §444c KULLANICI ÖNCELİĞİ: ktpanel/kap-arsiv-oncelik.json = ["ASELS", ...] — bu kodlar her
+     şeyin önünde (0), yavaş yolda bile ilk 2 slotu alır. Kullanıcı "ASELS arşivde yok" dedi;
+     dosyaya yazar, sıradaki koşu getirir. Dosya yoksa/bozuksa sessizce boş. */
+  let elleOncelik = []; try { const eo = await oku('kap-arsiv-oncelik.json'); elleOncelik = (Array.isArray(eo) ? eo : (eo.kodlar || [])).map(x => String(x).toUpperCase()); } catch (e) {}
+  const oncelik = (k) => elleOncelik.includes(k) ? -1 : (tetik.includes(k) ? 0 : (xk030.includes(k) ? 1 : (xk100.includes(k) ? 2 : 3)));
   /* §382b BELLEKTE OLANI TERCİH ET: faktör evreni (§361) bu koşuda zaten
      bazı şirketlerin dönem listesini çekti. Arşiv onları seçerse liste
      BEDAVA gelir — yeni KAP isteği yok. Aynı öncelik grubunda, listesi
