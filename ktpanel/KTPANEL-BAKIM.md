@@ -6,6 +6,28 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §444d–e (17 Eyl 2026)
+
+## §444d TUFE tarih eslemesi + birlesik taban
+EVDS aylik tarih '2026-6' (sifirsiz) donuyor; eslestirici '2026-06' ariyordu — 49 ay geldi,
+hicbiri tutmadi ("TUFE endeksi yok"). Iki taraf normalize edildi. Yeni taban 'tufe_usd':
+once son donem satin alma gucune tasi (TP.FG.J0 orani), sonra SON DONEM kuruyla USD —
+videodaki zincirin aynisi; 3. ve 4. adim ayri satirda, seri kodlariyla.
+## §444e BILESENLI KALEMLER + IC ICE ZINCIR + MUTABAKAT (kullanici: "opex kalemlerini gostersin")
+Ilk surum "rapor satiri" deyip geciyordu. Artik kalemler BILESENLERINDEN kurulur:
+Brut kar = Hasilat + Satislarin maliyeti · Esas faaliyet kari = Brut kar + Genel yonetim
++ Pazarlama + AR-GE + Diger gelir + Diger gider · Finansman oncesi = EFK + Yatirim (net) ·
+Vergi oncesi = Finansman oncesi + Finansman gelir/gider + Net parasal pozisyon · Net kar =
+Vergi oncesi + Vergi · FAVOK = EFK + Amortisman · Net borc = KV+UV borc - nakit - KV fin.
+yatirim. Raporun kendi satiri MUTABAKAT olarak yanda (fark 0 ✓ / ⚠ bilesen eksik).
+Bilesen bir kalemse tiklaninca KENDI zinciri acilir (ekmek kirintisi: Esas faaliyet kari
+› Brut kar). Ozyinelemeli hesap (hzHesapla, memo donem+sutun), 3 aylik sutun bilesen
+bilesen uygulanir.
+OLCUM (EGGUB 2026/2 C): EFK = 634,7 - 254,3 - 6,3 + 103,9 - 4,0 = 473,99 mn = rapor satiri,
+fark 0 ✓; Brut kar = 1.188,1 - 553,5 = 634,7 = rapor, fark 0 ✓. FAVOK "hesaplanamadi —
+Amortisman ve itfa → ifrs-full_DepreciationAndAmortisationExpense" (durust).
+DEPLOY: ktpanel/{app.js, index.html} (surum 20260917a).
+
 # BAKIM EK — §444 (16 Eyl 2026)
 
 ## §444 HESAP ZINCIRI — Finansal Tablolar > "Hesap Zinciri" alt sekmesi (kullanici istegi)
