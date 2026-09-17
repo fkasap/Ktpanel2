@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-09-17",
- "guncelleme": "2026-09-17 — otomatik (GitHub Actions · vercel-köprüsü (2009 fon fiyat + 1066 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-09-17 — otomatik (GitHub Actions · vercel-köprüsü (2024 fon fiyat + 1066 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -534,18 +534,18 @@
      "k": "KKL",
      "u": "Allbatross",
      "t": "S",
-     "yu": 2.570953,
+     "yu": 2.572073,
      "g": [
       0.1213,
-      3.7405,
-      11.6256,
-      36.6974,
-      54.9685,
+      3.7856,
+      11.6742,
+      36.757,
+      55.0361,
       null
      ],
-     "b": 3673908793,
+     "b": 3675509176,
      "ys": 1641,
-     "a": -39680811
+     "a": -39698097
     },
     {
      "k": "KVR",
@@ -585,7 +585,7 @@
      "k": "PKL",
      "u": "Pusula",
      "t": "S",
-     "yu": 2.586574,
+     "yu": 2.586821,
      "g": [
       0.2538,
       4.6061,
@@ -594,7 +594,7 @@
       47.8853,
       null
      ],
-     "b": 4014842939,
+     "b": 4015225912,
      "ys": 14,
      "a": 0
     },
