@@ -6,6 +6,21 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §446 (17 Eyl 2026)
+
+## §446 KAP ARSIVI: KOPRU KAP TARAFINDAN REDDEDILIYORDU — DOGRUDAN YOL, YAVAS TEMPO
+Kullanici: "ASELS onceliklendirdik, gelmedi". Rapor: "ASELS:2026: fetch failed (2. kez)" —
+oncelik CALISMISTI (ASELS one gecti), ama yavas yol Vercel koprusu uzerinden KAP'a gidiyor
+ve KAP Vercel'i ag seviyesinde reddediyor (§338b). Gunlerdir "+0 ceyrek" bu yuzden; ceza
+sayaci iki basarisizlikta onceliyi sona atiyordu. Actions'in dogrudan KAP yolu her gun
+calisiyor (fon portfoy 31 rapor/kosu).
+YAPILAN: kapDonemler() once kopru, dusunce DOGRUDAN KAP (member/filter -> oid ->
+listCompanyExcelMembers/oid/yil/T; yillar sirayla, 250 ms). Ham sayfa artik HER ZAMAN
+dogrudan (kapHamAyristir icerde); parti 2 / 2,5 sn tempo korunur (kullanici karari
+"yavas yavas"). Elle oncelikli kod ceza ile sona atilmaz.
+BEKLENTI: sonraki kosuda "KAP arsivi — +N ceyrek" ve ASELS/BSOKE ilk iki sirket.
+DEPLOY: scripts/tazele.mjs.
+
 # BAKIM EK — §444d–e (17 Eyl 2026)
 
 ## §444d TUFE tarih eslemesi + birlesik taban
