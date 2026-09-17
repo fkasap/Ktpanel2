@@ -509,7 +509,7 @@ module.exports.config = { maxDuration: 60 };
    TP.FG.J0  TÜFE genel endeksi (aylık, 2003=100) — satın alma gücü taşıma
    TP.DK.USD.A.YTL  USD/TRY alış (günlük) — dönem sonu kuru
    Fintables'ın gösterdiği zincirle aynı iki kaynak. Başka seri kabul edilmez. */
-const SERI_BEYAZ = { 'TP.FG.J0': 'TÜFE genel endeksi (2003=100)', 'TP.DK.USD.A.YTL': 'USD/TRY alış (TCMB)' };
+const SERI_BEYAZ = { 'TP.FG.J0': 'TÜFE genel endeksi (2003=100, 2026-1\'de biter)', 'TP.TUKFIY2025.GENEL': 'TÜFE genel endeksi (2025=100, yeni baz)', 'TP.DK.USD.A.YTL': 'USD/TRY alış (TCMB)' };   /* §444f: TÜİK 2026 baz değişimi */
 async function seriModu(req, res){
   res.setHeader('Access-Control-Allow-Origin','*');
   res.setHeader('Cache-Control', 's-maxage=43200, stale-while-revalidate=86400');
