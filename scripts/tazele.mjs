@@ -3029,15 +3029,41 @@ async function kapDonemler(kod, yil) {
   const ank = kod + '|' + y;
   if (_DONEM_BELLEK.has(ank)) return _DONEM_BELLEK.get(ank);
   let sonuc = { ok: false, donemler: [] };
-  for (let deneme = 0; deneme < 2; deneme++) {
+  /* §446 (17 Eyl canlı): köprü (Vercel → KAP) günlerdir "fetch failed" — KAP Vercel'i
+     reddediyor (§338b), arşiv +0 çeyrekte kaldı, ceza sayacı öncelikli ASELS'i sona attı.
+     Önce köprü (önbellekli, hafif), düşerse DOĞRUDAN KAP: member/filter → mkkMemberOid →
+     listCompanyExcelMembers/<oid>/<yıl>/T (kap.js donemler mantığının birebir taşınmışı;
+     yıllar SIRAYLA, 250 ms aralık — §338b dersi). */
+  try {
+    const r = await fetch('https://ktpanel.vercel.app/api/kap?mod=donemler&kod=' + kod + '&yil=' + y, { signal: AbortSignal.timeout(25000) });
+    const j = await r.json();
+    if (j && j.ok && (j.donemler || []).length) sonuc = j;
+  } catch (e) { sonuc = { ok: false, donemler: [], err: 'köprü: ' + String(e && e.message || e).slice(0, 30) }; }
+  if (!sonuc.ok) {
+    const UA2 = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36';
+    const BAS = { 'user-agent': UA2, 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' };
+    const uyku2 = ms => new Promise(r => setTimeout(r, ms));
     try {
-      const r = await fetch('https://ktpanel.vercel.app/api/kap?mod=donemler&kod=' + kod + '&yil=' + y,
-        { signal: AbortSignal.timeout(25000) });
-      const j = await r.json();
-      if (j && j.ok && (j.donemler || []).length) { sonuc = j; break; }
-      sonuc = j || sonuc;
-    } catch (e) { sonuc = { ok: false, donemler: [], err: String(e && e.message || e).slice(0, 40) }; }
-    if (deneme === 0) await new Promise(r => setTimeout(r, 2500));
+      const mr = await fetch('https://www.kap.org.tr/tr/api/member/filter/' + encodeURIComponent(kod), { headers: BAS, signal: AbortSignal.timeout(15000) });
+      const mj = mr.ok ? await mr.json() : null; const uye = Array.isArray(mj) ? mj[0] : null;
+      if (uye && uye.mkkMemberOid) {
+        const buYil = new Date().getFullYear(); const donemler = [];
+        for (let i = 0; i < y; i++) {
+          const yy = buYil - i; const u = 'https://www.kap.org.tr/tr/api/financialTable/listCompanyExcelMembers/' + uye.mkkMemberOid + '/' + yy + '/T';
+          for (let deneme = 0; deneme < 2; deneme++) {
+            try { const r = await fetch(u, { headers: Object.assign({}, BAS, { referer: 'https://www.kap.org.tr/tr/sirket-finansal-bilgileri/' + uye.mkkMemberOid }), signal: AbortSignal.timeout(15000) });
+              if (!r.ok) throw new Error('HTTP ' + r.status); const arr = await r.json();
+              (Array.isArray(arr) ? arr : []).forEach(x => { if (x && x.disclosureIndex) donemler.push({ yil: +x.year, donem: +x.period, id: String(x.disclosureIndex), kod: x.stockCode || kod }); }); break; }
+            catch (e) { if (deneme === 1) throw e; await uyku2(600); }
+          }
+          await uyku2(250);
+        }
+        const enIyi = new Map(); donemler.forEach(d => { const k = d.yil + '|' + d.donem; const v = enIyi.get(k); if (!v || +d.id > +v.id) enIyi.set(k, d); });
+        const liste = [...enIyi.values()].sort((a, b) => (b.yil - a.yil) || (b.donem - a.donem));
+        if (liste.length) sonuc = { ok: true, kod, oid: uye.mkkMemberOid, unvan: uye.title || null, donemler: liste, yol: 'doğrudan' };
+        else sonuc = { ok: false, donemler: [], err: 'doğrudan: liste boş' };
+      } else sonuc = { ok: false, donemler: [], err: 'doğrudan: member/filter boş' };
+    } catch (e) { sonuc = { ok: false, donemler: [], err: 'doğrudan: ' + String(e && e.message || e).slice(0, 40) }; }
   }
   _DONEM_BELLEK.set(ank, sonuc);
   return sonuc;
@@ -3135,7 +3161,8 @@ async function kapArsiv() {
      (hız sınırının asıl yeri) devre dışı. Parti 2 -> 25, şirket başına 15 çeyrek,
      600 ms aralık. Fon zinciri aynı yoldan 300+ istek/koşu attı, kesinti görülmedi.
      Dönem LİSTESİ hâlâ köprüden (hafif, 12 saat önbellekli). */
-  const HIZLI = KSET.has('kaparsiv');   /* §437b: kullanıcı kararı — YALNIZ açık istekle; hepsi/Cumartesi eski yavaş tempoda kalır */
+  const HIZLI = KSET.has('kaparsiv');   /* §437b: parti/tempo yalnız açık istekle büyür */
+  const DOGRUDAN = true;   /* §446: ham sayfa HER ZAMAN doğrudan KAP'tan (köprü KAP tarafından reddediliyor); tempo yavaş kalır */
   const hamAyristir = kapHamAyristir;   /* §437: ayrıştırıcı bu dosyanın içinde (kullanıcı: ayrı .mjs yok) */
   const PARTI = (HIZLI && hamAyristir) ? 25 : 2;
   const CEYREK_TAVAN = 15;
@@ -3187,6 +3214,7 @@ async function kapArsiv() {
     const r = SAY[k];
     if (!r) return 0;
     if (r.n >= 3 && r.son && (simdi - r.son) < 6 * 3600 * 1000) return 2;   /* 6 saat dinlendir */
+    if (elleOncelik.includes(k)) return 0;   /* §446: elle öncelikli kod iki başarısızlıkla sona atılmaz */
     return r.n >= 2 ? 1 : 0;
   };
   const sira = durum.filter(x => x.n < CEYREK_TAVAN)
@@ -3220,7 +3248,7 @@ async function kapArsiv() {
         if (!bid) continue;
         try {
           let jh;
-          if (HIZLI && hamAyristir) {
+          if ((HIZLI || DOGRUDAN) && hamAyristir) {
             const rh = await fetch('https://www.kap.org.tr/tr/Bildirim/' + bid, { headers: { 'user-agent': UA, 'accept': 'text/html', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' }, signal: AbortSignal.timeout(30000) });
             jh = rh.ok ? hamAyristir(await rh.text()) : { ok: false };
           } else {
