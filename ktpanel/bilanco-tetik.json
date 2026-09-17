@@ -317,7 +317,8 @@
   "TKFEN": "2026-09-14",
   "GUBRF": "2026-09-15",
   "MAVI": "2026-09-16",
-  "OTTO": "2026-09-16"
+  "OTTO": "2026-09-16",
+  "CMSAN": "2026-09-17"
  },
  "evren_disi": [
   "ADESE",
@@ -350,6 +351,7 @@
   "BYDNR",
   "CITAS",
   "CLEBI",
+  "CMSAN",
   "COSMO",
   "DARDL",
   "DENGE",
@@ -493,8 +495,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 172,
- "pencere_sayi": 2,
+ "evren_disi_sayi": 173,
+ "pencere_sayi": 3,
  "dusen_son": [],
- "guncelleme": "2026-09-17 08:37 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-17 17:55 UTC — otomatik (KAP FR · kümülatif §299)"
 }
