@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20260917a';   // SS444e bilesenli kalemler + ic ice zincir + mutabakat
+const KTP_SURUM = '20260917b';   // SS444f TUFE baz degisimi zincirleme
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10156,8 +10156,17 @@ function hzHesapla(S, tanim, carpan, sutun, memo){
   memo[anah]=out; return out;
 }
 async function hzSeri(kod, bas){ try{ const r=await fetch('/api/evds2?mod=seri&kod='+encodeURIComponent(kod)+'&bas='+bas,{cache:'no-store'}); const j=await r.json(); return (j&&j.ok)?j:null; }catch(e){ return null; } }
+function hzTufeZincirle(yeni, eski){
+  const norm=t=>{const m=String(t).match(/^(\d{4})-(\d{1,2})/); return m?m[1]+'-'+String(+m[2]).padStart(2,'0'):String(t);};
+  if(!yeni||!yeni.seri||!yeni.seri.length) return eski?Object.assign({},eski,{zincir:'yalnız eski seri (yeni gelmedi)'}):null;
+  const Y=yeni.seri.map(p=>({t:norm(p.t),v:p.v,seri:'TP.TUKFIY2025.GENEL'})); const ilkYeni=Y[0].t;
+  let katsayi=null, out=Y.slice();
+  if(eski&&eski.seri&&eski.seri.length){ const E=eski.seri.map(p=>({t:norm(p.t),v:p.v})); const ort=E.find(p=>p.t===ilkYeni); if(ort){ katsayi=Y[0].v/ort.v; E.filter(p=>p.t<ilkYeni).forEach(p=>out.push({t:p.t,v:p.v*katsayi,seri:'TP.FG.J0×'+katsayi.toFixed(6)})); } }
+  out.sort((a,b)=>a.t<b.t?-1:1);
+  return {ok:true, kod:'TÜFE zincirli', seri:out, zincir: katsayi?('yeni baz 2025=100 · '+ilkYeni+' öncesi TP.FG.J0 × '+katsayi.toFixed(6)):'yalnız yeni seri', n:out.length};
+}
 /* §444d: EVDS aylık tarihi '2026-6' (sıfırsız) — iki taraf da normalize edilir (canlı: 49 ay geldi, hiçbiri eşleşmedi) */
-function hzTufeAy(seri, yil, ay){ if(!seri) return null; const norm=t=>{const m=String(t).match(/^(\d{4})-(\d{1,2})/); return m?m[1]+'-'+String(+m[2]).padStart(2,'0'):String(t);}; const hedef=yil+'-'+String(ay).padStart(2,'0'); const x=seri.seri.find(p=>norm(p.t)===hedef); return x?{v:x.v,t:norm(x.t)}:null; }
+function hzTufeAy(seri, yil, ay){ if(!seri) return null; const norm=t=>{const m=String(t).match(/^(\d{4})-(\d{1,2})/); return m?m[1]+'-'+String(+m[2]).padStart(2,'0'):String(t);}; const hedef=yil+'-'+String(ay).padStart(2,'0'); const x=seri.seri.find(p=>norm(p.t)===hedef); return x?{v:x.v,t:norm(x.t),seri:x.seri||'TP.FG.J0'}:null; }
 function hzKurGun(seri, yil, ay){ if(!seri) return null; const son=new Date(yil, ay, 0); const g=son.getDate(); for(let d=g; d>=g-10; d--){ const key=String(d).padStart(2,'0')+'-'+String(ay).padStart(2,'0')+'-'+yil; const x=seri.seri.find(p=>String(p.t)===key); if(x) return {v:x.v,t:x.t}; } return null; }
 async function hzKur(){
   const kod=(document.getElementById('hzKod').value||'').trim().toUpperCase(); const taban=document.getElementById('hzTaban').value, mod=document.getElementById('hzMod').value;
@@ -10170,7 +10179,12 @@ async function hzKur(){
   /* dönem anahtarı kaydın ANAHTARINDA ('2026/2'); kayıt içinde donem alanı yok */
   const donemler=Object.entries(ars.donemler).map(([k,D])=>({D:Object.assign({donem:k},D),a:hzDonemAnahtar({donem:k})})).filter(x=>x.a).sort((x,y)=>(x.a.yil-y.a.yil)||(x.a.c-y.a.c));
   const sonD=donemler[donemler.length-1];
-  if(taban!=='nominal'){ d.textContent='EVDS serileri…'; if((taban==='tufe'||taban==='tufe_usd')&&!HZ.tufe) HZ.tufe=await hzSeri('TP.FG.J0','01-01-2022'); if((taban==='usd'||taban==='tufe_usd')&&!HZ.kur) HZ.kur=await hzSeri('TP.DK.USD.A.YTL','01-01-2022'); }
+  if(taban!=='nominal'){ d.textContent='EVDS serileri…';
+    /* §444f (canlı MAVI: "TÜFE hedef yok"): TÜİK 2026'da bazı 2025=100'e taşıdı; TP.FG.J0 2026-1'de bitiyor.
+       Yeni seri TP.TUKFIY2025.GENEL esas; ondan önceki aylar eski seriden, örtüşen ilk ayın oranıyla ZİNCİRLENİR.
+       Künyede hangi seri + bağ katsayısı yazılır. Fintables'ın "TÜFE 30.04.2026 = 4.028" eski baza zincirlenmiş hâlidir. */
+    if((taban==='tufe'||taban==='tufe_usd')&&!HZ.tufe){ const yeni=await hzSeri('TP.TUKFIY2025.GENEL','01-01-2024'), eski=await hzSeri('TP.FG.J0','01-01-2022'); HZ.tufe=hzTufeZincirle(yeni,eski); }
+    if((taban==='usd'||taban==='tufe_usd')&&!HZ.kur) HZ.kur=await hzSeri('TP.DK.USD.A.YTL','01-01-2022'); }
   const hedefAy=sonD.a.c*3, hedefYil=sonD.a.yil; const tufeHedef=HZ.tufe?hzTufeAy(HZ.tufe,hedefYil,hedefAy):null;
   // dönem bazlı sözlük + kümülatif değerler
   const sozluk={}; donemler.forEach(x=>{ sozluk[x.a.key]={S:hzSatirSozlugu(x.D), carpan:(x.D.birim&&x.D.birim.carpan)||1, D:x.D, a:x.a}; });
@@ -10226,7 +10240,7 @@ function hzZincirGoster(id, altYol){
     else if(r.ceyrek&&r.kumulatifBilgi!=null) h+='<div class="kv"><span class="k">2. Bağımsız çeyrek</span><span><b>'+n(r.deger)+'</b> <span class="sub">'+r.not+' · kümülatif '+n(r.kumulatifBilgi)+'</span></span></div>';
     else h+='<div class="kv"><span class="k">2. Toplam</span><span><b>'+n(r.deger)+'</b>'+(r.not?' <span class="sub">'+r.not+'</span>':'')+'</span></div>';
     const dz=z.duzeltme;
-    if(dz&&dz.adim){ if(dz.adim.tip==='TÜFE taşıma') h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' × '+dz.adim.hedef.v.toLocaleString('tr-TR')+' ('+dz.adim.hedef.t+') / '+dz.adim.kaynak.v.toLocaleString('tr-TR')+' ('+dz.adim.kaynak.t+') = <b>'+n(dz.adim2?dz.adim2.ara:dz.v)+'</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>';
+    if(dz&&dz.adim){ if(dz.adim.tip==='TÜFE taşıma') h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' × '+dz.adim.hedef.v.toLocaleString('tr-TR')+' ('+dz.adim.hedef.t+') / '+dz.adim.kaynak.v.toLocaleString('tr-TR')+' ('+dz.adim.kaynak.t+') = <b>'+n(dz.adim2?dz.adim2.ara:dz.v)+'</b> <span class="sub">· '+(dz.adim.kaynak.seri||dz.adim.seri)+' → '+(dz.adim.hedef.seri||dz.adim.seri)+' · TCMB EVDS'+(HZ.tufe&&HZ.tufe.zincir?' · '+HZ.tufe.zincir:'')+'</span></span></div>';
       else h+='<div class="kv"><span class="k">3. '+dz.adim.tip+'</span><span>'+n(r.deger)+' ÷ '+dz.adim.kur.v.toLocaleString('tr-TR',{maximumFractionDigits:4})+' (USD/TRY '+dz.adim.kur.t+') = <b>'+n(dz.v)+' $</b> <span class="sub">· seri '+dz.adim.seri+' · TCMB EVDS</span></span></div>';
       if(dz.adim2) h+='<div class="kv"><span class="k">4. '+dz.adim2.tip+'</span><span>'+n(dz.adim2.ara)+' ÷ '+dz.adim2.kur.v.toLocaleString('tr-TR',{maximumFractionDigits:4})+' (USD/TRY '+dz.adim2.kur.t+') = <b>'+n(dz.v)+' $</b> <span class="sub">· seri '+dz.adim2.seri+' · TCMB EVDS</span></span></div>'; }
     else if(dz&&dz.hata) h+='<div class="kv"><span class="k">3. Düzeltme</span><span class="sub">'+dz.hata+'</span></div>';

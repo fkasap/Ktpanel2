@@ -6,6 +6,20 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §447 (17 Eyl 2026) — ILERIDE: BILANCO DIPNOTLARI (karar: simdilik kalsin)
+Kullanici Hesap Zinciri'ne dipnotlari eklemeyi sordu; dusunuldu, ertelendi. KAYIT:
+- Kaynak: KAP finansal rapor bildiriminin PDF eki (80-200 sayfa); fon zincirindeki
+  boru hatti (bildirim -> ek -> pdftotext) aynen kullanilabilir; Actions dogrudan KAP.
+- Boyut: donem basina 300-500 KB metin -> tumu repoya girmez; son 2 donem gz ya da
+  secilmis notlar.
+- BAG: KAP tablo satirlarindaki "Dipnot referansi" sutununu arsiv ayristiricisi ATIYOR
+  (§206: 1000 alti noktasiz sayi = dipnot ref elenir). Yakalanirsa Hesap Zinciri
+  bilesen satiri -> "Not 8" -> dipnot metni tek tikla (Fintables'ta yok).
+- Kademe 1: ref + dizin + ham metin (son 2 donem). Kademe 2: secili notlarin
+  yapilandirilmasi (amortisman -> FAVOK acilir; borc vadeleri; kur riski; segment;
+  iliskili taraf) — LLM ile, §104 esikli dogrulama. Kademe 3: zincire dahil.
+Baslangic icin en degerli tek not: AMORTISMAN (bugun FAVOK "hesaplanamadi").
+
 # BAKIM EK — §446 (17 Eyl 2026)
 
 ## §446 KAP ARSIVI: KOPRU KAP TARAFINDAN REDDEDILIYORDU — DOGRUDAN YOL, YAVAS TEMPO
