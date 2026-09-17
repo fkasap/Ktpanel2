@@ -44,34 +44,34 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ℹ 5 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
 - ℹ 1410 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
-### TEFAS genel bilgi (§253i) — ✓ 1977 fon · AUM + yatırımcı sayısı köprüden (ham 2038 kayıt, sayfalamalı)
+### TEFAS genel bilgi (§253i) — ✓ 1987 fon · AUM + yatırımcı sayısı köprüden (ham 2038 kayıt, sayfalamalı)
 
 ### TEFAS köprü (bilgi)
 - getiri: 1066 fon ✓ · liste: 1178 kayıt · alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
 
-### Fon akışı — ℹ 947 fonun kurucusu fon adından türetildi (§279; mod=liste 1054 kayıt kapsıyordu, evren 1977)
+### Fon akışı — ℹ 951 fonun kurucusu fon adından türetildi (§279; mod=liste 1054 kayıt kapsıyordu, evren 1987)
 
 ### Akış pencereleri (§359) — ✓ 1H, 1A hazır · arşiv 26 gün
-- 1H giriş: TERA 26.8 mlr · FİBA 8.9 mlr · VAKIF KATILIM ANONİM ŞİRKETİ 6.5 mlr
-- 1A giriş: TERA 156.6 mlr · AURA 19.2 mlr · İŞ 16.7 mlr
+- 1H giriş: TERA 28.0 mlr · FİBA 8.9 mlr · VAKIF KATILIM ANONİM ŞİRKETİ 6.5 mlr
+- 1A giriş: TERA 158.5 mlr · AURA 19.2 mlr · İŞ 16.3 mlr
 
-### PYŞ bazında akış (§358) — ✓ 70 kurum · 2026-09-17 · 9 fon eşleşmedi
-- giriş: İŞ 13.25 mlr · FİBA 3.59 mlr · DENİZ 2.29 mlr
-- çıkış: TERA -5.60 mlr · ATL -8.12 mlr · GARANTİ -15.05 mlr
+### PYŞ bazında akış (§358) — ✓ 70 kurum · 2026-09-17 · 13 fon eşleşmedi
+- giriş: İŞ 13.24 mlr · FİBA 3.59 mlr · DENİZ 2.29 mlr
+- çıkış: TERA -5.65 mlr · ATL -8.65 mlr · GARANTİ -15.05 mlr
 
-### Fon akışı (§263) — ✓ 1977 fon · 2026-09-16 → 2026-09-17
-- giriş 61.62 mlr ₺ · çıkış -92.86 mlr ₺ · net -31.24 mlr ₺
+### Fon akışı (§263) — ✓ 1987 fon · 2026-09-16 → 2026-09-17
+- giriş 61.62 mlr ₺ · çıkış -93.44 mlr ₺ · net -31.82 mlr ₺
 
 ### TEFAS çekim tanısı (bilgi)
-- yol: vercel-köprüsü (1977 fon fiyat + 1066 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587011590567448> [Go Back]`
+- yol: vercel-köprüsü (1987 fon fiyat + 1066 getiri)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587013154977003> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
 - ✓ **aykırı değer**: temiz (sınır ±%2)
 - ✓ **dönem tutarlılığı**: temiz
 
-- §427 yeni fiyat günü: 45/45 fonda fiyat değişti — 1G ve akış hesaplandı
+### Katılım fonları — ℹ tekrar koşu (fiyat vektörü değişmedi: 44/45 aynı): fiyat/AUM tazelendi, 1G ve akış KORUNDU (§266/§427)
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
@@ -120,14 +120,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-09-16 18:00Z · USD · Federal Funds Rate
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 104/247
-- bu turda: 3 tam · 1 eksik kalemli · 2 alınamadı
-- not: RALYH:2 ana kalem boş · SAFKR:2026: fetch failed · SARKY:2026: fetch failed
+- bu turda: 6 tam · 0 eksik kalemli · 0 alınamadı
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
-### KAP arşivi (§381) — ✓ +0 çeyrek · 0/247 şirket tam
-- QUAGR:2026: fetch failed (2. kez) · ASELS:2026: fetch failed (2. kez)
+### KAP arşivi (§381) — ✓ +8 çeyrek · 0/247 şirket tam · 2 yeni dosya
+- ASELS:0→4 · BSOKE:0→4
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
-- 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
 - §364b fiyat: 46/46 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
@@ -162,15 +160,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
 - §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
 
-- §429p kuyruk: liste 243 kayıt · daha önce işlenmiş 140 idx · iş 39
+- §429p kuyruk: liste 243 kayıt · daha önce işlenmiş 141 idx · iş 37
 
-### Fon portföy dağılımı (§429) — ✓ 31 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 168 dönem · KAP yolu: tarama(47 fon, 12526 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+### Fon portföy dağılımı (§429) — ✓ 30 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 168 dönem · KAP yolu: tarama(47 fon, 12526 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (110 fiyat) · Model sicili (32 fiyat) · TR 5Y CDS (229.99 bp) · risk metrikleri (141) · fon akışı (1977) · katılım fonları (45+akış) · bilanço tetiği (71 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (25 olay) · faktör evreni (104/247) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (31 rapor)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (125 fiyat) · Model sicili (36 fiyat) · TR 5Y CDS (229.99 bp) · fon akışı (1987) · katılım fonları (45+akış) · bilanço tetiği (71 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (25 olay) · faktör evreni (104/247) · KAP arşivi (+8 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (30 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 90 sn
-- ⏱ KAP arşivi (§381) — 73 sn
-- toplam: 265 sn
+- ⏱ Faktör evreni (§361) — 100 sn
+- ⏱ KAP arşivi (§381) — 77 sn
+- toplam: 263 sn
