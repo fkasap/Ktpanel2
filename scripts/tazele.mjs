@@ -3829,6 +3829,15 @@ async function bultenKesif() {
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
+  /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
+     SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
+  if (ister('hepsi')) await olcKos('SEC ticker yedeği (§448)', async () => {
+    try { const r = await fetch('https://www.sec.gov/files/company_tickers.json', { headers: { 'User-Agent': process.env.EDGAR_UA || 'KTPanel/1.0 (kisisel arastirma; github actions)', 'Accept': 'application/json' }, signal: AbortSignal.timeout(30000) });
+      if (!r.ok) { const g = (await r.text()).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 120); raporlar.push('### SEC ticker yedeği (§448) — ✗ HTTP ' + r.status + (g ? ' · "' + g + '"' : '')); return; }
+      const j = await r.json(); const n = Object.keys(j || {}).length; if (n < 1000) { raporlar.push('### SEC ticker yedeği (§448) — ✗ ' + n + ' kayıt (eşik 1000)'); return; }
+      await yaz('sec-tickers.json', j); raporlar.push('### SEC ticker yedeği (§448) — ✓ ' + n + ' kayıt'); degisenler.push('sec-tickers');
+    } catch (e) { raporlar.push('### SEC ticker yedeği (§448) — ✗ ' + String(e.message || e).slice(0, 60)); }
+  });
 
   raporlar.push(
     `\n---\n**Sonuç:** ${degisenler.length ? degisenler.join(' · ') : 'değişiklik yok'}` +
