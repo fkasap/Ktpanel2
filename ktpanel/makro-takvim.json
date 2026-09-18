@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-17 18:59 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-18 07:56 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -163,7 +163,7 @@
    "onceki": "206K"
   },
   {
-   "t": "2026-09-18T02:30:00.000Z",
+   "t": "2026-09-18T02:54:00.000Z",
    "ulke": "JPY",
    "olay": "BOJ Policy Rate",
    "etki": "High",
@@ -171,17 +171,9 @@
    "onceki": "<1.00%"
   },
   {
-   "t": "2026-09-18T02:30:00.000Z",
+   "t": "2026-09-18T02:54:00.000Z",
    "ulke": "JPY",
    "olay": "Monetary Policy Statement",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-09-18T05:30:00.000Z",
-   "ulke": "JPY",
-   "olay": "BOJ Press Conference",
    "etki": "High",
    "beklenti": "",
    "onceki": ""
@@ -193,6 +185,14 @@
    "etki": "Medium",
    "beklenti": "-0.2%",
    "onceki": "-0.5%"
+  },
+  {
+   "t": "2026-09-18T06:30:00.000Z",
+   "ulke": "JPY",
+   "olay": "BOJ Press Conference",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
   },
   {
    "t": "2026-09-18T10:30:00.000Z",
