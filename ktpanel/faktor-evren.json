@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-18T11:48:34Z",
+ "guncelleme": "2026-09-18T18:24:22Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -1160,7 +1160,7 @@
    "eksik": false
   },
   "GLRMK": {
-   "ts": "2026-09-15T16:57:47Z",
+   "ts": "2026-09-18T18:23:08Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1194,7 +1194,7 @@
    "eksik": false
   },
   "GOLTS": {
-   "ts": "2026-09-15T16:58:03Z",
+   "ts": "2026-09-18T18:23:25Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1228,7 +1228,7 @@
    "eksik": false
   },
   "GRSEL": {
-   "ts": "2026-09-15T16:58:21Z",
+   "ts": "2026-09-18T18:23:41Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1262,7 +1262,7 @@
    "eksik": false
   },
   "GRTHO": {
-   "ts": "2026-09-15T18:56:48Z",
+   "ts": "2026-09-18T18:23:58Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1296,7 +1296,7 @@
    "eksik": false
   },
   "HRKET": {
-   "ts": "2026-09-15T18:57:04Z",
+   "ts": "2026-09-18T18:24:19Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3538,8 +3538,42 @@
    "adet": 794512000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
    "eksik": false
+  },
+  "GOKNR": {
+   "ts": "2026-09-18T18:22:52Z",
+   "y": "362",
+   "donem": "2026/2",
+   "ceyrek": 5,
+   "ciro": 14531996781,
+   "brut": 3138359575,
+   "favok": 2227112082,
+   "netKar": 313891203,
+   "ozk": 11621635086,
+   "aktif": 18508671718,
+   "donen": 12534143771,
+   "kvY": 5946673120,
+   "finBorc": 3841293151,
+   "likit": 2297117261,
+   "netBorc": 1544175890,
+   "isletmeNA": 1705988823,
+   "capex": -455451082,
+   "sna": 1250537741,
+   "tahakkuk": -7.52,
+   "odFaiz": -678274201,
+   "odTemettu": null,
+   "stoklar": 6372975647,
+   "ticariAlacak": 2706410925,
+   "ticariBorc": 1681016957,
+   "buyume": {
+    "ciro": -6.5,
+    "netKar": -22,
+    "brut": -4.3
+   },
+   "adet": 350000000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "eksik": false
   }
  },
  "uye_sayisi": 247,
- "kapsam": 104
+ "kapsam": 105
 }

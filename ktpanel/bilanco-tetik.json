@@ -28,6 +28,7 @@
   "GEREL",
   "GESAN",
   "GLRMK",
+  "GOKNR",
   "GOLTS",
   "GRSEL",
   "GRTHO",
@@ -73,7 +74,7 @@
   "YATAS",
   "YEOTK"
  ],
- "sayi": 71,
+ "sayi": 72,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -318,7 +319,11 @@
   "GUBRF": "2026-09-15",
   "MAVI": "2026-09-16",
   "OTTO": "2026-09-16",
-  "CMSAN": "2026-09-17"
+  "CMSAN": "2026-09-17",
+  "CASA": "2026-09-18",
+  "ERGLI": "2026-09-18",
+  "GOKNR": "2026-09-18",
+  "ONRYT": "2026-09-18"
  },
  "evren_disi": [
   "ADESE",
@@ -349,6 +354,7 @@
   "BRMEN",
   "BVSAN",
   "BYDNR",
+  "CASA",
   "CITAS",
   "CLEBI",
   "CMSAN",
@@ -374,6 +380,7 @@
   "ENTRA",
   "EPLAS",
   "ERCB",
+  "ERGLI",
   "ESEN",
   "ETILR",
   "EYGYO",
@@ -439,6 +446,7 @@
   "ODAS",
   "ODINE",
   "OFSYM",
+  "ONRYT",
   "ORZAX",
   "OSTIM",
   "OTTO",
@@ -495,8 +503,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 173,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 176,
+ "pencere_sayi": 5,
  "dusen_son": [],
- "guncelleme": "2026-09-18 11:46 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-18 18:22 UTC — otomatik (KAP FR · kümülatif §299)"
 }
