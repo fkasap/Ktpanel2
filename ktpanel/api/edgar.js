@@ -28,7 +28,11 @@ const _SURUM = 'edgar-2026-08-23-e';
 
 /* SEC User-Agent ZORUNLU — iletişim bilgisi içermeli, yoksa 403 döner.
    Bu bir nezaket kuralı değil, teknik şart. */
-const UA = 'KTPanel/1.0 (kisisel arastirma; iletisim: ktpanel@ornek.com)';
+/* §448 (17 Eyl canlı: 'ticker listesi alınamadı HTTP 403'): SEC 403'ü ya UA'da gerçek iletişim yok
+   (ornek.com sahte) ya da datacenter IP engeli. UA artık Vercel env EDGAR_UA'dan (örn.
+   'KTPanel/1.0 (contact: ad@alanadi.com)'); yoksa eski. 403'te SEC'in yanıt gövdesi hataya eklenir —
+   gerekçe orada yazar ('Undeclared Automated Tool' = UA, 'Rate Threshold' = hız, boş = IP engeli). */
+const UA = process.env.EDGAR_UA || 'KTPanel/1.0 (kisisel arastirma; iletisim: ktpanel@ornek.com)';
 const BAS = { 'User-Agent': UA, 'Accept': 'application/json', 'Accept-Encoding': 'gzip, deflate' };
 
 /* ── US-GAAP KALEM HARİTASI ────────────────────────────────────────────────
@@ -84,7 +88,7 @@ const AKIS = new Set(['ciro','brut','satisMal','faalKar','netKar','amort','satis
 async function getJ(url) {
   try {
     const r = await fetch(url, { headers: BAS, signal: AbortSignal.timeout(25000) });
-    if (!r.ok) return { _http: r.status };
+    if (!r.ok) { let govde=''; try{ govde=(await r.text()).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,160); }catch(_){} return { _http: r.status, _govde: govde }; }
     return await r.json();
   } catch (e) { return { _hata: String(e && e.message || e).slice(0, 80) }; }
 }
@@ -94,8 +98,13 @@ let _TICKER_BELLEK = null, _TICKER_TS = 0;
 async function tickerCik(t) {
   const simdi = Date.now();
   if (!_TICKER_BELLEK || (simdi - _TICKER_TS) > 6 * 3600 * 1000) {
-    const j = await getJ('https://www.sec.gov/files/company_tickers.json');
-    if (!j || j._http || j._hata) return { hata: 'ticker listesi alınamadı' + (j._http ? (' HTTP ' + j._http) : '') };
+    let j = await getJ('https://www.sec.gov/files/company_tickers.json');
+    if (!j || j._http || j._hata) {
+      /* §448 yedek: Actions'ın Cumartesi yazdığı sec-tickers.json (repo, aynı biçim) */
+      const ilkHata = 'ticker listesi alınamadı' + (j && j._http ? (' HTTP ' + j._http + (j._govde ? ' · SEC: "' + j._govde + '"' : '')) : (j && j._hata ? ' · ' + j._hata : ''));
+      try { const ry = await fetch('https://ktpanel.vercel.app/sec-tickers.json', { signal: AbortSignal.timeout(8000) }); if (ry.ok) { j = await ry.json(); j._yedek = true; } } catch (_) {}
+      if (!j || j._http || j._hata) return { hata: ilkHata + ' · yedek sec-tickers.json da yok (UA için Vercel env EDGAR_UA, §448)' };
+    }
     _TICKER_BELLEK = j; _TICKER_TS = simdi;
   }
   const ara = String(t || '').toUpperCase().trim();
