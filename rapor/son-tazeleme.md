@@ -47,7 +47,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### TEFAS genel bilgi (§253i) — ⏭ boş döndü · fetch failed
 - Playwright yedeği devrede.
 
-- §408b TANI: HTTP 200 · boy 6164 · Rejected:hayır · chunk:0 · inlineJeton:yok · baş120: <!DOCTYPE html> <html><head> <meta http-equiv="Pragma" content="no-cache"/> <meta http-equiv="Expires" content="-1"/>
+- §408b TANI: HTTP 200 · boy 7454 · Rejected:hayır · chunk:0 · inlineJeton:yok · baş120: <!DOCTYPE html> <html><head> <meta http-equiv="Pragma" content="no-cache"/> <meta http-equiv="Expires" content="-1"/>
 
 - §408 TEFAS: sayfada chunk yok (0) ve inline jeton yok — runner farklı HTML görüyor (TANI satırına bak)
 
@@ -60,7 +60,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587013067825775> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <9051587013220163902> [Go Back]`
 
 - §410 konsol dosyası YOK: arac/gelen/tefas-tam-*.json okunamadı (ENOENT) — üretmek için: ktpanel/arac/tefas-konsol.js
 
@@ -114,12 +114,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-09-16 18:00Z · USD · Federal Funds Rate
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 104/247
-- bu turda: 5 tam · 1 eksik kalemli · 0 alınamadı
-- not: BINHO:1 ana kalem boş
+- bu turda: 6 tam · 0 eksik kalemli · 0 alınamadı
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### KAP arşivi (§381) — ✓ +8 çeyrek · 0/247 şirket tam
-- BIMAS:5→9 · CANTE:5→9
+- EUPWR:5→9 · TKFEN:5→9
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -159,13 +158,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Fon portföy dağılımı (§429) — ✓ 30 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 168 dönem · KAP yolu: tarama(47 fon, 9868 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 
+### SEC ticker yedeği (§448) — ✗ HTTP 403 · " SEC.gov | Request Rate Threshold Exceeded html {height: 100%} body {height: 100%; margin:0; padding:0;} #header {backgr"
+
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (141 fiyat) · Model sicili (40 fiyat) · TR 5Y CDS (232.97 bp) · bilanço tetiği (71 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (25 olay) · faktör evreni (104/247) · KAP arşivi (+8 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (30 rapor)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (104 fiyat) · Model sicili (33 fiyat) · TR 5Y CDS (232.97 bp) · bilanço tetiği (71 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (25 olay) · faktör evreni (104/247) · KAP arşivi (+8 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (30 rapor)
 
 ⚠ **Bir ya da daha fazla katman denetimden geçemedi — o katmanlar YAZILMADI.**
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 105 sn
+- ⏱ Faktör evreni (§361) — 106 sn
 - ⏱ KAP arşivi (§381) — 86 sn
 - toplam: 287 sn
