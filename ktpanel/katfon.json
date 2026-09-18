@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-09-18",
- "guncelleme": "2026-09-18 — otomatik (GitHub Actions · vercel-köprüsü (2023 fon fiyat + 1066 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-09-18 — otomatik (GitHub Actions · vercel-köprüsü (2026 fon fiyat + 1066 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -266,18 +266,18 @@
      "k": "TLV",
      "u": "Tera",
      "t": "K",
-     "yu": 1.394777,
+     "yu": 1.395268,
      "g": [
       -0.6485,
-      0,
-      0,
-      0,
+      2.548,
+      9.5343,
+      32.7089,
       null,
       null
      ],
-     "b": 3626564861,
-     "ys": 12177,
-     "a": -628653029
+     "b": 3627841100,
+     "ys": 12178,
+     "a": 0
     },
     {
      "k": "KLU",
