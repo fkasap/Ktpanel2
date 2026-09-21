@@ -205963,6 +205963,10 @@
     76170132,
     66.646244
    ],
+   "HEH": [
+    109831779,
+    3.374629
+   ],
    "HFA": [
     1574729725,
     3.132992
@@ -206034,6 +206038,10 @@
    "HII": [
     329367203,
     3.360237
+   ],
+   "HIM": [
+    67520750,
+    4.086038
    ],
    "HIP": [
     858078793,
@@ -208631,6 +208639,10 @@
     283069105,
     1.499006
    ],
+   "PBR": [
+    829607761,
+    0.255479
+   ],
    "PBS": [
     5658894,
     70.567254
@@ -208651,9 +208663,17 @@
     8605496,
     66.06649
    ],
+   "PDC": [
+    1084666311,
+    0.108878
+   ],
    "PDD": [
     136214482,
     6.078169
+   ],
+   "PDE": [
+    9682097247,
+    0.593229
    ],
    "PDF": [
     7745432,
@@ -208685,7 +208705,7 @@
    ],
    "PFS": [
     5157600,
-    2.839882
+    2.839555
    ],
    "PGD": [
     102456443,
@@ -208695,9 +208715,17 @@
     403827399,
     25.387541
    ],
+   "PGH": [
+    1328323644,
+    1.431101
+   ],
    "PGS": [
     123632231,
     1.254687
+   ],
+   "PHB": [
+    5262810617,
+    0.601062
    ],
    "PHF": [
     304499891,
@@ -208751,6 +208779,10 @@
     22310227,
     1.079117
    ],
+   "PKD": [
+    2968702,
+    0.878606
+   ],
    "PKF": [
     81003503,
     4.80415
@@ -208762,6 +208794,10 @@
    "PKL": [
     1552185490,
     2.587688
+   ],
+   "PKM": [
+    312395595,
+    1.101616
    ],
    "PKN": [
     12356254,
@@ -208787,6 +208823,10 @@
     5883206417,
     2.132885
    ],
+   "PKZ": [
+    4258299901,
+    4.023637
+   ],
    "PLA": [
     757405,
     1.305885
@@ -208810,6 +208850,10 @@
    "PMP": [
     15276860,
     0.698095
+   ],
+   "PNU": [
+    5451818052,
+    1.283539
    ],
    "PO7": [
     1513476425,
@@ -208951,6 +208995,10 @@
     1742844422,
     1.388654
    ],
+   "PRY": [
+    5754582499,
+    3.279933
+   ],
    "PSD": [
     50962165,
     54.232897
@@ -209034,6 +209082,10 @@
    "PUH": [
     272571524,
     1.6104
+   ],
+   "PUK": [
+    271451753,
+    1.373928
    ],
    "PUR": [
     12414078296,
@@ -210050,10 +210102,6 @@
    "TNK": [
     106858470,
     34.780262
-   ],
-   "TNR": [
-    55001,
-    1.002121
    ],
    "TNS": [
     7255694,
@@ -211189,7 +211237,7 @@
  "akis": {
   "onceki": "2026-09-18",
   "gun": "2026-09-21",
-  "adet": 2011,
+  "adet": 2024,
   "fon": {
    "AAL": -5725088,
    "AAS": -108059,
@@ -211898,6 +211946,7 @@
    "HDK": 0,
    "HDS": 0,
    "HDV": -11736470,
+   "HEH": -1624617,
    "HFA": 0,
    "HFI": -64196,
    "HFO": -134548,
@@ -211916,6 +211965,7 @@
    "HIF": -856,
    "HIH": -2019882,
    "HII": 0,
+   "HIM": -14853,
    "HIP": -47075092,
    "HIS": 0,
    "HIZ": -2189616,
@@ -212565,12 +212615,15 @@
    "PBI": -3424879,
    "PBK": -1589049,
    "PBN": -4982913,
+   "PBR": 5248,
    "PBS": 0,
    "PBY": 0,
    "PCE": 0,
    "PCH": 0,
    "PCN": 0,
+   "PDC": 0,
    "PDD": -8832,
+   "PDE": 0,
    "PDF": -1226,
    "PDG": 0,
    "PDH": 0,
@@ -212581,7 +212634,9 @@
    "PFS": 0,
    "PGD": -69151,
    "PGE": 0,
+   "PGH": 0,
    "PGS": -6506,
+   "PHB": 0,
    "PHF": -11488407,
    "PHI": -9618,
    "PHK": -1515708,
@@ -212595,21 +212650,25 @@
    "PJL": -15381247,
    "PJP": -50215,
    "PK1": 280240,
+   "PKD": 105,
    "PKF": -2998626,
    "PKH": -3779,
    "PKL": 0,
+   "PKM": 0,
    "PKN": 0,
    "PKP": -10572700,
    "PKR": -291905,
    "PKT": -191765029,
    "PKU": 0,
    "PKV": 0,
+   "PKZ": 0,
    "PLA": 767,
    "PLR": -59173370,
    "PLS": 0,
    "PMG": 0,
    "PMH": 0,
    "PMP": -10039,
+   "PNU": 0,
    "PO7": 0,
    "PO8": 0,
    "PO9": -661,
@@ -212645,6 +212704,7 @@
    "PRR": -14545405,
    "PRU": -41694013,
    "PRV": 77783843,
+   "PRY": 0,
    "PSD": 0,
    "PSE": 0,
    "PSG": 0,
@@ -212666,6 +212726,7 @@
    "PUA": 0,
    "PUC": 402251550,
    "PUH": 0,
+   "PUK": 99746,
    "PUR": 1927659421,
    "PUT": 0,
    "PUV": 0,
@@ -214530,6 +214591,7 @@
   "HDK": "HEDEF PORTFÖY",
   "HDS": "HEDEF PORTFÖY",
   "HDV": "HSBC PORTFÖY",
+  "HEH": "HEDEF PORTFÖY",
   "HFA": "HSBC PORTFÖY",
   "HFI": "HEDEF PORTFÖY",
   "HFR": "A1 CAPİTAL PORTFÖY",
@@ -214544,6 +214606,7 @@
   "HGV": "HEDEF PORTFÖY",
   "HIA": "HEDEF PORTFÖY",
   "HIF": "HEDEF PORTFÖY",
+  "HIM": "HEDEF PORTFÖY",
   "HIP": "HSBC PORTFÖY",
   "HIS": "HEDEF PORTFÖY",
   "HJA": "AZİMUT PORTFÖY",
@@ -214887,30 +214950,39 @@
   "PBF": "PHİLLİP PORTFÖY",
   "PBH": "PUSULA PORTFÖY",
   "PBI": "PARDUS PORTFÖY",
+  "PBR": "PUSULA PORTFÖY",
   "PBS": "AZİMUT PORTFÖY",
   "PBY": "PARDUS PORTFÖY",
   "PCE": "PARDUS PORTFÖY",
   "PCH": "PARDUS PORTFÖY",
   "PCN": "PERFORM PORTFÖY",
+  "PDC": "PUSULA PORTFÖY",
+  "PDE": "PUSULA PORTFÖY",
   "PDG": "PUSULA PORTFÖY",
   "PDH": "PARDUS PORTFÖY",
   "PDR": "PHİLLİP PORTFÖY",
   "PDS": "PARDUS PORTFÖY",
   "PFS": "ATLAS PORTFÖY",
   "PGE": "PARDUS PORTFÖY",
+  "PGH": "PUSULA PORTFÖY",
+  "PHB": "PUSULA PORTFÖY",
   "PHS": "PERFORM PORTFÖY",
   "PHY": "PARDUS PORTFÖY",
   "PIS": "PARDUS PORTFÖY",
+  "PKD": "PUSULA PORTFÖY",
   "PKH": "DENİZ PORTFÖY",
   "PKL": "PUSULA PORTFÖY",
+  "PKM": "PUSULA PORTFÖY",
   "PKN": "PİRAMİT PORTFÖY",
   "PKU": "PARDUS PORTFÖY",
   "PKV": "PARDUS PORTFÖY",
+  "PKZ": "PUSULA PORTFÖY",
   "PLA": "YAPI KREDİ PORTFÖY",
   "PLS": "DENİZ PORTFÖY",
   "PMG": "İŞ PORTFÖY",
   "PMH": "PARDUS PORTFÖY",
   "PMP": "PARDUS PORTFÖY",
+  "PNU": "PUSULA PORTFÖY",
   "PO7": "PARDUS PORTFÖY",
   "PO8": "PARDUS PORTFÖY",
   "PO9": "PARDUS PORTFÖY",
@@ -214928,6 +215000,7 @@
   "PPT": "ATLAS PORTFÖY",
   "PPU": "PARDUS PORTFÖY",
   "PRF": "AZİMUT PORTFÖY",
+  "PRY": "PUSULA PORTFÖY",
   "PSD": "İŞ PORTFÖY",
   "PSE": "ATLAS PORTFÖY",
   "PSG": "AZİMUT PORTFÖY",
@@ -214940,6 +215013,7 @@
   "PTL": "TEB PORTFÖY",
   "PTO": "PARDUS PORTFÖY",
   "PUA": "AZİMUT PORTFÖY",
+  "PUK": "PUSULA PORTFÖY",
   "PUR": "AK PORTFÖY",
   "PUT": "AK PORTFÖY",
   "PUV": "AK PORTFÖY",
@@ -215075,7 +215149,6 @@
   "TNH": "TACİRLER PORTFÖY",
   "TNI": "TEB PORTFÖY",
   "TNK": "TEB PORTFÖY",
-  "TNR": "TUNA PORTFÖY",
   "TNS": "TACİRLER PORTFÖY",
   "TO8": "TEB PORTFÖY",
   "TOK": "TEB PORTFÖY",
@@ -215215,7 +215288,7 @@
   "gun": "2026-09-21",
   "onceki": "2026-09-18",
   "adet": 69,
-  "eslesmeyen": 9,
+  "eslesmeyen": 22,
   "liste": [
    {
     "ad": "YAPI KREDİ",
@@ -215568,7 +215641,7 @@
   "1H": {
    "taban": "2026-09-14",
    "gun": "2026-09-21",
-   "adet": 2009,
+   "adet": 2022,
    "pys": [
     {
      "ad": "ZİRAAT",
@@ -215887,7 +215960,7 @@
     },
     {
      "ad": "ATL",
-     "net": -20655046785,
+     "net": -20655046718,
      "fon": 29
     },
     {
@@ -216082,7 +216155,7 @@
   "1A": {
    "taban": "2026-08-20",
    "gun": "2026-09-21",
-   "adet": 1996,
+   "adet": 2009,
    "pys": [
     {
      "ad": "ZİRAAT",
@@ -216396,7 +216469,7 @@
     },
     {
      "ad": "ATL",
-     "net": -25155873238,
+     "net": -25155873180,
      "fon": 29
     },
     {
