@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-22T18:51:28Z",
+ "guncelleme": "2026-09-23T19:03:53Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -2690,7 +2690,7 @@
    "eksik": false
   },
   "SARKY": {
-   "ts": "2026-09-17T07:35:39Z",
+   "ts": "2026-09-23T19:02:24Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2724,7 +2724,7 @@
    "eksik": false
   },
   "SDTTR": {
-   "ts": "2026-09-17T07:35:56Z",
+   "ts": "2026-09-23T19:02:40Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2792,7 +2792,7 @@
    "eksik": false
   },
   "SELEC": {
-   "ts": "2026-09-17T07:36:13Z",
+   "ts": "2026-09-23T19:02:56Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2894,7 +2894,7 @@
    "eksik": false
   },
   "SNGYO": {
-   "ts": "2026-09-17T07:36:29Z",
+   "ts": "2026-09-23T19:03:12Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2928,7 +2928,7 @@
    "eksik": false
   },
   "SOKE": {
-   "ts": "2026-09-17T07:36:45Z",
+   "ts": "2026-09-23T19:03:28Z",
    "y": "362",
    "donem": "2026/1",
    "ceyrek": 5,
@@ -2962,7 +2962,7 @@
    "eksik": false
   },
   "SRVGY": {
-   "ts": "2026-09-17T08:37:47Z",
+   "ts": "2026-09-23T19:03:50Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
