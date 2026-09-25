@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-24 19:05 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-25 07:53 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -132,6 +132,14 @@
   },
   {
    "t": "2026-09-24T14:15:00.000Z",
+   "ulke": "USD",
+   "olay": "President Trump Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-09-24T23:55:00.000Z",
    "ulke": "USD",
    "olay": "President Trump Speaks",
    "etki": "Medium",
