@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-09-25",
- "guncelleme": "2026-09-25 — otomatik (GitHub Actions · vercel-köprüsü (2011 fon fiyat + 1068 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-09-25 — otomatik (GitHub Actions · vercel-köprüsü (2017 fon fiyat + 1069 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -699,7 +699,7 @@
      "k": "KTT",
      "u": "Kuveyt Türk — Dördüncü",
      "t": "S",
-     "yu": 71.586361,
+     "yu": 71.586353,
      "g": [
       -0.2149,
       1.0112,
@@ -708,7 +708,7 @@
       21.9195,
       119.3056
      ],
-     "b": 5066322446,
+     "b": 5066321912,
      "ys": 1374,
      "a": 5016915
     },
