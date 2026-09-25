@@ -326,7 +326,8 @@
   "ONRYT": "2026-09-18",
   "REEDR": "2026-09-19",
   "TBARV": "2026-09-19",
-  "KUYAS": "2026-09-21"
+  "KUYAS": "2026-09-21",
+  "BRKO": "2026-09-25"
  },
  "evren_disi": [
   "ADESE",
@@ -353,6 +354,7 @@
   "BIOEN",
   "BIZIM",
   "BORLS",
+  "BRKO",
   "BRKSN",
   "BRMEN",
   "BVSAN",
@@ -509,8 +511,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 179,
- "pencere_sayi": 0,
+ "evren_disi_sayi": 180,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-09-25 07:53 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-09-25 18:52 UTC — otomatik (KAP FR · kümülatif §299)"
 }
