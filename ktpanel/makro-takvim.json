@@ -1,9 +1,9 @@
 {
- "guncelleme": "2026-09-26 09:15 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-28 21:13 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
-   "t": "2026-09-21T15:00:00.000Z",
+   "t": "2026-09-28T13:30:00.000Z",
    "ulke": "EUR",
    "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
@@ -11,15 +11,23 @@
    "onceki": ""
   },
   {
-   "t": "2026-09-22T03:10:00.000Z",
+   "t": "2026-09-29T04:30:00.000Z",
    "ulke": "AUD",
-   "olay": "RBA Gov Bullock Speaks",
+   "olay": "Cash Rate",
+   "etki": "High",
+   "beklenti": "4.60%",
+   "onceki": "4.35%"
+  },
+  {
+   "t": "2026-09-29T04:30:00.000Z",
+   "ulke": "AUD",
+   "olay": "RBA Rate Statement",
    "etki": "High",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-09-22T11:00:00.000Z",
+   "t": "2026-09-29T11:00:00.000Z",
    "ulke": "EUR",
    "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
@@ -27,148 +35,172 @@
    "onceki": ""
   },
   {
-   "t": "2026-09-22T13:55:00.000Z",
+   "t": "2026-09-29T14:00:00.000Z",
    "ulke": "USD",
-   "olay": "President Trump Speaks",
+   "olay": "CB Consumer Confidence",
    "etki": "Medium",
-   "beklenti": "",
-   "onceki": ""
+   "beklenti": "89.2",
+   "onceki": "89.4"
   },
   {
-   "t": "2026-09-23T07:15:00.000Z",
-   "ulke": "EUR",
-   "olay": "French Flash Manufacturing PMI",
+   "t": "2026-09-29T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "JOLTS Job Openings",
    "etki": "Medium",
-   "beklenti": "50.9",
-   "onceki": "51.5"
+   "beklenti": "7.23M",
+   "onceki": "7.27M"
   },
   {
-   "t": "2026-09-23T07:15:00.000Z",
-   "ulke": "EUR",
-   "olay": "French Flash Services PMI",
-   "etki": "Medium",
-   "beklenti": "48.3",
-   "onceki": "48.4"
-  },
-  {
-   "t": "2026-09-23T07:30:00.000Z",
-   "ulke": "EUR",
-   "olay": "German Flash Manufacturing PMI",
-   "etki": "Medium",
-   "beklenti": "54.1",
-   "onceki": "54.1"
-  },
-  {
-   "t": "2026-09-23T07:30:00.000Z",
-   "ulke": "EUR",
-   "olay": "German Flash Services PMI",
-   "etki": "Medium",
-   "beklenti": "49.9",
-   "onceki": "48.5"
-  },
-  {
-   "t": "2026-09-23T08:30:00.000Z",
-   "ulke": "GBP",
-   "olay": "Flash Manufacturing PMI",
-   "etki": "Medium",
-   "beklenti": "51.5",
-   "onceki": "51.5"
-  },
-  {
-   "t": "2026-09-23T08:30:00.000Z",
-   "ulke": "GBP",
-   "olay": "Flash Services PMI",
-   "etki": "Medium",
-   "beklenti": "52.0",
-   "onceki": "52.8"
-  },
-  {
-   "t": "2026-09-24T01:30:00.000Z",
+   "t": "2026-09-30T01:30:00.000Z",
    "ulke": "AUD",
-   "olay": "Employment Change",
+   "olay": "CPI m/m",
    "etki": "High",
-   "beklenti": "21.5K",
-   "onceki": "-15.8K"
+   "beklenti": "0.5%",
+   "onceki": "1.0%"
   },
   {
-   "t": "2026-09-24T01:30:00.000Z",
+   "t": "2026-09-30T01:30:00.000Z",
    "ulke": "AUD",
-   "olay": "Unemployment Rate",
+   "olay": "CPI y/y",
    "etki": "High",
-   "beklenti": "4.5%",
-   "onceki": "4.5%"
+   "beklenti": "4.1%",
+   "onceki": "3.5%"
   },
   {
-   "t": "2026-09-24T07:30:00.000Z",
-   "ulke": "CHF",
-   "olay": "SNB Monetary Policy Assessment",
+   "t": "2026-09-30T01:30:00.000Z",
+   "ulke": "AUD",
+   "olay": "Trimmed Mean CPI m/m",
    "etki": "High",
+   "beklenti": "0.3%",
+   "onceki": "0.5%"
+  },
+  {
+   "t": "2026-09-30T06:29:00.000Z",
+   "ulke": "EUR",
+   "olay": "German Prelim CPI m/m",
+   "etki": "Medium",
+   "beklenti": "0.5%",
+   "onceki": "0.2%"
+  },
+  {
+   "t": "2026-09-30T12:15:00.000Z",
+   "ulke": "USD",
+   "olay": "ADP Non-Farm Employment Change",
+   "etki": "Medium",
+   "beklenti": "73K",
+   "onceki": "38K"
+  },
+  {
+   "t": "2026-09-30T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Core PCE Price Index m/m",
+   "etki": "High",
+   "beklenti": "0.3%",
+   "onceki": "0.2%"
+  },
+  {
+   "t": "2026-09-30T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Final GDP q/q",
+   "etki": "High",
+   "beklenti": "1.5%",
+   "onceki": "1.5%"
+  },
+  {
+   "t": "2026-09-30T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Final GDP Price Index q/q",
+   "etki": "Medium",
+   "beklenti": "6.4%",
+   "onceki": "6.4%"
+  },
+  {
+   "t": "2026-10-01T08:00:00.000Z",
+   "ulke": "GBP",
+   "olay": "BOE Gov Bailey Speaks",
+   "etki": "Medium",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-09-24T07:30:00.000Z",
-   "ulke": "CHF",
-   "olay": "SNB Policy Rate",
-   "etki": "High",
-   "beklenti": "0.00%",
-   "onceki": "0.00%"
-  },
-  {
-   "t": "2026-09-24T08:00:00.000Z",
-   "ulke": "CHF",
-   "olay": "SNB Press Conference",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-09-24T12:30:00.000Z",
+   "t": "2026-10-01T12:30:00.000Z",
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
    "beklenti": "201K",
-   "onceki": "196K"
+   "onceki": "197K"
   },
   {
-   "t": "2026-09-24T14:15:00.000Z",
-   "ulke": "USD",
-   "olay": "President Trump Speaks",
+   "t": "2026-10-01T13:30:00.000Z",
+   "ulke": "EUR",
+   "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-09-24T23:55:00.000Z",
+   "t": "2026-10-01T14:00:00.000Z",
    "ulke": "USD",
-   "olay": "President Trump Speaks",
+   "olay": "FOMC Member Waller Speaks",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-09-25T09:15:00.000Z",
-   "ulke": "GBP",
-   "olay": "BOE Gov Bailey Speaks",
+   "t": "2026-10-01T14:00:00.000Z",
+   "ulke": "USD",
+   "olay": "ISM Manufacturing PMI",
+   "etki": "Medium",
+   "beklenti": "54.8",
+   "onceki": "54.6"
+  },
+  {
+   "t": "2026-10-01T23:30:00.000Z",
+   "ulke": "JPY",
+   "olay": "Tokyo Core CPI y/y",
+   "etki": "Medium",
+   "beklenti": "2.4%",
+   "onceki": "1.8%"
+  },
+  {
+   "t": "2026-10-02T09:00:00.000Z",
+   "ulke": "EUR",
+   "olay": "Core CPI Flash Estimate y/y",
+   "etki": "Medium",
+   "beklenti": "2.5%",
+   "onceki": "2.4%"
+  },
+  {
+   "t": "2026-10-02T09:00:00.000Z",
+   "ulke": "EUR",
+   "olay": "CPI Flash Estimate y/y",
+   "etki": "Medium",
+   "beklenti": "3.7%",
+   "onceki": "3.3%"
+  },
+  {
+   "t": "2026-10-02T12:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Average Hourly Earnings m/m",
    "etki": "High",
-   "beklenti": "",
-   "onceki": ""
+   "beklenti": "0.3%",
+   "onceki": "0.3%"
   },
   {
-   "t": "2026-09-25T14:00:00.000Z",
+   "t": "2026-10-02T12:30:00.000Z",
    "ulke": "USD",
-   "olay": "Revised UoM Consumer Sentiment",
-   "etki": "Medium",
-   "beklenti": "47.4",
-   "onceki": "47.8"
+   "olay": "Non-Farm Employment Change",
+   "etki": "High",
+   "beklenti": "90K",
+   "onceki": "162K"
   },
   {
-   "t": "2026-09-25T14:00:00.000Z",
+   "t": "2026-10-02T12:30:00.000Z",
    "ulke": "USD",
-   "olay": "Revised UoM Inflation Expectations",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": "4.6%"
+   "olay": "Unemployment Rate",
+   "etki": "High",
+   "beklenti": "4.1%",
+   "onceki": "4.1%"
   }
  ]
 }
