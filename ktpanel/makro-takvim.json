@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-29 19:57 UTC — otomatik (§319)",
+ "guncelleme": "2026-09-30 19:58 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -113,6 +113,22 @@
    "etki": "Medium",
    "beklenti": "6.4%",
    "onceki": "6.4%"
+  },
+  {
+   "t": "2026-09-30T19:30:00.000Z",
+   "ulke": "USD",
+   "olay": "President Trump Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-09-30T22:00:00.000Z",
+   "ulke": "USD",
+   "olay": "FOMC Member Kashkari Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
   },
   {
    "t": "2026-10-01T08:00:00.000Z",

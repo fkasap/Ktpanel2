@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-09-29T19:59:25Z",
+ "guncelleme": "2026-09-30T19:59:56Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -1432,7 +1432,7 @@
    "eksik": false
   },
   "IHLGM": {
-   "ts": "2026-09-19T08:42:46Z",
+   "ts": "2026-09-30T19:58:22Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1500,7 +1500,7 @@
    "eksik": false
   },
   "IMASM": {
-   "ts": "2026-09-19T08:43:02Z",
+   "ts": "2026-09-30T19:58:40Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1534,7 +1534,7 @@
    "eksik": false
   },
   "IZFAS": {
-   "ts": "2026-09-19T08:43:19Z",
+   "ts": "2026-09-30T19:58:57Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1602,7 +1602,7 @@
    "eksik": false
   },
   "JANTS": {
-   "ts": "2026-09-19T08:43:36Z",
+   "ts": "2026-09-30T19:59:14Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1636,7 +1636,7 @@
    "eksik": false
   },
   "KATMR": {
-   "ts": "2026-09-19T08:43:53Z",
+   "ts": "2026-09-30T19:59:32Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1670,7 +1670,7 @@
    "eksik": false
   },
   "KMPUR": {
-   "ts": "2026-09-21T19:58:43Z",
+   "ts": "2026-09-30T19:59:53Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3574,6 +3574,6 @@
    "eksik": false
   }
  },
- "uye_sayisi": 247,
+ "uye_sayisi": 238,
  "kapsam": 105
 }
