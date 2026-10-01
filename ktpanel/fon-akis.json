@@ -215250,12 +215250,12 @@
     {
      "ad": "HEDEF",
      "net": 0,
-     "fon": 51
+     "fon": 52
     },
     {
      "ad": "TERA",
      "net": 0,
-     "fon": 4
+     "fon": 5
     },
     {
      "ad": "GOLDEN GLOBAL",
@@ -215727,11 +215727,6 @@
      "fon": 2
     },
     {
-     "ad": "TERA",
-     "net": 230069690,
-     "fon": 4
-    },
-    {
      "ad": "AHLATCI ANONİM ŞİRKETİ",
      "net": 73077416,
      "fon": 7
@@ -215800,6 +215795,11 @@
      "ad": "MEKSA",
      "net": -140131027,
      "fon": 6
+    },
+    {
+     "ad": "TERA",
+     "net": -196101881,
+     "fon": 5
     },
     {
      "ad": "MARMARA CAPİTAL",
@@ -215999,7 +215999,7 @@
     {
      "ad": "HEDEF",
      "net": -17091883234,
-     "fon": 51
+     "fon": 52
     },
     {
      "ad": "KUVEYT TÜRK",
