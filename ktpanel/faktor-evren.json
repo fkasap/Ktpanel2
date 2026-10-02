@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-01T20:21:26Z",
+ "guncelleme": "2026-10-02T06:42:51Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -2112,7 +2112,7 @@
    "eksik": false
   },
   "MERCN": {
-   "ts": "2026-09-22T09:53:18Z",
+   "ts": "2026-10-02T06:41:25Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2146,7 +2146,7 @@
    "eksik": false
   },
   "MEYSU": {
-   "ts": "2026-09-22T09:53:30Z",
+   "ts": "2026-10-02T06:41:37Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 3,
@@ -2248,7 +2248,7 @@
    "eksik": false
   },
   "OBAMS": {
-   "ts": "2026-09-22T09:54:03Z",
+   "ts": "2026-10-02T06:41:54Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2316,7 +2316,7 @@
    "eksik": false
   },
   "ONCSM": {
-   "ts": "2026-09-22T18:49:55Z",
+   "ts": "2026-10-02T06:42:26Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2452,7 +2452,7 @@
    "eksik": false
   },
   "PLTUR": {
-   "ts": "2026-09-22T18:50:12Z",
+   "ts": "2026-10-02T06:42:48Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3404,14 +3404,14 @@
    "eksik": false
   },
   "BRLSM": {
-   "ts": "2026-09-22T09:54:24Z",
+   "ts": "2026-10-02T06:42:05Z",
    "y": "362",
    "donem": "2026/2",
-   "ceyrek": 5,
-   "ciro": 5807141031,
-   "brut": 755118426,
-   "favok": 482262904,
-   "netKar": -482437245,
+   "ceyrek": 2,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "netKar": null,
    "ozk": 1569975513,
    "aktif": 7499554823,
    "donen": 6503004670,
@@ -3419,11 +3419,11 @@
    "finBorc": 1177110752,
    "likit": 372340073,
    "netBorc": 804770679,
-   "isletmeNA": -69024406,
+   "isletmeNA": null,
    "capex": null,
    "sna": null,
-   "tahakkuk": -5.51,
-   "odFaiz": -496774140,
+   "tahakkuk": null,
+   "odFaiz": null,
    "odTemettu": null,
    "stoklar": 626160646,
    "ticariAlacak": 4049589583,
@@ -3435,7 +3435,7 @@
    },
    "adet": 224000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "eksik": true
   },
   "TKFEN": {
    "ts": "2026-09-26T09:16:48Z",
