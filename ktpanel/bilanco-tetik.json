@@ -12,6 +12,7 @@
   "BIMAS",
   "BINHO",
   "BRLSM",
+  "BSOKE",
   "BUCIM",
   "BURCE",
   "CANTE",
@@ -74,7 +75,7 @@
   "YATAS",
   "YEOTK"
  ],
- "sayi": 72,
+ "sayi": 73,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -329,7 +330,10 @@
   "KUYAS": "2026-09-21",
   "BRKO": "2026-09-25",
   "DIRIT": "2026-09-30",
-  "TRYKI": "2026-09-30"
+  "TRYKI": "2026-09-30",
+  "BSOKE": "2026-10-02",
+  "BTCIM": "2026-10-02",
+  "KONTR": "2026-10-02"
  },
  "evren_disi": [
   "ADESE",
@@ -359,6 +363,7 @@
   "BRKO",
   "BRKSN",
   "BRMEN",
+  "BTCIM",
   "BVSAN",
   "BYDNR",
   "CASA",
@@ -423,6 +428,7 @@
   "KLKIM",
   "KLRHO",
   "KNFRT",
+  "KONTR",
   "KORTS",
   "KPEKS",
   "KPTGY",
@@ -515,8 +521,8 @@
   "YYAPI",
   "ZEDUR"
  ],
- "evren_disi_sayi": 182,
- "pencere_sayi": 0,
+ "evren_disi_sayi": 184,
+ "pencere_sayi": 3,
  "dusen_son": [],
- "guncelleme": "2026-10-02 06:40 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-02 19:55 UTC — otomatik (KAP FR · kümülatif §299)"
 }
