@@ -329,15 +329,15 @@
    "ad": "TCMB Fonlama Rejimi kartı (damgalı satırlar)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-11",
-   "limit_gun": 45,
+   "son": "2026-10-02",
+   "limit_gun": 21,
    "kaynak": "PPK takvimi: 10 Eyl SABİT %37 (§436b) → 22 Eki → Aralık. Karar sonrası satırlar/etiket tazelenir"
   },
   {
    "ad": "Haberler Gündem Özeti kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-10",
+   "son": "2026-10-02",
    "limit_gun": 7,
    "kaynak": "Haftalık omurga — her Pazartesi ya da merkez bankası günü sonrası (§436)"
   },
@@ -345,7 +345,7 @@
    "ad": "Piyasa Global Risk Barometresi (damgalı bağlam)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-10",
+   "son": "2026-10-02",
    "limit_gun": 30,
    "kaynak": "Satırlar canlı (§421); yalnız etiket/okuma metni damgalı"
   },
@@ -361,9 +361,9 @@
    "ad": "Fed & Politika kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-13",
-   "limit_gun": 10,
-   "kaynak": "FOMC 15-16 Eyl (SEP+nokta) → 27-28 Eki. Karar sonrası tazelenir (§439)"
+   "son": "2026-10-02",
+   "limit_gun": 30,
+   "kaynak": "FOMC 16 Eyl +25bp -> 27-28 Eki (§449)"
   },
   {
    "ad": "Makroihtiyati & Kredi Koşulları kartı (damgalı)",

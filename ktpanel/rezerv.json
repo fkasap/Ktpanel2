@@ -1,13 +1,13 @@
 {
- "guncelleme": "2026-09-11",
+ "guncelleme": "2026-10-02",
  "kaynak": "TCMB haftalık basın açıklaması (web) — swap stoku bileşeni EVDS'de yok (yurt dışı ikili swap, ağırlıkla Katar)",
- "swapStoku": 12.2,
+ "swapStoku": 13.5,
  "webDogrulama": {
-  "tarih": "04-09-2026",
-  "brut": 184.2,
-  "net": 65.6,
-  "swapHaricNet": 53.4,
-  "not": "swapStoku = net − swapHaricNet = 65,6 − 53,4 = 12,2. Kaynak: TCMB Haftalik Para ve Banka Istatistikleri, 4 Eyl haftasi (10 Eyl yayini). 28 Agu haftasi: net 66,6 − swap haric 55,9 = 10,7. Brut 188,2 -> 184,2 (−3,95 mlr: altin −3,25 (fiyat), doviz −0,70). Swap haric net 55,9 -> 53,4 (−2,5): dusus altin degerlemesinin ve swap kullaniminin (+1,5) birlesimi.",
+  "tarih": "25-09-2026",
+  "brut": 171.2,
+  "net": 53.4,
+  "swapHaricNet": 39.9,
+  "not": "swapStoku = net − swapHaricNet = 53,4 − 39,9 = 13,5. Kaynak: TCMB Haftalik Para ve Banka Istatistikleri, 25 Eyl haftasi (1 Eki yayini; Bloomberg HT/Dunya hesabi). Bes hafta ust uste dusus: brut 188,4 (21 Agu) -> 171,2; swap haric net 55,9 (28 Agu) -> 39,9 — bir ayda −16 mlr. Doviz −1,25, altin −1,96 (hafta). 25 Eyl haftasi = FON KRIZI haftasi (SPK 17 Eyl 131 fon tasfiye).",
   "seri": [
    {
     "h": "31 Tem",
@@ -44,10 +44,29 @@
     "net": 65.6,
     "swapHaric": 53.4,
     "swap": 12.2
+   },
+   {
+    "h": "11 Eyl",
+    "brut": 178.7
+   },
+   {
+    "h": "18 Eyl",
+    "brut": 174.4,
+    "net": 55.8,
+    "swapHaric": 43.1,
+    "swap": 12.7
+   },
+   {
+    "h": "25 Eyl",
+    "brut": 171.2,
+    "net": 53.4,
+    "swapHaric": 39.9,
+    "swap": 13.5
    }
   ],
   "_425": "28 Agu: 13 + 20 + 27 Agu yayinlari UC HAFTA gec islendi (18 gun bayat). Swap stoku 13,4 -> 11,0: yurt disi swap yukumlulugu ERIYOR, swap haric net ayni donemde 40,8 -> 55,9 (+15,1 mlr, 3 haftada). SIRADAKI: 28 Agu haftasi verisi 3 Eyl Persembe yayinlanir.",
-  "_436c": "11 Eyl: iki haftalik yayin (3 + 10 Eyl) islendi. Swap stoku 11,0 -> 10,7 -> 12,2: bir hafta eridi, sonra 1,5 mlr geri geldi. Doviz bacagi 71,1 -> 70,4. SIRADAKI: 11 Eyl haftasi verisi 17 Eyl Persembe."
+  "_436c": "11 Eyl: iki haftalik yayin (3 + 10 Eyl) islendi. Swap stoku 11,0 -> 10,7 -> 12,2: bir hafta eridi, sonra 1,5 mlr geri geldi. Doviz bacagi 71,1 -> 70,4. SIRADAKI: 11 Eyl haftasi verisi 17 Eyl Persembe.",
+  "_449": "2 Eki: UC yayin (17, 24 Eyl, 1 Eki) birden islendi — 21 gun bayat kalmisti. SIRADAKI: 2 Eki haftasi verisi 8 Eki Persembe."
  },
  "aciklama": "Swap stoku yavaş değişen bir kalemdir (yurt dışı MB ikili anlaşmaları, ağırlıkla Katar ~15 mlr limit). Haftalık net rezerv hareketi ağırlıkla kur+bilançodan gelir. Bu dosya 'rezervleri güncelle' komutuyla web'den tazelenir; ara zamanlarda swap hariç net = canlı net − swapStoku olarak hesaplanır (net EVDS'den canlı)."
 }

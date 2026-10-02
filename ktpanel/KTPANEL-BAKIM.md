@@ -6,6 +6,31 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §449 (2 Eki 2026) — EKIM TARAMASI
+
+## §449 15 GUNLUK ARA SONRASI TARAMA: 4 KRITIK BULGU
+1) EBU KAPALI: pano "Your credit balance is too low to access the Anthropic API" — not
+   motoru 51 degisim bekletiyor, nobet/haftalik yorum yazilmiyor. KULLANICI: Anthropic
+   Console > Plans & Billing bakiye yukle. Panel verisi akiyor, yorum katmani durdu.
+2) REZERV 21 GUN BAYAT: uc Persembe yayini islendi. 25 Eyl: brut 171,2 / net 53,4 /
+   swap haric 39,9 -> swap stoku 13,5. BES HAFTA ust uste dusus (21 Agu 188,4 -> 171,2);
+   swap haric net bir ayda −16 mlr. Karne EVDS hesabina dusmus, "39,0" gosteriyordu
+   (tesaduf yakin). yabanci.json rezerv trend 'eriyor'.
+3) MERKEZ BANKALARI: Fed 16 Eyl +25bp -> %3,75-4,00 (12-0; 2023'ten beri ilk; nokta
+   yil sonu 4,1-4,4), BoJ 18 Eyl +25bp -> %1,25 (31 yil zirvesi), HKMA 4,25, BoE 17 Eyl
+   sabit. Tablo, Fed karti, koro satirlari, takvim (2 Eki-2 Kas) tazelendi.
+4) FON KRIZI (panelin kalbi): SPK 17 Eyl'de 7 portfoy yonetim sirketine ait 131 fonu
+   TASFIYE etti (455.758 yatirimci); bazilari temerrude dustu; 29 Eyl Fon Koordinasyon
+   Kurulu; 1 Eki SPK 1 mn TL'ye kadar ara odeme (para piyasasi fonlarindan baslayarak);
+   malvarligi dondurma/yurt disi yasagi tedbirleri. TEFAS'in 18 Eyl'de uc yolu da
+   reddetmesi bu gunle ortusuyor. Panelde HICBIR IZ YOK — Ebu kapali oldugu icin yorum
+   da yazilmadi. ACIK: hangi 7 PYS? Katilim fon evreni (46 + 47 fon) etkilenen var mi?
+   Fon akisi (son hafta) — ayri inceleme (§450 onerisi: FON KRIZI karti + evren kontrolu).
+DIGER: guidance 38g, degerleme 63g (aylik kalemler Eylul turu yapilmadi); sec-tickers
+   yok (EDGAR_UA repo Secret'i girilmemis). ASELS arsivde (8 donem) — §446 calisti.
+DEPLOY: ktpanel/{index.html, app.js, rezerv.json, yabanci.json, guncelleme-plani.json}
+   (surum 20261002a).
+
 # BAKIM EK — §447 (17 Eyl 2026) — ILERIDE: BILANCO DIPNOTLARI (karar: simdilik kalsin)
 Kullanici Hesap Zinciri'ne dipnotlari eklemeyi sordu; dusunuldu, ertelendi. KAYIT:
 - Kaynak: KAP finansal rapor bildiriminin PDF eki (80-200 sayfa); fon zincirindeki
