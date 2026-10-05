@@ -1,48 +1,60 @@
 # Tazeleme — 2026-10-05
 
-Katman: `hepsi` · Veri dizini: `ktpanel`
+Katman: `endeks,fiyat,fon` · Veri dizini: `ktpanel`
 
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-05
-- ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-10-05 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-02
+- ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-10-02 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XK100 ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-02 dondurdu, dosyada 2026-10-05 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 238/238 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-05
-- ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-10-05 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-02
+- ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-10-02 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XKTUM ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-02 dondurdu, dosyada 2026-10-05 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 41/41 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-05
-- ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-10-05 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-02
+- ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-10-02 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XKTMT ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-02 dondurdu, dosyada 2026-10-05 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-05
-- ✓ **fiyat yasi (Multiple fiyatları)**: 2026-10-05 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-02
+- ✓ **fiyat yasi (Multiple fiyatları)**: 2026-10-02 (1 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Multiple fiyatları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-02 dondurdu, dosyada 2026-10-05 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-05
-- ✓ **fiyat yasi (Model sicili)**: 2026-10-05 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-02
+- ✓ **fiyat yasi (Model sicili)**: 2026-10-02 (1 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Model sicili — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-02 dondurdu, dosyada 2026-10-05 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### TR 5Y CDS — ✓ 252.1 bp · 2026-10-03 · +5.69
 - ✓ 3321 günlük seri · kaynak etiketi 2026-10-05 (hafta sonu doldurmalı)
-
-### Risk metrikleri — ✓ GEÇTİ
-- ✓ **kapsam**: 141/141 (%100)
-- ✓ **aykırı değer**: temiz (sınır ±%3)
-- ✓ **aykırı değer**: temiz (sınır ±%150)
-- ℹ **beta referansı: XKTUM (BIST resmî arşiv)** (217 gün)
-- ℹ 4 gözlem kurumsal işlem süzgecine takıldı (±%20 üstü hareket — bölünme/bedelsiz)
-- ℹ 1128 gözlem TARİH BOŞLUĞU nedeniyle atlandı (>5 gün ara — aylık tohum noktaları; §252z) — ✓ GERÇEK katılım çıpası (BIST resmî)
 
 ### TEFAS genel bilgi (§253i) — ✓ 2005 fon · AUM + yatırımcı sayısı köprüden (ham 2034 kayıt, sayfalamalı)
 
@@ -64,7 +76,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2005 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903498594176267> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903498580102590> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -75,18 +87,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Depo hijyeni + kalem tazeligi (§297) — ✓ GEÇTİ
 - ✓ **ikiz dosya**: temiz
-- ✓ **seri guncelligi (track.series)**: 2026-10-02 (referans 2026-10-05, fark 3g)
+- ✓ **seri guncelligi (track.series)**: 2026-10-05 (referans 2026-10-05, fark 0g)
 - ✓ **seri guncelligi (fon-akis)**: 2026-10-05 (referans 2026-10-05, fark 0g)
 
-### Bilanço borç defteri — ✓ GEÇTİ
-- ⚠ **borc defteri (§299)**: 110 kart bekliyor · en eski AKHAN (48g)
-  - 106 kod 21 gunden uzun suredir kartsiz: AKHAN, AKYHO, ALKIM, ALTNY, BAKAB, BERA, BIENY, BIMAS, BINHO, BRKSN, BRLSM, BUCIM …
-
-### Bilanço tetiği (§299 kümülatif) — ✓ 110 şirket kart bekliyor (katılım evreni · evren dışı 147 saklı, §428)
-- pencere: 0 FR · yeni deftere giren: 0
-- kart yazılıp düşen: 0
-- en eski borç: AKHAN · 48 gündür bekliyor ⚠
-- AKHAN, AKYHO, ALKIM, ALTNY, BAKAB, BERA, BIENY, BIMAS, BINHO, BRKSN, BRLSM, BUCIM, BURCE, BYDNR, CELHA, CITAS, COSMO, CVKMD, DARDL, DCTTR …
+### Bilanço tetiği — ✗ fetch failed
 
 ### Endeks üyelikleri — ✓ XK030EA:30 · XKTUM:238 · XK100:100 · XK050:50 · XK030:30 · XSRDK:27 · XKTMT:41
 - ✓ üyelik uyumu XKTUM: 238/238 (tasarım gereği ilk 238)
@@ -105,12 +109,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - XU100 (1G/1H/1A/3A): 1.42 · -1.18 · -11.19 · -11.88
 - 3A lideri: XKMYA %24.21
 
-### Hazine ihale sonuçları (§314) — ✓ defter 16 duyuru · yeni 2
-- 2026-10-05 · 5 Ekim 2026 Tarihinde Gerçekleştirilen 2 Yıl Vadeli TLREFK’y
-  - TLREFK’ye endeksli kira sertifikası → 59,26 mlr TL · itfa 4 Ekim 2028 · TRD041028T26
-- 2026-10-05 · 5 Ekim 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçların
-  - Sabit Kuponlu Devlet Tahvili → bilesik %39.87 (teklif 39.97) · donemsel %18.27 (teklif 18.31) · TRT130928T38
-  - Sabit Kuponlu Devlet Tahvili → bilesik %38.71 (teklif 38.78) · donemsel %17.78 (teklif 17.81) · TRT160431T35
+### Hazine ihale sonuçları (§314) — ✓ defter 16 duyuru · yeni 0
+- yeni duyuru yok
 
 ### Hazine ihraç takvimi (§334) — ⏭ yeni strateji yok (mevcut: 2026-09-30 · Ekim–Aralık 2026)
 
@@ -121,16 +121,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-10-09 12:30Z · CAD · Employment Change
 - 2026-10-09 12:30Z · CAD · Unemployment Rate
 
-- §383 arşive yazıldı: +19 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
-
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 114/238
-- bu turda: 4 tam · 0 eksik kalemli · 2 alınamadı
-- not: CITAS:liste boş · KPEKS:liste boş
+- bu turda: 0 tam · 0 eksik kalemli · 3 alınamadı
+- not: CITAS:doğrudan: fetch failed · KPEKS:doğrudan: fetch failed · REEDR:doğrudan: fetch failed · ⏹ devre kesici: 3 ardışık hata, tur erken bitti
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
-### KAP arşivi (§381) — ✓ +8 çeyrek · 0/238 şirket tam
-- KTLEV:4→8 · PASEU:4→8
+### KAP arşivi (§381) — ✓ +0 çeyrek · 0/238 şirket tam
+- PETKM:doğrudan: fetch failed (1. kez) · TUPRS:doğrudan: fetch failed (1. kez)
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
+- 2 düştü
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
 - §364b fiyat: 46/46 GYO için canlı fiyat eklendi (güncel iskonto hesaplandı)
@@ -149,38 +148,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - son ay net değişimi: 538.3 mlr ₺ (dönem sonu − dönem başı, tüm türler)
 - ölçüler: Dönem Başı Fon Adedi · Dönem Sonu Fon Adedi · Fon Adedi Değişim · Dönem Başı Fon Tutarı (TL) · Dönem Sonu Fon Tutarı (TL) · Dönem Başı Fon Sayısı · Dönem Sonu Fon Sayısı
 
-### Bülten keşfi (§250k) — ✓ thb202610021.zip indi · 250KB
-- içerik: thb202610021.csv
-- endeks izi: `thb202610021.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
+### Bülten keşfi (§250k) — ✓ thb202610051.zip indi · 262KB
+- içerik: thb202610051.csv
+- endeks izi: `thb202610051.csv → TARIH;ISLEM  KODU;BULTEN ADI;PAZAR GRUBU;PAZAR;YAPISAL BAZDA PIYASA ALT BOLUMU;ENSTRUMAN GRUBU;ENSTRUMAN TIPI;ENSTRUMAN SINIFI;ISLEM YONTEMI;PIYASA YAPICI;BIST 100 ENDEKS;BIST 30 ENDEKS;BRUT TAKAS;OZS`
 
-### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202610021.csv
-- satır: 10307 · kolon: 57
+### Bülten fiyat keşfi (§305 · tek koşuluk ölçüm) — thb202610051.csv
+- satır: 10304 · kolon: 57
 - fiyat kolon adayları: ONCEKI KAPANIS FIYATI · ACILIS FIYATI · ACILIS SEANSI FIYATI · EN DUSUK FIYAT · EN YUKSEK FIYAT · KAPANIS FIYATI · KAPANIS SEANSI FIYATI · REFERANS FIYAT …
-- THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=292
-- örnek satır: `2026-10-02;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
-
-- §429p kabul dağılımı: 40 fon kabul (PHK:5 RPI:6 DKH:5 TIL:7 NKT:6 VHS:6 RKH:9 KTS:9 PKD:7 HFI:7 KLH:7 OHK:6 NKM:5 PUK:4 HFO:2 MAC:5 MKA:5 ZPE:5 TZD:5 KHJ:5 MPS:5 GKV:5 KTI:6 TLZ:6 KHC:5 KST:5 ELZ:5 YHK:6 MTK:4 RBH:4 KH1:5 KTM:5 KPA:5 KPU:5 KPC:5 KCV:5 HKH:5 NNF:5 IVF:5 ZPJ:2)
-
-- §429f teşhis: listede 1329 farklı fon kodu · evrenden görülen: 40/47
-- §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
-- §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | ZPMDK=ZİRAAT PORTFÖY BIST KATILIM 100 ENDEKSİ MODEL PORTFÖY H | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
-
-- §429p kuyruk: liste 214 kayıt · daha önce işlenmiş 142 idx · iş 41
-
-### Fon portföy dağılımı (§429) — ✓ 35 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 173 dönem · KAP yolu: tarama(47 fon, 10424 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
-- bu turda hedef 38 (tur tavanı 80; kalan sonraki koşuda)
-- ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
-  · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
-  · VHS null: ek bulunamadı (HTTP 200)
-
-### SEC ticker yedeği (§448) — ✗ HTTP 403 · " SEC.gov | Request Rate Threshold Exceeded html {height: 100%} body {height: 100%; margin:0; padding:0;} #header {backgr"
+- THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=292.25
+- örnek satır: `2026-10-05;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (134 fiyat) · Model sicili (39 fiyat) · TR 5Y CDS (252.1 bp) · fon akışı (2004) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · hazine ihale sonuçları (+2) · küresel makro takvim (10 olay) · faktör evreni (114/238) · KAP arşivi (+8 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor)
+**Sonuç:** TR 5Y CDS (252.1 bp) · fon akışı (2004) · katılım fonları (45+akış) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (10 olay) · faktör evreni (114/238) · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 86 sn
-- ⏱ KAP arşivi (§381) — 89 sn
-- ⏱ Fon portföy dağılımı (§429) — 62 sn
-- toplam: 297 sn
+- ⏱ Faktör evreni (§361) — 73 sn
+- ⏱ KAP arşivi (§381) — 78 sn
+- toplam: 213 sn
