@@ -6,6 +6,32 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §450 (5 Eki 2026) — TARAMA (tarayici yok, repo + rapor)
+
+## §450 BULGULAR
+1) DAMGALI ASYA KARTLARI (nobet uyarisi, kullanici bildirdi): BoJ (55g), HKMA (67g), Kore
+   Okuma (67g) tazelendi. BoJ 18 Eyl +25bp -> %1,25 (7-2; Asada, Sato karsi; yururluk
+   24 Eyl); yen artirima ragmen zayifladi (USD/JPY 157+, Ueda hiz taahhudu yok); siradaki
+   29-30 Eki. HKMA: Fed +25 ile baz %4,25, Aggregate Balance ~54 mlr sabit. Kore: BOK
+   22 Eki (TCMB ile ayni gun). Plan 'son' tarihleri guncellendi.
+2) ENDEKS DONEMSEL DEGISIMI (EN BUYUK ACIK): Ekim donemi uyelik revizyonu gelmis —
+   XK100: 35 FAZLA / 35 EKSIK, oluk agirlik %8,74; XKTUM 21 fazla (%3,75); XKTMT 3/5.
+   endeks-uyeler.json (resmi) yeni; xk100/xktum/xktmt.json pay_adedi ESKI uyelerle.
+   Agirliklar her gun pay_adedi x fiyat ile yeniden hesaplanir ama pay_adedi ELLE
+   (cereklik). Yeni uyelerin serbest dolasim pay adedi gerekir — ayri is (§451 onerisi:
+   BIST endeks agirlik dosyasindan otomatik). Panelde XK100 agirliklarinin %8,7'si
+   artik endekste olmayan hisselere dagitilmis durumda.
+3) Plan: 'Swap stoku' son tarihi rezerv.json'la hizalandi; 'BIST bilanco takvimi'
+   haftalik -> ceyreklik (yanlis alarm uretiyordu).
+4) Aylik kalemler bayat: guidance/analist/halkaarz 41g, inceleme-ai 39g, degerleme 66g,
+   bist-takvim 48g, fm.json tarihsiz. Yabanci AYLIK odemeler dengesi 55g (Tem/Agu verisi
+   islenmedi).
+5) CDS 252 bp (2 Eki 233'ten) — fon krizi + rezerv erimesi fiyatlaniyor.
+6) RKH haftalik rapor (14-18 Eyl) aylik dongu sanilip donem cozulemedi — zararsiz,
+   haftalik raporlar suzulmeli (kucuk is).
+7) SEC yedegi 403 suruyor — repo Secret EDGAR_UA + yml (§448) yuklenmedi.
+DEPLOY: ktpanel/{index.html, app.js, guncelleme-plani.json} (surum 20261005a).
+
 # BAKIM EK — §449 (2 Eki 2026) — EKIM TARAMASI
 
 ## §449 15 GUNLUK ARA SONRASI TARAMA: 4 KRITIK BULGU

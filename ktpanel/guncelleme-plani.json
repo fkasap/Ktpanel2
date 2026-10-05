@@ -226,8 +226,8 @@
    "ad": "Swap stoku (rezerv bileşeni)",
    "dosya": "rezerv.json",
    "siklik": "haftalik",
-   "son": "2026-08-10",
-   "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır)",
+   "son": "2026-10-02",
+   "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır) · son: 25 Eyl haftasi (1 Eki yayini) §449",
    "limit_gun": 13,
    "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği."
   },
@@ -260,10 +260,11 @@
   {
    "ad": "BIST bilanço takvimi",
    "dosya": "bist-takvim.json",
-   "siklik": "haftalik",
+   "siklik": "ceyreklik",
    "son": "2026-08-10",
    "kaynak": "KAP beklenen bildirimler + Fintables",
-   "_245": "§F0 ihlali: panele veri besliyordu ama kayıtta YOKTU → sessizce eskiyordu."
+   "_245": "§F0 ihlali: panele veri besliyordu ama kayıtta YOKTU → sessizce eskiyordu.",
+   "_450": "haftalik degil: 3C sezonu Ekim sonu (§450)"
   },
   {
    "ad": "Gunluk fon akisi",
@@ -296,8 +297,8 @@
    "ad": "BoJ Politika kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-08-08",
-   "limit_gun": 35,
+   "son": "2026-10-05",
+   "limit_gun": 30,
    "kaynak": "BoJ toplantı takvimi (~6 haftada bir) — canlı satırlar /api/market?mod=boj; bu kart POLİTİKA anlatısı",
    "_433": "§433: Asya damgalı kartları nöbete alındı — eskime artık otomatik görünür. Sıradaki basamak: koro satırının canlı hesaplanması."
   },
@@ -305,7 +306,7 @@
    "ad": "HKMA Okuma & Bölge Bağı kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-07-27",
+   "son": "2026-10-05",
    "limit_gun": 45,
    "kaynak": "Rejim anlatısı (currency board) — yavaş eskir; HIBOR/AB canlı"
   },
@@ -321,7 +322,7 @@
    "ad": "Kore Okuma & Bağlar kartı (koro dahil, damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-07-27",
+   "son": "2026-10-05",
    "limit_gun": 30,
    "kaynak": "Küresel koro + Kore rolü anlatısı — §433 basamak 2'de koro satırı canlıya taşınacak"
   },
