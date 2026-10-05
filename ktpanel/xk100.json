@@ -4,7 +4,7 @@
  "_bicim": "uyeler: {HISSE_KODU: agirlik_yuzde}. Toplam ~100 olmali. Ornek: {\"ASELS\": 4.82, \"TUPRS\": 3.91}",
  "_nasil_doldurulur": "Borsa Istanbul'un yayinladigi XK100 kompozisyon dosyasindan ya da bir terminalden alinip buraya yazilir. Yazildiktan sonra panel AKTIF AGIRLIK ve AKTIF PAY sutunlarini kendiliginden gosterir.",
  "tarih": "2026-10-05",
- "donem": "1 Mayıs 2026 – 31 Ekim 2026 (BIST üç aylık revizyon dönemi)",
+ "donem": "Ekim 2026 revizyonu (resmî üyelik 5 Eki; BIST çeyreklik) — pay adedi: Fintables hisse_senetleri.fiili_dolasim_pay_adedi (5 Eki 2026)",
  "uyeler": {
   "ASELS": 23.6168,
   "BIMAS": 17.9989,
@@ -113,37 +113,21 @@
   "BIMAS": 825360000,
   "TUPRS": 936229981.0682,
   "EREGL": 3260600000,
-  "KTLEV": 1598800000,
   "KRDMD": 1060086000,
   "EKGYO": 1837300000,
-  "OZATD": 8954425,
   "MPARK": 79709391.8946,
-  "RALYH": 115351200,
   "GUBRF": 70574200,
-  "PASEU": 134668800,
   "ENJSA": 236095686.5033,
   "PETKM": 1217525760,
   "MAVI": 576656809.6,
-  "EUPWR": 252120000,
-  "GUNDG": 10186800,
   "SELEC": 92591100,
   "CIMSA": 426272465.1752,
-  "SARKY": 849200000,
-  "RGYAS": 89998900,
-  "ALKLC": 41899200,
   "CVKMD": 694008000,
-  "EFOR": 656231400,
-  "BSOKE": 405120000,
   "GLRMK": 85134140,
-  "MAGEN": 341020000,
-  "GESAN": 175766000,
   "YEOTK": 301456000,
   "TKFEN": 79217000,
   "CWENE": 303646466.5344,
-  "GENIL": 1080450000,
-  "CANTE": 7061000000,
   "ARDYZ": 127266036.1665,
-  "DAPGM": 912395000,
   "GEREL": 193612711.3606,
   "IZFAS": 124846312.5,
   "LOGO": 61265500,
@@ -155,17 +139,12 @@
   "AKFYE": 294093672.9822,
   "MEGMT": 85701000,
   "BMSTL": 149490000,
-  "GRTHO": 25587500,
   "BERA": 463141280,
   "ALTNY": 371300000,
   "DOFRB": 44981000,
-  "CEMZY": 416070000,
-  "TUKAS": 2542950000,
   "NETCD": 39990300,
   "FZLGY": 435875000,
-  "SUNTK": 113287020,
   "BINHO": 488708820,
-  "QUAGR": 1242648000,
   "ORGE": 41816000,
   "GOKNR": 185045000,
   "EGGUB": 45470000,
@@ -173,12 +152,10 @@
   "KATMR": 1717862850,
   "OBAMS": 750774474.594,
   "KARSN": 354780000,
-  "ALFAS": 84529600,
   "KBORU": 134880000,
   "POLHO": 164139400,
   "SDTTR": 13775000,
   "SURGY": 49764250,
-  "ALVES": 1359360000,
   "LMKDC": 138284541.63,
   "HRKET": 32509440,
   "BINBN": 16956800,
@@ -188,27 +165,50 @@
   "NTGAZ": 264891000,
   "SAFKR": 138900000,
   "IHLAS": 2518200000,
-  "USAK": 1797320000,
   "TARKM": 4995900,
-  "GENTS": 408900000,
   "MEYSU": 174957000,
-  "SAYAS": 42217125,
   "SRVGY": 797225000,
   "FORMT": 1025623913.3088,
   "YIGIT": 89609100,
-  "JANTS": 119910000,
-  "CEMTS": 194400000,
   "BIENY": 83030000,
   "IMASM": 648980000,
-  "DCTTR": 146055000,
-  "MERCN": 74282743.1292,
   "MOPAS": 57302700,
   "TKNSA": 100439700,
-  "KOPOL": 281570016,
-  "TEZOL": 124850000,
-  "ZERGY": 148675000,
-  "IHLGM": 749700000,
-  "BEGYO": 284190500
+  "AHGAZ": 317460000,
+  "AKCNS": 12003731,
+  "AKFIS": 382714348,
+  "ARASE": 43600000,
+  "ATAKP": 26352043,
+  "AVPGY": 79840000,
+  "AYDEM": 123868500,
+  "BASGZ": 106960000,
+  "BETAE": 54958500,
+  "BLUME": 96632242,
+  "BUCIM": 742950000,
+  "BURCE": 44369208,
+  "EGPRO": 71558500,
+  "EKOS": 306992000,
+  "EMPAE": 37995000,
+  "ENERY": 1849500000,
+  "ESCOM": 465407295,
+  "FORTE": 25004400,
+  "GMTAS": 256470000,
+  "HATSN": 45451800,
+  "KGYO": 280300000,
+  "KOCMT": 619750000,
+  "LINK": 565550993,
+  "LXGYO": 108900000,
+  "MCARD": 18890400,
+  "MOGAN": 259627491,
+  "NATEN": 371085000,
+  "ONCSM": 10081395,
+  "PARSN": 24474420,
+  "SMRTG": 643626324,
+  "SSAAT": 46953657,
+  "TCKRC": 54162000,
+  "TMPOL": 7857203,
+  "UCAYM": 59557500,
+  "VAKKO": 17936000
  },
  "toplam_uye": 100,
  "kapsanan_agirlik_hedef": 100,
@@ -217,5 +217,226 @@
  "kapsanan_agirlik": 100,
  "_hesap": "Ağırlık = pay_adedi × Yahoo kapanış / toplam. pay_adedi çeyreklik elle tazelenir.",
  "_pay_adedi_tazeleme": "§252b (9 Ağu): pay_adedi Fintables hisse_senetleri.fiili_dolasim_pay_adedi ile tazelendi. Sebep: 31 Tem–5 Ağu arası ÜÇ bedelsiz (YEOTK %58,8+%75,0 · KTLEV iç kaynak %238,2 · CVKMD) panele işlenmemişti. Kaynak teyidi: BIST resmî endeks-uyeler.json ile üyelik BİREBİR tuttu.",
- "_pay_adedi_tarih": "2026-08-09"
+ "_pay_adedi_tarih": "2026-08-09",
+ "_cikan": {
+  "ALFAS": {
+   "pay": 84529600,
+   "tarih": "2026-10-05"
+  },
+  "ALKLC": {
+   "pay": 41899200,
+   "tarih": "2026-10-05"
+  },
+  "ALVES": {
+   "pay": 1359360000,
+   "tarih": "2026-10-05"
+  },
+  "BEGYO": {
+   "pay": 284190500,
+   "tarih": "2026-10-05"
+  },
+  "BSOKE": {
+   "pay": 405120000,
+   "tarih": "2026-10-05"
+  },
+  "CANTE": {
+   "pay": 7061000000,
+   "tarih": "2026-10-05"
+  },
+  "CEMTS": {
+   "pay": 194400000,
+   "tarih": "2026-10-05"
+  },
+  "CEMZY": {
+   "pay": 416070000,
+   "tarih": "2026-10-05"
+  },
+  "DAPGM": {
+   "pay": 912395000,
+   "tarih": "2026-10-05"
+  },
+  "DCTTR": {
+   "pay": 146055000,
+   "tarih": "2026-10-05"
+  },
+  "EFOR": {
+   "pay": 656231400,
+   "tarih": "2026-10-05"
+  },
+  "EUPWR": {
+   "pay": 252120000,
+   "tarih": "2026-10-05"
+  },
+  "GENIL": {
+   "pay": 1080450000,
+   "tarih": "2026-10-05"
+  },
+  "GENTS": {
+   "pay": 408900000,
+   "tarih": "2026-10-05"
+  },
+  "GESAN": {
+   "pay": 175766000,
+   "tarih": "2026-10-05"
+  },
+  "GRTHO": {
+   "pay": 25587500,
+   "tarih": "2026-10-05"
+  },
+  "GUNDG": {
+   "pay": 10186800,
+   "tarih": "2026-10-05"
+  },
+  "IHLGM": {
+   "pay": 749700000,
+   "tarih": "2026-10-05"
+  },
+  "JANTS": {
+   "pay": 119910000,
+   "tarih": "2026-10-05"
+  },
+  "KOPOL": {
+   "pay": 281570016,
+   "tarih": "2026-10-05"
+  },
+  "KTLEV": {
+   "pay": 1598800000,
+   "tarih": "2026-10-05"
+  },
+  "MAGEN": {
+   "pay": 341020000,
+   "tarih": "2026-10-05"
+  },
+  "MERCN": {
+   "pay": 74282743.1292,
+   "tarih": "2026-10-05"
+  },
+  "OZATD": {
+   "pay": 8954425,
+   "tarih": "2026-10-05"
+  },
+  "PASEU": {
+   "pay": 134668800,
+   "tarih": "2026-10-05"
+  },
+  "QUAGR": {
+   "pay": 1242648000,
+   "tarih": "2026-10-05"
+  },
+  "RALYH": {
+   "pay": 115351200,
+   "tarih": "2026-10-05"
+  },
+  "RGYAS": {
+   "pay": 89998900,
+   "tarih": "2026-10-05"
+  },
+  "SARKY": {
+   "pay": 849200000,
+   "tarih": "2026-10-05"
+  },
+  "SAYAS": {
+   "pay": 42217125,
+   "tarih": "2026-10-05"
+  },
+  "SUNTK": {
+   "pay": 113287020,
+   "tarih": "2026-10-05"
+  },
+  "TEZOL": {
+   "pay": 124850000,
+   "tarih": "2026-10-05"
+  },
+  "TUKAS": {
+   "pay": 2542950000,
+   "tarih": "2026-10-05"
+  },
+  "USAK": {
+   "pay": 1797320000,
+   "tarih": "2026-10-05"
+  },
+  "ZERGY": {
+   "pay": 148675000,
+   "tarih": "2026-10-05"
+  }
+ },
+ "_goc": {
+  "tarih": "2026-10-05",
+  "cikan": [
+   "ALFAS",
+   "ALKLC",
+   "ALVES",
+   "BEGYO",
+   "BSOKE",
+   "CANTE",
+   "CEMTS",
+   "CEMZY",
+   "DAPGM",
+   "DCTTR",
+   "EFOR",
+   "EUPWR",
+   "GENIL",
+   "GENTS",
+   "GESAN",
+   "GRTHO",
+   "GUNDG",
+   "IHLGM",
+   "JANTS",
+   "KOPOL",
+   "KTLEV",
+   "MAGEN",
+   "MERCN",
+   "OZATD",
+   "PASEU",
+   "QUAGR",
+   "RALYH",
+   "RGYAS",
+   "SARKY",
+   "SAYAS",
+   "SUNTK",
+   "TEZOL",
+   "TUKAS",
+   "USAK",
+   "ZERGY"
+  ],
+  "giren": [
+   "AHGAZ",
+   "AKCNS",
+   "AKFIS",
+   "ARASE",
+   "ATAKP",
+   "AVPGY",
+   "AYDEM",
+   "BASGZ",
+   "BETAE",
+   "BLUME",
+   "BUCIM",
+   "BURCE",
+   "EGPRO",
+   "EKOS",
+   "EMPAE",
+   "ENERY",
+   "ESCOM",
+   "FORTE",
+   "GMTAS",
+   "HATSN",
+   "KGYO",
+   "KOCMT",
+   "LINK",
+   "LXGYO",
+   "MCARD",
+   "MOGAN",
+   "NATEN",
+   "ONCSM",
+   "PARSN",
+   "SMRTG",
+   "SSAAT",
+   "TCKRC",
+   "TMPOL",
+   "UCAYM",
+   "VAKKO"
+  ],
+  "kaynak": "Fintables MCP hisse_senetleri (fiili_dolasim_pay_adedi) — dosyanın asıl kaynağıyla aynı; §451b",
+  "not": "Çıkanlar silinmedi (_cikan). Girenlerin pay adedi 5 Eki itibarıyla; çeyreklik revizyonda yeniden."
+ }
 }

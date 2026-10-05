@@ -36216,5 +36216,164 @@
    "tarih": "2026-09-09"
   }
  },
- "_af429o": "2026-09-09"
+ "_af429o": "2026-09-09",
+ "tasfiye": {
+  "_not": "§452: SPK 17 Eyl 2026 — 7 PYŞ'nin 131 fonu tasfiye (Tera, Pusula, Hedef, Atlas, A1 Capital, Pardus, Bulls). Bu kodlar evren kartının risk iştahı/akım hesabından DÜŞER, fon seçicide TASFİYE etiketi taşır. Katfon (46) listesindekiler de burada.",
+  "tarih": "2026-09-17",
+  "kurucular": [
+   "Tera",
+   "Pusula",
+   "Hedef",
+   "Atlas",
+   "A1 Capital",
+   "Pardus",
+   "Bulls"
+  ],
+  "kodlar": {
+   "HFI": "Hedef",
+   "HKH": "Hedef",
+   "HKP": "Hedef",
+   "KHC": "Pardus",
+   "KHD": "Atlas",
+   "KHJ": "Atlas",
+   "KLH": "Atlas",
+   "PKD": "Pusula",
+   "PUK": "Pusula",
+   "HPH": "Hedef",
+   "TLV": "Tera",
+   "KVR": "Atlas",
+   "PKL": "Pusula"
+  },
+  "baski": {
+   "_not": "Tasfiye kapsamındaki 7 evren fonunun SON raporundaki hisse pozisyonları (nominal TL); zorunlu satış baskısı adayı. Kaynak: KAP portföy dağılım raporları (Ağu/Eyl 2026).",
+   "toplam": 2264718386.54,
+   "liste": [
+    {
+     "kod": "BIMAS",
+     "deger": 177771493.5,
+     "fon": 6
+    },
+    {
+     "kod": "KTLEV",
+     "deger": 138957789.78,
+     "fon": 2
+    },
+    {
+     "kod": "EKGYO",
+     "deger": 134110140,
+     "fon": 4
+    },
+    {
+     "kod": "GUNDG",
+     "deger": 131420744,
+     "fon": 1
+    },
+    {
+     "kod": "TUPRS",
+     "deger": 127884575,
+     "fon": 4
+    },
+    {
+     "kod": "ASELS",
+     "deger": 126378386.25,
+     "fon": 5
+    },
+    {
+     "kod": "PASEU",
+     "deger": 125132630.4,
+     "fon": 1
+    },
+    {
+     "kod": "EREGL",
+     "deger": 118725700,
+     "fon": 4
+    },
+    {
+     "kod": "ALBRK",
+     "deger": 117455634.92,
+     "fon": 5
+    },
+    {
+     "kod": "KRDMD",
+     "deger": 91575305,
+     "fon": 4
+    },
+    {
+     "kod": "MPARK",
+     "deger": 89250712,
+     "fon": 4
+    },
+    {
+     "kod": "ENJSA",
+     "deger": 85697390.7,
+     "fon": 3
+    },
+    {
+     "kod": "GLRMK",
+     "deger": 63154231,
+     "fon": 4
+    },
+    {
+     "kod": "SELEC",
+     "deger": 61909500,
+     "fon": 3
+    },
+    {
+     "kod": "IZFAS",
+     "deger": 55527500,
+     "fon": 2
+    },
+    {
+     "kod": "GUBRF",
+     "deger": 52475200,
+     "fon": 5
+    },
+    {
+     "kod": "GENIL",
+     "deger": 47455154.620000005,
+     "fon": 3
+    },
+    {
+     "kod": "LMKDC",
+     "deger": 46150965.6,
+     "fon": 3
+    },
+    {
+     "kod": "CIMSA",
+     "deger": 39505800,
+     "fon": 3
+    },
+    {
+     "kod": "ORGE",
+     "deger": 38978893.68,
+     "fon": 4
+    },
+    {
+     "kod": "YUNSA",
+     "deger": 35950361.6,
+     "fon": 1
+    },
+    {
+     "kod": "RGYAS",
+     "deger": 35339565,
+     "fon": 3
+    },
+    {
+     "kod": "EKSUN",
+     "deger": 33530077.580000002,
+     "fon": 2
+    },
+    {
+     "kod": "AHGAZ",
+     "deger": 32557937.22,
+     "fon": 1
+    },
+    {
+     "kod": "GESAN",
+     "deger": 27630000,
+     "fon": 1
+    }
+   ]
+  }
+ }
 }

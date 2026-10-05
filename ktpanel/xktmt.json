@@ -4,8 +4,8 @@
  "_not": "BIST resmi listesi (hisse_endeks_katilim_ds.csv) ve Fintables BAGIMSIZ olarak 39 uye dogruladi. Onceki surumde 34 uye vardi: JANTS FAZLADAN (o XKTUM ve XK100 uyesi, XKTMT degil), AVPGY GENTS KBORU NETCD SDTTR TEZOL EKSIKTI. NOT: XK050 endeksi BIST resmi listesinde VARDIR (50 uye) — bu alandaki eski \"XK050 diye bir endeks YOK\" ifadesi YANLISTI.",
  "_ritim": "Uyelik uc ayda bir, agirlik her gun kayar. Haftalik tazelenir (§153).",
  "tarih": "2026-10-05",
- "donem": "1 Mayıs 2026 – 31 Ekim 2026",
- "toplam_uye": 39,
+ "donem": "Ekim 2026 revizyonu (resmî üyelik 5 Eki; BIST çeyreklik) — pay adedi: Fintables hisse_senetleri.fiili_dolasim_pay_adedi (5 Eki 2026)",
+ "toplam_uye": 41,
  "kapsanan_agirlik": 100,
  "uyeler": {
   "ARASE": 0.2978,
@@ -54,7 +54,6 @@
   "ASELS": 1176024000,
   "ATATP": 18290625,
   "AVPGY": 86720000,
-  "AYEN": 47008500,
   "BASGZ": 106960000,
   "BIMAS": 825360000,
   "CIMSA": 426272465.1752,
@@ -65,7 +64,6 @@
   "EMPAE": 37995000,
   "EREGL": 3260600000,
   "GENIL": 1080450000,
-  "GENTS": 408900000,
   "GOLTS": 12231000,
   "GRSEL": 22633800,
   "ISDMR": 147030000,
@@ -82,17 +80,52 @@
   "PLTUR": 49488450,
   "SARKY": 849200000,
   "SDTTR": 13775000,
-  "SUNTK": 113287020,
   "SUWEN": 363440000,
   "TEZOL": 124850000,
   "TUPRS": 936229981.0682,
   "VAKKO": 21200000,
-  "YUNSA": 200352000
+  "YUNSA": 200352000,
+  "AKCNS": 12003731,
+  "ENERY": 1849500000,
+  "KFEIN": 141706250,
+  "PNLSN": 18817500,
+  "TGSAS": 10909500
  },
  "kapsanan_agirlik_hedef": 100,
  "_gocs": "§186: ağırlık yerine PAY ADEDİ saklanıyor. Ağırlık her gün GitHub Actions içinde Yahoo kapanışıyla yeniden hesaplanır. pay_adedi ÇEYREKLİK elle tazelenir (BIST endeks revizyonu + sermaye artırımları).",
  "fiyat_tarihi": "2026-10-05",
  "_hesap": "Ağırlık = pay_adedi × Yahoo kapanış / toplam. pay_adedi çeyreklik elle tazelenir.",
  "_pay_adedi_tazeleme": "§252b (9 Ağu): pay_adedi Fintables hisse_senetleri.fiili_dolasim_pay_adedi ile tazelendi. Sebep: 31 Tem–5 Ağu arası ÜÇ bedelsiz (YEOTK %58,8+%75,0 · KTLEV iç kaynak %238,2 · CVKMD) panele işlenmemişti. Kaynak teyidi: BIST resmî endeks-uyeler.json ile üyelik BİREBİR tuttu.",
- "_pay_adedi_tarih": "2026-08-09"
+ "_pay_adedi_tarih": "2026-08-09",
+ "_cikan": {
+  "AYEN": {
+   "pay": 47008500,
+   "tarih": "2026-10-05"
+  },
+  "GENTS": {
+   "pay": 408900000,
+   "tarih": "2026-10-05"
+  },
+  "SUNTK": {
+   "pay": 113287020,
+   "tarih": "2026-10-05"
+  }
+ },
+ "_goc": {
+  "tarih": "2026-10-05",
+  "cikan": [
+   "AYEN",
+   "GENTS",
+   "SUNTK"
+  ],
+  "giren": [
+   "AKCNS",
+   "ENERY",
+   "KFEIN",
+   "PNLSN",
+   "TGSAS"
+  ],
+  "kaynak": "Fintables MCP hisse_senetleri (fiili_dolasim_pay_adedi) — dosyanın asıl kaynağıyla aynı; §451b",
+  "not": "Çıkanlar silinmedi (_cikan). Girenlerin pay adedi 5 Eki itibarıyla; çeyreklik revizyonda yeniden."
+ }
 }

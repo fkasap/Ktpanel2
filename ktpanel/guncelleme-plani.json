@@ -114,7 +114,7 @@
    "ad": "Halka arzlar",
    "dosya": "halkaarz.json",
    "siklik": "olay",
-   "son": "2026-08-25",
+   "son": "2026-10-05",
    "kaynak": "Fintables halka_arzlar"
   },
   {
@@ -218,7 +218,7 @@
    "ad": "Analist konsensüsü (hedef fiyat)",
    "dosya": "analist.json",
    "siklik": "aylik",
-   "son": "2026-08-25",
+   "son": "2026-10-05",
    "kaynak": "analist.json — Fintables hisse_senedi_araci_kurum_hedef_fiyatlari. Son 6 ayin hedef fiyat ORTALAMASI (yayin_tarihi >= bugun-180g). Sorgu: GROUP BY hisse, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat). Son 6 ayda raporu olmayan hisse \"bayat\":true isaretlenir — hedefi eskidir, guncel fiyatla kiyaslanmamalidir.",
    "sezon": true
   },
@@ -373,6 +373,14 @@
    "son": "2026-09-13",
    "limit_gun": 45,
    "kaynak": "TCMB makroihtiyati basın duyuruları + Kredi Eğilim Anketi (3Ç26 Ekim başı). Yeni adım/anket çıkınca tazelenir (§440)"
+  },
+  {
+   "ad": "Fon krizi kartı (damgalı, SPK tasfiye)",
+   "dosya": "index.html",
+   "siklik": "olay",
+   "son": "2026-10-05",
+   "limit_gun": 14,
+   "kaynak": "SPK bültenleri + tasfiye bankası duyuruları; ödeme turları, yeni tedbir, evren fonlarının akıbeti (§452)"
   }
  ],
  "bilanco_sezonu_aylar": [

@@ -1022,7 +1022,20 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <button class="subtab-btn" data-subtab="sv-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
   <button class="subtab-btn" data-subtab="sv-vap" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">MKK Fon Büyüklüğü</button><button class="subtab-btn" data-subtab="sv-fonpd" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Fon Portföy Dağılımı</button>
 </div>
-<div id="sv-katfon" class="subtab-panel"><h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
+<div id="sv-katfon" class="subtab-panel">
+<!-- §452 FON KRİZİ (5 Eki 2026) — damgalı olay kartı; rakamlar SPK bültenleri (2026/60-61-62-64) ve
+     panelin kendi deposundan (fon-portfoy.json tasfiye bloğu). Ebu kapalı olduğu için 17 Eyl'den
+     5 Eki'ye kadar panelde hiç iz yoktu; bu kart o boşluğu kapatır. Nöbet: 14 gün. -->
+<div class="card" style="border-color:#E8933B">
+  <div class="kart-bas"><span class="lbl">FON KRİZİ — SPK 131 FONU TASFİYE ETTİ <span class="thin">(7 PYŞ · ~800 mlr ₺ · 456 bin yatırımcı)</span></span><span class="tag snap">5 EKİ · SPK BÜLTENLERİ</span></div>
+  <div class="kv"><span class="k">Ne oldu</span><span><b>17 Eyl:</b> SPK 2026/60-61 bültenleriyle Tera, Pusula, Hedef, Atlas, A1 Capital, Pardus ve Bulls Portföy'ün TEFAS'ta işlem gören tüm fonlarını işleme kapattı; 131'ini tasfiyeye aldı (Tera 5 · Pusula 12 · Hedef 31 · Atlas 16 · A1 9 · Pardus 42 · Bulls 15). Gerekçe: borsada manipülasyon soruşturması; bazı fonlar temerrüde düştü.</span></div>
+  <div class="kv"><span class="k">Süreç</span><span>Saklayıcı/tasfiye bankası: Tera → İş Bankası, diğer altı → Ziraat. Varlıklar "piyasa koşulları ve yatırımcı menfaati gözetilerek" nakde çevrilip pay oranında ödenecek · 20 Eyl: malvarlığı dondurma ve yurt dışı yasağı · 28 Eyl: 17 Eyl talimatları iptal · 29 Eyl: Fon Koordinasyon Kurulu · <b>1 Eki: 1 mn ₺'ye kadar ara ödeme</b> (para piyasası fonlarından başlayarak)</span></div>
+  <div class="kv"><span class="k">Bizim evren</span><span><b>Katılım fonları (46):</b> HPH (Hedef PP, 4,05 mlr ₺) · TLV (Tera PP, 3,63 mlr) · PKL (Pusula KV serbest, 4,02 mlr) · KVR (Atlas) — ~<b>11,8 mlr ₺</b> katılım parası dondu; katman 18 Eyl'den beri 44/46 ("eksik" ikisi bunlar). <b>Fon portföy evreni (47):</b> 9 fon tasfiye şirketlerine ait (HFI/HKH/HKP Hedef · KHD/KHJ/KLH Atlas · PKD/PUK Pusula · KHC Pardus) — evren kartından düşüldü, seçicide ⚠ TASFİYE</span></div>
+  <div class="kv"><span class="k">Tasfiye baskısı</span><span>7 evren fonunun son raporundaki hisseler <b>~2,3 mlr ₺</b> — en büyük pozisyonlar BIMAS 178 mn (6 fon) · KTLEV 139 · EKGYO 134 · GUNDG 131 · TUPRS 128 · ASELS 126 · PASEU 125 · EREGL 119 · ALBRK 117. Tam liste Fon Portföy Dağılımı evren kartında. Ölçek notu: 131 fonun büyük kısmı serbest hisse/para piyasası (800 mlr); katılım payı küçük, ama GUNDG/PASEU/KTLEV gibi düşük derinlikli isimlerde pay büyük.</span></div>
+  <div class="kv"><span class="k">Panel izleri</span><span>TEFAS 18 Eyl'de üç yolu da reddetti (köprü/doğrudan/Playwright) — kriz günü · CDS 233 → 252 bp (2 Eki) · katılım fon akışı 24-25 Eyl net çıkış · rezerv beş hafta düşüşte (swap hariç 39,9) — aynı pencere</span></div>
+  <div class="note" style="font-size:10px;margin-top:6px"><b>Fon yöneticisi için okuma:</b> (1) Zorunlu satış, fiyatı değil <em>zamanlamayı</em> belirsiz bırakır — tasfiye bankaları parça parça satar; düşük derinlikli isimlerde (GUNDG, PASEU, KTLEV, GENIL) aylarca tavan baskısı olabilir, likit büyüklerde (BIMAS, TUPRS, ASELS) etki gürültü seviyesinde. (2) Güven kanalı daha önemli: TEFAS'ta "fonum güvende mi" sorusu para piyasası fonlarından çıkış ve mevduata dönüşü tetikler — katılım PP fonlarının akışını haftalık izle. (3) 22 Eki PPK için karşı ağırlık: indirim beklentisi vardı; fon krizi + rezerv erimesi + CDS 252 "sabit" ihtimalini büyütür. (4) Ödemeler 1 mn ₺ tavanla başladı; yatırımcı tabanının çoğu bu tavanın altında — perakende paniği sınırlanır, kurumsal/büyük hesaplar beklemede.</div>
+</div>
+<h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · Fintables)</span></h2>
 <div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
 <!-- §263 GÜNLÜK FON AKIŞI. Formül: (pay_t − pay_t−1) × fiyat_t. Ham ΔAUM
      KULLANILMAZ — o hem akıştan hem GETİRİDEN değişir ve 12 Ağu ölçümünde
@@ -1882,8 +1895,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261005a"></script>
-<script src="/ajan.js?v=20261005a"></script>
+<script src="/app.js?v=20261005b"></script>
+<script src="/ajan.js?v=20261005b"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

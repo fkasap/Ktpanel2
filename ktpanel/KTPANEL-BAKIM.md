@@ -6,6 +6,40 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §451–§453 (5 Eki 2026) — "HEPSINI SIRAYLA"
+
+## §451 ENDEKS DONEMSEL DEGISIMI — pay_adedi RESMI UYELIGE HIZALANDI
+Ekim revizyonu gercek (XK030'un 13 uyesi degisti; alt kume iliskileri tutarli). Kaynak:
+Fintables MCP hisse_senetleri.fiili_dolasim_pay_adedi — dosyanin ASIL kaynagi (xk100.json
+_kaynak notu), 238 sirket = resmi XKTUM. XK100 cikan 35 / giren 35 · XKTUM cikan 21 /
+giren 109 (artik TAM kapsam, kapsanan_agirlik_hedef 100) · XKTMT cikan 3 / giren 5.
+Cikanlar _cikan'a tarihli (silinmedi). tazele'ye uyelikGoc() katmani: gelecek
+revizyonlarda Yahoo floatShares ile otomatik (esik %80, yoksa yazmaz).
+RISK: XKTUM artik 238 isim — endeksTazele kapsam kurali %95 Yahoo fiyat ister; ince
+kuyrukta Yahoo bosluk cikarsa katman yazmaz (eski agirlik kalir, rapor soyler). Ilk kosu
+olcer.
+## §452 FON KRIZI KARTI + EVREN DUZELTMESI
+SPK 17 Eyl: 7 PYS'nin 131 fonu tasfiye (Tera 5 · Pusula 12 · Hedef 31 · Atlas 16 · A1 9
+· Pardus 42 · Bulls 15; ~800 mlr TL, 456 bin yatirimci). Bizim evren: katfon 46'nin 4'u
+(HPH Hedef PP 4,05 mlr · TLV Tera 3,63 · PKL Pusula 4,02 · KVR Atlas) ~11,8 mlr TL
+dondu — "44/46" bunlar. Fon portfoy evreninin 9'u (HFI/HKH/HKP, KHD/KHJ/KLH, PKD/PUK,
+KHC) tasfiye sirketlerine ait; son raporlardaki hisse 2,3 mlr TL = zorunlu satis adayi
+(BIMAS 178 mn/6 fon · KTLEV 139 · EKGYO 134 · GUNDG 131 · TUPRS 128 · ASELS 126 ·
+PASEU 125). fon-portfoy.json 'tasfiye' blogu (kodlar + baski listesi); evren karti bu
+fonlari DUSER (etiket "N tasfiye fonu HARIC"), secicide "⚠ TASFIYE"; islem ayi esigi
+evrenin %30'u (3 fonluk Eylul evren sayilmiyordu — §452b). Sektorel > Katilim Fonlari
+basina damgali FON KRIZI karti (olay, surec, evren, baski, panel izleri, okuma); nobet 14g.
+## §453 AYLIK KALEMLER — Ekim turu (kismi)
+analist.json: Fintables hedef fiyatlari, pencere 1 yil, Ekim XK100 evreni — 46 hisse
+(55'ten; cikan uyeler dustu, girenlerin cogunda hedef yok); 14 hedef degisti (ASELS 443
+-> 467, BIMAS 493 -> 500, ENJSA 143 -> 152; AKFYE/HRKET bedelsiz tabani). halkaarz.json:
+NETGL (9-11 Eyl, 652 bin katilimci, Tacirler) eklendi; INTET (araci BULLS — kurucusu
+tasfiyede) ve BKRGY zaten vardi. YAPILMADI: guidance.json (20 sirket metin — ayri oturum),
+degerleme.json (PD/DD z-skoru 60+ sirket, Fintables bilanco — ayri oturum), odemeler
+dengesi aylik blok (Tem/Agu). Plan 'son' tarihleri guncellendi.
+DEPLOY: scripts/tazele.mjs · ktpanel/{index.html, app.js, fon-portfoy.json, xk100.json,
+xktum.json, xktmt.json, analist.json, halkaarz.json, guncelleme-plani.json} (surum 20261005b).
+
 # BAKIM EK — §450 (5 Eki 2026) — TARAMA (tarayici yok, repo + rapor)
 
 ## §450 BULGULAR

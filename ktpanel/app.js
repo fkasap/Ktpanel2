@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261005a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261005b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10367,7 +10367,8 @@ async function fonpdInit(){
   const sec=$('fonpdSec'); if(!sec) return;
   const fonlar=Object.keys(FONPD.fonlar||{}).sort();
   if(!fonlar.length){ $('fonpdTablo').innerHTML='<div class="sub">depoda henüz rapor yok — ilk Cumartesi koşusundan sonra dolar (evren: '+Object.keys(FONPD.evren||{}).length+' fon)</div>'; return; }
-  sec.innerHTML=fonlar.map(k=>{ const f=FONPD.fonlar[k]; const n=Object.keys(f.donemler||{}).length; return '<option value="'+k+'">'+k+' — '+String(f.ad||'').replace(/^[A-Z0-9]+-/,'').slice(0,60)+' ('+n+' ay)</option>'; }).join('');
+  const TAS=(FONPD.tasfiye&&FONPD.tasfiye.kodlar)||{};   /* §452 */
+  sec.innerHTML=fonlar.map(k=>{ const f=FONPD.fonlar[k]; const n=Object.keys(f.donemler||{}).length; return '<option value="'+k+'">'+k+(TAS[k]?' ⚠ TASFİYE':'')+' — '+String(f.ad||'').replace(/^[A-Z0-9]+-/,'').slice(0,60)+' ('+n+' ay)</option>'; }).join('');
   $('fonpdDamga').textContent=FONPD.guncelleme?('depo '+FONPD.guncelleme+' · '+fonlar.length+' fon'):'—';
   ['fonpdSec','fonpdAy','fonpdSira','fonpdGor'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',fonpdRender); });
   fonpdRender(); fonpdEvrenRender();
@@ -10445,7 +10446,9 @@ function fonpdRender(){
   }
 }
 function fonpdEvrenRender(){
-  const fonlar=Object.keys(FONPD.fonlar||{}); if(!fonlar.length) return;
+  /* §452: tasfiyedeki fonlar (SPK 17 Eyl) evren toplamlarından DÜŞER — raporları artık gelmez; sinyal değil zorunlu satış */
+  const TASF=(FONPD.tasfiye&&FONPD.tasfiye.kodlar)||{};
+  const fonlar=Object.keys(FONPD.fonlar||{}).filter(k=>!TASF[k]); if(!fonlar.length) return;
   // son ortak dönem: her fonun en son dönemi içinden en sık olan
   const sayac={}; fonlar.forEach(k=>{ const d=Object.keys(FONPD.fonlar[k].donemler).sort().pop(); if(d) sayac[d]=(sayac[d]||0)+1; });
   /* §434f: 'son dönem' = EN YAYGIN son ay */
@@ -10453,7 +10456,7 @@ function fonpdEvrenRender(){
   /* §434h: işlem ayı ayrı seçilir — Ağustos 2026 raporlarının 29/33'ü işlem bölümü olmayan KISA sürümdü.
      Alım/satım için fonların ≥%40'ında işlem verisi olan en son ay kullanılır; ağırlık/risk kartı 'son'da kalır. */
   const donemSet=new Set(); fonlar.forEach(k=>Object.keys(FONPD.fonlar[k].donemler).forEach(dn=>donemSet.add(dn)));
-  let sonIslem=son; for(const dn of [...donemSet].sort().reverse()){ let dolu=0,top=0; fonlar.forEach(k=>{const D=FONPD.fonlar[k].donemler[dn]; if(!D) return; top++; const I=D.islem||{}; if(Object.keys(I.alis||{}).length||Object.keys(I.satis||{}).length) dolu++;}); if(top>=3&&dolu/top>=0.4){ sonIslem=dn; break; } }
+  let sonIslem=son; for(const dn of [...donemSet].sort().reverse()){ let dolu=0,top=0; fonlar.forEach(k=>{const D=FONPD.fonlar[k].donemler[dn]; if(!D) return; top++; const I=D.islem||{}; if(Object.keys(I.alis||{}).length||Object.keys(I.satis||{}).length) dolu++;}); if(top>=Math.max(5,Math.round(fonlar.length*0.3))&&dolu/top>=0.4){ sonIslem=dn; break; } }   /* §452b: 3 fonluk ay evren sayılmaz — en az evrenin %30'u */
   const agg={}; let fonSay=0;
   fonlar.forEach(k=>{ const D=FONPD.fonlar[k].donemler[sonIslem]; if(!D) return; fonSay++;
     const I=D.islem||{}; const kodlar=new Set([...Object.keys(I.alis||{}),...Object.keys(I.satis||{})]);
@@ -10461,14 +10464,17 @@ function fonpdEvrenRender(){
   });
   const L=Object.entries(agg).sort((a,b)=>b[1].net-a[1].net);
   const alan=L.filter(x=>x[1].net>0).slice(0,10), satan=L.filter(x=>x[1].net<0).slice(-10).reverse();
-  $('fonpdEvrenTag').textContent=sonIslem.replace('-','/')+' işlem · '+fonSay+' fon'+(sonIslem!==son?' (ağırlık/risk: '+son.replace('-','/')+' — o ayın raporlarının çoğu işlem bölümsüz kısa sürüm)':'');
+  const tasfSay=Object.keys(FONPD.fonlar||{}).filter(k=>TASF[k]).length;
+  $('fonpdEvrenTag').textContent=sonIslem.replace('-','/')+' işlem · '+fonSay+' fon'+(tasfSay?' · '+tasfSay+' tasfiye fonu HARİÇ (§452)':'')+(sonIslem!==son?' (ağırlık/risk: '+son.replace('-','/')+' — o ayın raporlarının çoğu işlem bölümsüz kısa sürüm)':'');
   const tbl=(rows,bas)=>'<table class="tbl"><thead><tr><th>'+bas+'</th><th style="text-align:right">Net (mn ₺)</th><th style="text-align:right">Fon</th></tr></thead><tbody>'+rows.map(([k,v])=>'<tr><td><b>'+k+'</b></td><td style="text-align:right" class="'+(v.net>0?'up':'down')+'">'+(v.net>0?'+':'')+(v.net/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+'</td><td style="text-align:right">'+(v.net>0?v.alan:v.satan)+'</td></tr>').join('')+'</tbody></table>';
   let risk='';
   { const dl=[]; fonlar.forEach(k=>{ const ds=Object.keys(FONPD.fonlar[k].donemler).sort(); if(ds.length<2) return; const a2=FONPD.fonlar[k].donemler[ds[ds.length-1]].varlik, b2=FONPD.fonlar[k].donemler[ds[ds.length-2]].varlik; if(a2&&b2&&a2.hisse!=null&&b2.hisse!=null&&!a2._tutarsiz&&!b2._tutarsiz&&a2.hisse<=100.5&&b2.hisse<=100.5) dl.push([k,+(a2.hisse-b2.hisse).toFixed(2),a2.hisse,ds[ds.length-1]]); });
     if(dl.length){ dl.sort((x,y)=>y[1]-x[1]); const ort=(dl.reduce((s,x)=>s+x[2],0)/dl.length).toFixed(1);
       const li=r=>'<li><b>'+r[0]+'</b> '+(r[1]>0?'+':'')+r[1].toLocaleString('tr-TR')+' puan <span class="thin">(hisse %'+r[2].toLocaleString('tr-TR')+', '+r[3].slice(2).replace('-','/')+')</span></li>';
       risk='<div style="margin-top:12px" class="lbl">RİSK İŞTAHI — HİSSE AĞIRLIĞINI EN ÇOK ARTIRAN / AZALTAN FONLAR <span class="thin">§434 · evren ort. hisse %'+ort+' · '+dl.length+' fon</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><ul style="margin:6px 0 0 16px;padding:0">'+dl.slice(0,5).map(li).join('')+'</ul><ul style="margin:6px 0 0 16px;padding:0">'+dl.slice(-5).reverse().map(li).join('')+'</ul></div>'; } }
-  $('fonpdEvren').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'+tbl(alan,'En çok alınan')+tbl(satan,'En çok satılan')+'</div>'+risk;
+  let baski='';
+  if(FONPD.tasfiye&&FONPD.tasfiye.baski&&FONPD.tasfiye.baski.liste&&FONPD.tasfiye.baski.liste.length){ const B=FONPD.tasfiye.baski; baski='<div style="margin-top:12px" class="lbl">TASFİYE BASKISI — 7 EVREN FONUNUN SON RAPORUNDAKİ HİSSELER <span class="thin">§452 · toplam '+(B.toplam/1e9).toLocaleString('tr-TR',{maximumFractionDigits:1})+' mlr ₺ · zorunlu satış adayı</span></div><table class="tbl"><thead><tr><th>Hisse</th><th style="text-align:right">Pozisyon (mn ₺)</th><th style="text-align:right">Fon sayısı</th></tr></thead><tbody>'+B.liste.slice(0,12).map(x=>'<tr><td><b>'+x.kod+'</b></td><td style="text-align:right">'+(x.deger/1e6).toLocaleString('tr-TR',{maximumFractionDigits:0})+'</td><td style="text-align:right">'+x.fon+'</td></tr>').join('')+'</tbody></table><div class="sub" style="margin-top:4px">Tasfiye bankaları (Ziraat/İş) bu pozisyonları piyasa koşullarına göre nakde çevirecek; kaynak KAP Ağu/Eyl raporları — satış zamanlaması bilinmiyor, ağırlık = baskının büyüklüğü.</div>'; }
+  $('fonpdEvren').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'+tbl(alan,'En çok alınan')+tbl(satan,'En çok satılan')+'</div>'+risk+baski;
 }
 /* ── §366 MKK VAP FON BÜYÜKLÜĞÜ KARTI (21 Ağu) ─────────────────────────────
    vap-fon-akis.json (Actions §366) — MKK'nin resmî saklama verisi.

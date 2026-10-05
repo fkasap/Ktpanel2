@@ -1,30 +1,47 @@
 {
- "guncelleme": "2026-08-25",
+ "guncelleme": "2026-10-05",
  "hisseler": [
+  {
+   "k": "AHGAZ",
+   "kurum": 1,
+   "hedef": 65.0,
+   "son": "2026-09-14"
+  },
+  {
+   "k": "AKCNS",
+   "kurum": 11,
+   "hedef": 280.76,
+   "son": "2026-09-14"
+  },
   {
    "k": "AKFYE",
    "kurum": 2,
-   "hedef": 27.5,
+   "hedef": 4.59,
    "son": "2026-08-14"
   },
   {
-   "k": "ALKIM",
-   "kurum": 1,
-   "hedef": 23.0,
-   "son": "2026-08-20"
+   "k": "ALBRK",
+   "kurum": 10,
+   "hedef": 12.21,
+   "son": "2026-09-07"
   },
   {
-   "k": "ALKLC",
+   "k": "ARASE",
    "kurum": 1,
-   "hedef": 155.13,
-   "son": "2025-12-05",
-   "bayat": true
+   "hedef": 214.7,
+   "son": "2026-08-14"
+  },
+  {
+   "k": "ARDYZ",
+   "kurum": 1,
+   "hedef": 156.0,
+   "son": "2026-08-17"
   },
   {
    "k": "ASELS",
-   "kurum": 23,
-   "hedef": 442.66,
-   "son": "2026-08-24"
+   "kurum": 25,
+   "hedef": 466.72,
+   "son": "2026-10-02"
   },
   {
    "k": "ATAKP",
@@ -33,33 +50,39 @@
    "son": "2026-04-24"
   },
   {
+   "k": "ATATP",
+   "kurum": 1,
+   "hedef": 472.0,
+   "son": "2026-08-14"
+  },
+  {
    "k": "AVPGY",
    "kurum": 6,
    "hedef": 93.32,
    "son": "2026-08-11"
   },
   {
+   "k": "AYDEM",
+   "kurum": 4,
+   "hedef": 42.48,
+   "son": "2026-08-13"
+  },
+  {
    "k": "BIMAS",
    "kurum": 27,
-   "hedef": 492.88,
-   "son": "2026-08-18"
+   "hedef": 499.87,
+   "son": "2026-09-17"
   },
   {
-   "k": "BORSK",
-   "kurum": 2,
-   "hedef": 9.99,
-   "son": "2026-06-09"
-  },
-  {
-   "k": "BRISA",
-   "kurum": 2,
-   "hedef": 109.75,
-   "son": "2026-08-06"
+   "k": "BINHO",
+   "kurum": 1,
+   "hedef": 17.35,
+   "son": "2026-06-30"
   },
   {
    "k": "CIMSA",
    "kurum": 21,
-   "hedef": 71.15,
+   "hedef": 71.55,
    "son": "2026-08-04"
   },
   {
@@ -69,59 +92,46 @@
    "son": "2026-08-17"
   },
   {
-   "k": "EBEBK",
-   "kurum": 5,
-   "hedef": 104.88,
-   "son": "2026-08-20"
-  },
-  {
    "k": "EKGYO",
    "kurum": 16,
    "hedef": 32.54,
-   "son": "2026-08-17"
+   "son": "2026-09-29"
+  },
+  {
+   "k": "ENERY",
+   "kurum": 1,
+   "hedef": 20.0,
+   "son": "2026-09-14"
   },
   {
    "k": "ENJSA",
    "kurum": 11,
-   "hedef": 143.15,
-   "son": "2026-08-11"
+   "hedef": 152.41,
+   "son": "2026-08-26"
   },
   {
    "k": "EREGL",
-   "kurum": 22,
-   "hedef": 46.11,
+   "kurum": 21,
+   "hedef": 46.79,
    "son": "2026-08-11"
   },
   {
-   "k": "EUPWR",
-   "kurum": 2,
-   "hedef": 120.55,
-   "son": "2026-06-10"
-  },
-  {
-   "k": "GESAN",
-   "kurum": 2,
-   "hedef": 130.5,
-   "son": "2026-06-10"
+   "k": "FORTE",
+   "kurum": 1,
+   "hedef": 240.0,
+   "son": "2026-07-01"
   },
   {
    "k": "GLRMK",
    "kurum": 6,
-   "hedef": 286.37,
-   "son": "2026-08-19"
+   "hedef": 284.62,
+   "son": "2026-09-29"
   },
   {
    "k": "GOKNR",
    "kurum": 1,
    "hedef": 36.11,
-   "son": "2025-10-31",
-   "bayat": true
-  },
-  {
-   "k": "GOODY",
-   "kurum": 1,
-   "hedef": 3.93,
-   "son": "2026-08-07"
+   "son": "2025-10-31"
   },
   {
    "k": "GRSEL",
@@ -130,27 +140,15 @@
    "son": "2026-08-18"
   },
   {
-   "k": "GRTHO",
-   "kurum": 1,
-   "hedef": 359.5,
-   "son": "2026-06-17"
-  },
-  {
-   "k": "HOROZ",
-   "kurum": 1,
-   "hedef": 87.92,
-   "son": "2026-08-12"
-  },
-  {
    "k": "HRKET",
    "kurum": 1,
-   "hedef": 142.7,
+   "hedef": 10.19,
    "son": "2026-05-26"
   },
   {
    "k": "ISDMR",
    "kurum": 1,
-   "hedef": 66.6,
+   "hedef": 68.2,
    "son": "2026-08-11"
   },
   {
@@ -172,27 +170,9 @@
    "son": "2026-08-06"
   },
   {
-   "k": "KCHOL",
-   "kurum": 22,
-   "hedef": 315.71,
-   "son": "2026-08-10"
-  },
-  {
-   "k": "KOTON",
-   "kurum": 5,
-   "hedef": 23.48,
-   "son": "2026-08-14"
-  },
-  {
    "k": "KRDMD",
    "kurum": 17,
    "hedef": 51.05,
-   "son": "2026-08-18"
-  },
-  {
-   "k": "LKMNH",
-   "kurum": 4,
-   "hedef": 25.15,
    "son": "2026-08-18"
   },
   {
@@ -202,28 +182,28 @@
    "son": "2026-08-11"
   },
   {
+   "k": "LOGO",
+   "kurum": 8,
+   "hedef": 226.18,
+   "son": "2026-08-06"
+  },
+  {
    "k": "MAVI",
-   "kurum": 22,
-   "hedef": 63.24,
-   "son": "2026-07-27"
+   "kurum": 21,
+   "hedef": 61.04,
+   "son": "2026-09-23"
   },
   {
-   "k": "MEDTR",
-   "kurum": 2,
-   "hedef": 39.25,
-   "son": "2026-08-17"
-  },
-  {
-   "k": "MGROS",
-   "kurum": 29,
-   "hedef": 917.34,
-   "son": "2026-08-14"
+   "k": "MOGAN",
+   "kurum": 1,
+   "hedef": 16.6,
+   "son": "2026-08-10"
   },
   {
    "k": "MPARK",
    "kurum": 16,
-   "hedef": 644.85,
-   "son": "2026-08-07"
+   "hedef": 651.85,
+   "son": "2026-09-15"
   },
   {
    "k": "NTGAZ",
@@ -240,64 +220,44 @@
   {
    "k": "ORGE",
    "kurum": 1,
-   "hedef": 198.9,
+   "hedef": 39.78,
    "son": "2026-08-14"
   },
   {
-   "k": "PGSUS",
-   "kurum": 26,
-   "hedef": 269.94,
-   "son": "2026-08-13"
-  },
-  {
-   "k": "RGYAS",
-   "kurum": 7,
-   "hedef": 300.6,
-   "son": "2026-08-14"
-  },
-  {
-   "k": "SAHOL",
-   "kurum": 17,
-   "hedef": 159.26,
-   "son": "2026-08-13"
+   "k": "PETKM",
+   "kurum": 14,
+   "hedef": 20.53,
+   "son": "2026-09-22"
   },
   {
    "k": "SELEC",
-   "kurum": 9,
-   "hedef": 153.67,
+   "kurum": 8,
+   "hedef": 154.02,
    "son": "2026-08-18"
   },
   {
-   "k": "SISE",
-   "kurum": 16,
-   "hedef": 62.63,
-   "son": "2026-08-17"
+   "k": "SMRTG",
+   "kurum": 1,
+   "hedef": 18.77,
+   "son": "2026-05-13"
   },
   {
    "k": "SNGYO",
    "kurum": 1,
    "hedef": 10.51,
-   "son": "2025-11-10",
-   "bayat": true
+   "son": "2025-11-10"
   },
   {
-   "k": "SUNTK",
-   "kurum": 1,
-   "hedef": 45.0,
-   "son": "2026-02-02",
-   "bayat": true
-  },
-  {
-   "k": "TCELL",
-   "kurum": 27,
-   "hedef": 158.85,
+   "k": "TCKRC",
+   "kurum": 2,
+   "hedef": 289.34,
    "son": "2026-08-14"
   },
   {
-   "k": "THYAO",
-   "kurum": 30,
-   "hedef": 454.33,
-   "son": "2026-08-07"
+   "k": "TKFEN",
+   "kurum": 2,
+   "hedef": 130.7,
+   "son": "2026-07-27"
   },
   {
    "k": "TKNSA",
@@ -306,28 +266,10 @@
    "son": "2026-08-06"
   },
   {
-   "k": "TOASO",
-   "kurum": 23,
-   "hedef": 415.28,
-   "son": "2026-08-10"
-  },
-  {
    "k": "TUPRS",
    "kurum": 23,
-   "hedef": 370.87,
-   "son": "2026-08-12"
-  },
-  {
-   "k": "ULKER",
-   "kurum": 17,
-   "hedef": 170.26,
-   "son": "2026-08-19"
-  },
-  {
-   "k": "YATAS",
-   "kurum": 6,
-   "hedef": 57.51,
-   "son": "2026-08-20"
+   "hedef": 389.8,
+   "son": "2026-09-22"
   },
   {
    "k": "YEOTK",
@@ -336,7 +278,8 @@
    "son": "2026-05-14"
   }
  ],
- "_kaynak": "Fintables hisse_senedi_araci_kurum_hedef_fiyatlari · pencere SON 1 YIL (2025-08-10..) · hedef = kurum ortalamasi, kurum = DISTINCT araci kurum sayisi",
+ "_kaynak": "Fintables hisse_senedi_araci_kurum_hedef_fiyatlari · pencere SON 1 YIL (2025-10-05..) · hedef = kurum başına EN GÜNCEL hedefin ortalaması, kurum = DISTINCT aracı kurum sayısı · evren: Ekim 2026 XK100 üyeleri (46 hissede hedef var)",
  "_pencere_notu": "§252v: pencere 1 YIL olarak KORUNDU. 6 aylik pencere daha taze gorunur ama kurum sayilarini dusurur (ASELS 23->18, THYAO 30->22) — bu TAZELEME degil METODOLOJI DARALTMASI olurdu. Panelin kurum sayilariyla Fintables 1-yil sorgusu BIREBIR tuttu, pencere dogrulandi.",
- "_duzeltme": "2026-08-25: 55/55 hisse tazelendi (onceki 10 Agu). Pencere 1 YIL (>= 2025-08-25) — §252v geregi KORUNDU. 28 hissede hedef/kurum degisti. 4 hisse son 6 ayda raporsuz -> bayat:true (hedefi eskidir, guncel fiyatla kiyaslanmamalidir). Kaynak: Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat)."
+ "_duzeltme": "2026-08-25: 55/55 hisse tazelendi (onceki 10 Agu). Pencere 1 YIL (>= 2025-08-25) — §252v geregi KORUNDU. 28 hissede hedef/kurum degisti. 4 hisse son 6 ayda raporsuz -> bayat:true (hedefi eskidir, guncel fiyatla kiyaslanmamalidir). Kaynak: Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat).",
+ "_ekim_turu": "5 Eki: 55 -> 46 hisse (XK100 Ekim revizyonu; çıkan üyeler düştü, girenlerin çoğunda hedef yok). Değişen hedef: 14 · örnek: AKFYE 27.5->4.59 · ASELS 442.66->466.72 · BIMAS 492.88->499.87 · CIMSA 71.15->71.55 · ENJSA 143.15->152.41 · EREGL 46.11->46.79"
 }
