@@ -429,8 +429,68 @@
      "kira": null
     }
    ]
+  },
+  "5-ekim-2026-tarihinde-gerceklestirilen-2-yil-vadeli-tlrefkye-endeksli-kira-serti": {
+   "tarih": "2026-10-05",
+   "baslik": "5 Ekim 2026 Tarihinde Gerçekleştirilen 2 Yıl Vadeli TLREFK’ye Endeksli Kira Sertifikası İhraç Sonucuna İlişkin Basın Duyurusu",
+   "ek": null,
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "TLREFK’ye endeksli kira sertifikası",
+     "isin": "TRD041028T26",
+     "tutar": 59255500000,
+     "doviz": "TL",
+     "valor": "7 Ekim 2026",
+     "itfa": "4 Ekim 2028"
+    }
+   ]
+  },
+  "5-ekim-2026-tarihinde-gerceklestirilen-ihalelerin-sonuclarina-iliskin-basin-duyu": {
+   "tarih": "2026-10-05",
+   "baslik": "5 Ekim 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İlişkin Basın Duyurusu",
+   "ek": "https://ms.hmb.gov.tr/uploads/2026/10/KAF_20261005_ihale_sonucu_2s_5s-49038a5cd8bac9c1.pdf",
+   "dosyaAdi": "KAF_20261005_ihale_sonucu_2s_5s-49038a5cd8bac9c1.pdf",
+   "ihaleler": [
+    {
+     "ihaleNo": "2896",
+     "isin": "TRT130928T38",
+     "senet": "Sabit Kuponlu Devlet Tahvili",
+     "donemsel": {
+      "teklif": 18.31,
+      "gerceklesme": 18.27
+     },
+     "basit": {
+      "teklif": 36.61,
+      "gerceklesme": 36.53
+     },
+     "bilesik": {
+      "teklif": 39.97,
+      "gerceklesme": 39.87
+     },
+     "kira": null
+    },
+    {
+     "ihaleNo": "2897",
+     "isin": "TRT160431T35",
+     "senet": "Sabit Kuponlu Devlet Tahvili",
+     "donemsel": {
+      "teklif": 17.81,
+      "gerceklesme": 17.78
+     },
+     "basit": {
+      "teklif": 35.61,
+      "gerceklesme": 35.55
+     },
+     "bilesik": {
+      "teklif": 38.78,
+      "gerceklesme": 38.71
+     },
+     "kira": null
+    }
+   ]
   }
  },
- "guncelleme": "2026-10-05 08:40 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
- "sayi": 14
+ "guncelleme": "2026-10-05 16:12 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
+ "sayi": 16
 }

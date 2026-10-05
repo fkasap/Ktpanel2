@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-05 08:40 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-05 16:12 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -22,6 +22,22 @@
    "t": "2026-10-07T18:00:00.000Z",
    "ulke": "USD",
    "olay": "FOMC Meeting Minutes",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-10-08T08:30:00.000Z",
+   "ulke": "USD",
+   "olay": "FOMC Member Waller Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-10-08T12:15:00.000Z",
+   "ulke": "GBP",
+   "olay": "BOE Gov Bailey Speaks",
    "etki": "High",
    "beklenti": "",
    "onceki": ""
