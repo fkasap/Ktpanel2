@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-03T09:48:14Z",
+ "guncelleme": "2026-10-05T07:45:53Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -3132,7 +3132,7 @@
    "eksik": false
   },
   "TUREX": {
-   "ts": "2026-09-24T19:06:18Z",
+   "ts": "2026-10-05T07:44:24Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3166,7 +3166,7 @@
    "eksik": false
   },
   "UCAYM": {
-   "ts": "2026-09-24T19:06:35Z",
+   "ts": "2026-10-05T07:44:36Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 3,
@@ -3234,7 +3234,7 @@
    "eksik": false
   },
   "VAKKO": {
-   "ts": "2026-09-25T07:53:47Z",
+   "ts": "2026-10-05T07:44:53Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3268,7 +3268,7 @@
    "eksik": false
   },
   "BURCE": {
-   "ts": "2026-09-25T07:54:04Z",
+   "ts": "2026-10-05T07:45:10Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3302,7 +3302,7 @@
    "eksik": false
   },
   "YATAS": {
-   "ts": "2026-09-25T07:54:21Z",
+   "ts": "2026-10-05T07:45:28Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3336,7 +3336,7 @@
    "eksik": false
   },
   "YEOTK": {
-   "ts": "2026-09-25T07:54:37Z",
+   "ts": "2026-10-05T07:45:50Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
