@@ -244,6 +244,51 @@ async function yahooFiyat(kodlar, ekle = '.IS') {
    Ağırlık = pay_adedi × fiyat / toplam — HER GÜN yeniden hesaplanır.
    GERİYE UYUM: dosyada `pay_adedi` yoksa (eski biçim) katman ATLANIR ve
    raporda göç gerektiği yazılır. Sessizce eski ağırlıkla devam ETMEZ. */
+/* ── §451 ÜYELİK GÖÇÜ (5 Eki 2026) ──────────────────────────────────────────
+   BIST katılım endeksleri çeyreklik revize olur; endeks-uyeler.json (resmî CSV) yeni
+   listeyi getirir ama xk*.json'daki pay_adedi (serbest dolaşım pay sayısı) ELLE idi —
+   Ekim revizyonunda XK100 35 çıkan/35 giren, ağırlığın %8,7'si endekste olmayan hisselere
+   dağıtılmış durumdaydı (canlı rapor). Burada: çıkanlar pay_adedi'nden düşer (_cikan'a
+   tarihli taşınır, silinmez), girenler için Yahoo quoteSummary floatShares çekilir
+   (yoksa sharesOutstanding × KAP fiili dolaşım oranı yerine EKLENMEZ ve raporda yazar —
+   uydurma yok). Ağırlık hesabı (endeksTazele) hemen ardından yeni evrenle koşar.
+   Denetim: giren sayısının ≥%80'i bulunmalı; yoksa dosya YAZILMAZ (eski ağırlık kalır,
+   rapor söyler). */
+async function yahooFloat(kod) {
+  const url = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary/' + encodeURIComponent(kod + '.IS') + '?modules=defaultKeyStatistics';
+  try {
+    const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(12000) });
+    if (!r.ok) return null;
+    const j = await r.json(); const k = j?.quoteSummary?.result?.[0]?.defaultKeyStatistics || {};
+    const fl = k.floatShares?.raw, so = k.sharesOutstanding?.raw;
+    if (fl && fl > 0 && (!so || fl <= so * 1.01)) return { pay: Math.round(fl), kaynak: 'yahoo floatShares', so: so || null };
+    return null;
+  } catch { return null; }
+}
+async function uyelikGoc() {
+  const uyku = (ms) => new Promise(r => setTimeout(r, ms));
+  if (!(await varMi('endeks-uyeler.json'))) return;
+  const eu = await oku('endeks-uyeler.json'); const U = eu.uyeler || {};
+  const HARITA = { 'xk100.json': 'XK100', 'xktum.json': 'XKTUM', 'xktmt.json': 'XKTMT' };
+  for (const [dosya, endeks] of Object.entries(HARITA)) {
+    if (!(await varMi(dosya)) || !(U[endeks] || []).length) continue;
+    const d = await oku(dosya); const pa = d.pay_adedi || {}; const resmi = new Set(U[endeks]);
+    const fazla = Object.keys(pa).filter(k => !resmi.has(k)); const eksik = [...resmi].filter(k => !pa[k]);
+    if (!fazla.length && !eksik.length) continue;
+    const bulunan = {}, bulunamayan = [];
+    for (const k of eksik) { const f = await yahooFloat(k); if (f) bulunan[k] = f; else bulunamayan.push(k); await uyku(250); }
+    const oran = eksik.length ? Object.keys(bulunan).length / eksik.length : 1;
+    if (oran < 0.8) { raporlar.push('### ' + endeks + ' üyelik göçü (§451) — ✗ girenlerin ' + Object.keys(bulunan).length + '/' + eksik.length + ' pay adedi bulundu (eşik %80) — dosya YAZILMADI · bulunamayan: ' + bulunamayan.slice(0, 12).join(',')); denetimDustu = true; continue; }
+    d._cikan = d._cikan || {}; fazla.forEach(k => { d._cikan[k] = { pay: pa[k], tarih: bugun }; delete pa[k]; });
+    Object.entries(bulunan).forEach(([k, f]) => { pa[k] = f.pay; });
+    d.pay_adedi = pa; d.toplam_uye = resmi.size; d.donem = 'Ekim 2026 revizyonu (resmî üyelik ' + (eu.tarih || bugun) + ') — çeyreklik';
+    d._goc = { tarih: bugun, cikan: fazla, giren: Object.keys(bulunan), girenKaynak: 'Yahoo quoteSummary floatShares', bulunamayan };
+    await yaz(dosya, d);
+    raporlar.push('### ' + endeks + ' üyelik göçü (§451) — ✓ çıkan ' + fazla.length + ' · giren ' + Object.keys(bulunan).length + '/' + eksik.length + (bulunamayan.length ? ' · pay adedi bulunamayan (eklenmedi): ' + bulunamayan.join(',') : '') + '\n- örnek: ' + Object.entries(bulunan).slice(0, 3).map(([k, f]) => k + ' ' + (f.pay / 1e6).toFixed(1) + ' mn' + (f.so ? ' (çıkarılmış ' + (f.so / 1e6).toFixed(0) + ' mn)' : '')).join(' · '));
+    degisenler.push(endeks + ' üyelik');
+  }
+}
+
 async function endeksTazele(dosya, ad) {
   if (!(await varMi(dosya))) return null;
   const d = await oku(dosya);
@@ -3767,6 +3812,7 @@ async function bultenKesif() {
   }
 
   if (ister('endeks')) {
+    await uyelikGoc();   /* §451: dönemsel değişimde pay_adedi'ni resmî üyeliğe hizala (Yahoo floatShares) */
     await endeksTazele('xk100.json', 'XK100 ağırlıkları');
     await endeksTazele('xktum.json', 'XKTUM ağırlıkları');
     await endeksTazele('xktmt.json', 'XKTMT ağırlıkları');
