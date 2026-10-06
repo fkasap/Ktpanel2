@@ -6,28 +6,34 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
-# BAKIM EK — §454 (5 Eki 2026)
+# BAKIM EK — §455 (6 Eki 2026)
 
-## §454 FAKTOR MODELI: "LARGE CAP'LER HEP ASAGIDA" — SIRALAMA ISTATISTIGI, BUG DEGIL
-Kullanici sikayeti. OLCUM (fm.json 24 Agu, varsayilan agirliklar, Fintables PD):
-- Buyukler ORTALAMADA daha iyi: ort. sira buyuk(25 en buyuk) 66 · orta 94 · mikro 121;
-  corr(log PD, skor) +0,25.
-- Ama TOP-25: 10 mikro / 10 orta / 5 buyuk; secimin XKTUM kapsami %22.
-- Sebep: dagilim. 129 mikro std 0,40, 18 buyuk std 0,27 — ucu kalabalik ve gurultulu grup
-  doldurur (siralama istatistigi). ESCOM GROWTH +3,00 (kirpma siniri) tek metrikle 1.
-  Mikro z-skorlarinin ucu sinyal degil, olcum gurultusu (ince bilanco, tek seferlik kalem).
-COZUM (app.js fmRender, index.html 2 secici):
-  TABAN: XKTUM agirligi (serbest dolasim degeri payi, xktum.json uyeler) < esik -> secime
-    girmez; Ekim'de endeksten cikanlar da duser. Varsayilan %0,05 (138 isim).
-  BUZME: pozitif skor x (0,4 + 0,6 x log-agirlik yuzdeligi); negatif skor dokunulmaz.
-  Varsayilan ikisi acik: kapsam %22,4 -> %41,4; BIMAS, KRDMD, GRSEL, BASGZ girer;
-  GEDZA/BNTAS/KRPLS/ELITE/CEMZY/RUBNS/SANEL duser. Eski davranis secicilerle geri gelir.
-  fmEff satiri kapsam/taban disi/endeks disi sayilarini yazar.
-DURUSTLUK: ASELS hala disarida (sira ~101): VALUE -0,48 (F/K 38x), LOW_RISK -0,70 (yuksek
-  beta/vol) — modelin GERCEK gorusu, buyukluk yanliligi degil.
-ACIK: fm.json 42 gun bayat ve evreni Agustos XKTUM'u — 37'si artik endekste degil, Ekim'de
-  giren 109'un coguna skor yok. Ekim Koyfin CSV'si gerekli (kullanici disa aktarir, fm-isle.py).
-DEPLOY: ktpanel/{app.js, index.html} (surum 20261005c).
+## §455 FAKTOR MODELI KOYFIN'DEN KURTULDU — KENDI BILANCO + FIYATIMIZDAN
+Tetik: Koyfin XKTUM disa aktarimi BOS geldi (238 satir, tum hucreler bos). Kullanici:
+"bilancolari zaten Actions'ta cekiyoruz." Dogru: §361 faktor-evren.json KAP'tan TTM
+temelleri biriktiriyordu (114/238) ama hic skora baglanmamisti.
+YAPILAN:
+  fmSatir(): 29 Koyfin metriginin 28'i kendi verimizden (3Y capex buyumesi yok).
+    Temeller §361 TTM; fiyat/hacim Yahoo v8 1y gunluk (adjclose); beta cipasi XKTUM
+    resmi arsivi (riskTazele kuraliyla: ±%20 kurumsal islem, >5 gun bosluk suzgeci).
+    Negatif paydali carpanlar BOS (Koyfin NM). PD = pay adedi (sermaye, nominal 1 TL
+    varsayimi) x son ham kapanis.
+  fmHesapla(): evren = resmi XKTUM; fm-girdi.csv (Koyfin SUTUN ADLARIYLA, denetlenebilir)
+    -> mevcut fm-isle.py (YONTEM DEGISMEDI) -> fm-oto.json. TERFI: siralanan >= evrenin
+    %60'i (143) olunca fm.json'un yerine gecer; o gune dek panel Koyfin dosyasiyla.
+  §361: yeni alanlar faal (FVOK), amort, vergiOncesi, vergi, gecmisKar (NOPAT/ROIC/FVOK
+    marji/Altman Z icin); ham sayfa ONCE dogrudan KAP (§446 dersi), dusunce kopru.
+  fm-isle.py: sektoru 'Bilinmiyor' olan hisseler TUM EVRENE karsi z-skorlanir (kendi
+    aralarinda havuz olmasin). fm-sektor.json: kalici sektor haritasi (Koyfin 24 Agu
+    tohumu 215, eksikler Yahoo assetProfile, elle duzeltilebilir).
+  Katman: hepsi'de §361'in hemen ardindan; elle --katman=fm.
+TEST (sandbox, temeller GERCEK faktor-evren.json, fiyat SENTETIK — yalniz boru hatti):
+  238 satir · temel 96 · siralanan 95 · imza VAL/GRO/QUA std .64-.74 (Koyfin donemi
+  .57-.74 ile ayni aile), |z|>3 yok. Terfiye ~48 sirket (≈8 kosu) kaldi.
+SINIRLAR: bankalar/sigorta (ALBRK, KTLEV...) KAP sablonu farkli -> §361 'eksik' ->
+  yalniz momentum/risk -> siralanmaz (minfac 3). Eski 114 kaydin FVOK'u §361 rotasyonu
+  onlari yeniden cekince dolar (once hic cekilmemisler sirada).
+DEPLOY: scripts/tazele.mjs · ktpanel/arac/fm-isle.py · ktpanel/fm-sektor.json (yeni).
 
 # BAKIM EK — §451–§453 (5 Eki 2026) — "HEPSINI SIRAYLA"
 
