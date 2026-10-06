@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261005c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261006a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2101,16 +2101,41 @@ function korLens(){
   const eb=cift[0];
   $('korNote').innerHTML='<b>Efektif hisse ('+eff.toFixed(1)+' / '+n+' modeldeki hisse)</b>: ağırlık ne kadar dengeli dağılmış — gerçek sayıya yakınsa iyi. <b>Faktör benzerliği</b>: 1\u0027e yakın çiftler farklı hisseler olsa da <em>aynı DNA</em>yı taşır ('+eb.a+' ↔ '+eb.b+': '+eb.c.toFixed(2)+'). Kâğıtta çeşitli görünüp kriz anında birlikte düşen pozisyonları yakalar — gerçek çeşitlendirme, <em>düşük</em> faktör-benzerliğidir.';
 }
+/* §456 FONZİ (Vaka-ı Tezmen) — fon krizi stres katmanı (6 Eki 2026, kullanıcı adlandırması).
+   Makro kaydırıcıların ÜSTÜNE idiyosenkratik şok: SPK 17 Eyl tasfiyesindeki 9 evren fonunun son
+   raporundaki hisse pozisyonu (fon-portfoy.json tasfiye.baski) / hissenin serbest dolaşım değeri
+   (xktum.json pay_adedi × pozisyon fiyatı) = BASKI ORANI. Şok = −2 (piyasa bacağı; ölçülen kriz günü:
+   16 Eyl BIST100 −1,2, katılım 30'da 28/30 eksi, 9 hisse tavan→taban) − min(8, 400 × oran).
+   Oran %1 → −6 toplam, %2+ → −10 (BIST limiti). Oran verisi yoksa yalnız piyasa bacağı. */
+let FONZI=false, FONZI_VERI=null;
+async function fonziYukle(){
+  if(FONZI_VERI) return FONZI_VERI;
+  const j=async u=>{try{return await (await fetch(u,{cache:'no-store'})).json();}catch(e){return null;}};
+  const fp=await j('/fon-portfoy.json'), xk=await j('/xktum.json');
+  const baski={}; (((fp||{}).tasfiye||{}).baski||{}).liste?.forEach(x=>{ baski[x.kod]=x.deger; });
+  FONZI_VERI={ baski, pay:(xk||{}).pay_adedi||{}, tarih:((fp||{}).tasfiye||{}).tarih||'?' };
+  return FONZI_VERI;
+}
+function fonziSok(kod){
+  if(!FONZI||!FONZI_VERI) return {e:0,oran:null};
+  const p=(poz||[]).find(q=>q.kod===kod); const fiyat=p?+p.fiyat:0; const pay=FONZI_VERI.pay[kod]; const pozisyon=FONZI_VERI.baski[kod];
+  const sdd=(pay>0&&fiyat>0)?pay*fiyat:null;
+  const oran=(sdd&&pozisyon>0)?pozisyon/sdd:null;
+  const e=-2.0-(oran!=null?Math.min(8,400*oran):0);
+  return {e, oran, pozisyon:pozisyon||0, sdd};
+}
 function stresTest(){
   const kur=+$('stresKur').value,faiz=+$('stresFaiz').value,pet=+$('stresPet').value;
   $('stresKurV').textContent=(kur>=0?'+':'')+kur+'%';$('stresFaizV').textContent=(faiz>=0?'+':'')+faiz+'bp';$('stresPetV').textContent=(pet>=0?'+':'')+pet+'%';
   const {kapsanan,disi}=pozHisse(),el=$('stresSonuc');
   if(!kapsanan.length){el.innerHTML='<div class="sub">Faktör modeli evreninde hisse pozisyonu yok.</div>';return;}
-  let portEtki=0;const detay=[];
-  kapsanan.forEach(x=>{const b=SEKTOR_BETA[x.s],e=(kur/10)*b[0]+(faiz/100)*b[1]+(pet/10)*b[2];portEtki+=x.w*e;detay.push({kod:x.kod,e});});
+  if(!kur&&!faiz&&!pet&&!FONZI){ el.innerHTML='<div class="sub">Şok gir veya hazır senaryo seç — sıfır şokta etki de sıfırdır.</div>'; return; }   /* §442 açık kalemi: anlamsız "+0,0" bitti */
+  let portEtki=0,fonziEtki=0;const detay=[];
+  kapsanan.forEach(x=>{const b=SEKTOR_BETA[x.s];let e=(kur/10)*b[0]+(faiz/100)*b[1]+(pet/10)*b[2];const fz=fonziSok(x.kod);e+=fz.e;portEtki+=x.w*e;fonziEtki+=x.w*fz.e;detay.push({kod:x.kod,e,fz});});
   detay.sort((a,b)=>a.e-b.e);
   const cls=portEtki>=0?'up':'down',enKotu=detay.slice(0,2),enIyi=detay.slice(-2).reverse();
-  el.innerHTML='<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px"><span class="lbl" style="margin:0">TAHMİNİ PORTFÖY ETKİSİ</span><span class="val '+cls+'" style="font-size:22px">'+(portEtki>=0?'+':'')+portEtki.toFixed(2)+'%</span></div><div class="kv"><span class="k">En olumsuz</span><span>'+enKotu.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div><div class="kv"><span class="k">En olumlu</span><span>'+enIyi.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div>'+(disi.length?'<div class="kv"><span class="k">Kapsam dışı</span><span>'+disi.join(', ')+'</span></div>':'');
+  el.innerHTML='<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px"><span class="lbl" style="margin:0">TAHMİNİ PORTFÖY ETKİSİ</span><span class="val '+cls+'" style="font-size:22px">'+(portEtki>=0?'+':'')+portEtki.toFixed(2)+'%</span></div><div class="kv"><span class="k">En olumsuz</span><span>'+enKotu.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div><div class="kv"><span class="k">En olumlu</span><span>'+enIyi.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div>'+(disi.length?'<div class="kv"><span class="k">Kapsam dışı</span><span>'+disi.join(', ')+'</span></div>':'')
+    +(FONZI?'<div class="kv" style="border-top:1px dashed var(--line);margin-top:6px;padding-top:6px"><span class="k" style="color:#E8933B">Fonzi bileşeni</span><span>'+fonziEtki.toFixed(2)+' puan · tasfiye baskısı olan: '+(detay.filter(d=>d.fz.oran!=null).map(d=>d.kod+' (pozisyon '+(d.fz.pozisyon/1e6).toFixed(0)+' mn / serbest dolaşım %'+(d.fz.oran*100).toFixed(2)+' → '+d.fz.e.toFixed(1)+')').join(' · ')||'portföyde tasfiye listesinden hisse yok — yalnız piyasa bacağı −2')+'</span></div>':'');
 }
 /* ---- Yield Curve Laboratuvarı ---- */
 
@@ -2157,7 +2182,11 @@ function renderPoz(){
 
 
 ['stresKur','stresFaiz','stresPet'].forEach(id=>$(id).addEventListener('input',stresTest));
-document.querySelectorAll('button[data-preset]').forEach(b=>b.addEventListener('click',()=>{const P={iran:[15,300,25],dezenf:[-3,-500,-10],yumusak:[5,-200,0],sifir:[0,0,0]}[b.dataset.preset];$('stresKur').value=P[0];$('stresFaiz').value=P[1];$('stresPet').value=P[2];stresTest();}));
+document.querySelectorAll('button[data-preset]').forEach(b=>b.addEventListener('click',async()=>{const P={iran:[15,300,25],dezenf:[-3,-500,-10],yumusak:[5,-200,0],sifir:[0,0,0],fonzi:[2,0,0]}[b.dataset.preset];
+  /* §456: Fonzi makro bacağı ölçülen kriz haftası (USD/TRY +%2, faiz/petrol 0) + idiyosenkratik katman; Sıfırla kapatır */
+  if(b.dataset.preset==='fonzi'){ FONZI=true; await fonziYukle(); } else if(b.dataset.preset==='sifir'){ FONZI=false; }
+  document.querySelectorAll('button[data-preset]').forEach(x=>x.style.fontWeight=(x.dataset.preset==='fonzi'&&FONZI)?'700':'');
+  $('stresKur').value=P[0];$('stresFaiz').value=P[1];$('stresPet').value=P[2];stresTest();}));
 $('pozEkle').addEventListener('click',async()=>{
   const tip=$('pTip').value,kod=($('pKod').value||'').trim().toUpperCase();
   const adet=+$('pAdet').value,maliyet=+$('pMaliyet').value;let fiyat=+$('pFiyat').value;

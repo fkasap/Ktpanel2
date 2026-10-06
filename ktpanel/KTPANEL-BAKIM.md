@@ -6,6 +6,57 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §456 (6 Eki 2026)
+
+## §456 "FONZİ (Vaka-ı Tezmen)" — SENARYO & STRES TESTİ'NE FON KRİZİ KATMANI
+Kullanıcı istegi (ve adlandirmasi). Mevcut stres testi 3 makro kaydirici (kur/faiz/petrol)
+x sektor betasi; fon krizi idiyosenkratiktir — zorunlu satis belirli hisselere biner.
+YAPILAN: preset "Fonzi (Vaka-ı Tezmen)": makro bacak USD/TRY +%2 (olculen kriz haftasi)
++ idiyosenkratik katman: sok = −2 (piyasa bacagi; 16 Eyl olcumu: BIST100 −1,2, katilim
+30'da 28/30 eksi, 9 hisse tavan→taban) − min(8, 400 x oran); oran = tasfiye fonlarinin
+son raporundaki pozisyon (fon-portfoy.json tasfiye.baski, 9 evren fonu) / hissenin
+serbest dolasim degeri (xktum.json pay_adedi x pozisyon fiyati). Oran %1 → −6, %2+ → −10
+(BIST limiti). Veri yoksa yalniz piyasa bacagi. Sonuc kutusunda "Fonzi bileseni" satiri:
+hisse basina pozisyon / serbest dolasim yuzdesi / sok. Sifirla kapatir.
+TEST: BIMAS/KTLEV/PASEU/TUPRS esit agirlikli portfoy → −3,96; PASEU −9,9 (sd %2,24),
+KTLEV −6,3 (%1,10), BIMAS −2,3, TUPRS −2,1 — 16 Eyl'de tavan→taban olanlarla ortusuyor
+(PASEU, KTLEV). Likit buyuklerde etki gurultu seviyesi — kartin okumasiyla tutarli.
+§442 ACIK KALEMI KAPANDI: sifir sokta "en olumsuz +0,0" yerine "sok gir / senaryo sec".
+SINIR: baski listesi ilk 25 pozisyon (fon-portfoy.json); listede olmayan hissede yalniz
+piyasa bacagi. Kalibrasyon (400 x oran) tek gunluk olcume dayanir; tasfiye satislari
+haftalara yayilirsa gercek etki daha yumusak, uzun olur.
+DEPLOY: ktpanel/{index.html, app.js} (surum 20261006a).
+
+# BAKIM EK — §455c–d (6 Eki 2026)
+
+## §455c KANITLANDI + BUYUKLER EKSIKTI -> ARSIVDEN DOLDUR, BUYUK ONCE
+Canli kosu (#: 10:08): §455 calisti — siralanan 98/238 · temel 99 · fiyat 230 · beta
+XKTUM arsivi. PD saglamasi: bizim (adet x fiyat) BIMAS 497 / GUBRF 140 / MAVI 30 mlr,
+Fintables 496 / 139 / 30 — nominal 1 TL varsayimi tutuyor.
+SORUN: en buyuk 40 hissenin 26'sinda temel veri YOK (ASELS, TUPRS, EREGL, ENJSA,
+ISDMR, MPARK, EKGYO...) — temel kapsam XKTUM agirliginin yalniz %28'i. Sebep: §361
+hic cekilmemisleri ALFABETIK siriyla cekiyordu (endeks-uyeler.json sirasi).
+COZUM: (1) ARSIVDEN DOLDUR — kap-arsiv/<KOD>.json'da TTM'e yeten donem varsa faktor
+  kaydi SIFIR AG istegiyle arsivden kurulur (§383'un ters yonu: biri ceksin digeri
+  okusun). Kayit kaynak:'arsiv'. Arsivde daha yeni donem cikarsa da yeniden kurulur.
+  (2) Ag partisinde esit yasta XKTUM agirligi BUYUK olan once.
+SANDBOX OLCUMU: arsivden 15 sirket (ASELS/TUPRS/EREGL/KRDMD/EKGYO/PETKM/CIMSA/EFOR/
+  CWENE/GENIL/PASEU...) -> temel kapsamin agirligi %28,4 -> %77,8.
+ONIZLEME (gercek Yahoo momentumu + arsivle doldurulmus temeller + kapanis fiyati):
+  siralanan 111 · Koyfin Agu dosyasiyla korelasyon VAL .68 QUA .78 GRO .41 LOW .49
+  MOM .10 (6 hafta arayla momentumun dusuk olmasi beklenen) · varsayilan secim
+  (taban + buzme): TUPRS 1 · BIMAS 2 · MAVI 3 · GUBRF 6 · CIMSA 16 · KRDMD 19 · EREGL
+  20; secimin XKTUM kapsami %45,6. ASELS 40 (VAL -0,95 F/K yuksek, LOW -1,41 yuksek
+  vol) — modelin gercek gorusu.
+## §455d DAYANIKLILIK
+  fiyatTazele: Yahoo hic donmezse f[kapsanan[0]] tanimsiz -> TUM KOSU COKUYORDU
+    (sonraki katmanlar da calismiyordu). Bos kapsam artik katmani dusurur, kosu surer.
+  fm-isle.py imza yazimi bos faktorde cokmez. fmHesapla: fiyat kapsami <%80 ise fm.json
+    TERFI ETMEZ (eksik faktorle siralama yaniltir).
+BILINEN: KRDMA/KRDMB (Kardemir A/B) KAP'ta ayri bildirim yok -> temel veri yok; KRDMD'den
+  kopyalamak PD'yi bozar (adet tum siniflarin toplami) — bilincli olarak yapilmadi.
+DEPLOY: scripts/tazele.mjs · ktpanel/arac/fm-isle.py.
+
 # BAKIM EK — §455 (6 Eki 2026)
 
 ## §455 FAKTOR MODELI KOYFIN'DEN KURTULDU — KENDI BILANCO + FIYATIMIZDAN
