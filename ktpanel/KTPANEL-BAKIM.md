@@ -6,6 +6,29 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §454 (5 Eki 2026)
+
+## §454 FAKTOR MODELI: "LARGE CAP'LER HEP ASAGIDA" — SIRALAMA ISTATISTIGI, BUG DEGIL
+Kullanici sikayeti. OLCUM (fm.json 24 Agu, varsayilan agirliklar, Fintables PD):
+- Buyukler ORTALAMADA daha iyi: ort. sira buyuk(25 en buyuk) 66 · orta 94 · mikro 121;
+  corr(log PD, skor) +0,25.
+- Ama TOP-25: 10 mikro / 10 orta / 5 buyuk; secimin XKTUM kapsami %22.
+- Sebep: dagilim. 129 mikro std 0,40, 18 buyuk std 0,27 — ucu kalabalik ve gurultulu grup
+  doldurur (siralama istatistigi). ESCOM GROWTH +3,00 (kirpma siniri) tek metrikle 1.
+  Mikro z-skorlarinin ucu sinyal degil, olcum gurultusu (ince bilanco, tek seferlik kalem).
+COZUM (app.js fmRender, index.html 2 secici):
+  TABAN: XKTUM agirligi (serbest dolasim degeri payi, xktum.json uyeler) < esik -> secime
+    girmez; Ekim'de endeksten cikanlar da duser. Varsayilan %0,05 (138 isim).
+  BUZME: pozitif skor x (0,4 + 0,6 x log-agirlik yuzdeligi); negatif skor dokunulmaz.
+  Varsayilan ikisi acik: kapsam %22,4 -> %41,4; BIMAS, KRDMD, GRSEL, BASGZ girer;
+  GEDZA/BNTAS/KRPLS/ELITE/CEMZY/RUBNS/SANEL duser. Eski davranis secicilerle geri gelir.
+  fmEff satiri kapsam/taban disi/endeks disi sayilarini yazar.
+DURUSTLUK: ASELS hala disarida (sira ~101): VALUE -0,48 (F/K 38x), LOW_RISK -0,70 (yuksek
+  beta/vol) — modelin GERCEK gorusu, buyukluk yanliligi degil.
+ACIK: fm.json 42 gun bayat ve evreni Agustos XKTUM'u — 37'si artik endekste degil, Ekim'de
+  giren 109'un coguna skor yok. Ekim Koyfin CSV'si gerekli (kullanici disa aktarir, fm-isle.py).
+DEPLOY: ktpanel/{app.js, index.html} (surum 20261005c).
+
 # BAKIM EK — §451–§453 (5 Eki 2026) — "HEPSINI SIRAYLA"
 
 ## §451 ENDEKS DONEMSEL DEGISIMI — pay_adedi RESMI UYELIGE HIZALANDI

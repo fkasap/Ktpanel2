@@ -985,6 +985,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <label style="font-size:10px;color:var(--muted)">MOMENTUM <input id="fmwMOMENTUM" type="number" step="0.05" min="0" value="0.20" style="width:70px"></label>
     <label style="font-size:10px;color:var(--muted)">LOW_RISK <input id="fmwLOW_RISK" type="number" step="0.05" min="0" value="0.15" style="width:70px"></label>
     <label style="font-size:10px;color:var(--muted)">GROWTH <input id="fmwGROWTH" type="number" step="0.05" min="0" value="0.10" style="width:70px"></label>
+    <label style="font-size:10px;color:var(--muted)" title="§454 Yatırılabilirlik tabanı: XKTUM ağırlığı (serbest dolaşım değeri payı) bu eşiğin altındaki hisseler seçime girmez. Ekim XKTUM'undan çıkanlar da düşer.">TABAN <select id="fmTaban" style="font-family:inherit;font-size:10px;padding:2px"><option value="0">yok</option><option value="0.05" selected>XKTUM ≥ %0,05</option><option value="0.10">XKTUM ≥ %0,10</option><option value="0.25">XKTUM ≥ %0,25</option></select></label>
+    <label style="font-size:10px;color:var(--muted)" title="§454 Büyüklük büzmesi: pozitif skor, büyüklüğün evren içi yüzdeliğine göre 0,4–1,0 katsayıyla çarpılır (en küçük skorun %40'ını, en büyük %100'ünü taşır). Küçük hisselerin uç z-skorları gürültüye en açık olanlardır.">BÜZME <select id="fmBuzme" style="font-family:inherit;font-size:10px;padding:2px"><option value="1" selected>açık</option><option value="0">kapalı</option></select></label>
     <button class="btn" id="fmReset" style="padding:6px 12px;font-size:10px">Varsayılana dön</button>
     <span id="fmEff" style="font-family:var(--mono);font-size:10px;color:var(--muted)"></span>
   </div>
@@ -1895,8 +1897,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261005b"></script>
-<script src="/ajan.js?v=20261005b"></script>
+<script src="/app.js?v=20261005c"></script>
+<script src="/ajan.js?v=20261005c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

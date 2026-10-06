@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261005b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261005c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1620,6 +1620,8 @@ async function fmInit(){
       document.querySelectorAll('.fmDamgaKisa').forEach(e=>{e.textContent=kisa;}); } } }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
+  ['fmTaban','fmBuzme'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',()=>fmRender()); });
+  try{ const xj=await (await fetch('/xktum.json',{cache:'no-store'})).json(); window.__FMX=xj.uyeler||{}; }catch(e){ window.__FMX=null; }   /* §454 büyüklük vekili: XKTUM ağırlığı */
   $('fmReset').addEventListener('click',()=>{FMF.forEach(k=>$('fmw'+k).value=FMW_DEF[k]);
     try{localStorage.removeItem(FMW_KEY);}catch(e){}   // kaydı sil, yoksa varsayılan geri gelmez
     fmRender();});
@@ -1769,8 +1771,23 @@ function fmRender(){
     // Eksik faktör = nötr (0 z-skoru, yani sektör ortalaması): ne ödül ne ceza, ağırlık kaymaz.
     let sc=0,nn=0;r.f.forEach((v,i)=>{if(v!=null)nn++;sc+=(v!=null?v:0)*(wArr[i]/tw);});
     if(nn<(FM.meta.minfac||3))return null;
-    return {t:r.t,s:r.s,f:r.f,n:r.n,score:sc};
+    return {t:r.t,s:r.s,f:r.f,n:r.n,score:sc,ham:sc};
   }).filter(Boolean);
+  /* §454 BÜYÜKLÜK YANLILIĞI (5 Eki ölçümü, fm.json 24 Ağu): büyükler ORTALAMADA daha yüksek skorlu (ort. sıra 66
+     vs mikro 121; corr(log PD, skor) +0,25) ama TOP-25'i mikrolar dolduruyordu (10 mikro / 5 büyük; seçimin XKTUM
+     kapsamı %22). Sebep sıralama istatistiği: 129 mikro, std 0,40 — 18 büyük, std 0,27; uçları kalabalık ve gürültülü
+     grup doldurur (ESCOM: GROWTH +3,00 kırpılmış, tek metrikle 1.). Çözüm iki kademe, ikisi de açıklanabilir:
+     (1) TABAN: XKTUM ağırlığı < eşik olan (ve Ekim'de endeksten çıkan) düşer — yatırılamayanı seçme;
+     (2) BÜZME: pozitif skor × (0,4 + 0,6 × büyüklük yüzdeliği) — küçük ismin uç skoruna daha az güven. Negatif
+     skorlar dokunulmaz. Ham skor detayda kalır. Varsayılan: taban %0,05 + büzme açık → kapsam %41, BIMAS girer. */
+  const FMX=window.__FMX||null; const taban=+(($('fmTaban')||{}).value||0); const buz=(($('fmBuzme')||{}).value||'1')==='1';
+  let tabanDisi=0, endeksDisi=0;
+  if(FMX){
+    const lw=rows.map(r=>FMX[r.t]).filter(v=>v>0).map(v=>Math.log(v)).sort((x,y)=>x-y);
+    const yuzde=w=>{ if(!(w>0)||!lw.length) return 0; const L=Math.log(w); let lo=0,hi=lw.length; while(lo<hi){const md=(lo+hi)>>1; if(lw[md]<L) lo=md+1; else hi=md;} return lo/Math.max(1,lw.length-1); };
+    rows.forEach(r=>{ r.xw=FMX[r.t]||null; if(buz&&r.score>0&&r.xw) r.score=r.score*(0.4+0.6*yuzde(r.xw)); });
+    if(taban>0){ const once=rows.length; for(let i=rows.length-1;i>=0;i--){ const w=rows[i].xw; if(!w){ endeksDisi++; rows.splice(i,1); } else if(w<taban){ tabanDisi++; rows.splice(i,1); } } }
+  }
   rows.sort((a,b)=>b.score-a.score);
   /* §405: dışlananlar SEÇİMDEN ÖNCE düşer — yedek kendiliğinden girer */
   const disla=new Set(fmDislaOku());
@@ -1782,6 +1799,7 @@ function fmRender(){
     sel.push(r);cnt[r.s]=(cnt[r.s]||0)+1;
   }
   const wts=fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s));
+  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+kap.toFixed(1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':''); }
   const zf=v=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+v.toFixed(2)+'</td>';
   $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek üstten girer" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
