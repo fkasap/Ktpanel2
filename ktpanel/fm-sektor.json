@@ -1,5 +1,5 @@
 {
- "_not": "§455 faktör modeli sektör haritası (GICS adları). Kaynak sırası: elle > Koyfin fm.json (24 Ağu) > Yahoo assetProfile. Eksikler 'Bilinmiyor' → tüm evrene karşı normalize. Elle düzeltmek için bu dosyaya KOD: 'Sektör' ekle.",
+ "_not": "§455 faktör modeli sektör haritası (GICS adları). Kaynak sırası: elle > Koyfin fm.json > Yahoo assetProfile. Eksikler \"Bilinmiyor\" → tüm evrene karşı normalize (fm-isle.py §455).",
  "guncelleme": "2026-10-06",
  "sektor": {
   "ACSEL": "Materials",
