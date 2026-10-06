@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-10-06",
- "guncelleme": "2026-10-06 — otomatik (GitHub Actions · vercel-köprüsü (1848 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-10-06 — otomatik (GitHub Actions · vercel-köprüsü (2000 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -62,18 +62,18 @@
      "k": "NSA",
      "u": "Neo",
      "t": "S",
-     "yu": 2.673613,
+     "yu": 2.673788,
      "g": [
       0.0912,
-      2.9423,
-      10.1022,
-      33.6809,
-      46.5346,
+      2.949,
+      10.1094,
+      33.6896,
+      46.5442,
       null
      ],
-     "b": 489038278,
+     "b": 489070254,
      "ys": 256,
-     "a": -1476086
+     "a": -1476182
     },
     {
      "k": "DNP",
@@ -130,16 +130,16 @@
      "k": "HPH",
      "u": "Hedef",
      "t": "K",
-     "yu": 2.45664,
+     "yu": 2.457092,
      "g": [
       0.0308,
-      0,
-      0,
-      0,
-      0,
+      1.8035,
+      7.8533,
+      30.7602,
+      43.2072,
       null
      ],
-     "b": 4054908008,
+     "b": 4055654993,
      "ys": 6593,
      "a": 0
     },
