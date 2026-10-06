@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (2000 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903498714682380> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903498724050779> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -117,19 +117,17 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-10-09 12:30Z · CAD · Employment Change
 - 2026-10-09 12:30Z · CAD · Unemployment Rate
 
-- §383 arşive yazıldı: +15 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
-
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 131/238
-- bu turda: 16 tam · 2 eksik kalemli · 3 alınamadı
-- not: §455c arşivden 15 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %77.7 · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · TKNKA:liste boş · KPEKS:liste boş
+- bu turda: 0 tam · 2 eksik kalemli · 3 alınamadı
+- not: §455c arşivden 2 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %77.7 · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · TKNKA:liste boş · KPEKS:liste boş · ⏹ devre kesici: 3 ardışık hata, tur erken bitti
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Faktör skorları (§455) — ✓ sıralanan 112/238 · temel veri 113 · fiyat 230 · beta çıpası XKTUM arşivi
 - ⏳ fm.json korunuyor: terfi eşiği 143 (temel verisi biriktikçe §361 her koşu +6 şirket)
-- imza: VALUE 112 -0.017 0.669 -2.97 1.13 0 · GROWTH 112 0.007 0.727 -1.93 2.45 0 · QUALITY 112 -0.011 0.687 -1.82 1.76 0 · MOMENTUM 112 -0.105 0.634 -2.21 1.69 0 · LOW_RISK 112 -0.060 0.746 -1.93 1.57 0
+- imza: VALUE 112 -0.017 0.670 -2.97 1.13 0 · GROWTH 112 0.007 0.727 -1.93 2.45 0 · QUALITY 112 -0.011 0.687 -1.82 1.76 0 · MOMENTUM 112 -0.105 0.633 -2.21 1.68 0 · LOW_RISK 112 -0.060 0.745 -1.93 1.57 0
 
 ### KAP arşivi (§381) — ✓ +4 çeyrek · 0/238 şirket tam
-- GLRMK:7→7 · CIMSA:8→12
+- GLRMK:7→7 · CWENE:8→12
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -165,10 +163,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - §429n GÖRÜLMEYEN (7, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM · VHK=V PORTFÖY KATILIM HİSSE SENE
 - §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | ZPMDK=ZİRAAT PORTFÖY BIST KATILIM 100 ENDEKSİ MODEL PORTFÖY H | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
 
-- §429p kuyruk: liste 242 kayıt · daha önce işlenmiş 146 idx · iş 42
+- §429p kuyruk: liste 242 kayıt · daha önce işlenmiş 147 idx · iş 40
 
-### Fon portföy dağılımı (§429) — ✓ 33 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 175 dönem · KAP yolu: tarama(47 fon, 11017 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
-- bu turda hedef 36 (tur tavanı 80; kalan sonraki koşuda)
+### Fon portföy dağılımı (§429) — ✓ 32 rapor işlendi · evren 47 fon (oto +0) · depo 34 fon / 175 dönem · KAP yolu: tarama(47 fon, 11017 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+- bu turda hedef 35 (tur tavanı 80; kalan sonraki koşuda)
 - ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
   · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
   · VHS null: ek bulunamadı (HTTP 200)
@@ -177,9 +175,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (132 fiyat) · Model sicili (38 fiyat) · TR 5Y CDS (255.69 bp) · risk metrikleri (129) · fon akışı (2000) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (10 olay) · faktör evreni (131/238) · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (33 rapor)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (93 fiyat) · Model sicili (29 fiyat) · TR 5Y CDS (255.69 bp) · fon akışı (2000) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (10 olay) · faktör evreni (131/238) · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (32 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 74 sn
-- ⏱ KAP arşivi (§381) — 75 sn
-- toplam: 263 sn
+- ⏱ KAP arşivi (§381) — 68 sn
+- toplam: 204 sn
