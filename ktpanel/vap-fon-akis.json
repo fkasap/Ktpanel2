@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-05T22:01:48Z",
+ "guncelleme": "2026-10-06T06:55:30Z",
  "kaynak": "MKK VAP · mobil.vap.org.tr (MicroStrategy Library, anonim erişim)",
  "dosya_adi": "Fon Nakit Akış",
  "_yontem": "Hücreler gvs.items[0].items[].rv içinde satır sırasıyla düz dizi; ay etiketleri gts.col[0].es[].n. Hücre sayısı = ay × ölçü eşitliği DOĞRULANIR, tutmazsa yazılmaz. Anonim erişim: loginMode 1, kullanıcı \"public\". X-MSTR-ProjectID başlığı ve resultFlag=3 ŞART.",
@@ -13,7 +13,7 @@
   "Dönem Başı Fon Sayısı",
   "Dönem Sonu Fon Sayısı"
  ],
- "son_ay": "2026-08",
+ "son_ay": "2026-09",
  "satir_boyut": [
   "Ay",
   "Fon Türü"
@@ -38,6 +38,160 @@
   "SERBEST ŞEMSİYE FON"
  ],
  "tur_seri": [
+  {
+   "ay": "2026-09",
+   "tur": "BORÇLANMA ARAÇLARI ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 345401000000,
+   "Dönem Sonu Fon Adedi": 352131000000,
+   "Fon Adedi Değişim": 6729000000,
+   "Dönem Başı Fon Tutarı (TL)": 203910000000,
+   "Dönem Sonu Fon Tutarı (TL)": 215714000000,
+   "Dönem Başı Fon Sayısı": 84,
+   "Dönem Sonu Fon Sayısı": 84
+  },
+  {
+   "ay": "2026-09",
+   "tur": "DEĞİŞKEN ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 135330000000,
+   "Dönem Sonu Fon Adedi": 127019000000,
+   "Fon Adedi Değişim": -8311000000,
+   "Dönem Başı Fon Tutarı (TL)": 109569000000,
+   "Dönem Sonu Fon Tutarı (TL)": 95914000000,
+   "Dönem Başı Fon Sayısı": 173,
+   "Dönem Sonu Fon Sayısı": 176
+  },
+  {
+   "ay": "2026-09",
+   "tur": "FON SEPETİ ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 41292000000,
+   "Dönem Sonu Fon Adedi": 39591000000,
+   "Fon Adedi Değişim": -1701000000,
+   "Dönem Başı Fon Tutarı (TL)": 120096000000,
+   "Dönem Sonu Fon Tutarı (TL)": 110514000000,
+   "Dönem Başı Fon Sayısı": 90,
+   "Dönem Sonu Fon Sayısı": 91
+  },
+  {
+   "ay": "2026-09",
+   "tur": "GARANTİLİ ŞEMSİYE FON",
+   "Dönem Başı Fon Adedi": 0,
+   "Dönem Sonu Fon Adedi": 0,
+   "Fon Adedi Değişim": 0,
+   "Dönem Başı Fon Tutarı (TL)": 0,
+   "Dönem Sonu Fon Tutarı (TL)": 0,
+   "Dönem Başı Fon Sayısı": 0,
+   "Dönem Sonu Fon Sayısı": 0
+  },
+  {
+   "ay": "2026-09",
+   "tur": "GAYRİMENKUL YATIRIM FONU",
+   "Dönem Başı Fon Adedi": 1000626000000,
+   "Dönem Sonu Fon Adedi": 1001409000000,
+   "Fon Adedi Değişim": 783000000,
+   "Dönem Başı Fon Tutarı (TL)": 237180000000,
+   "Dönem Sonu Fon Tutarı (TL)": 238936000000,
+   "Dönem Başı Fon Sayısı": 261,
+   "Dönem Sonu Fon Sayısı": 260
+  },
+  {
+   "ay": "2026-09",
+   "tur": "GİRİŞİM SERMAYESİ ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 9688000000,
+   "Dönem Sonu Fon Adedi": 7558000000,
+   "Fon Adedi Değişim": -2130000000,
+   "Dönem Başı Fon Tutarı (TL)": 12219000000,
+   "Dönem Sonu Fon Tutarı (TL)": 9942000000,
+   "Dönem Başı Fon Sayısı": 34,
+   "Dönem Sonu Fon Sayısı": 35
+  },
+  {
+   "ay": "2026-09",
+   "tur": "GİRİŞİM SERMAYESİ YATIRIM FONU",
+   "Dönem Başı Fon Adedi": 129668000000,
+   "Dönem Sonu Fon Adedi": 134159000000,
+   "Fon Adedi Değişim": 4491000000,
+   "Dönem Başı Fon Tutarı (TL)": 500807000000,
+   "Dönem Sonu Fon Tutarı (TL)": 482163000000,
+   "Dönem Başı Fon Sayısı": 508,
+   "Dönem Sonu Fon Sayısı": 510
+  },
+  {
+   "ay": "2026-09",
+   "tur": "HİSSE SENEDİ ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 191385000000,
+   "Dönem Sonu Fon Adedi": 201151000000,
+   "Fon Adedi Değişim": 9766000000,
+   "Dönem Başı Fon Tutarı (TL)": 286577000000,
+   "Dönem Sonu Fon Tutarı (TL)": 156241000000,
+   "Dönem Başı Fon Sayısı": 190,
+   "Dönem Sonu Fon Sayısı": 192
+  },
+  {
+   "ay": "2026-09",
+   "tur": "KARMA ŞEMSİYE FON",
+   "Dönem Başı Fon Adedi": 748000000,
+   "Dönem Sonu Fon Adedi": 698000000,
+   "Fon Adedi Değişim": -50000000,
+   "Dönem Başı Fon Tutarı (TL)": 6410000000,
+   "Dönem Sonu Fon Tutarı (TL)": 6063000000,
+   "Dönem Başı Fon Sayısı": 9,
+   "Dönem Sonu Fon Sayısı": 9
+  },
+  {
+   "ay": "2026-09",
+   "tur": "KATILIM ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 303278000000,
+   "Dönem Sonu Fon Adedi": 249914000000,
+   "Fon Adedi Değişim": -53364000000,
+   "Dönem Başı Fon Tutarı (TL)": 445198000000,
+   "Dönem Sonu Fon Tutarı (TL)": 420995000000,
+   "Dönem Başı Fon Sayısı": 114,
+   "Dönem Sonu Fon Sayısı": 116
+  },
+  {
+   "ay": "2026-09",
+   "tur": "KIYMETLİ MADENLER ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 151237000000,
+   "Dönem Sonu Fon Adedi": 145318000000,
+   "Fon Adedi Değişim": -5920000000,
+   "Dönem Başı Fon Tutarı (TL)": 201807000000,
+   "Dönem Sonu Fon Tutarı (TL)": 186708000000,
+   "Dönem Başı Fon Sayısı": 26,
+   "Dönem Sonu Fon Sayısı": 27
+  },
+  {
+   "ay": "2026-09",
+   "tur": "KORUMALI ŞEMSİYE FON",
+   "Dönem Başı Fon Adedi": 1496000000,
+   "Dönem Sonu Fon Adedi": 1473000000,
+   "Fon Adedi Değişim": -23000000,
+   "Dönem Başı Fon Tutarı (TL)": 1589000000,
+   "Dönem Sonu Fon Tutarı (TL)": 1580000000,
+   "Dönem Başı Fon Sayısı": 6,
+   "Dönem Sonu Fon Sayısı": 6
+  },
+  {
+   "ay": "2026-09",
+   "tur": "PARA PİYASASI ŞEMSİYE FONU",
+   "Dönem Başı Fon Adedi": 3134792000000,
+   "Dönem Sonu Fon Adedi": 2592418000000,
+   "Fon Adedi Değişim": -542374000000,
+   "Dönem Başı Fon Tutarı (TL)": 2021184000000,
+   "Dönem Sonu Fon Tutarı (TL)": 1450265000000,
+   "Dönem Başı Fon Sayısı": 83,
+   "Dönem Sonu Fon Sayısı": 86
+  },
+  {
+   "ay": "2026-09",
+   "tur": "SERBEST ŞEMSİYE FON",
+   "Dönem Başı Fon Adedi": 2499486000000,
+   "Dönem Sonu Fon Adedi": 2387037000000,
+   "Fon Adedi Değişim": -112448000000,
+   "Dönem Başı Fon Tutarı (TL)": 6443856000000,
+   "Dönem Sonu Fon Tutarı (TL)": 5458373000000,
+   "Dönem Başı Fon Sayısı": 1275,
+   "Dönem Sonu Fon Sayısı": 1265
+  },
   {
    "ay": "2026-08",
    "tur": "BORÇLANMA ARAÇLARI ŞEMSİYE FONU",
@@ -983,160 +1137,6 @@
    "Dönem Sonu Fon Tutarı (TL)": 112565000000,
    "Dönem Başı Fon Sayısı": 156,
    "Dönem Sonu Fon Sayısı": 161
-  },
-  {
-   "ay": "2026-02",
-   "tur": "FON SEPETİ ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 46998000000,
-   "Dönem Sonu Fon Adedi": 52806000000,
-   "Fon Adedi Değişim": 5809000000,
-   "Dönem Başı Fon Tutarı (TL)": 160012000000,
-   "Dönem Sonu Fon Tutarı (TL)": 155783000000,
-   "Dönem Başı Fon Sayısı": 87,
-   "Dönem Sonu Fon Sayısı": 87
-  },
-  {
-   "ay": "2026-02",
-   "tur": "GARANTİLİ ŞEMSİYE FON",
-   "Dönem Başı Fon Adedi": 0,
-   "Dönem Sonu Fon Adedi": 0,
-   "Fon Adedi Değişim": 0,
-   "Dönem Başı Fon Tutarı (TL)": 0,
-   "Dönem Sonu Fon Tutarı (TL)": 0,
-   "Dönem Başı Fon Sayısı": 0,
-   "Dönem Sonu Fon Sayısı": 0
-  },
-  {
-   "ay": "2026-02",
-   "tur": "GAYRİMENKUL YATIRIM FONU",
-   "Dönem Başı Fon Adedi": 975334000000,
-   "Dönem Sonu Fon Adedi": 882258000000,
-   "Fon Adedi Değişim": -93076000000,
-   "Dönem Başı Fon Tutarı (TL)": 214833000000,
-   "Dönem Sonu Fon Tutarı (TL)": 214096000000,
-   "Dönem Başı Fon Sayısı": 233,
-   "Dönem Sonu Fon Sayısı": 236
-  },
-  {
-   "ay": "2026-02",
-   "tur": "GİRİŞİM SERMAYESİ ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 1305000000,
-   "Dönem Sonu Fon Adedi": 1450000000,
-   "Fon Adedi Değişim": 146000000,
-   "Dönem Başı Fon Tutarı (TL)": 2629000000,
-   "Dönem Sonu Fon Tutarı (TL)": 2752000000,
-   "Dönem Başı Fon Sayısı": 18,
-   "Dönem Sonu Fon Sayısı": 20
-  },
-  {
-   "ay": "2026-02",
-   "tur": "GİRİŞİM SERMAYESİ YATIRIM FONU",
-   "Dönem Başı Fon Adedi": 107484000000,
-   "Dönem Sonu Fon Adedi": 108364000000,
-   "Fon Adedi Değişim": 880000000,
-   "Dönem Başı Fon Tutarı (TL)": 422771000000,
-   "Dönem Sonu Fon Tutarı (TL)": 427395000000,
-   "Dönem Başı Fon Sayısı": 462,
-   "Dönem Sonu Fon Sayısı": 463
-  },
-  {
-   "ay": "2026-02",
-   "tur": "HİSSE SENEDİ ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 182863000000,
-   "Dönem Sonu Fon Adedi": 186973000000,
-   "Fon Adedi Değişim": 4111000000,
-   "Dönem Başı Fon Tutarı (TL)": 197202000000,
-   "Dönem Sonu Fon Tutarı (TL)": 200127000000,
-   "Dönem Başı Fon Sayısı": 176,
-   "Dönem Sonu Fon Sayısı": 177
-  },
-  {
-   "ay": "2026-02",
-   "tur": "KARMA ŞEMSİYE FON",
-   "Dönem Başı Fon Adedi": 848000000,
-   "Dönem Sonu Fon Adedi": 811000000,
-   "Fon Adedi Değişim": -37000000,
-   "Dönem Başı Fon Tutarı (TL)": 5949000000,
-   "Dönem Sonu Fon Tutarı (TL)": 5780000000,
-   "Dönem Başı Fon Sayısı": 8,
-   "Dönem Sonu Fon Sayısı": 8
-  },
-  {
-   "ay": "2026-02",
-   "tur": "KATILIM ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 260997000000,
-   "Dönem Sonu Fon Adedi": 258848000000,
-   "Fon Adedi Değişim": -2149000000,
-   "Dönem Başı Fon Tutarı (TL)": 360123000000,
-   "Dönem Sonu Fon Tutarı (TL)": 364944000000,
-   "Dönem Başı Fon Sayısı": 93,
-   "Dönem Sonu Fon Sayısı": 94
-  },
-  {
-   "ay": "2026-02",
-   "tur": "KIYMETLİ MADENLER ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 167660000000,
-   "Dönem Sonu Fon Adedi": 172543000000,
-   "Fon Adedi Değişim": 4883000000,
-   "Dönem Başı Fon Tutarı (TL)": 238777000000,
-   "Dönem Sonu Fon Tutarı (TL)": 250647000000,
-   "Dönem Başı Fon Sayısı": 24,
-   "Dönem Sonu Fon Sayısı": 25
-  },
-  {
-   "ay": "2026-02",
-   "tur": "KORUMALI ŞEMSİYE FON",
-   "Dönem Başı Fon Adedi": 3000000,
-   "Dönem Sonu Fon Adedi": 3000000,
-   "Fon Adedi Değişim": 0,
-   "Dönem Başı Fon Tutarı (TL)": 0,
-   "Dönem Sonu Fon Tutarı (TL)": 0,
-   "Dönem Başı Fon Sayısı": 4,
-   "Dönem Sonu Fon Sayısı": 4
-  },
-  {
-   "ay": "2026-02",
-   "tur": "PARA PİYASASI ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 2795579000000,
-   "Dönem Sonu Fon Adedi": 2899088000000,
-   "Fon Adedi Değişim": 103508000000,
-   "Dönem Başı Fon Tutarı (TL)": 1543330000000,
-   "Dönem Sonu Fon Tutarı (TL)": 1708895000000,
-   "Dönem Başı Fon Sayısı": 77,
-   "Dönem Sonu Fon Sayısı": 78
-  },
-  {
-   "ay": "2026-02",
-   "tur": "SERBEST ŞEMSİYE FON",
-   "Dönem Başı Fon Adedi": 1236215000000,
-   "Dönem Sonu Fon Adedi": 1160683000000,
-   "Fon Adedi Değişim": -75532000000,
-   "Dönem Başı Fon Tutarı (TL)": 5330614000000,
-   "Dönem Sonu Fon Tutarı (TL)": 5257618000000,
-   "Dönem Başı Fon Sayısı": 1287,
-   "Dönem Sonu Fon Sayısı": 1282
-  },
-  {
-   "ay": "2026-01",
-   "tur": "BORÇLANMA ARAÇLARI ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 397128000000,
-   "Dönem Sonu Fon Adedi": 428418000000,
-   "Fon Adedi Değişim": 31290000000,
-   "Dönem Başı Fon Tutarı (TL)": 175387000000,
-   "Dönem Sonu Fon Tutarı (TL)": 191147000000,
-   "Dönem Başı Fon Sayısı": 84,
-   "Dönem Sonu Fon Sayısı": 84
-  },
-  {
-   "ay": "2026-01",
-   "tur": "DEĞİŞKEN ŞEMSİYE FONU",
-   "Dönem Başı Fon Adedi": 180862000000,
-   "Dönem Sonu Fon Adedi": 208676000000,
-   "Fon Adedi Değişim": 27815000000,
-   "Dönem Başı Fon Tutarı (TL)": 79290000000,
-   "Dönem Sonu Fon Tutarı (TL)": 101019000000,
-   "Dönem Başı Fon Sayısı": 153,
-   "Dönem Sonu Fon Sayısı": 156
   }
  ],
  "tur_kismi": true,
