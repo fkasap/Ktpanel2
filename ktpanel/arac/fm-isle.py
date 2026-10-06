@@ -161,6 +161,7 @@ print('\nYAPISAL IMZA (yontem dogru cozuldu mu?)')
 print(f'{"faktor":11}{"n":>5}{"ort":>9}{"std":>8}{"min":>8}{"max":>8}{"|z|>3":>7}')
 for i, fa in enumerate(FAK):
     v = [x['f'][i] for x in data if x['f'][i] is not None]
+    if not v: print(f'{fa:11}{0:>5}   (veri yok)'); continue      # §455d: kaynak dusmusse imza cokmesin
     print(f'{fa:11}{len(v):>5}{st.mean(v):>9.3f}{st.pstdev(v):>8.3f}{min(v):>8.2f}{max(v):>8.2f}'
           f'{sum(1 for q in v if abs(q) > 3):>7}')
 sekG = defaultdict(lambda: defaultdict(list))
@@ -171,6 +172,7 @@ buyuk = [k for k in sekG if len(sekG[k][2]) >= 10]
 print('\nsektorler arasi YAYILIM (VAL/GRO/QUA dar, MOM/LOW genis olmali):')
 for i, fa in enumerate(FAK):
     o = [st.mean(sekG[s][i]) for s in buyuk if sekG[s][i]]
+    if not o: print(f'  {fa:11} —'); continue
     print(f'  {fa:11} {max(o)-min(o):.3f}   {"sektör içi" if fa in SEKTOR_ICI else "tüm evren"}')
 
 if DOGRULA:
