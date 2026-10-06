@@ -489,8 +489,68 @@
      "kira": null
     }
    ]
+  },
+  "6-ekim-2026-tarihinde-gerceklestirilen-ihalelerin-sonuclarina-iliskin-basin-duyu": {
+   "tarih": "2026-10-06",
+   "baslik": "6 Ekim 2026 Tarihinde Gerçekleştirilen İhalelerin Sonuçlarına İlişkin Basın Duyurusu",
+   "ek": "https://ms.hmb.gov.tr/uploads/2026/10/KAF_20261006_ihale_sonucu_4TLREF_8s-321fbdf82d0a926a.pdf",
+   "dosyaAdi": "KAF_20261006_ihale_sonucu_4TLREF_8s-321fbdf82d0a926a.pdf",
+   "ihaleler": [
+    {
+     "ihaleNo": "2898",
+     "isin": "TRT110930T36",
+     "senet": "TLREF'e Endeksli Devlet Tahvili",
+     "donemsel": {
+      "teklif": 18.88,
+      "gerceklesme": 18.82
+     },
+     "basit": {
+      "teklif": 37.77,
+      "gerceklesme": 37.64
+     },
+     "bilesik": {
+      "teklif": 41.33,
+      "gerceklesme": 41.18
+     },
+     "kira": null
+    },
+    {
+     "ihaleNo": "2899",
+     "isin": "TRT270934T18",
+     "senet": "Sabit Kuponlu Devlet Tahvili",
+     "donemsel": {
+      "teklif": 16.81,
+      "gerceklesme": 16.79
+     },
+     "basit": {
+      "teklif": 33.63,
+      "gerceklesme": 33.59
+     },
+     "bilesik": {
+      "teklif": 36.45,
+      "gerceklesme": 36.4
+     },
+     "kira": null
+    }
+   ]
+  },
+  "6-ekim-2026-tarihinde-kurumsal-yatirimcilara-gerceklestirilen-abd-dolari-cinsi-s": {
+   "tarih": "2026-10-06",
+   "baslik": "6 Ekim 2026 Tarihinde Kurumsal Yatırımcılara Gerçekleştirilen ABD Doları Cinsi Sabit Kuponlu Devlet İç Borçlanma Senedi (DİBS) İhracına İliş",
+   "ek": null,
+   "ihaleler": [
+    {
+     "tip": "dogrudan_satis",
+     "senet": "ABD doları cinsi Devlet tahvili",
+     "isin": "TRT061027F15",
+     "tutar": 1575845000,
+     "doviz": "USD",
+     "valor": "7 Ekim 2026",
+     "itfa": "6 Ekim 2027"
+    }
+   ]
   }
  },
- "guncelleme": "2026-10-06 13:28 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
- "sayi": 16
+ "guncelleme": "2026-10-06 17:02 UTC — otomatik (§314 HMB WP-API + PDF · mühürlü)",
+ "sayi": 18
 }
