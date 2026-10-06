@@ -373,6 +373,9 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
      birlikte güncellenmeli" der. Kalan hisseler NORMAL güncellenir.
      Kapsam ve tarih birliği düşürmeye devam eder — onlar kaynak arızasıdır,
      kurumsal işlem değil. */
+  /* §455d: Yahoo HİÇ dönmezse f[kapsanan[0]] tanımsız → TÜM koşu çöküyordu (sandbox testinde yakalandı);
+     sonraki katmanlar (faktör evreni, fon portföy…) da çalışmıyordu. Boş kapsam = katman düşer, koşu sürer. */
+  if (!kapsanan.length) { raporlar.push('### ' + ad + ' — ✗ fiyat kaynağı hiç yanıt vermedi (0/' + kodlar.length + ') · katman yazılmadı'); denetimDustu = true; return null; }
   const kontrol = [
     KURALLAR.kapsam(kapsanan.length, kodlar.length, 0.95),
     KURALLAR.tarihBirligi(kapsanan.map(k => f[k]), 'tarih'),
@@ -3455,11 +3458,13 @@ async function fmHesapla() {
   const oto = await oku('fm-oto.json'); const ranked = (oto.meta || {}).ranked || 0; const esik = Math.ceil(uyeler.length * 0.6);
   oto.meta._kaynak = '§455 kendi verimiz: KAP TTM (faktor-evren.json) + Yahoo fiyat/hacim + XKTUM arşivi · evren resmî XKTUM ' + uyeler.length;
   let terfi = false;
-  if (ranked >= esik) { await yaz('fm.json', oto); terfi = true; degisenler.push('fm.json (§455 kendi hesap)'); }
+  /* §455d: fiyat kaynağı düşmüşse (momentum/risk boş) terfi YOK — eksik faktörle sıralama yanıltır */
+  const piyasaYeter = piyasa >= Math.ceil(uyeler.length * 0.8);
+  if (ranked >= esik && piyasaYeter) { await yaz('fm.json', oto); terfi = true; degisenler.push('fm.json (§455 kendi hesap)'); }
   await yaz('fm-oto.json', oto); degisenler.push('fm-oto');
   const imza = (cikti.match(/YAPISAL IMZA[\s\S]*?(?=\n\n)/) || [''])[0].split('\n').slice(2, 7).map(s => s.trim().replace(/\s+/g, ' ')).join(' · ');
   raporlar.push('### Faktör skorları (§455) — ✓ sıralanan ' + ranked + '/' + uyeler.length + ' · temel veri ' + temel + ' · fiyat ' + piyasa + ' · beta çıpası ' + (eSeri ? 'XKTUM arşivi' : 'YOK') + (yahooSek ? ' · Yahoo sektör +' + yahooSek : '') +
-    (terfi ? '\n- ✓ fm.json TERFİ ETTİ (eşik ' + esik + ') — panel artık kendi hesabımızla çalışıyor' : '\n- ⏳ fm.json korunuyor: terfi eşiği ' + esik + ' (temel verisi biriktikçe §361 her koşu +6 şirket)') +
+    (terfi ? '\n- ✓ fm.json TERFİ ETTİ (eşik ' + esik + ') — panel artık kendi hesabımızla çalışıyor' : ('\n- ⏳ fm.json korunuyor: ' + (!piyasaYeter ? 'fiyat kapsamı ' + piyasa + '/' + uyeler.length + ' (%80 şart)' : 'terfi eşiği ' + esik + ' (temel verisi biriktikçe §361 her koşu +6 şirket)'))) +
     '\n- imza: ' + imza.slice(0, 300));
 }
 
@@ -3522,11 +3527,45 @@ async function faktorEvren() {
     if (!r.ts) return 0;
     return new Date(r.ts).getTime();
   };
+  /* §455c (6 Eki canlı ölçüm): hiç çekilmemişler ALFABETİK sırayla geliyordu — en büyük 40 hissenin 26'sı
+     (ASELS, TUPRS, EREGL…) hâlâ yoktu, temel kapsam XKTUM ağırlığının yalnız %28'i. Eşit yaşta BÜYÜK önce. */
+  let XW = {}; try { XW = (await oku('xktum.json')).uyeler || {}; } catch (e) {}
   const sira = uyeler.slice().sort((a, b) => {
     const ta = tetikKodlar.includes(a) ? 0 : 1, tb = tetikKodlar.includes(b) ? 0 : 1;
     if (ta !== tb) return ta - tb;
-    return yas(a) - yas(b);
+    return (yas(a) - yas(b)) || ((XW[b] || 0) - (XW[a] || 0));
   }).slice(0, PARTI_BOY);
+  /* §455c ARŞİVDEN DOLDUR (sıfır KAP isteği): §383 "aynı veriyi iki modül çekiyorsa biri çeksin, diğeri
+     okusun" kuralının TERS yönü — arşivde (kap-arsiv/<KOD>.json) TTM'e yetecek dönem (son yıllık, ya da
+     ara dönem + yıllık) varsa ve faktör kaydı yok/eksik/eski yöntem/daha eski dönem ise, kayıt ARŞİVDEN
+     kurulur. Sınırsız (ağ yok). Ölçüm: 15 şirket anında, içinde ASELS/TUPRS/EREGL/KRDMD/EKGYO/PETKM/CIMSA. */
+  const arsivKalemleri = async (kod) => {
+    try {
+      const A = JSON.parse(await fs.readFile(path.join(KOK, 'kap-arsiv', kod + '.json'), 'utf8'));
+      const ks = Object.keys(A.donemler || {}).filter(x => /^\d{4}\/\d$/.test(x)).sort((x, y) => { const [a1, a2] = x.split('/').map(Number), [b1, b2] = y.split('/').map(Number); return (b1 - a1) || (b2 - a2); }).slice(0, 5);
+      if (!ks.length) return null;
+      const kl = ks.map(key => { const D0 = A.donemler[key]; const carpan = (D0.birim && D0.birim.carpan) || 1; const K = {};
+        (D0.tablolar || []).forEach(tb => (tb.satirlar || []).forEach(sr => { if (!sr.xbrl || !sr.degerler || !sr.degerler.length || K[sr.xbrl]) return;
+          K[sr.xbrl] = { k: sr.degerler[0] * carpan, onceki: Number.isFinite(sr.degerler[1]) ? sr.degerler[1] * carpan : null, c: (sr.degerler.length >= 4 && Number.isFinite(sr.degerler[2])) ? sr.degerler[2] * carpan : null }; }));
+        const [yy, dd] = key.split('/').map(Number); return Object.keys(K).length ? { yil: yy, donem: dd, K } : null; });
+      const son0 = kl.find(x => x); if (!son0) return null;
+      if (son0.donem !== 4 && !kl.some(x => x && x.donem === 4)) return null;   /* TTM için yıllık bacak şart */
+      return kl;
+    } catch (e) { return null; }
+  };
+  const arsivKodlar = [];
+  for (const k of uyeler) {
+    const r = D.sirketler[k];
+    if (r && !r.eksik && r.y === YONTEM) {
+      /* kayıt sağlam: arşivde DAHA YENİ dönem varsa yine arşivden tazele */
+      try { const A = JSON.parse(await fs.readFile(path.join(KOK, 'kap-arsiv', k + '.json'), 'utf8')); const enYeni = Object.keys(A.donemler || {}).sort((x, y) => { const [a1, a2] = x.split('/').map(Number), [b1, b2] = y.split('/').map(Number); return (b1 - a1) || (b2 - a2); })[0];
+        const [e1, e2] = String(enYeni || '0/0').split('/').map(Number), [r1, r2] = String(r.donem || '0/0').split('/').map(Number); if (e1 * 10 + e2 > r1 * 10 + r2) arsivKodlar.push(k); } catch (e) {}
+      continue;
+    }
+    if (await varMi(path.join('kap-arsiv', k + '.json'))) arsivKodlar.push(k);
+  }
+  const arsivSet = new Set(arsivKodlar);
+  let arsivden = 0;
 
   const AL = {
     ciro: 'ifrs-full_Revenue', brut: 'ifrs-full_GrossProfit',
@@ -3560,12 +3599,16 @@ async function faktorEvren() {
   const notlar = [];
 
   let ardisikHata = 0;
-  for (const kod of sira) {
+  for (const kod of [...arsivKodlar, ...sira.filter(k => !arsivSet.has(k))]) {
     if (ardisikHata >= ARDISIK_TAVAN) {
       notlar.push('⏹ devre kesici: ' + ARDISIK_TAVAN + ' ardışık hata, tur erken bitti');
       break;
     }
     try {
+      let kalemler = arsivSet.has(kod) ? await arsivKalemleri(kod) : null;
+      const arsivKaynak = !!kalemler;
+      if (arsivSet.has(kod) && !kalemler) continue;     /* arşiv yetersiz: ağ partisine bırak (bu tur değil) */
+      if (!kalemler) {
       const jd = await kapDonemler(kod, 2);            /* §382: ortak koşu-içi önbellek */
       const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, 5) : [];   /* §361d: son yıllık (4Ç) mutlaka kapsansın */
       if (donemler.length < 2) {
@@ -3576,7 +3619,7 @@ async function faktorEvren() {
         await uyku(3000); continue;
       }
 
-      const kalemler = [];
+      kalemler = [];
       for (const dn of donemler) {
         /* §361b ALAN ADI HATASI (canlı ölçüm): mod=donemler çıktısı
            {yil, donem, id, kod} döndürüyor — `disclosureIndex` DEĞİL. Kodum o
@@ -3625,6 +3668,7 @@ async function faktorEvren() {
         await uyku(1200);
       }
 
+      }   /* §455c: ağdan çekim bloğu sonu */
       const son = kalemler.find(x => x);
       if (!son) { dusen++; notlar.push(kod + ':tablo yok'); await uyku(700); continue; }
       /* §361d TTM YÖNTEMİ DEĞİŞTİ — ÇEYREK TOPLAMI YERİNE KÜMÜLATİF FARKI
@@ -3699,8 +3743,9 @@ async function faktorEvren() {
       kayit.eksik = bosSay > 0;
       if (kayit.eksik) { eksikli++; notlar.push(kod + ':' + bosSay + ' ana kalem boş'); } else basarili++;
       ardisikHata = 0;                              /* §363b: başarı zinciri sıfırlar */
+      if (arsivKaynak) { kayit.kaynak = 'arşiv'; arsivden++; } else kayit.kaynak = 'KAP';
       D.sirketler[kod] = kayit;
-      await uyku(3000);
+      if (!arsivKaynak) await uyku(3000);
     } catch (e) {
       dusen++; ardisikHata++; notlar.push(kod + ':' + String(e && e.message || e).slice(0, 24));
       await uyku(3000);
@@ -3716,6 +3761,7 @@ async function faktorEvren() {
   degisenler.push('faktör evreni (' + D.kapsam + '/' + uyeler.length + ')');
   const eskiYontem = Object.values(D.sirketler).filter(x => x.y !== YONTEM).length;
   if (arsivYazilan) raporlar.push('- §383 arşive yazıldı: +' + arsivYazilan + ' çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)');
+  { const tamW = uyeler.reduce((s, k) => s + ((D.sirketler[k] && !D.sirketler[k].eksik) ? (XW[k] || 0) : 0), 0); notlar.unshift('§455c arşivden ' + arsivden + ' şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %' + tamW.toFixed(1)); }
   raporlar.push('### Faktör evreni (§361) — ✓ parti ' + sira.length + ' · kapsam ' + D.kapsam + '/' + uyeler.length +
     (eskiYontem ? (' · ⚠ ' + eskiYontem + ' kayıt eski yöntemle (sıraya öne alındı)') : '') +
     '\n- bu turda: ' + basarili + ' tam · ' + eksikli + ' eksik kalemli · ' + dusen + ' alınamadı' +
