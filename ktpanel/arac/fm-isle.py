@@ -109,12 +109,17 @@ for ad, fa, hib in METRIK:
     if fa in SEKTOR_ICI:
         gruplar = defaultdict(list)
         for h in hisse:
+            if h['s'] == 'Bilinmiyor': continue          # §455: sektoru bilinmeyen asagida TUM EVRENE karsi
             g = h['s'] if sekUye[h['s']] >= MIN_SEKTOR else '__KUCUK__'
             gruplar[g].append(h)
+        bilinmeyen = [h for h in hisse if h['s'] == 'Bilinmiyor']
+        if bilinmeyen:
+            gruplar['__BILINMEYEN__'] = bilinmeyen       # z-skoru tum evren havuzuyla hesaplanir (asagida)
     else:
         gruplar = {'__TUM__': hisse}
     for g, uyeler in gruplar.items():
-        havuz = [h['ham'][ad] for h in uyeler if h['ham'][ad] is not None]
+        havuzK = hisse if g == '__BILINMEYEN__' else uyeler
+        havuz = [h['ham'][ad] for h in havuzK if h['ham'][ad] is not None]
         for h in uyeler:
             v = h['ham'][ad]
             if v is None: continue
