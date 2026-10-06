@@ -3330,6 +3330,139 @@ async function kapArsiv() {
     ' çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).');
 }
 
+/* ── §455 FAKTÖR SKORLARI — KOYFIN'SİZ fm.json (6 Eki 2026) ─────────────────
+   Kullanıcı: "bilançoları zaten Actions'ta çekiyoruz." Doğru: §361 faktor-evren.json
+   KAP'tan TTM temelleri biriktiriyor; fiyat/hacim Yahoo'dan, beta çıpası XKTUM arşivi.
+   Bu katman ikisini birleştirip Koyfin'in SÜTUN ADLARIYLA fm-girdi.csv yazar ve
+   doğrulanmış fm-isle.py'yi çağırır — YÖNTEM DEĞİŞMEZ, yalnız veri kaynağı değişir.
+   Evren = resmî XKTUM (endeks-uyeler.json); revizyonlar kendiliğinden yansır.
+   TERFİ: çıktı fm-oto.json; sıralanan ≥ evrenin %60'ı olunca fm.json'un yerine geçer
+   (o güne dek panel eski dosyayla çalışır, rapor ilerlemeyi söyler).
+   Metrik eşlemesi (TTM, §361 alanları): P/E=PD/netKar · EV=PD+netBorç · EV/EBITDA,
+   EV/Sales · P/FCF=PD/SNA · P/OCF=PD/işletmeNA · NetBorç/FAVÖK · Borç/(FAVÖK+capex)
+   [capex negatif] · EV/(FVÖK+capex) · büyüme=kümülatif y/y · capex/ciro · NOPAT=FVÖK×
+   (1−t), t=−vergi/vergiÖncesi [0..%50, yoksa %25] · ROE/ROA/ROIC · marjlar · Altman Z
+   (1,2 İS/A + 1,4 GYK/A + 3,3 FVÖK/A + 0,6 PD/Y + 1,0 ciro/A). Momentum: RSI10 (Wilder),
+   6A getiri, göreli hacim (son gün / 63 gün ort.), SMA10/50 ve EMA20 sapması.
+   Risk: yıllık vol, beta (XKTUM, ±%20 kurumsal işlem ve >5 gün boşluk süzgeci).
+   Negatif paydalı çarpanlar BOŞ bırakılır (Koyfin'in NM'i). 3Y capex büyümesi yok.
+   PD = pay adedi (sermaye, nominal 1₺ varsayımı — §361) × son ham kapanış. */
+const FM_KOLON = ['P/E (LTM)','EV/EBITDA (LTM)','EV/Sales (LTM)','P/FCF (LTM)','P/OCF (LTM)','Net Debt / EBITDA (LTM)','Total Debt / (EBITDA - Capex) (LTM)','EV/(EBIT-Capex)','Total Revenues/CAGR (1Y TTM)','Capex as % of Revenues (LTM)','CAPEX/CAGR (3Y TTM)','Nopat margin','Return On Equity % (LTM)','Return on Assets (ROA) % (LTM)','ROIC (LTM)','EBIT Margin % (LTM)','EBITDA Margin % (LTM)','Gross Profit Margin % (LTM)','FCF Margin % (LTM)','Altman Z-Score (LTM)','NOPAT / ASSETS','RSI 10D','Price Chg. % (6M)','Rel. Volume','SMA % (10D)','SMA % (50D)','EMA % (20D)','Volatility (1Y)','Beta (1Y)'];
+const FM_YAHOO_SEKTOR = { 'Basic Materials': 'Materials', 'Consumer Cyclical': 'Consumer Discretionary', 'Consumer Defensive': 'Consumer Staples', 'Financial Services': 'Financials', 'Healthcare': 'Health Care', 'Technology': 'Information Technology' };
+function fmSatir(F, px, eSeri) {
+  const ok = v => typeof v === 'number' && isFinite(v);
+  const bol = (a, b, pozitifPayda = true) => (ok(a) && ok(b) && (pozitifPayda ? b > 0 : b !== 0)) ? a / b : null;
+  const M = {};
+  /* ── piyasa verisi */
+  if (px && px.c && px.c.length >= 60) {
+    const c = px.c, n = c.length, v = px.v || [];
+    const ort = (a) => a.reduce((s, x) => s + x, 0) / a.length;
+    let ag = 0, al = 0; const P = 10, bas = Math.max(1, n - 120);
+    for (let i = bas; i < bas + P && i < n; i++) { const d = c[i] - c[i - 1]; if (d > 0) ag += d; else al -= d; }
+    ag /= P; al /= P;
+    for (let i = bas + P; i < n; i++) { const d = c[i] - c[i - 1]; ag = (ag * (P - 1) + Math.max(d, 0)) / P; al = (al * (P - 1) + Math.max(-d, 0)) / P; }
+    M['RSI 10D'] = al === 0 ? 100 : 100 - 100 / (1 + ag / al);
+    if (n > 126) M['Price Chg. % (6M)'] = (c[n - 1] / c[n - 127] - 1) * 100;
+    const vs = v.slice(Math.max(0, n - 64), n - 1).filter(x => x > 0);
+    if (vs.length >= 20 && v[n - 1] > 0) M['Rel. Volume'] = v[n - 1] / ort(vs);
+    M['SMA % (10D)'] = (c[n - 1] / ort(c.slice(n - 10)) - 1) * 100;
+    M['SMA % (50D)'] = (c[n - 1] / ort(c.slice(n - 50)) - 1) * 100;
+    let e = c[Math.max(0, n - 100)]; const k = 2 / 21; for (let i = Math.max(1, n - 99); i < n; i++) e = c[i] * k + e * (1 - k);
+    M['EMA % (20D)'] = (c[n - 1] / e - 1) * 100;
+    const getiri = []; const tar = px.t;
+    for (let i = 1; i < n; i++) { const gun = (Date.parse(tar[i]) - Date.parse(tar[i - 1])) / 864e5; const r = c[i] / c[i - 1] - 1; if (gun <= 5 && Math.abs(r) <= 0.20) getiri.push({ t: tar[i], r }); }
+    if (getiri.length >= 60) {
+      const m = ort(getiri.map(x => x.r)); const sd = Math.sqrt(getiri.reduce((s, x) => s + (x.r - m) ** 2, 0) / getiri.length);
+      M['Volatility (1Y)'] = sd * Math.sqrt(252) * 100;
+      if (eSeri) {
+        const E = []; const eT = [...eSeri.keys()].sort(); const eIdx = new Map(eT.map((d, i) => [d, i]));
+        getiri.forEach(x => { const i = eIdx.get(x.t); if (i > 0) { const g = (Date.parse(eT[i]) - Date.parse(eT[i - 1])) / 864e5; const re = eSeri.get(eT[i]) / eSeri.get(eT[i - 1]) - 1; if (g <= 5 && Math.abs(re) <= 0.20) E.push([x.r, re]); } });
+        if (E.length >= 60) { const mx = ort(E.map(p => p[0])), my = ort(E.map(p => p[1])); const cov = E.reduce((s, p) => s + (p[0] - mx) * (p[1] - my), 0), vr = E.reduce((s, p) => s + (p[1] - my) ** 2, 0); if (vr > 0) M['Beta (1Y)'] = cov / vr; }
+      }
+    }
+  }
+  /* ── temeller (§361 TTM) */
+  if (F && !F.eksik) {
+    const pd = (ok(F.adet) && px && ok(px.sonHam)) ? F.adet * px.sonHam : null;
+    const ev = (ok(pd) && ok(F.netBorc)) ? pd + F.netBorc : null;
+    M['P/E (LTM)'] = bol(pd, F.netKar); M['EV/EBITDA (LTM)'] = bol(ev, F.favok); M['EV/Sales (LTM)'] = bol(ev, F.ciro);
+    M['P/FCF (LTM)'] = bol(pd, F.sna); M['P/OCF (LTM)'] = bol(pd, F.isletmeNA);
+    M['Net Debt / EBITDA (LTM)'] = bol(F.netBorc, F.favok);
+    M['Total Debt / (EBITDA - Capex) (LTM)'] = (ok(F.favok) && ok(F.capex)) ? bol(F.finBorc, F.favok + F.capex) : null;
+    M['EV/(EBIT-Capex)'] = (ok(F.faal) && ok(F.capex)) ? bol(ev, F.faal + F.capex) : null;
+    M['Total Revenues/CAGR (1Y TTM)'] = F.buyume && ok(F.buyume.ciro) ? F.buyume.ciro : null;
+    M['Capex as % of Revenues (LTM)'] = (ok(F.capex) && ok(F.ciro) && F.ciro > 0) ? -F.capex / F.ciro * 100 : null;
+    let t = 0.25; if (ok(F.vergi) && ok(F.vergiOncesi) && F.vergiOncesi > 0) t = Math.min(0.5, Math.max(0, -F.vergi / F.vergiOncesi));
+    const nopat = ok(F.faal) ? F.faal * (1 - t) : null;
+    const yuz = (a, b) => { const x = bol(a, b); return x == null ? null : x * 100; };
+    M['Nopat margin'] = yuz(nopat, F.ciro);
+    M['Return On Equity % (LTM)'] = yuz(F.netKar, F.ozk); M['Return on Assets (ROA) % (LTM)'] = yuz(F.netKar, F.aktif);
+    M['ROIC (LTM)'] = (ok(F.ozk) && ok(F.netBorc)) ? yuz(nopat, F.ozk + F.netBorc) : null;
+    M['EBIT Margin % (LTM)'] = yuz(F.faal, F.ciro); M['EBITDA Margin % (LTM)'] = yuz(F.favok, F.ciro);
+    M['Gross Profit Margin % (LTM)'] = yuz(F.brut, F.ciro); M['FCF Margin % (LTM)'] = yuz(F.sna, F.ciro);
+    if ([F.donen, F.kvY, F.gecmisKar, F.faal, F.aktif, F.ozk, F.ciro, pd].every(ok) && F.aktif > 0 && F.aktif - F.ozk > 0)
+      M['Altman Z-Score (LTM)'] = 1.2 * (F.donen - F.kvY) / F.aktif + 1.4 * F.gecmisKar / F.aktif + 3.3 * F.faal / F.aktif + 0.6 * pd / (F.aktif - F.ozk) + 1.0 * F.ciro / F.aktif;
+    M['NOPAT / ASSETS'] = yuz(nopat, F.aktif);
+  }
+  return M;
+}
+async function fmHesapla() {
+  const uyku = (ms) => new Promise(r => setTimeout(r, ms));
+  let uyeler = []; try { uyeler = ((await oku('endeks-uyeler.json')).uyeler || {}).XKTUM || []; } catch (e) {}
+  if (!uyeler.length) { raporlar.push('### Faktör skorları (§455) — ⏭ XKTUM üye listesi yok'); return; }
+  let FE = {}; try { FE = (await oku('faktor-evren.json')).sirketler || {}; } catch (e) {}
+  /* sektör: kalıcı harita (fm-sektor.json) ← mevcut fm.json (Koyfin GICS) ← Yahoo assetProfile (yalnız eksikler) */
+  let SEK = {}; try { SEK = (await oku('fm-sektor.json')).sektor || {}; } catch (e) {}
+  try { (await oku('fm.json')).data.forEach(r => { if (r.s && r.s !== 'Bilinmiyor' && !SEK[r.t]) SEK[r.t] = r.s; }); } catch (e) {}
+  let yahooSek = 0;
+  for (const k of uyeler.filter(k => !SEK[k]).slice(0, 40)) {
+    try { const r = await fetch('https://query2.finance.yahoo.com/v10/finance/quoteSummary/' + k + '.IS?modules=assetProfile', { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(10000) });
+      if (r.ok) { const s = (await r.json())?.quoteSummary?.result?.[0]?.assetProfile?.sector; if (s) { SEK[k] = FM_YAHOO_SEKTOR[s] || s; yahooSek++; } } } catch (e) {}
+    await uyku(200);
+  }
+  /* fiyat + hacim (1 yıl, günlük) */
+  const PX = {};
+  const tek = async kod => { try {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(kod + '.IS') + '?interval=1d&range=1y', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) return; const d = (await r.json())?.chart?.result?.[0]; if (!d) return;
+    const adj = d.indicators?.adjclose?.[0]?.adjclose, ham = d.indicators?.quote?.[0]?.close, vol = d.indicators?.quote?.[0]?.volume, ts = d.timestamp || [];
+    const cc = (Array.isArray(adj) && adj.some(x => typeof x === 'number')) ? adj : (ham || []);
+    const o = { t: [], c: [], v: [], sonHam: null };
+    for (let i = 0; i < ts.length; i++) if (typeof cc[i] === 'number' && cc[i] > 0) { o.t.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); o.c.push(cc[i]); o.v.push(typeof (vol || [])[i] === 'number' ? vol[i] : 0); }
+    for (let i = (ham || []).length - 1; i >= 0; i--) if (typeof ham[i] === 'number' && ham[i] > 0) { o.sonHam = ham[i]; break; }
+    if (o.c.length >= 60) PX[kod] = o;
+  } catch (e) {} };
+  { let i = 0; const isci = async () => { while (i < uyeler.length) { const k = uyeler[i++]; await tek(k); } }; await Promise.all(Array.from({ length: 8 }, isci)); }
+  /* beta çıpası: XKTUM resmî arşiv (riskTazele ile aynı kural: son 120 günde ≥60 nokta) */
+  let eSeri = null; try { const ar = await oku('endeks-arsiv.json'); const m = new Map(); Object.keys(ar.gunler || {}).sort().forEach(g => { const v = ar.gunler[g] && ar.gunler[g].XKTUM; if (v > 0) m.set(g, v); });
+    const sinir = new Date(Date.now() - 120 * 864e5).toISOString().slice(0, 10); if ([...m.keys()].filter(g => g >= sinir).length >= 60) eSeri = m; } catch (e) {}
+  /* CSV (Koyfin sütun adlarıyla) */
+  const esc = s => /[",]/.test(String(s)) ? '"' + String(s).replace(/"/g, '""') + '"' : String(s);
+  const satirlar = [['Ticker', 'Sector', ...FM_KOLON].map(esc).join(',')];
+  let temel = 0, piyasa = 0;
+  for (const kod of uyeler) {
+    const F = FE[kod], px = PX[kod]; const M = fmSatir(F, px, eSeri);
+    if (F && !F.eksik) temel++; if (px) piyasa++;
+    satirlar.push([kod, SEK[kod] || '', ...FM_KOLON.map(k => (typeof M[k] === 'number' && isFinite(M[k])) ? +M[k].toFixed(4) : '')].map(esc).join(','));
+  }
+  await fs.writeFile(path.join(KOK, 'fm-girdi.csv'), satirlar.join('\n') + '\n', 'utf8');
+  await yaz('fm-sektor.json', { _not: '§455 faktör modeli sektör haritası (GICS adları). Kaynak sırası: elle > Koyfin fm.json > Yahoo assetProfile. Eksikler "Bilinmiyor" → tüm evrene karşı normalize (fm-isle.py §455).', guncelleme: bugun, sektor: SEK });
+  /* fm-isle.py (doğrulanmış yöntem) */
+  const cp = await import('node:child_process');
+  let cikti = '';
+  try { cikti = cp.execFileSync('python3', [path.join(KOK, 'arac', 'fm-isle.py'), path.join(KOK, 'fm-girdi.csv'), path.join(KOK, 'fm-oto.json')], { encoding: 'utf8', timeout: 120000 }); }
+  catch (e) { raporlar.push('### Faktör skorları (§455) — ✗ fm-isle.py: ' + String(e.stderr || e.message || e).slice(0, 160)); return; }
+  const oto = await oku('fm-oto.json'); const ranked = (oto.meta || {}).ranked || 0; const esik = Math.ceil(uyeler.length * 0.6);
+  oto.meta._kaynak = '§455 kendi verimiz: KAP TTM (faktor-evren.json) + Yahoo fiyat/hacim + XKTUM arşivi · evren resmî XKTUM ' + uyeler.length;
+  let terfi = false;
+  if (ranked >= esik) { await yaz('fm.json', oto); terfi = true; degisenler.push('fm.json (§455 kendi hesap)'); }
+  await yaz('fm-oto.json', oto); degisenler.push('fm-oto');
+  const imza = (cikti.match(/YAPISAL IMZA[\s\S]*?(?=\n\n)/) || [''])[0].split('\n').slice(2, 7).map(s => s.trim().replace(/\s+/g, ' ')).join(' · ');
+  raporlar.push('### Faktör skorları (§455) — ✓ sıralanan ' + ranked + '/' + uyeler.length + ' · temel veri ' + temel + ' · fiyat ' + piyasa + ' · beta çıpası ' + (eSeri ? 'XKTUM arşivi' : 'YOK') + (yahooSek ? ' · Yahoo sektör +' + yahooSek : '') +
+    (terfi ? '\n- ✓ fm.json TERFİ ETTİ (eşik ' + esik + ') — panel artık kendi hesabımızla çalışıyor' : '\n- ⏳ fm.json korunuyor: terfi eşiği ' + esik + ' (temel verisi biriktikçe §361 her koşu +6 şirket)') +
+    '\n- imza: ' + imza.slice(0, 300));
+}
+
 async function faktorEvren() {
   const dosya = 'faktor-evren.json';
   /* §361b HIZ SINIRI (canlı ölçüm: 12/12 "dönem yok"; aynı uç tarayıcıdan tek
@@ -3418,7 +3551,10 @@ async function faktorEvren() {
     odenenTemettu: 'ifrs-full_DividendsPaidClassifiedAsFinancingActivities',
     amortNA: 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense',
     stok: 'ifrs-full_Inventories', ticariAlacak: 'ifrs-full_CurrentTradeReceivables',
-    ticariBorc: 'kap-fr_CurrentTradePayables'
+    ticariBorc: 'kap-fr_CurrentTradePayables',
+    /* §455: faktör skorlarının eksik metrikleri için (FVÖK marjı, NOPAT, ROIC, Altman Z) */
+    vergiOncesi: 'ifrs-full_ProfitLossBeforeTax', vergi: 'ifrs-full_IncomeTaxExpenseContinuingOperations',
+    gecmisKar: 'ifrs-full_RetainedEarnings'
   };
   let basarili = 0, eksikli = 0, dusen = 0, arsivYazilan = 0;
   const notlar = [];
@@ -3449,8 +3585,11 @@ async function faktorEvren() {
            TAHMİN ETME. */
         const bid = dn.id || dn.disclosureIndex;
         if (!bid) { kalemler.push(null); continue; }
-        const rh = await fetch(TABAN + '?mod=ham&id=' + bid, { signal: AbortSignal.timeout(30000) });
-        const jh = await rh.json();
+        /* §455b: ham sayfa ÖNCE doğrudan KAP (§446: köprüyü KAP reddediyor), düşerse köprü */
+        let jh = null;
+        try { const rd = await fetch('https://www.kap.org.tr/tr/Bildirim/' + bid, { headers: { 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36', 'accept': 'text/html', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu' }, signal: AbortSignal.timeout(30000) });
+          if (rd.ok) jh = kapHamAyristir(await rd.text()); } catch (e0) {}
+        if (!jh || !jh.ok) { try { const rh = await fetch(TABAN + '?mod=ham&id=' + bid, { signal: AbortSignal.timeout(30000) }); jh = await rh.json(); } catch (e1) { jh = null; } }
         if (!jh || !jh.ok) { kalemler.push(null); await uyku(1200); continue; }
         const carpan = (jh.birim && jh.birim.carpan) || 1;
         const K = {};
@@ -3553,7 +3692,8 @@ async function faktorEvren() {
         stoklar: stok('stok'), ticariAlacak: stok('ticariAlacak'), ticariBorc: stok('ticariBorc'),
         buyume: { ciro: yyOran('ciro'), netKar: yyOran('netKar'), brut: yyOran('brut') },
         adet: Number.isFinite(stok('sermaye')) ? Math.round(stok('sermaye')) : null,
-        adet_kaynak: 'sermaye(nominal 1₺ varsayımı)'
+        adet_kaynak: 'sermaye(nominal 1₺ varsayımı)',
+        /* §455 */ faal, amort: am, vergiOncesi: akis('vergiOncesi'), vergi: akis('vergi'), gecmisKar: stok('gecmisKar')
       };
       const bosSay = ['ciro', 'favok', 'ozk', 'aktif'].filter(x => !Number.isFinite(kayit[x])).length;
       kayit.eksik = bosSay > 0;
@@ -3867,6 +4007,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
+    await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
@@ -3875,6 +4016,7 @@ async function bultenKesif() {
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
+  if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
   if (ister('hepsi')) await olcKos('SEC ticker yedeği (§448)', async () => {
