@@ -3436,6 +3436,21 @@ async function fmHesapla() {
     if (o.c.length >= 60) PX[kod] = o;
   } catch (e) {} };
   { let i = 0; const isci = async () => { while (i < uyeler.length) { const k = uyeler[i++]; await tek(k); } }; await Promise.all(Array.from({ length: 8 }, isci)); }
+  /* §457 FONZİ GERÇEKLEŞEN (7 Eki): fon krizi penceresi 15 Eyl → 30 Eyl (dip) hisse bazında gerçekleşen
+     getiri — Yahoo adjclose (bölünme/bedelsiz düzeltilmiş; Fintables ham kapanışında HRKET 80→8 gibi
+     bölünmeler çöküş gibi görünür). Stres testi "o kriz tekrar olsa" sorusunu bununla cevaplar. */
+  try {
+    const BAS = '2026-09-15', DIP = '2026-09-30'; const H = {}; let sayac = 0;
+    for (const kod of Object.keys(PX)) { const o = PX[kod]; const iB = o.t.findIndex(d => d >= BAS); const iD = o.t.findIndex(d => d >= DIP);
+      if (iB < 0 || iD < 0 || iD <= iB || o.t[iB] > '2026-09-17') continue;
+      const cB = o.c[iB]; let enDusuk = cB; for (let i = iB + 1; i <= iD; i++) if (o.c[i] < enDusuk) enDusuk = o.c[i];
+      H[kod] = { k30: +(((o.c[iD] / cB) - 1) * 100).toFixed(2), dip: +(((enDusuk / cB) - 1) * 100).toFixed(2) }; sayac++; }
+    let endeks = {}; try { const ar = (await oku('endeks-arsiv.json')).gunler || {}; const g = Object.keys(ar).sort(); const ilk = g.find(d => d >= BAS), son = g.filter(d => d <= DIP).pop();
+      for (const e of ['XKTUM', 'XK100', 'XK030', 'XU100']) { const a = ar[ilk] && ar[ilk][e], b = ar[son] && ar[son][e]; if (a > 0 && b > 0) endeks[e] = +(((b / a) - 1) * 100).toFixed(1); } } catch (e) {}
+    /* §457b: ayrı dosya DEĞİL — fon-portfoy.json tasfiye bloğunun içine (kodlar, baskı listesiyle aynı yer) */
+    if (sayac >= 150) { const fpj = await oku('fon-portfoy.json'); fpj.tasfiye = fpj.tasfiye || {}; fpj.tasfiye.gerceklesen = { _not: '§457 Fon krizi penceresinde hisse bazında GERÇEKLEŞEN getiri: k30 = 15 Eyl kapanış → 30 Eyl kapanış (dip günü), dip = pencere içi en düşük kapanış. Kaynak Yahoo adjclose (bölünme düzeltilmiş), her koşuda yeniden yazılır. Stres testi "Fonzi" hisse başına uygular.', pencere: { bas: BAS, dip: DIP }, guncelleme: bugun, kaynak: 'Yahoo adjclose (Actions §457)', endeks, hisseler: H }; await yaz('fon-portfoy.json', fpj); degisenler.push('fonzi gerçekleşen'); raporlar.push('### Fonzi gerçekleşen (§457) — ✓ ' + sayac + ' hisse · endeks ' + Object.entries(endeks).map(([k, v]) => k + ' ' + v).join(' · ') + ' · fon-portfoy.json/tasfiye.gerceklesen'); }
+    else raporlar.push('### Fonzi gerçekleşen (§457) — ⏭ yalnız ' + sayac + ' hissede pencere verisi (eşik 150)');
+  } catch (e) { raporlar.push('### Fonzi gerçekleşen (§457) — ✗ ' + String(e.message || e).slice(0, 80)); }
   /* beta çıpası: XKTUM resmî arşiv (riskTazele ile aynı kural: son 120 günde ≥60 nokta) */
   let eSeri = null; try { const ar = await oku('endeks-arsiv.json'); const m = new Map(); Object.keys(ar.gunler || {}).sort().forEach(g => { const v = ar.gunler[g] && ar.gunler[g].XKTUM; if (v > 0) m.set(g, v); });
     const sinir = new Date(Date.now() - 120 * 864e5).toISOString().slice(0, 10); if ([...m.keys()].filter(g => g >= sinir).length >= 60) eSeri = m; } catch (e) {}
