@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261006a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261007a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2111,18 +2111,26 @@ let FONZI=false, FONZI_VERI=null;
 async function fonziYukle(){
   if(FONZI_VERI) return FONZI_VERI;
   const j=async u=>{try{return await (await fetch(u,{cache:'no-store'})).json();}catch(e){return null;}};
-  const fp=await j('/fon-portfoy.json'), xk=await j('/xktum.json');
+  const fp=await j('/fon-portfoy.json'), xk=await j('/xktum.json'); const g=((fp||{}).tasfiye||{}).gerceklesen||null;   /* §457b: ayrı dosya yok */
   const baski={}; (((fp||{}).tasfiye||{}).baski||{}).liste?.forEach(x=>{ baski[x.kod]=x.deger; });
-  FONZI_VERI={ baski, pay:(xk||{}).pay_adedi||{}, tarih:((fp||{}).tasfiye||{}).tarih||'?' };
+  FONZI_VERI={ baski, pay:(xk||{}).pay_adedi||{}, tarih:((fp||{}).tasfiye||{}).tarih||'?', gercek:(g&&g.hisseler)||null, endeks:(g&&g.endeks)||null, pencere:(g&&g.pencere)||null };
   return FONZI_VERI;
 }
+/* §457 (7 Eki, kullanıcı: "borsa −20 düştü, bunlar nasıl −2?"): tek günle kalibre edilmişti; olay iki
+   haftaya yayıldı — 15 Eyl → 30 Eyl dibi: XK100 −20,5 · XKTUM −17,1 · BIST100 −14,0. Hisse bazında ise
+   iki dünya: likit büyükler −2…−10 (BIMAS +1, ASELS −11), fon ağırlıklı küçükler −30…−70 (ALKLC, GUNDG,
+   KTLEV, RALYH −68; PASEU −63; MERCN −38). Doğru yöntem TARİHSEL SENARYO: hisse başına GERÇEKLEŞEN
+   getiri (fon-portfoy.json tasfiye.gerceklesen, Yahoo adjclose, Actions yazar). Veri olmayan hissede model: taban −6
+   (likit büyüklerin ölçülen ortalaması) − min(60, 3000 × tasfiye oranı). */
 function fonziSok(kod){
   if(!FONZI||!FONZI_VERI) return {e:0,oran:null};
+  const G=FONZI_VERI.gercek&&FONZI_VERI.gercek[kod];
+  if(G&&typeof G.k30==='number') return {e:G.k30, dip:G.dip, oran:null, kaynak:'gerçekleşen'};
   const p=(poz||[]).find(q=>q.kod===kod); const fiyat=p?+p.fiyat:0; const pay=FONZI_VERI.pay[kod]; const pozisyon=FONZI_VERI.baski[kod];
   const sdd=(pay>0&&fiyat>0)?pay*fiyat:null;
   const oran=(sdd&&pozisyon>0)?pozisyon/sdd:null;
-  const e=-2.0-(oran!=null?Math.min(8,400*oran):0);
-  return {e, oran, pozisyon:pozisyon||0, sdd};
+  const e=-6.0-(oran!=null?Math.min(60,3000*oran):0);
+  return {e, oran, pozisyon:pozisyon||0, sdd, kaynak:'model'};
 }
 function stresTest(){
   const kur=+$('stresKur').value,faiz=+$('stresFaiz').value,pet=+$('stresPet').value;
@@ -2135,7 +2143,9 @@ function stresTest(){
   detay.sort((a,b)=>a.e-b.e);
   const cls=portEtki>=0?'up':'down',enKotu=detay.slice(0,2),enIyi=detay.slice(-2).reverse();
   el.innerHTML='<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px"><span class="lbl" style="margin:0">TAHMİNİ PORTFÖY ETKİSİ</span><span class="val '+cls+'" style="font-size:22px">'+(portEtki>=0?'+':'')+portEtki.toFixed(2)+'%</span></div><div class="kv"><span class="k">En olumsuz</span><span>'+enKotu.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div><div class="kv"><span class="k">En olumlu</span><span>'+enIyi.map(d=>d.kod+' ('+(d.e>=0?'+':'')+d.e.toFixed(1)+'%)').join(' · ')+'</span></div>'+(disi.length?'<div class="kv"><span class="k">Kapsam dışı</span><span>'+disi.join(', ')+'</span></div>':'')
-    +(FONZI?'<div class="kv" style="border-top:1px dashed var(--line);margin-top:6px;padding-top:6px"><span class="k" style="color:#E8933B">Fonzi bileşeni</span><span>'+fonziEtki.toFixed(2)+' puan · tasfiye baskısı olan: '+(detay.filter(d=>d.fz.oran!=null).map(d=>d.kod+' (pozisyon '+(d.fz.pozisyon/1e6).toFixed(0)+' mn / serbest dolaşım %'+(d.fz.oran*100).toFixed(2)+' → '+d.fz.e.toFixed(1)+')').join(' · ')||'portföyde tasfiye listesinden hisse yok — yalnız piyasa bacağı −2')+'</span></div>':'');
+    +(FONZI?'<div class="kv" style="border-top:1px dashed var(--line);margin-top:6px;padding-top:6px"><span class="k" style="color:#E8933B">Fonzi bileşeni</span><span>'+fonziEtki.toFixed(2)+' puan'
+      +(FONZI_VERI&&FONZI_VERI.endeks?' · gerçekleşen '+(FONZI_VERI.pencere?FONZI_VERI.pencere.bas.slice(5)+'→'+FONZI_VERI.pencere.dip.slice(5):'')+': '+Object.entries(FONZI_VERI.endeks).map(([k,v])=>k+' '+v).join(' · '):' · <b>gerçekleşen hisse verisi henüz yok</b> (fon-portfoy.json/tasfiye.gerceklesen — Actions yazar) — model: taban −6 + tasfiye oranı')
+      +'<br>'+detay.slice().sort((x,y)=>x.fz.e-y.fz.e).map(d=>d.kod+' '+d.fz.e.toFixed(1)+(d.fz.kaynak==='gerçekleşen'?(typeof d.fz.dip==='number'?' (dip '+d.fz.dip.toFixed(1)+')':''):' <span class="sub">model'+(d.fz.oran!=null?' · tasfiye %'+(d.fz.oran*100).toFixed(2):'')+'</span>')).join(' · ')+'</span></div>':'');
 }
 /* ---- Yield Curve Laboratuvarı ---- */
 

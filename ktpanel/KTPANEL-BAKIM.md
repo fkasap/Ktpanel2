@@ -6,6 +6,33 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-08-28
 
 
+# BAKIM EK — §457 (7 Eki 2026)
+
+## §457 FONZİ YENİDEN KALİBRE: TEK GUN DEGIL, TARIHSEL SENARYO
+Kullanici: "borsa −20 dustu, bunlar nasil −2?" HAKLI: piyasa bacagi 16 Eyl tek gunuyle
+(BIST100 −1,2) kalibre edilmisti; olay iki haftaya yayildi. OLCUM (endeks arsivi, 15 Eyl →
+30 Eyl dibi): XK100 −20,5 · XK030 −20,0 · XKTUM −17,1 · XU100 −14,0. Hisse bazinda
+(Fintables gunluk kapanis) IKI DUNYA: likit buyukler BIMAS +1,3 · MAVI +2,8 · KRDMD 0 ·
+CIMSA −3 · GRSEL −5 · EREGL −6 · ENJSA −7 · EKGYO −7 · TUPRS −9 · ASELS −11; fon agirlikli
+kucukler ALKLC/GUNDG/KTLEV/RALYH −68 · PASEU −63 · DAPGM −61 · GENIL −47 · MERCN −38 ·
+CWENE −37 · EFOR −32 · EUPWR −28. Endeksi −20 dusuren ince kagitlar; kullanicinin
+portfoyu (EREGL/BIMAS/TUPRS/ASELS/GRSEL) gercekten −2…−10 kaldi.
+YONTEM DEGISTI: Fonzi artik TARIHSEL SENARYO — hisse basina GERCEKLESEN getiri
+(fonzi-gerceklesen.json: k30 = 15→30 Eyl kapanis, dip = pencere en dusugu). Actions
+(fmHesapla icinde) Yahoo adjclose ile 238 hisseyi yazar (bolunme duzeltilmis — Fintables
+ham kapanisinda HRKET 80→8, AKFYE 23→3,5, SELEC 292→92 BOLUNMEdir, cokus degil; esik 150
+hisse). Bugun 31 hisselik ELLE tohum (bolunme kontrolu yapilmis) koyuldu, ilk kosuda
+tam dosya ustune gelir. Veri olmayan hissede model: taban −6 (likit buyuklerin olculen
+ortalamasi) − min(60, 3000 × tasfiye orani). Sonuc kutusu: endeks gerceklesen satiri +
+hisse basina gerceklesen/dip ya da "model".
+TEST: EREGL/BIMAS/MERCN/GRSEL/ASELS esit agirlik → −11,7 (MERCN −37,8 dip −39,6 · ASELS
+−10,7 · EREGL −6,1 · GRSEL −5,3 · BIMAS +1,3).
+DERS: stres senaryosu tek gunle kalibre edilmez; olayin penceresi olculur. Hisse bazli
+gerceklesen veri varken model kullanmak israftir.
+§457b (kullanici: yeni json gereksiz): gerceklesen blok fon-portfoy.json/tasfiye.gerceklesen
+icine alindi (kodlar + baski listesiyle ayni yer); Actions ayni blogu gunceller; ayri dosya yok.
+DEPLOY: scripts/tazele.mjs · ktpanel/{app.js, index.html, fon-portfoy.json} (surum 20261007a).
+
 # BAKIM EK — §456 (6 Eki 2026)
 
 ## §456 "FONZİ (Vaka-ı Tezmen)" — SENARYO & STRES TESTİ'NE FON KRİZİ KATMANI

@@ -27795,176 +27795,6 @@
        "alisUz": 0
       }
      }
-    },
-    "2026-09": {
-     "baslik": {
-      "kod": "NKM",
-      "ad": "NKM-NEO PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSSE SENEDİ",
-      "donem": "2026-09",
-      "fonToplamDegeri": 30401852.05,
-      "paySayisi": 35247655,
-      "payFiyati": 0.862521,
-      "aylikGetiri": -14.97,
-      "hisseOrtYuzde": 96.19,
-      "hisseDevirHizi": 0.52
-     },
-     "hisse": [
-      {
-       "kod": "EBEBK",
-       "agirlik": 9.89,
-       "deger": 3006720,
-       "nominal": 38400
-      },
-      {
-       "kod": "KRVGD",
-       "agirlik": 9.79,
-       "deger": 2974400,
-       "nominal": 1430000
-      },
-      {
-       "kod": "ARDYZ",
-       "agirlik": 8.97,
-       "deger": 2725700,
-       "nominal": 48500
-      },
-      {
-       "kod": "NTGAZ",
-       "agirlik": 5.15,
-       "deger": 1564500,
-       "nominal": 150000
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 5.03,
-       "deger": 1530535.02,
-       "nominal": 41433
-      },
-      {
-       "kod": "BIMAS",
-       "agirlik": 4.96,
-       "deger": 1506600,
-       "nominal": 3600
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 4.83,
-       "deger": 1467375,
-       "nominal": 3900
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 4.67,
-       "deger": 1420350,
-       "nominal": 3400
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 4.65,
-       "deger": 1413300,
-       "nominal": 4200
-      },
-      {
-       "kod": "YEOTK",
-       "agirlik": 4.43,
-       "deger": 1346000,
-       "nominal": 50000
-      },
-      {
-       "kod": "SNGYO",
-       "agirlik": 3.55,
-       "deger": 1080000,
-       "nominal": 400000
-      },
-      {
-       "kod": "YUNSA",
-       "agirlik": 3.26,
-       "deger": 992000,
-       "nominal": 160000
-      },
-      {
-       "kod": "LKMNH",
-       "agirlik": 3.23,
-       "deger": 982120,
-       "nominal": 86000
-      },
-      {
-       "kod": "MERCN",
-       "agirlik": 2.98,
-       "deger": 906593.45,
-       "nominal": 83557
-      },
-      {
-       "kod": "ALKIM",
-       "agirlik": 2.92,
-       "deger": 888750,
-       "nominal": 75000
-      },
-      {
-       "kod": "ALBRK",
-       "agirlik": 2.73,
-       "deger": 830000,
-       "nominal": 100000
-      },
-      {
-       "kod": "KMPUR",
-       "agirlik": 2.29,
-       "deger": 695500,
-       "nominal": 50000
-      },
-      {
-       "kod": "SAYAS",
-       "agirlik": 1.98,
-       "deger": 603000,
-       "nominal": 15000
-      },
-      {
-       "kod": "YATAS",
-       "agirlik": 1.36,
-       "deger": 412800,
-       "nominal": 16000
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 1.21,
-       "deger": 368800,
-       "nominal": 20000
-      }
-     ],
-     "hisseToplam": {
-      "deger": 26715043.47,
-      "grup": 100,
-      "fpd": 98.88,
-      "ftd": 87.88,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {},
-      "satis": {}
-     },
-     "varlik": {
-      "hisse": 87.88,
-      "nakit": 11.12,
-      "_portfoyDegeriYuzde": 88.88,
-      "_hazirDeger": 0.67,
-      "_alacak": 11.75,
-      "_borc": -1.3,
-      "_toplam": 99
-     },
-     "diger": [],
-     "kaynak": {
-      "index": 1673411,
-      "objId": "4028328ca0b8418501a1117bd3ca2d76",
-      "yayin": "06.10.2026 16:54:55",
-      "islendi": "2026-10-06",
-      "ek": 1,
-      "metinUz": 23396,
-      "islemIz": {
-       "satisBolum": false,
-       "alisBolum": false,
-       "satisUz": 0,
-       "alisUz": 0
-      }
-     }
     }
    }
   },
@@ -37142,7 +36972,7 @@
  },
  "guncelleme": "2026-10-06",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(47 fon, 11147 kayıt)",
+ "yol": "tarama(47 fon, 11017 kayıt)",
  "pencereGun": 150,
  "evren_pasif": {
   "AC1": {
@@ -37764,6 +37594,147 @@
      "fon": 1
     }
    ]
+  },
+  "gerceklesen": {
+   "_not": "§457 TOHUM (7 Eki, elle): fon krizi penceresinde (15 Eyl kapanış → 30 Eyl kapanış/dip) GERÇEKLEŞEN getiri. Kaynak Fintables ham kapanış; bölünme/bedelsiz kontrolü ELLE yapılmış 31 hisse (HRKET 80→8, AKFYE 23→3,5, SELEC 292→92 gibi bölünmeler DAHİL EDİLMEDİ). Actions (§457) Yahoo düzeltilmiş kapanışla 238 hisselik tam dosyayı yazınca bu tohumun üstüne gelir.",
+   "pencere": {
+    "bas": "2026-09-15",
+    "dip": "2026-09-30"
+   },
+   "guncelleme": "2026-10-07",
+   "kaynak": "tohum: Fintables mumlar_gunluk_gh (ham kapanış, elle bölünme kontrolü)",
+   "endeks": {
+    "XKTUM": -17.1,
+    "XK100": -20.5,
+    "XK030": -20.0,
+    "XU100": -14.0
+   },
+   "hisseler": {
+    "ALKLC": {
+     "k30": -68.54,
+     "dip": -79.33
+    },
+    "ASELS": {
+     "k30": -10.74,
+     "dip": -11.34
+    },
+    "BIMAS": {
+     "k30": 1.27,
+     "dip": -5.63
+    },
+    "CIMSA": {
+     "k30": -3.11,
+     "dip": -8.37
+    },
+    "CWENE": {
+     "k30": -37.2,
+     "dip": -37.51
+    },
+    "DAPGM": {
+     "k30": -61.45,
+     "dip": -63.82
+    },
+    "EFOR": {
+     "k30": -31.97,
+     "dip": -35.77
+    },
+    "EKGYO": {
+     "k30": -6.87,
+     "dip": -10.0
+    },
+    "ENJSA": {
+     "k30": -6.56,
+     "dip": -9.04
+    },
+    "EREGL": {
+     "k30": -6.06,
+     "dip": -9.98
+    },
+    "EUPWR": {
+     "k30": -28.33,
+     "dip": -34.11
+    },
+    "GENIL": {
+     "k30": -47.3,
+     "dip": -52.52
+    },
+    "GRSEL": {
+     "k30": -5.29,
+     "dip": -13.99
+    },
+    "GUBRF": {
+     "k30": -10.79,
+     "dip": -17.79
+    },
+    "KRDMD": {
+     "k30": -0.05,
+     "dip": -10.0
+    },
+    "KTLEV": {
+     "k30": -68.49,
+     "dip": -71.64
+    },
+    "MAVI": {
+     "k30": 2.78,
+     "dip": -7.35
+    },
+    "MERCN": {
+     "k30": -37.75,
+     "dip": -39.64
+    },
+    "MPARK": {
+     "k30": -2.22,
+     "dip": -5.44
+    },
+    "PASEU": {
+     "k30": -62.74,
+     "dip": -68.48
+    },
+    "RALYH": {
+     "k30": -67.79,
+     "dip": -78.83
+    },
+    "TUKAS": {
+     "k30": -3.0,
+     "dip": -13.5
+    },
+    "TUPRS": {
+     "k30": -8.79,
+     "dip": -11.15
+    },
+    "TKFEN": {
+     "k30": 0.61,
+     "dip": -7.17
+    },
+    "ISDMR": {
+     "k30": -0.25,
+     "dip": -8.52
+    },
+    "AHGAZ": {
+     "k30": 5.35,
+     "dip": -11.05
+    },
+    "AKCNS": {
+     "k30": -2.33,
+     "dip": -10.77
+    },
+    "ALBRK": {
+     "k30": -1.19,
+     "dip": -7.86
+    },
+    "GLRMK": {
+     "k30": -19.61,
+     "dip": -24.48
+    },
+    "PETKM": {
+     "k30": -16.62,
+     "dip": -18.69
+    },
+    "LOGO": {
+     "k30": 1.12,
+     "dip": -9.9
+    }
+   }
   }
  }
 }
