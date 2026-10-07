@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-06 20:12 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-07 03:45 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -15,6 +15,14 @@
    "ulke": "JPY",
    "olay": "BOJ Gov Ueda Speaks",
    "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-10-07T17:00:00.000Z",
+   "ulke": "USD",
+   "olay": "President Trump Speaks",
+   "etki": "Medium",
    "beklenti": "",
    "onceki": ""
   },
@@ -55,7 +63,7 @@
    "ulke": "CAD",
    "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "6.2K",
+   "beklenti": "6.3K",
    "onceki": "-41.7K"
   },
   {
@@ -71,7 +79,7 @@
    "ulke": "USD",
    "olay": "Prelim UoM Consumer Sentiment",
    "etki": "Medium",
-   "beklenti": "47.6",
+   "beklenti": "47.5",
    "onceki": "47.8"
   },
   {
