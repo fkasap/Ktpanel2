@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-08 06:34 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-08 20:40 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -63,7 +63,7 @@
    "ulke": "CAD",
    "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "6.3K",
+   "beklenti": "6.1K",
    "onceki": "-41.7K"
   },
   {
