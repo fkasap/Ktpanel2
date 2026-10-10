@@ -3,19 +3,11 @@
 Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
-### XK100 ağırlıkları — §307 YEDEK DEVREDE: BIST bülteni 2026-10-09
-- Yahoo 2026-10-08 gün döndürdü (hedef 2026-10-09) → resmî bülten kullanıldı
-- kapsam 100/100 · dosya thb202610091.csv · satır biçimi {".E":100} · TÜM fiyatlar tek kaynaktan (§114)
-
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-10-09
 - ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-10-09 (0 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
-
-### XKTUM ağırlıkları — §307 YEDEK DEVREDE: BIST bülteni 2026-10-09
-- Yahoo 2026-10-08 gün döndürdü (hedef 2026-10-09) → resmî bülten kullanıldı
-- kapsam 238/238 · dosya thb202610091.csv · satır biçimi {".E":238} · TÜM fiyatlar tek kaynaktan (§114)
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 238/238 (%100)
@@ -23,29 +15,17 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-10-09 (0 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
-### XKTMT ağırlıkları — §307 YEDEK DEVREDE: BIST bülteni 2026-10-09
-- Yahoo 2026-10-08 gün döndürdü (hedef 2026-10-09) → resmî bülten kullanıldı
-- kapsam 41/41 · dosya thb202610091.csv · satır biçimi {".E":41} · TÜM fiyatlar tek kaynaktan (§114)
-
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 41/41 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-10-09
 - ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-10-09 (0 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
 
-### Multiple fiyatları — §307 YEDEK DEVREDE: BIST bülteni 2026-10-09
-- Yahoo 2026-10-08 gün döndürdü (hedef 2026-10-09) → resmî bülten kullanıldı
-- kapsam 141/141 · dosya thb202610091.csv · satır biçimi {".E":141} · TÜM fiyatlar tek kaynaktan (§114)
-
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **tarih birliği**: tek tarih: 2026-10-09
 - ✓ **fiyat yasi (Multiple fiyatları)**: 2026-10-09 (0 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
-
-### Model sicili — §307 YEDEK DEVREDE: BIST bülteni 2026-10-09
-- Yahoo 2026-10-08 gün döndürdü (hedef 2026-10-09) → resmî bülten kullanıldı
-- kapsam 40/40 · dosya thb202610091.csv · satır biçimi {".E":40} · TÜM fiyatlar tek kaynaktan (§114)
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
@@ -72,7 +52,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903498984435517> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903499168862828> [Go Back]`
 
 - §410 konsol dosyası YOK: arac/gelen/tefas-tam-*.json okunamadı (ENOENT) — üretmek için: ktpanel/arac/tefas-konsol.js
 
@@ -132,10 +112,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Faktör skorları (§455) — ✓ sıralanan 112/238 · temel veri 113 · fiyat 231 · beta çıpası XKTUM arşivi
 - ⏳ fm.json korunuyor: terfi eşiği 143 (temel verisi biriktikçe §361 her koşu +6 şirket)
-- imza: VALUE 112 -0.017 0.666 -2.87 1.13 0 · GROWTH 112 0.007 0.727 -1.93 2.45 0 · QUALITY 112 -0.011 0.687 -1.82 1.76 0 · MOMENTUM 112 -0.076 0.602 -1.88 1.95 0 · LOW_RISK 112 -0.057 0.728 -1.61 1.57 0
+- imza: VALUE 112 -0.017 0.666 -2.85 1.13 0 · GROWTH 112 0.007 0.727 -1.93 2.45 0 · QUALITY 112 -0.011 0.687 -1.82 1.76 0 · MOMENTUM 112 -0.067 0.617 -1.71 2.39 0 · LOW_RISK 112 -0.058 0.728 -1.59 1.58 0
 
 ### KAP arşivi (§381) — ✓ +4 çeyrek · 0/238 şirket tam
-- GLRMK:7→7 · BIMAS:9→13
+- GLRMK:7→7 · CVKMD:9→13
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -171,8 +151,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (247.8 bp) · risk metrikleri (133) · katılım fonları (getiri-modu 36) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (11 olay) · faktör evreni (131/238) · fonzi gerçekleşen · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** TR 5Y CDS (247.8 bp) · risk metrikleri (125) · katılım fonları (getiri-modu 36) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (11 olay) · faktör evreni (131/238) · fonzi gerçekleşen · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ KAP arşivi (§381) — 66 sn
-- toplam: 163 sn
+- ⏱ KAP arşivi (§381) — 68 sn
+- toplam: 185 sn
