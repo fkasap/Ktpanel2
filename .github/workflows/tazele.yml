@@ -113,7 +113,9 @@ jobs:
       - name: poppler (yalnız fon portföy katmanı · §429)
         if: contains(steps.sec.outputs.katman, 'fonportfoy') || contains(steps.sec.outputs.katman, 'hepsi')
         continue-on-error: true
-        run: sudo apt-get install -y -q poppler-utils >/dev/null && pdftotext -v 2>&1 | head -1
+        # §459h: apt listesi runner imajında bayat → "Unable to locate package" (exit 100, iki koşuda görüldü).
+        # Önce update; yine düşerse katman ⏭ atlanır (continue-on-error), iş kırmızı yanmaz.
+        run: (sudo apt-get update -qq >/dev/null 2>&1 || true) && sudo apt-get install -y -q poppler-utils >/dev/null && pdftotext -v 2>&1 | head -1
 
       - name: Playwright (yalnız fon katmanı)
         if: contains(steps.sec.outputs.katman, 'fon') || contains(steps.sec.outputs.katman, 'hepsi')
@@ -146,6 +148,9 @@ jobs:
         run: node scripts/tazele.mjs --katman="${{ steps.sec.outputs.katman }}" --fonkod="${{ github.event.inputs.fonkod }}"
         env:
           TZ: Europe/Istanbul
+          # §448: SEC EDGAR kimlik — repo Settings → Secrets → Actions → EDGAR_UA
+          # (biçim: "KTPanel/1.0 (ad soyad; e-posta)"). Tanımsızsa script kendi varsayılanına düşer (403 sürer).
+          EDGAR_UA: ${{ secrets.EDGAR_UA }}
 
       # Denetim raporu her koşuda görünsün — geçse de kalsa da
       - name: Denetim raporu
