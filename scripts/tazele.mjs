@@ -1355,6 +1355,128 @@ async function fonTazele() {
    bilanco-tetik.json'a yazılır. Panel Earnings AI sekmesinde "bugün
    açıklananlar" şeridi basar; kullanıcı tek komutla kart ister.
    Uç formatı panel api/kap.js'ten (kanıtlı: Referer zorunlu, JSON body). */
+
+/* ── §459 BIST BİLANÇO TAKVİMİ — KAP'TAN OTOMATİK (12 Eki) ─────────────────────
+   Taramada yakalandı: bist-takvim.json 18 Ağu'da (2Ç26) kalmıştı; kart Ekim'in
+   ortasında hâlâ "JANTS GECİKTİ · SPK sınırı 14–29 Ağu" basıyordu ve Ebu o ölü
+   tabloya taze yorum yazıyordu (§166'daki hastalığın aynısı, bu kez veri
+   katmanında). Sebep: takvim Fintables'tan ELLE üretiliyordu, sezon dönünce kimse
+   yenilemedi.
+   KAYNAK DEĞİŞTİ: Fintables yerine KAP'ın kendi sorgusu — bilanço tetiğinin zaten
+   kullandığı POST /tr/api/disclosure/members/byCriteria. Kayıtlar {disclosureClass
+   'FR', subject 'Finansal Rapor', year, period, publishDate 'GG.AA.YYYY', stockCodes}
+   taşıyor (12 Eki tarayıcıdan ölçüldü; yanıt 2000 kayıtta KESİLİYOR → pencere
+   2 gün). Üç iş:
+     (1) SEZON BAŞI: dosyanın donem'i bugünün sezonundan farklıysa geçen yılın aynı
+         dönem penceresi taranır, şirket başına EN ERKEN yayın +364 gün (aynı hafta
+         günü) → beklenen. Hafta sonuna düşen tahmin Pazartesi'ye alınır.
+     (2) HER KOŞU: tetik sorgusunun getirdiği FR kayıtlarından bu sezonun
+         "Finansal Rapor"ları gerçekleşen'e yazılır, beklenen'den düşer. Ek istek yok.
+     (3) SPK sınırı sezona göre hesaplanır (3/9 ay 30-40 gün · 6 ay 40-50 · yıllık
+         60-70); kart bunu DOSYADAN okur, kodda gömülü "14–29 Ağu" kalktı (app §459b).
+   Evren: XKTUM + XK100 + endeks-uyeler. DERS: SEZONLUK BİR VERİYİ ELLE ÜRETİYORSAN
+   SEZON DÖNDÜĞÜNDE BAYATLAR — ritmi olan her katmanın üreticisi de o ritimde koşmalı. */
+function sezonBul(tarih) {
+  const d = new Date(tarih + 'T12:00:00Z'); const y = d.getUTCFullYear(), m = d.getUTCMonth() + 1, g = d.getUTCDate();
+  const iso = (dt) => dt.toISOString().slice(0, 10);
+  const ekle = (isoT, n) => { const x = new Date(isoT + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return iso(x); };
+  const AYK = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+  const kisa = (isoT) => { const p = isoT.split('-'); return (+p[2]) + ' ' + AYK[+p[1] - 1]; };
+  let per, yil, donemSon, gunSolo, gunKons, pBas, pSon;
+  if (m <= 3 || (m === 4 && g <= 12)) { per = 4; yil = y - 1; donemSon = (y - 1) + '-12-31'; gunSolo = 60; gunKons = 70; pBas = (y - 1) + '-01-25'; pSon = (y - 1) + '-04-15'; }
+  else if (m <= 6) { per = 1; yil = y; donemSon = y + '-03-31'; gunSolo = 30; gunKons = 40; pBas = (y - 1) + '-04-15'; pSon = (y - 1) + '-06-10'; }
+  else if (m <= 9) { per = 2; yil = y; donemSon = y + '-06-30'; gunSolo = 40; gunKons = 50; pBas = (y - 1) + '-07-15'; pSon = (y - 1) + '-09-10'; }
+  else { per = 3; yil = y; donemSon = y + '-09-30'; gunSolo = 30; gunKons = 40; pBas = (y - 1) + '-10-14'; pSon = (y - 1) + '-12-01'; }
+  const spkSolo = ekle(donemSon, gunSolo), spkKons = ekle(donemSon, gunKons);
+  const etiket = (per === 4 ? 'Yıllık ' + yil : per + 'Ç' + String(yil).slice(2));
+  return { per, yil, donem: etiket, donemSon, sezonBas: ekle(donemSon, 1), spkSolo, spkKons, spkKisa: kisa(spkSolo) + ' (solo) · ' + kisa(spkKons) + ' (konsolide)', pBas, pSon,
+    spkMetin: etiket + ': konsolide olmayan ' + gunSolo + ' gün (' + kisa(spkSolo) + ' ' + spkSolo.slice(0, 4) + ') · konsolide ' + gunKons + ' gün (' + kisa(spkKons) + ' ' + spkKons.slice(0, 4) + '). Bu tarihi aşan tahmin, mali yılı takvim yılıyla uyuşmayan ya da geçen yıl gecikmiş şirket demektir — ayrı tutulur.' };
+}
+async function kapFrPencere(bas, son) {
+  /* 2 günlük dilimler — yanıt 2000 kayıtta kesiliyor (12 Eki ölçümü: 3 günlük dilimde 1708 görüldü) */
+  const uyku = ms => new Promise(r => setTimeout(r, ms));
+  const BAS = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu',
+    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
+  const out = []; let d = new Date(bas + 'T12:00:00Z'); const sonD = new Date(son + 'T12:00:00Z'); let hata = 0, dilim = 0;
+  while (d <= sonD) {
+    const a = d.toISOString().slice(0, 10); const b = new Date(d); b.setUTCDate(b.getUTCDate() + 1); const bI = (b <= sonD ? b : sonD).toISOString().slice(0, 10);
+    try {
+      const r = await fetch('https://www.kap.org.tr/tr/api/disclosure/members/byCriteria', { method: 'POST', headers: BAS,
+        body: JSON.stringify({ fromDate: a, toDate: bI, mkkMemberOidList: [], subjectList: [] }), signal: AbortSignal.timeout(20000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const j = await r.json(); const items = Array.isArray(j) ? j : (j.items || j.data || []);
+      if (items.length >= 2000) raporlar.push('- ⚠ §459 KAP yanıtı ' + a + ' diliminde 2000 kayıtta kesildi — dilim daraltılmalı');
+      out.push(...items); dilim++;
+    } catch (e) { hata++; if (hata >= 3) throw new Error('KAP byCriteria 3 hata: ' + String(e.message || e).slice(0, 40)); }
+    d = new Date(b); d.setUTCDate(d.getUTCDate() + 1); await uyku(400);
+  }
+  return { items: out, dilim };
+}
+function frKayitlari(items, yil, per) {
+  const m = {};
+  (items || []).forEach(b => {
+    if (String(b.disclosureClass || b.disclosureType || '').toUpperCase() !== 'FR') return;
+    if (!/^Finansal Rapor/i.test(String(b.subject || ''))) return;
+    if (+b.year !== yil || +b.period !== per) return;
+    const k = String(b.stockCodes || b.stockCode || '').split(/[,;\s]+/)[0].trim().toUpperCase(); if (!/^[A-Z]{4,6}$/.test(k)) return;
+    const t = /^(\d{2})\.(\d{2})\.(\d{4})/.exec(String(b.publishDate || '')); if (!t) return; const iso = t[3] + '-' + t[2] + '-' + t[1];
+    if (!m[k] || iso < m[k]) m[k] = iso;
+  });
+  return m;
+}
+async function bilancoTakvimIsle(tetikItems) {
+  const dosya = 'bist-takvim.json';
+  const S = sezonBul(bugun);
+  let d = {}; try { if (await varMi(dosya)) d = await oku(dosya); } catch (e) { d = {}; }
+  let degisti = false;
+  /* evren */
+  let evren = new Set();
+  try { const x = await oku('xktum.json'); Object.keys(x.uyeler || {}).forEach(k => evren.add(k)); } catch (e) {}
+  try { const x = await oku('xk100.json'); Object.keys(x.uyeler || x.agirliklar || {}).forEach(k => evren.add(k)); } catch (e) {}
+  try { const x = await oku('endeks-uyeler.json'); Object.values(x.uyeler || {}).forEach(v => { if (Array.isArray(v)) v.forEach(k => evren.add(k)); }); } catch (e) {}
+  if (!evren.size) { raporlar.push('### BIST bilanço takvimi (§459) — ⏭ evren listesi yok'); return; }
+  /* (1) sezon başı: tahmin listesi */
+  if (d.donem !== S.donem) {
+    const { items, dilim } = await kapFrPencere(S.pBas, S.pSon);
+    const gecen = frKayitlari(items, S.per === 4 ? S.yil - 1 : S.yil - 1, S.per);
+    const bek = {}, yok = [];
+    const sabit = {}; if (gecen.KRDMA) { sabit.KRDMB = gecen.KRDMA; sabit.KRDMD = gecen.KRDMA; }   /* aynı şirket, üç kod */
+    for (const k of [...evren].sort()) {
+      const g = gecen[k] || sabit[k]; if (!g) { yok.push(k); continue; }
+      const x = new Date(g + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() + 364);
+      const wd = x.getUTCDay(); if (wd === 6) x.setUTCDate(x.getUTCDate() + 2); else if (wd === 0) x.setUTCDate(x.getUTCDate() + 1);   /* hafta sonu → Pazartesi */
+      bek[k] = x.toISOString().slice(0, 10);
+    }
+    const farkli = {}; Object.keys(bek).forEach(k => { if (bek[k] > S.spkKons) { farkli[k] = { tahmin: bek[k], gecenYil: gecen[k] || sabit[k] }; delete bek[k]; } });
+    const eski = d.donem ? { donem: d.donem, gerceklesen: d.gerceklesen || {} } : null;
+    d = { _aciklama: 'BIST ' + S.donem + ' BEKLENEN bilanço açıklama tarihleri (dönem sonu ' + S.donemSon + ').',
+      _yontem: 'TAHMİN — geçen yılın aynı dönem KAP "Finansal Rapor" bildirimi yayın tarihi (publishDate) +364 gün, AYNI HAFTA GÜNÜNE hizalı; hafta sonuna düşen Pazartesi\'ye alınır. BAĞLAYICI DEĞİLDİR (10 Ağu 2026 ölçümü: ortalama mutlak sapma 2,7 gün). GECİKTİ rozeti 3 gün toleranslı (app §459b).',
+      _neden_tahmin: 'BIST/KAP makine-okunur "beklenen bilanço tarihi" tablosu yayımlamıyor; şirketlerin Finansal Takvim bildirimi serbest metin. Geçen yıl deseni en sağlam ÖLÇÜLEBİLİR yaklaşım.',
+      _spk_siniri: S.spkMetin, _spk_kisa: S.spkKisa, _spk_son: S.spkKons, _sezon_bas: S.sezonBas,
+      _kaynak: 'KAP /tr/api/disclosure/members/byCriteria · pencere ' + S.pBas + ' → ' + S.pSon + ' (' + dilim + ' dilim) · disclosureClass=FR · subject "Finansal Rapor" · year/period eşleşmeli · şirket başına en erken yayın (Actions §459, ' + bugun + ')',
+      tarih: bugun, donem: S.donem, adet: Object.keys(bek).length, beklenen: Object.fromEntries(Object.entries(bek).sort((a, b) => a[1].localeCompare(b[1]) || a[0].localeCompare(b[0]))),
+      farkli_mali_yil: farkli, gerceklesen: {},
+      _tahmin_yok: { kodlar: yok, neden: 'Geçen yıl aynı dönemde KAP\'ta Finansal Rapor yok: yeni halka arz, farklı mali yıl ya da farklı bildirim başlığı. Açıklayınca gerçek tarihiyle takvime girer.' },
+      _onceki_sezon: eski };
+    degisti = true;
+    raporlar.push('### BIST bilanço takvimi (§459) — ✓ ' + S.donem + ' tahmini üretildi: ' + Object.keys(bek).length + ' şirket · tahmin yok ' + yok.length + ' · mali yılı farklı ' + Object.keys(farkli).length + ' · SPK ' + S.spkKisa);
+  }
+  /* (2) gerçekleşen: tetik sorgusu (dün→bugün) + sezon içinde 3 günlük geriye bakış
+     (hafta sonu/tatil atlanan koşuda Cuma akşamı yayınları kaçmasın; 2 istek) */
+  let kaynakItems = tetikItems || [];
+  try {
+    const ekle2 = (isoT, n) => { const x = new Date(isoT + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+    if (bugun >= ekle2(S.sezonBas, 10) && bugun <= ekle2(S.spkKons, 20)) { const geri = await kapFrPencere(ekle2(bugun, -3), bugun); kaynakItems = kaynakItems.concat(geri.items); }
+  } catch (e) { raporlar.push('- ⚠ §459 geriye bakış sorgusu düştü: ' + String(e.message || e).slice(0, 60)); }
+  const bu = frKayitlari(kaynakItems, S.yil, S.per); let yeni = 0;
+  d.gerceklesen = d.gerceklesen || {}; d.beklenen = d.beklenen || {};
+  Object.keys(bu).forEach(k => { if (!evren.has(k)) return; if (!d.gerceklesen[k]) { d.gerceklesen[k] = bu[k]; yeni++; } if (d.beklenen[k]) delete d.beklenen[k]; if (d.farkli_mali_yil && d.farkli_mali_yil[k]) delete d.farkli_mali_yil[k]; });
+  if (yeni) { d.adet = Object.keys(d.beklenen).length; d.tarih = bugun; degisti = true;
+    raporlar.push('### BIST bilanço takvimi (§459) — ✓ ' + yeni + ' şirket açıkladı (' + Object.keys(bu).filter(k => evren.has(k)).slice(0, 12).join(', ') + ') · beklenen ' + d.adet + ' · gerçekleşen ' + Object.keys(d.gerceklesen).length); }
+  else if (d.donem === S.donem) raporlar.push('### BIST bilanço takvimi (§459) — ✓ ' + S.donem + ' · beklenen ' + Object.keys(d.beklenen).length + ' · gerçekleşen ' + Object.keys(d.gerceklesen).length + ' · bugün yeni açıklama yok');
+  if (degisti) { await yaz(dosya, d); degisenler.push('bilanço takvimi (' + S.donem + ')'); }
+}
+
 async function bilancoTetik() {
   const dosya = 'bilanco-tetik.json';
   try {
@@ -1390,6 +1512,7 @@ async function bilancoTetik() {
     if (!r.ok) { raporlar.push('### Bilanço tetiği — ✗ KAP HTTP ' + r.status); return null; }
     const j = await r.json();
     const items = Array.isArray(j) ? j : (j.items || j.data || []);
+    try { await bilancoTakvimIsle(items); } catch (e) { raporlar.push('### BIST bilanço takvimi (§459) — ✗ ' + String(e && e.message || e).slice(0, 80)); }   /* §459 */
     const pencere = [...new Set(items
       .filter(b => String(b.disclosureType || b.disclosureCategory || '').toUpperCase().includes('FR'))
       .map(b => String(b.stockCodes || b.stockCode || '').split(/[,;\s]+/)[0].trim().toUpperCase())
@@ -2305,11 +2428,13 @@ async function hazineTakvimOto() {
     const yilM = bas.match(/20\d{2}/);
     if (bulunanAylar.length >= 2 && yilM) {
       d.donem = bulunanAylar[0] + '–' + bulunanAylar[bulunanAylar.length - 1] + ' ' + yilM[0];
-      /* sonraki yayin: donemin SON ayindan bir sonraki ayin ~25'i */
-      const sonAyIdx = AYLAR.indexOf(bulunanAylar[bulunanAylar.length - 1]);
-      const sonrakiAy = AYLAR[(sonAyIdx + 1) % 12];
-      const s1 = AYLAR[(sonAyIdx + 1) % 12], s3 = AYLAR[(sonAyIdx + 3) % 12];
-      d.sonraki_aciklama = '~25 ' + sonrakiAy + ' (' + s1.slice(0, 3) + '–' + s3.slice(0, 3) + ' stratejisi)';
+      /* §459g (12 Eki, taramada yakalandı): HMB stratejisi ÇEYREKLİK DEĞİL AYLIK KAYAN — 31 Ağu "Eyl–Kas",
+         30 Eyl "Eki–Ara" yayımlandı (bu katmanın kendi geçmişi). Eski kural "dönemin son ayından sonraki
+         ay" diyordu → "~25 Ocak" basıyordu; oysa sıradaki yayın Ekim sonunda (Kas–Oca). Yayın, dönemin
+         İLK ayının son iş günü civarıdır. DERS: BİR YAYININ RİTMİNİ KENDİ ARŞİVİNDEN ÖLÇ — varsaymak değil. */
+      const ilkAyIdx = AYLAR.indexOf(bulunanAylar[0]);
+      const s1 = AYLAR[(ilkAyIdx + 1) % 12], s3 = AYLAR[(ilkAyIdx + 3) % 12];
+      d.sonraki_aciklama = AYLAR[ilkAyIdx] + ' sonu (' + s1.slice(0, 3) + '–' + s3.slice(0, 3) + ' stratejisi · aylık kayan)';
     } else {
       d.donem = enYeni.baslik.replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü \-]/g, '').slice(0, 60);
       d.sonraki_aciklama = '—';   /* uydurma yok: baslik cozulemedi */
@@ -3388,12 +3513,15 @@ function fmSatir(F, px, eSeri) {
   if (F && !F.eksik) {
     const pd = (ok(F.adet) && px && ok(px.sonHam)) ? F.adet * px.sonHam : null;
     const ev = (ok(pd) && ok(F.netBorc)) ? pd + F.netBorc : null;
-    M['P/E (LTM)'] = bol(pd, F.netKar); M['EV/EBITDA (LTM)'] = bol(ev, F.favok); M['EV/Sales (LTM)'] = bol(ev, F.ciro);
-    M['P/FCF (LTM)'] = bol(pd, F.sna); M['P/OCF (LTM)'] = bol(pd, F.isletmeNA);
-    M['Net Debt / EBITDA (LTM)'] = bol(F.netBorc, F.favok);
-    M['Total Debt / (EBITDA - Capex) (LTM)'] = (ok(F.favok) && ok(F.capex)) ? bol(F.finBorc, F.favok + F.capex) : null;
-    M['EV/(EBIT-Capex)'] = (ok(F.faal) && ok(F.capex)) ? bol(ev, F.faal + F.capex) : null;
-    M['Total Revenues/CAGR (1Y TTM)'] = F.buyume && ok(F.buyume.ciro) ? F.buyume.ciro : null;
+    /* §458 NM eşikleri: sıfıra yakın payda çarpanı 2.000x yapıyordu (P/E 2325, EV/EBITDA 7859, NetDebt/EBITDA 1432);
+       z-skoru kırpılsa da sektör ortalama/std'yi bozuyor. Koyfin'in "NM"i gibi anlamsız uç BOŞ bırakılır. */
+    const nm = (v, tavan) => (v == null || v > tavan) ? null : v;
+    M['P/E (LTM)'] = nm(bol(pd, F.netKar), 150); M['EV/EBITDA (LTM)'] = nm(bol(ev, F.favok), 150); M['EV/Sales (LTM)'] = nm(bol(ev, F.ciro), 60);
+    M['P/FCF (LTM)'] = nm(bol(pd, F.sna), 150); M['P/OCF (LTM)'] = nm(bol(pd, F.isletmeNA), 150);
+    M['Net Debt / EBITDA (LTM)'] = nm(bol(F.netBorc, F.favok), 20);
+    M['Total Debt / (EBITDA - Capex) (LTM)'] = (ok(F.favok) && ok(F.capex)) ? nm(bol(F.finBorc, F.favok + F.capex), 50) : null;
+    M['EV/(EBIT-Capex)'] = (ok(F.faal) && ok(F.capex)) ? nm(bol(ev, F.faal + F.capex), 150) : null;
+    M['Total Revenues/CAGR (1Y TTM)'] = (F.buyume && ok(F.buyume.ciro) && Math.abs(F.buyume.ciro) <= 300) ? F.buyume.ciro : null;
     M['Capex as % of Revenues (LTM)'] = (ok(F.capex) && ok(F.ciro) && F.ciro > 0) ? -F.capex / F.ciro * 100 : null;
     let t = 0.25; if (ok(F.vergi) && ok(F.vergiOncesi) && F.vergiOncesi > 0) t = Math.min(0.5, Math.max(0, -F.vergi / F.vergiOncesi));
     const nopat = ok(F.faal) ? F.faal * (1 - t) : null;
@@ -3431,8 +3559,12 @@ async function fmHesapla() {
     const adj = d.indicators?.adjclose?.[0]?.adjclose, ham = d.indicators?.quote?.[0]?.close, vol = d.indicators?.quote?.[0]?.volume, ts = d.timestamp || [];
     const cc = (Array.isArray(adj) && adj.some(x => typeof x === 'number')) ? adj : (ham || []);
     const o = { t: [], c: [], v: [], sonHam: null };
-    for (let i = 0; i < ts.length; i++) if (typeof cc[i] === 'number' && cc[i] > 0) { o.t.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); o.c.push(cc[i]); o.v.push(typeof (vol || [])[i] === 'number' ? vol[i] : 0); }
-    for (let i = (ham || []).length - 1; i >= 0; i--) if (typeof ham[i] === 'number' && ham[i] > 0) { o.sonHam = ham[i]; break; }
+    /* §458: seans sürerken (TR saati < 19) günün barı KISMİDİR — Rel. Volume medyanı 0,11 çıktı (hacim yarım),
+       RSI/SMA/EMA da yarım fiyatla hesaplanıyordu. Bugünün barı seans bitmeden kullanılmaz; son TAMAMLANMIŞ seans. */
+    const bugunTR = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }); const saatTR = +new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', hour12: false });
+    let sonIdx = ts.length - 1; while (sonIdx >= 0 && new Date(ts[sonIdx] * 1000).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }) === bugunTR && saatTR < 19) sonIdx--;
+    for (let i = 0; i <= sonIdx; i++) if (typeof cc[i] === 'number' && cc[i] > 0) { o.t.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); o.c.push(cc[i]); o.v.push(typeof (vol || [])[i] === 'number' ? vol[i] : 0); }
+    for (let i = Math.min(sonIdx, (ham || []).length - 1); i >= 0; i--) if (typeof ham[i] === 'number' && ham[i] > 0) { o.sonHam = ham[i]; break; }
     if (o.c.length >= 60) PX[kod] = o;
   } catch (e) {} };
   { let i = 0; const isci = async () => { while (i < uyeler.length) { const k = uyeler[i++]; await tek(k); } }; await Promise.all(Array.from({ length: 8 }, isci)); }
@@ -3470,16 +3602,33 @@ async function fmHesapla() {
   let cikti = '';
   try { cikti = cp.execFileSync('python3', [path.join(KOK, 'arac', 'fm-isle.py'), path.join(KOK, 'fm-girdi.csv'), path.join(KOK, 'fm-oto.json')], { encoding: 'utf8', timeout: 120000 }); }
   catch (e) { raporlar.push('### Faktör skorları (§455) — ✗ fm-isle.py: ' + String(e.stderr || e.message || e).slice(0, 160)); return; }
-  const oto = await oku('fm-oto.json'); const ranked = (oto.meta || {}).ranked || 0; const esik = Math.ceil(uyeler.length * 0.6);
+  const oto = await oku('fm-oto.json'); const ranked = (oto.meta || {}).ranked || 0;
+  /* §459f TERFİ ÖLÇÜTÜ ADET DEĞİL AĞIRLIK (12 Eki): "143 şirket" eşiği (üyelerin %60'ı) ADET sayıyordu —
+     oysa modelin yatırım yapılabilir evreni ağırlıkla ölçülür: sıralanan 112 isim XKTUM ağırlığının
+     ~%78'iydi ve ASELS/BIMAS/TUPRS içerideydi; dışarıda kalan 126 ismin ağırlığı %22 ve çoğu %0,1'in
+     altı. Adet eşiği, 12 Ağu'dan beri Koyfin'in 24 Ağu fotoğrafını ekranda tutuyordu (7 hafta bayat).
+     YENİ: sıralanan AĞIRLIK ≥ %70 VE adet ≥ 100 VE fiyat kapsamı ≥ %80 → terfi. Adet tabanı küçük
+     evrende tek sektörün modeli ele geçirmesini önler; ağırlık tabanı asıl ölçüt.
+     DERS: EŞİĞİ, MODELİN KULLANILDIĞI BÜYÜKLÜKLE AYNI BİRİMDE KOY — adet sayıp ağırlık varsaymak
+     kuyruğun başı rehin almasıdır. */
+  let XWm = {}; try { XWm = (await oku('xktum.json')).uyeler || {}; } catch (e) {}
+  const rankedKod = new Set((oto.data || []).filter(r => r && r.t && r.f && r.f.some(v => typeof v === 'number')).map(r => r.t));
+  const topW = uyeler.reduce((a, k) => a + (XWm[k] || 0), 0);
+  const rankedW = uyeler.filter(k => rankedKod.has(k)).reduce((a, k) => a + (XWm[k] || 0), 0);
+  const agirlikPay = topW > 0 ? rankedW / topW : 0;
+  const esikAdet = 100, esikAgirlik = 0.70;
   oto.meta._kaynak = '§455 kendi verimiz: KAP TTM (faktor-evren.json) + Yahoo fiyat/hacim + XKTUM arşivi · evren resmî XKTUM ' + uyeler.length;
+  oto.meta.agirlik_kapsami = +(agirlikPay * 100).toFixed(1);
   let terfi = false;
   /* §455d: fiyat kaynağı düşmüşse (momentum/risk boş) terfi YOK — eksik faktörle sıralama yanıltır */
   const piyasaYeter = piyasa >= Math.ceil(uyeler.length * 0.8);
-  if (ranked >= esik && piyasaYeter) { await yaz('fm.json', oto); terfi = true; degisenler.push('fm.json (§455 kendi hesap)'); }
+  const esik = esikAdet;
+  if (ranked >= esikAdet && agirlikPay >= esikAgirlik && piyasaYeter) { await yaz('fm.json', oto); terfi = true; degisenler.push('fm.json (§455 kendi hesap · ağırlık %' + (agirlikPay * 100).toFixed(0) + ')'); }
   await yaz('fm-oto.json', oto); degisenler.push('fm-oto');
   const imza = (cikti.match(/YAPISAL IMZA[\s\S]*?(?=\n\n)/) || [''])[0].split('\n').slice(2, 7).map(s => s.trim().replace(/\s+/g, ' ')).join(' · ');
-  raporlar.push('### Faktör skorları (§455) — ✓ sıralanan ' + ranked + '/' + uyeler.length + ' · temel veri ' + temel + ' · fiyat ' + piyasa + ' · beta çıpası ' + (eSeri ? 'XKTUM arşivi' : 'YOK') + (yahooSek ? ' · Yahoo sektör +' + yahooSek : '') +
-    (terfi ? '\n- ✓ fm.json TERFİ ETTİ (eşik ' + esik + ') — panel artık kendi hesabımızla çalışıyor' : ('\n- ⏳ fm.json korunuyor: ' + (!piyasaYeter ? 'fiyat kapsamı ' + piyasa + '/' + uyeler.length + ' (%80 şart)' : 'terfi eşiği ' + esik + ' (temel verisi biriktikçe §361 her koşu +6 şirket)'))) +
+  let rvMed = null; try { const rv = satirlar.slice(1).map(s => parseFloat(s.split(',')[2 + FM_KOLON.indexOf('Rel. Volume')])).filter(x => isFinite(x)).sort((a, b) => a - b); if (rv.length) rvMed = rv[Math.floor(rv.length / 2)]; } catch (e) {}
+  raporlar.push('### Faktör skorları (§455) — ✓ sıralanan ' + ranked + '/' + uyeler.length + ' · temel veri ' + temel + ' · fiyat ' + piyasa + ' · beta çıpası ' + (eSeri ? 'XKTUM arşivi' : 'YOK') + (yahooSek ? ' · Yahoo sektör +' + yahooSek : '') + (rvMed != null ? ' · Rel.Vol medyan ' + rvMed.toFixed(2) + (rvMed < 0.5 ? ' ⚠ (kısmi gün?)' : ' ✓') : '') +
+    (terfi ? '\n- ✓ fm.json TERFİ ETTİ (adet ' + ranked + ' ≥ ' + esikAdet + ' · XKTUM ağırlık kapsamı %' + (agirlikPay * 100).toFixed(1) + ' ≥ %70) — panel kendi hesabımızla çalışıyor' : ('\n- ⏳ fm.json korunuyor: ' + (!piyasaYeter ? 'fiyat kapsamı ' + piyasa + '/' + uyeler.length + ' (%80 şart)' : 'adet ' + ranked + '/' + esikAdet + ' · ağırlık kapsamı %' + (agirlikPay * 100).toFixed(1) + '/70 (§459f)'))) +
     '\n- imza: ' + imza.slice(0, 300));
 }
 
@@ -3608,7 +3757,7 @@ async function faktorEvren() {
     ticariBorc: 'kap-fr_CurrentTradePayables',
     /* §455: faktör skorlarının eksik metrikleri için (FVÖK marjı, NOPAT, ROIC, Altman Z) */
     vergiOncesi: 'ifrs-full_ProfitLossBeforeTax', vergi: 'ifrs-full_IncomeTaxExpenseContinuingOperations',
-    gecmisKar: 'ifrs-full_RetainedEarnings'
+    gecmisKar: 'kap-fr_PriorYearsProfitsOrLosses'   /* §458: KAP bilançoda 'Geçmiş Yıllar Kâr/Zararları' bu kodla (ifrs-full_RetainedEarnings yok — ASELS arşivinde ölçüldü) */
   };
   let basarili = 0, eksikli = 0, dusen = 0, arsivYazilan = 0;
   const notlar = [];
@@ -3630,7 +3779,11 @@ async function faktorEvren() {
         dusen++;
         const sbp = (jd && (jd.err || (jd.hatalar && jd.hatalar[0]))) || 'liste boş';
         notlar.push(kod + ':' + String(sbp).slice(0, 26));
-        ardisikHata++;
+        /* §458 (7 Eki canlı): CITAS/TKNKA/KPEKS her koşu "liste boş" → yaş 0 → hep önde → 3 ardışık hata → devre
+           kesici → O KOŞUDA HİÇ YENİ ŞİRKET ÇEKİLMİYORDU. Veri yokluğu ağ hatası değildir: 'eksik' kaydı yazılır
+           (30 gün sonra yeniden denenir), devre kesici SAYMAZ. */
+        if (/liste boş|boş/.test(String(sbp))) { D.sirketler[kod] = { eksik: true, neden: String(sbp).slice(0, 40), t: bugun, y: YONTEM, kaynak: 'KAP' }; }
+        else ardisikHata++;
         await uyku(3000); continue;
       }
 
