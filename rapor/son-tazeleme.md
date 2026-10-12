@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1994 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903499286132636> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903499254334730> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -96,7 +96,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ✓ üyelik uyumu XKTMT: 41/41 (tam kapsam)
 
 ### Endeks kapanışları — ✓ 87 endeks · veri günü 2026-10-09
-- XKTUM 16253.27 · XKTMT 14547.84 · XK100 14411.23 · XU100 12265.98 · BISTTLREFK 4275.27592
+- XKTUM 16253.27 · XKTMT 14547.84 · XK100 14411.23 · XU100 12265.98 · BISTTLREFK 4279.57063
 - arşiv: 651 gün · dosyalar: bisttlrefkendeksi.csv(1), zip:[FiyatEndeksleri_PriceIndices.csv, GetiriEndeksleri_ReturnIndices.csv], FiyatEndeksleri_PriceIndices.csv(84), GetiriEndeksleri_ReturnIndices.csv(2)
 - ℹ beklenen 404 (§250b: bu dosyalar zip içinde, tekil URL yok): FiyatEndeksleri_PriceIndices.csv:HTTP404 · GetiriEndeksleri_ReturnIndices.csv:HTTP404
 
@@ -121,10 +121,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 2026-10-15 00:30Z · AUD · Employment Change
 - 2026-10-15 00:30Z · AUD · Unemployment Rate
 
-- §383 arşive yazıldı: +5 çeyrek (ek istek YOK — faktörün zaten çektiği tablolar)
-
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 134/238
-- bu turda: 3 tam · 2 eksik kalemli · 3 alınamadı
+- bu turda: 2 tam · 2 eksik kalemli · 3 alınamadı
 - not: §455c arşivden 2 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %77.7 · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · TKNKA:liste boş · KPEKS:liste boş
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
@@ -132,7 +130,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Faktör skorları (§455) — ✓ sıralanan 114/238 · temel veri 115 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.60 ✓
 - ✓ fm.json TERFİ ETTİ (adet 114 ≥ 100 · XKTUM ağırlık kapsamı %77.6 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 114 -0.116 0.772 -2.98 1.13 0 · GROWTH 113 -0.006 0.697 -1.93 2.14 0 · QUALITY 114 -0.010 0.688 -1.77 1.76 0 · MOMENTUM 114 -0.076 0.617 -1.71 2.39 0 · LOW_RISK 114 -0.065 0.729 -1.60 1.58 0
+- imza: VALUE 114 -0.117 0.773 -2.98 1.13 0 · GROWTH 113 -0.003 0.696 -1.93 2.14 0 · QUALITY 114 -0.016 0.687 -1.77 1.76 0 · MOMENTUM 114 -0.076 0.617 -1.71 2.39 0 · LOW_RISK 114 -0.065 0.729 -1.60 1.58 0
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/238 şirket tam
 - GLRMK:7→7 · EFOR:9→9
@@ -180,13 +178,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
   · VHS null: ek bulunamadı (HTTP 200)
   …+2
 
-### SEC ticker yedeği (§448) — ✗ Cannot convert argument to a ByteString because the characte
+### SEC ticker yedeği (§448) — ✓ 10445 kayıt
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (96 fiyat) · Model sicili (27 fiyat) · TR 5Y CDS (247.8 bp) · fon akışı (1993) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (20 olay) · faktör evreni (134/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %78) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor)
-
-### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 70 sn
-- ⏱ KAP arşivi (§381) — 62 sn
-- toplam: 239 sn
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (102 fiyat) · Model sicili (30 fiyat) · TR 5Y CDS (247.8 bp) · fon akışı (1993) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (20 olay) · faktör evreni (134/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %78) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor) · sec-tickers
