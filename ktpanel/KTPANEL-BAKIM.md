@@ -3,8 +3,107 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-08-28
+Son güncelleme: 2026-10-12
 
+
+# BAKIM EK — §459 (12 Eki 2026) — PANEL TARAMASI: SEZON DONDU, DAMGALAR KALDI
+
+## §459 TARAMA BULGULARI (sekme sekme, tarayici + depo)
+Nobet listesi 3 bayat / 2 yaklasti diyordu; gercek bayatlik listenin DISINDAYDI. Nobet
+dosya tarihine bakar, icerigin sezonuna bakmaz:
+  1) BILANCO TAKVIMI (t1 kart 08): bist-takvim.json 18 Agu'da (2C26) kalmis — Ekim ortasinda
+     "JANTS GECIKTI · ENJSA yayinlandi · SPK siniri 14–29 Agu" basiyordu, Ebu o olu tabloya
+     "takvim aktif seyrediyor" diye taze yorum yaziyordu (§166 hastaligi, veri katmaninda).
+  2) OKUMA & REEL FAIZ (mk-faiz): app.js'te OKU_TUFE=31,75 / OKU_BEK=23,95 (9 Agu) gomulu;
+     ayni sekmenin ust karti EVDS'den CANLI %29,7 / %23,7 okuyor → 2Y reel 2 puan yanlis,
+     ayni ekranda iki TUFE. DAMGA altin kural 3 ihlali, ikinci kez (§252d'de de olmustu).
+  3) TCMB karti (mk-para): h2 "23 Tem PPK sonrasi", kv satiri "Sonraki toplanti 10 Eylul —
+     agustosta toplanti yok"; 10 Eyl gecmis, karar metni islenmemis. Rezerv anlatisi
+     Temmuz'da (17 Tem haftasi) kalmis; rezerv.json 25 Eyl'de (8 Eki yayini islenmemis).
+  4) MAKROIHTIYATI karti "13 Eyl tarama · son adim 1 Tem": 1 Eki'de KOBİ siniri %4,5→5 ve
+     TL ZK bloke tesis indirimi (%40→35, %30→15) VARDI, kartta yoktu. Kredi Egilim Anketi
+     3C26 (2 Eki) de islenmemisti.
+  5) ULKE KREDI NOTU: "S&P son bilinen" — S&P 16 Eki takvimli degerlendirme (BB-/duragan,
+     16/16 analist degisiklik yok; S&P 2 Eki: fon sorusturmasi izole kaldikca baski yok).
+  6) KRITIK TAKVIM 2 Eki–2 Kas penceresindeydi, ilk uc satiri gecmis olaydi.
+  7) HABERLER GUNDEM OZETI "10 EYL" haftasini anlatiyordu (FED 15-16 Eyl, Sali AKBNK);
+     plan 2 Eki damgaliydi ama icerik Eylul'du — damga guncellenmis, icerik degil.
+  8) HALKA ARZLAR "arz→bugun" diyordu, "bugun" 25 Agu'ydu; Eylul arzlari fiyatsiz.
+  9) KATILIM FONLARI notu "13 Tem itibariyla · %32,11 TUFE" (91 gun).
+ 10) PORTFOY likidite notu "17–29 Temmuz olay penceresi" gomulu metin.
+ 11) HAZINE takvimi "sonraki aciklama ~25 Ocak" — strateji AYLIK KAYAN (31 Agu Eyl–Kas,
+     30 Eyl Eki–Ara), sıradaki Ekim sonu. Kod ceyreklik varsayiyordu.
+ 12) FAKTOR MODELI: fm.json 24 Agu (Koyfin) — terfi 112/143'te takili; §458 tazele.mjs
+     depoya YUKLENMEMIS (deponun dosyasi §457 ile birebir), devre kesici her kosuda
+     CITAS/TKNKA/KPEKS "liste bos" uclusunde tetikleniyor (uclu 2026 halka arzi, 3C25
+     raporu yok). Terfi esigi ADET sayiyordu; siralanan 112 isim XKTUM agirliginin %78'i.
+ 13) Actions 38225451001 (11:44, hepsi): YESIL, veri commit'lendi; "exit code 100"
+     apt-get poppler (continue-on-error) → fon portfoy katmani bu kosuda atlandi.
+     SEC ticker yedegi 403 (EDGAR_UA secret + yml hala bekliyor).
+DOGRULANDI (web): TCMB 10 Eyl %37 sabit, koridor 35,5–40 (CNN Turk canli) · rezerv 2 Eki
+haftasi brut 167,4 / net 53,8 / swap haric 37,9 (CNBC-e) → swap stoku 15,9 · makroihtiyati
+1 Eki (Bloomberg HT) · Kredi Egilim Anketi 3C26 2 Eki (Bloomberg HT) · S&P 16 Eki (Dunya).
+
+## §459 YAPILANLAR
+a) OKU_* sabitleri CANLIYA BAGLANDI: loadEnflasyonBeklenti() → window.ENF_CANLI
+   {tufe,bek,ay}; zincirCiz() → window.POL_CANLI (BIS politika faizi, 5–80 suzgeci);
+   egriRender() once bunlara bakar, yoksa damgaliya duser ve ETIKETTE SOYLER (canli/damgali).
+   Canli gelince egriRender yeniden cagrilir — sira onemsiz. katfon notu da ayni TUFE'yi alir.
+b) BILANCO TAKVIMI 3C26: KAP byCriteria (tetigin kullandigi uc) ile 3C25 "Finansal Rapor"
+   yayin tarihleri (569 sirket, 14 Eki–30 Kas 2025, 3 gunluk dilimler; yanit 2000'de KESILIYOR)
+   → +364 gun (ayni hafta gunu; hafta sonu → Pazartesi) → 215 tahmin (evren 239: XKTUM+XK100+
+   uyeler). Tahmin yok 24 (2025-26 arzlari + MAVI/TKFEN mali yili farkli). SPK 3C26: solo 30 Eki,
+   konsolide 9 Kas. Dagilim: 9 Kas 87 · 29 Eki 48 · 6 Kas 33. Ilk: EREGL/ISDMR 19 Eki.
+   Render (§459b): GECIKTI 3 gun toleransli, dipnot DOSYADAN (_spk_kisa, donem) — "14–29 Agu"
+   kodda gomuluydu. tazele.mjs §459: sezonBul() + kapFrPencere() + bilancoTakvimIsle():
+   sezon basinda tahmin uretir (dosyanin donem'i degistiyse), her kosuda tetik sorgusunun
+   FR kayitlarindan gerceklesen'i yazar (ek istek yok). Fintables'a bagimlilik kalkti.
+c) HALKA ARZ CANLI: halkaarzCanli() /api/market?mod=fiyat ile arz kodlarini ceker, getiri =
+   guncel ÷ arz − 1; ozet etiketi tarih + "canli N" yazar, canli gelmezse "damgali".
+d) Likidite notu olay penceresi genel ("PPK · FOMC · 3C26").
+e) katfon notu: tarih KATFON.fiyat_tarihi'nden, TUFE canli.
+f) TERFI OLCUTU: adet ≥100 VE XKTUM agirlik kapsami ≥%70 VE fiyat ≥%80 (adet 143 yerine).
+   Mevcut durum 112 adet / %78 agirlik → §458 yuklenince ilk kosuda terfi beklenir.
+g) Hazine sonraki_aciklama: "<ilk ay> sonu (… stratejisi · aylik kayan)".
+h) index.html: TCMB karti (10 Eyl karari + metni, 22 Eki), rezerv anlatisi (2 Eki, 6 hafta),
+   rejim satiri, kredi notu (S&P 16 Eki), makroihtiyati (1 Eki adimi + KEA 3C26 + okuma),
+   kritik takvim 12 Eki–12 Kas (S&P, rezerv, 3C26 sezon, SPK sinirlari), gundem ozeti 12 Eki
+   (ABD TUFE, S&P, rezerv, fon akisi −6,9, PYS Kuveyt Turk −10,8, MKK −1.757), baslik yedegi.
+   rezerv.json 2 Eki (swap 15,9) · guncelleme-plani son tarihleri · hazine-takvim notu.
+KALAN (bu turda yapilmadi, nedeniyle): BOK & Piyasa karti 9 Eyl (icerik dogru, 22 Eki BoK
+sonrasi yenilenir) · Avrupa mega-cap arastirmasi 27 Tem (ASML/LVMH 3C 14–15 Eki sonrasi) ·
+Fed bilanco anlatisi 27 Tem (QT; FOMC 28 Eki sonrasi) · guidance.json 25 Agu (3C sonuclariyla)
+· fm.json terfisi (§458 yuklenmeli) · EDGAR_UA secret.
+DERS: NOBET DOSYA TARIHINE BAKAR, SEZONA BAKMAZ — sezonluk katmanlarda "son" tarihi degil
+"hangi donem" sorusu sorulmali. Ikinci ders: DAMGAYI GUNCELLEYIP ICERIGI GUNCELLEMEMEK, hic
+guncellememekten kotudur (gundem ozeti 2 Eki damgali Eylul metniydi).
+DEPLOY: ktpanel/{index.html, app.js (20261012a), bist-takvim.json, rezerv.json,
+guncelleme-plani.json, hazine-takvim.json, KTPANEL-BAKIM.md} · scripts/tazele.mjs (§458+§459).
+
+# BAKIM EK — §458 (7 Eki 2026) — FAKTOR MODELI SORGUSU
+
+## §458 "DUZGUN CALISIYOR MU?" — fm-girdi.csv (238 x 29) metrik metrik incelendi
+SAGLAM: temel oranlar makul (BIMAS F/K 18,5 · FD/FAVOK 11,2 · ROE 12,9; TUPRS F/K 10,9 ·
+FD/FAVOK 6,2 · net nakit; ASELS F/K 46 · FD/FAVOK 30,5; MAVI brut marj %52); vol 27-104,
+beta 0,15-1,65; 6A getiri medyan −22 ve SMA50 −18 (cokus donemi ile tutarli); 112 siralanan.
+HATALAR (duzeltildi):
+1) Rel. Volume medyan 0,11 (olmasi gereken ~1): kosu 11:22'de — Yahoo'nun gunluk bari
+   KISMI (seans surerken). RSI/SMA/EMA de yarim fiyatla hesaplaniyordu. Artik TR saati <19
+   iken bugunun bari atilir; son TAMAMLANMIS seans kullanilir. Rapora "Rel.Vol medyan" gostergesi
+   (<0,5 ise ⚠).
+2) Uc paydalar: P/E 2325, EV/EBITDA 7859, NetDebt/EBITDA 1432, ciro buyumesi %3934 —
+   kirpma olsa da sektor ortalama/std'yi bozuyordu. Koyfin'in NM'i gibi esik: P/E, EV/EBITDA,
+   P/FCF, P/OCF, EV/(EBIT-Capex) >150 → bos; EV/Sales >60; NetDebt/EBITDA >20; Borc/(EBITDA
+   -Capex) >50; buyume |%|>300 → bos.
+3) Altman Z = 0 hisse: gecmisKar kodu yanlisti (ifrs-full_RetainedEarnings); KAP'ta
+   'kap-fr_PriorYearsProfitsOrLosses' (ASELS arsivinde olculdu). Duzeltildi.
+4) §361 KILIT: CITAS/TKNKA/KPEKS her kosu "liste bos" → yas 0 → hep onde → 3 ardisik hata
+   → devre kesici → o kosuda HIC yeni sirket cekilmiyordu (bugun ag partisi 0). Veri
+   yoklugu artik 'eksik' kaydi (30 gun sonra yeniden), devre kesici saymaz.
+ACIK: 60 hissede sektor yok (Yahoo assetProfile crumb istiyor, cekilemedi) → tum evrene karsi
+   normalize (kabul edilebilir); Fintables kurumsal bilgi kartindan tamamlanabilir (ayri is).
+   FVOK/NOPAT/ROIC/Altman yalniz yeni cekilenlerde (17); eskiler rotasyonla dolar.
+DEPLOY: scripts/tazele.mjs.
 
 # BAKIM EK — §457 (7 Eki 2026)
 

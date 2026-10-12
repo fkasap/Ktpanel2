@@ -2,7 +2,7 @@
  "kaynak": "HMB İç Borçlanma Stratejisi (26 May 2026)",
  "donem": "Ekim–Aralık 2026",
  "guncelleme": "2026-09-30",
- "sonraki_aciklama": "~25 Ocak (Oca–Mar stratejisi)",
+ "sonraki_aciklama": "Ekim sonu (Kas–Oca stratejisi · aylık kayan)",
  "finansman": [
   {
    "ay": "Ekim",
@@ -168,5 +168,6 @@
  ],
  "_kaynak_slug": "ekim-aralik-2026-ic-borclanma-stratejisi",
  "_kaynak_pdf": "https://ms.hmb.gov.tr/uploads/2026/09/Tr10-Ekim-Aralik-2026-Ic-Borclanma-Stratejisi-cb8d52ad2125052a.pdf",
- "_ayristirici": "v5"
+ "_ayristirici": "v5",
+ "_459": "12 Eki: \"~25 Ocak\" notu yanlıştı — HMB üç aylık strateji AYLIK KAYAN (31 Ağu Eyl–Kas, 30 Eyl Eki–Ara). Sıradaki yayın Ekim sonu. tazele.mjs §459g aynı kuralı uygular."
 }

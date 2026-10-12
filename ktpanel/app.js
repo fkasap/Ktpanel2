@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261007a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261012a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2184,7 +2184,7 @@ function renderPoz(){
   const w=$('ccWarn');
   if(!poz.length){w.className='note';w.innerHTML='Pozisyon ekleyerek başla. Fon seçersen fiyat TEFAS\u0027tan otomatik çekilir; hisse fiyatı girişte yazdığın değerle başlar, sonrasında panel açılışlarında Yahoo\u0027dan otomatik tazelenir. Getiriler maliyete göredir.';}
   else if(topW>35){w.className='note warn';w.innerHTML='<em>Konsantrasyon uyarısı:</em> '+esc(top.kod)+' portföyün %'+trN(topW,1)+'\u0027i. Tek pozisyonun %35\u0027i aşması, portföy getirisini tek hikayeye bağlar — Journal\u0027daki tezinin bu ağırlığı hak edip etmediğini sorgula.'}
-  else if(toplam>0&&nakit/toplam<0.02){w.className='note warn';w.innerHTML='<em>Likidite notu:</em> nakit %2\u0027nin altında. 17–29 Temmuz olay penceresinde fırsat alımı için kuru barut kalmamış.';}
+  else if(toplam>0&&nakit/toplam<0.02){w.className='note warn';w.innerHTML='<em>Likidite notu:</em> nakit %2\u0027nin altında. Önümüzdeki olay penceresinde (PPK · FOMC · 3Ç26 bilançoları) fırsat alımı için kuru barut kalmamış.';   /* §459d: "17–29 Temmuz" gömülüydü */}
   else{w.className='note';w.innerHTML='Dağılım dengeli görünüyor. Hisse fiyatları panel her açılışında ve bu sekmeye her girişte Yahoo\u0027dan otomatik tazelenir'+(POZ_FIYAT_SAAT?' (son: '+POZ_FIYAT_SAAT+')':'')+'; fonlarda ↻ TEFAS\u0027tan çeker.';}
   riskStresGuncelle();
 }
@@ -2413,6 +2413,7 @@ async function katfonCanli(){
        Eski metin kaldırılan bir süreci anlatmaya devam ediyordu — kullanıcıya
        var olmayan bir kısıt hatırlatmak, gerçek kısıtları da inandırıcılıktan
        düşürür. */
+    try{ const kt=$('katfonNotTarih'); if(kt) kt.textContent=String(KATFON.fiyat_tarihi||'son tazeleme'); }catch(e){}   /* §459e */
     damgala('getiriler '+esc(KATFON.fiyat_tarihi||'?')+
           ' · AUM/akış '+esc(KATFON.akis_tarihi||'?')+
           ((KATFON.fiyat_tarihi===KATFON.akis_tarihi)
@@ -2738,6 +2739,12 @@ async function loadEnflasyonBeklenti(){
     if($('ppkPiya')&&gPiya!=null){$('ppkPiya').innerHTML='%'+trN(gPiya,1)+' <span class="thin" style="font-size:9px">· canlı</span>';
       if($('ppkPiyaTag')&&gGercek!=null){const makas=gPiya-gGercek;$('ppkPiyaTag').textContent='(makas '+(makas>=0?'+':'')+trN(makas,1)+'pp)';}}
     if($('ppkHane')&&gHane!=null)$('ppkHane').innerHTML='%'+trN(gHane,1)+' <span class="thin" style="font-size:9px">· canlı</span>';
+    /* §459a: aynı değerler Okuma & Reel Faiz kartına ve katılım fonu notuna */
+    try{
+      window.ENF_CANLI={ tufe:gGercek, bek:gPiya, ay:(ayAd[tm]+' '+String(ty).slice(2)) };
+      if(typeof egriRender==='function') egriRender();
+      const kt=$('katfonNotTufe'); if(kt&&Number.isFinite(gGercek)) kt.textContent='%'+trN(gGercek,1)+' · '+ayAd[tm]+' '+String(ty).slice(2)+' · canlı';
+    }catch(e){}
   }catch(e){el.innerHTML='<div class="sub">Grafik yüklenemedi.</div>';}
 }
 
@@ -3330,14 +3337,25 @@ function egriRender(){
      POLITIKA 37 DEGISMEDI — 23 Tem PPK sabit tuttu, dogrulandi.
      Panel kendi icinde celisiyordu: bilanco tezi metni ve index.html:707 zaten %31,75 diyordu,
      bu sabit ise %32,11'de kalmisti -> 2Y/10Y REEL GETIRI 0,36 puan yanlis hesaplaniyordu. */
-  const OKU_POLITIKA=37, OKU_TUFE=31.75, OKU_BEK=23.95;
-  /* §258 ETİKETLER DE BU SABİTTEN. index.html'de "cari TÜFE %32,11" ve
-     "12a beklenti %23,81" SABİT YAZILIYDI; §252d hesabı düzeltti ama etiketi
-     düzeltmedi ve aynı satırda doğru değer + yanlış gerekçe yan yana kaldı.
-     Artık tek kaynak. */
+  /* §459a (12 Eki, taramada yakalandı): bu üç sabit 9 Ağu'da yazılmış ve
+     ORADA KALMIŞTI — TÜFE 31,75 (Tem) ve 12a beklenti 23,95 (Tem anketi),
+     oysa aynı ekranın üst kartı EVDS'den CANLI %29,7 (Eyl) ve %23,7 okuyordu.
+     2Y reel getiri 2 puan yanlış, aynı sekmede iki farklı TÜFE. DAMGA altın
+     kural 3'ün aynısı: canlı kartın içinde elle yazılmış rakam, ikinci kez.
+     ÇÖZÜM: loadEnflasyonBeklenti() canlı değerleri window.ENF_CANLI'ya,
+     zincirCiz() politika faizini window.POL_CANLI'ya bırakır; bu kart önce
+     onlara bakar, yoksa damgalıya düşer ve ETİKETTE SÖYLER. Canlı geldiğinde
+     egriRender() yeniden çağrılır, böylece sıra önemsizleşir.
+     DERS: AYNI BÜYÜKLÜK PANELDE İKİ YERDE GÖRÜNÜYORSA TEK KAYNAKTAN BESLENMELİ —
+     ikisi arasındaki fark bir gün kullanıcının gözüne takılır. */
+  const _EC=(window.ENF_CANLI&&Number.isFinite(window.ENF_CANLI.tufe))?window.ENF_CANLI:null;
+  const _PC=(window.POL_CANLI&&Number.isFinite(window.POL_CANLI.deger))?window.POL_CANLI:null;
+  const OKU_POLITIKA=_PC?_PC.deger:37, OKU_TUFE=_EC?_EC.tufe:31.75, OKU_BEK=(_EC&&Number.isFinite(_EC.bek))?_EC.bek:23.95;
   try{
-    const et1=$('okuTufeEt'); if(et1) et1.textContent='(cari TÜFE %'+trN(OKU_TUFE,2)+"'e göre)";
-    const et2=$('okuBekEt');  if(et2) et2.textContent='(12a beklenti %'+trN(OKU_BEK,2)+')';
+    const ay=_EC&&_EC.ay?(' · '+_EC.ay):'';
+    const et1=$('okuTufeEt'); if(et1) et1.textContent='(cari TÜFE %'+trN(OKU_TUFE,2)+(_EC?"'e göre · canlı"+ay+')':"'e göre · damgalı Tem)");
+    const et2=$('okuBekEt');  if(et2) et2.textContent='(12a beklenti %'+trN(OKU_BEK,2)+((_EC&&Number.isFinite(_EC.bek))?' · canlı)':' · damgalı Tem)');
+    const et0=$('okuPolEt'); if(et0) et0.textContent='(%'+trN(OKU_POLITIKA,2)+(_PC?' · canlı)':' · damgalı)');
   }catch(e){}
   const y2=EGRI_CANLI&&EGRI_CANLI['2Y']?EGRI_CANLI['2Y'].getiri:null;
   const y10=EGRI_CANLI&&EGRI_CANLI['10Y']?EGRI_CANLI['10Y'].getiri:null;
@@ -4815,7 +4833,28 @@ $('btnYenile').addEventListener('click',async()=>{
 
 /* ---- Halka Arzlar ---- */
 let HALKAARZ=null;
-async function halkaarzInit(){try{HALKAARZ=await (await fetch('/halkaarz.json',{cache:'no-store'})).json();}catch(e){return;}halkaarzRender();}
+async function halkaarzInit(){try{HALKAARZ=await (await fetch('/halkaarz.json',{cache:'no-store'})).json();}catch(e){return;}halkaarzRender();halkaarzCanli();}
+/* §459c HALKA ARZ GETİRİSİ CANLI (12 Eki, taramada yakalandı): kart "arz→bugün"
+   diyordu ama "bugün" dosyanın fiyat_tarihi'ydi — 25 Ağu. 48 gün bayat getiri,
+   üstelik Eylül arzları (NETGL, INTET, BKRGY) fiyatsız/getirisiz duruyordu.
+   Fiyat zaten /api/market?mod=fiyat ile 141 hisse için çekiliyor; aynı uç
+   arz kodları için de çağrılır, getiri = güncel ÷ (düzeltilmiş) arz − 1.
+   Dosyadaki getiri DAMGALI yedek olarak kalır; canlı gelmezse o görünür ve
+   etiket tarihi söyler. DERS: "BUGÜN" YAZAN HER ETİKETİN ARKASINDA GERÇEKTEN
+   BUGÜNÜN VERİSİ OLMALI — yoksa etiket tarihi yazmalı. */
+async function halkaarzCanli(){
+  try{
+    if(!HALKAARZ||!Array.isArray(HALKAARZ.arzlar)) return;
+    const kodlar=HALKAARZ.arzlar.filter(a=>a&&a.k&&Number.isFinite(a.arz)&&a.arz>0).map(a=>a.k);
+    if(!kodlar.length) return;
+    const r=await fetch('/api/market?mod=fiyat&kodlar='+encodeURIComponent(kodlar.join(',')));
+    if(!r.ok) return;
+    const d=await r.json(); if(!d||!d.ok||!d.fiyat) return;
+    let n=0;
+    HALKAARZ.arzlar.forEach(a=>{ const f=d.fiyat[a.k]; if(Number.isFinite(f)&&f>0&&Number.isFinite(a.arz)&&a.arz>0){ a.guncel=f; a.getiri=+((f/a.arz-1)*100).toFixed(1); a._canli=true; n++; } });
+    if(n){ HALKAARZ._canli={ adet:n, tarih:d.tarih||new Date().toISOString().slice(0,10) }; halkaarzRender(); }
+  }catch(e){}
+}
 function halkaarzRender(){
   if(!HALKAARZ||!$('halkaarzBody'))return;
   const arr=HALKAARZ.arzlar, gec=arr.filter(a=>a.getiri!=null);
@@ -4823,7 +4862,7 @@ function halkaarzRender(){
   const eIyi=gec.reduce((a,b)=>b.getiri>a.getiri?b:a), eKotu=gec.reduce((a,b)=>b.getiri<a.getiri?b:a);
   if($('halkaarzOzet'))$('halkaarzOzet').innerHTML=
     '<div class="card" style="padding:8px 12px"><div class="lbl">2026 ARZ</div><div class="val">'+arr.length+'</div><div class="sub">'+katUygun+' katılım-uygun</div></div>'+
-    '<div class="card" style="padding:8px 12px"><div class="lbl">ORT. GETİRİ</div><div class="val '+(ort>=0?'up':'down')+'">'+(ort>=0?'+':'')+trN(ort,0)+'%</div><div class="sub">arz→bugün</div></div>'+
+    '<div class="card" style="padding:8px 12px"><div class="lbl">ORT. GETİRİ</div><div class="val '+(ort>=0?'up':'down')+'">'+(ort>=0?'+':'')+trN(ort,0)+'%</div><div class="sub">'+(HALKAARZ._canli?('arz→'+esc(String(HALKAARZ._canli.tarih))+' · canlı '+HALKAARZ._canli.adet):('arz→'+esc(String(HALKAARZ.fiyat_tarihi||'?'))+' · damgalı'))+'</div></div>'+
     '<div class="card" style="padding:8px 12px"><div class="lbl">EN İYİ</div><div class="val up">'+eIyi.k+'</div><div class="sub">+'+trN(eIyi.getiri,0)+'%</div></div>'+
     '<div class="card" style="padding:8px 12px"><div class="lbl">EN KÖTÜ</div><div class="val down">'+eKotu.k+'</div><div class="sub">'+trN(eKotu.getiri,0)+'%</div></div>';
   $('halkaarzBody').innerHTML=arr.map(a=>{
@@ -6446,6 +6485,8 @@ function zincirCiz(z){
   const el=$('thZincir'); if(!el||!z) return;
   const F=(v,d)=>v==null||!isFinite(v)?'—':trN(v,d==null?2:d);
   const h=z.halkalar, ilk=h[0]&&h[0].deger;
+  /* §459a: BIS derlemesinden gelen politika faizi Okuma & Reel Faiz kartına da (makul aralık süzgeci) */
+  try{ if(Number.isFinite(ilk)&&ilk>5&&ilk<80){ window.POL_CANLI={deger:ilk, tarih:(h[0]&&h[0].tarih)||null}; if(typeof egriRender==='function') egriRender(); } }catch(e){}
   el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px">'+
     h.map((x,i)=>{
       if(!x) return '<div class="card" style="padding:7px 11px;opacity:.5"><div class="lbl">'+esc(ZINCIR[i].ad)+
@@ -9476,12 +9517,22 @@ function bistTakvimRender(){
     'NVDA','AMD','CSCO','HD','IBM','NOW','ORCL','CRM','ADBE','QCOM','MU','AVGO','ASML','PLTR',
     'DIS','GS','MS','BAC','C','WFC','V','MA','AXP','BLK','UNH','JNJ','MCD','MRK','PFE','LLY','ABBV','CVX']);
   const bugun=new Date().toISOString().slice(0,10);
-  const aciklanan=K.filter(k=>k.kod&&/^[A-Z]{4,5}$/.test(k.kod)&&!ABD.has(k.kod))
+  /* §459b SEZON SÜZGECİ: açıklananlar inceleme-ai kartlarından gelir; sezon dönünce
+     2Ç26 kartları (19 Ağu) 3Ç26 beklenenlerin yanında "açıklandı" diye duruyordu.
+     Takvim dosyası sezon başlangıcını (_sezon_bas) taşır; ondan eski kart listeye girmez. */
+  const _sezonBas=(typeof BISTTAK!=='undefined'&&BISTTAK&&BISTTAK._sezon_bas)?BISTTAK._sezon_bas:null;
+  const aciklanan=K.filter(k=>k.kod&&/^[A-Z]{4,5}$/.test(k.kod)&&!ABD.has(k.kod)&&(!_sezonBas||String(k.tarih_iso||'')>=_sezonBas))
     .map(k=>({kod:k.kod, iso:k.tarih_iso||'', skor:k.skor, durum:'açıklandı'}));
   const varOlan=new Set(aciklanan.map(x=>x.kod));
   const B=(typeof BISTTAK!=='undefined'&&BISTTAK&&BISTTAK.beklenen)?BISTTAK.beklenen:{};
+  /* §459b GECİKTİ TOLERANSI (12 Eki): tahmin yöntemi 10 Ağu ölçümünde ortalama
+     2,7 gün sapıyordu; tahminin ertesi günü "GECİKTİ" basmak yöntemin kendi
+     gürültüsünü şirkete suç diye yazmaktı. 3 iş günü tolerans; SPK sınırı
+     geçildiyse toleranssız. */
+  const _tol=(function(){ const d=new Date(); d.setDate(d.getDate()-3); return d.toISOString().slice(0,10); })();
+  const _spkSon=(typeof BISTTAK!=='undefined'&&BISTTAK&&BISTTAK._spk_son)?BISTTAK._spk_son:null;
   const bekleyen=Object.keys(B).filter(k=>!varOlan.has(k))
-    .map(k=>({kod:k, iso:B[k], durum:(B[k]<bugun?'gecikti':'bekleniyor')}));
+    .map(k=>({kod:k, iso:B[k], durum:((B[k]<_tol)||(_spkSon&&_spkSon<bugun&&B[k]<bugun)?'gecikti':'bekleniyor')}));
   /* §252r GERCEKLESEN BLOGU. Takvimde artik iki blok var: `beklenen` (tahmin)
      ve `gerceklesen` (KAP'ta yayinlanmis GERCEK tarih). Render onceden yalniz
      `beklenen`i okuyordu ve aciklananlari INC_KARTLAR'dan aliyordu — yani
@@ -9521,14 +9572,17 @@ function bistTakvimRender(){
         (a?'<b style="color:'+skorRenk(x.skor)+'">'+(typeof x.skor==='number'?'skor '+trN(x.skor,1):esc(String(x.skor||'—')))+'</b> <span class="thin">· kart var</span>':'<span class="thin">tahmini tarih</span>')+
         ' '+rozet+'</td></tr>';
   };
-  el.innerHTML='<table><tbody>'+bek.slice(0,7).map(satir).join('')+
+  el.innerHTML='<table><tbody>'+bek.slice(0,9).map(satir).join('')+
     (bek.length&&acik.length?'<tr><td colspan="3" style="padding:3px 0"><div style="border-top:1px dashed var(--line2)"></div></td></tr>':'')+
     acik.slice(0,7).map(satir).join('')+'</tbody></table>'+
     '<div class="sub" style="font-size:10px;margin-top:5px">'+
     bek.length+' beklenen (tahmini · geçen yılın aynı dönem tarihinden) + '+acik.length+' açıklanan (kart var). '+
     'Şirket açıklayınca beklenen listesinden <b>düşer</b>, açıklananlara geçer. '+
     ((typeof BISTTAK!=='undefined'&&BISTTAK&&BISTTAK.farkli_mali_yil)?'<span class="thin">Mali yılı farklı: '+Object.keys(BISTTAK.farkli_mali_yil).join(', ')+'.</span> ':'')+
-    '<span class="thin">Tahmin bağlayıcı değildir; SPK sınırı 14–29 Ağu.</span></div>';
+    /* §459b: sınır ve dönem DOSYADAN — "14–29 Ağu" kodda gömülüydü, 3Ç26'da da onu basıyordu */
+    '<span class="thin">'+esc((BISTTAK&&BISTTAK.donem)?BISTTAK.donem+' · ':'')+'Tahmin bağlayıcı değildir; SPK sınırı '+esc((BISTTAK&&BISTTAK._spk_kisa)||'—')+'.'+
+    ((BISTTAK&&BISTTAK._tahmin_yok&&BISTTAK._tahmin_yok.kodlar&&BISTTAK._tahmin_yok.kodlar.length)?(' Tahmin yok ('+BISTTAK._tahmin_yok.kodlar.length+' kod: yeni arz / farklı mali yıl) — açıklayınca gerçek tarihiyle girer.'):'')+
+    '</span></div>';
 }
 /* §166 BIST BİLANÇO TAKVİMİ — CANLI.
    TEŞHİS: "08 Bilanço Takvimi" başlığı "Ebu günlük bakımında" diyordu ve Ebu'nun

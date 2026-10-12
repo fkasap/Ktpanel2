@@ -101,7 +101,8 @@
    "dosya": "index.html",
    "siklik": "olay",
    "son": "2026-07-17",
-   "kaynak": "Fitch/Moody's/S&P rating kararları (web) — sonraki Fitch ~Ocak 2027"
+   "kaynak": "Fitch/Moody's/S&P rating kararları (web) — sonraki Fitch ~Ocak 2027",
+   "_459": "12 Eki: S&P 16 Eki takvimli degerlendirme karta islendi (BB-/duragan, 16/16 analist degisiklik yok). Sonuc 16 Eki aksami ELLE islenir; olay tarihi (son) o gun guncellenir."
   },
   {
    "ad": "Sanayi üretimi / makro",
@@ -226,8 +227,8 @@
    "ad": "Swap stoku (rezerv bileşeni)",
    "dosya": "rezerv.json",
    "siklik": "haftalik",
-   "son": "2026-10-02",
-   "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır) · son: 25 Eyl haftasi (1 Eki yayini) §449",
+   "son": "2026-10-12",
+   "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır) · son: 2 Eki haftasi (8 Eki yayini) §459",
    "limit_gun": 13,
    "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği."
   },
@@ -252,19 +253,21 @@
   {
    "ad": "BIST beklenen bilanco takvimi",
    "siklik": "ceyreklik",
-   "son": "2026-08-10",
+   "son": "2026-10-12",
    "sezon": true,
    "kaynak": "bist-takvim.json — TAHMIN. Gecen yilin ayni donem KAP aciklama tarihi, ayni hafta gunune hizalanarak tasinir. Her CEYREK BASINDA yenilenir (yeni donemin tahminleri). Sorgu: SELECT hisse_senedi_kodu, yayinlanma_tarihi_utc FROM hisse_finansal_tablolari WHERE yil=<oncekiYil> AND ay=<donem>. SPK sinirini asan tahminler 'farkli_mali_yil' altina ayrilir (MAVI, TKFEN gibi).",
-   "dosya": "bist-takvim.json"
+   "dosya": "bist-takvim.json",
+   "_459": "12 Eki: 3C26 takvimi KAP byCriteria ile (3C25 yayin tarihleri +364 gun) uretildi — Fintables yerine KAP; Actions §459 her sezon basinda kendisi uretir, gerceklesenleri gunluk tetik sorgusundan isler."
   },
   {
    "ad": "BIST bilanço takvimi",
    "dosya": "bist-takvim.json",
    "siklik": "ceyreklik",
-   "son": "2026-08-10",
+   "son": "2026-10-12",
    "kaynak": "KAP beklenen bildirimler + Fintables",
    "_245": "§F0 ihlali: panele veri besliyordu ama kayıtta YOKTU → sessizce eskiyordu.",
-   "_450": "haftalik degil: 3C sezonu Ekim sonu (§450)"
+   "_450": "haftalik degil: 3C sezonu Ekim sonu (§450)",
+   "_459": "12 Eki: 3C26 takvimi KAP byCriteria ile (3C25 yayin tarihleri +364 gun) uretildi — Fintables yerine KAP; Actions §459 her sezon basinda kendisi uretir, gerceklesenleri gunluk tetik sorgusundan isler."
   },
   {
    "ad": "Gunluk fon akisi",
@@ -330,7 +333,7 @@
    "ad": "TCMB Fonlama Rejimi kartı (damgalı satırlar)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-02",
+   "son": "2026-10-12",
    "limit_gun": 21,
    "kaynak": "PPK takvimi: 10 Eyl SABİT %37 (§436b) → 22 Eki → Aralık. Karar sonrası satırlar/etiket tazelenir"
   },
@@ -338,7 +341,7 @@
    "ad": "Haberler Gündem Özeti kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-02",
+   "son": "2026-10-12",
    "limit_gun": 7,
    "kaynak": "Haftalık omurga — her Pazartesi ya da merkez bankası günü sonrası (§436)"
   },
@@ -370,7 +373,7 @@
    "ad": "Makroihtiyati & Kredi Koşulları kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-13",
+   "son": "2026-10-12",
    "limit_gun": 45,
    "kaynak": "TCMB makroihtiyati basın duyuruları + Kredi Eğilim Anketi (3Ç26 Ekim başı). Yeni adım/anket çıkınca tazelenir (§440)"
   },
