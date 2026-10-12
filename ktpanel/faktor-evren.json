@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-12T08:46:04Z",
+ "guncelleme": "2026-10-12T12:15:30Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -350,7 +350,7 @@
    "eksik": false
   },
   "BINHO": {
-   "ts": "2026-10-12T08:45:46Z",
+   "ts": "2026-10-12T12:14:19Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -385,7 +385,7 @@
    "amort": 7342358,
    "vergiOncesi": -5769642801,
    "vergi": 660407450,
-   "gecmisKar": null,
+   "gecmisKar": 13051874828,
    "eksik": true,
    "kaynak": "arşiv"
   },
@@ -464,7 +464,7 @@
    "eksik": false
   },
   "BYDNR": {
-   "ts": "2026-08-20T22:08:46Z",
+   "ts": "2026-10-12T12:14:50Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -495,7 +495,13 @@
    },
    "adet": 84000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": -101498676,
+   "amort": 654995381,
+   "vergiOncesi": 121152422,
+   "vergi": -132743161,
+   "gecmisKar": 491160468,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "CANTE": {
    "ts": "2026-09-25T19:14:51Z",
@@ -566,7 +572,7 @@
    "eksik": false
   },
   "COSMO": {
-   "ts": "2026-08-20T22:26:47Z",
+   "ts": "2026-10-12T12:15:07Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -597,7 +603,13 @@
    },
    "adet": 6917538,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": -12516781,
+   "amort": 10912297,
+   "vergiOncesi": -59792093,
+   "vergi": -3473148,
+   "gecmisKar": -144632416,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "CVKMD": {
    "ts": "2026-09-25T19:15:27Z",
@@ -634,14 +646,14 @@
    "eksik": false
   },
   "DARDL": {
-   "ts": "2026-08-20T22:27:15Z",
+   "ts": "2026-10-12T12:15:27Z",
    "y": "362",
    "donem": "2026/2",
-   "ceyrek": 2,
-   "ciro": null,
-   "brut": null,
-   "favok": null,
-   "netKar": null,
+   "ceyrek": 5,
+   "ciro": 13162005602,
+   "brut": 4069671643,
+   "favok": 859485753,
+   "netKar": -1396749521,
    "ozk": 7174059005,
    "aktif": 15900388046,
    "donen": 5038714423,
@@ -649,11 +661,11 @@
    "finBorc": 5999009524,
    "likit": 143314491,
    "netBorc": 5855695033,
-   "isletmeNA": null,
-   "capex": null,
-   "sna": null,
-   "tahakkuk": null,
-   "odFaiz": null,
+   "isletmeNA": -1668081919,
+   "capex": -713317063,
+   "sna": -2381398982,
+   "tahakkuk": 1.71,
+   "odFaiz": -1382089807,
    "odTemettu": null,
    "stoklar": 1308960712,
    "ticariAlacak": 1770386703,
@@ -665,7 +677,13 @@
    },
    "adet": 2344397132,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": true
+   "faal": 406086038,
+   "amort": 453399715,
+   "vergiOncesi": -1519207520,
+   "vergi": 122457999,
+   "gecmisKar": -1590017654,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "DCTTR": {
    "ts": "2026-09-25T19:15:49Z",
@@ -4366,7 +4384,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-12T08:45:46Z",
+   "ts": "2026-10-12T12:14:19Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -4401,7 +4419,7 @@
    "amort": null,
    "vergiOncesi": 41538263037,
    "vergi": -12606405432,
-   "gecmisKar": null,
+   "gecmisKar": 7630297240,
    "eksik": true,
    "kaynak": "arşiv"
   },
@@ -4564,8 +4582,29 @@
    "gecmisKar": null,
    "eksik": false,
    "kaynak": "KAP"
+  },
+  "CITAS": {
+   "eksik": true,
+   "neden": "liste boş",
+   "t": "2026-10-12",
+   "y": "362",
+   "kaynak": "KAP"
+  },
+  "TKNKA": {
+   "eksik": true,
+   "neden": "liste boş",
+   "t": "2026-10-12",
+   "y": "362",
+   "kaynak": "KAP"
+  },
+  "KPEKS": {
+   "eksik": true,
+   "neden": "liste boş",
+   "t": "2026-10-12",
+   "y": "362",
+   "kaynak": "KAP"
   }
  },
  "uye_sayisi": 238,
- "kapsam": 131
+ "kapsam": 134
 }
