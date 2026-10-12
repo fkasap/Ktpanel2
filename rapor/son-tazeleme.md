@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1994 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <13936271197882160424> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <13936271197883459160> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -125,14 +125,14 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 134/238
 - bu turda: 3 tam · 2 eksik kalemli · 3 alınamadı
-- not: §455c arşivden 2 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %77.6 · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · TKNKA:liste boş · KPEKS:liste boş
+- not: §455c arşivden 2 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %77.7 · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · TKNKA:liste boş · KPEKS:liste boş
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Fonzi gerçekleşen (§457) — ✓ 231 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
-### Faktör skorları (§455) — ✓ sıralanan 113/238 · temel veri 114 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.60 ✓
-- ✓ fm.json TERFİ ETTİ (adet 113 ≥ 100 · XKTUM ağırlık kapsamı %77.5 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 113 -0.113 0.777 -2.98 1.13 0 · GROWTH 112 0.010 0.750 -1.93 2.13 0 · QUALITY 113 -0.014 0.691 -1.77 1.77 0 · MOMENTUM 113 -0.069 0.614 -1.71 2.39 0 · LOW_RISK 113 -0.056 0.726 -1.60 1.58 0
+### Faktör skorları (§455) — ✓ sıralanan 114/238 · temel veri 115 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.60 ✓
+- ✓ fm.json TERFİ ETTİ (adet 114 ≥ 100 · XKTUM ağırlık kapsamı %77.5 ≥ %70) — panel kendi hesabımızla çalışıyor
+- imza: VALUE 114 -0.115 0.773 -2.98 1.13 0 · GROWTH 113 0.015 0.737 -1.93 2.14 0 · QUALITY 114 -0.021 0.689 -1.77 1.76 0 · MOMENTUM 114 -0.076 0.617 -1.71 2.39 0 · LOW_RISK 114 -0.065 0.729 -1.60 1.58 0
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/238 şirket tam
 - GLRMK:7→7 · EFOR:9→9
@@ -171,9 +171,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (130 fiyat) · Model sicili (38 fiyat) · TR 5Y CDS (247.8 bp) · fon akışı (1993) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (20 olay) · faktör evreni (134/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %77) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (101 fiyat) · Model sicili (29 fiyat) · TR 5Y CDS (247.8 bp) · fon akışı (1993) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (20 olay) · faktör evreni (134/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %78) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 72 sn
-- ⏱ KAP arşivi (§381) — 61 sn
-- toplam: 198 sn
+- ⏱ Faktör evreni (§361) — 67 sn
+- toplam: 200 sn
