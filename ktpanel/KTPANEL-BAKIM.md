@@ -6,7 +6,22 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-12
 
 
-# BAKIM EK — §459 (12 Eki 2026) — PANEL TARAMASI: SEZON DONDU, DAMGALAR KALDI
+# BAKIM EK — §459 (12 Eki 2026)
+
+## §459 SONUC (12 Eki 15:17 kosusu, 38247664450) + §459h/i
+Ilk kosuda uc beklenti de tuttu: (1) fm.json TERFI ETTI — adet 113 ≥ 100, XKTUM agirlik
+kapsami %77,5 ≥ %70; Koyfin'in 24 Agu fotografi 49 gun sonra ekrandan kalkti, panel kendi
+KAP TTM + Yahoo hesabiyla. (2) Faktor evreni devre kesici tetiklenmedi (3 tam · 2 eksik ·
+3 "liste bos" eksik:true), kapsam 131→134. (3) BIST bilanco takvimi §459: 3C26 · 215 beklenen.
+Rel.Vol medyan 0,60 (gun ici kesik bar duzeltmesi tuttu). Ilk 10 (ham toplam): TUPRS,
+SRVGY, BRKSN, SAFKR, MAVI, BIMAS, IHLGM, KRVGD, GRSEL, AKHAN.
+§459h YML: "exit code 100" ikinci kez — apt listesi bayat, poppler kurulamiyor; `apt-get update`
+one eklendi. EDGAR_UA env Tazele adimina eklendi (secret tanimlanmali, yoksa 403 surer).
+§459i: t6 basligi "veri: Universe CSV" diyordu; meta._kaynak §455 ise "KAP TTM + Yahoo
+(kendi hesap · agirlik kapsami %…)" yazar. Surum 20261012b.
+DEPLOY: .github/workflows/tazele.yml · ktpanel/{index.html, app.js, KTPANEL-BAKIM.md}.
+
+ — PANEL TARAMASI: SEZON DONDU, DAMGALAR KALDI
 
 ## §459 TARAMA BULGULARI (sekme sekme, tarayici + depo)
 Nobet listesi 3 bayat / 2 yaklasti diyordu; gercek bayatlik listenin DISINDAYDI. Nobet

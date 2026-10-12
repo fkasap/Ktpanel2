@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261012a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261012b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1618,6 +1618,11 @@ async function fmInit(){
     if(p.length===3){ const kisa=parseInt(p[2],10)+' '+AY[parseInt(p[1],10)-1];
       const u=$('fmDamga'); if(u)u.textContent=kisa+' '+p[0];
       document.querySelectorAll('.fmDamgaKisa').forEach(e=>{e.textContent=kisa;}); } } }catch(e){}
+  /* §459i KAYNAK ETİKETİ (12 Eki): fm.json §455 ile kendi hesabımıza terfi etti ama başlık
+     "veri: Universe CSV" diyordu. Kaynak meta._kaynak'tan okunur; yoksa eski etiket durur. */
+  try{ const kk=String((FM.meta&&FM.meta._kaynak)||''); const kendi=kk.indexOf('§455')>=0;
+    const fk=$('fmKaynak'); if(fk) fk.textContent= kendi ? ('KAP TTM + Yahoo (kendi hesap · ağırlık kapsamı %'+(FM.meta.agirlik_kapsami!=null?FM.meta.agirlik_kapsami:'—')+')') : 'Universe CSV';
+    document.querySelectorAll('.fmKaynakKisa').forEach(e=>{ e.textContent= kendi ? 'KAP+Yahoo kendi hesap' : 'CSV'; }); }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
   ['fmTaban','fmBuzme'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',()=>fmRender()); });
