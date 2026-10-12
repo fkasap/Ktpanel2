@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1994 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <13936271197883459160> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903499287116415> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -131,8 +131,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Fonzi gerçekleşen (§457) — ✓ 231 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
 ### Faktör skorları (§455) — ✓ sıralanan 114/238 · temel veri 115 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.60 ✓
-- ✓ fm.json TERFİ ETTİ (adet 114 ≥ 100 · XKTUM ağırlık kapsamı %77.5 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 114 -0.115 0.773 -2.98 1.13 0 · GROWTH 113 0.015 0.737 -1.93 2.14 0 · QUALITY 114 -0.021 0.689 -1.77 1.76 0 · MOMENTUM 114 -0.076 0.617 -1.71 2.39 0 · LOW_RISK 114 -0.065 0.729 -1.60 1.58 0
+- ✓ fm.json TERFİ ETTİ (adet 114 ≥ 100 · XKTUM ağırlık kapsamı %77.6 ≥ %70) — panel kendi hesabımızla çalışıyor
+- imza: VALUE 114 -0.116 0.772 -2.98 1.13 0 · GROWTH 113 0.007 0.727 -1.93 2.14 0 · QUALITY 114 -0.016 0.686 -1.77 1.76 0 · MOMENTUM 114 -0.076 0.617 -1.71 2.39 0 · LOW_RISK 114 -0.065 0.729 -1.60 1.58 0
 
 ### KAP arşivi (§381) — ✓ +0 çeyrek · 0/238 şirket tam
 - GLRMK:7→7 · EFOR:9→9
@@ -165,14 +165,27 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - THYAO varyantları (kod=kapanış): THYAO.AOF=0 · THYAO.E=287.5
 - örnek satır: `2026-10-09;THYAO.AOF;TURK HAVA YOLLARI AOF;;Z;MSPOT;AOF;MSPOTAOF;MSPOTAOFTHYAO;SI;0;0;0;0;;0;0;0;0;0;0;0;0;0;0;0;0;;;;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0`
 
-### Fon portföy dağılımı (§429) — ⏭ pdftotext yok (poppler-utils kurulmamış); katman atlandı
+- §429p kabul dağılımı: 41 fon kabul (KST:5 NNF:5 HKH:5 KTI:5 KPA:5 KPU:5 KCV:5 KPC:5 KTM:5 HFO:3 GKV:5 ZPE:5 TZD:5 KHJ:5 MKA:5 MAC:5 IVF:5 VHK:1 OHK:6 KTS:9 YHK:5 TLZ:5 MPS:5 KHC:5 MTK:5 RBH:5 RKH:10 NKM:5 ELZ:5 KH1:5 PHK:5 RPI:5 DKH:5 TIL:5 NKT:5 VHS:5 PKD:6 HFI:6 KLH:6 PUK:4 ZPJ:1)
+
+- §429f teşhis: listede 1334 farklı fon kodu · evrenden görülen: 41/47
+- §429n GÖRÜLMEYEN (6, 150 günde KAP listesinde yok): FS3=ONE PORTFÖY KATILIM HİSSE SE · HKP=HEDEF PORTFÖY KATILIM HİSSE  · KBP=KUVEYT TÜRK PORTFÖY PY KATIL · KHD=ATLAS PORTFÖY İKİNCİ KATILIM · KHF=ALLBATROSS PORTFÖY KATILIM H · PKH=DENİZ PORTFÖY POYRAZ KATILIM
+- §429n kod uyuşmazlığı adayları (KAP başlığı katılım-hisse, kod evren dışı): OPK30=OSMANLI PORTFÖY KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞUN ( | ZPMDK=ZİRAAT PORTFÖY BIST KATILIM 100 ENDEKSİ MODEL PORTFÖY H | Z30KP=ZİRAAT PORTFÖY BIST KATILIM 30 ENDEKSİ HİSSE SENEDİ YOĞ | Z30KE=ZİRAAT PORTFÖY BIST KATILIM 30 EŞİT AĞIRLIKLI ENDEKSİ H
+
+- §429p kuyruk: liste 207 kayıt · daha önce işlenmiş 152 idx · iş 49
+
+### Fon portföy dağılımı (§429) — ✓ 44 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 10078 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+- bu turda hedef 49 (tur tavanı 80; kalan sonraki koşuda)
+- ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
+  · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
+  · VHS null: ek bulunamadı (HTTP 200)
+  …+2
 
 ### SEC ticker yedeği (§448) — ✗ HTTP 403 · " SEC.gov | Request Rate Threshold Exceeded html {height: 100%} body {height: 100%; margin:0; padding:0;} #header {backgr"
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (101 fiyat) · Model sicili (29 fiyat) · TR 5Y CDS (247.8 bp) · fon akışı (1993) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (20 olay) · faktör evreni (134/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %78) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay)
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (101 fiyat) · Model sicili (34 fiyat) · TR 5Y CDS (247.8 bp) · fon akışı (1993) · katılım fonları (45+akış) · bilanço tetiği (110 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (20 olay) · faktör evreni (134/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %78) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (44 rapor)
 
 ### Süre bütçesi (§326)
-- ⏱ Faktör evreni (§361) — 67 sn
-- toplam: 200 sn
+- ⏱ Faktör evreni (§361) — 70 sn
+- toplam: 243 sn

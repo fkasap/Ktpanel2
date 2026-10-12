@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-12T12:28:22Z",
+ "guncelleme": "2026-10-12T12:40:45Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -350,7 +350,7 @@
    "eksik": false
   },
   "BINHO": {
-   "ts": "2026-10-12T12:27:15Z",
+   "ts": "2026-10-12T12:39:35Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -976,7 +976,7 @@
    "eksik": false
   },
   "EYGYO": {
-   "ts": "2026-08-20T23:38:30Z",
+   "ts": "2026-10-12T12:40:05Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1007,7 +1007,13 @@
    },
    "adet": 700000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": -131858190,
+   "amort": 8051330,
+   "vergiOncesi": -644023804,
+   "vergi": 53960625,
+   "gecmisKar": 108868452,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "FONET": {
    "ts": "2026-09-26T09:17:10Z",
@@ -1112,7 +1118,7 @@
    "eksik": false
   },
   "GEDZA": {
-   "ts": "2026-08-21T06:22:31Z",
+   "ts": "2026-10-12T12:40:22Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1143,7 +1149,13 @@
    },
    "adet": 46656000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 283292745,
+   "amort": 41767720,
+   "vergiOncesi": 162737184,
+   "vergi": -154999342,
+   "gecmisKar": -24235802,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "GEREL": {
    "ts": "2026-09-28T21:13:54Z",
@@ -1418,7 +1430,7 @@
    "eksik": true
   },
   "IHEVA": {
-   "ts": "2026-08-22T04:38:24Z",
+   "ts": "2026-10-12T12:40:42Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1449,7 +1461,13 @@
    },
    "adet": 350500000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 260324113,
+   "amort": 83308668,
+   "vergiOncesi": 56129254,
+   "vergi": 21529560,
+   "gecmisKar": 147152602,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "IHLAS": {
    "ts": "2026-09-29T19:59:22Z",
@@ -4402,7 +4420,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-12T12:27:15Z",
+   "ts": "2026-10-12T12:39:35Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
