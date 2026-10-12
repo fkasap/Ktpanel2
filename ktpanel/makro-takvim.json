@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-12 13:02 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-12 22:29 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -63,7 +63,7 @@
    "ulke": "AUD",
    "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "20.0K",
+   "beklenti": "19.6K",
    "onceki": "39.5K"
   },
   {
@@ -103,7 +103,7 @@
    "ulke": "USD",
    "olay": "Core Retail Sales m/m",
    "etki": "High",
-   "beklenti": "0.5%",
+   "beklenti": "0.6%",
    "onceki": "1.4%"
   },
   {
@@ -111,7 +111,7 @@
    "ulke": "USD",
    "olay": "PPI m/m",
    "etki": "High",
-   "beklenti": "0.5%",
+   "beklenti": "0.6%",
    "onceki": "0.4%"
   },
   {
@@ -127,7 +127,7 @@
    "ulke": "USD",
    "olay": "Philly Fed Manufacturing Index",
    "etki": "Medium",
-   "beklenti": "26.5",
+   "beklenti": "28.2",
    "onceki": "37.8"
   },
   {
@@ -135,7 +135,7 @@
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "195K",
+   "beklenti": "199K",
    "onceki": "197K"
   },
   {

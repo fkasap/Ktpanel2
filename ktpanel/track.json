@@ -502,6 +502,11 @@
    "d": "2026-10-09",
    "model": -13.984,
    "endeks": -11.002
+  },
+  {
+   "d": "2026-10-12",
+   "model": -14.966,
+   "endeks": -12.26
   }
  ],
  "not_sicil": "Model getirisi yalniz FIYAT TARIHI olan gunlerde kesindir; ara gunlerin model degeri onceki tazelemelerden korunur, bos olabilir. Endeks serisi her is gunu tam (endeks_mumlar_gunluk_gh). Bos model noktasi CIZILMEZ, uydurulmaz.",

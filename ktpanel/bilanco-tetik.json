@@ -6,6 +6,7 @@
   "ALKIM",
   "ALTNY",
   "BAKAB",
+  "BANVT",
   "BERA",
   "BIENY",
   "BIMAS",
@@ -112,7 +113,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 110,
+ "sayi": 111,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -370,7 +371,13 @@
   "TRYKI": "2026-09-30",
   "BSOKE": "2026-10-02",
   "BTCIM": "2026-10-02",
-  "KONTR": "2026-10-02"
+  "KONTR": "2026-10-02",
+  "BANVT": "2026-10-12",
+  "BJKAS": "2026-10-12",
+  "FENER": "2026-10-12",
+  "GSRAY": "2026-10-12",
+  "TRILC": "2026-10-12",
+  "TSPOR": "2026-10-12"
  },
  "evren_disi": [
   "ADESE",
@@ -397,6 +404,7 @@
   "BESLR",
   "BIOEN",
   "BIZIM",
+  "BJKAS",
   "BORLS",
   "BRKO",
   "BRMEN",
@@ -426,6 +434,7 @@
   "ERCB",
   "ERGLI",
   "ETILR",
+  "FENER",
   "FSDAT",
   "GEDIK",
   "GGBVK",
@@ -433,6 +442,7 @@
   "GRTHO",
   "GSDDE",
   "GSDHO",
+  "GSRAY",
   "GZNMI",
   "HATEK",
   "HDFFL",
@@ -507,9 +517,11 @@
   "TRCAS",
   "TRENJ",
   "TRGYO",
+  "TRILC",
   "TRMEN",
   "TRMET",
   "TRYKI",
+  "TSPOR",
   "ULAS",
   "ULKER",
   "ULUUN",
@@ -521,8 +533,8 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 147,
- "pencere_sayi": 0,
+ "evren_disi_sayi": 152,
+ "pencere_sayi": 6,
  "dusen_son": [],
- "guncelleme": "2026-10-12 13:02 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-12 22:29 UTC — otomatik (KAP FR · kümülatif §299)"
 }
