@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-12T22:30:15Z",
+ "guncelleme": "2026-10-13T08:07:58Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -350,7 +350,7 @@
    "eksik": false
   },
   "BINHO": {
-   "ts": "2026-10-12T22:29:23Z",
+   "ts": "2026-10-13T08:07:06Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2084,7 +2084,7 @@
    "kaynak": "KAP"
   },
   "MARBL": {
-   "ts": "2026-08-23T09:27:07Z",
+   "ts": "2026-10-13T08:07:38Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2115,7 +2115,13 @@
    },
    "adet": 228600000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 184396641,
+   "amort": 255897299,
+   "vergiOncesi": 11306972,
+   "vergi": -48815509,
+   "gecmisKar": 259776923,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "MCARD": {
    "ts": "2026-10-01T20:21:02Z",
@@ -2186,7 +2192,7 @@
    "eksik": false
   },
   "MEKAG": {
-   "ts": "2026-08-23T14:38:28Z",
+   "ts": "2026-10-13T08:07:55Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2217,7 +2223,13 @@
    },
    "adet": 800000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 6788836,
+   "amort": 108686909,
+   "vergiOncesi": -47559422,
+   "vergi": -25089724,
+   "gecmisKar": 279825775,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "MERCN": {
    "ts": "2026-10-02T06:41:25Z",
@@ -4456,7 +4468,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-12T22:29:23Z",
+   "ts": "2026-10-13T08:07:06Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -4658,21 +4670,21 @@
   "CITAS": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-12",
+   "t": "2026-10-13",
    "y": "362",
    "kaynak": "KAP"
   },
   "TKNKA": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-12",
+   "t": "2026-10-13",
    "y": "362",
    "kaynak": "KAP"
   },
   "KPEKS": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-12",
+   "t": "2026-10-13",
    "y": "362",
    "kaynak": "KAP"
   },
