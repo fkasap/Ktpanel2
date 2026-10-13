@@ -441,6 +441,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <button class="subtab-btn" data-subtab="mk-enf" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Enflasyon &amp; Reel Ekonomi</button>
   <button class="subtab-btn" data-subtab="mk-banka" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Bankacılık</button><button class="subtab-btn" data-subtab="mk-yorum" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Haftalık Yorum</button>
   <button class="subtab-btn" data-subtab="mk-tahmin" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Tahminler</button>
+  <button class="subtab-btn" data-subtab="mk-patika" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Enflasyon Patikası</button>
 </div>
 <div id="mk-para" class="subtab-panel">
 <h2 style="margin-top:0">03 Türkiye — Para Politikası &amp; Likidite <span class="thin">(TCMB · efektif fonlama · rezervler · 10 Eyl PPK sonrası · sıradaki 22 Eki)</span></h2>
@@ -840,6 +841,26 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="thEnf" style="margin-bottom:8px"></div>
 <div class="note" style="margin-bottom:16px"><b>Neden kimlik:</b> y/y(t+k) = I(t+k) / I(t+k−12) − 1. <em>Payda tarihtir, bilinir.</em> Belirsizlik yalnız payda değil PAYDADIR — yani senin aylık varsayımında. Bu yüzden tablo “enflasyon şu olacak” demez, “aylık X olursa yıllık şu olur” der. <b>Asıl değeri tersinden:</b> hedefe ulaşmak için aylık kaç gerektiğini gösterir — varsayımının TCMB hedefiyle uyumlu olup olmadığını tek bakışta anlarsın. Aynı aylık varsayımla bile y/y sert düşebilir: geçen yılın büyük ayı seriden düşer.</div>
 
+</div>
+<!-- §461 ENFLASYON PATİKASI — TCMB faiz tahmin modeli (kullanıcının model.py/veri.py'si, 13 Eki 2026).
+     Panel #t2'nin İÇİNDE (.subtab-panel) — genel alt sekme dinleyicisi (app.js ~145) data-subtab id'sini açar.
+     data-ebu="hayir": Ebu günlük bakımı bu panele dokunmaz. İçerik app.js epInit() ile çizilir (idempotent). -->
+<div id="mk-patika" class="subtab-panel" style="display:none" data-ebu="hayir">
+<div class="note" style="margin-bottom:12px;border-left:3px solid var(--mm2)"><b>TCMB faiz tahmin modeli</b> — reaksiyon fonksiyonu + yumuşatma + senaryo. Üç katman: <b>(1) kimlik</b> (yıllık TÜFE = aylıkların çarpımı, reel faiz, 2Y getirinin ima ettiği gecelik oran — aritmetik, model riski yok), <b>(2) reaksiyon fonksiyonu</b> <em>i* = (1 + r<sub>hedef</sub>)(1 + E<sub>12</sub>) − 1</em>: TCMB ileriye dönük reel faizi hedefte tutar, beklenti düştükçe nominal faizi indirir; adımlar 50 bp katlarında, toplantı başına tavanlı, küçük pozitif açıkta artırmaz (ölü bölge), <b>(3) varsayımlar</b>: aylık TÜFE patikaları, reel hedefin ufuk boyunca inişi, beklentinin 0,85 ileri + 0,15 geriye karışımı, senaryo olasılıkları. Bütün girdiler aşağıda düzenlenebilir ve tarayıcında saklanır; <em>hesapla</em> ile model yeniden çalışır. Çıktı senin varsayımının sonucudur, tahmin değil.</div>
+
+<h2 style="margin-top:0">01 Girdiler <span class="thin">(veri.py + model.py parametreleri · düzenlenebilir · bu tarayıcıda saklanır)</span></h2>
+<div class="card" id="epGirdi" style="padding:10px 12px"><div class="sub">Form yükleniyor…</div></div>
+
+<h2>02 Ortak Göstergeler <span class="thin">(kimlik hesapları · varsayım yok)</span></h2>
+<div id="epOzet"><div class="sub">Hesaplanıyor…</div></div>
+
+<h2>03 İlk Toplantı Kararı <span class="thin">(kural-ima faiz · skor kartı · olasılık dağılımı)</span></h2>
+<div id="epKarar"></div>
+
+<h2>04 Faiz Patikası <span class="thin">(üç senaryo + olasılık ağırlıklı · ufuk 15 ay)</span></h2>
+<div id="epGrafik"></div>
+<div id="epTablo" style="margin-top:8px"></div>
+<div class="note" style="margin-top:8px;font-size:10.5px"><b>Nasıl okunur:</b> Toplantı ayında model kural-ima hedef ile mevcut faiz arasındaki farka bakar; fark −0,5 puanın altındaysa (hedef daha düşükse) 50 bp katlarıyla, senaryonun maksimum adımını aşmadan indirir; +1,5 puanı aşarsa sıkılaştırır; aradaysa bekler. İlk toplantı kuraldan değil senaryoyla tutarlı "ilk karar" girdisinden gelir. <b>Ağırlıklı patika</b> senaryoların olasılıkla ortalamasıdır — 50 bp katı olmayan sayılar üretir, bu bir "beklenen değer"dir, tek bir toplantı sonucu değil. <b>Senaryo TÜFE dizileri</b> ufuk + 12 ay uzunluğundadır çünkü her ayın beklentisi o aydan sonraki 12 ayın gerçekleşmesine bakar. <b>Skor kartı</b> dağılımı nitel olarak iter; py'de sayısal bağ yoktu, burada κ katsayılı açık formülle gösterilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div>
 </div>
 </div><div class="tab" id="t3"><!-- ==== 00 COMMAND CENTER ==== -->
 <h2>00 Portfolio Command Center <span class="thin">(pozisyonların tarayıcında saklanır)</span></h2>

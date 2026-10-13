@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261012c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261013a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -158,6 +158,8 @@ document.addEventListener('click',(e)=>{
   if(b.dataset.subtab==='sv-fonpd'){ try{ fonpdInit(); }catch(e){ console.warn('[KTPanel] §429:', e&&e.message); } }
   /* §366: MKK Fon Buyuklugu — acilinca bir kez yuklenir */
   if(b.dataset.subtab==='sv-vap'){ try{ vapInit(); }catch(e){ console.warn('[KTPanel] §366:', e&&e.message); } }
+  /* §461: Enflasyon Patikası — açılınca çizilir (idempotent; hata panelde yazılır, sessiz kalmaz) */
+  if(b.dataset.subtab==='mk-patika'){ try{ epInit(); }catch(e){ console.warn('[KTPanel] §461:', e&&e.message); } }
   /* §399 EDGAR: alt sekme açılınca girişe odaklan */
   if(b.dataset.subtab==='ft-yabanci'){ try{ const e=$('edgKod'); if(e) setTimeout(()=>e.focus(),120); }catch(x){} }
 });
@@ -2553,6 +2555,326 @@ function katfonRender(){
   });
   $('katfonBody').innerHTML=html;
 }
+/* ── §461 ENFLASYON PATİKASI — TCMB FAİZ TAHMİN MODELİ (13 Eki 2026) ─────────
+   Kullanıcının model.py + veri.py'si (13 Eki) birebir JS'e taşındı; Python
+   çıktısıyla (cikti.json) sayı sayı doğrulandı. Girdiler düzenlenebilir ve
+   tarayıcıda saklanır (ktp_ep_v1); "Varsayılan" py'deki değerlere döner.
+   ÖĞRETİCİ ÖZET (model.py docstring'inden):
+     1) Reaksiyon fonksiyonu: i* = (1 + r_hedef)(1 + E12) − 1 — TCMB ileriye dönük
+        reel faizi hedefte tutar; beklenti düştükçe nominal faiz iner.
+     2) Yumuşatma: adımlar 50 bp katlarında, toplantı başına tavanlı; küçük
+        pozitif açıkta artırmaz (ölü bölge), 1,5 puanı aşarsa sıkılaştırır.
+     3) Piyasa: 2Y DİBS bileşik getirisinden ima edilen ortalama gecelik faiz,
+        anket patikasının ortalamasıyla kıyaslanır — fark vade primi ya da şahinlik.
+   KİMLİK vs VARSAYIM: y/y hesabı, reel faiz, 2Y ima oranı ARİTMETİKTİR; aylık
+   TÜFE patikaları, r_hedef, beklenti formülü (0,85 ileri + 0,15 geriye) ve
+   olasılıklar VARSAYIMDIR — hepsi girdi kartında açık ve değiştirilebilir. */
+const EP_VARSAYILAN = {
+  surum: '13 Eki 2026 · model.py/veri.py',
+  tufe_2025: [5.03, 2.27, 2.46, 3.00, 1.53, 1.37, 2.06, 2.04, 3.23, 2.55, 0.87, 0.89],
+  tufe_2026: [4.84, 2.96, 1.94, 4.18, 1.71, 0.99, 1.78, 1.84, 1.84],
+  yillik_tufe: 29.73, cekirdek_B_aylik: 2.01, cekirdek_B_yillik: 29.00,
+  politika_faizi: 37.0, koridor: [35.5, 40.0],
+  E12: 23.70, E24: 18.32, pka_pf_12ay: 29.22, pka_pf_24ay: 22.43,
+  dibs_2y: 40.06, dibs_10y: 35.51, brent: 102.5, ust_2y: 4.92,
+  ara_hedef: { 2026: 24, 2027: 15, 2028: 9 }, tcmb_tahmin_2026: 28,
+  E12_dusus: 0.4,                      /* karar öncesi 12a beklentisinin gerilemesi varsayımı (puan) */
+  r_adaylar: [10.0, 10.75, 11.5],      /* kural-ima faiz için reel hedef adayları */
+  ileri_agirlik: 0.85,                 /* e12 = w·ileri 12 ay + (1−w)·geriye 12 ay (PKA'ya kalibre) */
+  kappa: 1.0,                          /* skor-eğimli dağılım katsayısı (§461 eki, py'de yok) */
+  pka: { /* anket ayı → (cari, 1a, 2a, yıl sonu, 12a, 24a) */
+    '2025-01': [4.07, 2.65, 2.15, 27.05, 25.38, 17.72], '2025-02': [3.23, 2.26, 2.20, 28.30, 25.26, 17.26],
+    '2025-03': [2.27, 2.25, 1.87, 28.04, 24.55, 17.06], '2025-04': [3.07, 2.20, 1.70, 29.98, 25.56, 17.69],
+    '2025-05': [2.36, 1.77, 1.94, 30.35, 25.06, 17.77], '2025-06': [1.61, 1.86, 1.64, 29.86, 24.56, 17.35],
+    '2025-07': [2.11, 1.63, 1.93, 29.66, 23.39, 17.08], '2025-08': [1.69, 1.97, 2.05, 29.69, 22.84, 16.92],
+    '2025-09': [2.04, 2.05, 1.57, 29.86, 22.25, 16.78], '2025-10': [2.34, 1.55, 1.14, 31.77, 23.26, 17.36],
+    '2025-11': [1.59, 1.16, 3.34, 32.20, 23.49, 17.69], '2025-12': [1.08, 3.44, 2.01, 31.17, 23.35, 17.45],
+    '2026-01': [3.76, 2.05, 1.84, 23.23, 22.20, 16.94], '2026-02': [2.54, 1.89, 1.89, 24.11, 22.10, 17.11],
+    '2026-03': [2.18, 2.11, 1.50, 25.38, 22.17, 17.30], '2026-04': [2.93, 1.82, 1.52, 27.53, 23.39, 18.02],
+    '2026-05': [1.89, 1.52, 1.62, 28.94, 23.82, 18.43], '2026-06': [1.36, 1.57, 1.49, 29.14, 23.81, 18.29],
+    '2026-07': [1.68, 1.44, 2.03, 29.21, 23.95, 17.83], '2026-08': [1.67, 2.08, 1.97, 29.43, 23.69, 18.03],
+    '2026-09': [2.12, 1.97, 1.13, 29.61, 23.70, 18.32]
+  },
+  aofm: { '2025-01': 45.0, '2025-02': 45.0, '2025-03': 46.0, '2025-04': 48.78, '2025-05': 48.98, '2025-06': 46.0,
+    '2025-07': 43.0, '2025-08': 43.0, '2025-09': 40.5, '2025-10': 39.5, '2025-11': 39.5, '2025-12': 38.0,
+    '2026-01': 37.0, '2026-02': 37.0, '2026-03': 40.0, '2026-04': 40.0, '2026-05': 40.0, '2026-06': 40.0,
+    '2026-07': 40.0, '2026-08': 37.0, '2026-09': 37.0, '2026-10': 37.0 },
+  skor: [
+    ['Eylül TÜFE beklenti altı (1,84 vs 2,14)', -1.0],
+    ["Yıllık TÜFE %30 altında (Kas 2021'den beri ilk)", -0.5],
+    ['Ex-ante reel faiz hâlâ ~%10,8', -0.5],
+    ['Çekirdek B aylık %2,01 — ana eğilim yapışkan', 0.5],
+    ['Brent ~102$ (TCMB mayıs varsayımı 89$)', 0.75],
+    ["Fon krizi: PPF'lerden döviz/altına kaçış", 0.75],
+    ['ABD 2Y %4,9 / 10Y %5,2: küresel sıkılaşma', 0.5],
+    ['Rezervler ekimde toparlanıyor', -0.25],
+    ['YBB TÜFE %24,3 > ara hedef %24; TCMB %28 tahmini zor', 0.5]
+  ],
+  anket: { 'Sabit': 3, '-50 bp': 2, '-100 bp': 15, '-150 bp': 2 },     /* ForInvest 9 Eki, n=22 */
+  model_olas: { 'Sabit': 0.35, '-50 bp': 0.10, '-100 bp': 0.50, '-150 bp': 0.05 },
+  adim: { 'Sabit': 0, '-50 bp': -50, '-100 bp': -100, '-150 bp': -150 },
+  ilk_ay: '2026-10', ufuk: 15,          /* patika Eki26 → Ara27 (15 ay); TÜFE dizileri 27 ay (2028 yalnız beklenti için) */
+  toplantilar: ['2026-10', '2026-12', '2027-01', '2027-03', '2027-04', '2027-06', '2027-07', '2027-09', '2027-10', '2027-12'],
+  senaryolar: {
+    'Baz': { olas: 0.55, aciklama: "Brent kademeli olarak 80-85$'a iner, fon krizi sınırlı kalır, kur reel değerini korur.",
+      tufe: [2.0, 1.15, 1.05, 4.0, 2.2, 1.7, 1.9, 1.3, 1.0, 1.6, 1.3, 1.7, 1.6, 1.0, 0.9, 3.2, 1.8, 1.4, 1.4, 1.0, 0.8, 1.3, 1.1, 1.4, 1.3, 0.8, 0.7],
+      r_hedef: [10.5, 8.0], max_adim: 250, ekim: 36.0 },
+    'Şahin': { olas: 0.25, aciklama: 'Brent 100$ üstünde kalır, fon krizi döviz talebi yaratır, ocak fiyatlamaları sert.',
+      tufe: [2.4, 1.6, 1.4, 4.8, 2.7, 2.1, 2.3, 1.7, 1.3, 2.0, 1.6, 2.0, 2.0, 1.3, 1.2, 3.8, 2.2, 1.7, 1.7, 1.3, 1.0, 1.6, 1.3, 1.6, 1.6, 1.0, 0.9],
+      r_hedef: [11.0, 9.5], max_adim: 150, ekim: 37.0 },
+    'Güvercin': { olas: 0.20, aciklama: "Hürmüz normalleşir, Brent 70'lere iner, gıda ve enerji dezenflasyonu hızlanır.",
+      tufe: [1.7, 0.9, 0.8, 3.4, 1.8, 1.3, 1.5, 1.0, 0.7, 1.3, 1.0, 1.3, 1.3, 0.7, 0.6, 2.7, 1.5, 1.1, 1.1, 0.8, 0.6, 1.0, 0.9, 1.1, 1.0, 0.6, 0.5],
+      r_hedef: [10.0, 7.0], max_adim: 300, ekim: 35.5 }
+  }
+};
+function epKum(l){ let p = 1; for (const x of l) p *= 1 + x / 100; return p; }
+function epPyRound(x){ /* Python round(): yarım → çift (banker's); model.py 50 bp katlarını böyle yuvarlıyor */
+  const f = Math.floor(x), d = x - f; if (d > 0.5) return f + 1; if (d < 0.5) return f; return (f % 2 === 0) ? f : f + 1; }
+function epAyEkle(ay, n){ const p = ay.split('-').map(Number); let t = p[0] * 12 + (p[1] - 1) + n; return Math.floor(t / 12) + '-' + String(t % 12 + 1).padStart(2, '0'); }
+function epHesapla(G){
+  const O = {};
+  const gecmisTum = (G.tufe_2025 || []).concat(G.tufe_2026 || []);
+  O.ytd = (epKum(G.tufe_2026) - 1) * 100;
+  O.yoy = (epKum(gecmisTum.slice(-12)) - 1) * 100;
+  O.reelExante = ((1 + G.politika_faizi / 100) / (1 + G.E12 / 100) - 1) * 100;
+  O.reelExpost = ((1 + G.politika_faizi / 100) / (1 + G.yillik_tufe / 100) - 1) * 100;
+  O.reelTarihce = {}; Object.keys(G.pka || {}).forEach(k => { if (G.aofm && G.aofm[k] != null) O.reelTarihce[k] = +(((1 + G.aofm[k] / 100) / (1 + G.pka[k][4] / 100) - 1) * 100).toFixed(2); });
+  O.imaOn2y = 365 * (Math.pow(1 + G.dibs_2y / 100, 1 / 365) - 1) * 100;
+  /* anket patikası: politika → pf12 (12 ay, doğrusal) → pf24 (12 ay) — 25 nokta, py: linspace(37,pf12,13)[:-1] + linspace(pf12,pf24,13) */
+  const pat = []; for (let i = 0; i < 12; i++) pat.push(G.politika_faizi + (G.pka_pf_12ay - G.politika_faizi) * i / 12);
+  for (let i = 0; i <= 12; i++) pat.push(G.pka_pf_12ay + (G.pka_pf_24ay - G.pka_pf_12ay) * i / 12);
+  O.anketOrt2y = pat.reduce((a, b) => a + b, 0) / pat.length;
+  O.fark2y = O.imaOn2y - O.anketOrt2y;
+  /* (a) ilk toplantı kararı */
+  const E12k = G.E12 - G.E12_dusus; O.E12_karar = E12k;
+  O.kural = (G.r_adaylar || []).map(r => ({ r, i: ((1 + r / 100) * (1 + E12k / 100) - 1) * 100 }));
+  O.netSkor = (G.skor || []).reduce((a, s) => a + (+s[1] || 0), 0);
+  const nA = Object.values(G.anket || {}).reduce((a, b) => a + (+b || 0), 0);
+  O.onsel = {}; Object.keys(G.adim).forEach(k => { O.onsel[k] = nA ? (+(G.anket[k] || 0)) / nA : 0; });
+  O.modelOlas = {}; Object.keys(G.adim).forEach(k => { O.modelOlas[k] = +(G.model_olas[k] || 0); });
+  /* §461 eki: skor-eğimli dağılım — önsel × exp(κ · skor · adım/100): temkin (+) indirim kollarını küçültür, "Sabit"e dokunmaz */
+  const kap = (G.kappa == null ? 1 : +G.kappa); let z = 0; const skorO = {};
+  Object.keys(G.adim).forEach(k => { skorO[k] = O.onsel[k] * Math.exp(kap * O.netSkor * (G.adim[k] / 100)); z += skorO[k]; });
+  Object.keys(skorO).forEach(k => { skorO[k] = z ? skorO[k] / z : 0; }); O.skorOlas = skorO;
+  const bek = (P) => Object.keys(G.adim).reduce((a, k) => a + (P[k] || 0) * G.adim[k], 0);
+  O.bekOnsel = bek(O.onsel); O.bekModel = bek(O.modelOlas); O.bekSkor = bek(skorO);
+  /* (b) patika */
+  const ufuk = G.ufuk || 15; const aylar = []; for (let j = 0; j < ufuk; j++) aylar.push(epAyEkle(G.ilk_ay, j));
+  O.aylar = aylar;
+  const gecmis = gecmisTum.slice(-12), n0 = gecmis.length, w = (G.ileri_agirlik == null ? 0.85 : +G.ileri_agirlik);
+  const topl = new Set(G.toplantilar || []);
+  O.sonuclar = {}; O.uyari = [];
+  Object.keys(G.senaryolar).forEach(ad => {
+    const s = G.senaryolar[ad]; const seri = gecmis.concat(s.tufe || []);
+    if ((s.tufe || []).length < ufuk + 12) O.uyari.push(ad + ': TÜFE dizisi ' + (s.tufe || []).length + ' ay — ufuk+12 = ' + (ufuk + 12) + ' gerekli, son aylarda ileri beklenti eksik kalır');
+    let i = G.politika_faizi; const r0 = s.r_hedef[0], r1 = s.r_hedef[1]; const out = [];
+    for (let j = 0; j < ufuk; j++) {
+      const ay = aylar[j], t = n0 + j;
+      const yoy = (epKum(seri.slice(t - 11, t + 1)) - 1) * 100;
+      const ileri = (epKum(seri.slice(t + 1, t + 13)) - 1) * 100;
+      const trailing = (epKum(seri.slice(t - 12, t)) - 1) * 100;
+      const e12 = w * ileri + (1 - w) * trailing;
+      const rH = r0 + (r1 - r0) * j / (ufuk - 1);
+      const hedef = ((1 + rH / 100) * (1 + e12 / 100) - 1) * 100;
+      let hareket = null;
+      if (j === 0 && topl.has(ay) && s.ekim != null) { hareket = +(s.ekim - i).toFixed(2); i = +s.ekim; }
+      else if (topl.has(ay)) {
+        const fark = hedef - i;
+        if (fark > 1.5) hareket = Math.min(epPyRound(fark * 2) / 2, 3.0);
+        else if (fark < -0.5) hareket = Math.max(epPyRound(fark * 2) / 2, -s.max_adim / 100);
+        else hareket = 0.0;
+        i = Math.round((i + hareket) * 100) / 100;
+      }
+      out.push({ ay, toplanti: topl.has(ay), hareket, tufe_yoy: +yoy.toFixed(2), e12: +e12.toFixed(2), r_hedef: +rH.toFixed(2),
+        kural: +hedef.toFixed(2), faiz: i, reel: +(((1 + i / 100) / (1 + e12 / 100) - 1) * 100).toFixed(2) });
+    }
+    O.sonuclar[ad] = out;
+  });
+  O.olasToplam = Object.values(G.senaryolar).reduce((a, s) => a + (+s.olas || 0), 0);
+  O.agirlikli = aylar.map((_, j) => +Object.keys(G.senaryolar).reduce((a, ad) => a + (+G.senaryolar[ad].olas || 0) * O.sonuclar[ad][j].faiz, 0).toFixed(2));
+  O.agirlikliYoy = aylar.map((_, j) => +Object.keys(G.senaryolar).reduce((a, ad) => a + (+G.senaryolar[ad].olas || 0) * O.sonuclar[ad][j].tufe_yoy, 0).toFixed(2));
+  return O;
+}
+
+/* ── §461 UI: girdi formu + çıktı kartları + patika grafiği ───────────────────
+   Kaybolma tuzağı (kullanıcı uyardı): panel #t2'nin İÇİNDE .subtab-panel; data-ebu="hayir"
+   (Ebu dokunmaz); init idempotent ve try/catch'li — hata olursa panel boş kalmaz, sebebi
+   yazar. Alt sekme mekaniği genel tıklama dinleyicisi (satır ~145): kendi sekmesindeki
+   panelleri gizler, data-subtab id'sini açar — yeni panel aynı kalıpta. */
+let EP_G = null, EP_HAZIR = false, EP_SON = null;
+const EP_KEY = 'ktp_ep_v1';
+const EP_RENK = { 'Baz': '#128A66', 'Şahin': '#C9612B', 'Güvercin': '#3D7BD9' };   /* dataviz doğrulayıcı: 3 renk CVD dahil geçti; 4.+ senaryo ince gri */
+function epKopya(o){ return JSON.parse(JSON.stringify(o)); }
+function epSayi(s){ const v = parseFloat(String(s == null ? '' : s).trim().replace(/\s/g, '').replace(',', '.')); return Number.isFinite(v) ? v : null; }
+function epDizi(s){ return String(s || '').split(/[\s;]+/).map(x => x.trim()).filter(Boolean).map(epSayi).filter(v => v != null); }
+function epYukle(){ try { const j = JSON.parse(localStorage.getItem(EP_KEY) || 'null'); if (j && j.senaryolar) return j; } catch (e) {} return epKopya(EP_VARSAYILAN); }
+function epKaydet(){ try { localStorage.setItem(EP_KEY, JSON.stringify(EP_G)); } catch (e) {} }
+function epAyAdi(ay){ const A = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara']; const p = String(ay).split('-'); return A[+p[1] - 1] + ' ' + String(p[0]).slice(2); }
+function epIlkAy(G){ /* patika, bilinen son TÜFE ayının ertesinde başlar: 2025 (12) + 2026 dizisi */
+  const n26 = (G.tufe_2026 || []).length; return '2026-' + String(Math.min(12, n26 + 1)).padStart(2, '0'); }
+function epInit(){
+  const kok = $('mk-patika'); if (!kok) return;
+  try {
+    if (!EP_G) EP_G = epYukle();
+    EP_G.ilk_ay = epIlkAy(EP_G);
+    if (!EP_HAZIR) { epFormCiz(); EP_HAZIR = true; }
+    epRender();
+  } catch (e) {
+    const d = $('epDurum'); if (d) d.innerHTML = '<span style="color:var(--down)">✗ model çizilemedi: ' + esc(String(e && e.message || e)) + '</span>';
+    console.error('[KTPanel] §461', e);
+  }
+}
+function epFormCiz(){
+  const G = EP_G, F = $('epGirdi'); if (!F) return;
+  const sat = (id, lbl, v, w, ipucu) => '<div><label class="arzLb" style="margin:0 0 2px" title="' + esc(ipucu || '') + '">' + lbl + '</label><input id="' + id + '" class="arzIn" type="text" inputmode="decimal" value="' + esc(String(v).replace('.', ',')) + '" style="width:' + (w || 72) + 'px;text-align:right"></div>';
+  const ta = (id, lbl, arr, ipucu) => '<div style="flex:1;min-width:260px"><label class="arzLb" style="margin:0 0 2px" title="' + esc(ipucu || '') + '">' + lbl + '</label><textarea id="' + id + '" class="arzIn" rows="2" style="width:100%;font-size:11px;line-height:1.35;resize:vertical">' + esc((arr || []).map(v => String(v).replace('.', ',')).join(' ')) + '</textarea></div>';
+  let h = '';
+  h += '<div class="lbl" style="margin-bottom:6px">VERİ <span class="thin">(veri.py · ' + esc(G.surum || '') + ')</span></div>';
+  h += '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
+    sat('epPol', 'Politika faizi %', G.politika_faizi, 70, 'TCMB 1 hafta repo') +
+    sat('epE12', 'PKA 12 ay TÜFE bek. %', G.E12, 70, 'TP.PKAUO 12 ay sonrası — reaksiyon fonksiyonunun girdisi') +
+    sat('epE24', 'PKA 24 ay %', G.E24, 64) +
+    sat('epPf12', 'PKA politika faizi 12a %', G.pka_pf_12ay, 72, 'anket patikası: politika → 12a → 24a doğrusal') +
+    sat('epPf24', 'PKA politika faizi 24a %', G.pka_pf_24ay, 72) +
+    sat('epD2y', 'DİBS 2Y bileşik %', G.dibs_2y, 70, 'piyasa: ima edilen ortalama gecelik buradan') +
+    sat('epYoy', 'Yıllık TÜFE (resmî) %', G.yillik_tufe, 70, 'ex-post reel faiz için') +
+    sat('epBrent', 'Brent $', G.brent, 64) + sat('epUst2y', 'ABD 2Y %', G.ust_2y, 60) +
+    '</div>';
+  h += '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">' +
+    ta('epT25', 'Aylık TÜFE 2025 (12 değer, Oca→Ara)', G.tufe_2025, 'TÜİK; y/y ve geriye dönük beklenti için') +
+    ta('epT26', 'Aylık TÜFE 2026 (bilinen aylar, Oca→…)', G.tufe_2026, 'Yeni ay açıklanınca sona ekle — patika başlangıcı kendiliğinden kayar') +
+    '</div>';
+  h += '<div class="lbl" style="margin:12px 0 6px">KARAR MODELİ <span class="thin">(ilk toplantı: ' + esc(G.toplantilar[0] || '') + ')</span></div>';
+  h += '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
+    sat('epDusus', 'E12 karar öncesi düşüş (puan)', G.E12_dusus, 64, 'Eylül sürprizi sonrası 12a beklentisinin gerilemesi varsayımı') +
+    sat('epRad', 'Reel hedef adayları %', (G.r_adaylar || []).join(' · ').replace(/\./g, ','), 120, 'nokta ile ayır: 10 · 10,75 · 11,5') +
+    sat('epW', 'Beklenti: ileri 12 ay ağırlığı', G.ileri_agirlik, 60, 'e12 = w·ileri + (1−w)·geriye (PKA\'ya kalibre, 0,85)') +
+    sat('epKappa', 'Skor eğim katsayısı κ', G.kappa, 56, 'önsel × exp(κ·skor·adım/100) — §461 eki, py\'de yok') +
+    '<div style="flex:1;min-width:220px"><label class="arzLb" style="margin:0 0 2px">PPK toplantıları (YYYY-AA, boşlukla)</label><input id="epTopl" class="arzIn" type="text" value="' + esc((G.toplantilar || []).join(' ')) + '" style="width:100%"></div>' +
+    '</div>';
+  /* skor kartı */
+  h += '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px"><div style="flex:1;min-width:320px"><label class="arzLb" style="margin:0 0 4px">Skor kartı <span class="thin">(− gevşeme · + temkin)</span></label><table id="epSkorTb" style="width:100%"><tbody>' +
+    (G.skor || []).map((s, i) => '<tr><td style="padding:2px 4px"><input class="arzIn epSkorAd" type="text" value="' + esc(s[0]) + '" style="width:100%;font-size:11px;padding:4px 7px"></td><td style="padding:2px 4px;width:70px"><input class="arzIn epSkorP" type="text" inputmode="decimal" value="' + esc(String(s[1]).replace('.', ',')) + '" style="width:64px;text-align:right;padding:4px 7px"></td></tr>').join('') +
+    '</tbody></table><button class="mini" id="epSkorEkle" type="button" style="margin-top:4px">+ satır</button></div>';
+  /* anket + model olasılıkları */
+  h += '<div style="min-width:280px"><label class="arzLb" style="margin:0 0 4px">İlk toplantı dağılımı</label><table><thead><tr><th>Kol</th><th class="num">Anket (kişi)</th><th class="num">Model olasılık</th></tr></thead><tbody>' +
+    Object.keys(G.adim).map(k => '<tr><td>' + esc(k) + '</td><td class="num"><input class="arzIn epAnk" data-k="' + esc(k) + '" type="text" inputmode="numeric" value="' + esc(String(G.anket[k] != null ? G.anket[k] : 0)) + '" style="width:56px;text-align:right;padding:4px 7px"></td><td class="num"><input class="arzIn epMo" data-k="' + esc(k) + '" type="text" inputmode="decimal" value="' + esc(String(G.model_olas[k] != null ? G.model_olas[k] : 0).replace('.', ',')) + '" style="width:64px;text-align:right;padding:4px 7px"></td></tr>').join('') +
+    '</tbody></table><div class="sub" style="font-size:9.5px;margin-top:4px">Anket: ForInvest 9 Eki (n=22). Model olasılığı senin yargın; skor-eğimli üçüncü dağılım otomatik hesaplanır.</div></div></div>';
+  /* senaryolar */
+  h += '<div class="lbl" style="margin:12px 0 6px">SENARYOLAR <span class="thin">(aylık TÜFE dizisi ' + esc(G.ilk_ay) + '\'dan başlar; ufuk ' + (G.ufuk || 15) + ' ay + 12 ay ileri beklenti için = ' + ((G.ufuk || 15) + 12) + ' değer)</span></div>';
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px">' + Object.keys(G.senaryolar).map(ad => { const s = G.senaryolar[ad]; const sl = encodeURIComponent(ad);
+    return '<div class="card" style="padding:8px 10px;border-left:3px solid ' + (EP_RENK[ad] || 'var(--line2)') + '"><div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap"><b style="font-size:12px;min-width:70px">' + esc(ad) + '</b>' +
+      sat('epOl_' + sl, 'olasılık', s.olas, 54) + sat('epEk_' + sl, 'ilk karar %', s.ekim, 58, 'ilk toplantıda faiz (kuraldan değil, senaryoyla tutarlı adım)') +
+      sat('epR0_' + sl, 'r hedef baş %', s.r_hedef[0], 54) + sat('epR1_' + sl, 'r hedef son %', s.r_hedef[1], 54, 'ufuk boyunca doğrusal iner') + sat('epMx_' + sl, 'maks adım bp', s.max_adim, 54) + '</div>' +
+      '<label class="arzLb" style="margin:6px 0 2px">Açıklama</label><input id="epAc_' + sl + '" class="arzIn" type="text" value="' + esc(s.aciklama || '') + '" style="width:100%;font-size:11px;padding:4px 7px">' +
+      '<label class="arzLb" style="margin:6px 0 2px">Aylık TÜFE patikası (' + (s.tufe || []).length + ' değer)</label><textarea id="epTf_' + sl + '" class="arzIn" rows="3" style="width:100%;font-size:11px;line-height:1.35;resize:vertical">' + esc((s.tufe || []).map(v => String(v).replace('.', ',')).join(' ')) + '</textarea></div>'; }).join('') + '</div>';
+  h += '<div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap"><button class="mini" id="epHesaplaBtn" type="button" style="padding:6px 14px;font-size:12px">hesapla · kaydet</button><button class="mini" id="epCanliBtn" type="button" title="Üst kartlardaki canlı değerleri (TÜFE y/y, PKA 12a, politika faizi, 2Y DİBS) forma yazar">canlıdan doldur</button><button class="mini" id="epVarsBtn" type="button" title="py dosyalarındaki değerlere döner">varsayılana dön</button><span id="epDurum" class="sub" style="font-size:10.5px"></span></div>';
+  F.innerHTML = h;
+  $('epHesaplaBtn').onclick = () => { try { epOku(); epKaydet(); epRender(); $('epDurum').textContent = '✓ hesaplandı · tarayıcında saklandı'; } catch (e) { $('epDurum').innerHTML = '<span style="color:var(--down)">✗ ' + esc(String(e.message || e)) + '</span>'; } };
+  $('epVarsBtn').onclick = () => { try { localStorage.removeItem(EP_KEY); } catch (e) {} EP_G = epKopya(EP_VARSAYILAN); EP_G.ilk_ay = epIlkAy(EP_G); EP_HAZIR = false; epInit(); const d = $('epDurum'); if (d) d.textContent = 'varsayılanlar (py) yüklendi'; };
+  $('epCanliBtn').onclick = () => { const y = []; try {
+      const EC = window.ENF_CANLI, PC = window.POL_CANLI, EG = (typeof EGRI_CANLI !== 'undefined') ? EGRI_CANLI : null;
+      if (EC && Number.isFinite(EC.tufe)) { $('epYoy').value = String(EC.tufe).replace('.', ','); y.push('TÜFE y/y ' + trN(EC.tufe, 2)); }
+      if (EC && Number.isFinite(EC.bek)) { $('epE12').value = String(EC.bek).replace('.', ','); y.push('PKA 12a ' + trN(EC.bek, 2)); }
+      if (PC && Number.isFinite(PC.deger)) { $('epPol').value = String(PC.deger).replace('.', ','); y.push('politika ' + trN(PC.deger, 2)); }
+      if (EG && EG['2Y'] && Number.isFinite(EG['2Y'].getiri)) { $('epD2y').value = String(EG['2Y'].getiri).replace('.', ','); y.push('2Y ' + trN(EG['2Y'].getiri, 2)); }
+    } catch (e) {}
+    $('epDurum').textContent = y.length ? ('canlıdan alındı: ' + y.join(' · ') + ' — hesapla ile uygula') : 'canlı değer henüz yok (Makro › Para Politikası ve Faiz & Piyasa kartları yüklenince gelir)'; };
+  $('epSkorEkle').onclick = () => { const tb = $('epSkorTb').querySelector('tbody'); const tr = document.createElement('tr'); tr.innerHTML = '<td style="padding:2px 4px"><input class="arzIn epSkorAd" type="text" value="" placeholder="yeni faktör" style="width:100%;font-size:11px;padding:4px 7px"></td><td style="padding:2px 4px;width:70px"><input class="arzIn epSkorP" type="text" inputmode="decimal" value="0" style="width:64px;text-align:right;padding:4px 7px"></td>'; tb.appendChild(tr); };
+}
+function epOku(){
+  const G = EP_G; const n = (id) => { const v = epSayi(($(id) || {}).value); if (v == null) throw new Error(id.replace('ep', '') + ' sayı değil'); return v; };
+  G.politika_faizi = n('epPol'); G.E12 = n('epE12'); G.E24 = n('epE24'); G.pka_pf_12ay = n('epPf12'); G.pka_pf_24ay = n('epPf24');
+  G.dibs_2y = n('epD2y'); G.yillik_tufe = n('epYoy'); G.brent = n('epBrent'); G.ust_2y = n('epUst2y');
+  G.tufe_2025 = epDizi($('epT25').value); if (G.tufe_2025.length !== 12) throw new Error('2025 TÜFE 12 değer olmalı (' + G.tufe_2025.length + ')');
+  G.tufe_2026 = epDizi($('epT26').value); if (!G.tufe_2026.length || G.tufe_2026.length > 12) throw new Error('2026 TÜFE 1–12 değer olmalı');
+  G.E12_dusus = n('epDusus'); G.ileri_agirlik = n('epW'); G.kappa = n('epKappa');
+  G.r_adaylar = String($('epRad').value).split(/[·;\s]+/).map(epSayi).filter(v => v != null); if (!G.r_adaylar.length) throw new Error('reel hedef adayı yok');
+  G.toplantilar = String($('epTopl').value).split(/[\s,;]+/).filter(x => /^\d{4}-\d{2}$/.test(x));
+  G.skor = []; document.querySelectorAll('#epSkorTb tr').forEach(tr => { const ad = tr.querySelector('.epSkorAd').value.trim(), p = epSayi(tr.querySelector('.epSkorP').value); if (ad && p != null) G.skor.push([ad, p]); });
+  G.anket = {}; document.querySelectorAll('.epAnk').forEach(i => { G.anket[i.dataset.k] = epSayi(i.value) || 0; });
+  G.model_olas = {}; document.querySelectorAll('.epMo').forEach(i => { G.model_olas[i.dataset.k] = epSayi(i.value) || 0; });
+  const mo = Object.values(G.model_olas).reduce((a, b) => a + b, 0); if (Math.abs(mo - 1) > 0.02) throw new Error('model olasılıkları toplamı ' + trN(mo, 2) + ' (1,00 olmalı)');
+  Object.keys(G.senaryolar).forEach(ad => { const s = G.senaryolar[ad], sl = encodeURIComponent(ad);
+    s.olas = n('epOl_' + sl); s.ekim = n('epEk_' + sl); s.r_hedef = [n('epR0_' + sl), n('epR1_' + sl)]; s.max_adim = n('epMx_' + sl);
+    s.aciklama = ($('epAc_' + sl) || {}).value || ''; s.tufe = epDizi(($('epTf_' + sl) || {}).value);
+    if (s.tufe.length < (G.ufuk || 15)) throw new Error(ad + ' TÜFE dizisi en az ' + (G.ufuk || 15) + ' değer olmalı'); });
+  const ol = Object.values(G.senaryolar).reduce((a, s) => a + s.olas, 0); if (Math.abs(ol - 1) > 0.02) throw new Error('senaryo olasılıkları toplamı ' + trN(ol, 2) + ' (1,00 olmalı)');
+  G.ilk_ay = epIlkAy(G);
+}
+function epRender(){
+  const G = EP_G, O = epHesapla(G); EP_SON = O;
+  const K = (lbl, val, sub, renk) => '<div class="card" style="padding:8px 12px"><div class="lbl">' + lbl + '</div><div class="val"' + (renk ? ' style="color:' + renk + '"' : '') + '>' + val + '</div><div class="sub">' + sub + '</div></div>';
+  const sonAy = '2026-' + String((G.tufe_2026 || []).length).padStart(2, '0');
+  $('epOzet').innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">' +
+    K('YBB TÜFE', '%' + trN(O.ytd, 2), 'Oca→' + epAyAdi(sonAy) + ' · ara hedef %' + (G.ara_hedef && G.ara_hedef[2026] != null ? G.ara_hedef[2026] : '—') + ' · TCMB tahmini %' + (G.tcmb_tahmin_2026 || '—'), O.ytd > (G.ara_hedef ? G.ara_hedef[2026] : 99) ? 'var(--down)' : 'var(--up)') +
+    K('Yıllık TÜFE (seri)', '%' + trN(O.yoy, 2), 'son 12 ay çarpımı · resmî %' + trN(G.yillik_tufe, 2) + (Math.abs(O.yoy - G.yillik_tufe) > 0.05 ? ' <span style="color:var(--down)">· seri resmîden sapıyor</span>' : ' ✓')) +
+    K('Ex-ante reel', '%' + trN(O.reelExante, 2), '(1+' + trN(G.politika_faizi, 1) + ')/(1+' + trN(G.E12, 2) + ')−1 · TCMB\'nin çıpası') +
+    K('Ex-post reel', '%' + trN(O.reelExpost, 2), 'gerçekleşen y/y ile · geriye bakar') +
+    K('2Y ima gecelik', '%' + trN(O.imaOn2y, 2), '(1+' + trN(G.dibs_2y, 2) + ')^(1/365)·365 · piyasanın ortalama O/N fiyatlaması') +
+    K('Anket patikası ort.', '%' + trN(O.anketOrt2y, 2), trN(G.politika_faizi, 1) + '→' + trN(G.pka_pf_12ay, 2) + '→' + trN(G.pka_pf_24ay, 2) + ' · 25 nokta') +
+    K('Fark', (O.fark2y >= 0 ? '+' : '') + trN(O.fark2y, 2) + ' pp', O.fark2y > 1 ? 'piyasa anketten şahin · vade primi ya da sahicilik' : (O.fark2y < -1 ? 'piyasa anketten güvercin' : 'piyasa ≈ anket'), O.fark2y > 1 ? 'var(--down)' : 'var(--up)') +
+    '</div>' +
+    '<div class="note" style="margin-top:8px;font-size:10.5px"><b>Reel faiz tarihçesi (AOFM − PKA 12a, ex-ante):</b> ' + Object.keys(O.reelTarihce).map(k => '<span style="white-space:nowrap">' + epAyAdi(k) + ' <b>' + trN(O.reelTarihce[k], 1) + '</b></span>').join(' · ') + '. Zirve Mayıs 2025 (~19), Eylül 2026 ~10,8 — TCMB çıpayı yarıya indirmiş durumda; model bu çıpanın ufukta ' + trN(G.senaryolar['Baz'] ? G.senaryolar['Baz'].r_hedef[0] : 10, 1) + '→' + trN(G.senaryolar['Baz'] ? G.senaryolar['Baz'].r_hedef[1] : 8, 1) + ' puana (Baz) inmesini varsayar.</div>';
+  /* karar */
+  const kol = Object.keys(G.adim);
+  $('epKarar').innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">' +
+    '<div class="card" style="padding:8px 12px"><div class="lbl">KURAL-İMA FAİZ <span class="thin">(E12 ' + trN(G.E12, 2) + ' − ' + trN(G.E12_dusus, 2) + ' = ' + trN(O.E12_karar, 2) + ')</span></div><table><thead><tr><th>r hedef</th><th class="num">i* = (1+r)(1+E12)−1</th><th class="num">fark (37→)</th></tr></thead><tbody>' +
+      O.kural.map(x => '<tr><td>%' + trN(x.r, 2) + '</td><td class="num"><b>%' + trN(x.i, 2) + '</b></td><td class="num ' + (x.i - G.politika_faizi < 0 ? 'down' : 'up') + '">' + (x.i - G.politika_faizi >= 0 ? '+' : '') + trN((x.i - G.politika_faizi) * 100, 0) + ' bp</td></tr>').join('') +
+      '</tbody></table><div class="sub" style="font-size:9.5px;margin-top:4px">Reaksiyon fonksiyonu nominal hedefi verir; 50 bp katına yuvarlanır. Reel hedef %10,75 bugünkü ex-ante reel faizle tutarlı okumadır.</div></div>' +
+    '<div class="card" style="padding:8px 12px"><div class="lbl">SKOR KARTI <span class="thin">net ' + (O.netSkor >= 0 ? '+' : '') + trN(O.netSkor, 2) + ' → ' + (O.netSkor > 0 ? 'TEMKİN' : 'GEVŞEME') + ' yönü</span></div><table><tbody>' +
+      (G.skor || []).map(s => '<tr><td style="font-size:10px">' + esc(s[0]) + '</td><td class="num ' + (s[1] > 0 ? 'down' : 'up') + '" style="width:48px">' + (s[1] > 0 ? '+' : '') + trN(s[1], 2) + '</td></tr>').join('') +
+      '</tbody></table></div>' +
+    '<div class="card" style="padding:8px 12px"><div class="lbl">İLK TOPLANTI DAĞILIMI <span class="thin">(' + esc(G.toplantilar[0] || '') + ')</span></div><table><thead><tr><th>Kol</th><th class="num">Önsel (anket)</th><th class="num">Model</th><th class="num">Skor-eğimli κ=' + trN(G.kappa, 1) + '</th></tr></thead><tbody>' +
+      kol.map(k => '<tr><td>' + esc(k) + '</td><td class="num">%' + trN(O.onsel[k] * 100, 0) + '</td><td class="num"><b>%' + trN(O.modelOlas[k] * 100, 0) + '</b></td><td class="num">%' + trN(O.skorOlas[k] * 100, 0) + '</td></tr>').join('') +
+      '<tr style="border-top:1px solid var(--line)"><td><b>Beklenen adım</b></td><td class="num">' + trN(O.bekOnsel, 0) + ' bp</td><td class="num"><b>' + trN(O.bekModel, 0) + ' bp</b></td><td class="num">' + trN(O.bekSkor, 0) + ' bp</td></tr></tbody></table>' +
+      '<div class="sub" style="font-size:9.5px;margin-top:4px">Skor-eğimli sütun py\'de yoktur: önsel × exp(κ·skor·adım/100), normalize. Pozitif skor indirim kollarını küçültür, "Sabit"e dokunmaz — skorun dağılıma <em>nasıl</em> çevrildiğini görünür kılar.</div></div>' +
+    '</div>';
+  /* grafik + tablo */
+  $('epGrafik').innerHTML = epGrafik(G, O);
+  const ad = Object.keys(G.senaryolar);
+  let t = '<div style="overflow-x:auto"><table><thead><tr><th>Ay</th>' + ad.map(a => '<th class="num" style="color:' + (EP_RENK[a] || 'inherit') + '">' + esc(a) + ' faiz</th>').join('') + '<th class="num">Ağırlıklı</th>' + ad.map(a => '<th class="num">' + esc(a) + ' e12</th>').join('') + '<th class="num">Baz reel</th></tr></thead><tbody>';
+  O.aylar.forEach((ay, j) => { const topl = (G.toplantilar || []).includes(ay);
+    t += '<tr' + (topl ? ' style="background:var(--bg2)"' : '') + '><td>' + epAyAdi(ay) + (topl ? ' <span class="thin" style="font-size:8px">PPK</span>' : '') + '</td>' +
+      ad.map(a => { const r = O.sonuclar[a][j]; return '<td class="num"' + (topl ? ' style="font-weight:700"' : '') + '>' + trN(r.faiz, 1) + (topl && r.hareket != null && r.hareket !== 0 ? ' <span class="thin" style="font-size:8px">' + (r.hareket > 0 ? '+' : '') + trN(r.hareket * 100, 0) + '</span>' : '') + '</td>'; }).join('') +
+      '<td class="num"><b>' + trN(O.agirlikli[j], 2) + '</b></td>' + ad.map(a => '<td class="num" style="color:var(--muted)">' + trN(O.sonuclar[a][j].e12, 1) + '</td>').join('') +
+      '<td class="num" style="color:var(--muted)">' + trN(O.sonuclar['Baz'] ? O.sonuclar['Baz'][j].reel : 0, 1) + '</td></tr>'; });
+  t += '</tbody></table></div>';
+  $('epTablo').innerHTML = t + (O.uyari.length ? '<div class="sub" style="color:var(--down);margin-top:4px">⚠ ' + O.uyari.map(esc).join(' · ') + '</div>' : '') +
+    (Math.abs(O.olasToplam - 1) > 0.02 ? '<div class="sub" style="color:var(--down)">⚠ senaryo olasılıkları toplamı ' + trN(O.olasToplam, 2) + '</div>' : '');
+}
+function epGrafik(G, O){
+  const ad = Object.keys(G.senaryolar), n = O.aylar.length;
+  const W = 680, H = 200, pL = 40, pR = 70, pT = 14, pB = 24;
+  const x = (j) => pL + (W - pL - pR) * j / (n - 1);
+  const panel = (baslik, seriler, birim) => {
+    let vs = []; seriler.forEach(s => s.d.forEach(v => { if (Number.isFinite(v)) vs.push(v); }));
+    const mn = Math.floor(Math.min(...vs) / 2) * 2 - 1, mx = Math.ceil(Math.max(...vs) / 2) * 2 + 1;
+    const y = (v) => pT + (H - pT - pB) * (1 - (v - mn) / (mx - mn));
+    let g = '';
+    const adimY = Math.max(2, Math.round((mx - mn) / 5 / 2) * 2);
+    for (let v = mn; v <= mx; v += adimY) g += '<line x1="' + pL + '" y1="' + y(v) + '" x2="' + (W - pR) + '" y2="' + y(v) + '" stroke="var(--line)" stroke-width="0.5"/><text x="' + (pL - 4) + '" y="' + (y(v) + 3) + '" text-anchor="end" font-size="9" fill="var(--muted)">' + v + '</text>';
+    O.aylar.forEach((ay, j) => { if (j % 3 === 0 || j === n - 1) g += '<text x="' + x(j) + '" y="' + (H - 7) + '" text-anchor="middle" font-size="8.5" fill="var(--muted)">' + epAyAdi(ay) + '</text>';
+      if ((G.toplantilar || []).includes(ay)) g += '<line x1="' + x(j) + '" y1="' + (H - pB) + '" x2="' + x(j) + '" y2="' + (H - pB - 4) + '" stroke="var(--muted)" stroke-width="1"/>'; });
+    let p = ''; const etiket = [];
+    seriler.forEach(s => { let d = ''; s.d.forEach((v, j) => { if (Number.isFinite(v)) d += (d ? 'L' : 'M') + x(j).toFixed(1) + ' ' + y(v).toFixed(1); });
+      p += '<path d="' + d + '" fill="none" stroke="' + s.renk + '" stroke-width="' + (s.kalin || 2) + '"' + (s.dash ? ' stroke-dasharray="' + s.dash + '"' : '') + ' stroke-linejoin="round"/>';
+      s.d.forEach((v, j) => { if (!Number.isFinite(v)) return; p += '<circle cx="' + x(j) + '" cy="' + y(v) + '" r="' + ((G.toplantilar || []).includes(O.aylar[j]) ? 3 : 2) + '" fill="' + s.renk + '" stroke="var(--bg,#fff)" stroke-width="1.5"><title>' + s.ad + ' · ' + epAyAdi(O.aylar[j]) + ': %' + trN(v, 2) + '</title></circle>'; });
+      const son = s.d[n - 1]; if (Number.isFinite(son)) etiket.push({ y: y(son) + 3, renk: s.renk, metin: s.ad + ' ' + trN(son, 1) }); });
+    /* doğrudan etiketler çakışmasın: y'ye göre sırala, en az 11px aralık (dataviz: direct label, collision) */
+    etiket.sort((a, b) => a.y - b.y);
+    for (let k = 1; k < etiket.length; k++) if (etiket[k].y - etiket[k - 1].y < 11) etiket[k].y = etiket[k - 1].y + 11;
+    for (let k = etiket.length - 2; k >= 0; k--) if (etiket[k + 1].y - etiket[k].y < 11) etiket[k].y = etiket[k + 1].y - 11;
+    etiket.forEach(e => { p += '<text x="' + (W - pR + 6) + '" y="' + e.y.toFixed(1) + '" font-size="9" font-weight="700" fill="' + e.renk + '">' + esc(e.metin) + '</text>'; });
+    return '<div class="sub" style="font-size:10px;margin:4px 0 0 2px"><b>' + baslik + '</b> <span class="thin">' + birim + '</span></div><svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto">' + g + p + '</svg>';
+  };
+  const faizS = ad.map(a => ({ ad: a, renk: EP_RENK[a] || '#8A939B', d: O.sonuclar[a].map(r => r.faiz) }));
+  faizS.push({ ad: 'Ağırlıklı', renk: 'var(--ink,#3C4451)', d: O.agirlikli, dash: '5,4', kalin: 2.5 });
+  const yoyS = ad.map(a => ({ ad: a, renk: EP_RENK[a] || '#8A939B', d: O.sonuclar[a].map(r => r.tufe_yoy) }));
+  const legend = '<div class="sub" style="font-size:9.5px;margin-top:4px;display:flex;gap:12px;flex-wrap:wrap">' + ad.map(a => '<span><span style="display:inline-block;width:14px;height:3px;background:' + (EP_RENK[a] || '#8A939B') + ';vertical-align:middle;margin-right:4px"></span>' + esc(a) + ' (p=' + trN(G.senaryolar[a].olas, 2) + ')</span>').join('') + '<span><span style="display:inline-block;width:14px;height:0;border-top:3px dashed var(--ink,#3C4451);vertical-align:middle;margin-right:4px"></span>Olasılık ağırlıklı faiz</span><span class="thin">· büyük nokta = PPK toplantısı · imleçle değer</span></div>';
+  return '<div class="card" style="padding:8px 12px">' + panel('Politika faizi patikası', faizS, '% · toplantı ayında kural-ima hedefe 50 bp katlarıyla yaklaşır') + panel('Yıllık TÜFE (senaryo dizilerinden kimlik hesabı)', yoyS, '% y/y · aynı eksen değil, ayrı panel') + legend + '</div>';
+}
+
 /* ---- Yabancı Para Akışı (portföy + carry) ---- */
 let YABANCI=null;
 async function yabanciInit(){

@@ -386,6 +386,14 @@
    "limit_gun": 14,
    "kaynak": "SPK bültenleri + tasfiye bankası duyuruları; ödeme turları, yeni tedbir, evren fonlarının akıbeti (§452)",
    "_460": "12 Eki: 5 Eki tasfiye baslangici (A1/Bulls/Pardus 17 fon), 8 Eki ilk odemeler, Tera/Pusula/Hedef/Atlas tarih yok; panel izleri (CDS 247,8 · 9-12 Eki akis −7,1) islendi. Sonraki: ara odeme tarihi aciklaninca."
+  },
+  {
+   "ad": "Enflasyon Patikası modeli — girdiler (PKA · TÜFE · DİBS)",
+   "dosya": "app.js",
+   "siklik": "aylik",
+   "son": "2026-10-13",
+   "kaynak": "Kullanıcının model.py/veri.py (13 Eki) → app.js EP_VARSAYILAN; kullanıcı girdileri tarayıcıda (ktp_ep_v1). Aylık: TÜİK TÜFE (ayın ~3ü) dizinin sonuna eklenir, PKA (ayın ~16sı) E12/pf12/pf24 güncellenir; PPK sonrası politika faizi. \"canlıdan doldur\" düğmesi TÜFE y/y, PKA 12a, politika ve 2Y DİBSi üst kartlardan alır.",
+   "_461": "13 Eki: §461 kuruldu. Varsayılanlar py ile birebir doğrulandı (225 hücre, fark 0)."
   }
  ],
  "bilanco_sezonu_aylar": [

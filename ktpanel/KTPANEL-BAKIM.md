@@ -6,6 +6,40 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-12
 
 
+# BAKIM EK — §461 (13 Eki 2026) — ENFLASYON PATİKASI ALT SEKMESİ: TCMB FAİZ TAHMİN MODELİ
+
+Kullanıcı model.py + veri.py gönderdi: "tara, Makro'ya 'Enflasyon Patikası' alt sekmesi aç
+(tıklayınca kaybolmasın), değişkenleri girip model çıktısı alabileceğim sistem olur mu?"
+TARAMA (py): (1) veri.py 2025 aylık TÜFE "hafızadan" — çarpım 30,90 (TÜİK 2025 yıllık 30,89 ✓),
+Eyl 26 y/y seriden 29,72 (resmî 29,73 ✓): seri sağlam. PKA Eyl 26 12a 23,70 panelin EVDS
+canlısıyla aynı. (2) model.py: reaksiyon fonksiyonu i*=(1+r)(1+E12)−1, beklenti 0,85·ileri +
+0,15·geriye (Eki26 e12 23,58 ≈ PKA 23,70, kalibre), ölü bölge (+1,5 / −0,5), 50 bp katı,
+senaryo başına maks adım, r_hedef ufukta doğrusal iner. İlk toplantı KURALDAN DEĞİL senaryo
+girdisinden (ekim: 36/37/35,5). (3) Zayıf yerler: model_olas elle (0,35/0,10/0,50/0,05) — skor
+kartıyla sayısal bağ yok, metin "kaydırma" diyor ama formül yok; anket patikası başlangıcı 37
+gömülü (politika faizi olmalı); round() Python yarım-çift; brut_rezerv_endeks kullanılmıyor ve
+birimi belirsiz; skor maddesi "rezervler ekimde toparlanıyor" (−0,25) panelin verisiyle çelişir
+(2 Eki haftasına kadar 6 hafta düşüş). (4) 2Y ima gecelik: 365·((1+y)^(1/365)−1) — bileşikten
+basit günlük orana; anket patikası ortalamasıyla farkı (4,23 pp) vade primi/şahinlik olarak
+okunuyor — doğru çerçeve.
+YAPILAN: model JS'e birebir taşındı (epHesapla) — Python cikti.json ile 225 hücre, fark 0,0000.
+Python yarım-çift yuvarlama epPyRound ile; anket patikası politika faizinden başlar; ilk ay
+TÜFE dizisinin uzunluğundan türer (yeni ay eklenince patika kendiliğinden kayar). EK: skor-eğimli
+dağılım önsel×exp(κ·skor·adım/100) — py'de olmayan, açıkça etiketli üçüncü sütun.
+UI: #mk-patika (.subtab-panel, #t2 içinde, data-ebu="hayir"), buton Tahminler'in sağında.
+Girdi formu: 9 skaler, 2025/2026 TÜFE dizileri, karar modeli (E12 düşüş, r adayları, w, κ,
+toplantılar), skor kartı (satır ekle), anket/model olasılıkları, 3 senaryo (olasılık, ilk karar,
+r hedef baş/son, maks adım, açıklama, 27 aylık TÜFE). hesapla·kaydet (localStorage ktp_ep_v1),
+canlıdan doldur (ENF_CANLI/POL_CANLI/EGRI_CANLI), varsayılana dön. Çıktı: 7 özet kartı, reel faiz
+tarihçesi, kural-ima tablo, skor kartı, dağılım (önsel/model/skor-eğimli + beklenen adım), iki
+panelli SVG (faiz · y/y — tek eksen kuralı; renkler dataviz doğrulayıcıdan geçti: #128A66 /
+#C9612B / #3D7BD9, ağırlıklı = mürekkep kesikli; uç etiketleri çakışma korumalı), 15 aylık tablo.
+KAYBOLMA TESTİ (headless Chromium, yerel sunucu): sekmeye tıkla → görünür, 2 svg, 15 satır;
+başka alt sekmeye gidip dön → aynı; girdi değiştir+hesapla → tablo ve localStorage değişti;
+hatalı girdi → kırmızı mesaj, panel boş kalmadı; varsayılana dön → py değerleri. Konsol hatası 0.
+DERS: KULLANICININ MODELİNİ TAŞIRKEN ÖNCE BİREBİR EŞLE (sayı sayı), SONRA EKLE — ekler ayrı
+etiketle. DEPLOY: ktpanel/{index.html, app.js (20261013a), guncelleme-plani.json, KTPANEL-BAKIM.md}.
+
 # BAKIM EK — §460 (12 Eki 2026) — KATILIM FONLARI: "ESKİ KALMIŞ" DEDİ, ÖLÇÜLDÜ
 
 Kullanıcı: "sektörel verilerde katılım fonları eski kalmış sanki". ÖNCE ÖLÇÜM: KSK/HPH/KPR için
