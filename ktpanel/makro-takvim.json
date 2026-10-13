@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-13 08:07 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-13 18:14 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -22,6 +22,14 @@
    "t": "2026-10-14T08:30:00.000Z",
    "ulke": "EUR",
    "olay": "ECB President Lagarde Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-10-14T10:15:00.000Z",
+   "ulke": "EUR",
+   "olay": "EU Economic Summit",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""
@@ -86,6 +94,14 @@
    "t": "2026-10-15T07:30:00.000Z",
    "ulke": "GBP",
    "olay": "BOE Gov Bailey Speaks",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-10-15T10:15:00.000Z",
+   "ulke": "EUR",
+   "olay": "EU Economic Summit",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""
