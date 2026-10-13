@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261012b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261012c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2375,6 +2375,8 @@ function haberRender(){
 /* ---- Katılım Fon Dünyası ---- */
 let KATFON=null,katfonSort='ytd';
 async function katfonInit(){
+  /* §460: tasfiye kümesi fon-portfoy.json'dan (tek kaynak). Yüklenemezse boş küme — eski davranış. */
+  try{ const fp=await (await fetch('/fon-portfoy.json',{cache:'no-store'})).json(); const k=((fp||{}).tasfiye||{}).kodlar||{}; window.__KATFON_TASFIYE=new Set(Object.keys(k)); }catch(e){ window.__KATFON_TASFIYE=new Set(); }
   await tlrefkYukle();   /* §250e */
   try{KATFON=await (await fetch('/katfon.json',{cache:'no-store'})).json();}catch(e){$('katfonBody').innerHTML='<div class="note">katfon.json yüklenemedi.</div>';return;}
   const sel=$('katfonSort');if(sel)sel.addEventListener('change',()=>{katfonSort=sel.value;katfonRender();});
@@ -2422,7 +2424,7 @@ async function katfonCanli(){
     damgala('getiriler '+esc(KATFON.fiyat_tarihi||'?')+
           ' · AUM/akış '+esc(KATFON.akis_tarihi||'?')+
           ((KATFON.fiyat_tarihi===KATFON.akis_tarihi)
-            ? ' <span class="thin">· tek tarih, tümü Fintables</span>'
+            ? ' <span class="thin">· tek tarih, tümü TEFAS/Actions</span>'
             : ' <span class="thin" style="color:var(--down)">· TARİHLER AYRIŞIK — hangi rakamın hangi güne ait olduğuna dikkat</span>'));
         return; }
       /* §144: önek tekrarı kesildi. Sunucu zaten "TEFAS: ..." diye gönderiyordu. */
@@ -2487,30 +2489,40 @@ function katfonRender(){
      Tek kaynak kuralı (§112) veri için olduğu kadar ARAYÜZ METNİ için de
      geçerli — ve deploy yükünü yarıya indiriyor. */
   try{
-    const _b = document.querySelector('#t5 h2 .thin');
-    if(_b) _b.textContent = '(46 fon · 6 kategori · Fintables)';
+    const _b = document.querySelector('#sv-katfon h2 .thin') || document.querySelector('#t5 h2 .thin');   /* §460: kart t27/sv-katfon'a taşınmıştı, #t5 seçicisi boşa düşüyordu */
+    if(_b) _b.textContent = '(46 fon · 6 kategori · TEFAS · Actions)';   /* §460: kaynak Fintables değil TEFAS/Actions */
   }catch(e){}
 
   if(!KATFON)return;
   const sIdx={'1g':0,'1a':1,'3a':2,'ytd':3,'1y':4,'3y':5}[katfonSort];
   const donemLbl=['1G','1A','3A','YTD','1Y','3Y'];
   let tum=[];KATFON.kategoriler.forEach(k=>k.fonlar.forEach(f=>tum.push(f)));
-  const gec=tum.filter(f=>f.g[3]!=null);
-  const enIyi=gec.reduce((a,b)=>b.g[3]>a.g[3]?b:a),enKotu=gec.reduce((a,b)=>b.g[3]<a.g[3]?b:a);
-  const ort=gec.reduce((s,f)=>s+f.g[3],0)/gec.length;
-  // AUM + günlük akış toplamları (Fintables damgalı)
+  /* §460 TASFİYE FONLARI ÖZETTEN DIŞARI (12 Eki, kullanıcı "eski kalmış" dedi; ölçüldü):
+     TLV (Tera PP) 17 Eyl'den beri işlem kapalı — fiyat 0, getiriler 0 — ve özet kartı onu
+     "EN DÜŞÜK YTD %0,00" diye basıyordu; HPH/PKL/KVR de donmuş fonlar olarak ortalamaya
+     giriyordu. Tasfiye listesi fon-portfoy.json tasfiye.kodlar'dan (tek kaynak, §452/§457b).
+     Dışlanır: YTD en iyi/en kötü/ortalama, en çok giren/çıkan. Tabloda rozetle gösterilir.
+     DERS: ÖLÜ KAYIT İSTATİSTİĞE GİRERSE İSTATİSTİK ÖLÜR — kapalı fonun sıfırı getiri değildir. */
+  const TASF = (window.__KATFON_TASFIYE instanceof Set) ? window.__KATFON_TASFIYE : new Set();
+  const aktif=tum.filter(f=>!TASF.has(f.k));
+  const gec=aktif.filter(f=>f.g[3]!=null && !(f.yu===0));
+  const enIyi=gec.length?gec.reduce((a,b)=>b.g[3]>a.g[3]?b:a):{k:'—',g:[null,null,null,null],u:''};
+  const enKotu=gec.length?gec.reduce((a,b)=>b.g[3]<a.g[3]?b:a):{k:'—',g:[null,null,null,null],u:''};
+  const ort=gec.length?gec.reduce((s,f)=>s+f.g[3],0)/gec.length:null;
+  // AUM + günlük akış toplamları (TEFAS · Actions)
   const aumlu=tum.filter(f=>f.b!=null);
+  const akisli=aktif.filter(f=>f.b!=null);
   const topAum=aumlu.reduce((s,f)=>s+f.b,0), netAkis=aumlu.reduce((s,f)=>s+(f.a||0),0);
   const aumFmt=v=>v>=1e9?trN(v/1e9,1)+' mlr':(v>=1e6?trN(v/1e6,0)+' mn':trN(v/1e3,0)+' bin');
-  const enGiris=aumlu.slice().sort((a,b)=>(b.a||0)-(a.a||0))[0];
-  const enCikis=aumlu.slice().sort((a,b)=>(a.a||0)-(b.a||0))[0];
+  const enGiris=(akisli.length?akisli:aumlu).slice().sort((a,b)=>(b.a||0)-(a.a||0))[0];
+  const enCikis=(akisli.length?akisli:aumlu).slice().sort((a,b)=>(a.a||0)-(b.a||0))[0];
   $('katfonOzet').innerHTML=
-    '<div class="card" style="padding:8px 12px"><div class="lbl">TOPLAM FON</div><div class="val">'+tum.length+'</div><div class="sub">6 kategori · '+(KATFON.canli||('fiyat: '+(KATFON.fiyat_tarihi||'')))+'</div></div>'+
-    '<div class="card" style="padding:8px 12px"><div class="lbl">EN YÜKSEK YTD</div><div class="val up">'+enIyi.k+'</div><div class="sub">%'+trN(enIyi.g[3],2)+' · '+esc(enIyi.u)+'</div></div>'+
-    '<div class="card" style="padding:8px 12px"><div class="lbl">ORT. YTD</div><div class="val">%'+trN(ort,2)+'</div><div class="sub">'+gec.length+' fon (YTD verisi olan)</div></div>'+
-    '<div class="card" style="padding:8px 12px"><div class="lbl">EN DÜŞÜK YTD</div><div class="val down">'+enKotu.k+'</div><div class="sub">%'+trN(enKotu.g[3],2)+' · '+esc(enKotu.u)+'</div></div>'+
+    '<div class="card" style="padding:8px 12px"><div class="lbl">TOPLAM FON</div><div class="val">'+tum.length+'</div><div class="sub">6 kategori · '+(KATFON.canli||('fiyat: '+(KATFON.fiyat_tarihi||'')))+(TASF.size?(' · <span style="color:#E8933B">'+tum.filter(f=>TASF.has(f.k)).length+' tasfiye</span>'):'')+'</div></div>'+
+    '<div class="card" style="padding:8px 12px"><div class="lbl">EN YÜKSEK YTD</div><div class="val up">'+enIyi.k+'</div><div class="sub">'+(enIyi.g[3]!=null?('%'+trN(enIyi.g[3],2)+' · '):'')+esc(enIyi.u)+'</div></div>'+
+    '<div class="card" style="padding:8px 12px"><div class="lbl">ORT. YTD</div><div class="val">'+(ort!=null?('%'+trN(ort,2)):'—')+'</div><div class="sub">'+gec.length+' aktif fon (YTD verisi olan'+(TASF.size?'; tasfiye hariç':'')+')</div></div>'+
+    '<div class="card" style="padding:8px 12px"><div class="lbl">EN DÜŞÜK YTD</div><div class="val down">'+enKotu.k+'</div><div class="sub">'+(enKotu.g[3]!=null?('%'+trN(enKotu.g[3],2)+' · '):'')+esc(enKotu.u)+'</div></div>'+
     (aumlu.length?
-    '<div class="card" style="padding:8px 12px"><div class="lbl">TOPLAM BÜYÜKLÜK</div><div class="val">'+aumFmt(topAum)+'</div><div class="sub">₺ · '+(KATFON.akis_tarihi||'')+' · Fintables</div></div>'+
+    '<div class="card" style="padding:8px 12px"><div class="lbl">TOPLAM BÜYÜKLÜK</div><div class="val">'+aumFmt(topAum)+'</div><div class="sub">₺ · '+(KATFON.akis_tarihi||'')+' · TEFAS</div></div>'+
     '<div class="card" style="padding:8px 12px"><div class="lbl">GÜNLÜK NET AKIŞ</div><div class="val '+(netAkis>=0?'up':'down')+'">'+(netAkis>=0?'+':'−')+aumFmt(Math.abs(netAkis))+'</div><div class="sub">₺ · 46 fon toplamı</div></div>'+
     '<div class="card" style="padding:8px 12px"><div class="lbl">EN ÇOK GİREN</div><div class="val up">'+enGiris.k+'</div><div class="sub">+'+aumFmt(enGiris.a)+' ₺ · '+esc(enGiris.u)+'</div></div>'+
     '<div class="card" style="padding:8px 12px"><div class="lbl">EN ÇOK ÇIKAN</div><div class="val down">'+enCikis.k+'</div><div class="sub">−'+aumFmt(Math.abs(enCikis.a))+' ₺ · '+esc(enCikis.u)+'</div></div>'
@@ -2518,14 +2530,15 @@ function katfonRender(){
   const renkler=['#128A66','#3D7BD9','#8B6FD8','#E8933B','#0FA26B','#DE4B5E'];
   let html='';
   KATFON.kategoriler.forEach((kat,ki)=>{
-    const fs=kat.fonlar.slice().sort((a,b)=>{const av=a.g[sIdx],bv=b.g[sIdx];if(av==null)return 1;if(bv==null)return -1;return bv-av;});
+    const fs=kat.fonlar.slice().sort((a,b)=>{const ta=TASF.has(a.k),tb=TASF.has(b.k);if(ta!==tb)return ta?1:-1;const av=a.g[sIdx],bv=b.g[sIdx];if(av==null)return 1;if(bv==null)return -1;return bv-av;});   /* §460: tasfiye en alta */
     const renk=renkler[ki%6];
     html+='<div style="margin-top:'+(ki?18:4)+'px"><div style="display:flex;align-items:baseline;gap:8px;border-left:3px solid '+renk+';padding-left:8px;margin-bottom:6px"><span style="font-weight:700;font-size:13px">'+esc(kat.ad)+'</span><span class="sub">'+kat.fonlar.length+' fon · '+esc(kat.aciklama)+'</span></div>';
-    html+='<div style="overflow-x:auto"><table><thead><tr><th>Kod</th><th>Fon</th><th>Tip</th><th class="num">YÜ%</th><th class="num">AUM · günlük akış</th>'+donemLbl.map((d,i)=>'<th class="num"'+(i===sIdx?' style="color:var(--mm2)"':'')+'>'+d+'</th>').join('')+(TLREFK_YTD!=null?'<th class="num" title="YTD getiri − TLREFK YTD (katılım referans)">α vs TLREFK</th>':'')+'</tr></thead><tbody>';
+    html+='<div style="overflow-x:auto"><table><thead><tr><th>Kod</th><th>Fon</th><th>Tip</th><th class="num" title="TEFAS birim pay değeri (₺)">Fiyat ₺</th><th class="num">AUM · günlük akış</th>'+donemLbl.map((d,i)=>'<th class="num"'+(i===sIdx?' style="color:var(--mm2)"':'')+'>'+d+'</th>').join('')+(TLREFK_YTD!=null?'<th class="num" title="YTD getiri − TLREFK YTD (katılım referans)">α vs TLREFK</th>':'')+'</tr></thead><tbody>';
     fs.forEach((f,i)=>{
       const top=i===0;
       const aumH=f.b!=null?('<td class="num" style="font-size:9px">'+ (f.b>=1e9?trN(f.b/1e9,1)+'mlr':trN(f.b/1e6,0)+'mn') + (f.a?(' <span class="'+(f.a>=0?'up':'down')+'">'+(f.a>=0?'▲':'▼')+(Math.abs(f.a)>=1e9?trN(Math.abs(f.a)/1e9,1)+'mlr':trN(Math.abs(f.a)/1e6,0)+'mn')+'</span>'):'')+'</td>'):'<td class="num" style="color:var(--line2)">\u2014</td>';
-      html+='<tr'+(top?' style="background:var(--mmL)"':'')+'><td><b'+(top?' style="color:var(--mm2)"':'')+'>'+f.k+'</b></td><td style="font-size:10px;color:var(--muted);font-family:var(--sans)">'+esc(f.u)+'</td><td><span style="font-size:8px;font-weight:700;letter-spacing:.5px;color:'+(f.t==='K'?'var(--mm2)':'var(--blue)')+'">'+(f.t==='K'?'KATILIM':'SERBEST')+'</span></td><td class="num" style="color:var(--muted)">'+trN(f.yu,4)+'</td>'+aumH;
+      const _tasf=TASF.has(f.k);   /* §460 */
+      html+='<tr'+(top&&!_tasf?' style="background:var(--mmL)"':(_tasf?' style="opacity:.62"':''))+'><td><b'+(top&&!_tasf?' style="color:var(--mm2)"':'')+'>'+f.k+'</b></td><td style="font-size:10px;color:var(--muted);font-family:var(--sans)">'+esc(f.u)+(_tasf?' <span class="tag" style="background:#E8933B;color:#fff;font-size:8px;padding:1px 5px">⚠ TASFİYE'+(f.yu===0?' · işlem kapalı':'')+'</span>':'')+'</td><td><span style="font-size:8px;font-weight:700;letter-spacing:.5px;color:'+(f.t==='K'?'var(--mm2)':'var(--blue)')+'">'+(f.t==='K'?'KATILIM':'SERBEST')+'</span></td><td class="num" style="color:var(--muted)">'+trN(f.yu,4)+'</td>'+aumH;
       f.g.forEach((v,gi)=>{html+='<td class="num"'+(gi===sIdx?' style="font-weight:700"':'')+'>'+(v==null?'<span style="color:var(--line2)">\u2014</span>':'<span class="'+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+trG(v)+'</span>')+'</td>';});
       /* §250e: alfa hücresi — YTD (g[3]) − TLREFK YTD */
       if(TLREFK_YTD!=null){

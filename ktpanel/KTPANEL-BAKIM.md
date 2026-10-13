@@ -6,6 +6,30 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-12
 
 
+# BAKIM EK — §460 (12 Eki 2026) — KATILIM FONLARI: "ESKİ KALMIŞ" DEDİ, ÖLÇÜLDÜ
+
+Kullanıcı: "sektörel verilerde katılım fonları eski kalmış sanki". ÖNCE ÖLÇÜM: KSK/HPH/KPR için
+TEFAS fiyat serisinden (köprü mod=fiyat, 251 gün) 1A/3A/YTD yeniden hesaplandı — panelin
+g[] değerleriyle 3A ve YTD BİREBİR, 1A ±0,3 puan (TEFAS takvim ayı vs 30 gün). Yani VERİ TAZE
+(TEFAS resmî getiriler her koşu yazılıyor, §249g). Bayat olan ETİKETLER ve ÖZETTİ:
+  1) Başlık/rozet "Fintables" diyordu (3 yerde) — kaynak §249'dan beri TEFAS/Actions.
+     Üstelik başlığı yazan seçici '#t5 h2 .thin' idi; kart t27/sv-katfon'a taşındığından boşa
+     düşüyordu, index.html'deki statik metin kalıyordu. Seçici düzeltildi, statik metin de.
+  2) "YÜ%" sütunu: alan `yu` §249l'den beri TEFAS birim pay FİYATI taşıyor (KSK 3,0827 = fiyat),
+     başlık "yönetim ücreti" diyordu; not da "YÜ = yıllık yönetim ücreti". Başlık "Fiyat ₺".
+  3) TLV (Tera PP) 17 Eyl'den beri işlem kapalı: fiyat 0, getiriler 0 — özet kartı onu
+     "EN DÜŞÜK YTD %0,00 · Tera" diye basıyordu; HPH/PKL/KVR de donmuş halleriyle ortalamaya
+     giriyordu. Şimdi tasfiye kümesi fon-portfoy.json tasfiye.kodlar'dan okunur (tek kaynak);
+     YTD en iyi/kötü/ortalama ve en çok giren/çıkan tasfiye HARİÇ (EN DÜŞÜK YTD artık KIS %12,87,
+     ORT. YTD 39 aktif fon %30,73); tabloda ⚠ TASFİYE rozeti (TLV: "işlem kapalı"), sırada en alta.
+  4) Fon krizi kartı 5 Eki'de kalmıştı: 5 Eki A1/Bulls/Pardus 17 fonunda olağan tasfiye (43.643
+     yatırımcı), 8 Eki ilk ödemeler Ziraat'tan aktarıldı, Tera/Pusula/Hedef/Atlas (bizim dördü) için
+     tarih yok (Tera 6 fon 388.718 yatırımcı · Ziraat grubu 125 fon 151.247), hedef süre 5–6 ay;
+     panel izleri CDS 247,8 · 9→12 Eki akış −7,1 (KPR −4,3) · MKK Eylül −1.757 mlr.
+DERS: "ESKİ KALMIŞ" HİSSİ VERİDEN DEĞİL ETİKETTEN DE GELİR — kaynak adı, sütun adı ve ölü kaydın
+sıfırı, taze veriyi bayat gösterir. Önce ölç (veri mi etiket mi), sonra düzelt.
+DEPLOY: ktpanel/{index.html, app.js (20261012c), guncelleme-plani.json, KTPANEL-BAKIM.md}.
+
 # BAKIM EK — §459 (12 Eki 2026)
 
 ## §459 SONUC (12 Eki 15:17 kosusu, 38247664450) + §459h/i

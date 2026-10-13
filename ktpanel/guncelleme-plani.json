@@ -67,7 +67,8 @@
    "dosya": "katfon.json",
    "siklik": "canlı (TEFAS)",
    "son": "2026-08-11",
-   "kaynak": "TEFAS fonGnlBlgSiraliGetir (YENİ API) → /api/katfon · 1G+fiyat+AUM canlı · dönem getirileri damgalı taban"
+   "kaynak": "TEFAS fonGnlBlgSiraliGetir (YENİ API) → /api/katfon · 1G+fiyat+AUM canlı · dönem getirileri damgalı taban",
+   "_460": "12 Eki: kullanici \"eski kalmis\" dedi; olculdu — getiriler TEFAS resmi (KSK/HPH/KPR fiyat serisinden birebir dogrulandi), veri taze. Bayat olan ETIKETLERDI: \"Fintables\" (kaynak artik TEFAS/Actions), \"YU%\" sutunu (alan §249dan beri fiyat), TLV (islem kapali, fiyat 0) \"EN DUSUK YTD %0,00\" diye ozete giriyordu. Tasfiye fonlari rozetli ve ozetten disari (app §460)."
   },
   {
    "ad": "Yabancı akışı — AYLIK ödemeler dengesi",
@@ -381,9 +382,10 @@
    "ad": "Fon krizi kartı (damgalı, SPK tasfiye)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-05",
+   "son": "2026-10-12",
    "limit_gun": 14,
-   "kaynak": "SPK bültenleri + tasfiye bankası duyuruları; ödeme turları, yeni tedbir, evren fonlarının akıbeti (§452)"
+   "kaynak": "SPK bültenleri + tasfiye bankası duyuruları; ödeme turları, yeni tedbir, evren fonlarının akıbeti (§452)",
+   "_460": "12 Eki: 5 Eki tasfiye baslangici (A1/Bulls/Pardus 17 fon), 8 Eki ilk odemeler, Tera/Pusula/Hedef/Atlas tarih yok; panel izleri (CDS 247,8 · 9-12 Eki akis −7,1) islendi. Sonraki: ara odeme tarihi aciklaninca."
   }
  ],
  "bilanco_sezonu_aylar": [
