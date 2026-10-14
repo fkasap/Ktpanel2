@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-10-14",
- "guncelleme": "2026-10-14 — otomatik (GitHub Actions · vercel-köprüsü (1844 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-10-14 — otomatik (GitHub Actions · vercel-köprüsü (1992 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -28,18 +28,18 @@
      "k": "KSK",
      "u": "Azimut — İkinci",
      "t": "K",
-     "yu": 3.088644,
+     "yu": 3.088406,
      "g": [
       0.0968,
-      3.0433,
-      9.9689,
-      34.5385,
-      46.0213,
+      3.0354,
+      9.9604,
+      34.5281,
+      46.01,
       null
      ],
-     "b": 3734781127,
+     "b": 3734493290,
      "ys": 603,
-     "a": -2689332
+     "a": -2689125
     },
     {
      "k": "PKT",
@@ -395,7 +395,7 @@
       null,
       null
      ],
-     "b": 5175902462,
+     "b": 5175903696,
      "ys": 3526,
      "a": -63136628
     }
