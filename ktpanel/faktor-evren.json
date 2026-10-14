@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-13T20:38:37Z",
+ "guncelleme": "2026-10-14T06:18:02Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -350,7 +350,7 @@
    "eksik": false
   },
   "BINHO": {
-   "ts": "2026-10-13T20:37:47Z",
+   "ts": "2026-10-14T06:17:12Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2766,14 +2766,14 @@
    "eksik": false
   },
   "RUBNS": {
-   "ts": "2026-08-24T16:56:53Z",
+   "ts": "2026-10-14T06:17:39Z",
    "y": "362",
    "donem": "2026/2",
-   "ceyrek": 5,
-   "ciro": 2312534978,
-   "brut": 392275969,
-   "favok": 490747932,
-   "netKar": 36908767,
+   "ceyrek": 2,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "netKar": null,
    "ozk": 5415826981,
    "aktif": 6534709146,
    "donen": 5005122494,
@@ -2781,10 +2781,10 @@
    "finBorc": 503816660,
    "likit": 200217835,
    "netBorc": 303598825,
-   "isletmeNA": -4539725753,
+   "isletmeNA": null,
    "capex": null,
    "sna": null,
-   "tahakkuk": 70.04,
+   "tahakkuk": null,
    "odFaiz": null,
    "odTemettu": null,
    "stoklar": 1995925151,
@@ -2797,7 +2797,13 @@
    },
    "adet": 81950000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": null,
+   "amort": null,
+   "vergiOncesi": null,
+   "vergi": null,
+   "gecmisKar": 2013215927,
+   "eksik": true,
+   "kaynak": "KAP"
   },
   "SAFKR": {
    "ts": "2026-10-02T19:56:09Z",
@@ -2902,7 +2908,7 @@
    "eksik": false
   },
   "SEKUR": {
-   "ts": "2026-08-24T17:52:08Z",
+   "ts": "2026-10-14T06:17:59Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -2933,7 +2939,13 @@
    },
    "adet": 187641391,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 135911530,
+   "amort": 59261709,
+   "vergiOncesi": -50901864,
+   "vergi": 73742167,
+   "gecmisKar": -63785575,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "SELEC": {
    "ts": "2026-10-02T19:57:05Z",
@@ -4492,7 +4504,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-13T20:37:47Z",
+   "ts": "2026-10-14T06:17:12Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -4694,21 +4706,21 @@
   "CITAS": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-13",
+   "t": "2026-10-14",
    "y": "362",
    "kaynak": "KAP"
   },
   "TKNKA": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-13",
+   "t": "2026-10-14",
    "y": "362",
    "kaynak": "KAP"
   },
   "KPEKS": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-13",
+   "t": "2026-10-14",
    "y": "362",
    "kaynak": "KAP"
   },
