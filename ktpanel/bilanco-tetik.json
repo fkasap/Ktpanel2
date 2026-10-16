@@ -377,7 +377,8 @@
   "FENER": "2026-10-12",
   "GSRAY": "2026-10-12",
   "TRILC": "2026-10-12",
-  "TSPOR": "2026-10-12"
+  "TSPOR": "2026-10-12",
+  "MILKS": "2026-10-16"
  },
  "evren_disi": [
   "ADESE",
@@ -476,6 +477,7 @@
   "MERIT",
   "MERKO",
   "MIATK",
+  "MILKS",
   "MNDRS",
   "MOBTL",
   "MZHLD",
@@ -533,8 +535,8 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 152,
- "pencere_sayi": 0,
+ "evren_disi_sayi": 153,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-10-16 07:01 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-16 18:46 UTC — otomatik (KAP FR · kümülatif §299)"
 }
