@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-10-16",
- "guncelleme": "2026-10-16 — otomatik (GitHub Actions · vercel-köprüsü (1948 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-10-16 — otomatik (GitHub Actions · vercel-köprüsü (1989 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -88,7 +88,7 @@
       45.926,
       null
      ],
-     "b": 1262875200,
+     "b": 1262875580,
      "ys": 391,
      "a": -10473507
     },
