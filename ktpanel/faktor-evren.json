@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-16T18:47:16Z",
+ "guncelleme": "2026-10-17T08:25:57Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -306,7 +306,7 @@
    "kaynak": "KAP"
   },
   "BIENY": {
-   "ts": "2026-09-25T18:54:33Z",
+   "ts": "2026-10-17T08:25:38Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -337,10 +337,16 @@
    },
    "adet": 361000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 612682678,
+   "amort": 940903752,
+   "vergiOncesi": 129872238,
+   "vergi": -692964506,
+   "gecmisKar": 2917648491,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "BIMAS": {
-   "ts": "2026-09-25T18:54:55Z",
+   "ts": "2026-10-17T08:25:54Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -371,10 +377,16 @@
    },
    "adet": 1200000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 20822769000,
+   "amort": 25440013000,
+   "vergiOncesi": 41817796000,
+   "vergi": -15323588000,
+   "gecmisKar": 124745371000,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "BINHO": {
-   "ts": "2026-10-16T18:46:25Z",
+   "ts": "2026-10-17T08:25:05Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -4552,7 +4564,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-16T18:46:25Z",
+   "ts": "2026-10-17T08:25:05Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -4754,21 +4766,21 @@
   "CITAS": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-16",
+   "t": "2026-10-17",
    "y": "362",
    "kaynak": "KAP"
   },
   "TKNKA": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-16",
+   "t": "2026-10-17",
    "y": "362",
    "kaynak": "KAP"
   },
   "KPEKS": {
    "eksik": true,
    "neden": "liste boş",
-   "t": "2026-10-16",
+   "t": "2026-10-17",
    "y": "362",
    "kaynak": "KAP"
   },
