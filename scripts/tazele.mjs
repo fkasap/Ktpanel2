@@ -2713,11 +2713,17 @@ async function surucuSeriler() {
       if (!html) {
         try {
           const kodV = k === 'hurda_lme' ? 'hurda' : 'demir';
-          const rv = await fetch('https://ktpanel.vercel.app/api/market?mod=lme&kod=' + kodV, { headers: { 'User-Agent': 'KtPanel/Actions' }, signal: AbortSignal.timeout(30000) });
+          /* §464f (20 Eki 00:10 koşusu: "köprü: giriş gerekli"): panelin giriş kapısı (middleware.js) çerezsiz Actions'ı
+             kesiyordu. İki anahtar: (1) CRON_SECRET varsa Vercel cron'un kullandığı Bearer başlığı (middleware muaf tutar),
+             (2) middleware.js'e /api/market?mod=lme muafiyeti (§249j/§361c sınıfı: kamu verisi, iki sabit sayfa). */
+          const hV = { 'User-Agent': 'KtPanel/Actions', 'Accept': 'application/json' };
+          if (process.env.CRON_SECRET) hV['Authorization'] = 'Bearer ' + process.env.CRON_SECRET;
+          const rv = await fetch('https://ktpanel.vercel.app/api/market?mod=lme&kod=' + kodV, { headers: hV, signal: AbortSignal.timeout(30000) });
           const jv = await rv.json();
+          if (jv && jv.err === 'giriş gerekli') throw new Error('köprü: giriş kapısı (middleware) kesti — ' + (process.env.CRON_SECRET ? 'CRON_SECRET Vercel ile aynı mı?' : 'Actions env\'e CRON_SECRET ekle ya da middleware.js §464f muafiyetini yükle'));
           if (jv && jv.ok && jv.deger > 0) { html = '<span class="hero-metal-data__number"> ' + jv.deger + ' </span> Month 2 Closing Price (day-delayed) Data valid for ' + (jv.etiket || '') + ' '; yol = 'vercel'; }
           else throw new Error('köprü: ' + ((jv && jv.err) || 'yanıt yok') + (jv && jv.ornek ? ' · ' + jv.ornek.slice(0, 60) : ''));
-        } catch (e) { throw new Error('fetch/Playwright Cloudflare duvarı · ' + String(e && e.message || e).slice(0, 120)); }
+        } catch (e) { throw new Error('fetch/Playwright Cloudflare duvarı · ' + String(e && e.message || e).slice(0, 200)); }
       }
       /* §464d (19 Eki 23:38 ölçümü): değer ETİKETTEN ÖNCE gelir ve kendi sınıfında durur:
            <span class="hero-metal-data__number"> 393.00 </span> <span class="hero-metal-data__change"> 0.38% </span>
@@ -2791,6 +2797,222 @@ async function surucuSeriler() {
   await yaz(dosya, D);
   degisenler.push('sürücü serileri (' + notlar.length + ')');
   raporlar.push('### Sürücü serileri (§464) — ✓ ' + notlar.length + ' seri\n- ' + notlar.join('\n- ') + (uyari.length ? '\n- ⚠ ' + uyari.join('\n- ⚠ ') : ''));
+}
+
+/* ── §466 KAMU VERİ KATMANLARI: TCMB EVDS + EPİAŞ ŞEFFAFLIK → sektor-surucu.json/seriler ──
+   Karar Motoru'nun (§462–465) "kaynak bekliyor" dediği yerli sürücüler burada dolar.
+   İki katman, iki anahtar; ikisi de repo Settings → Secrets → Actions'tan okunur:
+
+   A) EVDS (evds3.tcmb.gov.tr/igmevdsms-dis) — başlık `key` = EVDS_KEY
+      Seri kodları 20 Eki 2026'da EVDS portalının kendi arama ucuyla doğrulandı
+      (searchResults, anahtarsız; veri ucu anahtar ister):
+        TP.TUKFIY2025.GENEL / .01 (gıda) / .03 (giyim)   TÜFE 2025=100 (COICOP 2018 — 2026-1'den itibaren resmî)
+        TP.FG.J0 / J01 / J03                              TÜFE 2003=100 (Arşiv; 2026-1'de biter) → 2025 öncesi ZİNCİR
+        TP.TUFE1YI.T1 / T69 / T74 / T120 / T53            Yİ-ÜFE genel · çimento-kireç-alçı · ana demir-çelik · elektrik · temel kimyasal-gübre
+        TP.KFE.TR                                         Konut Fiyat Endeksi (TCMB)
+        TP.APIFON4                                        TCMB ağırlıklı ortalama fonlama maliyeti (iş günü, %)
+        TP.BISTTLREF.ORAN                                 BIST TLREF gecelik referans faiz (iş günü, %)
+      ZİNCİR: TÜİK 2026'da TÜFE bazını 2025=100'e taşıdı; yeni seri 2025-1'den başlar, eski seri
+      2026-1'de biter. Örtüşen İLK ayın oranıyla eski seri yeni baza taşınır (app.js §444f ile aynı
+      yöntem) → tek kesintisiz aylık endeks. Yüzde değişimler (ΔÇeyrek, ΔYıl) bazdan bağımsızdır;
+      panelde seviye değil değişim okunur.
+
+   B) EPİAŞ Şeffaflık (seffaflik.epias.com.tr/electricity-service) — iki adım:
+      1) POST https://giris.epias.com.tr/cas/v1/tickets  (form: username, password; Accept: text/plain)
+         → HTTP 201 + gövdede "TGT-…" (2 saat geçerli; dokümantasyon §2)
+      2) POST /v1/markets/dam/data/mcp  başlık TGT, gövde {startDate, endDate} (ISO-8601 +03:00)
+         → items[{date, hour, price, priceUsd, priceEur}]  — SAATLİK PTF; aralık en fazla 1 YIL (SEF1117)
+         Uç ve gövde biçimi 20 Eki 2026'da tarayıcıdan doğrulandı (2026-04-01..09-30 → 4392 saat).
+      Günlük ortalama alınır (≥20 saat olan günler), TL/MWh (ptf) ve $/MWh (ptf_usd) iki seri.
+      Kimlik secret adları: EPIAS_ID+EPIAS_KEY · EPIAS_USER+EPIAS_PASS · EPIAS_USERNAME+EPIAS_PASSWORD ·
+      EPIAS_EMAIL+EPIAS_SIFRE — ilk dolu çift kullanılır; rapor hangi AD'ın bulunduğunu yazar, değeri asla.
+
+   DENETİM (§300 ailesi): değer aralık dışıysa atılır; seri bir önceki koşudan GERİ gittiyse yazılmaz;
+   anahtar yoksa katman ⏭ ile atlanır (hata değil); hiçbir seri gelmezse dosya dokunulmaz. */
+const EVDS_KAYIT = {
+  tufe:         { kod: 'TP.TUKFIY2025.GENEL', eski: 'TP.FG.J0',  ad: 'TÜFE genel (2025=100; 2025 öncesi 2003 bazından zincirli)',           birim: 'endeks', siklik: 'aylik',  aralik: [20, 50000], hisse: ['ENJSA', 'ENERY', 'AHGAZ', 'BIMAS', 'MAVI', 'MPARK', 'ALBRK'] },
+  tufe_gida:    { kod: 'TP.TUKFIY2025.01',    eski: 'TP.FG.J01', ad: 'TÜFE 01 gıda ve alkolsüz içecekler (2025=100; zincirli)',             birim: 'endeks', siklik: 'aylik',  aralik: [20, 50000], hisse: ['BIMAS'] },
+  tufe_giyim:   { kod: 'TP.TUKFIY2025.03',    eski: 'TP.FG.J03', ad: 'TÜFE 03 giyim ve ayakkabı (2025=100; zincirli)',                     birim: 'endeks', siklik: 'aylik',  aralik: [20, 50000], hisse: ['MAVI'] },
+  yiufe:        { kod: 'TP.TUFE1YI.T1',                           ad: 'Yİ-ÜFE genel (2003=100)',                                             birim: 'endeks', siklik: 'aylik',  aralik: [50, 200000], hisse: [] },
+  cimento_ufe:  { kod: 'TP.TUFE1YI.T69',                          ad: 'Yİ-ÜFE 3.14.5 çimento, kireç ve alçı (2003=100)',                     birim: 'endeks', siklik: 'aylik',  aralik: [50, 200000], hisse: ['AKCNS', 'CIMSA'] },
+  celik_ufe:    { kod: 'TP.TUFE1YI.T74',                          ad: 'Yİ-ÜFE 3.15.1 ana demir-çelik ve ferro alaşımlar (2003=100)',         birim: 'endeks', siklik: 'aylik',  aralik: [50, 200000], hisse: ['EREGL', 'KRDMD', 'KCAER'] },
+  elektrik_ufe: { kod: 'TP.TUFE1YI.T120',                         ad: 'Yİ-ÜFE 4.1.1 elektrik üretim-iletim-dağıtım (2003=100)',             birim: 'endeks', siklik: 'aylik',  aralik: [50, 200000], hisse: ['AKFYE', 'ENJSA', 'ENERY', 'AHGAZ'] },
+  gubre_ufe:    { kod: 'TP.TUFE1YI.T53',                          ad: 'Yİ-ÜFE 3.11.1 temel kimyasallar, gübre ve azot bileşikleri (2003=100)', birim: 'endeks', siklik: 'aylik', aralik: [50, 200000], hisse: ['GUBRF', 'TKFEN'] },
+  kfe:          { kod: 'TP.KFE.TR',                               ad: 'Konut Fiyat Endeksi — TCMB KFE (aylık)',                              birim: 'endeks', siklik: 'aylik',  aralik: [10, 100000], hisse: ['EKGYO'] },
+  aofm:         { kod: 'TP.APIFON4',                              ad: 'TCMB ağırlıklı ortalama fonlama maliyeti (AOFM, %)',                  birim: '%',      siklik: 'gunluk', aralik: [0, 100],    hisse: ['ALBRK'], bas: '01-01-2021' },
+  tlref:        { kod: 'TP.BISTTLREF.ORAN',                       ad: 'BIST TLREF gecelik referans faiz (%)',                                birim: '%',      siklik: 'gunluk', aralik: [0, 100],    hisse: ['ALBRK'], bas: '01-01-2021' },
+};
+const EVDS_BAS_AYLIK = '01-01-2015';
+/* EVDS tarih normalizasyonu: aylık "2025-1"/"2025-01" → "2025-01"; günlük "20-10-2026" → "2026-10-20" */
+function evdsTarih(t) {
+  const s = String(t || '').trim();
+  let m = s.match(/^(\d{4})-(\d{1,2})$/); if (m) return m[1] + '-' + m[2].padStart(2, '0');
+  m = s.match(/^(\d{2})-(\d{2})-(\d{4})$/); if (m) return m[3] + '-' + m[2] + '-' + m[1];
+  m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) return m[1] + '-' + m[2].padStart(2, '0') + '-' + m[3].padStart(2, '0');
+  return s;
+}
+/* Tek EVDS çağrısı: kodlar '-' ile birleşir; dönüş kod→Map(tarih→değer). İki deneme (12 s, 25 s). */
+async function evdsCek(key, kodlar, bas, bitis) {
+  const url = 'https://evds3.tcmb.gov.tr/igmevdsms-dis/series=' + kodlar.join('-') + '&startDate=' + bas + '&endDate=' + bitis + '&type=json';
+  let sonHata = null;
+  for (const ms of [12000, 25000]) {
+    try {
+      const r = await fetch(url, { headers: { 'key': key, 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0 KTPanel-Actions' }, signal: AbortSignal.timeout(ms) });
+      const t = await r.text();
+      if (!r.ok) { sonHata = new Error('HTTP ' + r.status + ' · ' + t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 100)); if (r.status === 403 || r.status === 401) break; continue; }
+      if (!(t.trim().startsWith('{') || t.trim().startsWith('['))) { sonHata = new Error('JSON değil: ' + t.slice(0, 80)); continue; }
+      const j = JSON.parse(t); const items = Array.isArray(j) ? j : (j.items || []);
+      const out = {}; for (const k of kodlar) out[k] = new Map();
+      for (const it of items) {
+        const tarih = evdsTarih(it.Tarih);
+        for (const k of kodlar) { const v = it[k.replace(/\./g, '_')]; if (v == null || v === '') continue; const n = parseFloat(String(v).replace(',', '.')); if (isFinite(n)) out[k].set(tarih, n); }
+      }
+      return out;
+    } catch (e) { sonHata = e; }
+  }
+  throw sonHata || new Error('EVDS yanıt vermedi');
+}
+/* Aylık Map'ten {aylik, ceyreklik(tam 3 ay), yillik(tam 12 ay)} */
+function aylikTuret(m) {
+  const aylik = {}; [...m.keys()].sort().forEach(a => { aylik[a] = +m.get(a).toFixed(4); });
+  const grup = (anah) => { const g = {}; for (const a of Object.keys(aylik)) { const k = anah(a); (g[k] = g[k] || []).push(aylik[a]); } return g; };
+  const c = grup(a => a.slice(0, 4) + 'Q' + (Math.floor((+a.slice(5, 7) - 1) / 3) + 1)), y = grup(a => a.slice(0, 4));
+  const ceyreklik = {}, yillik = {};
+  for (const [k, v] of Object.entries(c)) if (v.length === 3) ceyreklik[k] = +(v.reduce((s, x) => s + x, 0) / 3).toFixed(4);
+  for (const [k, v] of Object.entries(y)) if (v.length === 12) yillik[k] = +(v.reduce((s, x) => s + x, 0) / 12).toFixed(4);
+  return { aylik, ceyreklik, yillik };
+}
+async function evdsSeriler() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### EVDS serileri (§466) — ⏭ sektor-surucu.json yok (önce §462 koşmalı)'); return; }
+  const key = process.env.EVDS_KEY || process.env.EVDS_API_KEY || '';
+  if (!key) { raporlar.push('### EVDS serileri (§466) — ⏭ EVDS_KEY secret yok\n- Repo Settings → Secrets → Actions → `EVDS_KEY` (evds3.tcmb.gov.tr → profil → API anahtarı). Tanımlanınca TÜFE gıda/giyim, çimento ÜFE, AOFM/TLREF, KFE serileri bu katmanla dolar.'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const notlar = [], uyari = [];
+  const bitis = bugun.slice(8, 10) + '-' + bugun.slice(5, 7) + '-' + bugun.slice(0, 4);
+  /* 1) Aylık blok: yeni baz + eski baz + ÜFE + KFE tek çağrıda */
+  const aylikK = Object.entries(EVDS_KAYIT).filter(([, t]) => t.siklik === 'aylik');
+  const kodlarA = [...new Set(aylikK.flatMap(([, t]) => [t.kod].concat(t.eski ? [t.eski] : [])))];
+  /* 4'erli parçalar: bir parça düşerse diğerleri yaşar (URL de kısa kalır) */
+  let H = null;
+  for (let i = 0; i < kodlarA.length; i += 4) {
+    const parca = kodlarA.slice(i, i + 4);
+    try { const P = await evdsCek(key, parca, EVDS_BAS_AYLIK, bitis); H = Object.assign(H || {}, P); }
+    catch (e) { uyari.push('aylık parça ' + parca.join(',') + ': ' + String(e && e.message || e).slice(0, 140)); }
+  }
+  if (H) for (const [k, t] of aylikK) {
+    try {
+      const yeni = H[t.kod] || new Map();
+      if (!yeni.size) { uyari.push(k + ' (' + t.kod + ' boş — kod/yetki kontrol)'); continue; }
+      const m = new Map(); let zincir = null;
+      for (const [a, v] of yeni) if (v >= t.aralik[0] && v <= t.aralik[1]) m.set(a, v);
+      if (t.eski && H[t.eski] && H[t.eski].size) {
+        const ilkYeni = [...m.keys()].sort()[0]; const e = H[t.eski];
+        if (ilkYeni && e.has(ilkYeni) && e.get(ilkYeni) > 0) {
+          const kat = m.get(ilkYeni) / e.get(ilkYeni);
+          for (const [a, v] of e) if (a < ilkYeni && v > 0) m.set(a, v * kat);
+          zincir = 'yeni baz ' + t.kod + ' ' + ilkYeni + "'den; öncesi " + t.eski + ' × ' + kat.toFixed(6);
+        } else uyari.push(k + ' (zincir kurulamadı: eski seride ' + ilkYeni + ' yok — yalnız yeni baz yazıldı)');
+      }
+      const T = aylikTuret(m); const aylar = Object.keys(T.aylik); const sonAy = aylar[aylar.length - 1];
+      const onceki = D.seriler[k];
+      if (onceki && onceki.son && onceki.son.tarih && sonAy < onceki.son.tarih) { uyari.push(k + ' (tarih geriledi ' + onceki.son.tarih + '→' + sonAy + ', atlandı)'); continue; }
+      D.seriler[k] = Object.assign({}, onceki || {}, { ad: t.ad, birim: t.birim, kaynak: 'TCMB EVDS ' + t.kod + (t.eski ? ' (+' + t.eski + ' zincir)' : ''), kod: t.kod, siklik: 'aylik', hisse: t.hisse, aylik: T.aylik, ceyreklik: T.ceyreklik, yillik: T.yillik, son: { tarih: sonAy, deger: T.aylik[sonAy] }, guncelleme: bugun, _zincir: zincir || undefined });
+      if (!zincir) delete D.seriler[k]._zincir;
+      const oncekiAy = aylar[aylar.length - 2]; const gecenYil = T.aylik[sonAy.slice(0, 4) - 1 + sonAy.slice(4)];
+      notlar.push(k + ' ' + T.aylik[sonAy] + ' (' + sonAy + ', ' + aylar.length + ' ay' + (oncekiAy ? ', aylık ' + ((T.aylik[sonAy] / T.aylik[oncekiAy] - 1) * 100).toFixed(2) + '%' : '') + (gecenYil ? ', yıllık ' + ((T.aylik[sonAy] / gecenYil - 1) * 100).toFixed(1) + '%' : '') + (zincir ? ', zincirli' : '') + ')');
+    } catch (e) { uyari.push(k + ': ' + String(e && e.message || e).slice(0, 80)); }
+  }
+  /* 2) Günlük blok (iş günü): AOFM + TLREF — ayrı çağrı (aylıkla karışınca satırlar boş gelir) */
+  const gunlukK = Object.entries(EVDS_KAYIT).filter(([, t]) => t.siklik === 'gunluk');
+  for (const [k, t] of gunlukK) {
+    try {
+      const onceki = D.seriler[k]; const eskiG = (onceki && onceki.gunluk) || [];
+      /* artımlı: dosyada seri varsa son tarihten 45 gün geriden; yoksa t.bas'tan */
+      let bas = t.bas || '01-01-2021';
+      if (eskiG.length) { const d = new Date(eskiG[eskiG.length - 1][0] + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 45); const s = d.toISOString().slice(0, 10); bas = s.slice(8, 10) + '-' + s.slice(5, 7) + '-' + s.slice(0, 4); }
+      const G = await evdsCek(key, [t.kod], bas, bitis); const m = G[t.kod] || new Map();
+      if (!m.size) { uyari.push(k + ' (' + t.kod + ' boş)'); continue; }
+      const harita = new Map(eskiG.map(x => [x[0], x[1]])); let disi = 0;
+      for (const [d, v] of m) { if (v >= t.aralik[0] && v <= t.aralik[1]) harita.set(d, +v.toFixed(4)); else disi++; }
+      const gunluk = [...harita.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1); const son = gunluk[gunluk.length - 1];
+      if (onceki && onceki.son && son[0] < onceki.son.tarih) { uyari.push(k + ' (tarih geriledi, atlandı)'); continue; }
+      D.seriler[k] = Object.assign({}, onceki || {}, { ad: t.ad, birim: t.birim, kaynak: 'TCMB EVDS ' + t.kod, kod: t.kod, siklik: 'gunluk', hisse: t.hisse, gunluk, son: { tarih: son[0], deger: son[1] }, guncelleme: bugun });
+      notlar.push(k + ' %' + son[1] + ' (' + son[0] + ', ' + gunluk.length + ' gün' + (disi ? ', ' + disi + ' aralık dışı' : '') + ')');
+    } catch (e) { uyari.push(k + ': ' + String(e && e.message || e).slice(0, 120)); }
+  }
+  if (!notlar.length) { raporlar.push('### EVDS serileri (§466) — ✗ hiçbir seri gelmedi\n- ' + uyari.join('\n- ')); return; }
+  D.evds = { guncelleme: bugun, seriler: notlar.length, kaynak: 'evds3.tcmb.gov.tr/igmevdsms-dis', kodlar: Object.fromEntries(Object.entries(EVDS_KAYIT).map(([k, t]) => [k, t.kod])) };
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  degisenler.push('EVDS serileri (' + notlar.length + ')');
+  raporlar.push('### EVDS serileri (§466) — ✓ ' + notlar.length + '/' + Object.keys(EVDS_KAYIT).length + ' seri\n- ' + notlar.join('\n- ') + (uyari.length ? '\n- ⚠ ' + uyari.join('\n- ⚠ ') : ''));
+}
+
+/* ── EPİAŞ PTF ─────────────────────────────────────────────────────────────── */
+const EPIAS_KIMLIK_ADAYLARI = [['EPIAS_ID', 'EPIAS_KEY'], ['EPIAS_USER', 'EPIAS_PASS'], ['EPIAS_USERNAME', 'EPIAS_PASSWORD'], ['EPIAS_EMAIL', 'EPIAS_SIFRE'], ['EPIAS_MAIL', 'EPIAS_SIFRE'], ['EPIAS_KULLANICI', 'EPIAS_SIFRE'], ['EPIAS_KULLANICI_ADI', 'EPIAS_SIFRE']];
+function epiasKimlik() {
+  for (const [u, p] of EPIAS_KIMLIK_ADAYLARI) { const U = process.env[u], P = process.env[p]; if (U && P) return { user: U, pass: P, adlar: u + '+' + p }; }
+  return null;
+}
+async function epiasTgt(kimlik) {
+  const r = await fetch('https://giris.epias.com.tr/cas/v1/tickets', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain' }, body: new URLSearchParams({ username: kimlik.user, password: kimlik.pass }).toString(), signal: AbortSignal.timeout(25000) });
+  const t = (await r.text()).trim();
+  if (!(r.status === 201 || r.ok) || !/^TGT-/.test(t)) throw new Error('TGT alınamadı HTTP ' + r.status + ' · ' + t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 90));
+  return t;
+}
+const EPIAS_BAS = '2023-01-01';   /* 2024Q1'den itibaren katalogdaki gerçek FAVÖK çeyrekleriyle yıllık karşılaştırma için bir yıl pay */
+async function epiasPtf() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ sektor-surucu.json yok (önce §462 koşmalı)'); return; }
+  const kimlik = epiasKimlik();
+  if (!kimlik) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ EPİAŞ kimliği (secret) bulunamadı\n- Beklenen ad çiftleri: ' + EPIAS_KIMLIK_ADAYLARI.map(x => '`' + x[0] + '`+`' + x[1] + '`').join(' · ') + '\n- Değer: Şeffaflık Platformu kullanıcı e-postası + şifresi (kayit.epias.com.tr). Workflow env bloğunda bu adların secrets.* ile eşlenmiş olması gerekir.'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const eskiTL = (D.seriler.ptf && D.seriler.ptf.gunluk) || [];
+  const eskiUSD = (D.seriler.ptf_usd && D.seriler.ptf_usd.gunluk) || [];
+  /* artımlı: son günden 10 gün geriden; ilk koşuda EPIAS_BAS'tan. Bitiş: yarın (GÖP yarının fiyatını ~14:00'te açıklar) */
+  let bas = EPIAS_BAS;
+  if (eskiTL.length) { const d = new Date(eskiTL[eskiTL.length - 1][0] + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 10); bas = d.toISOString().slice(0, 10); }
+  const yarin = (() => { const d = new Date(bugun + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); })();
+  let tgt;
+  try { tgt = await epiasTgt(kimlik); }
+  catch (e) { raporlar.push('### EPİAŞ PTF (§466) — ✗ ' + String(e && e.message || e).slice(0, 160) + '\n- Kimlik secret adları bulundu (' + kimlik.adlar + ') ama giriş reddedildi: e-posta/şifre ya da Şeffaflık üyeliği (kayit.epias.com.tr) kontrol.'); return; }
+  /* parçalar: ≤180 gün (sunucu sınırı 1 yıl; yanıt ~700 KB/9 ay — küçük tutuluyor) */
+  const parcalar = []; { let p = new Date(bas + 'T00:00:00Z'); const son = new Date(yarin + 'T00:00:00Z'); while (p <= son) { const q = new Date(p); q.setUTCDate(q.getUTCDate() + 179); const e = q > son ? son : q; parcalar.push([p.toISOString().slice(0, 10), e.toISOString().slice(0, 10)]); p = new Date(e); p.setUTCDate(p.getUTCDate() + 1); } }
+  const saat = new Map();   /* gün → {tl:[], usd:[]} */
+  let saatToplam = 0, hata = null;
+  for (const [s, e] of parcalar) {
+    try {
+      const r = await fetch('https://seffaflik.epias.com.tr/electricity-service/v1/markets/dam/data/mcp', { method: 'POST', headers: { 'TGT': tgt, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ startDate: s + 'T00:00:00+03:00', endDate: e + 'T00:00:00+03:00' }), signal: AbortSignal.timeout(60000) });
+      const t = await r.text();
+      if (!r.ok) { let m = ''; try { const j = JSON.parse(t); m = (j.errors || []).map(x => x.errorMessage || x.errorCode).join('; ') || ''; } catch (_) {} throw new Error('HTTP ' + r.status + (m ? ' · ' + m.slice(0, 100) : '')); }
+      const j = JSON.parse(t);
+      for (const it of (j.items || [])) {
+        const g = String(it.date || '').slice(0, 10); if (!/^\d{4}-\d{2}-\d{2}$/.test(g)) continue;
+        const tl = +it.price, usd = +it.priceUsd; if (!isFinite(tl)) continue;
+        const b = saat.get(g) || { tl: [], usd: [] }; b.tl.push(tl); if (isFinite(usd)) b.usd.push(usd); saat.set(g, b); saatToplam++;
+      }
+    } catch (err) { hata = (hata ? hata + ' | ' : '') + s + '..' + e + ': ' + String(err && err.message || err).slice(0, 100); }
+  }
+  if (!saat.size) { raporlar.push('### EPİAŞ PTF (§466) — ✗ veri gelmedi' + (hata ? '\n- ' + hata : '') + '\n- sektor-surucu.json KORUNDU.'); return; }
+  const ort = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const hTL = new Map(eskiTL.map(x => [x[0], x[1]])), hUSD = new Map(eskiUSD.map(x => [x[0], x[1]]));
+  let eksikGun = 0;
+  for (const [g, b] of saat) { if (b.tl.length < 20) { eksikGun++; continue; } hTL.set(g, +ort(b.tl).toFixed(2)); if (b.usd.length >= 20) hUSD.set(g, +ort(b.usd).toFixed(2)); }
+  const gTL = [...hTL.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1), gUSD = [...hUSD.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1);
+  const sonTL = gTL[gTL.length - 1], sonUSD = gUSD[gUSD.length - 1];
+  if (D.seriler.ptf && D.seriler.ptf.son && sonTL[0] < D.seriler.ptf.son.tarih) { raporlar.push('### EPİAŞ PTF (§466) — ⚠ tarih geriledi (' + D.seriler.ptf.son.tarih + '→' + sonTL[0] + '), yazılmadı'); return; }
+  const ortak = { kaynak: 'EPİAŞ Şeffaflık · GÖP PTF saatlik → günlük ortalama (TGT)', siklik: 'gunluk', guncelleme: bugun, _not: 'Saatlik piyasa takas fiyatının gün ortalaması (≥20 saat). Gün Öncesi Piyasası yarının fiyatını ~14:00 TR açıklar; akşam koşusu yarını da alır.' };
+  D.seriler.ptf = Object.assign({}, D.seriler.ptf || {}, ortak, { ad: 'PTF — gün öncesi piyasa takas fiyatı, günlük ort.', birim: 'TL/MWh', hisse: ['AKFYE', 'AHGAZ', 'ENJSA', 'ENERY'], gunluk: gTL, son: { tarih: sonTL[0], deger: sonTL[1] } });
+  if (sonUSD) D.seriler.ptf_usd = Object.assign({}, D.seriler.ptf_usd || {}, ortak, { ad: 'PTF — günlük ort., ABD doları (TCMB alış kuruyla, EPİAŞ)', birim: '$/MWh', hisse: ['AKFYE'], gunluk: gUSD, son: { tarih: sonUSD[0], deger: sonUSD[1] } });
+  /* bilgi: son 30 gün ortalaması ve geçen yılın aynı 30 günü */
+  const son30 = gTL.slice(-30).map(x => x[1]); const yilOnce = sonTL[0].slice(0, 4) - 1 + sonTL[0].slice(4); const gecen30 = gTL.filter(x => x[0] <= yilOnce).slice(-30).map(x => x[1]);
+  const yoy = (son30.length === 30 && gecen30.length === 30) ? ((ort(son30) / ort(gecen30) - 1) * 100).toFixed(1) + '%' : null;
+  D.epias = { guncelleme: bugun, gun: gTL.length, ilk: gTL[0][0], son: sonTL[0], kimlik_adlari: kimlik.adlar, kaynak: 'seffaflik.epias.com.tr/electricity-service/v1/markets/dam/data/mcp' };
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  degisenler.push('EPİAŞ PTF (' + gTL.length + ' gün)');
+  raporlar.push('### EPİAŞ PTF (§466) — ✓ ' + sonTL[1] + ' TL/MWh' + (sonUSD ? ' · ' + sonUSD[1] + ' $/MWh' : '') + ' (' + sonTL[0] + ')\n- ' + gTL.length + ' gün (' + gTL[0][0] + '→) · bu koşuda ' + saat.size + ' gün/' + saatToplam + ' saat · ' + parcalar.length + ' parça' + (eksikGun ? ' · ' + eksikGun + ' eksik gün atlandı' : '') + '\n- son 30 gün ort. ' + (son30.length ? ort(son30).toFixed(0) : '—') + ' TL/MWh' + (yoy ? ' · yıllık ' + yoy : '') + ' · kimlik: ' + kimlik.adlar + (hata ? '\n- ⚠ ' + hata : ''));
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
@@ -4704,6 +4926,8 @@ async function bultenKesif() {
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu());   /* §462: Neste crack + Brent → Karar Motoru hammaddesi (hepsi/fiyat → hafta içi akşam) */
     await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME (fetch→Playwright→Vercel köprüsü) · Dünya Bankası aylık xlsx → sektor-surucu.json/seriler */
+    await olcKos('EVDS serileri (§466)', ()=>evdsSeriler());   /* §466: TÜFE gıda/giyim (2025=100 zincirli) · Yİ-ÜFE çimento/çelik/elektrik/gübre · KFE · AOFM/TLREF — EVDS_KEY secret; yoksa ⏭ */
+    await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf());   /* §466: GÖP saatlik PTF → günlük ort. (TL ve $) — EPIAS_* secret; yoksa ⏭. Akşam koşusu yarının fiyatını da alır (GÖP ~14:00) */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
@@ -4716,7 +4940,8 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); }   /* elle: --katman=kamu — yalnız TCMB EVDS + EPİAŞ (secret testi için hızlı koşu, ~1 dk) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
