@@ -5,33 +5,53 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### XK100 ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 100/100 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-19
-- ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-10-19 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-16
+- ✓ **fiyat yasi (XK100 ağırlıkları)**: 2026-10-16 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XK100 ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-16 dondurdu, dosyada 2026-10-19 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### XKTUM ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 238/238 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-19
-- ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-10-19 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-16
+- ✓ **fiyat yasi (XKTUM ağırlıkları)**: 2026-10-16 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XKTUM ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-16 dondurdu, dosyada 2026-10-19 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### XKTMT ağırlıkları — ✓ GEÇTİ
 - ✓ **kapsam**: 41/41 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-19
-- ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-10-19 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-16
+- ✓ **fiyat yasi (XKTMT ağırlıkları)**: 2026-10-16 (1 is gunu — guncel)
 - ✓ **toplam**: 100.00 (hedef 100 ±3)
+
+### XKTMT ağırlıkları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-16 dondurdu, dosyada 2026-10-19 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### Multiple fiyatları — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-19
-- ✓ **fiyat yasi (Multiple fiyatları)**: 2026-10-19 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-16
+- ✓ **fiyat yasi (Multiple fiyatları)**: 2026-10-16 (1 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Multiple fiyatları — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-16 dondurdu, dosyada 2026-10-19 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### Model sicili — ✓ GEÇTİ
 - ✓ **kapsam**: 40/40 (%100)
-- ✓ **tarih birliği**: tek tarih: 2026-10-19
-- ✓ **fiyat yasi (Model sicili)**: 2026-10-19 (0 is gunu — guncel)
+- ✓ **tarih birliği**: tek tarih: 2026-10-16
+- ✓ **fiyat yasi (Model sicili)**: 2026-10-16 (1 is gunu — guncel)
 - ✓ **aykırı değer**: temiz (sınır ±%25)
+
+### Model sicili — ⏭ ATLANDI (§300 geri gitme korumasi)
+- kaynak 2026-10-16 dondurdu, dosyada 2026-10-19 var — 3 gun ESKI
+- dosya KORUNDU: taze fiyatlar eski fiyatla ezilmedi. Kaynak toparlayinca yazim kendiliginden surer.
 
 ### TR 5Y CDS — ✓ 247.33 bp · 2026-10-17 · +2.06
 - ✓ 3331 günlük seri · kaynak etiketi 2026-10-19 (hafta sonu doldurmalı)
@@ -62,13 +82,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 ### Fon akışı (§263) — ✓ 1989 fon · 2026-10-16 → 2026-10-19
 - giriş 42.15 mlr ₺ · çıkış -38.81 mlr ₺ · net 3.34 mlr ₺
 
-### TEFAS alan keşfi (bilgi)
-- uç: `/api/statistics/tefas/getFplFonList`
-- alanlar: fonKod, unvan, kurucuKod, kurucuAd, oprKod, oprAd, durum, tarih
-
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1990 fon fiyat + 1071 getiri)
-- yakalanan JSON: 1 / toplam yanıt: 83 · sayfa: "Fon Getirileri - TEFAS Fon Bilgilendirme ve Karşılaştırma | " · gövde: `Görme engelliler için erişilebilirliği etkinleştirin Erişilebilirlik menüsünü açma Erişilebilir Gezinme Menüsünü Açın Ana içeriğe geç Ana Sayfa Fon Getirileri Fon Karşılaştır F` · uçlar: /api/statistics/tefas/getFplFonList (942)
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500180522153> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -128,34 +144,34 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 469 satır · 21 çeyrek · USDTRY Yahoo günlük · değişiklik yok
 
 ### Sürücü serileri (§464) — ✓ 12 seri
-- altin 4158 (2026-10-19, 502 gün)
-- gumus 57.2 (2026-10-19, 502 gün)
-- bakir 6.583 (2026-10-19, 502 gün)
-- aluminyum 3115.25 (2026-10-19, 501 gün)
+- altin 4160.2998 (2026-10-19, 502 gün)
+- gumus 57.23 (2026-10-19, 502 gün)
+- bakir 6.584 (2026-10-19, 502 gün)
+- aluminyum 3107.25 (2026-10-19, 500 gün)
 - hrc_abd 1368 (2026-10-19, 501 gün)
-- ttf 87.547 (2026-10-16, 501 gün)
-- henryhub 3.038 (2026-10-19, 502 gün)
+- ttf 88.09 (2026-10-19, 502 gün)
+- henryhub 3.039 (2026-10-19, 502 gün)
 - bugday 656 (2026-10-19, 501 gün)
-- brent_yh 109.4 (2026-10-19, 502 gün)
+- brent_yh 109.21 (2026-10-19, 502 gün)
 - eurusd 1.1213 (2026-10-19, 517 gün)
-- usdtry 49.5389 (2026-10-19, 517 gün)
+- usdtry 49.5682 (2026-10-19, 517 gün)
 - wb 15 seri · 2026M09 · "Updated on October 02, 2026"
-- ⚠ hurda_lme: fiyat deseni bulunamadı (playwright):  Just a moment... *{box-sizing:border-box;margin:0;p
-- ⚠ demir_lme: fiyat deseni bulunamadı (playwright):  Just a moment... *{box-sizing:border-box;margin:0;p
+- ⚠ hurda_lme: fetch/Playwright Cloudflare duvarı · köprü: giriş gerekli
+- ⚠ demir_lme: fetch/Playwright Cloudflare duvarı · köprü: giriş gerekli
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 138/238
-- bu turda: 4 tam · 2 eksik kalemli · 3 alınamadı
-- not: §455c arşivden 4 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %79.9 · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 139/238
+- bu turda: 2 tam · 3 eksik kalemli · 3 alınamadı
+- not: §455c arşivden 3 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %79.9 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Fonzi gerçekleşen (§457) — ✓ 231 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
 ### Faktör skorları (§455) — ✓ sıralanan 119/238 · temel veri 119 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.62 ✓
 - ✓ fm.json TERFİ ETTİ (adet 119 ≥ 100 · XKTUM ağırlık kapsamı %79.9 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 119 -0.093 0.750 -2.97 1.16 0 · GROWTH 118 0.001 0.629 -1.51 1.86 0 · QUALITY 119 0.011 0.684 -1.55 1.74 0 · MOMENTUM 119 -0.059 0.607 -1.26 1.69 0 · LOW_RISK 119 -0.035 0.755 -1.74 1.68 0
+- imza: VALUE 119 -0.092 0.748 -2.96 1.19 0 · GROWTH 118 -0.001 0.624 -1.51 1.86 0 · QUALITY 119 0.008 0.683 -1.55 1.74 0 · MOMENTUM 119 -0.040 0.611 -1.20 1.99 0 · LOW_RISK 119 -0.030 0.751 -1.69 1.71 0
 
 ### KAP arşivi (§381) — ✓ +5 çeyrek · 0/238 şirket tam · 1 yeni dosya
-- EUPWR:13→14 · ALBRK:0→4
+- TKFEN:13→14 · ENERY:0→4
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -204,8 +220,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (247.33 bp) · risk metrikleri (129) · fon akışı (1989) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (12) · faktör evreni (138/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %80) · fm-oto · KAP arşivi (+5 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor) · sec-tickers
+**Sonuç:** TR 5Y CDS (247.33 bp) · risk metrikleri (129) · fon akışı (1989) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (12) · faktör evreni (139/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %80) · fm-oto · KAP arşivi (+5 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ KAP arşivi (§381) — 77 sn
-- toplam: 261 sn
+- ⏱ KAP arşivi (§381) — 78 sn
+- toplam: 304 sn
