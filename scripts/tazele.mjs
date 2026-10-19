@@ -2704,18 +2704,27 @@ async function surucuSeriler() {
       return null;
     } catch (e) { return null; } finally { await pg.close().catch(() => {}); }
   };
-  for (const [k, t] of Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme')) {
+  /* §464h (20 Eki 01:50 koşusu: demir Playwright'tan GEÇTİ, ondan ÖNCE denenen hurda geçememişti): Cloudflare izni
+     ikinci sayfada kazanıldı ama ilk sayfa çoktan pes etmişti. İKİ TUR: 1. tur fetch→Playwright→köprü; bir sayfa
+     Playwright'tan geçtiyse (çerez artık bağlamda) kalanlar 2. turda yalnız Playwright ile yeniden denenir. */
+  const lmeListe = Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme');
+  const lmeKalan = new Set(lmeListe.map(([k]) => k)), lmeHata = {}; let pwGecti = false;
+  for (const tur of [1, 2]) {
+    if (tur === 2 && !(pwGecti && lmeKalan.size)) break;
+    for (const [k, t] of lmeListe) {
+    if (!lmeKalan.has(k)) continue;
     try {
       let html = null, yol = 'fetch';
       /* Yol 1-2: düz fetch, iki başlık seti (Cloudflare bazen geçiriyor — 19 Eki 23:32 geçti, 00:00 geçmedi) */
-      for (const H of [
+      if (tur === 1) for (const H of [
         { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-GB,en;q=0.9', 'Upgrade-Insecure-Requests': '1' },
         { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-US,en;q=0.9', 'Referer': 'https://www.lme.com/en/metals/ferrous', 'Sec-Fetch-Dest': 'document', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'same-origin', 'Cache-Control': 'no-cache' }
       ]) {
         try { const r = await fetch(t.url, { headers: H, signal: AbortSignal.timeout(25000) }); const h = await r.text(); if (r.ok && !duvar(h)) { html = h; break; } } catch (e) {}
       }
       /* Yol 3: Playwright — Cloudflare JS doğrulaması için 25 sn'ye kadar bekle; bağlam seriler arasında ORTAK (§464g) */
-      if (!html) { const h = await pwSayfa(t.url); if (h) { html = h; yol = 'playwright'; } }
+      if (!html) { const h = await pwSayfa(t.url); if (h) { html = h; yol = tur === 2 ? 'playwright·2.tur' : 'playwright'; } }
+      if (!html && tur === 2) throw new Error('Playwright 2. turda da Cloudflare duvarı');
       /* Yol 4: Vercel köprüsü (§464e api/market.js?mod=lme) — farklı çıkış IP'si; Cloudflare orada da duvar örerse ok:false */
       if (!html) {
         try {
@@ -2748,8 +2757,11 @@ async function surucuSeriler() {
       if (!son || son[0] !== bugunT) eski.push([bugunT, v, tarihM ? tarihM[1] : null]); else eski[eski.length - 1] = [bugunT, v, tarihM ? tarihM[1] : null];
       D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: t.ad, birim: t.birim, kaynak: 'lme.com (statik sayfa, gün gecikmeli)', siklik: 'gunluk', hisse: t.hisse, gunluk: eski, son: { tarih: bugunT, deger: v, etiket: tarihM ? tarihM[1] : null }, guncelleme: bugunT, _not: 'Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta ' + eski[0][0] + '). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur.' });
       notlar.push(k + ' ' + v + ' $/t (' + (tarihM ? tarihM[1] : bugunT) + ', ' + eski.length + ' nokta, ' + yol + ')');
-    } catch (e) { uyari.push(k + ': ' + String(e && e.message || e).slice(0, 90)); }
+      lmeKalan.delete(k); if (yol.startsWith('playwright')) pwGecti = true;
+    } catch (e) { lmeHata[k] = String(e && e.message || e).slice(0, 200); }
+    }
   }
+  for (const k of lmeKalan) uyari.push(k + ': ' + (lmeHata[k] || 'bilinmeyen'));
   /* türetilmiş: TR uzun çelik metal marjı (demir − hurda), ikisi de bugün geldiyse */
   try {
     const d = D.seriler.demir_lme, h = D.seriler.hurda_lme;
@@ -2996,11 +3008,27 @@ function epiasKimlik() {
   if (!uAd || !pAd) return null;
   return { user: havuz[uAd], pass: havuz[pAd], adlar: uAd + '+' + pAd + ' (KTP_SECRETS taraması)' };
 }
+/* §466f (20 Eki 01:50 koşusu: HTTP 401 "authentication_exceptions"): CAS hata gövdesindeki istisna sınıfı NEDENİ söyler —
+   AccountNotFound = e-posta yanlış · FailedLogin = şifre yanlış · AccountLocked/Disabled · CredentialExpired = şifre yenilenmeli.
+   Kimlik önce KIRPILMIŞ (baş/son boşluk — yapıştırma artığı) denenir; 401 alırsa ve ham değer farklıysa bir kez ham denenir. */
+const EPIAS_CAS_NEDEN = { AccountNotFoundException: 'kullanıcı adı (e-posta) CAS\'ta bulunamadı — kayit.epias.com.tr e-postası mı?', FailedLoginException: 'şifre yanlış (ya da secret\'a eski şifre yazılı)', AccountLockedException: 'hesap kilitli — çok deneme; giris.epias.com.tr\'den aç', AccountDisabledException: 'hesap pasif', CredentialExpiredException: 'şifre süresi dolmuş — giris.epias.com.tr\'de yenile', AccountExpiredException: 'hesap süresi dolmuş', AccountPasswordMustChangeException: 'şifre değiştirilmeli (ilk giriş) — giris.epias.com.tr\'de bir kez elle gir', UnauthorizedServiceException: 'bu kullanıcı Şeffaflık servisine yetkili değil' };
+function epiasCasNeden(govde) {
+  const sinif = [...String(govde || '').matchAll(/([A-Z][A-Za-z]+Exception)/g)].map(m => m[1]).filter((x, i, a) => a.indexOf(x) === i);
+  return sinif.length ? sinif.map(x => EPIAS_CAS_NEDEN[x] ? x + ' → ' + EPIAS_CAS_NEDEN[x] : x).join(' · ') : null;
+}
 async function epiasTgt(kimlik) {
-  const r = await fetch('https://giris.epias.com.tr/cas/v1/tickets', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain' }, body: new URLSearchParams({ username: kimlik.user, password: kimlik.pass }).toString(), signal: AbortSignal.timeout(25000) });
-  const t = (await r.text()).trim();
-  if (!(r.status === 201 || r.ok) || !/^TGT-/.test(t)) throw new Error('TGT alınamadı HTTP ' + r.status + ' · ' + t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 90));
-  return t;
+  const denemeler = [{ u: String(kimlik.user).trim(), p: String(kimlik.pass).trim(), ad: 'kırpılmış' }];
+  if (denemeler[0].u !== kimlik.user || denemeler[0].p !== kimlik.pass) denemeler.push({ u: kimlik.user, p: kimlik.pass, ad: 'ham (boşluklu)' });
+  let son = null;
+  for (const d of denemeler) {
+    const r = await fetch('https://giris.epias.com.tr/cas/v1/tickets', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain' }, body: new URLSearchParams({ username: d.u, password: d.p }).toString(), signal: AbortSignal.timeout(25000) });
+    const t = (await r.text()).trim();
+    if ((r.status === 201 || r.ok) && /^TGT-/.test(t)) return t;
+    const neden = epiasCasNeden(t);
+    son = 'TGT alınamadı HTTP ' + r.status + ' (' + d.ad + ' kimlik) · ' + (neden || t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 90));
+    if (r.status !== 401 && r.status !== 400) break;   /* 5xx/ağ: ham denemenin anlamı yok */
+  }
+  throw new Error(son || 'TGT alınamadı');
 }
 const EPIAS_BAS = '2023-01-01';   /* 2024Q1'den itibaren katalogdaki gerçek FAVÖK çeyrekleriyle yıllık karşılaştırma için bir yıl pay */
 async function epiasPtf() {
