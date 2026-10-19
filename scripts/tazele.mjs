@@ -2493,6 +2493,66 @@ async function kararOrneklem() {
   } catch (e) { raporlar.push('### Karar modeli örneklemi (§462b) — ✗ ' + String(e && e.message || e).slice(0, 120)); }
 }
 
+/* ── §464b XLSX OKUYUCU (bağımlılıksız) ──────────────────────────────────────
+   .xlsx = zip (merkezi dizin + deflate-raw girdiler) + XML. Node'un zlib'i
+   inflateRawSync verir; SheetJS kurmadan okunur. Yalnız gerekeni çözer:
+   workbook.xml (sayfa adı → rId), workbook.xml.rels (rId → dosya),
+   sharedStrings.xml (t="s" hücreler), hedef sayfa (satır/hücre regex).
+   Sınır: 4 GB altı, şifresiz, standart xlsx. Pink Sheet 586 KB → sorunsuz. */
+function zipGirdiler(buf) {
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 70000); i--) { if (buf.readUInt32LE(i) === 0x06054b50) { eocd = i; break; } }
+  if (eocd < 0) throw new Error('zip EOCD yok');
+  const n = buf.readUInt16LE(eocd + 10), off = buf.readUInt32LE(eocd + 16);
+  const out = {}; let p = off;
+  for (let k = 0; k < n; k++) {
+    const nlen = buf.readUInt16LE(p + 28), elen = buf.readUInt16LE(p + 30), clen = buf.readUInt16LE(p + 32);
+    const method = buf.readUInt16LE(p + 10), csize = buf.readUInt32LE(p + 20), loff = buf.readUInt32LE(p + 42);
+    const name = buf.toString('utf8', p + 46, p + 46 + nlen);
+    out[name] = { method, csize, loff };
+    p += 46 + nlen + elen + clen;
+  }
+  return out;
+}
+function zipOku(buf, girdiler, ad, zlib) {
+  const e = girdiler[ad]; if (!e) throw new Error('zip girdisi yok: ' + ad);
+  const nlen = buf.readUInt16LE(e.loff + 26), elen = buf.readUInt16LE(e.loff + 28);
+  const bas = e.loff + 30 + nlen + elen; const ham = buf.subarray(bas, bas + e.csize);
+  return (e.method === 0 ? ham : zlib.inflateRawSync(ham)).toString('utf8');
+}
+const xmlCoz = s => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+async function xlsxSayfa(buf, sayfaAdi) {
+  const zlib = await import('node:zlib');
+  const G = zipGirdiler(buf);
+  const wb = zipOku(buf, G, 'xl/workbook.xml', zlib);
+  /* öznitelik sırası yazara göre değişir (Excel: name…r:id; openpyxl: Target…Id) → etiket içinden ayrı ayrı okunur */
+  const oz = (etiket, ad) => { const m = etiket.match(new RegExp('(?:^|\\s)' + ad.replace(':', '\\:') + '="([^"]*)"')); return m ? m[1] : null; };
+  const sheets = [...wb.matchAll(/<sheet\s[^>]*>/g)].map(m => ({ name: xmlCoz(oz(m[0], 'name') || ''), rid: oz(m[0], 'r:id') }));
+  const sheet = sheets.find(s => s.name === sayfaAdi);
+  if (!sheet) throw new Error('sayfa yok: ' + sayfaAdi + ' (var: ' + sheets.map(s => s.name).join(', ') + ')');
+  const rels = zipOku(buf, G, 'xl/_rels/workbook.xml.rels', zlib);
+  const rel = [...rels.matchAll(/<Relationship\s[^>]*>/g)].map(m => ({ id: oz(m[0], 'Id'), target: oz(m[0], 'Target') })).find(r => r.id === sheet.rid);
+  if (!rel || !rel.target) throw new Error('sayfa ilişkisi yok (' + sheet.rid + ')');
+  const t = rel.target.replace(/^\//, '');
+  const hedef = t.startsWith('xl/') ? t : 'xl/' + t;
+  let strs = [];
+  if (G['xl/sharedStrings.xml']) { const ss = zipOku(buf, G, 'xl/sharedStrings.xml', zlib); strs = [...ss.matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => xmlCoz([...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(x => x[1]).join(''))); }
+  const xml = zipOku(buf, G, hedef, zlib);
+  const rows = {};
+  for (const rm of xml.matchAll(/<row [^>]*r="(\d+)"[^>]*>([\s\S]*?)<\/row>/g)) {
+    const cells = {};
+    for (const cm of rm[2].matchAll(/<c r="([A-Z]+)\d+"([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+      const col = cm[1], attrs = cm[2] || '', inner = cm[3] || '';
+      const vm = inner.match(/<v>([\s\S]*?)<\/v>/); let v = null;
+      if (vm) { v = vm[1]; if (/t="s"/.test(attrs)) v = strs[+v]; else if (/t="(str|inlineStr|b|e)"/.test(attrs)) v = xmlCoz(v); else v = +v; }
+      else { const im = inner.match(/<is>[\s\S]*?<t[^>]*>([\s\S]*?)<\/t>/); if (im) v = xmlCoz(im[1]); }
+      if (v !== null && v !== '') cells[col] = v;
+    }
+    rows[+rm[1]] = cells;
+  }
+  return rows;
+}
+
 /* ── §464 SÜRÜCÜ SERİLERİ KAYDI (sektor-surucu.json → seriler{}) ─────────────
    Karar Motoru'nun XK030'a genişlemesi için tier A/B sürücüleri TEK kayıt
    defterinden çekilir. Her serinin kaynağı, sembolü, birimi ve sıklığı kodda
@@ -2514,14 +2574,16 @@ async function kararOrneklem() {
               Ama investing Vercel'den de GitHub'dan da 403 veriyor (Cloudflare,
               §253f) → otomasyonda kullanılmaz; Yahoo HRC=F düşerse plan B
               Playwright ile investing (TEFAS deseni).
-   - wb     : Dünya Bankası Pink Sheet (aylık PDF, ayın ~2. iş günü; sonraki
-              3 Kas 2026). Sayfa: worldbank.org/en/research/commodity-markets →
-              güncel PDF linki regex ile bulunur → pdf-parse. Tablo sütunları:
-              3 yıllık + 5 çeyreklik + 3 aylık. Satırlar: Urea E. Europe, DAP,
-              Iron ore, Coal Australia (termal), Natural gas Europe (TTF),
-              Gold, Silver, Zinc, Lead, Copper, Aluminum, Wheat U.S. HRW, Cocoa,
-              Sugar World, Crude oil Brent. Çeyreklik sütunlar modelin doğrudan
-              girdisidir; aylık sütunlar koşu çeyreğini besler.
+   - wb     : Dünya Bankası Pink Sheet — AYLIK XLSX (CMO-Historical-Data-Monthly,
+              1960'tan beri; ayın ~2. iş günü, sonraki 3 Kas 2026). Sayfa:
+              worldbank.org/en/research/commodity-markets → xlsx linki regex ile →
+              bağımlılıksız zip/XML okuyucu (xlsxSayfa). §464b: ilk koşuda PDF
+              yolu denendi, pdf-parse hücreleri boşluksuz birleştirdi (0 satır) →
+              xlsx'e geçildi; yapı 19 Eki Chrome'da ölçüldü (Monthly Prices:
+              satır 5 adlar, 6 birimler, 7+ veri, eksik "…"). Seriler: Urea, DAP,
+              Iron ore, Coal Australian (termal), Natural gas Europe, Gold, Silver,
+              Zinc, Lead, Copper, Aluminum, Wheat US HRW, Cocoa, Sugar world, Brent.
+              Çeyreklik = 3 tam ayın ortalaması (model girdisi); aylık koşu çeyreğini besler.
    DENETİM: değer makul aralıkta değilse ya da seri bir önceki koşudan GERİ
    gittiyse o seri atlanır (dosya diğer serilerle yazılır); hiçbir kaynak
    gelmezse seriler{} korunur. Sorun raporda seri adıyla görünür. */
@@ -2542,7 +2604,7 @@ const SURUCU_KAYIT = {
 };
 /* Dünya Bankası Pink Sheet satır eşlemesi: anahtar → satır başlangıcı (regex, büyük/küçük duyarsız), birim */
 const WB_SATIR = {
-  ure:        { ad: 'Üre, Karadeniz (WB)',           re: /^Urea,\s*E\.\s*Europe/i,        birim: '$/t',     hisse: ['GUBRF', 'TKFEN'] },
+  ure:        { ad: 'Üre, Karadeniz (WB)',           re: /^Urea/i,        birim: '$/t',     hisse: ['GUBRF', 'TKFEN'] },
   dap:        { ad: 'DAP (WB)',                      re: /^DAP\b/i,                       birim: '$/t',     hisse: ['GUBRF', 'TKFEN'] },
   demir_cevheri:{ ad: 'Demir cevheri cfr (WB)',      re: /^Iron ore\b/i,                  birim: '$/dmt',   hisse: ['EREGL', 'KRDMD'] },
   komur_termal:{ ad: 'Kömür, Avustralya termal (WB)', re: /^Coal,\s*Australia/i,          birim: '$/t',     hisse: ['AKCNS', 'CIMSA', 'EREGL'] },
@@ -2620,9 +2682,18 @@ async function surucuSeriler() {
         İkisi birlikte Türkiye uzun çelik METAL MARJI'nı verir: demir − hurda ($/t). 19 Eki: hurda 393,00 · demir 587,50 → marj ~195 $/t. */
   for (const [k, t] of Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme')) {
     try {
-      const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const html = (await r.text()).replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
+      let html = null;
+      const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(25000) });
+      if (r.ok) html = await r.text();
+      else {
+        /* §464c: düz fetch 403 (Akamai, 19 Eki ölçüldü) → Playwright ile gerçek tarayıcı (fon katmanıyla aynı kurulum; chromium yoksa atlanır) */
+        let chromium = null; try { ({ chromium } = await import('playwright')); } catch (e) { throw new Error('HTTP ' + r.status + ' · playwright yok'); }
+        const browser = await chromium.launch();
+        try { const pg = await browser.newPage({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' }); await pg.goto(t.url, { waitUntil: 'domcontentloaded', timeout: 45000 }); await pg.waitForTimeout(4000); html = await pg.content(); }
+        finally { await browser.close().catch(() => {}); }
+        if (!html || /Access Denied|Pardon Our Interruption|captcha/i.test(html.slice(0, 3000))) throw new Error('HTTP ' + r.status + ' · Playwright da engellendi');
+      }
+      html = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
       const m = html.match(/Month\s*2\s*Closing\s*Price[^0-9]{0,120}?(\d{2,4}(?:\.\d{1,2})?)/i) || html.match(/Closing\s*Price[^0-9]{0,120}?(\d{3}(?:\.\d{1,2})?)/i);
       if (!m) throw new Error('fiyat deseni bulunamadı (sayfa düzeni değişmiş olabilir)');
       const v = +m[1];
@@ -2647,31 +2718,42 @@ async function surucuSeriler() {
       notlar.push('metal_marji_tr ' + marj + ' $/t');
     }
   } catch (e) { uyari.push('metal_marji_tr: ' + String(e && e.message || e).slice(0, 60)); }
-  /* 3) Dünya Bankası Pink Sheet — aylık; ayda bir değişir, her koşuda bakılır (ucuz: 1 sayfa + 1 PDF) */
+  /* 3) Dünya Bankası Pink Sheet — AYLIK XLSX (CMO-Historical-Data-Monthly.xlsx, 1960'tan beri).
+        §464b: ilk koşuda PDF metni (pdf-parse) hücreleri boşluksuz birleştirdi, 0 satır eşleşti → xlsx'e geçildi.
+        Yapı 19 Eki Chrome'da ÖLÇÜLDÜ: sayfa "Monthly Prices", satır 5 adlar, 6 birimler, 7+ veri (A: 2026M09), eksik "…".
+        Sayfa linki landing page'den regex ile; dosya ~586 KB; ayda bir değişir (A4 "Updated on …"). */
   try {
     const sayfa = await (await fetch('https://www.worldbank.org/en/research/commodity-markets', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(25000) })).text();
-    const pm = sayfa.match(/https:\/\/thedocs\.worldbank\.org\/[^"' ]*CMO-Pink-Sheet-[A-Za-z]+-20\d{2}\.pdf/);
-    if (!pm) throw new Error('Pink Sheet PDF linki sayfada bulunamadı');
-    const pdfUrl = pm[0];
-    const eskiUrl = D.wb && D.wb.url;
-    if (eskiUrl === pdfUrl && D.wb && D.wb.guncelleme) { notlar.push('wb: aynı sayı (' + pdfUrl.split('/').pop() + '), yeniden okunmadı'); }
-    else {
-      let pdfParse = null; try { pdfParse = (await import('pdf-parse')).default; } catch (e) { throw new Error('pdf-parse yok'); }
-      const buf = Buffer.from(await (await fetch(pdfUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(40000) })).arrayBuffer());
-      const metin = (await pdfParse(buf)).text || '';
-      const { out, donemler } = wbAyristir(metin);
-      const bulunan = Object.keys(out);
-      if (bulunan.length < 6) throw new Error('yalnız ' + bulunan.length + ' satır eşleşti (' + bulunan.join(',') + ') — tablo düzeni değişmiş olabilir; ilk 300 kr: ' + metin.replace(/\s+/g, ' ').slice(0, 300));
-      for (const k of bulunan) {
-        const t = WB_SATIR[k]; const e = D.seriler[k] || {};
-        D.seriler[k] = Object.assign({}, e, { ad: t.ad, birim: t.birim, kaynak: 'Dünya Bankası Pink Sheet (aylık PDF)', siklik: 'aylik', hisse: t.hisse,
-          yillik: Object.assign({}, e.yillik || {}, out[k].yillik), ceyreklik: Object.assign({}, e.ceyreklik || {}, out[k].ceyreklik), aylik: Object.assign({}, e.aylik || {}, out[k].aylik), guncelleme: bugunT });
-        const aylar = Object.keys(D.seriler[k].aylik).sort(); const sonAy = aylar[aylar.length - 1];
-        D.seriler[k].son = { tarih: sonAy, deger: D.seriler[k].aylik[sonAy] };
-      }
-      D.wb = { url: pdfUrl, sayi: pdfUrl.split('/').pop(), guncelleme: bugunT, donemler: (donemler || []).map(d => d.e + ' ' + d.y), satir: bulunan.length, _not: 'Tablo: 3 yıllık + 5 çeyreklik + 3 aylık sütun. Çeyreklik sütunlar birikerek tarihçe oluşturur (yeni sayı eskilerin üstüne yazmaz, ekler). Sonraki sayı ayın ~2. iş günü.' };
-      notlar.push('wb ' + D.wb.sayi + ' · ' + bulunan.length + ' seri (ör. ure ' + (out.ure ? JSON.stringify(out.ure.aylik) : '—') + ')');
+    const xm = sayfa.match(/https:\/\/thedocs\.worldbank\.org\/[^"' ]*CMO-Historical-Data-Monthly\.xlsx/);
+    if (!xm) throw new Error('aylık xlsx linki sayfada bulunamadı');
+    const xlsxUrl = xm[0];
+    const buf = Buffer.from(await (await fetch(xlsxUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(60000) })).arrayBuffer());
+    if (buf.length < 15000) throw new Error('xlsx küçük/boş (' + buf.length + ' B)');
+    const rows = await xlsxSayfa(buf, 'Monthly Prices');
+    const rn = Object.keys(rows).map(Number).sort((a, b) => a - b);
+    const adSatir = rn.find(r => Object.values(rows[r]).some(v => typeof v === 'string' && /Crude oil,\s*Brent/i.test(v)));
+    if (!adSatir) throw new Error('ad satırı bulunamadı (Crude oil, Brent yok)');
+    const adlar = rows[adSatir], birimler = rows[adSatir + 1] || {};
+    const guncel = (rows[4] && rows[4].A) || '';
+    const veri = rn.filter(r => typeof rows[r].A === 'string' && /^\d{4}M\d{2}$/.test(rows[r].A));
+    if (veri.length < 100) throw new Error('veri satırı az: ' + veri.length);
+    const kolon = {};
+    for (const [k, t] of Object.entries(WB_SATIR)) { const e = Object.entries(adlar).find(([c, v]) => typeof v === 'string' && t.re.test(v.trim())); if (e) kolon[k] = e[0]; }
+    const bulunan = Object.keys(kolon);
+    if (bulunan.length < 8) throw new Error('yalnız ' + bulunan.length + ' sütun eşleşti (' + bulunan.join(',') + '); adlar: ' + Object.values(adlar).slice(0, 12).join(' | '));
+    const eskiSayi = D.wb && D.wb.guncel;
+    for (const k of bulunan) {
+      const t = WB_SATIR[k]; const e = D.seriler[k] || {};
+      const aylik = {}; for (const r of veri) { const ay = rows[r].A; if (ay < '2015M01') continue; const v = rows[r][kolon[k]]; if (typeof v === 'number' && isFinite(v)) aylik[ay.slice(0, 4) + '-' + ay.slice(5)] = +v.toFixed(3); }
+      const ceyreklik = {}, grup = {};
+      for (const [ym, v] of Object.entries(aylik)) { const q = ym.slice(0, 4) + 'Q' + (Math.floor((+ym.slice(5) - 1) / 3) + 1); (grup[q] = grup[q] || []).push(v); }
+      for (const [q, l] of Object.entries(grup)) if (l.length === 3) ceyreklik[q] = +(l.reduce((a, b) => a + b, 0) / 3).toFixed(3);
+      const yillik = {}, gy = {}; for (const [ym, v] of Object.entries(aylik)) (gy[ym.slice(0, 4)] = gy[ym.slice(0, 4)] || []).push(v); for (const [y, l] of Object.entries(gy)) if (l.length === 12) yillik[y] = +(l.reduce((a, b) => a + b, 0) / 12).toFixed(3);
+      const aylar = Object.keys(aylik).sort(); const sonAy = aylar[aylar.length - 1];
+      D.seriler[k] = Object.assign({}, e, { ad: t.ad, birim: String(birimler[kolon[k]] || t.birim).replace(/[()]/g, ''), kaynak: 'Dünya Bankası Pink Sheet (aylık xlsx)', siklik: 'aylik', hisse: t.hisse, aylik, ceyreklik, yillik, son: { tarih: sonAy, deger: aylik[sonAy] }, guncelleme: bugunT });
     }
+    D.wb = { url: xlsxUrl, guncel, guncelleme: bugunT, sutun: bulunan.length, satir: veri.length, ilk: rows[veri[0]].A, son: rows[veri[veri.length - 1]].A, _not: 'Monthly Prices sayfası: satır 5 adlar, 6 birimler, 7+ aylık veri; eksik "…". 2015-01 sonrası saklanır; çeyreklik = 3 tam ayın ortalaması, yıllık = 12 ay.' };
+    notlar.push('wb ' + bulunan.length + ' seri · ' + D.wb.son + ' · "' + guncel + '"' + (eskiSayi === guncel ? ' (aynı sayı)' : ''));
   } catch (e) { uyari.push('wb: ' + String(e && e.message || e).slice(0, 160)); }
   if (!notlar.length) { raporlar.push('### Sürücü serileri (§464) — ✗ hiçbir kaynak gelmedi\n- ' + uyari.join('\n- ')); return; }
   D.seriler_guncelleme = bugunT;
@@ -4590,7 +4672,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu());   /* §462: Neste crack + Brent → Karar Motoru hammaddesi (hepsi/fiyat → hafta içi akşam) */
-    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME hurda+inşaat demiri · Dünya Bankası Pink Sheet → sektor-surucu.json/seriler */
+    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME hurda+inşaat demiri (Playwright yedeği) · Dünya Bankası aylık xlsx → sektor-surucu.json/seriler */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
