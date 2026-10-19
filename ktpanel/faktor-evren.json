@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-19T20:34:53Z",
+ "guncelleme": "2026-10-19T20:58:13Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -386,7 +386,7 @@
    "kaynak": "KAP"
   },
   "BINHO": {
-   "ts": "2026-10-19T20:33:54Z",
+   "ts": "2026-10-19T20:57:21Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -980,7 +980,7 @@
    "kaynak": "KAP"
   },
   "ELITE": {
-   "ts": "2026-09-26T09:16:15Z",
+   "ts": "2026-10-19T20:57:53Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1011,10 +1011,16 @@
    },
    "adet": 129600000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 388257057,
+   "amort": 86019703,
+   "vergiOncesi": 83364005,
+   "vergi": -20176720,
+   "gecmisKar": 1193683722,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "EUPWR": {
-   "ts": "2026-09-26T09:16:32Z",
+   "ts": "2026-10-19T20:58:10Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -1045,7 +1051,13 @@
    },
    "adet": 660000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 3233811000,
+   "amort": 427133000,
+   "vergiOncesi": 2322793000,
+   "vergi": -1145666000,
+   "gecmisKar": 4490510000,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "EYGYO": {
    "ts": "2026-10-12T12:40:05Z",
@@ -4600,7 +4612,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-19T20:33:54Z",
+   "ts": "2026-10-19T20:57:21Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -4899,8 +4911,88 @@
    "gecmisKar": 9135782013,
    "eksik": false,
    "kaynak": "arşiv"
+  },
+  "AKCNS": {
+   "ts": "2026-10-19T20:57:21Z",
+   "y": "362",
+   "donem": "2026/2",
+   "ceyrek": 4,
+   "ciro": 25250393000,
+   "brut": 2781253000,
+   "favok": 2973181000,
+   "netKar": 538017000,
+   "ozk": 28533760000,
+   "aktif": 39671723000,
+   "donen": 13494737000,
+   "kvY": 8939069000,
+   "finBorc": 4438992000,
+   "likit": 3992989000,
+   "netBorc": 446003000,
+   "isletmeNA": 3754236000,
+   "capex": -2351891000,
+   "sna": 1402345000,
+   "tahakkuk": -8.11,
+   "odFaiz": -678558000,
+   "odTemettu": -110077000,
+   "stoklar": 2880611000,
+   "ticariAlacak": 5508560000,
+   "ticariBorc": 4307597000,
+   "buyume": {
+    "ciro": 4.9,
+    "netKar": -205,
+    "brut": -33.8
+   },
+   "adet": 191447000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "faal": 1198152000,
+   "amort": 1775029000,
+   "vergiOncesi": 1292882000,
+   "vergi": -754865000,
+   "gecmisKar": 4708835000,
+   "eksik": false,
+   "kaynak": "arşiv"
+  },
+  "AKFYE": {
+   "ts": "2026-10-19T20:57:21Z",
+   "y": "362",
+   "donem": "2026/2",
+   "ceyrek": 4,
+   "ciro": 5631113000,
+   "brut": 1211992000,
+   "favok": 4246501000,
+   "netKar": 2370339000,
+   "ozk": 69279857000,
+   "aktif": 86438201000,
+   "donen": 2169569000,
+   "kvY": 4307763000,
+   "finBorc": 12582766000,
+   "likit": 1235302000,
+   "netBorc": 11347464000,
+   "isletmeNA": 4529888000,
+   "capex": -2883859000,
+   "sna": 1646029000,
+   "tahakkuk": -2.5,
+   "odFaiz": -347659000,
+   "odTemettu": null,
+   "stoklar": 2512000,
+   "ticariAlacak": 643604000,
+   "ticariBorc": 740833000,
+   "buyume": {
+    "ciro": -4.6,
+    "netKar": 42.7,
+    "brut": -49.7
+   },
+   "adet": 1196962000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "faal": 2164023000,
+   "amort": 2082478000,
+   "vergiOncesi": 118621000,
+   "vergi": 2256621000,
+   "gecmisKar": 38605079000,
+   "eksik": false,
+   "kaynak": "arşiv"
   }
  },
  "uye_sayisi": 238,
- "kapsam": 136
+ "kapsam": 138
 }
