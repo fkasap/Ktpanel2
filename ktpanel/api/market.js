@@ -634,8 +634,36 @@ async function aiModu(req, res){
   }
 }
 
+
+/* ── §464e LME KÖPRÜSÜ (plan C) ─────────────────────────────────────────────
+   GitHub runner'dan lme.com Cloudflare "Just a moment" duvarına takılıyor
+   (19-20 Eki: düz fetch 403, Playwright headless JS doğrulamasını geçemedi).
+   Vercel'in çıkış IP'leri farklı itibar sınıfında → tazele.mjs son çare olarak
+   bu ucu çağırır. Yalnız iki sabit sayfa; serbest URL kabul edilmez (SSRF yok).
+   Değer sayfada statik: <span class="hero-metal-data__number"> 393.00 </span>
+   ve "Data valid for 16 Oct 2026". Cloudflare burada da duvar örerse ok:false
+   + ilk 120 karakter döner — tazele raporuna düşer. */
+async function lmeModu(req, res){
+  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Cache-Control','s-maxage=3600, stale-while-revalidate=7200');
+  const SAYFA = { hurda:'https://www.lme.com/en/metals/ferrous/lme-steel-scrap-cfr-turkey-platts', demir:'https://www.lme.com/en/metals/ferrous/lme-steel-rebar-fob-turkey-platts' };
+  const kod = String((req.query && req.query.kod) || 'hurda').toLowerCase();
+  const url = SAYFA[kod]; if(!url) return res.status(200).json({ ok:false, err:'kod: hurda | demir' });
+  try{
+    const r = await fetch(url, { headers:{ 'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language':'en-GB,en;q=0.9', 'Upgrade-Insecure-Requests':'1' }, signal: AbortSignal.timeout(20000) });
+    const html = await r.text();
+    const metin = html.replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ');
+    if(!r.ok || /Just a moment|Attention Required|Access Denied/i.test(html.slice(0,4000))) return res.status(200).json({ ok:false, err:'LME engeli HTTP '+r.status, ornek: metin.slice(0,120) });
+    let m = html.match(/hero-metal-data__number[^>]*>\s*([\d,]+(?:\.\d{1,2})?)\s*</i) || metin.match(/([\d,]{2,6}(?:\.\d{1,2})?)\s+-?\d+(?:\.\d+)?%\s+Month\s*2\s*Closing\s*Price/i);
+    if(!m) return res.status(200).json({ ok:false, err:'desen yok', ornek: metin.slice(0,120) });
+    const deger = +String(m[1]).replace(/,/g,'');
+    const t = metin.match(/Data valid for\s+(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i);
+    return res.status(200).json({ ok: isFinite(deger) && deger>0, kod, deger, etiket: t?t[1]:null, kaynak:'lme.com (Vercel köprüsü · Month-2 kapanış, gün gecikmeli)', alinma:new Date().toISOString() });
+  }catch(e){ return res.status(200).json({ ok:false, err:String(e&&e.message||e).slice(0,100) }); }
+}
 module.exports = async (req, res) => {
   if(req.query.mod==='ai') return aiModu(req, res);
+  if(req.query.mod==='lme') return lmeModu(req, res);   /* §464e */
   if(req.query.mod==='seri') return seriModu(req, res);
   if(req.query.mod==='fiyat') return fiyatModu(req, res);
   if(req.query.mod==='asya') return asyaModu(req, res);
