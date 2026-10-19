@@ -2579,11 +2579,8 @@ async function xlsxSayfa(buf, sayfaAdi) {
               worldbank.org/en/research/commodity-markets → xlsx linki regex ile →
               bağımlılıksız zip/XML okuyucu (xlsxSayfa). §464b: ilk koşuda PDF
               yolu denendi, pdf-parse hücreleri boşluksuz birleştirdi (0 satır) →
-              xlsx'e geçildi; yapı 19 Eki Chrome'da ölçüldü (Monthly Prices:
-              satır 5 adlar, 6 birimler, 7+ veri, eksik "…"). Seriler: Urea, DAP,
-              Iron ore, Coal Australian (termal), Natural gas Europe, Gold, Silver,
-              Zinc, Lead, Copper, Aluminum, Wheat US HRW, Cocoa, Sugar world, Brent.
-              Çeyreklik = 3 tam ayın ortalaması (model girdisi); aylık koşu çeyreğini besler.
+              xlsx'e geçildi; yapı 19 Eki Chrome'da ölçüldü, 23:32 koşusunda
+              CANLI DOĞRULANDI (15 seri · 2026M09). Çeyreklik = 3 tam ay ortalaması.
    DENETİM: değer makul aralıkta değilse ya da seri bir önceki koşudan GERİ
    gittiyse o seri atlanır (dosya diğer serilerle yazılır); hiçbir kaynak
    gelmezse seriler{} korunur. Sorun raporda seri adıyla görünür. */
@@ -2682,28 +2679,34 @@ async function surucuSeriler() {
         İkisi birlikte Türkiye uzun çelik METAL MARJI'nı verir: demir − hurda ($/t). 19 Eki: hurda 393,00 · demir 587,50 → marj ~195 $/t. */
   for (const [k, t] of Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme')) {
     try {
-      let html = null;
+      let html = null, yol = 'fetch';
       const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(25000) });
       if (r.ok) html = await r.text();
       else {
-        /* §464c: düz fetch 403 (Akamai, 19 Eki ölçüldü) → Playwright ile gerçek tarayıcı (fon katmanıyla aynı kurulum; chromium yoksa atlanır) */
+        /* §464c: düz fetch 403 (Akamai, 19 Eki 18:31 koşusu) → Playwright ile gerçek tarayıcı (fon katmanıyla aynı kurulum; chromium yoksa atlanır).
+           23:32 koşusunda tarayıcı UA'lı düz fetch GEÇTİ (403 yok) — Playwright yalnız yedek. */
         let chromium = null; try { ({ chromium } = await import('playwright')); } catch (e) { throw new Error('HTTP ' + r.status + ' · playwright yok'); }
         const browser = await chromium.launch();
-        try { const pg = await browser.newPage({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' }); await pg.goto(t.url, { waitUntil: 'domcontentloaded', timeout: 45000 }); await pg.waitForTimeout(4000); html = await pg.content(); }
+        try { const pg = await browser.newPage({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' }); await pg.goto(t.url, { waitUntil: 'domcontentloaded', timeout: 45000 }); await pg.waitForTimeout(4000); html = await pg.content(); yol = 'playwright'; }
         finally { await browser.close().catch(() => {}); }
         if (!html || /Access Denied|Pardon Our Interruption|captcha/i.test(html.slice(0, 3000))) throw new Error('HTTP ' + r.status + ' · Playwright da engellendi');
       }
-      html = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
-      const m = html.match(/Month\s*2\s*Closing\s*Price[^0-9]{0,120}?(\d{2,4}(?:\.\d{1,2})?)/i) || html.match(/Closing\s*Price[^0-9]{0,120}?(\d{3}(?:\.\d{1,2})?)/i);
-      if (!m) throw new Error('fiyat deseni bulunamadı (sayfa düzeni değişmiş olabilir)');
-      const v = +m[1];
+      /* §464d (19 Eki 23:38 ölçümü): değer ETİKETTEN ÖNCE gelir ve kendi sınıfında durur:
+           <span class="hero-metal-data__number"> 393.00 </span> <span class="hero-metal-data__change"> 0.38% </span>
+           <div class="hero-metal-data__text"> Month 2 Closing Price (day-delayed) </div>
+         Önce ham HTML'de sınıf eşlenir; düşerse metin deseni (sayı → yüzde → etiket). İlk sürüm sayıyı etiketten SONRA aradı → "fiyat deseni bulunamadı". */
+      let m = html.match(/hero-metal-data__number[^>]*>\s*([\d,]+(?:\.\d{1,2})?)\s*</i);
+      const metin = html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
+      if (!m) m = metin.match(/([\d,]{2,6}(?:\.\d{1,2})?)\s+-?\d+(?:\.\d+)?%\s+Month\s*2\s*Closing\s*Price/i);
+      if (!m) { const ci = metin.search(/Closing Price/i); throw new Error('fiyat deseni bulunamadı (' + yol + '): ' + metin.slice(Math.max(0, ci - 120), ci + 80)); }
+      const v = +String(m[1]).replace(/,/g, '');
       if (!(v >= t.aralik[0] && v <= t.aralik[1])) throw new Error('aralık dışı ' + v);
-      const tarihM = html.match(/(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i);
+      const tarihM = metin.match(/Data valid for\s+(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i) || metin.match(/(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i);
       const eski = (D.seriler[k] && D.seriler[k].gunluk) || [];
       const son = eski[eski.length - 1];
       if (!son || son[0] !== bugunT) eski.push([bugunT, v, tarihM ? tarihM[1] : null]); else eski[eski.length - 1] = [bugunT, v, tarihM ? tarihM[1] : null];
       D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: t.ad, birim: t.birim, kaynak: 'lme.com (statik sayfa, gün gecikmeli)', siklik: 'gunluk', hisse: t.hisse, gunluk: eski, son: { tarih: bugunT, deger: v, etiket: tarihM ? tarihM[1] : null }, guncelleme: bugunT, _not: 'Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta ' + eski[0][0] + '). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur.' });
-      notlar.push(k + ' ' + v + ' $/t (' + (tarihM ? tarihM[1] : bugunT) + ', ' + eski.length + ' nokta)');
+      notlar.push(k + ' ' + v + ' $/t (' + (tarihM ? tarihM[1] : bugunT) + ', ' + eski.length + ' nokta, ' + yol + ')');
     } catch (e) { uyari.push(k + ': ' + String(e && e.message || e).slice(0, 90)); }
   }
   /* türetilmiş: TR uzun çelik metal marjı (demir − hurda), ikisi de bugün geldiyse */
