@@ -172,6 +172,9 @@ jobs:
           EPIAS_KULLANICI: ${{ secrets.EPIAS_KULLANICI }}
           EPIAS_KULLANICI_ADI: ${{ secrets.EPIAS_KULLANICI_ADI }}
           EPIAS_MAIL: ${{ secrets.EPIAS_MAIL }}
+          # §466b: secret adı yukarıdaki listede yoksa script tüm secret ADLARINI tarar ve adında EPIAS geçen ikisini
+          # kullanır (e-posta görünümlü = kullanıcı, diğeri = şifre). Değerler loglanmaz; GitHub zaten maskeler.
+          KTP_SECRETS: ${{ toJSON(secrets) }}
 
       # Denetim raporu her koşuda görünsün — geçse de kalsa da
       - name: Denetim raporu
