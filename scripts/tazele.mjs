@@ -2681,11 +2681,32 @@ async function surucuSeriler() {
   } catch (e) { uyari.push('Yahoo katmanı: ' + String(e && e.message || e).slice(0, 80)); }
   /* 2) LME ferrous (hurda CFR TR · inşaat demiri FOB TR) — günlük tek nokta (statik HTML; tarihçe üyelik ister).
         İkisi birlikte Türkiye uzun çelik METAL MARJI'nı verir: demir − hurda ($/t). 19 Eki: hurda 393,00 · demir 587,50 → marj ~195 $/t. */
+  const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+  const duvar = h => !h || /Just a moment|Attention Required|Access Denied|Pardon Our Interruption|captcha/i.test(h.slice(0, 4000));
+  /* §464g (20 Eki 00:59 koşusu: hurda Playwright ile GEÇTİ, demir aynı koşuda Cloudflare'a takıldı): her seri için yeni
+     tarayıcı açılıyordu, ilk sayfada kazanılan cf_clearance çerezi ikinciye taşınmıyordu. Tek bağlam, iki deneme. */
+  let pwBrowser = null, pwCtx = null, pwDurum = null;
+  const pwSayfa = async (url) => {
+    if (pwDurum === 'yok') return null;
+    if (!pwCtx) {
+      let chromium = null; try { ({ chromium } = await import('playwright')); } catch (e) { pwDurum = 'yok'; return null; }
+      try { pwBrowser = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] }); pwCtx = await pwBrowser.newContext({ userAgent: UA, viewport: { width: 1366, height: 850 }, locale: 'en-GB' }); }
+      catch (e) { pwDurum = 'yok'; return null; }   /* chromium kurulu değil / launch düştü → köprüye geç */
+    }
+    const pg = await pwCtx.newPage();
+    try {
+      for (let deneme = 0; deneme < 2; deneme++) {
+        await pg.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+        await pg.waitForFunction(() => !/just a moment|attention required/i.test(document.title) && !!document.querySelector('.hero-metal-data__number'), null, { timeout: 25000 }).catch(() => {});
+        const h = await pg.content(); if (!duvar(h) && /hero-metal-data__number/.test(h)) return h;
+        await pg.waitForTimeout(3000);
+      }
+      return null;
+    } catch (e) { return null; } finally { await pg.close().catch(() => {}); }
+  };
   for (const [k, t] of Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme')) {
     try {
       let html = null, yol = 'fetch';
-      const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
-      const duvar = h => !h || /Just a moment|Attention Required|Access Denied|Pardon Our Interruption|captcha/i.test(h.slice(0, 4000));
       /* Yol 1-2: düz fetch, iki başlık seti (Cloudflare bazen geçiriyor — 19 Eki 23:32 geçti, 00:00 geçmedi) */
       for (const H of [
         { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-GB,en;q=0.9', 'Upgrade-Insecure-Requests': '1' },
@@ -2693,22 +2714,8 @@ async function surucuSeriler() {
       ]) {
         try { const r = await fetch(t.url, { headers: H, signal: AbortSignal.timeout(25000) }); const h = await r.text(); if (r.ok && !duvar(h)) { html = h; break; } } catch (e) {}
       }
-      /* Yol 3: Playwright — Cloudflare JS doğrulaması için 25 sn'ye kadar bekle (headless genelde geçemez; denenir, rapora düşer) */
-      if (!html) {
-        let chromium = null; try { ({ chromium } = await import('playwright')); } catch (e) { chromium = null; }
-        if (chromium) {
-          let browser = null;
-          try {
-            browser = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] });
-            const ctx = await browser.newContext({ userAgent: UA, viewport: { width: 1366, height: 850 }, locale: 'en-GB' });
-            const pg = await ctx.newPage();
-            await pg.goto(t.url, { waitUntil: 'domcontentloaded', timeout: 45000 });
-            await pg.waitForFunction(() => !/just a moment|attention required/i.test(document.title) && !!document.querySelector('.hero-metal-data__number'), null, { timeout: 25000 }).catch(() => {});
-            const h = await pg.content(); if (!duvar(h) && /hero-metal-data__number/.test(h)) { html = h; yol = 'playwright'; }
-          } catch (e) { /* chromium kurulu değil / launch düştü → köprüye geç */ }
-          finally { if (browser) await browser.close().catch(() => {}); }
-        }
-      }
+      /* Yol 3: Playwright — Cloudflare JS doğrulaması için 25 sn'ye kadar bekle; bağlam seriler arasında ORTAK (§464g) */
+      if (!html) { const h = await pwSayfa(t.url); if (h) { html = h; yol = 'playwright'; } }
       /* Yol 4: Vercel köprüsü (§464e api/market.js?mod=lme) — farklı çıkış IP'si; Cloudflare orada da duvar örerse ok:false */
       if (!html) {
         try {
@@ -2755,6 +2762,7 @@ async function surucuSeriler() {
       notlar.push('metal_marji_tr ' + marj + ' $/t');
     }
   } catch (e) { uyari.push('metal_marji_tr: ' + String(e && e.message || e).slice(0, 60)); }
+  if (pwBrowser) await pwBrowser.close().catch(() => {});   /* §464g: ortak tarayıcı LME turu bitince kapanır */
   /* 3) Dünya Bankası Pink Sheet — AYLIK XLSX (CMO-Historical-Data-Monthly.xlsx, 1960'tan beri).
         §464b: ilk koşuda PDF metni (pdf-parse) hücreleri boşluksuz birleştirdi, 0 satır eşleşti → xlsx'e geçildi.
         Yapı 19 Eki Chrome'da ÖLÇÜLDÜ: sayfa "Monthly Prices", satır 5 adlar, 6 birimler, 7+ veri (A: 2026M09), eksik "…".
@@ -2951,9 +2959,38 @@ async function evdsSeriler() {
 
 /* ── EPİAŞ PTF ─────────────────────────────────────────────────────────────── */
 const EPIAS_KIMLIK_ADAYLARI = [['EPIAS_ID', 'EPIAS_KEY'], ['EPIAS_USER', 'EPIAS_PASS'], ['EPIAS_USERNAME', 'EPIAS_PASSWORD'], ['EPIAS_EMAIL', 'EPIAS_SIFRE'], ['EPIAS_MAIL', 'EPIAS_SIFRE'], ['EPIAS_KULLANICI', 'EPIAS_SIFRE'], ['EPIAS_KULLANICI_ADI', 'EPIAS_SIFRE']];
+/* §466d: TEK secret içinde "id=… / pass=…" (satır satır, virgüllü ya da JSON) — kullanıcı 20 Eki'de böyle girdi.
+   Anahtar sözcükler: id|user|username|email|kullanici|login  ve  pass|password|key|sifre|parola|secret. Değerler kırpılır
+   (yapıştırmadan gelen boşluk şifreyi bozmasın). Hiçbir değer loglanmaz. */
+function epiasCoz(metin) {
+  const t = String(metin || '').trim(); if (!t || !/[=:]/.test(t)) return null;
+  try { const j = JSON.parse(t); const u = j.id || j.user || j.username || j.email || j.kullanici, p = j.key || j.pass || j.password || j.sifre || j.parola; if (u && p) return { user: String(u).trim(), pass: String(p).trim() }; } catch (e) {}
+  const al = re => { const m = t.match(re); return m ? m[1].trim() : null; };
+  const u = al(/(?:^|[\s,;])(?:id|user(?:name)?|e-?mail|mail|kullanici(?:_adi)?|login)\s*[=:]\s*([^\s,;]+)/im);
+  const p = al(/(?:^|[\s,;])(?:pass(?:word)?|pw|key|sifre|şifre|parola|secret)\s*[=:]\s*([^\n\r,;]+?)\s*(?:[\n\r,;]|$)/im);
+  return (u && p) ? { user: u, pass: p } : null;
+}
 function epiasKimlik() {
-  for (const [u, p] of EPIAS_KIMLIK_ADAYLARI) { const U = process.env[u], P = process.env[p]; if (U && P) return { user: U, pass: P, adlar: u + '+' + p }; }
-  return null;
+  for (const [u, p] of EPIAS_KIMLIK_ADAYLARI) { const U = process.env[u], P = process.env[p]; if (U && P) { const c = epiasCoz(P); return c ? { user: c.user, pass: c.pass, adlar: p + ' (tek secret, id/pass ayrıştırıldı; ' + u + ' yok sayıldı)' } : { user: U, pass: P, adlar: u + '+' + p }; } }
+  /* §466d: tek secret (ör. EPIAS_KEY = "id=…\npass=…") — önce env, sonra KTP_SECRETS içinde EPIAS adlı değerler */
+  {
+    const tekler = Object.entries(process.env).filter(([k, v]) => /EPIAS/i.test(k) && v);
+    try { for (const [k, v] of Object.entries(JSON.parse(process.env.KTP_SECRETS || '{}'))) if (/EPIAS/i.test(k) && v && !process.env[k]) tekler.push([k, String(v)]); } catch (e) {}
+    for (const [k, v] of tekler) { const c = epiasCoz(v); if (c) return { user: c.user, pass: c.pass, adlar: k + ' (tek secret, id/pass ayrıştırıldı)' }; }
+  }
+  /* §466b (20 Eki 00:59 koşusu: "kimlik bulunamadı" — kullanıcının verdiği secret adı listede yok): workflow
+     KTP_SECRETS = toJSON(secrets) geçirir; burada YALNIZ adında EPIAS geçen anahtarlar okunur, gerisi hemen atılır,
+     hiçbir değer loglanmaz. Kullanıcı adı = '@' içeren değer (e-posta) ya da ID/USER/KULLANICI/MAIL/LOGIN adlı anahtar;
+     şifre = diğeri (KEY/PASS/SIFRE/SECRET/PAROLA/PWD). Ayrıca process.env'de EPIAS geçen tanımsız adlar da taranır. */
+  let havuz = {};
+  try { const j = JSON.parse(process.env.KTP_SECRETS || '{}'); for (const [k, v] of Object.entries(j)) if (/EPIAS/i.test(k) && v) havuz[k] = String(v); } catch (e) {}
+  for (const [k, v] of Object.entries(process.env)) if (/EPIAS/i.test(k) && v && !havuz[k]) havuz[k] = String(v);
+  const adlar = Object.keys(havuz); if (adlar.length < 2) return null;
+  const kullaniciRe = /ID|USER|KULLANICI|MAIL|LOGIN|HESAP/i, sifreRe = /KEY|PASS|SIFRE|SECRET|PAROLA|PWD|ANAHTAR/i;
+  let uAd = adlar.find(k => /@/.test(havuz[k])) || adlar.find(k => kullaniciRe.test(k) && !sifreRe.test(k)) || adlar.find(k => kullaniciRe.test(k));
+  let pAd = adlar.find(k => k !== uAd && sifreRe.test(k)) || adlar.find(k => k !== uAd);
+  if (!uAd || !pAd) return null;
+  return { user: havuz[uAd], pass: havuz[pAd], adlar: uAd + '+' + pAd + ' (KTP_SECRETS taraması)' };
 }
 async function epiasTgt(kimlik) {
   const r = await fetch('https://giris.epias.com.tr/cas/v1/tickets', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain' }, body: new URLSearchParams({ username: kimlik.user, password: kimlik.pass }).toString(), signal: AbortSignal.timeout(25000) });
@@ -2966,7 +3003,8 @@ async function epiasPtf() {
   const dosya = 'sektor-surucu.json';
   if (!(await varMi(dosya))) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ sektor-surucu.json yok (önce §462 koşmalı)'); return; }
   const kimlik = epiasKimlik();
-  if (!kimlik) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ EPİAŞ kimliği (secret) bulunamadı\n- Beklenen ad çiftleri: ' + EPIAS_KIMLIK_ADAYLARI.map(x => '`' + x[0] + '`+`' + x[1] + '`').join(' · ') + '\n- Değer: Şeffaflık Platformu kullanıcı e-postası + şifresi (kayit.epias.com.tr). Workflow env bloğunda bu adların secrets.* ile eşlenmiş olması gerekir.'); return; }
+  if (!kimlik) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ EPİAŞ kimliği (secret) bulunamadı\n- Beklenen ad çiftleri: ' + EPIAS_KIMLIK_ADAYLARI.map(x => '`' + x[0] + '`+`' + x[1] + '`').join(' · ') + '\n- Ya da adında EPIAS geçen HERHANGİ iki secret (workflow KTP_SECRETS taraması; e-posta görünümlü olan kullanıcı adı sayılır). Bulunan EPIAS adlı secret sayısı: ' + Object.keys(process.env).filter(k => /EPIAS/i.test(k) && process.env[k]).length + ' (env) · ' + (() => { if (!process.env.KTP_SECRETS) return 'KTP_SECRETS env yok — workflow güncel mi?'; try { return Object.entries(JSON.parse(process.env.KTP_SECRETS)).filter(([k, v]) => /EPIAS/i.test(k) && v).length + ' (KTP_SECRETS)'; } catch (e) { return 'KTP_SECRETS okunamadı'; } })() +
+    '\n- Değer: Şeffaflık Platformu kullanıcı e-postası + şifresi (kayit.epias.com.tr). Secret adı serbest; iki ayrı secret (kullanıcı ve şifre) gerekir — tek secret içinde "id:şifre" tanınmaz.'); return; }
   const D = await oku(dosya); D.seriler = D.seriler || {};
   const eskiTL = (D.seriler.ptf && D.seriler.ptf.gunluk) || [];
   const eskiUSD = (D.seriler.ptf_usd && D.seriler.ptf_usd.gunluk) || [];
