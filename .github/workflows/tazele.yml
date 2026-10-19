@@ -30,7 +30,7 @@ on:
   workflow_dispatch:        # elle tetikleme (Actions sekmesinden)
     inputs:
       katman:
-        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy | kaparsiv)'
+        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy | kaparsiv | surucu | kamu | fm)'
         required: false
         default: 'hepsi'
       fonkod:
@@ -151,6 +151,27 @@ jobs:
           # §448: SEC EDGAR kimlik — repo Settings → Secrets → Actions → EDGAR_UA
           # (biçim: "KTPanel/1.0 (ad soyad; e-posta)"). Tanımsızsa script kendi varsayılanına düşer (403 sürer).
           EDGAR_UA: ${{ secrets.EDGAR_UA }}
+          # §464f: Vercel köprüsü (api/market?mod=lme) panelin giriş kapısından geçebilsin — middleware Bearer CRON_SECRET'ı muaf tutar.
+          # Vercel'deki CRON_SECRET ile AYNI değer (Köprü testi §306 adımı da bunu kullanır). Yoksa köprü 'giriş gerekli' der.
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          # §466: TCMB EVDS anahtarı — Settings → Secrets → Actions → EVDS_KEY (evds3.tcmb.gov.tr → profil → API anahtarı).
+          # Tanımsızsa EVDS katmanı ⏭ atlanır (TÜFE gıda/giyim, çimento ÜFE, AOFM/TLREF, KFE serileri boş kalır).
+          EVDS_KEY: ${{ secrets.EVDS_KEY }}
+          EVDS_API_KEY: ${{ secrets.EVDS_API_KEY }}
+          # §466: EPİAŞ Şeffaflık kimliği (kayit.epias.com.tr e-posta + şifre). Script ilk DOLU çifti kullanır;
+          # hangi adı bulduğunu raporda yazar (değeri asla). Secret'ı farklı adla girdiysen buradaki
+          # eşlemeye o adı ekle — tanımsız secret boş string gelir, zarar vermez.
+          EPIAS_ID: ${{ secrets.EPIAS_ID }}
+          EPIAS_KEY: ${{ secrets.EPIAS_KEY }}
+          EPIAS_USER: ${{ secrets.EPIAS_USER }}
+          EPIAS_PASS: ${{ secrets.EPIAS_PASS }}
+          EPIAS_USERNAME: ${{ secrets.EPIAS_USERNAME }}
+          EPIAS_PASSWORD: ${{ secrets.EPIAS_PASSWORD }}
+          EPIAS_EMAIL: ${{ secrets.EPIAS_EMAIL }}
+          EPIAS_SIFRE: ${{ secrets.EPIAS_SIFRE }}
+          EPIAS_KULLANICI: ${{ secrets.EPIAS_KULLANICI }}
+          EPIAS_KULLANICI_ADI: ${{ secrets.EPIAS_KULLANICI_ADI }}
+          EPIAS_MAIL: ${{ secrets.EPIAS_MAIL }}
 
       # Denetim raporu her koşuda görünsün — geçse de kalsa da
       - name: Denetim raporu
