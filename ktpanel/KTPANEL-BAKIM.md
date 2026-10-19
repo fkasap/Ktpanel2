@@ -6,6 +6,41 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-19
 
 
+# BAKIM EK — §465 (19 Eki 2026, 22:00) — SEKTÖR BİLGİSİ HER HİSSEDE + İLK CANLI KOŞUNUN DERSLERİ
+
+Kullanıcı: "Sayfa güzel ama sektörel bilgi yok; Tüpraş'ın var, diğerlerinin yok. Nasıl alacağız?"
+CANLI KOŞU ÖLÇÜMÜ (18:31 akşam cron, rapor/son-tazeleme.md): §462 Neste ✓ (469 satır) · §464 Yahoo 11/11
+seri ✓ (GC=F SI=F HG=F ALI=F HRC=F TTF=F NG=F ZW=F BZ=F EURUSD=X TRY=X, 2 yıl günlük — "=F" semboller
+sorunsuz) · LME hurda/inşaat demiri HTTP 403 (Akamai, runner IP) · Pink Sheet PDF "0 satır eşleşti"
+(pdf-parse metni hücreleri boşluksuz birleştiriyor; satır regex'i çaresiz).
+DÜZELTME 1 — Dünya Bankası XLSX: CMO-Historical-Data-Monthly.xlsx (586 KB, 1960→2026M09) Chrome'da
+aynı kökten çekilip DecompressionStream ile açıldı, yapı ÖLÇÜLDÜ: sayfa "Monthly Prices", satır 5 adlar,
+6 birimler, 7+ veri (A: 2026M09), eksik "…", kod satırı YOK. Node için BAĞIMLILIKSIZ okuyucu yazıldı
+(zip merkezi dizin + zlib.inflateRawSync + sharedStrings/sheet XML regex; öznitelik sırası yazara göre
+değişir → etiket içinden ayrı okunur). Sentetik xlsx ile test: 15/15 sütun eşleşti ("Urea" adı PDF'deki
+"Urea, E. Europe"dan farklı → regex /^Urea/). 2015-01+ saklanır; çeyreklik = 3 tam ay ortalaması.
+TOHUM: 2021-01→2026-09 aylık 19 seri Chrome'dan aktarıldı (wb_monthly.csv) → sektor-surucu.json/seriler
+(canlı Yahoo serileriyle BİRLEŞTİRİLDİ, üzerine yazılmadı). Üre çeyrek: 3Ç25 488 · 1Ç26 538 · 2Ç26 694 ·
+3Ç26 399 (−%42 QoQ) — GUBRF için ilk nicel okuma.
+DÜZELTME 2 — LME: düz fetch 403 → Playwright yedeği (fon katmanıyla aynı kurulum; chromium yalnız
+fon/hepsi koşularında kurulu → akşam cron'da var, elle "surucu" koşusunda yok → rapora "playwright yok").
+Akamai Playwright'ı da engellerse rapora "Playwright da engellendi" düşer; o zaman plan C: Vercel köprüsü.
+SEKTÖR BİLGİSİ (UI, §465): karar-model.json her modelde sektor_not (iş modeli · kâr sürücüsü ·
+mevsimsellik · bozucu — analist özeti, 30 hisse) + surucu_seriler[] (seri anahtarı, rol gelir/maliyet/
+kur/marj, bekliyor + kaynak notu) + birincil. Panelde Özet'in altında "SEKTÖR BİLGİSİ" bölümü: not +
+tablo (son değer · hedef çeyrek ort · Δ çeyrek · Δ yıl · koşu ort · 12 ay kıvılcım); renk ROLE göre
+(gelir ↑ yeşil, maliyet ↑ kırmızı, kur renksiz). "Kaynak bekliyor" satırları hangi secret/kaynağın
+eksik olduğunu yazar (EVDS alt kalemler, EPİAŞ PTF, KAP aylık ÖDA, LME). Pano'ya "SÜRÜCÜ Δ ÇEYREK"
+sütunu: birincil sürücünün hedef/önceki çeyrek değişimi (TUPRS dizel +%53 · EREGL HRC +%10 · CVKMD altın
+−%5 · GUBRF üre −%42 · AKCNS kömür +%2).
+EKSİK KALANLAR (kullanıcı aksiyonu): EVDS_KEY'i Actions secret'a eklemek (TÜFE gıda/giyim, çimento ÜFE,
+politika faizi); EPİAŞ Şeffaflık hesabı (PTF); sonrası EKGYO aylık ön satış ayrıştırıcısı (KAP).
+DERS: "ÖLÇMEDEN YAZMA" iki kez doğrulandı — PDF yolu masa başında mantıklıydı, metin çıkarımı hücreleri
+yapıştırdı; xlsx'i gerçek dosyada ölçünce ilk denemede geçti. Üçüncü taraf engeli (403) için her kaynağa
+ikinci yol (Playwright/köprü) baştan planlanmalı.
+DEPLOY: ktpanel/{app.js (20261019b), karar-model.json (2026-10-19b), sektor-surucu.json (canlı+WB tohumu),
+guncelleme-plani.json, KTPANEL-BAKIM.md, KTPANEL-DAMGA.md} + scripts/tazele.mjs (§464b/c). index.html değişmedi.
+
 # BAKIM EK — §464 (19 Eki 2026) — SÜRÜCÜ SERİLERİ KAYDI: "DİĞER HİSSELERİN SEKTÖR DEĞİŞKENLERİNİ NASIL ÇEKECEKSİN?"
 
 Kullanıcının sorusu veri tedarikine indi; cevap ÖLÇÜLDÜ, varsayılmadı:
@@ -40,6 +75,13 @@ KOD: SURUCU_KAYIT (yahoo/lme) + WB_SATIR (Pink Sheet) kayıt defteri → surucuS
 sektor-surucu.json/seriler{k}: {ad, birim, kaynak, siklik, hisse[], gunluk[[t,v]] | aylik{}/ceyreklik{}/yillik{},
 son, guncelleme}. Denetim: aralık, tarih gerilemesi (seri bazında atlanır), Pink Sheet <6 satır → o
 kaynak atlanır ve metnin ilk 300 karakteri rapora düşer. hepsi/fiyat koşusu + --katman=surucu.
+EK (15:58, kullanıcı: "yassı çelik investing'de var ama"): Doğru — investing'deki "ABD Çelik Rulo (HRC)"
+AYNI CME kontratı (Yahoo HRC=F ile birebir); ayrıca SHFE inşaat demiri ve SGX demir cevheri var. Ama
+investing Vercel'den de GitHub'dan da 403 (Cloudflare, §253f) → otomasyonda kullanılmaz; HRC=F düşerse
+plan B Playwright+investing. ASIL KAZANIM: LME'nin TÜRKİYE kontratı var — "LME Steel Rebar FOB Turkey
+(Platts)" 587,50 $/t (18 Eki, ölçüldü) → kayda demir_lme eklendi; hurda (393,00) ile birlikte TR uzun
+çelik METAL MARJI türetiliyor (metal_marji_tr ≈ 195 $/t) — KRDMD/KCAER'in birincil sürücüsü. Yassı için
+HRC=F − hurda ayrı okunur (EREGL). Harness: 11 seri, marj 194,5 ✓.
 MODEL KURULUM SIRASI (öneri): CVKMD (altın×kur, en temiz) → çelik üçlüsü (HRC=F + hurda değişimi + demir
 cevheri/kömür) → GUBRF/TKFEN (üre−TTF) → OBAMS (buğday) → EPİAŞ hesabı açılırsa AKFYE.
 DERS: KAYNAĞI ÖNCE ÖLÇ (tek satır veri çek), SONRA KATMAN YAZ — LME'de "tarihçe var sanıp" kurulsaydı

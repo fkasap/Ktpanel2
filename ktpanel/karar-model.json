@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-19",
+ "surum": "2026-10-19b",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -84,7 +84,26 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Doğalgaz dağıtım (düzenlenmiş; birim sistem kullanım bedeli EPDK) + elektrik üretimi/ticareti. Dağıtım geliri abone sayısı ve tüketim hacmine (kış ağır: 1Ç/4Ç güçlü) bağlı, marj tarifeyle korunur. Üretim/ticaret segmenti PTF ve gaz fiyatına duyarlı — konsolide FAVÖK bu yüzden mevsimsel ve oynak.",
+   "surucu_seriler": [
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı"
+    },
+    {
+     "k": "epdk_tarife",
+     "rol": "gelir",
+     "ad": "EPDK dağıtım tarifesi (sistem kullanım bedeli)",
+     "bekliyor": true
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "gaz_avrupa"
   },
   {
    "kod": "AKCNS",
@@ -211,7 +230,33 @@
     "beklenen": "2026-10-29",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Çimento: yerel talep (konut/altyapı) + Marmara ihracatı; maliyetin yarısı enerji (petrokok/kömür + elektrik). Kâr = çimento fiyatı − enerji; fiyat artışı enflasyon ve rekabetle sınırlı. Deprem bölgesi talebi ve kamu altyapı harcaması hacmi belirler.",
+   "surucu_seriler": [
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB) — petrokok vekili"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB)"
+    },
+    {
+     "k": "cimento_ufe",
+     "rol": "gelir",
+     "ad": "Çimento ÜFE (TÜİK)",
+     "bekliyor": true,
+     "kaynak": "EVDS alt kalem — EVDS_KEY secret gerekli"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    }
+   ],
+   "birincil": "komur_termal"
   },
   {
    "kod": "AKFYE",
@@ -326,7 +371,28 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Yenilenebilir üretici (HES, RES, GES). Gelir = üretim × fiyat; fiyat ya YEKDEM (USD endeksli sabit) ya spot PTF. Hidroloji (yağış) hacmi, doğalgaz fiyatı PTF’yi belirler. Borçlu yapı: faiz/kur gideri net kârı FAVÖK’ten koparır; FAVÖK’e bakılır.",
+   "surucu_seriler": [
+    {
+     "k": "ptf",
+     "rol": "gelir",
+     "ad": "PTF spot elektrik (EPİAŞ)",
+     "bekliyor": true,
+     "kaynak": "EPİAŞ Şeffaflık API — üyelik/secret gerekli"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "gelir",
+     "ad": "Doğalgaz Avrupa (WB) — PTF’yi belirleyen marjinal yakıt"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur",
+     "ad": "USD/TRY (YEKDEM $ tarifesi)"
+    }
+   ],
+   "birincil": "ptf"
   },
   {
    "kod": "ALBRK",
@@ -416,7 +482,22 @@
     "beklenen": "2026-11-05",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Katılım bankası: gelir kâr payı makası (fonlama maliyeti vs kredi/sukuk getirisi) + komisyon. Faiz indirim döngüsünde mevduat maliyeti kredi getirisinden hızlı düşer → makas açılır; karşılık giderleri ve TÜFE’ye endeksli kira sertifikası getirisi oynaklık kaynağı. Hedef metrik net kâr; FAVÖK tanımsız.",
+   "surucu_seriler": [
+    {
+     "k": "politika_faizi",
+     "rol": "marj",
+     "ad": "Politika faizi / TLREF (kâr payı makası)",
+     "bekliyor": true,
+     "kaynak": "Panelde canlı (Makro sekmesi POL_CANLI); EVDS alt seri eklenecek"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "politika_faizi"
   },
   {
    "kod": "ALTNY",
@@ -503,7 +584,21 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Savunma teknolojileri (robotik/otomasyon, mühimmat). Küçük ölçek, sipariş bazlı gelir; ASELS gibi 4Ç ağırlıklı teslimat olabilir. Tek kurum tahmini → fiyat mercekleri ağırlıklı.",
+   "surucu_seriler": [
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "siparis",
+     "rol": "gelir",
+     "ad": "Savunma siparişleri (KAP)",
+     "bekliyor": true
+    }
+   ],
+   "birincil": "usdtry"
   },
   {
    "kod": "ASELS",
@@ -630,7 +725,28 @@
     "beklenen": "2026-11-03",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Savunma elektroniği: gelir backlog’un teslimat takvimine göre tanınır (yıllar süren projeler). 4Ç çok ağır (yıl sonu teslimat/kabul) → çeyrekler YoY kıyaslanır. Sözleşmeler ağırlıkla USD/EUR endeksli, maliyet TL → kur geçişkenliği pozitif. Nakit döngüsü (alacak/avans) ve işletme sermayesi serbest nakit için belirleyici.",
+   "surucu_seriler": [
+    {
+     "k": "usdtry",
+     "rol": "kur",
+     "ad": "USD/TRY (sözleşmeler $ endeksli)"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD"
+    },
+    {
+     "k": "backlog",
+     "rol": "gelir",
+     "ad": "Backlog ve teslimat (şirket)",
+     "bekliyor": true,
+     "kaynak": "KAP/faaliyet raporu — çeyreklik elle"
+    }
+   ],
+   "birincil": "usdtry"
   },
   {
    "kod": "BERA",
@@ -702,7 +818,15 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Holding (Konya merkezli; inşaat malzemesi, enerji, perakende, finans iştirakleri). Konsolide FAVÖK iştirak karmasına bağlı; dış sürücü tanımsız. Net aktif değer (NAV) iskontosu ve iştirak haberleri belirleyici; konsensüs yok.",
+   "surucu_seriler": [
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": null
   },
   {
    "kod": "BIMAS",
@@ -831,7 +955,27 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Gıda perakendesi (indirim): ciro = mağaza sayısı × sepet; sepet büyümesi gıda enflasyonuna yapışıktır. Marj, asgari ücret (personel gideri) ve kira artışı ile fiyat geçişkenliği arasındaki yarıştır. Enflasyon düşerken ciro büyümesi yavaşlar, maliyet enflasyonu gecikmeli düşer → marj baskısı. Mevsimsellik: 3Ç güçlü (yaz), 1Ç zayıf.",
+   "surucu_seriler": [
+    {
+     "k": "tufe_gida",
+     "rol": "gelir",
+     "ad": "TÜFE gıda (TÜİK)",
+     "bekliyor": true,
+     "kaynak": "EVDS alt kalem — EVDS_KEY secret gerekli"
+    },
+    {
+     "k": "bugday_wb",
+     "rol": "maliyet",
+     "ad": "Buğday (WB) — temel gıda maliyet vekili"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "tufe_gida"
   },
   {
    "kod": "BINHO",
@@ -908,7 +1052,15 @@
     "beklenen": "2026-10-29",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Yatırım holdingi (sağlık, tarım, teknoloji iştirakleri). Operasyonel FAVÖK küçük/negatif; değer iştirak değerlemeleri ve bilanço dışı gelişmelerden. Dış sürücü yok; fiyat mercekleri ve KAP.",
+   "surucu_seriler": [
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": null
   },
   {
    "kod": "CIMSA",
@@ -1035,7 +1187,33 @@
     "beklenen": "2026-10-30",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Gri + beyaz çimento (dünya lideri konumunda) ve ABD (Cimsa Americas) hacmi. Beyaz çimento ihracatı EUR/USD’ye duyarlı, marjı gri çimentodan yüksek. Enerji maliyeti ve ihracat navlunu ikinci sürücü; yurt içi fiyat disiplini çeyreklik marjı belirler.",
+   "surucu_seriler": [
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB) — petrokok vekili"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB)"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (beyaz çimento ihracatı)"
+    },
+    {
+     "k": "cimento_ufe",
+     "rol": "gelir",
+     "ad": "Çimento ÜFE (TÜİK)",
+     "bekliyor": true,
+     "kaynak": "EVDS"
+    }
+   ],
+   "birincil": "komur_termal"
   },
   {
    "kod": "CVKMD",
@@ -1124,7 +1302,35 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Maden: altın-gümüş ve kurşun-çinko konsantresi. Gelir = metal fiyatı × üretilen ons/ton; maliyet TL ağırlıklı (işçilik, enerji, kimyasal) → TL reel değerlenmesi marjı daraltır. Üretim hacmi tenör ve kapasite açıklamalarıyla (KAP) değişir; metal fiyatı en şeffaf sürücü.",
+   "surucu_seriler": [
+    {
+     "k": "altin",
+     "rol": "gelir",
+     "ad": "Altın (COMEX)"
+    },
+    {
+     "k": "gumus",
+     "rol": "gelir",
+     "ad": "Gümüş (COMEX)"
+    },
+    {
+     "k": "cinko",
+     "rol": "gelir",
+     "ad": "Çinko (WB)"
+    },
+    {
+     "k": "kursun",
+     "rol": "gelir",
+     "ad": "Kurşun (WB)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "altin"
   },
   {
    "kod": "CWENE",
@@ -1223,7 +1429,26 @@
     "beklenen": "2026-10-30",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Güneş paneli üretimi + GES kurulum (EPC) + kendi santralleri. Panel fiyatı Çin modül fiyatıyla belirlenir (düşüş = marj baskısı ama kurulum talebi artar); EPC gelirleri proje teslimine bağlı. Kapasite yatırımları ve finansman maliyeti bozucu.",
+   "surucu_seriler": [
+    {
+     "k": "modul_fiyati",
+     "rol": "maliyet",
+     "ad": "GES modül fiyatı ($/W, Çin)",
+     "bekliyor": true,
+     "kaynak": "InfoLink haftalık — Faz 2 adayı"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "modul_fiyati"
   },
   {
    "kod": "EKGYO",
@@ -1343,7 +1568,29 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "GYO (konut geliştirme): gelir TESLİMATTA tanınır → çeyrek FAVÖK’ü hangi projenin teslim edildiğine bağlı, satış hızıyla eşzamanlı değil. Ön satışlar (aylık KAP) ileriye dönük gösterge; arsa portföyü ve hasılat paylaşımı modeli marjı belirler. Faiz düşüşü konut talebini açar.",
+   "surucu_seriler": [
+    {
+     "k": "on_satis",
+     "rol": "gelir",
+     "ad": "Aylık ön satış (KAP)",
+     "bekliyor": true,
+     "kaynak": "KAP ÖDA aylık — ayrıştırıcı Faz 3"
+    },
+    {
+     "k": "kfe",
+     "rol": "gelir",
+     "ad": "Konut fiyat endeksi (TCMB KFE)",
+     "bekliyor": true,
+     "kaynak": "EVDS"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "on_satis"
   },
   {
    "kod": "ENERY",
@@ -1420,7 +1667,26 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Doğalgaz dağıtım şirketi (çok bölge). Gelir = abone × tüketim × EPDK tarifesi; tarife TÜFE ile endekslenir, hacim kış sıcaklığına bağlı (1Ç/4Ç güçlü, 3Ç zayıf). Yatırım harcaması ve yeni bölge lisansları büyüme kaynağı; gaz fiyatı geçiş kalemi (marjı doğrudan etkilemez).",
+   "surucu_seriler": [
+    {
+     "k": "epdk_tarife",
+     "rol": "gelir",
+     "ad": "EPDK dağıtım tarifesi (TÜFE endeksli)",
+     "bekliyor": true
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB) — dolaylı"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "epdk_tarife"
   },
   {
    "kod": "ENJSA",
@@ -1547,7 +1813,22 @@
     "beklenen": "2026-10-29",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Düzenlenmiş elektrik dağıtımı + perakende: dağıtım geliri EPDK formülüyle RAB (düzenlenmiş varlık tabanı) × reel getiri + TÜFE endekslemesi; yatırım yaptıkça RAB büyür. Enflasyon yükselince gelir de endekslenir → reel korunaklı; finansal gelir (RAB üzerinden) faizle oynar. Perakende tarafı tarife-maliyet makası ve tüketim hacmi.",
+   "surucu_seriler": [
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE (RAB endekslemesi)",
+     "bekliyor": true,
+     "kaynak": "EVDS TP.TUKFIY2025.GENEL — Vercel köprüsü var; Actions secret eklenecek"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "tufe"
   },
   {
    "kod": "EREGL",
@@ -1674,7 +1955,38 @@
     "beklenen": "2026-10-19",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Entegre yassı çelik (yüksek fırın): girdi demir cevheri + kok kömürü, satış HRC/CRC/galvaniz. Kâr/ton = yassı fiyat − (cevher+kömür) − enerji; fonksiyonel para birimi USD, TL güçlenince TL FAVÖK baskılanır. Çin ihracatı ve AB koruma önlemleri fiyatı belirler; stok etkisi fiyat dönüşlerinde 1 çeyrek gecikmeli görünür.",
+   "surucu_seriler": [
+    {
+     "k": "hrc_abd",
+     "rol": "gelir",
+     "ad": "HRC (ABD Midwest vekili)",
+     "not": "TR yassı ihracat fiyatına vekil; gümrük farkı nedeniyle seviye değil yön okunur"
+    },
+    {
+     "k": "hurda_lme",
+     "rol": "maliyet",
+     "ad": "Hurda CFR TR (LME)",
+     "bekliyor": true,
+     "kaynak": "lme.com 403 → Playwright yedeği (sonraki koşu)"
+    },
+    {
+     "k": "demir_cevheri",
+     "rol": "maliyet",
+     "ad": "Demir cevheri (WB)"
+    },
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB, termal — kok vekili)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "hrc_abd"
   },
   {
    "kod": "GLRMK",
@@ -1785,7 +2097,26 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Altyapı müteahhidi (raylı sistem, tünel; yurt dışı ağırlıklı). Gelir tamamlanma yüzdesiyle tanınır; marj proje maliyet tahminine bağlı (revizyonlar çeyreği oynatır). Backlog/gelir oranı görünürlük ölçüsü; yeni ihale kazanımı katalizör.",
+   "surucu_seriler": [
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (backlog € ağırlıklı)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "backlog",
+     "rol": "gelir",
+     "ad": "Backlog/proje ilerlemesi (şirket)",
+     "bekliyor": true
+    }
+   ],
+   "birincil": "eurusd"
   },
   {
    "kod": "GRSEL",
@@ -1898,7 +2229,26 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Personel/öğrenci taşımacılığı ve filo kiralama. Gelir sözleşme fiyatı (TÜFE/akaryakıt eskalasyonlu), maliyet şoför ücreti + akaryakıt + araç amortismanı. Marj eskalasyon gecikmesine bağlı; filo yenileme borç ve kur gideri yaratır.",
+   "surucu_seriler": [
+    {
+     "k": "brent_yh",
+     "rol": "maliyet",
+     "ad": "Brent — akaryakıt maliyeti vekili"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "asgari_ucret",
+     "rol": "maliyet",
+     "ad": "Asgari ücret (şoför maliyeti)",
+     "bekliyor": true
+    }
+   ],
+   "birincil": "brent_yh"
   },
   {
    "kod": "GUBRF",
@@ -2006,7 +2356,35 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Gübre: Türkiye’de ithal amonyak/üre ile harmanlama + İran Razi (üre/amonyak üretimi, gaz ucuz). Kâr sürücüsü üre fiyatı − doğalgaz; Türkiye tarafında BOTAŞ sanayi tarifesi gecikmeli geçer. Tarım sezonu (ilkbahar/sonbahar) satış hacmini belirler; Razi tarafında yaptırım/konsolidasyon muhasebesi bozucu.",
+   "surucu_seriler": [
+    {
+     "k": "ure",
+     "rol": "gelir",
+     "ad": "Üre, Karadeniz (WB)"
+    },
+    {
+     "k": "dap",
+     "rol": "gelir",
+     "ad": "DAP (WB)"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB)"
+    },
+    {
+     "k": "ttf",
+     "rol": "maliyet",
+     "ad": "TTF (günlük)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "ure"
   },
   {
    "kod": "KATMR",
@@ -2078,7 +2456,25 @@
     "beklenen": "2026-11-06",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Savunma/araç üstyapı (zırhlı araç, itfaiye, tanker). Gelir sipariş teslimatına bağlı, düzensiz; marj proje bazlı. Borçluluk ve kur farkı net kârı oynatır. Küçük ölçek → fon-krizi satışına açık (3Ç26 −%44).",
+   "surucu_seriler": [
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur"
+    },
+    {
+     "k": "siparis",
+     "rol": "gelir",
+     "ad": "Savunma araç siparişleri (KAP)",
+     "bekliyor": true
+    }
+   ],
+   "birincil": "usdtry"
   },
   {
    "kod": "KCAER",
@@ -2191,7 +2587,33 @@
     "beklenen": "2026-11-03",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Çelik profil üreticisi; kütük alıp haddeler, satışın büyük kısmı ihracat (AB/ABD). Kâr = profil fiyatı − kütük; kütük hurda+enerjiye bağlı. İhracat ağırlığı nedeniyle EUR/USD ve navlun önemli; gümrük/antidamping gelişmeleri bozucu.",
+   "surucu_seriler": [
+    {
+     "k": "demir_lme",
+     "rol": "gelir",
+     "ad": "İnşaat demiri FOB TR (LME) — kütük/profil vekili",
+     "bekliyor": true
+    },
+    {
+     "k": "hurda_lme",
+     "rol": "maliyet",
+     "ad": "Hurda CFR TR (LME) — kütük girdisi",
+     "bekliyor": true
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (AB ihracatı)"
+    },
+    {
+     "k": "hrc_abd",
+     "rol": "gelir",
+     "ad": "HRC (vekil)"
+    }
+   ],
+   "birincil": "demir_lme"
   },
   {
    "kod": "KRDMD",
@@ -2318,7 +2740,45 @@
     "beklenen": "2026-11-05",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Uzun çelik ağırlıklı entegre üretici (kütük, inşaat demiri, ray, profil). Kâr sürücüsü metal marjı: inşaat demiri − hurda/cevher; yurt içi inşaat talebi ve ihracat (Irak, AB) hacmi belirler. Kömür/elektrik maliyeti ikinci sürücü. Nakit pozisyonu kur farkı geliri yaratır (TL zayıflamasında net kâr şişer).",
+   "surucu_seriler": [
+    {
+     "k": "metal_marji_tr",
+     "rol": "marj",
+     "ad": "TR metal marjı (inşaat demiri − hurda)",
+     "bekliyor": true,
+     "kaynak": "LME iki kontrat; Playwright yedeği"
+    },
+    {
+     "k": "demir_lme",
+     "rol": "gelir",
+     "ad": "İnşaat demiri FOB TR (LME)",
+     "bekliyor": true
+    },
+    {
+     "k": "hurda_lme",
+     "rol": "maliyet",
+     "ad": "Hurda CFR TR (LME)",
+     "bekliyor": true
+    },
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB)"
+    },
+    {
+     "k": "demir_cevheri",
+     "rol": "maliyet",
+     "ad": "Demir cevheri (WB)"
+    },
+    {
+     "k": "hrc_abd",
+     "rol": "gelir",
+     "ad": "HRC (yassı vekili)"
+    }
+   ],
+   "birincil": "metal_marji_tr"
   },
   {
    "kod": "MAVI",
@@ -2449,7 +2909,27 @@
     },
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Giyim perakendesi (denim). Gelir yurt içi (ağırlık) + uluslararası; marj indirim dönemleri ve kampanya takvimiyle oynar. Tüketici güveni ve reel ücret talebi, asgari ücret maliyeti belirler. Güçlü mevsimsellik: 4Ç (kış koleksiyonu) ve 2Ç güçlü, 3Ç zayıf — YoY kıyas şart.",
+   "surucu_seriler": [
+    {
+     "k": "tufe_giyim",
+     "rol": "gelir",
+     "ad": "TÜFE giyim (TÜİK)",
+     "bekliyor": true,
+     "kaynak": "EVDS"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (uluslararası satış)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "eurusd"
   },
   {
    "kod": "MPARK",
@@ -2576,7 +3056,27 @@
     "beklenen": "2026-11-04",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Özel hastane zinciri: gelir SGK (SUT tarifesi, kamu fiyatlaması) + özel/tamamlayıcı sigorta + yabancı hasta (döviz). Marj, SUT zamları ile maliyet enflasyonu (hekim/hemşire ücretleri) arasındaki fark; yatak doluluğu ve hasta karması (ameliyat yoğun) FAVÖK’ü belirler. Yabancı hasta payı kur korunağı.",
+   "surucu_seriler": [
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (yabancı hasta geliri)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "sut",
+     "rol": "gelir",
+     "ad": "SUT tarifesi (SGK)",
+     "bekliyor": true,
+     "kaynak": "Resmî Gazete — düzensiz"
+    }
+   ],
+   "birincil": "eurusd"
   },
   {
    "kod": "OBAMS",
@@ -2663,7 +3163,30 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Makarna üreticisi, ihracat ağırlıklı. Kâr = makarna fiyatı − makarnalık buğday; buğday (TMO alım fiyatı + dünya fiyatı) ana maliyet. Hasat dönemi (Haz–Tem) maliyet sıfırlar; navlun ve EUR/USD ihracat marjını oynatır.",
+   "surucu_seriler": [
+    {
+     "k": "bugday",
+     "rol": "maliyet",
+     "ad": "Buğday CBOT (günlük)"
+    },
+    {
+     "k": "bugday_wb",
+     "rol": "maliyet",
+     "ad": "Buğday ABD HRW (WB)"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "bugday"
   },
   {
    "kod": "PETKM",
@@ -2790,7 +3313,27 @@
     "beklenen": "2026-11-05",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Petrokimya: nafta kırarak etilen/polietilen/PP üretir; kâr nafta–polimer makası. Brent yükselince nafta pahalanır, polimer fiyatı aynı hızda artmazsa marj daralır. Küresel polietilen kapasite fazlası (Çin/ABD) marjı baskılıyor; STAR rafineri entegrasyonu nafta maliyetini kısmen yumuşatır.",
+   "surucu_seriler": [
+    {
+     "k": "brent_yh",
+     "rol": "maliyet",
+     "ad": "Brent — nafta girdi vekili"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "pe_pp",
+     "rol": "gelir",
+     "ad": "Polietilen/PP Asya fiyatı",
+     "bekliyor": true,
+     "kaynak": "ICIS/Platts ücretli; serbest günlük kaynak yok"
+    }
+   ],
+   "birincil": "brent_yh"
   },
   {
    "kod": "TCKRC",
@@ -2903,7 +3446,19 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "İmalat (şirkete özgü ürün gamı). Tek-iki kurumluk tahmin; FAVÖK küçük ve oynak. Sürücü modeli için önce şirket faaliyet raporundan gelir kırılımı çıkarılmalı — şimdilik fiyat mercekleri.",
+   "surucu_seriler": [
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "usdtry"
   },
   {
    "kod": "TKFEN",
@@ -3026,7 +3581,31 @@
     },
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Holding: taahhüt (petrol/gaz altyapı, USD/EUR backlog), kimya/gübre (Toros Tarım: üre-DAP marjı), tarım. Kârın oynak kısmı gübre marjı; taahhüt kârı proje tamamlanma ve maliyet aşımına bağlı. Segment bazlı bakılır; konsolide konsensüs seyrek.",
+   "surucu_seriler": [
+    {
+     "k": "ure",
+     "rol": "gelir",
+     "ad": "Üre (WB) — Toros Tarım"
+    },
+    {
+     "k": "dap",
+     "rol": "gelir",
+     "ad": "DAP (WB)"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB)"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (taahhüt sözleşmeleri)"
+    }
+   ],
+   "birincil": "ure"
   },
   {
    "kod": "TUPRS",
@@ -3651,7 +4230,33 @@
     "tarih": "2026-10-19",
     "fiyat": 368.25
    },
-   "bolunme": null
+   "bolunme": null,
+   "sektor_not": "Rafineri: kâr, ürün fiyatı ile ham petrol arasındaki farktır (crack); hacim görece sabit (KKO %90-100) olduğundan FAVÖK neredeyse tamamen crack × kurdur. Orta damıtık (dizel/jet) payı ~%47 → dizel crack belirleyici. Stok etkisi hedge ile nötr. 3Ç/4Ç bakım dönemleri hacmi kısar.",
+   "surucu_seriler": [
+    {
+     "k": "dizel_nwe",
+     "rol": "marj",
+     "ad": "Dizel crack NWE",
+     "kaynak": "Neste"
+    },
+    {
+     "k": "benzin_ara",
+     "rol": "marj",
+     "ad": "Benzin crack ARA",
+     "kaynak": "Neste"
+    },
+    {
+     "k": "brent",
+     "rol": "maliyet",
+     "ad": "Brent (Neste)",
+     "kaynak": "Neste"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "dizel_nwe"
   },
   {
    "kod": "TUREX",
@@ -3723,7 +4328,20 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null
+   "guidance": null,
+   "sektor_not": "Turizm/personel taşımacılığı ve araç kiralama (GRSEL ile benzer model, daha küçük ölçek). Sözleşme eskalasyonu vs ücret/akaryakıt maliyeti; sezon (yaz turizmi) 3Ç’yi güçlendirir. Konsensüs yok → fiyat mercekleri ve KAP açıklamaları.",
+   "surucu_seriler": [
+    {
+     "k": "brent_yh",
+     "rol": "maliyet",
+     "ad": "Brent — akaryakıt vekili"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "brent_yh"
   }
  ],
  "_yol_haritasi": [
@@ -3734,5 +4352,6 @@
   "Faz 3 (tier B): BIMAS/MAVI TÜFE alt kalemleri (EVDS), EKGYO aylık ön satış (KAP), AKCNS/CIMSA çimento ÜFE, ALBRK faiz makası, OBAMS buğday",
   "ENJSA tip \"tarife\" formülü (RAB × reel getiri + TÜFE)",
   "Konsensüs anlık görüntüsünü her tazelemede konsensus_tarihce[] olarak sakla → revizyon ivmesi bileşeni"
- ]
+ ],
+ "_465": "Sektör bilgisi: her modelde sektor_not (analist özeti: iş modeli · kâr sürücüsü · mevsimsellik · bozucu) ve surucu_seriler[] (sektor-surucu.json/seriler anahtarı, rol gelir|maliyet|kur|marj; bekliyor:true = kaynak bağlanmadı, kaynak notu). birincil = panoda gösterilen sürücü. Roller işaret okuması içindir: gelir ↑ olumlu, maliyet ↑ olumsuz, kur ↑ (TL zayıf) ihracatçı/$-gelirli için olumlu."
 }
