@@ -2504,9 +2504,16 @@ async function kararOrneklem() {
               alüminyum, HRC=F ABD Midwest HRC, TTF=F Hollanda TTF gaz, NG=F
               Henry Hub, ZW=F CBOT buğday, BZ=F Brent (Neste çaprazı), EURUSD=X,
               TRY=X. 2 yıllık günlük tarihçe ilk koşuda gelir.
-   - lme    : lme.com ferrous sayfası statik HTML'de "Month 2 Closing Price
-              (day-delayed)" tek değer taşır (393,00 $/t, 18 Eki). Tarihçe ve
-              grafik LMElive üyeliği ister → günlük nokta biriktirilir.
+   - lme    : lme.com ferrous sayfaları statik HTML'de "Month 2 Closing Price
+              (day-delayed)" tek değer taşır: hurda CFR TR 393,00 · inşaat demiri
+              FOB TR 587,50 $/t (18 Eki). Tarihçe/grafik LMElive üyeliği ister →
+              günlük nokta biriktirilir; ikisinden TR metal marjı türetilir.
+   - investing.com: kullanıcı "yassı çelik investing'de var" dedi — doğru;
+              oradaki "ABD Çelik Rulo (HRC)" AYNI CME kontratıdır (Yahoo HRC=F
+              ile birebir), ayrıca SHFE inşaat demiri ve SGX demir cevheri var.
+              Ama investing Vercel'den de GitHub'dan da 403 veriyor (Cloudflare,
+              §253f) → otomasyonda kullanılmaz; Yahoo HRC=F düşerse plan B
+              Playwright ile investing (TEFAS deseni).
    - wb     : Dünya Bankası Pink Sheet (aylık PDF, ayın ~2. iş günü; sonraki
               3 Kas 2026). Sayfa: worldbank.org/en/research/commodity-markets →
               güncel PDF linki regex ile bulunur → pdf-parse. Tablo sütunları:
@@ -2531,6 +2538,7 @@ const SURUCU_KAYIT = {
   eurusd:   { ad: 'EUR/USD',                               birim: '',      kaynak: 'yahoo', sembol: 'EURUSD=X', aralik: [0.6, 2],     hisse: ['KCAER', 'CIMSA', 'MAVI', 'OBAMS'] },
   usdtry:   { ad: 'USD/TRY',                               birim: '',      kaynak: 'yahoo', sembol: 'TRY=X',   aralik: [5, 200],      hisse: ['*'] },
   hurda_lme:{ ad: 'LME Steel Scrap CFR Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli)', birim: '$/t', kaynak: 'lme', url: 'https://www.lme.com/en/metals/ferrous/lme-steel-scrap-cfr-turkey-platts', aralik: [150, 1200], hisse: ['EREGL', 'KRDMD', 'KCAER'] },
+  demir_lme:{ ad: 'LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri', birim: '$/t', kaynak: 'lme', url: 'https://www.lme.com/en/metals/ferrous/lme-steel-rebar-fob-turkey-platts', aralik: [250, 2000], hisse: ['KRDMD', 'KCAER'] },
 };
 /* Dünya Bankası Pink Sheet satır eşlemesi: anahtar → satır başlangıcı (regex, büyük/küçük duyarsız), birim */
 const WB_SATIR = {
@@ -2608,23 +2616,37 @@ async function surucuSeriler() {
       notlar.push(k + ' ' + son[1] + ' (' + son[0] + ', ' + gunluk.length + ' gün' + (aralikDisi ? ', ' + aralikDisi + ' aralık dışı atıldı' : '') + ')');
     }
   } catch (e) { uyari.push('Yahoo katmanı: ' + String(e && e.message || e).slice(0, 80)); }
-  /* 2) LME hurda — günlük tek nokta (statik HTML) */
+  /* 2) LME ferrous (hurda CFR TR · inşaat demiri FOB TR) — günlük tek nokta (statik HTML; tarihçe üyelik ister).
+        İkisi birlikte Türkiye uzun çelik METAL MARJI'nı verir: demir − hurda ($/t). 19 Eki: hurda 393,00 · demir 587,50 → marj ~195 $/t. */
+  for (const [k, t] of Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme')) {
+    try {
+      const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const html = (await r.text()).replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
+      const m = html.match(/Month\s*2\s*Closing\s*Price[^0-9]{0,120}?(\d{2,4}(?:\.\d{1,2})?)/i) || html.match(/Closing\s*Price[^0-9]{0,120}?(\d{3}(?:\.\d{1,2})?)/i);
+      if (!m) throw new Error('fiyat deseni bulunamadı (sayfa düzeni değişmiş olabilir)');
+      const v = +m[1];
+      if (!(v >= t.aralik[0] && v <= t.aralik[1])) throw new Error('aralık dışı ' + v);
+      const tarihM = html.match(/(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i);
+      const eski = (D.seriler[k] && D.seriler[k].gunluk) || [];
+      const son = eski[eski.length - 1];
+      if (!son || son[0] !== bugunT) eski.push([bugunT, v, tarihM ? tarihM[1] : null]); else eski[eski.length - 1] = [bugunT, v, tarihM ? tarihM[1] : null];
+      D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: t.ad, birim: t.birim, kaynak: 'lme.com (statik sayfa, gün gecikmeli)', siklik: 'gunluk', hisse: t.hisse, gunluk: eski, son: { tarih: bugunT, deger: v, etiket: tarihM ? tarihM[1] : null }, guncelleme: bugunT, _not: 'Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta ' + eski[0][0] + '). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur.' });
+      notlar.push(k + ' ' + v + ' $/t (' + (tarihM ? tarihM[1] : bugunT) + ', ' + eski.length + ' nokta)');
+    } catch (e) { uyari.push(k + ': ' + String(e && e.message || e).slice(0, 90)); }
+  }
+  /* türetilmiş: TR uzun çelik metal marjı (demir − hurda), ikisi de bugün geldiyse */
   try {
-    const t = SURUCU_KAYIT.hurda_lme;
-    const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const html = (await r.text()).replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
-    const m = html.match(/Month\s*2\s*Closing\s*Price[^0-9]{0,120}?(\d{2,4}(?:\.\d{1,2})?)/i) || html.match(/Closing\s*Price[^0-9]{0,120}?(\d{3}(?:\.\d{1,2})?)/i);
-    if (!m) throw new Error('fiyat deseni bulunamadı (sayfa düzeni değişmiş olabilir)');
-    const v = +m[1];
-    if (!(v >= t.aralik[0] && v <= t.aralik[1])) throw new Error('aralık dışı ' + v);
-    const tarihM = html.match(/(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i);
-    const eski = (D.seriler.hurda_lme && D.seriler.hurda_lme.gunluk) || [];
-    const son = eski[eski.length - 1];
-    if (!son || son[0] !== bugunT) eski.push([bugunT, v, tarihM ? tarihM[1] : null]); else eski[eski.length - 1] = [bugunT, v, tarihM ? tarihM[1] : null];
-    D.seriler.hurda_lme = Object.assign({}, D.seriler.hurda_lme || {}, { ad: t.ad, birim: t.birim, kaynak: 'lme.com (statik sayfa, gün gecikmeli)', siklik: 'gunluk', hisse: t.hisse, gunluk: eski, son: { tarih: bugunT, deger: v, etiket: tarihM ? tarihM[1] : null }, guncelleme: bugunT, _not: 'Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta ' + eski[0][0] + '). Değer Month-2 kontrat kapanışı, spot Platts CFR TR değil — seviye değil DEĞİŞİM okunur.' });
-    notlar.push('hurda_lme ' + v + ' $/t (' + (tarihM ? tarihM[1] : bugunT) + ', ' + eski.length + ' nokta)');
-  } catch (e) { uyari.push('hurda_lme: ' + String(e && e.message || e).slice(0, 90)); }
+    const d = D.seriler.demir_lme, h = D.seriler.hurda_lme;
+    if (d && h && d.son && h.son && d.son.tarih === bugunT && h.son.tarih === bugunT) {
+      const marj = +(d.son.deger - h.son.deger).toFixed(2);
+      const eski = (D.seriler.metal_marji_tr && D.seriler.metal_marji_tr.gunluk) || [];
+      const son = eski[eski.length - 1];
+      if (!son || son[0] !== bugunT) eski.push([bugunT, marj]); else eski[eski.length - 1] = [bugunT, marj];
+      D.seriler.metal_marji_tr = { ad: 'TR uzun çelik metal marjı (LME inşaat demiri FOB TR − hurda CFR TR)', birim: '$/t', kaynak: 'türetilmiş (lme)', siklik: 'gunluk', hisse: ['KRDMD', 'KCAER'], gunluk: eski, son: { tarih: bugunT, deger: marj }, guncelleme: bugunT, _not: 'KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur.' };
+      notlar.push('metal_marji_tr ' + marj + ' $/t');
+    }
+  } catch (e) { uyari.push('metal_marji_tr: ' + String(e && e.message || e).slice(0, 60)); }
   /* 3) Dünya Bankası Pink Sheet — aylık; ayda bir değişir, her koşuda bakılır (ucuz: 1 sayfa + 1 PDF) */
   try {
     const sayfa = await (await fetch('https://www.worldbank.org/en/research/commodity-markets', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(25000) })).text();
@@ -4568,7 +4590,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu());   /* §462: Neste crack + Brent → Karar Motoru hammaddesi (hepsi/fiyat → hafta içi akşam) */
-    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME hurda · Dünya Bankası Pink Sheet → sektor-surucu.json/seriler */
+    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME hurda+inşaat demiri · Dünya Bankası Pink Sheet → sektor-surucu.json/seriler */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
