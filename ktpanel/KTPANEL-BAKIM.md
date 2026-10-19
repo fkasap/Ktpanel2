@@ -6,6 +6,38 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §466b/§464g (20 Eki 2026, 01:30) — İLK CANLI KOŞU: EVDS 11/11 ✓ · EPİAŞ SECRET ADI TUTMADI · LME ÇEREZ DERSİ
+
+CANLI KOŞU (00:59, run 39331666600, elle hepsi, yeşil, 300 sn): **EVDS serileri (§466) — ✓ 11/11** — tufe 137,23 (Eyl 26,
+aylık +1,84 · yıllık +29,7, zincirli) · gıda y/y +27,6 · giyim y/y +13,2 · Yİ-ÜFE +27,4 · çimento +28,5 · demir-çelik +27,0 ·
+elektrik ÜFE y/y +0,5 (ama 3Ç/2Ç +22: Temmuz tarife zammı) · gübre +36,7 · KFE 239,38 (y/y +22,3) · AOFM %37 · TLREF %36,80.
+sektor-surucu.json 349→477 KB, 38 seri. Ölçümler: (a) TÜİK 2025 bazlı seriler geriye uzatılmış — GENEL 2021-12'den, gıda
+2022-01'den, giyim 2015-01'den; zincir yalnız daha eski aylara uygulandı, 2024-12→2025-01 sıçrama yok (84,33→88,58 = Ocak
+2025 gerçek +%5,03). (b) EVDS günlük serilerde yanıt ~1000 satırla kesiliyor: 2021'den istendi, 2022-12-20'den geldi (962 gün)
+— yeterli, not düşüldü. (c) Panel canlı dosyayla headless render edildi: ALBRK AOFM 3Ç26 ort 38,7 → −1,3 p ç/ç, −4,6 p y/y;
+BIMAS gıda +%33 y/y; MAVI giyim −%2 ç/ç ama +%14 y/y → §466c.
+§466c PANO OKUMA KURALI: fiyat endeksleri (birim 'endeks': TÜFE/ÜFE/KFE) mevsimsel ve enflasyon dilinde YILLIK okunur; pano
+"SÜRÜCÜ Δ ÇEYREK" sütunu bu serilerde ΔYıl gösterir ve "y/y" etiketi basar (giyim 3Ç yaz indirimi −%2 kırmızı yanıp yanıltmasın).
+Emtia/kur/faiz için çeyrek değişimi kalır. app.js 20261020b.
+§466b EPİAŞ: rapor "kimlik (secret) bulunamadı" — kullanıcının verdiği secret adı 7 aday çiftin hiçbiri değil (adlar API'den
+listelenemedi: proxy Actions secrets ucunu kapatıyor). Çözüm tahmin değil TARAMA: workflow `KTP_SECRETS: toJSON(secrets)`
+geçirir; script yalnız adında EPIAS geçen anahtarları alır (gerisi hemen atılır, hiçbir değer loglanmaz, GitHub zaten maskeler),
+'@' içeren değer = kullanıcı adı, diğeri = şifre (yoksa ad desenine bakar: ID/USER/KULLANICI/MAIL vs KEY/PASS/SIFRE/SECRET).
+Rapor bulunan ADLARI yazar ("EPIAS_X+EPIAS_Y (KTP_SECRETS taraması)"); bulamazsa kaç EPIAS adlı secret gördüğünü yazar ve
+"KTP_SECRETS env yok — workflow güncel mi?" der. Tek secret içinde "id:şifre" TANINMAZ (iki ayrı secret gerekir).
+§464g LME: aynı koşuda hurda Playwright ile GEÇTİ (393, 16 Oct), demir aynı zincirde Cloudflare'a takıldı, köprü de 403 aldı
+(Vercel çıkışı da duvarda; §464f kapı düzeltmesi çalıştı — artık "giriş gerekli" değil "LME engeli HTTP 403"). Neden: her seri
+için YENİ tarayıcı açılıyordu; ilk sayfada kazanılan cf_clearance çerezi ikinciye taşınmıyordu. Düzeltme: tek Playwright
+bağlamı LME turu boyunca ortak, sayfa başına 2 deneme (3 sn ara), tur sonunda kapanır. Köprü yolu yedek olarak kalır.
+LME artık "olsa iyi olur": KRDMD/KCAER birincil sürücüsü resmî aylık Yİ-ÜFE demir-çelik (canlı), hrc_abd günlük yön verir.
+§466d TEK SECRET BİÇİMİ (01:33): kullanıcı tek secret girmiş — `epias_key` = "id=<e-posta>" ve "pass=<şifre>" iki satır.
+Script artık bunu da ayrıştırır (id|user|username|email|kullanici|login = … / pass|password|key|sifre|parola|secret = …;
+satır satır, virgüllü ya da JSON; değerler kırpılır — yapıştırma boşluğu şifreyi bozmaz). Rapor: "EPIAS_KEY (tek secret,
+id/pass ayrıştırıldı)". İki ayrı secret (EPIAS_ID + EPIAS_KEY) yine tercih edilir. GÜVENLİK NOTU: şifre sohbete yapıştırıldı →
+EPİAŞ şifresi değiştirilmeli, secret yeni değerle güncellenmeli (Actions değeri loglamaz, GitHub maskeler).
+DEPLOY: scripts/tazele.mjs (§466b + §464g + §466d) · .github/workflows/tazele.yml (KTP_SECRETS) · ktpanel/app.js (20261020b) ·
+KTPANEL-BAKIM.md. karar-model.json / middleware.js / guncelleme-plani.json değişmedi (canlıda). sektor-surucu.json YÜKLENMEZ.
+
 # BAKIM EK — §466 (20 Eki 2026, 00:50) — KAMU VERİ KATMANLARI: TCMB EVDS + EPİAŞ PTF ("evds key girdim, EPIAS id ve key de girdim")
 
 Kullanıcı iki secret'ı Actions'a girdi; bu ek "kaynak bekliyor" satırlarının resmî yerli veriyle dolmasıdır.

@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2466,12 +2466,12 @@ function kararPanoHtml(){
   const L=kararPanoSatirlar(); if(!L.length) return '';
   const hq=L[0].H.hedefQ;
   let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>XK030 PANOSU <span class="thin">'+L.length+' hisse · '+(hq?kararQAd(hq)+' beklentisi':'')+' · puan/bileşen oranına göre · satıra tıkla</span></summary>';
-  h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl" id="kararPanoTbl"><thead><tr><th>KOD</th><th>SEKTÖR · TIER</th><th>BEKLENTİ '+(hq?kararQAd(hq):'')+'</th><th>YoY ₺</th><th>SÜRÜCÜ Δ ÇEYREK</th><th>KONS. SİCİLİ</th><th>ÇEYREK GÖRELİ</th><th>PD/FAVÖK İLERİ</th><th>HEDEF</th><th>PUAN</th><th>SİNYAL</th></tr></thead><tbody>';
+  h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl" id="kararPanoTbl"><thead><tr><th>KOD</th><th>SEKTÖR · TIER</th><th>BEKLENTİ '+(hq?kararQAd(hq):'')+'</th><th>YoY ₺</th><th title="Birincil sürücünün hedef çeyrek ortalaması / önceki çeyrek; fiyat endekslerinde (TÜFE/ÜFE/KFE) yıllık değişim (y/y)">SÜRÜCÜ Δ ÇEYREK</th><th>KONS. SİCİLİ</th><th>ÇEYREK GÖRELİ</th><th>PD/FAVÖK İLERİ</th><th>HEDEF</th><th>PUAN</th><th>SİNYAL</th></tr></thead><tbody>';
   L.forEach(({M,H,F,P})=>{
     const hd=H.hedef||{}; const bek = hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
     const yoy = hd.kaynak==='model'? (hd.yoyUsd!=null? kararIsaret(hd.yoyUsd,0,'% $'):'—') : (hd.yoyTl!=null? kararIsaret(hd.yoyTl,0,'%'):'—');
     const bo=kararBirincilOzet(M,H);
-    const sur = !bo? '—' : bo.bekliyor? '<span class="sub">'+esc(bo.ad)+' · bekliyor</span>' : '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="'+(bo.dQ==null||bo.isaret===0?'':(bo.dQ*bo.isaret>=0?'up':'down'))+'">'+kararIsaret(bo.dQ,bo.fark?1:0,bo.fark?' p':'%')+'</span>';
+    const sur = !bo? '—' : bo.bekliyor? '<span class="sub">'+esc(bo.ad)+' · bekliyor</span>' : '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="'+(bo.dQ==null||bo.isaret===0?'':(bo.dQ*bo.isaret>=0?'up':'down'))+'">'+kararIsaret(bo.dQ,bo.fark?1:0,bo.fark?' p':'%')+(bo.yy?' <span class="sub">y/y</span>':'')+'</span>';
     const sic = (H.konsSicil.ort!=null&&!H.konsSicil.ince)? kararIsaret(H.konsSicil.ort,0,'%')+(H.konsSicil.ayniYon?' ●':'') : (H.konsSicil.tum&&H.konsSicil.tum.length? '<span class="sub">ince</span>' : '—');
     const gor = F.ceyrek&&F.ceyrek.goreli!=null? kararIsaret(F.ceyrek.goreli,0,'%')+(F.supheli?' ⚠':'') : '—';
     const pdf = F.fwd!=null? trN(F.fwd,1)+'x'+(F.fwdYuzdelik!=null?' <span class="sub">%'+trN(F.fwdYuzdelik,0)+'</span>':'') : '—';
@@ -2648,7 +2648,10 @@ function kararBirincilOzet(M,H){
   const d=(M.surucu_seriler||[]).find(x=>x.k===k); if(!d) return {bekliyor:true, ad:k};
   const st=kararSeriStat(k, H.hedefQ, H.kosuQ); if(!st) return {bekliyor:true, ad:d.ad||k};   /* §466: dosyada seri varsa bekliyor bayrağına bakılmaz */
   const rol=KARAR_ROL[d.rol]||KARAR_ROL.kur;
-  return {ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ:st.dQ, dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son, fark:st.fark};
+  /* §466c: fiyat endeksleri (TÜFE/ÜFE/KFE) mevsimseldir ve enflasyon dilinde YILLIK okunur (giyim 3Ç yaz indirimi −%2 ama y/y +%14);
+     emtia/kur/faiz için çeyrek değişimi kalır. Pano bu yüzden endeks serisinde ΔYıl gösterir ve "y/y" etiketi basar. */
+  const endeks = st.ser.birim==='endeks';
+  return {ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ: endeks? st.dY : st.dQ, dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son, fark:st.fark, yy:endeks};
 }
 
 /* ── Grafik: son 12 ay crack (dizel/benzin) ve Brent — iki panel, ortak x. Doğrudan etiket; eksen başına tek ölçek. ── */
