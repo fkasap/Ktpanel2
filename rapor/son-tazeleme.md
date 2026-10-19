@@ -84,7 +84,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1990 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903499699004781> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500044291547> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -144,20 +144,20 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 469 satır · 21 çeyrek · USDTRY Yahoo günlük · değişiklik yok
 
 ### Sürücü serileri (§464) — ✓ 13 seri
-- altin 4160.2998 (2026-10-19, 502 gün)
-- gumus 57.23 (2026-10-19, 502 gün)
-- bakir 6.584 (2026-10-19, 502 gün)
-- aluminyum 3107.25 (2026-10-19, 501 gün)
+- altin 4156.8999 (2026-10-19, 502 gün)
+- gumus 57.09 (2026-10-19, 502 gün)
+- bakir 6.577 (2026-10-19, 502 gün)
+- aluminyum 3104.75 (2026-10-19, 501 gün)
 - hrc_abd 1368 (2026-10-19, 501 gün)
-- ttf 87.547 (2026-10-16, 501 gün)
-- henryhub 3.039 (2026-10-19, 502 gün)
+- ttf 88.09 (2026-10-19, 502 gün)
+- henryhub 3.034 (2026-10-19, 502 gün)
 - bugday 656 (2026-10-19, 501 gün)
-- brent_yh 109.21 (2026-10-19, 502 gün)
-- eurusd 1.1217 (2026-10-19, 517 gün)
-- usdtry 49.5657 (2026-10-19, 517 gün)
-- hurda_lme 393 $/t (16 Oct 2026, 1 nokta, playwright)
+- brent_yh 109.23 (2026-10-19, 502 gün)
+- eurusd 1.1216 (2026-10-19, 517 gün)
+- usdtry 49.5534 (2026-10-19, 517 gün)
+- demir_lme 587.5 $/t (16 Oct 2026, 1 nokta, playwright)
 - wb 15 seri · 2026M09 · "Updated on October 02, 2026"
-- ⚠ demir_lme: fetch/Playwright Cloudflare duvarı · köprü: LME engeli HTTP 403 ·  Just a moment... *{box-
+- ⚠ hurda_lme: fetch/Playwright Cloudflare duvarı · köprü: LME engeli HTTP 403 ·  Just a moment... *{box-
 
 ### EVDS serileri (§466) — ✓ 11/11 seri
 - tufe 137.23 (2026-09, 141 ay, aylık 1.84%, yıllık 29.7%, zincirli)
@@ -172,23 +172,22 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - aofm %37 (2026-10-19, 962 gün)
 - tlref %36.7953 (2026-10-16, 944 gün)
 
-### EPİAŞ PTF (§466) — ⏭ EPİAŞ kimliği (secret) bulunamadı
-- Beklenen ad çiftleri: `EPIAS_ID`+`EPIAS_KEY` · `EPIAS_USER`+`EPIAS_PASS` · `EPIAS_USERNAME`+`EPIAS_PASSWORD` · `EPIAS_EMAIL`+`EPIAS_SIFRE` · `EPIAS_MAIL`+`EPIAS_SIFRE` · `EPIAS_KULLANICI`+`EPIAS_SIFRE` · `EPIAS_KULLANICI_ADI`+`EPIAS_SIFRE`
-- Değer: Şeffaflık Platformu kullanıcı e-postası + şifresi (kayit.epias.com.tr). Workflow env bloğunda bu adların secrets.* ile eşlenmiş olması gerekir.
+### EPİAŞ PTF (§466) — ✗ TGT alınamadı HTTP 401 · { "@class" : "java.util.HashMap", "authentication_exceptions" : [ "java.util.ArrayList", [
+- Kimlik secret adları bulundu (EPIAS_ID+EPIAS_KEY) ama giriş reddedildi: e-posta/şifre ya da Şeffaflık üyeliği (kayit.epias.com.tr) kontrol.
 
-### Faktör evreni (§361) — ✓ parti 6 · kapsam 140/238
-- bu turda: 3 tam · 3 eksik kalemli · 3 alınamadı
-- not: §455c arşivden 4 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %81.2 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
+### Faktör evreni (§361) — ✓ parti 6 · kapsam 142/238
+- bu turda: 4 tam · 3 eksik kalemli · 3 alınamadı
+- not: §455c arşivden 5 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %82.8 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Fonzi gerçekleşen (§457) — ✓ 231 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
-### Faktör skorları (§455) — ✓ sıralanan 120/238 · temel veri 120 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.62 ✓
-- ✓ fm.json TERFİ ETTİ (adet 120 ≥ 100 · XKTUM ağırlık kapsamı %81.2 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 120 -0.093 0.745 -2.96 1.19 0 · GROWTH 120 -0.001 0.628 -1.51 1.86 0 · QUALITY 120 0.018 0.679 -1.55 1.75 0 · MOMENTUM 120 -0.027 0.625 -1.20 1.99 0 · LOW_RISK 120 -0.018 0.758 -1.69 1.71 0
+### Faktör skorları (§455) — ✓ sıralanan 122/238 · temel veri 122 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.62 ✓
+- ✓ fm.json TERFİ ETTİ (adet 122 ≥ 100 · XKTUM ağırlık kapsamı %82.8 ≥ %70) — panel kendi hesabımızla çalışıyor
+- imza: VALUE 122 -0.090 0.736 -2.96 1.19 0 · GROWTH 122 0.001 0.623 -1.51 1.86 0 · QUALITY 122 0.007 0.682 -1.55 1.75 0 · MOMENTUM 122 -0.018 0.625 -1.20 1.99 0 · LOW_RISK 122 -0.014 0.756 -1.69 1.71 0
 
-### KAP arşivi (§381) — ✓ +8 çeyrek · 0/238 şirket tam · 2 yeni dosya
-- ENJSA:0→4 · KCAER:0→4
+### KAP arşivi (§381) — ✓ +4 çeyrek · 0/238 şirket tam · 1 yeni dosya
+- GUBRF:13→13 · MPARK:0→4
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -237,8 +236,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (247.33 bp) · fon akışı (1989) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (13) · EVDS serileri (11) · faktör evreni (140/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %81) · fm-oto · KAP arşivi (+8 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor) · sec-tickers
+**Sonuç:** TR 5Y CDS (247.33 bp) · fon akışı (1989) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (13) · EVDS serileri (11) · faktör evreni (142/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %83) · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (35 rapor) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ KAP arşivi (§381) — 89 sn
-- toplam: 300 sn
+- ⏱ Faktör evreni (§361) — 61 sn
+- ⏱ KAP arşivi (§381) — 66 sn
+- toplam: 298 sn

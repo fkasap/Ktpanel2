@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-19T22:00:12Z",
+ "guncelleme": "2026-10-19T22:50:57Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -320,8 +320,8 @@
    "n": 13,
    "ilk": "2026-10-01",
    "son": "2026-10-19",
-   "usdtry_ort": 49.297,
-   "usdtry_son": 49.5657,
+   "usdtry_ort": 49.291,
+   "usdtry_son": 49.5534,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.5657
+  "2026-10": 49.5534
  },
  "seriler": {
   "altin": {
@@ -5221,12 +5221,12 @@
     ],
     [
      "2026-10-19",
-     4160.2998
+     4156.8999
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 4160.2998
+    "deger": 4156.8999
    },
    "guncelleme": "2026-10-19"
   },
@@ -7245,12 +7245,12 @@
     ],
     [
      "2026-10-19",
-     57.23
+     57.09
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 57.23
+    "deger": 57.09
    },
    "guncelleme": "2026-10-19"
   },
@@ -9269,12 +9269,12 @@
     ],
     [
      "2026-10-19",
-     6.584
+     6.577
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 6.584
+    "deger": 6.577
    },
    "guncelleme": "2026-10-19"
   },
@@ -11287,12 +11287,12 @@
     ],
     [
      "2026-10-19",
-     3107.25
+     3104.75
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 3107.25
+    "deger": 3104.75
    },
    "guncelleme": "2026-10-19"
   },
@@ -15333,11 +15333,15 @@
     [
      "2026-10-16",
      87.547
+    ],
+    [
+     "2026-10-19",
+     88.09
     ]
    ],
    "son": {
-    "tarih": "2026-10-16",
-    "deger": 87.547
+    "tarih": "2026-10-19",
+    "deger": 88.09
    },
    "guncelleme": "2026-10-19"
   },
@@ -17354,12 +17358,12 @@
     ],
     [
      "2026-10-19",
-     3.039
+     3.034
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 3.039
+    "deger": 3.034
    },
    "guncelleme": "2026-10-19"
   },
@@ -21398,12 +21402,12 @@
     ],
     [
      "2026-10-19",
-     109.21
+     109.23
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 109.21
+    "deger": 109.23
    },
    "guncelleme": "2026-10-19"
   },
@@ -23485,12 +23489,12 @@
     ],
     [
      "2026-10-19",
-     1.1217
+     1.1216
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 1.1217
+    "deger": 1.1216
    },
    "guncelleme": "2026-10-19"
   },
@@ -25569,35 +25573,34 @@
     ],
     [
      "2026-10-19",
-     49.5657
+     49.5534
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 49.5657
+    "deger": 49.5534
    },
    "guncelleme": "2026-10-19"
   },
-  "hurda_lme": {
-   "ad": "LME Steel Scrap CFR Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli)",
+  "demir_lme": {
+   "ad": "LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri",
    "birim": "$/t",
    "kaynak": "lme.com (statik sayfa, gün gecikmeli)",
    "siklik": "gunluk",
    "hisse": [
-    "EREGL",
     "KRDMD",
     "KCAER"
    ],
    "gunluk": [
     [
      "2026-10-19",
-     393,
+     587.5,
      "16 Oct 2026"
     ]
    ],
    "son": {
     "tarih": "2026-10-19",
-    "deger": 393,
+    "deger": 587.5,
     "etiket": "16 Oct 2026"
    },
    "guncelleme": "2026-10-19",
