@@ -1,8 +1,17 @@
 {
  "_not": "§444c/§445: KAP arşivi çekim önceliği — bu kodlar HER ŞEYİN ÖNÜNDE (yavaş yolda koşu başına 2 şirket). Kaynak: cnbce.com BIST Katılım 30 listesi (16 Eyl 2026), arşivde OLMAYANLAR başa alındı. Listeye kod ekle/çıkar; işlenmiş olanlar atlanır.",
  "kaynak": "https://www.cnbce.com/borsa/hisseler/bist-katilim-30-hisseleri",
- "tarih": "2026-09-16",
+ "tarih": "2026-10-19",
  "kodlar": [
+  "AHGAZ",
+  "AKCNS",
+  "AKFYE",
+  "ALBRK",
+  "ENERY",
+  "ENJSA",
+  "KCAER",
+  "MPARK",
+  "TCKRC",
   "ASELS",
   "BSOKE",
   "CIMSA",
@@ -33,5 +42,6 @@
   "RALYH",
   "TUREX",
   "YEOTK"
- ]
+ ],
+ "_463": "19 Eki 2026: XK030 (Ekim üyeliği) kapsamında arşivde OLMAYAN 9 kod başa alındı — Karar Motoru (Journal §463) bilanço sonrası gerçek FAVÖK’ü buradan okur. ALBRK banka şablonu: arşivlenir ama FAVÖK türetilmez."
 }

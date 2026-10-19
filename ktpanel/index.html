@@ -962,6 +962,20 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </details>
 </div><div class="tab" id="t4"><!-- ==== 01 Journal ==== -->
 <h2>01 Investment Journal <span class="thin">(tez yaz → disiplin kazan)</span></h2>
+<!-- §462/§463 Çeyrek Karar Motoru (XK030): pano + seçili hisse detayı. Ebu dışı (data-ebu="hayir"): kart kendi verisini kendi çeker. -->
+<div class="card" id="kararCard" data-ebu="hayir" style="border-color:var(--mm2);margin-bottom:12px">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div class="lbl" style="margin:0">ÇEYREK KARAR MOTORU · XK030 <span class="thin">konsensüs · sicil · fiyatlanma her hissede → sinyal; sürücü modeli kalibre edildikçe (TUPRS crack)</span></div>
+    <div style="display:flex;gap:6px;align-items:center"><select id="kararKod" style="font-size:11px;padding:3px 6px"></select><button class="btn" id="kararYenile" style="padding:3px 9px!important;font-size:10px!important">Yenile</button></div>
+  </div>
+  <div id="kararPano"></div>
+  <div id="kararOzet" style="margin-top:8px"><div class="sub">Journal sekmesi açılınca yüklenir…</div></div>
+  <div id="kararGrafik"></div>
+  <div id="kararModel"></div>
+  <div id="kararFiyat"></div>
+  <div id="kararSinyal"></div>
+  <div class="note" id="kararNot"></div>
+</div>
 <div class="card">
   <div class="jform">
     <input id="jKod" maxlength="10" placeholder="Kod (ASELS)" style="text-transform:uppercase">

@@ -3,8 +3,163 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-10-12
+Son güncelleme: 2026-10-19
 
+
+# BAKIM EK — §464 (19 Eki 2026) — SÜRÜCÜ SERİLERİ KAYDI: "DİĞER HİSSELERİN SEKTÖR DEĞİŞKENLERİNİ NASIL ÇEKECEKSİN?"
+
+Kullanıcının sorusu veri tedarikine indi; cevap ÖLÇÜLDÜ, varsayılmadı:
+- Yahoo /v8/finance/chart (crumb yok, tazele zaten kullanıyor): vadeli semboller =F ile — GC=F altın, SI=F
+  gümüş, HG=F bakır, ALI=F alüminyum, HRC=F ABD Midwest HRC (TR HRC vekili), TTF=F gaz, NG=F, ZW=F buğday,
+  BZ=F Brent, EURUSD=X, TRY=X. 2 yıllık günlük tarihçe. Sandbox'tan doğrulanamadı (robots/proxy) →
+  ilk Actions koşusu doğrular; düşen sembol raporda "⚠ (Yahoo X boş)" olarak görünür.
+- Dünya Bankası Pink Sheet: worldbank.org/en/research/commodity-markets → güncel PDF
+  (CMO-Pink-Sheet-October-2026.pdf, 2 Eki; sonraki 3 Kas) ve CMO-Historical-Data-Monthly.xlsx.
+  WebFetch ile OKUNDU: tablo 3 yıllık + 5 çeyreklik + 3 aylık sütun; satırlar Urea E. Europe
+  (Eyl 407,5 $/t), DAP 800,6, Iron ore 97,7, Coal Australia 147,1 (termal; kok YOK), Natural gas
+  Europe 25,42 $/mmbtu, Gold 4.319, Silver 64,6, Zinc 4.021, Lead 1.873, Copper 14.474, Aluminum 3.283,
+  Wheat US HRW 347, Cocoa 5,92 $/kg, Sugar World 0,41. Ayrıştırıcı (wbAyristir) verbatim satırlarla
+  test edildi: 10/10 satır, çeyrek/ay eşlemesi doğru. ÇEYREKLİK sütunlar modelin doğrudan girdisi;
+  her yeni sayı eskinin üstüne EKLER (tarihçe birikir). xlsx (1960'tan beri aylık) tam tarihçe için
+  tek seferlik tohum adayı — SheetJS bağımlılığı ister, şimdilik PDF.
+- LME Steel Scrap CFR Turkey (Platts): lme.com sayfası statik HTML'de tek değer — "Month 2 Closing
+  Price (day-delayed)" 393,00 $/t (18 Eki). Tarihçe/grafik LMElive üyeliği → GÜNLÜK NOKTA BİRİKTİRİLİR.
+  Kontrat kapanışı, spot değil: seviye değil DEĞİŞİM okunur (model fark/oran kullanır).
+- EPİAŞ Şeffaflık (PTF, AKFYE/enerji): TGT kimlik doğrulama POST giris.epias.com.tr/cas/v1/tickets
+  (username/password form), başlık "TGT", 2 saat geçerli; taban seffaflik.epias.com.tr/electricity-service;
+  PTF ucu dokümanda 5.128 "Market Clearing Price Listing" (PtfRequestDto). Üyelik gerekli → Actions
+  secret (EPIAS_USER/EPIAS_PASS) — kullanıcı açarsa Faz 2'de katman eklenir.
+- EVDS (TÜFE/ÜFE alt kalemleri, BIMAS/MAVI/AKCNS/CIMSA): Vercel köprüsü beyaz listeli (TP.FG.J0,
+  TP.TUKFIY2025.GENEL, TP.DK.USD.A.YTL). Actions'ta EVDS_KEY yok → secret eklenince alt kalem kodları
+  (2025=100 yeni baz) EVDS kataloğundan doğrulanıp kayda eklenir.
+- KAP aylık operasyonel bildirim (EKGYO ön satış): KAP byCriteria zaten kullanılıyor (§459); ÖDA
+  metninden tablo ayrıştırma — Faz 3.
+- Ücretli/erişilemez: Türkiye HRC/inşaat demiri/hurda günlük (SteelOrbis/Platts), nafta–PE makası
+  (ICIS), investing.com (403). Vekil kullanılır, panel vekil olduğunu yazar.
+KOD: SURUCU_KAYIT (yahoo/lme) + WB_SATIR (Pink Sheet) kayıt defteri → surucuSeriler() katmanı
+sektor-surucu.json/seriler{k}: {ad, birim, kaynak, siklik, hisse[], gunluk[[t,v]] | aylik{}/ceyreklik{}/yillik{},
+son, guncelleme}. Denetim: aralık, tarih gerilemesi (seri bazında atlanır), Pink Sheet <6 satır → o
+kaynak atlanır ve metnin ilk 300 karakteri rapora düşer. hepsi/fiyat koşusu + --katman=surucu.
+MODEL KURULUM SIRASI (öneri): CVKMD (altın×kur, en temiz) → çelik üçlüsü (HRC=F + hurda değişimi + demir
+cevheri/kömür) → GUBRF/TKFEN (üre−TTF) → OBAMS (buğday) → EPİAŞ hesabı açılırsa AKFYE.
+DERS: KAYNAĞI ÖNCE ÖLÇ (tek satır veri çek), SONRA KATMAN YAZ — LME'de "tarihçe var sanıp" kurulsaydı
+boş kalırdı; günlük nokta biriktirme kararı ölçümden çıktı.
+DEPLOY: scripts/tazele.mjs (§462+§463+§464 birlikte), ktpanel/guncelleme-plani.json, KTPANEL-BAKIM.md.
+
+# BAKIM EK — §463 (19 Eki 2026) — KARAR MOTORU XK030'A GENİŞLEDİ: "SADECE TÜPRAŞ DEĞİL"
+
+Kullanıcı: "Sadece Tüpraş değil, tüm XK030 için yapmamız lazım, nasıl yapacağız?"
+CEVABIN ÖZÜ: Tüpraş'taki zincir (sürücü → FAVÖK → fiyat) her hissede AYNI ŞEKİLDE kurulamaz;
+30 hissenin çoğunda günlük ölçülebilir dış sürücü YOK. Dürüst mimari: ORTAK İSKELET + KADEMELİ
+SÜRÜCÜ. İskelet her hissede aynı: konsensüs (kurum ort · sayı) → konsensüs sicili (kurumlar
+sistematik eksik/fazla mı; ORTANCA, ≥3 kurumlu çeyrekler) → fiyatlanma (çeyrek içi göreli getiri ·
+ileri PD/FAVÖK bandı · hedef mesafesi) → puan kartı → sinyal (= toplam/bileşen). Sürücü modeli
+yalnız ölçülebilen yerde eklenir; yoksa UYDURULMAZ, kart "Tier C — sürücü modeli yok" der.
+TIER KATALOĞU (karar-model.json/_tier + modeller[].tier/surucu_plani):
+ A (günlük dış sürücü, regresyon kurulabilir): TUPRS (aktif), EREGL/KRDMD/KCAER (çelik–hurda makası:
+   Yahoo HRC=F + LME hurda + Dünya Bankası demir cevheri/kok aylık), CVKMD (altın×kur), GUBRF/TKFEN
+   (üre−TTF), PETKM (nafta–PE, serbest kaynak zayıf), AKFYE (PTF, EPİAŞ hesabı gerek).
+ B (aylık makro/operasyonel, esneklik): BIMAS/MAVI (TÜFE alt kalemleri EVDS), OBAMS (buğday), EKGYO
+   (KAP aylık ön satış), AKCNS/CIMSA (çimento ÜFE, enerji maliyeti), ALBRK (faiz makası, net kâr).
+ C (sürücü yok): ASELS/ENJSA(tarife)/MPARK/GLRMK/GRSEL/TUREX/KATMR/ALTNY/BERA/BINHO/CWENE/TCKRC/AHGAZ/ENERY.
+VERİ (Fintables MCP, 19 Eki; araç başına 300 satır tavanı → 5 sorgu): sektör+sermaye (30), kurum
+tahmin özeti 2025Ç1–2026Ç3 (135 satır: ort FAVÖK/net/satış · kurum sayısı), FAVÖK $ 2024Ç1–2026Ç2
+(290), FAVÖK/net ₺ 2025Ç1+ (252), çeyrek sonu kapanış 2024Ç3+ (298). ELLE TRANSKRİPT (xk030_data.py)
+→ karar-model.json (30 model, 61 KB). Bilinen tuzak: Fintables çeyrek sonu kapanışı bedelsizi
+DÜZELTMEMİŞ (AKFYE 22,4→3,5 ×0,1667 multiple.json'dan; BIMAS 683→365 607/1200 pay; CVKMD 38,8→12,1
+×1/3 varsayım) → bolunme{} ile düzeltildi; −%45 üstü çeyrek düşüşü "⚠ şüpheli" (fon krizi mi,
+sermaye işlemi mi) → puanlanmaz. 2025Ç3+ küçük hisselerde −%30..−%50 GERÇEK (A1/Bulls/Pardus tasfiyesi §457).
+KORUMALAR (ilk pano koşusunda görüldü, düzeltildi): (1) tek kurumluk hedef/konsensüs "sinyal"
+üretiyordu (BINHO hedef +%276 1 kurum → OLUMLU) → hedef: <3 kurum, bayat ya da ±%60 üstü mesafe
+→ BİLGİ (puan yok); konsensüs sicili yalnız ≥3 kurumlu çeyrekler, ≥3 çeyrek, ORTANCA (EKGYO 2Ç25
++%437 tek uç ortalamayı ele geçiriyordu); (2) 2 bileşenle OLUMLU deniyordu → n<2 KAPSAM YOK,
+n=2 ZAYIF KAPSAM (yön yok), n≥3 sinyal; (3) PETKM YoY −%2.866 (sıfıra yakın baz) → baz ≤ %10 ise "—".
+SONUÇ PANOSU (19 Eki, 3Ç26): 10 sinyalli (MPARK +3/4, AKCNS/ASELS/BIMAS/ENJSA/KRDMD +2/4 OLUMLU;
+CIMSA/MAVI/EREGL NÖTR-POZİTİF; TUPRS −1/6 NÖTR-NEGATİF), 3 zayıf kapsam (ALBRK, EKGYO, PETKM),
+17 KAPSAM YOK. Bu dağılım bir eksik değil ÖLÇÜM: XK030'un yarısından fazlasında kurum tahmini yok;
+oralarda "öneri" ancak tier A/B sürücü modeli kurulunca rakama dayanır — yol haritası budur.
+UI: #kararPano (details, açık) — 30 satır, puan/bileşen oranına göre; satıra tıkla → detay.
+Detay kartı tipe göre: regresyon (TUPRS) sürücü grafiği+katsayı; konsensus → gerçek FAVÖK çubukları
++ konsensüs içi boş nokta + sürücü planı metni. kararFitGrafik tüm tiplerde ortak (eksen adımı
+veriye göre). Banka (ALBRK): hedef metrik net kâr, çarpan satırları boş (sonraki tur F/K·PD/DD).
+ACTIONS: kararOrneklem() artık TÜM modellerde favok[q] doldurur (KAP arşivi; tablo adı şirkete
+göre değişiyor — BIMAS "Tablo 310003" → xbrl tüm tablolarda aranır); 2024Ç1 öncesi türetilmez
+(TMS-29 geçişi 4Ç23'ü bozuyor: BIMAS −0,4 görüldü); konsensüs o çeyrekse sicile düşer. Yerel
+harness: EREGL 2Ç26 6,582 (Fintables 6,582 ✓), BIMAS 14,08 (13,57; amortisman kapsamı), TUPRS 54,6.
+kap-arsiv-oncelik.json: arşivde olmayan 9 XK030 kodu (AHGAZ AKCNS AKFYE ALBRK ENERY ENJSA KCAER MPARK
+TCKRC) başa alındı → yavaş yolda koşu başına 2 şirket.
+RİTÜEL (DAMGA): bilanço haftası (30 Eki–9 Kas) Fintables ile 30 kodun konsensüsü/hedefi/çeyrek
+sonu fiyatı tek sorguda tazelenir (kurum sayısı 1-2 → 5-15'e çıkar, pano kapsamı genişler).
+DERS: ÇOK HİSSEYE GENİŞLERKEN İLK İŞ KAPSAM KORUMASI — ince veri sinyal gibi görünür; bileşen
+sayısını sinyalin yanına yaz, tek kaynaklı değerleri griye al. İkinci ders: üçüncü taraf "düzeltilmiş"
+fiyat serisine güvenme, bedelsizleri sermaye değişiminden doğrula.
+DEPLOY (§462 ile birlikte): ktpanel/{index.html, app.js (20261019a), karar-model.json, sektor-surucu.json,
+kap-arsiv-oncelik.json, guncelleme-plani.json, KTPANEL-BAKIM.md, KTPANEL-DAMGA.md} + scripts/tazele.mjs.
+
+# BAKIM EK — §462 (19 Eki 2026) — ÇEYREK KARAR MOTORU (JOURNAL): "SÖZEL OLMAZ, RAKAMA DÖK"
+
+Kullanıcı: "Hisse tarafında öneri yok. Journal'da yapalım ama tasarı eksik: sektör etkisini
+rakama dökmek lazım — Tüpraş örneğinde Brent 100+, crack yüksek 'iyi çeyrek' demek; NE KADAR
+iyi, ne kadarı fiyatlanmış? Crack marjlarını Neste sayfasından çek, ona göre sinyal ver."
+KAYNAK KEŞFİ: neste.com/investors/market-data/oil-products üç monitöre bağlanır
+(ir-service.appspot.com/v/nesteoil/monitor/{ProductDiff,CrudeOils}/en + funkton Diesel).
+Chrome ağ sekmesiyle ÖLÇÜLDÜ: ayrı veri ucu YOK — seriler sayfanın içinde Google DataTable
+satırı olarak gömülü ({c: [{v: new Date(2026, 9, 19)}, {v : 21.93}, {v: null},{v: null},
+{v : 74.444}]}; ay 0 tabanlı). Excel ucu gerçek BIFF .xls (26 KB) — ayrıştırmaya değmez.
+Sandbox proxy appspot'u reddediyor (CONNECT 403) → tohum Chrome'da Dygraph rawData_'dan
+döküldü (469 satır: 2021-10→2025-10 haftalık, sonra günlük). Actions runner'ı çeker.
+Seriler: Benzin crack ARA, Dizel crack NWE (Brent'e fark, $/v, LSEG 5 günlük ort.), Brent dated.
+19 Eki: dizel 74,4 · benzin 21,9 · Brent 123,5. 3Ç26 ort: dizel 77,6 (!) · benzin 40,7 ·
+Brent 94,8 (71→117). 4Ç26 (13 gün): dizel 68,4 · benzin 24,5 · Brent 124,9.
+MODEL: FAVÖK($ mn) = sabit + b1·dizel + b2·benzin (EKK). Örneklem 18 çeyrek 2021Ç4–2026Ç2
+(Fintables usd_ceyreklik satir 10005; 2022Ç4 Fintables'ta boş → örnekleme ALINMADI, TTM
+bandında ~1.100 mn $ yaklaşıkla). R² 0,58, hata ±222 mn $. ΔBrent (stok etkisi) BİLEREK
+DIŞARIDA: 2026Ç1 ΔBrent +56 $ ile FAVÖK 362 mn $ — hedge muhasebesi stok kazancını nötrlüyor;
+regresyonda katsayı ≈0/negatif. Katsayılar eşhareketli sürücü yüzünden ayrı ayrı değil
+TOPLAM okunur (model ~34 vs aşağıdan-yukarı verim×hacim 33 mn $ / 1 $ eşzamanlı artış ✓).
+3Ç26 ÇIKTI: 1,75 mlr $ ≈ 84 mlr ₺ (±11) · YoY +%260 ($) · QoQ +%46. Aşağıdan-yukarı: 2,03
+mlr $. EKSTRAPOLASYON uyarısı panelde (dizel 77,6 vs örneklem maks 50,7). Konsensüs: Fintables
+hisse_senedi_araci_kurum_tahminleri 3Ç26 tek kurum (Ünlü) FAVÖK 78,0 → model farkı +%7.
+Konsensüs sicili: 3Ç25 +%26, 4Ç25 +%12, 1Ç26 +%1, 2Ç26 +%42 — kurumlar crack şokunu sistematik
+EKSİK fiyatladı (sinyalde ayrı puan). Rehberlik (guidance.json): NRM 13-15 $/v (Ağu'da 6-7'den);
+1Y26 tersine hesap ~4 ve ~21 → 2Y26 ima ~15; spot crack ile model ~30 $/v ima ediyor.
+FİYATLANMA (üç mercek): (1) 3Ç26 içi TUPRS +%65,4 vs XU100 −%15,4 → göreli +%95 (XKMYA 3A
++24 vs XU100 −12 ile tutarlı) — iyi haberin büyük kısmı fiyatta; (2) PD/FAVÖK($) ileri (3
+gerçek + model) 4,0x, bant 2023Ç4+ medyan 4,8x, %45 yüzdelik — bant ortası (döngü tepesinde
+çarpan bant altına iner, 'ucuz' kalıcılık sorusuyla okunur); (3) hedef fiyat ort 389,8 (23
+kurum) vs 375,75 → +%4: revizyon döngüsü belirleyici. Bant 2023Ç4'ten başlar: Fintables
+düzeltilmiş fiyat temettüyü de düzeltir, 2022'de PD %28 düşük görünüyordu (2,9 vs ~4,0 mlr $).
+PUAN KARTI (−1/0/+1, eşikler kodda): model−kons +7 → 0 · kons sicili +20 → +1 · sürücü ivmesi
+4Ç koşu −27 → −1 · göreli getiri +95 → −1 · değerleme %45 → 0 · hedef mesafe +4 → 0 = −1 →
+NÖTR-NEGATİF: "sürücü iyi ama fiyat ve ivme destek vermiyor; koru, ekleme yapma". Çeyreğin ilk
+10 günü ivme puanlanmaz (bilgi). "Tavsiye" kelimesi yok — karar desteği.
+UI (t4 Journal, en üst kart #kararCard, data-ebu="hayir"): 5 özet çipi · 12 aylık iki panelli
+SVG (crack · Brent; gölge = açıklanacak/koşu çeyreği; çeyrek ort. kesikli, haleli etiket) ·
+model tablosu (katsayı · okuma · aşağıdan-yukarı) · gerçek-vs-model çubuk/nokta grafiği (içi boş
+= tahmin, ±hata) · fiyatlanma tabloları · puan kartı · bozucular (otomatik taslak) · "Teze aktar"
+(Journal formunu doldurur: kod, hedef, tez, katalizör, bozucu) · "Kararı sicile yaz"
+(localStorage ktp_karar_sicil_v1; gerçek gelince model hatası otomatik dolar).
+VERİ: sektor-surucu.json (gunluk [tarih,benzin,dizel,brent], ceyrek{...,usdtry_ort,tam},
+son) · karar-model.json (modeller[]: tip regresyon, surucular, orneklem, band, band_bas,
+fiyat_ceyrek_sonu, konsensus, konsensus_gecmis, guidance, hedef_fiyat, bilanco, riskler).
+ACTIONS (tazele.mjs): sektorSurucu() — iki HTML çek, cols'tan sayısal sütunları bul, satırları
+regex ile oku, Brent'i tarihe eşle, çeyrek istatistikleri, USDTRY Yahoo TRY=X günlük ort.;
+DENETİM: aralık (crack −40..150, Brent 20..250), ≥300 satır, son tarih geri gitmez → aksi
+dosya KORUNUR. hepsi/fiyat (hafta içi akşam) + --katman=surucu. kararOrneklem() (§462b): KAP
+arşivinden bilanço düşünce çeyrek FAVÖK'ü Fintables tanımıyla (EFK − diğer gelir − diğer gider
++ amortisman) hesaplar, örnekleme ekler → sicil kendiliğinden dolar. Yerel harness: 2026Ç2
+54,6 (Fintables 54,34 ✓), 2026Ç1 15,8 (16,9; amortisman kapsamı), 4Ç25 16,2 (16,8; 4Ç yaklaşık).
+Ayrıştırıcı sentetik HTML'de doğrulandı; canlı sayfada ilk Actions koşusu doğrular.
+TEST (headless Chromium, yerel sunucu): Equity→Journal → kart görünür, 2+1 svg, çipler dolu,
+"Teze aktar" formu doldurdu, sicil satırı yazıldı; sekme değiştirip dön → aynı; konsol hata 0.
+Köprü (api/market) statikte yok → getiriler fiyat_ceyrek_sonu + endeks arşivinden (XU100) düştü.
+YOL HARİTASI: ENJSA (tip 'tarife': RAB reel getiri, TÜFE, faiz) · THYAO (jet crack = dizel+3
+vekili, Brent, EUR/USD, DHMİ yolcu) · konsensüs bloğunu Fintables ile bilanço haftasında
+tazele (kurum sayısı 1 → 8-10 olur) · bilanço sonrası model hatasını BAKIM'a yaz.
+DERS: "ÖNERİ" İSTENİNCE ÖNCE ÖLÇÜM ZİNCİRİNİ KUR (sürücü → kâr → fiyat), SİNYAL EN SONDA VE
+PUANLARI AÇIK OLSUN — kullanıcı eşiği beğenmezse değiştirebilmeli, kara kutu olmasın.
+DEPLOY: ktpanel/{index.html, app.js (20261019a), sektor-surucu.json (YENİ), karar-model.json
+(YENİ), guncelleme-plani.json, KTPANEL-BAKIM.md} + scripts/tazele.mjs.
 
 # BAKIM EK — §461 (13 Eki 2026) — ENFLASYON PATİKASI ALT SEKMESİ: TCMB FAİZ TAHMİN MODELİ
 

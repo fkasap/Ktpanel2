@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261013a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261019a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -88,6 +88,8 @@ document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('clic
   }
   try{
     if(b.dataset.tab==='t6'&&!fmLoaded){fmLoaded=true;fmInit();}
+    /* §462: Journal açılınca Karar Motoru (idempotent; hata kartta yazılır) */
+    if(b.dataset.tab==='t4'){ try{ kararInit(); }catch(e){ console.warn('[KTPanel] §462:', e&&e.message); } }
     if(b.dataset.tab==='t7'&&!haberLoaded){haberLoaded=true;haberInit();}
     if(b.dataset.tab==='t10'&&!ihracLoaded){ihracLoaded=true;ihracRender();}
     if(b.dataset.tab==='t15'){emtiaRender();}
@@ -2243,6 +2245,403 @@ $('jEkle').addEventListener('click',()=>{
   ['jKod','jHedef','jTez','jKat','jBoz'].forEach(id=>$(id).value='');
 });
 renderJ();
+/* ═══════════════════════════════════════════════════════════════════════════
+   §462/§463 ÇEYREK KARAR MOTORU (Journal · t4) — XK030 çapında
+   Soru: "Bu çeyrek şirket için iyi mi?" sözel kalmasın — RAKAMA dökülsün.
+   ORTAK İSKELET (her hisse): konsensüs (kurum ort. · sayısı) → konsensüs
+     sicili (kurumlar sistematik eksik/fazla mı) → fiyatlanma (çeyrek içi göreli
+     getiri · ileri PD/FAVÖK bandı · hedef fiyat mesafesi) → puan kartı → sinyal
+     → Teze aktar · Sicil.
+   SÜRÜCÜ MODELİ (yalnız kalibre edilen hisselerde, tip 'regresyon'): sektör
+     sürücüsü (sektor-surucu.json) → çeyrek FAVÖK EKK → model−konsensüs ve koşu
+     hızı bileşenleri eklenir. Bugün: TUPRS (crack × hacim × kur).
+   Tasarım notları:
+   - Katsayılar panelde HER AÇILIŞTA örneklemden yeniden hesaplanır.
+   - Sürücü modeli olmayan hissede sahte sürücü UYDURULMAZ: kart "Tier C ·
+     sürücü modeli yok" der ve kalan bileşenlerle puanlar; kapsam (bileşen
+     sayısı) sinyalin yanında yazılır.
+   - Sinyal = toplam puan / bileşen sayısı (oran) — farklı kapsamlar kıyaslanabilir.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const KARAR={surucu:null, model:null, hazir:false, yukleniyor:false, seri:{}, secili:null, hata:null, panoAcik:true};
+const KARAR_RENK={dizel:'#C9612B', benzin:'#128A66', brent:'#3D7BD9', model:'#3D7BD9', gercek:'#128A66', kons:'#C9612B', muted:'#63756C', grid:'#E2EBE6'};
+const kararSicilOku=()=>{ try{ return JSON.parse(localStorage.getItem('ktp_karar_sicil_v1')||'[]'); }catch(e){ return []; } };
+const kararSicilYaz=(l)=>{ try{ localStorage.setItem('ktp_karar_sicil_v1', JSON.stringify(l)); }catch(e){} };
+
+function kararQAd(q){ const m=String(q||'').match(/^(\d{4})Q([1-4])$/); return m? m[2]+'Ç'+m[1].slice(2) : String(q||'—'); }
+function kararQOnce(q,n=1){ const m=q.match(/^(\d{4})Q([1-4])$/); let y=+m[1], c=+m[2]-n; while(c<1){ c+=4; y--; } return y+'Q'+c; }
+function kararQAralik(q){ const m=q.match(/^(\d{4})Q([1-4])$/); const y=+m[1], c=+m[2]; const bas=y+'-'+String(3*c-2).padStart(2,'0')+'-01'; const sonAy=3*c; const sonGun=new Date(y, sonAy, 0).getDate(); return {bas, son:y+'-'+String(sonAy).padStart(2,'0')+'-'+sonGun}; }
+const kararTrTarih=(s)=>{ if(!s) return '—'; const d=new Date(s+'T00:00:00'); return isNaN(d)?s:d.toLocaleDateString('tr-TR',{day:'numeric',month:'short'}); };
+const kararIsaret=(v,d=1,suffix='')=>v==null||!isFinite(v)?'—':((v>=0?'+':'−')+trN(Math.abs(v),d)+suffix);
+const kararFxAy=(ym)=>{ const a=(KARAR.surucu&&KARAR.surucu.usdtry_ay_sonu)||{}; return a[ym]||null; };
+const kararFxQ=(q)=>{ const m=q.match(/^(\d{4})Q([1-4])$/); return kararFxAy(m[1]+'-'+String(3*+m[2]).padStart(2,'0')); };
+
+/* EKK (en küçük kareler) — normal denklemler, Gauss eliminasyonu. k ≤ 4 regresör için yeterli. */
+function kararEKK(X, y){
+  const n=y.length, k=X[0].length+1;
+  const A=Array.from({length:k},()=>new Array(k).fill(0)), B=new Array(k).fill(0);
+  for(let i=0;i<n;i++){ const xi=[1,...X[i]]; for(let a=0;a<k;a++){ B[a]+=xi[a]*y[i]; for(let b=0;b<k;b++) A[a][b]+=xi[a]*xi[b]; } }
+  for(let c=0;c<k;c++){ let p=c; for(let r=c+1;r<k;r++) if(Math.abs(A[r][c])>Math.abs(A[p][c])) p=r;
+    [A[c],A[p]]=[A[p],A[c]]; [B[c],B[p]]=[B[p],B[c]];
+    if(Math.abs(A[c][c])<1e-12) return null;
+    for(let r=0;r<k;r++){ if(r===c) continue; const f=A[r][c]/A[c][c]; for(let cc=c;cc<k;cc++) A[r][cc]-=f*A[c][cc]; B[r]-=f*B[c]; } }
+  const b=B.map((v,i)=>v/A[i][i]);
+  const yh=X.map(xi=>b[0]+xi.reduce((s,v,j)=>s+b[j+1]*v,0));
+  const ort=y.reduce((s,v)=>s+v,0)/n;
+  const sse=y.reduce((s,v,i)=>s+(v-yh[i])**2,0), sst=y.reduce((s,v)=>s+(v-ort)**2,0);
+  return {b, r2: sst>0?1-sse/sst:0, se: Math.sqrt(sse/Math.max(1,n-k)), n, fitted: yh};
+}
+
+async function kararInit(force){
+  const kart=$('kararCard'); if(!kart) return;
+  if(KARAR.yukleniyor) return;
+  if(KARAR.hazir && !force){ kararRender(); return; }
+  KARAR.yukleniyor=true;
+  const oz=$('kararOzet'); if(oz) oz.innerHTML='<div class="sub">Sektör sürücüleri ve model kataloğu yükleniyor…</div>';
+  try{
+    const [s,m]=await Promise.all([
+      fetch('/sektor-surucu.json',{cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('sektor-surucu.json HTTP '+r.status); return r.json(); }),
+      fetch('/karar-model.json',{cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('karar-model.json HTTP '+r.status); return r.json(); })
+    ]);
+    KARAR.surucu=s; KARAR.model=m; KARAR.hazir=true; KARAR.hata=null;
+    (m.modeller||[]).forEach(x=>{ if(!x.favok) x.favok={}; if(x.orneklem) x.orneklem.forEach(r=>{ x.favok[r.q]=x.favok[r.q]||{}; if(x.favok[r.q].usd==null) x.favok[r.q].usd=r.favok_usd; if(x.favok[r.q].tl==null) x.favok[r.q].tl=r.favok_tl; }); });
+    const sel=$('kararKod');
+    if(sel && !sel.options.length){
+      sel.innerHTML=(m.modeller||[]).map(x=>'<option value="'+esc(x.kod)+'">'+esc(x.kod)+' · '+esc(x.sektor)+(x.tip==='regresyon'?' · model':'')+'</option>').join('');
+      sel.onchange=()=>{ KARAR.secili=sel.value; kararRender(); kararSeriYukle(KARAR.secili).then(()=>kararRender()).catch(()=>{}); };
+    }
+    KARAR.secili=(sel&&sel.value)||(m.modeller[0]&&m.modeller[0].kod);
+    const yb=$('kararYenile'); if(yb) yb.onclick=()=>kararInit(true);
+    try{ if(ENDARS===null && typeof endArsivYukle==='function') await endArsivYukle(); }catch(e){}
+    kararRender();
+    kararSeriYukle(KARAR.secili).then(()=>kararRender()).catch(e=>console.warn('[KTPanel] §462 seri:', e&&e.message));
+  }catch(e){
+    KARAR.hata=e; if(oz) oz.innerHTML='<div class="note">Karar motoru verisi yüklenemedi: '+esc(e.message||e)+'</div>';
+  }finally{ KARAR.yukleniyor=false; }
+}
+
+/* Fiyat serileri: hisse (Yahoo köprüsü) + XU100 (Yahoo; olmazsa endeks arşivi). Statik önizlemede köprü yoksa sessizce çeyrek sonu kapanışlarına düşer. */
+async function kararSeriYukle(kod){
+  if(!kod || KARAR.seri[kod]) return;
+  const cek=async k=>{ try{ const r=await fetch('/api/market?mod=seri&kod='+encodeURIComponent(k)+'&gun=400',{cache:'no-store'}); const j=await r.json(); return (j&&j.ok&&Array.isArray(j.bar)&&j.bar.length>20)? j.bar.map(b=>[b.t,b.c]) : null; }catch(e){ return null; } };
+  const [h,x]=await Promise.all([cek(kod), KARAR.seri.__xu? Promise.resolve(KARAR.seri.__xu) : cek('XU100')]);
+  if(x) KARAR.seri.__xu=x;
+  KARAR.seri[kod]={hisse:h, canli:!!h};
+}
+function kararXU(){ if(KARAR.seri.__xu) return KARAR.seri.__xu; if(ENDARS&&ENDARS.gunler){ const xu=Object.keys(ENDARS.gunler).filter(g=>ENDARS.gunler[g]&&ENDARS.gunler[g].XU100>0).sort().map(g=>[g,ENDARS.gunler[g].XU100]); if(xu.length>20){ KARAR.seri.__xu=xu; return xu; } } return null; }
+function kararKapanis(seri, tarih){ if(!seri||!seri.length) return null; let v=null; for(const [t,c] of seri){ if(t<=tarih) v=c; else break; } return v; }
+function kararCanliFiyat(M){ const s=KARAR.seri[M.kod]; if(s&&s.hisse&&s.hisse.length) return {fiyat:s.hisse[s.hisse.length-1][1], tarih:s.hisse[s.hisse.length-1][0], kaynak:'Yahoo köprüsü'}; const c=jCanliFiyat(M.kod); if(c>0) return {fiyat:c, tarih:'canlı', kaynak:'canlı akış'}; if(M.fiyat_son&&M.fiyat_son.fiyat>0) return {fiyat:M.fiyat_son.fiyat, tarih:M.fiyat_son.tarih, kaynak:'katalog ('+M.fiyat_son.tarih+')'}; return null; }
+
+/* ── Hesap: hedef çeyrek, (varsa) sürücü modeli, konsensüs, sicil ── */
+function kararHesap(M){
+  const S=KARAR.surucu, C=S.ceyrek||{};
+  const qs=Object.keys(C).sort();
+  const gercekQ=new Set(Object.keys(M.favok||{}).filter(q=>M.favok[q]&&(M.favok[q].usd!=null||M.favok[q].tl!=null)));
+  const hedefQ=qs.filter(q=>C[q].tam && !gercekQ.has(q)).pop() || null;
+  const kosuQ=qs.filter(q=>!C[q].tam).pop() || null;
+  const out={hedefQ, kosuQ, fit:null, disinda:[], maks:{}, duyarlilik:{}, bbl:0, tip:M.tip};
+  const fx=hedefQ? (C[hedefQ].usdtry_ort||C[hedefQ].usdtry_son||kararFxQ(hedefQ)) : null;
+  const gecen=hedefQ? M.favok[kararQOnce(hedefQ,4)] : null, onceki=hedefQ? M.favok[kararQOnce(hedefQ,1)] : null;
+  const K=M.konsensus; const konsVar=!!(K && hedefQ && K.donem===hedefQ && (K.favok_tl_mlr>0 || (M.tip==='konsensus_banka'&&K.net_tl_mlr)));
+  /* sürücü modeli (regresyon) */
+  if(M.tip==='regresyon' && M.orneklem && M.surucular){
+    const X=M.orneklem.map(r=>M.surucular.map(d=>r[d.k])), y=M.orneklem.map(r=>r.favok_usd);
+    out.fit=kararEKK(X,y);
+    M.surucular.forEach(d=>{ out.maks[d.k]=Math.max(...M.orneklem.map(r=>r[d.k])); });
+    out.disinda=hedefQ? M.surucular.filter(d=>C[hedefQ][d.k]>out.maks[d.k]) : [];
+    const op=M.operasyon||{}; out.bbl=(op.uretim_mn_ton_ceyrek||7)*(op.bbl_per_ton||7.33);
+    out.duyarlilik={dizel: out.bbl*(op.orta_damitik_pay||0.47), benzin: out.bbl*(op.benzin_pay||0.17)};
+    const tahminUsd=q=>{ const c=C[q]; if(!c||!out.fit) return null; let v=out.fit.b[0]; M.surucular.forEach((d,i)=>{ v+=out.fit.b[i+1]*(c[d.k]??0); }); return v; };
+    if(hedefQ && out.fit){
+      const c=C[hedefQ], usd=tahminUsd(hedefQ);
+      let asagidan=null; if(onceki&&onceki.usd!=null){ asagidan=onceki.usd; M.surucular.forEach(d=>{ const oq=kararQOnce(hedefQ,1); if(out.duyarlilik[d.k]!=null&&C[oq]) asagidan+=(c[d.k]-C[oq][d.k])*out.duyarlilik[d.k]; }); }
+      out.hedef={q:hedefQ, c, usd, fx, tl: usd*fx/1000, alt:(usd-out.fit.se)*fx/1000, ust:(usd+out.fit.se)*fx/1000, altUsd:usd-out.fit.se, ustUsd:usd+out.fit.se,
+        yoyUsd: (gecen&&gecen.usd)? (usd/gecen.usd-1)*100 : null, qoqUsd: (onceki&&onceki.usd)? (usd/onceki.usd-1)*100 : null, gecen, onceki, asagidan, asagidanTl: asagidan!=null? asagidan*fx/1000 : null, kaynak:'model'};
+      if(konsVar){ out.hedef.kons=K; out.hedef.konsFark=(out.hedef.tl/K.favok_tl_mlr-1)*100; out.hedef.konsUsd=K.favok_tl_mlr*1000/fx; }
+    }
+    if(kosuQ && out.fit){ const c=C[kosuQ], usd=tahminUsd(kosuQ), fxk=c.usdtry_ort||c.usdtry_son; out.kosu={q:kosuQ, c, usd, fx:fxk, tl:usd*fxk/1000, gun:c.n, degisim: out.hedef? (usd/out.hedef.usd-1)*100 : null}; }
+  }
+  /* sürücü modeli yok → beklenti = konsensüs */
+  if(!out.hedef && hedefQ){
+    const metrikTl = konsVar ? (M.tip==='konsensus_banka'? K.net_tl_mlr : K.favok_tl_mlr) : null;
+    out.hedef={q:hedefQ, c:C[hedefQ], fx, kons: konsVar?K:null, kaynak:'konsensus',
+      tl: metrikTl, usd: (metrikTl!=null&&fx)? metrikTl*1000/fx : null,
+      yoyTl: (metrikTl!=null&&gecen&&gecen.tl>0&&gecen.tl>0.1*Math.abs(metrikTl))? (metrikTl/gecen.tl-1)*100 : null,
+      qoqTl: (metrikTl!=null&&onceki&&onceki.tl>0&&onceki.tl>0.1*Math.abs(metrikTl))? (metrikTl/onceki.tl-1)*100 : null,
+      yoyUsd: (metrikTl!=null&&fx&&gecen&&gecen.usd>0&&gecen.usd>0.1*Math.abs(metrikTl*1000/fx))? ((metrikTl*1000/fx)/gecen.usd-1)*100 : null,
+      gecen, onceki};
+  }
+  /* Sicil: tek kurumluk "konsensüs" gürültüdür → yalnız ≥3 kurumlu çeyrekler sayılır; ince kalanlar bilgi olarak listelenir */
+  const kgTum=(M.konsensus_gecmis||[]).filter(x=>x.ort_favok_tl>0&&x.gercek_favok_tl>0).map(x=>({q:x.q, n:x.n||0, surpriz:(x.gercek_favok_tl/x.ort_favok_tl-1)*100}));
+  const kg=kgTum.filter(x=>x.n>=3);
+  const medyan=l=>{ if(!l.length) return null; const v=l.map(x=>x.surpriz).sort((a,b)=>a-b); const m=Math.floor(v.length/2); return v.length%2? v[m] : (v[m-1]+v[m])/2; };
+  /* ORTANCA (medyan): tek bir uç çeyrek (ör. EKGYO 2Ç25 +%437) ortalamayı ele geçirmesin */
+  out.konsSicil={liste:kg, tum:kgTum, ort: medyan(kg), ortalama: kg.length? kg.reduce((s,x)=>s+x.surpriz,0)/kg.length : null, ince: kg.length<3, ayniYon: kg.length>=3 && (kg.every(x=>x.surpriz>0)||kg.every(x=>x.surpriz<0))};
+  return out;
+}
+
+/* ── Fiyatlanma: göreli getiri · PD/FAVÖK (TTM ve ileri) bandı · hedef fiyat ── */
+function kararFiyatlanma(M, H){
+  const S=KARAR.surucu, seri=KARAR.seri[M.kod]||{};
+  const hisse=seri.hisse, xu=kararXU(), PX=M.fiyat_ceyrek_sonu||{};
+  const cf=kararCanliFiyat(M); const fiyat=cf?cf.fiyat:null, fiyatTarih=cf?cf.tarih:null;
+  const ar=H.hedefQ? kararQAralik(H.hedefQ) : null, onceQ=H.hedefQ? kararQOnce(H.hedefQ,1) : null, onceAr=onceQ? kararQAralik(onceQ) : null;
+  let ceyrek=null, qtd=null, supheli=false;
+  if(ar){
+    const h0=hisse? kararKapanis(hisse, onceAr.son) : PX[onceQ];
+    const h1=hisse? kararKapanis(hisse, ar.son) : PX[H.hedefQ];
+    const x0=kararKapanis(xu, onceAr.son), x1=kararKapanis(xu, ar.son), x2=xu? xu[xu.length-1][1] : null;
+    if(h0&&h1){ ceyrek={hisse:(h1/h0-1)*100, xu:(x0&&x1)?(x1/x0-1)*100:null, h0, h1}; ceyrek.goreli=(ceyrek.xu!=null)? ((1+ceyrek.hisse/100)/(1+ceyrek.xu/100)-1)*100 : null; if(ceyrek.hisse<-45 && !(M.bolunme&&M.bolunme[H.hedefQ])) supheli=true; }
+    if(h1&&fiyat){ qtd={hisse:(fiyat/h1-1)*100, xu:(x1&&x2)?(x2/x1-1)*100:null}; qtd.goreli=(qtd.xu!=null)? ((1+qtd.hisse/100)/(1+qtd.xu/100)-1)*100 : null; }
+  }
+  /* PD/FAVÖK ($): TTM gerçek + ileri (3 gerçek + beklenti) · bant: çeyrek sonu fiyat × sermaye / kur ÷ TTM FAVÖK */
+  const fxNow=(()=>{ const a=S.usdtry_ay_sonu||{}; const k=Object.keys(a).sort().pop(); return k? a[k] : null; })();
+  const F=M.favok||{}; const fq=Object.keys(F).filter(q=>F[q].usd!=null).sort();
+  const sonlar=H.hedefQ? fq.filter(q=>q<H.hedefQ) : fq;
+  const son4=sonlar.slice(-4), son3=sonlar.slice(-3);
+  const ttmUsd=son4.length===4? son4.reduce((s,q)=>s+F[q].usd,0) : null;
+  const pdUsd=(fiyat&&fxNow&&M.sermaye_mn)? fiyat*M.sermaye_mn/fxNow : null;
+  const bekUsd=H.hedef? H.hedef.usd : null;
+  const ttm=(pdUsd&&ttmUsd>0)? pdUsd/ttmUsd : null;
+  const fwd=(pdUsd&&son3.length===3&&bekUsd!=null)? (()=>{ const t=son3.reduce((s,q)=>s+F[q].usd,0)+bekUsd; return t>0? pdUsd/t : null; })() : null;
+  let band=[];
+  if(M.band && M.band.length){ band=M.band.filter(b=>!M.band_bas||b.q>=M.band_bas).map(b=>({q:b.q, v:b.pd_favok})); }
+  else { for(let i=3;i<fq.length;i++){ const q=fq[i]; const px=PX[q], fx=kararFxQ(q); if(!px||!fx) continue; const t=fq.slice(i-3,i+1).reduce((s,x)=>s+F[x].usd,0); if(t<=0) continue; band.push({q, v:px*M.sermaye_mn/fx/t}); } }
+  const bv=band.map(b=>b.v).filter(v=>v>0).sort((a,b)=>a-b);
+  const medyan=bv.length? bv[Math.floor(bv.length/2)] : null;
+  const yuzdelik=(v)=> (v!=null&&bv.length>=4)? bv.filter(x=>x<=v).length/bv.length*100 : null;
+  const hedefF=M.hedef_fiyat||{}; const hedefMesafe=(hedefF.ort&&fiyat)? (hedefF.ort/fiyat-1)*100 : null;
+  return {fiyat, fiyatTarih, fiyatKaynak:cf?cf.kaynak:'—', canli:!!hisse, xuVar:!!xu, ceyrek, qtd, supheli, pdUsd, ttm, fwd, medyan, bant:{min:bv[0], maks:bv[bv.length-1], n:bv.length}, fwdYuzdelik:yuzdelik(fwd), ttmYuzdelik:yuzdelik(ttm), hedefF, hedefMesafe, fxNow, bekKaynak:H.hedef?H.hedef.kaynak:null};
+}
+
+/* ── Puan kartı: her bileşen −1/0/+1, gerekçesiyle. Sinyal = toplam/bileşen sayısı. ── */
+const medyanSurpriz=l=>{ const v=l.map(x=>x.surpriz).sort((a,b)=>a-b); const m=Math.floor(v.length/2); return v.length%2? v[m] : (v[m-1]+v[m])/2; };
+function kararPuan(M, H, F){
+  const P=[]; const ekle=(ad,deger,puan,neden,bilgi)=>P.push({ad,deger,puan,neden,bilgi:!!bilgi});
+  if(H.hedef&&H.hedef.kaynak==='model'){
+    if(H.hedef.konsFark!=null){ const f=H.hedef.konsFark; ekle('Model − konsensüs', kararIsaret(f,0,'%'), f>10?1:f<-10?-1:0, f>10?'Model konsensüsün belirgin üstünde: pozitif sürpriz alanı':f<-10?'Model konsensüsün altında: hayal kırıklığı riski':'Model ile konsensüs ±%10 içinde: sürpriz alanı dar'); }
+    else ekle('Model − konsensüs','—',0,'Bu çeyrek için konsensüs yok (model tek başına)',true);
+  }
+  if(H.konsSicil&&H.konsSicil.ort!=null&&!H.konsSicil.ince){ const o=H.konsSicil.ort; ekle('Konsensüs sicili (son '+H.konsSicil.liste.length+' çeyrek · ≥3 kurum · sürpriz ortancası)', kararIsaret(o,0,'%'), o>10?1:o<-10?-1:0, o>10?'Kurumlar sistematik EKSİK tahmin etti; eğilim pozitif sürpriz':o<-10?'Kurumlar sistematik FAZLA iyimser; negatif sürpriz eğilimi':'Konsensüs yansız'); }
+  else if(H.konsSicil&&H.konsSicil.tum&&H.konsSicil.tum.length){ const o=medyanSurpriz(H.konsSicil.tum); ekle('Konsensüs sicili (ince: '+H.konsSicil.tum.length+' çeyrek, çoğu <3 kurum)', kararIsaret(o,0,'%'), 0, 'Tek-iki kurumluk tahmin geçmişi gürültüdür — bilgi, puanlanmaz', true); }
+  if(H.kosu&&H.kosu.degisim!=null){ const d=H.kosu.degisim, erken=H.kosu.gun<10; ekle('Sürücü ivmesi ('+kararQAd(H.kosu.q)+' koşu hızı · '+H.kosu.gun+' gün vs '+kararQAd(H.hedefQ)+')', kararIsaret(d,0,'%'), erken?0:(d>10?1:d<-10?-1:0), erken?'Çeyreğin ilk 10 günü: yön bilgi amaçlı, puanlanmaz':d>10?'Sonraki çeyrek modelde daha güçlü: bilanço sonrası da destek':d<-10?'Sonraki çeyrek modelde zayıflıyor: "iyi bilanço, zayıf rehberlik" riski':'Koşu hızı yatay'); }
+  if(F.ceyrek&&F.ceyrek.goreli!=null){ const g=F.ceyrek.goreli; if(F.supheli) ekle('Fiyatlanma: çeyrek içi göreli getiri', kararIsaret(g,0,'%'), 0, '⚠ Çeyrek içi düşüş −%45’i aşıyor: sermaye işlemi (bedelsiz/bölünme) mi, gerçek düşüş mü? Doğrulanana dek puanlanmaz', true);
+    else ekle('Fiyatlanma: çeyrek içi göreli getiri (XU100’e karşı)', kararIsaret(g,0,'%'), g>30?-1:g<-10?1:0, g>30?'Hisse çeyrekte endeksten çok ayrıştı: iyi haberin büyük kısmı fiyatta':g<-10?'Hisse endeksin gerisinde kaldı: beklenti fiyata yansımamış':'Göreli hareket ılımlı'); }
+  if(F.fwd!=null&&F.fwdYuzdelik!=null){ const y=F.fwdYuzdelik; ekle('Değerleme: PD/FAVÖK ileri ('+trN(F.fwd,1)+'x) kendi bandında', '%'+trN(y,0)+' yüzdelik', y<25?1:y>75?-1:0, y<25?'Kendi tarihine göre ucuz (döngü tepesi iskontosu olabilir — kalıcılık sorusu açık)':y>75?'Kendi tarihine göre pahalı':'Bant ortasında'); }
+  else if(F.fwd!=null) ekle('Değerleme: PD/FAVÖK ileri', trN(F.fwd,1)+'x', 0, 'Bant için yeterli çeyrek yok (≥4 gerekli)', true);
+  if(F.hedefMesafe!=null){ const m=F.hedefMesafe, k=F.hedefF.kurum||0, bayat=!!F.hedefF.bayat, asiri=Math.abs(m)>60;
+    if(bayat||k<3||asiri) ekle('Hedef fiyat mesafesi ('+k+' kurum'+(F.hedefF.tarih?' · son '+kararTrTarih(F.hedefF.tarih):'')+')', kararIsaret(m,0,'%'), 0, bayat?'Hedefler 6+ aydır yenilenmemiş (bayat) — puanlanmaz':k<3?'3’ten az kurum: tekil görüş, puanlanmaz':'Mesafe ±%60’ı aşıyor: hedefler fiyat şokundan sonra revize edilmemiş görünüyor (bedelsiz/çöküş) — puanlanmaz', true);
+    else ekle('Hedef fiyat mesafesi ('+k+' kurum ort.)', kararIsaret(m,0,'%'), m>15?1:m<0?-1:0, m>15?'Kurum hedefleri belirgin yukarıda':m<0?'Fiyat kurum hedeflerinin üstünde: revizyon gelmezse tavan':'Hedefler fiyata yakın: revizyon döngüsü belirleyici'); }
+  const puanli=P.filter(p=>!p.bilgi); const toplam=puanli.reduce((s,x)=>s+x.puan,0), n=puanli.length;
+  const oran=n? toplam/n : 0;
+  let etiket;
+  if(n<2) etiket={ad:'KAPSAM YOK', sinif:'', aciklama:'Puanlanabilir bileşen 2’den az (konsensüs/hedef yok) — yalnız fiyat merceği; sinyal verilmez.'};
+  else if(n===2) etiket={ad:'ZAYIF KAPSAM', sinif:'', aciklama:'Yalnız iki bileşen puanlanabildi ('+(toplam>=0?'+':'')+toplam+'/2): yön için konsensüs ya da sürücü modeli gerekli; fiyat mercekleri tek başına sinyal sayılmaz.'};
+  else if(oran>=0.5) etiket={ad:'OLUMLU', sinif:'up', aciklama:'Beklenti güçlü, fiyatlanma tam değil — pozisyon koru/artır adayı.'};
+  else if(oran<=-0.5) etiket={ad:'OLUMSUZ', sinif:'down', aciklama:'Beklenti ile fiyat ayrışmış — azaltma adayı.'};
+  else if(oran>0) etiket={ad:'NÖTR-POZİTİF', sinif:'up', aciklama:'Sürpriz olası ama kısmen fiyatta; ekleme için bilanço sonrası ivmeye bak.'};
+  else if(oran<0) etiket={ad:'NÖTR-NEGATİF', sinif:'down', aciklama:'Beklenti iyi görünse de fiyat/ivme destek vermiyor; koru, ekleme yapma.'};
+  else etiket={ad:'NÖTR', sinif:'', aciklama:'Belirgin kenar yok.'};
+  return {P, toplam, n, oran, etiket};
+}
+
+function kararBozucular(M,H,F){
+  const L=[];
+  if(H.hedef&&H.hedef.kaynak==='model'&&M.surucular){ M.surucular.forEach(d=>{ const v=H.hedef.c[d.k]; const med=M.orneklem.map(r=>r[d.k]).sort((a,b)=>a-b); const m=med[Math.floor(med.length/2)]; L.push(d.ad+' '+trN(v,0)+' → '+trN(Math.max(m, v*0.6),0)+' '+d.birim+' altına 4 hafta kalırsa (koşu hızı modeli '+kararQAd(H.kosuQ||'')+' için konsensüsün altına iner)'); }); }
+  if(H.hedef&&H.hedef.kons&&H.hedef.kons.favok_tl_mlr>0) L.push('Bilanço FAVÖK < '+trN(H.hedef.kons.favok_tl_mlr*0.9,1)+' mlr ₺ (konsensüs −%10): '+(H.hedef.kaynak==='model'?'model yanlış, sürücü-FAVÖK bağı kopmuş demektir — tezi kapat':'beklenti kırıldı — tezi gözden geçir'));
+  if(F.hedefMesafe!=null&&F.hedefMesafe<10) L.push('Bilanço sonrası 2 hafta içinde kurum hedefleri yukarı revize edilmezse: fiyat kurum hedeflerinin üstünde kalır, çarpan daralması riski');
+  if(F.ceyrek&&F.ceyrek.goreli!=null&&F.ceyrek.goreli>30) L.push('Çeyrek içi +%'+trN(F.ceyrek.goreli,0)+' göreli primin bilanço günü korunamaması (al-söylentiyi-sat-haberi): ilk 3 günde XU100’e göre −%8 ve üzeri');
+  (M.riskler||[]).slice(0,3).forEach(r=>L.push(r));
+  if(!L.length) L.push('Konsensüs/sürücü verisi yok: bozucu tanımlanamadı — tezi yazarken elle gir');
+  return L;
+}
+
+/* ── XK030 panosu: tüm modeller tek tabloda, puana göre ── */
+function kararPanoSatirlar(){
+  const L=(KARAR.model&&KARAR.model.modeller||[]).map(M=>{ try{ const H=kararHesap(M), F=kararFiyatlanma(M,H), P=kararPuan(M,H,F); return {M,H,F,P}; }catch(e){ console.warn('[KTPanel] §463 pano', M.kod, e&&e.message); return null; } }).filter(Boolean);
+  const sira=x=> x.P.n>=3? 2 : x.P.n===2? 1 : 0;   /* sinyalli → zayıf kapsam → kapsam yok */
+  L.sort((a,b)=> (sira(b)-sira(a)) || (b.P.oran-a.P.oran) || (b.P.toplam-a.P.toplam) || a.M.kod.localeCompare(b.M.kod));
+  return L;
+}
+function kararPanoHtml(){
+  const L=kararPanoSatirlar(); if(!L.length) return '';
+  const hq=L[0].H.hedefQ;
+  let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>XK030 PANOSU <span class="thin">'+L.length+' hisse · '+(hq?kararQAd(hq)+' beklentisi':'')+' · puan/bileşen oranına göre · satıra tıkla</span></summary>';
+  h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl" id="kararPanoTbl"><thead><tr><th>KOD</th><th>SEKTÖR · TIER</th><th>BEKLENTİ '+(hq?kararQAd(hq):'')+'</th><th>YoY ₺</th><th>KONS. SİCİLİ</th><th>ÇEYREK GÖRELİ</th><th>PD/FAVÖK İLERİ</th><th>HEDEF</th><th>PUAN</th><th>SİNYAL</th></tr></thead><tbody>';
+  L.forEach(({M,H,F,P})=>{
+    const hd=H.hedef||{}; const bek = hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
+    const yoy = hd.kaynak==='model'? (hd.yoyUsd!=null? kararIsaret(hd.yoyUsd,0,'% $'):'—') : (hd.yoyTl!=null? kararIsaret(hd.yoyTl,0,'%'):'—');
+    const sic = (H.konsSicil.ort!=null&&!H.konsSicil.ince)? kararIsaret(H.konsSicil.ort,0,'%')+(H.konsSicil.ayniYon?' ●':'') : (H.konsSicil.tum&&H.konsSicil.tum.length? '<span class="sub">ince</span>' : '—');
+    const gor = F.ceyrek&&F.ceyrek.goreli!=null? kararIsaret(F.ceyrek.goreli,0,'%')+(F.supheli?' ⚠':'') : '—';
+    const pdf = F.fwd!=null? trN(F.fwd,1)+'x'+(F.fwdYuzdelik!=null?' <span class="sub">%'+trN(F.fwdYuzdelik,0)+'</span>':'') : '—';
+    const hed = F.hedefMesafe!=null? ((F.hedefF.kurum||0)<3||Math.abs(F.hedefMesafe)>60||F.hedefF.bayat? '<span class="sub">'+kararIsaret(F.hedefMesafe,0,'%')+' ('+(F.hedefF.kurum||0)+')</span>' : kararIsaret(F.hedefMesafe,0,'%')+' <span class="sub">('+F.hedefF.kurum+')</span>') : '—';
+    const sec = M.kod===KARAR.secili;
+    h+='<tr data-kkod="'+esc(M.kod)+'" style="cursor:pointer'+(sec?';background:rgba(18,138,102,.08)':'')+'"><td style="font-weight:700">'+esc(M.kod)+(M.tip==='regresyon'?' <span class="sub">▣</span>':'')+'</td><td style="font-family:var(--sans);color:var(--muted)">'+esc(M.sektor)+' · '+esc(M.tier)+'</td><td>'+bek+'</td><td class="'+(String(yoy).startsWith('+')?'up':String(yoy).startsWith('−')?'down':'')+'">'+yoy+'</td><td class="'+(sic.startsWith('+')?'up':sic.startsWith('−')?'down':'')+'">'+sic+'</td><td class="'+(gor.startsWith('+')?'up':gor.startsWith('−')?'down':'')+'">'+gor+'</td><td>'+pdf+'</td><td class="'+(hed.startsWith('+')?'up':hed.startsWith('−')?'down':'')+'">'+hed+'</td><td style="font-weight:700" class="'+(P.n<2?'':P.toplam>0?'up':P.toplam<0?'down':'')+'">'+(P.n<2?'—':(P.toplam>=0?'+':'')+P.toplam+'/'+P.n)+'</td><td class="'+P.etiket.sinif+'" style="font-weight:700;font-size:10px">'+P.etiket.ad+'</td></tr>';
+  });
+  h+='</tbody></table></div><div class="sub">▣ = kalibre sürücü modeli (TUPRS). Gri değerler bilgi amaçlı (ince kapsam: <3 kurum, ±%60 üstü hedef mesafesi, bayat hedef) — puana girmez. Beklenti: model varsa model FAVÖK, yoksa kurum ortalaması (mlr ₺; banka: net kâr). YoY: beklenti / geçen yılın aynı çeyreği gerçek (₺ nominal — TMS-29 enflasyon düzeltmeli, ~%30 enflasyon ile okunur). Kons. sicili: ≥3 kurumlu çeyreklerde gerçek − ortalama tahmin, ORTANCA (● = hep aynı yönde). Göreli: çeyrek içi hisse − XU100 (⚠ = −%45 üzeri düşüş, sermaye işlemi şüphesi). PD/FAVÖK ileri = PD($) / (son 3 gerçek + beklenti), yüzdelik kendi bandında. Puan: −1/0/+1 bileşenlerin toplamı / sayısı.</div></details>';
+  return h;
+}
+
+function kararRender(){
+  const ML=(KARAR.model&&KARAR.model.modeller||[]);
+  const M=ML.find(x=>x.kod===KARAR.secili) || ML[0];
+  if(!M){ return; }
+  const H=kararHesap(M), F=kararFiyatlanma(M,H), PK=kararPuan(M,H,F), S=KARAR.surucu;
+  const son=S.son||{};
+  const hq=H.hedef, kq=H.kosu, model=hq&&hq.kaynak==='model';
+  const chip=(l,v,s,cls)=>'<div class="card" style="padding:7px 11px"><div class="lbl">'+l+'</div><div class="val '+(cls||'')+'" style="font-size:14px">'+v+'</div><div class="sub">'+s+'</div></div>';
+  /* ── Pano ── */
+  const pano=$('kararPano'); if(pano){ pano.innerHTML=kararPanoHtml(); pano.querySelectorAll('tr[data-kkod]').forEach(tr=>tr.onclick=()=>{ KARAR.secili=tr.dataset.kkod; const sel=$('kararKod'); if(sel) sel.value=KARAR.secili; kararRender(); kararSeriYukle(KARAR.secili).then(()=>kararRender()).catch(()=>{}); try{ $('kararOzet').scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){} }); const dw=$('kararPanoWrap'); if(dw) dw.ontoggle=()=>{ KARAR.panoAcik=dw.open; }; }
+  /* ── Özet çipleri ── */
+  let oz='<div class="lbl" style="margin-top:10px">'+esc(M.kod)+' · '+esc(M.ad||'')+' <span class="thin">'+esc(M.sektor)+' · Tier '+esc(M.tier)+' · '+(model?'sürücü modeli KALİBRE':'sürücü modeli yok → konsensüs iskeleti')+'</span></div>';
+  oz+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:6px">';
+  if(model) oz+=chip('SÜRÜCÜ · '+esc(kararTrTarih(son.tarih)), 'Dizel '+trN(son.dizel,1)+' <span class="sub">$/v</span>', 'Benzin '+trN(son.benzin,1)+' · Brent '+trN(son.brent,1)+'<br>'+kararQAd(hq.q)+' ort: dizel '+trN(hq.c.dizel,1)+' · benzin '+trN(hq.c.benzin,1));
+  else oz+=chip('SÜRÜCÜ MODELİ', '<span class="sub" style="font-size:12px">'+(M.tier==='C'?'yok (Tier C)':'planlı (Tier '+esc(M.tier)+')')+'</span>', esc(M.surucu_plani||'—'));
+  if(hq&&model) oz+=chip('MODEL · '+kararQAd(hq.q)+' FAVÖK', trN(hq.tl,1)+' <span class="sub">mlr ₺</span>', trN(hq.usd/1000,2)+' mlr $ · aralık '+trN(hq.alt,0)+'–'+trN(hq.ust,0)+'<br>YoY '+kararIsaret(hq.yoyUsd,0,'%')+' · QoQ '+kararIsaret(hq.qoqUsd,0,'%')+' ($)');
+  if(hq&&hq.kons) oz+=chip((model?'KONSENSÜS':'BEKLENTİ · KONSENSÜS')+' · '+esc(hq.kons.kurum)+' kurum', trN(M.tip==='konsensus_banka'?hq.kons.net_tl_mlr:hq.kons.favok_tl_mlr,1)+' <span class="sub">mlr ₺'+(M.tip==='konsensus_banka'?' net kâr':'')+'</span>', (model?'model farkı <b class="'+(hq.konsFark>=0?'up':'down')+'">'+kararIsaret(hq.konsFark,0,'%')+'</b>':'YoY ₺ '+kararIsaret(hq.yoyTl,0,'%')+' · QoQ '+kararIsaret(hq.qoqTl,0,'%')+(hq.yoyUsd!=null?' · YoY $ '+kararIsaret(hq.yoyUsd,0,'%'):''))+(H.konsSicil.ort!=null?'<br>sicil: son '+H.konsSicil.liste.length+' çeyrek sürpriz ortancası '+kararIsaret(H.konsSicil.ort,0,'%'):'<br>'+(hq.kons.kurum<3?'⚠ ince konsensüs':'')));
+  else if(hq) oz+=chip('BEKLENTİ · KONSENSÜS','—','bu çeyrek için kurum tahmini yok'+(H.konsSicil.ort!=null?'<br>sicil: son '+H.konsSicil.liste.length+' çeyrek '+kararIsaret(H.konsSicil.ort,0,'%'):''));
+  oz+=chip('FİYATLANMA', F.ceyrek&&F.ceyrek.goreli!=null? 'göreli '+kararIsaret(F.ceyrek.goreli,0,'%')+(F.supheli?' ⚠':'') : (F.fwd!=null? 'PD/FAVÖK '+trN(F.fwd,1)+'x':'—'), (F.ceyrek?kararQAd(H.hedefQ)+': hisse '+kararIsaret(F.ceyrek.hisse,0,'%')+(F.ceyrek.xu!=null?' · XU100 '+kararIsaret(F.ceyrek.xu,0,'%'):''):'')+(F.fwd!=null?'<br>PD/FAVÖK ileri '+trN(F.fwd,1)+'x'+(F.medyan!=null?' · bant medyanı '+trN(F.medyan,1)+'x':''):''));
+  oz+=chip('SİNYAL · puan '+(PK.n<2?'—':(PK.toplam>=0?'+':'')+PK.toplam+'/'+PK.n), '<span class="'+PK.etiket.sinif+'">'+PK.etiket.ad+'</span>', esc(PK.etiket.aciklama)+(M.bilanco&&M.bilanco.beklenen?'<br>bilanço (beklenen): '+kararTrTarih(M.bilanco.beklenen):''));
+  oz+='</div>';
+  if(model&&H.disinda.length) oz+='<div class="note" style="margin-top:8px;border-color:#C9612B">⚠ Ekstrapolasyon: '+H.disinda.map(d=>esc(d.ad)+' '+trN(hq.c[d.k],1)+' $/v, örneklem maksimumu '+trN(H.maks[d.k],1)).join(' · ')+'. Model doğrusal uzatıyor; aşağıdan-yukarı kontrol (verim × hacim): '+(hq.asagidan!=null? trN(hq.asagidan/1000,2)+' mlr $ ≈ '+trN(hq.asagidanTl,0)+' mlr ₺':'—')+'. İki yöntem yakınsa güven artar; ayrışıyorsa düşük olanı baz al.</div>';
+  if(M.bolunme) oz+='<div class="sub" style="margin-top:6px">Fiyat serisi düzeltmesi: '+Object.entries(M.bolunme).map(([q,c])=>kararQAd(q)+' öncesi ×'+trN(c,4)).join(' · ')+' (bedelsiz/bölünme; Fintables çeyrek sonu kapanışı düzeltilmemişti).</div>';
+  $('kararOzet').innerHTML=oz;
+  /* ── Grafikler ── */
+  $('kararGrafik').innerHTML= model? kararSurucuGrafik(M,H) : '';
+  /* ── Model / beklenti bölümü ── */
+  let md='';
+  if(model){
+    md+='<div class="lbl" style="margin-top:12px">MODEL · '+esc(M.hedef.ad)+' = sabit + Σ katsayı × sürücü <span class="thin">(EKK · '+H.fit.n+' çeyrek · R² '+trN(H.fit.r2,2)+' · hata ±'+trN(H.fit.se,0)+' mn $)</span></div>';
+    md+='<div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>TERİM</th><th>KATSAYI</th><th>OKUMA</th><th>AŞAĞIDAN-YUKARI</th></tr></thead><tbody>';
+    md+='<tr><td>Sabit</td><td>'+trN(H.fit.b[0],0)+'</td><td style="text-align:left;font-family:var(--sans);color:var(--muted)">crack sıfırken FAVÖK (opex, enerji, diğer segmentler — negatif olması olağan)</td><td>—</td></tr>';
+    M.surucular.forEach((d,i)=>{ md+='<tr><td>'+esc(d.ad)+'</td><td>'+trN(H.fit.b[i+1],1)+'</td><td style="text-align:left;font-family:var(--sans);color:var(--muted)">1 $/v crack ≈ '+trN(H.fit.b[i+1],0)+' mn $ FAVÖK/çeyrek</td><td>'+(H.duyarlilik[d.k]!=null? trN(H.duyarlilik[d.k],0)+' mn $ <span class="sub">('+trN(H.bbl,0)+' mn v × pay)</span>':'—')+'</td></tr>'; });
+    md+='</tbody></table></div>';
+    md+='<div class="sub">Sürücüler eşhareketli (dizel ve benzin crack’i birlikte açılır/kapanır): katsayılar ayrı ayrı değil TOPLAM duyarlılık olarak okunmalı (model '+trN(H.fit.b.slice(1).reduce((a,b)=>a+b,0),0)+' vs aşağıdan-yukarı '+trN(Object.values(H.duyarlilik).reduce((a,b)=>a+b,0),0)+' mn $ / 1 $ eşzamanlı artış). Bant: ±1 hata (yaklaşık %68 güven).</div>';
+    md+=kararFitGrafik(M,H);
+    if(kq) md+='<div class="sub" style="margin-top:6px">Koşu hızı '+kararQAd(kq.q)+' ('+kq.gun+' gün): dizel '+trN(kq.c.dizel,1)+' · benzin '+trN(kq.c.benzin,1)+' → model '+trN(kq.usd/1000,2)+' mlr $ ≈ '+trN(kq.tl,0)+' mlr ₺ ('+kararIsaret(kq.degisim,0,'%')+' vs '+kararQAd(H.hedefQ)+' modeli). Brent '+trN(kq.c.brent,1)+' $ (çeyrek içi '+kararIsaret(kq.c.dBrent,1)+').</div>';
+  } else {
+    md+='<div class="lbl" style="margin-top:12px">BEKLENTİ · FAVÖK GERÇEKLEŞEN ve '+(hq?kararQAd(hq.q):'')+' KONSENSÜSÜ <span class="thin">çubuk gerçek ($ mn) · içi boş nokta: kurum ortalaması (₺→$ çeyrek ort. kur)</span></div>';
+    md+=kararFitGrafik(M,H);
+    md+='<div class="sub" style="margin-top:6px">Sürücü planı (Tier '+esc(M.tier)+'): '+esc(M.surucu_plani||'—')+'.'+(M.kaynak_notu?' Kaynak notu: '+esc(M.kaynak_notu)+'.':'')+' Model kurulunca bu bölüm TUPRS’taki gibi katsayı tablosuna döner.</div>';
+  }
+  $('kararModel').innerHTML=md;
+  /* ── Fiyatlanma ── */
+  let fy='<div class="lbl" style="margin-top:12px">NE KADARI FİYATLANMIŞ? <span class="thin">göreli getiri · çarpan bandı · kurum hedefleri · konsensüs sicili</span></div>';
+  fy+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px">';
+  fy+='<div><table class="arzTbl"><thead><tr><th>GETİRİ</th><th>HİSSE</th><th>XU100</th><th>GÖRELİ</th></tr></thead><tbody>';
+  if(F.ceyrek) fy+='<tr><td>'+kararQAd(H.hedefQ)+' içi</td><td class="'+(F.ceyrek.hisse>=0?'up':'down')+'">'+kararIsaret(F.ceyrek.hisse,1,'%')+'</td><td>'+kararIsaret(F.ceyrek.xu,1,'%')+'</td><td class="'+(F.ceyrek.goreli>=0?'up':'down')+'">'+kararIsaret(F.ceyrek.goreli,1,'%')+(F.supheli?' ⚠':'')+'</td></tr>';
+  if(F.qtd) fy+='<tr><td>Çeyrek sonundan bugüne</td><td class="'+(F.qtd.hisse>=0?'up':'down')+'">'+kararIsaret(F.qtd.hisse,1,'%')+'</td><td>'+kararIsaret(F.qtd.xu,1,'%')+'</td><td class="'+(F.qtd.goreli>=0?'up':'down')+'">'+kararIsaret(F.qtd.goreli,1,'%')+'</td></tr>';
+  if(!F.ceyrek&&!F.qtd) fy+='<tr><td colspan="4" style="text-align:left;color:var(--muted)">fiyat serisi alınamadı</td></tr>';
+  fy+='</tbody></table><div class="sub">Fiyat '+(F.fiyat?trN(F.fiyat,2)+' ₺ ('+esc(F.fiyatKaynak||'')+')':'—')+(F.canli?' · getiriler Yahoo köprüsü serisinden':' · getiriler çeyrek sonu kapanışlarından (köprü serisi yok)')+(F.xuVar?'':' · XU100 serisi yok')+(F.supheli?'<br>⚠ Çeyrek içi düşüş −%45’i aşıyor: Fintables serisi bedelsiz/bölünmeyi düzeltmemiş olabilir (AKFYE/BIMAS/CVKMD’de görüldü) ya da fon-krizi satışı (§457) gerçek. Doğrulamadan puanlanmaz.':'')+'</div></div>';
+  fy+='<div><table class="arzTbl"><thead><tr><th>PD/FAVÖK ($)</th><th>DEĞER</th><th>BANT YÜZDELİK</th></tr></thead><tbody>';
+  fy+='<tr><td>TTM (son 4 gerçek)</td><td>'+(F.ttm!=null?trN(F.ttm,1)+'x':'—')+'</td><td>'+(F.ttmYuzdelik!=null?'%'+trN(F.ttmYuzdelik,0):'—')+'</td></tr>';
+  fy+='<tr><td>İleri (3 gerçek + '+(model?'model':'konsensüs')+' '+kararQAd(H.hedefQ)+')</td><td><b>'+(F.fwd!=null?trN(F.fwd,1)+'x':'—')+'</b></td><td>'+(F.fwdYuzdelik!=null?'%'+trN(F.fwdYuzdelik,0):'—')+'</td></tr>';
+  fy+='<tr><td>Bant ('+F.bant.n+' çeyrek sonu)</td><td>'+(F.bant.min!=null?trN(F.bant.min,1)+'–'+trN(F.bant.maks,1)+'x':'—')+'</td><td>medyan '+(F.medyan!=null?trN(F.medyan,1)+'x':'—')+'</td></tr>';
+  fy+='<tr><td>Hedef fiyat ort. ('+(F.hedefF.kurum||'—')+' kurum)</td><td>'+(F.hedefF.ort?trN(F.hedefF.ort,1)+' ₺':'—')+'</td><td class="'+(F.hedefMesafe>=0?'up':'down')+'">'+kararIsaret(F.hedefMesafe,1,'%')+'</td></tr>';
+  fy+='</tbody></table><div class="sub">PD = fiyat × '+trN(M.sermaye_mn,0)+' mn pay / USDTRY '+(F.fxNow?trN(F.fxNow,2):'—')+'. '+(M.tip==='konsensus_banka'?'Banka: FAVÖK tanımsız, çarpan satırları boş; F/K ve PD/DD sonraki tur.':'Döngü tepesinde çarpanın bant altına inmesi olağandır: piyasa marjı kalıcı saymaz — "ucuz" okuması kalıcılık sorusuyla birlikte okunmalı.')+(F.bant.n&&F.bant.n<8?' Bant kısa ('+F.bant.n+' çeyrek) — yüzdelik kaba.':'')+'</div></div>';
+  if(H.konsSicil.tum&&H.konsSicil.tum.length){ fy+='<div><table class="arzTbl"><thead><tr><th>KONSENSÜS SİCİLİ</th><th>N</th><th>ORT. TAHMİN</th><th>GERÇEK</th><th>SÜRPRİZ</th></tr></thead><tbody>';
+    (M.konsensus_gecmis||[]).filter(x=>x.ort_favok_tl>0&&x.gercek_favok_tl>0).forEach(x=>{ const s=(x.gercek_favok_tl/x.ort_favok_tl-1)*100; const ince=(x.n||0)<3; fy+='<tr'+(ince?' style="color:var(--muted)"':'')+'><td>'+kararQAd(x.q)+(ince?' <span class="sub">ince</span>':'')+'</td><td>'+(x.n||'—')+'</td><td>'+trN(x.ort_favok_tl,2)+'</td><td>'+trN(x.gercek_favok_tl,2)+'</td><td class="'+(ince?'':(s>=0?'up':'down'))+'">'+kararIsaret(s,0,'%')+'</td></tr>'; });
+    fy+='</tbody></table><div class="sub">mlr ₺ FAVÖK · kurum ortalaması (Fintables). Yalnız ≥3 kurumlu çeyrekler puana girer ("ince" satırlar bilgi). Sürpriz hep aynı yöndeyse kurumlar sürücüyü modele almıyor demektir — sinyalde ayrı puan.</div></div>'; }
+  fy+='</div>';
+  $('kararFiyat').innerHTML=fy;
+  /* ── Puan kartı + sinyal ── */
+  let sg='<div class="lbl" style="margin-top:12px">PUAN KARTI → SİNYAL <span class="thin">her bileşen −1 / 0 / +1 · eşikler kodda açık · sinyal = toplam / bileşen · "tavsiye" değil, karar desteği</span></div>';
+  sg+='<div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>BİLEŞEN</th><th>DEĞER</th><th>PUAN</th><th>GEREKÇE</th></tr></thead><tbody>';
+  PK.P.forEach(p=>{ sg+='<tr'+(p.bilgi?' style="color:var(--muted)"':'')+'><td>'+esc(p.ad)+(p.bilgi?' <span class="sub">(bilgi)</span>':'')+'</td><td>'+p.deger+'</td><td class="'+(p.puan>0?'up':p.puan<0?'down':'')+'" style="font-weight:700">'+(p.bilgi?'·':(p.puan>0?'+1':p.puan<0?'−1':'0'))+'</td><td style="text-align:left;font-family:var(--sans);color:var(--muted);white-space:normal">'+esc(p.neden)+'</td></tr>'; });
+  sg+='<tr><td><b>TOPLAM</b></td><td>'+PK.n+' bileşen</td><td class="'+PK.etiket.sinif+'" style="font-weight:700">'+(PK.n<2?'—':(PK.toplam>=0?'+':'')+PK.toplam)+'</td><td style="text-align:left;font-family:var(--sans);white-space:normal"><b class="'+PK.etiket.sinif+'">'+PK.etiket.ad+'</b> — '+esc(PK.etiket.aciklama)+'</td></tr>';
+  sg+='</tbody></table></div>';
+  const boz=kararBozucular(M,H,F);
+  sg+='<div class="lbl" style="margin-top:10px">TEZİ BOZACAKLAR <span class="thin">(otomatik taslak — Journal’a aktarılır)</span></div><ul style="margin:4px 0 0 16px;font-size:11px;line-height:1.6;color:var(--muted)">'+boz.map(b=>'<li>'+esc(b)+'</li>').join('')+'</ul>';
+  sg+='<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="kararTeze">Teze aktar ↓</button><button class="btn" id="kararSicilEkle" style="background:var(--muted)">Kararı sicile yaz</button></div>';
+  sg+=kararSicilHtml(M,H);
+  $('kararSinyal').innerHTML=sg;
+  const tb=$('kararTeze'); if(tb) tb.onclick=()=>kararTezeAktar(M,H,F,PK,boz);
+  const sb=$('kararSicilEkle'); if(sb) sb.onclick=()=>{ if(!hq) return; const L=kararSicilOku(); L.unshift({kod:M.kod,q:hq.q,tarih:new Date().toISOString().slice(0,10),model_tl:hq.tl!=null?+hq.tl.toFixed(2):null,model_usd:hq.usd!=null?Math.round(hq.usd):null,kaynak:hq.kaynak,kons_tl:hq.kons?(M.tip==='konsensus_banka'?hq.kons.net_tl_mlr:hq.kons.favok_tl_mlr):null,fiyat:F.fiyat||null,puan:PK.toplam,n:PK.n,sinyal:PK.etiket.ad}); kararSicilYaz(L.slice(0,120)); kararRender(); };
+  /* ── Not ── */
+  const n=$('kararNot'); if(n) n.innerHTML='<b>Nasıl okunur.</b> '+(model? 'Sürücü → FAVÖK bağı örneklemden tahmin edilir; "bu çeyrek iyi" artık bir rakam: '+trN(hq.tl,0)+' mlr ₺ (±'+trN(H.fit.se*hq.fx/1000,0)+').' : 'Bu hissede kalibre sürücü modeli yok; beklenti kurum ortalamasıdır ve sicil (kurumlar geçmişte hangi yöne şaştı) ile birlikte okunur.')+' Fiyatlanma üç ayrı mercekle ölçülür: çeyrek içi <em>göreli</em> getiri (beklenti fiyata ne kadar girdi), <em>ileri</em> PD/FAVÖK’ün kendi bandındaki yeri (piyasa kârı kalıcı sayıyor mu) ve kurum hedef mesafesi (revizyon döngüsü nerede). Üçü birden aynı yöne bakmıyorsa sinyal nötrde kalır — bu bir hata değil, ölçümün dürüstlüğüdür. Konsensüs ve hedefler elle (Fintables) tazelenir: '+esc((M.konsensus&&M.konsensus.tarih)||(KARAR.model.surum||''))+'. '+(model?'Veri: '+esc((S.kaynak&&S.kaynak.crack)||'')+'. ':'')+'<span class="sub">sürüm '+esc(KARAR.model.surum||'')+' · tier '+esc(M.tier)+' · tip '+esc(M.tip)+'</span>';
+}
+
+function kararSicilHtml(M,H){
+  const L=kararSicilOku().filter(x=>x.kod===M.kod); if(!L.length) return '';
+  let h='<div class="lbl" style="margin-top:10px">SİCİL <span class="thin">ne denildi · gerçek ne oldu</span></div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>TARİH</th><th>ÇEYREK</th><th>BEKLENTİ</th><th>KAYNAK</th><th>GERÇEK</th><th>HATA</th><th>SİNYAL</th><th>FİYAT</th><th></th></tr></thead><tbody>';
+  L.forEach((x,i)=>{ const g=(M.favok||{})[x.q]; const gt=g&&g.tl; const hata=(gt&&x.model_tl)? (x.model_tl/gt-1)*100 : null;
+    h+='<tr><td>'+esc(x.tarih)+'</td><td>'+kararQAd(x.q)+'</td><td>'+(x.model_tl!=null?trN(x.model_tl,2):'—')+'</td><td style="font-family:var(--sans);color:var(--muted)">'+esc(x.kaynak||'model')+'</td><td>'+(gt?trN(gt,2):'<span class="sub">bekliyor</span>')+'</td><td class="'+(hata==null?'':Math.abs(hata)<10?'up':'down')+'">'+(hata==null?'—':kararIsaret(hata,0,'%'))+'</td><td>'+esc(x.sinyal||'')+' ('+(x.puan>=0?'+':'')+x.puan+(x.n?'/'+x.n:'')+')</td><td>'+(x.fiyat?trN(x.fiyat,2):'—')+'</td><td><button class="btn mini2" data-ksil="'+i+'">sil</button></td></tr>'; });
+  h+='</tbody></table></div><div class="sub">mlr ₺ FAVÖK (banka: net kâr). Gerçek, bilanço KAP arşivine düşüp katalog güncellenince otomatik dolar. Hata ±%10 içindeyse yeşil.</div>';
+  setTimeout(()=>{ document.querySelectorAll('#kararSinyal button[data-ksil]').forEach(b=>b.onclick=()=>{ const all=kararSicilOku(); const mine=all.filter(x=>x.kod===M.kod); const hedef=mine[+b.dataset.ksil]; kararSicilYaz(all.filter(x=>JSON.stringify(x)!==JSON.stringify(hedef))); kararRender(); }); },0);
+  return h;
+}
+
+function kararTezeAktar(M,H,F,PK,boz){
+  const hq=H.hedef; if(!hq) return;
+  const set=(id,v)=>{ const e=$(id); if(e) e.value=v; };
+  const model=hq.kaynak==='model';
+  set('jKod', M.kod);
+  set('jHedef', F.hedefF&&F.hedefF.ort? trN(F.hedefF.ort,0)+' ₺ (kurum ort.)' : '');
+  set('jTez', (M.ad||M.kod)+' · '+kararQAd(hq.q)+(model?' sürücü tezi: '+M.surucular.map(d=>d.ad+' '+trN(hq.c[d.k],1)+' $/v').join(', ')+' → model FAVÖK '+trN(hq.tl,0)+' mlr ₺ ('+trN(hq.usd/1000,2)+' mlr $; YoY '+kararIsaret(hq.yoyUsd,0,'%')+' $)'+(hq.kons?' · konsensüs '+trN(hq.kons.favok_tl_mlr,0)+' → fark '+kararIsaret(hq.konsFark,0,'%'):'') : ' beklenti tezi: '+(hq.kons?'konsensüs '+trN(hq.tl,1)+' mlr ₺ ('+hq.kons.kurum+' kurum; YoY ₺ '+kararIsaret(hq.yoyTl,0,'%')+')':'konsensüs yok')+(H.konsSicil.ort!=null?' · kurum sicili '+kararIsaret(H.konsSicil.ort,0,'%'):''))+'. Fiyatlanma: '+(F.ceyrek&&F.ceyrek.goreli!=null?'çeyrek içi göreli '+kararIsaret(F.ceyrek.goreli,0,'%'):'—')+(F.fwd!=null?', ileri PD/FAVÖK '+trN(F.fwd,1)+'x'+(F.medyan!=null?' (bant medyanı '+trN(F.medyan,1)+')':''):'')+'. Puan '+(PK.n<2?'—':(PK.toplam>=0?'+':'')+PK.toplam+'/'+PK.n)+' → '+PK.etiket.ad+'.');
+  set('jKat', 'Bilanço '+(M.bilanco&&M.bilanco.beklenen?kararTrTarih(M.bilanco.beklenen):'—')+': FAVÖK ≥ '+(model?trN(hq.alt,0)+' mlr ₺ (model alt bandı)':(hq.tl!=null?trN(hq.tl,1)+' mlr ₺ (konsensüs)':'—'))+' · kurum tahmin/hedef revizyonları'+(H.kosu?' · '+kararQAd(H.kosu.q)+' koşu hızı '+trN(H.kosu.tl,0)+' mlr ₺ korunursa':'')+(model?' · '+M.surucular.map(d=>d.ad).join('/')+' seviyesinin sürmesi':(M.surucu_plani?' · sürücü: '+M.surucu_plani:'')));
+  set('jBoz', boz.join(' | '));
+  try{ $('jTez').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+}
+
+/* ── Grafik: son 12 ay crack (dizel/benzin) ve Brent — iki panel, ortak x. Doğrudan etiket; eksen başına tek ölçek. ── */
+function kararSurucuGrafik(M,H){
+  const S=KARAR.surucu, G=S.gunluk||[]; if(G.length<30) return '';
+  const sonT=G[G.length-1][0]; const basD=new Date(sonT+'T00:00:00'); basD.setFullYear(basD.getFullYear()-1); const bas=basD.toISOString().slice(0,10);
+  const D=G.filter(g=>g[0]>=bas);
+  const W=760, Hc=150, Hb=96, padL=8, padR=118, padT=12, padB=18; const HALE='paint-order="stroke" stroke="#fff" stroke-width="3" stroke-linejoin="round"';
+  const t0=new Date(D[0][0]).getTime(), t1=new Date(D[D.length-1][0]).getTime();
+  const x=t=>padL+(new Date(t).getTime()-t0)/(t1-t0)*(W-padL-padR);
+  const yK=(min,max,h)=>v=>padT+(max-v)/(max-min)*(h-padT-padB);
+  const dz=D.map(d=>d[2]), bz=D.map(d=>d[1]), br=D.map(d=>d[3]);
+  const cMin=Math.floor(Math.min(0,...dz,...bz)/10)*10, cMax=Math.ceil(Math.max(...dz,...bz)/10)*10;
+  const bMin=Math.floor(Math.min(...br)/10)*10, bMax=Math.ceil(Math.max(...br)/10)*10;
+  const yc=yK(cMin,cMax,Hc), yb=yK(bMin,bMax,Hb);
+  const path=(vals,yf)=>D.map((d,i)=>(i?'L':'M')+x(d[0]).toFixed(1)+' '+yf(vals[i]).toFixed(1)).join(' ');
+  const golge=(q,h,renk)=>{ if(!q) return ''; const a=kararQAralik(q); const xa=x(a.bas<D[0][0]?D[0][0]:a.bas), xb=x(a.son>sonT?sonT:a.son); return '<rect x="'+xa.toFixed(1)+'" y="'+padT+'" width="'+Math.max(1,xb-xa).toFixed(1)+'" height="'+(h-padT-padB)+'" fill="'+renk+'" opacity="0.08"/>'; };
+  const grid=(min,max,yf,h)=>{ const adim=(max-min)>80?20:10; let s=''; for(let v=min; v<=max; v+=adim){ s+='<line x1="'+padL+'" x2="'+(W-padR)+'" y1="'+yf(v).toFixed(1)+'" y2="'+yf(v).toFixed(1)+'" stroke="'+KARAR_RENK.grid+'" stroke-width="1"/><text x="'+(W-22)+'" y="'+(yf(v)+3).toFixed(1)+'" font-size="9" fill="'+KARAR_RENK.muted+'" font-family="var(--mono)">'+v+'</text>'; } return s; };
+  let aylar=''; { let son='', sonX=-99; D.forEach(d=>{ const ay=d[0].slice(0,7); if(ay!==son){ son=ay; const xx=x(d[0]); if(xx-sonX<30) return; sonX=xx; const dd=new Date(d[0]+'T00:00:00'); aylar+='<text x="'+xx.toFixed(1)+'" y="'+(Hc-4)+'" font-size="9" fill="'+KARAR_RENK.muted+'" font-family="var(--mono)">'+dd.toLocaleDateString('tr-TR',{month:'short'})+'</text>'; } }); }
+  const ortCizgi=(q,k,renk,yf,h)=>{ const c=S.ceyrek[q]; if(!c) return ''; const a=kararQAralik(q); const xa=x(a.bas<D[0][0]?D[0][0]:a.bas), xb=x(a.son>sonT?sonT:a.son); const y=yf(c[k]); return '<line x1="'+xa.toFixed(1)+'" x2="'+xb.toFixed(1)+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="'+renk+'" stroke-width="1.2" stroke-dasharray="3 3"/><text x="'+((xa+xb)/2).toFixed(1)+'" y="'+(y-3).toFixed(1)+'" text-anchor="middle" font-size="9" fill="'+renk+'" font-family="var(--mono)" '+HALE+'>'+kararQAd(q)+' ort '+trN(c[k],1)+'</text>'; };
+  let eDz=yc(dz[dz.length-1]), eBz=yc(bz[bz.length-1]); if(Math.abs(eDz-eBz)<11){ if(eDz<eBz){ eDz-=(11-Math.abs(eDz-eBz))/2; eBz+=(11-Math.abs(eDz-eBz))/2; } else { eBz-=(11-Math.abs(eDz-eBz))/2; eDz+=(11-Math.abs(eDz-eBz))/2; } }
+  let svg='<div class="lbl" style="margin-top:10px">SÜRÜCÜ · son 12 ay <span class="thin">crack = ürün − Brent ($/v) · gölge: '+(H.hedefQ?kararQAd(H.hedefQ)+' (açıklanacak)':'')+(H.kosuQ?' · '+kararQAd(H.kosuQ)+' (koşu)':'')+'</span></div>';
+  svg+='<svg viewBox="0 0 '+W+' '+Hc+'" width="100%" style="display:block;max-height:'+Hc+'px">'+golge(H.hedefQ,Hc,'#3D7BD9')+golge(H.kosuQ,Hc,'#C9612B')+grid(cMin,cMax,yc,Hc);
+  svg+='<path d="'+path(dz,yc)+'" fill="none" stroke="'+KARAR_RENK.dizel+'" stroke-width="1.6"/><path d="'+path(bz,yc)+'" fill="none" stroke="'+KARAR_RENK.benzin+'" stroke-width="1.6"/>';
+  svg+=ortCizgi(H.hedefQ,'dizel',KARAR_RENK.dizel,yc,Hc)+ortCizgi(H.hedefQ,'benzin',KARAR_RENK.benzin,yc,Hc);
+  svg+='<text x="'+(x(sonT)+3).toFixed(1)+'" y="'+(eDz+3).toFixed(1)+'" font-size="9.5" font-weight="700" fill="'+KARAR_RENK.dizel+'" font-family="var(--mono)" '+HALE+'>Dizel '+trN(dz[dz.length-1],1)+'</text>';
+  svg+='<text x="'+(x(sonT)+3).toFixed(1)+'" y="'+(eBz+3).toFixed(1)+'" font-size="9.5" font-weight="700" fill="'+KARAR_RENK.benzin+'" font-family="var(--mono)" '+HALE+'>Benzin '+trN(bz[bz.length-1],1)+'</text>';
+  svg+=aylar+'</svg>';
+  svg+='<svg viewBox="0 0 '+W+' '+Hb+'" width="100%" style="display:block;max-height:'+Hb+'px;margin-top:2px">'+golge(H.hedefQ,Hb,'#3D7BD9')+golge(H.kosuQ,Hb,'#C9612B')+grid(bMin,bMax,yb,Hb);
+  svg+='<path d="'+path(br,yb)+'" fill="none" stroke="'+KARAR_RENK.brent+'" stroke-width="1.6"/>'+ortCizgi(H.hedefQ,'brent',KARAR_RENK.brent,yb,Hb);
+  svg+='<text x="'+(x(sonT)+3).toFixed(1)+'" y="'+(yb(br[br.length-1])+3).toFixed(1)+'" font-size="9.5" font-weight="700" fill="'+KARAR_RENK.brent+'" font-family="var(--mono)" '+HALE+'>Brent '+trN(br[br.length-1],1)+'</text></svg>';
+  return svg;
+}
+
+/* ── Grafik: gerçek FAVÖK ($ mn) çubuk · model noktası (regresyon) · beklenti (içi boş: model ±hata ya da konsensüs) ── */
+function kararFitGrafik(M,H){
+  const F=M.favok||{}; const qs=Object.keys(F).filter(q=>F[q].usd!=null).sort().slice(-12);
+  if(qs.length<4) return '<div class="sub">Çeyrek FAVÖK serisi kısa.</div>';
+  const fitMap={}; if(H.fit&&M.orneklem) M.orneklem.forEach((r,i)=>{ fitMap[r.q]=H.fit.fitted[i]; });
+  const Q=qs.map(q=>({q, gercek:F[q].usd, model:fitMap[q]}));
+  if(H.hedef&&H.hedef.usd!=null) Q.push({q:H.hedef.q, gercek:null, model:H.hedef.usd, alt:H.hedef.altUsd, ust:H.hedef.ustUsd, kons:H.hedef.kaynak!=='model'});
+  if(H.kosu) Q.push({q:H.kosu.q, gercek:null, model:H.kosu.usd, kosu:true});
+  const W=760, Hh=170, padL=8, padR=52, padT=16, padB=22;
+  const vals=Q.flatMap(q=>[q.gercek,q.model,q.ust].filter(v=>v!=null&&isFinite(v)));
+  const vMinRaw=Math.min(0,...vals), vMaxRaw=Math.max(...vals,1);
+  const adim=vMaxRaw>1500?500:vMaxRaw>400?100:vMaxRaw>120?50:vMaxRaw>40?10:vMaxRaw>12?5:1;
+  const vMax=Math.ceil(vMaxRaw/adim)*adim, vMin=Math.floor(vMinRaw/adim)*adim;
+  const y=v=>padT+(vMax-v)/(vMax-vMin||1)*(Hh-padT-padB);
+  const bw=(W-padL-padR)/Q.length, x=i=>padL+i*bw;
+  let s='<svg viewBox="0 0 '+W+' '+Hh+'" width="100%" style="display:block;max-height:'+Hh+'px">';
+  for(let v=vMin; v<=vMax; v+=adim){ s+='<line x1="'+padL+'" x2="'+(W-padR)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'" stroke="'+KARAR_RENK.grid+'"/><text x="'+(W-padR+4)+'" y="'+(y(v)+3).toFixed(1)+'" font-size="9" fill="'+KARAR_RENK.muted+'" font-family="var(--mono)">'+v+'</text>'; }
+  Q.forEach((q,i)=>{ const cx=x(i)+bw/2;
+    if(q.gercek!=null) s+='<rect x="'+(x(i)+bw*0.22).toFixed(1)+'" y="'+y(Math.max(0,q.gercek)).toFixed(1)+'" width="'+(bw*0.56).toFixed(1)+'" height="'+Math.max(1,Math.abs(y(q.gercek)-y(0))).toFixed(1)+'" fill="'+KARAR_RENK.gercek+'" opacity="0.75"/>';
+    if(q.alt!=null&&q.ust!=null) s+='<line x1="'+cx.toFixed(1)+'" x2="'+cx.toFixed(1)+'" y1="'+y(q.alt).toFixed(1)+'" y2="'+y(q.ust).toFixed(1)+'" stroke="'+KARAR_RENK.model+'" stroke-width="1.2"/>';
+    if(q.model!=null&&isFinite(q.model)) s+='<circle cx="'+cx.toFixed(1)+'" cy="'+y(q.model).toFixed(1)+'" r="3.2" fill="'+(q.gercek==null?'#fff':KARAR_RENK.model)+'" stroke="'+(q.kosu?KARAR_RENK.dizel:q.kons?KARAR_RENK.kons:KARAR_RENK.model)+'" stroke-width="1.6"/>';
+    if(q.gercek==null&&q.model!=null) s+='<text x="'+cx.toFixed(1)+'" y="'+(y(q.ust!=null?q.ust:q.model)-5).toFixed(1)+'" text-anchor="middle" font-size="9" font-weight="700" fill="'+(q.kosu?KARAR_RENK.dizel:q.kons?KARAR_RENK.kons:KARAR_RENK.model)+'" font-family="var(--mono)">'+trN(q.model,0)+(q.kons?' kons':'')+'</text>';
+    if(i%2===0||q.gercek==null) s+='<text x="'+cx.toFixed(1)+'" y="'+(Hh-6)+'" text-anchor="middle" font-size="8.5" fill="'+KARAR_RENK.muted+'" font-family="var(--mono)">'+kararQAd(q.q)+'</text>';
+  });
+  s+='</svg>';
+  return (H.fit? '<div class="lbl" style="margin-top:10px">GERÇEK vs MODEL · FAVÖK $ mn <span class="thin">çubuk gerçek · nokta model · içi boş: açıklanacak/koşu (±hata bandı)</span></div>' : '')+s;
+}
+
 /* ---- HABER AKIŞI ---- */
 let haberLoaded=false,haberFiltre='portfoy';
 const TIP_ETIKET={FR:'BİLANÇO',ODA:'ÖZEL DURUM',DUY:'DUYURU',DG:'DİĞER',CA:'KURUMSAL',HBR:'HABER'};

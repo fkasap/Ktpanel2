@@ -394,6 +394,24 @@
    "son": "2026-10-13",
    "kaynak": "Kullanıcının model.py/veri.py (13 Eki) → app.js EP_VARSAYILAN; kullanıcı girdileri tarayıcıda (ktp_ep_v1). Aylık: TÜİK TÜFE (ayın ~3ü) dizinin sonuna eklenir, PKA (ayın ~16sı) E12/pf12/pf24 güncellenir; PPK sonrası politika faizi. \"canlıdan doldur\" düğmesi TÜFE y/y, PKA 12a, politika ve 2Y DİBSi üst kartlardan alır.",
    "_461": "13 Eki: §461 kuruldu. Varsayılanlar py ile birebir doğrulandı (225 hücre, fark 0)."
+  },
+  {
+   "ad": "Sektör sürücüleri — Neste crack · Brent · USDTRY + sürücü serileri kaydı (Yahoo emtia/kur · LME hurda · Dünya Bankası Pink Sheet)",
+   "dosya": "sektor-surucu.json",
+   "siklik": "gunluk",
+   "son": "2026-10-19",
+   "kaynak": "Actions sektorSurucu() (§462): ir-service.appspot.com/share/nesteoil (ProductMargins · CrudeOils) HTML içindeki DataTable satırları; USDTRY Yahoo TRY=X. Hafta içi akşam koşusunda (fiyat katmanı) + elle --katman=surucu. Tohum 19 Eki Chrome/Dygraph dökümü.",
+   "_462": "Karar Motoru (Journal) hammaddesi. Denetim: aralık, ≥300 satır, son tarih geri gitmez; aksi halde dosya korunur.",
+   "_464": "19 Eki: seriler{} kaydı eklendi — altın/gümüş/bakır/alüminyum/HRC/TTF/HenryHub/buğday/Brent/EURUSD/USDTRY (Yahoo günlük, 2y), hurda_lme (günlük tek nokta, tarihçe birikir), Pink Sheet aylık (üre, DAP, demir cevheri, termal kömür, TTF, altın, gümüş, çinko, kurşun, bakır, alüminyum, buğday HRW, kakao, şeker, Brent; 3 yıllık + 5 çeyreklik + 3 aylık sütun). Tier A/B modelleri bu seriler üzerine kurulur."
+  },
+  {
+   "ad": "Karar modeli kataloğu — XK030 (30 hisse): FAVÖK gerçekleri · konsensüs · hedef · çeyrek sonu fiyat",
+   "dosya": "karar-model.json",
+   "siklik": "ceyreklik",
+   "son": "2026-10-19",
+   "kaynak": "Fintables MCP (19 Eki): gelir tablosu çeyreklik (10005), kurum tahminleri (ortalama·sayı), çeyrek sonu kapanış, sermaye. Konsensüs/fiyat/hedef ELLE (bilanço haftası ritüeli: 30 kod tek sorgu). FAVÖK gerçekleri Actions kararOrneklem() (§463, KAP arşivinden tüm modeller). TUPRS: sürücü modeli örneklemi (§462).",
+   "_462": "Bilanço (TUPRS 30 Eki beklenen) öncesi: konsensüs kurum sayısı artınca konsensus bloğu tazelenir; sonrası: örneklem otomatik, sicil panelde dolar.",
+   "_463": "19 Eki: 30 hisseye genişletildi (tier A/B/C kataloğu). Bilanço sezonunda (30 Eki–9 Kas) konsensüs kurum sayısı artar → konsensus bloğu tazelenir."
   }
  ],
  "bilanco_sezonu_aylar": [
