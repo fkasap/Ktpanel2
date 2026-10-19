@@ -33,6 +33,13 @@ tablo (son değer · hedef çeyrek ort · Δ çeyrek · Δ yıl · koşu ort · 
 eksik olduğunu yazar (EVDS alt kalemler, EPİAŞ PTF, KAP aylık ÖDA, LME). Pano'ya "SÜRÜCÜ Δ ÇEYREK"
 sütunu: birincil sürücünün hedef/önceki çeyrek değişimi (TUPRS dizel +%53 · EREGL HRC +%10 · CVKMD altın
 −%5 · GUBRF üre −%42 · AKCNS kömür +%2).
+İKİNCİ CANLI KOŞU (23:32, run 39320189174, yeşil, 231 sn): Yahoo 11 ✓ · **Dünya Bankası xlsx ✓ "wb 15 seri ·
+2026M09"** (bağımlılıksız okuyucu canlıda geçti) · LME: 403 YOK (tarayıcı UA'lı düz fetch geçti) ama
+"fiyat deseni bulunamadı" → sayfa Chrome'da ölçüldü: değer etiketten ÖNCE ve kendi sınıfında
+(<span class="hero-metal-data__number"> 393.00 </span> … "Month 2 Closing Price (day-delayed)"); ilk regex
+sayıyı etiketten SONRA arıyordu. §464d: önce ham HTML'de sınıf eşlenir, düşerse "sayı → yüzde → etiket"
+metin deseni; tarih "Data valid for 16 Oct 2026" satırından. Stub testi: hurda 393 · demir 587,5 · marj 194,5 ✓.
+Rapor artık yolu da yazar (fetch/playwright). Sonraki koşuda LME iki serisi ve metal_marji_tr dolmalı.
 EKSİK KALANLAR (kullanıcı aksiyonu): EVDS_KEY'i Actions secret'a eklemek (TÜFE gıda/giyim, çimento ÜFE,
 politika faizi); EPİAŞ Şeffaflık hesabı (PTF); sonrası EKGYO aylık ön satış ayrıştırıcısı (KAP).
 DERS: "ÖLÇMEDEN YAZMA" iki kez doğrulandı — PDF yolu masa başında mantıklıydı, metin çıkarımı hücreleri
