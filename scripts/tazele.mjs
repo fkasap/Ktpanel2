@@ -2963,12 +2963,16 @@ const EPIAS_KIMLIK_ADAYLARI = [['EPIAS_ID', 'EPIAS_KEY'], ['EPIAS_USER', 'EPIAS_
    Anahtar sözcükler: id|user|username|email|kullanici|login  ve  pass|password|key|sifre|parola|secret. Değerler kırpılır
    (yapıştırmadan gelen boşluk şifreyi bozmasın). Hiçbir değer loglanmaz. */
 function epiasCoz(metin) {
-  const t = String(metin || '').trim(); if (!t || !/[=:]/.test(t)) return null;
+  const t = String(metin || '').trim(); if (!t || !/[=:\n\r]/.test(t)) return null;
   try { const j = JSON.parse(t); const u = j.id || j.user || j.username || j.email || j.kullanici, p = j.key || j.pass || j.password || j.sifre || j.parola; if (u && p) return { user: String(u).trim(), pass: String(p).trim() }; } catch (e) {}
   const al = re => { const m = t.match(re); return m ? m[1].trim() : null; };
   const u = al(/(?:^|[\s,;])(?:id|user(?:name)?|e-?mail|mail|kullanici(?:_adi)?|login)\s*[=:]\s*([^\s,;]+)/im);
   const p = al(/(?:^|[\s,;])(?:pass(?:word)?|pw|key|sifre|şifre|parola|secret)\s*[=:]\s*([^\n\r,;]+?)\s*(?:[\n\r,;]|$)/im);
-  return (u && p) ? { user: u, pass: p } : null;
+  if (u && p) return { user: u, pass: p };
+  /* etiketsiz iki satır: biri e-posta (kullanıcı), diğeri şifre */
+  const satir = t.split(/[\r\n]+/).map(x => x.trim()).filter(Boolean);
+  if (satir.length === 2) { const i = satir.findIndex(x => /@/.test(x) && !/\s/.test(x)); if (i >= 0) return { user: satir[i], pass: satir[1 - i] }; }
+  return null;
 }
 function epiasKimlik() {
   for (const [u, p] of EPIAS_KIMLIK_ADAYLARI) { const U = process.env[u], P = process.env[p]; if (U && P) { const c = epiasCoz(P); return c ? { user: c.user, pass: c.pass, adlar: p + ' (tek secret, id/pass ayrıştırıldı; ' + u + ' yok sayıldı)' } : { user: U, pass: P, adlar: u + '+' + p }; } }
@@ -3003,8 +3007,8 @@ async function epiasPtf() {
   const dosya = 'sektor-surucu.json';
   if (!(await varMi(dosya))) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ sektor-surucu.json yok (önce §462 koşmalı)'); return; }
   const kimlik = epiasKimlik();
-  if (!kimlik) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ EPİAŞ kimliği (secret) bulunamadı\n- Beklenen ad çiftleri: ' + EPIAS_KIMLIK_ADAYLARI.map(x => '`' + x[0] + '`+`' + x[1] + '`').join(' · ') + '\n- Ya da adında EPIAS geçen HERHANGİ iki secret (workflow KTP_SECRETS taraması; e-posta görünümlü olan kullanıcı adı sayılır). Bulunan EPIAS adlı secret sayısı: ' + Object.keys(process.env).filter(k => /EPIAS/i.test(k) && process.env[k]).length + ' (env) · ' + (() => { if (!process.env.KTP_SECRETS) return 'KTP_SECRETS env yok — workflow güncel mi?'; try { return Object.entries(JSON.parse(process.env.KTP_SECRETS)).filter(([k, v]) => /EPIAS/i.test(k) && v).length + ' (KTP_SECRETS)'; } catch (e) { return 'KTP_SECRETS okunamadı'; } })() +
-    '\n- Değer: Şeffaflık Platformu kullanıcı e-postası + şifresi (kayit.epias.com.tr). Secret adı serbest; iki ayrı secret (kullanıcı ve şifre) gerekir — tek secret içinde "id:şifre" tanınmaz.'); return; }
+  if (!kimlik) { raporlar.push('### EPİAŞ PTF (§466) — ⏭ EPİAŞ kimliği (secret) bulunamadı\n- Beklenen ad çiftleri: ' + EPIAS_KIMLIK_ADAYLARI.map(x => '`' + x[0] + '`+`' + x[1] + '`').join(' · ') + '\n- Ya da TEK secret (ör. EPIAS_KEY) içinde iki satır: `id=<e-posta>` ve `pass=<şifre>` (§466d). Bu koşuda dolu gelen EPIAS adlı env sayısı: ' + Object.keys(process.env).filter(k => /EPIAS/i.test(k) && process.env[k]).length + (Object.keys(process.env).filter(k => /EPIAS/i.test(k) && process.env[k]).length === 1 ? ' — tek değer var ama id=/pass= deseni çözülemedi (satır başlarını kontrol et)' : '') +
+    '\n- Değer: Şeffaflık Platformu kullanıcı e-postası + şifresi (kayit.epias.com.tr). Secret adı workflow env listesindeki adlardan biri olmalı (EPIAS_ID/EPIAS_KEY en sadesi).'); return; }
   const D = await oku(dosya); D.seriler = D.seriler || {};
   const eskiTL = (D.seriler.ptf && D.seriler.ptf.gunluk) || [];
   const eskiUSD = (D.seriler.ptf_usd && D.seriler.ptf_usd.gunluk) || [];
