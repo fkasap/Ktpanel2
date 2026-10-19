@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-19T08:03:54Z",
+ "guncelleme": "2026-10-19T18:31:56Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -386,7 +386,7 @@
    "kaynak": "KAP"
   },
   "BINHO": {
-   "ts": "2026-10-19T08:03:03Z",
+   "ts": "2026-10-19T18:31:03Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -660,7 +660,7 @@
    "kaynak": "KAP"
   },
   "CVKMD": {
-   "ts": "2026-09-25T19:15:27Z",
+   "ts": "2026-10-19T18:31:36Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -691,7 +691,13 @@
    },
    "adet": 1400000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 593529812,
+   "amort": 501428074,
+   "vergiOncesi": 798640341,
+   "vergi": -702412655,
+   "gecmisKar": 5953727225,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "DARDL": {
    "ts": "2026-10-12T12:15:27Z",
@@ -734,7 +740,7 @@
    "kaynak": "KAP"
   },
   "DCTTR": {
-   "ts": "2026-09-25T19:15:49Z",
+   "ts": "2026-10-19T18:31:53Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -765,7 +771,13 @@
    },
    "adet": 390000000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": -150828958,
+   "amort": 26155761,
+   "vergiOncesi": -308518438,
+   "vergi": 11234135,
+   "gecmisKar": -101209783,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "DITAS": {
    "ts": "2026-10-12T12:27:43Z",
@@ -4576,7 +4588,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-19T08:03:03Z",
+   "ts": "2026-10-19T18:31:03Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
