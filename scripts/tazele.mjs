@@ -2311,6 +2311,353 @@ async function olcKos(ad, fn) {
   }
 }
 
+/* ── §462 SEKTÖR SÜRÜCÜLERİ (sektor-surucu.json) — Neste crack & Brent ─────
+   Karar Motoru'nun (Journal · kararInit) hammaddesi. Neste Oyj yatırımcı
+   sayfası üç fiyat monitörünü ir-service.appspot.com üzerinden yayınlar;
+   veri sayfanın İÇİNDEDİR (Google DataTable satırları olarak gömülü), ayrı bir
+   JSON/CSV ucu YOK (19 Eki: Chrome ağ sekmesiyle ölçüldü — sayfa yüklenince
+   tek veri isteği yok; Excel ucu gerçek BIFF .xls, ayrıştırmaya değmez).
+   O yüzden HTML çekilir, satırlar regex ile okunur:
+     {c: [{v: new Date(2026, 9, 19)}, {v : 21.93}, {v: null},{v: null}, {v : 74.444}]}
+   JS Date ayı 0 tabanlıdır (9 = Ekim) → +1. Hangi hücrenin hangi seri olduğu
+   cols listesinden bulunur (type 'number' olanlar; 'Annotation' sütunları
+   string, atlanır) — sütun sırası değişirse kod bozulmaz.
+   Sayfa her çağrıda TÜM tarihçeyi verir (2021-10'dan beri ~470 satır:
+   2025-10'a kadar haftalık, sonra günlük) → birleştirme yok, seri komple
+   yeniden yazılır (kendi kendini onaran katman). USDTRY: Yahoo TRY=X günlük
+   (2y) → çeyrek ortalaması + ay sonu kapanış; alınamazsa tohumdaki değerler
+   korunur.
+   DENETİM (§300 ruhu): crack −40..150 ve Brent 20..250 aralığı, ≥300 satır,
+   son tarih mevcut dosyadan GERİ gitmez. Aksi halde dosya KORUNUR, rapora
+   yazılır. */
+async function sektorSurucu() {
+  const dosya = 'sektor-surucu.json';
+  const URLS = {
+    crack: 'https://ir-service.appspot.com/share/nesteoil/English/price_monitor3_dg.html?name=ProductMargins&r=13032',
+    brent: 'https://ir-service.appspot.com/share/nesteoil/English/price_monitor3_dg.html?name=CrudeOils&r=13032'
+  };
+  const eski = (await varMi(dosya)) ? await oku(dosya) : {};
+  const cek = async u => {
+    const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  };
+  const ayristir = html => {
+    const colsM = html.match(/cols:\s*\[([\s\S]*?)\]\s*,\s*rows:/);
+    if (!colsM) throw new Error('cols bulunamadı (sayfa düzeni değişti?)');
+    const cols = [...colsM[1].matchAll(/\{label:\s*'([^']*)',\s*type:\s*'(\w+)'\}/g)].map(m => ({ label: m[1], type: m[2] }));
+    const sayisal = cols.map((c, i) => c.type === 'number' ? i : -1).filter(i => i > 0);
+    if (!sayisal.length) throw new Error('sayısal sütun yok');
+    const satirlar = [];
+    const re = /\{c:\s*\[([\s\S]*?)\]\s*\}/g; let m;
+    while ((m = re.exec(html))) {
+      const h = [...m[1].matchAll(/\{v\s*:\s*(new Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})\)|-?\d+(?:\.\d+)?|null)\s*\}/g)];
+      if (!h.length || !h[0][2]) continue;
+      const tarih = h[0][2] + '-' + String(+h[0][3] + 1).padStart(2, '0') + '-' + String(+h[0][4]).padStart(2, '0');
+      const degerler = sayisal.map(i => { const c = h[i]; return (c && !c[2] && c[1] !== 'null') ? +c[1] : null; });
+      satirlar.push([tarih, ...degerler]);
+    }
+    return { etiketler: sayisal.map(i => cols[i].label), satirlar };
+  };
+  try {
+    const [hC, hB] = await Promise.all([cek(URLS.crack), cek(URLS.brent)]);
+    const C = ayristir(hC), B = ayristir(hB);
+    const iB = C.etiketler.findIndex(e => /gasoline/i.test(e)), iD = C.etiketler.findIndex(e => /diesel/i.test(e)), iBr = B.etiketler.findIndex(e => /brent/i.test(e));
+    if (iB < 0 || iD < 0 || iBr < 0) throw new Error('seri etiketleri eşleşmedi: ' + C.etiketler.join(' | ') + ' / ' + B.etiketler.join(' | '));
+    const brent = new Map(B.satirlar.map(r => [r[0], r[1 + iBr]]));
+    const brentTarih = [...brent.keys()].sort();
+    const brentEnYakin = t => { if (brent.has(t)) return brent.get(t); let v = null; for (const k of brentTarih) { if (k <= t) v = brent.get(k); else break; } return v; };
+    const gunluk = C.satirlar
+      .filter(r => r[1 + iB] != null && r[1 + iD] != null)
+      .map(r => [r[0], r[1 + iB], r[1 + iD], brentEnYakin(r[0])])
+      .filter(r => r[3] != null)
+      .sort((a, b) => a[0] < b[0] ? -1 : 1);
+    /* denetim */
+    const aralikDisi = gunluk.filter(r => r[1] < -40 || r[1] > 150 || r[2] < -40 || r[2] > 150 || r[3] < 20 || r[3] > 250);
+    if (gunluk.length < 300) throw new Error('DENETİM: ' + gunluk.length + ' satır (<300) — dosya korundu');
+    if (aralikDisi.length) throw new Error('DENETİM: ' + aralikDisi.length + ' satır makul aralık dışı (ör. ' + JSON.stringify(aralikDisi[0]) + ') — dosya korundu');
+    const son = gunluk[gunluk.length - 1];
+    if (eski.son && eski.son.tarih && son[0] < eski.son.tarih) throw new Error('DENETİM: son tarih geriledi ' + eski.son.tarih + ' → ' + son[0] + ' — dosya korundu');
+    /* USDTRY (Yahoo TRY=X) → çeyrek ortalaması + ay sonu */
+    let fxGun = null;
+    try { const h = await yahooSeri(['TRY=X'], '', '2y'); fxGun = h['TRY=X'] || null; } catch { fxGun = null; }
+    const aySonu = Object.assign({}, eski.usdtry_ay_sonu || {});
+    if (fxGun) { for (const [t, v] of fxGun) { if (v > 5 && v < 200) aySonu[t.slice(0, 7)] = +v.toFixed(4); } }   /* Map tarih sıralı → ay içi son değer kalır */
+    const qk = t => { const y = +t.slice(0, 4), m = +t.slice(5, 7); return y + 'Q' + (Math.floor((m - 1) / 3) + 1); };
+    const qAylar = q => { const y = +q.slice(0, 4), n = +q.slice(-1); return [1, 2, 3].map(i => y + '-' + String(3 * (n - 1) + i).padStart(2, '0')); };
+    const oncekiAy = ym => { let y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1; if (m === 0) { y--; m = 12; } return y + '-' + String(m).padStart(2, '0'); };
+    const Q = {};
+    for (const r of gunluk) { (Q[qk(r[0])] = Q[qk(r[0])] || []).push(r); }
+    const fxQ = {};
+    if (fxGun) { for (const [t, v] of fxGun) { if (v > 5 && v < 200) (fxQ[qk(t)] = fxQ[qk(t)] || []).push(v); } }
+    const ceyrek = {};
+    for (const q of Object.keys(Q).sort()) {
+      const L = Q[q], n = L.length;
+      const ort = i => +(L.reduce((s, r) => s + r[i], 0) / n).toFixed(2);
+      const ay = qAylar(q);
+      let fxOrt = null, fxSon = null;
+      if (fxQ[q] && fxQ[q].length >= 15) fxOrt = +(fxQ[q].reduce((s, v) => s + v, 0) / fxQ[q].length).toFixed(3);
+      else { const l = [aySonu[oncekiAy(ay[0])], ...ay.map(m => aySonu[m])].filter(v => v > 0); if (l.length) fxOrt = +(l.reduce((s, v) => s + v, 0) / l.length).toFixed(3); }
+      for (const m of [...ay].reverse()) { if (aySonu[m] > 0) { fxSon = aySonu[m]; break; } }
+      const y = +q.slice(0, 4), qn = +q.slice(-1);
+      const tam = !(q === qk(son[0]) && son[0] < y + '-' + String(3 * qn).padStart(2, '0') + '-28');
+      ceyrek[q] = { benzin: ort(1), dizel: ort(2), brent: ort(3), brent_bas: L[0][3], brent_son: L[n - 1][3], dBrent: +(L[n - 1][3] - L[0][3]).toFixed(2), n, ilk: L[0][0], son: L[n - 1][0], usdtry_ort: fxOrt, usdtry_son: fxSon, tam };
+    }
+    const D = {
+      guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
+      _surum: '§462 Actions sektorSurucu()' + (fxGun ? ' · USDTRY Yahoo günlük' : ' · USDTRY tohum (Yahoo alınamadı)'),
+      kaynak: eski.kaynak || { crack: 'Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)', brent: 'Neste Oyj · CrudeOils monitörü · Brent dated (USD/bbl)', usdtry: 'Yahoo TRY=X günlük (Actions)' },
+      url: Object.assign({ sayfa: 'https://www.neste.com/investors/market-data/oil-products' }, URLS),
+      kolonlar: ['tarih', 'benzin_ara', 'dizel_nwe', 'brent'],
+      _not: eski._not || '2021-10 → 2025-10 haftalık (Salı), 21 Eki 2025 sonrası günlük (iş günü). Crack = ürün fiyatı − Brent; NWE dizel ve ARA benzin Akdeniz için vekil.',
+      etiketler: { benzin: C.etiketler[iB], dizel: C.etiketler[iD], brent: B.etiketler[iBr] },
+      son: { tarih: son[0], benzin: son[1], dizel: son[2], brent: son[3] },
+      ceyrek, gunluk, usdtry_ay_sonu: aySonu
+    };
+    const degisti = !eski.son || eski.son.tarih !== son[0] || eski.son.dizel !== son[2] || eski.son.benzin !== son[1] || eski.son.brent !== son[3];
+    await yaz(dosya, D);
+    if (degisti) degisenler.push('sektör sürücüleri (' + son[0] + ')');
+    raporlar.push('### Sektör sürücüleri (§462) — ✓ ' + son[0] + ' · dizel ' + son[2] + ' · benzin ' + son[1] + ' · Brent ' + son[3] + ' $/v\n- ' + gunluk.length + ' satır · ' + Object.keys(ceyrek).length + ' çeyrek · USDTRY ' + (fxGun ? 'Yahoo günlük' : 'tohum') + (degisti ? '' : ' · değişiklik yok'));
+  } catch (e) {
+    raporlar.push('### Sektör sürücüleri (§462) — ✗ ' + String(e && e.message || e).slice(0, 140) + '\n- sektor-surucu.json KORUNDU; panel son dosyayla çalışır (tarih damgası görünür).');
+  }
+}
+
+/* ── §462b/§463 KARAR MODELİ GERÇEKLERİ — bilanço gelince otomatik düşer ──
+   karar-model.json içindeki HER model (XK030) için: sektor-surucu çeyreği TAM
+   ama favok{} içinde yoksa ve kap-arsiv/<KOD>.json o dönemi taşıyorsa çeyreklik
+   FAVÖK hesaplanır ve favok[q] yazılır; 'regresyon' tipinde ayrıca örnekleme
+   eklenir; katalogdaki konsensüs o çeyrekse sicile (konsensus_gecmis) düşer.
+   Böylece pano/sicil (ne denildi · gerçek ne oldu) elle beklemez. kap-arsiv'de
+   olmayan 9 XK030 kodu kap-arsiv-oncelik.json'a eklendi (§463) → yavaş yolda
+   koşu başına 2 şirket dolar.
+   FAVÖK tanımı Fintables ile uyumlu (tohum örneklemi oradan): EFK − diğer
+   faaliyet gelirleri − diğer faaliyet giderleri + amortisman (2Ç26: 46,83 −
+   6,05 + 9,11 + 4,73 ≈ 54,6 vs Fintables 54,34; fark amortisman kapsamı).
+   Çeyreklik türetme: 1Ç = rapor sütunu [0]; 2Ç/3Ç = 4 sütunlu gelir
+   tablosunda [2] (çeyrek sütunu), yoksa YTD farkı; 4Ç = yıllık − 9A (TMS-29
+   yeniden ölçüm farkı GÖZ ARDI edilir → 'yaklasik' işareti). Amortisman nakit
+   akışı YTD farkından. USD = TL / çeyrek ort. USDTRY (sektor-surucu).
+   Fintables kaynaklı tohum satırlarıyla ufak tanım farkı olabilir (amortisman
+   kapsamı); satır '_kaynak: KAP' ile işaretlenir, panel ayrım yapmaz. */
+async function kararOrneklem() {
+  const dosya = 'karar-model.json';
+  if (!(await varMi(dosya)) || !(await varMi('sektor-surucu.json'))) return;
+  try {
+    const M = await oku(dosya), S = await oku('sektor-surucu.json');
+    let eklenen = [];
+    for (const mdl of (M.modeller || [])) {
+      if (!mdl.kod || mdl.tip === 'konsensus_banka') continue;   /* banka şablonu farklı (FAVÖK yok) — sonraki tur */
+      const kapDosya = 'kap-arsiv/' + mdl.kod + '.json';
+      if (!(await varMi(kapDosya))) continue;
+      const K = await oku(kapDosya);
+      mdl.favok = mdl.favok || {};
+      const var_ = new Set([...(mdl.orneklem || []).map(r => r.q), ...Object.keys(mdl.favok).filter(q => mdl.favok[q] && (mdl.favok[q].tl != null || mdl.favok[q].usd != null))]);
+      const C = S.ceyrek || {};
+      for (const q of Object.keys(C).sort()) {
+        if (!C[q].tam || var_.has(q)) continue;
+        if (q < '2024Q1') continue;   /* TMS-29 geçiş yılı (2023): 9A nominal, yıllık yeniden ölçülmüş → 4Ç türetmesi bozuk (BIMAS 4Ç23 −0,4 görüldü); 2024'ten itibaren */
+        const y = +q.slice(0, 4), n = +q.slice(-1);
+        const dn = K.donemler && K.donemler[y + '/' + n]; if (!dn) continue;
+        /* Tablo adı şirkete göre değişir (BIMAS: "Tablo 310003" — fonksiyon esaslı gelir tablosu etiketsiz) → xbrl TÜM tablolarda aranır */
+        const satir = (tabloAd, xbrl) => { for (const t of (dn.tablolar || [])) { const s = (t.satirlar || []).find(s => s.xbrl === xbrl); if (s) return s.degerler; } return null; };
+        const carpan = (dn.birim && dn.birim.carpan) || 1000;
+        const efkYtd = satir('Gelir Tablosu', 'ifrs-full_ProfitLossFromOperatingActivities');
+        const dgYtd = satir('Gelir Tablosu', 'ifrs-full_OtherIncome') || [], dyYtd = satir('Gelir Tablosu', 'ifrs-full_OtherExpenseByFunction') || [];   /* Fintables FAVÖK tanımı: EFK − diğer faaliyet gelir − diğer faaliyet gider (gider negatif) + amortisman */
+        const hasYtd = satir('Gelir Tablosu', 'ifrs-full_Revenue');
+        const netYtd = satir('Gelir Tablosu', 'ifrs-full_ProfitLossAttributableToOwnersOfParent');
+        const amYtd = satir('Nakit Akış', 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense');
+        if (!efkYtd || !amYtd) continue;
+        let efk, has, net, am, yaklasik = false;
+        const once = (n > 1) ? (K.donemler[y + '/' + (n - 1)]) : null;
+        const onceSatir = (tabloAd, xbrl) => { if (!once) return null; for (const t of (once.tablolar || [])) { const s = (t.satirlar || []).find(s => s.xbrl === xbrl); if (s) return s.degerler; } return null; };
+        const duz = (e, dg, dy) => e - (dg || 0) - (dy || 0);   /* diğer faaliyet kalemlerini düş (gider zaten negatif → eklenir) */
+        if (n === 1) { efk = duz(efkYtd[0], dgYtd[0], dyYtd[0]); has = hasYtd && hasYtd[0]; net = netYtd && netYtd[0]; am = amYtd[0]; }
+        else if (efkYtd.length >= 4 && n !== 4) { efk = duz(efkYtd[2], dgYtd[2], dyYtd[2]); has = hasYtd && hasYtd[2]; net = netYtd && netYtd[2]; const amO = onceSatir('Nakit Akış', 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense'); am = amO ? amYtd[0] - amO[0] : null; }
+        else { const eO = onceSatir('Gelir Tablosu', 'ifrs-full_ProfitLossFromOperatingActivities'), dgO = onceSatir('Gelir Tablosu', 'ifrs-full_OtherIncome') || [], dyO = onceSatir('Gelir Tablosu', 'ifrs-full_OtherExpenseByFunction') || [], hO = onceSatir('Gelir Tablosu', 'ifrs-full_Revenue'), nO = onceSatir('Gelir Tablosu', 'ifrs-full_ProfitLossAttributableToOwnersOfParent'), amO = onceSatir('Nakit Akış', 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense');
+          if (!eO || !amO) continue; efk = duz(efkYtd[0], dgYtd[0], dyYtd[0]) - duz(eO[0], dgO[0], dyO[0]); has = (hasYtd && hO) ? hasYtd[0] - hO[0] : null; net = (netYtd && nO) ? netYtd[0] - nO[0] : null; am = amYtd[0] - amO[0]; yaklasik = (n === 4); }
+        if (!(typeof efk === 'number') || !isFinite(efk) || !(typeof am === 'number') || !isFinite(am)) continue;
+        const fx = C[q].usdtry_ort || C[q].usdtry_son; if (!fx) continue;
+        const favokTl = (efk + am) * carpan / 1e9;   /* mlr TL */
+        const r = { q, favok_usd: +(favokTl * 1000 / fx).toFixed(1), favok_tl: +favokTl.toFixed(3),
+          satis_usd: has != null ? +(has * carpan / 1e6 / fx).toFixed(1) : null, net_usd: net != null ? +(net * carpan / 1e6 / fx).toFixed(1) : null, net_tl: net != null ? +(net * carpan / 1e9).toFixed(3) : null,
+          dizel: C[q].dizel, benzin: C[q].benzin, brent: C[q].brent, dBrent: C[q].dBrent, usdtry_ort: fx, _kaynak: 'KAP arşivi (Actions §462b)' + (yaklasik ? ' · 4Ç yaklaşık (yıllık − 9A)' : '') };
+        mdl.favok[q] = { tl: r.favok_tl, usd: r.favok_usd, _kaynak: 'KAP' };   /* §463: her modelde gerçek FAVÖK — pano/sicil/band buradan okur */
+        if (mdl.tip === 'regresyon' && Array.isArray(mdl.orneklem)) { mdl.orneklem.push(r); mdl.orneklem.sort((a, b) => a.q < b.q ? -1 : 1); }
+        /* konsensüs sicili: açıklanan çeyreğin kurum ortalaması katalogda ise gerçekle eşle */
+        if (mdl.konsensus && mdl.konsensus.donem === q && mdl.konsensus.favok_tl_mlr > 0) { mdl.konsensus_gecmis = mdl.konsensus_gecmis || []; if (!mdl.konsensus_gecmis.some(x => x.q === q)) mdl.konsensus_gecmis.push({ q, n: mdl.konsensus.kurum || null, ort_favok_tl: mdl.konsensus.favok_tl_mlr, ort_net_tl: mdl.konsensus.net_tl_mlr || null, gercek_favok_tl: r.favok_tl, _kaynak: 'Actions §463' }); }
+        eklenen.push(mdl.kod + ' ' + q + ' FAVÖK ' + favokTl.toFixed(1) + ' mlr ₺');
+      }
+    }
+    if (eklenen.length) { M.surum = bugun; await yaz(dosya, M); degisenler.push('karar modeli örneklemi (' + eklenen.length + ')'); raporlar.push('### Karar modeli örneklemi (§462b) — ✓ ' + eklenen.join(' · ')); }
+  } catch (e) { raporlar.push('### Karar modeli örneklemi (§462b) — ✗ ' + String(e && e.message || e).slice(0, 120)); }
+}
+
+/* ── §464 SÜRÜCÜ SERİLERİ KAYDI (sektor-surucu.json → seriler{}) ─────────────
+   Karar Motoru'nun XK030'a genişlemesi için tier A/B sürücüleri TEK kayıt
+   defterinden çekilir. Her serinin kaynağı, sembolü, birimi ve sıklığı kodda
+   açık; model kurulana kadar veri BİRİKİR (özellikle LME hurda: tarihçe
+   ücretli, kendi serimizi günlük noktadan kurarız).
+   KAYNAKLAR (19 Eki ölçüldü):
+   - yahoo  : /v8/finance/chart (crumb yok; tazele zaten kullanır). Vadeli
+              sembolleri "=F" ile: GC=F altın, SI=F gümüş, HG=F bakır, ALI=F
+              alüminyum, HRC=F ABD Midwest HRC, TTF=F Hollanda TTF gaz, NG=F
+              Henry Hub, ZW=F CBOT buğday, BZ=F Brent (Neste çaprazı), EURUSD=X,
+              TRY=X. 2 yıllık günlük tarihçe ilk koşuda gelir.
+   - lme    : lme.com ferrous sayfası statik HTML'de "Month 2 Closing Price
+              (day-delayed)" tek değer taşır (393,00 $/t, 18 Eki). Tarihçe ve
+              grafik LMElive üyeliği ister → günlük nokta biriktirilir.
+   - wb     : Dünya Bankası Pink Sheet (aylık PDF, ayın ~2. iş günü; sonraki
+              3 Kas 2026). Sayfa: worldbank.org/en/research/commodity-markets →
+              güncel PDF linki regex ile bulunur → pdf-parse. Tablo sütunları:
+              3 yıllık + 5 çeyreklik + 3 aylık. Satırlar: Urea E. Europe, DAP,
+              Iron ore, Coal Australia (termal), Natural gas Europe (TTF),
+              Gold, Silver, Zinc, Lead, Copper, Aluminum, Wheat U.S. HRW, Cocoa,
+              Sugar World, Crude oil Brent. Çeyreklik sütunlar modelin doğrudan
+              girdisidir; aylık sütunlar koşu çeyreğini besler.
+   DENETİM: değer makul aralıkta değilse ya da seri bir önceki koşudan GERİ
+   gittiyse o seri atlanır (dosya diğer serilerle yazılır); hiçbir kaynak
+   gelmezse seriler{} korunur. Sorun raporda seri adıyla görünür. */
+const SURUCU_KAYIT = {
+  altin:    { ad: 'Altın (COMEX GC=F)',                    birim: '$/toz', kaynak: 'yahoo', sembol: 'GC=F',    aralik: [500, 20000],  hisse: ['CVKMD'] },
+  gumus:    { ad: 'Gümüş (COMEX SI=F)',                    birim: '$/toz', kaynak: 'yahoo', sembol: 'SI=F',    aralik: [5, 500],      hisse: ['CVKMD'] },
+  bakir:    { ad: 'Bakır (COMEX HG=F)',                    birim: '$/lb',  kaynak: 'yahoo', sembol: 'HG=F',    aralik: [1, 20],       hisse: ['CVKMD'] },
+  aluminyum:{ ad: 'Alüminyum (CME ALI=F)',                 birim: '$/t',   kaynak: 'yahoo', sembol: 'ALI=F',   aralik: [800, 10000],  hisse: [] },
+  hrc_abd:  { ad: 'ABD Midwest HRC (CME HRC=F) — TR HRC vekili', birim: '$/t', kaynak: 'yahoo', sembol: 'HRC=F', aralik: [300, 3000], hisse: ['EREGL', 'KRDMD', 'KCAER'] },
+  ttf:      { ad: 'TTF doğalgaz (TTF=F)',                  birim: '€/MWh', kaynak: 'yahoo', sembol: 'TTF=F',   aralik: [5, 500],      hisse: ['GUBRF', 'TKFEN', 'AKCNS', 'CIMSA'] },
+  henryhub: { ad: 'Henry Hub doğalgaz (NG=F)',             birim: '$/mmbtu', kaynak: 'yahoo', sembol: 'NG=F', aralik: [0.5, 50],     hisse: [] },
+  bugday:   { ad: 'Buğday CBOT (ZW=F)',                    birim: '¢/bu',  kaynak: 'yahoo', sembol: 'ZW=F',    aralik: [200, 2500],   hisse: ['OBAMS'] },
+  brent_yh: { ad: 'Brent (ICE BZ=F) — Neste çaprazı',      birim: '$/v',   kaynak: 'yahoo', sembol: 'BZ=F',    aralik: [20, 300],     hisse: ['TUPRS'] },
+  eurusd:   { ad: 'EUR/USD',                               birim: '',      kaynak: 'yahoo', sembol: 'EURUSD=X', aralik: [0.6, 2],     hisse: ['KCAER', 'CIMSA', 'MAVI', 'OBAMS'] },
+  usdtry:   { ad: 'USD/TRY',                               birim: '',      kaynak: 'yahoo', sembol: 'TRY=X',   aralik: [5, 200],      hisse: ['*'] },
+  hurda_lme:{ ad: 'LME Steel Scrap CFR Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli)', birim: '$/t', kaynak: 'lme', url: 'https://www.lme.com/en/metals/ferrous/lme-steel-scrap-cfr-turkey-platts', aralik: [150, 1200], hisse: ['EREGL', 'KRDMD', 'KCAER'] },
+};
+/* Dünya Bankası Pink Sheet satır eşlemesi: anahtar → satır başlangıcı (regex, büyük/küçük duyarsız), birim */
+const WB_SATIR = {
+  ure:        { ad: 'Üre, Karadeniz (WB)',           re: /^Urea,\s*E\.\s*Europe/i,        birim: '$/t',     hisse: ['GUBRF', 'TKFEN'] },
+  dap:        { ad: 'DAP (WB)',                      re: /^DAP\b/i,                       birim: '$/t',     hisse: ['GUBRF', 'TKFEN'] },
+  demir_cevheri:{ ad: 'Demir cevheri cfr (WB)',      re: /^Iron ore\b/i,                  birim: '$/dmt',   hisse: ['EREGL', 'KRDMD'] },
+  komur_termal:{ ad: 'Kömür, Avustralya termal (WB)', re: /^Coal,\s*Australia/i,          birim: '$/t',     hisse: ['AKCNS', 'CIMSA', 'EREGL'] },
+  gaz_avrupa: { ad: 'Doğalgaz Avrupa TTF (WB)',      re: /^Natural gas,\s*Europe/i,       birim: '$/mmbtu', hisse: ['GUBRF', 'TKFEN', 'AKCNS', 'CIMSA'] },
+  altin_wb:   { ad: 'Altın (WB)',                    re: /^Gold\b/i,                      birim: '$/toz',   hisse: ['CVKMD'] },
+  gumus_wb:   { ad: 'Gümüş (WB)',                    re: /^Silver\b/i,                    birim: '$/toz',   hisse: ['CVKMD'] },
+  cinko:      { ad: 'Çinko LME (WB)',                re: /^Zinc\b/i,                      birim: '$/t',     hisse: ['CVKMD'] },
+  kursun:     { ad: 'Kurşun LME (WB)',               re: /^Lead\b/i,                      birim: '$/t',     hisse: ['CVKMD'] },
+  bakir_wb:   { ad: 'Bakır LME (WB)',                re: /^Copper\b/i,                    birim: '$/t',     hisse: ['CVKMD'] },
+  aluminyum_wb:{ ad: 'Alüminyum LME (WB)',           re: /^Aluminum\b/i,                  birim: '$/t',     hisse: [] },
+  bugday_wb:  { ad: 'Buğday ABD HRW (WB)',           re: /^Wheat,\s*U\.?S\.?,?\s*HRW/i,   birim: '$/t',     hisse: ['OBAMS'] },
+  kakao:      { ad: 'Kakao (WB)',                    re: /^Cocoa\b/i,                     birim: '$/kg',    hisse: [] },
+  seker_dunya:{ ad: 'Şeker dünya (WB)',              re: /^Sugar,\s*World/i,              birim: '$/kg',    hisse: [] },
+  brent_wb:   { ad: 'Brent (WB)',                    re: /^Crude oil,\s*Brent/i,          birim: '$/v',     hisse: ['TUPRS'] },
+};
+const WB_AY = { january: '01', february: '02', march: '03', april: '04', may: '05', june: '06', july: '07', august: '08', september: '09', october: '10', november: '11', december: '12' };
+const WB_CEYREK = { 'Jan-Mar': 'Q1', 'Apr-Jun': 'Q2', 'Jul-Sep': 'Q3', 'Oct-Dec': 'Q4' };
+/* Pink Sheet metnini ayrıştır: dönem başlıkları (iki satır) + hedef satırlar → {yillik, ceyreklik, aylik} */
+function wbAyristir(metin) {
+  const satirlar = metin.split(/\r?\n/).map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  const out = {}; let donemler = null;
+  for (let i = 0; i < satirlar.length; i++) {
+    const s = satirlar[i];
+    if (/Jan-Dec/.test(s) && /(January|February|March|April|May|June|July|August|September|October|November|December)/.test(s)) {
+      const etiket = s.match(/Jan-Dec|Jan-Mar|Apr-Jun|Jul-Sep|Oct-Dec|January|February|March|April|May|June|July|August|September|October|November|December/g) || [];
+      const yilSatir = satirlar[i + 1] || '';
+      const yillar = (yilSatir.match(/\b(19|20)\d{2}\b/g) || []);
+      if (etiket.length && yillar.length === etiket.length) donemler = etiket.map((e, k) => ({ e, y: yillar[k] }));
+      continue;
+    }
+    if (!donemler) continue;
+    for (const [k, t] of Object.entries(WB_SATIR)) {
+      if (!t.re.test(s)) continue;
+      const sayilar = (s.match(/-?\d{1,3}(?:,\d{3})*(?:\.\d+)?/g) || []).map(x => +x.replace(/,/g, ''));
+      /* satır başındaki dipnot (a/ b/) ve "**" sayısal değil; sondan donemler.length sayı alınır */
+      if (sayilar.length < donemler.length) continue;
+      const v = sayilar.slice(-donemler.length);
+      const r = { yillik: {}, ceyreklik: {}, aylik: {} };
+      donemler.forEach((d, j) => {
+        if (d.e === 'Jan-Dec') r.yillik[d.y] = v[j];
+        else if (WB_CEYREK[d.e]) r.ceyreklik[d.y + WB_CEYREK[d.e]] = v[j];
+        else if (WB_AY[d.e.toLowerCase()]) r.aylik[d.y + '-' + WB_AY[d.e.toLowerCase()]] = v[j];
+      });
+      if (!out[k]) out[k] = r;   /* ilk eşleşme (Sugar World tek satır; Gold vb. bir kez) */
+    }
+  }
+  return { out, donemler };
+}
+async function surucuSeriler() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### Sürücü serileri (§464) — ⏭ sektor-surucu.json yok (önce §462 koşmalı)'); return; }
+  const D = await oku(dosya);
+  D.seriler = D.seriler || {};
+  const notlar = [], uyari = [];
+  const bugunT = bugun;
+  /* 1) Yahoo günlük (2 yıl; sonraki koşularda son 400 gün üstüne birleştirilir) */
+  const yahooKod = Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'yahoo');
+  try {
+    const h = await yahooSeri(yahooKod.map(([, t]) => t.sembol), '', '2y');
+    for (const [k, t] of yahooKod) {
+      const m = h[t.sembol]; if (!m || !m.size) { uyari.push(k + ' (Yahoo ' + t.sembol + ' boş)'); continue; }
+      const eski = (D.seriler[k] && D.seriler[k].gunluk) || [];
+      const harita = new Map(eski.map(x => [x[0], x[1]]));
+      let aralikDisi = 0;
+      for (const [tarih, v] of m) { if (v >= t.aralik[0] && v <= t.aralik[1]) harita.set(tarih, +(+v).toFixed(4)); else aralikDisi++; }
+      const gunluk = [...harita.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1);
+      if (!gunluk.length) { uyari.push(k + ' (Yahoo ' + t.sembol + ': ' + aralikDisi + ' değer, hepsi aralık dışı — birim/sembol kontrol)'); continue; }
+      const son = gunluk[gunluk.length - 1];
+      if (D.seriler[k] && D.seriler[k].son && son[0] < D.seriler[k].son.tarih) { uyari.push(k + ' (tarih geriledi, atlandı)'); continue; }
+      D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: t.ad, birim: t.birim, kaynak: 'Yahoo ' + t.sembol, siklik: 'gunluk', hisse: t.hisse, gunluk, son: { tarih: son[0], deger: son[1] }, guncelleme: bugunT });
+      notlar.push(k + ' ' + son[1] + ' (' + son[0] + ', ' + gunluk.length + ' gün' + (aralikDisi ? ', ' + aralikDisi + ' aralık dışı atıldı' : '') + ')');
+    }
+  } catch (e) { uyari.push('Yahoo katmanı: ' + String(e && e.message || e).slice(0, 80)); }
+  /* 2) LME hurda — günlük tek nokta (statik HTML) */
+  try {
+    const t = SURUCU_KAYIT.hurda_lme;
+    const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': 'text/html' }, signal: AbortSignal.timeout(25000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const html = (await r.text()).replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ');
+    const m = html.match(/Month\s*2\s*Closing\s*Price[^0-9]{0,120}?(\d{2,4}(?:\.\d{1,2})?)/i) || html.match(/Closing\s*Price[^0-9]{0,120}?(\d{3}(?:\.\d{1,2})?)/i);
+    if (!m) throw new Error('fiyat deseni bulunamadı (sayfa düzeni değişmiş olabilir)');
+    const v = +m[1];
+    if (!(v >= t.aralik[0] && v <= t.aralik[1])) throw new Error('aralık dışı ' + v);
+    const tarihM = html.match(/(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+20\d{2})/i);
+    const eski = (D.seriler.hurda_lme && D.seriler.hurda_lme.gunluk) || [];
+    const son = eski[eski.length - 1];
+    if (!son || son[0] !== bugunT) eski.push([bugunT, v, tarihM ? tarihM[1] : null]); else eski[eski.length - 1] = [bugunT, v, tarihM ? tarihM[1] : null];
+    D.seriler.hurda_lme = Object.assign({}, D.seriler.hurda_lme || {}, { ad: t.ad, birim: t.birim, kaynak: 'lme.com (statik sayfa, gün gecikmeli)', siklik: 'gunluk', hisse: t.hisse, gunluk: eski, son: { tarih: bugunT, deger: v, etiket: tarihM ? tarihM[1] : null }, guncelleme: bugunT, _not: 'Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta ' + eski[0][0] + '). Değer Month-2 kontrat kapanışı, spot Platts CFR TR değil — seviye değil DEĞİŞİM okunur.' });
+    notlar.push('hurda_lme ' + v + ' $/t (' + (tarihM ? tarihM[1] : bugunT) + ', ' + eski.length + ' nokta)');
+  } catch (e) { uyari.push('hurda_lme: ' + String(e && e.message || e).slice(0, 90)); }
+  /* 3) Dünya Bankası Pink Sheet — aylık; ayda bir değişir, her koşuda bakılır (ucuz: 1 sayfa + 1 PDF) */
+  try {
+    const sayfa = await (await fetch('https://www.worldbank.org/en/research/commodity-markets', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(25000) })).text();
+    const pm = sayfa.match(/https:\/\/thedocs\.worldbank\.org\/[^"' ]*CMO-Pink-Sheet-[A-Za-z]+-20\d{2}\.pdf/);
+    if (!pm) throw new Error('Pink Sheet PDF linki sayfada bulunamadı');
+    const pdfUrl = pm[0];
+    const eskiUrl = D.wb && D.wb.url;
+    if (eskiUrl === pdfUrl && D.wb && D.wb.guncelleme) { notlar.push('wb: aynı sayı (' + pdfUrl.split('/').pop() + '), yeniden okunmadı'); }
+    else {
+      let pdfParse = null; try { pdfParse = (await import('pdf-parse')).default; } catch (e) { throw new Error('pdf-parse yok'); }
+      const buf = Buffer.from(await (await fetch(pdfUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(40000) })).arrayBuffer());
+      const metin = (await pdfParse(buf)).text || '';
+      const { out, donemler } = wbAyristir(metin);
+      const bulunan = Object.keys(out);
+      if (bulunan.length < 6) throw new Error('yalnız ' + bulunan.length + ' satır eşleşti (' + bulunan.join(',') + ') — tablo düzeni değişmiş olabilir; ilk 300 kr: ' + metin.replace(/\s+/g, ' ').slice(0, 300));
+      for (const k of bulunan) {
+        const t = WB_SATIR[k]; const e = D.seriler[k] || {};
+        D.seriler[k] = Object.assign({}, e, { ad: t.ad, birim: t.birim, kaynak: 'Dünya Bankası Pink Sheet (aylık PDF)', siklik: 'aylik', hisse: t.hisse,
+          yillik: Object.assign({}, e.yillik || {}, out[k].yillik), ceyreklik: Object.assign({}, e.ceyreklik || {}, out[k].ceyreklik), aylik: Object.assign({}, e.aylik || {}, out[k].aylik), guncelleme: bugunT });
+        const aylar = Object.keys(D.seriler[k].aylik).sort(); const sonAy = aylar[aylar.length - 1];
+        D.seriler[k].son = { tarih: sonAy, deger: D.seriler[k].aylik[sonAy] };
+      }
+      D.wb = { url: pdfUrl, sayi: pdfUrl.split('/').pop(), guncelleme: bugunT, donemler: (donemler || []).map(d => d.e + ' ' + d.y), satir: bulunan.length, _not: 'Tablo: 3 yıllık + 5 çeyreklik + 3 aylık sütun. Çeyreklik sütunlar birikerek tarihçe oluşturur (yeni sayı eskilerin üstüne yazmaz, ekler). Sonraki sayı ayın ~2. iş günü.' };
+      notlar.push('wb ' + D.wb.sayi + ' · ' + bulunan.length + ' seri (ör. ure ' + (out.ure ? JSON.stringify(out.ure.aylik) : '—') + ')');
+    }
+  } catch (e) { uyari.push('wb: ' + String(e && e.message || e).slice(0, 160)); }
+  if (!notlar.length) { raporlar.push('### Sürücü serileri (§464) — ✗ hiçbir kaynak gelmedi\n- ' + uyari.join('\n- ')); return; }
+  D.seriler_guncelleme = bugunT;
+  await yaz(dosya, D);
+  degisenler.push('sürücü serileri (' + notlar.length + ')');
+  raporlar.push('### Sürücü serileri (§464) — ✓ ' + notlar.length + ' seri\n- ' + notlar.join('\n- ') + (uyari.length ? '\n- ⚠ ' + uyari.join('\n- ⚠ ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -4220,9 +4567,12 @@ async function bultenKesif() {
     await olcKos('Hazine ihale (§314)', ()=>hmbIhale());   /* SS326 */
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
+    await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu());   /* §462: Neste crack + Brent → Karar Motoru hammaddesi (hepsi/fiyat → hafta içi akşam) */
+    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME hurda · Dünya Bankası Pink Sheet → sektor-surucu.json/seriler */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
+    await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
@@ -4230,6 +4580,8 @@ async function bultenKesif() {
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
+  if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
