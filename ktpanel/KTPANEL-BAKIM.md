@@ -35,8 +35,15 @@ Script artık bunu da ayrıştırır (id|user|username|email|kullanici|login = �
 satır satır, virgüllü ya da JSON; değerler kırpılır — yapıştırma boşluğu şifreyi bozmaz). Rapor: "EPIAS_KEY (tek secret,
 id/pass ayrıştırıldı)". İki ayrı secret (EPIAS_ID + EPIAS_KEY) yine tercih edilir. GÜVENLİK NOTU: şifre sohbete yapıştırıldı →
 EPİAŞ şifresi değiştirilmeli, secret yeni değerle güncellenmeli (Actions değeri loglamaz, GitHub maskeler).
-DEPLOY: scripts/tazele.mjs (§466b + §464g + §466d) · .github/workflows/tazele.yml (KTP_SECRETS) · ktpanel/app.js (20261020b) ·
-KTPANEL-BAKIM.md. karar-model.json / middleware.js / guncelleme-plani.json değişmedi (canlıda). sektor-surucu.json YÜKLENMEZ.
+§466e GITHUB "MAY BE MALICIOUS" (01:46, commit a1a44c2): workflow'a eklediğim `KTP_SECRETS: toJSON(secrets)` satırı GitHub'ın
+kötücül-workflow tarayıcısına takıldı ("will not run until someone with write access approves") — tüm secret'ları env'e
+dökmek sızdırma deseniyle aynı imza. HAKLI uyarı; satır KALDIRILDI, "Approve and run" denmedi. Kimlik artık yalnız açık
+adlarla (EPIAS_ID/EPIAS_KEY vb.) gelir; tek secret içinde id=/pass= satırları ya da etiketsiz "e-posta + şifre" iki satır
+da çözülür (§466d). Script'teki KTP_SECRETS okuma kolu zararsız (env yoksa boş) ama tanı metni artık onu beklemiyor.
+DERS: "tüm secret'ları geçir" kolaylığı güvenlik aracı için kırmızı bayraktır; secret adı bilinmiyorsa kullanıcıya sormak
+daha ucuzdur.
+DEPLOY: scripts/tazele.mjs (§466b + §464g + §466d/e) · .github/workflows/tazele.yml (toJSON(secrets) YOK) · ktpanel/app.js
+(20261020b) · KTPANEL-BAKIM.md. karar-model.json / middleware.js / guncelleme-plani.json değişmedi (canlıda). sektor-surucu.json YÜKLENMEZ.
 
 # BAKIM EK — §466 (20 Eki 2026, 00:50) — KAMU VERİ KATMANLARI: TCMB EVDS + EPİAŞ PTF ("evds key girdim, EPIAS id ve key de girdim")
 
