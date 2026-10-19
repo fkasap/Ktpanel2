@@ -2564,10 +2564,14 @@ async function xlsxSayfa(buf, sayfaAdi) {
               alüminyum, HRC=F ABD Midwest HRC, TTF=F Hollanda TTF gaz, NG=F
               Henry Hub, ZW=F CBOT buğday, BZ=F Brent (Neste çaprazı), EURUSD=X,
               TRY=X. 2 yıllık günlük tarihçe ilk koşuda gelir.
-   - lme    : lme.com ferrous sayfaları statik HTML'de "Month 2 Closing Price
-              (day-delayed)" tek değer taşır: hurda CFR TR 393,00 · inşaat demiri
-              FOB TR 587,50 $/t (18 Eki). Tarihçe/grafik LMElive üyeliği ister →
-              günlük nokta biriktirilir; ikisinden TR metal marjı türetilir.
+   - lme    : lme.com ferrous sayfaları statik HTML'de tek değer taşır
+              (<span class="hero-metal-data__number"> 393.00 </span> … "Month 2
+              Closing Price (day-delayed)"): hurda CFR TR 393,00 · inşaat demiri
+              FOB TR 587,50 $/t (16 Eki). Tarihçe LMElive üyeliği ister → günlük
+              nokta biriktirilir; ikisinden TR metal marjı türetilir. ENGEL:
+              Cloudflare "Just a moment" (runner IP) → zincir: düz fetch (2 başlık
+              seti) → Playwright (25 sn doğrulama beklemesi) → Vercel köprüsü
+              (§464e api/market.js?mod=lme). Rapor hangi yoldan geldiğini yazar.
    - investing.com: kullanıcı "yassı çelik investing'de var" dedi — doğru;
               oradaki "ABD Çelik Rulo (HRC)" AYNI CME kontratıdır (Yahoo HRC=F
               ile birebir), ayrıca SHFE inşaat demiri ve SGX demir cevheri var.
@@ -2680,16 +2684,40 @@ async function surucuSeriler() {
   for (const [k, t] of Object.entries(SURUCU_KAYIT).filter(([, t]) => t.kaynak === 'lme')) {
     try {
       let html = null, yol = 'fetch';
-      const r = await fetch(t.url, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(25000) });
-      if (r.ok) html = await r.text();
-      else {
-        /* §464c: düz fetch 403 (Akamai, 19 Eki 18:31 koşusu) → Playwright ile gerçek tarayıcı (fon katmanıyla aynı kurulum; chromium yoksa atlanır).
-           23:32 koşusunda tarayıcı UA'lı düz fetch GEÇTİ (403 yok) — Playwright yalnız yedek. */
-        let chromium = null; try { ({ chromium } = await import('playwright')); } catch (e) { throw new Error('HTTP ' + r.status + ' · playwright yok'); }
-        const browser = await chromium.launch();
-        try { const pg = await browser.newPage({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' }); await pg.goto(t.url, { waitUntil: 'domcontentloaded', timeout: 45000 }); await pg.waitForTimeout(4000); html = await pg.content(); yol = 'playwright'; }
-        finally { await browser.close().catch(() => {}); }
-        if (!html || /Access Denied|Pardon Our Interruption|captcha/i.test(html.slice(0, 3000))) throw new Error('HTTP ' + r.status + ' · Playwright da engellendi');
+      const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+      const duvar = h => !h || /Just a moment|Attention Required|Access Denied|Pardon Our Interruption|captcha/i.test(h.slice(0, 4000));
+      /* Yol 1-2: düz fetch, iki başlık seti (Cloudflare bazen geçiriyor — 19 Eki 23:32 geçti, 00:00 geçmedi) */
+      for (const H of [
+        { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-GB,en;q=0.9', 'Upgrade-Insecure-Requests': '1' },
+        { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-US,en;q=0.9', 'Referer': 'https://www.lme.com/en/metals/ferrous', 'Sec-Fetch-Dest': 'document', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'same-origin', 'Cache-Control': 'no-cache' }
+      ]) {
+        try { const r = await fetch(t.url, { headers: H, signal: AbortSignal.timeout(25000) }); const h = await r.text(); if (r.ok && !duvar(h)) { html = h; break; } } catch (e) {}
+      }
+      /* Yol 3: Playwright — Cloudflare JS doğrulaması için 25 sn'ye kadar bekle (headless genelde geçemez; denenir, rapora düşer) */
+      if (!html) {
+        let chromium = null; try { ({ chromium } = await import('playwright')); } catch (e) { chromium = null; }
+        if (chromium) {
+          let browser = null;
+          try {
+            browser = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] });
+            const ctx = await browser.newContext({ userAgent: UA, viewport: { width: 1366, height: 850 }, locale: 'en-GB' });
+            const pg = await ctx.newPage();
+            await pg.goto(t.url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+            await pg.waitForFunction(() => !/just a moment|attention required/i.test(document.title) && !!document.querySelector('.hero-metal-data__number'), null, { timeout: 25000 }).catch(() => {});
+            const h = await pg.content(); if (!duvar(h) && /hero-metal-data__number/.test(h)) { html = h; yol = 'playwright'; }
+          } catch (e) { /* chromium kurulu değil / launch düştü → köprüye geç */ }
+          finally { if (browser) await browser.close().catch(() => {}); }
+        }
+      }
+      /* Yol 4: Vercel köprüsü (§464e api/market.js?mod=lme) — farklı çıkış IP'si; Cloudflare orada da duvar örerse ok:false */
+      if (!html) {
+        try {
+          const kodV = k === 'hurda_lme' ? 'hurda' : 'demir';
+          const rv = await fetch('https://ktpanel.vercel.app/api/market?mod=lme&kod=' + kodV, { headers: { 'User-Agent': 'KtPanel/Actions' }, signal: AbortSignal.timeout(30000) });
+          const jv = await rv.json();
+          if (jv && jv.ok && jv.deger > 0) { html = '<span class="hero-metal-data__number"> ' + jv.deger + ' </span> Month 2 Closing Price (day-delayed) Data valid for ' + (jv.etiket || '') + ' '; yol = 'vercel'; }
+          else throw new Error('köprü: ' + ((jv && jv.err) || 'yanıt yok') + (jv && jv.ornek ? ' · ' + jv.ornek.slice(0, 60) : ''));
+        } catch (e) { throw new Error('fetch/Playwright Cloudflare duvarı · ' + String(e && e.message || e).slice(0, 120)); }
       }
       /* §464d (19 Eki 23:38 ölçümü): değer ETİKETTEN ÖNCE gelir ve kendi sınıfında durur:
            <span class="hero-metal-data__number"> 393.00 </span> <span class="hero-metal-data__change"> 0.38% </span>
@@ -4675,7 +4703,7 @@ async function bultenKesif() {
     await olcKos('Hazine ihraç takvimi (§334)', ()=>hazineTakvimOto());
     await olcKos('Küresel makro (§319)', ()=>makroTakvim());   /* SS326 */
     await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu());   /* §462: Neste crack + Brent → Karar Motoru hammaddesi (hepsi/fiyat → hafta içi akşam) */
-    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME hurda+inşaat demiri (Playwright yedeği) · Dünya Bankası aylık xlsx → sektor-surucu.json/seriler */
+    await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME (fetch→Playwright→Vercel köprüsü) · Dünya Bankası aylık xlsx → sektor-surucu.json/seriler */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
