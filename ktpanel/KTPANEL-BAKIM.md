@@ -40,13 +40,22 @@ sütunu: birincil sürücünün hedef/önceki çeyrek değişimi (TUPRS dizel +%
 sayıyı etiketten SONRA arıyordu. §464d: önce ham HTML'de sınıf eşlenir, düşerse "sayı → yüzde → etiket"
 metin deseni; tarih "Data valid for 16 Oct 2026" satırından. Stub testi: hurda 393 · demir 587,5 · marj 194,5 ✓.
 Rapor artık yolu da yazar (fetch/playwright). Sonraki koşuda LME iki serisi ve metal_marji_tr dolmalı.
+ÜÇÜNCÜ KOŞU (00:00, run 39323438134, elle hepsi, yeşil): LME bu kez düz fetch'te takıldı, Playwright
+"Just a moment..." (CLOUDFLARE JS doğrulaması — Akamai değil) döndürdü; headless 4 sn'de geçemedi.
+Yani 23:32'deki geçiş şanstı (runner IP'ye göre değişiyor). §464e ZİNCİR: düz fetch (2 başlık seti) →
+Playwright (AutomationControlled kapalı, 25 sn'ye kadar doğrulama bekler) → VERCEL KÖPRÜSÜ
+api/market.js?mod=lme&kod=hurda|demir (farklı çıkış IP'si; yalnız iki sabit sayfa, SSRF yok). Playwright
+launch düşerse (chromium kurulu değil) zincir kırılmaz, köprüye geçer (harness: 'vercel' yoluyla 393/587,5
+/marj 194,5 ✓). Rapor yolu yazar (fetch/playwright/vercel). Cloudflare Vercel'i de duvara alırsa ok:false +
+ilk 120 karakter rapora düşer → plan D: Chrome'dan günlük el tohumu ya da farklı kaynak (kabul: hurda
+tarihçesi şart değil, metal marjı yön serisi).
 EKSİK KALANLAR (kullanıcı aksiyonu): EVDS_KEY'i Actions secret'a eklemek (TÜFE gıda/giyim, çimento ÜFE,
 politika faizi); EPİAŞ Şeffaflık hesabı (PTF); sonrası EKGYO aylık ön satış ayrıştırıcısı (KAP).
 DERS: "ÖLÇMEDEN YAZMA" iki kez doğrulandı — PDF yolu masa başında mantıklıydı, metin çıkarımı hücreleri
 yapıştırdı; xlsx'i gerçek dosyada ölçünce ilk denemede geçti. Üçüncü taraf engeli (403) için her kaynağa
 ikinci yol (Playwright/köprü) baştan planlanmalı.
 DEPLOY: ktpanel/{app.js (20261019b), karar-model.json (2026-10-19b), sektor-surucu.json (canlı+WB tohumu),
-guncelleme-plani.json, KTPANEL-BAKIM.md, KTPANEL-DAMGA.md} + scripts/tazele.mjs (§464b/c). index.html değişmedi.
+guncelleme-plani.json, KTPANEL-BAKIM.md, KTPANEL-DAMGA.md, api/market.js (§464e mod=lme)} + scripts/tazele.mjs (§464b-e). index.html değişmedi.
 
 # BAKIM EK — §464 (19 Eki 2026) — SÜRÜCÜ SERİLERİ KAYDI: "DİĞER HİSSELERİN SEKTÖR DEĞİŞKENLERİNİ NASIL ÇEKECEKSİN?"
 
