@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-19b",
+ "surum": "2026-10-20a",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -93,6 +93,18 @@
      "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı"
     },
     {
+     "k": "ptf",
+     "rol": "gelir",
+     "ad": "PTF günlük ort. (EPİAŞ) — üretim/ticaret segmenti",
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarife endekslemesi",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
      "k": "epdk_tarife",
      "rol": "gelir",
      "ad": "EPDK dağıtım tarifesi (sistem kullanım bedeli)",
@@ -112,7 +124,7 @@
    "tier": "B",
    "tip": "konsensus",
    "surucu_plani": "Çimento ÜFE (TÜİK 23.5) · petrokok/doğalgaz/elektrik maliyeti · yurt içi tüketim (TÇMB) · ihracat navlun",
-   "kaynak_notu": "EVDS/TÜİK aylık; TÇMB aylık bülten",
+   "kaynak_notu": "TCMB EVDS §466: Yİ-ÜFE 3.14.5 çimento-kireç-alçı aylık; TÇMB aylık bülten (elle)",
    "sermaye_mn": 191.447068,
    "favok": {
     "2024Q1": {
@@ -246,9 +258,9 @@
     {
      "k": "cimento_ufe",
      "rol": "gelir",
-     "ad": "Çimento ÜFE (TÜİK)",
-     "bekliyor": true,
-     "kaynak": "EVDS alt kalem — EVDS_KEY secret gerekli"
+     "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
+     "not": "Yurt içi çimento satış fiyatının resmî aylık vekili; seviye değil yıllık/çeyreklik değişim okunur"
     },
     {
      "k": "eurusd",
@@ -265,7 +277,7 @@
    "tier": "A",
    "tip": "konsensus",
    "surucu_plani": "PTF (EPİAŞ Şeffaflık, TL/MWh) × üretim (hidroloji · rüzgâr) · YEKDEM USD tarifesi · USDTRY",
-   "kaynak_notu": "EPİAŞ API ücretsiz üyelik (Actions secret) — Faz 2",
+   "kaynak_notu": "EPİAŞ Şeffaflık (TGT) — Actions §466 günlük PTF (TL ve $); YEKDEM payı şirket sunumundan",
    "sermaye_mn": 7181.774676,
    "favok": {
     "2024Q1": {
@@ -377,9 +389,21 @@
     {
      "k": "ptf",
      "rol": "gelir",
-     "ad": "PTF spot elektrik (EPİAŞ)",
-     "bekliyor": true,
-     "kaynak": "EPİAŞ Şeffaflık API — üyelik/secret gerekli"
+     "ad": "PTF spot elektrik, günlük ort. (EPİAŞ GÖP)",
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466",
+     "not": "Saatlik piyasa takas fiyatının gün ortalaması; spot satışın birim geliri"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "gelir",
+     "ad": "PTF $/MWh — YEKDEM $ tarifesiyle kıyas",
+     "kaynak": "EPİAŞ (TCMB alış kuru)"
+    },
+    {
+     "k": "elektrik_ufe",
+     "rol": "gelir",
+     "ad": "Elektrik ÜFE (TÜİK, aylık) — toptan fiyat vekili",
+     "kaynak": "TCMB EVDS"
     },
     {
      "k": "gaz_avrupa",
@@ -401,7 +425,7 @@
    "tier": "B",
    "tip": "konsensus_banka",
    "surucu_plani": "Kâr payı makası: politika faizi/TLREF − katılma hesabı maliyeti · kredi büyümesi · TÜFEX benzeri sukuk getirisi · karşılık",
-   "kaynak_notu": "Banka şablonu: hedef metrik NET KÂR; EVDS faiz serileri panelde var",
+   "kaynak_notu": "Banka şablonu: hedef metrik NET KÂR; AOFM/TLREF/TÜFE EVDS §466 (günlük/aylık)",
    "sermaye_mn": 2500.0,
    "favok": {},
    "fiyat_ceyrek_sonu": {
@@ -486,18 +510,31 @@
    "sektor_not": "Katılım bankası: gelir kâr payı makası (fonlama maliyeti vs kredi/sukuk getirisi) + komisyon. Faiz indirim döngüsünde mevduat maliyeti kredi getirisinden hızlı düşer → makas açılır; karşılık giderleri ve TÜFE’ye endeksli kira sertifikası getirisi oynaklık kaynağı. Hedef metrik net kâr; FAVÖK tanımsız.",
    "surucu_seriler": [
     {
-     "k": "politika_faizi",
-     "rol": "marj",
-     "ad": "Politika faizi / TLREF (kâr payı makası)",
-     "bekliyor": true,
-     "kaynak": "Panelde canlı (Makro sekmesi POL_CANLI); EVDS alt seri eklenecek"
+     "k": "aofm",
+     "rol": "maliyet",
+     "ad": "TCMB AOFM — ağırlıklı ort. fonlama maliyeti (%)",
+     "kaynak": "TCMB EVDS TP.APIFON4 (iş günü)",
+     "not": "Fonlama maliyetinin fiilî ölçüsü (politika faizinden daha gerçekçi). İndirim döngüsünde katılma hesabı maliyeti kredi getirisinden hızlı düşer → makas açılır: AOFM ↓ lehte, ↑ aleyhte. Değişim puan (p) okunur"
+    },
+    {
+     "k": "tlref",
+     "rol": "maliyet",
+     "ad": "BIST TLREF gecelik referans faiz (%)",
+     "kaynak": "TCMB EVDS TP.BISTTLREF.ORAN",
+     "not": "Piyasa gecelik faizi; kira sertifikası/mevduat fiyatlamasının günlük çapası"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — TÜFE endeksli kira sertifikası getirisi",
+     "kaynak": "TCMB EVDS (zincirli)"
     },
     {
      "k": "usdtry",
      "rol": "kur"
     }
    ],
-   "birincil": "politika_faizi"
+   "birincil": "aofm"
   },
   {
    "kod": "ALTNY",
@@ -835,7 +872,7 @@
    "tier": "B",
    "tip": "konsensus",
    "surucu_plani": "TÜFE gıda (TÜİK/EVDS aylık) · mağaza sayısı · asgari ücret (marj) · reel sepet",
-   "kaynak_notu": "EVDS köprüsü panelde var; mağaza sayısı KAP çeyreklik",
+   "kaynak_notu": "TCMB EVDS §466: TÜFE gıda (2025=100, zincirli); mağaza sayısı KAP çeyreklik",
    "sermaye_mn": 1200.0,
    "favok": {
     "2024Q1": {
@@ -961,9 +998,9 @@
     {
      "k": "tufe_gida",
      "rol": "gelir",
-     "ad": "TÜFE gıda (TÜİK)",
-     "bekliyor": true,
-     "kaynak": "EVDS alt kalem — EVDS_KEY secret gerekli"
+     "ad": "TÜFE gıda ve alkolsüz içecekler (TÜİK, 2025=100)",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.01 (+2003 bazı zincirli)",
+     "not": "Sepet büyümesinin resmî vekili: gıda enflasyonu ciro büyümesine yapışıktır; çeyrek ortalamasının yıllık değişimi = aynı mağaza nominal büyüme tabanı"
     },
     {
      "k": "bugday_wb",
@@ -1208,9 +1245,8 @@
     {
      "k": "cimento_ufe",
      "rol": "gelir",
-     "ad": "Çimento ÜFE (TÜİK)",
-     "bekliyor": true,
-     "kaynak": "EVDS"
+     "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T69"
     }
    ],
    "birincil": "komur_termal"
@@ -1457,7 +1493,7 @@
    "tier": "B",
    "tip": "konsensus",
    "surucu_plani": "Aylık ön satış (KAP: satış rakamları) · teslimat takvimi (gelir tanıma) · konut fiyat endeksi (TCMB KFE)",
-   "kaynak_notu": "KAP aylık bildirim (Actions kapArsiv deseniyle çekilebilir) + EVDS KFE",
+   "kaynak_notu": "TCMB EVDS §466: KFE aylık; KAP aylık ön satış bildirimi (ayrıştırıcı Faz 3)",
    "sermaye_mn": 3800.0,
    "favok": {
     "2024Q1": {
@@ -1572,6 +1608,25 @@
    "sektor_not": "GYO (konut geliştirme): gelir TESLİMATTA tanınır → çeyrek FAVÖK’ü hangi projenin teslim edildiğine bağlı, satış hızıyla eşzamanlı değil. Ön satışlar (aylık KAP) ileriye dönük gösterge; arsa portföyü ve hasılat paylaşımı modeli marjı belirler. Faiz düşüşü konut talebini açar.",
    "surucu_seriler": [
     {
+     "k": "kfe",
+     "rol": "gelir",
+     "ad": "Konut Fiyat Endeksi (TCMB KFE, aylık)",
+     "kaynak": "TCMB EVDS TP.KFE.TR",
+     "not": "Konut fiyatlarının resmî aylık ölçüsü (hedonik). Teslimat geliri satış anındaki fiyatla tanınır; KFE yıllık değişimi birim gelir büyümesinin tabanı. Reel okuma için TÜFE ile kıyaslanır"
+    },
+    {
+     "k": "tufe",
+     "rol": "maliyet",
+     "ad": "TÜFE genel — inşaat maliyeti/reel konut fiyatı kıyası",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
+     "k": "aofm",
+     "rol": "maliyet",
+     "ad": "TCMB AOFM (%) — konut kredisi faizinin çapası",
+     "kaynak": "TCMB EVDS"
+    },
+    {
      "k": "on_satis",
      "rol": "gelir",
      "ad": "Aylık ön satış (KAP)",
@@ -1579,18 +1634,11 @@
      "kaynak": "KAP ÖDA aylık — ayrıştırıcı Faz 3"
     },
     {
-     "k": "kfe",
-     "rol": "gelir",
-     "ad": "Konut fiyat endeksi (TCMB KFE)",
-     "bekliyor": true,
-     "kaynak": "EVDS"
-    },
-    {
      "k": "usdtry",
      "rol": "kur"
     }
    ],
-   "birincil": "on_satis"
+   "birincil": "kfe"
   },
   {
    "kod": "ENERY",
@@ -1671,6 +1719,12 @@
    "sektor_not": "Doğalgaz dağıtım şirketi (çok bölge). Gelir = abone × tüketim × EPDK tarifesi; tarife TÜFE ile endekslenir, hacim kış sıcaklığına bağlı (1Ç/4Ç güçlü, 3Ç zayıf). Yatırım harcaması ve yeni bölge lisansları büyüme kaynağı; gaz fiyatı geçiş kalemi (marjı doğrudan etkilemez).",
    "surucu_seriler": [
     {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — EPDK tarife endekslemesi",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
      "k": "epdk_tarife",
      "rol": "gelir",
      "ad": "EPDK dağıtım tarifesi (TÜFE endeksli)",
@@ -1686,7 +1740,7 @@
      "rol": "kur"
     }
    ],
-   "birincil": "epdk_tarife"
+   "birincil": "tufe"
   },
   {
    "kod": "ENJSA",
@@ -1695,7 +1749,7 @@
    "tier": "C",
    "tip": "konsensus",
    "surucu_plani": "Düzenlenmiş: RAB (düzenlenmiş varlık tabanı) × reel getiri (%) + TÜFE endekslemesi + verimlilik/kayıp-kaçak primi · finansal gelir",
-   "kaynak_notu": "Tip \"tarife\": formül şirket sunumundan; sürücü TÜFE (EVDS) — yarı-nicel",
+   "kaynak_notu": "Tip \"tarife\": formül şirket sunumundan; TÜFE + elektrik ÜFE + AOFM EVDS §466 — yarı-nicel",
    "sermaye_mn": 1181.068967,
    "favok": {
     "2024Q1": {
@@ -1819,9 +1873,21 @@
     {
      "k": "tufe",
      "rol": "gelir",
-     "ad": "TÜFE (RAB endekslemesi)",
-     "bekliyor": true,
-     "kaynak": "EVDS TP.TUKFIY2025.GENEL — Vercel köprüsü var; Actions secret eklenecek"
+     "ad": "TÜFE genel (TÜİK, 2025=100) — RAB endekslemesi",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.GENEL (+2003 bazı zincirli)",
+     "not": "Dağıtım geliri EPDK formülüyle TÜFE’ye endekslenir; çeyrek ortalamasının yıllık değişimi düzenlenmiş gelirin nominal büyüme tabanı"
+    },
+    {
+     "k": "elektrik_ufe",
+     "rol": "gelir",
+     "ad": "Elektrik ÜFE (TÜİK Yİ-ÜFE 4.1.1) — perakende tarife/toptan fiyat vekili",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T120"
+    },
+    {
+     "k": "aofm",
+     "rol": "gelir",
+     "ad": "TCMB AOFM (%) — RAB üzerinden finansal gelir faizle oynar",
+     "kaynak": "TCMB EVDS"
     },
     {
      "k": "usdtry",
@@ -1963,6 +2029,12 @@
      "rol": "gelir",
      "ad": "HRC (ABD Midwest vekili)",
      "not": "TR yassı ihracat fiyatına vekil; gümrük farkı nedeniyle seviye değil yön okunur"
+    },
+    {
+     "k": "celik_ufe",
+     "rol": "gelir",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74"
     },
     {
      "k": "hurda_lme",
@@ -2238,6 +2310,12 @@
      "ad": "Brent — akaryakıt maliyeti vekili"
     },
     {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — sözleşme eskalasyonu",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     },
@@ -2370,6 +2448,12 @@
      "ad": "DAP (WB)"
     },
     {
+     "k": "gubre_ufe",
+     "rol": "gelir",
+     "ad": "Temel kimyasal-gübre ÜFE (TÜİK Yİ-ÜFE 3.11.1) — yurt içi gübre fiyatı",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T53"
+    },
+    {
      "k": "gaz_avrupa",
      "rol": "maliyet",
      "ad": "Doğalgaz Avrupa (WB)"
@@ -2483,7 +2567,7 @@
    "tier": "A",
    "tip": "konsensus",
    "surucu_plani": "Profil çelik–hurda makası (kütük girdi) · ihracat navlunu · EUR/USD",
-   "kaynak_notu": "EREGL/KRDMD ile aynı kütük/hurda serisi; AB ihracat ağırlığı → EUR/USD",
+   "kaynak_notu": "EVDS §466 Yİ-ÜFE 3.15.1 ana demir-çelik (aylık) birincil; LME kontratları §464e zinciri",
    "sermaye_mn": 1915.0,
    "favok": {
     "2024Q1": {
@@ -2591,6 +2675,12 @@
    "sektor_not": "Çelik profil üreticisi; kütük alıp haddeler, satışın büyük kısmı ihracat (AB/ABD). Kâr = profil fiyatı − kütük; kütük hurda+enerjiye bağlı. İhracat ağırlığı nedeniyle EUR/USD ve navlun önemli; gümrük/antidamping gelişmeleri bozucu.",
    "surucu_seriler": [
     {
+     "k": "celik_ufe",
+     "rol": "gelir",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — kütük/profil fiyat vekili",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74"
+    },
+    {
      "k": "demir_lme",
      "rol": "gelir",
      "ad": "İnşaat demiri FOB TR (LME) — kütük/profil vekili",
@@ -2613,7 +2703,7 @@
      "ad": "HRC (vekil)"
     }
    ],
-   "birincil": "demir_lme"
+   "birincil": "celik_ufe"
   },
   {
    "kod": "KRDMD",
@@ -2622,7 +2712,7 @@
    "tier": "A",
    "tip": "konsensus",
    "surucu_plani": "Uzun çelik–hurda makası (inşaat demiri − hurda) · kok kömürü · yurt içi inşaat talebi",
-   "kaynak_notu": "EREGL ile aynı sürücü seti; uzun ürün için inşaat demiri TR fiyatı (TÜİK ÜFE 24.10 aylık vekil)",
+   "kaynak_notu": "EVDS §466 Yİ-ÜFE 3.15.1 ana demir-çelik (aylık) birincil; LME hurda/inşaat demiri köprü zinciri (§464e)",
    "sermaye_mn": 1140.0,
    "favok": {
     "2024Q1": {
@@ -2744,6 +2834,13 @@
    "sektor_not": "Uzun çelik ağırlıklı entegre üretici (kütük, inşaat demiri, ray, profil). Kâr sürücüsü metal marjı: inşaat demiri − hurda/cevher; yurt içi inşaat talebi ve ihracat (Irak, AB) hacmi belirler. Kömür/elektrik maliyeti ikinci sürücü. Nakit pozisyonu kur farkı geliri yaratır (TL zayıflamasında net kâr şişer).",
    "surucu_seriler": [
     {
+     "k": "celik_ufe",
+     "rol": "gelir",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi çelik fiyatı",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "not": "Aylık resmî yurt içi fiyat; LME kontratları gelene kadar birincil sürücü. Marj için hurda ile birlikte okunur"
+    },
+    {
      "k": "metal_marji_tr",
      "rol": "marj",
      "ad": "TR metal marjı (inşaat demiri − hurda)",
@@ -2778,7 +2875,7 @@
      "ad": "HRC (yassı vekili)"
     }
    ],
-   "birincil": "metal_marji_tr"
+   "birincil": "celik_ufe"
   },
   {
    "kod": "MAVI",
@@ -2787,7 +2884,7 @@
    "tier": "B",
    "tip": "konsensus",
    "surucu_plani": "TÜFE giyim · tüketici güveni · asgari ücret · kampanya takvimi · ihracat (EUR)",
-   "kaynak_notu": "EVDS aylık; mevsimsellik güçlü (3Ç zayıf çeyrek)",
+   "kaynak_notu": "TCMB EVDS §466: TÜFE giyim aylık; mevsimsellik güçlü (3Ç zayıf çeyrek)",
    "sermaye_mn": 794.512,
    "favok": {
     "2024Q1": {
@@ -2915,9 +3012,9 @@
     {
      "k": "tufe_giyim",
      "rol": "gelir",
-     "ad": "TÜFE giyim (TÜİK)",
-     "bekliyor": true,
-     "kaynak": "EVDS"
+     "ad": "TÜFE giyim ve ayakkabı (TÜİK, 2025=100)",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.03 (+2003 bazı zincirli)",
+     "not": "Giyim fiyat enflasyonu = birim fiyat büyümesi; hacim tüketici güvenine bağlı. Mevsimsel indirim ayları (Oca, Tem) endeksi düşürür → çeyrek ortalaması okunur"
     },
     {
      "k": "eurusd",
@@ -2929,7 +3026,7 @@
      "rol": "kur"
     }
    ],
-   "birincil": "eurusd"
+   "birincil": "tufe_giyim"
   },
   {
    "kod": "MPARK",
@@ -3059,6 +3156,12 @@
    "guidance": null,
    "sektor_not": "Özel hastane zinciri: gelir SGK (SUT tarifesi, kamu fiyatlaması) + özel/tamamlayıcı sigorta + yabancı hasta (döviz). Marj, SUT zamları ile maliyet enflasyonu (hekim/hemşire ücretleri) arasındaki fark; yatak doluluğu ve hasta karması (ameliyat yoğun) FAVÖK’ü belirler. Yabancı hasta payı kur korunağı.",
    "surucu_seriler": [
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — SUT zammı ve özel fiyat artışının çapası",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
     {
      "k": "eurusd",
      "rol": "kur",
@@ -3593,6 +3696,12 @@
      "k": "dap",
      "rol": "gelir",
      "ad": "DAP (WB)"
+    },
+    {
+     "k": "gubre_ufe",
+     "rol": "gelir",
+     "ad": "Temel kimyasal-gübre ÜFE (TÜİK) — yurt içi gübre fiyatı",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T53"
     },
     {
      "k": "gaz_avrupa",
@@ -4337,6 +4446,12 @@
      "ad": "Brent — akaryakıt vekili"
     },
     {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — sözleşme eskalasyonu",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -4349,9 +4464,10 @@
   "THYAO: jet crack (dizel +3 $ vekili), Brent, EUR/USD, DHMİ yolcu/doluluk — tip \"regresyon\" çok sürücülü",
   "Sicil: her bilanço sonrası model−gerçek farkı otomatik yazılır (kapAriv üzerinden)",
   "Faz 2 (tier A): EREGL/KRDMD/KCAER çelik makası (Yahoo HRC=F + LME hurda + Dünya Bankası demir cevheri/kok), CVKMD altın×kur, GUBRF/TKFEN üre−TTF, AKFYE PTF (EPİAŞ hesabı)",
-  "Faz 3 (tier B): BIMAS/MAVI TÜFE alt kalemleri (EVDS), EKGYO aylık ön satış (KAP), AKCNS/CIMSA çimento ÜFE, ALBRK faiz makası, OBAMS buğday",
   "ENJSA tip \"tarife\" formülü (RAB × reel getiri + TÜFE)",
-  "Konsensüs anlık görüntüsünü her tazelemede konsensus_tarihce[] olarak sakla → revizyon ivmesi bileşeni"
+  "Konsensüs anlık görüntüsünü her tazelemede konsensus_tarihce[] olarak sakla → revizyon ivmesi bileşeni",
+  "Faz 3 (tier B) — §466 ile kısmen TAMAM: BIMAS/MAVI TÜFE alt kalemleri, AKCNS/CIMSA çimento ÜFE, ALBRK AOFM/TLREF, EKGYO KFE bağlandı. Kalan: EKGYO aylık ön satış (KAP), OBAMS buğday modeli, ENJSA tarife formülü, EPDK tarifeleri (AHGAZ/ENERY), asgari ücret serisi (GRSEL)"
  ],
- "_465": "Sektör bilgisi: her modelde sektor_not (analist özeti: iş modeli · kâr sürücüsü · mevsimsellik · bozucu) ve surucu_seriler[] (sektor-surucu.json/seriler anahtarı, rol gelir|maliyet|kur|marj; bekliyor:true = kaynak bağlanmadı, kaynak notu). birincil = panoda gösterilen sürücü. Roller işaret okuması içindir: gelir ↑ olumlu, maliyet ↑ olumsuz, kur ↑ (TL zayıf) ihracatçı/$-gelirli için olumlu."
+ "_465": "Sektör bilgisi: her modelde sektor_not (analist özeti: iş modeli · kâr sürücüsü · mevsimsellik · bozucu) ve surucu_seriler[] (sektor-surucu.json/seriler anahtarı, rol gelir|maliyet|kur|marj; bekliyor:true = kaynak bağlanmadı, kaynak notu). birincil = panoda gösterilen sürücü. Roller işaret okuması içindir: gelir ↑ olumlu, maliyet ↑ olumsuz, kur ↑ (TL zayıf) ihracatçı/$-gelirli için olumlu.",
+ "_466": "Kamu veri katmanları bağlandı (Actions §466): TCMB EVDS — TÜFE genel/gıda/giyim (2025=100, 2025 öncesi 2003 bazından zincirli), Yİ-ÜFE çimento-kireç-alçı (T69) · ana demir-çelik (T74) · elektrik (T120) · temel kimyasal-gübre (T53), KFE, AOFM (TP.APIFON4) ve TLREF (iş günü); EPİAŞ Şeffaflık — GÖP PTF saatlik → günlük ortalama TL/MWh (ptf) ve $/MWh (ptf_usd). Anahtarlar: EVDS_KEY ve EPIAS_* secret. Panel kuralı: sektor-surucu.json/seriler içinde anahtar varsa bekliyor bayrağı EZİLİR (karar.js §466); yüzde birimli seride değişim puan (p) okunur; endeks serilerinde son ayın yıllık değişimi gösterilir. Birincil değişti: MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe."
 }

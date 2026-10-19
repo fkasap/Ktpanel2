@@ -107,6 +107,11 @@ export default async function middleware(req) {
   // NOT: yalnız OKUMA modları muaf; yazan/kişisel uç yok (kap.js salt okur).
   if (url.pathname === '/api/kap') return;
 
+  // §464f: /api/market?mod=lme GİRİŞSİZ — LME hurda/inşaat demiri köprüsü (§464e). Actions çerezsiz gelir;
+  // 20 Eki 00:10 koşusunda "köprü: giriş gerekli" ile kesildi (§249j/§361c ile aynı sınıf). Uç yalnız iki
+  // sabit lme.com sayfasını okur (SSRF yok), kişisel veri taşımaz. Diğer market modları kapıda kalır.
+  if (url.pathname === '/api/market' && url.searchParams.get('mod') === 'lme') return;
+
   // Vercel Cron muafiyeti (TÜM cron path'leri: /api/ajanktp, /api/data mail...):
   // Vercel, cron isteklerine Authorization: Bearer CRON_SECRET ekler.
   {

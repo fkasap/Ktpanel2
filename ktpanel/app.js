@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261019b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2471,7 +2471,7 @@ function kararPanoHtml(){
     const hd=H.hedef||{}; const bek = hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
     const yoy = hd.kaynak==='model'? (hd.yoyUsd!=null? kararIsaret(hd.yoyUsd,0,'% $'):'—') : (hd.yoyTl!=null? kararIsaret(hd.yoyTl,0,'%'):'—');
     const bo=kararBirincilOzet(M,H);
-    const sur = !bo? '—' : bo.bekliyor? '<span class="sub">'+esc(bo.ad)+' · bekliyor</span>' : '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="'+(bo.dQ==null||bo.isaret===0?'':(bo.dQ*bo.isaret>=0?'up':'down'))+'">'+kararIsaret(bo.dQ,0,'%')+'</span>';
+    const sur = !bo? '—' : bo.bekliyor? '<span class="sub">'+esc(bo.ad)+' · bekliyor</span>' : '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="'+(bo.dQ==null||bo.isaret===0?'':(bo.dQ*bo.isaret>=0?'up':'down'))+'">'+kararIsaret(bo.dQ,bo.fark?1:0,bo.fark?' p':'%')+'</span>';
     const sic = (H.konsSicil.ort!=null&&!H.konsSicil.ince)? kararIsaret(H.konsSicil.ort,0,'%')+(H.konsSicil.ayniYon?' ●':'') : (H.konsSicil.tum&&H.konsSicil.tum.length? '<span class="sub">ince</span>' : '—');
     const gor = F.ceyrek&&F.ceyrek.goreli!=null? kararIsaret(F.ceyrek.goreli,0,'%')+(F.supheli?' ⚠':'') : '—';
     const pdf = F.fwd!=null? trN(F.fwd,1)+'x'+(F.fwdYuzdelik!=null?' <span class="sub">%'+trN(F.fwdYuzdelik,0)+'</span>':'') : '—';
@@ -2602,12 +2602,16 @@ function kararSeriStat(k, hedefQ, kosuQ){
     if(ser.siklik==='aylik'){ if(ser.ceyreklik&&ser.ceyreklik[q]!=null) return ser.ceyreklik[q]; const ay=Object.keys(ser.aylik||{}).filter(a=>a.slice(0,4)===q.slice(0,4)&&Math.floor((+a.slice(5)-1)/3)+1===+q.slice(-1)); return ay.length? ay.reduce((s,a)=>s+ser.aylik[a],0)/ay.length : null; }
     const a=kararQAralik(q); const v=(ser.gunluk||[]).filter(x=>x[0]>=a.bas&&x[0]<=a.son&&typeof x[1]==='number').map(x=>x[1]); return v.length? v.reduce((s,x)=>s+x,0)/v.length : null; };
   const hedef=ortQ(hedefQ), onceki=hedefQ? ortQ(kararQOnce(hedefQ,1)) : null, gecen=hedefQ? ortQ(kararQOnce(hedefQ,4)) : null, kosu=ortQ(kosuQ);
-  const d=(a,b)=> (a!=null&&b!=null&&b!==0)? (a/b-1)*100 : null;
+  /* §466: faiz gibi yüzde birimli seride değişim ORAN değil FARK (puan) okunur: AOFM 39,5→38 = −1,5 p, −%3,8 değil */
+  const fark = ser.birim==='%';
+  const d=(a,b)=> (a!=null&&b!=null)? (fark? a-b : (b!==0? (a/b-1)*100 : null)) : null;
+  /* §466: endeks serilerinde (TÜFE, Yİ-ÜFE, KFE) seviye anlamsız, son ayın YILLIK değişimi gösterilir */
+  let yoySon=null; if(ser.siklik==='aylik' && ser.aylik){ const ks=Object.keys(ser.aylik).sort(); const sonK=ks[ks.length-1]; if(sonK){ const gk=(+sonK.slice(0,4)-1)+sonK.slice(4); if(ser.aylik[gk]) yoySon=(ser.aylik[sonK]/ser.aylik[gk]-1)*100; } }
   /* kıvılcım: son 12 ay — günlükte haftalık örnek, aylıkta aylar */
   let spark=[];
   if(ser.siklik==='aylik'){ spark=Object.keys(ser.aylik||{}).sort().slice(-13).map(a=>ser.aylik[a]); }
   else { const g=(ser.gunluk||[]).filter(x=>typeof x[1]==='number'); const son=g[g.length-1]; if(son){ const basD=new Date(son[0]+'T00:00:00'); basD.setFullYear(basD.getFullYear()-1); const bas=basD.toISOString().slice(0,10); const w=g.filter(x=>x[0]>=bas); const adim=Math.max(1,Math.floor(w.length/26)); spark=w.filter((x,i)=>i%adim===0||i===w.length-1).map(x=>x[1]); } }
-  return {ser, son:ser.son, hedef, onceki, gecen, kosu, dQ:d(hedef,onceki), dY:d(hedef,gecen), dK:d(kosu,hedef), spark};
+  return {ser, son:ser.son, hedef, onceki, gecen, kosu, dQ:d(hedef,onceki), dY:d(hedef,gecen), dK:d(kosu,hedef), spark, fark, yoySon};
 }
 function kararSpark(v, renk){
   if(!v||v.length<3) return '';
@@ -2622,29 +2626,29 @@ function kararSektorPanel(M,H){
   if(M.sektor_not) h+='<div class="note" style="margin-top:4px;border-color:var(--mm2)">'+esc(M.sektor_not)+'</div>';
   if(L.length){
     h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl"><thead><tr><th>SÜRÜCÜ</th><th>ROL</th><th>SON</th><th>'+(H.hedefQ?kararQAd(H.hedefQ):'HEDEF')+' ORT</th><th>Δ ÇEYREK</th><th>Δ YIL</th><th>'+(H.kosuQ?kararQAd(H.kosuQ):'KOŞU')+' ORT</th><th>12 AY</th></tr></thead><tbody>';
-    L.forEach(d=>{ const rol=KARAR_ROL[d.rol]||KARAR_ROL.kur; const st=d.bekliyor? null : kararSeriStat(d.k, H.hedefQ, H.kosuQ);
+    L.forEach(d=>{ const rol=KARAR_ROL[d.rol]||KARAR_ROL.kur; const st=kararSeriStat(d.k, H.hedefQ, H.kosuQ);   /* §466: seri dosyada varsa bekliyor bayrağı ezilir — kaynak Actions'ta bağlanınca satır kendiliğinden canlanır */
       if(!st){ h+='<tr style="color:var(--muted)"><td style="font-family:var(--sans)">'+esc(d.ad||d.k)+'</td><td>'+rol.ad+'</td><td colspan="6" style="text-align:left;font-family:var(--sans)">kaynak bekliyor'+(d.kaynak?' — '+esc(d.kaynak):'')+'</td></tr>'; return; }
       const ser=st.ser; const renkYon=(v)=>{ if(v==null||rol.isaret===0) return ''; return (v*rol.isaret>=0)?'up':'down'; };
       const dkYon=(v)=>{ if(v==null||rol.isaret===0) return ''; return (v*rol.isaret>=0)?'up':'down'; };
       const fmt=(v)=> v==null?'—':trN(v, Math.abs(v)<10?2:Math.abs(v)<1000?1:0);
       h+='<tr><td style="font-family:var(--sans)">'+esc(d.ad||ser.ad||d.k)+(d.not?' <span class="sub" title="'+esc(d.not)+'">ⓘ</span>':'')+'<div class="sub">'+esc(ser.kaynak||d.kaynak||'')+(ser.birim?' · '+esc(ser.birim):'')+'</div></td>'+
          '<td style="color:var(--muted)">'+rol.ad+' <span class="sub">'+rol.aciklama+'</span></td>'+
-         '<td><b>'+fmt(st.son&&st.son.deger)+'</b><div class="sub">'+esc(kararTrTarih(st.son&&st.son.tarih))+'</div></td>'+
+         '<td><b>'+fmt(st.son&&st.son.deger)+(st.fark?'%':'')+'</b><div class="sub">'+esc(kararTrTarih(st.son&&st.son.tarih))+(st.yoySon!=null?' · yıllık '+kararIsaret(st.yoySon,1,'%'):'')+'</div></td>'+
          '<td>'+fmt(st.hedef)+'</td>'+
-         '<td class="'+renkYon(st.dQ)+'">'+kararIsaret(st.dQ,0,'%')+'</td>'+
-         '<td class="'+renkYon(st.dY)+'">'+kararIsaret(st.dY,0,'%')+'</td>'+
-         '<td>'+fmt(st.kosu)+(st.dK!=null?' <span class="'+dkYon(st.dK)+'" style="font-size:10px">('+kararIsaret(st.dK,0,'%')+')</span>':'')+'</td>'+
+         '<td class="'+renkYon(st.dQ)+'">'+kararIsaret(st.dQ,st.fark?1:0,st.fark?' p':'%')+'</td>'+
+         '<td class="'+renkYon(st.dY)+'">'+kararIsaret(st.dY,st.fark?1:0,st.fark?' p':'%')+'</td>'+
+         '<td>'+fmt(st.kosu)+(st.dK!=null?' <span class="'+dkYon(st.dK)+'" style="font-size:10px">('+kararIsaret(st.dK,st.fark?1:0,st.fark?' p':'%')+')</span>':'')+'</td>'+
          '<td>'+kararSpark(st.spark, d.rol==='maliyet'?KARAR_RENK.dizel:d.rol==='kur'?KARAR_RENK.muted:KARAR_RENK.gercek)+'</td></tr>'; });
-    h+='</tbody></table></div><div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta).</div>';
+    h+='</tbody></table></div><div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta) · TCMB EVDS aylık endeksler (TÜFE 2025=100, 2025 öncesi zincirli) ve günlük AOFM/TLREF (değişim puan) · EPİAŞ PTF günlük ortalama.</div>';
   }
   return h;
 }
 function kararBirincilOzet(M,H){
   const k=M.birincil; if(!k) return null;
-  const d=(M.surucu_seriler||[]).find(x=>x.k===k); if(!d||d.bekliyor) return {bekliyor:true, ad:(d&&d.ad)||k};
-  const st=kararSeriStat(k, H.hedefQ, H.kosuQ); if(!st) return {bekliyor:true, ad:d.ad||k};
+  const d=(M.surucu_seriler||[]).find(x=>x.k===k); if(!d) return {bekliyor:true, ad:k};
+  const st=kararSeriStat(k, H.hedefQ, H.kosuQ); if(!st) return {bekliyor:true, ad:d.ad||k};   /* §466: dosyada seri varsa bekliyor bayrağına bakılmaz */
   const rol=KARAR_ROL[d.rol]||KARAR_ROL.kur;
-  return {ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ:st.dQ, dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son};
+  return {ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ:st.dQ, dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son, fark:st.fark};
 }
 
 /* ── Grafik: son 12 ay crack (dizel/benzin) ve Brent — iki panel, ortak x. Doğrudan etiket; eksen başına tek ölçek. ── */

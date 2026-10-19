@@ -3,7 +3,61 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 
 # KTPanel — Bakım & Güncelleme Haritası
 
-Son güncelleme: 2026-10-19
+Son güncelleme: 2026-10-20
+
+
+# BAKIM EK — §466 (20 Eki 2026, 00:50) — KAMU VERİ KATMANLARI: TCMB EVDS + EPİAŞ PTF ("evds key girdim, EPIAS id ve key de girdim")
+
+Kullanıcı iki secret'ı Actions'a girdi; bu ek "kaynak bekliyor" satırlarının resmî yerli veriyle dolmasıdır.
+SERİ KODLARI ÖLÇÜLDÜ (EVDS portalının anahtarsız arama ucu /igmevdsms-dis/searchResults — veri ucu anahtar ister):
+  TÜFE 2025=100 (bie_tukfiy2025, COICOP 2018): TP.TUKFIY2025.GENEL · .01 "Gıda ve alkolsüz içecekler" · .03 "Giyim ve
+  ayakkabı" (alt kırılımlar .011 gıda, .0111 tahıl… var). Eski baz 2003=100 (bie_tukfiy4, "Arşiv"): TP.FG.J0/J01/J03 —
+  2026-1'de biter. Yİ-ÜFE 2003=100 (bie_tufe1yi, hâlâ tek baz): T1 genel · T64 "3.14 Diğer metalik olmayan mineral" ·
+  T69 "3.14.5 Çimento kireç ve alçı" · T73 "3.15 Ana metaller" · T74 "3.15.1 Ana demir-çelik ve ferro alaşımlar" ·
+  T120 "4.1.1 Elektrik enerjisi üretimi iletimi dağıtımı" · T53 "3.11.1 Temel kimyasallar gübreler…" · T8 doğalgaz (madencilik).
+  KFE: TP.KFE.TR (bie_kfe, aylık). Faiz: TP.APIFON4 "TCMB Ağırlıklı Ortalama Fonlama Maliyeti" (iş günü) · TP.BISTTLREF.ORAN.
+  "Politika faizi" diye tek seri aramada çıkmadı (yalnız beklenti anketleri); AOFM zaten fonlama maliyetinin fiilî ölçüsü →
+  ALBRK birincil sürücüsü AOFM oldu (katılım bankasında makas: indirimde katılma hesabı maliyeti kredi getirisinden hızlı
+  düşer → AOFM ↓ lehte; rol MALİYET).
+ZİNCİR: TÜİK 2026'da TÜFE bazını değiştirdi; yeni seri 2025-1'den, eski 2026-1'e kadar. Örtüşen ilk ayın oranıyla eski
+seri yeni baza taşınır (app.js §444f hesap zinciriyle aynı yöntem) → 2015-01'den kesintisiz aylık endeks; ΔÇeyrek/ΔYıl
+bazdan bağımsız. Panelde endeks seviyesi değil değişim okunur; SON hücresine "yıllık +%" eklendi.
+EPİAŞ ÖLÇÜLDÜ (Chrome, oturum açık): POST seffaflik.epias.com.tr/electricity-service/v1/markets/dam/data/mcp gövde
+{startDate,endDate} ISO+03:00 → items[{date,hour,price,priceUsd,priceEur}] saatlik; aralık >1 yıl → 400 "(BUS)SEF1117";
+9 ay = 6552 saat ≈ 700 KB. Kimlik: POST giris.epias.com.tr/cas/v1/tickets (form username/password, Accept text/plain)
+→ 201 "TGT-…", 2 saat geçerli, başlık "TGT" (dokümantasyon §2 ve §5.128 doğrulandı). Katman günlük ortalama alır (≥20 saat),
+TL/MWh (ptf) ve $/MWh (ptf_usd: YEKDEM $ tarifesiyle kıyas), 2023-01'den, ≤180 günlük parçalar, artımlı (son 10 gün
+yeniden; GÖP yarının fiyatını ~14:00'te açıkladığı için akşam koşusu yarını da alır).
+SECRET ADLARI: kullanıcı "EPIAS diye ID ve key" dedi — ad kesin değil. Script ilk DOLU çifti kullanır: EPIAS_ID+EPIAS_KEY ·
+EPIAS_USER+EPIAS_PASS · EPIAS_USERNAME+EPIAS_PASSWORD · EPIAS_EMAIL+EPIAS_SIFRE · EPIAS_MAIL/EPIAS_KULLANICI(_ADI)+EPIAS_SIFRE;
+workflow env bloğu hepsini secrets.* ile eşler (tanımsız secret boş gelir). Rapor hangi ADI bulduğunu yazar, değeri asla.
+EVDS: EVDS_KEY (yedek EVDS_API_KEY). Anahtar yoksa katman ⏭ (hata değil); 401/403 ise ✗ + ilk 100 karakter.
+PANEL (karar.js §466): (1) seriler{} içinde anahtar VARSA bekliyor bayrağı ezilir — kaynak Actions'ta bağlanınca satır
+kendiliğinden canlanır, karar-model.json'a dokunmak gerekmez; (2) % birimli seride (AOFM/TLREF) değişim ORAN değil FARK
+(puan, "p") — 39,5→38 = −1,5 p; (3) endeks serilerinde son ayın yıllık değişimi. Pano "SÜRÜCÜ Δ ÇEYREK" aynı kuralla.
+KATALOG (karar-model.json 2026-10-20a): birincil MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe
+(LME zinciri dolana kadar aylık resmî fiyat); AKFYE ptf+ptf_usd+elektrik_ufe; ENJSA tufe+elektrik_ufe+aofm; GUBRF/TKFEN
+gubre_ufe; MPARK/GRSEL/TUREX tufe (eskalasyon); AHGAZ ptf+tufe. Hâlâ bekliyor: EPDK tarifeleri, KAP ön satış, backlog/sipariş,
+SUT, PE/PP, asgari ücret, LME üçlüsü (köprü zinciri sonraki koşuda).
+TEST: stub harness (h7.mjs) — 11/11 EVDS serisi, zincir 2024-12 98,04 → 2025-01 100 (sıçrama yok), PTF 1387 gün/8 parça,
+ikinci koşu artımlı 12 gün/1 parça, eksik gün (10 saat) atlandı; senaryolar: secret yok ⏭ · EVDS 403 ✗ · TGT 401 ✗ doğru
+mesaj. Headless panel: ALBRK/BIMAS/AKFYE/EKGYO/KRDMD sektör tabloları canlı satırlarla render, konsol hatasız.
+DOSYA BOYUTU: sektor-surucu.json ~615 KB (indent 1) olacak — AOFM/TLREF 2021'den, PTF 2023'ten sınırlandı; gzip ile ~130 KB.
+İLK CANLI KOŞU NE GÖSTERİR: "EVDS serileri (§466) — ✓ 11/11" + "EPİAŞ PTF (§466) — ✓ … TL/MWh"; değilse rapordaki tek satır
+nedeni söyler. Elle hızlı test: Actions → Veri Tazele → katman "kamu" (yalnız bu iki katman, ~1 dk).
+UYARI: sektor-surucu.json ARTIK ACTIONS'IN DOSYASI — elle eski tohum YÜKLENMEZ (canlı 349 KB Yahoo+WB birikimi silinir).
+§464f — LME KÖPRÜSÜ GİRİŞ KAPISINA TAKILDI (00:10 koşusu, run 39325372114, rapor: "hurda_lme: fetch/Playwright Cloudflare
+duvarı · köprü: giriş gerekli"): §464e zinciri doğru çalıştı ama api/market?mod=lme panelin giriş middleware'ine (çerez)
+takıldı — §249j (/api/tefas) ve §361c (/api/kap) ile AYNI sınıf hata, üçüncü kez. İki anahtar birden: (1) tazele.mjs köprü
+isteğine `Authorization: Bearer CRON_SECRET` (middleware'in Vercel cron muafiyeti; workflow Tazele adımına CRON_SECRET env
+eklendi — Vercel'deki değerle aynı olmalı); (2) middleware.js'e `/api/market?mod=lme` muafiyeti (yalnız bu mod; iki sabit
+lme.com sayfası, kişisel veri yok). Rapor artık nedeni ayırır: "giriş kapısı kesti — CRON_SECRET Vercel ile aynı mı?" /
+"Actions env'e CRON_SECRET ekle ya da middleware.js §464f muafiyetini yükle". DERS (üçüncü kez): Actions→Vercel çağrısı
+eklerken middleware muafiyeti listesine BAK — kapı her yeni ucu keser, hata "giriş gerekli" diye görünür.
+DEPLOY: ktpanel/{app.js (20261020a), karar-model.json (2026-10-20a), middleware.js (§464f), guncelleme-plani.json,
+KTPANEL-BAKIM.md, KTPANEL-DAMGA.md} + scripts/tazele.mjs (§466 + §464f) + .github/workflows/tazele.yml (env: EVDS_KEY,
+EPIAS_*, CRON_SECRET; katman açıklaması). index.html, api/ değişmedi (market.js §464e canlıda — 54 239 B doğrulandı).
+sektor-surucu.json YÜKLENMEZ (Actions'ın dosyası).
 
 
 # BAKIM EK — §465 (19 Eki 2026, 22:00) — SEKTÖR BİLGİSİ HER HİSSEDE + İLK CANLI KOŞUNUN DERSLERİ
