@@ -3320,7 +3320,8 @@ async function kapYeniIs() {
   const K = D.kap_yeni_is = D.kap_yeni_is || { oid: {}, kayit: {}, cozulemeyen: {} };
   K.oid = K.oid || {}; K.kayit = K.kayit || {}; K.cozulemeyen = K.cozulemeyen || {};
   /* ayrıştırıcı sürümü değişince kayıtlar bir kez yeniden çözülür (eski yanlış tutarlar dosyada kalmasın) */
-  const KAP_YI_SURUM = '469e'; if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
+  const tasinan = [];   /* §473 */
+  const KAP_YI_SURUM = '473';   /* §473: atıf+imza alanları için kayıtlar yeniden çözülür (≤40 sayfa/şirket/koşu) */ if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const uykuYi = ms => new Promise(r => setTimeout(r, ms));
   /* kur (ASELS katmanıyla aynı yol) */
@@ -3354,7 +3355,7 @@ async function kapYeniIs() {
           liste.push(...items); p = new Date(bit); p.setUTCDate(p.getUTCDate() + 1); } }
       /* Türkçe büyük İ: JS /i bayrağı 'İ'≠'i' sayar ("Yeni İş İlişkisi" /yeni iş/i ile EŞLEŞMEZ) → önce TR küçültme */
       const trK = x => String(x || '').replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase();
-      const sozlesme = liste.filter(b => String(b.disclosureClass || '').toUpperCase() === 'ODA' && (trK(b.subject).includes('yeni iş ilişkisi') || /sözleşme imzalan|sipariş al|ihale/.test(trK(b.summary))));
+      const sozlesme = liste.filter(b => String(b.disclosureClass || '').toUpperCase() === 'ODA' && (trK(b.subject).includes('yeni iş ilişkisi') || trK(b.subject).includes('ihale süreci') || /sözleşme imzalan|sipariş al|ihale/.test(trK(b.summary))));   /* §473: 'İhale Süreci / Sonucu' konusu da (GLRMK kesinleşme+imza bildirimleri bu konuda; özet 'ihale' demeyebilir) */
       /* 3) yeni kimlikler → sayfa çek, metni çöz (koşu başına tavan) */
       const yeni = sozlesme.filter(b => b.disclosureIndex && !K.kayit[b.disclosureIndex] && !(K.cozulemeyen[b.disclosureIndex] >= 3)).sort((a, b) => trTarih(b.publishDate) < trTarih(a.publishDate) ? -1 : 1);
       let cekilen = 0;
@@ -3379,6 +3380,10 @@ async function kapYeniIs() {
           const u = kur(fxUsd, fxUsdK, tarih, ASELS_KUR_YEDEK.usdtry), e = kur(fxEur, fxEurK, tarih, ASELS_KUR_YEDEK.eurusd);
           let backlogMn = null; if (blMetin) { const rb = aselsCozum(blMetin); if (rb.adet) backlogMn = +((rb.tutar.USD + rb.tutar.EUR * e + rb.tutar.TL / u + (rb.tutar.GBP || 0) * ASELS_PB_YAKLASIK.GBP + (rb.tutar.PLN || 0) / ASELS_PB_YAKLASIK.PLN_EUR * e) / 1e6).toFixed(1); }
           const kayit = { kod, t: tarih, ozet: metin.slice(0, 160), baslik: String(b.summary || '').trim().slice(0, 60) };
+          /* §473: "DD.MM.YYYY tarihli (özel durum) açıklamamıza istinaden … sözleşme imzalanmıştır" — önceki bildirime atıf; imza bildirimi
+             çoğu kez tutar yazmaz (GLRMK 12 Mar 2026 → 31 Eki 2025). Atıf tarihi ve imza bayrağı saklanır, seri kurulmadan önce tutar taşınır. */
+          const atifM = trMetin.match(/(\d{2})[.\/](\d{2})[.\/](\d{4})\s*(?:ve\s*\d{2}[.\/]\d{2}[.\/]\d{4}\s*)?tarihli\s*(?:özel\s*durum\s*)?açıklama/);
+          if (atifM) { kayit.atif = atifM[3] + '-' + atifM[2] + '-' + atifM[1]; kayit.imza = imza && !olumsuz; }
           if (!adet) Object.assign(kayit, { usd_mn: 0, usd: 0, eur: 0, tl: 0, tutarsiz: true, neden: neden || 'tutar açıklanmadı' });
           else Object.assign(kayit, { usd_mn: +((tutar.USD + tutar.EUR * e + tutar.TL / u + (tutar.GBP || 0) * ASELS_PB_YAKLASIK.GBP + (tutar.PLN || 0) / ASELS_PB_YAKLASIK.PLN_EUR * e) / 1e6).toFixed(1), kur_yaklasik: !!(tutar.GBP || tutar.PLN) || undefined, usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1) });
           if (backlogMn != null) kayit.backlog_usd_mn = backlogMn;
@@ -3389,6 +3394,16 @@ async function kapYeniIs() {
           yeniKayit++;
         } catch (e) { K.cozulemeyen[b.disclosureIndex] = (K.cozulemeyen[b.disclosureIndex] || 0) + 1; uyari.push(kod + ' #' + b.disclosureIndex + ': ' + String(e && e.message || e).slice(0, 60)); }
         await uykuYi(KAP_YI_UYKU);
+      }
+      /* §473: ihale kesinleşmesi (tutarlı, önceki) + atıflı imza bildirimi (tutarsız, sonraki) → tutar İMZA tarihine taşınır. Sözleşme akışı
+         backlog'a imzada girer (ASELS ile aynı olay tanımı); taşınmazsa kesinleşme yılı şişer, imza yılı "−100%" görünür (GLRMK 2025/2026).
+         Taşıma idempotent: hedef `tasindi_kaynak`, kaynak `tasindi_hedef` ile işaretlenir; tutarı olan imza bildirimi (ek sipariş) dokunulmaz. */
+      for (const x of Object.values(K.kayit).filter(x => x.kod === kod && x.atif && x.imza && x.tutarsiz && !x.tasindi_kaynak)) {
+        const ref = Object.values(K.kayit).find(r => r.kod === kod && r.t === x.atif && r.usd_mn > 0 && !r.tasindi_hedef && r.t < x.t);
+        if (!ref) continue;
+        Object.assign(x, { usd_mn: ref.usd_mn, usd: ref.usd, eur: ref.eur, tl: ref.tl, tutarsiz: false, neden: undefined, konsorsiyum: ref.konsorsiyum, kur_yaklasik: ref.kur_yaklasik, tasindi_kaynak: ref.t });
+        Object.assign(ref, { usd_mn: 0, usd: 0, eur: 0, tl: 0, tutarsiz: true, neden: 'ihale kesinleşmesi — tutar imza bildirimine taşındı (' + x.t + ')', tasindi_hedef: x.t });
+        tasinan.push(kod + ' ' + ref.t + ' → ' + x.t + ' (' + x.usd_mn + ' mn $)');
       }
       /* 4) seri: aylık/çeyreklik/yıllık toplam (tutarsız bildirimler 0 — sayı ayrı tutulur) */
       const kayitlar = Object.values(K.kayit).filter(x => x.kod === kod).sort((a, b) => a.t < b.t ? -1 : 1);
@@ -3403,7 +3418,7 @@ async function kapYeniIs() {
       const blNokta = kayitlar.filter(x => x.backlog_usd_mn != null);
       if (blNokta.length && t.hisse.length) { const ba = {}; for (const x of blNokta) ba[x.t.slice(0, 7)] = x.backlog_usd_mn; const bk = Object.keys(ba).sort(); const bs = bk[bk.length - 1]; D.seriler['kap_backlog_' + kod.toLowerCase()] = Object.assign({}, D.seriler['kap_backlog_' + kod.toLowerCase()] || {}, { ad: kod + ' beyan edilen backlog — KAP açıklamalarından (mn $)', birim: 'mn $', siklik: 'aylik', hisse: t.hisse, kaynak: 'KAP ÖDA metni ("güncel backlog … USD") · kur Yahoo', aylik: ba, ceyreklik: {}, son: { tarih: bs, deger: ba[bs] }, guncelleme: bugun, n: blNokta.length, _not: 'Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar).' }); }
       if (t.hisse.length || !t.capraz) {
-        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.konsorsiyum ? ' [konsorsiyum toplamı — şirket payı belirtilmedi]' : '') + (x.kur_yaklasik ? ' [kur yaklaşık]' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), yillik_kum: akisYillik(kayitlar, bugun), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
+        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.konsorsiyum ? ' [konsorsiyum toplamı — şirket payı belirtilmedi]' : '') + (x.tasindi_kaynak ? ' [tutar ' + x.tasindi_kaynak + ' ihale kesinleşmesinden taşındı]' : '') + (x.kur_yaklasik ? ' [kur yaklaşık]' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), yillik_kum: akisYillik(kayitlar, bugun), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
       } else { D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: [], kaynak: 'KAP ÖDA Yeni İş İlişkisi (çapraz)', aylik, ceyreklik, yillik, son: { tarih: sonX.t, deger: sonX.usd_mn }, guncelleme: bugun, n: kayitlar.length, gizli: true }); }
       const Qs = Object.keys(ceyreklik).sort(); const sonQ = Qs[Qs.length - 1], oncQ = Qs[Qs.length - 2];
       let capraz = '';
@@ -3415,7 +3430,7 @@ async function kapYeniIs() {
   D.seriler_guncelleme = bugun;
   await yaz(dosya, D);
   if (yeniKayit) degisenler.push('KAP yeni iş (' + yeniKayit + ' bildirim)');
-  raporlar.push('### KAP Yeni İş İlişkisi (§469) — ✓ ' + Object.keys(K.kayit).length + ' bildirim kayıtlı · bu koşu ' + sayfaSayisi + ' sayfa, ' + yeniKayit + ' yeni' + (bekleyen ? ' · tavan: ' + bekleyen + ' bekliyor (sonraki koşu)' : '') + '\n- ' + notlar.join('\n- ') + (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') : ''));
+  raporlar.push('### KAP Yeni İş İlişkisi (§469) — ✓ ' + Object.keys(K.kayit).length + ' bildirim kayıtlı · bu koşu ' + sayfaSayisi + ' sayfa, ' + yeniKayit + ' yeni' + (bekleyen ? ' · tavan: ' + bekleyen + ' bekliyor (sonraki koşu)' : '') + '\n- ' + notlar.join('\n- ') + (tasinan.length ? '\n- §473 imzaya taşınan tutar: ' + tasinan.join(' · ') : '') + (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') : ''));
 }
 
 /* ── §472 KARDEMİR LİSTE FİYATLARI + HURDA ALIM FİYATLARI (kardemir.com açık API) ─────────────────────────────────────
