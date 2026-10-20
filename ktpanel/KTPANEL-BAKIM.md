@@ -6,6 +6,33 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §473 (20 Eki 2026, 13:40) — "JOURNAL SEKMESİNİ KONTROL ET, EKSİK GEDİK VAR MI?"
+
+Canlı sekme Chrome'da tarandı (30 hisse × sektör paneli, pano, journal formu, konsol). KIRIK YOK: 30/30 panel render, konsolda §46x
+hatası yok, sürüm 20261020f/g aktif. Bulunanlar ve yapılanlar:
+1) PANO "−100% yıl içi y/y" (KATMR, GLRMK) — KATMR gerçek: KAP'ta Ağu 2025'ten beri Yeni İş İlişkisi yok (doğrudan KAP API ile
+   doğrulandı). Ama "−100%" okuyucuyu yanıltır → §473 panel: yıl içi toplam 0 ise "0 · yıl içi açıklama yok · geçen yıl aynı tarih X".
+   Actions yillik_kum'da kayıtsız yıl için satır olmadığından panel o yılı 0 toplamla kendi kurar (karar.js kararSeriStat).
+2) GLRMK "−100%" ise YÖNTEM ARTIFAKTIYDI: 31 Eki 2025 "kesinleşen ihale sonucu" bildiriminde tutar (2,08 mlr PLN ≈ 441 mn $) 2025'e
+   yazılmış; 12 Mar 2026 "31.10.2025 tarihli açıklamamıza istinaden … sözleşme imzalanmıştır" bildirimi tutar yazmıyor → 2026 = 0.
+   Sözleşme akışı backlog'a İMZADA girer (ASELS'te olay tanımı bu) → §473 tazele.mjs: atıflı imza bildirimi (tutarsız) + atıf tarihli
+   tutarlı kayıt → tutar imza tarihine TAŞINIR (kayıt bayrakları tasindi_kaynak/tasindi_hedef, idempotent; tutarı olan imza bildirimi
+   — ek sipariş — dokunulmaz). Kayıtta `atif` + `imza` alanı gerektiği için KAP_YI_SURUM 469e→473: 93 bildirim yeniden çözülür
+   (≤40 sayfa/şirket/koşu → ALTNY 46 kayıt 2 koşuda tamamlanır; arada ALTNY 2026 toplamı bir koşu eksik görünür — bilinçli).
+   Ayrıca liste süzgeci 'İhale Süreci / Sonucu' konusunu da alır (GLRMK bildirimleri bu konuda; özet 'ihale' demeyebiliyor).
+   Harness h13: fikstür çifti (kesinleşme 31.10.2025 + atıflı imza 12.03.2026) → 2026 472, 2025 sıfırlanır, 3. koşu idempotent ✓.
+3) ASELS "Resmî bakiye sipariş" satırı SON dışında "—": seri yalnız 3 resmî çeyrek (24Q4·25Q4·26Q2) → hedef çeyrek yok; kozmetik,
+   bilanço sonrası ASELS_RESMI'ye 26Q3 eklenince dolar (4 Kas).
+4) "Kaynak bekliyor" satırları (CWENE modül, EKGYO ön satış, GRSEL asgari ücret, MPARK SUT, PETKM PE/PP, EREGL hurda LME) — bilinen
+   açık liste, değişmedi. BERA/BINHO/TCKRC tier C: seri az (kapsam yok) — tasarım gereği.
+5) index.html `app.js?v=20261007a` bayat önbellek kırıcıydı (içerik güncel geliyordu ama sert önbellekte eski app.js kalabilir) →
+   patch.py artık ?v= sürümü app.js ile eşitler (20261020g). index.html yüklenmesi İSTEĞE BAĞLI.
+6) Journal: açık tez ASELS (hedef 400, güncel 330, +%21, 100 g) giriş fiyatı boş → nominal/reel getiri "—". Tezi kaydederken giriş
+   fiyatı girilmeli (ya da kapatırken sorulur). Öneri (yapılmadı): giriş boşsa tez tarihindeki kapanış otomatik önerilsin.
+TUPRS "83,8 model" = 1,7 mlr $ × kur (dizel crack 75 $/v ortamında makul); TUPRS "+260% $" YoY aynı nedenle. KCAER hadde spread'i
+daralma trendi (2025 180–195 → Eki 2026 123 $/t) bilanço (3 Kas) öncesi izlenecek ilk şey.
+DEPLOY: scripts/tazele.mjs (§473) · ktpanel/app.js (20261020g) · ktpanel/index.html (isteğe bağlı) · KTPANEL-BAKIM.md.
+
 # BAKIM EK — §472b (20 Eki 2026, 13:00) — İLK CANLI KOŞU ✓; YAHOO "max" TUZAĞI
 
 12:38 koşusu (run 39402209995, katman hepsi, 11 dk): Kardemir ✓ — kütük 565 $/t (13 Eki) · hurda Özel Ekstra 20.120 TL/t ≈ 411 $/t
