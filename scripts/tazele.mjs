@@ -3085,6 +3085,122 @@ async function epiasPtf() {
   raporlar.push('### EPİAŞ PTF (§466) — ✓ ' + sonTL[1] + ' TL/MWh' + (sonUSD ? ' · ' + sonUSD[1] + ' $/MWh' : '') + ' (' + sonTL[0] + ')\n- ' + gTL.length + ' gün (' + gTL[0][0] + '→) · bu koşuda ' + saat.size + ' gün/' + saatToplam + ' saat · ' + parcalar.length + ' parça' + (eksikGun ? ' · ' + eksikGun + ' eksik gün atlandı' : '') + '\n- son 30 gün ort. ' + (son30.length ? ort(son30).toFixed(0) : '—') + ' TL/MWh' + (yoy ? ' · yıllık ' + yoy : '') + ' · kimlik: ' + kimlik.adlar + (hata ? '\n- ⚠ ' + hata : ''));
 }
 
+/* ── §467 ASELSAN SÖZLEŞME AKIŞI (KAP açıklamaları → sektor-surucu.json/seriler.asels_kap_siparis) ──
+   Kullanıcı (20 Eki 02:18): "aselsanın backloglarını buradan toplayabilir misin?" → aselsan.com/investor-relations/kap-disclosures
+   ÖLÇÜM (Chrome): sayfa Next.js, veri tek JSON uçtan gelir ve TAM METİN taşır (TR+EN):
+     GET https://webapi.aselsan.com/investor-relations/kap-disclosures?locale=tr  → 283 açıklama (2017-01→), her biri
+     {announcementDate, translations:[{locale:'tr', title, description(html), slug}, {locale:'en', …}]}
+   Başlıklar: "SÖZLEŞME İMZALANMASI" 181 · "SÖZLEŞME DEĞİŞİKLİĞİ" 22 · diğer (atama, sigorta…) 80. Tutar TR metinde çeşitli
+   biçimlerde: "125 milyon ABD Doları" · "1,2 milyar Avro" · "195.000.000,- ABD Doları" · "40.801.680- ABD Doları ve
+   352.221.840-TL" · "29.135.362,99- Avro" · "ABD Dolar'ı". Çok para birimli sözleşmeler var; bazı metinler bileşenleri VE
+   toplamı birlikte verir ("… 2,6 mlr TL ve 132 mn $ … toplam bedeli 20,7 mlr TL ve 1,2 mlr $") → "toplam" sözcüğünden
+   SONRAKİ tutarlar alınır (yoksa tümü; aynı tutar+para birimi tekrarları sayılmaz). Chrome'da 212/212 sözleşme çözüldü.
+   NE DEĞİL: Bu seri KAP eşiği üstü AÇIKLANAN sözleşmelerdir, resmî "yeni iş alımı" değildir. Kıyas: 2024 açıklanan ≈4,4 mlr $
+   / resmî 6,5 · 2025 ≈6,4 / 9,6 · 1Y26 ≈2,05 / 4,9 → kapsam ~%45-70. Resmî bakiye sipariş (backlog) çeyrek sunumundan:
+   2024 sonu 14,0 · 2025 sonu 20,4 · 2Ç26 23,2 mlr $ (asels_backlog tohumu; elle güncellenir).
+   KUR: Yahoo TRY=X ve EURUSD=X 10 yıllık günlük (yahooSeri) — açıklama gününün (ya da önceki iş gününün) kuru. Yahoo
+   gelmezse dosyadaki usdtry/eurusd (2 yıl) + eski tarihler için çeyrek ortalama tablosu (Fintables, 20 Eki ölçümü).
+   DENETİM: ≥150 sözleşme çözülmeli ve çözülemeyen ≤%5; aksi halde dosya dokunulmaz, rapor çözülemeyen örnekleri yazar. */
+const ASELS_URL = 'https://webapi.aselsan.com/investor-relations/kap-disclosures?locale=tr';
+/* Yedek kur tablosu (çeyrek ortalamaları, Fintables mumlar_gunluk_gh 20 Eki 2026): Yahoo 10y gelmezse */
+const ASELS_KUR_YEDEK = {
+  usdtry: { '2017Q1': 3.6954, '2017Q2': 3.5774, '2017Q3': 3.5128, '2017Q4': 3.8021, '2018Q1': 3.8172, '2018Q2': 4.3734, '2018Q3': 5.6619, '2018Q4': 5.4903, '2019Q1': 5.368, '2019Q2': 5.6503, '2019Q3': 5.6761, '2019Q4': 5.8033, '2020Q1': 6.1227, '2020Q2': 6.8688, '2020Q3': 7.2459, '2020Q4': 7.8636, '2021Q1': 7.4184, '2021Q2': 8.4052, '2021Q3': 8.5492, '2021Q4': 11.2346, '2022Q1': 13.9609, '2022Q2': 15.8148, '2022Q3': 17.9591, '2022Q4': 18.6136, '2023Q1': 18.8816, '2023Q2': 21.0007, '2023Q3': 26.8012, '2023Q4': 28.5501, '2024Q1': 30.986, '2024Q2': 32.3857, '2024Q3': 33.5486, '2024Q4': 34.5736, '2025Q1': 36.3035, '2025Q2': 38.8136, '2025Q3': 40.8185, '2025Q4': 42.2931, '2026Q1': 43.7561, '2026Q2': 45.5532, '2026Q3': 47.898, '2026Q4': 49.3142 },
+  eurusd: { '2017Q1': 1.0655, '2017Q2': 1.1013, '2017Q3': 1.1754, '2017Q4': 1.1781, '2018Q1': 1.2293, '2018Q2': 1.1917, '2018Q3': 1.1628, '2018Q4': 1.1408, '2019Q1': 1.1355, '2019Q2': 1.1236, '2019Q3': 1.1113, '2019Q4': 1.1078, '2020Q1': 1.1026, '2020Q2': 1.1018, '2020Q3': 1.1699, '2020Q4': 1.1936, '2021Q1': 1.2044, '2021Q2': 1.2054, '2021Q3': 1.1782, '2021Q4': 1.1432, '2022Q1': 1.1215, '2022Q2': 1.0638, '2022Q3': 1.0063, '2022Q4': 1.0221, '2023Q1': 1.0732, '2023Q2': 1.089, '2023Q3': 1.088, '2023Q4': 1.0768, '2024Q1': 1.0854, '2024Q2': 1.0767, '2024Q3': 1.0993, '2024Q4': 1.0655, '2025Q1': 1.0533, '2025Q2': 1.1357, '2025Q3': 1.1685, '2025Q4': 1.1641, '2026Q1': 1.1709, '2026Q2': 1.1622, '2026Q3': 1.1502, '2026Q4': 1.1211 },
+};
+/* Resmî bakiye sipariş (mlr $) ve yeni iş alımı — şirket çeyrek sonuçları (AA/Bloomberg HT haberleri, 20 Eki 2026 ölçümü). ELLE güncellenir. */
+const ASELS_RESMI = {
+  backlog: { '2024Q4': 14.0, '2025Q4': 20.4, '2026Q2': 23.2 },
+  yeni_is: { '2024': 6.5, '2025': 9.6, '2026H1': 4.9 },
+  kaynak: 'Şirket finansal sonuç açıklamaları: 24 Şub 2026 (2025: bakiye 20,4 · yeni iş 9,6 · 2024 sonu 14,0) · 5 Ağu 2026 (1Y26: bakiye 23,2 (+%45) · yeni iş 4,9 (+%72))',
+};
+const aselsTemiz = h => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const aselsSayi = s => { s = s.trim(); if (/,\d{1,2}$/.test(s)) return parseFloat(s.replace(/\./g, '').replace(',', '.')); if (/^\d{1,3}(\.\d{3})+$/.test(s)) return parseFloat(s.replace(/\./g, '')); return parseFloat(s.replace(',', '.')); };
+const aselsPB = s => { s = s.toLowerCase(); if (/abd|usd|dolar/.test(s)) return 'USD'; if (/avro|euro|eur/.test(s)) return 'EUR'; return 'TL'; };
+const ASELS_RE = /(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d+)?)[\s,.\-]*(milyon|milyar|bin)?[\s,.\-]*(ABD\s*Dolar['’]?[ıi]?|Amerikan\s*Dolar['’]?[ıi]?|USD|Dolar|Avro|Euro|EUR|Türk\s*Liras[ıi]|TL|TRY)(?![A-Za-zıİşŞğĞüÜöÖçÇ])/giu;
+/* Metinden tutarları çöz: "toplam" varsa ondan sonrası; aynı (para birimi, tutar) tekrarı sayılmaz; <1000 birim (yıl, adet) atlanır */
+function aselsCozum(m) {
+  const sonToplam = Math.max(m.lastIndexOf('toplam'), m.lastIndexOf('Toplam'));
+  const parca = sonToplam >= 0 ? m.slice(sonToplam) : m;
+  const tutar = { USD: 0, EUR: 0, TL: 0 }; const gorulen = new Set(); let adet = 0;
+  for (const h of parca.matchAll(ASELS_RE)) {
+    let v = aselsSayi(h[1]); const c = (h[2] || '').toLowerCase();
+    if (c === 'milyar') v *= 1e9; else if (c === 'milyon') v *= 1e6; else if (c === 'bin') v *= 1e3;
+    if (!(v > 1000)) continue;
+    const pb = aselsPB(h[3]); const anahtar = pb + ':' + v; if (gorulen.has(anahtar)) continue;
+    gorulen.add(anahtar); tutar[pb] += v; adet++;
+  }
+  if (!adet && sonToplam >= 0) return aselsCozum(m.slice(0, sonToplam));   /* "toplam" sonrası tutarsızsa öncesine bak */
+  return { tutar, adet };
+}
+async function aselsSiparis() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### ASELSAN sözleşme akışı (§467) — ⏭ sektor-surucu.json yok'); return; }
+  let liste;
+  try {
+    const r = await fetch(ASELS_URL, { headers: { 'Accept': 'application/json', 'Origin': 'https://www.aselsan.com', 'Referer': 'https://www.aselsan.com/investor-relations/kap-disclosures', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' }, signal: AbortSignal.timeout(30000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    liste = await r.json(); if (!Array.isArray(liste)) liste = liste.data || liste.items || [];
+  } catch (e) { raporlar.push('### ASELSAN sözleşme akışı (§467) — ✗ webapi.aselsan.com: ' + String(e && e.message || e).slice(0, 120) + '\n- seri KORUNDU (varsa).'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  /* kur: Yahoo 10y günlük; düşerse dosyadaki 2y + çeyrek yedeği */
+  let fxUsd = new Map(), fxEur = new Map();
+  try { const h = await yahooSeri(['TRY=X', 'EURUSD=X'], '', '10y'); fxUsd = h['TRY=X'] || new Map(); fxEur = h['EURUSD=X'] || new Map(); } catch (e) {}
+  if (!fxUsd.size && D.seriler.usdtry) fxUsd = new Map(D.seriler.usdtry.gunluk);
+  if (!fxEur.size && D.seriler.eurusd) fxEur = new Map(D.seriler.eurusd.gunluk);
+  const fxUsdK = [...fxUsd.keys()].sort(), fxEurK = [...fxEur.keys()].sort();
+  const kur = (harita, anahtarlar, tarih, yedek) => {
+    if (harita.size) { let son = null; for (const k of anahtarlar) { if (k <= tarih) son = k; else break; } if (son && (new Date(tarih) - new Date(son)) < 20 * 86400000) return harita.get(son); }
+    const q = tarih.slice(0, 4) + 'Q' + (Math.floor((+tarih.slice(5, 7) - 1) / 3) + 1); return yedek[q] || yedek[Object.keys(yedek).sort().pop()];
+  };
+  const q = d => d.slice(0, 4) + 'Q' + (Math.floor((+d.slice(5, 7) - 1) / 3) + 1);
+  const items = [], cozulemeyen = [], gorulenKayit = new Set(); let sozlesmeSayisi = 0, kurYolu = fxUsd.size > 600 ? 'Yahoo 10y' : (fxUsd.size ? 'dosya 2y + çeyrek yedeği' : 'çeyrek yedeği');
+  for (const x of liste) {
+    const T = (x.translations || []).find(t => t.locale === 'tr') || {}; const baslik = String(T.title || '').trim();
+    if (!/SÖZLEŞME/i.test(baslik) || /DERECELENDİRME/i.test(baslik)) continue;
+    const tarih = String(x.announcementDate || '').slice(0, 10); if (!/^\d{4}-\d{2}-\d{2}$/.test(tarih)) continue;
+    sozlesmeSayisi++;
+    const metin = aselsTemiz(T.description); const { tutar, adet } = aselsCozum(metin);
+    if (!adet) { cozulemeyen.push(tarih + ': ' + metin.slice(0, 110)); continue; }
+    const imza = tarih + '|' + baslik + '|' + tutar.USD + '|' + tutar.EUR + '|' + tutar.TL; if (gorulenKayit.has(imza)) continue; gorulenKayit.add(imza);   /* listede aynı açıklama iki kez (2017-06-06, 2018-12-25) */
+    const u = kur(fxUsd, fxUsdK, tarih, ASELS_KUR_YEDEK.usdtry), e = kur(fxEur, fxEurK, tarih, ASELS_KUR_YEDEK.eurusd);
+    const usdMn = +((tutar.USD + tutar.EUR * e + tutar.TL / u) / 1e6).toFixed(1);
+    items.push({ t: tarih, tur: /DEĞİŞİKLİĞİ/i.test(baslik) ? 'değişiklik' : 'yeni', usd_mn: usdMn, usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1), ozet: metin.slice(0, 160), slug: T.slug || null });
+  }
+  if (items.length < 150 || cozulemeyen.length > Math.max(5, sozlesmeSayisi * 0.05)) { raporlar.push('### ASELSAN sözleşme akışı (§467) — ✗ denetim: ' + items.length + ' çözüldü, ' + cozulemeyen.length + '/' + sozlesmeSayisi + ' çözülemedi — şablon değişmiş olabilir; seri KORUNDU\n- ' + cozulemeyen.slice(0, 4).join('\n- ')); return; }
+  items.sort((a, b) => a.t < b.t ? -1 : 1);
+  /* aylık/çeyreklik/yıllık TOPLAM (akış); boş aylar 0 */
+  const aylik = {}; { const ilk = items[0].t.slice(0, 7); let y = +ilk.slice(0, 4), m = +ilk.slice(5, 7); const son = bugun.slice(0, 7); while (true) { const k = y + '-' + String(m).padStart(2, '0'); aylik[k] = 0; if (k >= son) break; m++; if (m > 12) { m = 1; y++; } } }
+  for (const it of items) aylik[it.t.slice(0, 7)] = +((aylik[it.t.slice(0, 7)] || 0) + it.usd_mn).toFixed(1);
+  const ceyreklik = {}, yillik = {}, adetQ = {};
+  for (const [k, v] of Object.entries(aylik)) { const Q = q(k + '-01'); ceyreklik[Q] = +((ceyreklik[Q] || 0) + v).toFixed(1); yillik[k.slice(0, 4)] = +((yillik[k.slice(0, 4)] || 0) + v).toFixed(1); }
+  for (const it of items) adetQ[q(it.t)] = (adetQ[q(it.t)] || 0) + 1;
+  const sonAy = Object.keys(aylik).sort().pop(); const sonIt = items[items.length - 1];
+  const onceki = D.seriler.asels_kap_siparis;
+  if (onceki && onceki.son && onceki.son.tarih > sonIt.t) { raporlar.push('### ASELSAN sözleşme akışı (§467) — ⚠ liste geriledi (' + onceki.son.tarih + '→' + sonIt.t + '), yazılmadı'); return; }
+  D.seriler.asels_kap_siparis = Object.assign({}, onceki || {}, {
+    ad: 'ASELSAN açıklanan sözleşmeler — KAP, çeyrek TOPLAMI (mn $)', birim: 'mn $', siklik: 'aylik', akis: true, hisse: ['ASELS'],
+    kaynak: 'aselsan.com KAP açıklamaları (webapi) · kur ' + kurYolu, aylik, ceyreklik, yillik, adet_ceyrek: adetQ,
+    son: { tarih: sonIt.t, deger: sonIt.usd_mn, ay: sonAy, ay_toplam: aylik[sonAy] }, guncelleme: bugun, n: items.length,   /* son = son açıklanan sözleşme (mn $); ay_toplam = içinde bulunulan ayın toplamı */
+    sozlesmeler: items.slice(-12).reverse(),
+    _kapsam: 'KAP eşiği üstü açıklanan sözleşmeler; resmî "yeni iş alımı"nın yaklaşık %45-70\'i (2024: 4,4/6,5 · 2025: 6,4/9,6 · 1Y26: 2,05/4,9 mlr $). Büyük sözleşme akışının öncü göstergesi; seviye değil yön ve y/y okunur.',
+  });
+  /* resmî bakiye sipariş — tohum (yoksa yaz; varsa elle girilmiş değerleri koru, yenileri ekle) */
+  const rb = D.seriler.asels_backlog || { ad: 'ASELSAN resmî bakiye sipariş — backlog (mlr $, çeyrek sonu; elle)', birim: 'mlr $', siklik: 'aylik', hisse: ['ASELS'], aylik: {}, ceyreklik: {}, kaynak: ASELS_RESMI.kaynak };
+  rb.ceyreklik = Object.assign({}, ASELS_RESMI.backlog, rb.ceyreklik || {}); rb.yeni_is = Object.assign({}, ASELS_RESMI.yeni_is, rb.yeni_is || {});
+  const rbQ = Object.keys(rb.ceyreklik).sort(); const rbSon = rbQ[rbQ.length - 1]; rb.son = { tarih: rbSon, deger: rb.ceyreklik[rbSon] }; rb.guncelleme = rb.guncelleme || bugun; rb.elle = true;
+  D.seriler.asels_backlog = rb;
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  degisenler.push('ASELSAN sözleşme akışı (' + items.length + ')');
+  const Qs = Object.keys(ceyreklik).sort(); const sonQ = Qs[Qs.length - 1], oncQ = Qs[Qs.length - 2], gecenQ = Qs[Qs.length - 5];
+  const ttm = Qs.slice(-4).reduce((s, k) => s + ceyreklik[k], 0);
+  raporlar.push('### ASELSAN sözleşme akışı (§467) — ✓ ' + items.length + ' sözleşme (' + items[0].t + '→' + sonIt.t + ') · kur ' + kurYolu +
+    '\n- ' + sonQ + ' (koşu): ' + (ceyreklik[sonQ] / 1000).toFixed(2) + ' mlr $ / ' + (adetQ[sonQ] || 0) + ' sözleşme · ' + oncQ + ': ' + (ceyreklik[oncQ] / 1000).toFixed(2) + ' mlr $' + (gecenQ ? ' · ' + gecenQ + ': ' + (ceyreklik[gecenQ] / 1000).toFixed(2) + ' mlr $' : '') + ' · son 4 çeyrek ' + (ttm / 1000).toFixed(1) + ' mlr $' +
+    '\n- son: ' + sonIt.t + ' ' + sonIt.usd_mn + ' mn $ — ' + sonIt.ozet.slice(0, 90) +
+    '\n- resmî backlog (elle): ' + Object.entries(rb.ceyreklik).map(([k, v]) => k + ' ' + v).join(' · ') + ' mlr $' +
+    (cozulemeyen.length ? '\n- ⚠ çözülemeyen ' + cozulemeyen.length + ': ' + cozulemeyen.slice(0, 2).join(' | ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -4998,6 +5114,7 @@ async function bultenKesif() {
     await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME (fetch→Playwright→Vercel köprüsü) · Dünya Bankası aylık xlsx → sektor-surucu.json/seriler */
     await olcKos('EVDS serileri (§466)', ()=>evdsSeriler());   /* §466: TÜFE gıda/giyim (2025=100 zincirli) · Yİ-ÜFE çimento/çelik/elektrik/gübre · KFE · AOFM/TLREF — EVDS_KEY secret; yoksa ⏭ */
     await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf());   /* §466: GÖP saatlik PTF → günlük ort. (TL ve $) — EPIAS_* secret; yoksa ⏭. Akşam koşusu yarının fiyatını da alır (GÖP ~14:00) */
+    await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
@@ -5010,8 +5127,8 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); }   /* elle: --katman=kamu — yalnız TCMB EVDS + EPİAŞ (secret testi için hızlı koşu, ~1 dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN KAP (hızlı koşu, ~1-2 dk) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
