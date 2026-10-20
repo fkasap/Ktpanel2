@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""§252s: Koyfin YERLI (XKTUM) CSV -> fm.json.  koyfin-isle.py'nin yerli karsiligi.
+"""§252s/§477: Koyfin YERLI (XKTUM) CSV -> fm.json.  v3.3 (20 Eki 2026): metrik AĞIRLIKLI, winsor, sektör büzme, faktör yeniden standart.  koyfin-isle.py'nin yerli karsiligi.
 
   koyfin-isle.py  ->  yevren.json  (YABANCI hisseler, ham metrik tablosu)
   fm-isle.py      ->  fm.json      (YERLI hisseler, 5 FAKTOR z-skoru)
@@ -34,40 +34,42 @@ DOGRULA = sys.argv[sys.argv.index('--dogrula')+1] if '--dogrula' in sys.argv els
 # ── Faktor tanimi. SIRA app.js:1519 ile SABIT: VALUE:0 GROWTH:1 QUALITY:2 MOMENTUM:3 LOW_RISK:4
 FAK = ['VALUE', 'GROWTH', 'QUALITY', 'MOMENTUM', 'LOW_RISK']
 SEKTOR_ICI = {'VALUE', 'GROWTH', 'QUALITY'}       # digerleri tum evren
-METRIK = [
-    ('P/E (LTM)',                          'VALUE',    False),
-    ('EV/EBITDA (LTM)',                    'VALUE',    False),
-    ('EV/Sales (LTM)',                     'VALUE',    False),
-    ('P/FCF (LTM)',                        'VALUE',    False),
-    ('P/OCF (LTM)',                        'VALUE',    False),
-    ('Net Debt / EBITDA (LTM)',            'VALUE',    False),
-    ('Total Debt / (EBITDA - Capex) (LTM)','VALUE',    False),
-    ('EV/(EBIT-Capex)',                    'VALUE',    False),
-    ('Total Revenues/CAGR (1Y TTM)',       'GROWTH',   True),
-    ('Capex as % of Revenues (LTM)',       'GROWTH',   False),
-    ('CAPEX/CAGR (3Y TTM)',                'GROWTH',   False),
-    ('Nopat margin',                       'GROWTH',   True),
-    ('Return On Equity % (LTM)',           'QUALITY',  True),
-    ('Return on Assets (ROA) % (LTM)',     'QUALITY',  True),
-    ('ROIC (LTM)',                         'QUALITY',  True),
-    ('EBIT Margin % (LTM)',                'QUALITY',  True),
-    ('EBITDA Margin % (LTM)',              'QUALITY',  True),
-    ('Gross Profit Margin % (LTM)',        'QUALITY',  True),
-    ('FCF Margin % (LTM)',                 'QUALITY',  True),
-    ('Altman Z-Score (LTM)',               'QUALITY',  True),
-    ('NOPAT / ASSETS',                     'QUALITY',  True),
-    ('RSI 10D',                            'MOMENTUM', True),
-    ('Price Chg. % (6M)',                  'MOMENTUM', True),
-    ('Rel. Volume',                        'MOMENTUM', True),
-    ('SMA % (10D)',                        'MOMENTUM', True),
-    ('SMA % (50D)',                        'MOMENTUM', True),
-    ('EMA % (20D)',                        'MOMENTUM', True),
-    ('Volatility (1Y)',                    'LOW_RISK', False),
-    ('Beta (1Y)',                          'LOW_RISK', False),
+METRIK = [   # (ad, faktör, yüksek-iyi, AĞIRLIK) — §477: ağırlık 0 = faktöre girmez (yalnız meta'da listelenir)
+    ('P/E (LTM)',                          'VALUE',    False, 1.0),
+    ('EV/EBITDA (LTM)',                    'VALUE',    False, 1.5),
+    ('EV/Sales (LTM)',                     'VALUE',    False, 0.5),
+    ('P/FCF (LTM)',                        'VALUE',    False, 1.0),
+    ('P/OCF (LTM)',                        'VALUE',    False, 0.5),
+    ('Net Debt / EBITDA (LTM)',            'VALUE',    False, 0.0),   # kaldıraç — değerleme değil (LOW_RISK'e bakılır)
+    ('Total Debt / (EBITDA - Capex) (LTM)','VALUE',    False, 0.0),
+    ('EV/(EBIT-Capex)',                    'VALUE',    False, 1.0),
+    ('Total Revenues/CAGR (1Y TTM)',       'GROWTH',   True,  2.0),
+    ('Capex as % of Revenues (LTM)',       'GROWTH',   False, 0.0),   # işareti belirsiz (yatırım = büyüme de olabilir) → dışarı
+    ('CAPEX/CAGR (3Y TTM)',                'GROWTH',   False, 0.0),
+    ('Nopat margin',                       'GROWTH',   True,  0.0),   # marj = kalite; GROWTH'ta çift sayım → dışarı
+    ('Return On Equity % (LTM)',           'QUALITY',  True,  1.5),
+    ('Return on Assets (ROA) % (LTM)',     'QUALITY',  True,  1.0),
+    ('ROIC (LTM)',                         'QUALITY',  True,  1.5),
+    ('EBIT Margin % (LTM)',                'QUALITY',  True,  1.0),
+    ('EBITDA Margin % (LTM)',              'QUALITY',  True,  0.5),
+    ('Gross Profit Margin % (LTM)',        'QUALITY',  True,  0.5),
+    ('FCF Margin % (LTM)',                 'QUALITY',  True,  1.0),
+    ('Altman Z-Score (LTM)',               'QUALITY',  True,  1.0),
+    ('NOPAT / ASSETS',                     'QUALITY',  True,  0.5),
+    ('RSI 10D',                            'MOMENTUM', True,  0.25),  # 10 günlük teknikler gürültü — ağırlık küçük
+    ('Price Chg. % (6M)',                  'MOMENTUM', True,  3.0),   # asıl momentum (6 ay)
+    ('Rel. Volume',                        'MOMENTUM', True,  0.0),   # hacim yön değil → dışarı
+    ('SMA % (10D)',                        'MOMENTUM', True,  0.25),
+    ('SMA % (50D)',                        'MOMENTUM', True,  1.0),
+    ('EMA % (20D)',                        'MOMENTUM', True,  0.5),
+    ('Volatility (1Y)',                    'LOW_RISK', False, 1.0),
+    ('Beta (1Y)',                          'LOW_RISK', False, 1.0),
 ]
 KIRP = 3.0
 MINFAC = 3
-MIN_SEKTOR = 5    # sektor-ici z-skor icin en az uye; altindaysa TUM EVRENE duser
+MIN_SEKTOR = 8    # §477: 5→8 — küçük sektörde z-skor gürültü (6 isimlik Health Care'de bir aykırı herkesi belirliyordu)
+WINSOR = 0.02     # §477: ham metrik havuzda %2/%98 kırpılır (CAGR %160 gibi uçlar sektör ort/std'yi bozmasın)
+BUZME = 0.5       # §477: sektör-içi z = 0,5·sektör + 0,5·evren (küçük havuz gürültüsü büzülür)
 
 def sayi(v):
     if v is None: return None
@@ -90,14 +92,14 @@ def z(deger, havuz):
 with open(CSV, encoding='utf-8-sig') as f:
     ham = [r for r in csv.DictReader(f) if (r.get('Ticker') or '').strip()]
 kol = {k.strip(): k for k in ham[0].keys()}
-eksik = [n for n, _, _ in METRIK if n not in kol]
+eksik = [n for n, _, _, _ in METRIK if n not in kol]
 assert not eksik, 'CSV\'de EKSIK METRIK: ' + ', '.join(eksik)
 
 hisse = []
 for r in ham:
     t = r['Ticker'].strip().upper()
     s = (r.get(kol.get('Sector', 'Sector')) or '').strip() or 'Bilinmiyor'
-    d = {n: sayi(r.get(kol[n])) for n, _, _ in METRIK}
+    d = {n: sayi(r.get(kol[n])) for n, _, _, _ in METRIK}
     hisse.append({'t': t, 's': s, 'ham': d})
 
 # ── z-SKOR HAVUZLARI
@@ -105,50 +107,70 @@ sekUye = defaultdict(int)
 for h in hisse: sekUye[h['s']] += 1
 
 zs = {h['t']: {} for h in hisse}
-for ad, fa, hib in METRIK:
+def winsor(havuz):
+    """§477: havuz uçları %2/%98 yüzdeliklerine kırpılır; z bu kırpılmış havuza göre."""
+    if len(havuz) < 10: return havuz, None, None
+    sr = sorted(havuz); lo = sr[int(len(sr) * WINSOR)]; hi = sr[min(len(sr) - 1, int(len(sr) * (1 - WINSOR)))]
+    return [min(hi, max(lo, v)) for v in sr], lo, hi
+def zw(deger, havuz):
+    w, lo, hi = winsor(havuz)
+    if lo is not None: deger = min(hi, max(lo, deger))
+    return z(deger, w)
+evrenHavuz = {ad: [h['ham'][ad] for h in hisse if h['ham'][ad] is not None] for ad, _, _, _ in METRIK}
+for ad, fa, hib, agirlik in METRIK:
+    if agirlik <= 0: continue
     if fa in SEKTOR_ICI:
         gruplar = defaultdict(list)
         for h in hisse:
-            if h['s'] == 'Bilinmiyor': continue          # §455: sektoru bilinmeyen asagida TUM EVRENE karsi
+            if h['s'] == 'Bilinmiyor': continue          # §455: sektoru bilinmeyen TUM EVRENE karsi
             g = h['s'] if sekUye[h['s']] >= MIN_SEKTOR else '__KUCUK__'
             gruplar[g].append(h)
         bilinmeyen = [h for h in hisse if h['s'] == 'Bilinmiyor']
-        if bilinmeyen:
-            gruplar['__BILINMEYEN__'] = bilinmeyen       # z-skoru tum evren havuzuyla hesaplanir (asagida)
+        if bilinmeyen: gruplar['__BILINMEYEN__'] = bilinmeyen
     else:
         gruplar = {'__TUM__': hisse}
     for g, uyeler in gruplar.items():
-        havuzK = hisse if g == '__BILINMEYEN__' else uyeler
+        havuzK = hisse if g in ('__BILINMEYEN__', '__TUM__') else uyeler
         havuz = [h['ham'][ad] for h in havuzK if h['ham'][ad] is not None]
         for h in uyeler:
             v = h['ham'][ad]
             if v is None: continue
-            zz = z(v, havuz)
+            zz = zw(v, havuz)
             if zz is None: continue
-            zs[h['t']][ad] = zz if hib else -zz     # dusuk-iyi metrikte ISARET TERS
-
-# ── FAKTOR SKORLARI
+            if fa in SEKTOR_ICI and g not in ('__BILINMEYEN__', '__TUM__'):
+                ze = zw(v, evrenHavuz[ad])                 # §477 büzme: sektör-içi z ile evren z karışımı
+                if ze is not None: zz = BUZME * zz + (1 - BUZME) * ze
+            zs[h['t']][ad] = (zz if hib else -zz) if True else zz     # dusuk-iyi metrikte ISARET TERS
+# ── FAKTOR SKORLARI (§477: metrik ağırlıklı ortalama → sıralanan evrende yeniden standartlaştırma, sd=1, ±3 kırpma)
 data, atlanan = [], []
 for h in hisse:
     f = []
     for fa in FAK:
-        vs = [zs[h['t']][ad] for ad, ff, _ in METRIK if ff == fa and ad in zs[h['t']]]
-        f.append(round(sum(vs) / len(vs), 4) if vs else None)
+        pay = [(zs[h['t']][ad], ag) for ad, ff, _, ag in METRIK if ff == fa and ag > 0 and ad in zs[h['t']]]
+        f.append(sum(v * a for v, a in pay) / sum(a for _, a in pay) if pay else None)
     n = sum(1 for x in f if x is not None)
     if n < MINFAC:
         atlanan.append(h['t']); continue
     data.append({'t': h['t'], 's': h['s'], 'f': f, 'n': n})
-
+for i, fa in enumerate(FAK):
+    v = [x['f'][i] for x in data if x['f'][i] is not None]
+    if len(v) >= 3 and st.pstdev(v) > 0:
+        m, sd = st.mean(v), st.pstdev(v)
+        for x in data:
+            if x['f'][i] is not None: x['f'][i] = round(max(-KIRP, min(KIRP, (x['f'][i] - m) / sd)), 4)
+    else:
+        for x in data:
+            if x['f'][i] is not None: x['f'][i] = round(x['f'][i], 4)
 data.sort(key=lambda x: x['t'])
 meta = {
     'uni': len(hisse), 'ranked': len(data), 'topn': 25,
     'defw': {'QUALITY': 0.3, 'VALUE': 0.25, 'MOMENTUM': 0.2, 'LOW_RISK': 0.15, 'GROWTH': 0.1},
     'minw': 0.01, 'maxw': 0.1, 'walpha': 0.5, 'seccap': 0.3, 'maxnames': 6, 'minfac': MINFAC,
-    'metrics': [{'n': n, 'f': fa, 'hib': hib} for n, fa, hib in METRIK],
+    'metrics': [{'n': n, 'f': fa, 'hib': hib, 'w': ag} for n, fa, hib, ag in METRIK],
     'tarih': str(datetime.date.today()),
     '_faktor_sirasi': FAK,
     '_normalizasyon': {fa: ('sektör içi' if fa in SEKTOR_ICI else 'tüm evren') for fa in FAK},
-    '_kirpma': KIRP, '_min_sektor_uye': MIN_SEKTOR,
+    '_kirpma': KIRP, '_min_sektor_uye': MIN_SEKTOR, '_winsor': WINSOR, '_buzme': BUZME, '_yontem': '§477 v3.3: metrik ağırlıklı · %2/98 winsor · sektör-içi z 0,5 büzme · faktör evrende sd=1',
     '_uretim': 'fm-isle.py · ' + CSV.split('/')[-1],
 }
 json.dump({'meta': meta, 'data': data},
