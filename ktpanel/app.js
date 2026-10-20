@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020n';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020o';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -11784,7 +11784,7 @@ function fekCiz(){
   /* faiz cezası: faiz 10× olsaydı not düşer miydi? */
   let faizEtkili = false;
   if(faizSupheli && Number.isFinite(kapasite) && Number.isFinite(yuk) && yuk>0){
-    const yukStres = yuk + (Number.isFinite(netFaiz) ? netFaiz*9 : (Number.isFinite(t.finBorc)? t.finBorc*0.25 : 0));
+    const yukStres = yuk + (Number.isFinite(brutFaiz) ? brutFaiz*9 : (Number.isFinite(t.finBorc)? t.finBorc*0.25 : 0));
     const fekStres = kapasite/yukStres;
     faizEtkili = fekStres < 3.5;          /* stres altında not düşüyorsa uyarı ANLAMLI */
   }
@@ -11856,7 +11856,7 @@ function fekCiz(){
       '<div class="sub" style="font-size:10.5px;margin-top:3px">'+
       (faizYok
         ? ('Finansal borç <b>'+mlrG(t.finBorc)+' mn</b> ama nakit akış tablosunun <b>finansman</b> bölümünde ödenen faiz satırı <b>YOK</b>. ')
-        : ('Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(netFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '+
+        : ('Örtük faiz oranı <b>%'+trN(ortFaizOran*100,1)+'</b> (ödenen faiz '+mlrG(brutFaiz)+' mn ÷ finansal borç '+mlrG(t.finBorc)+' mn). '+
            (dovizBandi ? '<b>TL kredisi için düşük ama DÖVİZ kredisi için normaldir</b> — ihracatçı ya da döviz gelirli şirketlerde beklenen bant. Borç kompozisyonuna bakın; ağırlıklı dövizse bu uyarıyı yok sayabilirsiniz. ' : '')))+
       (dovizBandi ? '' : 'TL borçta bu oran gerçekçi değil — faiz büyük olasılıkla nakit akış tablosunda <b>işletme faaliyetleri</b> altında raporlanmış (IAS 7 buna izin verir) ve finansman satırından okunamıyor. ')+
       (faizEtkili
