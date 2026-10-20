@@ -30,7 +30,7 @@ on:
   workflow_dispatch:        # elle tetikleme (Actions sekmesinden)
     inputs:
       katman:
-        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy | kaparsiv | surucu | kamu | fm)'
+        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy | kaparsiv | surucu | kamu | kardemir | fm)'
         required: false
         default: 'hepsi'
       fonkod:
