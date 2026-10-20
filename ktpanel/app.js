@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020i';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020j';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1803,7 +1803,7 @@ function fmRender(){
   const disla=new Set(fmDislaOku());
   /* §478: yedek=1 → dışlananlar seçimden ÖNCE düşer, 26. giren olur (eski §405). yedek=0 (varsayılan) → seçim tam listeden
      yapılır, dışlananlar SONRA çıkar; portföy küçülür, ağırlıkları kalanlara skorla orantılı dağılır. */
-  const yedek=(($('fmYedek')||{}).value||'0')==='1';
+  const yedek=(($('fmYedek')||{}).value||'1')==='1';
   const havuz=yedek? rows.filter(r=>!disla.has(r.t)) : rows;
   const sel0=[],cnt={}; let capa=null;
   for(const r of havuz){
@@ -1814,9 +1814,9 @@ function fmRender(){
   const sel=yedek? sel0 : sel0.filter(r=>!disla.has(r.t));
   const cikanSay=sel0.length-sel.length;
   const wts=sel.length? fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s),capa) : [];
-  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+kap.toFixed(1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':'')+(cikanSay?' · çıkarılan '+cikanSay+' → ağırlığı dağıtıldı ('+sel.length+' hisse)':''); }
+  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+kap.toFixed(1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':'')+(cikanSay?' · çıkarılan '+cikanSay+' → ağırlığı dağıtıldı ('+sel.length+' hisse)':(yedek&&disla.size?' · çıkarılanların yerine yedek girdi':'')); }
   const zf=(v,k)=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'"'+(k!=null&&k<0.6?' style="opacity:.55;font-style:italic" title="ince veri: bu faktörün metriklerinin yalnız %'+Math.round(k*100)+'\'i var — skor sıfıra doğru büzüldü"':'')+'>'+(v>=0?'+':'')+v.toFixed(2)+(k!=null&&k<0.6?'<sup>i</sup>':'')+'</td>';
-  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0],r.k&&r.k[0])+zf(r.f[1],r.k&&r.k[1])+zf(r.f[2],r.k&&r.k[2])+zf(r.f[3],r.k&&r.k[3])+zf(r.f[4],r.k&&r.k[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — ağırlığı kalanlara dağılır (ÇIKARILAN kutusundan yedek girsin seçilebilir)" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
+  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0],r.k&&r.k[0])+zf(r.f[1],r.k&&r.k[1])+zf(r.f[2],r.k&&r.k[2])+zf(r.f[3],r.k&&r.k[3])+zf(r.f[4],r.k&&r.k[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek girer, ağırlıklar yeniden hesaplanır (ÇIKARILAN: ağırlığı dağıt seçilebilir)" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
   /* §405: × satır tıklamasını YUTAR — yoksa çıkarırken detay kartı açılır */
   document.querySelectorAll('#fmBody .fmCikar').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();fmDislaEkle(b.dataset.t);}));
