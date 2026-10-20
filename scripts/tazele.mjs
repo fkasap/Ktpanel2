@@ -3418,6 +3418,147 @@ async function kapYeniIs() {
   raporlar.push('### KAP Yeni İş İlişkisi (§469) — ✓ ' + Object.keys(K.kayit).length + ' bildirim kayıtlı · bu koşu ' + sayfaSayisi + ' sayfa, ' + yeniKayit + ' yeni' + (bekleyen ? ' · tavan: ' + bekleyen + ' bekliyor (sonraki koşu)' : '') + '\n- ' + notlar.join('\n- ') + (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') : ''));
 }
 
+/* ── §472 KARDEMİR LİSTE FİYATLARI + HURDA ALIM FİYATLARI (kardemir.com açık API) ─────────────────────────────────────
+   Çıkış noktası (20 Eki 11:39): kullanıcı SteelOrbis'i sordu. Türkiye hurda/kütük/inşaat demiri serileri orada var ama
+   SEVİYE ücretli ("xxx"), ücretsiz üyelikte yalnız % değişim; sayfa girişli + bot engelli → Actions için uygun değil.
+   Aranırken bulundu: Kardemir KENDİ liste fiyatlarını ve hurda alım fiyatlarını açık JSON uçlarıyla, 2014'ten beri
+   TARİHÇELİ yayımlıyor (Chrome'da 20 Eki ölçüldü; çerez gerekmiyor, `Dil: 1` başlığı ŞART — yoksa HTTP 500):
+     GET /api/SatisPazarlamaapi/getpriceremarkdatelist          → ["13/10/2026","16/09/2026",…] 482 liste tarihi (07/01/2014→)
+     GET /api/SatisPazarlamaapi/getpricelist?date=dd/mm/yyyy      → [[{date, isLiveUpdateDate, allproduct:[{product, productdata:[{name, price, currency}]}]}]]
+         Ürünler: KÜTÜK · NERVÜRLÜ · KANGAL · PROFİL · DÜZ YUVARLAK · PLATİNA · KÖŞEBENT · MADEN DİREĞİ · PİK …
+         O gün SATIŞA AÇILMAYAN ürünün productdata[] boş gelir → her liste tarihi yalnız açılan ürünleri taşır.
+         Para birimi yıllara göre değişir: kütük 2014–15 " US$", 2015/06–2021/06 "TL", 2021/09→ "USD"; nervürlü hep TL; profil 2014–15 EUR,
+         2016–21 TL, sonra USD (Chrome'da 482 tarihin tamamı tarandı: çözücü hiçbir dolu ürünü kaçırmadı).
+         Ürün adları da değişti: kütük "130X130X6-12 M. (S235JR)" (2014–20) → "150X150 S235JR" (2021→); nervürlü
+         "Ø 18-20-22-25-28-32 mm." (2014) → "Ø 12-32 mm." (2018→); profil "IPE - NPI - NPU (180 - 200) (Std.)".
+     GET /api/TedarikciIliskileriapi/getscrappricemarkdatelist   → 347 tarih (11/02/2014→)
+     GET /api/TedarikciIliskileriapi/getscrapprice?date=…        → {date, content:HTML} "Özel Ekstra: 20 .120 TL/Ton · DKP Hurda: 20.100 ·
+         Ekstra: 19.850 · 1. Sınıf: 19.300 · 2. Sınıf: 19.000 · Büyük Parça İskontosu: 1.250" — 2014 metni HTML varlıklı
+         (&Ouml;zel), sayı içinde boşluk olabilir ("20 .120"), "Ekstra" sınıfı yalnız 2026-09'dan beri var → başlık
+         sınıfı ÖZEL EKSTRA (2014'ten beri kesintisiz).
+   Bu KRDMD için vekil değil, şirketin kendi gerçekleşen liste fiyatı ve kendi hurda maliyeti. Kardemir YÜKSEK FIRIN
+   (BOF) üreticisidir: ana ham madde cevher + kok, hurda şarjın küçük kısmı → "kütük − hurda" yurt içi metal marjının
+   gerçek ölçüsü ama Kardemir'in asıl makası "kütük − cevher(1,6 t) − kok(0,7 t)"; kok serisi yok → kısmi spread.
+   KCAER kütük alıp profil haddeler → Kardemir profil − kütük = haddeleme spread'i (ikisi de aynı listeden, tutarlı).
+   YÖNTEM: liste fiyatı bir sonraki listeye kadar geçerli sayılır (adım fonksiyonu, takvim günü ileri taşıma); TL fiyat
+   günün kuruyla $'a çevrilir (TL sabitken kur yükseldikçe $ değeri erir — gerçek davranış); günlük adımların AY
+   ORTALAMASI saklanır (siklik 'aylik', ~150 nokta/seri; dosya şişmez), `son` = son liste adımı, `adimlar` son 12 adım.
+   ARTIMLI: çözülen tarihler D.kardemir.liste / .hurda içinde (kısa anahtar); koşu başına ≤100 liste + ≤100 hurda
+   sayfası (250 ms ara, yeniden eskiye) → 2014'e kadar ~5 koşu. Hatalı sayfa 3 denemeden sonra bırakılır.
+   KARDEMIR_SURUM değişirse kayıt sıfırlanır (çözücü değişince yeniden çekilir). Tarih listesi gelmezse dosya dokunulmaz.
+   DENETİM: aralık dışı fiyat atlanır (kütük 200–2.000 $, nervürlü/profil 200–2.000 $, hurda 50–1.500 $); seri `son`
+   tarihi geriye gidemez (gerileme korunur, uyarı yazılır). */
+const KARDEMIR_API = 'https://www.kardemir.com/api/';
+const KARDEMIR_H = { 'Dil': '1', 'Accept': 'application/json, text/plain, */*', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36', 'Referer': 'https://www.kardemir.com/fiyat_listesi', 'Accept-Language': 'tr-TR,tr;q=0.9' };
+const KARDEMIR_SURUM = '472', KARDEMIR_TAVAN = 100, KARDEMIR_UYKU = 250, KARDEMIR_DENEME = 3;
+const KARDEMIR_KUR_ESKI = { '2013': 1.90, '2014': 2.19, '2015': 2.72, '2016': 3.02 };   /* yıllık ort. USD/TRY — Yahoo da yedek tablo da yoksa */
+const KARDEMIR_EURUSD_ESKI = { '2013': 1.33, '2014': 1.33, '2015': 1.11, '2016': 1.11 };   /* yıllık ort. EUR/USD — 2014–15 profil listesi EUR fiyatlıydı */
+const KARDEMIR_ENT = { Ouml: 'Ö', ouml: 'ö', Ccedil: 'Ç', ccedil: 'ç', Uuml: 'Ü', uuml: 'ü', Iuml: 'Ï', nbsp: ' ', amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+const kardemirHtml = s => String(s || '').replace(/&#x([0-9a-f]+);/gi, (m, h) => String.fromCharCode(parseInt(h, 16))).replace(/&#(\d+);/g, (m, n) => String.fromCharCode(+n)).replace(/&([a-zA-Z]+);/g, (m, n) => KARDEMIR_ENT[n] || m);
+const kardemirIso = d => { const m = String(d || '').match(/(\d{2})[./](\d{2})[./](\d{4})/); return m ? m[3] + '-' + m[2] + '-' + m[1] : null; };
+const kardemirGun = t => t.slice(8, 10) + '/' + t.slice(5, 7) + '/' + t.slice(0, 4);   /* ISO → dd/mm/yyyy (API biçimi) */
+const kardemirSayi = s => { s = String(s || '').replace(/\s/g, ''); if (/,\d{1,2}$/.test(s)) s = s.replace(/\./g, '').replace(',', '.'); else s = s.replace(/[.,](?=\d{3}(\D|$))/g, ''); const v = parseFloat(s); return isFinite(v) ? v : null; };
+const kardemirPB = s => { s = String(s || '').toUpperCase().replace(/\s/g, ''); if (/US\$|USD|\$/.test(s)) return 'USD'; if (/EUR|€/.test(s)) return 'EUR'; if (/TL|TRY|₺/.test(s)) return 'TL'; return s || '?'; };
+function kardemirListeCoz(j) {
+  const L = Array.isArray(j) ? (Array.isArray(j[0]) ? j[0][0] : j[0]) : j;
+  if (!L || !Array.isArray(L.allproduct)) return null;
+  const bul = (urunRe, secici) => { const p = L.allproduct.find(x => urunRe.test(String(x.product || '').trim())); if (!p || !Array.isArray(p.productdata)) return null; const it = p.productdata.find(x => secici(String(x.name || '').replace(/\s+/g, ' ').trim())); return it && +it.price > 0 ? { f: +it.price, pb: kardemirPB(it.currency) } : null; };
+  const o = {};
+  const k = bul(/^KÜTÜK/i, n => /S235/i.test(n)); if (k) o.k = k;                                   /* kütük 150×150 (eski 130×130) S235JR */
+  const kb = bul(/^KÜTÜK/i, n => /B420/i.test(n)); if (kb) o.kb = kb;                               /* kütük B420 (inşaat demiri kalitesi) */
+  const n = bul(/^NERVÜRLÜ/i, x => /^Ø/.test(x) && /-\s*32\b/.test(x) && !/muh/i.test(x)) || bul(/^NERVÜRLÜ/i, x => /-\s*32\b/.test(x) && !/muh/i.test(x)); if (n) o.n = n;   /* Ø12-32 (2014: Ø18-…-32); "Muhtelif boy" hariç */
+  const p = bul(/^PROF/i, x => /IPE/i.test(x) && /180\s*-\s*200/.test(x)) || bul(/^PROF/i, x => /IPE/i.test(x)); if (p) o.p = p;   /* IPE/NPI/NPU 180-200 Std */
+  const f = bul(/^KANGAL|^F[İI]LMA/i, x => /5[.,]5/.test(x) && /SAE[^)]*1008/i.test(x)) || bul(/^KANGAL|^F[İI]LMA/i, x => /SAE[^)]*1008/i.test(x)); if (f) o.f = f;   /* filmaşin Ø5.5 SAE1008 (2016: "SAE 1006-1008-1010") */
+  return Object.keys(o).length ? o : { bos: 1 };
+}
+function kardemirHurdaCoz(j) {
+  const t = kardemirHtml(String((j && j.content) || '')).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  const re = /(Özel Ekstra|Özel Extra|DKP Hurda|DKP|Ekstra|Extra|1\. ?S[ıi]n[ıi]f|2\. ?S[ıi]n[ıi]f|Büyük Parça İskontosu)\s*:\s*([\d][\d .,]*\d|\d)/g;
+  const ad = { 'Özel Ekstra': 'oe', 'Özel Extra': 'oe', 'DKP Hurda': 'dkp', 'DKP': 'dkp', 'Ekstra': 'ek', 'Extra': 'ek', 'Büyük Parça İskontosu': 'bp' };   /* 2015 metinlerinde "Extra" yazımı */
+  const o = {}; let m;
+  while ((m = re.exec(t))) { const key = ad[m[1]] || (/^1/.test(m[1]) ? 's1' : 's2'); const v = kardemirSayi(m[2]); if (v != null && o[key] == null) o[key] = v; }
+  return Object.keys(o).length ? o : { bos: 1 };
+}
+async function kardemirFiyat() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### Kardemir fiyatları (§472) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  let K = D.kardemir;
+  if (!K || K.surum !== KARDEMIR_SURUM) K = D.kardemir = { surum: KARDEMIR_SURUM, liste: {}, hurda: {}, _not: 'kardemir.com açık API kayıtları — liste: k kütük S235JR, kb kütük B420, n nervürlü Ø12-32, p profil IPE 180-200, f filmaşin Ø5.5 ({f fiyat, pb para birimi}); hurda: oe Özel Ekstra, dkp, ek Ekstra, s1/s2 sınıf, bp büyük parça iskontosu (TL/t). bos: o gün ilgili ürün yok; hata: deneme sayısı' };
+  const uyku = ms => new Promise(r => setTimeout(r, ms));
+  const getJ = async yol => { const r = await fetch(KARDEMIR_API + yol, { headers: KARDEMIR_H, signal: AbortSignal.timeout(20000) }); if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + yol.split('?')[0] + (r.status === 403 ? ' (erişim engeli — Actions IP?)' : r.status === 500 ? ' (Dil başlığı reddedildi?)' : '')); return r.json(); };
+  const notlar = [], uyari = []; let sayfa = 0, yeni = 0, bekleyen = 0;
+  const cek = async (listeYolu, sayfaYolu, kayit, cozucu, etiket) => {
+    try {
+      const ham = await getJ(listeYolu);
+      const tarihler = (Array.isArray(ham) ? ham : []).map(kardemirIso).filter(Boolean).sort().reverse();
+      if (!tarihler.length) throw new Error('tarih listesi boş');
+      const eksik = tarihler.filter(t => !kayit[t] || (kayit[t].hata && kayit[t].hata < KARDEMIR_DENEME)); let n = 0;
+      for (const t of eksik) {
+        if (n >= KARDEMIR_TAVAN) { bekleyen++; continue; }
+        try { const c = cozucu(await getJ(sayfaYolu + encodeURIComponent(kardemirGun(t)))); kayit[t] = c || { bos: 1 }; yeni++; }
+        catch (e) { kayit[t] = { hata: ((kayit[t] && kayit[t].hata) || 0) + 1 }; uyari.push(etiket + ' ' + t + ': ' + String(e && e.message || e).slice(0, 70)); }
+        n++; sayfa++; await uyku(KARDEMIR_UYKU);
+      }
+      notlar.push(etiket + ' ' + tarihler.length + ' tarih (' + tarihler[tarihler.length - 1] + '→' + tarihler[0] + ') · dosyada ' + Object.keys(kayit).length);
+      return true;
+    } catch (e) { uyari.push(etiket + ': ' + String(e && e.message || e).slice(0, 120)); return false; }
+  };
+  const l1 = await cek('SatisPazarlamaapi/getpriceremarkdatelist', 'SatisPazarlamaapi/getpricelist?date=', K.liste, kardemirListeCoz, 'liste');
+  const l2 = await cek('TedarikciIliskileriapi/getscrappricemarkdatelist', 'TedarikciIliskileriapi/getscrapprice?date=', K.hurda, kardemirHurdaCoz, 'hurda');
+  const dolu = o => Object.values(o).filter(v => v && !v.bos && !v.hata).length;
+  if (!dolu(K.liste) && !dolu(K.hurda)) { raporlar.push('### Kardemir fiyatları (§472) — ✗ veri yok' + (l1 || l2 ? ' (tarih listesi geldi, sayfalar çözülemedi)' : ' (kardemir.com\'a ulaşılamadı)') + '\n- ' + uyari.slice(0, 6).join('\n- ')); if (l1 || l2) await yaz(dosya, D); return; }
+  /* kur: Yahoo TRY=X (max) → dosyadaki usdtry → çeyrek yedek tablo → yıllık eski tablo */
+  let fx = new Map(), fxE = new Map(); try { const h = await yahooSeri(['TRY=X', 'EURUSD=X'], '', 'max'); fx = h['TRY=X'] || new Map(); fxE = h['EURUSD=X'] || new Map(); } catch (e) {}
+  if (D.seriler.usdtry && Array.isArray(D.seriler.usdtry.gunluk)) for (const [t, v] of D.seriler.usdtry.gunluk) if (typeof v === 'number' && !fx.has(t)) fx.set(t, v);
+  if (D.seriler.eurusd && Array.isArray(D.seriler.eurusd.gunluk)) for (const [t, v] of D.seriler.eurusd.gunluk) if (typeof v === 'number' && !fxE.has(t)) fxE.set(t, v);
+  const kurYap = (harita, yedekQ, yedekYil) => { const ks = [...harita.keys()].sort(), vs = ks.map(k => harita.get(k)); return t => { let lo = 0, hi = ks.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (ks[m] <= t) { r = m; lo = m + 1; } else hi = m - 1; }
+    if (r >= 0 && (new Date(t) - new Date(ks[r])) < 15 * 864e5) return vs[r];
+    const q = t.slice(0, 4) + 'Q' + (Math.floor((+t.slice(5, 7) - 1) / 3) + 1); return (yedekQ[q] || yedekYil[t.slice(0, 4)] || null); }; };
+  const kur = kurYap(fx, ASELS_KUR_YEDEK.usdtry, KARDEMIR_KUR_ESKI), kurE = kurYap(fxE, ASELS_KUR_YEDEK.eurusd, KARDEMIR_EURUSD_ESKI); const fxK = [...fx.keys()];
+  const cevir = (f, pb, hedef, t) => { if (pb === hedef) return f; if (pb === 'EUR') { const e = kurE(t); if (!e) return null; f = f * e; pb = 'USD'; if (pb === hedef) return f; } const k = kur(t); if (!k) return null; if (pb === 'TL' && hedef === 'USD') return f / k; if (pb === 'USD' && hedef === 'TL') return f * k; return null; };
+  /* adım noktaları → günlük ileri taşıma → ay ortalaması */
+  const noktalar = (kayit, alan) => Object.entries(kayit).filter(([t, v]) => v && v[alan] && typeof v[alan].f === 'number').map(([t, v]) => [t, v[alan].f, v[alan].pb]).sort((a, b) => a[0] < b[0] ? -1 : 1);
+  const gunlukAdim = (nokta, hedefPB, aralik) => { const out = new Map(); if (!nokta.length) return out; let i = 0, cur = null;
+    for (let d = new Date(nokta[0][0] + 'T00:00:00Z'), son = new Date(bugun + 'T00:00:00Z'); d <= son; d.setUTCDate(d.getUTCDate() + 1)) { const t = d.toISOString().slice(0, 10); while (i < nokta.length && nokta[i][0] <= t) { cur = nokta[i]; i++; } if (!cur) continue; const v = cevir(cur[1], cur[2], hedefPB, t); if (v == null || !(v >= aralik[0] && v <= aralik[1])) continue; out.set(t, v); }
+    return out; };
+  const aylikOrt = g => { const top = {}, say = {}; for (const [t, v] of g) { const a = t.slice(0, 7); top[a] = (top[a] || 0) + v; say[a] = (say[a] || 0) + 1; } const o = {}; for (const a of Object.keys(top).sort()) o[a] = +(top[a] / say[a]).toFixed(2); return o; };
+  const seriYaz = (anahtar, meta, nokta, hedefPB, aralik) => {
+    const g = gunlukAdim(nokta, hedefPB, aralik); if (!g.size) return null;
+    const aylik = aylikOrt(g); const sonN = nokta[nokta.length - 1]; let sonV = cevir(sonN[1], sonN[2], hedefPB, sonN[0]); if (sonV == null) sonV = [...g.values()].pop();
+    const onceki = D.seriler[anahtar];
+    if (onceki && onceki.son && onceki.son.tarih > sonN[0]) { uyari.push(anahtar + ': gerileme korundu (dosya ' + onceki.son.tarih + ' > yeni ' + sonN[0] + ')'); return onceki.son; }
+    D.seriler[anahtar] = Object.assign({}, onceki || {}, meta, { siklik: 'aylik', aylik, son: { tarih: sonN[0], deger: +sonV.toFixed(2), orijinal: sonN[1] + ' ' + sonN[2] }, adimlar: nokta.slice(-12).reverse(), ilk: nokta[0][0], guncelleme: bugun });
+    return D.seriler[anahtar].son;
+  };
+  const KAYNAK = 'kardemir.com açık API (Actions §472) · liste bir sonraki listeye kadar geçerli (adım) · ay ortalaması';
+  const kutukN = noktalar(K.liste, 'k'), nervN = noktalar(K.liste, 'n'), profN = noktalar(K.liste, 'p'), filmN = noktalar(K.liste, 'f'), hurdaN = Object.entries(K.hurda).filter(([t, v]) => v && typeof v.oe === 'number' && v.oe >= 0.9 * (v.dkp || 0) && v.oe >= (v.s1 || 0)).map(([t, v]) => [t, v.oe, 'TL']).sort((a, b) => a[0] < b[0] ? -1 : 1);   /* kaynak yazım hatası (25.03.2015 "80 TL" — 800 olmalı): Özel Ekstra DKP'nin ve 1. sınıfın altında kalamaz → nokta atlanır, önceki adım sürer */
+  const sK = seriYaz('kardemir_kutuk_usd', { ad: 'Kardemir kütük liste fiyatı — 150×150 S235JR ($/t, KDV hariç)', birim: '$/t', hisse: ['KRDMD', 'KCAER'], kaynak: KAYNAK + ' · 2016–2021 TL liste günün kuruyla', _not: 'Şirketin kendi liste fiyatı; satışa açılan günlerde yayımlanır (yılda 3–12 kez), bir sonraki listeye kadar geçerli sayılır. 2014–2020 ürün adı 130X130 S235JR.' }, kutukN, 'USD', [200, 2000]);
+  const sN = seriYaz('kardemir_nervurlu_tl', { ad: 'Kardemir inşaat demiri liste fiyatı — Ø12-32 (TL/t, KDV hariç)', birim: 'TL/t', hisse: ['KRDMD'], kaynak: KAYNAK }, nervN, 'TL', [500, 500000]);
+  const sNu = seriYaz('kardemir_nervurlu_usd', { ad: 'Kardemir inşaat demiri liste fiyatı — Ø12-32 ($/t, günün kuruyla)', birim: '$/t', hisse: ['KRDMD'], kaynak: KAYNAK + ' · TL liste ÷ USD/TRY (Yahoo)', _not: 'TL liste sabitken kur yükseldikçe $ karşılığı erir; LME "inşaat demiri FOB Türkiye" ile aynı birimde kıyaslanır (yurt içi liste ≠ ihracat FOB).' }, nervN, 'USD', [200, 2000]);
+  const sP = seriYaz('kardemir_profil_usd', { ad: 'Kardemir profil liste fiyatı — IPE/NPI/NPU 180-200 Std ($/t)', birim: '$/t', hisse: ['KCAER'], kaynak: KAYNAK, _not: 'Orta boy profil; Kocaer\'in ürün grubuyla örtüşür (yurt içi liste; Kocaer satışı ağırlıkla ihracat).' }, profN, 'USD', [200, 2000]);
+  const sF = seriYaz('kardemir_filmasin_usd', { ad: 'Kardemir filmaşin liste fiyatı — Ø5.5 SAE1008 ($/t)', birim: '$/t', hisse: [], kaynak: KAYNAK }, filmN, 'USD', [200, 2000]);
+  const sH = seriYaz('kardemir_hurda_tl', { ad: 'Kardemir hurda alım fiyatı — Özel Ekstra (TL/t)', birim: 'TL/t', hisse: ['KRDMD'], kaynak: 'kardemir.com açık API (Actions §472) · ilan tarihinden bir sonrakine kadar geçerli · ay ortalaması', _not: 'Şirketin kendi ilan ettiği hurda alım fiyatı; Özel Ekstra 2014\'ten beri kesintisiz sınıf. DKP/Ekstra/1.-2. sınıf ve büyük parça iskontosu dosyada (kardemir.hurda). Kardemir yüksek fırın üreticisi: hurda şarjın küçük kısmı, asıl maliyet cevher + kok.' }, hurdaN, 'TL', [100, 500000]);
+  const sHu = seriYaz('kardemir_hurda_usd', { ad: 'Kardemir hurda alım fiyatı — Özel Ekstra ($/t, günün kuruyla)', birim: '$/t', hisse: ['KRDMD'], kaynak: 'kardemir.com açık API (Actions §472) · TL ilan ÷ USD/TRY (Yahoo) · ay ortalaması', _not: 'Yurt içi hurda piyasasının açık, tarihli ölçüsü; LME "HMS 80:20 CFR Türkiye" ile aynı birimde kıyaslanır (yurt içi premium sınıf, CFR değil).' }, hurdaN, 'USD', [50, 1500]);
+  /* türetilmiş spread'ler — ay ortalamalarından (iki girdi de adım serisi; günlük fark ortalaması = ortalamaların farkı) */
+  const fark = (anahtar, meta, aK, bK, carpan) => { const A = D.seriler[aK], B = D.seriler[bK]; if (!A || !B || !A.aylik || !B.aylik || !A.son || !B.son) return null; const c = carpan || 1; const aylik = {}; for (const m of Object.keys(A.aylik).sort()) if (B.aylik[m] != null) aylik[m] = +(A.aylik[m] - c * B.aylik[m]).toFixed(2); const ks = Object.keys(aylik); if (!ks.length) return null;
+    const bSonDeger = typeof B.son.deger === 'number' ? B.son.deger : B.aylik[Object.keys(B.aylik).sort().pop()];
+    const sonDeger = +(A.son.deger - c * bSonDeger).toFixed(2), sonTarih = A.son.tarih > String(B.son.tarih || '') ? A.son.tarih : B.son.tarih;
+    const onceki = D.seriler[anahtar]; D.seriler[anahtar] = Object.assign({}, onceki || {}, meta, { siklik: 'aylik', aylik, son: { tarih: sonTarih, deger: sonDeger, bilesen: A.son.deger + ' − ' + (carpan ? carpan + '×' : '') + bSonDeger }, guncelleme: bugun }); return D.seriler[anahtar].son; };
+  const sM = fark('kardemir_marj_hurda_usd', { ad: 'Kardemir yurt içi metal marjı — kütük liste − hurda Özel Ekstra ($/t)', birim: '$/t', hisse: ['KRDMD'], kaynak: 'türetilmiş: kardemir.com kütük ($) − hurda alım (TL→$) · ay ortalaması', _not: 'Şirketin kendi satış ve kendi alım fiyatı arasındaki fark; LME metal marjının yerli, gerçekleşen karşılığı. Kardemir BOF üreticisi olduğundan kâr makası için cevher+kok spread\'i daha belirleyici; bu seri yurt içi uzun çelik piyasasının sağlığını ölçer.' }, 'kardemir_kutuk_usd', 'kardemir_hurda_usd');
+  const sC = fark('kardemir_spread_cevher_usd', { ad: 'Kardemir kütük − demir cevheri (1,6 t) — kok hariç kısmi spread ($/t)', birim: '$/t', hisse: ['KRDMD'], kaynak: 'türetilmiş: kardemir.com kütük ($) − 1,6 × WB demir cevheri 62% CFR Çin ($/t, aylık) · ay ortalaması', _not: 'Yüksek fırın girdisi ≈1,6 t cevher + ≈0,7 t kok kömürü/t sıvı çelik; kok serisi yok → mutlak seviye değil YÖN okunur (2021–22 kok şoku burada görünmez). WB cevher serisi bir ay geriden gelir.' }, 'kardemir_kutuk_usd', 'demir_cevheri', 1.6);
+  const sS = fark('kcaer_hadde_spread_usd', { ad: 'Haddeleme spread\'i — Kardemir profil − kütük ($/t)', birim: '$/t', hisse: ['KCAER'], kaynak: 'türetilmiş: kardemir.com IPE/NPI/NPU 180-200 − kütük S235JR · ay ortalaması', _not: 'Kocaer kütük alıp profil haddeler: kâr/ton ≈ profil fiyatı − kütük − dönüşüm maliyeti (enerji, işçilik). İki fiyat da Kardemir\'in yurt içi listesi (Kocaer satışı ağırlıkla ihracat) → seviye değil yön; profil listesi seyrek güncellenir (yılda 2–4 kez).' }, 'kardemir_profil_usd', 'kardemir_kutuk_usd');
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  if (yeni) degisenler.push('Kardemir fiyatları (' + yeni + ' tarih)');
+  const g = s => s ? s.deger + ' (' + s.tarih + ')' : '—';
+  raporlar.push('### Kardemir fiyatları (§472) — ' + (sK || sH ? '✓' : '⚠') + ' kütük ' + g(sK) + ' $/t · hurda Özel Ekstra ' + (sH ? sH.deger + ' TL/t' + (sHu ? ' ≈ ' + sHu.deger + ' $/t' : '') + ' (' + sH.tarih + ')' : '—') + (sM ? ' · metal marjı ' + sM.deger + ' $/t' : '') +
+    '\n- ' + notlar.join(' · ') + ' · bu koşu ' + sayfa + ' sayfa, ' + yeni + ' yeni' + (bekleyen ? ' · tavan: ' + bekleyen + ' tarih sonraki koşulara (geriye doldurma sürüyor)' : ' · geriye doldurma TAMAM') +
+    '\n- nervürlü Ø12-32 ' + (sN ? sN.deger + ' TL/t' + (sNu ? ' ≈ ' + sNu.deger + ' $/t' : '') + ' (' + sN.tarih + ')' : '—') + ' · profil IPE 180-200 ' + g(sP) + ' $/t · filmaşin ' + g(sF) + ' $/t' +
+    (sC ? '\n- kütük − 1,6×cevher ' + sC.deger + ' $/t (kok hariç)' : '') + (sS ? ' · KCAER hadde spread\'i (profil − kütük) ' + sS.deger + ' $/t' : '') + ' · kur noktası ' + fxK.length +
+    (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') + (uyari.length > 6 ? '\n- ⚠ … +' + (uyari.length - 6) : '') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -5333,6 +5474,7 @@ async function bultenKesif() {
     await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf());   /* §466: GÖP saatlik PTF → günlük ort. (TL ve $) — EPIAS_* secret; yoksa ⏭. Akşam koşusu yarının fiyatını da alır (GÖP ~14:00) */
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
+    await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
@@ -5345,8 +5487,9 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir (ilk koşu birkaç dk) */
+  if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
