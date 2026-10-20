@@ -6,6 +6,28 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §470 (20 Eki 2026, 11:00) — KÖK HATA: §462 DİĞER KATMANLARIN ANAHTARLARINI HER KOŞU SİLİYORDU
+
+10:19 koşusu (run 39385724483) raporunda PTF "✓ 689,55 TL/MWh (2026-06-13) · 1260 gün" + ⚠ "2026-10-21 tarihli veri saat 14
+öncesinde mevcut değil" → seri 13 Haz'da KESİLMİŞ. İz sürümü: artımlı PTF 8 parçayla 2023'ten yeniden çekmiş → demek ki dosyada
+eski PTF YOKTU. Neden: §462 sektorSurucu() dosyayı `const D = {…}` ile SIFIRDAN kuruyordu — seriler/wb/evds/epias/kap_yeni_is
+anahtarları her koşuda siliniyor, sonraki katmanlar boş nesneye yeniden yazıyordu. Bu yüzden LME "biriken günlük nokta" hiç
+birikmedi (üç koşudur "1 nokta"), AOFM/TLREF/EVDS her koşu tam çekildi, KAP yeni iş 93 sayfayı yarın yine çekecekti ve PTF'nin
+geri-gitme koruması tetiklenemedi (kıyaslanacak eski yoktu). DÜZELTME: `Object.assign({}, eski, {…})` — Neste alanları yenilenir,
+diğer anahtarlar korunur. DERS (§300 ailesi): "dosyayı yazan tek katman" varsayımı yanlıştı; aynı dosyaya birden çok katman
+yazıyorsa her biri ÜSTÜNE yazmalı, hiçbiri yeniden kurmamalı.
+§466g PTF: GÖP yarının fiyatını ~14:00 TR açıklar; bitiş tarihi artık TR saatine göre (15:00 öncesi bugün, sonrası yarın) ve
+"saat 14 öncesinde mevcut değil" 400'ünde son parça bir gün geri alınıp bir kez daha denenir. Harness'ta doğrulandı.
+§469c KAP metin dersleri (canlı 93 bildirimden): (1) KATMR "7.124.730 EURO (yaklaşık 260.381.807,53-TL, TCMB kuru…)" → iki kez
+sayıldı → parantez içi kur karşılığı çevirileri atılır. (2) GLRMK "…14.084.200.000 TL teklif verilmiştir" → İHALE TEKLİFİ
+booking sayıldı (394 mn $) → "teklif/iptal/fesih" içeren ve imza ifadesi olmayan metin sözleşme DEĞİL (tutarsız, nedeni yazılır).
+(3) ALTNY "134,1 mn $ sözleşme … güncel backlog tutarımız 334 mn $" → 468 sayıldı → "backlog/bakiye sipariş" sonrası SEVİYE
+bildirimidir, toplama girmez; ayrı seri kap_backlog_altny (seyrek aylık nokta, ALTNY'ye eşlendi). Ayrıştırıcı sürümü (469c)
+değiştiği için kayıtlar bir kez yeniden çözülür (~95 sayfa, 1 koşu). ÇAPRAZ KONTROL geçti: 3Ç26 ASELS KAP 3,09 = webapi 3,09 ✓.
+SONRAKİ KOŞUDA BEKLENEN: PTF yeniden 2023→bugün tam (eski yok, 8 parça) ve bundan sonra artımlı; LME noktaları birikmeye başlar;
+KAP 95 sayfa bir kez daha, sonra yalnız yeniler.
+DEPLOY: scripts/tazele.mjs (§470 + §466g + §469c) · ktpanel/karar-model.json (2026-10-20f) · KTPANEL-BAKIM.md. app.js değişmedi.
+
 # BAKIM EK — §469 (20 Eki 2026, 10:40) — "KAP'TA 'YENİ İŞ İLİŞKİSİ' DUYURUSU GELİYORDU; BİZ KAP'I ÇÖZEBİLİYORDUK"
 
 Kullanıcı haklı: genel kaynak KAP. ÖLÇÜM (Chrome, kap.org.tr): byCriteria listesi ASELS 1 Eyl–20 Eki → 27 kayıt; sözleşmeler
