@@ -3581,6 +3581,111 @@ async function kardemirFiyat() {
     (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') + (uyari.length > 6 ? '\n- ⚠ … +' + (uyari.length - 6) : '') : ''));
 }
 
+/* ── §474 SUT FİYAT ENDEKSİ (SGK Sağlık Uygulama Tebliği) + TTB ÖHU KATSAYISI + RESMÎ GAZETE İZLEYİCİ → MPARK ─────────
+   Soru (20 Eki 14:51): "SUT tarifelerini nasıl bulacağız ki?" — SUT, SGK'nın özel/kamu hastanelere ödediği fiyat listesidir
+   (EK-2/A vaka başı/muayene · EK-2/B hizmet başı işlem puanı · EK-2/C tanıya dayalı paket); fiyatları Sağlık Hizmetleri
+   Fiyatlandırma Komisyonu (SGK+SB+Hazine) belirler, Resmî Gazete'de "SUT Değişiklik Tebliği" + "SHFK Kararı" olarak çıkar
+   (yılda 5–10 kez; çoğu KALEM bazlı düzeltme). GENEL artışlar liste yenilenerek yapılır, metinde ORAN YAZMAZ — oranı
+   şirketler (MLP Care bilgilendirme notu/faaliyet raporu: "SUT fiyat listesine yaklaşık %30 artış") ve basın hesaplar.
+   Bu yüzden kaynak zinciri: (1) ADIM TABLOSU elle — her genel artış için yürürlük tarihi + oran; dayanak MLP Care KAP
+   notları (31.12.2023 / 31.12.2024 / 31.12.2025 bilgilendirme notu, 2026/03 faaliyet raporu) ve RG (2021-04-28 M1,
+   2022-02-08 M1, 2023-08-24 M1, 2024-05-09 M1, 2025-12-10). (2) RG İZLEYİCİ otomatik — son 14 günün günlük fihristleri
+   (eskiler/YYYY/MM/YYYYMMDD.htm + M1/M2 mükerrer; sayfa windows-1254) taranır, SUT/SHFK başlıkları kaydedilir ve raporda
+   "yeni RG değişikliği — oran MLP notuyla tabloya işlenecek" uyarısı verilir. (3) Türetilmiş seriler: sut_endeks (adım,
+   2020-12=100, ay ortalaması), sut_reel = SUT/TÜFE (SGK fiyatının satın alma gücü), ttb_endeks (TTB Özel Hekimlik
+   Uygulamaları katsayısı — özel sigorta/cepten fiyatlamanın çapası; 2022-12=100), ttb_reel.
+   ÖĞRETİCİ: SUT 2008–2021 arası donuktu; 2021'den beri 6 genel artış ama birikimli artış TÜFE'nin altında kaldı → SGK
+   hastası özel hastane için reel olarak ucuzladı; TTB katsayısı ise TÜFE'nin üstünde → MLP'nin "ödeme tipi miksi" (özel
+   sigortaya kayış) FAVÖK marjının asıl sürücüsü. İlave ücret tavanı SUT'un %200'ü olduğundan SUT artışı hem SGK ödemesini
+   hem hastadan alınabilecek farkı aynı anda yükseltir → SGK hastasında geçişkenlik tam.
+   ELLE GÜNCELLEME: yeni genel artışta SUT_ADIMLAR'a satır ekle (yürürlük tarihi, %, kaynak); TTB için TTB_ADIMLAR. Seriler
+   her koşuda tablodan yeniden kurulur. KAP'tan otomatik oran çekimi yapılmaz (oran PDF içinde, yılda 1–2 kez — elle güvenli). */
+const SUT_ADIMLAR = [   /* [yürürlük tarihi, artış %, dayanak] — GENEL fiyat artışları (kalem bazlı SHFK düzeltmeleri alınmaz) */
+  ['2021-04-28', 15, 'RG 28 Nis 2021 (31468 mük.): vaka başı +15 · radyoloji +10 · kan +20 · malzeme +10 · diğer +15 — 2008 sonrası ilk genel artış (basın: Cumhuriyet 6 May 2021)'],
+  ['2022-02-13', 40, 'RG 8 Şub 2022 (31744 M1): muayene +35 · paket +45 · diğer işlemler +40 · diyaliz +50 · malzeme +75; işlemler yayımdan 5 gün sonra (Diken 9 Şub 2022). Ağırlıklı ≈%40'],
+  ['2023-03-24', 31, 'MLP Care 31.12.2023 bilgilendirme notu: "24 Mart 2023 itibariyle SUT fiyat listesine %31 artış"'],
+  ['2023-09-01', 51, 'RG 24 Ağu 2023 (32289 M1): EK-2/A-B-C +50 (BirGün) · MLP notu: %51, 1 Eyl 2023 itibariyle etkili'],
+  ['2024-05-11', 50, 'RG 9 May 2024 (32541 M1) · MLP Care 31.12.2024 notu: "11 Mayıs 2024 itibariyle yaklaşık %50"'],
+  ['2025-12-10', 30, 'RG 10 Ara 2025 · MLP Care 31.12.2025 notu / 2026-03 faaliyet raporu: "10 Aralık 2025 itibariyle yaklaşık %30"'],
+];
+const TTB_ADIMLAR = [   /* TTB Özel Hekimlik Uygulamaları (ÖHU) katsayısı — özel sigorta/cepten fiyatlamanın çapası (MLP Care notları) */
+  ['2023-01-01', 41, 'TTB 26 Ara 2022 kararı (MLP 2023 notu)'], ['2023-07-01', 31, 'TTB 22 Haz 2023 kararı'],
+  ['2024-01-01', 41, 'TTB Oca 2024'], ['2024-07-01', 25, 'TTB Haz 2024 kararı (1 Tem)'],
+  ['2025-01-01', 20, 'TTB Oca 2025'], ['2025-07-01', 20.5, 'TTB Tem 2025'],
+  ['2026-01-01', 16.5, 'TTB Ara 2025 kararı (MLP 2025 notu)'],
+];
+const SUT_SURUM = '474', SUT_BAS = '2020-12', TTB_BAS = '2022-12', RG_GUN = 14;
+const RG_KOK = 'https://www.resmigazete.gov.tr/eskiler/';
+const RG_BASLIK = /Sa.{1,2}l.{1,2}k Uygulama Tebli|Fiyatland.{1,2}rma Komisyonu/i;   /* Türkçe harfler bozuk gelse de yakalar */
+function sutAdimSeri(adimlar, basAy, bugunStr) {
+  /* adım tablosu → günlük seviye (ileri taşıma) → ay ortalaması; seviye basAy'da 100 */
+  const sirali = adimlar.slice().sort((a, b) => a[0] < b[0] ? -1 : 1);
+  const aylik = {}, top = {}, say = {}; let i = 0, seviye = 100;
+  const bas = new Date(basAy + '-01T00:00:00Z'), son = new Date(bugunStr + 'T00:00:00Z');
+  for (let d = new Date(bas); d <= son; d.setUTCDate(d.getUTCDate() + 1)) { const t = d.toISOString().slice(0, 10); while (i < sirali.length && sirali[i][0] <= t) { seviye = seviye * (1 + sirali[i][1] / 100); i++; } const a = t.slice(0, 7); top[a] = (top[a] || 0) + seviye; say[a] = (say[a] || 0) + 1; }
+  for (const a of Object.keys(top).sort()) aylik[a] = +(top[a] / say[a]).toFixed(2);
+  const seviyeler = []; let s = 100; for (const x of sirali) { s = s * (1 + x[1] / 100); seviyeler.push({ t: x[0], artis: x[1], seviye: +s.toFixed(1), kaynak: x[2] }); }
+  return { aylik, seviyeler, son: seviyeler[seviyeler.length - 1], seviye: +seviye.toFixed(2) };
+}
+function sutReel(aylikEndeks, tufe, basAy) {
+  /* reel = endeks / TÜFE, basAy'da 100; TÜFE'nin olmadığı aylar atlanır (TÜFE bir ay geriden gelir) */
+  if (!tufe || !tufe[basAy] || !aylikEndeks[basAy]) return null;
+  const o = {}; for (const a of Object.keys(aylikEndeks).sort()) if (tufe[a] != null) o[a] = +(100 * (aylikEndeks[a] / aylikEndeks[basAy]) / (tufe[a] / tufe[basAy])).toFixed(2);
+  return Object.keys(o).length ? o : null;
+}
+async function sutRgTara(K, bugunStr, uyari) {
+  /* son RG_GUN günün fihristleri (ana + M1 + M2) — başlık yakala, {t, baslik, url} biriktir (tekrarsız) */
+  K.rg_olaylar = Array.isArray(K.rg_olaylar) ? K.rg_olaylar : [];
+  const var_ = new Set(K.rg_olaylar.map(x => x.url)); let sayfa = 0, yeni = 0, erisim = 0, artArda = 0;
+  const oku = async yol => { const r = await fetch(RG_KOK + yol, { headers: { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) KtPanel/1.0', 'Accept': 'text/html' }, signal: AbortSignal.timeout(15000) }); sayfa++; if (r.status === 404) return null; if (!r.ok) throw new Error('HTTP ' + r.status); erisim++; const buf = Buffer.from(await r.arrayBuffer()); const h8 = buf.toString('utf8'); const m = /charset=([\w-]+)/i.exec(h8.slice(0, 3000)); let h = h8; if (m && /1254|8859-9/i.test(m[1])) { try { h = new TextDecoder('windows-1254').decode(buf); } catch (e) { h = buf.toString('latin1'); } } return h; };
+  for (let g = 0; g < RG_GUN; g++) {
+    if (artArda >= 3) { uyari.push('RG: art arda 3 ağ hatası — tarama bırakıldı (resmigazete.gov.tr erişilemiyor?)'); break; }
+    const d = new Date(bugunStr + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - g); const t = d.toISOString().slice(0, 10); const kok = t.slice(0, 4) + '/' + t.slice(5, 7) + '/' + t.replace(/-/g, '');
+    for (const ek of ['', 'M1', 'M2']) {
+      let h; try { h = await oku(kok + ek + '.htm'); artArda = 0; } catch (e) { artArda++; uyari.push('RG ' + t + ek + ': ' + String(e && e.message || e).slice(0, 50)); break; }
+      if (h == null) { if (ek) break; else continue; }
+      artArda = 0;   /* ana sayı yoksa (hafta sonu/tatil) mükerrer de aranmaz… ama RG hafta sonu da çıkar → sadece M'ler atlanır */
+      const re = /<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi; let m;
+      while ((m = re.exec(h))) { const baslik = m[2].replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/\s+/g, ' ').replace(/^[–—-\s]+/, '').trim(); if (!RG_BASLIK.test(baslik)) continue; const url = /^https?:/.test(m[1]) ? m[1] : RG_KOK + t.slice(0, 4) + '/' + t.slice(5, 7) + '/' + m[1]; if (var_.has(url)) continue; var_.add(url); K.rg_olaylar.push({ t, mukerrer: ek || undefined, baslik: baslik.slice(0, 140), url }); yeni++; }
+    }
+  }
+  K.rg_olaylar.sort((a, b) => a.t < b.t ? 1 : -1); K.rg_olaylar = K.rg_olaylar.slice(0, 60); K.son_tarama = bugunStr;
+  return { sayfa, yeni, erisim };
+}
+async function sutEndeks() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### SUT endeksi (§474) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const K = D.sut = Object.assign({ surum: SUT_SURUM, rg_olaylar: [] }, D.sut || {}, { surum: SUT_SURUM });
+  const uyari = [];
+  /* 1) adım serileri */
+  const S = sutAdimSeri(SUT_ADIMLAR, SUT_BAS, bugun), T = sutAdimSeri(TTB_ADIMLAR, TTB_BAS, bugun);
+  const tufe = D.seriler.tufe && D.seriler.tufe.aylik; const tufeSon = tufe ? Object.keys(tufe).sort().pop() : null;
+  const sutR = sutReel(S.aylik, tufe, SUT_BAS), ttbR = sutReel(T.aylik, tufe, TTB_BAS);
+  /* son adımdan bu yana TÜFE (erozyon): SUT'un son artıştan beri kaybettiği satın alma gücü */
+  const erozyon = (sonT) => { if (!tufe) return null; const a0 = sonT.slice(0, 7); const once = Object.keys(tufe).filter(a => a < a0).sort().pop(); if (!once || !tufeSon || tufeSon <= once) return null; return { ay: tufeSon, tufe_degisim: +((tufe[tufeSon] / tufe[once] - 1) * 100).toFixed(1), reel_kayip: +((1 / (tufe[tufeSon] / tufe[once]) - 1) * 100).toFixed(1) }; };
+  const eS = erozyon(S.son.t), eT = erozyon(T.son.t);
+  const KAYNAK = 'Adım tablosu (tazele.mjs SUT_ADIMLAR): MLP Care KAP bilgilendirme notları + Resmî Gazete SUT değişiklik tebliğleri · ay ortalaması';
+  D.seriler.sut_endeks = Object.assign({}, D.seriler.sut_endeks || {}, { ad: 'SUT fiyat endeksi — SGK Sağlık Uygulama Tebliği genel fiyat artışları (2020-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: KAYNAK, aylik: S.aylik, son: { tarih: S.son.t, deger: S.seviye, artis: S.son.artis }, adimlar: S.seviyeler, guncelleme: bugun,
+    _not: 'SGK\'nın özel hastanelere ödediği fiyat listesinin (EK-2/A muayene · EK-2/B hizmet başı · EK-2/C paket) GENEL artışlarından kurulan basamak endeksi; kalem bazlı SHFK düzeltmeleri alınmaz. Oran metinde yazmaz → MLP Care\'in açıkladığı etkin oran kullanılır. İlave ücret tavanı SUT\'un %200\'ü → SUT artışı SGK ödemesini ve hastadan alınabilecek farkı birlikte yükseltir.' + (eS ? ' Son artıştan (' + S.son.t + ', +%' + S.son.artis + ') bu yana TÜFE +%' + eS.tufe_degisim + ' (' + eS.ay + ') → SUT reel %' + eS.reel_kayip + '.' : ''), erozyon: eS || undefined });
+  if (sutR) D.seriler.sut_reel = Object.assign({}, D.seriler.sut_reel || {}, { ad: 'SUT reel fiyat — SUT endeksi / TÜFE (2020-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: 'türetilmiş: sut_endeks ÷ TÜFE (EVDS, 2025=100 zincirli) · TÜFE bir ay geriden', aylik: sutR, son: { tarih: Object.keys(sutR).sort().pop(), deger: sutR[Object.keys(sutR).sort().pop()] }, guncelleme: bugun, _not: 'SGK hastasının özel hastane için reel fiyatı: 100\'ün altı = SUT, 2020 sonuna göre enflasyonun gerisinde. Artış ayında sıçrar, aylar geçtikçe erir (testere dişi) — çeyrek ortalaması okunur. MLP\'de SGK payı hasılatın küçük kısmı; asıl marj sürücüsü ödeme tipi miksi (özel sigortaya kayış).' });
+  D.seriler.ttb_endeks = Object.assign({}, D.seriler.ttb_endeks || {}, { ad: 'TTB ÖHU katsayısı endeksi — özel hekimlik ücret tarifesi (2022-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: 'Adım tablosu (TTB_ADIMLAR): MLP Care KAP notları · yılda 2 güncelleme (Oca/Tem)', aylik: T.aylik, son: { tarih: T.son.t, deger: T.seviye, artis: T.son.artis }, adimlar: T.seviyeler, guncelleme: bugun, _not: 'Türk Tabipleri Birliği Özel Hekimlik Uygulamaları katsayısı: özel sağlık sigortası ve cepten ödemelerde hekim ücretinin çapası → MLP yurt içi özel fiyatlamasının vekili. TÜFE\'nin üstünde arttı (2023–26).' + (eT ? ' Son artıştan (' + T.son.t + ') bu yana TÜFE +%' + eT.tufe_degisim + '.' : '') });
+  if (ttbR) D.seriler.ttb_reel = Object.assign({}, D.seriler.ttb_reel || {}, { ad: 'TTB katsayısı reel — TTB endeksi / TÜFE (2022-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: 'türetilmiş: ttb_endeks ÷ TÜFE', aylik: ttbR, son: { tarih: Object.keys(ttbR).sort().pop(), deger: ttbR[Object.keys(ttbR).sort().pop()] }, guncelleme: bugun, _not: 'Özel fiyatlamanın reel seyri; 100\'ün üstü = TTB tarifesi enflasyonun önünde.' });
+  K.adimlar = S.seviyeler; K.ttb_adimlar = T.seviyeler;
+  /* 2) RG izleyici (ağ hatası dosyayı bozmaz) */
+  let rg = null; try { rg = await sutRgTara(K, bugun, uyari); } catch (e) { uyari.push('RG tarama: ' + String(e && e.message || e).slice(0, 80)); }
+  const sonAdim = SUT_ADIMLAR.map(x => x[0]).sort().pop();
+  const yeniRg = (K.rg_olaylar || []).filter(x => x.t > sonAdim && /Uygulama Tebli/i.test(x.baslik));
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  const sutSonAy = Object.keys(S.aylik).sort().pop(), reelSon = sutR ? sutR[Object.keys(sutR).sort().pop()] : null;
+  raporlar.push('### SUT endeksi (§474) — ✓ SUT ' + S.seviye + ' (son artış ' + S.son.t + ' +%' + S.son.artis + ')' + (reelSon != null ? ' · reel ' + reelSon + ' (2020-12=100, ' + tufeSon + ')' : '') + ' · TTB ' + T.seviye + ' (son ' + T.son.t + ' +%' + T.son.artis + ')' + (ttbR ? ' · TTB reel ' + ttbR[Object.keys(ttbR).sort().pop()] : '') +
+    '\n- ' + SUT_ADIMLAR.length + ' SUT adımı (' + SUT_ADIMLAR[0][0] + '→' + sonAdim + ') · ' + TTB_ADIMLAR.length + ' TTB adımı' + (eS ? ' · son SUT artışından bu yana TÜFE +%' + eS.tufe_degisim + ' → reel %' + eS.reel_kayip : '') +
+    (rg ? '\n- RG fihrist taraması: ' + rg.sayfa + ' sayfa (' + rg.erisim + ' erişildi) · ' + rg.yeni + ' yeni başlık · kayıtlı ' + K.rg_olaylar.length : '\n- RG taraması yapılamadı') +
+    (yeniRg.length ? '\n- ⚠ Son SUT adımından (' + sonAdim + ') sonra RG\'de ' + yeniRg.length + ' SUT değişikliği: ' + yeniRg.slice(0, 4).map(x => x.t + (x.mukerrer ? ' ' + x.mukerrer : '')).join(' · ') + ' — çoğu kalem bazlıdır; GENEL artışsa MLP notu/basın oranıyla SUT_ADIMLAR\'a eklenir' : '') +
+    (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 4).join('\n- ⚠ ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -5497,6 +5602,7 @@ async function bultenKesif() {
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
+    await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
@@ -5509,8 +5615,8 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
