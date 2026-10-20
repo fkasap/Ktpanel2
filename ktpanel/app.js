@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020d';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020e';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2648,7 +2648,7 @@ function kararSektorPanel(M,H){
       const K=ser.yillik_kum; const buYil=String(K.bugun||'').slice(0,4); const yillar=Object.keys(K.yillar).sort().reverse().slice(0,5);
       h+='<div class="lbl" style="margin-top:8px">YILLIK TOPLAM · '+esc((ser.ad||d.k).split(' — ')[0])+' <span class="thin">mn $ · her yıl sıfırdan · '+(ser.n||'')+' kayıt · KAP eşiği üstü</span></div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>YIL</th><th>TOPLAM (mn $)</th><th>ADET</th><th>'+esc(kararTrTarih(K.bugun||''))+' İTİBARIYLA</th><th>Δ y/y (aynı tarih)</th><th style="text-align:left">YILIN SON SÖZLEŞMESİ</th></tr></thead><tbody>';
       yillar.forEach(y=>{ const o=K.yillar[y]; const yon=o.yy_ayni_tarih==null?'':(o.yy_ayni_tarih>=0?'up':'down');
-        h+='<tr'+(y===buYil?' style="font-weight:600"':'')+'><td>'+esc(y)+(y===buYil?' <span class="sub">devam</span>':'')+'</td><td><b>'+trN(o.toplam,0)+'</b></td><td>'+o.adet+(o.tutarsiz?' <span class="sub">('+o.tutarsiz+' tutarsız)</span>':'')+'</td><td>'+trN(o.ayni_tarih,0)+'</td><td class="'+yon+'">'+kararIsaret(o.yy_ayni_tarih,0,'%')+'</td><td style="text-align:left;font-family:var(--sans);font-size:11px;color:var(--muted)">'+(o.son?esc(kararTrTarih(o.son.t))+' · '+trN(o.son.usd_mn,0)+' mn $ — '+esc(String(o.son.ozet||'').replace(/^ASELSAN,?\s*/,'').slice(0,90)):'—')+'</td></tr>'; });
+        h+='<tr'+(y===buYil?' style="font-weight:600"':'')+'><td>'+esc(y)+(y===buYil?' <span class="sub">devam</span>':'')+'</td><td><b>'+trN(o.toplam,0)+'</b></td><td>'+o.adet+(o.tutarsiz?' <span class="sub">('+o.tutarsiz+' tutarsız)</span>':'')+(o.konsorsiyum?' <span class="sub" title="Konsorsiyum toplamı; şirket payı açıklanmadı">('+o.konsorsiyum+' konsorsiyum)</span>':'')+'</td><td>'+trN(o.ayni_tarih,0)+'</td><td class="'+yon+'">'+kararIsaret(o.yy_ayni_tarih,0,'%')+'</td><td style="text-align:left;font-family:var(--sans);font-size:11px;color:var(--muted)">'+(o.son?esc(kararTrTarih(o.son.t))+' · '+trN(o.son.usd_mn,0)+' mn $ — '+esc(String(o.son.ozet||'').replace(/^ASELSAN,?\s*/,'').slice(0,90)):'—')+'</td></tr>'; });
       h+='</tbody></table></div>'+(ser._kapsam?'<div class="sub">'+esc(ser._kapsam)+' Δ y/y: bu yıl '+esc(kararTrTarih(K.bugun||''))+"'e kadar olan toplam / geçen yılın aynı tarihine kadar olan toplam.</div>":''); });
     h+='<div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta) · TCMB EVDS aylık endeksler (TÜFE 2025=100, 2025 öncesi zincirli) ve günlük AOFM/TLREF (değişim puan) · EPİAŞ PTF günlük ortalama.</div>';
   }

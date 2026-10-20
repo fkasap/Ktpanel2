@@ -6,6 +6,19 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §469e (20 Eki 2026, 11:40) — KOŞU DOĞRULADI; KONSORSİYUM İŞARETİ
+
+11:05 koşusu (run 39390932401): PTF artımlı 11 gün ✓ · KAP 469d ile yeniden çözüldü: KATMR 14/14 tutarlı (2023 23 · 2024 56 ·
+2025 31,7 mn $; önceki koşuda 11'i "tutar açıklanmadı" idi) · GLRMK Polonya işleri PLN ile okundu (10 Tem 2025 2,08 mlr PLN
+≈ 567 mn $ · 31 Eki 2025 ≈ 441 mn $, kur yaklaşık işaretli) · ALTNY 2026 168,8 mn $ (12) · backlog 334 ✓ · ASELS çapraz ✓.
+UYARI (GLRMK): 10 Tem 2025 metni "Budimex–Budimex Kolejnictwo–Gülermak konsorsiyumu … 2.082.826.134 PLN teklif … kesinleşen
+ihale sonuç bildirimi tebliğ edilmiştir" — ihale KESİNLEŞMİŞ (sayılır) ama tutar KONSORSİYUM TOPLAMI, Gülermak payı yazmıyor.
+§469e: konsorsiyum/iş ortaklığı metninde pay belirtilmemişse tutar TAM sayılır ama kayıt `konsorsiyum:true` ile işaretlenir;
+yıllık tabloda adet yanında "(n konsorsiyum)", özette "[konsorsiyum toplamı — şirket payı belirtilmedi]". GLRMK için gerçek
+pay faaliyet raporundan (Faz 2). "Sözleşmeye davet iletildi" (17 Tem) ve sonraki "sözleşme imzalandı" bildirimleri tutarsız
+kalır → ihale kesinleşmesinde bir kez sayılır, çift sayım yok. Sürüm 469e → kayıtlar bir kez daha çözülür (70 sn).
+DEPLOY: scripts/tazele.mjs (§469e) · ktpanel/app.js (20261020e) · KTPANEL-BAKIM.md.
+
 # BAKIM EK — §471 (20 Eki 2026, 11:25) — "TOPLAM GÖZÜKSÜN, HER YIL YENİ BAŞLANGIÇ; LİSTE DAĞINIK" + §469d METİN BİÇİMLERİ
 
 10:41 koşusu (run 39388217242) §470'i DOĞRULADI: PTF "1389 gün · bu koşuda 140 gün/1 parça" — eski seri korundu, artımlı çekim
