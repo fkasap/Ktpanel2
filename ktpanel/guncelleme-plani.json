@@ -404,7 +404,8 @@
    "_462": "Karar Motoru (Journal) hammaddesi. Denetim: aralık, ≥300 satır, son tarih geri gitmez; aksi halde dosya korunur.",
    "_464": "19 Eki: seriler{} kaydı eklendi — altın/gümüş/bakır/alüminyum/HRC/TTF/HenryHub/buğday/Brent/EURUSD/USDTRY (Yahoo günlük, 2y), hurda_lme (günlük tek nokta, tarihçe birikir), Pink Sheet aylık XLSX (üre, DAP, demir cevheri, termal kömür, TTF, altın, gümüş, çinko, kurşun, bakır, alüminyum, buğday HRW, kakao, şeker, Brent; 2015-01+, çeyreklik = 3 ay ort.). Tier A/B modelleri bu seriler üzerine kurulur.",
    "_465": "19 Eki 18:31 canlı koşu: Yahoo 11/11 seri ✓ (2 yıl günlük) · LME 403 (Akamai) → Playwright yedeği eklendi · Pink Sheet PDF 0 satır → xlsx okuyucu. WB tohumu (2021-01→2026-09, 15 seri) Chrome’dan aktarıldı; panelde SEKTÖR BİLGİSİ bölümü bu serileri hisse başına gösterir.",
-   "_466": "20 Eki: TCMB EVDS + EPİAŞ katmanları (Actions evdsSeriler()/epiasPtf(), hafta içi akşam + Cmt + elle --katman=kamu|surucu). EVDS: TÜFE genel/01 gıda/03 giyim (TP.TUKFIY2025.*, 2025=100; 2025 öncesi TP.FG.J0/J01/J03'ten zincirli), Yİ-ÜFE T1 genel · T69 çimento-kireç-alçı · T74 ana demir-çelik · T120 elektrik · T53 temel kimyasal-gübre, KFE (TP.KFE.TR), AOFM (TP.APIFON4, iş günü) ve TLREF (TP.BISTTLREF.ORAN). EPİAŞ: GÖP PTF saatlik → günlük ort. TL/MWh (ptf) ve $/MWh (ptf_usd), 2023-01'den, artımlı (son 10 gün yeniden). Anahtarlar Actions secret: EVDS_KEY · EPIAS_ID+EPIAS_KEY (ya da USER/PASS, USERNAME/PASSWORD, EMAIL/SIFRE). Takvim: TÜFE/ÜFE ayın 3'ü 10:00 (TÜİK) → EVDS aynı gün; KFE ayın ~15'i; AOFM/TLREF her iş günü; PTF her gün ~14:00 (yarın için). ARIZA: rapor '⏭ secret yok' → secret adı; '✗ TGT alınamadı HTTP 401' → EPİAŞ şifre/üyelik; 'HTTP 403 key' → EVDS anahtarı."
+   "_466": "20 Eki: TCMB EVDS + EPİAŞ katmanları (Actions evdsSeriler()/epiasPtf(), hafta içi akşam + Cmt + elle --katman=kamu|surucu). EVDS: TÜFE genel/01 gıda/03 giyim (TP.TUKFIY2025.*, 2025=100; 2025 öncesi TP.FG.J0/J01/J03'ten zincirli), Yİ-ÜFE T1 genel · T69 çimento-kireç-alçı · T74 ana demir-çelik · T120 elektrik · T53 temel kimyasal-gübre, KFE (TP.KFE.TR), AOFM (TP.APIFON4, iş günü) ve TLREF (TP.BISTTLREF.ORAN). EPİAŞ: GÖP PTF saatlik → günlük ort. TL/MWh (ptf) ve $/MWh (ptf_usd), 2023-01'den, artımlı (son 10 gün yeniden). Anahtarlar Actions secret: EVDS_KEY · EPIAS_ID+EPIAS_KEY (ya da USER/PASS, USERNAME/PASSWORD, EMAIL/SIFRE). Takvim: TÜFE/ÜFE ayın 3'ü 10:00 (TÜİK) → EVDS aynı gün; KFE ayın ~15'i; AOFM/TLREF her iş günü; PTF her gün ~14:00 (yarın için). ARIZA: rapor '⏭ secret yok' → secret adı; '✗ TGT alınamadı HTTP 401' → EPİAŞ şifre/üyelik; 'HTTP 403 key' → EVDS anahtarı.",
+   "_468": "20 Eki: epdk_tarife TÜRETİLMİŞ seri (evdsSeriler içinde): EPDK Metodoloji md. 26 — SKB her ay (z−2) TÜFE değişimiyle güncellenir → endeks = TÜFE(z−2), 2022-01=100; son iki ay ileri taşınır (tarife belli). 2027-01 dördüncü tarife dönemi başında seviye yeniden kurulur → o ay kırılma notu eklenecek. Şirket/bölge TL/Sm3 (enerya.com.tr Fatura Parametreleri, il seçimli dinamik sayfa) Faz 2."
   },
   {
    "ad": "Karar modeli kataloğu — XK030 (30 hisse): FAVÖK gerçekleri · konsensüs · hedef · çeyrek sonu fiyat",
@@ -425,6 +426,14 @@
    "kaynak": "Actions aselsSiparis() (§467): webapi.aselsan.com/investor-relations/kap-disclosures?locale=tr (tek JSON, 2017→, TR+EN tam metin). Hafta içi akşam + Cmt + elle --katman=kamu|surucu. Kur Yahoo TRY=X/EURUSD=X 10y; yedek Fintables çeyrek ortalaması.",
    "_467": "Tutar ayrıştırma TR metinden: 'toplam' sonrası tutarlar; tekrarlar sayılmaz; <1000 atlanır. Denetim ≥150 sözleşme ve çözülemeyen ≤%5 — şablon değişirse dosya korunur, rapor örnek verir. Kapsam: açıklananlar resmî yeni iş alımının ~%45-70'i. asels_backlog ELLE: her çeyrek sonucu açıklandığında (Şub/May/Ağu/Kas) ASELS_RESMI tablosuna (tazele.mjs) yeni backlog + yeni iş eklenir.",
    "takvim": "Çeyrek sonuçları: ~25 Şub · ~5 May · ~5 Ağu · ~5 Kas → backlog elle"
+  },
+  {
+   "ad": "KAP 'Yeni İş İlişkisi' sözleşme akışı — KATMR · ALTNY · GLRMK (+ASELS çapraz)",
+   "dosya": "sektor-surucu.json",
+   "siklik": "gunluk",
+   "son": "2026-10-20",
+   "kaynak": "Actions kapYeniIs() (§469): kap.org.tr api/member/filter → disclosure/members/byCriteria (ODA + subject 'Yeni İş İlişkisi' ya da özet 'sözleşme imzalan/sipariş') → /tr/Bildirim/<id> HTML, 'oda_ExplanationTextBlock' metni → ASELSAN ayrıştırıcısı (toplam/pay kuralları) → kur Yahoo 10y. Hafta içi akşam + Cmt + elle kamu|surucu.",
+   "_469": "Artımlı: çözülen bildirim kimlikleri sektor-surucu.json/kap_yeni_is.kayit içinde; koşu başına şirket başına ≤40 sayfa (400 ms ara) → ilk doldurma birkaç koşu ('bekleyen N' raporda). Tutar açıklanmayan bildirim 0 sayılır (adet ayrı, tutarsiz_ceyrek). Türkçe İ: JS /i bayrağı 'İ'≠'i' — filtre önce TR küçültme yapar. Şirket eklemek: tazele.mjs KAP_YENI_IS tablosuna satır + karar-model.json surucu_seriler eşlemesi."
   }
  ],
  "bilanco_sezonu_aylar": [

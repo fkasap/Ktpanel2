@@ -6,6 +6,49 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §469 (20 Eki 2026, 10:40) — "KAP'TA 'YENİ İŞ İLİŞKİSİ' DUYURUSU GELİYORDU; BİZ KAP'I ÇÖZEBİLİYORDUK"
+
+Kullanıcı haklı: genel kaynak KAP. ÖLÇÜM (Chrome, kap.org.tr): byCriteria listesi ASELS 1 Eyl–20 Eki → 27 kayıt; sözleşmeler
+disclosureClass 'ODA' · subject 'Yeni İş İlişkisi' · summary 'Sözleşme İmzalanması'. Bildirim sayfası (160 KB) ÖDA şablonunun
+yapısal alanlarını taşıyor (karşı tarafın niteliği, unvanı, satışlardaki payı, başlangıç tarihi, önemli koşullar, etki) ama
+TUTAR yapısal alanda DEĞİL — yalnız "Açıklamalar" (oda_ExplanationTextBlock) serbest metninde. Yani ayrıştırıcı aynı
+(§467 aselsCozum); KAP'ın kazancı GENELLİK: aynı yol KATMR, ALTNY, GLRMK (ve istenen her şirket) için çalışır.
+TASARIM: ASELS için webapi birincil kalır (2017→ tam metin tek JSON; KAP'ta sözleşme başına 160 KB sayfa) — KAP ASELS'te
+ÇAPRAZ KONTROL (2025→, rapor çeyrek toplamını webapi ile kıyaslar). Diğer şirketlerde KAP tek kaynak → kap_yeni_is_<kod>.
+Artımlı: çözülen bildirim kimlikleri dosyada; koşu başına ≤40 sayfa/şirket, 400 ms ara → ilk doldurma 2-3 koşu.
+İKİ DERS: (1) Türkçe İ — JS /i bayrağı 'İ' ile 'i'yi aynı saymaz; /yeni iş ilişkisi/i "Yeni İş İlişkisi"ni ÇÖZMEDİ (stub'da
+13 kayıt listede, 0 eşleşme). Filtre artık önce TR küçültme (İ→i, I→ı) yapar. (2) Konsorsiyum metni: "toplam bedeli 410 mn €
+… Şirketimizin payı 205 mn €" — toplam kuralı ikisini topluyordu (688,8). §469b: "pay(ı|tutarı) <tutar>" varsa ŞİRKET PAYI
+esastır; ASELSAN-ROKETSAN "ASELSAN payı 29,1 mn € ve 187 mn TL" da aynı kuralla doğru. 8/8 birim testi geçti.
+PANEL: KATMR/ALTNY birincil sürücüsü kap_yeni_is_*, GLRMK kap_yeni_is_glrmk ('backlog' bekliyor satırı kapandı). Hepsi
+akış serisi (y/y okunur, son 8 sözleşme listesi). Kalan bekliyor: CWENE modül fiyatı, EKGYO ön satış, LME üçlüsü (köprü/2. tur),
+GRSEL asgari ücret, MPARK SUT, PETKM PE/PP.
+DEPLOY: scripts/tazele.mjs (§468 + §469 + §469b) · ktpanel/karar-model.json (2026-10-20e) · guncelleme-plani.json ·
+KTPANEL-BAKIM.md · KTPANEL-DAMGA.md. app.js değişmedi (20261020c). sektor-surucu.json YÜKLENMEZ.
+
+# BAKIM EK — §468 (20 Eki 2026, 10:10) — "EPDK DAĞITIM TARİFESİ (TÜFE ENDEKSLİ) BUNU NASIL EKLERİM?"
+
+Soru iki katmanlı: (a) panele bir sürücü NASIL eklenir, (b) bu sürücünün verisi NEREDEN gelir.
+(a) MEKANİZMA — üç yer, tek anahtar: 1) scripts/tazele.mjs içinde bir katman seriyi sektor-surucu.json → seriler[ANAHTAR]
+    olarak yazar ({ad, birim, siklik:'aylik'|'gunluk', aylik{}/ceyreklik{} ya da gunluk[[t,v]], son, kaynak, hisse[]});
+    2) karar-model.json → ilgili hissenin surucu_seriler[] listesine {k:ANAHTAR, rol:gelir|maliyet|kur|marj, ad, kaynak, not}
+    eklenir (sektor_katalog.py → apply_466.py üretir); 3) panel (karar.js) hiçbir değişiklik istemez: seri dosyada varsa satır
+    canlanır, yoksa "kaynak bekliyor" yazar; birincil = panoda görünen sürücü. Yüzde birimli seri puan, 'endeks'/akis y/y okunur.
+(b) KAYNAK — ÖLÇÜLDÜ: Doğal gaz dağıtım sistem kullanım bedeli (SKB) için EPDK "Doğal Gaz Dağıtım Şirketleri İçin Tarife
+    Hesaplama Usul ve Esasları" (RG 8 Haz 2017/30111, K.7139) md. 26: bedeller HER AY, "z-2 ayında TÜFE'de meydana gelen ve
+    z-1 ayında açıklanan değişim oranı" ile güncellenir (Eşitlik 22). Tarife dönemi başında (3. dönem 2022-26; 4. dönem
+    2027-31, RG 1 Ağu 2026, amortisman 22 yıl) EPDK seviyeyi gelir tavanından yeniden kurar. Yani dönem içinde tarife endeksi =
+    TÜFE(z−2). Ayrı kaynağa gerek yok: EVDS TÜFE'den TÜRETİLİR (evdsSeriler §468) — epdk_tarife, 2022-01=100, son iki ay ileri
+    taşınır (TÜFE açıklandı → Ekim/Kasım tarifesi belli). Şirket/bölge/kademe TL/Sm3 seviyesi (md. 27: her dağıtım şirketi
+    aylık güncel SKB'yi sitesinde yayımlar; Enerya "Fatura Parametreleri" il seçimli dinamik sayfa, 1 Ağu 2026 Aksa MKS
+    revizyonu 5 kademe 3,91→0,40 TL/Sm3) Faz 2 — Karar Motoru seviye değil değişim okur.
+CANLI TÜFE İLE ÖN HESAP: 3Ç26 tarife endeksi 686 (2Ç 644, 3Ç25 519) → ç/ç +%6,5 · y/y **+%32,2**; 4Ç26'nın iki ayı belli
+(Ağu–Eyl TÜFE %1,84+%1,84) → 4Ç/3Ç +%4,3 (Ekim TÜFE 3 Kas'ta gelince tamamlanır). ENERY birincil sürücüsü epdk_tarife;
+AHGAZ'da dağıtım segmenti için aynı seri + üretim/ticaret için PTF. Tarife "düzenlenmiş gelir"dir: hacim (abone × tüketim,
+kış ağır 1Ç/4Ç) ayrı okunur — hacim KAP faaliyet raporundan, Faz 2.
+DEPLOY: scripts/tazele.mjs (§468) · ktpanel/karar-model.json (2026-10-20d) · guncelleme-plani.json · KTPANEL-BAKIM.md.
+app.js değişmedi (20261020c). sektor-surucu.json YÜKLENMEZ.
+
 # BAKIM EK — §467 (20 Eki 2026, 02:50) — ASELSAN SÖZLEŞME AKIŞI: "BACKLOG'LARI BURADAN TOPLAYABİLİR MİSİN?"
 
 Kullanıcı aselsan.com/investor-relations/kap-disclosures sayfasını verdi. ÖLÇÜM (Chrome): Next.js sayfa, veri tek JSON uçtan:
