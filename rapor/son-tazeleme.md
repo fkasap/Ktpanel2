@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1988 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500120501243> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500149454794> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -124,17 +124,17 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 469 satır · 21 çeyrek · USDTRY Yahoo günlük · değişiklik yok
 
 ### Sürücü serileri (§464) — ✓ 15 seri
-- altin 4133.2998 (2026-10-20, 503 gün)
-- gumus 57.2 (2026-10-20, 503 gün)
-- bakir 6.5695 (2026-10-20, 503 gün)
-- aluminyum 3088 (2026-10-20, 502 gün)
+- altin 4139.2002 (2026-10-20, 503 gün)
+- gumus 57.265 (2026-10-20, 503 gün)
+- bakir 6.574 (2026-10-20, 503 gün)
+- aluminyum 3071 (2026-10-20, 502 gün)
 - hrc_abd 1287 (2026-10-19, 501 gün)
 - ttf 88.04 (2026-10-19, 502 gün)
-- henryhub 2.998 (2026-10-20, 503 gün)
-- bugday 658.5 (2026-10-20, 502 gün)
-- brent_yh 111.6 (2026-10-20, 503 gün)
-- eurusd 1.1218 (2026-10-20, 517 gün)
-- usdtry 49.5699 (2026-10-20, 517 gün)
+- henryhub 3.017 (2026-10-20, 503 gün)
+- bugday 661 (2026-10-20, 502 gün)
+- brent_yh 111.31 (2026-10-20, 503 gün)
+- eurusd 1.1216 (2026-10-20, 517 gün)
+- usdtry 49.5717 (2026-10-20, 517 gün)
 - demir_lme 587.5 $/t (16 Oct 2026, 1 nokta, playwright)
 - hurda_lme 396.5 $/t (19 Oct 2026, 1 nokta, playwright·2.tur)
 - metal_marji_tr 191 $/t
@@ -163,30 +163,32 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - son: 2026-10-08 125 mn $ — ASELSAN, yurt dışındaki bir son kullanıcıya Silah ve Elektronik Harp Sistemlerinin ihracat
 - resmî backlog (elle): 2024Q4 14 · 2025Q4 20.4 · 2026Q2 23.2 mlr $
 
-### KAP Yeni İş İlişkisi (§469) — ✓ 93 bildirim kayıtlı · bu koşu 0 sayfa, 0 yeni
+### KAP Yeni İş İlişkisi (§469) — ✓ 100 bildirim kayıtlı · bu koşu 101 sayfa, 100 yeni · tavan: 6 bekliyor (sonraki koşu)
 - KATMR: 14 bildirim · 2026Q4 0.00 mlr $ (0) · 2026Q3 0.00
 - ALTNY: 28 bildirim · 2026Q4 0.00 mlr $ (0) · 2026Q3 0.13
-- GLRMK: 11 bildirim · 2026Q4 0.00 mlr $ (0) · 2026Q3 0.00
-- ASELS: 40 bildirim · 2026Q4 4.92 mlr $ (6) · 2026Q3 3.09 · çapraz 2026Q3: KAP 3.09 / webapi 3.09 mlr $ ✓
+- GLRMK: 19 bildirim · 2026Q4 0.00 mlr $ (0) · 2026Q3 0.00
+- ASELS: 39 bildirim · 2026Q4 4.92 mlr $ (6) · 2026Q3 3.09 · bekleyen 6 · çapraz 2026Q3: KAP 3.09 / webapi 3.09 mlr $ ✓
+- §473 imzaya taşınan tutar: GLRMK 2025-07-10 → 2025-10-06 (566.9 mn $) · GLRMK 2025-04-25 → 2025-12-05 (396.8 mn $) · GLRMK 2025-10-31 → 2026-03-12 (440.5 mn $)
+- ⚠ ASELS #1391219: fetch failed
 
 ### Kardemir fiyatları (§472) — ✓ kütük 565 (2026-10-13) $/t · hurda Özel Ekstra 20120 TL/t ≈ 411.04 $/t (2026-09-25) · metal marjı 153.96 $/t
-- liste 482 tarih (2014-01-07→2026-10-13) · dosyada 200 · hurda 347 tarih (2014-02-11→2026-09-25) · dosyada 200 · bu koşu 200 sayfa, 200 yeni · tavan: 429 tarih sonraki koşulara (geriye doldurma sürüyor)
+- liste 482 tarih (2014-01-07→2026-10-13) · dosyada 300 · hurda 347 tarih (2014-02-11→2026-09-25) · dosyada 300 · bu koşu 200 sayfa, 200 yeni · tavan: 229 tarih sonraki koşulara (geriye doldurma sürüyor)
 - nervürlü Ø12-32 30540 TL/t ≈ 627.53 $/t (2026-09-16) · profil IPE 180-200 670 (2026-07-07) $/t · filmaşin 655 (2026-09-16) $/t
 - kütük − 1,6×cevher 408.68 $/t (kok hariç) · KCAER hadde spread'i (profil − kütük) 105 $/t · kur: günlük 2601 · ay başı 262
 
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 144/238
-- bu turda: 2 tam · 3 eksik kalemli · 3 alınamadı
-- not: §455c arşivden 3 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %85.0 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
+- bu turda: 1 tam · 3 eksik kalemli · 3 alınamadı
+- not: §455c arşivden 3 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %84.9 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Fonzi gerçekleşen (§457) — ✓ 231 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
 ### Faktör skorları (§455) — ✓ sıralanan 124/238 · temel veri 124 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.62 ✓
-- ✓ fm.json TERFİ ETTİ (adet 124 ≥ 100 · XKTUM ağırlık kapsamı %85.0 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 124 -0.089 0.735 -2.97 1.16 0 · GROWTH 124 0.009 0.582 -1.51 1.63 0 · QUALITY 124 0.010 0.707 -1.88 1.80 0 · MOMENTUM 124 -0.032 0.624 -1.26 1.69 0 · LOW_RISK 124 -0.012 0.758 -1.74 1.68 0
+- ✓ fm.json TERFİ ETTİ (adet 124 ≥ 100 · XKTUM ağırlık kapsamı %84.9 ≥ %70) — panel kendi hesabımızla çalışıyor
+- imza: VALUE 124 -0.089 0.735 -2.97 1.16 0 · GROWTH 124 0.006 0.576 -1.51 1.63 0 · QUALITY 124 0.014 0.708 -1.88 1.81 0 · MOMENTUM 124 -0.032 0.624 -1.26 1.69 0 · LOW_RISK 124 -0.012 0.758 -1.74 1.68 0
 
-### KAP arşivi (§381) — ✓ +5 çeyrek · 0/238 şirket tam
-- MAVI:13→14 · ENERY:4→8
+### KAP arşivi (§381) — ✓ +0 çeyrek · 0/238 şirket tam
+- ENJSA:4→4 · KCAER:4→4
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -224,20 +226,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §429p kuyruk: liste 224 kayıt · daha önce işlenmiş 161 idx · iş 45
 
-### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 11278 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+### Fon portföy dağılımı (§429) — ⏭ 0 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 11279 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 - bu turda hedef 42 (tur tavanı 80; kalan sonraki koşuda)
-- ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
-  · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
-  · VHS null: ek bulunamadı (HTTP 200)
-  …+3
+- ⚠ hata (ilk 3, tanılı): HFI null: fetch failed
+  · KTS null: fetch failed
+  · RKH null: fetch failed
+  …+39
 
 ### SEC ticker yedeği (§448) — ✓ 10443 kayıt
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (126 fiyat) · Model sicili (37 fiyat) · TR 5Y CDS (247.33 bp) · fon akışı (1988) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (15) · EVDS serileri (12) · EPİAŞ PTF (1389 gün) · ASELSAN sözleşme akışı (211) · Kardemir fiyatları (200 tarih) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+5 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (118 fiyat) · Model sicili (37 fiyat) · TR 5Y CDS (247.33 bp) · fon akışı (1988) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (15) · EVDS serileri (12) · EPİAŞ PTF (1389 gün) · ASELSAN sözleşme akışı (211) · KAP yeni iş (100 bildirim) · Kardemir fiyatları (200 tarih) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ Kardemir fiyatları (§472) — 115 sn
-- ⏱ KAP arşivi (§381) — 75 sn
-- toplam: 419 sn
+- ⏱ KAP Yeni İş İlişkisi (§469) — 76 sn
+- ⏱ Kardemir fiyatları (§472) — 109 sn
+- ⏱ KAP arşivi (§381) — 96 sn
+- toplam: 509 sn

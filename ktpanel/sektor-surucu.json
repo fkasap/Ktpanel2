@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-20T09:59:16Z",
+ "guncelleme": "2026-10-20T11:15:04Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -320,8 +320,8 @@
    "n": 14,
    "ilk": "2026-10-01",
    "son": "2026-10-20",
-   "usdtry_ort": 49.299,
-   "usdtry_son": 49.5699,
+   "usdtry_ort": 49.3,
+   "usdtry_son": 49.5717,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.5699
+  "2026-10": 49.5717
  },
  "seriler": {
   "altin": {
@@ -5225,12 +5225,12 @@
     ],
     [
      "2026-10-20",
-     4133.2998
+     4139.2002
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 4133.2998
+    "deger": 4139.2002
    },
    "guncelleme": "2026-10-20"
   },
@@ -7253,12 +7253,12 @@
     ],
     [
      "2026-10-20",
-     57.2
+     57.265
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 57.2
+    "deger": 57.265
    },
    "guncelleme": "2026-10-20"
   },
@@ -9281,12 +9281,12 @@
     ],
     [
      "2026-10-20",
-     6.5695
+     6.574
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 6.5695
+    "deger": 6.574
    },
    "guncelleme": "2026-10-20"
   },
@@ -11303,12 +11303,12 @@
     ],
     [
      "2026-10-20",
-     3088
+     3071
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 3088
+    "deger": 3071
    },
    "guncelleme": "2026-10-20"
   },
@@ -17378,12 +17378,12 @@
     ],
     [
      "2026-10-20",
-     2.998
+     3.017
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 2.998
+    "deger": 3.017
    },
    "guncelleme": "2026-10-20"
   },
@@ -19402,12 +19402,12 @@
     ],
     [
      "2026-10-20",
-     658.5
+     661
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 658.5
+    "deger": 661
    },
    "guncelleme": "2026-10-20"
   },
@@ -21430,12 +21430,12 @@
     ],
     [
      "2026-10-20",
-     111.6
+     111.31
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 111.6
+    "deger": 111.31
    },
    "guncelleme": "2026-10-20"
   },
@@ -23517,12 +23517,12 @@
     ],
     [
      "2026-10-20",
-     1.1218
+     1.1216
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 1.1218
+    "deger": 1.1216
    },
    "guncelleme": "2026-10-20"
   },
@@ -25601,12 +25601,12 @@
     ],
     [
      "2026-10-20",
-     49.5699
+     49.5717
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 49.5699
+    "deger": 49.5717
    },
    "guncelleme": "2026-10-20"
   },
@@ -50936,21 +50936,21 @@
     "2024-10": 0,
     "2024-11": 0,
     "2024-12": 0,
-    "2025-01": 394.5,
+    "2025-01": 858.4,
     "2025-02": 0,
     "2025-03": 0,
     "2025-04": 0,
-    "2025-05": 0,
+    "2025-05": 7.8,
     "2025-06": 0,
-    "2025-07": 613.8,
+    "2025-07": 46.9,
     "2025-08": 0,
     "2025-09": 0,
-    "2025-10": 440.5,
+    "2025-10": 566.9,
     "2025-11": 0,
-    "2025-12": 0,
+    "2025-12": 406,
     "2026-01": 0,
     "2026-02": 0,
-    "2026-03": 0,
+    "2026-03": 440.5,
     "2026-04": 0,
     "2026-05": 0,
     "2026-06": 0,
@@ -50968,11 +50968,11 @@
     "2024Q2": 0,
     "2024Q3": 0,
     "2024Q4": 0,
-    "2025Q1": 394.5,
-    "2025Q2": 0,
-    "2025Q3": 613.8,
-    "2025Q4": 440.5,
-    "2026Q1": 0,
+    "2025Q1": 858.4,
+    "2025Q2": 7.8,
+    "2025Q3": 46.9,
+    "2025Q4": 972.9,
+    "2026Q1": 440.5,
     "2026Q2": 0,
     "2026Q3": 0,
     "2026Q4": 0
@@ -50980,38 +50980,74 @@
    "yillik": {
     "2023": 0,
     "2024": 0,
-    "2025": 1448.8,
-    "2026": 0
+    "2025": 1886,
+    "2026": 440.5
    },
    "adet_ceyrek": {
-    "2025Q1": 1,
-    "2025Q2": 2,
-    "2025Q3": 4,
-    "2025Q4": 3,
-    "2026Q1": 1
+    "2025Q1": 2,
+    "2025Q2": 4,
+    "2025Q3": 5,
+    "2025Q4": 5,
+    "2026Q1": 3
    },
    "tutarsiz_ceyrek": {
-    "2025Q2": 2,
-    "2025Q3": 2,
+    "2025Q2": 3,
+    "2025Q3": 4,
     "2025Q4": 2,
-    "2026Q1": 1
+    "2026Q1": 2
    },
    "son": {
     "tarih": "2026-03-12",
-    "deger": 0,
+    "deger": 440.5,
     "ay": "2026-03"
    },
    "guncelleme": "2026-10-20",
-   "n": 11,
+   "n": 19,
    "sozlesmeler": [
     {
      "t": "2026-03-12",
+     "tur": "yeni",
+     "usd_mn": 440.5,
+     "usd": 0,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "31.10.2025 tarihli özel durum açıklamamıza istinaden, Polonya&#x27;daki Podleze Szczyrzyc Tymbark Mszana Dolna ile Chabowka Nowy Sacz demiryolu hatlarının moder [konsorsiyum toplamı — şirket payı belirtilmedi] [tutar 2025-10-31 ihale kesinleşmesinden taşındı] [kur yaklaşık]"
+    },
+    {
+     "t": "2026-02-24",
      "tur": "yeni",
      "usd_mn": 0,
      "usd": 0,
      "eur": 0,
      "tl": 0,
-     "ozet": "31.10.2025 tarihli özel durum açıklamamıza istinaden, Polonya&#x27;daki Podleze Szczyrzyc Tymbark Mszana Dolna ile Chabowka Nowy Sacz demiryolu hatlarının moder [tutar açıklanmadı]"
+     "ozet": "30.01.2026 tarihli özel durum açıklamamıza istinaden, Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu hat düzeninin genişletilmesi ihalesi kapsamında, Şirketi [tutar açıklanmadı]"
+    },
+    {
+     "t": "2026-01-30",
+     "tur": "yeni",
+     "usd_mn": 0,
+     "usd": 0,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "11.12.2025 tarihli özel durum açıklamamıza istinaden, sözleşmeye davet Şirketimize iletilmiş olup konuyla ilgili önemli gelişmeler mevzuata uygun olarak kamuya  [tutar açıklanmadı]"
+    },
+    {
+     "t": "2025-12-11",
+     "tur": "yeni",
+     "usd_mn": 9.2,
+     "usd": 0,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "Metro Warszawskie Sp. z o.o. tarafından yürütülen Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu Hat Düzeninin Genişletilmesi projesi kapsamında 11.12.2025 t [kur yaklaşık]"
+    },
+    {
+     "t": "2025-12-05",
+     "tur": "yeni",
+     "usd_mn": 396.8,
+     "usd": 0,
+     "eur": 348.91,
+     "tl": 0,
+     "ozet": "25.04.2025 tarihli özel durum açıklamamıza istinaden, Sırbistan&#x27;daki Belgrad-Nis, Stalac-Djunis kesimi demiryolunun yeniden inşası ve modernizasyonu ile ik [konsorsiyum toplamı — şirket payı belirtilmedi] [tutar 2025-04-25 ihale kesinleşmesinden taşındı]"
     },
     {
      "t": "2025-11-07",
@@ -51025,20 +51061,29 @@
     {
      "t": "2025-10-31",
      "tur": "yeni",
-     "usd_mn": 440.5,
+     "usd_mn": 0,
      "usd": 0,
      "eur": 0,
      "tl": 0,
-     "ozet": "Şirketimiz, Polonya Devlet Demiryolları&#x27;nın \"Podleze–Szczyrzyc–Tymbark Mszana Dolna ile Chabowka–Nowy Sacz demiryolu hatlarının modernizasyonu\" projesi içi [konsorsiyum toplamı — şirket payı belirtilmedi] [kur yaklaşık]"
+     "ozet": "Şirketimiz, Polonya Devlet Demiryolları&#x27;nın \"Podleze–Szczyrzyc–Tymbark Mszana Dolna ile Chabowka–Nowy Sacz demiryolu hatlarının modernizasyonu\" projesi içi [ihale kesinleşmesi — tutar imza bildirimine taşındı (2026-03-12)] [konsorsiyum toplamı — şirket payı belirtilmedi] [kur yaklaşık]"
     },
     {
      "t": "2025-10-06",
+     "tur": "yeni",
+     "usd_mn": 566.9,
+     "usd": 0,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "10.07.2025 tarihli özel durum açıklamamıza istinaden, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri ihalesi  [konsorsiyum toplamı — şirket payı belirtilmedi] [tutar 2025-07-10 ihale kesinleşmesinden taşındı] [kur yaklaşık]"
+    },
+    {
+     "t": "2025-09-19",
      "tur": "yeni",
      "usd_mn": 0,
      "usd": 0,
      "eur": 0,
      "tl": 0,
-     "ozet": "10.07.2025 tarihli özel durum açıklamamıza istinaden, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri ihalesi  [tutar açıklanmadı]"
+     "ozet": "01.05.2025 tarihli özel durum açıklamamıza istinaden, Polonya Varşova Metrosu 1. Hattı&#x27;nın telsiz sistemlerinin modernizasyonu ihalesi ilgili idare tarafın [teklif/iptal — sözleşme değil]"
     },
     {
      "t": "2025-07-25",
@@ -51061,79 +51106,44 @@
     {
      "t": "2025-07-10",
      "tur": "yeni",
-     "usd_mn": 566.9,
-     "usd": 0,
-     "eur": 0,
-     "tl": 0,
-     "ozet": "Şirketimiz, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri için açılan ihaleye Polonya&#x27;da yerleşik %100  [konsorsiyum toplamı — şirket payı belirtilmedi] [kur yaklaşık]"
-    },
-    {
-     "t": "2025-07-07",
-     "tur": "yeni",
-     "usd_mn": 46.9,
-     "usd": 0,
-     "eur": 0,
-     "tl": 1875,
-     "ozet": "Şirketimiz tarafından Gebze-Köseköy Demiryolu hat kesimi sinyalizasyon, telekomünikasyon ve destek sistemleri yapım işleri ihalesi kapsamında 21 Ağustos 2024 ta"
-    },
-    {
-     "t": "2025-05-13",
-     "tur": "yeni",
      "usd_mn": 0,
      "usd": 0,
      "eur": 0,
      "tl": 0,
-     "ozet": "08.04.2025 tarihli özel durum açıklamamıza istinaden, A1 (Ankaray) Hattı Dikimevi-Natoyolu Raylı Sistem Uzatma Hattı&#x27;nın inşaat ve elektromekanik sistemler [tutar açıklanmadı]"
-    },
-    {
-     "t": "2025-04-08",
-     "tur": "yeni",
-     "usd_mn": 0,
-     "usd": 0,
-     "eur": 0,
-     "tl": 0,
-     "ozet": "29.01.2025 tarihli özel durum açıklamamıza istinaden, sözleşmeye davet Şirketimize 8 Nisan 2025 tarihinde iletilmiş olup konuyla ilgili önemli gelişmeler mevzua [tutar açıklanmadı]"
-    },
-    {
-     "t": "2025-01-29",
-     "tur": "yeni",
-     "usd_mn": 394.5,
-     "usd": 0,
-     "eur": 0,
-     "tl": 14084.2,
-     "ozet": "Şirketimiz tarafından Ankara Natoyolu-Dikimevi Hattı Metrosu yapım işleri ihalesi kapsamında 22 Kasım 2024 tarihinde 14.084.200.000 TL teklif verilmiştir. İhale"
+     "ozet": "Şirketimiz, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri için açılan ihaleye Polonya&#x27;da yerleşik %100  [ihale kesinleşmesi — tutar imza bildirimine taşındı (2025-10-06)] [konsorsiyum toplamı — şirket payı belirtilmedi] [kur yaklaşık]"
     }
    ],
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.",
    "yillik_kum": {
     "yillar": {
      "2025": {
-      "toplam": 1448.8,
-      "adet": 10,
-      "tutarsiz": 6,
-      "ayni_tarih": 1008.3,
-      "ayni_tarih_adet": 8,
+      "toplam": 1886,
+      "adet": 16,
+      "tutarsiz": 9,
+      "ayni_tarih": 1480,
+      "ayni_tarih_adet": 12,
       "son": {
-       "t": "2025-11-07",
-       "usd_mn": 0,
-       "ozet": "19.09.2025 tarihli özel durum açıklamamıza istinaden, ilgili idare tarafından iptal edilen Polonya Varşova Metrosu 1. Ha"
+       "t": "2025-12-11",
+       "usd_mn": 9.2,
+       "ozet": "Metro Warszawskie Sp. z o.o. tarafından yürütülen Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu Hat Düzeninin Genişl"
       },
-      "konsorsiyum": 2,
+      "konsorsiyum": 6,
       "yy_ayni_tarih": null,
       "yy_toplam": null
      },
      "2026": {
-      "toplam": 0,
-      "adet": 1,
-      "tutarsiz": 1,
-      "ayni_tarih": 0,
-      "ayni_tarih_adet": 1,
+      "toplam": 440.5,
+      "adet": 3,
+      "tutarsiz": 2,
+      "ayni_tarih": 440.5,
+      "ayni_tarih_adet": 3,
       "son": {
        "t": "2026-03-12",
-       "usd_mn": 0,
+       "usd_mn": 440.5,
        "ozet": "31.10.2025 tarihli özel durum açıklamamıza istinaden, Polonya&#x27;daki Podleze Szczyrzyc Tymbark Mszana Dolna ile Chabo"
       },
-      "yy_ayni_tarih": -100,
+      "konsorsiyum": 1,
+      "yy_ayni_tarih": -70.2,
       "yy_toplam": null
      }
     },
@@ -51150,7 +51160,7 @@
    "kaynak": "KAP ÖDA Yeni İş İlişkisi (çapraz)",
    "aylik": {
     "2025-01": 0,
-    "2025-02": 489.4,
+    "2025-02": 412,
     "2025-03": 200.7,
     "2025-04": 211.3,
     "2025-05": 137.7,
@@ -51173,7 +51183,7 @@
     "2026-10": 4921.4
    },
    "ceyreklik": {
-    "2025Q1": 690.1,
+    "2025Q1": 612.7,
     "2025Q2": 430.3,
     "2025Q3": 169727569.5,
     "2025Q4": 2252.9,
@@ -51183,7 +51193,7 @@
     "2026Q4": 4921.4
    },
    "yillik": {
-    "2025": 169730942.8,
+    "2025": 169730865.4,
     "2026": 10965
    },
    "son": {
@@ -51191,7 +51201,7 @@
     "deger": 125
    },
    "guncelleme": "2026-10-20",
-   "n": 40,
+   "n": 39,
    "gizli": true
   },
   "kap_backlog_altny": {
@@ -51296,7 +51306,38 @@
    "_not": "Şirketin kendi liste fiyatı; satışa açılan günlerde yayımlanır (yılda 3–12 kez), bir sonraki listeye kadar geçerli sayılır. 2014–2020 ürün adı 130X130 S235JR.",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 600,
+    "2020-05": 386,
+    "2020-06": 391.41,
+    "2020-07": 391.8,
+    "2020-08": 409.61,
+    "2020-09": 428.18,
+    "2020-10": 416.16,
+    "2020-11": 437.88,
+    "2020-12": 561.7,
+    "2021-01": 655.49,
+    "2021-02": 626.47,
+    "2021-03": 558.95,
+    "2021-04": 636.88,
+    "2021-05": 604.89,
+    "2021-06": 677.56,
+    "2021-07": 678.82,
+    "2021-08": 668.19,
+    "2021-09": 626.2,
+    "2021-10": 659.84,
+    "2021-11": 708.7,
+    "2021-12": 673,
+    "2022-01": 655.32,
+    "2022-02": 676.36,
+    "2022-03": 834.39,
+    "2022-04": 880,
+    "2022-05": 801.13,
+    "2022-06": 670.5,
+    "2022-07": 647.9,
+    "2022-08": 596.45,
+    "2022-09": 601.33,
+    "2022-10": 616.19,
+    "2022-11": 573.67,
+    "2022-12": 597.1,
     "2023-01": 625.1,
     "2023-02": 637.68,
     "2023-03": 666.61,
@@ -51411,7 +51452,7 @@
      "USD"
     ]
    ],
-   "ilk": "2022-12-07",
+   "ilk": "2020-05-13",
    "guncelleme": "2026-10-20"
   },
   "kardemir_nervurlu_tl": {
@@ -51423,7 +51464,38 @@
    "kaynak": "kardemir.com açık API (Actions §472) · liste bir sonraki listeye kadar geçerli (adım) · ay ortalaması",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 12382.29,
+    "2020-05": 2756.68,
+    "2020-06": 2852.47,
+    "2020-07": 2915.48,
+    "2020-08": 3186.45,
+    "2020-09": 3398.83,
+    "2020-10": 3456.77,
+    "2020-11": 3693.3,
+    "2020-12": 4302.26,
+    "2021-01": 4790,
+    "2021-02": 4547.86,
+    "2021-03": 4652.52,
+    "2021-04": 4941.9,
+    "2021-05": 5516.94,
+    "2021-06": 5888.17,
+    "2021-07": 6140,
+    "2021-08": 5870.16,
+    "2021-09": 5574.33,
+    "2021-10": 5530,
+    "2021-11": 5530,
+    "2021-12": 8652.9,
+    "2022-01": 8040,
+    "2022-02": 9455,
+    "2022-03": 11438.23,
+    "2022-04": 11575,
+    "2022-05": 11944.35,
+    "2022-06": 11915.5,
+    "2022-07": 11884.68,
+    "2022-08": 11583.87,
+    "2022-09": 12340.33,
+    "2022-10": 12748.06,
+    "2022-11": 11854.33,
+    "2022-12": 12360.32,
     "2023-01": 13116.94,
     "2023-02": 13484.64,
     "2023-03": 14069.84,
@@ -51538,7 +51610,7 @@
      "TL"
     ]
    ],
-   "ilk": "2022-12-08",
+   "ilk": "2020-05-13",
    "guncelleme": "2026-10-20"
   },
   "kardemir_nervurlu_usd": {
@@ -51551,7 +51623,38 @@
    "_not": "TL liste sabitken kur yükseldikçe $ karşılığı erir; LME \"inşaat demiri FOB Türkiye\" ile aynı birimde kıyaslanır (yurt içi liste ≠ ihracat FOB).",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 663.98,
+    "2020-05": 403.55,
+    "2020-06": 418.6,
+    "2020-07": 424.64,
+    "2020-08": 438.69,
+    "2020-09": 451.1,
+    "2020-10": 435.9,
+    "2020-11": 465.15,
+    "2020-12": 558.23,
+    "2021-01": 648.2,
+    "2021-02": 641.37,
+    "2021-03": 608.25,
+    "2021-04": 605.87,
+    "2021-05": 658.4,
+    "2021-06": 682.26,
+    "2021-07": 714.56,
+    "2021-08": 692.6,
+    "2021-09": 652.77,
+    "2021-10": 600.81,
+    "2021-11": 525.44,
+    "2021-12": 650.87,
+    "2022-01": 595.08,
+    "2022-02": 694.17,
+    "2022-03": 785.04,
+    "2022-04": 787.41,
+    "2022-05": 765.67,
+    "2022-06": 700.76,
+    "2022-07": 680.96,
+    "2022-08": 642.72,
+    "2022-09": 674.32,
+    "2022-10": 686.44,
+    "2022-11": 637.86,
+    "2022-12": 662.95,
     "2023-01": 698.85,
     "2023-02": 715.67,
     "2023-03": 740.76,
@@ -51597,7 +51700,7 @@
     "2026-07": 569,
     "2026-08": 576.49,
     "2026-09": 612.99,
-    "2026-10": 619.09
+    "2026-10": 619.14
    },
    "son": {
     "tarih": "2026-09-16",
@@ -51666,7 +51769,7 @@
      "TL"
     ]
    ],
-   "ilk": "2022-12-08",
+   "ilk": "2020-05-13",
    "guncelleme": "2026-10-20"
   },
   "kardemir_profil_usd": {
@@ -51679,7 +51782,38 @@
    "_not": "Orta boy profil; Kocaer'in ürün grubuyla örtüşür (yurt içi liste; Kocaer satışı ağırlıkla ihracat).",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 770,
+    "2020-05": 465.36,
+    "2020-06": 468.38,
+    "2020-07": 476.96,
+    "2020-08": 463.54,
+    "2020-09": 510.48,
+    "2020-10": 503.78,
+    "2020-11": 502.51,
+    "2020-12": 654.63,
+    "2021-01": 683.39,
+    "2021-02": 712.21,
+    "2021-03": 713.24,
+    "2021-04": 689.65,
+    "2021-05": 750.38,
+    "2021-06": 822.71,
+    "2021-07": 826.28,
+    "2021-08": 809.99,
+    "2021-09": 805,
+    "2021-10": 810.81,
+    "2021-11": 820,
+    "2021-12": 820,
+    "2022-01": 820,
+    "2022-02": 830.18,
+    "2022-03": 835,
+    "2022-04": 835,
+    "2022-05": 836.94,
+    "2022-06": 895,
+    "2022-07": 895,
+    "2022-08": 895,
+    "2022-09": 903.5,
+    "2022-10": 898.39,
+    "2022-11": 810,
+    "2022-12": 773.23,
     "2023-01": 771.13,
     "2023-02": 775,
     "2023-03": 810.16,
@@ -51794,7 +51928,7 @@
      "USD"
     ]
    ],
-   "ilk": "2022-12-21",
+   "ilk": "2020-05-13",
    "guncelleme": "2026-10-20"
   },
   "kardemir_filmasin_usd": {
@@ -51804,7 +51938,38 @@
    "kaynak": "kardemir.com açık API (Actions §472) · liste bir sonraki listeye kadar geçerli (adım) · ay ortalaması",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 690.2,
+    "2020-05": 442.48,
+    "2020-06": 454.32,
+    "2020-07": 466.58,
+    "2020-08": 492.17,
+    "2020-09": 523.9,
+    "2020-10": 531.29,
+    "2020-11": 573.57,
+    "2020-12": 664.47,
+    "2021-01": 754.9,
+    "2021-02": 677.83,
+    "2021-03": 688.46,
+    "2021-04": 686.8,
+    "2021-05": 735.46,
+    "2021-06": 774.55,
+    "2021-07": 800.68,
+    "2021-08": 802.6,
+    "2021-09": 775,
+    "2021-10": 824.35,
+    "2021-11": 869.33,
+    "2021-12": 836.45,
+    "2022-01": 800,
+    "2022-02": 820.89,
+    "2022-03": 1022.42,
+    "2022-04": 1060,
+    "2022-05": 936.13,
+    "2022-06": 765.83,
+    "2022-07": 749.84,
+    "2022-08": 685,
+    "2022-09": 728,
+    "2022-10": 729.06,
+    "2022-11": 663,
+    "2022-12": 687.26,
     "2023-01": 721.13,
     "2023-02": 745,
     "2023-03": 783.71,
@@ -51919,7 +52084,7 @@
      "USD"
     ]
    ],
-   "ilk": "2022-12-07",
+   "ilk": "2020-05-13",
    "guncelleme": "2026-10-20"
   },
   "kardemir_hurda_tl": {
@@ -51932,7 +52097,54 @@
    "_not": "Şirketin kendi ilan ettiği hurda alım fiyatı; Özel Ekstra 2014'ten beri kesintisiz sınıf. DKP/Ekstra/1.-2. sınıf ve büyük parça iskontosu dosyada (kardemir.hurda). Kardemir yüksek fırın üreticisi: hurda şarjın küçük kısmı, asıl maliyet cevher + kok.",
    "siklik": "aylik",
    "aylik": {
-    "2020-04": 1924.52,
+    "2016-05": 702.27,
+    "2016-06": 722.67,
+    "2016-07": 725,
+    "2016-08": 777.9,
+    "2016-09": 710.33,
+    "2016-10": 671.13,
+    "2016-11": 865.33,
+    "2016-12": 890.16,
+    "2017-01": 974.68,
+    "2017-02": 980.71,
+    "2017-03": 1029.19,
+    "2017-04": 1021,
+    "2017-05": 1040.48,
+    "2017-06": 1042.17,
+    "2017-07": 1102.9,
+    "2017-08": 1237.42,
+    "2017-09": 1244,
+    "2017-10": 1145.65,
+    "2017-11": 1248.33,
+    "2017-12": 1394.68,
+    "2018-01": 1385.65,
+    "2018-02": 1345,
+    "2018-03": 1416.61,
+    "2018-04": 1505,
+    "2018-05": 1505,
+    "2018-06": 1564,
+    "2018-07": 1635,
+    "2018-08": 1722.1,
+    "2018-09": 1930,
+    "2018-10": 1968.23,
+    "2018-11": 1945,
+    "2018-12": 1770.97,
+    "2019-01": 1660.65,
+    "2019-02": 1903.75,
+    "2019-03": 1914.35,
+    "2019-04": 2006.67,
+    "2019-05": 2036.13,
+    "2019-06": 2002.33,
+    "2019-07": 1914.52,
+    "2019-08": 1974.84,
+    "2019-09": 1711.83,
+    "2019-10": 1700.16,
+    "2019-11": 1805,
+    "2019-12": 1924.68,
+    "2020-01": 1990.81,
+    "2020-02": 1907.07,
+    "2020-03": 1903.39,
+    "2020-04": 1858.67,
     "2020-05": 1985.65,
     "2020-06": 2056.67,
     "2020-07": 2058.55,
@@ -52079,7 +52291,7 @@
      "TL"
     ]
    ],
-   "ilk": "2020-04-10",
+   "ilk": "2016-05-10",
    "guncelleme": "2026-10-20"
   },
   "kardemir_hurda_usd": {
@@ -52092,7 +52304,54 @@
    "_not": "Yurt içi hurda piyasasının açık, tarihli ölçüsü; LME \"HMS 80:20 CFR Türkiye\" ile aynı birimde kıyaslanır (yurt içi premium sınıf, CFR değil).",
    "siklik": "aylik",
    "aylik": {
-    "2020-04": 278.81,
+    "2016-05": 232.99,
+    "2016-06": 239.38,
+    "2016-07": 240.21,
+    "2016-08": 257.65,
+    "2016-09": 235.01,
+    "2016-10": 220.11,
+    "2016-11": 263.57,
+    "2016-12": 254.63,
+    "2017-01": 260.98,
+    "2017-02": 267.54,
+    "2017-03": 279.93,
+    "2017-04": 280.05,
+    "2017-05": 291.49,
+    "2017-06": 296.07,
+    "2017-07": 310.08,
+    "2017-08": 352.51,
+    "2017-09": 358.56,
+    "2017-10": 311.42,
+    "2017-11": 321.85,
+    "2017-12": 362.88,
+    "2018-01": 367.41,
+    "2018-02": 355.72,
+    "2018-03": 364.46,
+    "2018-04": 370.61,
+    "2018-05": 340.57,
+    "2018-06": 338.22,
+    "2018-07": 342.58,
+    "2018-08": 294.6,
+    "2018-09": 306.08,
+    "2018-10": 338.35,
+    "2018-11": 361.46,
+    "2018-12": 334.02,
+    "2019-01": 309.47,
+    "2019-02": 361.43,
+    "2019-03": 350.93,
+    "2019-04": 347.75,
+    "2019-05": 336.47,
+    "2019-06": 344.76,
+    "2019-07": 338.01,
+    "2019-08": 349.71,
+    "2019-09": 299.95,
+    "2019-10": 293.57,
+    "2019-11": 314.56,
+    "2019-12": 329.08,
+    "2020-01": 336.38,
+    "2020-02": 315.12,
+    "2020-03": 301.03,
+    "2020-04": 271.48,
     "2020-05": 286.91,
     "2020-06": 301.82,
     "2020-07": 299.83,
@@ -52170,7 +52429,7 @@
     "2026-07": 379.89,
     "2026-08": 371.15,
     "2026-09": 392.76,
-    "2026-10": 407.86
+    "2026-10": 407.89
    },
    "son": {
     "tarih": "2026-09-25",
@@ -52239,7 +52498,7 @@
      "TL"
     ]
    ],
-   "ilk": "2020-04-10",
+   "ilk": "2016-05-10",
    "guncelleme": "2026-10-20"
   },
   "kardemir_marj_hurda_usd": {
@@ -52252,7 +52511,38 @@
    "_not": "Şirketin kendi satış ve kendi alım fiyatı arasındaki fark; LME metal marjının yerli, gerçekleşen karşılığı. Kardemir BOF üreticisi olduğundan kâr makası için cevher+kok spread'i daha belirleyici; bu seri yurt içi uzun çelik piyasasının sağlığını ölçer.",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 182.31,
+    "2020-05": 99.09,
+    "2020-06": 89.59,
+    "2020-07": 91.97,
+    "2020-08": 104.89,
+    "2020-09": 118.33,
+    "2020-10": 117.5,
+    "2020-11": 110.8,
+    "2020-12": 112.86,
+    "2021-01": 169.24,
+    "2021-02": 178.56,
+    "2021-03": 88.27,
+    "2021-04": 178.02,
+    "2021-05": 89.79,
+    "2021-06": 179.3,
+    "2021-07": 154.69,
+    "2021-08": 158.73,
+    "2021-09": 140.31,
+    "2021-10": 162.51,
+    "2021-11": 224.6,
+    "2021-12": 170.96,
+    "2022-01": 142.12,
+    "2022-02": 148.3,
+    "2022-03": 189.44,
+    "2022-04": 235.72,
+    "2022-05": 281.12,
+    "2022-06": 210.13,
+    "2022-07": 220.22,
+    "2022-08": 173.65,
+    "2022-09": 205.02,
+    "2022-10": 214.38,
+    "2022-11": 196.84,
+    "2022-12": 179.41,
     "2023-01": 182.34,
     "2023-02": 196.11,
     "2023-03": 215.39,
@@ -52298,7 +52588,7 @@
     "2026-07": 138.34,
     "2026-08": 156.11,
     "2026-09": 142.24,
-    "2026-10": 139.14
+    "2026-10": 139.11
    },
    "son": {
     "tarih": "2026-10-13",
@@ -52317,7 +52607,38 @@
    "_not": "Yüksek fırın girdisi ≈1,6 t cevher + ≈0,7 t kok kömürü/t sıvı çelik; kok serisi yok → mutlak seviye değil YÖN okunur (2021–22 kok şoku burada görünmez). WB cevher serisi bir ay geriden gelir.",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 421.12,
+    "2020-05": 236.08,
+    "2020-06": 226.13,
+    "2020-07": 218.2,
+    "2020-08": 215.85,
+    "2020-09": 230.1,
+    "2020-10": 224.48,
+    "2020-11": 238.84,
+    "2020-12": 313.06,
+    "2021-01": 384.13,
+    "2021-02": 364.39,
+    "2021-03": 289.83,
+    "2021-04": 349.2,
+    "2021-05": 272.57,
+    "2021-06": 334.52,
+    "2021-07": 336.26,
+    "2021-08": 408.67,
+    "2021-09": 427,
+    "2021-10": 463.2,
+    "2021-11": 554.78,
+    "2021-12": 485.8,
+    "2022-01": 443.32,
+    "2022-02": 447.88,
+    "2022-03": 591.03,
+    "2022-04": 637.92,
+    "2022-05": 591.21,
+    "2022-06": 461.38,
+    "2022-07": 474.14,
+    "2022-08": 422.21,
+    "2022-09": 441.65,
+    "2022-10": 468.03,
+    "2022-11": 424.39,
+    "2022-12": 418.22,
     "2023-01": 429.58,
     "2023-02": 433.52,
     "2023-03": 461.17,
@@ -52381,7 +52702,38 @@
    "_not": "Kocaer kütük alıp profil haddeler: kâr/ton ≈ profil fiyatı − kütük − dönüşüm maliyeti (enerji, işçilik). İki fiyat da Kardemir'in yurt içi listesi (Kocaer satışı ağırlıkla ihracat) → seviye değil yön; profil listesi seyrek güncellenir (yılda 2–4 kez).",
    "siklik": "aylik",
    "aylik": {
-    "2022-12": 170,
+    "2020-05": 79.36,
+    "2020-06": 76.97,
+    "2020-07": 85.16,
+    "2020-08": 53.93,
+    "2020-09": 82.3,
+    "2020-10": 87.62,
+    "2020-11": 64.63,
+    "2020-12": 92.93,
+    "2021-01": 27.9,
+    "2021-02": 85.74,
+    "2021-03": 154.29,
+    "2021-04": 52.77,
+    "2021-05": 145.49,
+    "2021-06": 145.15,
+    "2021-07": 147.46,
+    "2021-08": 141.8,
+    "2021-09": 178.8,
+    "2021-10": 150.97,
+    "2021-11": 111.3,
+    "2021-12": 147,
+    "2022-01": 164.68,
+    "2022-02": 153.82,
+    "2022-03": 0.61,
+    "2022-04": -45,
+    "2022-05": 35.81,
+    "2022-06": 224.5,
+    "2022-07": 247.1,
+    "2022-08": 298.55,
+    "2022-09": 302.17,
+    "2022-10": 282.2,
+    "2022-11": 236.33,
+    "2022-12": 176.13,
     "2023-01": 146.03,
     "2023-02": 137.32,
     "2023-03": 143.55,
@@ -52642,6 +52994,18 @@
     "eur": 7.12,
     "tl": 0
    },
+   "1384891": {
+    "kod": "GLRMK",
+    "t": "2025-01-28",
+    "ozet": "Şirketimiz, Polonya&#x27;da S19 otoyolunun Jawornik Lutcza arasındaki bölümünün tasarım ve yapım işleri için açılan ihaleye Gülermak Ağır Sanayi İnşaat ve Taahh",
+    "baslik": "Polonya S19 otoyolunun Jawornik - Lutcza arasındaki bölümünü",
+    "usd_mn": 463.9,
+    "kur_yaklasik": true,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0,
+    "konsorsiyum": true
+   },
    "1385523": {
     "kod": "ALTNY",
     "t": "2025-01-29",
@@ -52670,16 +53034,6 @@
     "usd_mn": 5.2,
     "usd": 0,
     "eur": 5,
-    "tl": 0
-   },
-   "1391219": {
-    "kod": "ASELS",
-    "t": "2025-02-10",
-    "ozet": "ASELSAN ile Türkiye Raylı Sistem Araçları Sanayi A.Ş. (TÜRASAŞ) arasında Demiryolu Sinyalizasyon Sistemleri kapsamında toplam tutarı 75.050.000 Avro olan sözleş",
-    "baslik": "Sözleşme İmzalanması",
-    "usd_mn": 77.4,
-    "usd": 0,
-    "eur": 75.05,
     "tl": 0
    },
    "1395052": {
@@ -52747,6 +53101,8 @@
     "t": "2025-04-08",
     "ozet": "29.01.2025 tarihli özel durum açıklamamıza istinaden, sözleşmeye davet Şirketimize 8 Nisan 2025 tarihinde iletilmiş olup konuyla ilgili önemli gelişmeler mevzua",
     "baslik": "Ankara Natoyolu-Dikimevi Hattı Metrosu yapım işleri ihalesi",
+    "atif": "2025-01-29",
+    "imza": false,
     "usd_mn": 0,
     "usd": 0,
     "eur": 0,
@@ -52774,11 +53130,38 @@
     "eur": 5.39,
     "tl": 0
    },
+   "1429771": {
+    "kod": "GLRMK",
+    "t": "2025-04-25",
+    "ozet": "Şirketimiz, Sırbistan&#x27;daki Belgrad-Nis, Stalac-Djunis kesimi demiryolunun yeniden inşası ve modernizasyonu ile ikinci demiryolu hattının yapımı için açılan",
+    "baslik": "Belgrad-Nis, Stalac-Djunis kesimi demiryolunun yeniden inşas",
+    "usd_mn": 0,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0,
+    "konsorsiyum": true,
+    "tutarsiz": true,
+    "neden": "ihale kesinleşmesi — tutar imza bildirimine taşındı (2025-12-05)",
+    "tasindi_hedef": "2025-12-05"
+   },
+   "1432618": {
+    "kod": "GLRMK",
+    "t": "2025-05-01",
+    "ozet": "Şirketimiz tarafından Polonya Varşova Metrosu 1. Hattı&#x27;nın telsiz sistemlerinin modernizasyonu ihalesi kapsamında 30 Nisan 2025 tarihinde 29.875.000 PLN te",
+    "baslik": "Polonya Varşova Metrosu 1. Hattı?nın telsiz sistemlerinin mo",
+    "usd_mn": 7.8,
+    "kur_yaklasik": true,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0
+   },
    "1438667": {
     "kod": "GLRMK",
     "t": "2025-05-13",
     "ozet": "08.04.2025 tarihli özel durum açıklamamıza istinaden, A1 (Ankaray) Hattı Dikimevi-Natoyolu Raylı Sistem Uzatma Hattı&#x27;nın inşaat ve elektromekanik sistemler",
     "baslik": "Ankara Natoyolu-Dikimevi Hattı Metrosu yapım işleri ihalesi",
+    "atif": "2025-04-08",
+    "imza": true,
     "usd_mn": 0,
     "usd": 0,
     "eur": 0,
@@ -52881,18 +53264,23 @@
     "t": "2025-07-10",
     "ozet": "Şirketimiz, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri için açılan ihaleye Polonya&#x27;da yerleşik %100 ",
     "baslik": "Polonya Demiryolları Szczyrzyc - Tymbark Bölümü'nün demiryol",
-    "usd_mn": 566.9,
+    "usd_mn": 0,
     "kur_yaklasik": true,
     "usd": 0,
     "eur": 0,
     "tl": 0,
-    "konsorsiyum": true
+    "konsorsiyum": true,
+    "tutarsiz": true,
+    "neden": "ihale kesinleşmesi — tutar imza bildirimine taşındı (2025-10-06)",
+    "tasindi_hedef": "2025-10-06"
    },
    "1464171": {
     "kod": "GLRMK",
     "t": "2025-07-17",
     "ozet": "07.07.2025 tarihli özel durum açıklamamıza istinaden, sözleşmeye davet Şirketimize 17 Temmuz 2025 tarihinde iletilmiş olup konuyla ilgili önemli gelişmeler mevz",
     "baslik": "Gebze-Köseköy Demiryolu Hat Kesimi Sinyalizasyon, Telekomüni",
+    "atif": "2025-07-07",
+    "imza": false,
     "usd_mn": 0,
     "usd": 0,
     "eur": 0,
@@ -52935,6 +53323,8 @@
     "t": "2025-07-25",
     "ozet": "17.07.2025 tarihli özel durum açıklamamıza istinaden, Gebze-Köseköy Demiryolu hat kesimi sinyalizasyon, telekomünikasyon ve destek sistemleri yapım işleri ihale",
     "baslik": "Gebze-Köseköy Demiryolu Hat Kesimi Sinyalizasyon, Telekomüni",
+    "atif": "2025-07-17",
+    "imza": true,
     "usd_mn": 0,
     "usd": 0,
     "eur": 0,
@@ -52992,17 +53382,35 @@
     "eur": 1.44,
     "tl": 0
    },
-   "1497330": {
+   "1491440": {
     "kod": "GLRMK",
-    "t": "2025-10-06",
-    "ozet": "10.07.2025 tarihli özel durum açıklamamıza istinaden, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri ihalesi ",
-    "baslik": "Polonya Demiryolları Szczyrzyc - Tymbark Bölümü'nün demiryol",
+    "t": "2025-09-19",
+    "ozet": "01.05.2025 tarihli özel durum açıklamamıza istinaden, Polonya Varşova Metrosu 1. Hattı&#x27;nın telsiz sistemlerinin modernizasyonu ihalesi ilgili idare tarafın",
+    "baslik": "Polonya Varşova Metrosu 1. Hattı'nın Telsiz Sistemlerinin Mo",
+    "atif": "2025-05-01",
+    "imza": false,
     "usd_mn": 0,
     "usd": 0,
     "eur": 0,
     "tl": 0,
     "tutarsiz": true,
-    "neden": "tutar açıklanmadı"
+    "neden": "teklif/iptal — sözleşme değil"
+   },
+   "1497330": {
+    "kod": "GLRMK",
+    "t": "2025-10-06",
+    "ozet": "10.07.2025 tarihli özel durum açıklamamıza istinaden, Polonya Demiryolları&#x27;nın Szczyrzyc - Tymbark Bolümü&#x27;nün demiryolu ve tünel yapım işleri ihalesi ",
+    "baslik": "Polonya Demiryolları Szczyrzyc - Tymbark Bölümü'nün demiryol",
+    "atif": "2025-07-10",
+    "imza": true,
+    "usd_mn": 566.9,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0,
+    "tutarsiz": false,
+    "konsorsiyum": true,
+    "kur_yaklasik": true,
+    "tasindi_kaynak": "2025-07-10"
    },
    "1508559": {
     "kod": "ALTNY",
@@ -53041,18 +53449,23 @@
     "t": "2025-10-31",
     "ozet": "Şirketimiz, Polonya Devlet Demiryolları&#x27;nın \"Podleze–Szczyrzyc–Tymbark Mszana Dolna ile Chabowka–Nowy Sacz demiryolu hatlarının modernizasyonu\" projesi içi",
     "baslik": "C1 Tymbark Limanowa Kesimi Demiryolu'nun İnşaatı ve Tasarım ",
-    "usd_mn": 440.5,
+    "usd_mn": 0,
     "kur_yaklasik": true,
     "usd": 0,
     "eur": 0,
     "tl": 0,
-    "konsorsiyum": true
+    "konsorsiyum": true,
+    "tutarsiz": true,
+    "neden": "ihale kesinleşmesi — tutar imza bildirimine taşındı (2026-03-12)",
+    "tasindi_hedef": "2026-03-12"
    },
    "1513364": {
     "kod": "GLRMK",
     "t": "2025-11-07",
     "ozet": "19.09.2025 tarihli özel durum açıklamamıza istinaden, ilgili idare tarafından iptal edilen Polonya Varşova Metrosu 1. Hattı&#x27;nın telsiz sistemlerinin modern",
     "baslik": "Polonya Varşova Metrosu 1. Hattı'nın Telsiz Sistemlerinin Mo",
+    "atif": "2025-09-19",
+    "imza": false,
     "usd_mn": 0,
     "usd": 0,
     "eur": 0,
@@ -53110,6 +53523,32 @@
     "eur": 0,
     "tl": 0
    },
+   "1523906": {
+    "kod": "GLRMK",
+    "t": "2025-12-05",
+    "ozet": "25.04.2025 tarihli özel durum açıklamamıza istinaden, Sırbistan&#x27;daki Belgrad-Nis, Stalac-Djunis kesimi demiryolunun yeniden inşası ve modernizasyonu ile ik",
+    "baslik": "Belgrad-Nis, Stalac-Djunis kesimi demiryolunun yeniden inşas",
+    "atif": "2025-04-25",
+    "imza": true,
+    "usd_mn": 396.8,
+    "usd": 0,
+    "eur": 348.91,
+    "tl": 0,
+    "tutarsiz": false,
+    "konsorsiyum": true,
+    "tasindi_kaynak": "2025-04-25"
+   },
+   "1526045": {
+    "kod": "GLRMK",
+    "t": "2025-12-11",
+    "ozet": "Metro Warszawskie Sp. z o.o. tarafından yürütülen Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu Hat Düzeninin Genişletilmesi projesi kapsamında 11.12.2025 t",
+    "baslik": "Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu Hat Düzeni",
+    "usd_mn": 9.2,
+    "kur_yaklasik": true,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0
+   },
    "1528017": {
     "kod": "ASELS",
     "t": "2025-12-19",
@@ -53160,6 +53599,20 @@
     "eur": 0,
     "tl": 0
    },
+   "1550384": {
+    "kod": "GLRMK",
+    "t": "2026-01-30",
+    "ozet": "11.12.2025 tarihli özel durum açıklamamıza istinaden, sözleşmeye davet Şirketimize iletilmiş olup konuyla ilgili önemli gelişmeler mevzuata uygun olarak kamuya ",
+    "baslik": "Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu Hat Düzeni",
+    "atif": "2025-12-11",
+    "imza": false,
+    "usd_mn": 0,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0,
+    "tutarsiz": true,
+    "neden": "tutar açıklanmadı"
+   },
    "1556817": {
     "kod": "ALTNY",
     "t": "2026-02-16",
@@ -53169,6 +53622,20 @@
     "usd": 0,
     "eur": 10.15,
     "tl": 0
+   },
+   "1560970": {
+    "kod": "GLRMK",
+    "t": "2026-02-24",
+    "ozet": "30.01.2026 tarihli özel durum açıklamamıza istinaden, Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu hat düzeninin genişletilmesi ihalesi kapsamında, Şirketi",
+    "baslik": "Polonya Varşova Metrosu A1 Kabaty Metro İstasyonu Hat Düzeni",
+    "atif": "2026-01-30",
+    "imza": true,
+    "usd_mn": 0,
+    "usd": 0,
+    "eur": 0,
+    "tl": 0,
+    "tutarsiz": true,
+    "neden": "tutar açıklanmadı"
    },
    "1566870": {
     "kod": "ALTNY",
@@ -53185,12 +53652,16 @@
     "t": "2026-03-12",
     "ozet": "31.10.2025 tarihli özel durum açıklamamıza istinaden, Polonya&#x27;daki Podleze Szczyrzyc Tymbark Mszana Dolna ile Chabowka Nowy Sacz demiryolu hatlarının moder",
     "baslik": "C1 Tymbark Limanowa Kesimi Demiryolu'nun İnşaatı ve Tasarım ",
-    "usd_mn": 0,
+    "atif": "2025-10-31",
+    "imza": true,
+    "usd_mn": 440.5,
     "usd": 0,
     "eur": 0,
     "tl": 0,
-    "tutarsiz": true,
-    "neden": "tutar açıklanmadı"
+    "tutarsiz": false,
+    "konsorsiyum": true,
+    "kur_yaklasik": true,
+    "tasindi_kaynak": "2025-10-31"
    },
    "1572732": {
     "kod": "ASELS",
@@ -53436,8 +53907,10 @@
     "tl": 0
    }
   },
-  "cozulemeyen": {},
-  "surum": "469e"
+  "cozulemeyen": {
+   "1391219": 1
+  },
+  "surum": "473"
  },
  "kardemir": {
   "surum": "472",
@@ -55192,6 +55665,1098 @@
      "f": 695,
      "pb": "USD"
     }
+   },
+   "2022-11-30": {
+    "n": {
+     "f": 12285,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 675,
+     "pb": "USD"
+    }
+   },
+   "2022-11-29": {
+    "k": {
+     "f": 585,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 590,
+     "pb": "USD"
+    }
+   },
+   "2022-11-15": {
+    "n": {
+     "f": 11740,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 775,
+     "pb": "USD"
+    },
+    "f": {
+     "f": 650,
+     "pb": "USD"
+    }
+   },
+   "2022-11-09": {
+    "k": {
+     "f": 560,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 565,
+     "pb": "USD"
+    }
+   },
+   "2022-11-02": {
+    "n": {
+     "f": 11900,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 675,
+     "pb": "USD"
+    }
+   },
+   "2022-10-26": {
+    "k": {
+     "f": 605,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 610,
+     "pb": "USD"
+    },
+    "p": {
+     "f": 850,
+     "pb": "USD"
+    },
+    "f": {
+     "f": 690,
+     "pb": "USD"
+    }
+   },
+   "2022-10-20": {
+    "k": {
+     "f": 605,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 610,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 12545,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 705,
+     "pb": "USD"
+    }
+   },
+   "2022-10-18": {
+    "n": {
+     "f": 12740,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 715,
+     "pb": "USD"
+    }
+   },
+   "2022-10-06": {
+    "k": {
+     "f": 628,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 633,
+     "pb": "USD"
+    }
+   },
+   "2022-10-05": {
+    "n": {
+     "f": 12990,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 757,
+     "pb": "USD"
+    }
+   },
+   "2022-09-14": {
+    "k": {
+     "f": 610,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 615,
+     "pb": "USD"
+    },
+    "p": {
+     "f": 910,
+     "pb": "USD"
+    }
+   },
+   "2022-09-09": {
+    "n": {
+     "f": 12575,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 740,
+     "pb": "USD"
+    }
+   },
+   "2022-09-01": {
+    "f": {
+     "f": 695,
+     "pb": "USD"
+    }
+   },
+   "2022-08-26": {
+    "k": {
+     "f": 590,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 595,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 11695,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 675,
+     "pb": "USD"
+    }
+   },
+   "2022-08-25": {
+    "n": {
+     "f": 11695,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 675,
+     "pb": "USD"
+    }
+   },
+   "2022-08-23": {
+    "f": {
+     "f": 675,
+     "pb": "USD"
+    }
+   },
+   "2022-08-10": {
+    "k": {
+     "f": 610,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 615,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 11855,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 705,
+     "pb": "USD"
+    }
+   },
+   "2022-08-02": {
+    "k": {
+     "f": 570,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 575,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 10955,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 660,
+     "pb": "USD"
+    }
+   },
+   "2022-07-26": {
+    "k": {
+     "f": 630,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 635,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 11770,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 715,
+     "pb": "USD"
+    }
+   },
+   "2022-07-19": {
+    "k": {
+     "f": 675,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 680,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 12505,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 770,
+     "pb": "USD"
+    }
+   },
+   "2022-07-07": {
+    "k": {
+     "f": 670,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 675,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 12395,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 790,
+     "pb": "USD"
+    }
+   },
+   "2022-07-06": {
+    "f": {
+     "f": 760,
+     "pb": "USD"
+    }
+   },
+   "2022-06-28": {
+    "k": {
+     "f": 590,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 595,
+     "pb": "USD"
+    },
+    "n": {
+     "f": 10255,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 665,
+     "pb": "USD"
+    }
+   },
+   "2022-06-14": {
+    "f": {
+     "f": 765,
+     "pb": "USD"
+    }
+   },
+   "2022-06-02": {
+    "k": {
+     "f": 678,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 683,
+     "pb": "USD"
+    }
+   },
+   "2022-05-31": {
+    "n": {
+     "f": 12100,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 895,
+     "pb": "USD"
+    },
+    "f": {
+     "f": 790,
+     "pb": "USD"
+    }
+   },
+   "2022-05-24": {
+    "f": {
+     "f": 830,
+     "pb": "USD"
+    }
+   },
+   "2022-05-17": {
+    "k": {
+     "f": 717,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 722,
+     "pb": "USD"
+    },
+    "f": {
+     "f": 880,
+     "pb": "USD"
+    }
+   },
+   "2022-05-12": {
+    "n": {
+     "f": 12150,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 920,
+     "pb": "USD"
+    }
+   },
+   "2022-04-14": {
+    "bos": 1
+   },
+   "2022-03-31": {
+    "bos": 1
+   },
+   "2022-03-10": {
+    "f": {
+     "f": 1060,
+     "pb": "USD"
+    }
+   },
+   "2022-03-09": {
+    "f": {
+     "f": 1015,
+     "pb": "USD"
+    }
+   },
+   "2022-03-08": {
+    "k": {
+     "f": 880,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 885,
+     "pb": "USD"
+    },
+    "f": {
+     "f": 990,
+     "pb": "USD"
+    }
+   },
+   "2022-03-07": {
+    "f": {
+     "f": 965,
+     "pb": "USD"
+    }
+   },
+   "2022-03-03": {
+    "n": {
+     "f": 11575,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 915,
+     "pb": "USD"
+    }
+   },
+   "2022-03-02": {
+    "f": {
+     "f": 890,
+     "pb": "USD"
+    }
+   },
+   "2022-02-28": {
+    "f": {
+     "f": 855,
+     "pb": "USD"
+    }
+   },
+   "2022-02-15": {
+    "f": {
+     "f": 830,
+     "pb": "USD"
+    }
+   },
+   "2022-02-10": {
+    "p": {
+     "f": 835,
+     "pb": "USD"
+    }
+   },
+   "2022-02-03": {
+    "k": {
+     "f": 678,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 683,
+     "pb": "USD"
+    }
+   },
+   "2022-02-01": {
+    "n": {
+     "f": 9455,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 810,
+     "pb": "USD"
+    }
+   },
+   "2022-01-20": {
+    "bos": 1
+   },
+   "2022-01-06": {
+    "k": {
+     "f": 655,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 660,
+     "pb": "USD"
+    },
+    "f": {
+     "f": 800,
+     "pb": "USD"
+    }
+   },
+   "2021-12-28": {
+    "n": {
+     "f": 8040,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 800,
+     "pb": "USD"
+    }
+   },
+   "2021-12-17": {
+    "k": {
+     "f": 657,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 662,
+     "pb": "USD"
+    }
+   },
+   "2021-12-16": {
+    "bos": 1
+   },
+   "2021-12-09": {
+    "n": {
+     "f": 9640,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 830,
+     "pb": "USD"
+    }
+   },
+   "2021-12-07": {
+    "n": {
+     "f": 9870,
+     "pb": "TL"
+    }
+   },
+   "2021-12-02": {
+    "bos": 1
+   },
+   "2021-11-24": {
+    "k": {
+     "f": 688,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 693,
+     "pb": "USD"
+    }
+   },
+   "2021-11-18": {
+    "bos": 1
+   },
+   "2021-11-02": {
+    "f": {
+     "f": 870,
+     "pb": "USD"
+    }
+   },
+   "2021-10-20": {
+    "p": {
+     "f": 820,
+     "pb": "USD"
+    }
+   },
+   "2021-10-19": {
+    "k": {
+     "f": 715,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 720,
+     "pb": "USD"
+    }
+   },
+   "2021-10-18": {
+    "f": {
+     "f": 850,
+     "pb": "USD"
+    }
+   },
+   "2021-10-13": {
+    "f": {
+     "f": 835,
+     "pb": "USD"
+    }
+   },
+   "2021-10-11": {
+    "f": {
+     "f": 815,
+     "pb": "USD"
+    }
+   },
+   "2021-10-07": {
+    "f": {
+     "f": 800,
+     "pb": "USD"
+    }
+   },
+   "2021-09-28": {
+    "k": {
+     "f": 620,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 625,
+     "pb": "USD"
+    }
+   },
+   "2021-09-15": {
+    "n": {
+     "f": 5530,
+     "pb": "TL"
+    }
+   },
+   "2021-09-08": {
+    "k": {
+     "f": 623,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 628,
+     "pb": "USD"
+    }
+   },
+   "2021-08-26": {
+    "f": {
+     "f": 775,
+     "pb": "USD"
+    }
+   },
+   "2021-08-25": {
+    "k": {
+     "f": 638,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 643,
+     "pb": "USD"
+    }
+   },
+   "2021-08-18": {
+    "n": {
+     "f": 5625,
+     "pb": "TL"
+    }
+   },
+   "2021-08-11": {
+    "n": {
+     "f": 5975,
+     "pb": "TL"
+    }
+   },
+   "2021-08-05": {
+    "p": {
+     "f": 805,
+     "pb": "USD"
+    }
+   },
+   "2021-07-29": {
+    "k": {
+     "f": 677,
+     "pb": "USD"
+    },
+    "kb": {
+     "f": 682,
+     "pb": "USD"
+    }
+   },
+   "2021-06-24": {
+    "n": {
+     "f": 6140,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 6880,
+     "pb": "TL"
+    }
+   },
+   "2021-06-15": {
+    "k": {
+     "f": 5845,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 5890,
+     "pb": "TL"
+    }
+   },
+   "2021-06-08": {
+    "n": {
+     "f": 5915,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 6795,
+     "pb": "TL"
+    }
+   },
+   "2021-06-03": {
+    "bos": 1
+   },
+   "2021-05-27": {
+    "k": {
+     "f": 5850,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 5895,
+     "pb": "TL"
+    }
+   },
+   "2021-05-25": {
+    "bos": 1
+   },
+   "2021-05-18": {
+    "p": {
+     "f": 7100,
+     "pb": "TL"
+    }
+   },
+   "2021-05-05": {
+    "n": {
+     "f": 5575,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 6235,
+     "pb": "TL"
+    }
+   },
+   "2021-04-28": {
+    "k": {
+     "f": 4920,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 4960,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 5125,
+     "pb": "TL"
+    }
+   },
+   "2021-04-07": {
+    "n": {
+     "f": 4990,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 5675,
+     "pb": "TL"
+    }
+   },
+   "2021-03-31": {
+    "k": {
+     "f": 5225,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 5250,
+     "pb": "TL"
+    }
+   },
+   "2021-03-10": {
+    "p": {
+     "f": 5625,
+     "pb": "TL"
+    }
+   },
+   "2021-03-03": {
+    "n": {
+     "f": 4682,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 5310,
+     "pb": "TL"
+    }
+   },
+   "2021-02-17": {
+    "k": {
+     "f": 4245,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 4280,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 4225,
+     "pb": "TL"
+    }
+   },
+   "2021-02-09": {
+    "f": {
+     "f": 4635,
+     "pb": "TL"
+    }
+   },
+   "2021-01-26": {
+    "k": {
+     "f": 4590,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 4625,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 5240,
+     "pb": "TL"
+    }
+   },
+   "2020-12-25": {
+    "k": {
+     "f": 4905,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 4940,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 4790,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 5660,
+     "pb": "TL"
+    }
+   },
+   "2020-12-08": {
+    "f": {
+     "f": 5130,
+     "pb": "TL"
+    }
+   },
+   "2020-12-01": {
+    "p": {
+     "f": 5050,
+     "pb": "TL"
+    }
+   },
+   "2020-11-25": {
+    "k": {
+     "f": 4160,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 4195,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 4160,
+     "pb": "TL"
+    }
+   },
+   "2020-11-18": {
+    "k": {
+     "f": 3310,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 3345,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 3855,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3995,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 4560,
+     "pb": "TL"
+    }
+   },
+   "2020-10-27": {
+    "k": {
+     "f": 3310,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 3345,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 3462,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3995,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 4560,
+     "pb": "TL"
+    }
+   },
+   "2020-10-07": {
+    "k": {
+     "f": 3310,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 3345,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 3462,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3995,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 4195,
+     "pb": "TL"
+    }
+   },
+   "2020-09-08": {
+    "k": {
+     "f": 3260,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 3295,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 3435,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3995,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 4000,
+     "pb": "TL"
+    }
+   },
+   "2020-08-27": {
+    "k": {
+     "f": 3115,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 3150,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 3280,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3365,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3775,
+     "pb": "TL"
+    }
+   },
+   "2020-08-11": {
+    "k": {
+     "f": 3115,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 3150,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 3280,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3365,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3695,
+     "pb": "TL"
+    }
+   },
+   "2020-07-21": {
+    "k": {
+     "f": 2685,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 2715,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 2990,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3365,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3285,
+     "pb": "TL"
+    }
+   },
+   "2020-07-07": {
+    "k": {
+     "f": 2685,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 2715,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 2870,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3225,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3145,
+     "pb": "TL"
+    }
+   },
+   "2020-06-23": {
+    "k": {
+     "f": 2710,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 2740,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 2885,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3225,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3190,
+     "pb": "TL"
+    }
+   },
+   "2020-06-09": {
+    "k": {
+     "f": 2710,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 2740,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 2885,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3225,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3100,
+     "pb": "TL"
+    }
+   },
+   "2020-05-28": {
+    "k": {
+     "f": 2550,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 2580,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 2763,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3100,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 2995,
+     "pb": "TL"
+    }
+   },
+   "2020-05-13": {
+    "k": {
+     "f": 2660,
+     "pb": "TL"
+    },
+    "kb": {
+     "f": 2690,
+     "pb": "TL"
+    },
+    "n": {
+     "f": 2755,
+     "pb": "TL"
+    },
+    "p": {
+     "f": 3200,
+     "pb": "TL"
+    },
+    "f": {
+     "f": 3030,
+     "pb": "TL"
+    }
    }
   },
   "hurda": {
@@ -56794,6 +58359,786 @@
     "s1": 1525,
     "s2": 1415,
     "bp": 75
+   },
+   "2020-03-27": {
+    "oe": 1705,
+    "dkp": 1685,
+    "ek": 1525,
+    "s1": 1455,
+    "s2": 1345,
+    "bp": 75
+   },
+   "2020-03-24": {
+    "oe": 1825,
+    "dkp": 1805,
+    "ek": 1645,
+    "s1": 1575,
+    "s2": 1465,
+    "bp": 75
+   },
+   "2020-03-21": {
+    "oe": 1885,
+    "dkp": 1865,
+    "ek": 1705,
+    "s1": 1635,
+    "s2": 1525,
+    "bp": 75
+   },
+   "2020-03-10": {
+    "oe": 1945,
+    "dkp": 1925,
+    "ek": 1765,
+    "s1": 1695,
+    "s2": 1585,
+    "bp": 75
+   },
+   "2020-02-29": {
+    "oe": 1995,
+    "dkp": 1975,
+    "ek": 1815,
+    "s1": 1745,
+    "s2": 1635,
+    "bp": 75
+   },
+   "2020-02-25": {
+    "oe": 1975,
+    "dkp": 1955,
+    "ek": 1765,
+    "s1": 1695,
+    "s2": 1585,
+    "bp": 75
+   },
+   "2020-02-21": {
+    "oe": 1915,
+    "dkp": 1895,
+    "ek": 1705,
+    "s1": 1635,
+    "s2": 1525,
+    "bp": 75
+   },
+   "2020-02-06": {
+    "oe": 1875,
+    "dkp": 1855,
+    "ek": 1665,
+    "s1": 1595,
+    "s2": 1485,
+    "bp": 75
+   },
+   "2020-01-27": {
+    "oe": 1925,
+    "dkp": 1905,
+    "ek": 1715,
+    "s1": 1645,
+    "s2": 1535,
+    "bp": 75
+   },
+   "2020-01-21": {
+    "oe": 1965,
+    "dkp": 1945,
+    "ek": 1755,
+    "s1": 1685,
+    "s2": 1575,
+    "bp": 75
+   },
+   "2019-12-18": {
+    "oe": 2015,
+    "dkp": 1995,
+    "ek": 1805,
+    "s1": 1735,
+    "s2": 1625,
+    "bp": 75
+   },
+   "2019-12-11": {
+    "oe": 1915,
+    "dkp": 1895,
+    "ek": 1705,
+    "s1": 1635,
+    "s2": 1525,
+    "bp": 75
+   },
+   "2019-10-23": {
+    "oe": 1805,
+    "dkp": 1785,
+    "ek": 1595,
+    "s1": 1525,
+    "s2": 1415,
+    "bp": 75
+   },
+   "2019-10-18": {
+    "oe": 1765,
+    "dkp": 1745,
+    "ek": 1555,
+    "s1": 1485,
+    "s2": 1375,
+    "bp": 75
+   },
+   "2019-10-15": {
+    "oe": 1675,
+    "dkp": 1655,
+    "ek": 1465,
+    "s1": 1395,
+    "s2": 1285,
+    "bp": 75
+   },
+   "2019-09-20": {
+    "oe": 1615,
+    "dkp": 1595,
+    "ek": 1405,
+    "s1": 1335,
+    "s2": 1225,
+    "bp": 75
+   },
+   "2019-09-13": {
+    "oe": 1670,
+    "dkp": 1650,
+    "ek": 1460,
+    "s1": 1390,
+    "s2": 1280,
+    "bp": 75
+   },
+   "2019-09-11": {
+    "oe": 1730,
+    "dkp": 1710,
+    "ek": 1520,
+    "s1": 1450,
+    "s2": 1340,
+    "bp": 75
+   },
+   "2019-09-07": {
+    "oe": 1790,
+    "dkp": 1770,
+    "ek": 1580,
+    "s1": 1510,
+    "s2": 1400,
+    "bp": 75
+   },
+   "2019-09-05": {
+    "oe": 1840,
+    "dkp": 1820,
+    "ek": 1630,
+    "s1": 1560,
+    "s2": 1450,
+    "bp": 75
+   },
+   "2019-08-30": {
+    "oe": 1900,
+    "dkp": 1880,
+    "ek": 1690,
+    "s1": 1620,
+    "s2": 1510,
+    "bp": 75
+   },
+   "2019-07-30": {
+    "oe": 1980,
+    "dkp": 1960,
+    "ek": 1760,
+    "s1": 1710,
+    "s2": 1580,
+    "bp": 75
+   },
+   "2019-06-25": {
+    "oe": 1910,
+    "dkp": 1890,
+    "ek": 1690,
+    "s1": 1640,
+    "s2": 1510,
+    "bp": 75
+   },
+   "2019-06-19": {
+    "oe": 1950,
+    "dkp": 1930,
+    "ek": 1730,
+    "s1": 1680,
+    "s2": 1550,
+    "bp": 75
+   },
+   "2019-06-14": {
+    "oe": 2000,
+    "dkp": 1980,
+    "ek": 1860,
+    "s1": 1780,
+    "s2": 1590,
+    "bp": 30
+   },
+   "2019-05-22": {
+    "oe": 2070,
+    "dkp": 2050,
+    "ek": 1945,
+    "s1": 1875,
+    "s2": 1620,
+    "bp": 30
+   },
+   "2019-04-09": {
+    "oe": 2020,
+    "dkp": 2000,
+    "ek": 1895,
+    "s1": 1825,
+    "s2": 1570,
+    "bp": 30
+   },
+   "2019-03-26": {
+    "oe": 1970,
+    "dkp": 1950,
+    "ek": 1845,
+    "s1": 1775,
+    "s2": 1520,
+    "bp": 30
+   },
+   "2019-03-15": {
+    "oe": 1915,
+    "dkp": 1895,
+    "ek": 1790,
+    "s1": 1720,
+    "s2": 1465,
+    "bp": 30
+   },
+   "2019-02-27": {
+    "oe": 1890,
+    "dkp": 1870,
+    "ek": 1765,
+    "s1": 1695,
+    "s2": 1440,
+    "bp": 30
+   },
+   "2019-02-22": {
+    "oe": 1925,
+    "dkp": 1905,
+    "ek": 1800,
+    "s1": 1730,
+    "s2": 1475,
+    "bp": 30
+   },
+   "2019-02-09": {
+    "oe": 1940,
+    "dkp": 1920,
+    "ek": 1815,
+    "s1": 1745,
+    "s2": 1490,
+    "bp": 30
+   },
+   "2019-02-08": {
+    "oe": 1940,
+    "dkp": 1920,
+    "ek": 1790,
+    "s1": 1690,
+    "s2": 1490,
+    "bp": 30
+   },
+   "2019-02-07": {
+    "oe": 1880,
+    "dkp": 1860,
+    "ek": 1730,
+    "s1": 1630,
+    "s2": 1430,
+    "bp": 30
+   },
+   "2019-02-01": {
+    "oe": 1810,
+    "dkp": 1790,
+    "ek": 1660,
+    "s1": 1560,
+    "s2": 1360,
+    "bp": 30
+   },
+   "2019-01-28": {
+    "oe": 1770,
+    "dkp": 1750,
+    "ek": 1620,
+    "s1": 1520,
+    "s2": 1320,
+    "bp": 30
+   },
+   "2019-01-25": {
+    "oe": 1740,
+    "dkp": 1720,
+    "ek": 1570,
+    "s1": 1420,
+    "s2": 1290,
+    "bp": 30
+   },
+   "2019-01-04": {
+    "oe": 1640,
+    "dkp": 1620,
+    "ek": 1470,
+    "s1": 1320,
+    "s2": 1190,
+    "bp": 30
+   },
+   "2018-12-26": {
+    "oe": 1580,
+    "dkp": 1560,
+    "ek": 1410,
+    "s1": 1260,
+    "s2": 1130,
+    "bp": 30
+   },
+   "2018-12-25": {
+    "oe": 1670,
+    "dkp": 1650,
+    "ek": 1540,
+    "s1": 1340,
+    "s2": 1210,
+    "bp": 30
+   },
+   "2018-12-21": {
+    "oe": 1700,
+    "dkp": 1680,
+    "ek": 1570,
+    "s1": 1370,
+    "s2": 1240,
+    "bp": 30
+   },
+   "2018-12-19": {
+    "oe": 1700,
+    "dkp": 1680,
+    "ek": 1660,
+    "s1": 1470,
+    "s2": 1280,
+    "bp": 30
+   },
+   "2018-12-11": {
+    "oe": 1825,
+    "dkp": 1810,
+    "ek": 1800,
+    "s1": 1730,
+    "s2": 1540,
+    "bp": 30
+   },
+   "2018-12-01": {
+    "oe": 1895,
+    "dkp": 1880,
+    "ek": 1870,
+    "s1": 1800,
+    "s2": 1610,
+    "bp": 30
+   },
+   "2018-10-19": {
+    "oe": 1945,
+    "dkp": 1930,
+    "ek": 1920,
+    "s1": 1850,
+    "s2": 1660,
+    "bp": 30
+   },
+   "2018-09-11": {
+    "oe": 1985,
+    "dkp": 1970,
+    "ek": 1960,
+    "s1": 1890,
+    "s2": 1700,
+    "bp": 30
+   },
+   "2018-09-06": {
+    "oe": 1855,
+    "dkp": 1840,
+    "ek": 1830,
+    "s1": 1760,
+    "s2": 1570,
+    "bp": 30
+   },
+   "2018-08-14": {
+    "oe": 1785,
+    "dkp": 1770,
+    "ek": 1760,
+    "s1": 1690,
+    "s2": 1500,
+    "bp": 30
+   },
+   "2018-06-27": {
+    "oe": 1635,
+    "dkp": 1620,
+    "ek": 1610,
+    "s1": 1540,
+    "s2": 1350,
+    "bp": 30
+   },
+   "2018-06-02": {
+    "oe": 1555,
+    "dkp": 1540,
+    "ek": 1530,
+    "s1": 1460,
+    "s2": 1270,
+    "bp": 30
+   },
+   "2018-03-23": {
+    "oe": 1505,
+    "dkp": 1490,
+    "ek": 1480,
+    "s1": 1410,
+    "s2": 1220,
+    "bp": 30
+   },
+   "2018-03-19": {
+    "oe": 1465,
+    "dkp": 1450,
+    "ek": 1440,
+    "s1": 1370,
+    "s2": 1180,
+    "bp": 30
+   },
+   "2018-03-13": {
+    "oe": 1395,
+    "dkp": 1380,
+    "ek": 1370,
+    "s1": 1300,
+    "s2": 1110,
+    "bp": 30
+   },
+   "2018-01-22": {
+    "oe": 1345,
+    "dkp": 1330,
+    "ek": 1320,
+    "s1": 1250,
+    "s2": 1060,
+    "bp": 30
+   },
+   "2017-12-05": {
+    "oe": 1405,
+    "dkp": 1390,
+    "ek": 1380,
+    "s1": 1310,
+    "s2": 1120,
+    "bp": 30
+   },
+   "2017-11-29": {
+    "oe": 1325,
+    "dkp": 1310,
+    "ek": 1300,
+    "s1": 1230,
+    "s2": 1040,
+    "bp": 30
+   },
+   "2017-11-17": {
+    "oe": 1275,
+    "dkp": 1260,
+    "ek": 1250,
+    "s1": 1180,
+    "s2": 990,
+    "bp": 30
+   },
+   "2017-11-09": {
+    "oe": 1245,
+    "dkp": 1230,
+    "ek": 1220,
+    "s1": 1150,
+    "s2": 960,
+    "bp": 30
+   },
+   "2017-11-07": {
+    "oe": 1215,
+    "dkp": 1200,
+    "ek": 1190,
+    "s1": 1120,
+    "s2": 930,
+    "bp": 30
+   },
+   "2017-10-31": {
+    "oe": 1185,
+    "dkp": 1170,
+    "ek": 1160,
+    "s1": 1090,
+    "s2": 900,
+    "bp": 30
+   },
+   "2017-10-17": {
+    "oe": 1155,
+    "dkp": 1140,
+    "ek": 1130,
+    "s1": 1060,
+    "s2": 870,
+    "bp": 30
+   },
+   "2017-10-03": {
+    "oe": 1125,
+    "dkp": 1110,
+    "ek": 1100,
+    "s1": 1030,
+    "s2": 840,
+    "bp": 30
+   },
+   "2017-10-02": {
+    "oe": 1190,
+    "dkp": 1175,
+    "ek": 1165,
+    "s1": 1095,
+    "s2": 905,
+    "bp": 30
+   },
+   "2017-09-25": {
+    "oe": 1220,
+    "dkp": 1205,
+    "ek": 1195,
+    "s1": 1125,
+    "s2": 935,
+    "bp": 30
+   },
+   "2017-08-10": {
+    "oe": 1250,
+    "dkp": 1235,
+    "ek": 1225,
+    "s1": 1155,
+    "s2": 965,
+    "bp": 30
+   },
+   "2017-08-05": {
+    "oe": 1220,
+    "dkp": 1205,
+    "ek": 1195,
+    "s1": 1125,
+    "s2": 935,
+    "bp": 30
+   },
+   "2017-08-01": {
+    "oe": 1190,
+    "dkp": 1175,
+    "ek": 1165,
+    "s1": 1095,
+    "s2": 905,
+    "bp": 30
+   },
+   "2017-07-21": {
+    "oe": 1140,
+    "dkp": 1125,
+    "ek": 1115,
+    "s1": 1045,
+    "s2": 855,
+    "bp": 30
+   },
+   "2017-07-12": {
+    "oe": 1120,
+    "dkp": 1105,
+    "ek": 1095,
+    "s1": 1025,
+    "s2": 835,
+    "bp": 30
+   },
+   "2017-07-05": {
+    "oe": 1070,
+    "dkp": 1055,
+    "ek": 1045,
+    "s1": 975,
+    "s2": 785,
+    "bp": 30
+   },
+   "2017-06-20": {
+    "oe": 1020,
+    "dkp": 1005,
+    "ek": 995,
+    "s1": 925,
+    "s2": 735,
+    "bp": 30
+   },
+   "2017-05-16": {
+    "oe": 1055,
+    "dkp": 1040,
+    "ek": 1030,
+    "s1": 960,
+    "s2": 770,
+    "bp": 30
+   },
+   "2017-04-26": {
+    "oe": 1025,
+    "dkp": 1010,
+    "ek": 1000,
+    "s1": 930,
+    "s2": 740,
+    "bp": 30
+   },
+   "2017-04-20": {
+    "oe": 1005,
+    "dkp": 990,
+    "ek": 980,
+    "s1": 910,
+    "s2": 720,
+    "bp": 30
+   },
+   "2017-03-30": {
+    "oe": 1025,
+    "dkp": 1010,
+    "ek": 1000,
+    "s1": 930,
+    "s2": 740,
+    "bp": 30
+   },
+   "2017-03-10": {
+    "oe": 1045,
+    "dkp": 1030,
+    "ek": 1020,
+    "s1": 950,
+    "s2": 760,
+    "bp": 30
+   },
+   "2017-02-21": {
+    "oe": 995,
+    "dkp": 980,
+    "ek": 970,
+    "s1": 900,
+    "s2": 710,
+    "bp": 30
+   },
+   "2017-02-01": {
+    "oe": 975,
+    "dkp": 960,
+    "ek": 950,
+    "s1": 880,
+    "s2": 690,
+    "bp": 15
+   },
+   "2017-01-25": {
+    "oe": 975,
+    "dkp": 960,
+    "ek": 950,
+    "s1": 880,
+    "s2": 690,
+    "bp": 20
+   },
+   "2017-01-12": {
+    "oe": 1005,
+    "dkp": 990,
+    "ek": 980,
+    "s1": 910,
+    "s2": 720,
+    "bp": 20
+   },
+   "2017-01-07": {
+    "oe": 955,
+    "dkp": 940,
+    "ek": 930,
+    "s1": 860,
+    "s2": 670
+   },
+   "2016-12-28": {
+    "oe": 925,
+    "dkp": 910,
+    "ek": 900,
+    "s1": 830,
+    "s2": 640
+   },
+   "2016-11-10": {
+    "oe": 885,
+    "dkp": 870,
+    "ek": 860,
+    "s1": 790,
+    "s2": 600
+   },
+   "2016-11-02": {
+    "oe": 825,
+    "dkp": 810,
+    "ek": 800,
+    "s1": 740,
+    "s2": 635
+   },
+   "2016-10-29": {
+    "oe": 775,
+    "dkp": 760,
+    "ek": 750,
+    "s1": 690,
+    "s2": 585
+   },
+   "2016-10-27": {
+    "oe": 745,
+    "dkp": 730,
+    "ek": 720,
+    "s1": 660,
+    "s2": 555
+   },
+   "2016-10-21": {
+    "oe": 695,
+    "dkp": 680,
+    "ek": 670,
+    "s1": 610,
+    "s2": 505
+   },
+   "2016-10-17": {
+    "oe": 665,
+    "dkp": 650,
+    "ek": 640,
+    "s1": 580,
+    "s2": 475
+   },
+   "2016-09-22": {
+    "oe": 635,
+    "dkp": 620,
+    "ek": 610,
+    "s1": 550,
+    "s2": 445
+   },
+   "2016-09-20": {
+    "oe": 695,
+    "dkp": 680,
+    "ek": 670,
+    "s1": 610,
+    "s2": 505
+   },
+   "2016-09-09": {
+    "oe": 725,
+    "dkp": 710,
+    "ek": 700,
+    "s1": 640,
+    "s2": 535
+   },
+   "2016-09-08": {
+    "oe": 745,
+    "dkp": 730,
+    "ek": 720,
+    "s1": 660,
+    "s2": 555
+   },
+   "2016-09-03": {
+    "oe": 775,
+    "dkp": 760,
+    "ek": 750,
+    "s1": 690,
+    "s2": 585
+   },
+   "2016-08-13": {
+    "oe": 805,
+    "dkp": 790,
+    "ek": 780,
+    "s1": 720,
+    "s2": 615
+   },
+   "2016-08-09": {
+    "oe": 755,
+    "dkp": 740,
+    "ek": 730,
+    "s1": 670,
+    "s2": 565
+   },
+   "2016-06-02": {
+    "oe": 725,
+    "dkp": 710,
+    "ek": 700,
+    "s1": 640,
+    "s2": 535
+   },
+   "2016-05-24": {
+    "oe": 655,
+    "dkp": 640,
+    "ek": 630,
+    "s1": 570,
+    "s2": 465
+   },
+   "2016-05-13": {
+    "oe": 715,
+    "dkp": 700,
+    "ek": 690,
+    "s1": 630,
+    "s2": 525
+   },
+   "2016-05-12": {
+    "oe": 755,
+    "dkp": 740,
+    "ek": 730,
+    "s1": 670,
+    "s2": 565
+   },
+   "2016-05-10": {
+    "oe": 795,
+    "dkp": 780,
+    "ek": 770,
+    "s1": 710,
+    "s2": 605
    }
   },
   "_not": "kardemir.com açık API kayıtları — liste: k kütük S235JR, kb kütük B420, n nervürlü Ø12-32, p profil IPE 180-200, f filmaşin Ø5.5 ({f fiyat, pb para birimi}); hurda: oe Özel Ekstra, dkp, ek Ekstra, s1/s2 sınıf, bp büyük parça iskontosu (TL/t). bos: o gün ilgili ürün yok; hata: deneme sayısı"
