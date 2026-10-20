@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-20g",
+ "surum": "2026-10-20i",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -3072,8 +3072,8 @@
    "sektor": "İlaç ve Sağlık",
    "tier": "C",
    "tip": "konsensus",
-   "surucu_plani": "SUT tarifesi (SGK) · yabancı hasta (EUR/USD) · yatak doluluğu · asgari ücret",
-   "kaynak_notu": "Fiyat ayarlamaları düzensiz; konsensüs ağırlıklı",
+   "surucu_plani": "SUT fiyat endeksi ve reel SUT (÷TÜFE) · TTB ÖHU katsayısı (özel fiyatlama) · ödeme tipi miksi · yabancı hasta (EUR/USD)",
+   "kaynak_notu": "SUT: SGK EK-2B/EK-2C listeleri otomatik kıyas (§475, sut-ek2b.json) + elle tarihçe; TTB adım tablosu elle (MLP notları); RG fihrist izleyici bilgi; EUR/USD yabancı hasta",
    "sermaye_mn": 191.012202,
    "favok": {
     "2024Q1": {
@@ -3192,12 +3192,39 @@
     "kaynak": "bist-takvim.json"
    },
    "guidance": null,
-   "sektor_not": "Özel hastane zinciri: gelir SGK (SUT tarifesi, kamu fiyatlaması) + özel/tamamlayıcı sigorta + yabancı hasta (döviz). Marj, SUT zamları ile maliyet enflasyonu (hekim/hemşire ücretleri) arasındaki fark; yatak doluluğu ve hasta karması (ameliyat yoğun) FAVÖK’ü belirler. Yabancı hasta payı kur korunağı.",
+   "sektor_not": "Özel hastane zinciri: gelir SGK (SUT tarifesi, kamu fiyatlaması — reel olarak eriyen kalem) + özel/tamamlayıcı sigorta ve cepten (TTB katsayısı çapa — enflasyonun önünde) + yabancı hasta (döviz). Marj = tarife artışları ile maliyet enflasyonu (hekim/hemşire ücretleri, asgari ücret) arasındaki fark; ödeme tipi miksinin özel sigortaya kayması FAVÖK marjının asıl sürücüsü (2025: %27,8 · 1Ç26: %29,6). Yatak doluluğu ve hasta karması (ameliyat yoğun) ikinci sürücü.",
    "surucu_seriler": [
     {
-     "k": "tufe",
+     "k": "sut_endeks",
      "rol": "gelir",
-     "ad": "TÜFE genel (TÜİK) — SUT zammı ve özel fiyat artışının çapası",
+     "ad": "SUT fiyat endeksi — SGK fiyat listesi genel artışları (2020-12=100)",
+     "kaynak": "SGK EK-2B/EK-2C listeleri sürüm kıyası (otomatik, §475) + elle tarihçe (MLP Care KAP notları, RG)",
+     "not": "SGK’nın özel hastaneye ödediği fiyat listesi; genel artışlar SGK’nın yayımladığı listeden ölçülür (Ara 2025: hizmet başı +%20, paket ayrı). 2021–2025 tarihçe elle (+15 · +40 · +31 · +51 · +50). İlave ücret tavanı SUT’un %200’ü → artış SGK ödemesini ve hasta farkını birlikte yükseltir; y/y okunur"
+    },
+    {
+     "k": "sut_reel",
+     "rol": "gelir",
+     "ad": "SUT reel fiyat — SUT ÷ TÜFE (2020-12=100)",
+     "kaynak": "türetilmiş (§474)",
+     "not": "SGK hastasının reel fiyatı: 100’ün altı = SUT enflasyonun gerisinde (2026-09: ~72). Artışta sıçrar, aylarca erir — çeyrek ortalaması okunur"
+    },
+    {
+     "k": "ttb_endeks",
+     "rol": "gelir",
+     "ad": "TTB ÖHU katsayısı — özel hekimlik tarifesi (2022-12=100)",
+     "kaynak": "Adım tablosu: MLP Care KAP notları (Oca/Tem güncellemeleri)",
+     "not": "Özel sigorta ve cepten ödemede hekim ücretinin çapası; TÜFE’nin üstünde arttı → özel segmentte fiyatlama gücü"
+    },
+    {
+     "k": "ttb_reel",
+     "rol": "gelir",
+     "ad": "TTB reel — TTB ÷ TÜFE (2022-12=100)",
+     "kaynak": "türetilmiş (§474)"
+    },
+    {
+     "k": "tufe",
+     "rol": "maliyet",
+     "ad": "TÜFE genel (TÜİK) — personel/hekim maliyetinin ve tarifelerin çapası",
      "kaynak": "TCMB EVDS (zincirli)"
     },
     {
@@ -3208,16 +3235,9 @@
     {
      "k": "usdtry",
      "rol": "kur"
-    },
-    {
-     "k": "sut",
-     "rol": "gelir",
-     "ad": "SUT tarifesi (SGK)",
-     "bekliyor": true,
-     "kaynak": "Resmî Gazete — düzensiz"
     }
    ],
-   "birincil": "eurusd"
+   "birincil": "sut_endeks"
   },
   {
    "kod": "OBAMS",
@@ -4504,12 +4524,15 @@
   "Faz 2 (tier A): EREGL/KRDMD/KCAER çelik makası (Yahoo HRC=F + LME hurda + Dünya Bankası demir cevheri/kok), CVKMD altın×kur, GUBRF/TKFEN üre−TTF, AKFYE PTF (EPİAŞ hesabı)",
   "ENJSA tip \"tarife\" formülü (RAB × reel getiri + TÜFE)",
   "Konsensüs anlık görüntüsünü her tazelemede konsensus_tarihce[] olarak sakla → revizyon ivmesi bileşeni",
-  "Faz 3 (tier B) — §466 ile kısmen TAMAM: BIMAS/MAVI TÜFE alt kalemleri, AKCNS/CIMSA çimento ÜFE, ALBRK AOFM/TLREF, EKGYO KFE bağlandı. Kalan: EKGYO aylık ön satış (KAP), OBAMS buğday modeli, ENJSA tarife formülü, EPDK tarifeleri (AHGAZ/ENERY), asgari ücret serisi (GRSEL)"
+  "Faz 3 (tier B) — §466 ile kısmen TAMAM: BIMAS/MAVI TÜFE alt kalemleri, AKCNS/CIMSA çimento ÜFE, ALBRK AOFM/TLREF, EKGYO KFE bağlandı. Kalan: EKGYO aylık ön satış (KAP), OBAMS buğday modeli, ENJSA tarife formülü, EPDK tarifeleri (AHGAZ/ENERY), asgari ücret serisi (GRSEL)",
+  "§474 — MPARK SUT tarifesi TAMAM (adım tablosu + RG izleyici). Kalan bekliyor: CWENE modül fiyatı, EKGYO aylık ön satış, GRSEL asgari ücret, PETKM PE/PP, EREGL LME hurda"
  ],
  "_465": "Sektör bilgisi: her modelde sektor_not (analist özeti: iş modeli · kâr sürücüsü · mevsimsellik · bozucu) ve surucu_seriler[] (sektor-surucu.json/seriler anahtarı, rol gelir|maliyet|kur|marj; bekliyor:true = kaynak bağlanmadı, kaynak notu). birincil = panoda gösterilen sürücü. Roller işaret okuması içindir: gelir ↑ olumlu, maliyet ↑ olumsuz, kur ↑ (TL zayıf) ihracatçı/$-gelirli için olumlu.",
  "_466": "Kamu veri katmanları bağlandı (Actions §466): TCMB EVDS — TÜFE genel/gıda/giyim (2025=100, 2025 öncesi 2003 bazından zincirli), Yİ-ÜFE çimento-kireç-alçı (T69) · ana demir-çelik (T74) · elektrik (T120) · temel kimyasal-gübre (T53), KFE, AOFM (TP.APIFON4) ve TLREF (iş günü); EPİAŞ Şeffaflık — GÖP PTF saatlik → günlük ortalama TL/MWh (ptf) ve $/MWh (ptf_usd). Anahtarlar: EVDS_KEY ve EPIAS_* secret. Panel kuralı: sektor-surucu.json/seriler içinde anahtar varsa bekliyor bayrağı EZİLİR (karar.js §466); yüzde birimli seride değişim puan (p) okunur; endeks serilerinde son ayın yıllık değişimi gösterilir. Birincil değişti: MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe.",
  "_467": "ASELSAN sözleşme akışı: aselsan.com KAP açıklamaları (webapi JSON, 2017→) Actions §467 ile günlük ayrıştırılır → seriler.asels_kap_siparis (akış: aylık/çeyreklik/yıllık TOPLAM mn $, kur Yahoo 10y) + seriler.asels_backlog (resmî, elle: 2024Q4 14,0 · 2025Q4 20,4 · 2026Q2 23,2 mlr $; yeni iş 2024 6,5 · 2025 9,6 · 1Y26 4,9). Kapsam uyarısı: açıklananlar resmî yeni iş alımının ~%45-70'i. Panel: akis:true serilerde pano y/y okur, sözleşme listesi sektör tablosunun altında.",
  "_468": "EPDK doğal gaz dağıtım tarifesi: seri KAYNAKTAN değil KURALDAN türetilir — Metodoloji md. 26: sistem kullanım bedeli her ay (z−2) TÜFE değişimiyle güncellenir → epdk_tarife = TÜFE(z−2), 2022-01=100 (Actions evdsSeriler §468). ENERY/AHGAZ bekliyor satırları kapandı; ENERY birincil epdk_tarife. Şirket/bölge TL/Sm3 seviyesi Faz 2 (enerya.com.tr Fatura Parametreleri il bazlı, dinamik sayfa).",
  "_469": "KAP ÖDA 'Yeni İş İlişkisi' genel katmanı (Actions §469): KATMR/ALTNY/GLRMK (+ASELS çapraz) sözleşme akışı → kap_yeni_is_<kod> (akış, mn $). Tutar yapısal alanda değil, 'Açıklamalar' metninde → ASELSAN ayrıştırıcısı (toplam/pay kuralları) ortak. Artımlı: çözülen bildirim kimlikleri dosyada; koşu başına ≤40 sayfa/şirket. §469c: parantez içi kur karşılığı TL çevirileri atılır; 'teklif/iptal' metinleri sözleşme sayılmaz; metinde beyan edilen backlog ayrı seviye serisi (kap_backlog_<kod>, ALTNY). Ayrıştırıcı sürümü değişince kayıtlar bir kez yeniden çözülür.",
- "_472": "Kardemir açık API katmanı (Actions §472): kardemir.com liste fiyatları (kütük S235JR, nervürlü Ø12-32, profil IPE 180-200, filmaşin Ø5.5; $ ve TL) ve hurda alım fiyatları (Özel Ekstra, 2014→) günlük çekilir; liste bir sonraki listeye kadar geçerli sayılır (adım), TL fiyat günün kuruyla $’a çevrilir, ay ortalaması saklanır (siklik aylik). Türetilmiş: kardemir_marj_hurda_usd (kütük − hurda), kardemir_spread_cevher_usd (kütük − 1,6×WB cevher; kok hariç), kcaer_hadde_spread_usd (profil − kütük). Birincil değişti: KRDMD→kardemir_kutuk_usd, KCAER→kcaer_hadde_spread_usd. LME bekliyor satırları (metal_marji_tr, demir_lme, hurda_lme) bu iki hisseden kaldırıldı — SteelOrbis seviyeleri ücretli, Kardemir kendi fiyatını açık yayımlıyor (vekil değil, gerçekleşen). İlk koşuda son ~2 yıl, sonraki koşularda 2014’e kadar dolar (≤100+100 sayfa/koşu)."
+ "_472": "Kardemir açık API katmanı (Actions §472): kardemir.com liste fiyatları (kütük S235JR, nervürlü Ø12-32, profil IPE 180-200, filmaşin Ø5.5; $ ve TL) ve hurda alım fiyatları (Özel Ekstra, 2014→) günlük çekilir; liste bir sonraki listeye kadar geçerli sayılır (adım), TL fiyat günün kuruyla $’a çevrilir, ay ortalaması saklanır (siklik aylik). Türetilmiş: kardemir_marj_hurda_usd (kütük − hurda), kardemir_spread_cevher_usd (kütük − 1,6×WB cevher; kok hariç), kcaer_hadde_spread_usd (profil − kütük). Birincil değişti: KRDMD→kardemir_kutuk_usd, KCAER→kcaer_hadde_spread_usd. LME bekliyor satırları (metal_marji_tr, demir_lme, hurda_lme) bu iki hisseden kaldırıldı — SteelOrbis seviyeleri ücretli, Kardemir kendi fiyatını açık yayımlıyor (vekil değil, gerçekleşen). İlk koşuda son ~2 yıl, sonraki koşularda 2014’e kadar dolar (≤100+100 sayfa/koşu).",
+ "_474": "SUT katmanı (Actions §474): SGK Sağlık Uygulama Tebliği fiyat listesinin GENEL artışları adım tablosundan endekslenir (2020-12=100; 2021-04 +15 · 2022-02 +40 · 2023-03 +31 · 2023-09 +51 · 2024-05 +50 · 2025-12 +30; dayanak MLP Care KAP bilgilendirme notları + Resmî Gazete), sut_reel = SUT÷TÜFE; TTB ÖHU katsayısı aynı yöntemle (2022-12=100) ttb_endeks/ttb_reel. Oran RG metninde yazmadığı için otomatik çıkarım yok: Resmî Gazete fihristi (son 14 gün, ana+mükerrer, windows-1254) taranır, SUT/SHFK başlıkları sektor-surucu.json/sut.rg_olaylar’a yazılır ve son adımdan sonraki SUT değişikliği raporda uyarılır; genel artışsa MLP notu/basın oranıyla SUT_ADIMLAR’a elle eklenir (bilanço haftası ritüeli). MPARK birincil: eurusd → sut_endeks; \"SUT bekliyor\" satırı kapandı.",
+ "_475": "SUT oranı otomatik (Actions §475): SGK \"Değişiklik Tebliği İşlenmiş Güncel SUT\" ZIP içindeki EK-2B/EK-2C xlsx listeleri sürüm sürüm kıyaslanır (ortak kodlarda medyan değişim, değişen kod payı); medyan ≥%3 ve pay ≥%50 ise genel artış adımı yürürlük tarihiyle sut_endeks’e girer, ±45 gün içindeki elle adım düşer. Ölçüm: Aralık 2025 artışı EK-2B’de +%20 (MLP \"≈%30\"). Snapshot ktpanel/sut-ek2b.json (Actions dosyası)."
 }

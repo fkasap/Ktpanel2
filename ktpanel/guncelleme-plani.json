@@ -446,6 +446,19 @@
     "KRDMD",
     "KCAER"
    ]
+  },
+  {
+   "ad": "SUT fiyat endeksi (SGK EK-2B/EK-2C sepet kıyası — oran OTOMATİK) + TTB ÖHU katsayısı (elle) + RG izleyici — MPARK",
+   "dosya": "sektor-surucu.json",
+   "siklik": "gunluk: SGK duyuru kontrolü (1 istek) · değişiklikte ZIP (33 MB) · TTB elle (yılda 2)",
+   "son": "2026-10-20",
+   "kaynak": "Actions sutEndeks()→sutSepet() (§475): sgk.gov.tr/Arama/Index/sut → en yeni \"İşlenmiş Güncel SUT\" duyurusu → DownloadFile zip → EK-2 LİSTELERİ/EK-2B ve EK-2C xlsx → kod→puan; önceki sürüm ktpanel/sut-ek2b.json; medyan ≥%3 ve değişen pay ≥%50 → genel artış adımı (yürürlük tarihi dosya adından). Elle tablo yalnız tarihçe (2021–2025). RG eskiler/…htm izleyici bilgi amaçlı.",
+   "_474": "Oran RG metninde yazmaz → otomatik çıkarım yok; RG izleyici yeni SUT/SHFK başlığını raporlar, GENEL artışsa oran MLP notu/basından elle eklenir. Yürürlük ≠ yayım tarihi. Reel seriler TÜFE (EVDS) ile; TÜFE bir ay geriden.",
+   "hisse": [
+    "MPARK"
+   ],
+   "ritüel": "MLP Care 3Ç bilançosu (5 Kas) ve yıl sonu bilgilendirme notu (Mart): 'SUT fiyat listesine yaklaşık %X' cümlesi → SUT_ADIMLAR; 'TTB ÖHU katsayıları %Y' → TTB_ADIMLAR",
+   "_475": "Chrome ölçümü: Ara 2025 artışı EK-2B medyan +%20 (MLP: ≈%30 — liste karması). İleri tarihli yürürlük desteklenir. İlk koşu tohum: 25.11.2025 + 10.12.2025 + güncel (3 zip). sut-ek2b.json YÜKLENMEZ."
   }
  ],
  "bilanco_sezonu_aylar": [

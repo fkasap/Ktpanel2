@@ -6,6 +6,58 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §475 (20 Eki 2026, 16:00) — "SUT ZAMMINI NEREDEN GÖRECEK?" → SGK'NIN KENDİ LİSTESİNDEN, OTOMATİK
+
+İtiraz haklıydı: §474 RG'de SUT başlığını görüyor, ORANI elden alıyordu. Kaynak: SGK her değişiklikte sgk.gov.tr/Arama/Index/sut
+listesine "DD/MM/YYYY SUT Değişiklik Tebliği İşlenmiş Güncel 2013 SUT" duyurusu ekler (75 duyuru, 2011→); duyuru sayfasında tek
+/Download/DownloadFile?f=…zip (≈33 MB, 358 dosya); içinde EK-2 LİSTELERİ/ klasöründe FİYAT LİSTELERİ xlsx: "EK-2B HİZMET BAŞI İŞLEM
+PUAN LİSTESİ (Yür.07.07.2026).xlsx" (A İŞLEM KODU · B İŞLEM ADI · C AÇIKLAMA · D İŞLEM PUANI; ~7.600 satır; kodlar 510010 ya da
+L100060), "EK-2C TANIYA DAYALI … (P-kodlu paket)", "EK-2A AYAKTAN BAŞVURULARDA ÖDEME LİSTESİ" (branş×sınıf matrisi — Faz 2).
+Dosya adındaki "Yür." = listenin yürürlük tarihi (yayımdan ileri olabilir: 10 Ara 2025 duyurusunun EK-2B'si Yür.01.01.2026).
+ÖLÇÜM (Chrome, 20 Eki): 25.11.2025 → 10.12.2025 duyuruları arasında EK-2B'de ortak 1.483 kodun TAMAMI değişmiş; medyan ×1,20
+(1.234 kod +%20 · 222 kod +%10 · 26 kod +%96 · 1 kod −%40). Yani MLP'nin "yaklaşık %30" dediği Aralık artışı hizmet başı
+listede %20'dir; paket (EK-2C) ve ayaktan (EK-2A) listeleri farklı olabilir — ilk canlı koşu her ikisini de ölçüp yazar. DERS:
+"SUT zammı" tek sayı değil; listeye göre değişir, ölçmek şart.
+YÖNTEM (tazele.mjs sutSepet, sutEndeks içinden çağrılır): her koşu 1 istek (arama sayfası) → en yeni duyuru değişmediyse "değişiklik
+yok". Değiştiyse ZIP → EK-2B/EK-2C xlsx (bağımlılıksız zip/xlsx okuyucu §464b yeniden kullanıldı; başlık satırından KODU/PUAN sütunu
+bulunur) → kod→puan haritası → önceki sürümle (ktpanel/sut-ek2b.json) KIYAS: ortak kodlarda oran medyanı, değişen pay, histogram.
+Medyan ≥ %3 VE değişen pay ≥ %50 → GENEL ARTIŞ → D.sut.sepet.otomatik_adimlar {t: yürürlük, artis: liste medyanlarının ortalaması}.
+sut_endeks bu adımları elle tablonun üstüne yazar (±45 gün içindeki elle adım düşer → 2025-12-10 +30 yerine 2026-01-01 ölçülen).
+Kalem bazlı düzeltmeler (az kod/küçük medyan) adım olmaz, sürüm özeti kaydedilir (D.sut.sepet.surumler, son 24). İleri tarihli
+yürürlük: seri o tarihte basamak atar, rapor "İLERİ TARİHLİ" der. İLK KOŞU tohum: 25.11.2025 ve 10.12.2025 duyuruları sırayla
+işlenir (Aralık adımı otomatik doğar), sonra güncel (3×33 MB, bir kez). Snapshot yalnız son sürümün tam haritası (sut-ek2b.json,
+~60 KB) — sektor-surucu.json şişmez. Harness h15 (sahte SGK: zip+xlsx üretici, 3 sürüm + yeni sürüm + değişiklik-yok koşusu) 11
+denetim ✓; tam betik sahte SGK ile uçtan uca ✓.
+SINIRLAR: puan→TL katsayısı sabit varsayılır (artışlar bugüne dek puan üzerinden); EK-2A ayrı yapı (Faz 2); sgk.gov.tr Actions IP'sini
+engellerse "⚠ SGK duyuru listesi: HTTP …" ve elle tablo sürer. TTB katsayısı hâlâ elle (TTB kendi PDF'ini yayımlar — Faz 2).
+YÜKLENMEZ: ktpanel/sut-ek2b.json (Actions'ın dosyası; git add -A ile commit edilir).
+DEPLOY: scripts/tazele.mjs (§474b+§475) · karar-model.json (2026-10-20i) · guncelleme-plani.json · BAKIM · DAMGA.
+
+# BAKIM EK — §474 (20 Eki 2026, 15:30) — "SUT TARİFELERİNİ NASIL BULACAĞIZ Kİ?" → ADIM TABLOSU + RG İZLEYİCİ
+
+NE: SUT = SGK Sağlık Uygulama Tebliği; özel/kamu hastaneye SGK'nın ödediği fiyat listesi (EK-2/A vaka başı-muayene · EK-2/B hizmet
+başı işlem puanı · EK-2/C tanıya dayalı paket). Fiyatı Sağlık Hizmetleri Fiyatlandırma Komisyonu (SGK+SB+Hazine) belirler; Resmî
+Gazete'de "SUT Değişiklik Tebliği" + "SHFK Kararı" olarak çıkar (yılda 5–10; çoğu KALEM bazlı). GENEL artışlar liste yenilenerek
+yapılır ve METİNDE ORAN YAZMAZ → oranı şirketler/basın hesaplar. Bu yüzden "otomatik çek" yerine ÜÇ KATMAN:
+(1) ADIM TABLOSU (tazele.mjs SUT_ADIMLAR; elle, dayanaklı): 28 Nis 2021 +15 (RG 31468 mük.; Cumhuriyet) · 13 Şub 2022 +40 (RG 8 Şub
+    M1: muayene 35/paket 45/işlem 40/diyaliz 50/malzeme 75; Diken) · 24 Mar 2023 +31 (MLP Care 31.12.2023 notu) · 1 Eyl 2023 +51
+    (RG 24 Ağu 2023 M1; BirGün +50; MLP %51) · 11 May 2024 +50 (RG 9 May 2024 M1; MLP 31.12.2024 notu) · 10 Ara 2025 +30 (RG 10 Ara
+    2025; MLP 31.12.2025 notu, 2026/03 FR). TTB_ADIMLAR (Özel Hekimlik Uygulamaları katsayısı — özel sigorta/cepten çapası): Oca23 +41 ·
+    Tem23 +31 · Oca24 +41 · Tem24 +25 · Oca25 +20 · Tem25 +20,5 · Oca26 +16,5 (hepsi MLP Care notları).
+(2) TÜRETİLMİŞ SERİLER: sut_endeks (basamak, 2020-12=100, ay ortalaması; bugün 621) · sut_reel = SUT÷TÜFE (2026-09: 71,8 → SGK fiyatı
+    2020 sonuna göre reel %28 geride; son artıştan beri TÜFE +%25 → adımın %80'i erimiş) · ttb_endeks (2022-12=100; 548) · ttb_reel
+    (141,7 → özel tarife reel %42 önde). Kalem bazlı SHFK düzeltmeleri alınmaz.
+(3) RG İZLEYİCİ (otomatik): son 14 günün fihristleri eskiler/YYYY/MM/YYYYMMDD.htm + M1/M2 (sayfa windows-1254 — UTF-8 okunursa
+    başlıklar bozulur, TextDecoder('windows-1254') şart; robots.txt'de Disallow yok). SUT/SHFK başlıkları sektor-surucu.json/sut.rg_olaylar
+    (son 60) → raporda "⚠ son adımdan sonra RG'de SUT değişikliği" uyarısı; GENEL artışsa MLP notu/basın oranıyla SUT_ADIMLAR'a satır
+    eklenir (bilanço haftası ritüeli: MLP 3Ç 5 Kas, yıl sonu notu Mart). Yürürlük tarihi ≠ yayım tarihi (SHFK: yayımdan 5 iş günü).
+ÖĞRETİCİ: SUT 2008–2021 donuktu; 2021'den beri altı artış ama TÜFE'nin altında → SGK hastası özel hastane için reel ucuzladı; TTB TÜFE'nin
+üstünde → MLP'nin "ödeme tipi miksi" (özel sigortaya kayış) FAVÖK marjının asıl sürücüsü (2025 %27,8 · 1Ç26 %29,6). İlave ücret tavanı
+SUT'un %200'ü → SUT artışı SGK ödemesini ve hasta farkını birlikte yükseltir (SGK hastasında geçişkenlik tam).
+MODEL: MPARK birincil eurusd → sut_endeks; "SUT bekliyor" satırı kapandı; seriler sut_endeks · sut_reel · ttb_endeks · ttb_reel · tufe
+(maliyet) · eurusd · usdtry. Harness h14 (sahte RG 1254 + 500 + mükerrer): 12 denetim ✓. Panel değişikliği yok (endeks birimi hazır).
+DEPLOY: scripts/tazele.mjs (§474) · ktpanel/karar-model.json (2026-10-20h) · guncelleme-plani.json · BAKIM · DAMGA.
+
 # BAKIM EK — §473 (20 Eki 2026, 13:40) — "JOURNAL SEKMESİNİ KONTROL ET, EKSİK GEDİK VAR MI?"
 
 Canlı sekme Chrome'da tarandı (30 hisse × sektör paneli, pano, journal formu, konsol). KIRIK YOK: 30/30 panel render, konsolda §46x
