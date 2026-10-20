@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-20 07:20 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-20 07:42 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -71,7 +71,7 @@
    "ulke": "GBP",
    "olay": "Retail Sales m/m",
    "etki": "Medium",
-   "beklenti": "-0.2%",
+   "beklenti": "-0.1%",
    "onceki": "0.5%"
   },
   {
@@ -79,7 +79,7 @@
    "ulke": "EUR",
    "olay": "French Flash Manufacturing PMI",
    "etki": "Medium",
-   "beklenti": "50.6",
+   "beklenti": "50.5",
    "onceki": "50.3"
   },
   {
@@ -87,7 +87,7 @@
    "ulke": "EUR",
    "olay": "French Flash Services PMI",
    "etki": "Medium",
-   "beklenti": "50.8",
+   "beklenti": "50.7",
    "onceki": "51.4"
   },
   {
@@ -103,7 +103,7 @@
    "ulke": "EUR",
    "olay": "German Flash Services PMI",
    "etki": "Medium",
-   "beklenti": "52.6",
+   "beklenti": "52.5",
    "onceki": "52.9"
   },
   {
@@ -127,7 +127,7 @@
    "ulke": "USD",
    "olay": "Flash Manufacturing PMI",
    "etki": "Medium",
-   "beklenti": "55.5",
+   "beklenti": "55.4",
    "onceki": "57.0"
   },
   {
@@ -135,7 +135,7 @@
    "ulke": "USD",
    "olay": "Flash Services PMI",
    "etki": "Medium",
-   "beklenti": "58.0",
+   "beklenti": "57.8",
    "onceki": "58.7"
   },
   {
