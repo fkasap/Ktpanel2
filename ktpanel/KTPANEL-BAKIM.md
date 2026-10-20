@@ -6,6 +6,17 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §481 (20 Eki 2026, 21:50) — FEK YÜKÜ NET FAİZ (ödenen − alınan)
+
+TTRAK ekranında yakalandı: yük BRÜT ödenen faizdi; vadeli satış yapan ve kasası dolu şirketlerin faiz geliri düşülmüyordu (tasarım
+notu "net faiz yükü" diyordu, kod brüt kullanıyordu). §481: alınan faiz nakit akıştan, üç etiket: ifrs-full_InterestReceivedClassified-
+AsOperatingActivities · …AsInvestingActivities · kap-fr_InterestReceivedClassifiedAsFinancingActivities (KAP'a özgü — TTRAK bunu
+kullanıyor, canlı önbellekte görüldü). Net = max(0, ödenen − alınan); kaynak mutabakat/gelir tablosu vekiliyse (zaten net) düşülmez.
+Faiz karşılaması (λ firma çarpanı) ve V1 vetosu NET faizle; örtük faiz oranı denetimi (döviz kredisi uyarısı) BRÜT faizle. Kart satırı
+"Net faiz (12 ay) — ödenen X − alınan Y". Canlı ölçüm (TTM, mn ₺): TTRAK 6.553−1.871=4.682 (karşılama 0,58→0,81x; FEK ~0,55→~0,71,
+V1 vetosu sürer — hâlâ Kırılgan) · ARCLK 32.309−7.932 (1,08→1,43x) · PETKM 8.037−552 (0,23→0,24x) · FROTO 13.469−19.325 → net 0
+(faiz geliri gideri aşıyor) · SAFKR 5−51 → 0. DEPLOY: app.js 20261020m.
+
 # BAKIM EK — §480 (20 Eki 2026, 21:20) — FEK/KOPMA-σ KRİZ REJİMİ: EN SERT VARSAYIM
 
 İnceleme (SAFKR ekranı): mekanik doğru (K 637 = çekirdek FAVÖK 457 + serbest likidite 202 − bakım capex 22; L 6 = ödenen faiz 5 + KV borç
