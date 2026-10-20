@@ -2403,7 +2403,11 @@ async function sektorSurucu() {
       const tam = !(q === qk(son[0]) && son[0] < y + '-' + String(3 * qn).padStart(2, '0') + '-28');
       ceyrek[q] = { benzin: ort(1), dizel: ort(2), brent: ort(3), brent_bas: L[0][3], brent_son: L[n - 1][3], dBrent: +(L[n - 1][3] - L[0][3]).toFixed(2), n, ilk: L[0][0], son: L[n - 1][0], usdtry_ort: fxOrt, usdtry_son: fxSon, tam };
     }
-    const D = {
+    /* §470 (20 Eki 10:19 koşusu dersi): bu nesne SIFIRDAN kuruluyordu → diğer katmanların yazdığı seriler/wb/evds/epias/
+       kap_yeni_is anahtarları HER KOŞUDA SİLİNİYORDU. Sonuç: LME "biriken nokta" hiç birikmedi (hep 1 nokta), AOFM/TLREF/PTF/
+       KAP artımlı katmanlar her koşu sıfırdan çekti; PTF'de son parça düşünce seri 13 Haz'da KESİLDİ (eski veri yoktu).
+       Artık eski dosyanın üstüne yazılır: Neste alanları yenilenir, diğer katmanların anahtarları korunur. */
+    const D = Object.assign({}, eski, {
       guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
       _surum: '§462 Actions sektorSurucu()' + (fxGun ? ' · USDTRY Yahoo günlük' : ' · USDTRY tohum (Yahoo alınamadı)'),
       kaynak: eski.kaynak || { crack: 'Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)', brent: 'Neste Oyj · CrudeOils monitörü · Brent dated (USD/bbl)', usdtry: 'Yahoo TRY=X günlük (Actions)' },
@@ -2413,7 +2417,7 @@ async function sektorSurucu() {
       etiketler: { benzin: C.etiketler[iB], dizel: C.etiketler[iD], brent: B.etiketler[iBr] },
       son: { tarih: son[0], benzin: son[1], dizel: son[2], brent: son[3] },
       ceyrek, gunluk, usdtry_ay_sonu: aySonu
-    };
+    });
     const degisti = !eski.son || eski.son.tarih !== son[0] || eski.son.dizel !== son[2] || eski.son.benzin !== son[1] || eski.son.brent !== son[3];
     await yaz(dosya, D);
     if (degisti) degisenler.push('sektör sürücüleri (' + son[0] + ')');
@@ -3066,7 +3070,11 @@ async function epiasPtf() {
   /* artımlı: son günden 10 gün geriden; ilk koşuda EPIAS_BAS'tan. Bitiş: yarın (GÖP yarının fiyatını ~14:00'te açıklar) */
   let bas = EPIAS_BAS;
   if (eskiTL.length) { const d = new Date(eskiTL[eskiTL.length - 1][0] + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 10); bas = d.toISOString().slice(0, 10); }
-  const yarin = (() => { const d = new Date(bugun + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); })();
+  /* §466g (20 Eki 10:19 koşusu: son parça HTTP 400 "2026-10-21 tarihli veri saat 14 öncesinde mevcut değil" → parça düştü,
+     seri 13 Haz'da kesildi): GÖP yarının fiyatını ~14:00 TR açıklar; bitiş tarihi TR saatine göre seçilir — 15:00'ten önce
+     bugün, sonra yarın. Yine de 400 gelirse son parça bitişi bir gün geri alınarak BİR KEZ yeniden denenir. */
+  const trSimdi = new Date(Date.now() + 3 * 3600 * 1000); const bugunTR = trSimdi.toISOString().slice(0, 10);
+  const yarin = (() => { if (trSimdi.getUTCHours() < 15) return bugunTR; const d = new Date(bugunTR + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); })();
   let tgt;
   try { tgt = await epiasTgt(kimlik); }
   catch (e) { raporlar.push('### EPİAŞ PTF (§466) — ✗ ' + String(e && e.message || e).slice(0, 160) + '\n- Kimlik secret adları bulundu (' + kimlik.adlar + ') ama giriş reddedildi: e-posta/şifre ya da Şeffaflık üyeliği (kayit.epias.com.tr) kontrol.'); return; }
@@ -3074,12 +3082,18 @@ async function epiasPtf() {
   const parcalar = []; { let p = new Date(bas + 'T00:00:00Z'); const son = new Date(yarin + 'T00:00:00Z'); while (p <= son) { const q = new Date(p); q.setUTCDate(q.getUTCDate() + 179); const e = q > son ? son : q; parcalar.push([p.toISOString().slice(0, 10), e.toISOString().slice(0, 10)]); p = new Date(e); p.setUTCDate(p.getUTCDate() + 1); } }
   const saat = new Map();   /* gün → {tl:[], usd:[]} */
   let saatToplam = 0, hata = null;
-  for (const [s, e] of parcalar) {
+  const mcpCek = async (s, e) => {
+    const r = await fetch('https://seffaflik.epias.com.tr/electricity-service/v1/markets/dam/data/mcp', { method: 'POST', headers: { 'TGT': tgt, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ startDate: s + 'T00:00:00+03:00', endDate: e + 'T00:00:00+03:00' }), signal: AbortSignal.timeout(60000) });
+    const t = await r.text();
+    if (!r.ok) { let m = ''; try { const j = JSON.parse(t); m = (j.errors || []).map(x => x.errorMessage || x.errorCode).join('; ') || ''; } catch (_) {} const err = new Error('HTTP ' + r.status + (m ? ' · ' + m.slice(0, 100) : '')); err.mesaj = m; throw err; }
+    return JSON.parse(t);
+  };
+  for (const [s, e0] of parcalar) {
+    let e = e0;
     try {
-      const r = await fetch('https://seffaflik.epias.com.tr/electricity-service/v1/markets/dam/data/mcp', { method: 'POST', headers: { 'TGT': tgt, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ startDate: s + 'T00:00:00+03:00', endDate: e + 'T00:00:00+03:00' }), signal: AbortSignal.timeout(60000) });
-      const t = await r.text();
-      if (!r.ok) { let m = ''; try { const j = JSON.parse(t); m = (j.errors || []).map(x => x.errorMessage || x.errorCode).join('; ') || ''; } catch (_) {} throw new Error('HTTP ' + r.status + (m ? ' · ' + m.slice(0, 100) : '')); }
-      const j = JSON.parse(t);
+      let j;
+      try { j = await mcpCek(s, e); }
+      catch (err) { if (/mevcut değil|saat 14|not available/i.test(String(err.mesaj || err.message)) && e > s) { const d = new Date(e + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 1); e = d.toISOString().slice(0, 10); j = await mcpCek(s, e); } else throw err; }
       for (const it of (j.items || [])) {
         const g = String(it.date || '').slice(0, 10); if (!/^\d{4}-\d{2}-\d{2}$/.test(g)) continue;
         const tl = +it.price, usd = +it.priceUsd; if (!isFinite(tl)) continue;
@@ -3142,6 +3156,9 @@ const aselsPB = s => { s = s.toLowerCase(); if (/abd|usd|dolar/.test(s)) return 
 const ASELS_RE = /(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d+)?)[\s,.\-]*(milyon|milyar|bin)?[\s,.\-]*(ABD\s*Dolar['’]?[ıi]?|Amerikan\s*Dolar['’]?[ıi]?|USD|Dolar|Avro|Euro|EUR|Türk\s*Liras[ıi]|TL|TRY)(?![A-Za-zıİşŞğĞüÜöÖçÇ])/giu;
 /* Metinden tutarları çöz: "toplam" varsa ondan sonrası; aynı (para birimi, tutar) tekrarı sayılmaz; <1000 birim (yıl, adet) atlanır */
 function aselsCozum(m) {
+  /* §469c (KATMR 2 Oca 2025: "7.124.730 EURO (yaklaşık 260.381.807,53-TL, TCMB kuru…)" iki kez sayıldı): parantez içi kur
+     karşılığı/yaklaşık TL çevirileri tutar DEĞİL, aynı tutarın başka para birimiyle yazımıdır → metinden çıkarılır */
+  m = String(m || '').replace(/\([^)]*(?:yaklaşık|karşılığ|TCMB|kuru|kur\b|döviz)[^)]*\)/giu, ' ');
   /* §469b: konsorsiyum/iş ortaklığı metninde "Şirketimizin/ASELSAN payı … Avro" varsa ŞİRKET PAYI esastır (toplam değil) */
   const payM = m.match(/pay\s*tutar[ıi]\s*(?:ise|olan|olarak)?\s*(?=\d)/iu) || m.match(/(?:şirketimizin|ortaklığımızın|aselsan|grubumuzun|[A-ZÇĞİÖŞÜ][\wçğıöşü]+)\s+pay[ıi]\s*(?:ise|olan|olarak)?\s*(?=\d)/u);
   if (payM) { const r = aselsCozumParca(m.slice(payM.index)); if (r.adet) return r; }
@@ -3273,6 +3290,8 @@ async function kapYeniIs() {
   const D = await oku(dosya); D.seriler = D.seriler || {};
   const K = D.kap_yeni_is = D.kap_yeni_is || { oid: {}, kayit: {}, cozulemeyen: {} };
   K.oid = K.oid || {}; K.kayit = K.kayit || {}; K.cozulemeyen = K.cozulemeyen || {};
+  /* ayrıştırıcı sürümü değişince kayıtlar bir kez yeniden çözülür (eski yanlış tutarlar dosyada kalmasın) */
+  const KAP_YI_SURUM = '469c'; if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const uykuYi = ms => new Promise(r => setTimeout(r, ms));
   /* kur (ASELS katmanıyla aynı yol) */
@@ -3317,13 +3336,24 @@ async function kapYeniIs() {
           const rh = await fetch('https://www.kap.org.tr/tr/Bildirim/' + b.disclosureIndex, { headers: { 'user-agent': H['user-agent'], 'accept': 'text/html', 'referer': H.referer }, signal: AbortSignal.timeout(20000) });
           const html = await rh.text(); const M = kapYiMetin(html);
           if (!rh.ok || !M.bulundu) { K.cozulemeyen[b.disclosureIndex] = (K.cozulemeyen[b.disclosureIndex] || 0) + 1; uyari.push(kod + ' #' + b.disclosureIndex + ': açıklama alanı yok (HTTP ' + rh.status + ')'); await uykuYi(KAP_YI_UYKU); continue; }
-          const metin = (M.aciklama + ' ' + M.kosul).trim(); const { tutar, adet } = aselsCozum(metin);
+          const metin = (M.aciklama + ' ' + M.kosul).trim().replace(/Yukarıdaki açıklamalarımızın[\s\S]*$/, '').trim();   /* standart beyan paragrafı atılır */
           const tarih = trTarih(b.publishDate);
-          if (!adet) { K.kayit[b.disclosureIndex] = { kod, t: tarih, usd_mn: 0, usd: 0, eur: 0, tl: 0, tutarsiz: true, ozet: metin.slice(0, 160), baslik: String(b.summary || '').trim().slice(0, 60) }; }
-          else {
-            const u = kur(fxUsd, fxUsdK, tarih, ASELS_KUR_YEDEK.usdtry), e = kur(fxEur, fxEurK, tarih, ASELS_KUR_YEDEK.eurusd);
-            K.kayit[b.disclosureIndex] = { kod, t: tarih, usd_mn: +((tutar.USD + tutar.EUR * e + tutar.TL / u) / 1e6).toFixed(1), usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1), ozet: metin.slice(0, 160), baslik: String(b.summary || '').trim().slice(0, 60) };
-          }
+          /* §469c: (1) "backlog/bakiye sipariş … USD" SEVİYE bildirimidir, sözleşme toplamına girmez — ayrı yakalanır
+             (ALTNY 20 Tem 2026: 134,1 mn $ sözleşme + "güncel backlog 334 mn $" → 468 sayılmıştı). (2) "teklif verilmiştir /
+             iptal / fesih" metinleri sözleşme DEĞİL (GLRMK ihale teklifleri 14,1 mlr TL booking sayılmıştı) → tutarsız, nedeniyle. */
+          const trMetin = trK(metin); const blI = trMetin.search(/backlog|bakiye sipariş|bakiye iş|sipariş bakiyesi/);
+          const sozMetin = blI >= 0 ? metin.slice(0, blI) : metin, blMetin = blI >= 0 ? metin.slice(blI) : '';
+          const imza = /imzalan|imzaladı|imzalam|sipariş al|uhdesinde|sözleşmeye bağlan|kesinleş|sipariş onay|anlaşma sağlan|sözleşme yapıl/.test(trK(sozMetin));
+          const olumsuz = /teklif ver|teklif sun|iptal|fesih|fesh|ihale süreci|değerlendirme aşaması|askıya/.test(trK(sozMetin));
+          let { tutar, adet } = aselsCozum(sozMetin); let neden = null;
+          if (olumsuz && !imza) { neden = 'teklif/iptal — sözleşme değil'; adet = 0; }
+          const u = kur(fxUsd, fxUsdK, tarih, ASELS_KUR_YEDEK.usdtry), e = kur(fxEur, fxEurK, tarih, ASELS_KUR_YEDEK.eurusd);
+          let backlogMn = null; if (blMetin) { const rb = aselsCozum(blMetin); if (rb.adet) backlogMn = +((rb.tutar.USD + rb.tutar.EUR * e + rb.tutar.TL / u) / 1e6).toFixed(1); }
+          const kayit = { kod, t: tarih, ozet: metin.slice(0, 160), baslik: String(b.summary || '').trim().slice(0, 60) };
+          if (!adet) Object.assign(kayit, { usd_mn: 0, usd: 0, eur: 0, tl: 0, tutarsiz: true, neden: neden || 'tutar açıklanmadı' });
+          else Object.assign(kayit, { usd_mn: +((tutar.USD + tutar.EUR * e + tutar.TL / u) / 1e6).toFixed(1), usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1) });
+          if (backlogMn != null) kayit.backlog_usd_mn = backlogMn;
+          K.kayit[b.disclosureIndex] = kayit;
           yeniKayit++;
         } catch (e) { K.cozulemeyen[b.disclosureIndex] = (K.cozulemeyen[b.disclosureIndex] || 0) + 1; uyari.push(kod + ' #' + b.disclosureIndex + ': ' + String(e && e.message || e).slice(0, 60)); }
         await uykuYi(KAP_YI_UYKU);
@@ -3337,8 +3367,11 @@ async function kapYeniIs() {
       for (const [k, v] of Object.entries(aylik)) { const Q = q(k + '-01'); ceyreklik[Q] = +((ceyreklik[Q] || 0) + v).toFixed(1); yillik[k.slice(0, 4)] = +((yillik[k.slice(0, 4)] || 0) + v).toFixed(1); }
       for (const x of kayitlar) { adetQ[q(x.t)] = (adetQ[q(x.t)] || 0) + 1; if (x.tutarsiz) tutarsizQ[q(x.t)] = (tutarsizQ[q(x.t)] || 0) + 1; }
       const sonX = kayitlar[kayitlar.length - 1];
+      /* §469c: açıklamalarda beyan edilen backlog seviyesi (ALTNY) → ayrı seviye serisi (seyrek aylık nokta) */
+      const blNokta = kayitlar.filter(x => x.backlog_usd_mn != null);
+      if (blNokta.length && t.hisse.length) { const ba = {}; for (const x of blNokta) ba[x.t.slice(0, 7)] = x.backlog_usd_mn; const bk = Object.keys(ba).sort(); const bs = bk[bk.length - 1]; D.seriler['kap_backlog_' + kod.toLowerCase()] = Object.assign({}, D.seriler['kap_backlog_' + kod.toLowerCase()] || {}, { ad: kod + ' beyan edilen backlog — KAP açıklamalarından (mn $)', birim: 'mn $', siklik: 'aylik', hisse: t.hisse, kaynak: 'KAP ÖDA metni ("güncel backlog … USD") · kur Yahoo', aylik: ba, ceyreklik: {}, son: { tarih: bs, deger: ba[bs] }, guncelleme: bugun, n: blNokta.length, _not: 'Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar).' }); }
       if (t.hisse.length || !t.capraz) {
-        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [tutar açıklanmadı]' : '') })), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan sözleşmeler 0 sayılır (adet ayrı). Öncü gösterge; seviye değil yön/y/y okunur.' });
+        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
       } else { D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: [], kaynak: 'KAP ÖDA Yeni İş İlişkisi (çapraz)', aylik, ceyreklik, yillik, son: { tarih: sonX.t, deger: sonX.usd_mn }, guncelleme: bugun, n: kayitlar.length, gizli: true }); }
       const Qs = Object.keys(ceyreklik).sort(); const sonQ = Qs[Qs.length - 1], oncQ = Qs[Qs.length - 2];
       let capraz = '';
