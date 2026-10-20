@@ -6,6 +6,26 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §471 (20 Eki 2026, 11:25) — "TOPLAM GÖZÜKSÜN, HER YIL YENİ BAŞLANGIÇ; LİSTE DAĞINIK" + §469d METİN BİÇİMLERİ
+
+10:41 koşusu (run 39388217242) §470'i DOĞRULADI: PTF "1389 gün · bu koşuda 140 gün/1 parça" — eski seri korundu, artımlı çekim
+13 Haz'dan tamamladı; KAP 93 bildirim yeniden çözüldü (ALTNY 3Ç26 0,47→0,13 mlr $ doğru; KATMR 14,7→7,4). LME bu koşu üç yolda da
+duvar (nokta yok; şanslı koşuda gelecek ve artık korunacak). Üst anahtarlar: seriler · wb · evds · epias · kap_yeni_is ✓.
+§469d KATMR metinleri (13 bildirimin 11'i "tutar açıklanmadı" çıkmıştı — oysa tutar var): sembol ÖNDE "$ 8.392.800
+(SekizMilyon…)", "€ 2.990.000", "$7.684.639"; sembol arkada "4.150.000 $"; rakamın yazıyla tekrarı parantezde; HTML varlıkları
+(&#x27;). Ön-normalizasyon: rakamsız parantezler atılır, sembol biçimleri "SAYI PARA" sözcüğüne çevrilir, GBP/PLN eklendi
+(GLRMK Polonya işleri; kur yaklaşık GBP 1,27 $ · PLN = EUR/4,3, kayıtta kur_yaklasik işareti). 15/15 birim testi. Ayrıştırıcı
+sürümü 469d → kayıtlar bir kez daha yeniden çözülür (~95 sayfa, tek koşu).
+§471 KULLANICI İSTEĞİ: sözleşme listesi (8 satır, sürekli büyüyen) kaldırıldı → YILLIK TOPLAM tablosu: yıl · toplam mn $ · adet
+(tutarsız ayrı) · "bugün itibarıyla" (yılın aynı tarihine kadar) · Δ y/y aynı tarih · yılın son sözleşmesi; cari yıl "devam"
+kalın. Actions tarafı: akisYillik() → seride yillik_kum{yillar{Y:{toplam,adet,tutarsiz,ayni_tarih,yy_ayni_tarih,son}},bugun,mmdd}
+(hem ASELS webapi hem KAP katmanı). Panelde akış serisinin SON hücresi artık "2026 toplamı · 15 sözleşme · y/y +%147"; pano
+"yıl içi y/y" (geçen yılın aynı tarihine kadar olan toplamla) — çeyrek y/y'den daha az topaklı. ASELS: 2026 10,08 mlr $ (15) vs
+2025 aynı tarih 4,09 → +%147; 2025 6,41 · 2024 4,37 · 2023 4,42 · 2022 0,44.
+Düzen: uzun 'kaynak' metni ilk sütunu şişirip tabloyu yatay kaydırıyordu → ilk hücre max-width 380 px + kaynak 110 karakter;
+asels_backlog kaynak kısaltıldı (ayrıntı _not'ta). app.js 20261020d.
+DEPLOY: scripts/tazele.mjs (§469d + §471) · ktpanel/app.js (20261020d) · KTPANEL-BAKIM.md. karar-model.json değişmedi (f).
+
 # BAKIM EK — §470 (20 Eki 2026, 11:00) — KÖK HATA: §462 DİĞER KATMANLARIN ANAHTARLARINI HER KOŞU SİLİYORDU
 
 10:19 koşusu (run 39385724483) raporunda PTF "✓ 689,55 TL/MWh (2026-06-13) · 1260 gün" + ⚠ "2026-10-21 tarihli veri saat 14
