@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-20i",
+ "surum": "2026-10-20j",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -183,11 +183,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 1.69,
-    "net_tl_mlr": 0.61,
-    "kurum": 1,
+    "favok_tl_mlr": 1.651,
+    "net_tl_mlr": 0.678,
+    "kurum": 2,
+    "satis_tl_mlr": 8.63,
+    "favok_min": 1.62,
+    "favok_max": 1.69,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -448,10 +451,13 @@
    "konsensus": {
     "donem": "2026Q3",
     "favok_tl_mlr": null,
-    "net_tl_mlr": 1.12,
-    "kurum": 3,
+    "net_tl_mlr": 1.105,
+    "kurum": 4,
+    "satis_tl_mlr": null,
+    "favok_min": null,
+    "favok_max": null,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -710,11 +716,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 14.26,
-    "net_tl_mlr": 9.15,
-    "kurum": 2,
+    "favok_tl_mlr": 14.331,
+    "net_tl_mlr": 9.067,
+    "kurum": 4,
+    "satis_tl_mlr": 55.52,
+    "favok_min": 13.28,
+    "favok_max": 15.25,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -947,11 +956,14 @@
    },
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 17.01,
-    "net_tl_mlr": 9.23,
-    "kurum": 2,
+    "favok_tl_mlr": 17.094,
+    "net_tl_mlr": 8.985,
+    "kurum": 4,
+    "satis_tl_mlr": 247.08,
+    "favok_min": 15.56,
+    "favok_max": 18.46,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -1179,11 +1191,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 3.05,
-    "net_tl_mlr": 1.82,
-    "kurum": 1,
+    "favok_tl_mlr": 3.028,
+    "net_tl_mlr": 1.76,
+    "kurum": 2,
+    "satis_tl_mlr": 14.98,
+    "favok_min": 3.0,
+    "favok_max": 3.05,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -1823,11 +1838,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 18.87,
-    "net_tl_mlr": 2.11,
-    "kurum": 1,
+    "favok_tl_mlr": 18.077,
+    "net_tl_mlr": 2.214,
+    "kurum": 2,
+    "satis_tl_mlr": 64.28,
+    "favok_min": 17.28,
+    "favok_max": 18.87,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -1977,11 +1995,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 8.29,
-    "net_tl_mlr": 1.94,
-    "kurum": 3,
+    "favok_tl_mlr": 8.451,
+    "net_tl_mlr": 2.013,
+    "kurum": 5,
+    "satis_tl_mlr": 69.49,
+    "favok_min": 8.2,
+    "favok_max": 8.85,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -2641,7 +2662,17 @@
     "fiyat": 9.89
    },
    "bolunme": null,
-   "konsensus": null,
+   "konsensus": {
+    "donem": "2026Q3",
+    "favok_tl_mlr": 0.998,
+    "net_tl_mlr": 0.203,
+    "kurum": 1,
+    "satis_tl_mlr": 6.54,
+    "favok_min": 1.0,
+    "favok_max": 1.0,
+    "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
+    "tarih": "2026-10-20"
+   },
    "konsensus_gecmis": [
     {
      "q": "2025Q2",
@@ -2795,11 +2826,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 2.44,
-    "net_tl_mlr": 0.68,
-    "kurum": 3,
+    "favok_tl_mlr": 2.447,
+    "net_tl_mlr": 0.861,
+    "kurum": 5,
+    "satis_tl_mlr": 21.97,
+    "favok_min": 2.38,
+    "favok_max": 2.53,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -2980,11 +3014,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 3.2,
-    "net_tl_mlr": 1.05,
-    "kurum": 1,
+    "favok_tl_mlr": 3.186,
+    "net_tl_mlr": 1.125,
+    "kurum": 2,
+    "satis_tl_mlr": 15.52,
+    "favok_min": 3.18,
+    "favok_max": 3.2,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -3131,11 +3168,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 5.37,
-    "net_tl_mlr": 1.65,
-    "kurum": 5,
+    "favok_tl_mlr": 5.336,
+    "net_tl_mlr": 1.634,
+    "kurum": 6,
+    "satis_tl_mlr": 17.77,
+    "favok_min": 5.18,
+    "favok_max": 5.6,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -3414,11 +3454,14 @@
    "bolunme": null,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 2.13,
-    "net_tl_mlr": 1.4,
-    "kurum": 2,
+    "favok_tl_mlr": 1.309,
+    "net_tl_mlr": 1.893,
+    "kurum": 5,
+    "satis_tl_mlr": 31.88,
+    "favok_min": 0.39,
+    "favok_max": 3.67,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
-    "tarih": "2026-10-19"
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -4056,13 +4099,14 @@
    "sermaye_mn": 1926.796,
    "konsensus": {
     "donem": "2026Q3",
-    "favok_tl_mlr": 78.035,
-    "net_tl_mlr": 57.135,
-    "satis_tl_mlr": 447.878,
-    "kurum": 1,
-    "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (Ünlü)",
-    "tarih": "2026-10-19",
-    "_not": "Bilanço öncesi tahmin sayısı artar; şimdilik tek kurum → zayıf konsensüs. Önceki çeyrekler: 2Ç26 konsensüs ort. ~39 mlr → gerçek 54,3 (+%39 sürpriz); 3Ç25 ~19,3 → gerçek 24,3 (+%26). Kurumlar crack şokunu sistematik olarak EKSİK fiyatladı."
+    "favok_tl_mlr": 83.959,
+    "net_tl_mlr": 60.015,
+    "kurum": 4,
+    "satis_tl_mlr": 431.95,
+    "favok_min": 78.04,
+    "favok_max": 91.18,
+    "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
+    "tarih": "2026-10-20"
    },
    "konsensus_gecmis": [
     {
@@ -4534,5 +4578,6 @@
  "_469": "KAP ÖDA 'Yeni İş İlişkisi' genel katmanı (Actions §469): KATMR/ALTNY/GLRMK (+ASELS çapraz) sözleşme akışı → kap_yeni_is_<kod> (akış, mn $). Tutar yapısal alanda değil, 'Açıklamalar' metninde → ASELSAN ayrıştırıcısı (toplam/pay kuralları) ortak. Artımlı: çözülen bildirim kimlikleri dosyada; koşu başına ≤40 sayfa/şirket. §469c: parantez içi kur karşılığı TL çevirileri atılır; 'teklif/iptal' metinleri sözleşme sayılmaz; metinde beyan edilen backlog ayrı seviye serisi (kap_backlog_<kod>, ALTNY). Ayrıştırıcı sürümü değişince kayıtlar bir kez yeniden çözülür.",
  "_472": "Kardemir açık API katmanı (Actions §472): kardemir.com liste fiyatları (kütük S235JR, nervürlü Ø12-32, profil IPE 180-200, filmaşin Ø5.5; $ ve TL) ve hurda alım fiyatları (Özel Ekstra, 2014→) günlük çekilir; liste bir sonraki listeye kadar geçerli sayılır (adım), TL fiyat günün kuruyla $’a çevrilir, ay ortalaması saklanır (siklik aylik). Türetilmiş: kardemir_marj_hurda_usd (kütük − hurda), kardemir_spread_cevher_usd (kütük − 1,6×WB cevher; kok hariç), kcaer_hadde_spread_usd (profil − kütük). Birincil değişti: KRDMD→kardemir_kutuk_usd, KCAER→kcaer_hadde_spread_usd. LME bekliyor satırları (metal_marji_tr, demir_lme, hurda_lme) bu iki hisseden kaldırıldı — SteelOrbis seviyeleri ücretli, Kardemir kendi fiyatını açık yayımlıyor (vekil değil, gerçekleşen). İlk koşuda son ~2 yıl, sonraki koşularda 2014’e kadar dolar (≤100+100 sayfa/koşu).",
  "_474": "SUT katmanı (Actions §474): SGK Sağlık Uygulama Tebliği fiyat listesinin GENEL artışları adım tablosundan endekslenir (2020-12=100; 2021-04 +15 · 2022-02 +40 · 2023-03 +31 · 2023-09 +51 · 2024-05 +50 · 2025-12 +30; dayanak MLP Care KAP bilgilendirme notları + Resmî Gazete), sut_reel = SUT÷TÜFE; TTB ÖHU katsayısı aynı yöntemle (2022-12=100) ttb_endeks/ttb_reel. Oran RG metninde yazmadığı için otomatik çıkarım yok: Resmî Gazete fihristi (son 14 gün, ana+mükerrer, windows-1254) taranır, SUT/SHFK başlıkları sektor-surucu.json/sut.rg_olaylar’a yazılır ve son adımdan sonraki SUT değişikliği raporda uyarılır; genel artışsa MLP notu/basın oranıyla SUT_ADIMLAR’a elle eklenir (bilanço haftası ritüeli). MPARK birincil: eurusd → sut_endeks; \"SUT bekliyor\" satırı kapandı.",
- "_475": "SUT oranı otomatik (Actions §475): SGK \"Değişiklik Tebliği İşlenmiş Güncel SUT\" ZIP içindeki EK-2B/EK-2C xlsx listeleri sürüm sürüm kıyaslanır (ortak kodlarda medyan değişim, değişen kod payı); medyan ≥%3 ve pay ≥%50 ise genel artış adımı yürürlük tarihiyle sut_endeks’e girer, ±45 gün içindeki elle adım düşer. Ölçüm: Aralık 2025 artışı EK-2B’de +%20 (MLP \"≈%30\"). Snapshot ktpanel/sut-ek2b.json (Actions dosyası)."
+ "_475": "SUT oranı otomatik (Actions §475): SGK \"Değişiklik Tebliği İşlenmiş Güncel SUT\" ZIP içindeki EK-2B/EK-2C xlsx listeleri sürüm sürüm kıyaslanır (ortak kodlarda medyan değişim, değişen kod payı); medyan ≥%3 ve pay ≥%50 ise genel artış adımı yürürlük tarihiyle sut_endeks’e girer, ±45 gün içindeki elle adım düşer. Ölçüm: Aralık 2025 artışı EK-2B’de +%20 (MLP \"≈%30\"). Snapshot ktpanel/sut-ek2b.json (Actions dosyası).",
+ "_konsensus_tazeleme": "20 Eki 2026 17:10 Fintables MCP: 3Ç26 tahmini olan 13/30 hisse tazelendi (kurum sayısı · FAVÖK/net ort. · satış ort. · FAVÖK min/max). Bilanço öncesi hafta kurum tahminleri hızla girer → ritüel: bilanço haftasında her 2–3 günde bir tazele. Hedef fiyatlar analist.json (5 Eki; hedef_fiyatlari tablosu, 1 yıl pencere)."
 }
