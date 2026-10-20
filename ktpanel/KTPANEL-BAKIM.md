@@ -6,6 +6,21 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §472b (20 Eki 2026, 13:00) — İLK CANLI KOŞU ✓; YAHOO "max" TUZAĞI
+
+12:38 koşusu (run 39402209995, katman hepsi, 11 dk): Kardemir ✓ — kütük 565 $/t (13 Eki) · hurda Özel Ekstra 20.120 TL/t ≈ 411 $/t
+(25 Eyl) · metal marjı 154 $/t · nervürlü 30.540 TL/t ≈ 628 $/t · profil IPE 180-200 670 $/t (7 Tem) · filmaşin 655 $/t · kütük −
+1,6×cevher 409 $/t · KCAER hadde spread'i 105 $/t. Tüm değerler Chrome'daki kaynakla birebir. 200 sayfa/129 sn; liste 2024-08'e,
+hurda 2022-06'ya kadar indi; 629 tarih sonraki ~4 koşuda (rapor "geriye doldurma sürüyor"). kardemir.com Actions IP'sini
+engellemedi (403 yok). Diğer katmanlar etkilenmedi (PTF 1389 gün korundu, KAP 93, ASELS 211).
+TUZAK — raporda "kur noktası 764": Yahoo `interval=1d&range=max` isteğini SESSİZCE 1mo granülerliğe indiriyor (ay başı tek nokta,
+2005→, 262 nokta; meta.dataGranularity "1mo"). 764 = 262 ay başı + 517 dosya günlük. Sonuç: 2016–2023 TL→$ dönüşümleri ayın ilk
+yarısında ay başı kuru, ikinci yarısında çeyrek ortalaması kullandı (testere dişi riski). §472b: kur zinciri 'max' yerine '10y'
+GÜNLÜK (2016-10→, ~2.600 nokta) + 'max' ay başı yalnız 2014–2016 için → sıra: günlük (≤15 gün) → aynı ayın ay başı noktası →
+çeyrek → yıllık. Seriler her koşuda ham kayıttan (K.liste/K.hurda orijinal para birimiyle) yeniden kurulduğu için düzeltme
+geriye dönük uygulanır, yeniden çekim gerekmez. Rapor satırı artık "kur: günlük N · ay başı M" (N<2000 ise ⚠). Harness 14 denetim ✓.
+DEPLOY: scripts/tazele.mjs (§472b) · KTPANEL-BAKIM.md.
+
 # BAKIM EK — §472 (20 Eki 2026, 12:30) — "STEELORBIS'TEN ALABİLECEĞİN ŞEY VAR MI?" → KARDEMİR AÇIK API
 
 SORU: MySteelOrbis (ücretsiz hesap). CEVAP: Türkiye hurda HMS 80:20 CFR, kütük CFR, inşaat demiri FOB $/t ve depo çıkışı TL/t,
