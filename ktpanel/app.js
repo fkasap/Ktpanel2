@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020m';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020n';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -11890,7 +11890,7 @@ function fekCiz(){
       /* §372: KOPMA-σ rejimleri de kalibre λ kullanır — baz TCMB tabanı,
          kriz 2020 zirvesi; ikisi de firma çarpanıyla ölçeklenir. */
       const lamBaz = Math.min(0.60, (LAMBDA_REJIM['tcmb'].lam)*fc.c);
-      const lamKriz = 1.0;   /* §480: kriz = banka yenilemez → KV finansal borcun tamamı vadesinde ödenir (en sert varsayım) */
+      const lamKriz = 0.5;   /* §482: kriz = bankalar KV borcun YARISINI yenilemez (§480'de 1,0 idi: KV borç > kapasite olan her şirket PD = p(kriz) → 1,04σ'ya yapışıyordu, ayırt edicilik kayboldu). Tam kesinti (λ=1) tabloda bilgi satırı. */
       const yukOf=(l)=> S(netFaiz, Number.isFinite(kvBorc)?kvBorc*l:null);
       const DD=(L, sgv)=>{ const sv=(sgv||sgManset); return (Number.isFinite(L)&&L>0&&sv>0) ? (Math.log(kapasite/L)+(0-sv*sv/2))/sv : null; };
       const ddB=DD(yukOf(lamBaz)), ddK=DD(yukOf(lamKriz));
@@ -12010,6 +12010,7 @@ function fekCiz(){
               '<td class="num" style="font-family:var(--mono)">'+mlrG(yukOf(lamKriz))+'</td>'+
               '<td class="num" style="font-family:var(--mono);color:'+(ddK>0?'var(--up)':'var(--down)')+'">'+(Math.abs(ddK)>=10?((ddK>0?'≥+':'≤−')+'10σ'):((ddK>0?'+':'')+trN(ddK,2)+'σ'))+'</td>'+
               '<td class="num" style="font-family:var(--mono)">%'+trN(_phi(-ddK)*100,1)+'</td></tr>'+
+            (function(){ const yT=yukOf(1.0), dT=DD(yT); if(!Number.isFinite(dT)) return ''; return '<tr style="color:var(--muted)"><td>Tam kesinti — bilgi <span class="thin">(λ=1, karışıma girmez)</span></td><td class="num" style="font-family:var(--mono)">1,000</td><td class="num" style="font-family:var(--mono)">'+mlrG(yT)+'</td><td class="num" style="font-family:var(--mono)">'+(Math.abs(dT)>=10?((dT>0?'≥+':'≤−')+'10σ'):((dT>0?'+':'')+trN(dT,2)+'σ'))+'</td><td class="num" style="font-family:var(--mono)">%'+trN(_phi(-dT)*100,1)+'</td></tr>'; })()+
             '<tr style="background:var(--bg2)"><td><b>Karışım</b></td><td class="num"></td><td class="num"></td>'+
               '<td class="num" style="font-family:var(--mono)"><b>'+trN(ks,2)+'σ</b></td>'+
               '<td class="num" style="font-family:var(--mono)"><b>%'+trN(pd*100,1)+'</b></td></tr>'+

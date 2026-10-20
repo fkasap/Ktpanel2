@@ -6,6 +6,15 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §482 (20 Eki 2026, 22:10) — KRİZ λ 1,0 → 0,5 + "TAM KESİNTİ" BİLGİ SATIRI
+
+§480 (λ_kriz = 1) canlıda yan etki gösterdi: KV borç > kapasite olan her şirkette kriz dalı PD = %100 → karışım PD = p(kriz) →
+KOPMA-σ = −Φ⁻¹(0,15) = 1,04σ'ya YAPIŞIYOR (ARCLK); borç/kapasite 2 ile 10 ayırt edilemiyor, belirleyici yalnız p. Karar (kullanıcı
+"nasıl istersen"): λ_kriz = 0,5 — kriz dalında KV borcun yarısı 12 ayda ödenir (2018–19 büyük şirket deneyimi: kısmi kesinti +
+yapılandırma). λ = 1 tabloda gri "Tam kesinti — bilgi" satırı olarak durur, karışıma girmez. Not: ARCLK'ta kapasite (~67 mlr) KV borcun
+yarısı + net faizi de (~100 mlr) karşılamıyor → ARCLK 1,04σ'da KALIR; ayrışma kapasitesi KV borcun yarısı ile tamamı arasında olan
+şirketlerde geri gelir. DEPLOY: app.js 20261020n.
+
 # BAKIM EK — §481 (20 Eki 2026, 21:50) — FEK YÜKÜ NET FAİZ (ödenen − alınan)
 
 TTRAK ekranında yakalandı: yük BRÜT ödenen faizdi; vadeli satış yapan ve kasası dolu şirketlerin faiz geliri düşülmüyordu (tasarım
