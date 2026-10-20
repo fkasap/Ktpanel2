@@ -3508,14 +3508,21 @@ async function kardemirFiyat() {
   const l2 = await cek('TedarikciIliskileriapi/getscrappricemarkdatelist', 'TedarikciIliskileriapi/getscrapprice?date=', K.hurda, kardemirHurdaCoz, 'hurda');
   const dolu = o => Object.values(o).filter(v => v && !v.bos && !v.hata).length;
   if (!dolu(K.liste) && !dolu(K.hurda)) { raporlar.push('### Kardemir fiyatları (§472) — ✗ veri yok' + (l1 || l2 ? ' (tarih listesi geldi, sayfalar çözülemedi)' : ' (kardemir.com\'a ulaşılamadı)') + '\n- ' + uyari.slice(0, 6).join('\n- ')); if (l1 || l2) await yaz(dosya, D); return; }
-  /* kur: Yahoo TRY=X (max) → dosyadaki usdtry → çeyrek yedek tablo → yıllık eski tablo */
-  let fx = new Map(), fxE = new Map(); try { const h = await yahooSeri(['TRY=X', 'EURUSD=X'], '', 'max'); fx = h['TRY=X'] || new Map(); fxE = h['EURUSD=X'] || new Map(); } catch (e) {}
+  /* kur: Yahoo TRY=X / EURUSD=X — '10y' GÜNLÜK (2016-10→) + 'max' (Yahoo max'ı sessizce 1mo granülerliğe indirir: ay başı tek nokta,
+     2005→; §472b — ilk canlı koşuda "kur noktası 764" bunu açığa çıkardı) → dosyadaki usdtry/eurusd günlük → çeyrek yedek tablo → yıllık eski tablo.
+     Sıra: günlük nokta (≤15 gün) → aynı ayın ay başı noktası → çeyrek ortalaması → yıllık ortalama. */
+  let fx = new Map(), fxE = new Map(), fxAy = new Map(), fxEAy = new Map();
+  try { const h = await yahooSeri(['TRY=X', 'EURUSD=X'], '', '10y'); fx = h['TRY=X'] || new Map(); fxE = h['EURUSD=X'] || new Map(); } catch (e) {}
+  try { const h = await yahooSeri(['TRY=X', 'EURUSD=X'], '', 'max'); fxAy = h['TRY=X'] || new Map(); fxEAy = h['EURUSD=X'] || new Map(); } catch (e) {}
   if (D.seriler.usdtry && Array.isArray(D.seriler.usdtry.gunluk)) for (const [t, v] of D.seriler.usdtry.gunluk) if (typeof v === 'number' && !fx.has(t)) fx.set(t, v);
   if (D.seriler.eurusd && Array.isArray(D.seriler.eurusd.gunluk)) for (const [t, v] of D.seriler.eurusd.gunluk) if (typeof v === 'number' && !fxE.has(t)) fxE.set(t, v);
-  const kurYap = (harita, yedekQ, yedekYil) => { const ks = [...harita.keys()].sort(), vs = ks.map(k => harita.get(k)); return t => { let lo = 0, hi = ks.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (ks[m] <= t) { r = m; lo = m + 1; } else hi = m - 1; }
-    if (r >= 0 && (new Date(t) - new Date(ks[r])) < 15 * 864e5) return vs[r];
+  const sonNokta = (ks, vs, t) => { let lo = 0, hi = ks.length - 1, r = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (ks[m] <= t) { r = m; lo = m + 1; } else hi = m - 1; } return r; };
+  const kurYap = (gunluk, aylik, yedekQ, yedekYil) => { const gk = [...gunluk.keys()].sort(), gv = gk.map(k => gunluk.get(k)), ak = [...aylik.keys()].sort(), av = ak.map(k => aylik.get(k)); return t => {
+    const r = sonNokta(gk, gv, t); if (r >= 0 && (new Date(t) - new Date(gk[r])) < 15 * 864e5) return gv[r];
+    const ra = sonNokta(ak, av, t); if (ra >= 0 && ak[ra].slice(0, 7) === t.slice(0, 7)) return av[ra];
     const q = t.slice(0, 4) + 'Q' + (Math.floor((+t.slice(5, 7) - 1) / 3) + 1); return (yedekQ[q] || yedekYil[t.slice(0, 4)] || null); }; };
-  const kur = kurYap(fx, ASELS_KUR_YEDEK.usdtry, KARDEMIR_KUR_ESKI), kurE = kurYap(fxE, ASELS_KUR_YEDEK.eurusd, KARDEMIR_EURUSD_ESKI); const fxK = [...fx.keys()];
+  const kur = kurYap(fx, fxAy, ASELS_KUR_YEDEK.usdtry, KARDEMIR_KUR_ESKI), kurE = kurYap(fxE, fxEAy, ASELS_KUR_YEDEK.eurusd, KARDEMIR_EURUSD_ESKI);
+  const kurNot = 'kur: günlük ' + fx.size + ' · ay başı ' + fxAy.size + (fx.size < 2000 ? ' ⚠ Yahoo 10y günlük gelmedi (2016–2023 dönüşümleri ay başı/çeyrek kuruyla)' : '');
   const cevir = (f, pb, hedef, t) => { if (pb === hedef) return f; if (pb === 'EUR') { const e = kurE(t); if (!e) return null; f = f * e; pb = 'USD'; if (pb === hedef) return f; } const k = kur(t); if (!k) return null; if (pb === 'TL' && hedef === 'USD') return f / k; if (pb === 'USD' && hedef === 'TL') return f * k; return null; };
   /* adım noktaları → günlük ileri taşıma → ay ortalaması */
   const noktalar = (kayit, alan) => Object.entries(kayit).filter(([t, v]) => v && v[alan] && typeof v[alan].f === 'number').map(([t, v]) => [t, v[alan].f, v[alan].pb]).sort((a, b) => a[0] < b[0] ? -1 : 1);
@@ -3555,7 +3562,7 @@ async function kardemirFiyat() {
   raporlar.push('### Kardemir fiyatları (§472) — ' + (sK || sH ? '✓' : '⚠') + ' kütük ' + g(sK) + ' $/t · hurda Özel Ekstra ' + (sH ? sH.deger + ' TL/t' + (sHu ? ' ≈ ' + sHu.deger + ' $/t' : '') + ' (' + sH.tarih + ')' : '—') + (sM ? ' · metal marjı ' + sM.deger + ' $/t' : '') +
     '\n- ' + notlar.join(' · ') + ' · bu koşu ' + sayfa + ' sayfa, ' + yeni + ' yeni' + (bekleyen ? ' · tavan: ' + bekleyen + ' tarih sonraki koşulara (geriye doldurma sürüyor)' : ' · geriye doldurma TAMAM') +
     '\n- nervürlü Ø12-32 ' + (sN ? sN.deger + ' TL/t' + (sNu ? ' ≈ ' + sNu.deger + ' $/t' : '') + ' (' + sN.tarih + ')' : '—') + ' · profil IPE 180-200 ' + g(sP) + ' $/t · filmaşin ' + g(sF) + ' $/t' +
-    (sC ? '\n- kütük − 1,6×cevher ' + sC.deger + ' $/t (kok hariç)' : '') + (sS ? ' · KCAER hadde spread\'i (profil − kütük) ' + sS.deger + ' $/t' : '') + ' · kur noktası ' + fxK.length +
+    (sC ? '\n- kütük − 1,6×cevher ' + sC.deger + ' $/t (kok hariç)' : '') + (sS ? ' · KCAER hadde spread\'i (profil − kütük) ' + sS.deger + ' $/t' : '') + ' · ' + kurNot +
     (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') + (uyari.length > 6 ? '\n- ⚠ … +' + (uyari.length - 6) : '') : ''));
 }
 
