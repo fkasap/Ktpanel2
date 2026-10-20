@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1988 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500276713433> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <13936271198527955176> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -124,19 +124,19 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 469 satır · 21 çeyrek · USDTRY Yahoo günlük · değişiklik yok
 
 ### Sürücü serileri (§464) — ✓ 15 seri
-- altin 4141 (2026-10-20, 503 gün)
-- gumus 57.355 (2026-10-20, 503 gün)
-- bakir 6.5775 (2026-10-20, 503 gün)
-- aluminyum 3075.25 (2026-10-20, 502 gün)
+- altin 4141.5 (2026-10-20, 503 gün)
+- gumus 57.24 (2026-10-20, 503 gün)
+- bakir 6.5855 (2026-10-20, 503 gün)
+- aluminyum 3078.5 (2026-10-20, 502 gün)
 - hrc_abd 1287 (2026-10-19, 501 gün)
-- ttf 88.04 (2026-10-19, 502 gün)
-- henryhub 3.024 (2026-10-20, 503 gün)
-- bugday 661 (2026-10-20, 502 gün)
-- brent_yh 111.53 (2026-10-20, 503 gün)
-- eurusd 1.1213 (2026-10-20, 517 gün)
-- usdtry 49.5721 (2026-10-20, 517 gün)
-- demir_lme 591 $/t (19 Oct 2026, 1 nokta, playwright)
-- hurda_lme 396.5 $/t (19 Oct 2026, 1 nokta, playwright·2.tur)
+- ttf 89.725 (2026-10-20, 503 gün)
+- henryhub 2.989 (2026-10-20, 503 gün)
+- bugday 660.5 (2026-10-20, 502 gün)
+- brent_yh 110.39 (2026-10-20, 503 gün)
+- eurusd 1.1228 (2026-10-20, 517 gün)
+- usdtry 49.5718 (2026-10-20, 517 gün)
+- demir_lme 587.5 $/t (16 Oct 2026, 1 nokta, playwright)
+- hurda_lme 393 $/t (16 Oct 2026, 1 nokta, playwright·2.tur)
 - metal_marji_tr 194.5 $/t
 - wb 15 seri · 2026M09 · "Updated on October 02, 2026" (aynı sayı)
 
@@ -154,9 +154,9 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - tlref %36.7703 (2026-10-19, 944 gün)
 - epdk_tarife 722.24 (2026-11, TÜFE z−2 türevi, 119 ay)
 
-### EPİAŞ PTF (§466) — ✓ 3296.58 TL/MWh · 66.79 $/MWh (2026-10-20)
-- 1389 gün (2023-01-01→) · bu koşuda 11 gün/264 saat · 1 parça
-- son 30 gün ort. 2696 TL/MWh · yıllık 1.0% · kimlik: EPIAS_ID+EPIAS_KEY
+### EPİAŞ PTF (§466) — ✓ 3298.92 TL/MWh · 66.69 $/MWh (2026-10-21)
+- 1390 gün (2023-01-01→) · bu koşuda 12 gün/288 saat · 1 parça
+- son 30 gün ort. 2700 TL/MWh · yıllık -0.9% · kimlik: EPIAS_ID+EPIAS_KEY
 
 ### ASELSAN sözleşme akışı (§467) — ✓ 211 sözleşme (2017-01-06→2026-10-08) · kur Yahoo 10y
 - 2026Q4 (koşu): 4.92 mlr $ / 6 sözleşme · 2026Q3: 3.09 mlr $ · 2025Q4: 2.31 mlr $ · son 4 çeyrek 10.1 mlr $
@@ -170,23 +170,30 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ASELS: 39 bildirim · 2026Q4 4.92 mlr $ (6) · 2026Q3 3.09 · çapraz 2026Q3: KAP 3.09 / webapi 3.09 mlr $ ✓
 
 ### Kardemir fiyatları (§472) — ✓ kütük 565 (2026-10-13) $/t · hurda Özel Ekstra 20120 TL/t ≈ 411.04 $/t (2026-09-25) · metal marjı 153.96 $/t
-- liste 482 tarih (2014-01-07→2026-10-13) · dosyada 400 · hurda 347 tarih (2014-02-11→2026-09-25) · dosyada 347 · bu koşu 147 sayfa, 147 yeni · tavan: 82 tarih sonraki koşulara (geriye doldurma sürüyor)
+- liste 482 tarih (2014-01-07→2026-10-13) · dosyada 482 · hurda 347 tarih (2014-02-11→2026-09-25) · dosyada 347 · bu koşu 82 sayfa, 82 yeni · geriye doldurma TAMAM
 - nervürlü Ø12-32 30540 TL/t ≈ 627.53 $/t (2026-09-16) · profil IPE 180-200 670 (2026-07-07) $/t · filmaşin 655 (2026-09-16) $/t
 - kütük − 1,6×cevher 408.68 $/t (kok hariç) · KCAER hadde spread'i (profil − kütük) 105 $/t · kur: günlük 2601 · ay başı 262
 
+### SUT endeksi (§474) — ✓ SUT 597.14 (son artış 2026-01-01 +%25) · reel 69.01 (2020-12=100, 2026-09) · TTB 548.42 (son 2026-01-01 +%16.5) · TTB reel 141.67
+- 6 SUT adımı (2021-04-28→2026-01-01, 1 otomatik) · 7 TTB adımı · son SUT artışından bu yana TÜFE +%24.3 → reel %-19.6
+- SGK 2025-11-25 (21.7 MB): EK2B yür.2024-05-11 7055 kod · ilk sürüm · EK2C yür.2024-05-11 2400 kod · ilk sürüm
+- SGK 2025-12-10 (22.8 MB): EK2B yür.2026-01-01 7129 kod · medyan +19.98% (değişen %100, 10%:3500 20%:3352 194%:84 246%:70 96%:26) · EK2C yür.2026-01-01 2405 kod · medyan +30% (değişen %100, 30%:2387 55%:6 96%:3 5%:1 40%:1) → GENEL ARTIŞ 2026-01-01 +%25
+- SGK 2026-10-02 (31.4 MB): EK2B yür.2026-07-07 7143 kod · medyan +0% (değişen %2, 0%:6979 18%:95 54%:22 67%:19 26%:1) · EK2C yür.2026-07-07 2408 kod · medyan +0% (değişen %2, 0%:2348 54%:55 4%:1)
+- RG fihrist taraması: 28 sayfa (14 erişildi) · 0 yeni başlık · kayıtlı 0
+
 ### Faktör evreni (§361) — ✓ parti 6 · kapsam 144/238
 - bu turda: 1 tam · 3 eksik kalemli · 3 alınamadı
-- not: §455c arşivden 3 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %84.9 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
+- not: §455c arşivden 3 şirket (ağ yok) · temel kapsamın XKTUM ağırlığı %85.0 · ALBRK:2 ana kalem boş · BINHO:1 ana kalem boş · KTLEV:2 ana kalem boş · CITAS:liste boş · KPEKS:liste boş · TKNKA:liste boş
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Fonzi gerçekleşen (§457) — ✓ 231 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
 ### Faktör skorları (§455) — ✓ sıralanan 124/238 · temel veri 124 · fiyat 231 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.62 ✓
-- ✓ fm.json TERFİ ETTİ (adet 124 ≥ 100 · XKTUM ağırlık kapsamı %84.9 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 124 -0.089 0.735 -2.97 1.16 0 · GROWTH 124 0.004 0.574 -1.51 1.63 0 · QUALITY 124 0.013 0.708 -1.88 1.81 0 · MOMENTUM 124 -0.032 0.624 -1.26 1.69 0 · LOW_RISK 124 -0.012 0.758 -1.74 1.68 0
+- ✓ fm.json TERFİ ETTİ (adet 124 ≥ 100 · XKTUM ağırlık kapsamı %85.0 ≥ %70) — panel kendi hesabımızla çalışıyor
+- imza: VALUE 124 -0.089 0.735 -2.97 1.16 0 · GROWTH 124 0.004 0.574 -1.51 1.63 0 · QUALITY 124 0.011 0.709 -1.88 1.81 0 · MOMENTUM 124 -0.032 0.624 -1.26 1.69 0 · LOW_RISK 124 -0.012 0.758 -1.74 1.68 0
 
 ### KAP arşivi (§381) — ✓ +6 çeyrek · 0/238 şirket tam
-- ENJSA:4→6 · KCAER:4→8
+- MPARK:4→6 · TCKRC:4→8
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -224,7 +231,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §429p kuyruk: liste 224 kayıt · daha önce işlenmiş 161 idx · iş 45
 
-### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 11279 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 11286 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 - bu turda hedef 42 (tur tavanı 80; kalan sonraki koşuda)
 - ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
   · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
@@ -235,9 +242,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (120 fiyat) · Model sicili (39 fiyat) · TR 5Y CDS (247.33 bp) · fon akışı (1988) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (15) · EVDS serileri (12) · EPİAŞ PTF (1389 gün) · ASELSAN sözleşme akışı (211) · Kardemir fiyatları (147 tarih) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+6 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (120 fiyat) · Model sicili (34 fiyat) · TR 5Y CDS (247.33 bp) · fon akışı (1988) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (15) · EVDS serileri (12) · EPİAŞ PTF (1390 gün) · ASELSAN sözleşme akışı (211) · Kardemir fiyatları (82 tarih) · SUT sepeti (3 sürüm) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+6 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ Kardemir fiyatları (§472) — 83 sn
-- ⏱ KAP arşivi (§381) — 76 sn
-- toplam: 386 sn
+- ⏱ Sürücü serileri (§464) — 87 sn
+- ⏱ SUT endeksi (§474) — 186 sn
+- ⏱ KAP arşivi (§381) — 75 sn
+- toplam: 544 sn
