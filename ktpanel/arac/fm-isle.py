@@ -168,7 +168,7 @@ for i, fa in enumerate(FAK):
             if x['f'][i] is not None: x['f'][i] = round(x['f'][i], 4)
 data.sort(key=lambda x: x['t'])
 meta = {
-    'uni': len(hisse), 'ranked': len(data), 'topn': 25,
+    'uni': len(hisse), 'ranked': len(data), 'topn': 30,   # §479: portföy 30 hisse (kullanıcı)
     'defw': {'QUALITY': 0.3, 'VALUE': 0.25, 'MOMENTUM': 0.2, 'LOW_RISK': 0.15, 'GROWTH': 0.1},
     'minw': 0.01, 'maxw': 0.1, 'walpha': 0.5, 'seccap': 0.3, 'maxnames': 6, 'minfac': MINFAC,
     'metrics': [{'n': n, 'f': fa, 'hib': hib, 'w': ag} for n, fa, hib, ag in METRIK],
