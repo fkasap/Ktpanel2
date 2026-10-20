@@ -3210,7 +3210,7 @@ function akisYillik(items, bugunStr) {
   const mmdd = bugunStr.slice(5, 10); const out = {};
   for (const it of items) {
     const y = it.t.slice(0, 4); const o = out[y] = out[y] || { toplam: 0, adet: 0, tutarsiz: 0, ayni_tarih: 0, ayni_tarih_adet: 0, son: null };
-    o.adet++; if (it.tutarsiz) o.tutarsiz++; o.toplam = +(o.toplam + (it.usd_mn || 0)).toFixed(1);
+    o.adet++; if (it.tutarsiz) o.tutarsiz++; if (it.konsorsiyum) o.konsorsiyum = (o.konsorsiyum || 0) + 1; o.toplam = +(o.toplam + (it.usd_mn || 0)).toFixed(1);
     if (it.t.slice(5, 10) <= mmdd) { o.ayni_tarih = +(o.ayni_tarih + (it.usd_mn || 0)).toFixed(1); o.ayni_tarih_adet++; }
     if (!o.son || it.t > o.son.t) o.son = { t: it.t, usd_mn: it.usd_mn, ozet: String(it.ozet || '').slice(0, 120) };
   }
@@ -3320,7 +3320,7 @@ async function kapYeniIs() {
   const K = D.kap_yeni_is = D.kap_yeni_is || { oid: {}, kayit: {}, cozulemeyen: {} };
   K.oid = K.oid || {}; K.kayit = K.kayit || {}; K.cozulemeyen = K.cozulemeyen || {};
   /* ayrıştırıcı sürümü değişince kayıtlar bir kez yeniden çözülür (eski yanlış tutarlar dosyada kalmasın) */
-  const KAP_YI_SURUM = '469d'; if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
+  const KAP_YI_SURUM = '469e'; if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const uykuYi = ms => new Promise(r => setTimeout(r, ms));
   /* kur (ASELS katmanıyla aynı yol) */
@@ -3382,6 +3382,9 @@ async function kapYeniIs() {
           if (!adet) Object.assign(kayit, { usd_mn: 0, usd: 0, eur: 0, tl: 0, tutarsiz: true, neden: neden || 'tutar açıklanmadı' });
           else Object.assign(kayit, { usd_mn: +((tutar.USD + tutar.EUR * e + tutar.TL / u + (tutar.GBP || 0) * ASELS_PB_YAKLASIK.GBP + (tutar.PLN || 0) / ASELS_PB_YAKLASIK.PLN_EUR * e) / 1e6).toFixed(1), kur_yaklasik: !!(tutar.GBP || tutar.PLN) || undefined, usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1) });
           if (backlogMn != null) kayit.backlog_usd_mn = backlogMn;
+          /* §469e (GLRMK 10 Tem 2025: "Budimex–Budimex Kolejnictwo–Gülermak konsorsiyumu … 2,08 mlr PLN … kesinleşen ihale sonucu"):
+             konsorsiyum/iş ortaklığı toplamı, şirket payı belirtilmemişse TAM sayılır ama işaretlenir — panelde görünür */
+          if (adet && /konsorsiyum|iş ortaklığı|ortak girişim|joint venture|ortaklığı altında/.test(trK(sozMetin)) && !/pay[ıi]\s*(?:ise|olan|olarak|%|\d)/.test(trK(sozMetin))) kayit.konsorsiyum = true;
           K.kayit[b.disclosureIndex] = kayit;
           yeniKayit++;
         } catch (e) { K.cozulemeyen[b.disclosureIndex] = (K.cozulemeyen[b.disclosureIndex] || 0) + 1; uyari.push(kod + ' #' + b.disclosureIndex + ': ' + String(e && e.message || e).slice(0, 60)); }
@@ -3400,7 +3403,7 @@ async function kapYeniIs() {
       const blNokta = kayitlar.filter(x => x.backlog_usd_mn != null);
       if (blNokta.length && t.hisse.length) { const ba = {}; for (const x of blNokta) ba[x.t.slice(0, 7)] = x.backlog_usd_mn; const bk = Object.keys(ba).sort(); const bs = bk[bk.length - 1]; D.seriler['kap_backlog_' + kod.toLowerCase()] = Object.assign({}, D.seriler['kap_backlog_' + kod.toLowerCase()] || {}, { ad: kod + ' beyan edilen backlog — KAP açıklamalarından (mn $)', birim: 'mn $', siklik: 'aylik', hisse: t.hisse, kaynak: 'KAP ÖDA metni ("güncel backlog … USD") · kur Yahoo', aylik: ba, ceyreklik: {}, son: { tarih: bs, deger: ba[bs] }, guncelleme: bugun, n: blNokta.length, _not: 'Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar).' }); }
       if (t.hisse.length || !t.capraz) {
-        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), yillik_kum: akisYillik(kayitlar, bugun), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
+        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.konsorsiyum ? ' [konsorsiyum toplamı — şirket payı belirtilmedi]' : '') + (x.kur_yaklasik ? ' [kur yaklaşık]' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), yillik_kum: akisYillik(kayitlar, bugun), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
       } else { D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: [], kaynak: 'KAP ÖDA Yeni İş İlişkisi (çapraz)', aylik, ceyreklik, yillik, son: { tarih: sonX.t, deger: sonX.usd_mn }, guncelleme: bugun, n: kayitlar.length, gizli: true }); }
       const Qs = Object.keys(ceyreklik).sort(); const sonQ = Qs[Qs.length - 1], oncQ = Qs[Qs.length - 2];
       let capraz = '';
