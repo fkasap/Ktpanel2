@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-20T17:39:26Z",
+ "guncelleme": "2026-10-20T19:10:45Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -320,8 +320,8 @@
    "n": 14,
    "ilk": "2026-10-01",
    "son": "2026-10-20",
-   "usdtry_ort": 49.298,
-   "usdtry_son": 49.5672,
+   "usdtry_ort": 49.299,
+   "usdtry_son": 49.5702,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.5672
+  "2026-10": 49.5702
  },
  "seriler": {
   "altin": {
@@ -5225,12 +5225,12 @@
     ],
     [
      "2026-10-20",
-     4142.8999
+     4144.3999
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 4142.8999
+    "deger": 4144.3999
    },
    "guncelleme": "2026-10-20"
   },
@@ -7253,12 +7253,12 @@
     ],
     [
      "2026-10-20",
-     57.99
+     58.01
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 57.99
+    "deger": 58.01
    },
    "guncelleme": "2026-10-20"
   },
@@ -9281,12 +9281,12 @@
     ],
     [
      "2026-10-20",
-     6.611
+     6.614
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 6.611
+    "deger": 6.614
    },
    "guncelleme": "2026-10-20"
   },
@@ -11303,12 +11303,12 @@
     ],
     [
      "2026-10-20",
-     3078.75
+     3106
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 3078.75
+    "deger": 3106
    },
    "guncelleme": "2026-10-20"
   },
@@ -17386,12 +17386,12 @@
     ],
     [
      "2026-10-20",
-     2.973
+     2.999
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 2.973
+    "deger": 2.999
    },
    "guncelleme": "2026-10-20"
   },
@@ -19410,12 +19410,12 @@
     ],
     [
      "2026-10-20",
-     643.75
+     642.75
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 643.75
+    "deger": 642.75
    },
    "guncelleme": "2026-10-20"
   },
@@ -21438,12 +21438,12 @@
     ],
     [
      "2026-10-20",
-     108.76
+     108.98
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 108.76
+    "deger": 108.98
    },
    "guncelleme": "2026-10-20"
   },
@@ -25609,12 +25609,12 @@
     ],
     [
      "2026-10-20",
-     49.5672
+     49.5702
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 49.5672
+    "deger": 49.5702
    },
    "guncelleme": "2026-10-20"
   },
@@ -51256,14 +51256,14 @@
    "gunluk": [
     [
      "2026-10-20",
-     587.5,
-     "16 Oct 2026"
+     591,
+     "19 Oct 2026"
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 587.5,
-    "etiket": "16 Oct 2026"
+    "deger": 591,
+    "etiket": "19 Oct 2026"
    },
    "guncelleme": "2026-10-20",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
@@ -51305,12 +51305,12 @@
    "gunluk": [
     [
      "2026-10-20",
-     191
+     194.5
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 191
+    "deger": 194.5
    },
    "guncelleme": "2026-10-20",
    "_not": "KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur."
