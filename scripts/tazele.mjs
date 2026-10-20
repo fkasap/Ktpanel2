@@ -3148,23 +3148,36 @@ const ASELS_KUR_YEDEK = {
 const ASELS_RESMI = {
   backlog: { '2024Q4': 14.0, '2025Q4': 20.4, '2026Q2': 23.2 },
   yeni_is: { '2024': 6.5, '2025': 9.6, '2026H1': 4.9 },
-  kaynak: 'Şirket finansal sonuç açıklamaları: 24 Şub 2026 (2025: bakiye 20,4 · yeni iş 9,6 · 2024 sonu 14,0) · 5 Ağu 2026 (1Y26: bakiye 23,2 (+%45) · yeni iş 4,9 (+%72))',
+  kaynak: 'Şirket çeyrek sonuçları (AA/Bloomberg HT: 24 Şub 2026 · 5 Ağu 2026) — elle',
+  not: '24 Şub 2026: 2025 sonu bakiye 20,4 · yeni iş 9,6 · 2024 sonu 14,0 mlr $. 5 Ağu 2026: 1Y26 bakiye 23,2 (+%45) · yeni iş 4,9 (+%72) mlr $.',
 };
 const aselsTemiz = h => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 const aselsSayi = s => { s = s.trim(); if (/,\d{1,2}$/.test(s)) return parseFloat(s.replace(/\./g, '').replace(',', '.')); if (/^\d{1,3}(\.\d{3})+$/.test(s)) return parseFloat(s.replace(/\./g, '')); return parseFloat(s.replace(',', '.')); };
-const aselsPB = s => { s = s.toLowerCase(); if (/abd|usd|dolar/.test(s)) return 'USD'; if (/avro|euro|eur/.test(s)) return 'EUR'; return 'TL'; };
-const ASELS_RE = /(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d+)?)[\s,.\-]*(milyon|milyar|bin)?[\s,.\-]*(ABD\s*Dolar['’]?[ıi]?|Amerikan\s*Dolar['’]?[ıi]?|USD|Dolar|Avro|Euro|EUR|Türk\s*Liras[ıi]|TL|TRY)(?![A-Za-zıİşŞğĞüÜöÖçÇ])/giu;
+const aselsPB = s => { s = s.toLowerCase(); if (/abd|usd|dolar|\$/.test(s)) return 'USD'; if (/avro|euro|eur|€/.test(s)) return 'EUR'; if (/sterlin|gbp|£/.test(s)) return 'GBP'; if (/zlot|pln|zł/.test(s)) return 'PLN'; return 'TL'; };
+/* §469d (KATMR canlı metinleri): sembol ÖNDE "$ 8.392.800 (SekizMilyon…)", "€ 2.990.000", "$7.684.639"; sembol arkada "4.150.000 $";
+   rakamın yazıyla tekrarı parantez içinde; HTML varlıkları (&#x27;). Ön-normalizasyon: rakamsız parantezler atılır, sembol biçimleri
+   "SAYI PARA" biçimine çevrilir; GBP/PLN eklendi (kur yaklaşık: GBP 1,27 $ · PLN = EUR/4,3). */
+const ASELS_PB_YAKLASIK = { GBP: 1.27, PLN_EUR: 4.3 };
+const ASELS_RE = /(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d+)?)[\s,.\-]*(milyon|milyar|bin)?[\s,.\-]*(ABD\s*Dolar['’]?[ıi]?|Amerikan\s*Dolar['’]?[ıi]?|USD|Dolar|Avro|Euro|EURO|EUR|İngiliz\s*Sterlini|Sterlin|GBP|Polonya\s*Zlotisi|Zloti|PLN|Türk\s*Liras[ıi]|TL|TRY)(?![A-Za-zıİşŞğĞüÜöÖçÇ])/giu;
+function aselsNormalize(m) {
+  let t = String(m || '').replace(/&#x27;|&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#(\d+);/g, (_, c) => String.fromCharCode(+c));
+  t = t.replace(/\([^)\d]*\)/g, ' ');                                                        /* (üçmilyondokuzyüzbin), (KDV Hariç) */
+  t = t.replace(/\([^)]*(?:yaklaşık|karşılığ|TCMB|kuru|kur\b|döviz)[^)]*\)/giu, ' ');            /* (yaklaşık 260 mn TL, TCMB kuru…) */
+  t = t.replace(/([$€£])\s*(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d+)?)(\s*(?:milyon|milyar|bin))?/giu, (_, pb, sayi, carpan) => sayi + (carpan || '') + ' ' + ({ '$': 'USD', '€': 'EUR', '£': 'GBP' })[pb]);
+  t = t.replace(/(\d{1,3}(?:\.\d{3})+(?:,\d{1,2})?|\d+(?:,\d+)?)(\s*(?:milyon|milyar|bin))?\s*([$€£])(?![\w])/giu, (_, sayi, carpan, pb) => sayi + (carpan || '') + ' ' + ({ '$': 'USD', '€': 'EUR', '£': 'GBP' })[pb]);
+  t = t.replace(/\bzł\b/g, ' PLN');
+  return t.replace(/\s+/g, ' ');
+}
 /* Metinden tutarları çöz: "toplam" varsa ondan sonrası; aynı (para birimi, tutar) tekrarı sayılmaz; <1000 birim (yıl, adet) atlanır */
 function aselsCozum(m) {
-  /* §469c (KATMR 2 Oca 2025: "7.124.730 EURO (yaklaşık 260.381.807,53-TL, TCMB kuru…)" iki kez sayıldı): parantez içi kur
-     karşılığı/yaklaşık TL çevirileri tutar DEĞİL, aynı tutarın başka para birimiyle yazımıdır → metinden çıkarılır */
-  m = String(m || '').replace(/\([^)]*(?:yaklaşık|karşılığ|TCMB|kuru|kur\b|döviz)[^)]*\)/giu, ' ');
+  /* §469c/d: ön-normalizasyon — parantez içi kur karşılıkları ve yazıyla sayılar atılır, sembol biçimleri sözcüğe çevrilir */
+  m = aselsNormalize(m);
   /* §469b: konsorsiyum/iş ortaklığı metninde "Şirketimizin/ASELSAN payı … Avro" varsa ŞİRKET PAYI esastır (toplam değil) */
   const payM = m.match(/pay\s*tutar[ıi]\s*(?:ise|olan|olarak)?\s*(?=\d)/iu) || m.match(/(?:şirketimizin|ortaklığımızın|aselsan|grubumuzun|[A-ZÇĞİÖŞÜ][\wçğıöşü]+)\s+pay[ıi]\s*(?:ise|olan|olarak)?\s*(?=\d)/u);
   if (payM) { const r = aselsCozumParca(m.slice(payM.index)); if (r.adet) return r; }
   const sonToplam = Math.max(m.lastIndexOf('toplam'), m.lastIndexOf('Toplam'));
   const parca = sonToplam >= 0 ? m.slice(sonToplam) : m;
-  const tutar = { USD: 0, EUR: 0, TL: 0 }; const gorulen = new Set(); let adet = 0;
+  const tutar = { USD: 0, EUR: 0, TL: 0, GBP: 0, PLN: 0 }; const gorulen = new Set(); let adet = 0;
   for (const h of parca.matchAll(ASELS_RE)) {
     let v = aselsSayi(h[1]); const c = (h[2] || '').toLowerCase();
     if (c === 'milyar') v *= 1e9; else if (c === 'milyon') v *= 1e6; else if (c === 'bin') v *= 1e3;
@@ -3176,7 +3189,7 @@ function aselsCozum(m) {
   return { tutar, adet };
 }
 function aselsCozumParca(parca) {
-  const tutar = { USD: 0, EUR: 0, TL: 0 }; const gorulen = new Set(); let adet = 0;
+  const tutar = { USD: 0, EUR: 0, TL: 0, GBP: 0, PLN: 0 }; const gorulen = new Set(); let adet = 0;
   for (const h of parca.matchAll(ASELS_RE)) {
     let v = aselsSayi(h[1]); const c = (h[2] || '').toLowerCase();
     if (c === 'milyar') v *= 1e9; else if (c === 'milyon') v *= 1e6; else if (c === 'bin') v *= 1e3;
@@ -3189,6 +3202,21 @@ function aselsCozumParca(parca) {
   const ikinci = parca.match(new RegExp('^[^.;]*?' + ASELS_RE.source.replace(/^\(/, '(?:') , 'iu'));
   if (ikinci) { const kalan = parca.slice(ikinci[0].length); const m2 = kalan.match(/^\s*(?:ve|,)\s*/); if (m2) { const h2 = kalan.slice(m2[0].length).match(new RegExp('^' + ASELS_RE.source, 'iu')); if (h2) { let v = aselsSayi(h2[1]); const c = (h2[2] || '').toLowerCase(); if (c === 'milyar') v *= 1e9; else if (c === 'milyon') v *= 1e6; else if (c === 'bin') v *= 1e3; if (v > 1000) { const pb = aselsPB(h2[3]); tutar[pb] += v; adet++; } } } }
   return { tutar, adet };
+}
+/* §471 (kullanıcı 20 Eki 10:56: "backloglar toplam gözükse daha iyi olur, her yıl yeni bir başlangıç olsun; liste dağınık"):
+   akış serileri için YILLIK KÜMÜLATİF özet — yıl toplamı, adet, bugünün ay-gününe kadar olan kısım (geçen yılla aynı tarih
+   kıyası) ve son sözleşme. Panel uzun liste yerine bu tabloyu gösterir. */
+function akisYillik(items, bugunStr) {
+  const mmdd = bugunStr.slice(5, 10); const out = {};
+  for (const it of items) {
+    const y = it.t.slice(0, 4); const o = out[y] = out[y] || { toplam: 0, adet: 0, tutarsiz: 0, ayni_tarih: 0, ayni_tarih_adet: 0, son: null };
+    o.adet++; if (it.tutarsiz) o.tutarsiz++; o.toplam = +(o.toplam + (it.usd_mn || 0)).toFixed(1);
+    if (it.t.slice(5, 10) <= mmdd) { o.ayni_tarih = +(o.ayni_tarih + (it.usd_mn || 0)).toFixed(1); o.ayni_tarih_adet++; }
+    if (!o.son || it.t > o.son.t) o.son = { t: it.t, usd_mn: it.usd_mn, ozet: String(it.ozet || '').slice(0, 120) };
+  }
+  const yillar = Object.keys(out).sort();
+  for (let i = 0; i < yillar.length; i++) { const y = yillar[i], g = out[String(+y - 1)]; out[y].yy_ayni_tarih = (g && g.ayni_tarih > 0) ? +((out[y].ayni_tarih / g.ayni_tarih - 1) * 100).toFixed(1) : null; out[y].yy_toplam = (g && g.toplam > 0 && y !== bugunStr.slice(0, 4)) ? +((out[y].toplam / g.toplam - 1) * 100).toFixed(1) : null; }
+  return { yillar: out, bugun: bugunStr, mmdd };
 }
 async function aselsSiparis() {
   const dosya = 'sektor-surucu.json';
@@ -3221,7 +3249,7 @@ async function aselsSiparis() {
     if (!adet) { cozulemeyen.push(tarih + ': ' + metin.slice(0, 110)); continue; }
     const imza = tarih + '|' + baslik + '|' + tutar.USD + '|' + tutar.EUR + '|' + tutar.TL; if (gorulenKayit.has(imza)) continue; gorulenKayit.add(imza);   /* listede aynı açıklama iki kez (2017-06-06, 2018-12-25) */
     const u = kur(fxUsd, fxUsdK, tarih, ASELS_KUR_YEDEK.usdtry), e = kur(fxEur, fxEurK, tarih, ASELS_KUR_YEDEK.eurusd);
-    const usdMn = +((tutar.USD + tutar.EUR * e + tutar.TL / u) / 1e6).toFixed(1);
+    const usdMn = +((tutar.USD + tutar.EUR * e + tutar.TL / u + (tutar.GBP || 0) * ASELS_PB_YAKLASIK.GBP + (tutar.PLN || 0) / ASELS_PB_YAKLASIK.PLN_EUR * e) / 1e6).toFixed(1);
     items.push({ t: tarih, tur: /DEĞİŞİKLİĞİ/i.test(baslik) ? 'değişiklik' : 'yeni', usd_mn: usdMn, usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1), ozet: metin.slice(0, 160), slug: T.slug || null });
   }
   if (items.length < 150 || cozulemeyen.length > Math.max(5, sozlesmeSayisi * 0.05)) { raporlar.push('### ASELSAN sözleşme akışı (§467) — ✗ denetim: ' + items.length + ' çözüldü, ' + cozulemeyen.length + '/' + sozlesmeSayisi + ' çözülemedi — şablon değişmiş olabilir; seri KORUNDU\n- ' + cozulemeyen.slice(0, 4).join('\n- ')); return; }
@@ -3239,11 +3267,12 @@ async function aselsSiparis() {
     ad: 'ASELSAN açıklanan sözleşmeler — KAP, çeyrek TOPLAMI (mn $)', birim: 'mn $', siklik: 'aylik', akis: true, hisse: ['ASELS'],
     kaynak: 'aselsan.com KAP açıklamaları (webapi) · kur ' + kurYolu, aylik, ceyreklik, yillik, adet_ceyrek: adetQ,
     son: { tarih: sonIt.t, deger: sonIt.usd_mn, ay: sonAy, ay_toplam: aylik[sonAy] }, guncelleme: bugun, n: items.length,   /* son = son açıklanan sözleşme (mn $); ay_toplam = içinde bulunulan ayın toplamı */
-    sozlesmeler: items.slice(-12).reverse(),
+    sozlesmeler: items.slice(-12).reverse(), yillik_kum: akisYillik(items, bugun),
     _kapsam: 'KAP eşiği üstü açıklanan sözleşmeler; resmî "yeni iş alımı"nın yaklaşık %45-70\'i (2024: 4,4/6,5 · 2025: 6,4/9,6 · 1Y26: 2,05/4,9 mlr $). Büyük sözleşme akışının öncü göstergesi; seviye değil yön ve y/y okunur.',
   });
   /* resmî bakiye sipariş — tohum (yoksa yaz; varsa elle girilmiş değerleri koru, yenileri ekle) */
-  const rb = D.seriler.asels_backlog || { ad: 'ASELSAN resmî bakiye sipariş — backlog (mlr $, çeyrek sonu; elle)', birim: 'mlr $', siklik: 'aylik', hisse: ['ASELS'], aylik: {}, ceyreklik: {}, kaynak: ASELS_RESMI.kaynak };
+  const rb = D.seriler.asels_backlog || { ad: 'ASELSAN resmî bakiye sipariş — backlog (mlr $, çeyrek sonu; elle)', birim: 'mlr $', siklik: 'aylik', hisse: ['ASELS'], aylik: {}, ceyreklik: {} };
+  rb.kaynak = ASELS_RESMI.kaynak; rb._not = ASELS_RESMI.not;
   rb.ceyreklik = Object.assign({}, ASELS_RESMI.backlog, rb.ceyreklik || {}); rb.yeni_is = Object.assign({}, ASELS_RESMI.yeni_is, rb.yeni_is || {});
   const rbQ = Object.keys(rb.ceyreklik).sort(); const rbSon = rbQ[rbQ.length - 1]; rb.son = { tarih: rbSon, deger: rb.ceyreklik[rbSon] }; rb.guncelleme = rb.guncelleme || bugun; rb.elle = true;
   D.seriler.asels_backlog = rb;
@@ -3291,7 +3320,7 @@ async function kapYeniIs() {
   const K = D.kap_yeni_is = D.kap_yeni_is || { oid: {}, kayit: {}, cozulemeyen: {} };
   K.oid = K.oid || {}; K.kayit = K.kayit || {}; K.cozulemeyen = K.cozulemeyen || {};
   /* ayrıştırıcı sürümü değişince kayıtlar bir kez yeniden çözülür (eski yanlış tutarlar dosyada kalmasın) */
-  const KAP_YI_SURUM = '469c'; if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
+  const KAP_YI_SURUM = '469d'; if (K.surum !== KAP_YI_SURUM) { K.kayit = {}; K.cozulemeyen = {}; K.surum = KAP_YI_SURUM; }
   const H = { 'content-type': 'application/json', 'accept': 'application/json', 'referer': 'https://www.kap.org.tr/tr/bildirim-sorgu', 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' };
   const uykuYi = ms => new Promise(r => setTimeout(r, ms));
   /* kur (ASELS katmanıyla aynı yol) */
@@ -3348,10 +3377,10 @@ async function kapYeniIs() {
           let { tutar, adet } = aselsCozum(sozMetin); let neden = null;
           if (olumsuz && !imza) { neden = 'teklif/iptal — sözleşme değil'; adet = 0; }
           const u = kur(fxUsd, fxUsdK, tarih, ASELS_KUR_YEDEK.usdtry), e = kur(fxEur, fxEurK, tarih, ASELS_KUR_YEDEK.eurusd);
-          let backlogMn = null; if (blMetin) { const rb = aselsCozum(blMetin); if (rb.adet) backlogMn = +((rb.tutar.USD + rb.tutar.EUR * e + rb.tutar.TL / u) / 1e6).toFixed(1); }
+          let backlogMn = null; if (blMetin) { const rb = aselsCozum(blMetin); if (rb.adet) backlogMn = +((rb.tutar.USD + rb.tutar.EUR * e + rb.tutar.TL / u + (rb.tutar.GBP || 0) * ASELS_PB_YAKLASIK.GBP + (rb.tutar.PLN || 0) / ASELS_PB_YAKLASIK.PLN_EUR * e) / 1e6).toFixed(1); }
           const kayit = { kod, t: tarih, ozet: metin.slice(0, 160), baslik: String(b.summary || '').trim().slice(0, 60) };
           if (!adet) Object.assign(kayit, { usd_mn: 0, usd: 0, eur: 0, tl: 0, tutarsiz: true, neden: neden || 'tutar açıklanmadı' });
-          else Object.assign(kayit, { usd_mn: +((tutar.USD + tutar.EUR * e + tutar.TL / u) / 1e6).toFixed(1), usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1) });
+          else Object.assign(kayit, { usd_mn: +((tutar.USD + tutar.EUR * e + tutar.TL / u + (tutar.GBP || 0) * ASELS_PB_YAKLASIK.GBP + (tutar.PLN || 0) / ASELS_PB_YAKLASIK.PLN_EUR * e) / 1e6).toFixed(1), kur_yaklasik: !!(tutar.GBP || tutar.PLN) || undefined, usd: +(tutar.USD / 1e6).toFixed(2), eur: +(tutar.EUR / 1e6).toFixed(2), tl: +(tutar.TL / 1e6).toFixed(1) });
           if (backlogMn != null) kayit.backlog_usd_mn = backlogMn;
           K.kayit[b.disclosureIndex] = kayit;
           yeniKayit++;
@@ -3371,7 +3400,7 @@ async function kapYeniIs() {
       const blNokta = kayitlar.filter(x => x.backlog_usd_mn != null);
       if (blNokta.length && t.hisse.length) { const ba = {}; for (const x of blNokta) ba[x.t.slice(0, 7)] = x.backlog_usd_mn; const bk = Object.keys(ba).sort(); const bs = bk[bk.length - 1]; D.seriler['kap_backlog_' + kod.toLowerCase()] = Object.assign({}, D.seriler['kap_backlog_' + kod.toLowerCase()] || {}, { ad: kod + ' beyan edilen backlog — KAP açıklamalarından (mn $)', birim: 'mn $', siklik: 'aylik', hisse: t.hisse, kaynak: 'KAP ÖDA metni ("güncel backlog … USD") · kur Yahoo', aylik: ba, ceyreklik: {}, son: { tarih: bs, deger: ba[bs] }, guncelleme: bugun, n: blNokta.length, _not: 'Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar).' }); }
       if (t.hisse.length || !t.capraz) {
-        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
+        D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: t.hisse, kaynak: 'KAP ÖDA "Yeni İş İlişkisi" (kap.org.tr) · kur Yahoo', aylik, ceyreklik, yillik, adet_ceyrek: adetQ, tutarsiz_ceyrek: tutarsizQ, son: { tarih: sonX.t, deger: sonX.usd_mn, ay: sonX.t.slice(0, 7) }, guncelleme: bugun, n: kayitlar.length, sozlesmeler: kayitlar.slice(-12).reverse().map(x => ({ t: x.t, tur: 'yeni', usd_mn: x.usd_mn, usd: x.usd, eur: x.eur, tl: x.tl, ozet: x.ozet + (x.tutarsiz ? ' [' + (x.neden || 'tutar açıklanmadı') + ']' : '') + (x.backlog_usd_mn != null ? ' [backlog ' + x.backlog_usd_mn + ' mn $]' : '') })), yillik_kum: akisYillik(kayitlar, bugun), _kapsam: 'KAP ÖDA "Yeni İş İlişkisi" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur.' });
       } else { D.seriler[t.seri] = Object.assign({}, D.seriler[t.seri] || {}, { ad: t.ad, birim: 'mn $', siklik: 'aylik', akis: true, hisse: [], kaynak: 'KAP ÖDA Yeni İş İlişkisi (çapraz)', aylik, ceyreklik, yillik, son: { tarih: sonX.t, deger: sonX.usd_mn }, guncelleme: bugun, n: kayitlar.length, gizli: true }); }
       const Qs = Object.keys(ceyreklik).sort(); const sonQ = Qs[Qs.length - 1], oncQ = Qs[Qs.length - 2];
       let capraz = '';
