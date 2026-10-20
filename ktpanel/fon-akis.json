@@ -212835,7 +212835,7 @@
   "gun": "2026-10-20",
   "onceki": "2026-10-19",
   "adet": 69,
-  "eslesmeyen": 10,
+  "eslesmeyen": 9,
   "liste": [
    {
     "ad": "AK",
@@ -213065,7 +213065,7 @@
    {
     "ad": "HEDEF",
     "net": -6452115,
-    "fon": 53
+    "fon": 54
    },
    {
     "ad": "AHLATCI ANONİM ŞİRKETİ",
@@ -213428,7 +213428,7 @@
     {
      "ad": "HEDEF",
      "net": -227435712,
-     "fon": 52
+     "fon": 53
     },
     {
      "ad": "ALBARAKA",
@@ -213876,8 +213876,8 @@
     },
     {
      "ad": "HEDEF",
-     "net": -1067181263,
-     "fon": 53
+     "net": -1067198584,
+     "fon": 54
     },
     {
      "ad": "OSMANLI",
