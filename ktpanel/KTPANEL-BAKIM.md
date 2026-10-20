@@ -6,6 +6,19 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §478 (20 Eki 2026, 21:10) — FAKTÖR v3.4 + ÇIKARILANIN AĞIRLIĞI DAĞILIR
+
+Kullanıcı: "GYO'ları yoksay (ben silerim), diğerlerini yap; listeden hisse kaldırınca ağırlıklar aynı kalıyor." (1) fm-isle.py v3.4:
+TMS-29 — net kâr tabanlı P/E 1,0→0,5 · ROE 1,5→0,75 · ROA 1,0→0,5; faaliyet tabanlı ROIC 1,5→2,0 · FAVÖK marjı 0,5→1,0. İnce veri
+büzmesi: faktör skoru × (mevcut metrik ağırlık payı)^0,5, kapsam < 0,6 → kayıtta `ince` ve `k` (panelde soluk italik hücre + "i").
+YEOTK 14→32 (kalite tek ROE'den), SAFKR 15→23. HATA BULUNDU: küçük sektörlerde (Energy) metrik başına gözlem < 2 olunca z=None →
+TUPRS'un VALUE'su 6 metrikten yalnız EV/Sales ile kuruluyordu (k 0,1, VALUE 0,56); kural artık "sektörde o metrikte gözlem <
+MIN_SEKTOR ise evren z'si" → TUPRS VALUE 1,02. GYO'lar dokunulmadı (kullanıcı × ile çıkaracak). (2) app.js §478: ağırlık çapası =
+seçime giremeyen ilk hissenin skoru (eskiden seçimin en düşüğü — son isim ~0 → %1 tabanı). Yeni "ÇIKARILAN" kutusu: varsayılan
+"ağırlığı dağıt" — × ile çıkarılan isim seçimden SONRA düşer, portföy 24'e iner, ağırlığı kalanlara skorla orantılı dağılır (AHGAZ
+çıkınca TUPRS 7,7→8,4, TCKRC 7,3→8,0); "yedek girsin" eski §405 davranışı. Tampon listesi yeni değişkenle kuruldu (aktif kalktı).
+DEPLOY: ktpanel/arac/fm-isle.py · app.js 20261020i · index.html (ÇIKARILAN kutusu, etiket v3.4) · BAKIM. Skorlar: katman=fm.
+
 # BAKIM EK — §477 (20 Eki 2026, 17:40) — "FAKTÖR MODELİN SKORLAMASI SIKINTILI" → v3.3
 
 TEŞHİS (canlı fm.json + fm-girdi.csv üzerinde): (1) 60 hissenin sektörü boştu ("Bilinmiyor"; AHGAZ, AKCNS, ENERY, TKFEN, TCKRC…) →

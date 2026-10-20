@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020h';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020i';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1629,7 +1629,7 @@ async function fmInit(){
     document.querySelectorAll('.fmKaynakKisa').forEach(e=>{ e.textContent= kendi ? 'KAP+Yahoo kendi hesap' : 'CSV'; }); }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
-  ['fmTaban','fmBuzme'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',()=>fmRender()); });
+  ['fmTaban','fmBuzme','fmYedek'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',()=>fmRender()); });
   try{ const xj=await (await fetch('/xktum.json',{cache:'no-store'})).json(); window.__FMX=xj.uyeler||{}; }catch(e){ window.__FMX=null; }   /* §454 büyüklük vekili: XKTUM ağırlığı */
   $('fmReset').addEventListener('click',()=>{FMF.forEach(k=>$('fmw'+k).value=FMW_DEF[k]);
     try{localStorage.removeItem(FMW_KEY);}catch(e){}   // kaydı sil, yoksa varsayılan geri gelmez
@@ -1735,9 +1735,10 @@ function trackRender(){
     $('trkNote').innerHTML='Sicil <em>bugün</em> kuruldu — ilk performans noktası bir sonraki damgalı güncellemede ("güncelle" komutuyla) eklenecek. İzlenen portföy tabloda görünen seçim değil, kuruluşta damgalanan resmi Top-25\u0027tir: ağırlık kutucuklarıyla oynaman sicili etkilemez. Bu disiplin önemli: sicil ancak <em>önceden ilan edilmiş</em> kurallarla tutulursa anlamlıdır — sonradan ağırlık değiştirip "aslında şöyle yapsaydık" demek sicil değil, hikâye olur.';
   }
 }
-function fmWeightsCalc(scores,secs){
+function fmWeightsCalc(scores,secs,capa){
   const MINW=FM.meta.minw,MAXW=FM.meta.maxw,CAP=FM.meta.seccap;
-  const minv=Math.min.apply(null,scores);
+  /* §478: çapa = seçime giremeyen ilk hissenin skoru (yoksa seçimin en düşüğü) */
+  const minv=(typeof capa==='number'&&isFinite(capa)&&capa<Math.min.apply(null,scores))?capa:Math.min.apply(null,scores);
   let w=scores.map(s=>Math.pow(s-minv+1e-6,FM.meta.walpha));
   let t=w.reduce((a,b)=>a+b,0);w=w.map(x=>x/t);
   function indClip(){
@@ -1780,7 +1781,7 @@ function fmRender(){
     // Eksik faktör = nötr (0 z-skoru, yani sektör ortalaması): ne ödül ne ceza, ağırlık kaymaz.
     let sc=0,nn=0;r.f.forEach((v,i)=>{if(v!=null)nn++;sc+=(v!=null?v:0)*(wArr[i]/tw);});
     if(nn<(FM.meta.minfac||3))return null;
-    return {t:r.t,s:r.s,f:r.f,n:r.n,score:sc,ham:sc};
+    return {t:r.t,s:r.s,f:r.f,k:r.k||null,n:r.n,score:sc,ham:sc};
   }).filter(Boolean);
   /* §454 BÜYÜKLÜK YANLILIĞI (5 Eki ölçümü, fm.json 24 Ağu): büyükler ORTALAMADA daha yüksek skorlu (ort. sıra 66
      vs mikro 121; corr(log PD, skor) +0,25) ama TOP-25'i mikrolar dolduruyordu (10 mikro / 5 büyük; seçimin XKTUM
@@ -1800,17 +1801,22 @@ function fmRender(){
   rows.sort((a,b)=>b.score-a.score);
   /* §405: dışlananlar SEÇİMDEN ÖNCE düşer — yedek kendiliğinden girer */
   const disla=new Set(fmDislaOku());
-  const aktif=rows.filter(r=>!disla.has(r.t));
-  const sel=[],cnt={};
-  for(const r of aktif){
-    if(sel.length>=FM.meta.topn)break;
+  /* §478: yedek=1 → dışlananlar seçimden ÖNCE düşer, 26. giren olur (eski §405). yedek=0 (varsayılan) → seçim tam listeden
+     yapılır, dışlananlar SONRA çıkar; portföy küçülür, ağırlıkları kalanlara skorla orantılı dağılır. */
+  const yedek=(($('fmYedek')||{}).value||'0')==='1';
+  const havuz=yedek? rows.filter(r=>!disla.has(r.t)) : rows;
+  const sel0=[],cnt={}; let capa=null;
+  for(const r of havuz){
     if((cnt[r.s]||0)>=FM.meta.maxnames)continue;
-    sel.push(r);cnt[r.s]=(cnt[r.s]||0)+1;
+    if(sel0.length>=FM.meta.topn){ capa=r.score; break; }
+    sel0.push(r);cnt[r.s]=(cnt[r.s]||0)+1;
   }
-  const wts=fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s));
-  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+kap.toFixed(1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':''); }
-  const zf=v=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+v.toFixed(2)+'</td>';
-  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0])+zf(r.f[1])+zf(r.f[2])+zf(r.f[3])+zf(r.f[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek üstten girer" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
+  const sel=yedek? sel0 : sel0.filter(r=>!disla.has(r.t));
+  const cikanSay=sel0.length-sel.length;
+  const wts=sel.length? fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s),capa) : [];
+  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+kap.toFixed(1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':'')+(cikanSay?' · çıkarılan '+cikanSay+' → ağırlığı dağıtıldı ('+sel.length+' hisse)':''); }
+  const zf=(v,k)=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'"'+(k!=null&&k<0.6?' style="opacity:.55;font-style:italic" title="ince veri: bu faktörün metriklerinin yalnız %'+Math.round(k*100)+'\'i var — skor sıfıra doğru büzüldü"':'')+'>'+(v>=0?'+':'')+v.toFixed(2)+(k!=null&&k<0.6?'<sup>i</sup>':'')+'</td>';
+  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0],r.k&&r.k[0])+zf(r.f[1],r.k&&r.k[1])+zf(r.f[2],r.k&&r.k[2])+zf(r.f[3],r.k&&r.k[3])+zf(r.f[4],r.k&&r.k[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — ağırlığı kalanlara dağılır (ÇIKARILAN kutusundan yedek girsin seçilebilir)" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
   /* §405: × satır tıklamasını YUTAR — yoksa çıkarırken detay kartı açılır */
   document.querySelectorAll('#fmBody .fmCikar').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();fmDislaEkle(b.dataset.t);}));
@@ -1824,7 +1830,7 @@ function fmRender(){
     db.querySelectorAll('.fmGeriAl').forEach(x=>x.addEventListener('click',ev=>{ev.preventDefault();fmDislaGeriAl(x.dataset.t);}));
     const tm=db.querySelector('#fmDislaTemizle'); if(tm)tm.addEventListener('click',ev=>{ev.preventDefault();fmDislaYaz([]);fmRender();}); }
   const inSel=new Set(sel.map(r=>r.t));
-  const buf=aktif.filter(r=>!inSel.has(r.t)).slice(0,15).map(r=>r.t);
+  const buf=rows.filter(r=>!disla.has(r.t)&&!inSel.has(r.t)).slice(0,15).map(r=>r.t);
   $('fmBuffer').textContent='Tampon bölge / izleme listesi (26–40 bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
   const sw={};sel.forEach((r,i)=>sw[r.s]=(sw[r.s]||0)+wts[i]);
   const mx=Math.max.apply(null,Object.values(sw));
