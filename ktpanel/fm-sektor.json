@@ -1,5 +1,5 @@
 {
- "_not": "§455 faktör modeli sektör haritası (GICS adları). Kaynak sırası: elle > Koyfin fm.json > Yahoo assetProfile. Eksikler \"Bilinmiyor\" → tüm evrene karşı normalize (fm-isle.py §455). §477 (20 Eki 2026): 60 eksik sektör Fintables BIST sektöründen GICS'e eşlenerek ELLE dolduruldu (Enerji Üretim→Utilities, Kimya/Çimento/Ana Metal→Materials, Toptan-Perakende/Otomotiv Yan/Tekstil/Turizm→Consumer Discretionary, Bilişim/Tekn. Ürün Tic.→IT, Gıda→Consumer Staples, İnşaat/Savunma/İmalat/Holding/Destek→Industrials).",
+ "_not": "§455 faktör modeli sektör haritası (GICS adları). Kaynak sırası: elle > Koyfin fm.json > Yahoo assetProfile. Eksikler \"Bilinmiyor\" → tüm evrene karşı normalize (fm-isle.py §455).",
  "guncelleme": "2026-10-20",
  "sektor": {
   "ACSEL": "Materials",
