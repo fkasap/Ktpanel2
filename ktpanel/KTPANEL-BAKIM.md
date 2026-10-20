@@ -6,6 +6,18 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §476 (20 Eki 2026, 16:50) — "BAŞLIK TEMİZ OLUR" — BAŞLIK ALT YAZILARI KALDIRILDI
+
+Kullanıcı: "her başlığa bir şey yazıyorsun, başlık temiz olur." KURAL (bundan sonra): başlık = yalnız ad. Açıklama başlığa yazılmaz;
+veri/lejant (birim, tarih, R², lejant) gerekiyorsa başlığın ALTINDA küçük gri .sub satırı; yorum/öğretici metin dipnotta ("Nasıl okunur",
+"Rol:" notu). Uygulama: patch.py üretim sırasında (1) index.html'deki 25 <h2>…<span class="thin">(…)</span></h2> alt yazısı silindi
+(KATILIM BANKALARI birimi "milyon TL" .sub satırına taşındı); (2) app.js'de 11 <div class="lbl"> başlığının thin alt yazısı .sub
+satırına taşındı (veri taşıyorlar: ilk toplantı tarihi, E12 hesabı, net skor, mn birim, fon sayısı); (3) karar.js'de 11 başlık: açıklama
+olanlar silindi (pano, fiyatlanma, puan kartı, tezi bozacaklar, sicil, sektör bilgisi, yıllık toplam), lejant/veri olanlar .sub'a
+(model fit, beklenti grafiği lejantı, sürücü grafiği lejantı, gerçek-model lejantı, hisse sektör·tier); "PUAN KARTI → SİNYAL" → "PUAN
+KARTI", açıklaması "Nasıl okunur" notuna; kart başlığı "ÇEYREK KARAR MOTORU". Sürüm 20261020h; index.html de yüklenmeli (h2'ler orada).
+Satır içi thin kullanımları (tablo hücreleri, notlar) dokunulmadı.
+
 # BAKIM EK — §475 (20 Eki 2026, 16:00) — "SUT ZAMMINI NEREDEN GÖRECEK?" → SGK'NIN KENDİ LİSTESİNDEN, OTOMATİK
 
 İtiraz haklıydı: §474 RG'de SUT başlığını görüyor, ORANI elden alıyordu. Kaynak: SGK her değişiklikte sgk.gov.tr/Arama/Index/sut

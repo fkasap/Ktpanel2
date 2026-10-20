@@ -390,7 +390,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 
 
-<h2>07 Kritik Takvim <span class="thin">(12 Eki – 12 Kas 2026 · TR · ABD · Avrupa · Japonya)</span></h2>
+<h2>07 Kritik Takvim</h2>
 <!-- SS321: align-items:start -> stretch. Takvim karti SS319 otomatik bolumle
      uzayinca GORUS karti yarida kaliyordu. Artik ikisi ayni yuksekligi paylasir;
      GORUS notu kart icinde kaydirilir (sabit 460px tavani kalkti). -->
@@ -416,7 +416,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
 </div>
 
-<h2>08 Bilanço Takvimi <span class="thin">(açıklananlar inceleme-ai · BIST beklenenler KAP geçen yıl deseni · ABD Finnhub · canlı)</span></h2>
+<h2>08 Bilanço Takvimi</h2>
 <!-- §162: t11'deki kopya takvim kaldırıldı, CANLI ABD kazanç beslemesi buraya taşındı.
      Üstteki tablo damgalı (elle yazılır); aşağısı Finnhub'dan canlı gelir. İkisi ayrı kutuda
      ki hangisinin canlı olduğu görünsün — karışık bir tabloda bu ayrım kaybolurdu. -->
@@ -724,7 +724,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <h2>SEKTÖREL KREDİ STRESİ <span class="thin">(ekonomik faaliyet kolu · milyon TL)</span> <span class="tag" id="bnkSekDamga" style="font-weight:400">yükleniyor…</span></h2>
 <div class="card" style="padding:6px 10px;overflow-x:auto"><table aria-label="Sektörel kredi"><thead><tr><th>Sektör</th><th class="num">Nakdi Kredi</th><th class="num">Pay %</th><th class="num">Takip %</th><th class="num">Δ Takip (bp)</th><th class="num">Aylık Kredi %</th><th class="num">Uzun Vade %</th><th class="num">Gayrinakdi</th></tr></thead><tbody id="bnkSekBody"></tbody></table></div>
 <div class="note" id="bnkSekNot" style="margin-top:8px"></div>
-<h2>KATILIM BANKALARI — BİLANÇO DETAYI <span class="thin">(TP / YP / Toplam · milyon TL)</span></h2>
+<h2>KATILIM BANKALARI — BİLANÇO DETAYI</h2><div class="sub">milyon TL · TP / YP / Toplam</div>
 <div class="card" style="padding:6px 10px;overflow-x:auto"><table aria-label="Katılım bilanço"><thead><tr><th style="width:30px">#</th><th>Kalem</th><th class="num">TP</th><th class="num">YP</th><th class="num">Toplam</th><th class="num">YP %</th></tr></thead><tbody id="bnkKalemBody"></tbody></table></div>
 <div class="note" style="margin-top:8px">Kaynak: BDDK Aylık Bülten (bankacılık sektörü konsolide olmayan veriler), her ay yayımlanır; panel son yayımlanmış dönemi kendisi bulur. Tutarlar <b>milyon TL</b>. <b>K/M</b> = krediler / mevduat (fon kullandırma yoğunluğu), <b>Takip %</b> = takipteki alacaklar / brüt krediler, <b>Kaldıraç</b> = aktif / özkaynak, <b>YP %</b> = yabancı para aktiflerin payı, <b>Özk. kârlılık</b> = dönem kârı / özkaynak (yılbaşından bugüne, yıllıklandırılmamış).</div>
 </div>
@@ -806,14 +806,14 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <h2 style="margin-top:0">01 Politika Faizi &amp; Ex-Ante Reel <span class="thin">(TCMB · BIS derlemesi · piyasa katılımcıları anketi)</span></h2>
 <div id="thPolitika" style="margin:6px 0 16px"></div>
 
-<h2>02 Fonlama Zinciri <span class="thin">(PPK → AOFM → TLREF → piyasa repo · canlı)</span></h2>
+<h2>02 Fonlama Zinciri</h2>
 <div id="thZincir" style="margin:6px 0 8px"></div>
 <div class="note" style="margin-bottom:16px">Dört halka ayrı şeylerdir ve <b>karıştırılmaları en sık yapılan hatalardan biridir.</b> Politika faizi PPK’nın ilan ettiği orandır; AOFM TCMB’nin fonlamayı hangi kanaldan yaptığına göre <em>PPK karar vermeden de</em> değişir; TLREF gecelik referanstır; piyasa repo ise fonun <em>fiilen</em> kazandığı şeye en yakın orandır. Rozetlerdeki bp farkı politika faizine göredir. Fark açıldığında sebep neredeyse her zaman TL likidite pozisyonudur — alttaki satır onu ölçer.</div>
 
-<h2>03 PPK Olasılık Ağacı <span class="thin">(nokta tahmini değil dağılım · senin varsayımın)</span></h2>
+<h2>03 PPK Olasılık Ağacı</h2>
 <div id="thPPK" style="margin:6px 0 8px"></div>
 <div class="note">Her toplantı bir düğüm; olasılıkları sen girersin, beklenen hareket ve belirsizlik (std) hesaplanır, faiz patikası bileşiklenir. <b>Neden nokta tahmini değil:</b> nokta tahmini seni “haklı/haksız” ikilemine düşürür; dağılım ise pozisyon boyutlandırmaya çevrilebilir — belirsizlik büyükse pozisyon küçülür. <b>Uyarı:</b> faiz tek araç değildir. TCMB politika faizini sabit tutup zorunlu karşılık, kredi büyüme sınırı ya da koridor genişliğiyle sıkılaştırabilir — bu yüzden PPK’yı doğru tahmin edip fonun getirisini yine de yanlış hesaplayabilirsin. Zincir: <em>PPK → AOFM → TLREF → fon getirisi</em>; sapmanın ana kaynağı TL likidite pozisyonudur.</div>
-<h2>04 Repo Tahmini <span class="thin">(fonun fiilen kazanacağı oran · marjlar ölçüldü)</span></h2>
+<h2>04 Repo Tahmini</h2>
 <div class="card" style="padding:9px 12px;margin:6px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
   <label class="arzLb" style="margin:0">YÖNETİM ÜCRETİ %</label>
   <input id="thYonetim" class="arzIn" type="text" inputmode="decimal" value="1,5" style="width:64px;text-align:right">
@@ -822,11 +822,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="thRepo" style="margin-bottom:8px"></div>
 <div class="note" style="margin-bottom:16px"><b>Zincir neden buradan kuruluyor:</b> üstteki ölçüm AOFM’nin koridor <em>tavanına</em> yapışık olduğunu gösteriyorsa politika faizi fiilen bağlayıcı değildir — fonlama gecelik pencereden yapılıyor demektir. O rejimde doğru çıpa <b>koridor</b>dır, politika faizi değil; tablo TCMB’nin koridoru politika faiziyle birlikte oynatacağı varsayımına dayanır (tarihsel davranış budur, garanti değildir). Getiri <b>ACT/365 günlük bileşik</b> hesaplanır; basit yıllık ortalama dönem uzadıkça sapar. <b>Marjlar varsayılmamış, bugünkü veriden ölçülmüştür</b> — rejim değişirse marjlar da değişir ve kart bunu ayrıca uyarır.</div>
 
-<h2>05 Alfa — Senin Patikan vs Piyasa <span class="thin">(görüşünün bedeli · sıfır alfa senaryosu)</span></h2>
+<h2>05 Alfa — Senin Patikan vs Piyasa</h2>
 <div id="thAlfa" style="margin:6px 0 8px"></div>
 <div class="note" style="margin-bottom:16px"><b>Bir para piyasası fonu yöneticisinin fiilen verdiği karar iki seçenek arasındadır:</b> gecelikte dönüp patikayı takip etmek, ya da bugünden vadeyi kilitlemek. Hangisinin kazanacağı senin faiz görüşünün piyasanınkinden <em>farklı</em> olup olmadığına bağlıdır. Aynıysa iki seçenek de aynı getiriyi verir — <b>alfa tam olarak bu farktır</b>, tahminin kendisi değil. Kendi patikanı üretmenin tek amacı piyasadan nerede ayrıştığını görmektir; ayrışmadığını görmek de en az onun kadar değerlidir çünkü yanlış bir bahisten alıkoyar.</div>
 
-<h2>06 Enflasyon Patikası <span class="thin">(baz etkisi · 12 ay · varsayıma bağlı)</span></h2>
+<h2>06 Enflasyon Patikası</h2>
 <div class="card" style="padding:9px 12px;margin:6px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
   <label class="arzLb" style="margin:0">MOD</label>
   <select id="thMod" class="arzIn" style="width:auto"><option value="sabit">Sabit aylık</option><option value="mevsim">Mevsimsel profil</option></select>
@@ -851,19 +851,19 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <h2 style="margin-top:0">01 Girdiler <span class="thin">(veri.py + model.py parametreleri · düzenlenebilir · bu tarayıcıda saklanır)</span></h2>
 <div class="card" id="epGirdi" style="padding:10px 12px"><div class="sub">Form yükleniyor…</div></div>
 
-<h2>02 Ortak Göstergeler <span class="thin">(kimlik hesapları · varsayım yok)</span></h2>
+<h2>02 Ortak Göstergeler</h2>
 <div id="epOzet"><div class="sub">Hesaplanıyor…</div></div>
 
-<h2>03 İlk Toplantı Kararı <span class="thin">(kural-ima faiz · skor kartı · olasılık dağılımı)</span></h2>
+<h2>03 İlk Toplantı Kararı</h2>
 <div id="epKarar"></div>
 
-<h2>04 Faiz Patikası <span class="thin">(üç senaryo + olasılık ağırlıklı · ufuk 15 ay)</span></h2>
+<h2>04 Faiz Patikası</h2>
 <div id="epGrafik"></div>
 <div id="epTablo" style="margin-top:8px"></div>
 <div class="note" style="margin-top:8px;font-size:10.5px"><b>Nasıl okunur:</b> Toplantı ayında model kural-ima hedef ile mevcut faiz arasındaki farka bakar; fark −0,5 puanın altındaysa (hedef daha düşükse) 50 bp katlarıyla, senaryonun maksimum adımını aşmadan indirir; +1,5 puanı aşarsa sıkılaştırır; aradaysa bekler. İlk toplantı kuraldan değil senaryoyla tutarlı "ilk karar" girdisinden gelir. <b>Ağırlıklı patika</b> senaryoların olasılıkla ortalamasıdır — 50 bp katı olmayan sayılar üretir, bu bir "beklenen değer"dir, tek bir toplantı sonucu değil. <b>Senaryo TÜFE dizileri</b> ufuk + 12 ay uzunluğundadır çünkü her ayın beklentisi o aydan sonraki 12 ayın gerçekleşmesine bakar. <b>Skor kartı</b> dağılımı nitel olarak iter; py'de sayısal bağ yoktu, burada κ katsayılı açık formülle gösterilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div>
 </div>
 </div><div class="tab" id="t3"><!-- ==== 00 COMMAND CENTER ==== -->
-<h2>00 Portfolio Command Center <span class="thin">(pozisyonların tarayıcında saklanır)</span></h2>
+<h2>00 Portfolio Command Center</h2>
 <div class="grid cc" id="ccStrip">
   <div class="card"><div class="lbl">Toplam Değer</div><div class="val" id="ccVal">—</div></div>
   <div class="card"><div class="lbl">Getiri (maliyete göre)</div><div class="val" id="ccRet">—</div></div>
@@ -961,11 +961,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div id="ayrGrafik" style="margin-top:8px"></div>
 </details>
 </div><div class="tab" id="t4"><!-- ==== 01 Journal ==== -->
-<h2>01 Investment Journal <span class="thin">(tez yaz → disiplin kazan)</span></h2>
+<h2>01 Investment Journal</h2>
 <!-- §462/§463 Çeyrek Karar Motoru (XK030): pano + seçili hisse detayı. Ebu dışı (data-ebu="hayir"): kart kendi verisini kendi çeker. -->
 <div class="card" id="kararCard" data-ebu="hayir" style="border-color:var(--mm2);margin-bottom:12px">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-    <div class="lbl" style="margin:0">ÇEYREK KARAR MOTORU · XK030 <span class="thin">konsensüs · sicil · fiyatlanma her hissede → sinyal; sürücü modeli kalibre edildikçe (TUPRS crack)</span></div>
+    <div class="lbl" style="margin:0">ÇEYREK KARAR MOTORU</div>
     <div style="display:flex;gap:6px;align-items:center"><select id="kararKod" style="font-size:11px;padding:3px 6px"></select><button class="btn" id="kararYenile" style="padding:3px 9px!important;font-size:10px!important">Yenile</button></div>
   </div>
   <div id="kararPano"></div>
@@ -1054,7 +1054,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
      sekmesinin KAPANIŞI da gitmişti (denge dağıldı).
      NOT: bu yorumda ETİKET ADI GEÇMEZ — dosyanın kendi uyarısı: yorum içindeki
      etiket benzeri metin sayaca takılıyor ve sahte dengesizlik üretiyor. -->
-<div class="tab" id="t27"><h2>Sektörel Veriler <span class="thin">(fon akışları · PYŞ dağıtım gücü)</span></h2>
+<div class="tab" id="t27"><h2>Sektörel Veriler</h2>
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
   <button class="subtab-btn act" data-subtab="sv-katfon" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Katılım Fonları</button>
   <button class="subtab-btn" data-subtab="sv-pys" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">PYŞ Sektör</button>
@@ -1073,7 +1073,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="kv"><span class="k">Panel izleri</span><span>TEFAS 18 Eyl'de üç yolu da reddetti (köprü/doğrudan/Playwright) — kriz günü · CDS 233 → 252 (2 Eki) → 247,8 bp (9 Eki) · katılım fon akışı: 24-25 Eyl net çıkış, 9→12 Eki yine −7,1 mlr ₺ (KPR Kuveyt Türk Serbest −4,3 mlr tek başına) · MKK Eylül: toplam fon büyüklüğü −1.757 mlr ₺ (serbest fonlar 6.444→5.458) · rezerv altı hafta düşüşte (swap hariç 37,9) — aynı pencere</span></div>
   <div class="note" style="font-size:10px;margin-top:6px"><b>Fon yöneticisi için okuma:</b> (1) Zorunlu satış, fiyatı değil <em>zamanlamayı</em> belirsiz bırakır — tasfiye bankaları parça parça satar; düşük derinlikli isimlerde (GUNDG, PASEU, KTLEV, GENIL) aylarca tavan baskısı olabilir, likit büyüklerde (BIMAS, TUPRS, ASELS) etki gürültü seviyesinde. (2) Güven kanalı daha önemli: TEFAS'ta "fonum güvende mi" sorusu para piyasası fonlarından çıkış ve mevduata dönüşü tetikler — katılım PP fonlarının akışını haftalık izle. (3) 22 Eki PPK için karşı ağırlık: indirim beklentisi vardı; fon krizi + rezerv erimesi + CDS 252 "sabit" ihtimalini büyütür. (4) Ödemeler 1 mn ₺ tavanla ve küçük gruptan (A1/Bulls/Pardus, 43 bin yatırımcı) başladı; asıl kütle (Tera 389 bin + Ziraat grubu 151 bin) hâlâ tarih bekliyor — perakende paniği şimdilik sınırlı, ama "ne zaman" sorusu cevapsız kaldıkça para piyasası fonlarından mevduata kayış sürer (Ekim akışı negatif). Kurumsal/büyük hesaplar 1 mn tavanın üstünde kalan kısmı için 5–6 aylık tasfiye takvimine bakıyor.</div>
 </div>
-<h2>06 Katılım Fonları <span class="thin">(46 fon · 6 kategori · TEFAS · Actions)</span></h2>
+<h2>06 Katılım Fonları</h2>
 <div id="katfonOzet" style="display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin-bottom:14px"></div>
 <!-- §263 GÜNLÜK FON AKIŞI. Formül: (pay_t − pay_t−1) × fiyat_t. Ham ΔAUM
      KULLANILMAZ — o hem akıştan hem GETİRİDEN değişir ve 12 Ağu ölçümünde
@@ -1165,7 +1165,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 
 </div>
-<div class="tab" id="t8"><h2>Guidance <span class="thin">(şirket beklentileri · 2026 · Fintables + manuel)</span></h2>
+<div class="tab" id="t8"><h2>Guidance</h2>
 <input id="guidanceAra" type="text" placeholder="Şirket ara (kod veya isim)…" style="width:100%;max-width:340px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--sans);font-size:12px;background:var(--card);color:var(--text);box-sizing:border-box">
 <div id="guidanceListe" style="margin-top:12px"></div>
 <h2 style="margin-top:22px">Manuel Guidance Ekle <span class="thin">(cihazına kaydedilir)</span></h2>
@@ -1181,7 +1181,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <span id="gmMsg" class="sub"></span>
   </div>
 </div>
-</div><div class="tab" id="t9"><h2>DCF ve Multiple Değerleme <span class="thin">(içsel değer + piyasa çarpanı)</span></h2>
+</div><div class="tab" id="t9"><h2>DCF ve Multiple Değerleme</h2>
 <div class="card">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <div>
@@ -1275,7 +1275,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="fekKopma"></div>
 <div id="fekNot" class="note" style="margin-top:10px"></div>
 </div>
-<div class="tab" id="t10"><h2>Sukuk / Kira Sertifikası <span class="thin">(değerleme · ihraç takvimi)</span></h2>
+<div class="tab" id="t10"><h2>Sukuk / Kira Sertifikası</h2>
 <div style="display:flex;gap:6px;margin:10px 0 16px;border-bottom:1px solid var(--line)">
   <button class="subtab-btn act" data-subtab="sk-degerleme" style="background:none;border:none;border-bottom:2px solid var(--mm2);color:var(--mm2);font-weight:700;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Değerleme</button>
   <button class="subtab-btn" data-subtab="sk-egri" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit">Getiri Eğrisi</button>
@@ -1383,7 +1383,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <!-- §400 t25 YABANCI HİSSE KALDIRILDI (23 Ağu, kullanıcı kararı): Koyfin
      temelli statik evren yerine SEC EDGAR canlı çekiyor (§398). Çarpanlar
      Finansal Tablolar > Yabancı Şirketler alt sekmesinde hesaplanıyor. -->
-<div class="tab" id="t23"><h2>Finansal Tablolar <span class="thin">(KAP · bilançoda yatay, gelir tablosunda dikey analiz)</span></h2>
+<div class="tab" id="t23"><h2>Finansal Tablolar</h2>
 <!-- §399 İKİ ALT SEKME (23 Ağu, kullanıcı isteği): Yerli Şirketler (KAP ·
      Çeyreklik Seri) ve Yabancı Şirketler (SEC EDGAR). Aynı sekmede iki farklı
      kaynak; alt sekme mekanizması .tab kapsayıcısına bağlı (§365'te öğrenildi),
@@ -1480,7 +1480,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div id="gyoNot" class="note" style="margin-top:10px"></div>
   </div>
 </div>
-<div class="tab" id="t11"><h2>EQUITY <span class="thin">(varlık dağılımı · analist · performans · risk · likidite · temettü · takvim)</span></h2>
+<div class="tab" id="t11"><h2>EQUITY</h2>
 
 <h2 style="margin-top:22px">Analist Konsensüsü <span class="thin">(ticker yaz → pop-up · 55 hisse kapsamda)</span></h2>
 <input id="anaAra" type="text" placeholder="Ticker: THYAO, ASELS, TUPRS…" style="width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--line2);border-radius:8px;font-family:var(--mono);font-size:13px;box-sizing:border-box;text-transform:uppercase">
@@ -1512,7 +1512,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="incelemeBody"><div class="sub">yükleniyor…</div></div>
 </div>
 <div class="tab" id="t20">
-<h2>Halka Arzlar <span class="thin">(2026 · arz→bugün getiri · Fintables)</span></h2>
+<h2>Halka Arzlar</h2>
 <div id="halkaarzOzet" style="display:grid;grid-template-columns:repeat(4,minmax(108px,1fr));gap:8px;margin-bottom:10px"></div>
 <div class="card" style="overflow-x:auto;padding:8px 12px"><table><thead><tr><th>Şirket</th><th class="num">İlk İşl.</th><th class="num">Arz ₺</th><th class="num">Güncel ₺</th><th class="num">Getiri</th><th class="num">Boyut B₺</th><th>Tür</th></tr></thead><tbody id="halkaarzBody"></tbody></table></div>
 <div class="note">Getiri = düzeltilmiş arz fiyatından bugüne (arza girip tutsaydın ne kazanırdın). 2026 ort. arz getirisi +%80 ama dağılım çok geniş: NETCD/EMPAE +%200 üzeri, AAGYO −%26 — halka arz "garanti para" değil, <em>seçicilik</em> ister. <em>KATILIM</em> = katılım endeksine uygun arz. <em>*</em> işaretli aşırı getiriler bedelsiz düzeltmesi içermeyebilir. Yoğun arz dönemi genelde boğa işareti ama piyasadan likidite de çeker.</div>
@@ -1596,13 +1596,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <br><span class="thin">Ortalamalar: <span style="color:#3D7BD9">20g</span> · <span style="color:#E8933B">50g</span> · <span style="color:#8B6FD8">200g</span>. Göstergeler Wilder yumuşatmasıyla hesaplanır (RSI/ATR). Tatil barları (hacim 0 + düz OHLC) süzülür.</span></div>
 </div>
 
-<div class="tab" id="t15"><h2>Emtia <span class="thin">(canlı vadeli sözleşmeler · Yahoo Finance)</span></h2>
+<div class="tab" id="t15"><h2>Emtia</h2>
 <div id="emtiaOzet" style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px;margin-bottom:6px"></div>
 <div id="emtiaOzetNot" class="sub" style="font-size:10px;margin-bottom:12px"></div>
 <div id="emtiaBody"><div class="sub">yükleniyor…</div></div>
 </div>
 <div class="note" style="margin-top:12px"><b>Fon yöneticisi için okuma:</b> Emtialar üç kanaldan portföyü etkiler. <b>Enflasyon kanalı</b> — enerji ve tarım fiyatları TÜFE'ye doğrudan geçer; petrol yükselişi TCMB'nin dezenflasyon patikasını zorlar (kritik takvimde İran/enerji şoku notu). <b>Kur kanalı</b> — Türkiye net enerji ithalatçısı; Brent yükselişi cari açığı ve TL üzerindeki baskıyı artırır. <b>Sektör kanalı</b> — altın kuyumcu/perakende (kart harcamasında korunma kalemi), bakır/çelik inşaat ve sanayi, tahıl gıda üreticileri için girdi. Değerler canlı vadeli sözleşme (futures) fiyatlarıdır; renkler günün yönünü gösterir. Kaynak: Yahoo Finance, 15 dk gecikmeli olabilir.</div>
-<div class="tab" id="t16"><h2>Asya-Pasifik <span class="thin">(endeksler Yahoo · forex Twelve Data · Japonya makro BoJ — kripto Piyasa sekmesine taşındı)</span></h2>
+<div class="tab" id="t16"><h2>Asya-Pasifik</h2>
 <div id="asyaEndeksOzet" style="display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px;margin-bottom:6px"></div>
 <div id="asyaOzetNot" class="sub" style="font-size:10px;margin-bottom:12px"></div>
 <div id="asyaBody"><div class="sub">yükleniyor…</div></div>
@@ -1665,7 +1665,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div class="note" style="margin-top:12px"><b>Fon yöneticisi için okuma:</b> Asya-Pasifik seansı, Türkiye açılışından önce kapanır — yani sabah BIST'e oturmadan önce gecenin risk iştahını buradan okursun. <b>Nikkei ve KOSPI</b> küresel teknoloji/ihracat iştahının öncü göstergesi; sert düşüşleri yüksek-beta gelişen piyasalara (Türkiye dahil) taşar. <b>Hang Seng ve Shanghai</b> Çin talep sinyali — emtia ve ihracatçı hisseler için önemli. <b>USD/JPY</b> küresel taşıma işlemi (carry trade) barometresi: yen güçlenirse (USD/JPY düşerse) küresel kaldıraç çözülür, riskli varlıklar soğur. <b>USD/CNH</b> Çin'in kur duruşu; ani yuan zayıflaması bölgesel bulaşma yaratır. Endeksler Yahoo'dan (gün kapanışı), forex Twelve Data'dan (~gecikmeli). Asya saatleri Türkiye'nin gecesi/sabahı olduğu için genelde son kapanış görürsün.</div>
 </div>
-<div class="tab" id="t18"><h2>Avrupa <span class="thin">(endeksler Yahoo canlı · ECB damgalı)</span></h2>
+<div class="tab" id="t18"><h2>Avrupa</h2>
 
 <div class="grid g2">
   <div class="card">
@@ -1725,7 +1725,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="note" style="font-size:10px"><b>"İki Avrupa" teması:</b> AI tedarik zinciri (ASML: 2027 EUV siparişleri dolu, +%30 kapasite, 2028'e ek +%30 planı — kapasiteyi karneyle dağıtıyor) uçarken eski şampiyonlar (lüks/yazılım/ilaç) çöküyor — endeks yeşili tema ayrışmasını gizler. Türkiye bağı: LVMH zayıflığı = Çin lüks talebi sinyali (CAC notuyla bağlı); ASML gücü = AI capex temasının sağlamlığı → ABD sekmesindeki mega-cap kartıyla aynı hikayenin iki kıtası. Novo'nun 5 Ağu bilançosu Avrupa'nın "değer tuzağı mı dip mi" sorusunun ilk cevabı.</div>
   </div>
 </div>
-</div><div class="tab" id="t17"><h2>ABD <span class="thin">(endeksler Yahoo canlı · tahvil FRED canlı · derinlik damgalı)</span></h2>
+</div><div class="tab" id="t17"><h2>ABD</h2>
 
 <h2 style="font-size:13px">HİSSE PİYASASI</h2>
 <!-- SS332: MEGA-CAP DERINLIK karti KALDIRILDI (kullanici karari 19 Agu) — icerik
@@ -1809,7 +1809,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="note" style="margin-top:12px"><b>Fon yöneticisi için okuma:</b> ABD, küresel iskonto oranının belirlendiği yer — buradaki tahvil getirisi her varlığın (BIST dahil) değerleme paydasıdır. İzleme sırası: (1) 10Y getiri yönü — yükseliyorsa risk varlıklarına küresel baskı, (2) 2Y — Fed'in bir sonraki hamlesinin fiyatlaması, (3) T5YIE breakeven — enerji şokunun enflasyon beklentisine geçip geçmediğinin en temiz ölçüsü, (4) mega-cap bilançoları — AI capex teması endekslerin ~%30'unu taşıyor. Endeksler ve tahvil canlı; Fed olasılıkları ve mega-cap derinliği damgalı (Claude besler, etikette tarih).</div>
 </div>
 
-<div class="tab" id="t12"><h2>Kullanım Kılavuzu <span class="thin">(sekme rehberi + kavram sözlüğü)</span></h2>
+<div class="tab" id="t12"><h2>Kullanım Kılavuzu</h2>
 <div class="note" style="margin-top:6px">KTPanel, çok varlıklı bir katılım fonu yönetim masasıdır: piyasa takibi, makro analiz, portföy yönetimi, hisse ve sabit getirili değerleme ile faktör modelini tek ekranda birleştirir. Canlı veriler (kur, küresel endeksler, VIX) otomatik akar; diğer katmanlar "güncelle" ile tazelenir. Aşağıda önce her sekmenin ne işe yaradığı ve nasıl kullanılacağı, sonra geçen kavramların açıklaması var.</div>
 
 <h2 style="margin-top:18px">Sekme Rehberi</h2>
@@ -1933,7 +1933,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.2 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261020g"></script>
+<script src="/app.js?v=20261020h"></script>
 <script src="/ajan.js?v=20261007a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

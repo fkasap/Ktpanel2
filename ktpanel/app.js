@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020g';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020h';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2465,7 +2465,7 @@ function kararPanoSatirlar(){
 function kararPanoHtml(){
   const L=kararPanoSatirlar(); if(!L.length) return '';
   const hq=L[0].H.hedefQ;
-  let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>XK030 PANOSU <span class="thin">'+L.length+' hisse · '+(hq?kararQAd(hq)+' beklentisi':'')+' · puan/bileşen oranına göre · satıra tıkla</span></summary>';
+  let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>XK030 PANOSU</summary>';
   h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl" id="kararPanoTbl"><thead><tr><th>KOD</th><th>SEKTÖR · TIER</th><th>BEKLENTİ '+(hq?kararQAd(hq):'')+'</th><th>YoY ₺</th><th title="Birincil sürücünün hedef çeyrek ortalaması / önceki çeyrek; fiyat endekslerinde (TÜFE/ÜFE/KFE) yıllık değişim (y/y)">SÜRÜCÜ Δ ÇEYREK</th><th>KONS. SİCİLİ</th><th>ÇEYREK GÖRELİ</th><th>PD/FAVÖK İLERİ</th><th>HEDEF</th><th>PUAN</th><th>SİNYAL</th></tr></thead><tbody>';
   L.forEach(({M,H,F,P})=>{
     const hd=H.hedef||{}; const bek = hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
@@ -2495,7 +2495,7 @@ function kararRender(){
   /* ── Pano ── */
   const pano=$('kararPano'); if(pano){ pano.innerHTML=kararPanoHtml(); pano.querySelectorAll('tr[data-kkod]').forEach(tr=>tr.onclick=()=>{ KARAR.secili=tr.dataset.kkod; const sel=$('kararKod'); if(sel) sel.value=KARAR.secili; kararRender(); kararSeriYukle(KARAR.secili).then(()=>kararRender()).catch(()=>{}); try{ $('kararOzet').scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){} }); const dw=$('kararPanoWrap'); if(dw) dw.ontoggle=()=>{ KARAR.panoAcik=dw.open; }; }
   /* ── Özet çipleri ── */
-  let oz='<div class="lbl" style="margin-top:10px">'+esc(M.kod)+' · '+esc(M.ad||'')+' <span class="thin">'+esc(M.sektor)+' · Tier '+esc(M.tier)+' · '+(model?'sürücü modeli KALİBRE':'sürücü modeli yok → konsensüs iskeleti')+'</span></div>';
+  let oz='<div class="lbl" style="margin-top:10px">'+esc(M.kod)+' · '+esc(M.ad||'')+'</div><div class="sub">'+esc(M.sektor)+' · Tier '+esc(M.tier)+'</div>';
   oz+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:6px">';
   if(model) oz+=chip('SÜRÜCÜ · '+esc(kararTrTarih(son.tarih)), 'Dizel '+trN(son.dizel,1)+' <span class="sub">$/v</span>', 'Benzin '+trN(son.benzin,1)+' · Brent '+trN(son.brent,1)+'<br>'+kararQAd(hq.q)+' ort: dizel '+trN(hq.c.dizel,1)+' · benzin '+trN(hq.c.benzin,1));
   else oz+=chip('SÜRÜCÜ MODELİ', '<span class="sub" style="font-size:12px">'+(M.tier==='C'?'yok (Tier C)':'planlı (Tier '+esc(M.tier)+')')+'</span>', esc(M.surucu_plani||'—'));
@@ -2513,7 +2513,7 @@ function kararRender(){
   /* ── Model / beklenti bölümü ── */
   let md='';
   if(model){
-    md+='<div class="lbl" style="margin-top:12px">MODEL · '+esc(M.hedef.ad)+' = sabit + Σ katsayı × sürücü <span class="thin">(EKK · '+H.fit.n+' çeyrek · R² '+trN(H.fit.r2,2)+' · hata ±'+trN(H.fit.se,0)+' mn $)</span></div>';
+    md+='<div class="lbl" style="margin-top:12px">MODEL · '+esc(M.hedef.ad)+'</div><div class="sub">sabit + Σ katsayı × sürücü · EKK · '+H.fit.n+' çeyrek · R² '+trN(H.fit.r2,2)+' · hata ±'+trN(H.fit.se,0)+' mn $</div>';
     md+='<div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>TERİM</th><th>KATSAYI</th><th>OKUMA</th><th>AŞAĞIDAN-YUKARI</th></tr></thead><tbody>';
     md+='<tr><td>Sabit</td><td>'+trN(H.fit.b[0],0)+'</td><td style="text-align:left;font-family:var(--sans);color:var(--muted)">crack sıfırken FAVÖK (opex, enerji, diğer segmentler — negatif olması olağan)</td><td>—</td></tr>';
     M.surucular.forEach((d,i)=>{ md+='<tr><td>'+esc(d.ad)+'</td><td>'+trN(H.fit.b[i+1],1)+'</td><td style="text-align:left;font-family:var(--sans);color:var(--muted)">1 $/v crack ≈ '+trN(H.fit.b[i+1],0)+' mn $ FAVÖK/çeyrek</td><td>'+(H.duyarlilik[d.k]!=null? trN(H.duyarlilik[d.k],0)+' mn $ <span class="sub">('+trN(H.bbl,0)+' mn v × pay)</span>':'—')+'</td></tr>'; });
@@ -2522,13 +2522,13 @@ function kararRender(){
     md+=kararFitGrafik(M,H);
     if(kq) md+='<div class="sub" style="margin-top:6px">Koşu hızı '+kararQAd(kq.q)+' ('+kq.gun+' gün): dizel '+trN(kq.c.dizel,1)+' · benzin '+trN(kq.c.benzin,1)+' → model '+trN(kq.usd/1000,2)+' mlr $ ≈ '+trN(kq.tl,0)+' mlr ₺ ('+kararIsaret(kq.degisim,0,'%')+' vs '+kararQAd(H.hedefQ)+' modeli). Brent '+trN(kq.c.brent,1)+' $ (çeyrek içi '+kararIsaret(kq.c.dBrent,1)+').</div>';
   } else {
-    md+='<div class="lbl" style="margin-top:12px">BEKLENTİ · FAVÖK GERÇEKLEŞEN ve '+(hq?kararQAd(hq.q):'')+' KONSENSÜSÜ <span class="thin">çubuk gerçek ($ mn) · içi boş nokta: kurum ortalaması (₺→$ çeyrek ort. kur)</span></div>';
+    md+='<div class="lbl" style="margin-top:12px">BEKLENTİ · FAVÖK ($ mn)</div><div class="sub">çubuk gerçek · içi boş nokta: '+(hq?kararQAd(hq.q):'')+' kurum ortalaması (₺→$ çeyrek ort. kur)</div>';
     md+=kararFitGrafik(M,H);
     md+='<div class="sub" style="margin-top:6px">Sürücü planı (Tier '+esc(M.tier)+'): '+esc(M.surucu_plani||'—')+'.'+(M.kaynak_notu?' Kaynak notu: '+esc(M.kaynak_notu)+'.':'')+' Model kurulunca bu bölüm TUPRS’taki gibi katsayı tablosuna döner.</div>';
   }
   $('kararModel').innerHTML=md;
   /* ── Fiyatlanma ── */
-  let fy='<div class="lbl" style="margin-top:12px">NE KADARI FİYATLANMIŞ? <span class="thin">göreli getiri · çarpan bandı · kurum hedefleri · konsensüs sicili</span></div>';
+  let fy='<div class="lbl" style="margin-top:12px">NE KADARI FİYATLANMIŞ?</div>';
   fy+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px">';
   fy+='<div><table class="arzTbl"><thead><tr><th>GETİRİ</th><th>HİSSE</th><th>XU100</th><th>GÖRELİ</th></tr></thead><tbody>';
   if(F.ceyrek) fy+='<tr><td>'+kararQAd(H.hedefQ)+' içi</td><td class="'+(F.ceyrek.hisse>=0?'up':'down')+'">'+kararIsaret(F.ceyrek.hisse,1,'%')+'</td><td>'+kararIsaret(F.ceyrek.xu,1,'%')+'</td><td class="'+(F.ceyrek.goreli>=0?'up':'down')+'">'+kararIsaret(F.ceyrek.goreli,1,'%')+(F.supheli?' ⚠':'')+'</td></tr>';
@@ -2547,25 +2547,25 @@ function kararRender(){
   fy+='</div>';
   $('kararFiyat').innerHTML=fy;
   /* ── Puan kartı + sinyal ── */
-  let sg='<div class="lbl" style="margin-top:12px">PUAN KARTI → SİNYAL <span class="thin">her bileşen −1 / 0 / +1 · eşikler kodda açık · sinyal = toplam / bileşen · "tavsiye" değil, karar desteği</span></div>';
+  let sg='<div class="lbl" style="margin-top:12px">PUAN KARTI</div>';
   sg+='<div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>BİLEŞEN</th><th>DEĞER</th><th>PUAN</th><th>GEREKÇE</th></tr></thead><tbody>';
   PK.P.forEach(p=>{ sg+='<tr'+(p.bilgi?' style="color:var(--muted)"':'')+'><td>'+esc(p.ad)+(p.bilgi?' <span class="sub">(bilgi)</span>':'')+'</td><td>'+p.deger+'</td><td class="'+(p.puan>0?'up':p.puan<0?'down':'')+'" style="font-weight:700">'+(p.bilgi?'·':(p.puan>0?'+1':p.puan<0?'−1':'0'))+'</td><td style="text-align:left;font-family:var(--sans);color:var(--muted);white-space:normal">'+esc(p.neden)+'</td></tr>'; });
   sg+='<tr><td><b>TOPLAM</b></td><td>'+PK.n+' bileşen</td><td class="'+PK.etiket.sinif+'" style="font-weight:700">'+(PK.n<2?'—':(PK.toplam>=0?'+':'')+PK.toplam)+'</td><td style="text-align:left;font-family:var(--sans);white-space:normal"><b class="'+PK.etiket.sinif+'">'+PK.etiket.ad+'</b> — '+esc(PK.etiket.aciklama)+'</td></tr>';
   sg+='</tbody></table></div>';
   const boz=kararBozucular(M,H,F);
-  sg+='<div class="lbl" style="margin-top:10px">TEZİ BOZACAKLAR <span class="thin">(otomatik taslak — Journal’a aktarılır)</span></div><ul style="margin:4px 0 0 16px;font-size:11px;line-height:1.6;color:var(--muted)">'+boz.map(b=>'<li>'+esc(b)+'</li>').join('')+'</ul>';
+  sg+='<div class="lbl" style="margin-top:10px">TEZİ BOZACAKLAR</div><ul style="margin:4px 0 0 16px;font-size:11px;line-height:1.6;color:var(--muted)">'+boz.map(b=>'<li>'+esc(b)+'</li>').join('')+'</ul>';
   sg+='<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="kararTeze">Teze aktar ↓</button><button class="btn" id="kararSicilEkle" style="background:var(--muted)">Kararı sicile yaz</button></div>';
   sg+=kararSicilHtml(M,H);
   $('kararSinyal').innerHTML=sg;
   const tb=$('kararTeze'); if(tb) tb.onclick=()=>kararTezeAktar(M,H,F,PK,boz);
   const sb=$('kararSicilEkle'); if(sb) sb.onclick=()=>{ if(!hq) return; const L=kararSicilOku(); L.unshift({kod:M.kod,q:hq.q,tarih:new Date().toISOString().slice(0,10),model_tl:hq.tl!=null?+hq.tl.toFixed(2):null,model_usd:hq.usd!=null?Math.round(hq.usd):null,kaynak:hq.kaynak,kons_tl:hq.kons?(M.tip==='konsensus_banka'?hq.kons.net_tl_mlr:hq.kons.favok_tl_mlr):null,fiyat:F.fiyat||null,puan:PK.toplam,n:PK.n,sinyal:PK.etiket.ad}); kararSicilYaz(L.slice(0,120)); kararRender(); };
   /* ── Not ── */
-  const n=$('kararNot'); if(n) n.innerHTML='<b>Nasıl okunur.</b> '+(model? 'Sürücü → FAVÖK bağı örneklemden tahmin edilir; "bu çeyrek iyi" artık bir rakam: '+trN(hq.tl,0)+' mlr ₺ (±'+trN(H.fit.se*hq.fx/1000,0)+').' : 'Bu hissede kalibre sürücü modeli yok; beklenti kurum ortalamasıdır ve sicil (kurumlar geçmişte hangi yöne şaştı) ile birlikte okunur.')+' Fiyatlanma üç ayrı mercekle ölçülür: çeyrek içi <em>göreli</em> getiri (beklenti fiyata ne kadar girdi), <em>ileri</em> PD/FAVÖK’ün kendi bandındaki yeri (piyasa kârı kalıcı sayıyor mu) ve kurum hedef mesafesi (revizyon döngüsü nerede). Üçü birden aynı yöne bakmıyorsa sinyal nötrde kalır — bu bir hata değil, ölçümün dürüstlüğüdür. Konsensüs ve hedefler elle (Fintables) tazelenir: '+esc((M.konsensus&&M.konsensus.tarih)||(KARAR.model.surum||''))+'. '+(model?'Veri: '+esc((S.kaynak&&S.kaynak.crack)||'')+'. ':'')+'<span class="sub">sürüm '+esc(KARAR.model.surum||'')+' · tier '+esc(M.tier)+' · tip '+esc(M.tip)+'</span>';
+  const n=$('kararNot'); if(n) n.innerHTML='<b>Nasıl okunur.</b> Puan kartında her bileşen −1 / 0 / +1 alır, sinyal toplam/bileşendir — "tavsiye" değil, karar desteği. '+(model? 'Sürücü → FAVÖK bağı örneklemden tahmin edilir; "bu çeyrek iyi" artık bir rakam: '+trN(hq.tl,0)+' mlr ₺ (±'+trN(H.fit.se*hq.fx/1000,0)+').' : 'Bu hissede kalibre sürücü modeli yok; beklenti kurum ortalamasıdır ve sicil (kurumlar geçmişte hangi yöne şaştı) ile birlikte okunur.')+' Fiyatlanma üç ayrı mercekle ölçülür: çeyrek içi <em>göreli</em> getiri (beklenti fiyata ne kadar girdi), <em>ileri</em> PD/FAVÖK’ün kendi bandındaki yeri (piyasa kârı kalıcı sayıyor mu) ve kurum hedef mesafesi (revizyon döngüsü nerede). Üçü birden aynı yöne bakmıyorsa sinyal nötrde kalır — bu bir hata değil, ölçümün dürüstlüğüdür. Konsensüs ve hedefler elle (Fintables) tazelenir: '+esc((M.konsensus&&M.konsensus.tarih)||(KARAR.model.surum||''))+'. '+(model?'Veri: '+esc((S.kaynak&&S.kaynak.crack)||'')+'. ':'')+'<span class="sub">sürüm '+esc(KARAR.model.surum||'')+' · tier '+esc(M.tier)+' · tip '+esc(M.tip)+'</span>';
 }
 
 function kararSicilHtml(M,H){
   const L=kararSicilOku().filter(x=>x.kod===M.kod); if(!L.length) return '';
-  let h='<div class="lbl" style="margin-top:10px">SİCİL <span class="thin">ne denildi · gerçek ne oldu</span></div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>TARİH</th><th>ÇEYREK</th><th>BEKLENTİ</th><th>KAYNAK</th><th>GERÇEK</th><th>HATA</th><th>SİNYAL</th><th>FİYAT</th><th></th></tr></thead><tbody>';
+  let h='<div class="lbl" style="margin-top:10px">SİCİL</div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>TARİH</th><th>ÇEYREK</th><th>BEKLENTİ</th><th>KAYNAK</th><th>GERÇEK</th><th>HATA</th><th>SİNYAL</th><th>FİYAT</th><th></th></tr></thead><tbody>';
   L.forEach((x,i)=>{ const g=(M.favok||{})[x.q]; const gt=g&&g.tl; const hata=(gt&&x.model_tl)? (x.model_tl/gt-1)*100 : null;
     h+='<tr><td>'+esc(x.tarih)+'</td><td>'+kararQAd(x.q)+'</td><td>'+(x.model_tl!=null?trN(x.model_tl,2):'—')+'</td><td style="font-family:var(--sans);color:var(--muted)">'+esc(x.kaynak||'model')+'</td><td>'+(gt?trN(gt,2):'<span class="sub">bekliyor</span>')+'</td><td class="'+(hata==null?'':Math.abs(hata)<10?'up':'down')+'">'+(hata==null?'—':kararIsaret(hata,0,'%'))+'</td><td>'+esc(x.sinyal||'')+' ('+(x.puan>=0?'+':'')+x.puan+(x.n?'/'+x.n:'')+')</td><td>'+(x.fiyat?trN(x.fiyat,2):'—')+'</td><td><button class="btn mini2" data-ksil="'+i+'">sil</button></td></tr>'; });
   h+='</tbody></table></div><div class="sub">mlr ₺ FAVÖK (banka: net kâr). Gerçek, bilanço KAP arşivine düşüp katalog güncellenince otomatik dolar. Hata ±%10 içindeyse yeşil.</div>';
@@ -2625,7 +2625,7 @@ function kararSpark(v, renk){
 const KARAR_ROL={gelir:{ad:'gelir',isaret:1,aciklama:'↑ olumlu'}, maliyet:{ad:'maliyet',isaret:-1,aciklama:'↑ olumsuz'}, marj:{ad:'marj',isaret:1,aciklama:'↑ olumlu'}, kur:{ad:'kur',isaret:0,aciklama:'$ geliri/ihracat için ↑ olumlu'}};
 function kararSektorPanel(M,H){
   const L=M.surucu_seriler||[]; if(!L.length && !M.sektor_not) return '';
-  let h='<div class="lbl" style="margin-top:12px">SEKTÖR BİLGİSİ · '+esc(M.sektor)+' <span class="thin">iş modeli · sürücüler · çeyrek ortalamaları (hedef '+(H.hedefQ?kararQAd(H.hedefQ):'—')+' vs önceki · geçen yıl) · koşu '+(H.kosuQ?kararQAd(H.kosuQ):'—')+'</span></div>';
+  let h='<div class="lbl" style="margin-top:12px">SEKTÖR BİLGİSİ · '+esc(M.sektor)+'</div>';
   if(M.sektor_not) h+='<div class="note" style="margin-top:4px;border-color:var(--mm2)">'+esc(M.sektor_not)+'</div>';
   if(L.length){
     h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl"><thead><tr><th>SÜRÜCÜ</th><th>ROL</th><th>SON</th><th>'+(H.hedefQ?kararQAd(H.hedefQ):'HEDEF')+' ORT</th><th>Δ ÇEYREK</th><th>Δ YIL</th><th>'+(H.kosuQ?kararQAd(H.kosuQ):'KOŞU')+' ORT</th><th>12 AY</th></tr></thead><tbody>';
@@ -2647,7 +2647,7 @@ function kararSektorPanel(M,H){
        yıl toplamı · adet · geçen yılın aynı tarihine göre y/y · yılın son sözleşmesi. Uzun sözleşme listesi kaldırıldı. */
     L.forEach(d=>{ const ser=kararSeriVeri(d.k); if(!ser||!ser.akis||!ser.yillik_kum||!ser.yillik_kum.yillar) return;
       const K=ser.yillik_kum; const buYil=String(K.bugun||'').slice(0,4); const yillar=Object.keys(K.yillar).sort().reverse().slice(0,5);
-      h+='<div class="lbl" style="margin-top:8px">YILLIK TOPLAM · '+esc((ser.ad||d.k).split(' — ')[0])+' <span class="thin">mn $ · her yıl sıfırdan · '+(ser.n||'')+' kayıt · KAP eşiği üstü</span></div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>YIL</th><th>TOPLAM (mn $)</th><th>ADET</th><th>'+esc(kararTrTarih(K.bugun||''))+' İTİBARIYLA</th><th>Δ y/y (aynı tarih)</th><th style="text-align:left">YILIN SON SÖZLEŞMESİ</th></tr></thead><tbody>';
+      h+='<div class="lbl" style="margin-top:8px">YILLIK TOPLAM · '+esc((ser.ad||d.k).split(' — ')[0])+'</div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>YIL</th><th>TOPLAM (mn $)</th><th>ADET</th><th>'+esc(kararTrTarih(K.bugun||''))+' İTİBARIYLA</th><th>Δ y/y (aynı tarih)</th><th style="text-align:left">YILIN SON SÖZLEŞMESİ</th></tr></thead><tbody>';
       yillar.forEach(y=>{ const o=K.yillar[y]; const yon=o.yy_ayni_tarih==null?'':(o.yy_ayni_tarih>=0?'up':'down');
         h+='<tr'+(y===buYil?' style="font-weight:600"':'')+'><td>'+esc(y)+(y===buYil?' <span class="sub">devam</span>':'')+'</td><td><b>'+trN(o.toplam,0)+'</b></td><td>'+o.adet+(o.tutarsiz?' <span class="sub">('+o.tutarsiz+' tutarsız)</span>':'')+(o.konsorsiyum?' <span class="sub" title="Konsorsiyum toplamı; şirket payı açıklanmadı">('+o.konsorsiyum+' konsorsiyum)</span>':'')+'</td><td>'+trN(o.ayni_tarih,0)+'</td><td class="'+yon+'">'+kararIsaret(o.yy_ayni_tarih,0,'%')+'</td><td style="text-align:left;font-family:var(--sans);font-size:11px;color:var(--muted)">'+(o.son?esc(kararTrTarih(o.son.t))+' · '+trN(o.son.usd_mn,0)+' mn $ — '+esc(String(o.son.ozet||'').replace(/^ASELSAN,?\s*/,'').slice(0,90)):'—')+'</td></tr>'; });
       h+='</tbody></table></div>'+(ser._kapsam?'<div class="sub">'+esc(ser._kapsam)+' Δ y/y: bu yıl '+esc(kararTrTarih(K.bugun||''))+"'e kadar olan toplam / geçen yılın aynı tarihine kadar olan toplam.</div>":''); });
@@ -2687,7 +2687,7 @@ function kararSurucuGrafik(M,H){
   let aylar=''; { let son='', sonX=-99; D.forEach(d=>{ const ay=d[0].slice(0,7); if(ay!==son){ son=ay; const xx=x(d[0]); if(xx-sonX<30) return; sonX=xx; const dd=new Date(d[0]+'T00:00:00'); aylar+='<text x="'+xx.toFixed(1)+'" y="'+(Hc-4)+'" font-size="9" fill="'+KARAR_RENK.muted+'" font-family="var(--mono)">'+dd.toLocaleDateString('tr-TR',{month:'short'})+'</text>'; } }); }
   const ortCizgi=(q,k,renk,yf,h)=>{ const c=S.ceyrek[q]; if(!c) return ''; const a=kararQAralik(q); const xa=x(a.bas<D[0][0]?D[0][0]:a.bas), xb=x(a.son>sonT?sonT:a.son); const y=yf(c[k]); return '<line x1="'+xa.toFixed(1)+'" x2="'+xb.toFixed(1)+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="'+renk+'" stroke-width="1.2" stroke-dasharray="3 3"/><text x="'+((xa+xb)/2).toFixed(1)+'" y="'+(y-3).toFixed(1)+'" text-anchor="middle" font-size="9" fill="'+renk+'" font-family="var(--mono)" '+HALE+'>'+kararQAd(q)+' ort '+trN(c[k],1)+'</text>'; };
   let eDz=yc(dz[dz.length-1]), eBz=yc(bz[bz.length-1]); if(Math.abs(eDz-eBz)<11){ if(eDz<eBz){ eDz-=(11-Math.abs(eDz-eBz))/2; eBz+=(11-Math.abs(eDz-eBz))/2; } else { eBz-=(11-Math.abs(eDz-eBz))/2; eDz+=(11-Math.abs(eDz-eBz))/2; } }
-  let svg='<div class="lbl" style="margin-top:10px">SÜRÜCÜ · son 12 ay <span class="thin">crack = ürün − Brent ($/v) · gölge: '+(H.hedefQ?kararQAd(H.hedefQ)+' (açıklanacak)':'')+(H.kosuQ?' · '+kararQAd(H.kosuQ)+' (koşu)':'')+'</span></div>';
+  let svg='<div class="lbl" style="margin-top:10px">SÜRÜCÜ · SON 12 AY</div><div class="sub">crack = ürün − Brent ($/v) · gölge: '+(H.hedefQ?kararQAd(H.hedefQ)+' (açıklanacak)':'')+(H.kosuQ?' · '+kararQAd(H.kosuQ)+' (koşu)':'')+'</div>';
   svg+='<svg viewBox="0 0 '+W+' '+Hc+'" width="100%" style="display:block;max-height:'+Hc+'px">'+golge(H.hedefQ,Hc,'#3D7BD9')+golge(H.kosuQ,Hc,'#C9612B')+grid(cMin,cMax,yc,Hc);
   svg+='<path d="'+path(dz,yc)+'" fill="none" stroke="'+KARAR_RENK.dizel+'" stroke-width="1.6"/><path d="'+path(bz,yc)+'" fill="none" stroke="'+KARAR_RENK.benzin+'" stroke-width="1.6"/>';
   svg+=ortCizgi(H.hedefQ,'dizel',KARAR_RENK.dizel,yc,Hc)+ortCizgi(H.hedefQ,'benzin',KARAR_RENK.benzin,yc,Hc);
@@ -2725,7 +2725,7 @@ function kararFitGrafik(M,H){
     if(i%2===0||q.gercek==null) s+='<text x="'+cx.toFixed(1)+'" y="'+(Hh-6)+'" text-anchor="middle" font-size="8.5" fill="'+KARAR_RENK.muted+'" font-family="var(--mono)">'+kararQAd(q.q)+'</text>';
   });
   s+='</svg>';
-  return (H.fit? '<div class="lbl" style="margin-top:10px">GERÇEK vs MODEL · FAVÖK $ mn <span class="thin">çubuk gerçek · nokta model · içi boş: açıklanacak/koşu (±hata bandı)</span></div>' : '')+s;
+  return (H.fit? '<div class="lbl" style="margin-top:10px">GERÇEK vs MODEL · FAVÖK ($ mn)</div><div class="sub">çubuk gerçek · nokta model · içi boş: açıklanacak/koşu (±hata bandı)</div>' : '')+s;
 }
 
 /* ---- HABER AKIŞI ---- */
@@ -3214,7 +3214,7 @@ function epFormCiz(){
   const sat = (id, lbl, v, w, ipucu) => '<div><label class="arzLb" style="margin:0 0 2px" title="' + esc(ipucu || '') + '">' + lbl + '</label><input id="' + id + '" class="arzIn" type="text" inputmode="decimal" value="' + esc(String(v).replace('.', ',')) + '" style="width:' + (w || 72) + 'px;text-align:right"></div>';
   const ta = (id, lbl, arr, ipucu) => '<div style="flex:1;min-width:260px"><label class="arzLb" style="margin:0 0 2px" title="' + esc(ipucu || '') + '">' + lbl + '</label><textarea id="' + id + '" class="arzIn" rows="2" style="width:100%;font-size:11px;line-height:1.35;resize:vertical">' + esc((arr || []).map(v => String(v).replace('.', ',')).join(' ')) + '</textarea></div>';
   let h = '';
-  h += '<div class="lbl" style="margin-bottom:6px">VERİ <span class="thin">(veri.py · ' + esc(G.surum || '') + ')</span></div>';
+  h += '<div class="lbl" style="margin-bottom:6px">VERİ</div>';
   h += '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
     sat('epPol', 'Politika faizi %', G.politika_faizi, 70, 'TCMB 1 hafta repo') +
     sat('epE12', 'PKA 12 ay TÜFE bek. %', G.E12, 70, 'TP.PKAUO 12 ay sonrası — reaksiyon fonksiyonunun girdisi') +
@@ -3229,7 +3229,7 @@ function epFormCiz(){
     ta('epT25', 'Aylık TÜFE 2025 (12 değer, Oca→Ara)', G.tufe_2025, 'TÜİK; y/y ve geriye dönük beklenti için') +
     ta('epT26', 'Aylık TÜFE 2026 (bilinen aylar, Oca→…)', G.tufe_2026, 'Yeni ay açıklanınca sona ekle — patika başlangıcı kendiliğinden kayar') +
     '</div>';
-  h += '<div class="lbl" style="margin:12px 0 6px">KARAR MODELİ <span class="thin">(ilk toplantı: ' + esc(G.toplantilar[0] || '') + ')</span></div>';
+  h += '<div class="lbl" style="margin:12px 0 6px">KARAR MODELİ</div><div class="sub">(ilk toplantı: ' + esc(G.toplantilar[0] || '') + ')</div>';
   h += '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
     sat('epDusus', 'E12 karar öncesi düşüş (puan)', G.E12_dusus, 64, 'Eylül sürprizi sonrası 12a beklentisinin gerilemesi varsayımı') +
     sat('epRad', 'Reel hedef adayları %', (G.r_adaylar || []).join(' · ').replace(/\./g, ','), 120, 'nokta ile ayır: 10 · 10,75 · 11,5') +
@@ -3246,7 +3246,7 @@ function epFormCiz(){
     Object.keys(G.adim).map(k => '<tr><td>' + esc(k) + '</td><td class="num"><input class="arzIn epAnk" data-k="' + esc(k) + '" type="text" inputmode="numeric" value="' + esc(String(G.anket[k] != null ? G.anket[k] : 0)) + '" style="width:56px;text-align:right;padding:4px 7px"></td><td class="num"><input class="arzIn epMo" data-k="' + esc(k) + '" type="text" inputmode="decimal" value="' + esc(String(G.model_olas[k] != null ? G.model_olas[k] : 0).replace('.', ',')) + '" style="width:64px;text-align:right;padding:4px 7px"></td></tr>').join('') +
     '</tbody></table><div class="sub" style="font-size:9.5px;margin-top:4px">Anket: ForInvest 9 Eki (n=22). Model olasılığı senin yargın; skor-eğimli üçüncü dağılım otomatik hesaplanır.</div></div></div>';
   /* senaryolar */
-  h += '<div class="lbl" style="margin:12px 0 6px">SENARYOLAR <span class="thin">(aylık TÜFE dizisi ' + esc(G.ilk_ay) + '\'dan başlar; ufuk ' + (G.ufuk || 15) + ' ay + 12 ay ileri beklenti için = ' + ((G.ufuk || 15) + 12) + ' değer)</span></div>';
+  h += '<div class="lbl" style="margin:12px 0 6px">SENARYOLAR</div><div class="sub">(aylık TÜFE dizisi ' + esc(G.ilk_ay) + '\'dan başlar; ufuk ' + (G.ufuk || 15) + ' ay + 12 ay ileri beklenti için = ' + ((G.ufuk || 15) + 12) + ' değer)</div>';
   h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px">' + Object.keys(G.senaryolar).map(ad => { const s = G.senaryolar[ad]; const sl = encodeURIComponent(ad);
     return '<div class="card" style="padding:8px 10px;border-left:3px solid ' + (EP_RENK[ad] || 'var(--line2)') + '"><div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap"><b style="font-size:12px;min-width:70px">' + esc(ad) + '</b>' +
       sat('epOl_' + sl, 'olasılık', s.olas, 54) + sat('epEk_' + sl, 'ilk karar %', s.ekim, 58, 'ilk toplantıda faiz (kuraldan değil, senaryoyla tutarlı adım)') +
@@ -3304,13 +3304,13 @@ function epRender(){
   /* karar */
   const kol = Object.keys(G.adim);
   $('epKarar').innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">' +
-    '<div class="card" style="padding:8px 12px"><div class="lbl">KURAL-İMA FAİZ <span class="thin">(E12 ' + trN(G.E12, 2) + ' − ' + trN(G.E12_dusus, 2) + ' = ' + trN(O.E12_karar, 2) + ')</span></div><table><thead><tr><th>r hedef</th><th class="num">i* = (1+r)(1+E12)−1</th><th class="num">fark (37→)</th></tr></thead><tbody>' +
+    '<div class="card" style="padding:8px 12px"><div class="lbl">KURAL-İMA FAİZ</div><div class="sub">(E12 ' + trN(G.E12, 2) + ' − ' + trN(G.E12_dusus, 2) + ' = ' + trN(O.E12_karar, 2) + ')</div><table><thead><tr><th>r hedef</th><th class="num">i* = (1+r)(1+E12)−1</th><th class="num">fark (37→)</th></tr></thead><tbody>' +
       O.kural.map(x => '<tr><td>%' + trN(x.r, 2) + '</td><td class="num"><b>%' + trN(x.i, 2) + '</b></td><td class="num ' + (x.i - G.politika_faizi < 0 ? 'down' : 'up') + '">' + (x.i - G.politika_faizi >= 0 ? '+' : '') + trN((x.i - G.politika_faizi) * 100, 0) + ' bp</td></tr>').join('') +
       '</tbody></table><div class="sub" style="font-size:9.5px;margin-top:4px">Reaksiyon fonksiyonu nominal hedefi verir; 50 bp katına yuvarlanır. Reel hedef %10,75 bugünkü ex-ante reel faizle tutarlı okumadır.</div></div>' +
-    '<div class="card" style="padding:8px 12px"><div class="lbl">SKOR KARTI <span class="thin">net ' + (O.netSkor >= 0 ? '+' : '') + trN(O.netSkor, 2) + ' → ' + (O.netSkor > 0 ? 'TEMKİN' : 'GEVŞEME') + ' yönü</span></div><table><tbody>' +
+    '<div class="card" style="padding:8px 12px"><div class="lbl">SKOR KARTI</div><div class="sub">net ' + (O.netSkor >= 0 ? '+' : '') + trN(O.netSkor, 2) + ' → ' + (O.netSkor > 0 ? 'TEMKİN' : 'GEVŞEME') + ' yönü</div><table><tbody>' +
       (G.skor || []).map(s => '<tr><td style="font-size:10px">' + esc(s[0]) + '</td><td class="num ' + (s[1] > 0 ? 'down' : 'up') + '" style="width:48px">' + (s[1] > 0 ? '+' : '') + trN(s[1], 2) + '</td></tr>').join('') +
       '</tbody></table></div>' +
-    '<div class="card" style="padding:8px 12px"><div class="lbl">İLK TOPLANTI DAĞILIMI <span class="thin">(' + esc(G.toplantilar[0] || '') + ')</span></div><table><thead><tr><th>Kol</th><th class="num">Önsel (anket)</th><th class="num">Model</th><th class="num">Skor-eğimli κ=' + trN(G.kappa, 1) + '</th></tr></thead><tbody>' +
+    '<div class="card" style="padding:8px 12px"><div class="lbl">İLK TOPLANTI DAĞILIMI</div><div class="sub">(' + esc(G.toplantilar[0] || '') + ')</div><table><thead><tr><th>Kol</th><th class="num">Önsel (anket)</th><th class="num">Model</th><th class="num">Skor-eğimli κ=' + trN(G.kappa, 1) + '</th></tr></thead><tbody>' +
       kol.map(k => '<tr><td>' + esc(k) + '</td><td class="num">%' + trN(O.onsel[k] * 100, 0) + '</td><td class="num"><b>%' + trN(O.modelOlas[k] * 100, 0) + '</b></td><td class="num">%' + trN(O.skorOlas[k] * 100, 0) + '</td></tr>').join('') +
       '<tr style="border-top:1px solid var(--line)"><td><b>Beklenen adım</b></td><td class="num">' + trN(O.bekOnsel, 0) + ' bp</td><td class="num"><b>' + trN(O.bekModel, 0) + ' bp</b></td><td class="num">' + trN(O.bekSkor, 0) + ' bp</td></tr></tbody></table>' +
       '<div class="sub" style="font-size:9.5px;margin-top:4px">Skor-eğimli sütun py\'de yoktur: önsel × exp(κ·skor·adım/100), normalize. Pozitif skor indirim kollarını küçültür, "Sabit"e dokunmaz — skorun dağılıma <em>nasıl</em> çevrildiğini görünür kılar.</div></div>' +
@@ -4374,7 +4374,7 @@ function pariteKart(){
     const sifir=py(0);
     let d=''; g.forEach((x,i)=>{d+=(i?'L':'M')+px(i).toFixed(1)+' '+py(x.ort).toFixed(1);});
     const ilk=g[0].ort, sonD=g[g.length-1].ort, delta=sonD-ilk;
-    yon='<div class="lbl" style="margin-top:12px">MAKASIN YÖNÜ <span class="thin">('+g.length+' gün · localStorage)</span></div>'+
+    yon='<div class="lbl" style="margin-top:12px">MAKASIN YÖNÜ</div><div class="sub">('+g.length+' gün · localStorage)</div>'+
       '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;margin-top:4px" role="img" aria-label="Parite makasının zaman içindeki yönü">'+
       '<line x1="'+P+'" y1="'+sifir.toFixed(1)+'" x2="'+(W-P)+'" y2="'+sifir.toFixed(1)+'" stroke="var(--line)" stroke-width="0.7" stroke-dasharray="3 3"/>'+
       '<text x="'+(P+2)+'" y="'+(sifir-3).toFixed(1)+'" font-size="8" fill="var(--muted)" font-family="var(--mono)">parite (0)</text>'+
@@ -8982,15 +8982,15 @@ function dcfRender(){
       return '<td class="num" style="background:'+bg+';font-family:var(--mono);font-size:10px">'+trN(hbt,1)+'</td>';
     }).join('')+'</tr>').join('')+'</table>';
   $('dcfDetay').innerHTML=
-    '<div class="lbl" style="margin-top:12px">YIL-YIL PROJEKSİYON <span class="thin">(mn '+birim+')</span></div>'+
+    '<div class="lbl" style="margin-top:12px">YIL-YIL PROJEKSİYON</div><div class="sub">(mn '+birim+')</div>'+
     '<table style="margin-top:4px"><tr><th>Dönem</th><th class="num">FCF</th><th class="num">İsk. Faktörü</th><th class="num">Bugünkü Değer</th></tr>'+projRows+'</table>'+
-    '<div class="lbl" style="margin-top:12px">DEĞER KÖPRÜSÜ <span class="thin">(mn '+birim+')</span></div>'+
+    '<div class="lbl" style="margin-top:12px">DEĞER KÖPRÜSÜ</div><div class="sub">(mn '+birim+')</div>'+
     '<div class="kv"><span class="k">Projeksiyon PV toplamı</span><span class="num">'+trN(r.pvTop,0)+'</span></div>'+
     '<div class="kv"><span class="k">+ Terminal değer (PV)</span><span class="num">'+trN(r.pvTv,0)+' <span class="sub">(değerin %'+trN(r.tvPay,0)+"'i)</span></span></div>"+
     '<div class="kv"><span class="k">= Firma değeri (EV)</span><span class="num">'+trN(r.ev,0)+'</span></div>'+
     '<div class="kv"><span class="k">− Net borç</span><span class="num">'+trN(g.borc,0)+'</span></div>'+
     '<div class="kv"><span class="k"><b>= Özkaynak değeri</b></span><span class="num"><b>'+trN(r.ozk,0)+'</b></span></div>'+
-    '<div class="lbl" style="margin-top:12px">DUYARLILIK: İÇSEL DEĞER (₺/hisse'+(baz==='usd'?' · USD×kur':'')+') <span class="thin">(WACC × terminal · renk=potansiyel)</span></div>'+
+    '<div class="lbl" style="margin-top:12px">DUYARLILIK: İÇSEL DEĞER (₺/hisse'+(baz==='usd'?' · USD×kur':'')+')</div><div class="sub">(WACC × terminal · renk=potansiyel)</div>'+
     '<div style="overflow-x:auto">'+dMatris+'</div>'+
     '<div class="note">Terminal değer, sonucun %'+trN(r.tvPay,0)+"'ini oluşturuyor"+(r.tvPay>75?' — bu %75\u0027i aştığı için değerin çoğu "uzak gelecek" tahminine dayanıyor, temkinli ol':'')+'. Matristeki yayılım, DCF\u0027nin varsayımlara ne kadar duyarlı (kırılgan) olduğunu gösterir — dar aralık güven, geniş aralık belirsizlik demektir. Bu bir tahmin aracıdır, kesin fiyat değil.</div>';
 }
@@ -9299,7 +9299,7 @@ function multipleRender(){
   }).join('');
   const bugun=proj[0].carpan, son5=proj[3].carpan;
   if($('mulSonuc'))$('mulSonuc').innerHTML=
-    '<div class="lbl" style="margin-top:12px">EV SABİT · ÇARPAN ERİMESİ <span class="thin">(bugünkü EV korunur, EBITDA büyür)</span></div>'+
+    '<div class="lbl" style="margin-top:12px">EV SABİT · ÇARPAN ERİMESİ</div><div class="sub">(bugünkü EV korunur, EBITDA büyür)</div>'+
     '<table style="margin-top:4px"><tr><th>Dönem</th><th class="num">Ciro <span class="thin" style="font-weight:400">mlr ₺</span></th><th class="num">Marj</th><th class="num">EBITDA <span class="thin" style="font-weight:400">mlr ₺</span></th><th class="num">EV/EBITDA</th></tr>'+rows+'</table>'+
     '<div class="card" style="margin-top:10px"><div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap">'+
       '<div><span class="sub">Bugün</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--mm2)">'+trN(bugun,1)+'x</span></div>'+
