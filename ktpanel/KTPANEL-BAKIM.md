@@ -6,6 +6,37 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §472 (20 Eki 2026, 12:30) — "STEELORBIS'TEN ALABİLECEĞİN ŞEY VAR MI?" → KARDEMİR AÇIK API
+
+SORU: MySteelOrbis (ücretsiz hesap). CEVAP: Türkiye hurda HMS 80:20 CFR, kütük CFR, inşaat demiri FOB $/t ve depo çıkışı TL/t,
+sıcak rulo, demir cevheri — tam eksik serilerimiz — ama SEVİYE "xxx" maskeli (ücretli üyelik), yalnız günlük/haftalık/aylık
+% değişim görünüyor; sayfa şifreli + bot engelli (WebFetch 403). Actions'tan çekmek kırılgan ve kullanım şartları gri bölge;
+% değişimden yön endeksi türetilebilir ama seviye olmadan MARJ hesaplanamaz → ALINMADI.
+BULUNAN: Kardemir kendi sitesinde liste fiyatlarını ve hurda alım fiyatlarını açık JSON uçlarıyla 2014'ten beri tarihli veriyor
+(çerez yok; `Dil: 1` başlığı ŞART, yoksa 500): SatisPazarlamaapi/getpriceremarkdatelist → getpricelist?date=dd/mm/yyyy (482 liste);
+TedarikciIliskileriapi/getscrappricemarkdatelist → getscrapprice?date= (347 ilan, HTML metin). Chrome'da 482+347 tarihin TAMAMI
+tarandı: çözücü dolu hiçbir ürünü kaçırmadı. Tuzaklar: her liste yalnız o gün SATIŞA AÇILAN ürünleri taşır (kütük yılda 3–12 kez,
+nervürlü daha sık, profil 2–4 kez) → fiyat bir sonraki listeye kadar geçerli sayılır (ADIM fonksiyonu); para birimi dönem dönem
+değişir (kütük 2014–15 " US$", 2015/06–2021/06 TL, sonra USD; profil 2014–15 EUR, 2016–21 TL, sonra USD) → TL/EUR fiyat günün
+kuruyla $'a (TL sabitken kur yükseldikçe $ değeri erir — gerçek davranış); ürün adları değişti (130X130 → 150X150 S235JR;
+Ø18-…-32 → Ø12-32; "Muhtelif Boy" indirimli ürün hariç); hurda metninde 2014 HTML varlıkları (&Ouml;zel), sayı içinde boşluk
+("20 .120"), "Extra" yazımı, "Ekstra" sınıfı yalnız 2026-09'dan beri → başlık sınıfı ÖZEL EKSTRA (kesintisiz); 25.03.2015 ilanı
+"Özel Ekstra: 80 TL" (800 olmalı — kaynak hatası) → Özel Ekstra DKP'nin/1. sınıfın altında kalamaz kuralı, nokta atlanır.
+SERİLER (siklik aylik = günlük adımların ay ortalaması, ~150 nokta; dosya +31 KB): kardemir_kutuk_usd · kardemir_nervurlu_tl/_usd
+· kardemir_profil_usd (IPE/NPI/NPU 180-200; 2014–15 "(160)") · kardemir_filmasin_usd · kardemir_hurda_tl/_usd (Özel Ekstra) ·
+türetilmiş kardemir_marj_hurda_usd (kütük − hurda) · kardemir_spread_cevher_usd (kütük − 1,6×WB cevher; KOK HARİÇ — Kardemir
+yüksek fırın üreticisi, hurda şarjın küçük kısmı; kok serisi yok, mutlak seviye değil yön) · kcaer_hadde_spread_usd (profil −
+kütük: Kocaer kütük alıp haddeler). `son` = son liste adımı (tarih + orijinal fiyat/para birimi), `adimlar` son 12 adım.
+ARTIMLI: D.kardemir.liste/.hurda (kısa anahtar kayıt); koşu başına ≤100+100 sayfa (250 ms ara, yeniden eskiye) → ilk koşu son
+~2 yıl, 2014'e kadar ~5 koşu ("geriye doldurma sürüyor/TAMAM" raporda). Hatalı sayfa 3 denemede bırakılır; KARDEMIR_SURUM
+değişirse kayıt sıfırlanır. Tarih listesi gelmezse (403 = Actions IP engeli olabilir) dosya dokunulmaz, rapor ✗ (sandbox'ta
+403 yolu denendi: dosya md5 aynı). Stub harness h12: 4 koşu, TL/EUR dönüşümleri, typo dışlama, kalıcılık — 13 denetim ✓.
+MODEL: KRDMD birincil celik_ufe → kardemir_kutuk_usd (şirketin kendi fiyatı, vekil değil); KCAER birincil → kcaer_hadde_spread_usd;
+LME bekliyor satırları (metal_marji_tr, demir_lme, hurda_lme) bu ikisinden kaldırıldı (EREGL'de hurda_lme bekliyor kaldı).
+Elle: --katman=kardemir (yalnız bu katman, ~1–2 dk). DEPLOY: scripts/tazele.mjs (§472) · .github/workflows/tazele.yml (katman
+listesi) · ktpanel/karar-model.json (2026-10-20g) · ktpanel/app.js (20261020f, dipnot) · guncelleme-plani.json · BAKIM · DAMGA.
+sektor-surucu.json YÜKLENMEZ (Actions'ın dosyası).
+
 # BAKIM EK — §469e (20 Eki 2026, 11:40) — KOŞU DOĞRULADI; KONSORSİYUM İŞARETİ
 
 11:05 koşusu (run 39390932401): PTF artımlı 11 gün ✓ · KAP 469d ile yeniden çözüldü: KATMR 14/14 tutarlı (2023 23 · 2024 56 ·

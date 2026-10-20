@@ -396,7 +396,7 @@
    "_461": "13 Eki: §461 kuruldu. Varsayılanlar py ile birebir doğrulandı (225 hücre, fark 0)."
   },
   {
-   "ad": "Sektör sürücüleri — Neste crack · Brent · USDTRY + sürücü serileri kaydı (Yahoo emtia/kur · LME hurda · Dünya Bankası Pink Sheet) + TCMB EVDS endeks/faiz + EPİAŞ PTF (§466)",
+   "ad": "Sektör sürücüleri — Neste crack · Brent · USDTRY + sürücü serileri kaydı (Yahoo emtia/kur · LME hurda · Dünya Bankası Pink Sheet) + TCMB EVDS endeks/faiz + EPİAŞ PTF (§466) + Kardemir açık API (§472)",
    "dosya": "sektor-surucu.json",
    "siklik": "gunluk",
    "son": "2026-10-19",
@@ -434,6 +434,18 @@
    "son": "2026-10-20",
    "kaynak": "Actions kapYeniIs() (§469): kap.org.tr api/member/filter → disclosure/members/byCriteria (ODA + subject 'Yeni İş İlişkisi' ya da özet 'sözleşme imzalan/sipariş') → /tr/Bildirim/<id> HTML, 'oda_ExplanationTextBlock' metni → ASELSAN ayrıştırıcısı (toplam/pay kuralları) → kur Yahoo 10y. Hafta içi akşam + Cmt + elle kamu|surucu.",
    "_469": "Artımlı: çözülen bildirim kimlikleri sektor-surucu.json/kap_yeni_is.kayit içinde; koşu başına şirket başına ≤40 sayfa (400 ms ara) → ilk doldurma birkaç koşu ('bekleyen N' raporda). Tutar açıklanmayan bildirim 0 sayılır (adet ayrı, tutarsiz_ceyrek). Türkçe İ: JS /i bayrağı 'İ'≠'i' — filtre önce TR küçültme yapar. Şirket eklemek: tazele.mjs KAP_YENI_IS tablosuna satır + karar-model.json surucu_seriler eşlemesi."
+  },
+  {
+   "ad": "Kardemir liste fiyatları (kütük/nervürlü/profil/filmaşin) + hurda alım fiyatları (Özel Ekstra) — kardemir.com açık API",
+   "dosya": "sektor-surucu.json",
+   "siklik": "gunluk",
+   "son": "2026-10-20",
+   "kaynak": "Actions kardemirFiyat() (§472): www.kardemir.com/api/SatisPazarlamaapi/getpriceremarkdatelist → getpricelist?date=dd/mm/yyyy; TedarikciIliskileriapi/getscrappricemarkdatelist → getscrapprice?date= (başlık Dil: 1 şart). Hafta içi akşam + Cmt + elle --katman=kardemir|kamu|surucu. Kur Yahoo TRY=X / EURUSD=X (max).",
+   "_472": "Liste bir sonraki listeye kadar geçerli (adım) → günlük ileri taşıma → AY ORTALAMASI (siklik aylik). TL/EUR fiyat günün kuruyla $. Artımlı ≤100+100 sayfa/koşu, 2014'e kadar ~5 koşu. Türetilmiş: kütük − hurda (yurt içi metal marjı), kütük − 1,6×WB cevher (kok hariç), profil − kütük (KCAER hadde spread'i). Denetim: aralık, Özel Ekstra ≥ DKP ve ≥ 1. sınıf (kaynak yazım hatası 25.03.2015), son tarih geriye gidemez. SteelOrbis seviyeleri ücretli/girişli → alınmadı.",
+   "hisse": [
+    "KRDMD",
+    "KCAER"
+   ]
   }
  ],
  "bilanco_sezonu_aylar": [
