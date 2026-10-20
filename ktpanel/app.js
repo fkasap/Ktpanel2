@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020k';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020l';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -3404,7 +3404,7 @@ function yabanciRender(){
   const kum=d.aylik.reduce((s,a)=>s+a.portfoy,0);
   $('yabanciBody').innerHTML=
     '<div style="margin-bottom:8px"><span style="font-family:var(--mono);font-size:32px;font-weight:700;color:'+e[1]+'">'+skor+'</span> <span style="font-weight:700;font-size:13px;letter-spacing:.5px;color:'+e[1]+'">'+e[0]+'</span> <span class="sub" style="display:inline">/100 · yabancı para yön skoru <span class="thin">(aylık ödemeler dengesi)</span>'+(carryEksik?' · <b style="color:var(--down)">⚠ carry ölçülemedi, nötr alındı</b>':'')+'</span></div>'+
-    '<div class="lbl">AYLIK NET PORTFÖY AKIŞI <span class="thin" style="font-weight:400">(mlr $ · yeşil giriş / kırmızı çıkış · soluk = tahmini)</span></div>'+
+    '<div class="lbl">AYLIK NET PORTFÖY AKIŞI</div><div class="sub">(mlr $ · yeşil giriş / kırmızı çıkış · soluk = tahmini)</div>'+
     '<div style="display:flex;align-items:stretch;gap:3px;margin:6px 0 10px">'+bars+'</div>'+
     '<div class="kv"><span class="k">2026 kümülatif</span><span class="'+(kum>=0?'up':'down')+'" style="font-weight:600">'+(kum>=0?'+':'')+kum.toFixed(1)+' mlr $</span></div>'+
     '<div class="kv"><span class="k">Son hafta <span id="yabHaftaTag">('+d.hafta_son.etiket+')</span></span><span id="yabHaftaVal">hisse '+(d.hafta_son.hisse>=0?'+':'')+d.hafta_son.hisse+'mn · DİBS +'+d.hafta_son.tahvil+'mn'+(d.hafta_son.ost!=null?' · ÖST +'+d.hafta_son.ost+'mn':'')+' <span class="sub" style="display:inline">'+(d.hafta_son.not||'')+'</span></span></div>'+
@@ -8655,7 +8655,7 @@ async function sinyalRender(){
     }catch(e){} }
     if(ima) R.push({r:'',t:'\u0130MA',m:'Piyasa forward dilimleri: '+ima+' \u2014 patikanizla kiyaslayin (SS316b)'});
     const dm=(SON.guncelleme||'').slice(0,16);
-    el.innerHTML=R.length?('<div class="card" style="margin-bottom:14px"><div class="lbl">SUKUK TAKT\u0130K S\u0130NYAL\u0130 <span class="thin" style="font-weight:400">(okuma \u2014 karar de\u011fil \u00b7 girdiler otomatik \u00b7 SS315)</span></div>'+
+    el.innerHTML=R.length?('<div class="card" style="margin-bottom:14px"><div class="lbl">SUKUK TAKT\u0130K S\u0130NYAL\u0130</div><div class="sub">(okuma \u2014 karar de\u011fil \u00b7 girdiler otomatik \u00b7 SS315)</div>'+
       R.map(x=>'<div class="kv"><span class="k" style="font-weight:700;'+(x.r==='up'?'color:var(--up)':x.r==='down'?'color:var(--down)':'')+'">'+x.t+'</span><span style="font-size:10.5px;text-align:right;max-width:78%">'+x.m+'</span></div>').join('')+
       '<div class="sub" style="font-size:9px;margin-top:6px">Kaynak: PPK a\u011fac\u0131 (takdiriniz) \u00b7 HMB ihale defteri'+(dm?(' \u00b7 '+dm):'')+' \u00b7 EVDS. Rozet ortam okumas\u0131d\u0131r; pozisyon karar\u0131 risk b\u00fct\u00e7esiyle verilir.</div></div>'):'';
   }catch(e){}
@@ -8732,7 +8732,7 @@ async function hazineRender(){
       return '<div style="padding:6px 0;border-bottom:1px solid var(--line)">'+
         '<span style="font-family:var(--mono);font-size:10px;color:var(--mm2);font-weight:700">'+trh(k.tarih)+'</span>'+satirlar+'</div>';
     }).join('');
-    const sonucBlok=sonuclar?('<div style="margin-top:14px"><div class="lbl" style="font-size:10px">GERÇEKLEŞEN İHALELER <span class="thin" style="font-weight:400">(HMB duyuruları · otomatik §314 · '+(SON.sayi||sonKayit.length)+' kayıt)</span></div>'+sonuclar+'</div>'):'';
+    const sonucBlok=sonuclar?('<div style="margin-top:14px"><div class="lbl" style="font-size:10px">GERÇEKLEŞEN İHALELER</div><div class="sub">(HMB duyuruları · otomatik §314 · '+(SON.sayi||sonKayit.length)+' kayıt)</div>'+sonuclar+'</div>'):'';
     el.innerHTML=(rows||'<div class="sub">Takvim boş.</div>')+sonucBlok;
   }catch(e){el.innerHTML='<div class="sub">Hazine takvimi yüklenemedi.</div>';}
 }
@@ -9340,7 +9340,7 @@ function skPanel(cfg){
   r+=bolum('Durasyon')+satir('Macaulay',M(cfg.mac,2))+satir('Modife',M(cfg.mod,2))+satir('Efektif',M(cfg.efk,2));
   r+=satir('<b>Konveksite</b>',M(cfg.konv,3))+satir('<b>PVBP</b>',M(cfg.pvbp,3))+'</div>';
   const kutu=(ic)=>'<div style="border:1px solid var(--line2);border-radius:6px;overflow:hidden;flex:1;min-width:230px">'+ic+'</div>';
-  return '<div class="card"><div class="lbl">'+esc(cfg.ad||'Kıymet')+' <span class="thin" style="font-weight:400">'+(cfg.alt||'')+'</span></div>'+
+  return '<div class="card"><div class="lbl">'+esc(cfg.ad||'Kıymet')+'</div><div class="sub">'+(cfg.alt||'')+'</div>'+
     '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">'+kutu(f)+kutu(e)+kutu(r)+'</div></div>';
 }
 function skIRR(akis,hedef){let lo=-0.9,hi=10;for(let i=0;i<200;i++){const m=(lo+hi)/2,f=skPV(akis,m).fiyat;if(f>hedef)lo=m;else hi=m;}return (lo+hi)/2;}
@@ -9939,7 +9939,7 @@ function riskMetRender(){
   if(!h.bos){
     const gVol=h.volP/Math.sqrt(252)/100, var95g=h.riskliToplam*gVol*1.645, var95a=var95g*Math.sqrt(21);
     piyasaBolum='<div class="grid g2" style="margin-top:8px">'+
-      '<div class="card"><div class="lbl">PİYASA RİSKİ <span class="thin" style="font-weight:400">(risk bütçesi motoru · tek sahip §302)</span></div>'+
+      '<div class="card"><div class="lbl">PİYASA RİSKİ</div><div class="sub">(risk bütçesi motoru · tek sahip §302)</div>'+
       '<div class="kv"><span class="k">Portföy betası (XKTUM)</span><span class="'+(h.betaP>1.1?'down':h.betaP<0.9?'up':'')+'" style="font-weight:600">'+trN(h.betaP,2)+'</span></div>'+
       '<div class="kv"><span class="k">Yıllık volatilite (çeşitlendirilmiş)</span><span>%'+trN(h.volP,1)+'</span></div>'+
       '<div class="kv"><span class="k">Çeşitlendirme kazancı</span><span class="up" title="naif toplam %'+trN(h.volNaif,1)+' − model %'+trN(h.volP,1)+'">−'+trN(h.cesitKazanc,1)+' puan</span></div></div>'+
@@ -11880,7 +11880,7 @@ function fekCiz(){
       /* §372: KOPMA-σ rejimleri de kalibre λ kullanır — baz TCMB tabanı,
          kriz 2020 zirvesi; ikisi de firma çarpanıyla ölçeklenir. */
       const lamBaz = Math.min(0.60, (LAMBDA_REJIM['tcmb'].lam)*fc.c);
-      const lamKriz = Math.min(0.60, (LAMBDA_REJIM['kriz'].lam)*fc.c);
+      const lamKriz = 1.0;   /* §480: kriz = banka yenilemez → KV finansal borcun tamamı vadesinde ödenir (en sert varsayım) */
       const yukOf=(l)=> S(netFaiz, Number.isFinite(kvBorc)?kvBorc*l:null);
       const DD=(L, sgv)=>{ const sv=(sgv||sgManset); return (Number.isFinite(L)&&L>0&&sv>0) ? (Math.log(kapasite/L)+(0-sv*sv/2))/sv : null; };
       const ddB=DD(yukOf(lamBaz)), ddK=DD(yukOf(lamKriz));
@@ -11958,7 +11958,7 @@ function fekCiz(){
           return (!Number.isFinite(k2)||k2>=KS_TAVAN) ? KS_TAVAN : k2;
         })}));
         K2.innerHTML =
-          '<div class="lbl" style="font-size:11px;margin:16px 0 6px">KOPMA-σ <span class="thin" style="font-weight:400;text-transform:none">nakit servis kopma mesafesi · iki rejimli</span></div>'+
+          '<div class="lbl" style="font-size:11px;margin:16px 0 6px">KOPMA-σ</div><div class="sub">nakit servis kopma mesafesi · iki rejimli</div>'+
           '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px">'+
             '<div><span class="sub">KOPMA-σ</span><br><span style="font-family:var(--mono);font-size:22px;font-weight:700;color:'+sev2.renk+'">'+(doygun?'≥4,0σ':trN(ks,2)+'σ')+'</span></div>'+
             '<div><span class="sub">12 ayda zorunlu finansman olayı</span><br><span style="font-family:var(--mono);font-size:17px;font-weight:600">'+(doygun?'&lt;%0,1':('%'+trN(pd*100,1)))+'</span></div>'+
@@ -12046,7 +12046,7 @@ function fekCiz(){
               (vetolar.length?'<b>Veto her iki ölçüyü de 2\'ye tavanladı</b> — likidite vetosu σ\'nın göremediği türden bir risktir: σ FAVÖK\'ün dalgalanmasını ölçer, nakit tamponunun yokluğunu değil.':'')+
               '</div>';
           })())+
-          '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK <span class="thin" style="font-weight:400;text-transform:none">p(kriz) × σ → KOPMA-σ · <b>σ belirleyici değişkendir</b>, λ ve p değil</span></div>'+
+          '<div class="lbl" style="font-size:10px;margin:14px 0 4px">DUYARLILIK</div><div class="sub">p(kriz) × σ → KOPMA-σ · <b>σ belirleyici değişkendir</b>, λ ve p değil</div>'+
           '<table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr><th style="text-align:left">p \\ σ</th>'+
             sgL.map(sv=>'<th class="num"'+(Math.abs(sv-sgManset)<1e-6?' style="color:var(--mm2)"':'')+'>%'+trN(sv*100,1)+'</th>').join('')+'</tr></thead><tbody>'+
             izgara.map(r=>'<tr'+(Math.abs(r.p-p)<0.01?' style="background:var(--bg2);font-weight:600"':'')+'><td style="font-family:var(--mono)">%'+trN(r.p*100,0)+'</td>'+
@@ -12129,7 +12129,7 @@ function vapCiz(){
       o+='<rect x="'+(x-bw/2).toFixed(1)+'" y="'+Math.min(y,y0).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(1,Math.abs(y-y0)).toFixed(1)+'" rx="1.5" fill="'+(v<0?'var(--down)':'var(--up)')+'" opacity=".78"/>';
       if(i%2===0||n<=8) o+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" font-size="8" fill="var(--muted)" text-anchor="middle" font-family="var(--mono)">'+esc(String(seri[i].ay).slice(2))+'</text>';
     });
-    $('vapGrafik').innerHTML='<div class="lbl" style="font-size:10px">AYLIK NET PARA AKIŞI <span class="thin" style="font-weight:400;text-transform:none">mlr ₺ · yeşil giriş, kırmızı çıkış</span></div>'+
+    $('vapGrafik').innerHTML='<div class="lbl" style="font-size:10px">AYLIK NET PARA AKIŞI</div><div class="sub">mlr ₺ · yeşil giriş, kırmızı çıkış</div>'+
       '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+o+'</svg>';
   }
   T.innerHTML='<table style="width:100%;border-collapse:collapse">'+
@@ -12207,7 +12207,7 @@ function vapTurCiz(){
   /* grafik: yatay paylar */
   if($('vapGrafik')){
     const enB=oAy[0][kSonT]||1;
-    $('vapGrafik').innerHTML='<div class="lbl" style="font-size:10px">TÜR BAZINDA BÜYÜKLÜK <span class="thin" style="font-weight:400;text-transform:none">'+esc(sonAy)+' · mlr ₺</span></div>'+
+    $('vapGrafik').innerHTML='<div class="lbl" style="font-size:10px">TÜR BAZINDA BÜYÜKLÜK</div><div class="sub">'+esc(sonAy)+' · mlr ₺</div>'+
       oAy.slice(0,10).map(x=>{
         const p=(x[kSonT]/enB*100).toFixed(1), d=deg(x);
         return '<div class="bar" style="margin:2px 0"><span class="bn" style="font-size:10px;width:170px">'+esc(x.tur.replace(/ ŞEMSİYE FON[U]?$/i,'').replace(/ YATIRIM FONU$/i,''))+'</span>'+
@@ -12434,7 +12434,7 @@ function edgCiz(){
       '<div style="font-family:var(--mono);font-size:14px;font-weight:600'+(Number.isFinite(v)&&v<0?';color:var(--down)':'')+'">'+
       (Number.isFinite(v)?(trN(v, Math.abs(v)>=100?0:(Math.abs(v)>=10?1:2))+(ek||'')):'—')+'</div></div>';
     C.innerHTML =
-      '<div class="lbl" style="font-size:11px;margin:16px 0 8px">ÇARPANLAR <span class="thin" style="font-weight:400;text-transform:none">TTM temeller EDGAR · fiyat '+(fKaynak||'alınamadı')+'</span></div>'+
+      '<div class="lbl" style="font-size:11px;margin:16px 0 8px">ÇARPANLAR</div><div class="sub">TTM temeller EDGAR · fiyat '+(fKaynak||'alınamadı')+'</div>'+
       (pd===null
         ? '<div class="sub" style="padding:8px 12px;background:var(--bg2);border-left:3px solid #E8933B;font-size:10.5px">'+
           '<b>Çarpanlar hesaplanamadı.</b> '+(!Number.isFinite(fiyat)?'Fiyat alınamadı. ':'')+

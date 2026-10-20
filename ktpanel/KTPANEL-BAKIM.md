@@ -6,6 +6,17 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §480 (20 Eki 2026, 21:20) — FEK/KOPMA-σ KRİZ REJİMİ: EN SERT VARSAYIM
+
+İnceleme (SAFKR ekranı): mekanik doğru (K 637 = çekirdek FAVÖK 457 + serbest likidite 202 − bakım capex 22; L 6 = ödenen faiz 5 + KV borç
+63 × λ 1,6%). HATA: KOPMA-σ'nın "Kriz — yenilemez" dalı λ = %10 × firma çarpanı kullanıyordu (SAFKR %5) — p(kriz) %15 zaten olasılığı
+taşıyor; kriz dalında bankanın borcun %95'ini yine çevirdiğini varsaymak riski İKİ KEZ iskonto ediyordu. KARAR (kullanıcı: "en sert
+varsayım"): λ_kriz = 1,0 — kriz dalında KV finansal borcun TAMAMI 12 ayda ödenir, firma çarpanı uygulanmaz. Baz dal değişmedi (TCMB
+%3,1 × çarpan). FEK oranı (üstteki rejim kutusu) değişmedi. Etki: KV borcu kapasiteye yakın şirketlerde not düşer (örnek K 1.000,
+faiz 150, KV 900, σ %15: eski ≥4σ Kale → yeni ~1,3σ Dar emniyet); SAFKR gibi borçsuzlar etkilenmez (637/68 → yine ≥4σ). §476b: lbl
+içindeki stilli thin alt yazılar (11; KOPMA-σ, DUYARLILIK, AYLIK NET PARA AKIŞI…) ve FEK h2 alt yazısı alt satıra alındı.
+DEPLOY: app.js 20261020l · index.html.
+
 # BAKIM EK — §478 (20 Eki 2026, 21:10) — FAKTÖR v3.4 + ÇIKARILANIN AĞIRLIĞI DAĞILIR
 
 Kullanıcı: "GYO'ları yoksay (ben silerim), diğerlerini yap; listeden hisse kaldırınca ağırlıklar aynı kalıyor." (1) fm-isle.py v3.4:
