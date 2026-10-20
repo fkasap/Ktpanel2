@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-20T06:35:45Z",
+ "guncelleme": "2026-10-20T06:46:07Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -320,8 +320,8 @@
    "n": 13,
    "ilk": "2026-10-01",
    "son": "2026-10-19",
-   "usdtry_ort": 49.3,
-   "usdtry_son": 49.5727,
+   "usdtry_ort": 49.301,
+   "usdtry_son": 49.5739,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.5727
+  "2026-10": 49.5739
  },
  "seriler": {
   "altin": {
@@ -5225,12 +5225,12 @@
     ],
     [
      "2026-10-20",
-     4151.7002
+     4150.5
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 4151.7002
+    "deger": 4150.5
    },
    "guncelleme": "2026-10-20"
   },
@@ -7253,12 +7253,12 @@
     ],
     [
      "2026-10-20",
-     57.61
+     57.565
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 57.61
+    "deger": 57.565
    },
    "guncelleme": "2026-10-20"
   },
@@ -9281,12 +9281,12 @@
     ],
     [
      "2026-10-20",
-     6.5695
+     6.5705
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 6.5695
+    "deger": 6.5705
    },
    "guncelleme": "2026-10-20"
   },
@@ -11228,6 +11228,10 @@
     [
      "2026-09-23",
      3434.75
+    ],
+    [
+     "2026-09-24",
+     3426.75
     ],
     [
      "2026-09-25",
@@ -17374,12 +17378,12 @@
     ],
     [
      "2026-10-20",
-     3.006
+     3.008
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 3.006
+    "deger": 3.008
    },
    "guncelleme": "2026-10-20"
   },
@@ -19398,12 +19402,12 @@
     ],
     [
      "2026-10-20",
-     654.5
+     655
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 654.5
+    "deger": 655
    },
    "guncelleme": "2026-10-20"
   },
@@ -21426,12 +21430,12 @@
     ],
     [
      "2026-10-20",
-     109.93
+     110.2
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 109.93
+    "deger": 110.2
    },
    "guncelleme": "2026-10-20"
   },
@@ -23513,12 +23517,12 @@
     ],
     [
      "2026-10-20",
-     1.1233
+     1.1232
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 1.1233
+    "deger": 1.1232
    },
    "guncelleme": "2026-10-20"
   },
@@ -25597,14 +25601,85 @@
     ],
     [
      "2026-10-20",
-     49.5727
+     49.5739
     ]
    ],
    "son": {
     "tarih": "2026-10-20",
-    "deger": 49.5727
+    "deger": 49.5739
    },
    "guncelleme": "2026-10-20"
+  },
+  "demir_lme": {
+   "ad": "LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri",
+   "birim": "$/t",
+   "kaynak": "lme.com (statik sayfa, gün gecikmeli)",
+   "siklik": "gunluk",
+   "hisse": [
+    "KRDMD",
+    "KCAER"
+   ],
+   "gunluk": [
+    [
+     "2026-10-20",
+     587.5,
+     "16 Oct 2026"
+    ]
+   ],
+   "son": {
+    "tarih": "2026-10-20",
+    "deger": 587.5,
+    "etiket": "16 Oct 2026"
+   },
+   "guncelleme": "2026-10-20",
+   "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
+  },
+  "hurda_lme": {
+   "ad": "LME Steel Scrap CFR Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli)",
+   "birim": "$/t",
+   "kaynak": "lme.com (statik sayfa, gün gecikmeli)",
+   "siklik": "gunluk",
+   "hisse": [
+    "EREGL",
+    "KRDMD",
+    "KCAER"
+   ],
+   "gunluk": [
+    [
+     "2026-10-20",
+     396.5,
+     "19 Oct 2026"
+    ]
+   ],
+   "son": {
+    "tarih": "2026-10-20",
+    "deger": 396.5,
+    "etiket": "19 Oct 2026"
+   },
+   "guncelleme": "2026-10-20",
+   "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
+  },
+  "metal_marji_tr": {
+   "ad": "TR uzun çelik metal marjı (LME inşaat demiri FOB TR − hurda CFR TR)",
+   "birim": "$/t",
+   "kaynak": "türetilmiş (lme)",
+   "siklik": "gunluk",
+   "hisse": [
+    "KRDMD",
+    "KCAER"
+   ],
+   "gunluk": [
+    [
+     "2026-10-20",
+     191
+    ]
+   ],
+   "son": {
+    "tarih": "2026-10-20",
+    "deger": 191
+   },
+   "guncelleme": "2026-10-20",
+   "_not": "KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur."
   },
   "ure": {
    "ad": "Üre, Karadeniz (WB)",
@@ -48623,6 +48698,388 @@
     "tarih": "2026-06-13",
     "deger": 14.97
    }
+  },
+  "asels_kap_siparis": {
+   "ad": "ASELSAN açıklanan sözleşmeler — KAP, çeyrek TOPLAMI (mn $)",
+   "birim": "mn $",
+   "siklik": "aylik",
+   "akis": true,
+   "hisse": [
+    "ASELS"
+   ],
+   "kaynak": "aselsan.com KAP açıklamaları (webapi) · kur Yahoo 10y",
+   "aylik": {
+    "2017-01": 169.5,
+    "2017-02": 0,
+    "2017-03": 289.1,
+    "2017-04": 39.5,
+    "2017-05": 173.3,
+    "2017-06": 131.6,
+    "2017-07": 77.5,
+    "2017-08": 70.2,
+    "2017-09": 24.6,
+    "2017-10": 298.1,
+    "2017-11": 0,
+    "2017-12": 482.5,
+    "2018-01": 663.6,
+    "2018-02": 65.3,
+    "2018-03": 66.6,
+    "2018-04": 441.5,
+    "2018-05": 324.3,
+    "2018-06": 220.3,
+    "2018-07": 567.5,
+    "2018-08": 670.2,
+    "2018-09": 0,
+    "2018-10": 438.3,
+    "2018-11": 0,
+    "2018-12": 450.6,
+    "2019-01": 125.4,
+    "2019-02": 463.5,
+    "2019-03": 43.3,
+    "2019-04": 943.3,
+    "2019-05": 0,
+    "2019-06": 77.9,
+    "2019-07": 0,
+    "2019-08": 113.9,
+    "2019-09": 0,
+    "2019-10": 291.5,
+    "2019-11": 249.5,
+    "2019-12": 50,
+    "2020-01": 151.4,
+    "2020-02": 109.7,
+    "2020-03": 119.1,
+    "2020-04": 47.8,
+    "2020-05": 0,
+    "2020-06": 31.3,
+    "2020-07": 0,
+    "2020-08": 18.8,
+    "2020-09": 0,
+    "2020-10": 0,
+    "2020-11": 38.8,
+    "2020-12": 139.6,
+    "2021-01": 0,
+    "2021-02": 20.5,
+    "2021-03": 0,
+    "2021-04": 0,
+    "2021-05": 0,
+    "2021-06": 0,
+    "2021-07": 0,
+    "2021-08": 0,
+    "2021-09": 129.7,
+    "2021-10": 0,
+    "2021-11": 75,
+    "2021-12": 278.1,
+    "2022-01": 0,
+    "2022-02": 0,
+    "2022-03": 32.6,
+    "2022-04": 0,
+    "2022-05": 0,
+    "2022-06": 84.7,
+    "2022-07": 13.8,
+    "2022-08": 72.2,
+    "2022-09": 89.1,
+    "2022-10": 0,
+    "2022-11": 44.4,
+    "2022-12": 102.3,
+    "2023-01": 74.6,
+    "2023-02": 315,
+    "2023-03": 18.9,
+    "2023-04": 0,
+    "2023-05": 546.2,
+    "2023-06": 0,
+    "2023-07": 2115,
+    "2023-08": 239.9,
+    "2023-09": 358.4,
+    "2023-10": 26.4,
+    "2023-11": 0,
+    "2023-12": 755.1,
+    "2024-01": 218.1,
+    "2024-02": 134,
+    "2024-03": 824.2,
+    "2024-04": 36,
+    "2024-05": 839.3,
+    "2024-06": 322,
+    "2024-07": 194.1,
+    "2024-08": 129.8,
+    "2024-09": 44.4,
+    "2024-10": 195,
+    "2024-11": 437.3,
+    "2024-12": 991.1,
+    "2025-01": 517.4,
+    "2025-02": 510.7,
+    "2025-03": 200.7,
+    "2025-04": 211.3,
+    "2025-05": 137.7,
+    "2025-06": 81.3,
+    "2025-07": 360.6,
+    "2025-08": 132.5,
+    "2025-09": 1931.1,
+    "2025-10": 0,
+    "2025-11": 1578.6,
+    "2025-12": 732.9,
+    "2026-01": 171,
+    "2026-02": 0,
+    "2026-03": 54.6,
+    "2026-04": 125.1,
+    "2026-05": 470,
+    "2026-06": 1231.2,
+    "2026-07": 1681.3,
+    "2026-08": 0,
+    "2026-09": 1404.8,
+    "2026-10": 4921.4
+   },
+   "ceyreklik": {
+    "2017Q1": 458.6,
+    "2017Q2": 344.4,
+    "2017Q3": 172.3,
+    "2017Q4": 780.6,
+    "2018Q1": 795.5,
+    "2018Q2": 986.1,
+    "2018Q3": 1237.7,
+    "2018Q4": 888.9,
+    "2019Q1": 632.2,
+    "2019Q2": 1021.2,
+    "2019Q3": 113.9,
+    "2019Q4": 591,
+    "2020Q1": 380.2,
+    "2020Q2": 79.1,
+    "2020Q3": 18.8,
+    "2020Q4": 178.4,
+    "2021Q1": 20.5,
+    "2021Q2": 0,
+    "2021Q3": 129.7,
+    "2021Q4": 353.1,
+    "2022Q1": 32.6,
+    "2022Q2": 84.7,
+    "2022Q3": 175.1,
+    "2022Q4": 146.7,
+    "2023Q1": 408.5,
+    "2023Q2": 546.2,
+    "2023Q3": 2713.3,
+    "2023Q4": 781.5,
+    "2024Q1": 1176.3,
+    "2024Q2": 1197.3,
+    "2024Q3": 368.3,
+    "2024Q4": 1623.4,
+    "2025Q1": 1228.8,
+    "2025Q2": 430.3,
+    "2025Q3": 2424.2,
+    "2025Q4": 2311.5,
+    "2026Q1": 225.6,
+    "2026Q2": 1826.3,
+    "2026Q3": 3086.1,
+    "2026Q4": 4921.4
+   },
+   "yillik": {
+    "2017": 1755.9,
+    "2018": 3908.2,
+    "2019": 2358.3,
+    "2020": 656.5,
+    "2021": 503.3,
+    "2022": 439.1,
+    "2023": 4449.5,
+    "2024": 4365.3,
+    "2025": 6394.8,
+    "2026": 10059.4
+   },
+   "adet_ceyrek": {
+    "2017Q1": 5,
+    "2017Q2": 8,
+    "2017Q3": 5,
+    "2017Q4": 8,
+    "2018Q1": 5,
+    "2018Q2": 9,
+    "2018Q3": 6,
+    "2018Q4": 6,
+    "2019Q1": 10,
+    "2019Q2": 2,
+    "2019Q3": 1,
+    "2019Q4": 4,
+    "2020Q1": 3,
+    "2020Q2": 2,
+    "2020Q3": 1,
+    "2020Q4": 4,
+    "2021Q1": 1,
+    "2021Q3": 1,
+    "2021Q4": 4,
+    "2022Q1": 1,
+    "2022Q2": 3,
+    "2022Q3": 4,
+    "2022Q4": 2,
+    "2023Q1": 5,
+    "2023Q2": 7,
+    "2023Q3": 7,
+    "2023Q4": 5,
+    "2024Q1": 14,
+    "2024Q2": 8,
+    "2024Q3": 7,
+    "2024Q4": 17,
+    "2025Q1": 12,
+    "2025Q2": 5,
+    "2025Q3": 7,
+    "2025Q4": 7,
+    "2026Q1": 2,
+    "2026Q2": 5,
+    "2026Q3": 2,
+    "2026Q4": 6
+   },
+   "son": {
+    "tarih": "2026-10-08",
+    "deger": 125,
+    "ay": "2026-10",
+    "ay_toplam": 4921.4
+   },
+   "guncelleme": "2026-10-20",
+   "n": 211,
+   "sozlesmeler": [
+    {
+     "t": "2026-10-08",
+     "tur": "yeni",
+     "usd_mn": 125,
+     "usd": 125,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN, yurt dışındaki bir son kullanıcıya Silah ve Elektronik Harp Sistemlerinin ihracatına ilişkin toplam tutarı 125 milyon ABD Doları olan bir satış sözleşm",
+     "slug": "sozlesme-imzalanmasi-0700cc"
+    },
+    {
+     "t": "2026-10-07",
+     "tur": "yeni",
+     "usd_mn": 195,
+     "usd": 195,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında Radar Sistemlerinin tedarikine ilişkin 195.000.000,- ABD Doları tutarında b",
+     "slug": "sozlesme-imzalanmasi-75f60c"
+    },
+    {
+     "t": "2026-10-06",
+     "tur": "yeni",
+     "usd_mn": 157.9,
+     "usd": 157.9,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN, yurt dışındaki son kullanıcılarına yönelik olarak Elektronik Harp, Elektro-Optik, Arayıcı Başlık, Keşif ve Gözetleme, Haberleşme ve Silah Sistemlerinin",
+     "slug": "sozlesme-imzalanmasi-2b59df"
+    },
+    {
+     "t": "2026-10-05",
+     "tur": "yeni",
+     "usd_mn": 2759.4,
+     "usd": 0,
+     "eur": 2460,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında Hibrit Hava Savunma Sistemlerinin tedarikine yönelik toplam tutarı 2.460.00",
+     "slug": "sozlesme-imzalanmasi-2e9901"
+    },
+    {
+     "t": "2026-10-02",
+     "tur": "yeni",
+     "usd_mn": 549.6,
+     "usd": 0,
+     "eur": 488.5,
+     "tl": 0,
+     "ozet": "ASELSAN, yurt dışındaki bir son kullanıcı ile Hava Savunma Sistemlerinin ihracatına ilişkin toplam tutarı 488,5 milyon Avro olan bir satış sözleşmesi imzalamışt",
+     "slug": "sozlesme-imzalanmasi-cf28a5"
+    },
+    {
+     "t": "2026-10-01",
+     "tur": "yeni",
+     "usd_mn": 1134.5,
+     "usd": 0,
+     "eur": 1008.5,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında Uzun Menzilli Hava Savunma Sistemlerinin devam eden seri üretim projeleri k",
+     "slug": "sozlesme-imzalanmasi-f4f522"
+    },
+    {
+     "t": "2026-09-23",
+     "tur": "yeni",
+     "usd_mn": 1404.8,
+     "usd": 0,
+     "eur": 1234.21,
+     "tl": 0,
+     "ozet": "ASELSAN ile ROKETSAN arasında Hava Savunma Sistemlerine yönelik alt bileşenlerin tedariki kapsamında toplam tutarı 1.234.210.000,- Euro olan sözleşme imzalanmış",
+     "slug": "sozlesme-imzalanmasi-2d8342"
+    },
+    {
+     "t": "2026-07-10",
+     "tur": "yeni",
+     "usd_mn": 1681.3,
+     "usd": 0,
+     "eur": 1470.5,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında, Hava Savunma Sistemlerinin devam eden seri üretim projelerine ilave olarak",
+     "slug": "sozlesme-imzalanmasi-58fff3"
+    },
+    {
+     "t": "2026-06-15",
+     "tur": "yeni",
+     "usd_mn": 114.7,
+     "usd": 114.7,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN, yurt dışındaki son kullanıcılarına yönelik olarak Radar, Hava Savunma, Elektro-Optik ve Haberleşme Sistemleri ile İHA ve İDA faydalı yüklerinin ihracat",
+     "slug": "sozlesme-imzalanmasi-0bb77d"
+    },
+    {
+     "t": "2026-06-04",
+     "tur": "yeni",
+     "usd_mn": 271.5,
+     "usd": 271.45,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savuma Sanayii Başkanlığı arasında Radar ve Kamu Güvenliği Haberleşme Sistemlerinin tedarikine yönelik toplam t",
+     "slug": "sozlesme-imzalanmasi-89df00"
+    },
+    {
+     "t": "2026-06-01",
+     "tur": "yeni",
+     "usd_mn": 845,
+     "usd": 845,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında Kamu Güvenliği Haberleşme ile Uydu ve Uzay Sistemlerinin tedarikine yönelik",
+     "slug": "sozlesme-imzalanmasi-f9e2fc"
+    },
+    {
+     "t": "2026-05-21",
+     "tur": "yeni",
+     "usd_mn": 470,
+     "usd": 469.97,
+     "eur": 0,
+     "tl": 0,
+     "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında yapay zekâ destekli Kent Güvenliği Yönetim Sistemlerinin tedarikine yönelik",
+     "slug": "sozlesme-imzalanmasi-120180"
+    }
+   ],
+   "_kapsam": "KAP eşiği üstü açıklanan sözleşmeler; resmî \"yeni iş alımı\"nın yaklaşık %45-70'i (2024: 4,4/6,5 · 2025: 6,4/9,6 · 1Y26: 2,05/4,9 mlr $). Büyük sözleşme akışının öncü göstergesi; seviye değil yön ve y/y okunur."
+  },
+  "asels_backlog": {
+   "ad": "ASELSAN resmî bakiye sipariş — backlog (mlr $, çeyrek sonu; elle)",
+   "birim": "mlr $",
+   "siklik": "aylik",
+   "hisse": [
+    "ASELS"
+   ],
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q4": 14,
+    "2025Q4": 20.4,
+    "2026Q2": 23.2
+   },
+   "kaynak": "Şirket finansal sonuç açıklamaları: 24 Şub 2026 (2025: bakiye 20,4 · yeni iş 9,6 · 2024 sonu 14,0) · 5 Ağu 2026 (1Y26: bakiye 23,2 (+%45) · yeni iş 4,9 (+%72))",
+   "yeni_is": {
+    "2024": 6.5,
+    "2025": 9.6,
+    "2026H1": 4.9
+   },
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 23.2
+   },
+   "guncelleme": "2026-10-20",
+   "elle": true
   }
  },
  "wb": {
