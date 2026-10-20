@@ -378,7 +378,8 @@
   "GSRAY": "2026-10-12",
   "TRILC": "2026-10-12",
   "TSPOR": "2026-10-12",
-  "MILKS": "2026-10-16"
+  "MILKS": "2026-10-16",
+  "ULUFA": "2026-10-20"
  },
  "evren_disi": [
   "ADESE",
@@ -526,6 +527,7 @@
   "TSPOR",
   "ULAS",
   "ULKER",
+  "ULUFA",
   "ULUUN",
   "UNLU",
   "UNLUS",
@@ -535,8 +537,8 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 153,
- "pencere_sayi": 0,
+ "evren_disi_sayi": 154,
+ "pencere_sayi": 1,
  "dusen_son": [],
- "guncelleme": "2026-10-20 12:59 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-20 17:39 UTC — otomatik (KAP FR · kümülatif §299)"
 }
