@@ -6,6 +6,49 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §467 (20 Eki 2026, 02:50) — ASELSAN SÖZLEŞME AKIŞI: "BACKLOG'LARI BURADAN TOPLAYABİLİR MİSİN?"
+
+Kullanıcı aselsan.com/investor-relations/kap-disclosures sayfasını verdi. ÖLÇÜM (Chrome): Next.js sayfa, veri tek JSON uçtan:
+webapi.aselsan.com/investor-relations/kap-disclosures?locale=tr → 283 açıklama (2017-01→2026-10), her kayıtta TR+EN TAM METİN.
+Başlık dağılımı: SÖZLEŞME İMZALANMASI 181 · SÖZLEŞME DEĞİŞİKLİĞİ 22 · diğer 80. "Bakiye sipariş/backlog" bu açıklamalarda
+HİÇ geçmiyor → backlog SEVİYESİ buradan çıkmaz; çıkan şey SİPARİŞ AKIŞI (açıklanan sözleşmeler). İkisi ayrı seri yapıldı.
+AYRIŞTIRMA: tutar biçimleri "125 milyon ABD Doları" · "195.000.000,- ABD Doları" · "40.801.680- ABD Doları ve 352.221.840-TL" ·
+"29.135.362,99- Avro" · "ABD Dolar'ı" · "1.650.000.000,-. Avro"; çok para birimli; bileşen+toplam birlikte (TUSAŞ 13 Tem 2023:
+2,6 mlr TL + 132 mn $ … toplam 20,7 mlr TL + 1,2 mlr $) → "toplam" sonrası tutarlar alınır, aynı tutar tekrarı sayılmaz,
+<1000 (yıl/adet) atlanır. İlk regex 125/212 kaçırdı (\b Türkçe harfte çalışmıyor, ",-" eki); düzeltmeyle 212/212 çözüldü,
+2 çift kayıt (listede aynı açıklama iki kez) ayıklandı → 210 sözleşme. Kur: Yahoo TRY=X/EURUSD=X 10y günlük; yedek Fintables
+çeyrek ortalaması (mumlar_gunluk_gh, 2017→). DENETİM: ≥150 sözleşme ve çözülemeyen ≤%5, yoksa dosya korunur.
+SONUÇ (mlr $, açıklanan): 2017 1,75 · 2018 3,79 · 2019 2,36 · 2020 0,65 · 2021 0,53 · 2022 0,44 · 2023 4,42 · 2024 4,37 ·
+2025 6,41 · 2026 (8 Eki'ye kadar) 10,08. Çeyrek: 3Ç25 2,42 · 4Ç25 2,32 · 1Ç26 0,23 · 2Ç26 1,83 · 3Ç26 3,11 · 4Ç26 (8 gün!) 4,91 —
+5 Eki Hibrit Hava Savunma 2,46 mlr € + 1 Eki Uzun Menzilli HS 1,0 mlr € (SSB). KAPSAM: resmî yeni iş alımı 2024 6,5 · 2025 9,6 ·
+1Y26 4,9 mlr $ → açıklananlar %45-70'i (KAP eşiği altı ve toplu açıklanmayan işler yok). Resmî backlog: 2024 sonu 14,0 ·
+2025 sonu 20,4 · 2Ç26 23,2 mlr $ (+%45 y/y) — asels_backlog ELLE serisi (ASELS_RESMI tablosu tazele.mjs içinde; her çeyrek
+sonucunda güncellenir). Okuma: backlog/hasılat TTM 23,2/4,8 ≈ 5 yıl görünürlük; 2Y26 açıklanan 8,0 mlr $ 1Y26'nın resmî
+yeni işinin (4,9) üstünde → yıl sonu backlog 30 mlr $ bandına işaret eder (hasılat ~2,5 mlr $ düşülünce).
+PANEL (karar.js §467): seri `akis:true` → ay bazlı y/y gösterilmez (topaklı), pano y/y okur (3Ç26 +%28); sektör tablosunun
+altında "SON AÇIKLANAN SÖZLEŞMELER" listesi (tarih · mn $ · orijinal para birimi · özet). ASELS birincil sürücüsü
+asels_kap_siparis; 'backlog' bekliyor satırı yerini asels_backlog'a bıraktı. app.js 20261020c · karar-model.json 2026-10-20c.
+DERS: "backlog" istenince iki şey ayrılır — STOK (resmî bakiye sipariş, çeyrekte bir, sunumdan) ve AKIŞ (açıklanan sözleşmeler,
+günlük, KAP). Akış otomatikleşir, stok elle kalır; ikisinin oranı (kapsam) rapora yazılır ki akış resmî rakam sanılmasın.
+DEPLOY: scripts/tazele.mjs (§467) · ktpanel/{app.js (20261020c), karar-model.json (2026-10-20c), guncelleme-plani.json,
+KTPANEL-BAKIM.md, KTPANEL-DAMGA.md}. sektor-surucu.json YÜKLENMEZ — seri ilk koşuda (kamu/akşam) kendiliğinden oluşur.
+
+# BAKIM EK — §466f/§464h (20 Eki 2026, 02:05) — EPİAŞ 401 TANISI · LME İKİ TUR
+
+KOŞU (01:49, run 39337648059, elle hepsi, yeşil, 298 sn): secret adları artık bulundu (EPIAS_ID+EPIAS_KEY — kullanıcı iki
+ayrı secret açtı) ama CAS **HTTP 401** döndü: gövde `{"@class":"java.util.HashMap","authentication_exceptions":[…]}` — rapor
+160 karakterde kesildiği için istisna sınıfı görünmedi. §466f: gövdedeki `…Exception` sınıfı ayıklanıp Türkçe nedene çevrilir
+(FailedLogin = şifre yanlış · AccountNotFound = e-posta yanlış · AccountLocked · CredentialExpired · AccountPasswordMustChange
+= ilk girişte elle şifre değiştirme zorunlu). Kimlik önce KIRPILMIŞ denenir (kullanıcının yapıştırdığı "pass= …" baş/son
+boşluklu idi; GitHub secret değerini olduğu gibi saklar), 401'de ham değer bir kez daha denenir; rapor hangisinin denendiğini
+yazar. EN OLASI NEDEN: secret'taki baş boşluğu ya da sohbette önerilen şifre değişikliğinden sonra secret'ın güncellenmemesi.
+EVDS yine 11/11 ✓. LME bu kez TERS: demir Playwright'tan geçti, ondan önce denenen hurda geçememişti — Cloudflare izni ikinci
+sayfada kazanıldı, ilk sayfa pes etmişti. §464h: iki tur — 1. tur fetch→Playwright→köprü; en az bir sayfa Playwright'tan
+geçtiyse kalanlar 2. turda yalnız Playwright ile (aynı bağlam, çerez elde) yeniden denenir. Sahte-Playwright harness'ta
+doğrulandı: demir 1. tur, hurda "playwright·2.tur", marj 194,5 ✓. Köprü (Vercel) iki koşudur 403 — LME artık Vercel IP'sini de
+tanıyor; köprü zincirde yedek olarak kalır, beklenti düşük.
+DEPLOY: scripts/tazele.mjs (§466f + §464h) · KTPANEL-BAKIM.md. Workflow/app.js/model değişmedi.
+
 # BAKIM EK — §466b/§464g (20 Eki 2026, 01:30) — İLK CANLI KOŞU: EVDS 11/11 ✓ · EPİAŞ SECRET ADI TUTMADI · LME ÇEREZ DERSİ
 
 CANLI KOŞU (00:59, run 39331666600, elle hepsi, yeşil, 300 sn): **EVDS serileri (§466) — ✓ 11/11** — tufe 137,23 (Eyl 26,

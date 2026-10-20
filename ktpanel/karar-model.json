@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-20a",
+ "surum": "2026-10-20c",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -643,8 +643,8 @@
    "sektor": "Savunma",
    "tier": "C",
    "tip": "konsensus",
-   "surucu_plani": "Backlog (USD) × teslimat hızı · USDTRY · 4Ç ağırlıklı mevsimsellik · rehberlik (guidance.json)",
-   "kaynak_notu": "Backlog/rehberlik şirketten; dış günlük sürücü yok",
+   "surucu_plani": "Sipariş akışı (KAP açıklanan sözleşmeler, $) → backlog → teslimat takvimi (4Ç ağır) · USD/EUR endeksli sözleşmeler × TL maliyet · book-to-bill = yeni iş / hasılat",
+   "kaynak_notu": "KAP sözleşme açıklamaları aselsan.com webapi (Actions §467, günlük); resmî backlog/yeni iş çeyrek sonuçlarından elle (asels_backlog)",
    "sermaye_mn": 4560.0,
    "favok": {
     "2024Q1": {
@@ -766,6 +766,20 @@
    "sektor_not": "Savunma elektroniği: gelir backlog’un teslimat takvimine göre tanınır (yıllar süren projeler). 4Ç çok ağır (yıl sonu teslimat/kabul) → çeyrekler YoY kıyaslanır. Sözleşmeler ağırlıkla USD/EUR endeksli, maliyet TL → kur geçişkenliği pozitif. Nakit döngüsü (alacak/avans) ve işletme sermayesi serbest nakit için belirleyici.",
    "surucu_seriler": [
     {
+     "k": "asels_kap_siparis",
+     "rol": "gelir",
+     "ad": "Açıklanan sözleşmeler — KAP, çeyrek toplamı (mn $)",
+     "kaynak": "aselsan.com KAP açıklamaları (Actions §467, günlük)",
+     "not": "KAP eşiği üstü sözleşmeler; resmî yeni iş alımının ~%45-70'i (2024: 4,4/6,5 · 2025: 6,4/9,6 mlr $). Büyük sözleşme akışının öncü göstergesi — seviye değil y/y okunur; çeyrekler topaklı"
+    },
+    {
+     "k": "asels_backlog",
+     "rol": "gelir",
+     "ad": "Resmî bakiye sipariş — backlog (mlr $, çeyrek sonu)",
+     "kaynak": "Şirket çeyrek sonuçları (elle: 2024 sonu 14,0 · 2025 sonu 20,4 · 2Ç26 23,2)",
+     "not": "Backlog/hasılat ≈ 5 yıl görünürlük (23,2 mlr $ / ~4,8 mlr $ TTM). Yeni iş alımı: 2024 6,5 · 2025 9,6 · 1Y26 4,9 mlr $"
+    },
+    {
      "k": "usdtry",
      "rol": "kur",
      "ad": "USD/TRY (sözleşmeler $ endeksli)"
@@ -773,17 +787,10 @@
     {
      "k": "eurusd",
      "rol": "kur",
-     "ad": "EUR/USD"
-    },
-    {
-     "k": "backlog",
-     "rol": "gelir",
-     "ad": "Backlog ve teslimat (şirket)",
-     "bekliyor": true,
-     "kaynak": "KAP/faaliyet raporu — çeyreklik elle"
+     "ad": "EUR/USD (Avro sözleşmeler: 2025-26 hava savunma)"
     }
    ],
-   "birincil": "usdtry"
+   "birincil": "asels_kap_siparis"
   },
   {
    "kod": "BERA",
@@ -4469,5 +4476,6 @@
   "Faz 3 (tier B) — §466 ile kısmen TAMAM: BIMAS/MAVI TÜFE alt kalemleri, AKCNS/CIMSA çimento ÜFE, ALBRK AOFM/TLREF, EKGYO KFE bağlandı. Kalan: EKGYO aylık ön satış (KAP), OBAMS buğday modeli, ENJSA tarife formülü, EPDK tarifeleri (AHGAZ/ENERY), asgari ücret serisi (GRSEL)"
  ],
  "_465": "Sektör bilgisi: her modelde sektor_not (analist özeti: iş modeli · kâr sürücüsü · mevsimsellik · bozucu) ve surucu_seriler[] (sektor-surucu.json/seriler anahtarı, rol gelir|maliyet|kur|marj; bekliyor:true = kaynak bağlanmadı, kaynak notu). birincil = panoda gösterilen sürücü. Roller işaret okuması içindir: gelir ↑ olumlu, maliyet ↑ olumsuz, kur ↑ (TL zayıf) ihracatçı/$-gelirli için olumlu.",
- "_466": "Kamu veri katmanları bağlandı (Actions §466): TCMB EVDS — TÜFE genel/gıda/giyim (2025=100, 2025 öncesi 2003 bazından zincirli), Yİ-ÜFE çimento-kireç-alçı (T69) · ana demir-çelik (T74) · elektrik (T120) · temel kimyasal-gübre (T53), KFE, AOFM (TP.APIFON4) ve TLREF (iş günü); EPİAŞ Şeffaflık — GÖP PTF saatlik → günlük ortalama TL/MWh (ptf) ve $/MWh (ptf_usd). Anahtarlar: EVDS_KEY ve EPIAS_* secret. Panel kuralı: sektor-surucu.json/seriler içinde anahtar varsa bekliyor bayrağı EZİLİR (karar.js §466); yüzde birimli seride değişim puan (p) okunur; endeks serilerinde son ayın yıllık değişimi gösterilir. Birincil değişti: MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe."
+ "_466": "Kamu veri katmanları bağlandı (Actions §466): TCMB EVDS — TÜFE genel/gıda/giyim (2025=100, 2025 öncesi 2003 bazından zincirli), Yİ-ÜFE çimento-kireç-alçı (T69) · ana demir-çelik (T74) · elektrik (T120) · temel kimyasal-gübre (T53), KFE, AOFM (TP.APIFON4) ve TLREF (iş günü); EPİAŞ Şeffaflık — GÖP PTF saatlik → günlük ortalama TL/MWh (ptf) ve $/MWh (ptf_usd). Anahtarlar: EVDS_KEY ve EPIAS_* secret. Panel kuralı: sektor-surucu.json/seriler içinde anahtar varsa bekliyor bayrağı EZİLİR (karar.js §466); yüzde birimli seride değişim puan (p) okunur; endeks serilerinde son ayın yıllık değişimi gösterilir. Birincil değişti: MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe.",
+ "_467": "ASELSAN sözleşme akışı: aselsan.com KAP açıklamaları (webapi JSON, 2017→) Actions §467 ile günlük ayrıştırılır → seriler.asels_kap_siparis (akış: aylık/çeyreklik/yıllık TOPLAM mn $, kur Yahoo 10y) + seriler.asels_backlog (resmî, elle: 2024Q4 14,0 · 2025Q4 20,4 · 2026Q2 23,2 mlr $; yeni iş 2024 6,5 · 2025 9,6 · 1Y26 4,9). Kapsam uyarısı: açıklananlar resmî yeni iş alımının ~%45-70'i. Panel: akis:true serilerde pano y/y okur, sözleşme listesi sektör tablosunun altında."
 }

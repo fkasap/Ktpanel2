@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2606,12 +2606,12 @@ function kararSeriStat(k, hedefQ, kosuQ){
   const fark = ser.birim==='%';
   const d=(a,b)=> (a!=null&&b!=null)? (fark? a-b : (b!==0? (a/b-1)*100 : null)) : null;
   /* §466: endeks serilerinde (TÜFE, Yİ-ÜFE, KFE) seviye anlamsız, son ayın YILLIK değişimi gösterilir */
-  let yoySon=null; if(ser.siklik==='aylik' && ser.aylik){ const ks=Object.keys(ser.aylik).sort(); const sonK=ks[ks.length-1]; if(sonK){ const gk=(+sonK.slice(0,4)-1)+sonK.slice(4); if(ser.aylik[gk]) yoySon=(ser.aylik[sonK]/ser.aylik[gk]-1)*100; } }
+  let yoySon=null; if(ser.siklik==='aylik' && ser.aylik && !ser.akis){   /* §467: akış (toplam) serisinde ay bazlı y/y topaklı — gösterilmez */ const ks=Object.keys(ser.aylik).sort(); const sonK=ks[ks.length-1]; if(sonK){ const gk=(+sonK.slice(0,4)-1)+sonK.slice(4); if(ser.aylik[gk]) yoySon=(ser.aylik[sonK]/ser.aylik[gk]-1)*100; } }
   /* kıvılcım: son 12 ay — günlükte haftalık örnek, aylıkta aylar */
   let spark=[];
   if(ser.siklik==='aylik'){ spark=Object.keys(ser.aylik||{}).sort().slice(-13).map(a=>ser.aylik[a]); }
   else { const g=(ser.gunluk||[]).filter(x=>typeof x[1]==='number'); const son=g[g.length-1]; if(son){ const basD=new Date(son[0]+'T00:00:00'); basD.setFullYear(basD.getFullYear()-1); const bas=basD.toISOString().slice(0,10); const w=g.filter(x=>x[0]>=bas); const adim=Math.max(1,Math.floor(w.length/26)); spark=w.filter((x,i)=>i%adim===0||i===w.length-1).map(x=>x[1]); } }
-  return {ser, son:ser.son, hedef, onceki, gecen, kosu, dQ:d(hedef,onceki), dY:d(hedef,gecen), dK:d(kosu,hedef), spark, fark, yoySon};
+  return {ser, son:ser.son, hedef, onceki, gecen, kosu, dQ:d(hedef,onceki), dY:d(hedef,gecen), dK:d(kosu,hedef), spark, fark, yoySon, akis:!!ser.akis};
 }
 function kararSpark(v, renk){
   if(!v||v.length<3) return '';
@@ -2639,7 +2639,14 @@ function kararSektorPanel(M,H){
          '<td class="'+renkYon(st.dY)+'">'+kararIsaret(st.dY,st.fark?1:0,st.fark?' p':'%')+'</td>'+
          '<td>'+fmt(st.kosu)+(st.dK!=null?' <span class="'+dkYon(st.dK)+'" style="font-size:10px">('+kararIsaret(st.dK,st.fark?1:0,st.fark?' p':'%')+')</span>':'')+'</td>'+
          '<td>'+kararSpark(st.spark, d.rol==='maliyet'?KARAR_RENK.dizel:d.rol==='kur'?KARAR_RENK.muted:KARAR_RENK.gercek)+'</td></tr>'; });
-    h+='</tbody></table></div><div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta) · TCMB EVDS aylık endeksler (TÜFE 2025=100, 2025 öncesi zincirli) ve günlük AOFM/TLREF (değişim puan) · EPİAŞ PTF günlük ortalama.</div>';
+    h+='</tbody></table></div>';
+    /* §467: akış serisinin son sözleşmeleri (ASELSAN KAP) — tablonun altında kısa liste */
+    L.forEach(d=>{ const ser=kararSeriVeri(d.k); if(!ser||!Array.isArray(ser.sozlesmeler)||!ser.sozlesmeler.length) return;
+      h+='<div class="lbl" style="margin-top:8px">SON AÇIKLANAN SÖZLEŞMELER <span class="thin">'+esc(ser.ad||d.k)+' · '+(ser.n||ser.sozlesmeler.length)+' kayıt · KAP eşiği üstü</span></div><div style="overflow-x:auto"><table class="arzTbl"><thead><tr><th>TARİH</th><th>TUTAR (mn $)</th><th>ORİJİNAL</th><th style="text-align:left">AÇIKLAMA</th></tr></thead><tbody>';
+      ser.sozlesmeler.slice(0,8).forEach(x=>{ const org=[x.usd?trN(x.usd,1)+' $':'', x.eur?trN(x.eur,1)+' €':'', x.tl?trN(x.tl,0)+' TL':''].filter(Boolean).join(' + ');
+        h+='<tr><td>'+esc(kararTrTarih(x.t))+(x.tur==='değişiklik'?' <span class="sub">değişiklik</span>':'')+'</td><td><b>'+trN(x.usd_mn,0)+'</b></td><td class="sub">'+esc(org)+'</td><td style="text-align:left;font-family:var(--sans);font-size:11px;color:var(--muted)">'+esc(String(x.ozet||'').replace(/^ASELSAN,?\s*/,'').slice(0,120))+'</td></tr>'; });
+      h+='</tbody></table></div>'+(ser._kapsam?'<div class="sub">'+esc(ser._kapsam)+'</div>':''); });
+    h+='<div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta) · TCMB EVDS aylık endeksler (TÜFE 2025=100, 2025 öncesi zincirli) ve günlük AOFM/TLREF (değişim puan) · EPİAŞ PTF günlük ortalama.</div>';
   }
   return h;
 }
@@ -2650,7 +2657,7 @@ function kararBirincilOzet(M,H){
   const rol=KARAR_ROL[d.rol]||KARAR_ROL.kur;
   /* §466c: fiyat endeksleri (TÜFE/ÜFE/KFE) mevsimseldir ve enflasyon dilinde YILLIK okunur (giyim 3Ç yaz indirimi −%2 ama y/y +%14);
      emtia/kur/faiz için çeyrek değişimi kalır. Pano bu yüzden endeks serisinde ΔYıl gösterir ve "y/y" etiketi basar. */
-  const endeks = st.ser.birim==='endeks';
+  const endeks = st.ser.birim==='endeks' || !!st.ser.akis;   /* §467: akış serileri (sözleşme toplamı) de y/y okunur — çeyrekler topaklı */
   return {ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ: endeks? st.dY : st.dQ, dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son, fark:st.fark, yy:endeks};
 }
 

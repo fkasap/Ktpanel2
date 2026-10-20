@@ -416,6 +416,15 @@
    "_463": "19 Eki: 30 hisseye genişletildi (tier A/B/C kataloğu). Bilanço sezonunda (30 Eki–9 Kas) konsensüs kurum sayısı artar → konsensus bloğu tazelenir.",
    "_465": "19 Eki: her modele sektor_not (iş modeli · sürücü · mevsimsellik · bozucu) + surucu_seriler[] (rol: gelir/maliyet/kur/marj; bekliyor = kaynak bağlanmadı) + birincil. Bekleyen kaynaklar: EVDS alt kalemler (EVDS_KEY secret), EPİAŞ PTF (hesap), KAP aylık ÖDA (EKGYO), LME (Playwright).",
    "_466": "20 Eki: surucu_seriler yeniden eşlendi — EVDS/EPİAŞ serileri bekliyor'dan çıktı; birincil: MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe. Panel kuralı (karar.js §466): seriler{} içinde anahtar varsa bekliyor bayrağı ezilir; % birimli seride değişim puan; endeks serilerinde yıllık % gösterilir."
+  },
+  {
+   "ad": "ASELSAN sözleşme akışı — KAP açıklamaları (açıklanan sözleşmeler, USD) + resmî backlog tohumu",
+   "dosya": "sektor-surucu.json",
+   "siklik": "gunluk",
+   "son": "2026-10-20",
+   "kaynak": "Actions aselsSiparis() (§467): webapi.aselsan.com/investor-relations/kap-disclosures?locale=tr (tek JSON, 2017→, TR+EN tam metin). Hafta içi akşam + Cmt + elle --katman=kamu|surucu. Kur Yahoo TRY=X/EURUSD=X 10y; yedek Fintables çeyrek ortalaması.",
+   "_467": "Tutar ayrıştırma TR metinden: 'toplam' sonrası tutarlar; tekrarlar sayılmaz; <1000 atlanır. Denetim ≥150 sözleşme ve çözülemeyen ≤%5 — şablon değişirse dosya korunur, rapor örnek verir. Kapsam: açıklananlar resmî yeni iş alımının ~%45-70'i. asels_backlog ELLE: her çeyrek sonucu açıklandığında (Şub/May/Ağu/Kas) ASELS_RESMI tablosuna (tazele.mjs) yeni backlog + yeni iş eklenir.",
+   "takvim": "Çeyrek sonuçları: ~25 Şub · ~5 May · ~5 Ağu · ~5 Kas → backlog elle"
   }
  ],
  "bilanco_sezonu_aylar": [
