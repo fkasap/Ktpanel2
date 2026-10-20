@@ -35,7 +35,7 @@ DOGRULA = sys.argv[sys.argv.index('--dogrula')+1] if '--dogrula' in sys.argv els
 FAK = ['VALUE', 'GROWTH', 'QUALITY', 'MOMENTUM', 'LOW_RISK']
 SEKTOR_ICI = {'VALUE', 'GROWTH', 'QUALITY'}       # digerleri tum evren
 METRIK = [   # (ad, faktör, yüksek-iyi, AĞIRLIK) — §477: ağırlık 0 = faktöre girmez (yalnız meta'da listelenir)
-    ('P/E (LTM)',                          'VALUE',    False, 1.0),
+    ('P/E (LTM)',                          'VALUE',    False, 0.5),   # §478 TMS-29: net kârda parasal kazanç/kayıp → az ağırlık
     ('EV/EBITDA (LTM)',                    'VALUE',    False, 1.5),
     ('EV/Sales (LTM)',                     'VALUE',    False, 0.5),
     ('P/FCF (LTM)',                        'VALUE',    False, 1.0),
@@ -47,11 +47,11 @@ METRIK = [   # (ad, faktör, yüksek-iyi, AĞIRLIK) — §477: ağırlık 0 = fa
     ('Capex as % of Revenues (LTM)',       'GROWTH',   False, 0.0),   # işareti belirsiz (yatırım = büyüme de olabilir) → dışarı
     ('CAPEX/CAGR (3Y TTM)',                'GROWTH',   False, 0.0),
     ('Nopat margin',                       'GROWTH',   True,  0.0),   # marj = kalite; GROWTH'ta çift sayım → dışarı
-    ('Return On Equity % (LTM)',           'QUALITY',  True,  1.5),
-    ('Return on Assets (ROA) % (LTM)',     'QUALITY',  True,  1.0),
-    ('ROIC (LTM)',                         'QUALITY',  True,  1.5),
+    ('Return On Equity % (LTM)',           'QUALITY',  True,  0.75),  # §478 TMS-29
+    ('Return on Assets (ROA) % (LTM)',     'QUALITY',  True,  0.5),   # §478 TMS-29
+    ('ROIC (LTM)',                         'QUALITY',  True,  2.0),   # §478 faaliyet kârı tabanlı — enflasyon muhasebesinden temiz
     ('EBIT Margin % (LTM)',                'QUALITY',  True,  1.0),
-    ('EBITDA Margin % (LTM)',              'QUALITY',  True,  0.5),
+    ('EBITDA Margin % (LTM)',              'QUALITY',  True,  1.0),
     ('Gross Profit Margin % (LTM)',        'QUALITY',  True,  0.5),
     ('FCF Margin % (LTM)',                 'QUALITY',  True,  1.0),
     ('Altman Z-Score (LTM)',               'QUALITY',  True,  1.0),
@@ -69,6 +69,7 @@ KIRP = 3.0
 MINFAC = 3
 MIN_SEKTOR = 8    # §477: 5→8 — küçük sektörde z-skor gürültü (6 isimlik Health Care'de bir aykırı herkesi belirliyordu)
 WINSOR = 0.02     # §477: ham metrik havuzda %2/%98 kırpılır (CAGR %160 gibi uçlar sektör ort/std'yi bozmasın)
+INCE_US = 0.5     # §478: faktör skoru × (mevcut metrik ağırlığı / toplam)^0,5 — az metrikle gelen uç skor sıfıra çekilir
 BUZME = 0.5       # §477: sektör-içi z = 0,5·sektör + 0,5·evren (küçük havuz gürültüsü büzülür)
 
 def sayi(v):
@@ -132,26 +133,30 @@ for ad, fa, hib, agirlik in METRIK:
     for g, uyeler in gruplar.items():
         havuzK = hisse if g in ('__BILINMEYEN__', '__TUM__') else uyeler
         havuz = [h['ham'][ad] for h in havuzK if h['ham'][ad] is not None]
+        kucukHavuz = len(havuz) < MIN_SEKTOR     # §478: bu metrikte sektörde yeterli GÖZLEM yoksa (üye değil, veri) evrene düş
         for h in uyeler:
             v = h['ham'][ad]
             if v is None: continue
-            zz = zw(v, havuz)
+            zz = zw(v, evrenHavuz[ad] if kucukHavuz else havuz)
             if zz is None: continue
-            if fa in SEKTOR_ICI and g not in ('__BILINMEYEN__', '__TUM__'):
+            if fa in SEKTOR_ICI and g not in ('__BILINMEYEN__', '__TUM__') and not kucukHavuz:
                 ze = zw(v, evrenHavuz[ad])                 # §477 büzme: sektör-içi z ile evren z karışımı
                 if ze is not None: zz = BUZME * zz + (1 - BUZME) * ze
             zs[h['t']][ad] = (zz if hib else -zz) if True else zz     # dusuk-iyi metrikte ISARET TERS
 # ── FAKTOR SKORLARI (§477: metrik ağırlıklı ortalama → sıralanan evrende yeniden standartlaştırma, sd=1, ±3 kırpma)
 data, atlanan = [], []
 for h in hisse:
-    f = []
+    f = []; kp = []
     for fa in FAK:
         pay = [(zs[h['t']][ad], ag) for ad, ff, _, ag in METRIK if ff == fa and ag > 0 and ad in zs[h['t']]]
-        f.append(sum(v * a for v, a in pay) / sum(a for _, a in pay) if pay else None)
+        top = sum(ag for ad, ff, _, ag in METRIK if ff == fa and ag > 0)
+        kap = sum(a for _, a in pay) / top if top else 0
+        f.append((sum(v * a for v, a in pay) / sum(a for _, a in pay)) * (kap ** INCE_US) if pay else None)
+        kp.append(round(kap, 2))
     n = sum(1 for x in f if x is not None)
     if n < MINFAC:
         atlanan.append(h['t']); continue
-    data.append({'t': h['t'], 's': h['s'], 'f': f, 'n': n})
+    data.append({'t': h['t'], 's': h['s'], 'f': f, 'n': n, 'k': kp, 'ince': [fa for fa, k in zip(FAK, kp) if k < 0.6]})   # §478 k = faktör başına metrik kapsamı (ağırlık payı)
 for i, fa in enumerate(FAK):
     v = [x['f'][i] for x in data if x['f'][i] is not None]
     if len(v) >= 3 and st.pstdev(v) > 0:
@@ -170,7 +175,7 @@ meta = {
     'tarih': str(datetime.date.today()),
     '_faktor_sirasi': FAK,
     '_normalizasyon': {fa: ('sektör içi' if fa in SEKTOR_ICI else 'tüm evren') for fa in FAK},
-    '_kirpma': KIRP, '_min_sektor_uye': MIN_SEKTOR, '_winsor': WINSOR, '_buzme': BUZME, '_yontem': '§477 v3.3: metrik ağırlıklı · %2/98 winsor · sektör-içi z 0,5 büzme · faktör evrende sd=1',
+    '_kirpma': KIRP, '_min_sektor_uye': MIN_SEKTOR, '_winsor': WINSOR, '_buzme': BUZME, '_yontem': '§478 v3.4: metrik ağırlıklı (TMS-29: P/E, ROE, ROA az; ROIC, FAVÖK marjı çok) · %2/98 winsor · sektör-içi z 0,5 büzme · ince veri büzmesi kapsam^0,5 · faktör evrende sd=1', '_ince_us': INCE_US,
     '_uretim': 'fm-isle.py · ' + CSV.split('/')[-1],
 }
 json.dump({'meta': meta, 'data': data},
