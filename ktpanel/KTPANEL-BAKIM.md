@@ -6,6 +6,32 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §477 (20 Eki 2026, 17:40) — "FAKTÖR MODELİN SKORLAMASI SIKINTILI" → v3.3
+
+TEŞHİS (canlı fm.json + fm-girdi.csv üzerinde): (1) 60 hissenin sektörü boştu ("Bilinmiyor"; AHGAZ, AKCNS, ENERY, TKFEN, TCKRC…) →
+VALUE/GROWTH/QUALITY sektör-içi normalize edilirken bunlar TÜM EVRENE karşı skorlanıyordu; ilk 25'te 4 "Bilinmiyor" vardı ve sektör
+tavanı (≤6 isim) bunları tek sektör sayıyordu. Yahoo assetProfile bu kodları çözemiyor. (2) MOMENTUM'un 6 metriğinden 5'i 10–20 günlük
+teknik (RSI10, SMA10, EMA20, Rel.Volume, SMA50) → 2 haftalık sıçrama 6 aylık düşüşü örtüyordu (6M getiri ile korelasyon 0,61).
+(3) GROWTH'ta "Capex/Ciro" ve "Capex CAGR" ters işaretle (yatırım yapan cezalı) ve Nopat marjı (kalite) vardı; VALUE'da iki kaldıraç
+oranı (Net Borç/FAVÖK) değerleme sayılıyordu — bunlar 10 Ağu'da Koyfin'in ekranından geri çözülmüş tanımlardı. (4) Küçük sektörlerde
+(Health Care 6 isim) tek aykırı herkesin z'sini belirliyordu; CAGR %160 gibi uçlar havuz ortalama/std'yi bozuyordu. (5) Faktör skoru =
+metrik z'lerinin ortalaması → std 0,57–0,76, faktörler arası ölçek eşit değildi; 8 metrikli VALUE ile 2 metrikli LOW_RISK aynı
+ağırlıkla toplanıyordu. Kırık olan "sayı" değil TANIM ve KAPSAM'dı; kod hatasızdı.
+v3.3 (ktpanel/arac/fm-isle.py; aynı CSV, aynı çıktı şeması): metrik AĞIRLIKLARI (6M getiri 3,0 · SMA50 1,0 · 10–20 gün teknikler
+0,25–0,5 · Rel.Volume 0 · Capex oranları/Nopat 0 · kaldıraç oranları 0 · EV/EBITDA 1,5 · ROE/ROIC 1,5) · ham metrik %2/%98 winsor ·
+sektör-içi z = 0,5·sektör + 0,5·evren (büzme) · MIN_SEKTOR 5→8 · faktör skoru sıralanan evrende yeniden standart (ort 0, sd 1, ±3)
+→ "+1 = evrenden bir standart sapma iyi" okunur. Sektör haritası: 60 eksik Fintables BIST sektöründen GICS'e ELLE eşlendi
+(fm-sektor.json; Actions bu dosyayı okuyup üstüne yazar, elle girişler korunur). SONUÇ (canlı CSV): MOM~6M korelasyonu 0,61→0,89;
+faktör std'leri 1,0; ilk 10: AHGAZ·TUPRS·TCKRC·GRSEL·MAVI·SRVGY·ENJSA·AKFYE·ENERY·BIMAS (BIMAS 13→10, EREGL 35→24, MPARK 30→23,
+ASELS 83→74: EV/FAVÖK 27x → VALUE −1,5; TGSAS 8→30). --dogrula: eski skorlarla korelasyon VAL 0,83 GRO 0,72 QUA 0,95 MOM 0,84
+LOW 1,00 (yöntem değişti, veri aynı — beklenen). Not: MOMENTUM evren-içi GÖRELİDİR: ayı piyasasında 6 ayda −%27 düşen KRVGD'nin
+MOM'u pozitif (evren daha çok düştü) — hata değil tanım; panelde "göreli" vurgusu Faz 2.
+AÇIK KALANLAR: kapsam 124/238 (114 hissede KAP TTM yok — faktorEvren turu 6 şirket/koşu, ~2 hafta); kâğıt sicil 14 Tem'den beri
+−%20,1 vs XKTUM −%15,9 (alfa −4,3) ve "son 2026-10-16" (4 gün bayat); "Model karnesi" kartı "snapshot/canlı fiyat kesişimi yetersiz"
+diyor (multiple.json kapsamı) — ayrı bakılacak. v3.3 skorları ilk fm koşusunda (akşam hepsi ya da elle katman=fm) üretilir; kâğıt
+sicil yöntem değişikliğini "v3.3" etiketiyle not etmeli (Faz 2).
+DEPLOY: ktpanel/arac/fm-isle.py · ktpanel/fm-sektor.json · ktpanel/index.html (etiket v3.3, isteğe bağlı) · BAKIM.
+
 # BAKIM EK — §476 (20 Eki 2026, 16:50) — "BAŞLIK TEMİZ OLUR" — BAŞLIK ALT YAZILARI KALDIRILDI
 
 Kullanıcı: "her başlığa bir şey yazıyorsun, başlık temiz olur." KURAL (bundan sonra): başlık = yalnız ad. Açıklama başlığa yazılmaz;
