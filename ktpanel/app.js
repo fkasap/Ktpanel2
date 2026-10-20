@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020j';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020k';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1730,7 +1730,7 @@ function trackRender(){
       '<circle cx="'+lx.toFixed(1)+'" cy="'+Y(son.model).toFixed(1)+'" r="3.2" fill="#128A66"/>'+
       '<text x="8" y="14" font-family="IBM Plex Mono" font-size="10" font-weight="600" fill="#128A66">Model '+fmtP(son.model)+'</text>'+
       '<text x="120" y="14" font-family="IBM Plex Mono" font-size="10" fill="#8FA098">'+TRK.endeks+' '+fmtP(eSon)+'</text>';
-    $('trkNote').textContent='İzlenen portföy: kuruluş günü varsayılan ağırlıklarla damgalanan resmi Top-25. Getiriler Fintables kapanışlarıyla her damgalı güncellemede hesaplanır; temettü ve işlem maliyeti hariçtir.';
+    $('trkNote').textContent='İzlenen portföy: kuruluş günü varsayılan ağırlıklarla damgalanan resmi Top-'+FM.meta.topn+'. Getiriler Fintables kapanışlarıyla her damgalı güncellemede hesaplanır; temettü ve işlem maliyeti hariçtir.';
   }else{
     $('trkNote').innerHTML='Sicil <em>bugün</em> kuruldu — ilk performans noktası bir sonraki damgalı güncellemede ("güncelle" komutuyla) eklenecek. İzlenen portföy tabloda görünen seçim değil, kuruluşta damgalanan resmi Top-25\u0027tir: ağırlık kutucuklarıyla oynaman sicili etkilemez. Bu disiplin önemli: sicil ancak <em>önceden ilan edilmiş</em> kurallarla tutulursa anlamlıdır — sonradan ağırlık değiştirip "aslında şöyle yapsaydık" demek sicil değil, hikâye olur.';
   }
@@ -1831,7 +1831,7 @@ function fmRender(){
     const tm=db.querySelector('#fmDislaTemizle'); if(tm)tm.addEventListener('click',ev=>{ev.preventDefault();fmDislaYaz([]);fmRender();}); }
   const inSel=new Set(sel.map(r=>r.t));
   const buf=rows.filter(r=>!disla.has(r.t)&&!inSel.has(r.t)).slice(0,15).map(r=>r.t);
-  $('fmBuffer').textContent='Tampon bölge / izleme listesi (26–40 bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
+  $('fmBuffer').textContent='Tampon bölge / izleme listesi ('+(FM.meta.topn+1)+'–'+(FM.meta.topn+15)+' bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
   const sw={};sel.forEach((r,i)=>sw[r.s]=(sw[r.s]||0)+wts[i]);
   const mx=Math.max.apply(null,Object.values(sw));
   $('fmSec').innerHTML=Object.entries(sw).sort((a,b)=>b[1]-a[1]).map(([s,v])=>'<div class="bar" style="grid-template-columns:150px 1fr 56px"><span class="bn">'+s+'</span><span class="bt"><span class="bf" style="width:'+(v/mx*100).toFixed(0)+'%"></span></span><span class="bv">%'+(v*100).toFixed(1)+'</span></div>').join('');
