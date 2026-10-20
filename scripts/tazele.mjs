@@ -3624,8 +3624,9 @@ function sutAdimSeri(adimlar, basAy, bugunStr) {
   const bas = new Date(basAy + '-01T00:00:00Z'), son = new Date(bugunStr + 'T00:00:00Z');
   for (let d = new Date(bas); d <= son; d.setUTCDate(d.getUTCDate() + 1)) { const t = d.toISOString().slice(0, 10); while (i < sirali.length && sirali[i][0] <= t) { seviye = seviye * (1 + sirali[i][1] / 100); i++; } const a = t.slice(0, 7); top[a] = (top[a] || 0) + seviye; say[a] = (say[a] || 0) + 1; }
   for (const a of Object.keys(top).sort()) aylik[a] = +(top[a] / say[a]).toFixed(2);
-  const seviyeler = []; let s = 100; for (const x of sirali) { s = s * (1 + x[1] / 100); seviyeler.push({ t: x[0], artis: x[1], seviye: +s.toFixed(1), kaynak: x[2] }); }
-  return { aylik, seviyeler, son: seviyeler[seviyeler.length - 1], seviye: +seviye.toFixed(2) };
+  const seviyeler = []; let s = 100; for (const x of sirali) { s = s * (1 + x[1] / 100); seviyeler.push({ t: x[0], artis: x[1], seviye: +s.toFixed(1), kaynak: x[2], ileri: x[0] > bugunStr || undefined }); }
+  const gecmis = seviyeler.filter(x => !x.ileri), gelecek = seviyeler.filter(x => x.ileri);   /* yürürlük ileri tarihli olabilir (10 Ara 2025 yayım → 1 Oca 2026 yürürlük) */
+  return { aylik, seviyeler, son: gecmis[gecmis.length - 1] || { t: basAy + '-01', artis: 0, seviye: 100 }, gelecek, seviye: +seviye.toFixed(2) };
 }
 function sutReel(aylikEndeks, tufe, basAy) {
   /* reel = endeks / TÜFE, basAy'da 100; TÜFE'nin olmadığı aylar atlanır (TÜFE bir ay geriden gelir) */
@@ -3657,33 +3658,152 @@ async function sutEndeks() {
   if (!(await varMi(dosya))) { raporlar.push('### SUT endeksi (§474) — ⏭ sektor-surucu.json yok'); return; }
   const D = await oku(dosya); D.seriler = D.seriler || {};
   const K = D.sut = Object.assign({ surum: SUT_SURUM, rg_olaylar: [] }, D.sut || {}, { surum: SUT_SURUM });
-  const uyari = [];
-  /* 1) adım serileri */
-  const S = sutAdimSeri(SUT_ADIMLAR, SUT_BAS, bugun), T = sutAdimSeri(TTB_ADIMLAR, TTB_BAS, bugun);
+  const uyari = [], notlar = [];
+  /* 0) §475: SGK "İşlenmiş Güncel SUT" ZIP → EK-2B/EK-2C sepet kıyası → otomatik adımlar (ağ hatası dosyayı bozmaz) */
+  try { await sutSepet(D, K, uyari, notlar); } catch (e) { uyari.push('SUT sepeti: ' + String(e && e.message || e).slice(0, 100)); }
+  /* 1) adım serileri — elle tablo + otomatik adımlar (§475 sutAdimlarBirlesik) */
+  const ADIMLAR = sutAdimlarBirlesik(K);
+  const S = sutAdimSeri(ADIMLAR, SUT_BAS, bugun), T = sutAdimSeri(TTB_ADIMLAR, TTB_BAS, bugun);
   const tufe = D.seriler.tufe && D.seriler.tufe.aylik; const tufeSon = tufe ? Object.keys(tufe).sort().pop() : null;
   const sutR = sutReel(S.aylik, tufe, SUT_BAS), ttbR = sutReel(T.aylik, tufe, TTB_BAS);
   /* son adımdan bu yana TÜFE (erozyon): SUT'un son artıştan beri kaybettiği satın alma gücü */
   const erozyon = (sonT) => { if (!tufe) return null; const a0 = sonT.slice(0, 7); const once = Object.keys(tufe).filter(a => a < a0).sort().pop(); if (!once || !tufeSon || tufeSon <= once) return null; return { ay: tufeSon, tufe_degisim: +((tufe[tufeSon] / tufe[once] - 1) * 100).toFixed(1), reel_kayip: +((1 / (tufe[tufeSon] / tufe[once]) - 1) * 100).toFixed(1) }; };
   const eS = erozyon(S.son.t), eT = erozyon(T.son.t);
-  const KAYNAK = 'Adım tablosu (tazele.mjs SUT_ADIMLAR): MLP Care KAP bilgilendirme notları + Resmî Gazete SUT değişiklik tebliğleri · ay ortalaması';
+  const otoN = ((K.sepet && K.sepet.otomatik_adimlar) || []).length;
+  const KAYNAK = 'Adım tablosu: elle (MLP Care KAP notları + Resmî Gazete)' + (otoN ? ' + SGK EK-2B/EK-2C sepet kıyası (otomatik, ' + otoN + ' adım)' : '') + ' · ay ortalaması';
   D.seriler.sut_endeks = Object.assign({}, D.seriler.sut_endeks || {}, { ad: 'SUT fiyat endeksi — SGK Sağlık Uygulama Tebliği genel fiyat artışları (2020-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: KAYNAK, aylik: S.aylik, son: { tarih: S.son.t, deger: S.seviye, artis: S.son.artis }, adimlar: S.seviyeler, guncelleme: bugun,
-    _not: 'SGK\'nın özel hastanelere ödediği fiyat listesinin (EK-2/A muayene · EK-2/B hizmet başı · EK-2/C paket) GENEL artışlarından kurulan basamak endeksi; kalem bazlı SHFK düzeltmeleri alınmaz. Oran metinde yazmaz → MLP Care\'in açıkladığı etkin oran kullanılır. İlave ücret tavanı SUT\'un %200\'ü → SUT artışı SGK ödemesini ve hastadan alınabilecek farkı birlikte yükseltir.' + (eS ? ' Son artıştan (' + S.son.t + ', +%' + S.son.artis + ') bu yana TÜFE +%' + eS.tufe_degisim + ' (' + eS.ay + ') → SUT reel %' + eS.reel_kayip + '.' : ''), erozyon: eS || undefined });
+    _not: 'SGK\'nın özel hastanelere ödediği fiyat listesinin (EK-2/A muayene · EK-2/B hizmet başı · EK-2/C paket) GENEL artışlarından kurulan basamak endeksi; kalem bazlı SHFK düzeltmeleri alınmaz. Oran RG metninde yazmaz → 2026\'dan itibaren SGK\'nın yayımladığı EK-2B/EK-2C listeleri sürüm sürüm kıyaslanır (medyan değişim, §475); öncesi MLP Care\'in açıkladığı etkin oran. İlave ücret tavanı SUT\'un %200\'ü → SUT artışı SGK ödemesini ve hastadan alınabilecek farkı birlikte yükseltir.' + (eS ? ' Son artıştan (' + S.son.t + ', +%' + S.son.artis + ') bu yana TÜFE +%' + eS.tufe_degisim + ' (' + eS.ay + ') → SUT reel %' + eS.reel_kayip + '.' : ''), erozyon: eS || undefined });
   if (sutR) D.seriler.sut_reel = Object.assign({}, D.seriler.sut_reel || {}, { ad: 'SUT reel fiyat — SUT endeksi / TÜFE (2020-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: 'türetilmiş: sut_endeks ÷ TÜFE (EVDS, 2025=100 zincirli) · TÜFE bir ay geriden', aylik: sutR, son: { tarih: Object.keys(sutR).sort().pop(), deger: sutR[Object.keys(sutR).sort().pop()] }, guncelleme: bugun, _not: 'SGK hastasının özel hastane için reel fiyatı: 100\'ün altı = SUT, 2020 sonuna göre enflasyonun gerisinde. Artış ayında sıçrar, aylar geçtikçe erir (testere dişi) — çeyrek ortalaması okunur. MLP\'de SGK payı hasılatın küçük kısmı; asıl marj sürücüsü ödeme tipi miksi (özel sigortaya kayış).' });
   D.seriler.ttb_endeks = Object.assign({}, D.seriler.ttb_endeks || {}, { ad: 'TTB ÖHU katsayısı endeksi — özel hekimlik ücret tarifesi (2022-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: 'Adım tablosu (TTB_ADIMLAR): MLP Care KAP notları · yılda 2 güncelleme (Oca/Tem)', aylik: T.aylik, son: { tarih: T.son.t, deger: T.seviye, artis: T.son.artis }, adimlar: T.seviyeler, guncelleme: bugun, _not: 'Türk Tabipleri Birliği Özel Hekimlik Uygulamaları katsayısı: özel sağlık sigortası ve cepten ödemelerde hekim ücretinin çapası → MLP yurt içi özel fiyatlamasının vekili. TÜFE\'nin üstünde arttı (2023–26).' + (eT ? ' Son artıştan (' + T.son.t + ') bu yana TÜFE +%' + eT.tufe_degisim + '.' : '') });
   if (ttbR) D.seriler.ttb_reel = Object.assign({}, D.seriler.ttb_reel || {}, { ad: 'TTB katsayısı reel — TTB endeksi / TÜFE (2022-12=100)', birim: 'endeks', siklik: 'aylik', hisse: ['MPARK'], kaynak: 'türetilmiş: ttb_endeks ÷ TÜFE', aylik: ttbR, son: { tarih: Object.keys(ttbR).sort().pop(), deger: ttbR[Object.keys(ttbR).sort().pop()] }, guncelleme: bugun, _not: 'Özel fiyatlamanın reel seyri; 100\'ün üstü = TTB tarifesi enflasyonun önünde.' });
   K.adimlar = S.seviyeler; K.ttb_adimlar = T.seviyeler;
   /* 2) RG izleyici (ağ hatası dosyayı bozmaz) */
   let rg = null; try { rg = await sutRgTara(K, bugun, uyari); } catch (e) { uyari.push('RG tarama: ' + String(e && e.message || e).slice(0, 80)); }
-  const sonAdim = SUT_ADIMLAR.map(x => x[0]).sort().pop();
+  const sonAdim = ADIMLAR.map(x => x[0]).sort().pop();
   const yeniRg = (K.rg_olaylar || []).filter(x => x.t > sonAdim && /Uygulama Tebli/i.test(x.baslik));
   D.seriler_guncelleme = bugun;
   await yaz(dosya, D);
   const sutSonAy = Object.keys(S.aylik).sort().pop(), reelSon = sutR ? sutR[Object.keys(sutR).sort().pop()] : null;
-  raporlar.push('### SUT endeksi (§474) — ✓ SUT ' + S.seviye + ' (son artış ' + S.son.t + ' +%' + S.son.artis + ')' + (reelSon != null ? ' · reel ' + reelSon + ' (2020-12=100, ' + tufeSon + ')' : '') + ' · TTB ' + T.seviye + ' (son ' + T.son.t + ' +%' + T.son.artis + ')' + (ttbR ? ' · TTB reel ' + ttbR[Object.keys(ttbR).sort().pop()] : '') +
-    '\n- ' + SUT_ADIMLAR.length + ' SUT adımı (' + SUT_ADIMLAR[0][0] + '→' + sonAdim + ') · ' + TTB_ADIMLAR.length + ' TTB adımı' + (eS ? ' · son SUT artışından bu yana TÜFE +%' + eS.tufe_degisim + ' → reel %' + eS.reel_kayip : '') +
+  raporlar.push('### SUT endeksi (§474) — ✓ SUT ' + S.seviye + ' (son artış ' + S.son.t + ' +%' + S.son.artis + ')' + (S.gelecek.length ? ' · İLERİ TARİHLİ: ' + S.gelecek.map(x => x.t + ' +%' + x.artis).join(', ') : '') + (reelSon != null ? ' · reel ' + reelSon + ' (2020-12=100, ' + tufeSon + ')' : '') + ' · TTB ' + T.seviye + ' (son ' + T.son.t + ' +%' + T.son.artis + ')' + (ttbR ? ' · TTB reel ' + ttbR[Object.keys(ttbR).sort().pop()] : '') +
+    '\n- ' + ADIMLAR.length + ' SUT adımı (' + ADIMLAR[0][0] + '→' + sonAdim + (otoN ? ', ' + otoN + ' otomatik' : '') + ') · ' + TTB_ADIMLAR.length + ' TTB adımı' + (eS ? ' · son SUT artışından bu yana TÜFE +%' + eS.tufe_degisim + ' → reel %' + eS.reel_kayip : '') +
+    (notlar.length ? '\n- ' + notlar.join('\n- ') : '') +
     (rg ? '\n- RG fihrist taraması: ' + rg.sayfa + ' sayfa (' + rg.erisim + ' erişildi) · ' + rg.yeni + ' yeni başlık · kayıtlı ' + K.rg_olaylar.length : '\n- RG taraması yapılamadı') +
     (yeniRg.length ? '\n- ⚠ Son SUT adımından (' + sonAdim + ') sonra RG\'de ' + yeniRg.length + ' SUT değişikliği: ' + yeniRg.slice(0, 4).map(x => x.t + (x.mukerrer ? ' ' + x.mukerrer : '')).join(' · ') + ' — çoğu kalem bazlıdır; GENEL artışsa MLP notu/basın oranıyla SUT_ADIMLAR\'a eklenir' : '') +
     (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 4).join('\n- ⚠ ') : ''));
+}
+
+/* ── §475 SUT SEPET ENDEKSİ — SGK "Değişiklik Tebliği İşlenmiş Güncel SUT" ZIP → EK-2B/EK-2C xlsx → ORAN OTOMATİK ──────────
+   Soru (20 Eki 15:31): "SUT zammını nereden görecek? … bu JSON'lar işe yarayacak mı?" — §474 yalnız RG BAŞLIĞINI görüyordu, oranı
+   elden alıyordu. Kaynak bulundu: SGK her SUT değişikliğinde sgk.gov.tr/Arama/Index/sut listesine "DD/MM/YYYY SUT Değişiklik
+   Tebliği İşlenmiş Güncel 2013 SUT" duyurusu ekler; duyuru sayfasında tek bir /Download/DownloadFile?f=…zip bağlantısı (≈33 MB,
+   358 dosya) vardır ve içinde EK-2 LİSTELERİ/ klasöründe FİYAT LİSTELERİNİN KENDİSİ xlsx olarak durur:
+     "EK-2A AYAKTAN BAŞVURULARDA ÖDEME LİSTESİ (Yür.07.07.2026).xlsx" · "EK-2B HİZMET BAŞI İŞLEM PUAN LİSTESİ (Yür.07.07.2026).xlsx"
+     (sayfa1: A İŞLEM KODU · B İŞLEM ADI · C AÇIKLAMA · D İŞLEM PUANI; ~7.600 satır; kodlar 510010 gibi 6 hane ya da L100060 gibi
+     harf+6 hane) · "EK-2C TANIYA DAYALI İŞLEM PUAN LİSTESİ (Yür.…).xlsx" (P-kodlu paketler). Dosya adındaki "Yür." = o listenin
+     yürürlük tarihi. Arşiv 2011'e kadar gider (75 duyuru).
+   ÖLÇÜM (Chrome'da doğrulandı, 20 Eki): 25.11.2025 duyurusunun EK-2B'si "Yür.11.05.2024" (May 2024 artışından beri değişmemiş),
+   10.12.2025 duyurusununki "Yür.01.01.2026": ortak 1.483 kodun TAMAMI değişmiş, medyan ×1,20 (1.234 kod +%20 · 222 kod +%10 ·
+   26 kod +%96) → MLP'nin "yaklaşık %30" dediği Aralık artışı hizmet başı listede %20'dir (paket/ayaktan listeleri farklı olabilir).
+   Ders: zam tek sayı değil, listeye göre değişir — ölçmek şart.
+   YÖNTEM: her koşuda arama sayfası (1 istek) → en yeni duyuru değişmediyse bitti. Değiştiyse ZIP indir → EK-2B ve EK-2C xlsx →
+   kod→puan haritası → ktpanel/sut-ek2b.json'daki önceki sürümle KIYAS: ortak kodlarda oran medyanı, değişen kod payı. Medyan
+   ≥ %3 VE değişen pay ≥ %50 ise GENEL ARTIŞ → D.sut.otomatik_adimlar'a {t: yürürlük (dosya adından), artis} eklenir; sut_endeks
+   (§474) bu adımları elle tablonun ÜSTÜNE yazar (±45 gün içindeki elle adım düşer). Kalem bazlı düzeltmeler (az kod, küçük
+   medyan) adım olmaz ama sürüm özeti kaydedilir. İLK KOŞU: SUT_SGK_TOHUM ile 25.11.2025 ve 10.12.2025 duyuruları sırayla işlenir
+   → Aralık/Ocak adımı otomatik doğar ve doğrulanır; sonra güncel duyuru. Snapshot yalnız SON sürümün tam haritası (~1.500+ kod ×
+   2 liste, ayrı dosya) — sektor-surucu.json şişmez.
+   SINIRLAR: puan→TL katsayısı sabit varsayılır (SUT md. 4.4: işlem puanı × katsayı; artışlar bugüne dek puan üzerinden yapıldı);
+   EK-2A (ayaktan vaka başı, branş×sınıf matrisi) ayrı yapıda — Faz 2. sgk.gov.tr Actions IP'sini engellerse ⏭ ve elle tablo sürer. */
+const SUT_SGK_KOK = 'https://www.sgk.gov.tr', SUT_SGK_ARAMA = 'https://www.sgk.gov.tr/Arama/Index/sut';
+const SUT_SGK_TOHUM = ['25112025', '10122025'];   /* ilk koşuda sırayla işlenecek duyuru öncekleri (slug başı ddmmyyyy) — Aralık 2025 adımını doğrular */
+const SUT_SEPET_SURUM = '475', SUT_SEPET_ESIK = 3, SUT_SEPET_PAY = 0.5, SUT_SEPET_DOSYA = 'sut-ek2b.json';
+const SUT_SGK_H = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8', 'Accept-Language': 'tr-TR,tr;q=0.9' };
+const sutAsciiAd = s => String(s || '').replace(/[^\x20-\x7E]/g, '?');
+function sutYururluk(ad) { const m = /Y.{1,3}r\.?\s*(\d{2})\.(\d{2})\.(\d{4})/.exec(String(ad)); return m ? m[3] + '-' + m[2] + '-' + m[1] : null; }   /* "Yür.07.07.2026" — eski ZIP'lerde ad 1254 kodlu gelir, ü bozulur */
+function sutZipHam(buf, G, ad, zlib) { const e = G[ad]; const nlen = buf.readUInt16LE(e.loff + 26), elen = buf.readUInt16LE(e.loff + 28); const bas = e.loff + 30 + nlen + elen; const ham = buf.subarray(bas, bas + e.csize); return e.method === 0 ? Buffer.from(ham) : zlib.inflateRawSync(ham); }
+async function sutXlsxSatirlar(xbuf) {
+  const zlib = await import('node:zlib'); const G = zipGirdiler(xbuf);
+  const ss = G['xl/sharedStrings.xml'] ? zipOku(xbuf, G, 'xl/sharedStrings.xml', zlib) : '';
+  const strs = [...ss.matchAll(/<si>([\s\S]*?)<\/si>/g)].map(m => xmlCoz([...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(x => x[1]).join('')));
+  const sayfa = Object.keys(G).filter(k => /^xl\/worksheets\/sheet\d+\.xml$/.test(k)).sort((a, b) => (+a.match(/\d+/)[0]) - (+b.match(/\d+/)[0]))[0];
+  if (!sayfa) throw new Error('xlsx sayfa yok');
+  const xml = zipOku(xbuf, G, sayfa, zlib); const rows = [];
+  for (const rm of xml.matchAll(/<row [^>]*>([\s\S]*?)<\/row>/g)) { const cells = {}; for (const cm of rm[1].matchAll(/<c r="([A-Z]+)\d+"([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) { const col = cm[1], attrs = cm[2] || '', inner = cm[3] || ''; const vm = inner.match(/<v>([\s\S]*?)<\/v>/); let v = null; if (vm) { v = vm[1]; if (/t="s"/.test(attrs)) v = strs[+v]; else if (/t="(str|inlineStr|b|e)"/.test(attrs)) v = xmlCoz(v); else v = +v; } else { const im = inner.match(/<is>[\s\S]*?<t[^>]*>([\s\S]*?)<\/t>/); if (im) v = xmlCoz(im[1]); } if (v !== null && v !== '') cells[col] = v; } rows.push(cells); }
+  return rows;
+}
+function sutKodHarita(rows) {
+  /* başlık satırından kod/puan sütununu bul (yoksa A/D); kod: 6 hane ya da harf+6 hane; puan: sayı ya da virgüllü metin */
+  let kodCol = 'A', puanCol = 'D';
+  for (const r of rows.slice(0, 8)) { const ent = Object.entries(r); const k = ent.find(([c, v]) => /KODU/i.test(String(v))), p = ent.find(([c, v]) => /PUAN/i.test(String(v))); if (k && p) { kodCol = k[0]; puanCol = p[0]; break; } }
+  const m = {}; for (const r of rows) { const kod = String(r[kodCol] || '').trim(); let p = r[puanCol]; if (typeof p === 'string') p = parseFloat(p.replace(/\./g, '').replace(',', '.')); if (/^[A-Z]?\d{6}$/.test(kod) && typeof p === 'number' && isFinite(p) && p > 0) m[kod] = +p.toFixed(2); }
+  return { kodlar: m, n: Object.keys(m).length, kodCol, puanCol };
+}
+function sutKiyas(eski, yeni) {
+  const ortak = Object.keys(eski).filter(k => yeni[k] != null); if (!ortak.length) return null;
+  const oran = ortak.map(k => yeni[k] / eski[k]).sort((a, b) => a - b); const q = p => oran[Math.min(oran.length - 1, Math.floor(oran.length * p))];
+  const degisen = oran.filter(r => Math.abs(r - 1) > 0.001).length; const hist = {}; for (const r of oran) { const key = Math.round((r - 1) * 100); hist[key] = (hist[key] || 0) + 1; }
+  return { ortak: ortak.length, degisen, degisen_pay: +(degisen / ortak.length).toFixed(3), medyan: +((q(0.5) - 1) * 100).toFixed(2), p25: +((q(0.25) - 1) * 100).toFixed(2), p75: +((q(0.75) - 1) * 100).toFixed(2), yeni_kod: Object.keys(yeni).length - ortak.length, silinen_kod: Object.keys(eski).length - ortak.length, hist: Object.entries(hist).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k, v]) => k + '%:' + v).join(' ') };
+}
+async function sutSgkGetir(url, tip) { const r = await fetch(url, { headers: SUT_SGK_H, signal: AbortSignal.timeout(tip === 'zip' ? 180000 : 30000), redirect: 'follow' }); if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url.replace(SUT_SGK_KOK, '').slice(0, 60)); return tip === 'zip' ? Buffer.from(await r.arrayBuffer()) : await r.text(); }
+async function sutDuyuruListesi() {
+  const h = await sutSgkGetir(SUT_SGK_ARAMA, 'html'); const out = []; const seen = new Set();
+  for (const m of h.matchAll(/href="(\/Duyuru\/Detay\/([^"]*Islenmis-Guncel[^"]*))"/gi)) { if (seen.has(m[1])) continue; seen.add(m[1]); const t = /^(\d{2})(\d{2})(\d{4})-/.exec(m[2]); out.push({ href: m[1], slug: m[2], tarih: t ? t[3] + '-' + t[2] + '-' + t[1] : null }); }
+  return out;   /* sayfa sırası: en yeni önce */
+}
+async function sutDuyuruIsle(duyuru, onceki, zlib) {
+  /* duyuru sayfası → zip → EK-2B/EK-2C haritaları (+ önceki ile kıyas) */
+  const ph = await sutSgkGetir(SUT_SGK_KOK + duyuru.href, 'html'); const zm = /href="([^"]*DownloadFile[^"]*)"/i.exec(ph); if (!zm) throw new Error('duyuruda zip yok: ' + duyuru.slug.slice(0, 20));
+  const zipUrl = (zm[1].startsWith('http') ? zm[1] : SUT_SGK_KOK + zm[1]).replace(/&amp;/g, '&');
+  const buf = await sutSgkGetir(zipUrl, 'zip'); const G = zipGirdiler(buf); const adlar = Object.keys(G);
+  const bul = re => adlar.find(k => !/\/$/.test(k) && /\.xlsx?$/i.test(k) && re.test(sutAsciiAd(k)));
+  const sonuc = { duyuru: duyuru.slug, tarih: duyuru.tarih, zip: zipUrl.replace(SUT_SGK_KOK, ''), zip_mb: +(buf.length / 1048576).toFixed(1), girdi: adlar.length, listeler: {} };
+  for (const [ad, re] of [['ek2b', /EK-2B/], ['ek2c', /EK-2C T/]]) {
+    const k = bul(re); if (!k) { sonuc.listeler[ad] = { hata: 'dosya yok' }; continue; }
+    if (/\.xls$/i.test(k)) { sonuc.listeler[ad] = { hata: 'eski .xls biçimi', dosya: sutAsciiAd(k.split('/').pop()) }; continue; }
+    const xbuf = sutZipHam(buf, G, k, zlib); const rows = await sutXlsxSatirlar(xbuf); const H = sutKodHarita(rows);
+    const L = { dosya: k.split('/').pop(), yururluk: sutYururluk(k), n: H.n, satir: rows.length, sutun: H.kodCol + '/' + H.puanCol, kodlar: H.kodlar };
+    if (onceki && onceki.listeler && onceki.listeler[ad] && onceki.listeler[ad].kodlar) L.kiyas = sutKiyas(onceki.listeler[ad].kodlar, H.kodlar);
+    sonuc.listeler[ad] = L;
+  }
+  return sonuc;
+}
+function sutGenelArtis(sonuc) {
+  /* iki listeden ≥ eşik ve değişen pay ≥ %50 olanların medyan ortalaması; hiçbiri yoksa null */
+  const adim = []; for (const ad of ['ek2b', 'ek2c']) { const L = sonuc.listeler[ad]; if (L && L.kiyas && L.kiyas.medyan >= SUT_SEPET_ESIK && L.kiyas.degisen_pay >= SUT_SEPET_PAY) adim.push({ ad, medyan: L.kiyas.medyan, yururluk: L.yururluk }); }
+  if (!adim.length) return null;
+  const artis = +(adim.reduce((s, x) => s + x.medyan, 0) / adim.length).toFixed(1); const t = adim.map(x => x.yururluk).filter(Boolean).sort()[0] || sonuc.tarih;
+  return { t, artis, listeler: Object.fromEntries(adim.map(x => [x.ad, x.medyan])), kaynak: 'SGK İşlenmiş Güncel SUT ' + sonuc.tarih + ' — ' + adim.map(x => x.ad.toUpperCase() + ' medyan +%' + x.medyan).join(' · ') };
+}
+async function sutSepet(D, K, uyari, notlar) {
+  /* D.sut.sepet: {son_duyuru, surumler[], otomatik_adimlar[]}; tam harita ayrı dosyada */
+  const zlib = await import('node:zlib');
+  const P = K.sepet = Object.assign({ surum: SUT_SEPET_SURUM, surumler: [], otomatik_adimlar: [] }, K.sepet || {});
+  let snap = (await varMi(SUT_SEPET_DOSYA)) ? await oku(SUT_SEPET_DOSYA) : null; if (snap && snap.surum !== SUT_SEPET_SURUM) snap = null;
+  let liste; try { liste = await sutDuyuruListesi(); } catch (e) { uyari.push('SGK duyuru listesi: ' + String(e && e.message || e).slice(0, 80)); return; }
+  if (!liste.length) { uyari.push('SGK: "İşlenmiş Güncel SUT" duyurusu bulunamadı (sayfa yapısı değişti?)'); return; }
+  const enYeni = liste[0]; const kuyruk = [];
+  if (!snap) { for (const s of SUT_SGK_TOHUM) { const d = liste.find(x => x.slug.startsWith(s)); if (d) kuyruk.push(d); } }
+  if (!kuyruk.some(x => x.slug === enYeni.slug) && (!snap || snap.duyuru !== enYeni.slug)) kuyruk.push(enYeni);
+  if (!kuyruk.length) { notlar.push('SGK güncel SUT: değişiklik yok (son duyuru ' + (snap && snap.tarih) + ')'); return; }
+  let onceki = snap, islenen = 0;
+  for (const d of kuyruk) {
+    let sonuc; try { sonuc = await sutDuyuruIsle(d, onceki, zlib); } catch (e) { uyari.push('SGK ' + d.slug.slice(0, 8) + ': ' + String(e && e.message || e).slice(0, 90)); break; }
+    islenen++;
+    const ozet = { duyuru: sonuc.duyuru.slice(0, 8), tarih: sonuc.tarih, zip_mb: sonuc.zip_mb, girdi: sonuc.girdi }; for (const ad of ['ek2b', 'ek2c']) { const L = sonuc.listeler[ad]; ozet[ad] = L.hata ? { hata: L.hata } : { yururluk: L.yururluk, n: L.n, kiyas: L.kiyas || null }; }
+    const genel = sutGenelArtis(sonuc); if (genel) { ozet.genel_artis = genel; if (!P.otomatik_adimlar.some(x => x.t === genel.t)) P.otomatik_adimlar.push(genel); }
+    P.surumler = P.surumler.filter(x => x.duyuru !== ozet.duyuru).concat([ozet]).sort((a, b) => a.tarih < b.tarih ? -1 : 1).slice(-24);
+    const kayit = { surum: SUT_SEPET_SURUM, duyuru: sonuc.duyuru, tarih: sonuc.tarih, zip: sonuc.zip, guncelleme: bugun, listeler: {} }; for (const ad of ['ek2b', 'ek2c']) { const L = sonuc.listeler[ad]; kayit.listeler[ad] = L.hata ? { hata: L.hata } : { dosya: L.dosya, yururluk: L.yururluk, n: L.n, kodlar: L.kodlar }; }
+    await yaz(SUT_SEPET_DOSYA, kayit); onceki = kayit; P.son_duyuru = sonuc.duyuru; P.son_tarih = sonuc.tarih;
+    notlar.push('SGK ' + sonuc.tarih + ' (' + sonuc.zip_mb + ' MB): ' + ['ek2b', 'ek2c'].map(ad => { const L = sonuc.listeler[ad]; if (L.hata) return ad.toUpperCase() + ' ' + L.hata; return ad.toUpperCase() + ' yür.' + L.yururluk + ' ' + L.n + ' kod' + (L.kiyas ? ' · medyan ' + (L.kiyas.medyan >= 0 ? '+' : '') + L.kiyas.medyan + '% (değişen %' + Math.round(L.kiyas.degisen_pay * 100) + ', ' + L.kiyas.hist + ')' : ' · ilk sürüm'); }).join(' · ') + (genel ? ' → GENEL ARTIŞ ' + genel.t + ' +%' + genel.artis : ''));
+  }
+  P.otomatik_adimlar.sort((a, b) => a.t < b.t ? -1 : 1);
+  if (islenen) degisenler.push('SUT sepeti (' + islenen + ' sürüm)');
+}
+function sutAdimlarBirlesik(K) {
+  /* elle tablo + otomatik adımlar: otomatik adımın ±45 günü içindeki elle adım düşer (aynı artışın iki kaydı olmasın) */
+  const oto = ((K.sepet && K.sepet.otomatik_adimlar) || []).map(x => [x.t, x.artis, 'OTOMATİK: ' + x.kaynak]);
+  const elle = SUT_ADIMLAR.filter(e => !oto.some(o => Math.abs(new Date(o[0]) - new Date(e[0])) <= 45 * 864e5));
+  return elle.concat(oto).sort((a, b) => a[0] < b[0] ? -1 : 1);
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
