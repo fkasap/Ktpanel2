@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21d",
+ "surum": "2026-10-21e",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -1763,6 +1763,31 @@
      "rol": "gelir",
      "ad": "Konut satışı — toplam (adet/ay)",
      "kaynak": "TCMB EVDS TP.AKONUTSAT1.KTRTOPLAM (TÜİK)"
+    },
+    {
+     "k": "ekgyo_kfe_ime",
+     "rol": "marj",
+     "ad": "Konut fiyatı ÷ inşaat maliyeti (KFE ÷ İME ikamet) — geliştirici reel makası",
+     "kaynak": "türetilmiş TCMB KFE ÷ TÜİK İME (Actions §486)",
+     "not": ">100 ve yükseliyorsa konut fiyatı maliyetten hızlı artıyor → satılan projede marj genişler. EKGYO gelir paylaşımı modelinde yüklenici maliyeti dolaylı, kendi uygulama (anahtar teslim) projelerinde doğrudan etkiler."
+    },
+    {
+     "k": "ime_konut",
+     "rol": "maliyet",
+     "ad": "İnşaat maliyet endeksi — konut (TÜİK, 2015=100)",
+     "kaynak": "TÜİK veri portalı SDMX DF_UFE_INSAAT_V1 (Actions §486)"
+    },
+    {
+     "k": "ime_konut_malzeme",
+     "rol": "maliyet",
+     "ad": "İME konut — malzeme",
+     "kaynak": "TÜİK (Actions §486)"
+    },
+    {
+     "k": "ime_konut_iscilik",
+     "rol": "maliyet",
+     "ad": "İME konut — işçilik",
+     "kaynak": "TÜİK (Actions §486)"
     },
     {
      "k": "usdtry",
@@ -5098,5 +5123,6 @@
  "_483b": "PVinsights ikinci kaynak (Actions §483b): pvinsights.com ana sayfası ücretsiz haftalık spot (PV grade polisilikon $/kg · N-mono wafer · 182 N-Mono hücre · 182 N-Mono modül $/W, KDV hariç). Tarayıcıda https↔http döngüsü verir ama sunucu ayakta (Wayback 2026-10-05 görüntüsü 200); Actions düz http dener, olmazsa arşivin son görüntüsü. Geçmiş 81 görüntü / 67 hafta 2022-01→. Seviye InfoLink Çin dışı satırından düşük (0,090 vs 0,114 $/W) — tanım farkı; yön teyidi için yan yana.",
  "_483d": "EUPWR/GESAN grup yapısı (GESAN 6A26 dipnotu): GESAN → %50,43 Europower (EUPWR) → %60 Peak PV (panel); GESAN → %100 EP World (güç trafosu). Modül fiyatı EUPWR ve GESAN için GELİR (Peak PV satış fiyatı; kullanıcı düzeltmesi 21 Eki) — önceki \"maliyet/kurulum temposu\" rolü yanlıştı. Birincil ikisinde de bakır (brüt kârın çoğu trafo/pano). Satır çıkarılmadı; makas ve hücre eklendi.",
  "_484": "Grup 1 sürücüleri (21 Eki): EREGL + Kardemir yurt içi hurda (LME satırı korunur, bekliyor) · AKCNS/CIMSA + PTF $ (elektrik maliyeti) · ENJSA + PTF TL (perakende alış) · BIMAS + PTF TL · TKFEN + taahhüt backlog (faaliyet raporu, elle tablo tazele.mjs ELLE_CEYREK §484 — Tekfen KAP'a yeni iş bildirimi yapmadığı için KAP akışı kurulmadı).",
- "_485": "Grup 2 sürücüleri (21 Eki): MAVI + pamuk (Yahoo CT=F) + reel asgari ücret · GRSEL asgari ücret \"bekliyor\" KAPANDI + reel · TUREX/BIMAS + asgari ücret · PETKM + sanayi üretimi C20.16 plastik (hacim) + Yİ-ÜFE 20.1 (fiyat; 20.16 ayrı yok) · EKGYO + TÜİK konut satışı ilk el/ipotekli/toplam (EVDS AKONUTSAT) · ALBRK + TL katılma hesabı kâr payı oranı (EVDS KBH, haftalık). İnşaat maliyet endeksi EVDS'de yok → alınmadı."
+ "_485": "Grup 2 sürücüleri (21 Eki): MAVI + pamuk (Yahoo CT=F) + reel asgari ücret · GRSEL asgari ücret \"bekliyor\" KAPANDI + reel · TUREX/BIMAS + asgari ücret · PETKM + sanayi üretimi C20.16 plastik (hacim) + Yİ-ÜFE 20.1 (fiyat; 20.16 ayrı yok) · EKGYO + TÜİK konut satışı ilk el/ipotekli/toplam (EVDS AKONUTSAT) · ALBRK + TL katılma hesabı kâr payı oranı (EVDS KBH, haftalık). İnşaat maliyet endeksi EVDS'de yok → alınmadı.",
+ "_486": "TÜİK İnşaat Maliyet Endeksi (kullanıcı linki 21 Eki): veri portalı bülten API → SDMX dataflow TR,DF_UFE_INSAAT_V1 → databrowser2 POST /data gövde [] (JSON-stat). EKGYO + KFE÷İME konut makası, İME konut toplam/malzeme/işçilik."
 }

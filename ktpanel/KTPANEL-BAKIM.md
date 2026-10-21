@@ -6,6 +6,20 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §486 (21 Eki 2026, 12:50) — TÜİK İNŞAAT MALİYET ENDEKSİ (veri portalı → SDMX JSON-stat)
+
+Kullanıcı linki: veriportali.tuik.gov.tr/tr/press/58205 (İME Ağu 2026). Ölçüm (Chrome): bülten JSON'u /api/tr/press/{id} →
+statisticalTables[].url = databrowser2.tuik.gov.tr/#/tr/tuik/categories/6/6_8/TR,DF_UFE_INSAAT_V1,1.0. Veri ucu:
+POST https://databrowser2.tuik.gov.tr/api/core/nodes/1/datasets/TR,DF_UFE_INSAAT_V1,1.0/data · gövde '[]' · anahtar/çerez YOK → JSON-stat
+(~1 MB, 2015-01→2026-08, 140 ay). Boyutlar: DEGISIM (1 endeks …), MALIYET_GRUP (_T/1 malzeme/2 işçilik), FAALIYET_CPA_2_1 (F, F41,
+F41001 ikamet, F41002, F42…), FAAL_GRUP (hiyerarşi düzeyi; her CPA tek düzeyde dolu → koşuda bulunur). DOĞRULAMA: F toplam 2.501,40 /
+1.930,24 = +%29,59 · malzeme +28,72 · işçilik +31,20 = bülten ✓ (jsonStatSeri Chrome'da canlı veride test edildi).
+Seriler: ime_konut, ime_konut_malzeme, ime_konut_iscilik, ime_insaat + türetilmiş ekgyo_kfe_ime = KFE ÷ İME konut (2021-01=100).
+EKGYO'ya 4 satır (makas marj, üçü maliyet). AYNI YOL diğer TÜİK tabloları için de çalışır (dataflow kodu bülten JSON'undan) — ör. konut
+satış zaten EVDS'de, sanayi üretimi EVDS'de; EVDS'de olmayanlar (İME, ciro endeksleri, yapı izin) buradan.
+RİSK: TÜİK yurt dışı IP'yi kısıtlarsa (GitHub runner ABD) rapor "✗ HTTP 403" → dosya korunur; o durumda Vercel köprüsü düşünülür.
+DEPLOY: scripts/tazele.mjs (§486) · karar-model.json (2026-10-21e) · BAKIM.
+
 # BAKIM EK — §485 (21 Eki 2026, 11:20) — GRUP 2 SÜRÜCÜLERİ (EVDS + Yahoo + asgari ücret adım tablosu)
 
 EVDS kod keşfi: evds3 sitesinin AÇIK arama ucu /igmevdsms-dis/searchResults?searchVal=… (anahtar gerekmez; Chrome'da ölçüldü) — seri kodu,
