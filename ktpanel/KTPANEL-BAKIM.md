@@ -6,6 +6,18 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §484 (21 Eki 2026, 10:45) — GRUP 1 SÜRÜCÜLERİ (mevcut veriden bağlantı) + TKFEN BACKLOG (elle çeyrek)
+
+Journal taraması sonrası "1 ile başla": veri zaten dosyada olan sürücüler bağlandı (satır çıkarılmadı):
+EREGL + kardemir_hurda_usd (yurt içi hurda; LME satırı korunur) · AKCNS/CIMSA + ptf_usd (elektrik ~100–110 kWh/t çimento) ·
+ENJSA + ptf (perakende alış; dağıtım geliri PTF'den bağımsız) · BIMAS + ptf (küçük kalem, ince marj).
+TKFEN: plan KAP "Yeni İş İlişkisi" akışıydı (§469) — Fintables taraması: Tekfen 2023→ böyle bildirim YAPMIYOR → akış boş kalırdı.
+Yerine çeyrek faaliyet raporundaki "kalan işlerin parasal toplamı" cümlesi: 2025Q1 732 · 2025Q2 640 · 2025Q3 686 · 2026Q2 413 mn $
+(2025Q4, 2026Q1 Fintables'ta bulunamadı → BOŞ). Yeni katman §484 elleSeriler(): tazele.mjs ELLE_CEYREK tablosu → seriler.tkfen_backlog
+(ceyreklik; kod tablosu dosyayı ezer). Okuma: bakiye −%44 (5 çeyrek) → taahhüt hasılatında 2–4 çeyrek gecikmeli düşüş riski.
+RİTÜEL: bilanço haftası TKFEN faaliyet raporu → ELLE_CEYREK.tkfen_backlog.ceyreklik'e yeni çeyrek.
+DEPLOY: scripts/tazele.mjs (§483c + §484) · karar-model.json (2026-10-21c) · BAKIM · DAMGA.
+
 # BAKIM EK — §483d (21 Eki 2026, 10:20) — EUPWR/GESAN GRUP YAPISI: MODÜL FİYATI "GELİR"
 
 Kullanıcı düzeltmesi: "EUPWR panel üreten bir şirket (CWENE gibi), GESAN trafo/güç üniteleri; EUPWR GESAN'ın alt iştiraki; maliyet artarsa

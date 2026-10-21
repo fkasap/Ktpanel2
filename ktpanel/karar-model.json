@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21b",
+ "surum": "2026-10-21c",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -265,6 +265,13 @@
      "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
      "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
      "not": "Yurt içi çimento satış fiyatının resmî aylık vekili; seviye değil yıllık/çeyreklik değişim okunur"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "maliyet",
+     "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür)."
     },
     {
      "k": "eurusd",
@@ -1035,6 +1042,13 @@
      "ad": "Buğday (WB) — temel gıda maliyet vekili"
     },
     {
+     "k": "ptf",
+     "rol": "maliyet",
+     "ad": "Elektrik PTF (TL/MWh) — mağaza/depo elektriği",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Satışın ~%1'i civarı küçük kalem; ama FAVÖK marjı ~%5–7 olduğundan elektrik şoku marjda hissedilir."
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -1266,6 +1280,13 @@
      "k": "gaz_avrupa",
      "rol": "maliyet",
      "ad": "Doğalgaz Avrupa (WB)"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "maliyet",
+     "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Çimentoda elektrik ~100–110 kWh/t; beyaz çimento daha enerji yoğun."
     },
     {
      "k": "eurusd",
@@ -1971,6 +1992,13 @@
      "kaynak": "TCMB EVDS"
     },
     {
+     "k": "ptf",
+     "rol": "maliyet",
+     "ad": "Elektrik PTF (TL/MWh) — perakende alış maliyeti",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Dağıtım geliri düzenlenmiş (PTF'den bağımsız); perakende tarafında serbest tüketici marjı = satış tarifesi − PTF. PTF tarifeden hızlı artarsa perakende marjı daralır (son kaynak tedarik tarifesi gecikmeli ayarlanır)."
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -2136,6 +2164,13 @@
      "k": "komur_termal",
      "rol": "maliyet",
      "ad": "Kömür (WB, termal — kok vekili)"
+    },
+    {
+     "k": "kardemir_hurda_usd",
+     "rol": "maliyet",
+     "ad": "Yurt içi hurda — Kardemir Özel Ekstra ($/t) · LME hurdanın yerli karşılığı",
+     "kaynak": "kardemir.com açık API (Actions §472)",
+     "not": "EREGL yüksek fırın üreticisi; hurda konvertör şarjının ~%15–20'si. Yurt içi hurda fiyatı Türkiye çelik piyasasının genel nabzı (ark ocaklı rakiplerin maliyeti → yurt içi fiyat tabanı)."
     },
     {
      "k": "usdtry",
@@ -4203,6 +4238,13 @@
      "ad": "Doğalgaz Avrupa (WB)"
     },
     {
+     "k": "tkfen_backlog",
+     "rol": "gelir",
+     "ad": "Taahhüt bakiye iş (backlog, mn $) — faaliyet raporu beyanı",
+     "kaynak": "TKFEN çeyrek faaliyet raporu (elle, Actions §484)",
+     "not": "Tekfen KAP'a yeni iş bildirimi yapmıyor; bakiye iş çeyrek raporundan. 2025Q1 732 → 2026Q2 413 mn $: yeni iş girişi zayıf → taahhüt hasılatı 2–4 çeyrek gecikmeyle düşme riski."
+    },
+    {
      "k": "eurusd",
      "rol": "kur",
      "ad": "EUR/USD (taahhüt sözleşmeleri)"
@@ -4976,5 +5018,6 @@
  "_konsensus_tazeleme": "20 Eki 2026 17:10 Fintables MCP: 3Ç26 tahmini olan 13/30 hisse tazelendi (kurum sayısı · FAVÖK/net ort. · satış ort. · FAVÖK min/max). Bilanço öncesi hafta kurum tahminleri hızla girer → ritüel: bilanço haftasında her 2–3 günde bir tazele. Hedef fiyatlar analist.json (5 Eki; hedef_fiyatlari tablosu, 1 yıl pencere).",
  "_483": "GES zinciri katmanı (Actions §483): InfoLink Consulting haftalık spot tablosu (polisilikon RMB/kg ve $/kg · n-tipi wafer · TOPCon hücre $/W ve RMB/W · modül Çin dışı/Çin iç/Avrupa/ABD $/W) + Internet Archive görüntülerinden 2022-07→ geçmiş; ürün geçişi (PERC→TOPCon) örtüşme medyan oranıyla zincirlenir. Türetilmiş: montaj makası = modül − hücre. CWENE \"modül fiyatı bekliyor\" satırı kapandı (birincil montaj makası, tier C→B); EUPWR ve GESAN XK030 dışı İZLEME modeli olarak eklendi (evren: izleme; FAVÖK/fiyat/konsensüs Fintables 20 Eki, sonraki bilançolar KAP arşivinden §462b). pvinsights.com erişilemedi.",
  "_483b": "PVinsights ikinci kaynak (Actions §483b): pvinsights.com ana sayfası ücretsiz haftalık spot (PV grade polisilikon $/kg · N-mono wafer · 182 N-Mono hücre · 182 N-Mono modül $/W, KDV hariç). Tarayıcıda https↔http döngüsü verir ama sunucu ayakta (Wayback 2026-10-05 görüntüsü 200); Actions düz http dener, olmazsa arşivin son görüntüsü. Geçmiş 81 görüntü / 67 hafta 2022-01→. Seviye InfoLink Çin dışı satırından düşük (0,090 vs 0,114 $/W) — tanım farkı; yön teyidi için yan yana.",
- "_483d": "EUPWR/GESAN grup yapısı (GESAN 6A26 dipnotu): GESAN → %50,43 Europower (EUPWR) → %60 Peak PV (panel); GESAN → %100 EP World (güç trafosu). Modül fiyatı EUPWR ve GESAN için GELİR (Peak PV satış fiyatı; kullanıcı düzeltmesi 21 Eki) — önceki \"maliyet/kurulum temposu\" rolü yanlıştı. Birincil ikisinde de bakır (brüt kârın çoğu trafo/pano). Satır çıkarılmadı; makas ve hücre eklendi."
+ "_483d": "EUPWR/GESAN grup yapısı (GESAN 6A26 dipnotu): GESAN → %50,43 Europower (EUPWR) → %60 Peak PV (panel); GESAN → %100 EP World (güç trafosu). Modül fiyatı EUPWR ve GESAN için GELİR (Peak PV satış fiyatı; kullanıcı düzeltmesi 21 Eki) — önceki \"maliyet/kurulum temposu\" rolü yanlıştı. Birincil ikisinde de bakır (brüt kârın çoğu trafo/pano). Satır çıkarılmadı; makas ve hücre eklendi.",
+ "_484": "Grup 1 sürücüleri (21 Eki): EREGL + Kardemir yurt içi hurda (LME satırı korunur, bekliyor) · AKCNS/CIMSA + PTF $ (elektrik maliyeti) · ENJSA + PTF TL (perakende alış) · BIMAS + PTF TL · TKFEN + taahhüt backlog (faaliyet raporu, elle tablo tazele.mjs ELLE_CEYREK §484 — Tekfen KAP'a yeni iş bildirimi yapmadığı için KAP akışı kurulmadı)."
 }
