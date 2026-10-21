@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-20j",
+ "surum": "2026-10-20k",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -1402,10 +1402,10 @@
    "kod": "CWENE",
    "ad": "CW Enerji",
    "sektor": "Enerji Teknolojileri",
-   "tier": "C",
+   "tier": "B",
    "tip": "konsensus",
-   "surucu_plani": "Güneş paneli modül fiyatı (Çin, $/W) · kurulu güç ihaleleri · USDTRY",
-   "kaynak_notu": "Modül fiyatı serbest kaynak (InfoLink haftalık) — Faz 2 adayı",
+   "surucu_plani": "Montaj makası (modül − hücre, $/W) · Avrupa/ABD modül fiyatı · hücre ve polisilikon (öncü) · USDTRY/EURUSD",
+   "kaynak_notu": "GES zinciri fiyatları InfoLink Consulting haftalık spot tablosundan (infolink-group.com/spot-price) + Internet Archive geçmişi 2022-07→ (Actions §483). pvinsights.com 20 Eki'de erişilemedi.",
    "sermaye_mn": 1078.290009,
    "favok": {
     "2024Q1": {
@@ -1496,14 +1496,43 @@
     "kaynak": "bist-takvim.json"
    },
    "guidance": null,
-   "sektor_not": "Güneş paneli üretimi + GES kurulum (EPC) + kendi santralleri. Panel fiyatı Çin modül fiyatıyla belirlenir (düşüş = marj baskısı ama kurulum talebi artar); EPC gelirleri proje teslimine bağlı. Kapasite yatırımları ve finansman maliyeti bozucu.",
+   "sektor_not": "Güneş paneli üretimi (hücre alıp modül birleştirir) + GES kurulum (EPC) + kendi santralleri + ABD fabrikası. Panel üreticisinin kârı modül fiyatından çok MODÜL − HÜCRE makasına bağlıdır (cam, çerçeve, EVA, işçilik bu makastan karşılanır). Türkiye'de Çin modülüne ek gümrük/anti-damping var → yurt içi satış fiyatı Çin FOB'unun üstünde; seriler seviye değil YÖN ve makas için okunur. Polisilikon → hücre → modül fiyat geçişi 1–3 ay gecikmeli: polisilikon bugün düşerse 1–2 çeyrek sonra hücre ucuzlar (girdi lehine) ama modül de düşer (satış aleyhine) — net etki makasta. ABD fiyatı Çin'in 2–3 katı: ABD tesisi marjın ayrı motoru. EPC gelirleri proje teslimine bağlı, çeyrek oynak.",
    "surucu_seriler": [
     {
-     "k": "modul_fiyati",
+     "k": "ges_montaj_makasi_usd",
+     "rol": "marj",
+     "ad": "Montaj makası — modül − hücre ($/W)",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_modul_avrupa_usd",
+     "rol": "gelir",
+     "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W) — TR/AB rakip fiyatı",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_modul_usd",
+     "rol": "gelir",
+     "ad": "Modül TOPCon, Çin dışı piyasalar ($/W)",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_modul_abd_usd",
+     "rol": "gelir",
+     "ad": "Modül, ABD projeleri ($/W) — tarife duvarı arkası",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_hucre_usd",
      "rol": "maliyet",
-     "ad": "GES modül fiyatı ($/W, Çin)",
-     "bekliyor": true,
-     "kaynak": "InfoLink haftalık — Faz 2 adayı"
+     "ad": "Hücre TOPCon 182, Çin ihraç ($/W) — ana girdi",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_polisilikon_rmb",
+     "rol": "maliyet",
+     "ad": "Polisilikon (RMB/kg) — zincirin öncüsü",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
     },
     {
      "k": "usdtry",
@@ -1514,7 +1543,7 @@
      "rol": "kur"
     }
    ],
-   "birincil": "modul_fiyati"
+   "birincil": "ges_montaj_makasi_usd"
   },
   {
    "kod": "EKGYO",
@@ -2096,6 +2125,316 @@
     }
    ],
    "birincil": "hrc_abd"
+  },
+  {
+   "kod": "EUPWR",
+   "ad": "Europower Enerji",
+   "sektor": "Enerji Teknolojileri",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "izleme",
+   "surucu_plani": "Bakır/alüminyum (trafo girdisi) · GES modül fiyatı (yenilenebilir yatırım temposu) · USDTRY/EURUSD (ihracat)",
+   "kaynak_notu": "Konsensüs Fintables (1 kurum); bakır/alüminyum Yahoo; modül fiyatı InfoLink haftalık (Actions §483). Elektrik çeliği (GOES) serbest seri yok.",
+   "sermaye_mn": 660.0,
+   "favok": {
+    "2024Q1": {
+     "usd": 10
+    },
+    "2024Q2": {
+     "usd": 9
+    },
+    "2024Q3": {
+     "usd": 12
+    },
+    "2024Q4": {
+     "usd": 9
+    },
+    "2025Q1": {
+     "usd": 12,
+     "tl": 0.619
+    },
+    "2025Q2": {
+     "usd": 2,
+     "tl": 0.112
+    },
+    "2025Q3": {
+     "usd": 25,
+     "tl": 1.252
+    },
+    "2025Q4": {
+     "usd": 16,
+     "tl": 0.806
+    },
+    "2026Q1": {
+     "usd": 44,
+     "tl": 2.05
+    },
+    "2026Q2": {
+     "usd": 5,
+     "tl": 0.222
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q3": 26.67,
+    "2024Q4": 33.18,
+    "2025Q1": 29.14,
+    "2025Q2": 25.9,
+    "2025Q3": 28.6,
+    "2025Q4": 32.8,
+    "2026Q1": 40.44,
+    "2026Q2": 85.1,
+    "2026Q3": 54.35
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-19",
+    "fiyat": 43.38
+   },
+   "bolunme": null,
+   "konsensus": {
+    "donem": "2026Q3",
+    "favok_tl_mlr": 1.143,
+    "net_tl_mlr": 0.63,
+    "kurum": 1,
+    "satis_tl_mlr": 6.175,
+    "favok_min": 1.143,
+    "favok_max": 1.143,
+    "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
+    "tarih": "2026-10-20"
+   },
+   "konsensus_gecmis": [
+    {
+     "q": "2025Q2",
+     "n": 1,
+     "ort_favok_tl": 0.383,
+     "ort_net_tl": 0.1,
+     "gercek_favok_tl": 0.112
+    },
+    {
+     "q": "2025Q3",
+     "n": 1,
+     "ort_favok_tl": 0.15,
+     "ort_net_tl": 0.04,
+     "gercek_favok_tl": 1.252
+    },
+    {
+     "q": "2025Q4",
+     "n": 1,
+     "ort_favok_tl": 0.902,
+     "ort_net_tl": 0.275,
+     "gercek_favok_tl": 0.806
+    },
+    {
+     "q": "2026Q1",
+     "n": 1,
+     "ort_favok_tl": 0.707,
+     "ort_net_tl": 0.141,
+     "gercek_favok_tl": 2.05
+    },
+    {
+     "q": "2026Q2",
+     "n": 2,
+     "ort_favok_tl": 1.043,
+     "ort_net_tl": 0.899,
+     "gercek_favok_tl": 0.222
+    }
+   ],
+   "hedef_fiyat": {
+    "ort": 120.55,
+    "kurum": 2,
+    "tarih": "2026-06-10",
+    "kaynak": "Fintables hedef fiyat (son 6 ay)"
+   },
+   "bilanco": {
+    "beklenen": "2026-11-09",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "surucu_seriler": [
+    {
+     "k": "bakir",
+     "rol": "maliyet",
+     "ad": "Bakır (COMEX) — trafo sargısı ana girdisi"
+    },
+    {
+     "k": "aluminyum",
+     "rol": "maliyet",
+     "ad": "Alüminyum — sargı/gövde alternatif girdisi"
+    },
+    {
+     "k": "ges_modul_usd",
+     "rol": "maliyet",
+     "ad": "GES modül fiyatı ($/W) — yenilenebilir kurulum hızı vekili (↓ = trafo talebi ↑)",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "bakir",
+   "sektor_not": "Güç ve dağıtım trafosu, YG trafo merkezi, enerji depolama ve otomasyon; ihracat ağırlıklı. Trafo maliyetinin büyük kısmı bakır sargı + elektrik çeliği (GOES): bakır ↑ sabit fiyatlı siparişte marjı sıkar, endeksli sözleşmede geçer. Talep tarafı şebeke yatırımları ve yenilenebilir kurulum: rüzgâr/GES santrali başına YG trafo merkezi gerekir → modül fiyatının düşmesi GES temposunu, dolayısıyla trafo siparişini dolaylı artırır (doğrudan maliyet DEĞİL). Küresel trafo arzı dar (teslim süreleri 2–4 yıl) → fiyatlama gücü yüksek; 2Ç26 FAVÖK düşük (4,9 mn $) — çeyrek oynak."
+  },
+  {
+   "kod": "GESAN",
+   "ad": "Girişim Elektrik",
+   "sektor": "Enerji Teknolojileri",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "izleme",
+   "surucu_plani": "GES modül fiyatı (proje maliyeti → talep) · bakır (kablo/trafo) · PTF $ (yatırım getirisi) · USDTRY",
+   "kaynak_notu": "Konsensüs Fintables (1 kurum); modül fiyatı InfoLink haftalık (Actions §483); bakır Yahoo HG=F; PTF EPİAŞ.",
+   "sermaye_mn": 460.0,
+   "favok": {
+    "2024Q1": {
+     "usd": 21
+    },
+    "2024Q2": {
+     "usd": 10
+    },
+    "2024Q3": {
+     "usd": 28
+    },
+    "2024Q4": {
+     "usd": 33
+    },
+    "2025Q1": {
+     "usd": 24,
+     "tl": 1.237
+    },
+    "2025Q2": {
+     "usd": 11,
+     "tl": 0.549
+    },
+    "2025Q3": {
+     "usd": 32,
+     "tl": 1.581
+    },
+    "2025Q4": {
+     "usd": 21,
+     "tl": 1.049
+    },
+    "2026Q1": {
+     "usd": 55,
+     "tl": 2.545
+    },
+    "2026Q2": {
+     "usd": -3,
+     "tl": -0.123
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q3": 39.5,
+    "2024Q4": 47.18,
+    "2025Q1": 44.34,
+    "2025Q2": 41.32,
+    "2025Q3": 45.94,
+    "2025Q4": 46.4,
+    "2026Q1": 45.9,
+    "2026Q2": 72.95,
+    "2026Q3": 42.6
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-19",
+    "fiyat": 33.46
+   },
+   "bolunme": null,
+   "konsensus": {
+    "donem": "2026Q3",
+    "favok_tl_mlr": 1.49,
+    "net_tl_mlr": 0.467,
+    "kurum": 1,
+    "satis_tl_mlr": 9.075,
+    "favok_min": 1.49,
+    "favok_max": 1.49,
+    "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
+    "tarih": "2026-10-20"
+   },
+   "konsensus_gecmis": [
+    {
+     "q": "2025Q2",
+     "n": 1,
+     "ort_favok_tl": 0.64,
+     "ort_net_tl": 0.256,
+     "gercek_favok_tl": 0.549
+    },
+    {
+     "q": "2025Q3",
+     "n": 1,
+     "ort_favok_tl": 0.6,
+     "ort_net_tl": 0.06,
+     "gercek_favok_tl": 1.581
+    },
+    {
+     "q": "2025Q4",
+     "n": 1,
+     "ort_favok_tl": 1.402,
+     "ort_net_tl": 0.302,
+     "gercek_favok_tl": 1.049
+    },
+    {
+     "q": "2026Q1",
+     "n": 1,
+     "ort_favok_tl": 1.016,
+     "ort_net_tl": 0.075,
+     "gercek_favok_tl": 2.545
+    },
+    {
+     "q": "2026Q2",
+     "n": 2,
+     "ort_favok_tl": 1.442,
+     "ort_net_tl": 0.219,
+     "gercek_favok_tl": -0.123
+    }
+   ],
+   "hedef_fiyat": {
+    "ort": 162.0,
+    "kurum": 1,
+    "tarih": "2026-06-10",
+    "kaynak": "Fintables hedef fiyat (son 6 ay)"
+   },
+   "bilanco": {
+    "beklenen": "2026-11-09",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "surucu_seriler": [
+    {
+     "k": "ges_modul_usd",
+     "rol": "maliyet",
+     "ad": "GES modül fiyatı ($/W) — proje maliyeti; ↓ kurulum talebi ↑",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_modul_avrupa_usd",
+     "rol": "maliyet",
+     "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W)",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "bakir",
+     "rol": "maliyet",
+     "ad": "Bakır (COMEX) — kablo/trafo girdisi"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "gelir",
+     "ad": "Elektrik PTF ($/MWh) — GES yatırım getirisi (talep)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "ges_modul_usd",
+   "sektor_not": "Elektrik taahhüt: enerji iletim/dağıtım tesisleri ve trafo merkezleri kurulumu, GES kurulum (EPC) ve teçhizat üretimi; panel imalatına başlıyor. Gelir proje bazlı (çeyrek oynak — 2Ç26 FAVÖK negatif). Modül fiyatı EPC için çoğunlukla müşteriye geçen maliyet: asıl etkisi TALEP üzerinden — modül ucuzladıkça GES projesinin geri dönüşü kısalır, lisanssız GES ve 4. bölge teşviki (yatırımın %30–40'ı vergiden) ile birleşince sipariş artar. PTF yüksekse GES getirisi artar → aynı yönde. Bakır kablo/trafo maliyeti, sabit fiyatlı sözleşmede marjı sıkıştırır. Tek kurum tahmini → sürücüler yön, KAP iş ilanları belirleyici."
   },
   {
    "kod": "GLRMK",
@@ -4569,7 +4908,8 @@
   "ENJSA tip \"tarife\" formülü (RAB × reel getiri + TÜFE)",
   "Konsensüs anlık görüntüsünü her tazelemede konsensus_tarihce[] olarak sakla → revizyon ivmesi bileşeni",
   "Faz 3 (tier B) — §466 ile kısmen TAMAM: BIMAS/MAVI TÜFE alt kalemleri, AKCNS/CIMSA çimento ÜFE, ALBRK AOFM/TLREF, EKGYO KFE bağlandı. Kalan: EKGYO aylık ön satış (KAP), OBAMS buğday modeli, ENJSA tarife formülü, EPDK tarifeleri (AHGAZ/ENERY), asgari ücret serisi (GRSEL)",
-  "§474 — MPARK SUT tarifesi TAMAM (adım tablosu + RG izleyici). Kalan bekliyor: CWENE modül fiyatı, EKGYO aylık ön satış, GRSEL asgari ücret, PETKM PE/PP, EREGL LME hurda"
+  "§474 — MPARK SUT tarifesi TAMAM (adım tablosu + RG izleyici). Kalan bekliyor: CWENE modül fiyatı, EKGYO aylık ön satış, GRSEL asgari ücret, PETKM PE/PP, EREGL LME hurda",
+  "§483 — CWENE GES modül/hücre/polisilikon TAMAM (InfoLink + Wayback). EUPWR/GESAN izleme modeli. Kalan bekliyor: EKGYO aylık ön satış, GRSEL asgari ücret, PETKM PE/PP, EREGL LME hurda"
  ],
  "_465": "Sektör bilgisi: her modelde sektor_not (analist özeti: iş modeli · kâr sürücüsü · mevsimsellik · bozucu) ve surucu_seriler[] (sektor-surucu.json/seriler anahtarı, rol gelir|maliyet|kur|marj; bekliyor:true = kaynak bağlanmadı, kaynak notu). birincil = panoda gösterilen sürücü. Roller işaret okuması içindir: gelir ↑ olumlu, maliyet ↑ olumsuz, kur ↑ (TL zayıf) ihracatçı/$-gelirli için olumlu.",
  "_466": "Kamu veri katmanları bağlandı (Actions §466): TCMB EVDS — TÜFE genel/gıda/giyim (2025=100, 2025 öncesi 2003 bazından zincirli), Yİ-ÜFE çimento-kireç-alçı (T69) · ana demir-çelik (T74) · elektrik (T120) · temel kimyasal-gübre (T53), KFE, AOFM (TP.APIFON4) ve TLREF (iş günü); EPİAŞ Şeffaflık — GÖP PTF saatlik → günlük ortalama TL/MWh (ptf) ve $/MWh (ptf_usd). Anahtarlar: EVDS_KEY ve EPIAS_* secret. Panel kuralı: sektor-surucu.json/seriler içinde anahtar varsa bekliyor bayrağı EZİLİR (karar.js §466); yüzde birimli seride değişim puan (p) okunur; endeks serilerinde son ayın yıllık değişimi gösterilir. Birincil değişti: MAVI→tufe_giyim, ALBRK→aofm, ENERY→tufe, EKGYO→kfe, KRDMD/KCAER→celik_ufe.",
@@ -4579,5 +4919,6 @@
  "_472": "Kardemir açık API katmanı (Actions §472): kardemir.com liste fiyatları (kütük S235JR, nervürlü Ø12-32, profil IPE 180-200, filmaşin Ø5.5; $ ve TL) ve hurda alım fiyatları (Özel Ekstra, 2014→) günlük çekilir; liste bir sonraki listeye kadar geçerli sayılır (adım), TL fiyat günün kuruyla $’a çevrilir, ay ortalaması saklanır (siklik aylik). Türetilmiş: kardemir_marj_hurda_usd (kütük − hurda), kardemir_spread_cevher_usd (kütük − 1,6×WB cevher; kok hariç), kcaer_hadde_spread_usd (profil − kütük). Birincil değişti: KRDMD→kardemir_kutuk_usd, KCAER→kcaer_hadde_spread_usd. LME bekliyor satırları (metal_marji_tr, demir_lme, hurda_lme) bu iki hisseden kaldırıldı — SteelOrbis seviyeleri ücretli, Kardemir kendi fiyatını açık yayımlıyor (vekil değil, gerçekleşen). İlk koşuda son ~2 yıl, sonraki koşularda 2014’e kadar dolar (≤100+100 sayfa/koşu).",
  "_474": "SUT katmanı (Actions §474): SGK Sağlık Uygulama Tebliği fiyat listesinin GENEL artışları adım tablosundan endekslenir (2020-12=100; 2021-04 +15 · 2022-02 +40 · 2023-03 +31 · 2023-09 +51 · 2024-05 +50 · 2025-12 +30; dayanak MLP Care KAP bilgilendirme notları + Resmî Gazete), sut_reel = SUT÷TÜFE; TTB ÖHU katsayısı aynı yöntemle (2022-12=100) ttb_endeks/ttb_reel. Oran RG metninde yazmadığı için otomatik çıkarım yok: Resmî Gazete fihristi (son 14 gün, ana+mükerrer, windows-1254) taranır, SUT/SHFK başlıkları sektor-surucu.json/sut.rg_olaylar’a yazılır ve son adımdan sonraki SUT değişikliği raporda uyarılır; genel artışsa MLP notu/basın oranıyla SUT_ADIMLAR’a elle eklenir (bilanço haftası ritüeli). MPARK birincil: eurusd → sut_endeks; \"SUT bekliyor\" satırı kapandı.",
  "_475": "SUT oranı otomatik (Actions §475): SGK \"Değişiklik Tebliği İşlenmiş Güncel SUT\" ZIP içindeki EK-2B/EK-2C xlsx listeleri sürüm sürüm kıyaslanır (ortak kodlarda medyan değişim, değişen kod payı); medyan ≥%3 ve pay ≥%50 ise genel artış adımı yürürlük tarihiyle sut_endeks’e girer, ±45 gün içindeki elle adım düşer. Ölçüm: Aralık 2025 artışı EK-2B’de +%20 (MLP \"≈%30\"). Snapshot ktpanel/sut-ek2b.json (Actions dosyası).",
- "_konsensus_tazeleme": "20 Eki 2026 17:10 Fintables MCP: 3Ç26 tahmini olan 13/30 hisse tazelendi (kurum sayısı · FAVÖK/net ort. · satış ort. · FAVÖK min/max). Bilanço öncesi hafta kurum tahminleri hızla girer → ritüel: bilanço haftasında her 2–3 günde bir tazele. Hedef fiyatlar analist.json (5 Eki; hedef_fiyatlari tablosu, 1 yıl pencere)."
+ "_konsensus_tazeleme": "20 Eki 2026 17:10 Fintables MCP: 3Ç26 tahmini olan 13/30 hisse tazelendi (kurum sayısı · FAVÖK/net ort. · satış ort. · FAVÖK min/max). Bilanço öncesi hafta kurum tahminleri hızla girer → ritüel: bilanço haftasında her 2–3 günde bir tazele. Hedef fiyatlar analist.json (5 Eki; hedef_fiyatlari tablosu, 1 yıl pencere).",
+ "_483": "GES zinciri katmanı (Actions §483): InfoLink Consulting haftalık spot tablosu (polisilikon RMB/kg ve $/kg · n-tipi wafer · TOPCon hücre $/W ve RMB/W · modül Çin dışı/Çin iç/Avrupa/ABD $/W) + Internet Archive görüntülerinden 2022-07→ geçmiş; ürün geçişi (PERC→TOPCon) örtüşme medyan oranıyla zincirlenir. Türetilmiş: montaj makası = modül − hücre. CWENE \"modül fiyatı bekliyor\" satırı kapandı (birincil montaj makası, tier C→B); EUPWR ve GESAN XK030 dışı İZLEME modeli olarak eklendi (evren: izleme; FAVÖK/fiyat/konsensüs Fintables 20 Eki, sonraki bilançolar KAP arşivinden §462b). pvinsights.com erişilemedi."
 }

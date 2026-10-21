@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261020o';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261020p';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2461,7 +2461,7 @@ function kararBozucular(M,H,F){
   return L;
 }
 
-/* ── XK030 panosu: tüm modeller tek tabloda, puana göre ── */
+/* ── Karar panosu (XK030 + §483 izleme ◇): tüm modeller tek tabloda, puana göre ── */
 function kararPanoSatirlar(){
   const L=(KARAR.model&&KARAR.model.modeller||[]).map(M=>{ try{ const H=kararHesap(M), F=kararFiyatlanma(M,H), P=kararPuan(M,H,F); return {M,H,F,P}; }catch(e){ console.warn('[KTPanel] §463 pano', M.kod, e&&e.message); return null; } }).filter(Boolean);
   const sira=x=> x.P.n>=3? 2 : x.P.n===2? 1 : 0;   /* sinyalli → zayıf kapsam → kapsam yok */
@@ -2471,7 +2471,7 @@ function kararPanoSatirlar(){
 function kararPanoHtml(){
   const L=kararPanoSatirlar(); if(!L.length) return '';
   const hq=L[0].H.hedefQ;
-  let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>XK030 PANOSU</summary>';
+  let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>KARAR PANOSU</summary>';
   h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl" id="kararPanoTbl"><thead><tr><th>KOD</th><th>SEKTÖR · TIER</th><th>BEKLENTİ '+(hq?kararQAd(hq):'')+'</th><th>YoY ₺</th><th title="Birincil sürücünün hedef çeyrek ortalaması / önceki çeyrek; fiyat endekslerinde (TÜFE/ÜFE/KFE) yıllık değişim (y/y)">SÜRÜCÜ Δ ÇEYREK</th><th>KONS. SİCİLİ</th><th>ÇEYREK GÖRELİ</th><th>PD/FAVÖK İLERİ</th><th>HEDEF</th><th>PUAN</th><th>SİNYAL</th></tr></thead><tbody>';
   L.forEach(({M,H,F,P})=>{
     const hd=H.hedef||{}; const bek = hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
@@ -2484,9 +2484,9 @@ function kararPanoHtml(){
     const pdf = F.fwd!=null? trN(F.fwd,1)+'x'+(F.fwdYuzdelik!=null?' <span class="sub">%'+trN(F.fwdYuzdelik,0)+'</span>':'') : '—';
     const hed = F.hedefMesafe!=null? ((F.hedefF.kurum||0)<3||Math.abs(F.hedefMesafe)>60||F.hedefF.bayat? '<span class="sub">'+kararIsaret(F.hedefMesafe,0,'%')+' ('+(F.hedefF.kurum||0)+')</span>' : kararIsaret(F.hedefMesafe,0,'%')+' <span class="sub">('+F.hedefF.kurum+')</span>') : '—';
     const sec = M.kod===KARAR.secili;
-    h+='<tr data-kkod="'+esc(M.kod)+'" style="cursor:pointer'+(sec?';background:rgba(18,138,102,.08)':'')+'"><td style="font-weight:700">'+esc(M.kod)+(M.tip==='regresyon'?' <span class="sub">▣</span>':'')+'</td><td style="font-family:var(--sans);color:var(--muted)">'+esc(M.sektor)+' · '+esc(M.tier)+'</td><td>'+bek+'</td><td class="'+(String(yoy).startsWith('+')?'up':String(yoy).startsWith('−')?'down':'')+'">'+yoy+'</td><td>'+sur+'</td><td class="'+(sic.startsWith('+')?'up':sic.startsWith('−')?'down':'')+'">'+sic+'</td><td class="'+(gor.startsWith('+')?'up':gor.startsWith('−')?'down':'')+'">'+gor+'</td><td>'+pdf+'</td><td class="'+(hed.startsWith('+')?'up':hed.startsWith('−')?'down':'')+'">'+hed+'</td><td style="font-weight:700" class="'+(P.n<2?'':P.toplam>0?'up':P.toplam<0?'down':'')+'">'+(P.n<2?'—':(P.toplam>=0?'+':'')+P.toplam+'/'+P.n)+'</td><td class="'+P.etiket.sinif+'" style="font-weight:700;font-size:10px">'+P.etiket.ad+'</td></tr>';
+    h+='<tr data-kkod="'+esc(M.kod)+'" style="cursor:pointer'+(sec?';background:rgba(18,138,102,.08)':'')+'"><td style="font-weight:700">'+esc(M.kod)+(M.tip==='regresyon'?' <span class="sub">▣</span>':'')+(M.evren==='izleme'?' <span class="sub">◇</span>':'')+'</td><td style="font-family:var(--sans);color:var(--muted)">'+esc(M.sektor)+' · '+esc(M.tier)+'</td><td>'+bek+'</td><td class="'+(String(yoy).startsWith('+')?'up':String(yoy).startsWith('−')?'down':'')+'">'+yoy+'</td><td>'+sur+'</td><td class="'+(sic.startsWith('+')?'up':sic.startsWith('−')?'down':'')+'">'+sic+'</td><td class="'+(gor.startsWith('+')?'up':gor.startsWith('−')?'down':'')+'">'+gor+'</td><td>'+pdf+'</td><td class="'+(hed.startsWith('+')?'up':hed.startsWith('−')?'down':'')+'">'+hed+'</td><td style="font-weight:700" class="'+(P.n<2?'':P.toplam>0?'up':P.toplam<0?'down':'')+'">'+(P.n<2?'—':(P.toplam>=0?'+':'')+P.toplam+'/'+P.n)+'</td><td class="'+P.etiket.sinif+'" style="font-weight:700;font-size:10px">'+P.etiket.ad+'</td></tr>';
   });
-  h+='</tbody></table></div><div class="sub">▣ = kalibre sürücü modeli (TUPRS). Gri değerler bilgi amaçlı (ince kapsam: <3 kurum, ±%60 üstü hedef mesafesi, bayat hedef) — puana girmez. Beklenti: model varsa model FAVÖK, yoksa kurum ortalaması (mlr ₺; banka: net kâr). Sürücü Δ: hissenin birincil sektör sürücüsünün hedef çeyrek ortalaması / önceki çeyrek (renk role göre: gelir ↑ yeşil, maliyet ↑ kırmızı; detay için satıra tıkla). YoY: beklenti / geçen yılın aynı çeyreği gerçek (₺ nominal — TMS-29 enflasyon düzeltmeli, ~%30 enflasyon ile okunur). Kons. sicili: ≥3 kurumlu çeyreklerde gerçek − ortalama tahmin, ORTANCA (● = hep aynı yönde). Göreli: çeyrek içi hisse − XU100 (⚠ = −%45 üzeri düşüş, sermaye işlemi şüphesi). PD/FAVÖK ileri = PD($) / (son 3 gerçek + beklenti), yüzdelik kendi bandında. Puan: −1/0/+1 bileşenlerin toplamı / sayısı.</div></details>';
+  h+='</tbody></table></div><div class="sub">▣ = kalibre sürücü modeli (TUPRS). ◇ = XK030 dışı izleme hissesi (§483: EUPWR, GESAN). Gri değerler bilgi amaçlı (ince kapsam: <3 kurum, ±%60 üstü hedef mesafesi, bayat hedef) — puana girmez. Beklenti: model varsa model FAVÖK, yoksa kurum ortalaması (mlr ₺; banka: net kâr). Sürücü Δ: hissenin birincil sektör sürücüsünün hedef çeyrek ortalaması / önceki çeyrek (renk role göre: gelir ↑ yeşil, maliyet ↑ kırmızı; detay için satıra tıkla). YoY: beklenti / geçen yılın aynı çeyreği gerçek (₺ nominal — TMS-29 enflasyon düzeltmeli, ~%30 enflasyon ile okunur). Kons. sicili: ≥3 kurumlu çeyreklerde gerçek − ortalama tahmin, ORTANCA (● = hep aynı yönde). Göreli: çeyrek içi hisse − XU100 (⚠ = −%45 üzeri düşüş, sermaye işlemi şüphesi). PD/FAVÖK ileri = PD($) / (son 3 gerçek + beklenti), yüzdelik kendi bandında. Puan: −1/0/+1 bileşenlerin toplamı / sayısı.</div></details>';
   return h;
 }
 
@@ -2639,7 +2639,7 @@ function kararSektorPanel(M,H){
       if(!st){ h+='<tr style="color:var(--muted)"><td style="font-family:var(--sans)">'+esc(d.ad||d.k)+'</td><td>'+rol.ad+'</td><td colspan="6" style="text-align:left;font-family:var(--sans)">kaynak bekliyor'+(d.kaynak?' — '+esc(d.kaynak):'')+'</td></tr>'; return; }
       const ser=st.ser; const renkYon=(v)=>{ if(v==null||rol.isaret===0) return ''; return (v*rol.isaret>=0)?'up':'down'; };
       const dkYon=(v)=>{ if(v==null||rol.isaret===0) return ''; return (v*rol.isaret>=0)?'up':'down'; };
-      const fmt=(v)=> v==null?'—':trN(v, Math.abs(v)<10?2:Math.abs(v)<1000?1:0);
+      const fmt=(v)=> v==null?'—':trN(v, Math.abs(v)<1?3:Math.abs(v)<10?2:Math.abs(v)<1000?1:0);   /* §483: $/W (0,114) üç ondalık */
       h+='<tr><td style="font-family:var(--sans);max-width:380px;white-space:normal">'+esc(d.ad||ser.ad||d.k)+(d.not?' <span class="sub" title="'+esc(d.not)+'">ⓘ</span>':'')+'<div class="sub">'+esc(String(ser.kaynak||d.kaynak||'').slice(0,110))+(ser.birim?' · '+esc(ser.birim):'')+'</div></td>'+
          '<td style="color:var(--muted)">'+rol.ad+' <span class="sub">'+rol.aciklama+'</span></td>'+
          (st.ytd? '<td><b>'+trN(st.ytd.toplam,0)+'</b><div class="sub">'+esc(st.ytd.yil)+' toplamı · '+st.ytd.adet+' sözleşme'+(st.ytd.toplam>0&&st.ytd.yy!=null?' · y/y '+kararIsaret(st.ytd.yy,0,'%'):(st.ytd.gecen!=null?' · geçen yıl aynı tarih '+trN(st.ytd.gecen,0):''))+'</div></td>' : '<td><b>'+fmt(st.son&&st.son.deger)+(st.fark?'%':'')+'</b><div class="sub">'+esc(kararTrTarih(st.son&&st.son.tarih))+(st.yoySon!=null?' · yıllık '+kararIsaret(st.yoySon,1,'%'):'')+'</div></td>')+
@@ -2657,7 +2657,7 @@ function kararSektorPanel(M,H){
       yillar.forEach(y=>{ const o=K.yillar[y]; const yon=o.yy_ayni_tarih==null?'':(o.yy_ayni_tarih>=0?'up':'down');
         h+='<tr'+(y===buYil?' style="font-weight:600"':'')+'><td>'+esc(y)+(y===buYil?' <span class="sub">devam</span>':'')+'</td><td><b>'+trN(o.toplam,0)+'</b></td><td>'+o.adet+(o.tutarsiz?' <span class="sub">('+o.tutarsiz+' tutarsız)</span>':'')+(o.konsorsiyum?' <span class="sub" title="Konsorsiyum toplamı; şirket payı açıklanmadı">('+o.konsorsiyum+' konsorsiyum)</span>':'')+'</td><td>'+trN(o.ayni_tarih,0)+'</td><td class="'+yon+'">'+kararIsaret(o.yy_ayni_tarih,0,'%')+'</td><td style="text-align:left;font-family:var(--sans);font-size:11px;color:var(--muted)">'+(o.son?esc(kararTrTarih(o.son.t))+' · '+trN(o.son.usd_mn,0)+' mn $ — '+esc(String(o.son.ozet||'').replace(/^ASELSAN,?\s*/,'').slice(0,90)):'—')+'</td></tr>'; });
       h+='</tbody></table></div>'+(ser._kapsam?'<div class="sub">'+esc(ser._kapsam)+' Δ y/y: bu yıl '+esc(kararTrTarih(K.bugun||''))+"'e kadar olan toplam / geçen yılın aynı tarihine kadar olan toplam.</div>":''); });
-    h+='<div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta) · TCMB EVDS aylık endeksler (TÜFE 2025=100, 2025 öncesi zincirli) ve günlük AOFM/TLREF (değişim puan) · EPİAŞ PTF günlük ortalama · Kardemir açık API liste/hurda fiyatları (liste adımı → ay ortalaması; TL fiyat günün kuruyla $).</div>';
+    h+='<div class="sub">Rol: gelir/marj sürücüsünde artış hisse lehine (yeşil), maliyet sürücüsünde aleyhine (kırmızı); kur renksiz — $ geliri/ihracatçı için TL zayıflığı lehte, ithal girdili için aleyhte. Δ çeyrek = hedef çeyrek ortalaması / önceki çeyrek; Δ yıl = geçen yılın aynı çeyreği. Koşu = içinde bulunulan çeyreğin kısmi ortalaması (parantez: hedefe göre). Veri: Yahoo günlük · Dünya Bankası aylık (Pink Sheet) · Neste · LME (biriken günlük nokta) · TCMB EVDS aylık endeksler (TÜFE 2025=100, 2025 öncesi zincirli) ve günlük AOFM/TLREF (değişim puan) · EPİAŞ PTF günlük ortalama · Kardemir açık API liste/hurda fiyatları (liste adımı → ay ortalaması; TL fiyat günün kuruyla $) · GES zinciri InfoLink haftalık spot (ortalama sütunu; 2022–26 geçmişi Internet Archive görüntülerinden, PERC→TOPCon geçişi örtüşme oranıyla zincirli; hafta ortalamalarının ay ortalaması).</div>';
   }
   return h;
 }

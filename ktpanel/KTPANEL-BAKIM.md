@@ -6,6 +6,40 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §483 (20 Eki 2026, 23:50) — GES ZİNCİRİ FİYATLARI (InfoLink + Wayback) · CWENE sürücüsü · EUPWR/GESAN izleme modeli
+
+İstek: "pvinsights.com'a bak, sürücülerde eksik olanların yerine koy (EUPWR, GESAN, CWENE gibi)". ÖLÇÜM: pvinsights.com 20 Eki'de
+AÇILMADI (WebFetch http↔https 302 döngüsü; kullanıcının Chrome'unda chrome-error) → Actions'a bağlanamaz. Aynı veri (PV zinciri spot
+fiyatı) sektör standardı InfoLink Consulting'in AÇIK sayfasında: infolink-group.com/spot-price — sunucuda üretilmiş HTML <table>
+(JS yok), her Çarşamba; satır = Kalem | Yüksek | Düşük | ORTALAMA | Δ. 🔒 satırlar ücretli (sayı yok, atlanır).
+TARİHÇE: sayfa yalnız son haftayı gösterir → Internet Archive (Wayback) CDX: 183 görüntü 2022-07→2026-10 (2023 ~aylık, 2024–25
+~haftalık, 2026 seyrek); Chrome'da 183/183 çekildi, 137 ayrı yayın haftası, hata 0. Sayfa tarihi görüntüden değil sayfanın kendi
+yayın tarihinden ("October 14, 2026") → aynı haftanın kopyaları tek kayıt.
+ETİKET KAYMASI + ZİNCİR: polisilikon "Prime for Mono" (22–23) → "Chunk" (24–25) → "Mono-grade" (26); hücre/modül PERC → TOPCon;
+verim eşiği 22,8→25,4%. Her seri öncelikli desen listesi; eski teknoloji haftaları ÖRTÜŞME MEDYAN ORANIYLA bağlanır (modül $ ×1,118
+— TOPCon PERC'ten %12 pahalı; hücre RMB ×1,067); örtüşme yoksa = aynı ürünün yeniden adlandırılması → oran 1 (rapor yazar).
+Hindistan satırları alınmadı (Çin→Hindistan ile yerli montaj farklı ürün, zincirlenemez); solar cam InfoLink açık tablosundan 2025-01'de
+kalktı → seri yok.
+SERİLER (sektor-surucu.json/seriler, siklik aylik + haftalik son 104): ges_polisilikon_rmb/_usd · ges_wafer_rmb · ges_hucre_usd/_rmb ·
+ges_modul_usd (Çin dışı) · ges_modul_rmb + ges_modul_cin_usd (÷ Yahoo CNY=X) · ges_modul_avrupa_usd (Avrupa projeleri Çin malı FOB) ·
+ges_modul_abd_usd (ABD, GD Asya malı) · TÜRETİLMİŞ ges_montaj_makasi_usd = modül − hücre (aynı hafta).
+Chrome doğrulaması (zincirli, $/W): modül 0,307 (Ağu 22) → 0,134 (Oca 24) → 0,088 (Haz–Ara 25) → 0,114 (Eyl 26, dipten +%30 —
+nedeni ayrıca doğrulanmalı: Çin ihracat vergi iadesi/arz disiplini haberleri) · hücre 0,171 → 0,038 → 0,046 · polisilikon 292 → 40 RMB/kg.
+ARTIMLI: D.ges.hafta + D.ges.wb (işlenen görüntü); koşu başına ≤40 görüntü YA DA 150 sn (olcKos katman tavanı 4 dk — aşılırsa dosya
+YAZILMAZ, bu yüzden iç sınır) → ilk doldurma ~5–6 koşu. GES_SURUM değişirse kayıt sıfırlanır.
+EŞLEME (karar-model 2026-10-20k): CWENE birincil ges_montaj_makasi_usd (marj) + Avrupa/ABD/Çin dışı modül (gelir) + hücre, polisilikon
+(maliyet; polisilikon 1–3 ay öncü), tier C→B — "modül fiyatı bekliyor" KAPANDI. EUPWR ve GESAN XK030 DIŞI izleme modeli (evren:'izleme',
+panoda ◇): EUPWR birincil bakır (trafo sargısı; GOES serbest seri yok) + alüminyum + modül fiyatı (yenilenebilir kurulum temposu vekili,
+DOĞRUDAN maliyet değil); GESAN birincil ges_modul_usd (EPC proje maliyeti → talep) + bakır + PTF $ (GES yatırım getirisi). FAVÖK/fiyat/
+konsensüs Fintables 20 Eki (3Ç26: EUPWR 1,143 · GESAN 1,490 mlr ₺, 1'er kurum); sonraki bilançolar kap-arsiv/EUPWR|GESAN.json'dan
+§462b ile otomatik. Panel: "XK030 PANOSU" → "KARAR PANOSU"; sürücü tablosunda |v|<1 değerler 3 ondalık ($/W).
+OKUMA (öğretici): modül üreticisinin kârı modül fiyatından çok MODÜL − HÜCRE makasındadır; Türkiye'de Çin modülüne ek gümrük/anti-damping
+olduğundan yurt içi fiyat Çin FOB'unun üstünde → seviye değil YÖN ve makas okunur. Polisilikon düşüşü 1–2 çeyrek sonra hem hücreyi
+(girdi lehine) hem modülü (satış aleyhine) düşürür — net etki makasta.
+ARIZA: rapor "⚠ canlı sayfa yok" → infolink-group.com Actions IP engeli/tablo yapısı; "arşive ulaşılamadı" → archive.org.
+DEPLOY: scripts/tazele.mjs (§483) · .github/workflows/tazele.yml (katman ges) · ktpanel/app.js + index.html 20261020p · karar-model.json
+(2026-10-20k) · guncelleme-plani.json · BAKIM · DAMGA.
+
 # BAKIM EK — §482 (20 Eki 2026, 22:10) — KRİZ λ 1,0 → 0,5 + "TAM KESİNTİ" BİLGİ SATIRI
 
 §480 (λ_kriz = 1) canlıda yan etki gösterdi: KV borç > kapasite olan her şirkette kriz dalı PD = %100 → karışım PD = p(kriz) →
