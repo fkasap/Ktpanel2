@@ -4315,10 +4315,22 @@ async function plasticPortal() {
   let pwB = null, pwC = null, pwYok = false;
   const pw = async url => { if (pwYok) return null; try { if (!pwC) { const { chromium } = await import('playwright'); pwB = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] }); pwC = await pwB.newContext({ userAgent: UA, locale: 'en-GB', viewport: { width: 1366, height: 850 } }); } } catch (e) { pwYok = true; return null; }
     const pg = await pwC.newPage(); try { for (let d = 0; d < 1; d++) { await pg.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); await pg.waitForFunction(() => !/just a moment/i.test(document.title) && document.documentElement.outerHTML.includes('PlasticPricesChart.init('), null, { timeout: 20000 }).catch(() => {}); const h = await pg.content(); if (!duvar(h) && h.includes('PlasticPricesChart.init(')) return h; await pg.waitForTimeout(3000); } return null; } catch (e) { return null; } finally { await pg.close().catch(() => {}); } };
-  const wb = async url => { try { const c = await (await fetch('https://web.archive.org/cdx/search/cdx?url=' + encodeURIComponent(url.replace(/^https?:\/\//, '')) + '&output=json&fl=timestamp&filter=statuscode:200', { signal: AbortSignal.timeout(20000) })).json(); const ts = (c || []).slice(1).map(x => x[0]).sort().pop(); if (!ts) return null; const r = await fetch('https://web.archive.org/web/' + ts + 'id_/' + url, { signal: AbortSignal.timeout(25000) }); return r.ok ? { h: await r.text(), ts } : null; } catch (e) { return null; } };
+  /* §488c (21 Eki 2. koşu: "wayback görüntü yok" ×4 — Chrome'da aynı CDX sorgusu 2 görüntü döndürüyordu): URL encodeURIComponent ile
+     kodlanıyordu ('/' → %2F), CDX eşleşmedi. Ham yol + http/https/www'siz varyant; hata nedeni tanıya yazılır. Ayrıca okunamayan sayfa için
+     Wayback "Save Page Now" tetiklenir (web.archive.org/save/<url>) → archive.org kendi IP'sinden çeker; ertesi gün taze görüntü. */
+  const wb = async url => { const yalin = url.replace(/^https?:\/\//, ''); const neden = [];
+    for (const q of [yalin, yalin.replace(/^www\./, '')]) {
+      try { const r0 = await fetch('https://web.archive.org/cdx/search/cdx?url=' + q + '&output=json&fl=timestamp&filter=statuscode:200&limit=-5', { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(30000) }); if (!r0.ok) { neden.push('CDX HTTP ' + r0.status); continue; }
+        const c = await r0.json(); const ts = (c || []).slice(1).map(x => x[0]).sort().pop(); if (!ts) { neden.push('CDX boş'); continue; }
+        const r = await fetch('https://web.archive.org/web/' + ts + 'id_/' + url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(30000) }); if (!r.ok) { neden.push('görüntü HTTP ' + r.status); continue; }
+        return { h: await r.text(), ts };
+      } catch (e) { neden.push(String(e && e.message || e).slice(0, 40)); }
+    }
+    return { hata: neden.join('/') }; };
+  const spn = async url => { try { const r = await fetch('https://web.archive.org/save/' + url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(45000) }); return 'SPN ' + r.status; } catch (e) { return 'SPN ' + String(e.message || e).slice(0, 30); } };
   D.plastik = D.plastik || {};
   const sonAy = D.seriler.pe_pp && D.seriler.pe_pp.son && D.seriler.pe_pp.son.tarih;
-  if (D.plastik.son_deneme === bugun) { raporlar.push('### PlasticPortal PE/PP (§488) — ⏭ bugün zaten denendi (günde 1; veri aylık) · son ay ' + (sonAy || '—') + ' · yol ' + JSON.stringify(D.plastik.yollar || {})); return; }
+  if (D.plastik.son_deneme === bugun && D.plastik.surum === '488c') { raporlar.push('### PlasticPortal PE/PP (§488) — ⏭ bugün zaten denendi (günde 1; veri aylık) · son ay ' + (sonAy || '—') + ' · yol ' + JSON.stringify(D.plastik.yollar || {})); return; }
   const t0 = Date.now(); let fetchOlmadi = 0, pwOlmadi = 0; const tani = [];
   const sonuc = {}, yollar = {}, uyari = [];
   for (const [yol, ad] of PP_MALZEME) {
@@ -4326,7 +4338,8 @@ async function plasticPortal() {
     const url = 'https://www.plasticportal.eu/polymer-prices/' + yol; let m = null, ne = '';
     if (fetchOlmadi < 2) { try { const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(20000) }); const h = await r.text(); if (!duvar(h)) { m = ppCoz(h); if (m) ne = 'fetch'; } if (!m) { fetchOlmadi++; tani.push(ad + ' fetch HTTP ' + r.status + (duvar(h) ? ' Cloudflare' : ' init yok')); } } catch (e) { fetchOlmadi++; tani.push(ad + ' fetch ' + String(e.message || e).slice(0, 40)); } }
     if (!m && pwOlmadi < 1 && Date.now() - t0 < PP_SURE_MS) { const h = await pw(url); if (h) { m = ppCoz(h); if (m) ne = 'playwright'; } if (!m) { pwOlmadi++; tani.push(ad + ' playwright ' + (pwYok ? 'kurulu değil' : 'geçemedi')); } }   /* bir kez geçemezse diğer sayfalarda denenmez (süre) */
-    if (!m && Date.now() - t0 < PP_SURE_MS) { const w = await wb(url); if (w) { m = ppCoz(w.h); if (m) ne = 'wayback ' + w.ts.slice(0, 8); } if (!m) tani.push(ad + ' wayback ' + (w ? 'init yok' : 'görüntü yok')); }
+    if (!m && Date.now() - t0 < PP_SURE_MS) { const w = await wb(url); if (w && w.h) { m = ppCoz(w.h); if (m) ne = 'wayback ' + w.ts.slice(0, 8); } if (!m) tani.push(ad + ' wayback ' + (w && w.h ? 'init yok' : (w && w.hata || 'görüntü yok'))); }
+    if (!m || /^wayback/.test(ne)) { if (Date.now() - t0 < PP_SURE_MS + 30000) tani.push(ad + ' ' + await spn(url)); }   /* taze görüntü iste (ertesi koşu için) */
     if (!m) { uyari.push(ad + ': erişilemedi (Cloudflare + arşiv yok)'); continue; }
     sonuc[yol] = m; yollar[ne.split(' ')[0]] = (yollar[ne.split(' ')[0]] || 0) + 1;
     /* geçmiş + yeni birleştir (wayback eski görüntüden gelirse dosyadaki yeni ayları kaybetme) */
@@ -4357,8 +4370,8 @@ async function plasticPortal() {
     }
   }
   if (pwB) await pwB.close().catch(() => {});
-  if (!Object.keys(sonuc).length) { D.plastik.son_deneme = bugun; D.plastik.yollar = { hata: 1 }; await yaz(dosya, D); raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez\n- tanı: ' + tani.join(' · ') + (uyari.length ? '\n- ' + uyari.slice(0, 4).join('\n- ') : '')); return; }
-  D.plastik.son_deneme = bugun; D.plastik.yollar = yollar;
+  if (!Object.keys(sonuc).length) { D.plastik.son_deneme = bugun; D.plastik.surum = '488c'; D.plastik.yollar = { hata: 1 }; await yaz(dosya, D); raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez\n- tanı: ' + tani.join(' · ') + (uyari.length ? '\n- ' + uyari.slice(0, 4).join('\n- ') : '')); return; }
+  D.plastik.son_deneme = bugun; D.plastik.surum = '488c'; D.plastik.yollar = yollar;
   D.seriler_guncelleme = bugun; await yaz(dosya, D);
   degisenler.push('PlasticPortal PE/PP (' + Object.keys(sonuc).length + ' malzeme)');
   const g = k => D.seriler[k] && D.seriler[k].son ? D.seriler[k].son.deger.toFixed(2) : '—';
