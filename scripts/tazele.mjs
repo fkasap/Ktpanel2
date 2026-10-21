@@ -4097,6 +4097,81 @@ async function elleSeriler() {
   raporlar.push('### Elle seriler (§484 backlog · §485 asgari ücret) — ✓ ' + y.join(' · ') + (once === sonra ? ' · değişiklik yok' : ''));
 }
 
+/* ── §486 TÜİK İNŞAAT MALİYET ENDEKSİ (veri portalı SDMX → JSON-stat) ─────────────────────────────────────────────
+   Çıkış (21 Eki): kullanıcı TÜİK Veri Portalı İME bültenini gösterdi (Ağu 2026: yıllık %29,59, malzeme %28,72, işçilik %31,20).
+   EVDS'de İME YOK (§485 araması). Bülten API'si /api/tr/press/58205 'statisticalTables' alanında dataflow verir:
+   TR,DF_UFE_INSAAT_V1,1.0 (databrowser2.tuik.gov.tr). Veri ucu (Chrome'da ölçüldü, anahtar/çerez gerekmez):
+     POST https://databrowser2.tuik.gov.tr/api/core/nodes/1/datasets/TR,DF_UFE_INSAAT_V1,1.0/data   gövde '[]'  → JSON-stat 2.0
+     (~1 MB; boyutlar REF_AREA · INDICATOR · DEGISIM[1 endeks, 2 aylık %, 3 aralığa %, 4 yıllık %, 5 12 ay ort. %] · BASE_PER 2015 ·
+     FREQ M · MALIYET_GRUP[_T, 1 malzeme, 2 işçilik] · FAALIYET_CPA_2_1[F, F41, F41001 ikamet, F41002, F42, F421, F422, F429] ·
+     FAAL_GRUP[_T,4,5,7 hiyerarşi düzeyi — her CPA tek düzeyde dolu] · TIME_PERIOD 2015-01→).
+   Doğrulama: F toplam 2026-08 2.501,40 / 2025-08 1.930,24 = +%29,59 = bülten ✓ (malzeme +28,72 ✓ · işçilik +31,20 ✓).
+   Yalnız DEGISIM=1 (endeks) alınır, değişimler panelde hesaplanır. Seriler: ime_konut (F41001 toplam), ime_konut_malzeme,
+   ime_konut_iscilik, ime_insaat (F toplam) + TÜRETİLMİŞ ekgyo_kfe_ime = KFE ÷ İME konut (2021-01=100): konut FİYATI / konut MALİYETİ
+   → geliştiricinin reel makası (EKGYO). Yayın: ayın ~9'u, 2 ay gecikmeli. Erişim: TÜİK yurt dışı IP'yi kısıtlarsa rapor ✗ yazar, dosya korunur. */
+const TUIK_IME_URL = 'https://databrowser2.tuik.gov.tr/api/core/nodes/1/datasets/TR,DF_UFE_INSAAT_V1,1.0/data';
+function jsonStatSeri(j, secim) {
+  const ids = j.id, S = j.size, st = []; let m = 1; for (let i = S.length - 1; i >= 0; i--) { st[i] = m; m *= S[i]; }
+  const pos = d => { const ix = j.dimension[d].category.index; return Array.isArray(ix) ? Object.fromEntries(ix.map((k, i) => [k, i])) : ix; };
+  const P = Object.fromEntries(ids.map(d => [d, pos(d)]));
+  const zaman = Object.entries(P.TIME_PERIOD).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+  const deg = (o, d) => { const ix = ids.indexOf(d); return ix; };
+  const sabit = ids.map(d => d === 'TIME_PERIOD' ? null : (secim[d] != null ? P[d][secim[d]] : 0));
+  if (sabit.some((v, i) => ids[i] !== 'TIME_PERIOD' && ids[i] !== 'FAAL_GRUP' && v == null)) return null;
+  const tIx = ids.indexOf('TIME_PERIOD'), fIx = ids.indexOf('FAAL_GRUP');
+  const deger = (p) => j.value[String(p.reduce((s, x, i) => s + x * st[i], 0))];
+  /* FAAL_GRUP: CPA'nın dolu olduğu düzeyi bul (son dönemde değer veren ilk) */
+  let fg = 0; if (fIx >= 0) { for (let f = 0; f < S[fIx]; f++) { const p = sabit.slice(); p[fIx] = f; p[tIx] = zaman.length - 1; if (deger(p) != null) { fg = f; break; } } }
+  const out = new Map();
+  zaman.forEach((t, k) => { const p = sabit.slice(); if (fIx >= 0) p[fIx] = fg; p[tIx] = k; const v = parseFloat(deger(p)); if (isFinite(v) && v > 0) out.set(t.slice(0, 7), v); });
+  return out;
+}
+async function tuikIme() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### TÜİK inşaat maliyet endeksi (§486) — ⏭ sektor-surucu.json yok'); return; }
+  let j;
+  try {
+    const r = await fetch(TUIK_IME_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Origin': 'https://databrowser2.tuik.gov.tr', 'Referer': 'https://databrowser2.tuik.gov.tr/' }, body: '[]', signal: AbortSignal.timeout(60000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status + (r.status === 403 ? ' (TÜİK erişim engeli — yurt dışı IP?)' : ''));
+    j = await r.json();
+    if (!j || !Array.isArray(j.id) || !j.value) throw new Error('JSON-stat değil');
+  } catch (e) { raporlar.push('### TÜİK inşaat maliyet endeksi (§486) — ✗ ' + String(e && e.message || e).slice(0, 140) + ' · dosya korundu'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const KAY = 'TÜİK İnşaat Maliyet Endeksi (2015=100) — databrowser2 SDMX TR,DF_UFE_INSAAT_V1 (Actions §486)';
+  const TAN = [
+    ['ime_konut', { FAALIYET_CPA_2_1: 'F41001', MALIYET_GRUP: '_T' }, 'İnşaat maliyet endeksi — ikamet amaçlı binalar, toplam (2015=100)', ['EKGYO'], 'Konut geliştiricinin birim maliyeti: malzeme (çimento, demir, beton, tesisat) + işçilik. Ağırlık ~%60–65 malzeme.'],
+    ['ime_konut_malzeme', { FAALIYET_CPA_2_1: 'F41001', MALIYET_GRUP: '1' }, 'İnşaat maliyet endeksi — ikamet amaçlı binalar, malzeme (2015=100)', ['EKGYO'], 'Yİ-ÜFE alt kalemlerinden (çimento, demir-çelik, seramik, boya…) türetilir; çimento/çelik ÜFE ile birlikte okunur.'],
+    ['ime_konut_iscilik', { FAALIYET_CPA_2_1: 'F41001', MALIYET_GRUP: '2' }, 'İnşaat maliyet endeksi — ikamet amaçlı binalar, işçilik (2015=100)', ['EKGYO'], 'SGK ücret verisinden; asgari ücret adımlarıyla (Ocak/Temmuz) sıçrar.'],
+    ['ime_insaat', { FAALIYET_CPA_2_1: 'F', MALIYET_GRUP: '_T' }, 'İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)', ['EKGYO', 'AKCNS', 'CIMSA'], 'Genel inşaat maliyeti; bina dışı (yol, altyapı) dahil.'],
+  ];
+  const notlar = [], uyari = [];
+  for (const [k, sec, ad, hisse, not] of TAN) {
+    const m = jsonStatSeri(j, Object.assign({ DEGISIM: '1' }, sec));
+    if (!m || m.size < 24) { uyari.push(k + ': seri çözülemedi (' + (m ? m.size : 0) + ' ay) — boyut kodu değişmiş olabilir'); continue; }
+    const T = aylikTuret(m); const ks = Object.keys(T.aylik); const son = ks[ks.length - 1];
+    const onceki = D.seriler[k]; if (onceki && onceki.son && onceki.son.tarih > son) { uyari.push(k + ': tarih geriledi, korundu'); continue; }
+    D.seriler[k] = Object.assign({}, onceki || {}, { ad, birim: 'endeks', siklik: 'aylik', hisse, kaynak: KAY, _not: not, aylik: T.aylik, ceyreklik: T.ceyreklik, yillik: T.yillik, son: { tarih: son, deger: T.aylik[son] }, guncelleme: bugun });
+    const gy = T.aylik[(+son.slice(0, 4) - 1) + son.slice(4)];
+    notlar.push(k + ' ' + T.aylik[son].toFixed(1) + ' (' + son + (gy ? ', y/y ' + ((T.aylik[son] / gy - 1) * 100).toFixed(2) + '%' : '') + ')');
+  }
+  /* türetilmiş: KFE ÷ İME konut — geliştirici reel makası */
+  try {
+    const kfe = D.seriler.kfe && D.seriler.kfe.aylik, ime = D.seriler.ime_konut && D.seriler.ime_konut.aylik;
+    if (kfe && ime) { const ortak = Object.keys(ime).filter(a => kfe[a] != null && a >= '2021-01').sort();
+      if (ortak.length > 12) { const b = kfe[ortak[0]] / ime[ortak[0]]; const m = new Map(ortak.map(a => [a, 100 * (kfe[a] / ime[a]) / b])); const T = aylikTuret(m); const ks = Object.keys(T.aylik); const son = ks[ks.length - 1];
+        D.seriler.ekgyo_kfe_ime = Object.assign({}, D.seriler.ekgyo_kfe_ime || {}, { ad: 'Konut fiyatı ÷ konut inşaat maliyeti (KFE ÷ İME ikamet, ' + ortak[0] + '=100)', birim: 'endeks', siklik: 'aylik', hisse: ['EKGYO'],
+          kaynak: 'türetilmiş: TCMB KFE ÷ TÜİK İME F41001 (Actions §486)', _not: 'Geliştiricinin reel makası: >100 → konut fiyatı maliyetten hızlı artıyor (satılan projede marj genişler). Arsa maliyeti dahil değil; EKGYO arsa sahibi (gelir paylaşımı modeli) olduğu için yüklenici maliyeti dolaylı etkiler.',
+          aylik: T.aylik, ceyreklik: T.ceyreklik, yillik: T.yillik, son: { tarih: son, deger: T.aylik[son] }, guncelleme: bugun });
+        notlar.push('ekgyo_kfe_ime ' + T.aylik[son].toFixed(1) + ' (' + son + ')'); } }
+    else uyari.push('ekgyo_kfe_ime: KFE (EVDS) ya da İME yok');
+  } catch (e) { uyari.push('ekgyo_kfe_ime: ' + String(e && e.message || e).slice(0, 80)); }
+  if (!notlar.length) { raporlar.push('### TÜİK inşaat maliyet endeksi (§486) — ✗ seri yazılamadı\n- ' + uyari.join('\n- ')); return; }
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  degisenler.push('TÜİK İME (' + notlar.length + ')');
+  raporlar.push('### TÜİK inşaat maliyet endeksi (§486) — ✓ ' + notlar.join(' · ') + (uyari.length ? '\n- ⚠ ' + uyari.join('\n- ⚠ ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -6013,7 +6088,7 @@ async function bultenKesif() {
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
-    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
+    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
     await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
@@ -6027,8 +6102,8 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
