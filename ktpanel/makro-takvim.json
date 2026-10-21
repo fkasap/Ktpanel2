@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-21 12:52 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-21 19:16 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -135,7 +135,7 @@
    "ulke": "USD",
    "olay": "Flash Services PMI",
    "etki": "Medium",
-   "beklenti": "57.8",
+   "beklenti": "57.9",
    "onceki": "58.7"
   },
   {

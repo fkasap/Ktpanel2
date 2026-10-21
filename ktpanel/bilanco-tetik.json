@@ -538,7 +538,9 @@
   "YYAPI"
  ],
  "evren_disi_sayi": 154,
- "pencere_sayi": 1,
- "dusen_son": [],
- "guncelleme": "2026-10-21 12:52 UTC — otomatik (KAP FR · kümülatif §299)"
+ "pencere_sayi": 2,
+ "dusen_son": [
+  "TAVHL"
+ ],
+ "guncelleme": "2026-10-21 19:16 UTC — otomatik (KAP FR · kümülatif §299)"
 }
