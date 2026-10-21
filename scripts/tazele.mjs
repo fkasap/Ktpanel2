@@ -4172,6 +4172,192 @@ async function tuikIme() {
   raporlar.push('### TÜİK inşaat maliyet endeksi (§486) — ✓ ' + notlar.join(' · ') + (uyari.length ? '\n- ⚠ ' + uyari.join('\n- ⚠ ') : ''));
 }
 
+/* ── §487 TÜİK GENİŞ TABLOLAR (databrowser2 JSON-stat, filtreli POST) + §488 PLASTICPORTAL PE/PP ──────────────────────
+   §487 (21 Eki, kullanıcı "TÜİK'ten başka ne çekebiliriz → başla"): §486'daki uç (POST /api/core/nodes/1/datasets/TR,<DF>,1.0/data)
+   gövdeye FİLTRE alır: [{"id":"URUN_UFE_NACE_CPA","filterValues":["C2016","C2351"]},{"id":"DEGISIM","filterValues":["1"]}] →
+   31 MB'lık Yİ-ÜFE yerine ~40 KB (Chrome'da ölçüldü). 510 dataflow kataloğu /api/core/nodes/1/catalog. Seçilenler ve Eylül 2026 y/y
+   (Chrome, canlı): Yİ-ÜFE 4 hane (EVDS'de yalnız 3 hane) C2016 plastik +45,6 · C2351 çimento +29,0 · C1073 makarna +18,4 · C2410
+   demir-çelik +27,0 · C1320 dokuma kumaş +20,0 | YD-ÜFE (ihracat fiyatı) C2016 +33,5 · C2351 +21,6 · C1073 +18,7 · C2410 +26,8 |
+   tarım ÜFE madde fiyatı buğday 15,82 TL/kg +18,8 | tarımsal girdi fiyat endeksi 20_3 gübre +28,8 | perakende satış hacmi
+   (G47_FOOD gıda, G47_NF_CLTH giyim) | inşaat üretim endeksi | hizmet üretim endeksi (kara taşımacılığı).
+   BOYUT SEÇİMİ: tanımda verilen kod; yoksa etiket/kod regex tercih listesi; 'son' = son kategori (yayım dönemi/vintage); hiçbiri
+   yoksa '_T'/Toplam, o da yoksa ilk kategori. FAAL_GRUP (hiyerarşi düzeyi) otomatik: son dönemde değer veren ilk düzey.
+   Bir tablo çözülemezse rapor boyut kodlarını ve etiketlerini yazar (uzaktan düzeltme için). TÜİK yurt dışı IP'yi keserse ✗, dosya korunur.
+   TÜRETİLMİŞ: obams_makas = Yİ-ÜFE makarna ÷ buğday TL/kg (ilk ortak ay=100) · petkm_ufe_makas = Yİ-ÜFE plastik ÷ Brent TL.
+   §488 PLASTICPORTAL (kullanıcı linki): plasticportal.eu/polymer-prices/<malzeme>/<id> sayfası HTML içinde
+   `PlasticPricesChart.init({"2006-02-01":1.05,…})` ile 2006'dan beri AYLIK Orta Avrupa ortalama reçine fiyatını (€/kg, kaynak
+   Plastech.pl) taşır (Chrome'da HDPE film 265 nokta, 2026-10 = 1,43 ölçüldü). Ekim 2026: HDPE film 1,43 · LDPE film 1,63 · LLDPE 1,48 ·
+   PP homo 1,61 €/kg. Cloudflare "Just a moment" ön kontrolü var → yol: fetch → Playwright (tek bağlam, 2 deneme) → Wayback son
+   görüntüsü (sayfa tüm geçmişi taşıdığı için eski görüntü bile geçmişi verir; son ayları eksik olabilir). Ay içinde birden çok kayıt
+   (gün 01/02/03) → ay ortalaması. Seri pe_pp ($/t, PE+PP ortalaması × EURUSD) PETKM "PE/PP bekliyor" satırını doldurur;
+   petkm_polimer_makas_usd = pe_pp − 7,5 × Brent ($/t ham petrol eşdeğeri; nafta vekili, seviye değil yön). */
+const TUIK_DB = 'https://databrowser2.tuik.gov.tr/api/core/nodes/1/datasets/TR,';
+const TUIK_TABLO = [
+  { df: 'DF_YIUFE_EDO_V1', filtre: { URUN_UFE_NACE_CPA: ['C2016', 'C2351', 'C1073', 'C2410', 'C1320', 'C2015'], DEGISIM: ['1'] }, seriler: [
+    ['ufe_plastik', { URUN_UFE_NACE_CPA: 'C2016', DEGISIM: '1' }, 'Yİ-ÜFE 20.16 birincil formda plastik (TÜİK, 2003=100)', ['PETKM'], 'Petkim\'in ürün grubunun YURT İÇİ satış fiyatı (PE/PP/PVC/PET…); TL endeks.'],
+    ['ufe_cimento', { URUN_UFE_NACE_CPA: 'C2351', DEGISIM: '1' }, 'Yİ-ÜFE 23.51 çimento (TÜİK)', ['AKCNS', 'CIMSA'], 'Yalnız çimento (EVDS 3.14.5 kireç ve alçıyı da içerir).'],
+    ['ufe_makarna', { URUN_UFE_NACE_CPA: 'C1073', DEGISIM: '1' }, 'Yİ-ÜFE 10.73 makarna, şehriye, kuskus (TÜİK)', ['OBAMS'], 'Yurt içi makarna üretici fiyatı.'],
+    ['ufe_celik_2410', { URUN_UFE_NACE_CPA: 'C2410', DEGISIM: '1' }, 'Yİ-ÜFE 24.10 ana demir-çelik ürünleri (TÜİK)', ['EREGL', 'KRDMD', 'KCAER'], '4 hane; EVDS celik_ufe 3 hane (ferro alaşımlar dahil).'],
+    ['ufe_kumas', { URUN_UFE_NACE_CPA: 'C1320', DEGISIM: '1' }, 'Yİ-ÜFE 13.20 dokuma kumaş (TÜİK)', ['MAVI'], 'Denim/kumaş girdisi.'],
+    ['ufe_gubre_2015', { URUN_UFE_NACE_CPA: 'C2015', DEGISIM: '1' }, 'Yİ-ÜFE 20.15 kimyasal gübre ve azot bileşikleri (TÜİK)', ['GUBRF', 'TKFEN'], 'Yalnız gübre (EVDS 20.1 plastik + temel kimyasalı da içerir).'],
+  ] },
+  { df: 'DF_YDUFE_EDO_V1', filtre: { URUN_UFE_NACE_CPA: ['C2016', 'C2351', 'C1073', 'C2410'], DEGISIM: ['1'] }, seriler: [
+    ['ydufe_plastik', { URUN_UFE_NACE_CPA: 'C2016', DEGISIM: '1' }, 'YD-ÜFE 20.16 plastik — ihracat fiyatı (TÜİK)', ['PETKM'], 'Yurt dışı satış fiyat endeksi (TL bazlı).'],
+    ['ydufe_cimento', { URUN_UFE_NACE_CPA: 'C2351', DEGISIM: '1' }, 'YD-ÜFE 23.51 çimento — ihracat fiyatı (TÜİK)', ['AKCNS', 'CIMSA'], 'Yurt içi − ihracat fiyat farkı iç pazarın göreli kârlılığını gösterir.'],
+    ['ydufe_makarna', { URUN_UFE_NACE_CPA: 'C1073', DEGISIM: '1' }, 'YD-ÜFE 10.73 makarna — ihracat fiyatı (TÜİK)', ['OBAMS'], 'Oba ihracat ağırlıklı.'],
+    ['ydufe_celik', { URUN_UFE_NACE_CPA: 'C2410', DEGISIM: '1' }, 'YD-ÜFE 24.10 demir-çelik — ihracat fiyatı (TÜİK)', ['KCAER', 'EREGL', 'KRDMD'], 'Kocaer satışı ağırlıkla ihracat.'],
+  ] },
+  { df: 'DF_TARIM_URUNLERI_UFE_MADDE_FIYAT_V2', filtre: { TAORBA_2008_2_678: ['01_11_1'] }, seriler: [
+    ['bugday_tl', { TAORBA_2008_2_678: '01_11_1', UNIT_MEASURE: 'TRY_KG' }, 'Buğday — çiftçi satış fiyatı (TÜİK tarım ÜFE madde fiyatı, TL/kg)', ['OBAMS'], 'Yurt içi buğday fiyatı (TMO alım fiyatı ve piyasa). 2024-01\'den.', 'TL/kg'],
+  ] },
+  { df: 'DF_TARIMSAL_GIRDI_FIYAT_ENDEKSI_DEGISIM_V2', filtre: { TARIMSAL_FIYAT_1437: ['20_3'] }, seriler: [
+    ['gubre_girdi', { TARIMSAL_FIYAT_1437: '20_3', DEGISIM: '1' }, 'Tarımsal girdi fiyat endeksi — gübre ve toprak geliştiriciler (TÜİK, 2020=100)', ['GUBRF', 'TKFEN'], 'Çiftçinin ödediği gübre fiyatı = gübre üreticisinin yurt içi satış fiyatının resmî ölçüsü.'],
+  ] },
+  { df: 'DF_TICARET_SATIS_HACIM_ENDEKS_O', filtre: { ACTIVITY: ['G47_FOOD', 'G47_NF_CLTH'] }, secim: { DEGISIM_TUR: [/^index|^endeks/i], SEASONAL_ADJUST: [/^calendar|^takvim/i, /^C$|^CA$/, /unadjusted|arındırılmamış|^N$/i], YAYIM_DONEMI: 'son' }, seriler: [
+    ['perakende_gida_hacim', { ACTIVITY: 'G47_FOOD' }, 'Perakende satış hacim endeksi — gıda, içecek, tütün (TÜİK, takvim arındırılmış)', ['BIMAS'], 'Sabit fiyatlı hacim: enflasyondan arındırılmış sepet büyümesi.'],
+    ['perakende_giyim_hacim', { ACTIVITY: 'G47_NF_CLTH' }, 'Perakende satış hacim endeksi — tekstil, giyim, ayakkabı (TÜİK, takvim arındırılmış)', ['MAVI'], 'Giyim perakendesinin reel hacmi.'],
+  ] },
+  { df: 'DF_INSAAT_URETIM_ENDEKS_V1_O', filtre: {}, secim: { SEASONAL_ADJUST: [/^calendar|^takvim/i, /^C$|^CA$/, /unadjusted|arındırılmamış|^N$/i], DEGISIM: [/^index|^endeks/i], DEGISIM_TUR: [/^index|^endeks/i], YAYIM_DONEMI: 'son' }, seriler: [
+    ['insaat_uretim_bina', { ACTIVITY_NACE_REV2: [/^F41$/, /bina|building/i] }, 'İnşaat üretim endeksi — binalar (TÜİK, takvim arındırılmış)', ['AKCNS', 'CIMSA', 'EKGYO'], 'Çimento iç talebinin hacim ölçüsü.'],
+    ['insaat_uretim_toplam', { ACTIVITY_NACE_REV2: [/^F$/, /toplam|total|inşaat$/i] }, 'İnşaat üretim endeksi — toplam (TÜİK)', ['AKCNS', 'CIMSA'], 'Bina + bina dışı.'],
+  ] },
+  { df: 'DF_HIZMET_URETIM_ENDEKS_O', filtre: {}, secim: { SEASONAL_ADJUST: [/^calendar|^takvim/i, /^C$|^CA$/, /unadjusted|arındırılmamış|^N$/i], DEGISIM: [/^index|^endeks/i], DEGISIM_TUR: [/^index|^endeks/i], YAYIM_DONEMI: 'son' }, seriler: [
+    ['kara_tasima_hacim', { '*': [/^H49$/, /kara taşıma|land transport/i] }, 'Hizmet üretim endeksi — kara taşımacılığı H49 (TÜİK)', ['GRSEL', 'TUREX'], 'Servis/turizm taşımacılığının sektör hacmi.'],
+  ] },
+];
+function tuikKatman(j) {
+  const ids = j.id, S = j.size; const st = []; let m = 1; for (let i = S.length - 1; i >= 0; i--) { st[i] = m; m *= S[i]; }
+  const kat = d => { const c = j.dimension[d].category; const ix = Array.isArray(c.index) ? c.index : Object.entries(c.index).sort((a, b) => a[1] - b[1]).map(x => x[0]); return ix.map((k, i) => ({ k, i, l: String((c.label || {})[k] || '') })); };
+  return { ids, S, st, kat, deger: p => j.value[String(p.reduce((s, x, i) => s + x * st[i], 0))] };
+}
+function tuikSec(j, sabitSecim, ortak) {
+  const K = tuikKatman(j); const { ids, S } = K; const tIx = ids.indexOf('TIME_PERIOD'), fIx = ids.indexOf('FAAL_GRUP');
+  const zaman = K.kat('TIME_PERIOD').map(x => x.k);
+  const tercih = (d, spec) => { const L = K.kat(d); if (spec === 'son') return L[L.length - 1].i; const sp = Array.isArray(spec) ? spec : [spec];
+    for (const s of sp) { const x = L.find(c => s instanceof RegExp ? (s.test(c.k) || s.test(c.l)) : c.k === s); if (x) return x.i; } return null; };
+  const p = ids.map(() => 0); const eksik = [];
+  /* joker '*': hangi boyutta eşleşirse */
+  const joker = sabitSecim['*'];
+  ids.forEach((d, i) => {
+    if (d === 'TIME_PERIOD' || d === 'FAAL_GRUP') return;
+    let v = null;
+    if (sabitSecim[d] != null) { v = tercih(d, sabitSecim[d]); if (v == null) eksik.push(d + '=' + String(sabitSecim[d])); }
+    else if (joker && K.kat(d).some(c => joker.some(r => r.test(c.k) || r.test(c.l)))) v = tercih(d, joker);
+    else if (ortak && ortak[d] != null) v = tercih(d, ortak[d]);
+    if (v == null) { const L = K.kat(d); const t = L.find(c => c.k === '_T' || /^toplam$|^total$/i.test(c.l)); v = t ? t.i : 0; }
+    p[i] = v;
+  });
+  if (eksik.length) return { hata: 'kod yok: ' + eksik.join(', ') };
+  if (fIx >= 0) { for (let f = 0; f < S[fIx]; f++) { const q = p.slice(); q[fIx] = f; let n = 0; for (let t = Math.max(0, zaman.length - 6); t < zaman.length; t++) { q[tIx] = t; if (K.deger(q) != null) n++; } if (n) { p[fIx] = f; break; } } }
+  const out = new Map();
+  zaman.forEach((t, k) => { const q = p.slice(); q[tIx] = k; const v = parseFloat(K.deger(q)); if (isFinite(v) && v > 0) out.set(String(t).slice(0, 7), v); });
+  return { m: out, secilen: ids.filter(d => d !== 'TIME_PERIOD').map((d, i) => d + ':' + (K.kat(d)[p[ids.indexOf(d)]] || {}).k).join(' ') };
+}
+const tuikBoyutOzet = j => { const K = tuikKatman(j); return K.ids.filter(d => d !== 'TIME_PERIOD').map(d => d + '[' + K.kat(d).slice(0, 8).map(c => c.k + (c.l ? '=' + c.l.slice(0, 18) : '')).join(',') + ']').join(' '); };
+async function tuikGenis() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### TÜİK geniş tablolar (§487) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const notlar = [], uyari = []; let erisim = 0;
+  for (const T of TUIK_TABLO) {
+    const govde = Object.entries(T.filtre || {}).map(([id, v]) => ({ id, filterValues: v }));
+    let j;
+    try {
+      const r = await fetch(TUIK_DB + T.df + ',1.0/data', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Origin': 'https://databrowser2.tuik.gov.tr', 'Referer': 'https://databrowser2.tuik.gov.tr/' }, body: JSON.stringify(govde), signal: AbortSignal.timeout(60000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      j = await r.json(); if (!j || !Array.isArray(j.id)) throw new Error('JSON-stat değil'); erisim++;
+    } catch (e) { uyari.push(T.df + ': ' + String(e && e.message || e).slice(0, 80)); continue; }
+    for (const [k, sec, ad, hisse, not, birim] of T.seriler) {
+      try {
+        const R = tuikSec(j, sec, T.secim);
+        if (R.hata || !R.m || R.m.size < 12) { uyari.push(k + ': ' + (R.hata || ((R.m ? R.m.size : 0) + ' ay')) + ' · boyutlar ' + tuikBoyutOzet(j).slice(0, 300)); continue; }
+        const A = aylikTuret(R.m); const ks = Object.keys(A.aylik); const son = ks[ks.length - 1];
+        const onceki = D.seriler[k]; if (onceki && onceki.son && onceki.son.tarih > son) { uyari.push(k + ': tarih geriledi, korundu'); continue; }
+        D.seriler[k] = Object.assign({}, onceki || {}, { ad, birim: birim || 'endeks', siklik: 'aylik', hisse, kaynak: 'TÜİK databrowser2 SDMX TR,' + T.df + ' (' + R.secilen + ') — Actions §487', _not: not, aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: A.aylik[son] }, guncelleme: bugun });
+        const gy = A.aylik[(+son.slice(0, 4) - 1) + son.slice(4)];
+        notlar.push(k + ' ' + (+A.aylik[son]).toFixed(2) + ' (' + son + (gy ? ', y/y ' + ((A.aylik[son] / gy - 1) * 100).toFixed(1) + '%' : '') + ')');
+      } catch (e) { uyari.push(k + ': ' + String(e && e.message || e).slice(0, 80)); }
+    }
+  }
+  /* türetilmiş makaslar */
+  const oran = (k, aK, bK, ad, hisse, not, bDon) => { const A = D.seriler[aK] && D.seriler[aK].aylik, B0 = D.seriler[bK] && D.seriler[bK].aylik; const B = bDon ? bDon(B0) : B0; if (!A || !B) return;
+    const ortak = Object.keys(A).filter(a => B[a] != null && B[a] > 0).sort(); if (ortak.length < 6) return;
+    const b = A[ortak[0]] / B[ortak[0]]; const A2 = aylikTuret(new Map(ortak.map(a => [a, 100 * (A[a] / B[a]) / b]))); const ks = Object.keys(A2.aylik); const son = ks[ks.length - 1];
+    D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: ad + ' (' + ortak[0] + '=100)', birim: 'endeks', siklik: 'aylik', hisse, kaynak: 'türetilmiş (Actions §487)', _not: not, aylik: A2.aylik, ceyreklik: A2.ceyreklik, yillik: A2.yillik, son: { tarih: son, deger: A2.aylik[son] }, guncelleme: bugun });
+    notlar.push(k + ' ' + A2.aylik[son].toFixed(1) + ' (' + son + ')'); };
+  try { oran('obams_makas', 'ufe_makarna', 'bugday_tl', 'Makarna fiyatı ÷ buğday fiyatı — Yİ-ÜFE 10.73 ÷ buğday TL/kg', ['OBAMS'], 'Makarnacının yurt içi brüt makası: >100 ve yükseliyorsa satış fiyatı girdiden hızlı artıyor. İhracat makası için YD-ÜFE makarna ÷ CBOT buğday da okunur.'); } catch (e) { uyari.push('obams_makas: ' + e.message); }
+  try { oran('petkm_ufe_makas', 'ufe_plastik', 'brent_wb', 'Plastik yurt içi fiyatı ÷ Brent (TL) — Yİ-ÜFE 20.16 ÷ (Brent $ × USDTRY)', ['PETKM'], 'Nafta→polimer makasının TL vekili; yurt içi fiyat gücü. USDTRY ay sonu kuruyla.', B => { const fx = D.usdtry_ay_sonu || {}; const u = D.seriler.usdtry && D.seriler.usdtry.gunluk; const ay = {}; if (u) for (const [t, v] of u) { const a = t.slice(0, 7); (ay[a] = ay[a] || []).push(v); } const o = {}; for (const a of Object.keys(B || {})) { const k = ay[a] ? ay[a].reduce((s, x) => s + x, 0) / ay[a].length : (fx[a] || null); if (k) o[a] = B[a] * k; } return o; }); } catch (e) { uyari.push('petkm_ufe_makas: ' + e.message); }
+  if (!erisim) { raporlar.push('### TÜİK geniş tablolar (§487) — ✗ hiçbir tablo gelmedi · dosya korundu\n- ' + uyari.slice(0, 6).join('\n- ')); return; }
+  D.seriler_guncelleme = bugun; await yaz(dosya, D);
+  degisenler.push('TÜİK tablolar (' + notlar.length + ')');
+  raporlar.push('### TÜİK geniş tablolar (§487) — ✓ ' + erisim + '/' + TUIK_TABLO.length + ' tablo · ' + notlar.join(' · ') + (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 8).join('\n- ⚠ ') : ''));
+}
+/* ── §488 PLASTICPORTAL ── */
+const PP_MALZEME = [['hdpe-injection-moulding/1', 'HDPE enjeksiyon'], ['hdpe-blow-moulding/2', 'HDPE şişirme'], ['hdpe-film/3', 'HDPE film'], ['ldpe-injection-moulding/4', 'LDPE enjeksiyon'], ['ldpe-film/5', 'LDPE film'], ['lldpe-standard/6', 'LLDPE standart'], ['pp-homo/7', 'PP homo'], ['pp-block/8', 'PP blok'], ['pp-random/9', 'PP random']];
+const PP_KISA = { 'hdpe-film/3': 'pp_hdpe_film_eur', 'ldpe-film/5': 'pp_ldpe_film_eur', 'lldpe-standard/6': 'pp_lldpe_eur', 'pp-homo/7': 'pp_pp_homo_eur', 'hdpe-blow-moulding/2': 'pp_hdpe_sisirme_eur', 'pp-block/8': 'pp_pp_blok_eur' };
+function ppCoz(h) {
+  h = String(h || ''); const i = h.indexOf('PlasticPricesChart.init('); if (i < 0) return null;
+  const b = h.indexOf('{', i); if (b < 0) return null; let d = 0, e = -1;   /* init({…}, "etiket") — süslü parantez eşleme */
+  for (let k = b; k < h.length && k < b + 200000; k++) { const c = h[k]; if (c === '{') d++; else if (c === '}') { d--; if (!d) { e = k; break; } } }
+  if (e < 0) return null;
+  let o; try { o = JSON.parse(h.slice(b, e + 1)); } catch (err) { return null; }
+  const ay = {}; for (const [t, v] of Object.entries(o)) { const a = String(t).slice(0, 7); if (!/^\d{4}-\d{2}$/.test(a) || !(v > 0.2 && v < 10)) continue; (ay[a] = ay[a] || []).push(+v); }
+  const m = new Map(Object.keys(ay).sort().map(a => [a, +(ay[a].reduce((s, x) => s + x, 0) / ay[a].length).toFixed(4)]));
+  return m.size ? m : null;
+}
+async function plasticPortal() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### PlasticPortal PE/PP (§488) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
+  const duvar = h => !h || /Just a moment|Attention Required|cf-chl|challenge-platform/i.test(String(h).slice(0, 6000));
+  let pwB = null, pwC = null, pwYok = false;
+  const pw = async url => { if (pwYok) return null; try { if (!pwC) { const { chromium } = await import('playwright'); pwB = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] }); pwC = await pwB.newContext({ userAgent: UA, locale: 'en-GB', viewport: { width: 1366, height: 850 } }); } } catch (e) { pwYok = true; return null; }
+    const pg = await pwC.newPage(); try { for (let d = 0; d < 2; d++) { await pg.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 }); await pg.waitForFunction(() => !/just a moment/i.test(document.title) && document.documentElement.outerHTML.includes('PlasticPricesChart.init('), null, { timeout: 25000 }).catch(() => {}); const h = await pg.content(); if (!duvar(h) && h.includes('PlasticPricesChart.init(')) return h; await pg.waitForTimeout(3000); } return null; } catch (e) { return null; } finally { await pg.close().catch(() => {}); } };
+  const wb = async url => { try { const c = await (await fetch('https://web.archive.org/cdx/search/cdx?url=' + encodeURIComponent(url.replace(/^https?:\/\//, '')) + '&output=json&fl=timestamp&filter=statuscode:200', { signal: AbortSignal.timeout(30000) })).json(); const ts = (c || []).slice(1).map(x => x[0]).sort().pop(); if (!ts) return null; const r = await fetch('https://web.archive.org/web/' + ts + 'id_/' + url, { signal: AbortSignal.timeout(40000) }); return r.ok ? { h: await r.text(), ts } : null; } catch (e) { return null; } };
+  const sonuc = {}, yollar = {}, uyari = [];
+  for (const [yol, ad] of PP_MALZEME) {
+    const url = 'https://www.plasticportal.eu/polymer-prices/' + yol; let m = null, ne = '';
+    try { const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(30000) }); const h = await r.text(); if (!duvar(h)) { m = ppCoz(h); if (m) ne = 'fetch'; } } catch (e) {}
+    if (!m) { const h = await pw(url); if (h) { m = ppCoz(h); if (m) ne = 'playwright'; } }
+    if (!m) { const w = await wb(url); if (w) { m = ppCoz(w.h); if (m) ne = 'wayback ' + w.ts.slice(0, 8); } }
+    if (!m) { uyari.push(ad + ': erişilemedi (Cloudflare + arşiv yok)'); continue; }
+    sonuc[yol] = m; yollar[ne.split(' ')[0]] = (yollar[ne.split(' ')[0]] || 0) + 1;
+    /* geçmiş + yeni birleştir (wayback eski görüntüden gelirse dosyadaki yeni ayları kaybetme) */
+    const k = PP_KISA[yol]; if (!k) continue;
+    const eski = (D.seriler[k] && D.seriler[k].aylik) || {}; const bir = new Map(Object.entries(eski)); for (const [a, v] of m) bir.set(a, v);
+    const A = aylikTuret(new Map([...bir.entries()].sort())); const ks = Object.keys(A.aylik); const son = ks[ks.length - 1];
+    D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: ad + ' — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)', birim: '€/kg', siklik: 'aylik', hisse: ['PETKM'], kaynak: 'plasticportal.eu (Plastech.pl) — ' + ne + ' (Actions §488)', aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: A.aylik[son] }, guncelleme: bugun });
+  }
+  /* bileşik pe_pp ($/t): HDPE film + LDPE film + LLDPE + PP homo ortalaması × EURUSD */
+  let eu = new Map(); try { const h = await yahooSeri(['EURUSD=X'], '', 'max'); eu = h['EURUSD=X'] || new Map(); } catch (e) {}
+  const euAy = {}; for (const [t, v] of eu) if (v > 0.8 && v < 1.8) (euAy[t.slice(0, 7)] = euAy[t.slice(0, 7)] || []).push(v);
+  if (D.seriler.eurusd && D.seriler.eurusd.gunluk) { const g = {}; for (const [t, v] of D.seriler.eurusd.gunluk) (g[t.slice(0, 7)] = g[t.slice(0, 7)] || []).push(v); Object.assign(euAy, g); }
+  const kur = a => { const v = euAy[a] || euAy[Object.keys(euAy).filter(x => x <= a).sort().pop()]; return v ? v.reduce((s, x) => s + x, 0) / v.length : null; };
+  const bil = ['pp_hdpe_film_eur', 'pp_ldpe_film_eur', 'pp_lldpe_eur', 'pp_pp_homo_eur'].map(k => D.seriler[k] && D.seriler[k].aylik).filter(Boolean);
+  const notlar = [];
+  if (bil.length >= 2) {
+    const aylar = Object.keys(bil[0]).filter(a => bil.every(b => b[a] != null)).sort(); const m = new Map();
+    for (const a of aylar) { const k = kur(a); if (k) m.set(a, bil.reduce((s, b) => s + b[a], 0) / bil.length * k * 1000); }
+    if (m.size) { const A = aylikTuret(m); const ks = Object.keys(A.aylik); const son = ks[ks.length - 1];
+      D.seriler.pe_pp = Object.assign({}, D.seriler.pe_pp || {}, { ad: 'PE/PP Avrupa reçine fiyatı — HDPE film, LDPE film, LLDPE, PP homo ortalaması ($/t)', birim: '$/t', siklik: 'aylik', hisse: ['PETKM'], kaynak: 'plasticportal.eu (Plastech.pl, Orta Avrupa) × EURUSD (Yahoo) — Actions §488', _not: 'Petkim\'in ana ürünleri (AYPE/YYPE/AYPE-T/PP) için Avrupa referans fiyatı; Türkiye ithalat fiyatı Avrupa ve Orta Doğu arasında oluşur. Nafta maliyeti için Brent ile okunur.', aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: A.aylik[son] }, guncelleme: bugun });
+      notlar.push('pe_pp ' + A.aylik[son].toFixed(0) + ' $/t (' + son + ', ' + ks.length + ' ay)');
+      /* polimer − 7,5 × Brent */
+      const br = Object.assign({}, (D.seriler.brent_wb && D.seriler.brent_wb.aylik) || {}); if (D.seriler.brent_yh && D.seriler.brent_yh.gunluk) { const g = {}; for (const [t, v] of D.seriler.brent_yh.gunluk) (g[t.slice(0, 7)] = g[t.slice(0, 7)] || []).push(v); for (const a in g) if (br[a] == null) br[a] = g[a].reduce((s, x) => s + x, 0) / g[a].length; }
+      const mk = new Map(); for (const [a, v] of Object.entries(A.aylik)) if (br[a]) mk.set(a, v - 7.5 * br[a]);
+      if (mk.size) { const B = aylikTuret(mk); const kb = Object.keys(B.aylik); const sb = kb[kb.length - 1];
+        D.seriler.petkm_polimer_makas_usd = Object.assign({}, D.seriler.petkm_polimer_makas_usd || {}, { ad: 'Polimer − ham petrol makası — PE/PP Avrupa − 7,5 × Brent ($/t)', birim: '$/t', siklik: 'aylik', hisse: ['PETKM'], kaynak: 'türetilmiş: pe_pp − 7,5 × Brent (WB aylık + Yahoo) — Actions §488', _not: '7,5 varil ≈ 1 ton ham petrol; nafta Brent\'e yakın fiyatlanır (nafta crack ±). Petkim\'in brüt makasının YÖN göstergesi; etilen/propilen verimi ve enerji maliyeti dahil değil.', aylik: B.aylik, ceyreklik: B.ceyreklik, yillik: B.yillik, son: { tarih: sb, deger: B.aylik[sb] }, guncelleme: bugun });
+        notlar.push('polimer makası ' + B.aylik[sb].toFixed(0) + ' $/t (' + sb + ')'); }
+    }
+  }
+  if (pwB) await pwB.close().catch(() => {});
+  if (!Object.keys(sonuc).length) { raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı (Cloudflare; Playwright ' + (pwYok ? 'yok' : 'geçemedi') + '; arşiv yok) · dosya korundu\n- ' + uyari.slice(0, 4).join('\n- ')); return; }
+  D.seriler_guncelleme = bugun; await yaz(dosya, D);
+  degisenler.push('PlasticPortal PE/PP (' + Object.keys(sonuc).length + ' malzeme)');
+  const g = k => D.seriler[k] && D.seriler[k].son ? D.seriler[k].son.deger.toFixed(2) : '—';
+  raporlar.push('### PlasticPortal PE/PP (§488) — ✓ ' + Object.keys(sonuc).length + '/' + PP_MALZEME.length + ' malzeme · yol ' + JSON.stringify(yollar) + ' · HDPE film ' + g('pp_hdpe_film_eur') + ' · LDPE film ' + g('pp_ldpe_film_eur') + ' · LLDPE ' + g('pp_lldpe_eur') + ' · PP homo ' + g('pp_pp_homo_eur') + ' €/kg' + (notlar.length ? '\n- ' + notlar.join(' · ') : '') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -6088,7 +6274,7 @@ async function bultenKesif() {
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
-    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
+    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
     await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
@@ -6102,8 +6288,9 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
