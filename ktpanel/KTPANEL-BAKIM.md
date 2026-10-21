@@ -6,6 +6,30 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §488d/§489 (21 Eki 2026, 16:00) — PE/PP: TOHUM + DCE VADELİLERİ (Sina)
+
+Koşu #39597924825 tanısı: fetch 403 Cloudflare · Playwright geçemedi · Wayback görüntüleri "init yok" (arşiv Tem'de Cloudflare sayfasını
+kaydetmiş) · HTTP 429 · Save Page Now 520 → PlasticPortal'a OTOMATİK yol yok (GitHub IP'si). ÇÖZÜM iki ayaklı:
+§488d TOHUM: 4 malzeme Chrome'da (gerçek tarayıcı) okundu, aylık ort. ×100 olarak tazele.mjs PP_TOHUM'a gömüldü (242 ay, 2006-02→2026-10;
+sitede veri olmayan 7 ay eksik listesinde). Eki 2026 ✓ HDPE film 1,43 · LDPE film 1,63 · LLDPE 1,48 · PP homo 1,61. Kod önce otomatik yolları
+dener, gelen aylar tohumu ezer; gelmezse tohumdan yazar → pe_pp ve petkm_polimer_makas_usd ARTIK OLUŞUR. RİTÜEL: ayın ~16'sı yeni ay Chrome'dan
+v dizisine (PP_TOHUM). Save Page Now koşu başına 1 (520'de 45 sn). D.plastik.surum '488d' (bugünkü hata damgası yok sayılır).
+§489 DCE (otomatik Asya ayağı): Sina Finance IndexService.getInnerFuturesDailyKLine?symbol=L0/PP0/V0 (Dalian LLDPE/PP/PVC sürekli,
+günlük, CNY/t, 2014→; WebFetch ile doğrulandı) → ay ort. + $ (÷ CNY=X) → dce_lldpe/pp/pvc_{cny,usd} + petkm_asya_makas_usd =
+(LLDPE+PP)/2 ÷ 1,13 (KDV) − 7,5×Brent. PETKM'e 4 satır. ⚠ Sina'ya GitHub'dan erişim ilk koşuda belli olacak.
+DEPLOY: scripts/tazele.mjs · karar-model.json (2026-10-21g) · BAKIM.
+
+# BAKIM EK — §488c (21 Eki 2026, 15:20) — PLASTICPORTAL WAYBACK URL HATASI + SAVE PAGE NOW
+
+Kullanıcı: "polimer ve PE/PP panele gelmiyor". Koşu d5e8701 (11:35Z) tanısı: fetch HTTP 403 Cloudflare · Playwright geçemedi · wayback
+"görüntü yok" ×4 → başarısızlık damgalandı, sonraki koşular "⏭ bugün zaten denendi" (seri hiç oluşmadı → panelde "kaynak bekliyor").
+KÖK NEDEN (bizim hata): CDX sorgusunda URL encodeURIComponent ile kodlanıyordu ('/' → %2F); Chrome'da aynı sorgu ham yolla 2 görüntü
+(2026-07-13, 2026-07-14) döndürüyordu. DÜZELTME: ham yol + www'siz varyant, limit=-5 (son görüntüler), hata nedeni tanıya. Okunamayan ya da
+arşivden okunan sayfa için Wayback Save Page Now (web.archive.org/save/<url>) tetiklenir → archive.org kendi ağından çeker, ertesi koşuda
+taze görüntü (Cloudflare GitHub IP'sini engelliyor; arşivin tarayıcısı Tem'de geçmişti). D.plastik.surum='488c': eski "hata" damgası
+yeni sürümde yok sayılır → bugün tekrar dener. UYARI: arşiv görüntüsü Tem 2026 → pe_pp son ay ~2026-06/07 olur; SPN tutarsa güncellenir.
+DEPLOY: scripts/tazele.mjs · BAKIM.
+
 # BAKIM EK — §488b (21 Eki 2026, 14:40) — İLK CANLI KOŞU (#39589534826): TÜİK ✓, PLASTICPORTAL TAVAN
 
 Koşu yeşil (11 dk 27 sn; bütçe 646/660 sn). TÜİK yurt dışından ERİŞİLEBİLİR: §486 İME ✓ (Ağu: konut +%28,8; KFE÷İME 151,3, 2021-01=100) ·

@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21f",
+ "surum": "2026-10-21g",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -4160,6 +4160,30 @@
      "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)"
     },
     {
+     "k": "petkm_asya_makas_usd",
+     "rol": "marj",
+     "ad": "Asya polimer − ham petrol makası — DCE (LLDPE+PP)/2 − 7,5×Brent ($/t)",
+     "kaynak": "Sina Finance DCE (Actions §489)"
+    },
+    {
+     "k": "dce_lldpe_usd",
+     "rol": "gelir",
+     "ad": "DCE LLDPE vadeli — Asya PE fiyatı ($/t)",
+     "kaynak": "Sina Finance DCE (Actions §489)"
+    },
+    {
+     "k": "dce_pp_usd",
+     "rol": "gelir",
+     "ad": "DCE PP vadeli — Asya PP fiyatı ($/t)",
+     "kaynak": "Sina Finance DCE (Actions §489)"
+    },
+    {
+     "k": "dce_pvc_usd",
+     "rol": "gelir",
+     "ad": "DCE PVC vadeli — Asya PVC fiyatı ($/t)",
+     "kaynak": "Sina Finance DCE (Actions §489)"
+    },
+    {
      "k": "ufe_plastik",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
@@ -5288,5 +5312,6 @@
  "_484": "Grup 1 sürücüleri (21 Eki): EREGL + Kardemir yurt içi hurda (LME satırı korunur, bekliyor) · AKCNS/CIMSA + PTF $ (elektrik maliyeti) · ENJSA + PTF TL (perakende alış) · BIMAS + PTF TL · TKFEN + taahhüt backlog (faaliyet raporu, elle tablo tazele.mjs ELLE_CEYREK §484 — Tekfen KAP'a yeni iş bildirimi yapmadığı için KAP akışı kurulmadı).",
  "_485": "Grup 2 sürücüleri (21 Eki): MAVI + pamuk (Yahoo CT=F) + reel asgari ücret · GRSEL asgari ücret \"bekliyor\" KAPANDI + reel · TUREX/BIMAS + asgari ücret · PETKM + sanayi üretimi C20.16 plastik (hacim) + Yİ-ÜFE 20.1 (fiyat; 20.16 ayrı yok) · EKGYO + TÜİK konut satışı ilk el/ipotekli/toplam (EVDS AKONUTSAT) · ALBRK + TL katılma hesabı kâr payı oranı (EVDS KBH, haftalık). İnşaat maliyet endeksi EVDS'de yok → alınmadı.",
  "_486": "TÜİK İnşaat Maliyet Endeksi (kullanıcı linki 21 Eki): veri portalı bülten API → SDMX dataflow TR,DF_UFE_INSAAT_V1 → databrowser2 POST /data gövde [] (JSON-stat). EKGYO + KFE÷İME konut makası, İME konut toplam/malzeme/işçilik.",
- "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili."
+ "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili.",
+ "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası."
 }
