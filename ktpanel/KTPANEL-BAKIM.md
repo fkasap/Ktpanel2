@@ -6,6 +6,19 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §488b (21 Eki 2026, 14:40) — İLK CANLI KOŞU (#39589534826): TÜİK ✓, PLASTICPORTAL TAVAN
+
+Koşu yeşil (11 dk 27 sn; bütçe 646/660 sn). TÜİK yurt dışından ERİŞİLEBİLİR: §486 İME ✓ (Ağu: konut +%28,8; KFE÷İME 151,3, 2021-01=100) ·
+§487 7/7 tablo ✓ — perakende gıda hacmi 172,3 (Tem, y/y +3,2) · giyim 154,6 (+7,7) · bina inşaat üretimi 141,7 (Ağu, −0,9) · kara taşıma
+131,9 (Tem, +5,6) · obams_makas 91,7 (makarna 2024-01'den beri buğdayın %8 gerisinde) · petkm_ufe_makas 70,0 (plastik TL fiyatı Brent TL'nin
+gerisinde). Etiketle seçilen boyutlar (perakende/inşaat/hizmet) doğru çözüldü. EVDS §485: konut ilk el 51.519 (Eyl, +3,9), katılım kâr payı
+%42,96 ✓. GES: PVinsights canlı ✓.
+PLASTICPORTAL ✗ "KATMAN TAVANI 4 dk aşıldı": 9 sayfa × (fetch → Playwright 2 deneme → Wayback) — dosya yazılmadı. DÜZELTME §488b:
+4 malzeme (bileşik için gereken), iç süre bütçesi 150 sn, fetch 2 sayfada olmazsa bırakılır, Playwright tek deneme (geçemezse diğer
+sayfalarda denenmez), Wayback zaman aşımı 20+25 sn, GÜNDE 1 DENEME (D.plastik.son_deneme; başarısızlık da damgalanır — veri aylık),
+rapora yol tanısı ("fetch HTTP 403 Cloudflare · playwright geçemedi · wayback …").
+DEPLOY: scripts/tazele.mjs · BAKIM.
+
 # BAKIM EK — §487/§488 (21 Eki 2026, 13:40) — TÜİK GENİŞ TABLOLAR + PLASTICPORTAL PE/PP
 
 §487 TÜİK (databrowser2, §486 ucu + FİLTRE): gövde [{"id":boyut,"filterValues":[kodlar]}] → Yİ-ÜFE 31 MB yerine ~40 KB. Katalog 510
