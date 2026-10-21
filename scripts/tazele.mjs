@@ -4293,7 +4293,8 @@ async function tuikGenis() {
   raporlar.push('### TÜİK geniş tablolar (§487) — ✓ ' + erisim + '/' + TUIK_TABLO.length + ' tablo · ' + notlar.join(' · ') + (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 8).join('\n- ⚠ ') : ''));
 }
 /* ── §488 PLASTICPORTAL ── */
-const PP_MALZEME = [['hdpe-injection-moulding/1', 'HDPE enjeksiyon'], ['hdpe-blow-moulding/2', 'HDPE şişirme'], ['hdpe-film/3', 'HDPE film'], ['ldpe-injection-moulding/4', 'LDPE enjeksiyon'], ['ldpe-film/5', 'LDPE film'], ['lldpe-standard/6', 'LLDPE standart'], ['pp-homo/7', 'PP homo'], ['pp-block/8', 'PP blok'], ['pp-random/9', 'PP random']];
+const PP_MALZEME = [['hdpe-film/3', 'HDPE film'], ['ldpe-film/5', 'LDPE film'], ['lldpe-standard/6', 'LLDPE standart'], ['pp-homo/7', 'PP homo']];   /* §488b: 9 → 4 (bileşik pe_pp için gereken; ilk canlı koşuda 9 sayfa × 3 yol 4 dk tavanını aştı) */
+const PP_SURE_MS = 150 * 1000;
 const PP_KISA = { 'hdpe-film/3': 'pp_hdpe_film_eur', 'ldpe-film/5': 'pp_ldpe_film_eur', 'lldpe-standard/6': 'pp_lldpe_eur', 'pp-homo/7': 'pp_pp_homo_eur', 'hdpe-blow-moulding/2': 'pp_hdpe_sisirme_eur', 'pp-block/8': 'pp_pp_blok_eur' };
 function ppCoz(h) {
   h = String(h || ''); const i = h.indexOf('PlasticPricesChart.init('); if (i < 0) return null;
@@ -4313,14 +4314,19 @@ async function plasticPortal() {
   const duvar = h => !h || /Just a moment|Attention Required|cf-chl|challenge-platform/i.test(String(h).slice(0, 6000));
   let pwB = null, pwC = null, pwYok = false;
   const pw = async url => { if (pwYok) return null; try { if (!pwC) { const { chromium } = await import('playwright'); pwB = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] }); pwC = await pwB.newContext({ userAgent: UA, locale: 'en-GB', viewport: { width: 1366, height: 850 } }); } } catch (e) { pwYok = true; return null; }
-    const pg = await pwC.newPage(); try { for (let d = 0; d < 2; d++) { await pg.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 }); await pg.waitForFunction(() => !/just a moment/i.test(document.title) && document.documentElement.outerHTML.includes('PlasticPricesChart.init('), null, { timeout: 25000 }).catch(() => {}); const h = await pg.content(); if (!duvar(h) && h.includes('PlasticPricesChart.init(')) return h; await pg.waitForTimeout(3000); } return null; } catch (e) { return null; } finally { await pg.close().catch(() => {}); } };
-  const wb = async url => { try { const c = await (await fetch('https://web.archive.org/cdx/search/cdx?url=' + encodeURIComponent(url.replace(/^https?:\/\//, '')) + '&output=json&fl=timestamp&filter=statuscode:200', { signal: AbortSignal.timeout(30000) })).json(); const ts = (c || []).slice(1).map(x => x[0]).sort().pop(); if (!ts) return null; const r = await fetch('https://web.archive.org/web/' + ts + 'id_/' + url, { signal: AbortSignal.timeout(40000) }); return r.ok ? { h: await r.text(), ts } : null; } catch (e) { return null; } };
+    const pg = await pwC.newPage(); try { for (let d = 0; d < 1; d++) { await pg.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); await pg.waitForFunction(() => !/just a moment/i.test(document.title) && document.documentElement.outerHTML.includes('PlasticPricesChart.init('), null, { timeout: 20000 }).catch(() => {}); const h = await pg.content(); if (!duvar(h) && h.includes('PlasticPricesChart.init(')) return h; await pg.waitForTimeout(3000); } return null; } catch (e) { return null; } finally { await pg.close().catch(() => {}); } };
+  const wb = async url => { try { const c = await (await fetch('https://web.archive.org/cdx/search/cdx?url=' + encodeURIComponent(url.replace(/^https?:\/\//, '')) + '&output=json&fl=timestamp&filter=statuscode:200', { signal: AbortSignal.timeout(20000) })).json(); const ts = (c || []).slice(1).map(x => x[0]).sort().pop(); if (!ts) return null; const r = await fetch('https://web.archive.org/web/' + ts + 'id_/' + url, { signal: AbortSignal.timeout(25000) }); return r.ok ? { h: await r.text(), ts } : null; } catch (e) { return null; } };
+  D.plastik = D.plastik || {};
+  const sonAy = D.seriler.pe_pp && D.seriler.pe_pp.son && D.seriler.pe_pp.son.tarih;
+  if (D.plastik.son_deneme === bugun) { raporlar.push('### PlasticPortal PE/PP (§488) — ⏭ bugün zaten denendi (günde 1; veri aylık) · son ay ' + (sonAy || '—') + ' · yol ' + JSON.stringify(D.plastik.yollar || {})); return; }
+  const t0 = Date.now(); let fetchOlmadi = 0, pwOlmadi = 0; const tani = [];
   const sonuc = {}, yollar = {}, uyari = [];
   for (const [yol, ad] of PP_MALZEME) {
+    if (Date.now() - t0 > PP_SURE_MS) { uyari.push(ad + ': süre bütçesi (150 sn) doldu → sonraki koşu'); continue; }
     const url = 'https://www.plasticportal.eu/polymer-prices/' + yol; let m = null, ne = '';
-    try { const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(30000) }); const h = await r.text(); if (!duvar(h)) { m = ppCoz(h); if (m) ne = 'fetch'; } } catch (e) {}
-    if (!m) { const h = await pw(url); if (h) { m = ppCoz(h); if (m) ne = 'playwright'; } }
-    if (!m) { const w = await wb(url); if (w) { m = ppCoz(w.h); if (m) ne = 'wayback ' + w.ts.slice(0, 8); } }
+    if (fetchOlmadi < 2) { try { const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(20000) }); const h = await r.text(); if (!duvar(h)) { m = ppCoz(h); if (m) ne = 'fetch'; } if (!m) { fetchOlmadi++; tani.push(ad + ' fetch HTTP ' + r.status + (duvar(h) ? ' Cloudflare' : ' init yok')); } } catch (e) { fetchOlmadi++; tani.push(ad + ' fetch ' + String(e.message || e).slice(0, 40)); } }
+    if (!m && pwOlmadi < 1 && Date.now() - t0 < PP_SURE_MS) { const h = await pw(url); if (h) { m = ppCoz(h); if (m) ne = 'playwright'; } if (!m) { pwOlmadi++; tani.push(ad + ' playwright ' + (pwYok ? 'kurulu değil' : 'geçemedi')); } }   /* bir kez geçemezse diğer sayfalarda denenmez (süre) */
+    if (!m && Date.now() - t0 < PP_SURE_MS) { const w = await wb(url); if (w) { m = ppCoz(w.h); if (m) ne = 'wayback ' + w.ts.slice(0, 8); } if (!m) tani.push(ad + ' wayback ' + (w ? 'init yok' : 'görüntü yok')); }
     if (!m) { uyari.push(ad + ': erişilemedi (Cloudflare + arşiv yok)'); continue; }
     sonuc[yol] = m; yollar[ne.split(' ')[0]] = (yollar[ne.split(' ')[0]] || 0) + 1;
     /* geçmiş + yeni birleştir (wayback eski görüntüden gelirse dosyadaki yeni ayları kaybetme) */
@@ -4351,11 +4357,12 @@ async function plasticPortal() {
     }
   }
   if (pwB) await pwB.close().catch(() => {});
-  if (!Object.keys(sonuc).length) { raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı (Cloudflare; Playwright ' + (pwYok ? 'yok' : 'geçemedi') + '; arşiv yok) · dosya korundu\n- ' + uyari.slice(0, 4).join('\n- ')); return; }
+  if (!Object.keys(sonuc).length) { D.plastik.son_deneme = bugun; D.plastik.yollar = { hata: 1 }; await yaz(dosya, D); raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez\n- tanı: ' + tani.join(' · ') + (uyari.length ? '\n- ' + uyari.slice(0, 4).join('\n- ') : '')); return; }
+  D.plastik.son_deneme = bugun; D.plastik.yollar = yollar;
   D.seriler_guncelleme = bugun; await yaz(dosya, D);
   degisenler.push('PlasticPortal PE/PP (' + Object.keys(sonuc).length + ' malzeme)');
   const g = k => D.seriler[k] && D.seriler[k].son ? D.seriler[k].son.deger.toFixed(2) : '—';
-  raporlar.push('### PlasticPortal PE/PP (§488) — ✓ ' + Object.keys(sonuc).length + '/' + PP_MALZEME.length + ' malzeme · yol ' + JSON.stringify(yollar) + ' · HDPE film ' + g('pp_hdpe_film_eur') + ' · LDPE film ' + g('pp_ldpe_film_eur') + ' · LLDPE ' + g('pp_lldpe_eur') + ' · PP homo ' + g('pp_pp_homo_eur') + ' €/kg' + (notlar.length ? '\n- ' + notlar.join(' · ') : '') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : ''));
+  raporlar.push('### PlasticPortal PE/PP (§488) — ✓ ' + Object.keys(sonuc).length + '/' + PP_MALZEME.length + ' malzeme · yol ' + JSON.stringify(yollar) + ' · HDPE film ' + g('pp_hdpe_film_eur') + ' · LDPE film ' + g('pp_ldpe_film_eur') + ' · LLDPE ' + g('pp_lldpe_eur') + ' · PP homo ' + g('pp_pp_homo_eur') + ' €/kg' + (notlar.length ? '\n- ' + notlar.join(' · ') : '') + (tani.length ? '\n- tanı: ' + tani.join(' · ') : '') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : '') + ' · ' + Math.round((Date.now() - t0) / 1000) + ' sn');
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
