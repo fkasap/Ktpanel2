@@ -41,7 +41,12 @@ function bddkIstek(yol, govde, ekBaslik){
            BITIS 15 Kas 2026 <- o tarih civari sertifika yenilenince pin
            BILEREK kirilir. Yenileme tek adim: hata mesajindaki yeni parmak
            izini buraya yapistir. Takvimli, gurultulu, tek satirlik bakim. */
-        const BDDK_PIN = '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79';
+        /* §490b (21 Eki 2026): sertifika 15 Kas bitişinden ~3,5 hafta önce YENİLENDİ — canlı teshis=1 yeni parmak izi 56:2D:30:…:5A:B3.
+           Kabul gerekçesi: PIN kontrolünden ÖNCE çalışan üç kontrol geçti (alan adı *.bddk.org.tr, kendinden imzalı değil, geçerlilik
+           penceresi içinde). Eski pin 15 Kas'a kadar listede kalır (BDDK eski sertifikaya dönerse kırılmasın); sonra silinir. */
+        const BDDK_PINLER = ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3',
+                             '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79'];
+        const BDDK_PIN = BDDK_PINLER[0];
         const issCN = (c&&c.issuer&&c.issuer.CN)||'';
         const subCN = (c&&c.subject&&c.subject.CN)||'';
         if(issCN && subCN && issCN===subCN && !(c&&c.issuerCertificate&&c.issuerCertificate!==c)){
@@ -55,8 +60,8 @@ function bddkIstek(yol, govde, ekBaslik){
           }
         }
         const fp = (c&&(c.fingerprint256||c.fingerprint))||'';
-        if(BDDK_PIN && fp && fp.toUpperCase()!==BDDK_PIN.toUpperCase()){
-          s.destroy(); return red(new Error('TLS PIN UYUSMADI (SS309) - sertifika yenilenmis olabilir. GELEN PARMAK IZI (dogruysa BDDK_PIN sabitine yapistir): '+fp));
+        if(BDDK_PINLER.length && fp && !BDDK_PINLER.some(p=>p.toUpperCase()===fp.toUpperCase())){
+          s.destroy(); return red(new Error('TLS PIN UYUSMADI (SS309) - sertifika yenilenmis olabilir. GELEN PARMAK IZI (dogruysa BDDK_PINLER basina ekle): '+fp+' · CN '+subCN+' · veren '+issCN+' · gecerlilik '+((c&&c.valid_from)||'?')+' → '+((c&&c.valid_to)||'?')));
         }
         SON_TESHIS = Object.assign(SON_TESHIS||{}, { tls:{ fp, cn:subCN, veren:issCN, bitis:(c&&c.valid_to)||null, pin: BDDK_PIN?'AKTİF':'ölçüm modu' } });
       }catch(e){ return red(new Error('Sertifika okunamadı: '+e.message)); }
