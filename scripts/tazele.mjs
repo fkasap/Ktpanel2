@@ -3817,7 +3817,7 @@ function sutAdimlarBirlesik(K) {
      GET https://web.archive.org/cdx/search/cdx?url=infolink-group.com/spot-price/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8
      GET https://web.archive.org/web/{ts}id_/https://www.infolink-group.com/spot-price/   (id_ = arşivin ham HTML'i, aynı tablo)
      20 Eki ölçümü: 183 görüntü 2022-07→2026-10 (2023 ~aylık, 2024–25 ~haftalık, 2026 seyrek). Sayfa tarihi görüntü tarihinden
-     değil SAYFANIN KENDİ yayın tarihinden alınır (aynı haftanın birden çok görüntüsü tek kayıt). Koşu başına ≤40 görüntü ya da 150 sn (hangisi önce), 1,5 sn ara → 183 görüntü ~5–6 koşuda.
+     değil SAYFANIN KENDİ yayın tarihinden alınır (aynı haftanın birden çok görüntüsü tek kayıt). Koşu başına ≤40 görüntü ya da 120 sn (hangisi önce), 2,5 sn ara; §483c: HTTP 429 (archive.org hız sınırı) hata sayılmaz, 10 sn beklenir, 3 ardışık 429da koşu durur → 183 görüntü ~5–6 koşuda.
    Hindistan satırları seçilmedi: "Mono TOPCon - India" (2024–25, Çin→Hindistan) ile "India assembled" (2025→, yerli montaj)
      farklı ürün — zincirlenemez; TR hisseleri için de ilgisiz.
    Solar cam (3,2 mm) InfoLink'in açık tablosundan 2025-01'de kalktı → seri yok.
@@ -3834,7 +3834,7 @@ function sutAdimlarBirlesik(K) {
    Birim: polisilikon RMB/kg ve $/kg · wafer RMB/adet · hücre ve modül $/W ve RMB/W. RMB → $ Yahoo CNY=X (ay ortalaması).
    Saklama: D.ges = {surum, hafta:{tarih:{etiket:ortalama}}, wb:{ts:1}}; seriler{} 'aylik' (hafta ortalamalarının ay ort.) +
    'haftalik' son 104 nokta + son. GES_SURUM değişirse kayıt sıfırlanır. */
-const GES_SURUM = '483', GES_WB_TAVAN = 40, GES_WB_UYKU = 1500, GES_SURE_MS = 120 * 1000, PV_SURE_MS = 200 * 1000;
+const GES_SURUM = '483', GES_WB_TAVAN = 40, GES_WB_UYKU = 2500, GES_SURE_MS = 120 * 1000, PV_SURE_MS = 200 * 1000;
 /* §483b PVINSIGHTS (21 Eki, kullanıcı: "pvinsights'a tekrar bak"): http://pvinsights.com/ ana sayfası ÜCRETSİZ haftalık spot tablosu
    taşır (Çarşamba güncellenir, "Last Update: 2026-09-30"; satır = Kalem | High | Low | Average | AvgChg | AvgChg% | AvgCNY, $ fiyat KDV
    hariç). Açık satırlar: PV Grade polisilikon 9N ($/kg) · 182 mm mono + 182,2×183,75 N-mono wafer ($/adet) · 182 mm N-Mono/PERC hücre ·
@@ -3931,36 +3931,39 @@ async function gesFiyat() {
   catch (e) { uyari.push('infolink-group.com: ' + String(e && e.message || e).slice(0, 90)); }
   /* 2) Wayback geriye doldurma (artımlı) */
   const t0 = Date.now();   /* InfoLink arşivi ≤120 sn, PVinsights arşivi toplam ≤200 sn (olcKos tavanı 4 dk) */
-  let wbToplam = 0, wbBu = 0, wbBekleyen = 0, wbHata = false;
+  let wbToplam = 0, wbBu = 0, wbBekleyen = 0, wbHata = false, sinir429 = 0, n429 = 0;   /* §483c: archive.org hız sınırı (429) — görüntü 'hatalı' sayılmaz, 10 sn bekle; 3 ardışık 429'da bu koşu arşiv durur */
   try {
     const cdx = JSON.parse(await al('https://web.archive.org/cdx/search/cdx?url=infolink-group.com/spot-price/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8', 60000));
     const ts = (Array.isArray(cdx) ? cdx.slice(1) : []).map(x => x[0]).filter(Boolean).sort().reverse();
     wbToplam = ts.length;
-    for (const t of ts) {
+    try { for (const t of ts) {
       if (G.wb[t] === 1 || (G.wb[t] || 0) <= -3) continue;
       if (wbBu >= GES_WB_TAVAN || Date.now() - t0 > GES_SURE_MS) { wbBekleyen++; continue; }   /* olcKos katman tavanı 4 dk: aşılırsa iş yarıda bırakılır ve DOSYA YAZILMAZ → kendi süre sınırı */
-      try { const c = gesCoz(await al('https://web.archive.org/web/' + t + 'id_/' + GES_URL, 25000)); isle(c, 'wb'); G.wb[t] = 1; }
-      catch (e) { G.wb[t] = (typeof G.wb[t] === 'number' && G.wb[t] < 0 ? G.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('wayback ' + t + ': ' + String(e && e.message || e).slice(0, 60)); }
+      if (sinir429 >= 3) { wbBekleyen++; continue; }
+      try { const c = gesCoz(await al('https://web.archive.org/web/' + t + 'id_/' + GES_URL, 25000)); isle(c, 'wb'); G.wb[t] = 1; sinir429 = 0; }
+      catch (e) { const m = String(e && e.message || e); if (/HTTP 429/.test(m)) { sinir429++; n429++; await uyku(10000); } else { G.wb[t] = (typeof G.wb[t] === 'number' && G.wb[t] < 0 ? G.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('wayback ' + t + ': ' + m.slice(0, 60)); } }
       wbBu++; await uyku(GES_WB_UYKU);
-    }
+    } } finally { wbBekleyen = ts.filter(t => !(G.wb[t] === 1 || (G.wb[t] || 0) <= -3)).length; }
   } catch (e) { wbHata = true; uyari.push('wayback CDX: ' + String(e && e.message || e).slice(0, 90)); }
   /* 3) §483b PVinsights: canlı (düz http) → olmazsa arşivin son görüntüsü; geçmiş Wayback artımlı (aynı süre bütçesi, InfoLink'ten sonra) */
   G.pv = G.pv || { hafta: {}, wb: {} };
+  sinir429 = Math.min(sinir429, 2);
   let pvCanli = null, pvToplam = 0, pvBu = 0, pvBekleyen = 0, pvHata = false, pvYeni = 0;
   const pvIsle = c => { if (!c.tarih || c.n < 5) return false; if (!G.pv.hafta[c.tarih]) pvYeni++; G.pv.hafta[c.tarih] = Object.assign({}, G.pv.hafta[c.tarih] || {}, c.sat); return true; };
   try { const c = pvCoz(await al(PV_URL, 20000)); if (pvIsle(c)) pvCanli = c; else uyari.push('pvinsights canlı sayfa çözülemedi (tarih ' + c.tarih + ', ' + c.n + ' satır)'); }
   catch (e) { uyari.push('pvinsights.com: ' + String(e && e.message || e).slice(0, 80) + ' → arşiv'); }
   try {
-    const cdx = JSON.parse(await al('https://web.archive.org/cdx/search/cdx?url=pvinsights.com/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8', 60000));
+    const cdx = JSON.parse(await al('https://web.archive.org/cdx/search/cdx?url=pvinsights.com/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8&from=2022', 60000));
     const ts = (Array.isArray(cdx) ? cdx.slice(1) : []).map(x => x[0]).filter(Boolean).sort().reverse();
     pvToplam = ts.length;
-    for (const t of ts) {
+    try { for (const t of ts) {
       if (G.pv.wb[t] === 1 || (G.pv.wb[t] || 0) <= -3) continue;
       if (pvBu >= GES_WB_TAVAN || Date.now() - t0 > PV_SURE_MS) { pvBekleyen++; continue; }
-      try { pvIsle(pvCoz(await al('https://web.archive.org/web/' + t + 'id_/' + PV_URL, 25000))); G.pv.wb[t] = 1; }
-      catch (e) { G.pv.wb[t] = (typeof G.pv.wb[t] === 'number' && G.pv.wb[t] < 0 ? G.pv.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('pvinsights arşiv ' + t + ': ' + String(e && e.message || e).slice(0, 60)); }
+      if (sinir429 >= 3) { pvBekleyen++; continue; }
+      try { pvIsle(pvCoz(await al('https://web.archive.org/web/' + t + 'id_/' + PV_URL, 25000))); G.pv.wb[t] = 1; sinir429 = 0; }
+      catch (e) { const m = String(e && e.message || e); if (/HTTP 429/.test(m)) { sinir429++; n429++; await uyku(10000); } else { G.pv.wb[t] = (typeof G.pv.wb[t] === 'number' && G.pv.wb[t] < 0 ? G.pv.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('pvinsights arşiv ' + t + ': ' + m.slice(0, 60)); } }
       pvBu++; await uyku(GES_WB_UYKU);
-    }
+    } } finally { pvBekleyen = ts.filter(t => !(G.pv.wb[t] === 1 || (G.pv.wb[t] || 0) <= -3)).length; }
   } catch (e) { pvHata = true; uyari.push('pvinsights CDX: ' + String(e && e.message || e).slice(0, 80)); }
   yeni += pvYeni;
   const H = G.hafta, ht = Object.keys(H).sort();
@@ -4021,9 +4024,50 @@ async function gesFiyat() {
   raporlar.push('### GES zinciri fiyatları (§483) — ' + (canli ? '✓ ' + canli.tarih : '⚠ canlı sayfa yok') + ' · modül ' + g('ges_modul_usd', ' $/W') + ' · hücre ' + g('ges_hucre_usd', ' $/W') + ' · polisilikon ' + g('ges_polisilikon_rmb', ' RMB/kg') + ' · montaj makası ' + g('ges_montaj_makasi_usd', ' $/W') +
     '\n- arşiv: ' + ht.length + ' hafta (' + ht[0] + '→' + ht[ht.length - 1] + ') · Wayback ' + wbToplam + ' görüntü, bu koşu ' + wbBu + (wbHata ? ' · ⚠ arşive ulaşılamadı (sonraki koşu dener)' : wbBekleyen ? ' · ' + wbBekleyen + ' görüntü sonraki koşulara' : ' · geriye doldurma TAMAM') +
     '\n- ' + notlar.join(' · ') + ' · CNY kuru ' + cny.size + ' gün' +
+    (n429 ? '\n- archive.org hız sınırı (HTTP 429) ×' + n429 + ' — görüntüler sonraki koşulara (hata sayılmadı)' : '') +
     '\n- PVinsights (§483b): ' + (pvCanli ? '✓ canlı ' + pvCanli.tarih : '⚠ canlı sayfa yok (arşivle)') + ' · modül ' + g('ges_pvi_modul_usd', ' $/W') + ' · hücre ' + g('ges_pvi_hucre_usd', ' $/W') + ' · polisilikon ' + g('ges_pvi_polisilikon_usd', ' $/kg') + ' · makas ' + g('ges_pvi_montaj_makasi_usd', ' $/W') +
     ' · arşiv ' + pt.length + ' hafta' + (pt.length ? ' (' + pt[0] + '→' + pt[pt.length - 1] + ')' : '') + ' · Wayback ' + pvToplam + ' görüntü, bu koşu ' + pvBu + (pvHata ? ' · ⚠ arşive ulaşılamadı' : pvBekleyen ? ' · ' + pvBekleyen + ' sonraki koşulara' : ' · geriye doldurma TAMAM') + ' · ' + pvNot.join(' · ') +
     (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') : ''));
+}
+
+/* ── §484 ELLE ÇEYREK SERİLERİ — şirket beyanı, otomatik kaynağı olmayan sürücüler ─────────────────────────────────────
+   Çıkış (21 Eki): TKFEN taahhüt tarafı için sipariş akışı arandı. Tekfen KAP'a "Yeni İş İlişkisi" bildirimi YAPMIYOR (2023→ ÖDA
+   taraması: yalnız Finansal Duran Varlık Edinimi / Özel Durum (Genel) / Rusya projesi) → §469 KAP akışı boş kalırdı. Bunun yerine
+   çeyrek faaliyet raporundaki cümle kullanılır: "Mühendislik ve Taahhüt Grubu'nun [tarih] itibarıyla devam eden projelerinde kalan
+   işlerin parasal toplamı yaklaşık X milyon ABD doları" (Fintables faaliyet raporu araması, 21 Eki):
+     2025Q1 732 (s.8) · 2025Q2 640 (s.9) · 2025Q3 686 (s.7) · 2026Q2 413 (s.8; %62 Hazar, %34 Orta Doğu · %66 endüstri, %32 boru hattı).
+     2025Q4 ve 2026Q1 raporlarında aynı cümle Fintables'ta bulunamadı → BOŞ bırakıldı (uydurulmaz). Yıllık yeni iş: 2024 446 mn $.
+   RİTÜEL: her bilanço haftası TKFEN faaliyet raporu → ELLE_CEYREK.tkfen_backlog.ceyreklik'e satır. Kod tablosu dosyadakini EZER
+   (düzeltme koddan yapılır). Seri 'ceyreklik' taşır → panel çeyrek değerini doğrudan okur (kararSeriStat). */
+const ELLE_CEYREK = {
+  tkfen_backlog: { ad: 'Tekfen taahhüt bakiye iş (backlog) — kalan işlerin parasal toplamı (mn $, çeyrek sonu; elle)', birim: 'mn $', hisse: ['TKFEN'],
+    ceyreklik: { '2025Q1': 732, '2025Q2': 640, '2025Q3': 686, '2026Q2': 413 },
+    yillik_yeni_is: { '2024': 446 },
+    kaynak: 'TKFEN çeyrek faaliyet raporları ("kalan işlerin parasal toplamı") — elle (§484)',
+    _not: 'Taahhüt gelirinin öncü göstergesi: bakiye eriyip yeni iş gelmezse 2–4 çeyrek sonra taahhüt hasılatı düşer. 2025Q1 732 → 2026Q2 413 mn $ (−%44) = yeni iş girişi tamamlanan işin gerisinde. 2025Q4/2026Q1 değeri raporda bulunamadı (boş).' },
+};
+function elleCeyrekYaz(D) {
+  const yazilan = [];
+  for (const [k, t] of Object.entries(ELLE_CEYREK)) {
+    const s = D.seriler[k] || {};
+    const ceyreklik = Object.assign({}, s.ceyreklik || {}, t.ceyreklik);
+    const qs = Object.keys(ceyreklik).sort(); if (!qs.length) continue;
+    const sonQ = qs[qs.length - 1];
+    D.seriler[k] = Object.assign(s, { ad: t.ad, birim: t.birim, hisse: t.hisse, kaynak: t.kaynak, _not: t._not, siklik: 'aylik', aylik: s.aylik || {}, ceyreklik,
+      yillik_yeni_is: t.yillik_yeni_is, son: { tarih: sonQ, deger: ceyreklik[sonQ] }, elle: true, guncelleme: s.guncelleme || bugun });
+    yazilan.push(k + ' ' + sonQ + ' = ' + ceyreklik[sonQ] + ' ' + t.birim + ' (' + qs.length + ' çeyrek)');
+  }
+  return yazilan;
+}
+async function elleSeriler() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### Elle çeyrek serileri (§484) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const once = JSON.stringify(Object.keys(ELLE_CEYREK).map(k => D.seriler[k] && D.seriler[k].ceyreklik));
+  const y = elleCeyrekYaz(D);
+  const sonra = JSON.stringify(Object.keys(ELLE_CEYREK).map(k => D.seriler[k] && D.seriler[k].ceyreklik));
+  if (once !== sonra) { await yaz(dosya, D); degisenler.push('elle çeyrek serileri (' + y.length + ')'); }
+  raporlar.push('### Elle çeyrek serileri (§484) — ✓ ' + y.join(' · ') + (once === sonra ? ' · değişiklik yok' : ''));
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
@@ -5942,7 +5986,7 @@ async function bultenKesif() {
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
-    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
+    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
     await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
@@ -5956,8 +6000,8 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
