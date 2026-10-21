@@ -30,7 +30,7 @@ on:
   workflow_dispatch:        # elle tetikleme (Actions sekmesinden)
     inputs:
       katman:
-        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy | kaparsiv | surucu | kamu | kardemir | ges | fm)'
+        description: 'Hangi katman? (hepsi | fiyat | endeks | risk | fon | fonportfoy | kaparsiv | surucu | kamu | kardemir | ges | tuik | fm)'
         required: false
         default: 'hepsi'
       fonkod:
@@ -118,7 +118,7 @@ jobs:
         run: (sudo apt-get update -qq >/dev/null 2>&1 || true) && sudo apt-get install -y -q poppler-utils >/dev/null && pdftotext -v 2>&1 | head -1
 
       - name: Playwright (yalnız fon katmanı)
-        if: contains(steps.sec.outputs.katman, 'fon') || contains(steps.sec.outputs.katman, 'hepsi')
+        if: contains(steps.sec.outputs.katman, 'fon') || contains(steps.sec.outputs.katman, 'hepsi') || contains(steps.sec.outputs.katman, 'tuik')
         continue-on-error: true
         run: npx playwright install --with-deps chromium
 
