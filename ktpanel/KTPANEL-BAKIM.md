@@ -6,6 +6,25 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §487/§488 (21 Eki 2026, 13:40) — TÜİK GENİŞ TABLOLAR + PLASTICPORTAL PE/PP
+
+§487 TÜİK (databrowser2, §486 ucu + FİLTRE): gövde [{"id":boyut,"filterValues":[kodlar]}] → Yİ-ÜFE 31 MB yerine ~40 KB. Katalog 510
+dataflow (/api/core/nodes/1/catalog; konaklama, yapı izni, elektrik YOK; ciro endeksi sorgusu hata verdi). Kurulan tablolar (Eylül 2026 y/y,
+Chrome canlı): DF_YIUFE_EDO_V1 C2016 plastik +45,6 · C2351 çimento +29,0 · C1073 makarna +18,4 · C2410 demir-çelik +27,0 · C1320 kumaş
++20,0 · C2015 gübre | DF_YDUFE_EDO_V1 (ihracat) C2016 +33,5 · C2351 +21,6 · C1073 +18,7 · C2410 +26,8 | DF_TARIM_URUNLERI_UFE_MADDE_FIYAT_V2
+buğday 01_11_1 TRY_KG 15,82 +18,8 | DF_TARIMSAL_GIRDI_FIYAT_ENDEKSI_DEGISIM_V2 20_3 gübre +28,8 | DF_TICARET_SATIS_HACIM_ENDEKS_O G47_FOOD,
+G47_NF_CLTH | DF_INSAAT_URETIM_ENDEKS_V1_O F41/F | DF_HIZMET_URETIM_ENDEKS_O H49. Boyut seçimi: kod → etiket regex → 'son' (yayım dönemi) →
+_T → ilk; FAAL_GRUP otomatik. ⚠ Perakende/inşaat/hizmet tablolarının boyut kodları CANLI DOĞRULANMADI (Chrome bağlantısı koptu) —
+seçici etiketle buluyor; çözülemezse rapor boyut listesini yazar → koddan düzeltilir. Türetilmiş: obams_makas (makarna ÷ buğday),
+petkm_ufe_makas (plastik ÷ Brent TL).
+§488 PlasticPortal (kullanıcı linki): sayfa HTML'inde PlasticPricesChart.init({...}, "etiket") — 2006-02→ aylık Orta Avrupa €/kg
+(Plastech.pl); Chrome'da HDPE film 265 nokta, 2026-10 1,43 ✓. Cloudflare ön kontrolü (sayfa içi fetch bile "Just a moment") → yol:
+fetch → Playwright (tek bağlam) → Wayback son görüntü (CDX'te Tem 2026 görüntüleri var; geçmişin tamamını taşır). Ay içi çoklu kayıt →
+ortalama. Seriler pp_hdpe_film_eur, pp_ldpe_film_eur, pp_lldpe_eur, pp_pp_homo_eur, pp_hdpe_sisirme_eur, pp_pp_blok_eur + pe_pp ($/t =
+4'lü ortalama × EURUSD) + petkm_polimer_makas_usd (pe_pp − 7,5×Brent). PETKM "PE/PP bekliyor" KAPANDI, birincil = polimer makası.
+Playwright kurulum adımı artık 'tuik' katmanında da koşar (tazele.yml). Yeni elle katman: --katman=tuik.
+DEPLOY: scripts/tazele.mjs (§487/§488) · .github/workflows/tazele.yml · karar-model.json (2026-10-21f) · BAKIM · DAMGA.
+
 # BAKIM EK — §486 (21 Eki 2026, 12:50) — TÜİK İNŞAAT MALİYET ENDEKSİ (veri portalı → SDMX JSON-stat)
 
 Kullanıcı linki: veriportali.tuik.gov.tr/tr/press/58205 (İME Ağu 2026). Ölçüm (Chrome): bülten JSON'u /api/tr/press/{id} →

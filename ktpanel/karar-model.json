@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21e",
+ "surum": "2026-10-21f",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -272,6 +272,24 @@
      "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
      "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür)."
+    },
+    {
+     "k": "ufe_cimento",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 23.51 çimento — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ydufe_cimento",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 23.51 çimento — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "eurusd",
@@ -1062,6 +1080,12 @@
      "kaynak": "türetilmiş (Actions §485)"
     },
     {
+     "k": "perakende_gida_hacim",
+     "rol": "gelir",
+     "ad": "Perakende satış hacmi — gıda (sabit fiyat)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -1300,6 +1324,24 @@
      "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
      "not": "Çimentoda elektrik ~100–110 kWh/t; beyaz çimento daha enerji yoğun."
+    },
+    {
+     "k": "ufe_cimento",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 23.51 çimento — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ydufe_cimento",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 23.51 çimento — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "eurusd",
@@ -1790,6 +1832,12 @@
      "kaynak": "TÜİK (Actions §486)"
     },
     {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (sektör hacmi)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -2229,6 +2277,12 @@
      "ad": "Yurt içi hurda — Kardemir Özel Ekstra ($/t) · LME hurdanın yerli karşılığı",
      "kaynak": "kardemir.com açık API (Actions §472)",
      "not": "EREGL yüksek fırın üreticisi; hurda konvertör şarjının ~%15–20'si. Yurt içi hurda fiyatı Türkiye çelik piyasasının genel nabzı (ark ocaklı rakiplerin maliyeti → yurt içi fiyat tabanı)."
+    },
+    {
+     "k": "ufe_celik_2410",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 24.10 demir-çelik ürünleri — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "usdtry",
@@ -2852,6 +2906,12 @@
      "kaynak": "türetilmiş (Actions §485)"
     },
     {
+     "k": "kara_tasima_hacim",
+     "rol": "gelir",
+     "ad": "Hizmet üretim endeksi — kara taşımacılığı (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -2992,6 +3052,18 @@
      "k": "ttf",
      "rol": "maliyet",
      "ad": "TTF (günlük)"
+    },
+    {
+     "k": "gubre_girdi",
+     "rol": "gelir",
+     "ad": "Çiftçi gübre alış fiyat endeksi (yurt içi satış fiyatı)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ufe_gubre_2015",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.15 gübre ve azot bileşikleri",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "usdtry",
@@ -3235,6 +3307,12 @@
      "kaynak": "kardemir.com açık API (Actions §472)"
     },
     {
+     "k": "ydufe_celik",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 24.10 demir-çelik — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "eurusd",
      "rol": "kur",
      "ad": "EUR/USD (AB ihracatı)"
@@ -3435,6 +3513,12 @@
      "kaynak": "TCMB EVDS TP.TUFE1YI.T74"
     },
     {
+     "k": "ufe_celik_2410",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 24.10 demir-çelik ürünleri — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -3595,6 +3679,18 @@
      "rol": "maliyet",
      "ad": "Asgari ücret reel (÷TÜFE) — mağaza personeli maliyeti",
      "kaynak": "türetilmiş (Actions §485)"
+    },
+    {
+     "k": "perakende_giyim_hacim",
+     "rol": "gelir",
+     "ad": "Perakende satış hacmi — giyim (sabit fiyat)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ufe_kumas",
+     "rol": "maliyet",
+     "ad": "Yİ-ÜFE 13.20 dokuma kumaş",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "eurusd",
@@ -3883,6 +3979,31 @@
      "ad": "Buğday ABD HRW (WB)"
     },
     {
+     "k": "obams_makas",
+     "rol": "marj",
+     "ad": "Makarna fiyatı ÷ buğday fiyatı (yurt içi makas)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "not": "Yİ-ÜFE makarna ÷ TÜİK buğday çiftçi fiyatı; >100 ve yükseliyorsa marj genişliyor. Ekim 2026: makarna +%18,4, buğday +%18,8 y/y → yatay."
+    },
+    {
+     "k": "ufe_makarna",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 10.73 makarna — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ydufe_makarna",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 10.73 makarna — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "bugday_tl",
+     "rol": "maliyet",
+     "ad": "Buğday çiftçi fiyatı (TL/kg)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "eurusd",
      "rol": "kur",
      "ad": "EUR/USD (ihracat)"
@@ -4026,9 +4147,35 @@
    "sektor_not": "Petrokimya: nafta kırarak etilen/polietilen/PP üretir; kâr nafta–polimer makası. Brent yükselince nafta pahalanır, polimer fiyatı aynı hızda artmazsa marj daralır. Küresel polietilen kapasite fazlası (Çin/ABD) marjı baskılıyor; STAR rafineri entegrasyonu nafta maliyetini kısmen yumuşatır.",
    "surucu_seriler": [
     {
-     "k": "brent_yh",
-     "rol": "maliyet",
-     "ad": "Brent — nafta girdi vekili"
+     "k": "petkm_polimer_makas_usd",
+     "rol": "marj",
+     "ad": "Polimer − ham petrol makası — PE/PP Avrupa − 7,5×Brent ($/t)",
+     "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)",
+     "not": "Nafta Brent'e yakın fiyatlanır; makas Petkim brüt kârının yön göstergesi (etilen/propilen verimi, enerji hariç)."
+    },
+    {
+     "k": "pe_pp",
+     "rol": "gelir",
+     "ad": "PE/PP Avrupa reçine fiyatı ($/t) — HDPE/LDPE/LLDPE film + PP homo",
+     "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)"
+    },
+    {
+     "k": "ufe_plastik",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ydufe_plastik",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 20.16 plastik — ihracat fiyatı (TL)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "petkm_ufe_makas",
+     "rol": "marj",
+     "ad": "Plastik yurt içi fiyatı ÷ Brent TL (endeks)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "plastik_uretim",
@@ -4045,18 +4192,16 @@
      "not": "EVDS'de 20.16 (yalnız plastik) üretici fiyatı ayrı yok; 20.1 grubu plastik + gübre + temel kimyasal birlikte. TL endeks → $ yön için USDTRY ile okunur."
     },
     {
-     "k": "usdtry",
-     "rol": "kur"
+     "k": "brent_yh",
+     "rol": "maliyet",
+     "ad": "Brent — nafta girdi vekili"
     },
     {
-     "k": "pe_pp",
-     "rol": "gelir",
-     "ad": "Polietilen/PP Asya fiyatı",
-     "bekliyor": true,
-     "kaynak": "ICIS/Platts ücretli; serbest günlük kaynak yok"
+     "k": "usdtry",
+     "rol": "kur"
     }
    ],
-   "birincil": "brent_yh"
+   "birincil": "petkm_polimer_makas_usd"
   },
   {
    "kod": "TCKRC",
@@ -4334,6 +4479,18 @@
      "ad": "Taahhüt bakiye iş (backlog, mn $) — faaliyet raporu beyanı",
      "kaynak": "TKFEN çeyrek faaliyet raporu (elle, Actions §484)",
      "not": "Tekfen KAP'a yeni iş bildirimi yapmıyor; bakiye iş çeyrek raporundan. 2025Q1 732 → 2026Q2 413 mn $: yeni iş girişi zayıf → taahhüt hasılatı 2–4 çeyrek gecikmeyle düşme riski."
+    },
+    {
+     "k": "gubre_girdi",
+     "rol": "gelir",
+     "ad": "Çiftçi gübre alış fiyat endeksi (Toros Tarım satış fiyatı)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "ufe_gubre_2015",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.15 gübre ve azot bileşikleri",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     },
     {
      "k": "eurusd",
@@ -5092,6 +5249,12 @@
      "kaynak": "türetilmiş (Actions §485)"
     },
     {
+     "k": "kara_tasima_hacim",
+     "rol": "gelir",
+     "ad": "Hizmet üretim endeksi — kara taşımacılığı (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -5124,5 +5287,6 @@
  "_483d": "EUPWR/GESAN grup yapısı (GESAN 6A26 dipnotu): GESAN → %50,43 Europower (EUPWR) → %60 Peak PV (panel); GESAN → %100 EP World (güç trafosu). Modül fiyatı EUPWR ve GESAN için GELİR (Peak PV satış fiyatı; kullanıcı düzeltmesi 21 Eki) — önceki \"maliyet/kurulum temposu\" rolü yanlıştı. Birincil ikisinde de bakır (brüt kârın çoğu trafo/pano). Satır çıkarılmadı; makas ve hücre eklendi.",
  "_484": "Grup 1 sürücüleri (21 Eki): EREGL + Kardemir yurt içi hurda (LME satırı korunur, bekliyor) · AKCNS/CIMSA + PTF $ (elektrik maliyeti) · ENJSA + PTF TL (perakende alış) · BIMAS + PTF TL · TKFEN + taahhüt backlog (faaliyet raporu, elle tablo tazele.mjs ELLE_CEYREK §484 — Tekfen KAP'a yeni iş bildirimi yapmadığı için KAP akışı kurulmadı).",
  "_485": "Grup 2 sürücüleri (21 Eki): MAVI + pamuk (Yahoo CT=F) + reel asgari ücret · GRSEL asgari ücret \"bekliyor\" KAPANDI + reel · TUREX/BIMAS + asgari ücret · PETKM + sanayi üretimi C20.16 plastik (hacim) + Yİ-ÜFE 20.1 (fiyat; 20.16 ayrı yok) · EKGYO + TÜİK konut satışı ilk el/ipotekli/toplam (EVDS AKONUTSAT) · ALBRK + TL katılma hesabı kâr payı oranı (EVDS KBH, haftalık). İnşaat maliyet endeksi EVDS'de yok → alınmadı.",
- "_486": "TÜİK İnşaat Maliyet Endeksi (kullanıcı linki 21 Eki): veri portalı bülten API → SDMX dataflow TR,DF_UFE_INSAAT_V1 → databrowser2 POST /data gövde [] (JSON-stat). EKGYO + KFE÷İME konut makası, İME konut toplam/malzeme/işçilik."
+ "_486": "TÜİK İnşaat Maliyet Endeksi (kullanıcı linki 21 Eki): veri portalı bülten API → SDMX dataflow TR,DF_UFE_INSAAT_V1 → databrowser2 POST /data gövde [] (JSON-stat). EKGYO + KFE÷İME konut makası, İME konut toplam/malzeme/işçilik.",
+ "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili."
 }
