@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1986 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903499893405693> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500288030700> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -124,21 +124,21 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 469 satır · 21 çeyrek · USDTRY Yahoo günlük · değişiklik yok
 
 ### Sürücü serileri (§464) — ✓ 16 seri
-- altin 4145.2002 (2026-10-21, 504 gün)
-- gumus 57.68 (2026-10-21, 504 gün)
-- bakir 6.5535 (2026-10-21, 504 gün)
+- altin 4147.8999 (2026-10-21, 504 gün)
+- gumus 57.69 (2026-10-21, 504 gün)
+- bakir 6.5505 (2026-10-21, 504 gün)
 - aluminyum 3108.5 (2026-10-21, 503 gün)
 - hrc_abd 1285 (2026-10-20, 502 gün)
 - ttf 87.595 (2026-10-21, 504 gün)
-- henryhub 2.862 (2026-10-21, 504 gün)
-- bugday 639 (2026-10-21, 503 gün)
+- henryhub 2.846 (2026-10-21, 504 gün)
+- bugday 637.25 (2026-10-21, 503 gün)
 - pamuk 80.73 (2026-10-21, 504 gün)
-- brent_yh 110.61 (2026-10-21, 504 gün)
-- eurusd 1.1232 (2026-10-21, 519 gün)
-- usdtry 49.5991 (2026-10-21, 519 gün)
+- brent_yh 110.13 (2026-10-21, 504 gün)
+- eurusd 1.1235 (2026-10-21, 519 gün)
+- usdtry 49.5996 (2026-10-21, 519 gün)
+- hurda_lme 396.5 $/t (19 Oct 2026, 2 nokta, playwright)
 - demir_lme 590 $/t (20 Oct 2026, 2 nokta, playwright)
-- hurda_lme 394 $/t (20 Oct 2026, 2 nokta, playwright·2.tur)
-- metal_marji_tr 196 $/t
+- metal_marji_tr 193.5 $/t
 - wb 15 seri · 2026M09 · "Updated on October 02, 2026" (aynı sayı)
 
 ### EVDS serileri (§466) — ✓ 17 seri (16 EVDS + türetilmiş)
@@ -164,7 +164,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 1390 gün (2023-01-01→) · bu koşuda 11 gün/264 saat · 1 parça
 - son 30 gün ort. 2700 TL/MWh · yıllık -0.9% · kimlik: EPIAS_ID+EPIAS_KEY
 
-### ASELSAN sözleşme akışı (§467) — ✓ 211 sözleşme (2017-01-06→2026-10-08) · kur Yahoo 10y
+### ASELSAN sözleşme akışı (§467) — ✓ 211 sözleşme (2017-01-06→2026-10-08) · kur dosya 2y + çeyrek yedeği
 - 2026Q4 (koşu): 4.92 mlr $ / 6 sözleşme · 2026Q3: 3.09 mlr $ · 2025Q4: 2.31 mlr $ · son 4 çeyrek 10.1 mlr $
 - son: 2026-10-08 125 mn $ — ASELSAN, yurt dışındaki bir son kullanıcıya Silah ve Elektronik Harp Sistemlerinin ihracat
 - resmî backlog (elle): 2024Q4 14 · 2025Q4 20.4 · 2026Q2 23.2 mlr $
@@ -181,10 +181,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - kütük − 1,6×cevher 408.68 $/t (kok hariç) · KCAER hadde spread'i (profil − kütük) 105 $/t · kur: günlük 2602 · ay başı 262
 
 ### GES zinciri fiyatları (§483) — ✓ 2026-10-21 · modül 0.114 $/W (y/y +29.5%) · hücre 0.046 $/W (y/y +9.5%) · polisilikon 40 RMB/kg (y/y -23.1%) · montaj makası 0.068 $/W (y/y +47.8%)
-- arşiv: 30 hafta (2025-05-21→2026-10-21) · Wayback 183 görüntü, bu koşu 5 · 151 görüntü sonraki koşulara
+- arşiv: 30 hafta (2025-05-21→2026-10-21) · Wayback 183 görüntü, bu koşu 7 · 149 görüntü sonraki koşulara
 - polisilikon_rmb 30 hafta [k1 ad değişimi, oran 1 (11 hafta)] · polisilikon_usd 30 hafta [k1 ad değişimi, oran 1 (11 hafta)] · wafer_rmb 30 hafta · hucre_usd 30 hafta [k1 ad değişimi, oran 1 (21 hafta)] · hucre_rmb 30 hafta · modul_usd 30 hafta · modul_rmb 30 hafta · modul_avrupa_usd 30 hafta [k1 ad değişimi, oran 1 (19 hafta)] · modul_abd_usd 30 hafta [k1 ad değişimi, oran 1 (19 hafta)] · CNY kuru 2600 gün
-- archive.org hız sınırı (HTTP 429) ×5 — görüntüler sonraki koşulara (hata sayılmadı)
-- PVinsights (§483b): ✓ canlı 2026-10-14 · modül 0.09 $/W (y/y +15.4%) · hücre 0.04 $/W (y/y +11.1%) · polisilikon 5.07 $/kg (y/y -22%) · makas 0.05 $/W (y/y +19%) · arşiv 22 hafta (2024-05-22→2026-10-14) · Wayback 87 görüntü, bu koşu 1 · 58 sonraki koşulara · polisilikon_usd 22 · wafer_usd 22 · hucre_usd 22 · modul_usd 22
+- archive.org hız sınırı (HTTP 429) ×8 — görüntüler sonraki koşulara (hata sayılmadı)
+- PVinsights (§483b): ✓ canlı 2026-10-21 · modül 0.089 $/W (y/y +14.1%) · hücre 0.04 $/W (y/y +11.1%) · polisilikon 5.07 $/kg (y/y -22%) · makas 0.049 $/W (y/y +16.7%) · arşiv 25 hafta (2024-05-22→2026-10-21) · Wayback 87 görüntü, bu koşu 5 · 56 sonraki koşulara · polisilikon_usd 25 · wafer_usd 25 · hucre_usd 25 · modul_usd 25
 
 ### Elle seriler (§484 backlog · §485 asgari ücret) — ✓ tkfen_backlog 2026Q2 = 413 mn $ (4 çeyrek) · asgari_ucret 33030 TL (2026-10, son adım 2026-01-01) · reel 24069 (2026-09) · değişiklik yok
 
@@ -192,7 +192,12 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TÜİK geniş tablolar (§487) — ✓ 7/7 tablo · ufe_plastik 6946.05 (2026-09, y/y 45.6%) · ufe_cimento 6482.69 (2026-09, y/y 29.0%) · ufe_makarna 5356.46 (2026-09, y/y 18.4%) · ufe_celik_2410 6926.89 (2026-09, y/y 27.0%) · ufe_kumas 3692.83 (2026-09, y/y 20.0%) · ufe_gubre_2015 10127.37 (2026-09, y/y 31.8%) · ydufe_plastik 3531.22 (2026-09, y/y 33.5%) · ydufe_cimento 3223.24 (2026-09, y/y 21.6%) · ydufe_makarna 2770.00 (2026-09, y/y 18.7%) · ydufe_celik 5615.64 (2026-09, y/y 26.8%) · bugday_tl 15.82 (2026-09, y/y 18.8%) · gubre_girdi 1340.19 (2026-08, y/y 28.8%) · perakende_gida_hacim 172.33 (2026-07, y/y 3.2%) · perakende_giyim_hacim 154.57 (2026-07, y/y 7.7%) · insaat_uretim_bina 141.73 (2026-08, y/y -0.9%) · insaat_uretim_toplam 126.64 (2026-08, y/y 2.3%) · kara_tasima_hacim 131.89 (2026-07, y/y 5.6%) · obams_makas 91.7 (2026-09) · petkm_ufe_makas 70.0 (2026-09)
 
-### PlasticPortal PE/PP (§488) — ✗ KATMAN TAVANI 4 dk aşıldı — bırakıldı
+### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez
+- tanı: HDPE film fetch HTTP 403 Cloudflare · HDPE film playwright geçemedi · HDPE film wayback görüntü yok · LDPE film fetch HTTP 403 Cloudflare · LDPE film wayback görüntü yok · LLDPE standart wayback görüntü yok · PP homo wayback görüntü yok
+- HDPE film: erişilemedi (Cloudflare + arşiv yok)
+- LDPE film: erişilemedi (Cloudflare + arşiv yok)
+- LLDPE standart: erişilemedi (Cloudflare + arşiv yok)
+- PP homo: erişilemedi (Cloudflare + arşiv yok)
 
 ### SUT endeksi (§474) — ✓ SUT 597.14 (son artış 2026-01-01 +%25) · reel 69.01 (2020-12=100, 2026-09) · TTB 548.42 (son 2026-01-01 +%16.5) · TTB reel 141.67
 - 6 SUT adımı (2021-04-28→2026-01-01, 1 otomatik) · 7 TTB adımı · son SUT artışından bu yana TÜFE +%24.3 → reel %-19.6
@@ -208,10 +213,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Faktör skorları (§455) — ✓ sıralanan 124/238 · temel veri 124 · fiyat 232 · beta çıpası XKTUM arşivi · Rel.Vol medyan 0.61 ✓
 - ✓ fm.json TERFİ ETTİ (adet 124 ≥ 100 · XKTUM ağırlık kapsamı %85.3 ≥ %70) — panel kendi hesabımızla çalışıyor
-- imza: VALUE 124 0.014 0.949 -3.00 1.33 0 · GROWTH 123 0.000 1.000 -2.16 2.97 0 · QUALITY 124 -0.000 1.000 -2.86 2.70 0 · MOMENTUM 124 -0.000 1.000 -2.18 3.00 0 · LOW_RISK 124 -0.000 1.000 -2.29 2.06 0
+- imza: VALUE 124 0.014 0.949 -3.00 1.33 0 · GROWTH 123 0.000 1.000 -2.16 2.97 0 · QUALITY 124 0.000 1.000 -2.88 2.72 0 · MOMENTUM 124 -0.000 1.000 -2.18 3.00 0 · LOW_RISK 124 -0.000 1.000 -2.29 2.06 0
 
 ### KAP arşivi (§381) — ✓ +4 çeyrek · 0/238 şirket tam
-- GLRMK:7→7 · ENERY:8→12
+- GLRMK:7→7 · KCAER:8→12
 - öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)
 - ⓘ Ham tablolar `kap-arsiv/<KOD>.json` içinde, şirket başına en fazla 15 çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).
 
@@ -249,7 +254,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §429p kuyruk: liste 261 kayıt · daha önce işlenmiş 161 idx · iş 50
 
-### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 12005 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 12009 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 - bu turda hedef 43 (tur tavanı 80; kalan sonraki koşuda)
 - ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
   · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
@@ -260,11 +265,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (126 fiyat) · Model sicili (37 fiyat) · TR 5Y CDS (248.07 bp) · fon akışı (1986) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (16) · EVDS serileri (17) · EPİAŞ PTF (1390 gün) · ASELSAN sözleşme akışı (211) · GES zinciri fiyatları (2 hafta) · TÜİK İME (5) · TÜİK tablolar (19) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (111 fiyat) · Model sicili (37 fiyat) · TR 5Y CDS (248.07 bp) · fon akışı (1986) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (16) · EVDS serileri (17) · EPİAŞ PTF (1390 gün) · ASELSAN sözleşme akışı (211) · GES zinciri fiyatları (3 hafta) · TÜİK İME (5) · TÜİK tablolar (19) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+4 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ Sürücü serileri (§464) — 66 sn
-- ⏱ GES zinciri fiyatları (§483) — 75 sn
-- ⏱ PlasticPortal PE/PP (§488) — 240 sn
-- ⏱ KAP arşivi (§381) — 69 sn
-- toplam: 646 sn
+- ⏱ GES zinciri fiyatları (§483) — 133 sn
+- ⏱ PlasticPortal PE/PP (§488) — 66 sn
+- ⏱ KAP arşivi (§381) — 71 sn
+- toplam: 490 sn
