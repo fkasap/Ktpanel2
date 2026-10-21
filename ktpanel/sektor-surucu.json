@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-21T06:46:44Z",
+ "guncelleme": "2026-10-21T07:27:54Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -321,7 +321,7 @@
    "ilk": "2026-10-01",
    "son": "2026-10-20",
    "usdtry_ort": 49.313,
-   "usdtry_son": 49.5976,
+   "usdtry_son": 49.5977,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.5976
+  "2026-10": 49.5977
  },
  "seriler": {
   "altin": {
@@ -7261,12 +7261,12 @@
     ],
     [
      "2026-10-21",
-     57.405
+     57.305
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 57.405
+    "deger": 57.305
    },
    "guncelleme": "2026-10-21"
   },
@@ -9293,12 +9293,12 @@
     ],
     [
      "2026-10-21",
-     6.593
+     6.5885
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 6.593
+    "deger": 6.5885
    },
    "guncelleme": "2026-10-21"
   },
@@ -17406,12 +17406,12 @@
     ],
     [
      "2026-10-21",
-     2.959
+     2.954
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 2.959
+    "deger": 2.954
    },
    "guncelleme": "2026-10-21"
   },
@@ -19434,12 +19434,12 @@
     ],
     [
      "2026-10-21",
-     638.75
+     638
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 638.75
+    "deger": 638
    },
    "guncelleme": "2026-10-21"
   },
@@ -21466,12 +21466,12 @@
     ],
     [
      "2026-10-21",
-     110.4
+     110.04
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 110.4
+    "deger": 110.04
    },
    "guncelleme": "2026-10-21"
   },
@@ -23561,12 +23561,12 @@
     ],
     [
      "2026-10-21",
-     1.1226
+     1.1227
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 1.1226
+    "deger": 1.1227
    },
    "guncelleme": "2026-10-21"
   },
@@ -25653,12 +25653,12 @@
     ],
     [
      "2026-10-21",
-     49.5976
+     49.5977
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 49.5976
+    "deger": 49.5977
    },
    "guncelleme": "2026-10-21"
   },
@@ -38559,11 +38559,15 @@
     [
      "2026-10-19",
      36.7703
+    ],
+    [
+     "2026-10-20",
+     36.8228
     ]
    ],
    "son": {
-    "tarih": "2026-10-19",
-    "deger": 36.7703
+    "tarih": "2026-10-20",
+    "deger": 36.8228
    },
    "guncelleme": "2026-10-21"
   },
@@ -51335,14 +51339,14 @@
     ],
     [
      "2026-10-21",
-     396.5,
-     "19 Oct 2026"
+     394,
+     "20 Oct 2026"
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 396.5,
-    "etiket": "19 Oct 2026"
+    "deger": 394,
+    "etiket": "20 Oct 2026"
    },
    "guncelleme": "2026-10-21",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
@@ -51363,12 +51367,12 @@
     ],
     [
      "2026-10-21",
-     193.5
+     196
     ]
    ],
    "son": {
     "tarih": "2026-10-21",
-    "deger": 193.5
+    "deger": 196
    },
    "guncelleme": "2026-10-21",
    "_not": "KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur."
@@ -53894,7 +53898,9 @@
     "2025-10": 51.5,
     "2025-11": 52,
     "2025-12": 52,
+    "2026-01": 54,
     "2026-02": 54,
+    "2026-04": 35.5,
     "2026-05": 35,
     "2026-09": 40,
     "2026-10": 40
@@ -53957,12 +53963,28 @@
      52
     ],
     [
+     "2025-11-19",
+     52
+    ],
+    [
      "2025-12-10",
      52
     ],
     [
+     "2025-12-24",
+     52
+    ],
+    [
+     "2026-01-28",
+     54
+    ],
+    [
      "2026-02-11",
      54
+    ],
+    [
+     "2026-04-29",
+     35.5
     ],
     [
      "2026-05-20",
@@ -54010,7 +54032,9 @@
     "2025-10": 18,
     "2025-11": 18,
     "2025-12": 18,
+    "2026-01": 18.5,
     "2026-02": 18.5,
+    "2026-04": 18.5,
     "2026-05": 18.5,
     "2026-09": 18.5,
     "2026-10": 18.5
@@ -54073,11 +54097,27 @@
      18
     ],
     [
+     "2025-11-19",
+     18
+    ],
+    [
      "2025-12-10",
      18
     ],
     [
+     "2025-12-24",
+     18
+    ],
+    [
+     "2026-01-28",
+     18.5
+    ],
+    [
      "2026-02-11",
+     18.5
+    ],
+    [
+     "2026-04-29",
      18.5
     ],
     [
@@ -54122,9 +54162,11 @@
     "2025-08": 1.2,
     "2025-09": 1.317,
     "2025-10": 1.35,
-    "2025-11": 1.3,
-    "2025-12": 1.18,
+    "2025-11": 1.29,
+    "2025-12": 1.215,
+    "2026-01": 1.35,
     "2026-02": 1.1,
+    "2026-04": 0.9,
     "2026-05": 0.9,
     "2026-09": 1,
     "2026-10": 1
@@ -54187,12 +54229,28 @@
      1.3
     ],
     [
+     "2025-11-19",
+     1.28
+    ],
+    [
      "2025-12-10",
      1.18
     ],
     [
+     "2025-12-24",
+     1.25
+    ],
+    [
+     "2026-01-28",
+     1.35
+    ],
+    [
      "2026-02-11",
      1.1
+    ],
+    [
+     "2026-04-29",
+     0.9
     ],
     [
      "2026-05-20",
@@ -54228,7 +54286,7 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (16 hafta)"
+    "k1 ad değişimi, oran 1 (19 hafta)"
    ],
    "_not": "Modül üreticisinin ana girdisi (modül maliyetinin ~%50–60'ı). Türkiye'de hücre üretimi sınırlı → ithal hücre fiyatı ≈ maliyet.",
    "siklik": "aylik",
@@ -54239,9 +54297,11 @@
     "2025-08": 0.0387,
     "2025-09": 0.0407,
     "2025-10": 0.042,
-    "2025-11": 0.041,
-    "2025-12": 0.039,
+    "2025-11": 0.0405,
+    "2025-12": 0.04,
+    "2026-01": 0.059,
     "2026-02": 0.058,
+    "2026-04": 0.049,
     "2026-05": 0.049,
     "2026-09": 0.046,
     "2026-10": 0.046
@@ -54304,12 +54364,28 @@
      0.041
     ],
     [
+     "2025-11-19",
+     0.04
+    ],
+    [
      "2025-12-10",
      0.039
     ],
     [
+     "2025-12-24",
+     0.041
+    ],
+    [
+     "2026-01-28",
+     0.059
+    ],
+    [
      "2026-02-11",
      0.058
+    ],
+    [
+     "2026-04-29",
+     0.049
     ],
     [
      "2026-05-20",
@@ -54353,9 +54429,11 @@
     "2025-08": 0.29,
     "2025-09": 0.31,
     "2025-10": 0.3175,
-    "2025-11": 0.3,
-    "2025-12": 0.28,
+    "2025-11": 0.2975,
+    "2025-12": 0.31,
+    "2026-01": 0.45,
     "2026-02": 0.44,
+    "2026-04": 0.325,
     "2026-05": 0.33,
     "2026-09": 0.3,
     "2026-10": 0.3
@@ -54418,12 +54496,28 @@
      0.3
     ],
     [
+     "2025-11-19",
+     0.295
+    ],
+    [
      "2025-12-10",
      0.28
     ],
     [
+     "2025-12-24",
+     0.34
+    ],
+    [
+     "2026-01-28",
+     0.45
+    ],
+    [
      "2026-02-11",
      0.44
+    ],
+    [
+     "2026-04-29",
+     0.325
     ],
     [
      "2026-05-20",
@@ -54469,7 +54563,9 @@
     "2025-10": 0.088,
     "2025-11": 0.088,
     "2025-12": 0.088,
+    "2026-01": 0.096,
     "2026-02": 0.096,
+    "2026-04": 0.115,
     "2026-05": 0.115,
     "2026-09": 0.114,
     "2026-10": 0.114
@@ -54532,12 +54628,28 @@
      0.088
     ],
     [
+     "2025-11-19",
+     0.088
+    ],
+    [
      "2025-12-10",
      0.088
     ],
     [
+     "2025-12-24",
+     0.088
+    ],
+    [
+     "2026-01-28",
+     0.096
+    ],
+    [
      "2026-02-11",
      0.096
+    ],
+    [
+     "2026-04-29",
+     0.115
     ],
     [
      "2026-05-20",
@@ -54582,8 +54694,10 @@
     "2025-09": 0.691,
     "2025-10": 0.693,
     "2025-11": 0.693,
-    "2025-12": 0.693,
+    "2025-12": 0.6955,
+    "2026-01": 0.739,
     "2026-02": 0.739,
+    "2026-04": 0.756,
     "2026-05": 0.744,
     "2026-09": 0.723,
     "2026-10": 0.719
@@ -54646,12 +54760,28 @@
      0.693
     ],
     [
+     "2025-11-19",
+     0.693
+    ],
+    [
      "2025-12-10",
      0.693
     ],
     [
+     "2025-12-24",
+     0.698
+    ],
+    [
+     "2026-01-28",
+     0.739
+    ],
+    [
      "2026-02-11",
      0.739
+    ],
+    [
+     "2026-04-29",
+     0.756
     ],
     [
      "2026-05-20",
@@ -54687,7 +54817,7 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (15 hafta)"
+    "k1 ad değişimi, oran 1 (17 hafta)"
    ],
    "_not": "TR üreticisinin Avrupa'daki rakip fiyatı (Çin malı FOB). Türkiye'de Çin modülüne ek gümrük vergisi/anti-damping uygulanır → yurt içi fiyat bunun üstünde; makas korunma ölçüsüdür.",
    "siklik": "aylik",
@@ -54700,7 +54830,9 @@
     "2025-10": 0.086,
     "2025-11": 0.086,
     "2025-12": 0.086,
+    "2026-01": 0.095,
     "2026-02": 0.095,
+    "2026-04": 0.123,
     "2026-05": 0.123,
     "2026-09": 0.117,
     "2026-10": 0.115
@@ -54763,12 +54895,28 @@
      0.086
     ],
     [
+     "2025-11-19",
+     0.086
+    ],
+    [
      "2025-12-10",
      0.086
     ],
     [
+     "2025-12-24",
+     0.086
+    ],
+    [
+     "2026-01-28",
+     0.095
+    ],
+    [
      "2026-02-11",
      0.095
+    ],
+    [
+     "2026-04-29",
+     0.123
     ],
     [
      "2026-05-20",
@@ -54803,7 +54951,7 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (15 hafta)"
+    "k1 ad değişimi, oran 1 (17 hafta)"
    ],
    "_not": "ABD pazarı tarife duvarı arkasında (AD/CVD, Section 201/301) → Çin'in 2–3 katı. CW Enerji'nin ABD yatırımı bu fiyat bandına bakar.",
    "siklik": "aylik",
@@ -54816,7 +54964,9 @@
     "2025-10": 0.27,
     "2025-11": 0.27,
     "2025-12": 0.27,
+    "2026-01": 0.27,
     "2026-02": 0.27,
+    "2026-04": 0.27,
     "2026-05": 0.27,
     "2026-09": 0.27,
     "2026-10": 0.27
@@ -54879,11 +55029,27 @@
      0.27
     ],
     [
+     "2025-11-19",
+     0.27
+    ],
+    [
      "2025-12-10",
      0.27
     ],
     [
+     "2025-12-24",
+     0.27
+    ],
+    [
+     "2026-01-28",
+     0.27
+    ],
+    [
      "2026-02-11",
+     0.27
+    ],
+    [
+     "2026-04-29",
      0.27
     ],
     [
@@ -54932,8 +55098,10 @@
     "2025-09": 0.097,
     "2025-10": 0.0974,
     "2025-11": 0.0975,
-    "2025-12": 0.0983,
+    "2025-12": 0.0987,
+    "2026-01": 0.106,
     "2026-02": 0.1069,
+    "2026-04": 0.1106,
     "2026-05": 0.1094,
     "2026-09": 0.1078,
     "2026-10": 0.1074
@@ -54996,12 +55164,28 @@
      0.0975
     ],
     [
+     "2025-11-19",
+     0.0975
+    ],
+    [
      "2025-12-10",
      0.0983
     ],
     [
+     "2025-12-24",
+     0.099
+    ],
+    [
+     "2026-01-28",
+     0.106
+    ],
+    [
      "2026-02-11",
      0.1069
+    ],
+    [
+     "2026-04-29",
+     0.1106
     ],
     [
      "2026-05-20",
@@ -55047,9 +55231,11 @@
     "2025-08": 0.0493,
     "2025-09": 0.0473,
     "2025-10": 0.046,
-    "2025-11": 0.047,
-    "2025-12": 0.049,
+    "2025-11": 0.0475,
+    "2025-12": 0.048,
+    "2026-01": 0.037,
     "2026-02": 0.038,
+    "2026-04": 0.066,
     "2026-05": 0.066,
     "2026-09": 0.068,
     "2026-10": 0.068
@@ -55112,12 +55298,28 @@
      0.047
     ],
     [
+     "2025-11-19",
+     0.048
+    ],
+    [
      "2025-12-10",
      0.049
     ],
     [
+     "2025-12-24",
+     0.047
+    ],
+    [
+     "2026-01-28",
+     0.037
+    ],
+    [
      "2026-02-11",
      0.038
+    ],
+    [
+     "2026-04-29",
+     0.066
     ],
     [
      "2026-05-20",
@@ -55168,7 +55370,10 @@
     "2025-07": 4.94,
     "2025-11": 6.5,
     "2025-12": 6.5,
+    "2026-03": 5.77,
+    "2026-04": 4.44,
     "2026-05": 4.68,
+    "2026-06": 4.54,
     "2026-08": 5.27,
     "2026-09": 5.07,
     "2026-10": 5.07
@@ -55231,8 +55436,24 @@
      6.5
     ],
     [
+     "2026-03-04",
+     5.77
+    ],
+    [
+     "2026-04-08",
+     4.44
+    ],
+    [
      "2026-05-13",
      4.68
+    ],
+    [
+     "2026-06-03",
+     4.63
+    ],
+    [
+     "2026-06-10",
+     4.44
     ],
     [
      "2026-08-26",
@@ -55279,7 +55500,10 @@
     "2025-07": 0.124,
     "2025-11": 0.158,
     "2025-12": 0.148,
+    "2026-03": 0.135,
+    "2026-04": 0.117,
     "2026-05": 0.117,
+    "2026-06": 0.114,
     "2026-08": 0.144,
     "2026-09": 0.14,
     "2026-10": 0.14
@@ -55342,8 +55566,24 @@
      0.148
     ],
     [
+     "2026-03-04",
+     0.135
+    ],
+    [
+     "2026-04-08",
+     0.117
+    ],
+    [
      "2026-05-13",
      0.117
+    ],
+    [
+     "2026-06-03",
+     0.116
+    ],
+    [
+     "2026-06-10",
+     0.112
     ],
     [
      "2026-08-26",
@@ -55390,7 +55630,10 @@
     "2025-07": 0.028,
     "2025-11": 0.036,
     "2025-12": 0.033,
+    "2026-03": 0.052,
+    "2026-04": 0.045,
     "2026-05": 0.044,
+    "2026-06": 0.0415,
     "2026-08": 0.042,
     "2026-09": 0.04,
     "2026-10": 0.04
@@ -55453,8 +55696,24 @@
      0.033
     ],
     [
+     "2026-03-04",
+     0.052
+    ],
+    [
+     "2026-04-08",
+     0.045
+    ],
+    [
      "2026-05-13",
      0.044
+    ],
+    [
+     "2026-06-03",
+     0.043
+    ],
+    [
+     "2026-06-10",
+     0.04
     ],
     [
      "2026-08-26",
@@ -55501,7 +55760,10 @@
     "2025-07": 0.073,
     "2025-11": 0.078,
     "2025-12": 0.077,
+    "2026-03": 0.089,
+    "2026-04": 0.094,
     "2026-05": 0.092,
+    "2026-06": 0.0905,
     "2026-08": 0.091,
     "2026-09": 0.09,
     "2026-10": 0.09
@@ -55564,8 +55826,24 @@
      0.077
     ],
     [
+     "2026-03-04",
+     0.089
+    ],
+    [
+     "2026-04-08",
+     0.094
+    ],
+    [
      "2026-05-13",
      0.092
+    ],
+    [
+     "2026-06-03",
+     0.091
+    ],
+    [
+     "2026-06-10",
+     0.09
     ],
     [
      "2026-08-26",
@@ -55613,7 +55891,10 @@
     "2025-07": 0.045,
     "2025-11": 0.042,
     "2025-12": 0.044,
+    "2026-03": 0.037,
+    "2026-04": 0.049,
     "2026-05": 0.048,
+    "2026-06": 0.049,
     "2026-08": 0.049,
     "2026-09": 0.05,
     "2026-10": 0.05
@@ -55676,8 +55957,24 @@
      0.044
     ],
     [
+     "2026-03-04",
+     0.037
+    ],
+    [
+     "2026-04-08",
+     0.049
+    ],
+    [
      "2026-05-13",
      0.048
+    ],
+    [
+     "2026-06-03",
+     0.048
+    ],
+    [
+     "2026-06-10",
+     0.05
     ],
     [
      "2026-08-26",
@@ -55698,6 +55995,32 @@
     "yillik_degisim": 19
    },
    "ilk": "2024-05-22",
+   "guncelleme": "2026-10-21"
+  },
+  "tkfen_backlog": {
+   "ad": "Tekfen taahhüt bakiye iş (backlog) — kalan işlerin parasal toplamı (mn $, çeyrek sonu; elle)",
+   "birim": "mn $",
+   "hisse": [
+    "TKFEN"
+   ],
+   "kaynak": "TKFEN çeyrek faaliyet raporları (\"kalan işlerin parasal toplamı\") — elle (§484)",
+   "_not": "Taahhüt gelirinin öncü göstergesi: bakiye eriyip yeni iş gelmezse 2–4 çeyrek sonra taahhüt hasılatı düşer. 2025Q1 732 → 2026Q2 413 mn $ (−%44) = yeni iş girişi tamamlanan işin gerisinde. 2025Q4/2026Q1 değeri raporda bulunamadı (boş).",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2025Q1": 732,
+    "2025Q2": 640,
+    "2025Q3": 686,
+    "2026Q2": 413
+   },
+   "yillik_yeni_is": {
+    "2024": 446
+   },
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 413
+   },
+   "elle": true,
    "guncelleme": "2026-10-21"
   }
  },
@@ -66817,6 +67140,118 @@
     "182*182-210/210mm Mono TOPCon - US made (USD)": 0.3,
     "182*182-210/210mm Mono TOPCon - US (USD)": 0.27,
     "182*182-210/210mm Mono TOPCon - EU (USD)": 0.088
+   },
+   "2026-04-29": {
+    "Polysilicon Price - Mono-grade polysilicon (USD)": 18.5,
+    "Polysilicon Price - Mono-grade polysilicon (RMB)": 35.5,
+    "Polysilicon Price - Granular polysilicon (RMB)": 35,
+    "Mono N Type Wafer - 182-183.75mm / 130um (USD)": 0.132,
+    "Mono N Type Wafer - 182-183.75mm / 130um (RMB)": 0.9,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 1.2,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (USD)": 0.049,
+    "TOPCon Cell - China export - 182-183.75mm / 25.3%+ (USD)": 0.049,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (RMB)": 0.325,
+    "TOPCon Cell - 182*210mm / 25.3%+ (RMB)": 0.33,
+    "TOPCon Cell - 210mm / 25.3%+ (RMB)": 0.33,
+    "182*182-210mm/210mm Mono TOPCon Module (USD)": 0.115,
+    "182*182-210mm/210mm Mono TOPCon Module (RMB)": 0.756,
+    "210mm Mono HJT Module (USD)": 0.11,
+    "210mm Mono HJT Module (RMB)": 0.76,
+    "182*182-210mm/210mm TOPCon Module - Ground-mounted project": 0.71,
+    "182*182-210mm/210mm TOPCon Module - Distributed project": 0.78,
+    "182*182-210mm BC Module - Ground-mounted project": 0.818,
+    "182*182-210mm BC Module - C&I project": 0.851,
+    "TOPCon Module - India assembled (USD, FOB)": 0.15,
+    "TOPCon Module - US assembled (USD, DDP)": 0.3,
+    "TOPCon Module - US projects - SEA made (USD, FOB)": 0.27,
+    "TOPCon Module - Europe projects - China made (USD, FOB)": 0.123,
+    "BC Module - Europe C&I projects - China made (USD, FOB)": 0.143,
+    "BC All Black Module - Europe Residential projects - China made (USD, FOB)": 0.204
+   },
+   "2026-01-28": {
+    "Polysilicon Price - Mono-grade polysilicon (USD)": 18.5,
+    "Polysilicon Price - Mono-grade polysilicon (RMB)": 54,
+    "Polysilicon Price - Granular polysilicon (RMB)": 52,
+    "Mono N Type Wafer - 182-183.75mm / 130um (USD)": 0.177,
+    "Mono N Type Wafer - 182-183.75mm / 130um (RMB)": 1.35,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1.45,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 1.65,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (USD)": 0.047,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (USD)": 0.059,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (RMB)": 0.45,
+    "TOPCon Cell - 182*210mm / 25.3%+ (RMB)": 0.45,
+    "TOPCon Cell - 210mm / 25.3%+ (RMB)": 0.45,
+    "182*182-210mm Mono TOPCon Module (USD)": 0.096,
+    "182*182-210mm Mono TOPCon Module (RMB)": 0.739,
+    "210mm Mono HJT Module (USD)": 0.098,
+    "210mm Mono HJT Module (RMB)": 0.77,
+    "182*182-210mm/210mm TOPCon Module - Ground-mounted project": 0.69,
+    "182*182-210mm/210mm TOPCon Module - Distributed project": 0.76,
+    "182*182-210mm BC Module - Ground-mounted project": 0.8,
+    "182*182-210mm BC Module - C&I project": 0.84,
+    "TOPCon Module - India assembled (USD, FOB)": 0.145,
+    "TOPCon Module - US assembled (USD, DDP)": 0.3,
+    "TOPCon Module - US projects - SEA made (USD, FOB)": 0.27,
+    "TOPCon Module - Europe projects - China made (USD, FOB)": 0.095,
+    "BC Module - Europe C&I projects - China made (USD, FOB)": 0.13,
+    "BC All Black Module - Europe Residential projects - China made (USD, FOB)": 0.176
+   },
+   "2025-12-24": {
+    "Polysilicon Price - Mono-grade polysilicon (USD)": 18,
+    "Polysilicon Price - Mono-grade polysilicon (RMB)": 52,
+    "Polysilicon Price - Granular polysilicon (RMB)": 50,
+    "Mono N Type Wafer - 182-183.75mm / 130um (USD)": 0.162,
+    "Mono N Type Wafer - 182-183.75mm / 130um (RMB)": 1.25,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1.35,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 1.55,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (USD)": 0.041,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (USD)": 0.041,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (RMB)": 0.34,
+    "TOPCon Cell - 182*210mm / 25.3%+ (RMB)": 0.34,
+    "TOPCon Cell - 210mm / 25.3%+ (RMB)": 0.34,
+    "182*182-210mm Mono TOPCon Module (USD)": 0.088,
+    "182*182-210mm Mono TOPCon Module (RMB)": 0.698,
+    "210mm Mono HJT Module (USD)": 0.094,
+    "210mm Mono HJT Module (RMB)": 0.76,
+    "182*182-210mm/210mm TOPCon Module - Ground-mounted project": 0.685,
+    "182*182-210mm/210mm TOPCon Module - Distributed project": 0.71,
+    "182*182-210mm BC Module - Ground-mounted project": 0.76,
+    "182*182-210mm BC Module - C&I project": 0.76,
+    "182*182-210/210mm Mono TOPCon - India made (USD)": 0.145,
+    "182*182-210/210mm Mono TOPCon - US made (USD)": 0.3,
+    "182*182-210/210mm Mono TOPCon - US (USD)": 0.27,
+    "182*182-210/210mm Mono TOPCon - EU (USD)": 0.086,
+    "182*182-210mm BC Module - C&I project - EU (USD)": 0.115,
+    "182*182-210mm BC All black Module - Residential project - EU (USD)": 0.165
+   },
+   "2025-11-19": {
+    "Polysilicon Price - Mono-grade polysilicon (USD)": 18,
+    "Polysilicon Price - Mono-grade polysilicon (RMB)": 52,
+    "Polysilicon Price - Granular polysilicon (RMB)": 50,
+    "Mono N Type Wafer - 182-183.75mm / 130um (USD)": 0.165,
+    "Mono N Type Wafer - 182-183.75mm / 130um (RMB)": 1.28,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1.28,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 1.6,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (USD)": 0.039,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (USD)": 0.04,
+    "TOPCon Cell - 182-183.75mm / 25.3%+ (RMB)": 0.295,
+    "TOPCon Cell - 182*210mm / 25.3%+ (RMB)": 0.28,
+    "TOPCon Cell - 210mm / 25.3%+ (RMB)": 0.29,
+    "182*182-210mm Mono TOPCon Module (USD)": 0.088,
+    "182*182-210mm Mono TOPCon Module (RMB)": 0.693,
+    "210mm Mono HJT Module (USD)": 0.094,
+    "210mm Mono HJT Module (RMB)": 0.78,
+    "182*182-210mm/210mm TOPCon Module - Ground-mounted project": 0.685,
+    "182*182-210mm/210mm TOPCon Module - Distributed project": 0.7,
+    "182*182-210mm BC Module - Ground-mounted project": 0.76,
+    "182*182-210mm BC Module - C&I project": 0.76,
+    "182*182-210/210mm Mono TOPCon - India made (USD)": 0.145,
+    "182*182-210/210mm Mono TOPCon - US made (USD)": 0.3,
+    "182*182-210/210mm Mono TOPCon - US (USD)": 0.27,
+    "182*182-210/210mm Mono TOPCon - EU (USD)": 0.086,
+    "182*182-210mm BC Module - C&I project - EU (USD)": 0.115,
+    "182*182-210mm BC All black Module - Residential project - EU (USD)": 0.165
    }
   },
   "wb": {
@@ -66825,18 +67260,18 @@
    "20260807150922": -2,
    "20260522084031": 1,
    "20260516091223": -2,
-   "20260429132038": -2,
+   "20260429132038": 1,
    "20260416120948": -2,
    "20260221140754": 1,
-   "20260129171224": -2,
-   "20251230130116": -2,
+   "20260129171224": 1,
+   "20251230130116": 1,
    "20251226172206": -2,
-   "20251215194425": -2,
+   "20251215194425": 1,
    "20251211192945": 1,
    "20251209004248": -2,
    "20251126192339": -2,
-   "20251125094731": -2,
-   "20251113112410": -2,
+   "20251125094731": 1,
+   "20251113112410": 1,
    "20251112161355": 1,
    "20251107220433": -2,
    "20251029180615": -2,
@@ -67234,25 +67669,105 @@
      "Mono PERC Module in China": 0.091,
      "182mm 580/625Wp N-Mono Module": 0.1,
      "ThinFilm Solar Module": 0.184
+    },
+    "2026-06-10": {
+     "PV Grade PolySilicon (9N/9N+)": 4.44,
+     "156 mm Multi Solar Wafer": 0.07,
+     "182mm Mono Solar Wafer": 0.12,
+     "210mm Mono Solar Wafer": 0.172,
+     "182.2mm x 183.75mm N Mono Wafer": 0.112,
+     "Multi Cell Price": 0.037,
+     "Poly PERC Cell": 0.037,
+     "China Mono PERC Cell": 0.039,
+     "166mm Mono PERC Cell": 0.039,
+     "182mm Mono PERC Cell": 0.039,
+     "210mm Mono PERC Cell": 0.039,
+     "182mm N-Mono Cell": 0.04,
+     "Poly Module": 0.084,
+     "182mm 550/595Wp PERC Module": 0.086,
+     "210mm 600/660Wp PERC Module": 0.089,
+     "Mono PERC Module in China": 0.084,
+     "182mm 580/625Wp N-Mono Module": 0.09,
+     "ThinFilm Solar Module": 0.2
+    },
+    "2026-06-03": {
+     "PV Grade PolySilicon (9N/9N+)": 4.63,
+     "156 mm Multi Solar Wafer": 0.072,
+     "182mm Mono Solar Wafer": 0.124,
+     "210mm Mono Solar Wafer": 0.178,
+     "182.2mm x 183.75mm N Mono Wafer": 0.116,
+     "Multi Cell Price": 0.04,
+     "Poly PERC Cell": 0.04,
+     "China Mono PERC Cell": 0.042,
+     "166mm Mono PERC Cell": 0.042,
+     "182mm Mono PERC Cell": 0.043,
+     "210mm Mono PERC Cell": 0.043,
+     "182mm N-Mono Cell": 0.043,
+     "Poly Module": 0.085,
+     "182mm 550/595Wp PERC Module": 0.087,
+     "210mm 600/660Wp PERC Module": 0.09,
+     "Mono PERC Module in China": 0.085,
+     "182mm 580/625Wp N-Mono Module": 0.091,
+     "ThinFilm Solar Module": 0.2
+    },
+    "2026-04-08": {
+     "PV Grade PolySilicon (9N/9N+)": 4.44,
+     "156 mm Multi Solar Wafer": 0.072,
+     "182mm Mono Solar Wafer": 0.125,
+     "210mm Mono Solar Wafer": 0.178,
+     "182.2mm x 183.75mm N Mono Wafer": 0.117,
+     "Multi Cell Price": 0.041,
+     "Poly PERC Cell": 0.042,
+     "China Mono PERC Cell": 0.044,
+     "166mm Mono PERC Cell": 0.044,
+     "182mm Mono PERC Cell": 0.044,
+     "210mm Mono PERC Cell": 0.045,
+     "182mm N-Mono Cell": 0.045,
+     "Poly Module": 0.09,
+     "182mm 550/595Wp PERC Module": 0.091,
+     "210mm 600/660Wp PERC Module": 0.095,
+     "Mono PERC Module in China": 0.089,
+     "182mm 580/625Wp N-Mono Module": 0.094,
+     "ThinFilm Solar Module": 0.2
+    },
+    "2026-03-04": {
+     "PV Grade PolySilicon (9N/9N+)": 5.77,
+     "156 mm Multi Solar Wafer": 0.084,
+     "182mm Mono Solar Wafer": 0.142,
+     "210mm Mono Solar Wafer": 0.203,
+     "182.2mm x 183.75mm N Mono Wafer": 0.135,
+     "Multi Cell Price": 0.049,
+     "Poly PERC Cell": 0.049,
+     "China Mono PERC Cell": 0.051,
+     "166mm Mono PERC Cell": 0.052,
+     "182mm Mono PERC Cell": 0.052,
+     "210mm Mono PERC Cell": 0.052,
+     "182mm N-Mono Cell": 0.052,
+     "Poly Module": 0.08,
+     "182mm 550/595Wp PERC Module": 0.083,
+     "210mm 600/660Wp PERC Module": 0.087,
+     "Mono PERC Module in China": 0.081,
+     "182mm 580/625Wp N-Mono Module": 0.089,
+     "ThinFilm Solar Module": 0.2
     }
    },
    "wb": {
     "20261005133117": 1,
     "20260902093241": 1,
-    "20260611221831": -2,
-    "20260609234422": -2,
+    "20260611221831": 1,
+    "20260609234422": 1,
     "20260519060935": 1,
     "20260513184259": 1,
-    "20260411202229": -2,
-    "20260306020744": -2,
+    "20260411202229": 1,
+    "20260306020744": 1,
     "20260222044818": -2,
-    "20251215115450": -2,
+    "20251215115450": -3,
     "20251210075253": 1,
     "20251205020816": 1,
     "20251118033959": 1,
-    "20251115064103": -2,
-    "20251013053429": -2,
-    "20250909094852": -2,
+    "20251115064103": -3,
+    "20251013053429": -3,
+    "20250909094852": -3,
     "20250815211436": -2,
     "20250710193409": 1,
     "20250621141643": -2,
