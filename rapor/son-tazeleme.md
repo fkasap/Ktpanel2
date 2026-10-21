@@ -64,7 +64,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: vercel-köprüsü (1986 fon fiyat + 1071 getiri)
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500288489530> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500416471865> [Go Back]`
 
 ### Katılım fonları — ✓ GEÇTİ
 - ✓ **kapsam**: 45/46 (%98)
@@ -124,18 +124,18 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - 469 satır · 21 çeyrek · USDTRY Yahoo günlük · değişiklik yok
 
 ### Sürücü serileri (§464) — ✓ 16 seri
-- altin 4157.3999 (2026-10-21, 504 gün)
-- gumus 57.72 (2026-10-21, 504 gün)
-- bakir 6.542 (2026-10-21, 504 gün)
-- aluminyum 3108.5 (2026-10-21, 503 gün)
-- hrc_abd 1332 (2026-10-21, 503 gün)
-- ttf 87.44 (2026-10-21, 504 gün)
-- henryhub 2.858 (2026-10-21, 504 gün)
-- bugday 635.75 (2026-10-21, 503 gün)
-- pamuk 80.73 (2026-10-21, 504 gün)
-- brent_yh 109.24 (2026-10-21, 504 gün)
-- eurusd 1.1238 (2026-10-21, 519 gün)
-- usdtry 49.5996 (2026-10-21, 519 gün)
+- altin 4145.7002 (2026-10-21, 504 gün)
+- gumus 57.57 (2026-10-21, 504 gün)
+- bakir 6.5465 (2026-10-21, 504 gün)
+- aluminyum 3098 (2026-10-21, 503 gün)
+- hrc_abd 1380 (2026-10-21, 503 gün)
+- ttf 87.38 (2026-10-21, 504 gün)
+- henryhub 2.855 (2026-10-21, 504 gün)
+- bugday 631 (2026-10-21, 503 gün)
+- pamuk 80.72 (2026-10-21, 504 gün)
+- brent_yh 108.52 (2026-10-21, 504 gün)
+- eurusd 1.1235 (2026-10-21, 519 gün)
+- usdtry 49.5988 (2026-10-21, 519 gün)
 - demir_lme 590 $/t (20 Oct 2026, 2 nokta, playwright)
 - hurda_lme 394 $/t (20 Oct 2026, 2 nokta, playwright·2.tur)
 - metal_marji_tr 196 $/t
@@ -161,7 +161,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - epdk_tarife 722.24 (2026-11, TÜFE z−2 türevi, 119 ay)
 
 ### EPİAŞ PTF (§466) — ✓ 3186.06 TL/MWh · 64.38 $/MWh (2026-10-22)
-- 1391 gün (2023-01-01→) · bu koşuda 12 gün/288 saat · 1 parça
+- 1391 gün (2023-01-01→) · bu koşuda 11 gün/264 saat · 1 parça
 - son 30 gün ort. 2705 TL/MWh · yıllık -1.1% · kimlik: EPIAS_ID+EPIAS_KEY
 
 ### ASELSAN sözleşme akışı (§467) — ✓ 211 sözleşme (2017-01-06→2026-10-08) · kur Yahoo 10y
@@ -177,14 +177,15 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Kardemir fiyatları (§472) — ✓ kütük 565 (2026-10-13) $/t · hurda Özel Ekstra 20120 TL/t ≈ 411.04 $/t (2026-09-25) · metal marjı 153.96 $/t
 - liste 483 tarih (2014-01-07→2026-10-21) · dosyada 483 · hurda 347 tarih (2014-02-11→2026-09-25) · dosyada 347 · bu koşu 0 sayfa, 0 yeni · geriye doldurma TAMAM
-- nervürlü Ø12-32 30210 TL/t ≈ 609.1 $/t (2026-10-21) · profil IPE 180-200 670 (2026-07-07) $/t · filmaşin 635 (2026-10-21) $/t
+- nervürlü Ø12-32 30210 TL/t ≈ 609.11 $/t (2026-10-21) · profil IPE 180-200 670 (2026-07-07) $/t · filmaşin 635 (2026-10-21) $/t
 - kütük − 1,6×cevher 408.68 $/t (kok hariç) · KCAER hadde spread'i (profil − kütük) 105 $/t · kur: günlük 2602 · ay başı 262
 
 ### GES zinciri fiyatları (§483) — ✓ 2026-10-21 · modül 0.114 $/W (y/y +29.5%) · hücre 0.046 $/W (y/y +9.5%) · polisilikon 40 RMB/kg (y/y -23.1%) · montaj makası 0.068 $/W (y/y +47.8%)
 - arşiv: 31 hafta (2025-05-21→2026-10-21) · Wayback 183 görüntü, bu koşu 3 · 148 görüntü sonraki koşulara
 - polisilikon_rmb 31 hafta [k1 ad değişimi, oran 1 (11 hafta)] · polisilikon_usd 31 hafta [k1 ad değişimi, oran 1 (11 hafta)] · wafer_rmb 31 hafta · hucre_usd 31 hafta [k1 ad değişimi, oran 1 (22 hafta)] · hucre_rmb 31 hafta · modul_usd 31 hafta · modul_rmb 31 hafta · modul_avrupa_usd 31 hafta [k1 ad değişimi, oran 1 (20 hafta)] · modul_abd_usd 31 hafta [k1 ad değişimi, oran 1 (20 hafta)] · CNY kuru 2600 gün
 - archive.org hız sınırı (HTTP 429) ×4 — görüntüler sonraki koşulara (hata sayılmadı)
-- PVinsights (§483b): ✓ canlı 2026-10-21 · modül 0.089 $/W (y/y +14.1%) · hücre 0.04 $/W (y/y +11.1%) · polisilikon 5.07 $/kg (y/y -22%) · makas 0.049 $/W (y/y +16.7%) · arşiv 25 hafta (2024-05-22→2026-10-21) · Wayback 87 görüntü, bu koşu 1 · 56 sonraki koşulara · polisilikon_usd 25 · wafer_usd 25 · hucre_usd 25 · modul_usd 25
+- PVinsights (§483b): ⚠ canlı sayfa yok (arşivle) · modül 0.089 $/W (y/y +14.1%) · hücre 0.04 $/W (y/y +11.1%) · polisilikon 5.07 $/kg (y/y -22%) · makas 0.049 $/W (y/y +16.7%) · arşiv 25 hafta (2024-05-22→2026-10-21) · Wayback 87 görüntü, bu koşu 1 · 56 sonraki koşulara · polisilikon_usd 25 · wafer_usd 25 · hucre_usd 25 · modul_usd 25
+- ⚠ pvinsights canlı sayfa çözülemedi (tarih null, 0 satır)
 
 ### Elle seriler (§484 backlog · §485 asgari ücret) — ✓ tkfen_backlog 2026Q2 = 413 mn $ (4 çeyrek) · asgari_ucret 33030 TL (2026-10, son adım 2026-01-01) · reel 24069 (2026-09) · değişiklik yok
 
@@ -192,12 +193,11 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TÜİK geniş tablolar (§487) — ✓ 7/7 tablo · ufe_plastik 6946.05 (2026-09, y/y 45.6%) · ufe_cimento 6482.69 (2026-09, y/y 29.0%) · ufe_makarna 5356.46 (2026-09, y/y 18.4%) · ufe_celik_2410 6926.89 (2026-09, y/y 27.0%) · ufe_kumas 3692.83 (2026-09, y/y 20.0%) · ufe_gubre_2015 10127.37 (2026-09, y/y 31.8%) · ydufe_plastik 3531.22 (2026-09, y/y 33.5%) · ydufe_cimento 3223.24 (2026-09, y/y 21.6%) · ydufe_makarna 2770.00 (2026-09, y/y 18.7%) · ydufe_celik 5615.64 (2026-09, y/y 26.8%) · bugday_tl 15.82 (2026-09, y/y 18.8%) · gubre_girdi 1340.19 (2026-08, y/y 28.8%) · perakende_gida_hacim 172.33 (2026-07, y/y 3.2%) · perakende_giyim_hacim 154.57 (2026-07, y/y 7.7%) · insaat_uretim_bina 141.73 (2026-08, y/y -0.9%) · insaat_uretim_toplam 126.64 (2026-08, y/y 2.3%) · kara_tasima_hacim 131.89 (2026-07, y/y 5.6%) · obams_makas 91.7 (2026-09) · petkm_ufe_makas 70.0 (2026-09)
 
-### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez
-- tanı: HDPE film fetch HTTP 403 Cloudflare · HDPE film playwright geçemedi · HDPE film wayback görüntü HTTP 429/görüntü HTTP 429 · HDPE film SPN 520 · LDPE film fetch HTTP 403 Cloudflare · LDPE film wayback init yok · LDPE film SPN 520 · LLDPE standart wayback init yok · LLDPE standart SPN 520 · PP homo wayback init yok · PP homo SPN 520
-- HDPE film: erişilemedi (Cloudflare + arşiv yok)
-- LDPE film: erişilemedi (Cloudflare + arşiv yok)
-- LLDPE standart: erişilemedi (Cloudflare + arşiv yok)
-- PP homo: erişilemedi (Cloudflare + arşiv yok)
+### PlasticPortal PE/PP (§488) — ✓ 4/4 malzeme · yol {"tohum":4} · HDPE film 1.43 · LDPE film 1.63 · LLDPE 1.48 · PP homo 1.61 €/kg
+- pe_pp 1725 $/t (2026-10, 242 ay) · polimer makası 937 $/t (2026-10)
+- tanı: HDPE film fetch HTTP 403 Cloudflare · HDPE film playwright geçemedi · HDPE film wayback init yok · HDPE film SPN 520 · LDPE film fetch HTTP 403 Cloudflare · LDPE film wayback görüntü HTTP 429/görüntü HTTP 429 · LLDPE standart wayback init yok · PP homo wayback görüntü HTTP 429/görüntü HTTP 429 · 39 sn
+
+### DCE polimer vadelileri (§489) — ✓ LLDPE 8479 CNY/t ≈ 1195 $/t (2024-07-17, $ y/y 8.0%, 205 ay) · PP 7737 CNY/t ≈ 1090 $/t (2024-07-17, $ y/y 9.5%, 126 ay) · PVC 5970 CNY/t ≈ 841 $/t (2024-07-17, $ y/y 2.6%, 183 ay) · Asya makası 371 $/t (2024-07)
 
 ### SUT endeksi (§474) — ✓ SUT 597.14 (son artış 2026-01-01 +%25) · reel 69.01 (2020-12=100, 2026-09) · TTB 548.42 (son 2026-01-01 +%16.5) · TTB reel 141.67
 - 6 SUT adımı (2021-04-28→2026-01-01, 1 otomatik) · 7 TTB adımı · son SUT artışından bu yana TÜFE +%24.3 → reel %-19.6
@@ -254,7 +254,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 - §429p kuyruk: liste 261 kayıt · daha önce işlenmiş 161 idx · iş 50
 
-### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 12050 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
+### Fon portföy dağılımı (§429) — ✓ 36 rapor işlendi · evren 47 fon (oto +0) · depo 35 fon / 193 dönem · KAP yolu: tarama(47 fon, 12055 kayıt) · pencere 150 gün · kalıcı istisna 7 fon
 - bu turda hedef 43 (tur tavanı 80; kalan sonraki koşuda)
 - ⚠ hata (ilk 3, tanılı): RKH idx1666763: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 14/09/2026 - 18/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
   · RKH idx1669713: dönem çözülemedi · belge başı: "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON 21/09/2026 - 25/09/2026 I-FONU TANITICI BİLGİLER A-)Fonu"
@@ -265,9 +265,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (112 fiyat) · Model sicili (35 fiyat) · TR 5Y CDS (248.07 bp) · fon akışı (1986) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (16) · EVDS serileri (17) · EPİAŞ PTF (1391 gün) · ASELSAN sözleşme akışı (211) · TÜİK İME (5) · TÜİK tablolar (19) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
+**Sonuç:** XK100 ağırlıkları · XKTUM ağırlıkları · XKTMT ağırlıkları · Multiple fiyatları (121 fiyat) · Model sicili (34 fiyat) · TR 5Y CDS (248.07 bp) · fon akışı (1986) · katılım fonları (45+akış) · bilanço tetiği (111 bekliyor) · endeks üyelikleri · endeks arşivi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (16) · EVDS serileri (17) · EPİAŞ PTF (1391 gün) · ASELSAN sözleşme akışı (211) · TÜİK İME (5) · TÜİK tablolar (19) · PlasticPortal PE/PP (4 malzeme) · DCE polimer (4) · faktör evreni (144/238) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %85) · fm-oto · KAP arşivi (+0 çeyrek) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ GES zinciri fiyatları (§483) — 64 sn
-- ⏱ PlasticPortal PE/PP (§488) — 63 sn
-- toplam: 426 sn
+- ⏱ Sürücü serileri (§464) — 60 sn
+- toplam: 405 sn
