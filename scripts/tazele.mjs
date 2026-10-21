@@ -3806,6 +3806,178 @@ function sutAdimlarBirlesik(K) {
   return elle.concat(oto).sort((a, b) => a[0] < b[0] ? -1 : 1);
 }
 
+/* ── §483 GES ZİNCİRİ FİYATLARI — InfoLink haftalık spot (polisilikon → wafer → hücre → modül) ───────────────────────────
+   Çıkış noktası (20 Eki): kullanıcı pvinsights.com'u istedi. Site 20 Eki'de hem bu ortamdan hem kullanıcının Chrome'undan
+   AÇILMADI (http → https yönlendirme döngüsü / bağlantı hatası) → Actions için güvenilir değil. Aynı veriyi (PV zincir spot
+   fiyatı) yayımlayan sektör standardı InfoLink Consulting'in açık sayfası kullanıldı:
+     GET https://www.infolink-group.com/spot-price/   → sunucu tarafında üretilmiş HTML <table> (JS gerekmez), her Çarşamba
+         güncellenir ("Thursday of the previous week to this Wednesday"); satır: Kalem | Yüksek | Düşük | ORTALAMA | Δ% | Δ$ | tahmin.
+         Bazı bölgesel satırlar 🔒 (ücretli) → sayı yok, atlanır. Sayfa başlığında yayın tarihi "October 14, 2026".
+   TARİHÇE: InfoLink sayfası yalnız son haftayı gösterir. Geçmiş için Internet Archive (Wayback) anlık görüntüleri:
+     GET https://web.archive.org/cdx/search/cdx?url=infolink-group.com/spot-price/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8
+     GET https://web.archive.org/web/{ts}id_/https://www.infolink-group.com/spot-price/   (id_ = arşivin ham HTML'i, aynı tablo)
+     20 Eki ölçümü: 183 görüntü 2022-07→2026-10 (2023 ~aylık, 2024–25 ~haftalık, 2026 seyrek). Sayfa tarihi görüntü tarihinden
+     değil SAYFANIN KENDİ yayın tarihinden alınır (aynı haftanın birden çok görüntüsü tek kayıt). Koşu başına ≤40 görüntü ya da 150 sn (hangisi önce), 1,5 sn ara → 183 görüntü ~5–6 koşuda.
+   Hindistan satırları seçilmedi: "Mono TOPCon - India" (2024–25, Çin→Hindistan) ile "India assembled" (2025→, yerli montaj)
+     farklı ürün — zincirlenemez; TR hisseleri için de ilgisiz.
+   Solar cam (3,2 mm) InfoLink'in açık tablosundan 2025-01'de kalktı → seri yok.
+   ETİKET KAYMASI (ürün teknolojisi değiştikçe InfoLink satır adlarını değiştirdi): polisilikon "Prime for Mono" (2022–23) →
+     "Chunk polysilicon" (2024–25) → "Mono-grade polysilicon" (2026); hücre/modül PERC (p-tipi) → TOPCon (n-tipi, 2024→);
+     verim eşiği 22,8% → 23,1% → 24,5% → 25,4% (aynı ürün, eşik yükseliyor). ZİNCİRLEME: her seri için öncelikli etiket
+     kalıpları; yeni teknolojinin olmadığı eski haftalar eski teknoloji fiyatı × (yeni/eski) ÖRTÜŞME MEDYAN ORANIYLA bağlanır
+     (ürün geçişi seviye sıçraması yaratmasın; oran rapora yazılır). Örtüşme yoksa bağlanmaz (seri yeni etiketle başlar).
+   Neden önemli: CWENE (modül üreticisi + EPC) için satış fiyatı ≈ modül, girdi ≈ hücre (ithal) → modül − hücre = montaj
+     makası. GESAN (GES kurulum/EPC, panel imalatına başlıyor) için modül fiyatı proje maliyetinin ~%35–45'i → düşüş talebi
+     artırır. EUPWR (trafo/YG merkezi) için modül fiyatı yalnız dolaylı (GES yatırım hızı); doğrudan maliyet sürücüsü bakır.
+   Türkiye notu: Çin menşeli modüle ek gümrük/anti-damping var → yurt içi fiyat Çin ihraç FOB'unun üstünde; seviye değil YÖN
+     ve makas okunur. Avrupa projeleri FOB Çin satırı TR ihracatçısının rakip fiyatıdır.
+   Birim: polisilikon RMB/kg ve $/kg · wafer RMB/adet · hücre ve modül $/W ve RMB/W. RMB → $ Yahoo CNY=X (ay ortalaması).
+   Saklama: D.ges = {surum, hafta:{tarih:{etiket:ortalama}}, wb:{ts:1}}; seriler{} 'aylik' (hafta ortalamalarının ay ort.) +
+   'haftalik' son 104 nokta + son. GES_SURUM değişirse kayıt sıfırlanır. */
+const GES_SURUM = '483', GES_WB_TAVAN = 40, GES_WB_UYKU = 1500, GES_SURE_MS = 150 * 1000;
+const GES_URL = 'https://www.infolink-group.com/spot-price/';
+const GES_H = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-US,en;q=0.9' };
+const GES_AY = { January: '01', February: '02', March: '03', April: '04', May: '05', June: '06', July: '07', August: '08', September: '09', October: '10', November: '11', December: '12' };
+function gesCoz(h) {
+  h = String(h || '');
+  const m = h.match(/(January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (20\d\d)/);
+  const tarih = m ? m[3] + '-' + GES_AY[m[1]] + '-' + m[2].padStart(2, '0') : null;
+  const sat = {};
+  for (const r of h.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)) {
+    const td = [...r[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(x => x[1].replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&#181;|&micro;|µ/g, 'u').replace(/\s+/g, ' ').trim());
+    if (td.length < 4 || !td[0]) continue;
+    const v = parseFloat(td[3].replace(/,/g, ''));
+    if (isFinite(v) && v > 0) sat[td[0]] = v;
+  }
+  return { tarih, sat, n: Object.keys(sat).length };
+}
+/* seri tanımları: k anahtar · desen[] öncelik sırası (ilk eşleşen etiket; yoksa sonraki desen oranla bağlanır) · aralık denetimi */
+const GES_SERI = [
+  { k: 'ges_polisilikon_rmb', ad: 'Polisilikon — Çin mono-grade/chunk (RMB/kg)', birim: 'RMB/kg', ar: [10, 400],
+    d: [/^Polysilicon Price - Mono-grade polysilicon \(RMB\)$/i, /^Polysilicon Price - Chunk polysilicon \(RMB\)$/i, /^Polysilicon Price - Prime for Mono \(RMB\)$/i] },
+  { k: 'ges_polisilikon_usd', ad: 'Polisilikon — Çin dışı menşe ($/kg)', birim: '$/kg', ar: [3, 60],
+    d: [/^Polysilicon Price - Mono-grade polysilicon \(USD\)$/i, /^Polysilicon Price - Chunk polysilicon \(USD\)$/i] },
+  { k: 'ges_wafer_rmb', ad: 'Wafer — n-tipi 182 mm (RMB/adet)', birim: 'RMB/adet', ar: [0.3, 15],
+    d: [/^Mono N Type Wafer - 182(-183\.75)?mm \/.*\(RMB\)$/i, /^Mono P Type Wafer - 182(-183\.75)?mm \/.*\(RMB\)$/i, /^Mono Wafer - 182mm \/.*\(RMB\)$/i] },
+  { k: 'ges_hucre_usd', ad: 'Hücre — TOPCon 182 mm, Çin ihraç ($/W)', birim: '$/W', ar: [0.015, 0.4],
+    d: [/^TOPCon Cell - China export - 182/i, /^TOPCon Cell - 182[^(]*\(USD\)$/i, /^Mono PERC Cell - 182[^(]*\(USD\)$/i] },
+  { k: 'ges_hucre_rmb', ad: 'Hücre — TOPCon 182 mm, Çin iç piyasa (RMB/W)', birim: 'RMB/W', ar: [0.1, 3],
+    d: [/^TOPCon Cell - 182[^(]*\(RMB\)$/i, /^Mono PERC Cell - 182[^(]*\(RMB\)$/i] },
+  { k: 'ges_modul_usd', ad: 'Modül — TOPCon çift yüzlü, Çin dışı piyasalar ($/W)', birim: '$/W', ar: [0.05, 0.6],
+    d: [/^(182\*182-210mm\/210mm |182\*182-210mm |182mm )Mono TOPCon Module \(USD\)$/i, /^(182\*182-210mm |182mm )Mono PERC Module \(USD\)$/i] },
+  { k: 'ges_modul_rmb', ad: 'Modül — TOPCon çift yüzlü, Çin iç piyasa (RMB/W)', birim: 'RMB/W', ar: [0.4, 4],
+    d: [/^(182\*182-210mm\/210mm |182\*182-210mm |182mm )Mono TOPCon Module \(RMB\)$/i, /^(182\*182-210mm |182mm )Mono PERC Module \(RMB\)$/i] },
+  { k: 'ges_modul_avrupa_usd', ad: 'Modül — TOPCon, Avrupa projeleri, Çin üretimi ($/W)', birim: '$/W', ar: [0.05, 0.6],
+    d: [/^TOPCon Module - Europe projects - China made/i, /Mono TOPCon - EU \(USD\)$/i, /Mono PERC ?- ?EU ?\(USD\)$/i] },
+  { k: 'ges_modul_abd_usd', ad: 'Modül — TOPCon, ABD projeleri ($/W)', birim: '$/W', ar: [0.1, 1.2],
+    d: [/^TOPCon Module - US projects - SEA made/i, /Mono TOPCon - US \(USD\)$/i, /Mono PERC ?- ?US ?\(USD\)$/i] },
+];
+function gesZincir(H, tanim) {
+  const tarihler = Object.keys(H).sort();
+  const bul = (sat, re) => { for (const e of Object.keys(sat)) if (re.test(e)) return sat[e]; return null; };
+  /* her desen için tarih → değer */
+  const kat = tanim.d.map(re => { const o = {}; for (const t of tarihler) { const v = bul(H[t], re); if (v != null) o[t] = v; } return o; });
+  const out = {}, oranlar = [];
+  for (const t of Object.keys(kat[0])) out[t] = kat[0][t];
+  for (let i = 1; i < kat.length; i++) {
+    /* bir önceki katmanla (zincirin şimdiye kadarki hâli) örtüşme medyan oranı */
+    const ort = Object.keys(kat[i]).filter(t => out[t] != null).map(t => out[t] / kat[i][t]).sort((a, b) => a - b);
+    const ilkOut = Object.keys(out).sort()[0];
+    if (!ilkOut) { for (const t of Object.keys(kat[i])) out[t] = kat[i][t]; if (Object.keys(kat[i]).length) oranlar.push('k' + i + ':başlangıç'); continue; }
+    let med;
+    if (ort.length) med = ort[Math.floor(ort.length / 2)];
+    else med = 1;   /* InfoLink aynı ürünün satır adını değiştirdi ("TOPCon Cell - 182" → "…China export - 182", "Chunk" → "Mono-grade"); teknoloji geçişlerinde (PERC→TOPCon) tabloda daima örtüşme var → medyan oran */
+    let eklenen = 0;
+    for (const t of Object.keys(kat[i])) if (out[t] == null && t < ilkOut) { out[t] = kat[i][t] * med; eklenen++; }
+    if (eklenen) oranlar.push(ort.length ? 'k' + i + ' ×' + med.toFixed(3) + ' (' + ort.length + ' örtüşme, ' + eklenen + ' hafta)' : 'k' + i + ' ad değişimi, oran 1 (' + eklenen + ' hafta)');
+  }
+  const hafta = Object.entries(out).filter(([t, v]) => v >= tanim.ar[0] && v <= tanim.ar[1]).sort((a, b) => a[0] < b[0] ? -1 : 1);
+  return { hafta, oranlar, ilkEtiket: kat.findIndex(o => Object.keys(o).length) };
+}
+async function gesFiyat() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### GES zinciri fiyatları (§483) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  let G = D.ges;
+  if (!G || G.surum !== GES_SURUM) G = D.ges = { surum: GES_SURUM, hafta: {}, wb: {}, _not: 'InfoLink spot fiyat tablosu (ortalama sütunu) — hafta: yayın tarihi → {InfoLink satır adı: ortalama}; wb: işlenmiş Wayback görüntü zaman damgaları' };
+  const uyku = ms => new Promise(r => setTimeout(r, ms));
+  const uyari = [], notlar = []; let yeni = 0;
+  const al = async (u, ms) => { const r = await fetch(u, { headers: GES_H, signal: AbortSignal.timeout(ms || 30000) }); if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); };
+  const isle = (c, kaynak) => { if (!c.tarih || c.n < 5) return false; if (!G.hafta[c.tarih]) yeni++; G.hafta[c.tarih] = Object.assign({}, G.hafta[c.tarih] || {}, c.sat); return true; };
+  /* 1) canlı sayfa */
+  let canli = null;
+  try { const c = gesCoz(await al(GES_URL)); if (isle(c, 'canlı')) canli = c; else uyari.push('canlı sayfa çözülemedi (tarih ' + c.tarih + ', ' + c.n + ' satır) — tablo yapısı değişmiş olabilir'); }
+  catch (e) { uyari.push('infolink-group.com: ' + String(e && e.message || e).slice(0, 90)); }
+  /* 2) Wayback geriye doldurma (artımlı) */
+  const t0 = Date.now();
+  let wbToplam = 0, wbBu = 0, wbBekleyen = 0, wbHata = false;
+  try {
+    const cdx = JSON.parse(await al('https://web.archive.org/cdx/search/cdx?url=infolink-group.com/spot-price/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8', 60000));
+    const ts = (Array.isArray(cdx) ? cdx.slice(1) : []).map(x => x[0]).filter(Boolean).sort().reverse();
+    wbToplam = ts.length;
+    for (const t of ts) {
+      if (G.wb[t] === 1 || (G.wb[t] || 0) <= -3) continue;
+      if (wbBu >= GES_WB_TAVAN || Date.now() - t0 > GES_SURE_MS) { wbBekleyen++; continue; }   /* olcKos katman tavanı 4 dk: aşılırsa iş yarıda bırakılır ve DOSYA YAZILMAZ → kendi süre sınırı 150 sn */
+      try { const c = gesCoz(await al('https://web.archive.org/web/' + t + 'id_/' + GES_URL, 25000)); isle(c, 'wb'); G.wb[t] = 1; }
+      catch (e) { G.wb[t] = (typeof G.wb[t] === 'number' && G.wb[t] < 0 ? G.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('wayback ' + t + ': ' + String(e && e.message || e).slice(0, 60)); }
+      wbBu++; await uyku(GES_WB_UYKU);
+    }
+  } catch (e) { wbHata = true; uyari.push('wayback CDX: ' + String(e && e.message || e).slice(0, 90)); }
+  const H = G.hafta, ht = Object.keys(H).sort();
+  if (!ht.length) { raporlar.push('### GES zinciri fiyatları (§483) — ✗ veri yok\n- ' + uyari.slice(0, 6).join('\n- ')); return; }
+  /* RMB → $ (Yahoo CNY=X, USD başına CNY) — ay ortalaması */
+  let cny = new Map(); try { const h = await yahooSeri(['CNY=X'], '', '10y'); cny = h['CNY=X'] || new Map(); } catch (e) {}
+  const cnyAy = {}; { const top = {}, say = {}; for (const [t, v] of cny) { if (!(v > 5 && v < 9)) continue; const a = t.slice(0, 7); top[a] = (top[a] || 0) + v; say[a] = (say[a] || 0) + 1; } for (const a in top) cnyAy[a] = top[a] / say[a]; }
+  const cnyAl = a => cnyAy[a] || cnyAy[Object.keys(cnyAy).filter(x => x <= a).sort().pop()] || 7.1;
+  const KAYNAK = 'InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması';
+  const ozet = {};
+  const yazSeri = (tanim, hafta, oranlar, ekMeta) => {
+    if (!hafta.length) return null;
+    const top = {}, say = {}; for (const [t, v] of hafta) { const a = t.slice(0, 7); top[a] = (top[a] || 0) + v; say[a] = (say[a] || 0) + 1; }
+    const hassas = tanim.birim.includes('/W') ? 4 : (tanim.birim.includes('adet') ? 3 : 2);
+    const aylik = {}; for (const a of Object.keys(top).sort()) aylik[a] = +(top[a] / say[a]).toFixed(hassas);
+    const son = hafta[hafta.length - 1], onceki = D.seriler[tanim.k];
+    if (onceki && onceki.son && onceki.son.tarih > son[0]) { uyari.push(tanim.k + ': gerileme korundu'); return onceki.son; }
+    const gun = t => new Date(t + 'T00:00:00Z').getTime() / 864e5, hedefG = gun(son[0]) - 365;
+    const yil = hafta.filter(([t]) => Math.abs(gun(t) - hedefG) <= 45).sort((a, b) => Math.abs(gun(a[0]) - hedefG) - Math.abs(gun(b[0]) - hedefG))[0];   /* ±45 gün içinde en yakın hafta; arşiv seyrekse y/y yok */
+    D.seriler[tanim.k] = Object.assign({}, onceki || {}, { ad: tanim.ad, birim: tanim.birim, hisse: tanim.hisse || ['CWENE', 'GESAN'], kaynak: KAYNAK, zincir: oranlar }, ekMeta || {}, {
+      siklik: 'aylik', aylik, haftalik: hafta.slice(-104).map(([t, v]) => [t, +v.toFixed(hassas)]), son: { tarih: son[0], deger: +son[1].toFixed(hassas), yillik_degisim: yil ? +((son[1] / yil[1] - 1) * 100).toFixed(1) : null }, ilk: hafta[0][0], guncelleme: bugun });
+    ozet[tanim.k] = D.seriler[tanim.k].son; return D.seriler[tanim.k].son;
+  };
+  for (const tn of GES_SERI) {
+    const z = gesZincir(H, tn);
+    const meta = {};
+    if (tn.k === 'ges_modul_avrupa_usd') { meta.hisse = ['CWENE', 'GESAN']; meta._not = 'TR üreticisinin Avrupa\'daki rakip fiyatı (Çin malı FOB). Türkiye\'de Çin modülüne ek gümrük vergisi/anti-damping uygulanır → yurt içi fiyat bunun üstünde; makas korunma ölçüsüdür.'; }
+    if (tn.k === 'ges_modul_abd_usd') { meta.hisse = ['CWENE']; meta._not = 'ABD pazarı tarife duvarı arkasında (AD/CVD, Section 201/301) → Çin\'in 2–3 katı. CW Enerji\'nin ABD yatırımı bu fiyat bandına bakar.'; }
+    if (tn.k === 'ges_hucre_usd') meta._not = 'Modül üreticisinin ana girdisi (modül maliyetinin ~%50–60\'ı). Türkiye\'de hücre üretimi sınırlı → ithal hücre fiyatı ≈ maliyet.';
+    if (tn.k === 'ges_polisilikon_rmb') meta._not = 'Zincirin en üstü; Çin aşırı kapasitesinin termometresi. Polisilikon → wafer → hücre → modül fiyat geçişi 1–3 ay gecikmeli.';
+    yazSeri(tn, z.hafta, z.oranlar, meta);
+    notlar.push(tn.k.replace('ges_', '') + ' ' + z.hafta.length + ' hafta' + (z.oranlar.length ? ' [' + z.oranlar.join(', ') + ']' : ''));
+  }
+  /* RMB modül → $ (iç piyasa fiyatını ihraçla aynı birimde görmek için) */
+  const mR = D.seriler.ges_modul_rmb;
+  if (mR && Array.isArray(mR.haftalik)) {
+    const hR = gesZincir(H, GES_SERI.find(x => x.k === 'ges_modul_rmb')).hafta.map(([t, v]) => [t, v / cnyAl(t.slice(0, 7))]);
+    yazSeri({ k: 'ges_modul_cin_usd', ad: 'Modül — TOPCon, Çin iç piyasa ($/W, RMB ÷ USD/CNY)', birim: '$/W', ar: [0.05, 0.6] }, hR, ['RMB ÷ Yahoo CNY=X ay ort.'], { _not: 'Çin iç piyasa fiyatı (KDV dahil teslim) $ cinsinden; ihraç FOB ile fark = Çin iç talebi/ihracat iadesi etkisi.' });
+  }
+  /* türetilmiş: montaj makası = modül − hücre ($/W), haftalık eşleşen tarihlerden */
+  const A = D.seriler.ges_modul_usd, B = D.seriler.ges_hucre_usd;
+  if (A && B) {
+    const zA = gesZincir(H, GES_SERI.find(x => x.k === 'ges_modul_usd')).hafta, zB = new Map(gesZincir(H, GES_SERI.find(x => x.k === 'ges_hucre_usd')).hafta);
+    const tum = zA.filter(([t]) => zB.has(t)).map(([t, v]) => [t, v - zB.get(t)]);
+    yazSeri({ k: 'ges_montaj_makasi_usd', ad: 'GES montaj makası — modül − hücre ($/W)', birim: '$/W', ar: [-0.2, 0.4], hisse: ['CWENE'] }, tum, ['türetilmiş: ges_modul_usd − ges_hucre_usd (aynı hafta)'],
+      { _not: 'Hücre alıp modül birleştiren üreticinin brüt kazancı/W (cam, çerçeve, EVA, işçilik bu makastan karşılanır). Daralma = Çin fiyat baskısı montajcıya geçiyor.' });
+  }
+  D.seriler_guncelleme = bugun;
+  await yaz(dosya, D);
+  if (yeni) degisenler.push('GES zinciri fiyatları (' + yeni + ' hafta)');
+  const g = (k, b) => ozet[k] ? ozet[k].deger + (b || '') + (ozet[k].yillik_degisim != null ? ' (y/y ' + (ozet[k].yillik_degisim > 0 ? '+' : '') + ozet[k].yillik_degisim + '%)' : '') : '—';
+  raporlar.push('### GES zinciri fiyatları (§483) — ' + (canli ? '✓ ' + canli.tarih : '⚠ canlı sayfa yok') + ' · modül ' + g('ges_modul_usd', ' $/W') + ' · hücre ' + g('ges_hucre_usd', ' $/W') + ' · polisilikon ' + g('ges_polisilikon_rmb', ' RMB/kg') + ' · montaj makası ' + g('ges_montaj_makasi_usd', ' $/W') +
+    '\n- arşiv: ' + ht.length + ' hafta (' + ht[0] + '→' + ht[ht.length - 1] + ') · Wayback ' + wbToplam + ' görüntü, bu koşu ' + wbBu + (wbHata ? ' · ⚠ arşive ulaşılamadı (sonraki koşu dener)' : wbBekleyen ? ' · ' + wbBekleyen + ' görüntü sonraki koşulara' : ' · geriye doldurma TAMAM') +
+    '\n- ' + notlar.join(' · ') + ' · CNY kuru ' + cny.size + ' gün' +
+    (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -5722,6 +5894,7 @@ async function bultenKesif() {
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
+    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
     await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
@@ -5735,8 +5908,9 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
