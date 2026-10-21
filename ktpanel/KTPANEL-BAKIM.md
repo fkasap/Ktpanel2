@@ -6,6 +6,17 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §490 (21 Eki 2026, 16:20) — BANKACILIK "VERİ YOK": BDDK SERTİFİKA OKUMASI BOŞ DÖNÜYOR
+
+Panel Makro › Bankacılık: üç kart (özet, sahiplik, sektörel kredi) "VERİ YOK". /api/bddk?panel=1|sahiplik=1|sektor=1 → ok:false.
+Teşhis (/api/bddk?teshis=1, canlı): hata "Sertifika alan adı eşleşmedi:  " — ad BOŞ (CN de SAN da yok) → getPeerCertificate() {}
+döndürüyor; PIN hatası DEĞİL (o ayrı mesaj verir; pin bitişi 15 Kas 2026). Sertifika yanıt anında soket üzerinden okunuyordu; TLS
+oturumu yeniden kullanıldığında / Vercel çalışma ortamı değişince Node sertifikayı orada vermiyor. DÜZELTME api/bddk.js: agent:false
+(her istek taze el sıkışma, oturum yeniden kullanımı yok) + sertifika 'secureConnect' anında yakalanır, yanıtta boşsa o kullanılır.
+Güvenlik kontrolleri (alan adı, kendinden imzalı, geçerlilik, PIN) aynen duruyor. DOĞRULAMA: deploy sonrası /api/bddk?teshis=1 →
+"satir" > 0 ve teshis.tls.pin "AKTİF". 15 Kas civarı sertifika yenilenince PIN bilerek kırılır (mesajdaki yeni parmak izi yapıştırılır).
+DEPLOY: ktpanel/api/bddk.js · BAKIM.
+
 # BAKIM EK — §488d/§489 (21 Eki 2026, 16:00) — PE/PP: TOHUM + DCE VADELİLERİ (Sina)
 
 Koşu #39597924825 tanısı: fetch 403 Cloudflare · Playwright geçemedi · Wayback görüntüleri "init yok" (arşiv Tem'de Cloudflare sayfasını
