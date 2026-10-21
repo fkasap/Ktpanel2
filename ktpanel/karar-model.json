@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21c",
+ "surum": "2026-10-21d",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -544,6 +544,13 @@
      "kaynak": "TCMB EVDS (zincirli)"
     },
     {
+     "k": "katilim_kar_payi",
+     "rol": "maliyet",
+     "ad": "TL katılma hesabı kâr payı oranı (%) — fonlama maliyeti",
+     "kaynak": "TCMB EVDS TP.KBH.TRY.30 (haftalık)",
+     "not": "Katılım bankasının mevduat karşılığı maliyeti. Kâr payı makası = kredi/sukuk getirisi − bu oran. AOFM düşüşünden 4–8 hafta sonra iner; düşüş hızı makasın açılma hızı."
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -1047,6 +1054,12 @@
      "ad": "Elektrik PTF (TL/MWh) — mağaza/depo elektriği",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
      "not": "Satışın ~%1'i civarı küçük kalem; ama FAVÖK marjı ~%5–7 olduğundan elektrik şoku marjda hissedilir."
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — mağaza/depo personeli (en büyük gider kalemi)",
+     "kaynak": "türetilmiş (Actions §485)"
     },
     {
      "k": "usdtry",
@@ -1730,6 +1743,26 @@
      "ad": "Aylık ön satış (KAP)",
      "bekliyor": true,
      "kaynak": "KAP ÖDA aylık — ayrıştırıcı Faz 3"
+    },
+    {
+     "k": "konut_ilk_el",
+     "rol": "gelir",
+     "ad": "Konut satışı — ilk el (adet/ay) · geliştirici talebi",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT3.KTRTOPLAM (TÜİK)",
+     "not": "Emlak Konut ilk el satıcı; ilk el satış hacmi ön satış ve fiyat gücünün piyasa ölçüsü. Gelir teslimatta tanındığı için çeyrek FAVÖK'e 4–8 çeyrek gecikmeli yansır."
+    },
+    {
+     "k": "konut_ipotekli",
+     "rol": "gelir",
+     "ad": "Konut satışı — ipotekli (adet/ay) · kredi koşulları",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT2.KTRTOPLAM (TÜİK)",
+     "not": "Faiz indirimi döngüsünün ilk göründüğü yer; ipotekli pay yükselirse talep kredi ile genişliyor."
+    },
+    {
+     "k": "konut_toplam",
+     "rol": "gelir",
+     "ad": "Konut satışı — toplam (adet/ay)",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT1.KTRTOPLAM (TÜİK)"
     },
     {
      "k": "usdtry",
@@ -2782,14 +2815,20 @@
      "kaynak": "TCMB EVDS (zincirli)"
     },
     {
-     "k": "usdtry",
-     "rol": "kur"
-    },
-    {
      "k": "asgari_ucret",
      "rol": "maliyet",
-     "ad": "Asgari ücret (şoför maliyeti)",
-     "bekliyor": true
+     "ad": "Asgari ücret brüt (TL) — şoför maliyeti",
+     "kaynak": "Resmî Gazete adım tablosu (Actions §485)"
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — şoför maliyeti; sözleşme eskalasyonu TÜFE ise reel ücret ↑ marjı sıkar",
+     "kaynak": "türetilmiş (Actions §485)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
     }
    ],
    "birincil": "brent_yh"
@@ -3520,6 +3559,19 @@
      "not": "Giyim fiyat enflasyonu = birim fiyat büyümesi; hacim tüketici güvenine bağlı. Mevsimsel indirim ayları (Oca, Tem) endeksi düşürür → çeyrek ortalaması okunur"
     },
     {
+     "k": "pamuk",
+     "rol": "maliyet",
+     "ad": "Pamuk ICE (¢/lb) — denim/kumaş girdisi",
+     "kaynak": "Yahoo CT=F (Actions §464)",
+     "not": "Kumaş maliyetinin büyük kısmı pamuk ipliği; fiyat geçişi 2–3 sezon gecikmeli (sipariş önceden verilir). Mavi üretimi fason → etki tedarikçi fiyatı üzerinden."
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — mağaza personeli maliyeti",
+     "kaynak": "türetilmiş (Actions §485)"
+    },
+    {
      "k": "eurusd",
      "rol": "kur",
      "ad": "EUR/USD (uluslararası satış)"
@@ -3952,6 +4004,20 @@
      "k": "brent_yh",
      "rol": "maliyet",
      "ad": "Brent — nafta girdi vekili"
+    },
+    {
+     "k": "plastik_uretim",
+     "rol": "gelir",
+     "ad": "Sanayi üretimi C20.16 plastik hammadde (endeks) — Petkim hacmi vekili",
+     "kaynak": "TCMB EVDS TP.TSANAYTKVM2021.C2016 (Actions §485)",
+     "not": "Türkiye'de birincil formda plastik hammadde üretiminin büyük kısmı Petkim (STAR rafinerisi entegrasyonu dahil) → endeks şirketin üretim hacmine yakın. Bakım duruşları burada görünür."
+    },
+    {
+     "k": "gubre_ufe",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.1 temel kimyasal + birincil formda plastik (yurt içi fiyat)",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T53",
+     "not": "EVDS'de 20.16 (yalnız plastik) üretici fiyatı ayrı yok; 20.1 grubu plastik + gübre + temel kimyasal birlikte. TL endeks → $ yön için USDTRY ile okunur."
     },
     {
      "k": "usdtry",
@@ -4989,6 +5055,18 @@
      "kaynak": "TCMB EVDS (zincirli)"
     },
     {
+     "k": "asgari_ucret",
+     "rol": "maliyet",
+     "ad": "Asgari ücret brüt (TL) — şoför/personel maliyeti",
+     "kaynak": "Resmî Gazete adım tablosu (Actions §485)"
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — şoför maliyeti",
+     "kaynak": "türetilmiş (Actions §485)"
+    },
+    {
      "k": "usdtry",
      "rol": "kur"
     }
@@ -5019,5 +5097,6 @@
  "_483": "GES zinciri katmanı (Actions §483): InfoLink Consulting haftalık spot tablosu (polisilikon RMB/kg ve $/kg · n-tipi wafer · TOPCon hücre $/W ve RMB/W · modül Çin dışı/Çin iç/Avrupa/ABD $/W) + Internet Archive görüntülerinden 2022-07→ geçmiş; ürün geçişi (PERC→TOPCon) örtüşme medyan oranıyla zincirlenir. Türetilmiş: montaj makası = modül − hücre. CWENE \"modül fiyatı bekliyor\" satırı kapandı (birincil montaj makası, tier C→B); EUPWR ve GESAN XK030 dışı İZLEME modeli olarak eklendi (evren: izleme; FAVÖK/fiyat/konsensüs Fintables 20 Eki, sonraki bilançolar KAP arşivinden §462b). pvinsights.com erişilemedi.",
  "_483b": "PVinsights ikinci kaynak (Actions §483b): pvinsights.com ana sayfası ücretsiz haftalık spot (PV grade polisilikon $/kg · N-mono wafer · 182 N-Mono hücre · 182 N-Mono modül $/W, KDV hariç). Tarayıcıda https↔http döngüsü verir ama sunucu ayakta (Wayback 2026-10-05 görüntüsü 200); Actions düz http dener, olmazsa arşivin son görüntüsü. Geçmiş 81 görüntü / 67 hafta 2022-01→. Seviye InfoLink Çin dışı satırından düşük (0,090 vs 0,114 $/W) — tanım farkı; yön teyidi için yan yana.",
  "_483d": "EUPWR/GESAN grup yapısı (GESAN 6A26 dipnotu): GESAN → %50,43 Europower (EUPWR) → %60 Peak PV (panel); GESAN → %100 EP World (güç trafosu). Modül fiyatı EUPWR ve GESAN için GELİR (Peak PV satış fiyatı; kullanıcı düzeltmesi 21 Eki) — önceki \"maliyet/kurulum temposu\" rolü yanlıştı. Birincil ikisinde de bakır (brüt kârın çoğu trafo/pano). Satır çıkarılmadı; makas ve hücre eklendi.",
- "_484": "Grup 1 sürücüleri (21 Eki): EREGL + Kardemir yurt içi hurda (LME satırı korunur, bekliyor) · AKCNS/CIMSA + PTF $ (elektrik maliyeti) · ENJSA + PTF TL (perakende alış) · BIMAS + PTF TL · TKFEN + taahhüt backlog (faaliyet raporu, elle tablo tazele.mjs ELLE_CEYREK §484 — Tekfen KAP'a yeni iş bildirimi yapmadığı için KAP akışı kurulmadı)."
+ "_484": "Grup 1 sürücüleri (21 Eki): EREGL + Kardemir yurt içi hurda (LME satırı korunur, bekliyor) · AKCNS/CIMSA + PTF $ (elektrik maliyeti) · ENJSA + PTF TL (perakende alış) · BIMAS + PTF TL · TKFEN + taahhüt backlog (faaliyet raporu, elle tablo tazele.mjs ELLE_CEYREK §484 — Tekfen KAP'a yeni iş bildirimi yapmadığı için KAP akışı kurulmadı).",
+ "_485": "Grup 2 sürücüleri (21 Eki): MAVI + pamuk (Yahoo CT=F) + reel asgari ücret · GRSEL asgari ücret \"bekliyor\" KAPANDI + reel · TUREX/BIMAS + asgari ücret · PETKM + sanayi üretimi C20.16 plastik (hacim) + Yİ-ÜFE 20.1 (fiyat; 20.16 ayrı yok) · EKGYO + TÜİK konut satışı ilk el/ipotekli/toplam (EVDS AKONUTSAT) · ALBRK + TL katılma hesabı kâr payı oranı (EVDS KBH, haftalık). İnşaat maliyet endeksi EVDS'de yok → alınmadı."
 }

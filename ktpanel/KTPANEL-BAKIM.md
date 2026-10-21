@@ -6,6 +6,21 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §485 (21 Eki 2026, 11:20) — GRUP 2 SÜRÜCÜLERİ (EVDS + Yahoo + asgari ücret adım tablosu)
+
+EVDS kod keşfi: evds3 sitesinin AÇIK arama ucu /igmevdsms-dis/searchResults?searchVal=… (anahtar gerekmez; Chrome'da ölçüldü) — seri kodu,
+frekans (frequencyStr), toplama yöntemi döner. Bulunanlar → EVDS_KAYIT:
+  plastik_uretim TP.TSANAYTKVM2021.C2016 (sanayi üretimi, birincil formda plastik; aylık) → PETKM hacim vekili
+  konut_ilk_el TP.AKONUTSAT3.KTRTOPLAM · konut_ipotekli TP.AKONUTSAT2.KTRTOPLAM · konut_toplam TP.AKONUTSAT1.KTRTOPLAM (TÜİK, aylık) → EKGYO
+  katilim_kar_payi TP.KBH.TRY.30 (TL katılma hesapları toplam, akım %; HAFTALIK Cuma → günlük yol) → ALBRK
+  YOK: Yİ-ÜFE 20.16 ayrı seri (yalnız 20.1 = T53, zaten gubre_ufe — PETKM'e fiyat satırı olarak eklendi) · inşaat maliyet endeksi (EVDS'de yok).
+Yahoo: pamuk CT=F (SURUCU_KAYIT) → MAVI.
+Asgari ücret (§485, elleSeriler içinde): ASGARI_UCRET adım tablosu brüt TL — 2021 3.577,50 · 2022/01 5.004 · 2022/07 6.471 · 2023/01 10.008 ·
+2023/07 13.414,50 · 2024 20.002,50 · 2025 26.005,50 · 2026 33.030 (muhasebetr.com tablosu + KPMG 2026 bülteni; Tem 2026 ara zam YOK, gzt.com
+15 Tem). asgari_ucret (aylık adım) + asgari_ucret_reel (÷TÜFE). GRSEL "asgari ücret bekliyor" KAPANDI; TUREX/BIMAS/MAVI'ye reel satır.
+RİTÜEL: Aralık sonu Komisyon kararı → ASGARI_UCRET'e satır (ara zam olursa Temmuz).
+DEPLOY: scripts/tazele.mjs (§483c+§484+§485) · karar-model.json (2026-10-21d) · BAKIM · DAMGA.
+
 # BAKIM EK — §484 (21 Eki 2026, 10:45) — GRUP 1 SÜRÜCÜLERİ (mevcut veriden bağlantı) + TKFEN BACKLOG (elle çeyrek)
 
 Journal taraması sonrası "1 ile başla": veri zaten dosyada olan sürücüler bağlandı (satır çıkarılmadı):
