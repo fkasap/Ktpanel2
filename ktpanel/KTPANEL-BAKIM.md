@@ -6,6 +6,30 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §483d (21 Eki 2026, 10:20) — EUPWR/GESAN GRUP YAPISI: MODÜL FİYATI "GELİR"
+
+Kullanıcı düzeltmesi: "EUPWR panel üreten bir şirket (CWENE gibi), GESAN trafo/güç üniteleri; EUPWR GESAN'ın alt iştiraki; maliyet artarsa
+fiyat da artar". DOĞRULAMA (GESAN 6A26 konsolide dipnotu + EUPWR 6A26 faaliyet raporu, Fintables): GESAN → %50,43 Europower (EUPWR;
+Ara 25 %52,7) → %60 Peak PV Solar (panel, Temelli 7. fabrika 2023→); GESAN → %100 EP World (~100 mn $ güç trafosu, 1.000 MVA/550 kV,
+2Y25 üretim). 6A26 bölüm (bin TL): Girişim taahhüt hasılat 3,62 mlr / brüt 495 mn · Europower trafo-pano 3,44 mlr / 2,32 mlr · Peak PV
+panel 3,93 mlr / 215 mn (6A25: 1,44 mlr / −44 mn) · EP World 1,6 mn · eliminasyon −2,18 mlr (grup içi panel → EPC).
+SONUÇ: §483'te EUPWR'a modülü "kurulum temposu vekili / maliyet", GESAN'a "EPC maliyeti" diye koymuştum — YANLIŞ: modül iki şirkette de
+Peak PV'nin SATIŞ fiyatı → rol "gelir"; kârı belirleyen modül − hücre makası → makas (InfoLink + EUPWR'da PVinsights) ve hücre (maliyet)
+eklendi. Satır ÇIKARILMADI (kullanıcı). Birincil ikisinde de BAKIR: gelirin yarısı panel ama brüt kârın ~%90'ı (EUPWR) / ~%75'i (GESAN)
+trafo-pano. Europower brüt marjı %67 olağandışı (grup içi fiyatlama olabilir) — 3Ç26 dipnotunda tekrar bakılacak.
+DEPLOY: karar-model.json (2026-10-21b) · BAKIM.
+
+# BAKIM EK — §483c (21 Eki 2026, 09:50) — İLK CANLI KOŞU (#39553795830) + archive.org 429
+
+Koşu kırmızı bitti ama GES'ten DEĞİL: "Katılım fonları ✗ kapsam 41/46 (%89, eşik %95)" — TEFAS köprüsü F5 "Request Rejected"
+(WAF) döndü, 5 fon eksik → o katman yazılmadı (diğerleri commit 847b489). Geçici; tekrar koşu ya da --katman=fon.
+GES SONUCU: InfoLink canlı ✓ 2026-10-14 (modül 0,114 · hücre 0,046 $/W · polisilikon 40 RMB/kg) · PVinsights CANLI ✓ (düz http çalıştı;
+tarayıcı döngüsü Actions'ta yok) 2026-10-14 (modül 0,090 · hücre 0,040 · polisilikon 5,07 $/kg). Süre 202 sn.
+SORUNLAR → DÜZELTME: (1) archive.org HTTP 429 (hız sınırı) görüntüleri "hatalı" sayıyordu (3'te kalıcı bırakılırdı) → 429 hata
+sayılmaz, 10 sn bekle, 3 ardışık 429'da o koşu arşiv durur; ara 1,5 → 2,5 sn. (2) PVinsights CDX 458 görüntü döndü (2010'dan beri) →
+&from=2022 (81 görüntü). (3) "geriye doldurma TAMAM" bekleyen sayımı döngü sonunda gerçek kalanla hesaplanır.
+DEPLOY: scripts/tazele.mjs.
+
 # BAKIM EK — §483b (21 Eki 2026, 09:30) — PVINSIGHTS İKİNCİ KAYNAK (canlı http + Wayback geçmişi)
 
 Kullanıcı: "pvinsights.com'a tekrar bak". Chrome yine hata sayfası; WebFetch https→http 302. TEŞHİS: sunucu AYAKTA — Internet Archive

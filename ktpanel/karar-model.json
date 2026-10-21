@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21a",
+ "surum": "2026-10-21b",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -2151,7 +2151,7 @@
    "tier": "C",
    "tip": "konsensus",
    "evren": "izleme",
-   "surucu_plani": "Bakır/alüminyum (trafo girdisi) · GES modül fiyatı (yenilenebilir yatırım temposu) · USDTRY/EURUSD (ihracat)",
+   "surucu_plani": "Bakır (trafo/pano) · panel makası modül − hücre (Peak PV) · modül satış fiyatı · USDTRY/EURUSD (ihracat)",
    "kaynak_notu": "Konsensüs Fintables (1 kurum); bakır/alüminyum Yahoo; modül fiyatı InfoLink haftalık (Actions §483). Elektrik çeliği (GOES) serbest seri yok.",
    "sermaye_mn": 660.0,
    "favok": {
@@ -2271,18 +2271,36 @@
     {
      "k": "bakir",
      "rol": "maliyet",
-     "ad": "Bakır (COMEX) — trafo sargısı ana girdisi"
+     "ad": "Bakır (COMEX) — trafo/pano sargısı ana girdisi"
+    },
+    {
+     "k": "ges_montaj_makasi_usd",
+     "rol": "marj",
+     "ad": "Panel montaj makası — modül − hücre ($/W) · Peak PV",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_pvi_montaj_makasi_usd",
+     "rol": "marj",
+     "ad": "Panel montaj makası — PVinsights (ikinci kaynak, $/W)",
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+    },
+    {
+     "k": "ges_modul_usd",
+     "rol": "gelir",
+     "ad": "GES modül fiyatı ($/W) — Peak PV satış fiyatı",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_hucre_usd",
+     "rol": "maliyet",
+     "ad": "Hücre TOPCon 182 ($/W) — panel ana girdisi",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
     },
     {
      "k": "aluminyum",
      "rol": "maliyet",
-     "ad": "Alüminyum — sargı/gövde alternatif girdisi"
-    },
-    {
-     "k": "ges_modul_usd",
-     "rol": "maliyet",
-     "ad": "GES modül fiyatı ($/W) — yenilenebilir kurulum hızı vekili (↓ = trafo talebi ↑)",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "ad": "Alüminyum — sargı/gövde, panel çerçevesi, GES konstrüksiyonu"
     },
     {
      "k": "usdtry",
@@ -2294,7 +2312,7 @@
     }
    ],
    "birincil": "bakir",
-   "sektor_not": "Güç ve dağıtım trafosu, YG trafo merkezi, enerji depolama ve otomasyon; ihracat ağırlıklı. Trafo maliyetinin büyük kısmı bakır sargı + elektrik çeliği (GOES): bakır ↑ sabit fiyatlı siparişte marjı sıkar, endeksli sözleşmede geçer. Talep tarafı şebeke yatırımları ve yenilenebilir kurulum: rüzgâr/GES santrali başına YG trafo merkezi gerekir → modül fiyatının düşmesi GES temposunu, dolayısıyla trafo siparişini dolaylı artırır (doğrudan maliyet DEĞİL). Küresel trafo arzı dar (teslim süreleri 2–4 yıl) → fiyatlama gücü yüksek; 2Ç26 FAVÖK düşük (4,9 mn $) — çeyrek oynak."
+   "sektor_not": "Girişim Elektrik (GESAN) bağlı ortaklığı (GESAN payı %50,43, 2Ç26). İki iş kolu: (1) TRAFO/PANO — dağıtım ve ölçü trafoları, AG-OG şalt, mobil trafo merkezi, GES konstrüksiyonu, depolama; (2) PANEL — %60 bağlı ortaklık Peak PV Solar (Temelli 7. fabrika, 2023→). 6A26 bölüm tablosu (GESAN dipnotu, bin TL): Peak PV hasılat 3,93 mlr (6A25 1,44 → ×2,7), brüt kâr 215 mn (marj %5,5; 6A25 −44 mn); Europower trafo/pano hasılat 3,44 mlr, brüt kâr 2,32 mlr (marj %67 — grup içi fiyatlama etkisi olabilir). Yani gelirin yarısı panel ama BRÜT KÂRIN ~%90'ı trafo/pano → birincil sürücü bakır. Panel tarafında modül fiyatı SATIŞ fiyatıdır (↑ gelir lehine) — maliyet artışı fiyata yansır; kârı belirleyen modül − hücre makası (hücre ithal). Peak PV satışlarının önemli kısmı grup içi (GESAN EPC projelerine; 6A26 grup eliminasyonu 2,18 mlr). Güç trafosu fabrikası EP World GESAN altında (EUPWR'da değil)."
   },
   {
    "kod": "GESAN",
@@ -2303,7 +2321,7 @@
    "tier": "C",
    "tip": "konsensus",
    "evren": "izleme",
-   "surucu_plani": "GES modül fiyatı (proje maliyeti → talep) · bakır (kablo/trafo) · PTF $ (yatırım getirisi) · USDTRY",
+   "surucu_plani": "Bakır (konsolide trafo/pano + EP World güç trafosu) · panel makası (Peak PV) · modül fiyatı (EPC bedeli) · PTF $ · USDTRY",
    "kaynak_notu": "Konsensüs Fintables (1 kurum); modül fiyatı InfoLink haftalık (Actions §483); bakır Yahoo HG=F; PTF EPİAŞ.",
    "sermaye_mn": 460.0,
    "favok": {
@@ -2421,32 +2439,44 @@
    "guidance": null,
    "surucu_seriler": [
     {
-     "k": "ges_modul_usd",
+     "k": "bakir",
      "rol": "maliyet",
-     "ad": "GES modül fiyatı ($/W) — proje maliyeti; ↓ kurulum talebi ↑",
+     "ad": "Bakır (COMEX) — trafo/pano (Europower, EP World) ve kablo girdisi"
+    },
+    {
+     "k": "ges_montaj_makasi_usd",
+     "rol": "marj",
+     "ad": "Panel montaj makası — modül − hücre ($/W) · Peak PV (konsolide)",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_modul_usd",
+     "rol": "gelir",
+     "ad": "GES modül fiyatı ($/W) — Peak PV satışı; EPC sözleşme bedeline yansır",
      "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
     },
     {
      "k": "ges_modul_avrupa_usd",
-     "rol": "maliyet",
-     "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W)",
+     "rol": "gelir",
+     "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W) — ithal rakip fiyatı",
      "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
     },
     {
      "k": "ges_pvi_modul_usd",
-     "rol": "maliyet",
+     "rol": "gelir",
      "ad": "Modül N-mono 182 — PVinsights ($/W)",
      "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
     },
     {
-     "k": "bakir",
+     "k": "ges_hucre_usd",
      "rol": "maliyet",
-     "ad": "Bakır (COMEX) — kablo/trafo girdisi"
+     "ad": "Hücre TOPCon 182 ($/W) — panel ana girdisi",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
     },
     {
      "k": "ptf_usd",
      "rol": "gelir",
-     "ad": "Elektrik PTF ($/MWh) — GES yatırım getirisi (talep)"
+     "ad": "Elektrik PTF ($/MWh) — GES yatırım getirisi (EPC talebi)"
     },
     {
      "k": "usdtry",
@@ -2457,8 +2487,8 @@
      "rol": "kur"
     }
    ],
-   "birincil": "ges_modul_usd",
-   "sektor_not": "Elektrik taahhüt: enerji iletim/dağıtım tesisleri ve trafo merkezleri kurulumu, GES kurulum (EPC) ve teçhizat üretimi; panel imalatına başlıyor. Gelir proje bazlı (çeyrek oynak — 2Ç26 FAVÖK negatif). Modül fiyatı EPC için çoğunlukla müşteriye geçen maliyet: asıl etkisi TALEP üzerinden — modül ucuzladıkça GES projesinin geri dönüşü kısalır, lisanssız GES ve 4. bölge teşviki (yatırımın %30–40'ı vergiden) ile birleşince sipariş artar. PTF yüksekse GES getirisi artar → aynı yönde. Bakır kablo/trafo maliyeti, sabit fiyatlı sözleşmede marjı sıkıştırır. Tek kurum tahmini → sürücüler yön, KAP iş ilanları belirleyici."
+   "birincil": "bakir",
+   "sektor_not": "Grup şirketi: kendi işi elektrik TAAHHÜT/EPC (YG trafo merkezi, iletim/dağıtım, GES kurulumu; 6A26 hasılat 3,62 mlr TL, brüt marj %14) + %100 EP World (~100 mn $ güç trafosu fabrikası, 1.000 MVA/550 kV; 2Y25 üretime geçti, 6A26 hasılat henüz 1,6 mn TL) + %50,43 Europower (EUPWR: trafo/pano + %60 Peak PV panel) KONSOLİDE. 6A26 konsolide brüt kârın ~%75'i Europower trafo/pano, ~%16'sı taahhüt, ~%7'si panel → birincil sürücü bakır. Panel fiyatı konsolide düzeyde çift yönlü: dışarıya satılan panelde gelir, grubun kendi GES projesinde kullanılan panel elimine olur ve EPC bedeline piyasa fiyatından yansır → net etkiyi yine modül − hücre makası belirler. EP World devreye girdikçe güç trafosu (bakır + elektrik çeliği GOES, serbest seri yok) ağırlığı artar. Proje bazlı gelir: çeyrek oynak (2Ç26 FAVÖK negatif). Tek kurum tahmini → sürücüler yön, KAP iş ilanları belirleyici."
   },
   {
    "kod": "GLRMK",
@@ -4945,5 +4975,6 @@
  "_475": "SUT oranı otomatik (Actions §475): SGK \"Değişiklik Tebliği İşlenmiş Güncel SUT\" ZIP içindeki EK-2B/EK-2C xlsx listeleri sürüm sürüm kıyaslanır (ortak kodlarda medyan değişim, değişen kod payı); medyan ≥%3 ve pay ≥%50 ise genel artış adımı yürürlük tarihiyle sut_endeks’e girer, ±45 gün içindeki elle adım düşer. Ölçüm: Aralık 2025 artışı EK-2B’de +%20 (MLP \"≈%30\"). Snapshot ktpanel/sut-ek2b.json (Actions dosyası).",
  "_konsensus_tazeleme": "20 Eki 2026 17:10 Fintables MCP: 3Ç26 tahmini olan 13/30 hisse tazelendi (kurum sayısı · FAVÖK/net ort. · satış ort. · FAVÖK min/max). Bilanço öncesi hafta kurum tahminleri hızla girer → ritüel: bilanço haftasında her 2–3 günde bir tazele. Hedef fiyatlar analist.json (5 Eki; hedef_fiyatlari tablosu, 1 yıl pencere).",
  "_483": "GES zinciri katmanı (Actions §483): InfoLink Consulting haftalık spot tablosu (polisilikon RMB/kg ve $/kg · n-tipi wafer · TOPCon hücre $/W ve RMB/W · modül Çin dışı/Çin iç/Avrupa/ABD $/W) + Internet Archive görüntülerinden 2022-07→ geçmiş; ürün geçişi (PERC→TOPCon) örtüşme medyan oranıyla zincirlenir. Türetilmiş: montaj makası = modül − hücre. CWENE \"modül fiyatı bekliyor\" satırı kapandı (birincil montaj makası, tier C→B); EUPWR ve GESAN XK030 dışı İZLEME modeli olarak eklendi (evren: izleme; FAVÖK/fiyat/konsensüs Fintables 20 Eki, sonraki bilançolar KAP arşivinden §462b). pvinsights.com erişilemedi.",
- "_483b": "PVinsights ikinci kaynak (Actions §483b): pvinsights.com ana sayfası ücretsiz haftalık spot (PV grade polisilikon $/kg · N-mono wafer · 182 N-Mono hücre · 182 N-Mono modül $/W, KDV hariç). Tarayıcıda https↔http döngüsü verir ama sunucu ayakta (Wayback 2026-10-05 görüntüsü 200); Actions düz http dener, olmazsa arşivin son görüntüsü. Geçmiş 81 görüntü / 67 hafta 2022-01→. Seviye InfoLink Çin dışı satırından düşük (0,090 vs 0,114 $/W) — tanım farkı; yön teyidi için yan yana."
+ "_483b": "PVinsights ikinci kaynak (Actions §483b): pvinsights.com ana sayfası ücretsiz haftalık spot (PV grade polisilikon $/kg · N-mono wafer · 182 N-Mono hücre · 182 N-Mono modül $/W, KDV hariç). Tarayıcıda https↔http döngüsü verir ama sunucu ayakta (Wayback 2026-10-05 görüntüsü 200); Actions düz http dener, olmazsa arşivin son görüntüsü. Geçmiş 81 görüntü / 67 hafta 2022-01→. Seviye InfoLink Çin dışı satırından düşük (0,090 vs 0,114 $/W) — tanım farkı; yön teyidi için yan yana.",
+ "_483d": "EUPWR/GESAN grup yapısı (GESAN 6A26 dipnotu): GESAN → %50,43 Europower (EUPWR) → %60 Peak PV (panel); GESAN → %100 EP World (güç trafosu). Modül fiyatı EUPWR ve GESAN için GELİR (Peak PV satış fiyatı; kullanıcı düzeltmesi 21 Eki) — önceki \"maliyet/kurulum temposu\" rolü yanlıştı. Birincil ikisinde de bakır (brüt kârın çoğu trafo/pano). Satır çıkarılmadı; makas ve hücre eklendi."
 }
