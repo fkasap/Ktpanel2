@@ -2601,6 +2601,7 @@ const SURUCU_KAYIT = {
   ttf:      { ad: 'TTF doğalgaz (TTF=F)',                  birim: '€/MWh', kaynak: 'yahoo', sembol: 'TTF=F',   aralik: [5, 500],      hisse: ['GUBRF', 'TKFEN', 'AKCNS', 'CIMSA'] },
   henryhub: { ad: 'Henry Hub doğalgaz (NG=F)',             birim: '$/mmbtu', kaynak: 'yahoo', sembol: 'NG=F', aralik: [0.5, 50],     hisse: [] },
   bugday:   { ad: 'Buğday CBOT (ZW=F)',                    birim: '¢/bu',  kaynak: 'yahoo', sembol: 'ZW=F',    aralik: [200, 2500],   hisse: ['OBAMS'] },
+  pamuk:    { ad: 'Pamuk ICE (CT=F) — giyim girdisi (§485)', birim: '¢/lb',  kaynak: 'yahoo', sembol: 'CT=F',    aralik: [30, 300],     hisse: ['MAVI'] },
   brent_yh: { ad: 'Brent (ICE BZ=F) — Neste çaprazı',      birim: '$/v',   kaynak: 'yahoo', sembol: 'BZ=F',    aralik: [20, 300],     hisse: ['TUPRS'] },
   eurusd:   { ad: 'EUR/USD',                               birim: '',      kaynak: 'yahoo', sembol: 'EURUSD=X', aralik: [0.6, 2],     hisse: ['KCAER', 'CIMSA', 'MAVI', 'OBAMS'] },
   usdtry:   { ad: 'USD/TRY',                               birim: '',      kaynak: 'yahoo', sembol: 'TRY=X',   aralik: [5, 200],      hisse: ['*'] },
@@ -2862,9 +2863,14 @@ const EVDS_KAYIT = {
   celik_ufe:    { kod: 'TP.TUFE1YI.T74',                          ad: 'Yİ-ÜFE 3.15.1 ana demir-çelik ve ferro alaşımlar (2003=100)',         birim: 'endeks', siklik: 'aylik',  aralik: [50, 200000], hisse: ['EREGL', 'KRDMD', 'KCAER'] },
   elektrik_ufe: { kod: 'TP.TUFE1YI.T120',                         ad: 'Yİ-ÜFE 4.1.1 elektrik üretim-iletim-dağıtım (2003=100)',             birim: 'endeks', siklik: 'aylik',  aralik: [50, 200000], hisse: ['AKFYE', 'ENJSA', 'ENERY', 'AHGAZ'] },
   gubre_ufe:    { kod: 'TP.TUFE1YI.T53',                          ad: 'Yİ-ÜFE 3.11.1 temel kimyasallar, gübre ve azot bileşikleri (2003=100)', birim: 'endeks', siklik: 'aylik', aralik: [50, 200000], hisse: ['GUBRF', 'TKFEN'] },
+  plastik_uretim: { kod: 'TP.TSANAYTKVM2021.C2016',                ad: 'Sanayi üretim endeksi — C20.16 birincil formda plastik hammadde (2021=100, takvim etkisinden arındırılmış) §485', birim: 'endeks', siklik: 'aylik', aralik: [5, 1000], hisse: ['PETKM'] },
+  konut_ilk_el: { kod: 'TP.AKONUTSAT3.KTRTOPLAM',                   ad: 'Konut satışı — ilk el, Türkiye (TÜİK, adet/ay) §485',              birim: 'adet', siklik: 'aylik', aralik: [1000, 1000000], hisse: ['EKGYO'] },
+  konut_toplam: { kod: 'TP.AKONUTSAT1.KTRTOPLAM',                   ad: 'Konut satışı — toplam, Türkiye (TÜİK, adet/ay) §485',              birim: 'adet', siklik: 'aylik', aralik: [5000, 2000000], hisse: ['EKGYO'] },
+  konut_ipotekli: { kod: 'TP.AKONUTSAT2.KTRTOPLAM',                 ad: 'Konut satışı — ipotekli (krediyle), Türkiye (TÜİK, adet/ay) §485', birim: 'adet', siklik: 'aylik', aralik: [100, 1000000], hisse: ['EKGYO'] },
   kfe:          { kod: 'TP.KFE.TR',                               ad: 'Konut Fiyat Endeksi — TCMB KFE (aylık)',                              birim: 'endeks', siklik: 'aylik',  aralik: [10, 100000], hisse: ['EKGYO'] },
   aofm:         { kod: 'TP.APIFON4',                              ad: 'TCMB ağırlıklı ortalama fonlama maliyeti (AOFM, %)',                  birim: '%',      siklik: 'gunluk', aralik: [0, 100],    hisse: ['ALBRK'], bas: '01-01-2021' },
   tlref:        { kod: 'TP.BISTTLREF.ORAN',                       ad: 'BIST TLREF gecelik referans faiz (%)',                                birim: '%',      siklik: 'gunluk', aralik: [0, 100],    hisse: ['ALBRK'], bas: '01-01-2021' },
+  katilim_kar_payi: { kod: 'TP.KBH.TRY.30',                        ad: 'TL katılma hesapları kâr payı oranı — toplam, akım (%, haftalık Cuma) §485', birim: '%', siklik: 'gunluk', aralik: [0, 100], hisse: ['ALBRK'], bas: '01-01-2021' },
 };
 const EVDS_BAS_AYLIK = '01-01-2015';
 /* EVDS tarih normalizasyonu: aylık "2025-1"/"2025-01" → "2025-01"; günlük "20-10-2026" → "2026-10-20" */
@@ -4046,6 +4052,26 @@ const ELLE_CEYREK = {
     kaynak: 'TKFEN çeyrek faaliyet raporları ("kalan işlerin parasal toplamı") — elle (§484)',
     _not: 'Taahhüt gelirinin öncü göstergesi: bakiye eriyip yeni iş gelmezse 2–4 çeyrek sonra taahhüt hasılatı düşer. 2025Q1 732 → 2026Q2 413 mn $ (−%44) = yeni iş girişi tamamlanan işin gerisinde. 2025Q4/2026Q1 değeri raporda bulunamadı (boş).' },
 };
+/* §485 ASGARİ ÜCRET ADIM SERİSİ (GRSEL/TUREX/BIMAS/MAVI işçilik maliyeti). Brüt aylık TL, yürürlük tarihi (Asgari Ücret Tespit Komisyonu
+   kararı, Resmî Gazete). Kaynak 21 Eki 2026 web: muhasebetr.com asgari ücret tablosu + KPMG 2026 bülteni (brüt 33.030, net 28.075,50; işveren
+   maliyeti teşviksiz 40.874,63) · gzt.com 15 Tem 2026: "Temmuz 2026'da ara zam kararı yok". Yeni karar → ASGARI_UCRET'e satır (yıl sonu ritüeli).
+   Seri: aylık adım (her ay yürürlükteki tutar) + asgari_ucret_reel = brüt ÷ TÜFE (2025=100 zincirli) × 100 — reel işçilik maliyeti. */
+const ASGARI_UCRET = [['2021-01-01', 3577.50], ['2022-01-01', 5004.00], ['2022-07-01', 6471.00], ['2023-01-01', 10008.00], ['2023-07-01', 13414.50], ['2024-01-01', 20002.50], ['2025-01-01', 26005.50], ['2026-01-01', 33030.00]];
+function asgariUcretYaz(D) {
+  const ad = []; const bitis = bugun.slice(0, 7);
+  for (let y = 2021, m = 1; (y + '-' + String(m).padStart(2, '0')) <= bitis; m === 12 ? (y++, m = 1) : m++) { const a = y + '-' + String(m).padStart(2, '0'); const st = ASGARI_UCRET.filter(([t]) => t.slice(0, 7) <= a).pop(); if (st) ad.push([a, st[1]]); }
+  const T = aylikTuret(new Map(ad)); const sonAy = ad[ad.length - 1][0];
+  const adimlar = ASGARI_UCRET.map(([t, v], i) => ({ t, brut: v, artis: i ? +((v / ASGARI_UCRET[i - 1][1] - 1) * 100).toFixed(1) : null })).reverse();
+  D.seriler.asgari_ucret = Object.assign({}, D.seriler.asgari_ucret || {}, { ad: 'Asgari ücret — brüt aylık (TL, yürürlükteki tutar; adım)', birim: 'TL', siklik: 'aylik', hisse: ['GRSEL', 'TUREX', 'BIMAS', 'MAVI'],
+    kaynak: 'Asgari Ücret Tespit Komisyonu / Resmî Gazete — elle adım tablosu (tazele.mjs ASGARI_UCRET, §485)', aylik: T.aylik, ceyreklik: T.ceyreklik, yillik: T.yillik, adimlar, son: { tarih: sonAy, deger: ad[ad.length - 1][1] }, elle: true, guncelleme: bugun,
+    _not: 'İşveren maliyeti ≈ brüt × 1,2375 (SGK işveren payı + işsizlik, teşviksiz). Yıl içinde sabit → çeyrek değişimi yalnız Ocak/Temmuz adımında; reel seri (÷TÜFE) yıl içi erimeyi gösterir.' });
+  const tf = D.seriler.tufe && D.seriler.tufe.aylik; let reel = null;
+  if (tf) { const m = new Map(); for (const [a, v] of ad) if (tf[a]) m.set(a, v / tf[a] * 100); if (m.size) { const R = aylikTuret(m); const ks = Object.keys(R.aylik); reel = ks[ks.length - 1];
+    D.seriler.asgari_ucret_reel = Object.assign({}, D.seriler.asgari_ucret_reel || {}, { ad: 'Asgari ücret reel — brüt ÷ TÜFE (2025=100 fiyatlarıyla TL)', birim: 'TL (2025 fiyatı)', siklik: 'aylik', hisse: ['GRSEL', 'TUREX', 'BIMAS', 'MAVI'],
+      kaynak: 'türetilmiş: asgari_ucret ÷ TCMB EVDS TÜFE (2025=100 zincirli) × 100 (§485)', aylik: R.aylik, ceyreklik: R.ceyreklik, yillik: R.yillik, son: { tarih: reel, deger: R.aylik[reel] }, guncelleme: bugun,
+      _not: 'Ocak/Temmuz adımında sıçrar, ay ay TÜFE kadar erir. Maliyet tarafında okunur: reel ücret yükseliyorsa emek yoğun şirketin (servis, perakende) marjı sıkışır — fiyat eskalasyonu TÜFE ise.' }); } }
+  return 'asgari_ucret ' + ad[ad.length - 1][1] + ' TL (' + sonAy + ', son adım ' + ASGARI_UCRET[ASGARI_UCRET.length - 1][0] + ')' + (reel ? ' · reel ' + D.seriler.asgari_ucret_reel.son.deger.toFixed(0) + ' (' + reel + ')' : ' · reel: TÜFE yok');
+}
 function elleCeyrekYaz(D) {
   const yazilan = [];
   for (const [k, t] of Object.entries(ELLE_CEYREK)) {
@@ -4063,11 +4089,12 @@ async function elleSeriler() {
   const dosya = 'sektor-surucu.json';
   if (!(await varMi(dosya))) { raporlar.push('### Elle çeyrek serileri (§484) — ⏭ sektor-surucu.json yok'); return; }
   const D = await oku(dosya); D.seriler = D.seriler || {};
-  const once = JSON.stringify(Object.keys(ELLE_CEYREK).map(k => D.seriler[k] && D.seriler[k].ceyreklik));
+  const once = JSON.stringify([Object.keys(ELLE_CEYREK).map(k => D.seriler[k] && D.seriler[k].ceyreklik), D.seriler.asgari_ucret && D.seriler.asgari_ucret.aylik, D.seriler.asgari_ucret_reel && D.seriler.asgari_ucret_reel.aylik]);
   const y = elleCeyrekYaz(D);
-  const sonra = JSON.stringify(Object.keys(ELLE_CEYREK).map(k => D.seriler[k] && D.seriler[k].ceyreklik));
+  try { y.push(asgariUcretYaz(D)); } catch (e) { y.push('asgari_ucret ✗ ' + String(e && e.message || e).slice(0, 80)); }
+  const sonra = JSON.stringify([Object.keys(ELLE_CEYREK).map(k => D.seriler[k] && D.seriler[k].ceyreklik), D.seriler.asgari_ucret && D.seriler.asgari_ucret.aylik, D.seriler.asgari_ucret_reel && D.seriler.asgari_ucret_reel.aylik]);
   if (once !== sonra) { await yaz(dosya, D); degisenler.push('elle çeyrek serileri (' + y.length + ')'); }
-  raporlar.push('### Elle çeyrek serileri (§484) — ✓ ' + y.join(' · ') + (once === sonra ? ' · değişiklik yok' : ''));
+  raporlar.push('### Elle seriler (§484 backlog · §485 asgari ücret) — ✓ ' + y.join(' · ') + (once === sonra ? ' · değişiklik yok' : ''));
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
