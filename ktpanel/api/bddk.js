@@ -11,13 +11,19 @@ const https = require('node:https');
 function bddkIstek(yol, govde, ekBaslik){
   if(global.__BDDK_TEST_ISTEK) return global.__BDDK_TEST_ISTEK(yol, govde, ekBaslik);
   return new Promise((coz, red)=>{
-    const opt = { host:'www.bddk.org.tr', path:yol, method: govde?'POST':'GET',
+    /* §490 (21 Eki 2026): panel "Bankacılık · VERİ YOK". Teşhis: 'Sertifika alan adı eşleşmedi: ' — BOŞ ad. Sertifika YANIT
+       anında okunuyordu (s.socket.getPeerCertificate); TLS oturumu yeniden kullanıldığında (session resumption / keep-alive
+       ajanı) Node sertifikayı yeniden almaz ve {} döner → doğrulama boş adla düşüyor, BDDK'nın kendisi sağlam. DÜZELTME:
+       agent:false (her istek taze TLS el sıkışması) + sertifika 'secureConnect' anında yakalanır; yanıtta yoksa o kullanılır. */
+    let elSikisma = null;
+    const opt = { host:'www.bddk.org.tr', path:yol, method: govde?'POST':'GET', agent:false,
       servername:'www.bddk.org.tr', rejectUnauthorized:false, timeout:20000,
       headers: Object.assign({ 'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' }, ekBaslik||{}) };
     if(govde) opt.headers['Content-Length'] = Buffer.byteLength(govde);
     const r = https.request(opt, (s)=>{
       try{
-        const c = s.socket && s.socket.getPeerCertificate ? s.socket.getPeerCertificate(true) : null;
+        let c = s.socket && s.socket.getPeerCertificate ? s.socket.getPeerCertificate(true) : null;
+        if(!c || !c.subject) c = elSikisma;   /* §490: yanıtta boşsa el sıkışma anındaki sertifika */
         const ad = ((c&&c.subject&&c.subject.CN)||'') + ' ' + ((c&&c.subjectaltname)||'');
         if(!/bddk\.org\.tr/i.test(ad)){ s.destroy(); return red(new Error('Sertifika alan adı eşleşmedi: '+ad.slice(0,80))); }
         /* §309 TLS SERTLEŞTİRME — üç katman:
@@ -58,6 +64,8 @@ function bddkIstek(yol, govde, ekBaslik){
       s.on('data', d=>veri+=d);
       s.on('end', ()=>coz({ durum:s.statusCode, ctype:s.headers['content-type']||'', metin:veri, cerez:s.headers['set-cookie']||[] }));
     });
+    r.on('socket', so=>{ const al=()=>{ try{ const x=so.getPeerCertificate(true); if(x&&x.subject) elSikisma=x; }catch(e){} };
+      if(so.encrypted && so.authorized!==undefined && so.getPeerCertificate && so.getPeerCertificate().subject) al(); else so.once('secureConnect', al); });
     r.on('error', red);
     r.on('timeout', ()=>r.destroy(new Error('zaman aşımı')));
     if(govde) r.write(govde);
