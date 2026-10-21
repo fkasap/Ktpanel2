@@ -3834,7 +3834,28 @@ function sutAdimlarBirlesik(K) {
    Birim: polisilikon RMB/kg ve $/kg · wafer RMB/adet · hücre ve modül $/W ve RMB/W. RMB → $ Yahoo CNY=X (ay ortalaması).
    Saklama: D.ges = {surum, hafta:{tarih:{etiket:ortalama}}, wb:{ts:1}}; seriler{} 'aylik' (hafta ortalamalarının ay ort.) +
    'haftalik' son 104 nokta + son. GES_SURUM değişirse kayıt sıfırlanır. */
-const GES_SURUM = '483', GES_WB_TAVAN = 40, GES_WB_UYKU = 1500, GES_SURE_MS = 150 * 1000;
+const GES_SURUM = '483', GES_WB_TAVAN = 40, GES_WB_UYKU = 1500, GES_SURE_MS = 120 * 1000, PV_SURE_MS = 200 * 1000;
+/* §483b PVINSIGHTS (21 Eki, kullanıcı: "pvinsights'a tekrar bak"): http://pvinsights.com/ ana sayfası ÜCRETSİZ haftalık spot tablosu
+   taşır (Çarşamba güncellenir, "Last Update: 2026-09-30"; satır = Kalem | High | Low | Average | AvgChg | AvgChg% | AvgCNY, $ fiyat KDV
+   hariç). Açık satırlar: PV Grade polisilikon 9N ($/kg) · 182 mm mono + 182,2×183,75 N-mono wafer ($/adet) · 182 mm N-Mono/PERC hücre ·
+   182 mm 580/625Wp N-Mono ve PERC modül ($/W); diğerleri "Visit here" (üyelik). Site https isteğini http'ye, Chrome'un HTTPS-önce
+   modu da http'yi https'e çevirdiğinden tarayıcıda DÖNGÜ hatası verir (20–21 Eki gözlemi) — sunucu ayakta: Internet Archive 2026-10-05
+   görüntüsü 200. Actions düz http ile dener; olmazsa arşivin en son görüntüsü kullanılır. Geçmiş: Wayback 81 görüntü (2022-01→), 67
+   yayın haftası (Chrome'da çekildi, hata 0). İKİNCİ KAYNAK: InfoLink ile aynı zincir; seviyeler farklı tanımlı (PVinsights modül ≈ Çin
+   spot KDV hariç 0,090 $/W; InfoLink Çin dışı 0,114) → panelde yan yana YÖN teyidi, makas ayrı hesaplanır. */
+const PV_URL = 'http://pvinsights.com/';
+const PV_SERI = [
+  { k: 'ges_pvi_polisilikon_usd', ad: 'Polisilikon PV grade 9N — PVinsights ($/kg)', birim: '$/kg', ar: [1, 100], d: [/^PV Grade PolySilicon \(9N/i] },
+  { k: 'ges_pvi_wafer_usd', ad: 'Wafer N-mono 182,2×183,75 mm — PVinsights ($/adet)', birim: '$/adet', ar: [0.03, 3], d: [/^182\.2 ?mm x 183\.75 ?mm N[- ]?Mono Wafer/i, /^182 ?mm Mono Solar Wafer/i] },
+  { k: 'ges_pvi_hucre_usd', ad: 'Hücre N-mono 182 mm — PVinsights ($/W)', birim: '$/W', ar: [0.01, 0.4], d: [/^182 ?mm N-?Mono Cell/i, /^182 ?mm Mono PERC Cell/i] },
+  { k: 'ges_pvi_modul_usd', ad: 'Modül N-mono 182 mm 580/625Wp — PVinsights ($/W)', birim: '$/W', ar: [0.04, 0.6], d: [/^182 ?mm [\d\/]+ ?Wp N-?Mono Module/i, /^182 ?mm [\d\/]+ ?Wp PERC Module/i] },
+];
+function pvCoz(h) {
+  const c = gesCoz(h);   /* aynı tablo yapısı (td[0] kalem, td[3] ortalama); tarih biçimi farklı */
+  const t = String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+  const m = t.match(/Last Update:\s*(\d{4}-\d{2}-\d{2})/);   /* ilk "Last Update: 2026-Oct- 05" haber saatidir, atlanır */
+  c.tarih = m ? m[1] : null; return c;
+}
 const GES_URL = 'https://www.infolink-group.com/spot-price/';
 const GES_H = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36', 'Accept': 'text/html,application/xhtml+xml', 'Accept-Language': 'en-US,en;q=0.9' };
 const GES_AY = { January: '01', February: '02', March: '03', April: '04', May: '05', June: '06', July: '07', August: '08', September: '09', October: '10', November: '11', December: '12' };
@@ -3909,7 +3930,7 @@ async function gesFiyat() {
   try { const c = gesCoz(await al(GES_URL)); if (isle(c, 'canlı')) canli = c; else uyari.push('canlı sayfa çözülemedi (tarih ' + c.tarih + ', ' + c.n + ' satır) — tablo yapısı değişmiş olabilir'); }
   catch (e) { uyari.push('infolink-group.com: ' + String(e && e.message || e).slice(0, 90)); }
   /* 2) Wayback geriye doldurma (artımlı) */
-  const t0 = Date.now();
+  const t0 = Date.now();   /* InfoLink arşivi ≤120 sn, PVinsights arşivi toplam ≤200 sn (olcKos tavanı 4 dk) */
   let wbToplam = 0, wbBu = 0, wbBekleyen = 0, wbHata = false;
   try {
     const cdx = JSON.parse(await al('https://web.archive.org/cdx/search/cdx?url=infolink-group.com/spot-price/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8', 60000));
@@ -3917,14 +3938,33 @@ async function gesFiyat() {
     wbToplam = ts.length;
     for (const t of ts) {
       if (G.wb[t] === 1 || (G.wb[t] || 0) <= -3) continue;
-      if (wbBu >= GES_WB_TAVAN || Date.now() - t0 > GES_SURE_MS) { wbBekleyen++; continue; }   /* olcKos katman tavanı 4 dk: aşılırsa iş yarıda bırakılır ve DOSYA YAZILMAZ → kendi süre sınırı 150 sn */
+      if (wbBu >= GES_WB_TAVAN || Date.now() - t0 > GES_SURE_MS) { wbBekleyen++; continue; }   /* olcKos katman tavanı 4 dk: aşılırsa iş yarıda bırakılır ve DOSYA YAZILMAZ → kendi süre sınırı */
       try { const c = gesCoz(await al('https://web.archive.org/web/' + t + 'id_/' + GES_URL, 25000)); isle(c, 'wb'); G.wb[t] = 1; }
       catch (e) { G.wb[t] = (typeof G.wb[t] === 'number' && G.wb[t] < 0 ? G.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('wayback ' + t + ': ' + String(e && e.message || e).slice(0, 60)); }
       wbBu++; await uyku(GES_WB_UYKU);
     }
   } catch (e) { wbHata = true; uyari.push('wayback CDX: ' + String(e && e.message || e).slice(0, 90)); }
+  /* 3) §483b PVinsights: canlı (düz http) → olmazsa arşivin son görüntüsü; geçmiş Wayback artımlı (aynı süre bütçesi, InfoLink'ten sonra) */
+  G.pv = G.pv || { hafta: {}, wb: {} };
+  let pvCanli = null, pvToplam = 0, pvBu = 0, pvBekleyen = 0, pvHata = false, pvYeni = 0;
+  const pvIsle = c => { if (!c.tarih || c.n < 5) return false; if (!G.pv.hafta[c.tarih]) pvYeni++; G.pv.hafta[c.tarih] = Object.assign({}, G.pv.hafta[c.tarih] || {}, c.sat); return true; };
+  try { const c = pvCoz(await al(PV_URL, 20000)); if (pvIsle(c)) pvCanli = c; else uyari.push('pvinsights canlı sayfa çözülemedi (tarih ' + c.tarih + ', ' + c.n + ' satır)'); }
+  catch (e) { uyari.push('pvinsights.com: ' + String(e && e.message || e).slice(0, 80) + ' → arşiv'); }
+  try {
+    const cdx = JSON.parse(await al('https://web.archive.org/cdx/search/cdx?url=pvinsights.com/&output=json&fl=timestamp&filter=statuscode:200&collapse=timestamp:8', 60000));
+    const ts = (Array.isArray(cdx) ? cdx.slice(1) : []).map(x => x[0]).filter(Boolean).sort().reverse();
+    pvToplam = ts.length;
+    for (const t of ts) {
+      if (G.pv.wb[t] === 1 || (G.pv.wb[t] || 0) <= -3) continue;
+      if (pvBu >= GES_WB_TAVAN || Date.now() - t0 > PV_SURE_MS) { pvBekleyen++; continue; }
+      try { pvIsle(pvCoz(await al('https://web.archive.org/web/' + t + 'id_/' + PV_URL, 25000))); G.pv.wb[t] = 1; }
+      catch (e) { G.pv.wb[t] = (typeof G.pv.wb[t] === 'number' && G.pv.wb[t] < 0 ? G.pv.wb[t] : 0) - 1; if (uyari.length < 12) uyari.push('pvinsights arşiv ' + t + ': ' + String(e && e.message || e).slice(0, 60)); }
+      pvBu++; await uyku(GES_WB_UYKU);
+    }
+  } catch (e) { pvHata = true; uyari.push('pvinsights CDX: ' + String(e && e.message || e).slice(0, 80)); }
+  yeni += pvYeni;
   const H = G.hafta, ht = Object.keys(H).sort();
-  if (!ht.length) { raporlar.push('### GES zinciri fiyatları (§483) — ✗ veri yok\n- ' + uyari.slice(0, 6).join('\n- ')); return; }
+  if (!ht.length && !Object.keys(G.pv.hafta).length) { raporlar.push('### GES zinciri fiyatları (§483) — ✗ veri yok\n- ' + uyari.slice(0, 6).join('\n- ')); return; }
   /* RMB → $ (Yahoo CNY=X, USD başına CNY) — ay ortalaması */
   let cny = new Map(); try { const h = await yahooSeri(['CNY=X'], '', '10y'); cny = h['CNY=X'] || new Map(); } catch (e) {}
   const cnyAy = {}; { const top = {}, say = {}; for (const [t, v] of cny) { if (!(v > 5 && v < 9)) continue; const a = t.slice(0, 7); top[a] = (top[a] || 0) + v; say[a] = (say[a] || 0) + 1; } for (const a in top) cnyAy[a] = top[a] / say[a]; }
@@ -3940,7 +3980,7 @@ async function gesFiyat() {
     if (onceki && onceki.son && onceki.son.tarih > son[0]) { uyari.push(tanim.k + ': gerileme korundu'); return onceki.son; }
     const gun = t => new Date(t + 'T00:00:00Z').getTime() / 864e5, hedefG = gun(son[0]) - 365;
     const yil = hafta.filter(([t]) => Math.abs(gun(t) - hedefG) <= 45).sort((a, b) => Math.abs(gun(a[0]) - hedefG) - Math.abs(gun(b[0]) - hedefG))[0];   /* ±45 gün içinde en yakın hafta; arşiv seyrekse y/y yok */
-    D.seriler[tanim.k] = Object.assign({}, onceki || {}, { ad: tanim.ad, birim: tanim.birim, hisse: tanim.hisse || ['CWENE', 'GESAN'], kaynak: KAYNAK, zincir: oranlar }, ekMeta || {}, {
+    D.seriler[tanim.k] = Object.assign({}, onceki || {}, { ad: tanim.ad, birim: tanim.birim, hisse: tanim.hisse || ['CWENE', 'GESAN'], kaynak: tanim.kaynak || KAYNAK, zincir: oranlar }, ekMeta || {}, {
       siklik: 'aylik', aylik, haftalik: hafta.slice(-104).map(([t, v]) => [t, +v.toFixed(hassas)]), son: { tarih: son[0], deger: +son[1].toFixed(hassas), yillik_degisim: yil ? +((son[1] / yil[1] - 1) * 100).toFixed(1) : null }, ilk: hafta[0][0], guncelleme: bugun });
     ozet[tanim.k] = D.seriler[tanim.k].son; return D.seriler[tanim.k].son;
   };
@@ -3968,6 +4008,12 @@ async function gesFiyat() {
     yazSeri({ k: 'ges_montaj_makasi_usd', ad: 'GES montaj makası — modül − hücre ($/W)', birim: '$/W', ar: [-0.2, 0.4], hisse: ['CWENE'] }, tum, ['türetilmiş: ges_modul_usd − ges_hucre_usd (aynı hafta)'],
       { _not: 'Hücre alıp modül birleştiren üreticinin brüt kazancı/W (cam, çerçeve, EVA, işçilik bu makastan karşılanır). Daralma = Çin fiyat baskısı montajcıya geçiyor.' });
   }
+  const PVK = 'PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması';
+  const pvNot = [];
+  for (const tn of PV_SERI) { const z = gesZincir(G.pv.hafta, tn); yazSeri(Object.assign({ kaynak: PVK }, tn), z.hafta, z.oranlar, { _not: 'İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.' }); pvNot.push(tn.k.replace('ges_pvi_', '') + ' ' + z.hafta.length + (z.oranlar.length ? ' [' + z.oranlar.join(', ') + ']' : '')); }
+  { const zA = gesZincir(G.pv.hafta, PV_SERI[3]).hafta, zB = new Map(gesZincir(G.pv.hafta, PV_SERI[2]).hafta); const tum = zA.filter(([t]) => zB.has(t)).map(([t, v]) => [t, v - zB.get(t)]);
+    yazSeri({ k: 'ges_pvi_montaj_makasi_usd', ad: 'GES montaj makası — modül − hücre, PVinsights ($/W)', birim: '$/W', ar: [-0.2, 0.4], hisse: ['CWENE'], kaynak: PVK }, tum, ['türetilmiş: ges_pvi_modul_usd − ges_pvi_hucre_usd (aynı hafta)'], { _not: 'InfoLink makasının ikinci kaynaktan teyidi; iki makas aynı yöne gidiyorsa sinyal güçlü.' }); }
+  const pt = Object.keys(G.pv.hafta).sort();
   D.seriler_guncelleme = bugun;
   await yaz(dosya, D);
   if (yeni) degisenler.push('GES zinciri fiyatları (' + yeni + ' hafta)');
@@ -3975,6 +4021,8 @@ async function gesFiyat() {
   raporlar.push('### GES zinciri fiyatları (§483) — ' + (canli ? '✓ ' + canli.tarih : '⚠ canlı sayfa yok') + ' · modül ' + g('ges_modul_usd', ' $/W') + ' · hücre ' + g('ges_hucre_usd', ' $/W') + ' · polisilikon ' + g('ges_polisilikon_rmb', ' RMB/kg') + ' · montaj makası ' + g('ges_montaj_makasi_usd', ' $/W') +
     '\n- arşiv: ' + ht.length + ' hafta (' + ht[0] + '→' + ht[ht.length - 1] + ') · Wayback ' + wbToplam + ' görüntü, bu koşu ' + wbBu + (wbHata ? ' · ⚠ arşive ulaşılamadı (sonraki koşu dener)' : wbBekleyen ? ' · ' + wbBekleyen + ' görüntü sonraki koşulara' : ' · geriye doldurma TAMAM') +
     '\n- ' + notlar.join(' · ') + ' · CNY kuru ' + cny.size + ' gün' +
+    '\n- PVinsights (§483b): ' + (pvCanli ? '✓ canlı ' + pvCanli.tarih : '⚠ canlı sayfa yok (arşivle)') + ' · modül ' + g('ges_pvi_modul_usd', ' $/W') + ' · hücre ' + g('ges_pvi_hucre_usd', ' $/W') + ' · polisilikon ' + g('ges_pvi_polisilikon_usd', ' $/kg') + ' · makas ' + g('ges_pvi_montaj_makasi_usd', ' $/W') +
+    ' · arşiv ' + pt.length + ' hafta' + (pt.length ? ' (' + pt[0] + '→' + pt[pt.length - 1] + ')' : '') + ' · Wayback ' + pvToplam + ' görüntü, bu koşu ' + pvBu + (pvHata ? ' · ⚠ arşive ulaşılamadı' : pvBekleyen ? ' · ' + pvBekleyen + ' sonraki koşulara' : ' · geriye doldurma TAMAM') + ' · ' + pvNot.join(' · ') +
     (uyari.length ? '\n- ⚠ ' + uyari.slice(0, 6).join('\n- ⚠ ') : ''));
 }
 
