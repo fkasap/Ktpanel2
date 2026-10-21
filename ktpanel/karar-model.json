@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-20k",
+ "surum": "2026-10-21a",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -1405,7 +1405,7 @@
    "tier": "B",
    "tip": "konsensus",
    "surucu_plani": "Montaj makası (modül − hücre, $/W) · Avrupa/ABD modül fiyatı · hücre ve polisilikon (öncü) · USDTRY/EURUSD",
-   "kaynak_notu": "GES zinciri fiyatları InfoLink Consulting haftalık spot tablosundan (infolink-group.com/spot-price) + Internet Archive geçmişi 2022-07→ (Actions §483). pvinsights.com 20 Eki'de erişilemedi.",
+   "kaynak_notu": "GES zinciri iki kaynaktan: InfoLink Consulting haftalık spot (infolink-group.com/spot-price; Çin dışı/Avrupa/ABD kırılımı) ve PVinsights (pvinsights.com ana sayfa ücretsiz tablo; Çin spot, KDV hariç) — geçmiş Internet Archive 2022→ (Actions §483/§483b). İki makas aynı yöndeyse sinyal güçlü.",
    "sermaye_mn": 1078.290009,
    "favok": {
     "2024Q1": {
@@ -1533,6 +1533,24 @@
      "rol": "maliyet",
      "ad": "Polisilikon (RMB/kg) — zincirin öncüsü",
      "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_pvi_montaj_makasi_usd",
+     "rol": "marj",
+     "ad": "Montaj makası — PVinsights (ikinci kaynak, $/W)",
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+    },
+    {
+     "k": "ges_pvi_modul_usd",
+     "rol": "gelir",
+     "ad": "Modül N-mono 182 — PVinsights ($/W)",
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+    },
+    {
+     "k": "ges_pvi_hucre_usd",
+     "rol": "maliyet",
+     "ad": "Hücre N-mono 182 — PVinsights ($/W)",
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
     },
     {
      "k": "usdtry",
@@ -2413,6 +2431,12 @@
      "rol": "maliyet",
      "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W)",
      "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+    },
+    {
+     "k": "ges_pvi_modul_usd",
+     "rol": "maliyet",
+     "ad": "Modül N-mono 182 — PVinsights ($/W)",
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
     },
     {
      "k": "bakir",
@@ -4920,5 +4944,6 @@
  "_474": "SUT katmanı (Actions §474): SGK Sağlık Uygulama Tebliği fiyat listesinin GENEL artışları adım tablosundan endekslenir (2020-12=100; 2021-04 +15 · 2022-02 +40 · 2023-03 +31 · 2023-09 +51 · 2024-05 +50 · 2025-12 +30; dayanak MLP Care KAP bilgilendirme notları + Resmî Gazete), sut_reel = SUT÷TÜFE; TTB ÖHU katsayısı aynı yöntemle (2022-12=100) ttb_endeks/ttb_reel. Oran RG metninde yazmadığı için otomatik çıkarım yok: Resmî Gazete fihristi (son 14 gün, ana+mükerrer, windows-1254) taranır, SUT/SHFK başlıkları sektor-surucu.json/sut.rg_olaylar’a yazılır ve son adımdan sonraki SUT değişikliği raporda uyarılır; genel artışsa MLP notu/basın oranıyla SUT_ADIMLAR’a elle eklenir (bilanço haftası ritüeli). MPARK birincil: eurusd → sut_endeks; \"SUT bekliyor\" satırı kapandı.",
  "_475": "SUT oranı otomatik (Actions §475): SGK \"Değişiklik Tebliği İşlenmiş Güncel SUT\" ZIP içindeki EK-2B/EK-2C xlsx listeleri sürüm sürüm kıyaslanır (ortak kodlarda medyan değişim, değişen kod payı); medyan ≥%3 ve pay ≥%50 ise genel artış adımı yürürlük tarihiyle sut_endeks’e girer, ±45 gün içindeki elle adım düşer. Ölçüm: Aralık 2025 artışı EK-2B’de +%20 (MLP \"≈%30\"). Snapshot ktpanel/sut-ek2b.json (Actions dosyası).",
  "_konsensus_tazeleme": "20 Eki 2026 17:10 Fintables MCP: 3Ç26 tahmini olan 13/30 hisse tazelendi (kurum sayısı · FAVÖK/net ort. · satış ort. · FAVÖK min/max). Bilanço öncesi hafta kurum tahminleri hızla girer → ritüel: bilanço haftasında her 2–3 günde bir tazele. Hedef fiyatlar analist.json (5 Eki; hedef_fiyatlari tablosu, 1 yıl pencere).",
- "_483": "GES zinciri katmanı (Actions §483): InfoLink Consulting haftalık spot tablosu (polisilikon RMB/kg ve $/kg · n-tipi wafer · TOPCon hücre $/W ve RMB/W · modül Çin dışı/Çin iç/Avrupa/ABD $/W) + Internet Archive görüntülerinden 2022-07→ geçmiş; ürün geçişi (PERC→TOPCon) örtüşme medyan oranıyla zincirlenir. Türetilmiş: montaj makası = modül − hücre. CWENE \"modül fiyatı bekliyor\" satırı kapandı (birincil montaj makası, tier C→B); EUPWR ve GESAN XK030 dışı İZLEME modeli olarak eklendi (evren: izleme; FAVÖK/fiyat/konsensüs Fintables 20 Eki, sonraki bilançolar KAP arşivinden §462b). pvinsights.com erişilemedi."
+ "_483": "GES zinciri katmanı (Actions §483): InfoLink Consulting haftalık spot tablosu (polisilikon RMB/kg ve $/kg · n-tipi wafer · TOPCon hücre $/W ve RMB/W · modül Çin dışı/Çin iç/Avrupa/ABD $/W) + Internet Archive görüntülerinden 2022-07→ geçmiş; ürün geçişi (PERC→TOPCon) örtüşme medyan oranıyla zincirlenir. Türetilmiş: montaj makası = modül − hücre. CWENE \"modül fiyatı bekliyor\" satırı kapandı (birincil montaj makası, tier C→B); EUPWR ve GESAN XK030 dışı İZLEME modeli olarak eklendi (evren: izleme; FAVÖK/fiyat/konsensüs Fintables 20 Eki, sonraki bilançolar KAP arşivinden §462b). pvinsights.com erişilemedi.",
+ "_483b": "PVinsights ikinci kaynak (Actions §483b): pvinsights.com ana sayfası ücretsiz haftalık spot (PV grade polisilikon $/kg · N-mono wafer · 182 N-Mono hücre · 182 N-Mono modül $/W, KDV hariç). Tarayıcıda https↔http döngüsü verir ama sunucu ayakta (Wayback 2026-10-05 görüntüsü 200); Actions düz http dener, olmazsa arşivin son görüntüsü. Geçmiş 81 görüntü / 67 hafta 2022-01→. Seviye InfoLink Çin dışı satırından düşük (0,090 vs 0,114 $/W) — tanım farkı; yön teyidi için yan yana."
 }

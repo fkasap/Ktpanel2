@@ -6,10 +6,28 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §483b (21 Eki 2026, 09:30) — PVINSIGHTS İKİNCİ KAYNAK (canlı http + Wayback geçmişi)
+
+Kullanıcı: "pvinsights.com'a tekrar bak". Chrome yine hata sayfası; WebFetch https→http 302. TEŞHİS: sunucu AYAKTA — Internet Archive
+2026-10-05 görüntüsü 200, tablo 2026-09-30 tarihli. Hata tarayıcı tarafı: site https isteğini http'ye yönlendiriyor, Chrome'un
+HTTPS-önce modu http'yi https'e çeviriyor → döngü. Node fetch düz http ile döngüye girmez → Actions canlı dener; olmazsa arşivin son
+görüntüsü. ÜCRETSİZ satırlar (ana sayfa, Çarşamba): PV Grade polisilikon 9N ($/kg) · 182,2×183,75 N-mono wafer ($/adet; 2024-05 öncesi
+182 mono, ×0,933 bağlı) · 182 mm N-Mono hücre (2023-03→; öncesi PERC ×1,029) · 182 mm 580/625Wp N-Mono modül (2023-03→; öncesi PERC
+×1,067). $ fiyatlar Çin spotundan KDV hariç. "Visit here" satırları üyelik → alınmadı.
+GEÇMİŞ: Wayback 81 görüntü → 67 yayın haftası 2022-01→2026-09 (Chrome'da çekildi, hata 0). Chrome doğrulaması: modül 0,261 (Şub 22) →
+0,078 (Oca 25) → 0,090 (Eyl 26) · hücre 0,160 → 0,029 (Haz 25) → 0,040 · polisilikon 32,7 → 4,25 → 5,07 $/kg.
+SERİLER: ges_pvi_polisilikon_usd · ges_pvi_wafer_usd · ges_pvi_hucre_usd · ges_pvi_modul_usd · türetilmiş ges_pvi_montaj_makasi_usd.
+Kayıt D.ges.pv {hafta, wb}. Süre: InfoLink arşivi ≤120 sn, PVinsights arşivi toplam ≤200 sn (olcKos tavanı 4 dk).
+OKUMA: seviyeler kaynaklar arasında farklı TANIMLI (PVinsights modül 0,090 ≈ Çin spot KDV hariç; InfoLink Çin dışı 0,114) — fark hata
+değil. Kullanım YÖN TEYİDİ: iki makas aynı yöne gidiyorsa sinyal güçlü, ayrışıyorsa bölgesel fiyatlama (Çin içi vs ihraç) değişiyor.
+EŞLEME (karar-model 2026-10-21a): CWENE + PVinsights makas/modül/hücre; GESAN + PVinsights modül. ARIZA: rapor "pvinsights.com: …→ arşiv"
+sürekli ise canlı erişim yok (arşiv ~aylık görüntüler, gecikmeli); "pvinsights CDX" hatası → archive.org.
+DEPLOY: scripts/tazele.mjs · karar-model.json · BAKIM · DAMGA · guncelleme-plani.json (app.js/index.html DEĞİŞMEDİ, 20261020p).
+
 # BAKIM EK — §483 (20 Eki 2026, 23:50) — GES ZİNCİRİ FİYATLARI (InfoLink + Wayback) · CWENE sürücüsü · EUPWR/GESAN izleme modeli
 
-İstek: "pvinsights.com'a bak, sürücülerde eksik olanların yerine koy (EUPWR, GESAN, CWENE gibi)". ÖLÇÜM: pvinsights.com 20 Eki'de
-AÇILMADI (WebFetch http↔https 302 döngüsü; kullanıcının Chrome'unda chrome-error) → Actions'a bağlanamaz. Aynı veri (PV zinciri spot
+İstek: "pvinsights.com'a bak, sürücülerde eksik olanların yerine koy (EUPWR, GESAN, CWENE gibi)". ÖLÇÜM: pvinsights.com 20 Eki'de tarayıcıda
+AÇILMADI (§483b: sunucu ayakta, https↔http döngüsü) (WebFetch http↔https 302 döngüsü; kullanıcının Chrome'unda chrome-error) → Actions'a bağlanamaz. Aynı veri (PV zinciri spot
 fiyatı) sektör standardı InfoLink Consulting'in AÇIK sayfasında: infolink-group.com/spot-price — sunucuda üretilmiş HTML <table>
 (JS yok), her Çarşamba; satır = Kalem | Yüksek | Düşük | ORTALAMA | Δ. 🔒 satırlar ücretli (sayı yok, atlanır).
 TARİHÇE: sayfa yalnız son haftayı gösterir → Internet Archive (Wayback) CDX: 183 görüntü 2022-07→2026-10 (2023 ~aylık, 2024–25
@@ -25,7 +43,7 @@ ges_modul_usd (Çin dışı) · ges_modul_rmb + ges_modul_cin_usd (÷ Yahoo CNY=
 ges_modul_abd_usd (ABD, GD Asya malı) · TÜRETİLMİŞ ges_montaj_makasi_usd = modül − hücre (aynı hafta).
 Chrome doğrulaması (zincirli, $/W): modül 0,307 (Ağu 22) → 0,134 (Oca 24) → 0,088 (Haz–Ara 25) → 0,114 (Eyl 26, dipten +%30 —
 nedeni ayrıca doğrulanmalı: Çin ihracat vergi iadesi/arz disiplini haberleri) · hücre 0,171 → 0,038 → 0,046 · polisilikon 292 → 40 RMB/kg.
-ARTIMLI: D.ges.hafta + D.ges.wb (işlenen görüntü); koşu başına ≤40 görüntü YA DA 150 sn (olcKos katman tavanı 4 dk — aşılırsa dosya
+ARTIMLI: D.ges.hafta + D.ges.wb (işlenen görüntü); koşu başına ≤40 görüntü YA DA 120 sn (olcKos katman tavanı 4 dk — aşılırsa dosya
 YAZILMAZ, bu yüzden iç sınır) → ilk doldurma ~5–6 koşu. GES_SURUM değişirse kayıt sıfırlanır.
 EŞLEME (karar-model 2026-10-20k): CWENE birincil ges_montaj_makasi_usd (marj) + Avrupa/ABD/Çin dışı modül (gelir) + hücre, polisilikon
 (maliyet; polisilikon 1–3 ay öncü), tier C→B — "modül fiyatı bekliyor" KAPANDI. EUPWR ve GESAN XK030 DIŞI izleme modeli (evren:'izleme',

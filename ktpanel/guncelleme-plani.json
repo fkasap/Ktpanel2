@@ -448,17 +448,18 @@
    ]
   },
   {
-   "ad": "GES zinciri fiyatları — InfoLink haftalık spot (polisilikon · wafer · hücre · modül Çin dışı/Çin/Avrupa/ABD) + montaj makası (§483)",
+   "ad": "GES zinciri fiyatları — InfoLink + PVinsights haftalık spot (polisilikon · wafer · hücre · modül) + montaj makası (§483/§483b)",
    "dosya": "sektor-surucu.json",
    "siklik": "haftalik",
    "son": "2026-10-14",
-   "kaynak": "Actions gesFiyat() (§483): www.infolink-group.com/spot-price (HTML tablo, ortalama sütunu; her Çarşamba) + web.archive.org CDX/id_ görüntüleri (2022-07→). Hafta içi akşam + Cmt + elle --katman=ges|kamu|surucu. RMB→$ Yahoo CNY=X.",
+   "kaynak": "Actions gesFiyat() (§483): www.infolink-group.com/spot-price (HTML tablo, ortalama sütunu; her Çarşamba) + web.archive.org CDX/id_ görüntüleri (2022-07→). Hafta içi akşam + Cmt + elle --katman=ges|kamu|surucu. RMB→$ Yahoo CNY=X. §483b: http://pvinsights.com/ ana sayfa ücretsiz tablo (düz http; olmazsa Wayback son görüntü) + Wayback geçmişi 2022-01→.",
    "_483": "pvinsights.com 20 Eki erişilemedi → InfoLink. Etiket kayması (PERC→TOPCon, Chunk→Mono-grade) örtüşme medyan oranıyla zincirlenir; örtüşme yoksa oran 1 (yeniden adlandırma). Artımlı ≤40 görüntü/150 sn koşu başına. Hindistan ve solar cam alınmadı (zincirlenemez / 2025'te tablodan kalktı).",
    "hisse": [
     "CWENE",
     "GESAN",
     "EUPWR"
-   ]
+   ],
+   "_483b": "PVinsights tarayıcıda https↔http döngüsü verir, sunucu ayakta. Seviye InfoLink Çin dışından düşük (tanım farkı: Çin spot KDV hariç) → yön teyidi."
   },
   {
    "ad": "SUT fiyat endeksi (SGK EK-2B/EK-2C sepet kıyası — oran OTOMATİK) + TTB ÖHU katsayısı (elle) + RG izleyici — MPARK",
