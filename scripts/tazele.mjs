@@ -4295,6 +4295,15 @@ async function tuikGenis() {
 /* ── §488 PLASTICPORTAL ── */
 const PP_MALZEME = [['hdpe-film/3', 'HDPE film'], ['ldpe-film/5', 'LDPE film'], ['lldpe-standard/6', 'LLDPE standart'], ['pp-homo/7', 'PP homo']];   /* §488b: 9 → 4 (bileşik pe_pp için gereken; ilk canlı koşuda 9 sayfa × 3 yol 4 dk tavanını aştı) */
 const PP_SURE_MS = 150 * 1000;
+/* §488d TOHUM (21 Eki 15:40): Actions'tan üç yol da kapalı çıktı (fetch 403 Cloudflare · Playwright geçemedi · Wayback Tem 2026 görüntüleri
+   "init yok" = arşiv Cloudflare sayfasını kaydetmiş · Save Page Now 520). Seriler Chrome'da (gerçek tarayıcı, doğrulama geçti) okunup buraya
+   gömüldü: aylık ortalama ×100 (€ sent/kg), bas = ilk ay, eksik = sitede veri olmayan aylar. Doğrulama: Eki 2026 HDPE film 1,43 · LDPE film
+   1,63 · LLDPE 1,48 · PP homo 1,61 = site tablosu ✓. RİTÜEL: her ayın ~16'sı (site güncellemesi) Chrome'dan yeni ay → v dizisinin sonuna. Kod
+   önce fetch/Playwright/Wayback dener; gelen aylar tohumu EZER. */
+const PP_TOHUM = {"pp_hdpe_film_eur":{"bas":"2006-02","eksik":["2011-09","2015-11","2016-04","2016-08","2023-03","2025-12","2026-07"],"v":[105,105,109,112,114,114,119,123,123,119,117,117,118,119,122,126,126,127,126,126,128,124,126,124,128,124,120,122,125,142,142,134,119,83,69,70,74,84,83,82,83,97,98,105,95,94,94,100,107,106,107,105,105,104,106,106,105,108,111,121,125,132,134,132,122,115,120,117,114,114,120,131,140,140,132,125,123,140,150,144,136,140,139,140,137,135,126,127,128,131,137,132,132,135,137,133,132,132,134,135,138,138,136,137,134,131,118,117,133,152,160,167,163,152,146,138,145,141,135,138,138,138,132,132,130,129,126,130,136,135,134,133,128,120,120,122,122,119,120,120,122,119,120,120,125,125,126,126,130,128,124,122,123,125,128,127,127,121,119,115,118,114,112,114,115,105,95,87,95,100,102,99,97,102,107,126,145,164,198,193,194,173,160,157,155,165,164,168,165,180,215,214,202,182,163,154,150,157,148,140,144,137,131,117,106,113,126,132,125,123,125,135,140,131,123,121,124,130,131,125,119,118,126,129,130,123,122,120,115,111,120,117,112,113,118,154,208,216,175,145,144,143]},"pp_ldpe_film_eur":{"bas":"2006-02","eksik":["2011-09","2015-11","2016-04","2016-08","2023-03","2025-12","2026-07"],"v":[111,113,113,115,111,116,122,124,125,120,118,120,120,121,124,125,126,128,127,130,128,125,127,127,129,127,127,122,131,148,148,136,118,75,66,68,73,81,80,79,83,95,99,101,96,93,93,104,114,119,123,124,125,126,121,121,118,119,127,142,146,149,150,144,127,120,121,118,114,113,122,137,147,148,136,125,125,144,150,145,134,136,140,139,137,131,127,133,133,140,147,138,136,140,142,135,134,134,136,138,142,143,137,138,131,128,116,113,129,153,158,167,162,151,143,136,147,139,132,133,139,136,132,135,135,134,131,134,140,140,141,139,134,128,128,130,132,128,127,127,129,126,122,122,121,122,122,122,121,122,119,113,114,113,119,118,119,113,109,108,111,104,103,106,104,98,91,84,91,95,98,97,96,100,118,143,154,181,214,218,216,196,185,187,187,196,198,197,194,203,235,229,203,190,175,165,157,162,153,147,152,139,133,119,110,117,127,134,129,124,127,147,155,140,130,129,129,138,140,135,130,129,137,146,148,138,138,134,130,124,131,127,124,130,135,173,247,247,196,160,156,163]},"pp_lldpe_eur":{"bas":"2006-02","eksik":["2011-09","2015-11","2016-04","2016-08","2023-03","2025-12","2026-07"],"v":[113,111,110,111,110,112,120,118,121,116,116,116,118,118,120,119,120,123,120,124,124,119,122,122,124,126,128,123,130,149,145,140,125,90,71,72,75,84,86,84,85,98,103,107,99,96,96,103,117,120,123,126,126,125,124,125,119,118,118,128,139,137,143,145,132,127,123,113,118,117,124,136,145,145,135,122,124,139,142,145,139,139,142,140,140,133,128,132,134,142,144,138,132,137,139,136,134,133,134,135,139,142,136,132,131,127,115,112,129,152,160,167,163,157,138,134,145,135,129,130,135,135,127,129,127,126,123,130,133,134,134,130,130,120,123,125,129,122,121,123,129,120,117,119,117,118,116,117,117,117,115,114,117,117,121,121,120,115,111,109,113,107,107,108,107,101,96,93,99,102,105,101,101,104,105,131,144,179,199,211,218,201,184,188,191,197,195,198,198,203,235,230,193,170,158,150,145,166,160,147,156,140,132,118,102,115,126,132,127,123,127,137,144,136,129,123,121,133,134,128,121,121,130,134,135,127,129,128,123,121,130,124,119,123,127,159,215,217,186,148,147,148]},"pp_pp_homo_eur":{"bas":"2006-02","eksik":["2011-09","2015-11","2016-04","2016-08","2023-03","2025-12","2026-07"],"v":[106,104,106,110,107,108,114,115,116,112,114,111,112,113,116,119,119,125,122,123,124,122,123,122,122,120,118,113,118,129,129,122,110,86,68,66,67,72,71,71,76,89,93,100,94,89,89,98,106,113,119,124,128,127,123,123,123,123,124,136,138,143,146,141,134,126,123,119,117,116,123,132,140,143,135,127,126,133,144,134,128,130,131,130,131,126,125,126,129,131,137,130,129,133,135,131,132,135,137,138,140,140,139,138,134,127,116,111,124,142,149,150,147,136,130,122,125,117,113,117,118,118,115,119,118,119,118,119,127,129,129,128,125,119,119,122,128,126,127,129,132,130,128,129,132,132,133,133,134,134,132,130,130,133,137,137,136,129,125,120,121,116,113,116,115,108,99,93,99,104,107,106,104,108,115,131,145,181,202,207,213,189,185,189,189,199,203,200,196,201,245,239,205,187,161,151,145,153,145,138,146,143,140,125,121,119,133,137,138,133,135,145,154,143,140,145,140,144,150,140,139,139,142,146,147,142,141,134,135,128,134,131,128,127,129,172,230,240,198,161,158,161]}};
+function ppTohumMap(t) { const m = new Map(); if (!t) return m; const eks = new Set(t.eksik || []); let [y, a] = t.bas.split('-').map(Number); let i = 0;
+  while (i < t.v.length) { const k = y + '-' + String(a).padStart(2, '0'); if (!eks.has(k)) { m.set(k, t.v[i] / 100); i++; } a++; if (a > 12) { a = 1; y++; } if (y > 2100) break; }
+  return m; }
 const PP_KISA = { 'hdpe-film/3': 'pp_hdpe_film_eur', 'ldpe-film/5': 'pp_ldpe_film_eur', 'lldpe-standard/6': 'pp_lldpe_eur', 'pp-homo/7': 'pp_pp_homo_eur', 'hdpe-blow-moulding/2': 'pp_hdpe_sisirme_eur', 'pp-block/8': 'pp_pp_blok_eur' };
 function ppCoz(h) {
   h = String(h || ''); const i = h.indexOf('PlasticPricesChart.init('); if (i < 0) return null;
@@ -4330,8 +4339,8 @@ async function plasticPortal() {
   const spn = async url => { try { const r = await fetch('https://web.archive.org/save/' + url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(45000) }); return 'SPN ' + r.status; } catch (e) { return 'SPN ' + String(e.message || e).slice(0, 30); } };
   D.plastik = D.plastik || {};
   const sonAy = D.seriler.pe_pp && D.seriler.pe_pp.son && D.seriler.pe_pp.son.tarih;
-  if (D.plastik.son_deneme === bugun && D.plastik.surum === '488c') { raporlar.push('### PlasticPortal PE/PP (§488) — ⏭ bugün zaten denendi (günde 1; veri aylık) · son ay ' + (sonAy || '—') + ' · yol ' + JSON.stringify(D.plastik.yollar || {})); return; }
-  const t0 = Date.now(); let fetchOlmadi = 0, pwOlmadi = 0; const tani = [];
+  if (D.plastik.son_deneme === bugun && D.plastik.surum === '488d') { raporlar.push('### PlasticPortal PE/PP (§488) — ⏭ bugün zaten denendi (günde 1; veri aylık) · son ay ' + (sonAy || '—') + ' · yol ' + JSON.stringify(D.plastik.yollar || {})); return; }
+  const t0 = Date.now(); let fetchOlmadi = 0, pwOlmadi = 0, spnSay = 0; const tani = [];
   const sonuc = {}, yollar = {}, uyari = [];
   for (const [yol, ad] of PP_MALZEME) {
     if (Date.now() - t0 > PP_SURE_MS) { uyari.push(ad + ': süre bütçesi (150 sn) doldu → sonraki koşu'); continue; }
@@ -4339,14 +4348,17 @@ async function plasticPortal() {
     if (fetchOlmadi < 2) { try { const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'en-GB,en;q=0.9' }, signal: AbortSignal.timeout(20000) }); const h = await r.text(); if (!duvar(h)) { m = ppCoz(h); if (m) ne = 'fetch'; } if (!m) { fetchOlmadi++; tani.push(ad + ' fetch HTTP ' + r.status + (duvar(h) ? ' Cloudflare' : ' init yok')); } } catch (e) { fetchOlmadi++; tani.push(ad + ' fetch ' + String(e.message || e).slice(0, 40)); } }
     if (!m && pwOlmadi < 1 && Date.now() - t0 < PP_SURE_MS) { const h = await pw(url); if (h) { m = ppCoz(h); if (m) ne = 'playwright'; } if (!m) { pwOlmadi++; tani.push(ad + ' playwright ' + (pwYok ? 'kurulu değil' : 'geçemedi')); } }   /* bir kez geçemezse diğer sayfalarda denenmez (süre) */
     if (!m && Date.now() - t0 < PP_SURE_MS) { const w = await wb(url); if (w && w.h) { m = ppCoz(w.h); if (m) ne = 'wayback ' + w.ts.slice(0, 8); } if (!m) tani.push(ad + ' wayback ' + (w && w.h ? 'init yok' : (w && w.hata || 'görüntü yok'))); }
-    if (!m || /^wayback/.test(ne)) { if (Date.now() - t0 < PP_SURE_MS + 30000) tani.push(ad + ' ' + await spn(url)); }   /* taze görüntü iste (ertesi koşu için) */
-    if (!m) { uyari.push(ad + ': erişilemedi (Cloudflare + arşiv yok)'); continue; }
+    if ((!m || /^wayback/.test(ne)) && spnSay < 1 && Date.now() - t0 < PP_SURE_MS) { spnSay++; tani.push(ad + ' ' + await spn(url)); }   /* koşu başına 1 SPN (520'de 45 sn yiyor) */   /* taze görüntü iste (ertesi koşu için) */
+    const kT = PP_KISA[yol]; const tm = ppTohumMap(PP_TOHUM[kT]);
+    if (!m && tm.size) { m = tm; ne = 'tohum'; }
+    else if (m && tm.size) { const b = new Map(tm); for (const [a, v] of m) b.set(a, v); m = new Map([...b.entries()].sort()); }   /* arşiv/fetch + tohum birleşik */
+    if (!m) { uyari.push(ad + ': erişilemedi (Cloudflare + arşiv yok, tohum yok)'); continue; }
     sonuc[yol] = m; yollar[ne.split(' ')[0]] = (yollar[ne.split(' ')[0]] || 0) + 1;
     /* geçmiş + yeni birleştir (wayback eski görüntüden gelirse dosyadaki yeni ayları kaybetme) */
     const k = PP_KISA[yol]; if (!k) continue;
     const eski = (D.seriler[k] && D.seriler[k].aylik) || {}; const bir = new Map(Object.entries(eski)); for (const [a, v] of m) bir.set(a, v);
     const A = aylikTuret(new Map([...bir.entries()].sort())); const ks = Object.keys(A.aylik); const son = ks[ks.length - 1];
-    D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: ad + ' — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)', birim: '€/kg', siklik: 'aylik', hisse: ['PETKM'], kaynak: 'plasticportal.eu (Plastech.pl) — ' + ne + ' (Actions §488)', aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: A.aylik[son] }, guncelleme: bugun });
+    D.seriler[k] = Object.assign({}, D.seriler[k] || {}, { ad: ad + ' — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)', birim: '€/kg', siklik: 'aylik', hisse: ['PETKM'], kaynak: 'plasticportal.eu (Plastech.pl) — ' + (ne === 'tohum' ? 'elle tohum (Chrome 21 Eki; ayın ~16\'sı güncellenir)' : ne) + ' (Actions §488)', aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: A.aylik[son] }, guncelleme: bugun });
   }
   /* bileşik pe_pp ($/t): HDPE film + LDPE film + LLDPE + PP homo ortalaması × EURUSD */
   let eu = new Map(); try { const h = await yahooSeri(['EURUSD=X'], '', 'max'); eu = h['EURUSD=X'] || new Map(); } catch (e) {}
@@ -4370,12 +4382,56 @@ async function plasticPortal() {
     }
   }
   if (pwB) await pwB.close().catch(() => {});
-  if (!Object.keys(sonuc).length) { D.plastik.son_deneme = bugun; D.plastik.surum = '488c'; D.plastik.yollar = { hata: 1 }; await yaz(dosya, D); raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez\n- tanı: ' + tani.join(' · ') + (uyari.length ? '\n- ' + uyari.slice(0, 4).join('\n- ') : '')); return; }
-  D.plastik.son_deneme = bugun; D.plastik.surum = '488c'; D.plastik.yollar = yollar;
+  if (!Object.keys(sonuc).length) { D.plastik.son_deneme = bugun; D.plastik.surum = '488d'; D.plastik.yollar = { hata: 1 }; await yaz(dosya, D); raporlar.push('### PlasticPortal PE/PP (§488) — ✗ hiçbir sayfa okunamadı · bugün tekrar denenmez\n- tanı: ' + tani.join(' · ') + (uyari.length ? '\n- ' + uyari.slice(0, 4).join('\n- ') : '')); return; }
+  D.plastik.son_deneme = bugun; D.plastik.surum = '488d'; D.plastik.yollar = yollar;
   D.seriler_guncelleme = bugun; await yaz(dosya, D);
   degisenler.push('PlasticPortal PE/PP (' + Object.keys(sonuc).length + ' malzeme)');
   const g = k => D.seriler[k] && D.seriler[k].son ? D.seriler[k].son.deger.toFixed(2) : '—';
   raporlar.push('### PlasticPortal PE/PP (§488) — ✓ ' + Object.keys(sonuc).length + '/' + PP_MALZEME.length + ' malzeme · yol ' + JSON.stringify(yollar) + ' · HDPE film ' + g('pp_hdpe_film_eur') + ' · LDPE film ' + g('pp_ldpe_film_eur') + ' · LLDPE ' + g('pp_lldpe_eur') + ' · PP homo ' + g('pp_pp_homo_eur') + ' €/kg' + (notlar.length ? '\n- ' + notlar.join(' · ') : '') + (tani.length ? '\n- tanı: ' + tani.join(' · ') : '') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : '') + ' · ' + Math.round((Date.now() - t0) / 1000) + ' sn');
+}
+/* ── §489 DCE POLİMER VADELİLERİ (Sina Finance açık API) — Asya PE/PP/PVC referansı ─────────────────────────────────────
+   PlasticPortal Cloudflare'den geçmediği için ikinci, OTOMATİK kaynak (21 Eki): Dalian Ticaret Borsası (DCE) sürekli kontratları —
+   L0 = LLDPE, PP0 = polipropilen, V0 = PVC (Petkim'in üç ana ürün grubu). Uç (WebFetch ile ölçüldü, anahtar yok):
+     GET https://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=PP0
+     → [["2014-02-28","10680.000","10720.000","10604.000","10657.000","97582"], …] (tarih, açılış, yüksek, düşük, KAPANIŞ, hacim; CNY/t, KDV dahil)
+   Günlük kapanış → ay ortalaması; $ = CNY ÷ USD/CNY (Yahoo CNY=X). Çin iç piyasa fiyatı (KDV %13 dahil) — Türkiye ithalatı Orta Doğu/Asya
+   kaynaklı olduğundan Petkim fiyatlamasının ASYA tarafı; Avrupa tarafı PlasticPortal. Seviye değil yön/makas. */
+const DCE_SERI = [['L0', 'dce_lldpe', 'LLDPE'], ['PP0', 'dce_pp', 'PP'], ['V0', 'dce_pvc', 'PVC']];
+async function dceFiyat() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### DCE polimer vadelileri (§489) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  let cny = new Map(); try { const h = await yahooSeri(['CNY=X'], '', 'max'); cny = h['CNY=X'] || new Map(); } catch (e) {}
+  const cAy = {}; for (const [t, v] of cny) if (v > 5 && v < 9) (cAy[t.slice(0, 7)] = cAy[t.slice(0, 7)] || []).push(v);
+  const kur = a => { const v = cAy[a] || cAy[Object.keys(cAy).filter(x => x <= a).sort().pop()]; return v ? v.reduce((s, x) => s + x, 0) / v.length : 7.1; };
+  const notlar = [], uyari = [];
+  for (const [sem, k, ad] of DCE_SERI) {
+    try {
+      const r = await fetch('https://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=' + sem, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126.0', 'Referer': 'https://finance.sina.com.cn/' }, signal: AbortSignal.timeout(30000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const t = await r.text(); const j = JSON.parse(t.slice(t.indexOf('['), t.lastIndexOf(']') + 1));
+      const ay = {}; for (const x of j) { const d = String(x[0]), v = parseFloat(x[4]); if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !(v > 1000 && v < 50000)) continue; (ay[d.slice(0, 7)] = ay[d.slice(0, 7)] || []).push(v); }
+      const ks = Object.keys(ay).sort(); if (ks.length < 24) throw new Error(ks.length + ' ay');
+      const mC = new Map(ks.map(a => [a, ay[a].reduce((s, x) => s + x, 0) / ay[a].length])), mU = new Map(ks.map(a => [a, mC.get(a) / kur(a)]));
+      const sonGun = j.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(String(x[0]))).pop();
+      for (const [kk, m, br] of [[k + '_cny', mC, 'CNY/t'], [k + '_usd', mU, '$/t']]) {
+        const A = aylikTuret(m); const kz = Object.keys(A.aylik); const son = kz[kz.length - 1];
+        D.seriler[kk] = Object.assign({}, D.seriler[kk] || {}, { ad: 'DCE ' + ad + ' sürekli vadeli — Çin iç piyasa (' + br + ', ay ort.)', birim: br, siklik: 'aylik', hisse: ['PETKM'], kaynak: 'Sina Finance DCE ' + sem + ' günlük kapanış' + (br === '$/t' ? ' ÷ Yahoo CNY=X' : '') + ' (Actions §489)', _not: 'Asya polimer fiyatı (KDV %13 dahil). Petkim satış fiyatının Asya/Orta Doğu ayağı; Avrupa ayağı PlasticPortal.', aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: +A.aylik[son].toFixed(br === '$/t' ? 0 : 0), gun: sonGun ? sonGun[0] : null, kapanis: sonGun ? +sonGun[4] : null }, guncelleme: bugun });
+      }
+      const gy = mU.get((+ks[ks.length - 1].slice(0, 4) - 1) + ks[ks.length - 1].slice(4));
+      notlar.push(ad + ' ' + Math.round(mC.get(ks[ks.length - 1])) + ' CNY/t ≈ ' + Math.round(mU.get(ks[ks.length - 1])) + ' $/t (' + (sonGun ? sonGun[0] : ks[ks.length - 1]) + (gy ? ', $ y/y ' + ((mU.get(ks[ks.length - 1]) / gy - 1) * 100).toFixed(1) + '%' : '') + ', ' + ks.length + ' ay)');
+    } catch (e) { uyari.push(sem + ': ' + String(e && e.message || e).slice(0, 80)); }
+  }
+  /* Asya polimer − 7,5×Brent makası (PE+PP ortalaması) */
+  try { const A = D.seriler.dce_lldpe_usd && D.seriler.dce_lldpe_usd.aylik, B = D.seriler.dce_pp_usd && D.seriler.dce_pp_usd.aylik;
+    const br = Object.assign({}, (D.seriler.brent_wb && D.seriler.brent_wb.aylik) || {}); if (D.seriler.brent_yh && D.seriler.brent_yh.gunluk) { const g = {}; for (const [t, v] of D.seriler.brent_yh.gunluk) (g[t.slice(0, 7)] = g[t.slice(0, 7)] || []).push(v); for (const a in g) if (br[a] == null) br[a] = g[a].reduce((s, x) => s + x, 0) / g[a].length; }
+    if (A && B) { const m = new Map(); for (const a of Object.keys(A).sort()) if (B[a] != null && br[a]) m.set(a, (A[a] + B[a]) / 2 / 1.13 - 7.5 * br[a]);   /* KDV %13 düşülür */
+      if (m.size) { const M = aylikTuret(m); const kz = Object.keys(M.aylik); const son = kz[kz.length - 1];
+        D.seriler.petkm_asya_makas_usd = Object.assign({}, D.seriler.petkm_asya_makas_usd || {}, { ad: 'Asya polimer − ham petrol makası — DCE (LLDPE+PP)/2 KDV hariç − 7,5×Brent ($/t)', birim: '$/t', siklik: 'aylik', hisse: ['PETKM'], kaynak: 'türetilmiş: Sina DCE L0/PP0 ÷ CNY=X ÷ 1,13 − 7,5 × Brent (Actions §489)', _not: 'PlasticPortal Avrupa makasının Asya karşılığı; ikisi aynı yöne gidiyorsa sinyal güçlü.', aylik: M.aylik, ceyreklik: M.ceyreklik, yillik: M.yillik, son: { tarih: son, deger: +M.aylik[son].toFixed(0) }, guncelleme: bugun });
+        notlar.push('Asya makası ' + M.aylik[son].toFixed(0) + ' $/t (' + son + ')'); } } } catch (e) { uyari.push('asya makası: ' + e.message); }
+  if (!notlar.length) { raporlar.push('### DCE polimer vadelileri (§489) — ✗ ' + uyari.join(' · ') + ' · dosya korundu'); return; }
+  D.seriler_guncelleme = bugun; await yaz(dosya, D); degisenler.push('DCE polimer (' + notlar.length + ')');
+  raporlar.push('### DCE polimer vadelileri (§489) — ✓ ' + notlar.join(' · ') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : ''));
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
@@ -6294,7 +6350,7 @@ async function bultenKesif() {
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
-    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
+    await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
     await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
@@ -6308,9 +6364,9 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
-  if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
