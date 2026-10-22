@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-22T06:29:36Z",
+ "guncelleme": "2026-10-22T11:33:39Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -386,7 +386,7 @@
    "kaynak": "KAP"
   },
   "BINHO": {
-   "ts": "2026-10-22T06:29:02Z",
+   "ts": "2026-10-22T11:33:05Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3566,7 +3566,7 @@
    "kaynak": "KAP"
   },
   "TMPOL": {
-   "ts": "2026-10-03T09:48:11Z",
+   "ts": "2026-10-22T11:33:36Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -3597,7 +3597,13 @@
    },
    "adet": 14175000,
    "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
-   "eksik": false
+   "faal": 38920149,
+   "amort": 110391720,
+   "vergiOncesi": -77310152,
+   "vergi": -16538013,
+   "gecmisKar": 340077825,
+   "eksik": false,
+   "kaynak": "KAP"
   },
   "TUREX": {
    "ts": "2026-10-05T07:44:24Z",
@@ -4852,7 +4858,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-22T06:29:02Z",
+   "ts": "2026-10-22T11:33:05Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5233,7 +5239,7 @@
    "kaynak": "arşiv"
   },
   "ALBRK": {
-   "ts": "2026-10-22T06:29:02Z",
+   "ts": "2026-10-22T11:33:05Z",
    "y": "362",
    "donem": "2026/2",
    "ceyrek": 5,
