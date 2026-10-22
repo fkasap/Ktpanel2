@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261022b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261022d';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2592,6 +2592,8 @@ function kararSurucuOku(M,H){
     const rol=KARAR_ROL[d.rol]||KARAR_ROL.kur; const st=kararSeriStat(d.k, H.hedefQ, H.kosuQ);
     const ad=(d.ad||(st&&st.ser.ad)||d.k).split(' — ')[0].trim(); const birincil=M.birincil===d.k;
     if(!st){ out.push({d, ad, rol, birincil, yok:true}); return; }
+    /* §489b: kaynağı donmuş seri (DCE eski uç 2024-07'de kalmıştı) teze "güncel" diye girmesin — akış dışı seride son veri 1 yıldan eskiyse bayat */
+    { const t=String((st.son&&st.son.tarih)||''); const ms=Date.parse(t.length===7? t+'-01' : t); if(!st.akis && isFinite(ms) && (Date.now()-ms)/864e5>365){ out.push({d, ad, rol, birincil, yok:true, bayat:t}); return; } }
     const endeks=st.ser.birim==='endeks'||st.akis;
     /* ölçü: endeks/akış serisinde yıllık (mevsimsellik), diğerlerinde çeyrek değişimi; çeyrek yoksa yıllık */
     let olcu=null, olcuAd='', kurYY=null;
@@ -2679,7 +2681,7 @@ function kararTezMetin(M,H,F,PK,boz){
   const satir=(s,g)=>{
     const pay=g?payOf(g):null;
     const bas=(s.birincil?'★ ':'• ')+s.ad+' ['+s.rol.ad+(s.birincil?', birincil':'')+(pay!=null?', kâr payı ~%'+trN(pay*100,0)+(g.ilk?'':' (aile)'):'')+']: ';
-    if(s.yok){ T.push(bas+'kaynak bekliyor'+(s.d.kaynak?' ('+s.d.kaynak+')':'')+'.'); return; }
+    if(s.yok){ T.push(bas+(s.bayat?'BAYAT — son veri '+s.bayat+', kaynak donmuş; okumaya alınmadı':'kaynak bekliyor'+(s.d.kaynak?' ('+s.d.kaynak+')':''))+'.'); return; }
     const st=s.st, b=st.ser.birim||'';
     let sat=bas;
     if(st.ytd) sat+=st.ytd.yil+' toplamı '+trN(st.ytd.toplam,0)+' ('+st.ytd.adet+' adet'+(st.ytd.yy!=null?', geçen yılın aynı tarihine göre '+kararIsaret(st.ytd.yy,0,'%'):'')+')';
@@ -2692,7 +2694,7 @@ function kararTezMetin(M,H,F,PK,boz){
     T.push(sat);
   };
   const teyitSatir=(s,g)=>{
-    if(s.yok){ T.push('   ↳ '+s.ad+' ['+s.rol.ad+']: kaynak bekliyor.'); return; }
+    if(s.yok){ T.push('   ↳ '+s.ad+' ['+s.rol.ad+']: '+(s.bayat?'BAYAT (son veri '+s.bayat+')':'kaynak bekliyor')+'.'); return; }
     const uy= g.rep.yok? '' : ((s.yon==='lehte'&&g.rep.yon==='aleyhte')||(s.yon==='aleyhte'&&g.rep.yon==='lehte'))? ' — AYRIŞIYOR' : (s.yon===g.rep.yon&&s.yon!=='nötr'? ' — uyumlu' : '');
     T.push('   ↳ '+s.ad+' ['+s.rol.ad+']: '+(s.olcu!=null? s.olcuAd+' '+pct(s.olcu,s.fark) : 'ölçü yok')+' → '+(s.yon==='lehte'?'lehte':s.yon==='aleyhte'?'aleyhte':s.yon==='kur'?'kur':'nötr')+uy+'.');
   };
@@ -4370,7 +4372,7 @@ function egriRender(){
      ikisi arasındaki fark bir gün kullanıcının gözüne takılır. */
   const _EC=(window.ENF_CANLI&&Number.isFinite(window.ENF_CANLI.tufe))?window.ENF_CANLI:null;
   const _PC=(window.POL_CANLI&&Number.isFinite(window.POL_CANLI.deger))?window.POL_CANLI:null;
-  const OKU_POLITIKA=_PC?_PC.deger:37, OKU_TUFE=_EC?_EC.tufe:31.75, OKU_BEK=(_EC&&Number.isFinite(_EC.bek))?_EC.bek:23.95;
+  const OKU_POLITIKA=_PC?_PC.deger:36, OKU_TUFE=_EC?_EC.tufe:31.75, OKU_BEK=(_EC&&Number.isFinite(_EC.bek))?_EC.bek:23.95;
   try{
     const ay=_EC&&_EC.ay?(' · '+_EC.ay):'';
     const et1=$('okuTufeEt'); if(et1) et1.textContent='(cari TÜFE %'+trN(OKU_TUFE,2)+(_EC?"'e göre · canlı"+ay+')':"'e göre · damgalı Tem)");
@@ -7278,7 +7280,10 @@ function yabCarryTazele(){
 //   ?list=bie_bispolfaiz → 49 ülke, desen TP.BISPOLFAIZ.<ISO3>
 // UYARI: bu bir BIS DERLEMESİDİR. TCMB'nin kendi duyurusundan gecikmeli gelebilir;
 // PPK günü akşamı henüz eski değeri gösterebilir. Kart tarihi yazıyor, ona bak.
+// §493 (22 Eki): EVDS'de TCMB'nin KENDİ günlük politika faizi serisi var — TP.PF.FF.GUN ("TCMB Politika Faizi",
+// grup bie_pfaizler; EVDS aramasıyla bulundu). BIS derlemesi gecikmeli (PPK günü eski değeri gösterebilir) → yedeğe düştü.
 const TAHMIN_ADAY = [
+  {tip:'seri', kod:'TP.PF.FF.GUN'},
   {tip:'seri', kod:'TP.BISPOLFAIZ.TUR'},
   {tip:'grup', grup:'bie_bispolfaiz', ad:'Türkiye'},
   {tip:'grup', grup:'bie_bispolfaiz', ad:'TUR'}
@@ -7288,7 +7293,7 @@ const TAHMIN_ADAY = [
 // politika faizi ile fonun fiilen kazandığı oran aynı şey değil. Sapmanın ölçülebilmesi
 // için dördünün de AYNI EKRANDA olması gerekiyordu — şimdi var.
 const ZINCIR = [
-  {ad:'POLİTİKA', not:'PPK kararı', seri:'TP.BISPOLFAIZ.TUR'},
+  {ad:'POLİTİKA', not:'PPK kararı', seri:'TP.PF.FF.GUN', yedek:['TP.BISPOLFAIZ.TUR']},   /* §493: önce TCMB'nin kendi serisi */
   {ad:'AOFM', not:'TCMB efektif fonlama', seri:'TP.APIFON4'},
   {ad:'TLREF', not:'gecelik referans', grup:'bie_bisttlref'},
   {ad:'PİYASA REPO', not:'BİST O/N — fonun fiilen kazandığı', grup:'bie_onrepofbap'}
@@ -7298,7 +7303,7 @@ const ZINCIR = [
 // Panel şimdiye kadar yalnız NET'i (APIFON3) çekiyordu; brüt bileşenler daha çok
 // şey söyler — net sıfıra yakınken ikisi birden büyükse kompozisyon değişiyor demektir.
 const LIKIDITE = {fonlama:'TP.APIFON1.TOP', steril:'TP.APIFON2.TOP'};
-const POLITIKA_DAMGA = {deger:37, tarih:'23 Tem 2026 PPK'};   // yedek — damgalı, açıkça yazılır
+const POLITIKA_DAMGA = {deger:36, tarih:'22 Eki 2026 PPK · Duyuru 2026-45'};   // yedek — damgalı, açıkça yazılır
 let TAHMIN = {politika:null, politikaKaynak:null, tufe:null, bek:null, egri:null};
 
 async function tahminPolitikaFaizi(){
@@ -7472,6 +7477,8 @@ function egriInterp(nok, yil){
 /* Zincir halkalarını tek tek çeker — biri düşerse diğerleri etkilenmez. */
 async function zincirGetir(){
   const tek = async (h)=>{
+    /* §493: halkanın yedek serileri varsa sırayla denenir (TCMB kendi serisi → BIS derlemesi) */
+    if(h.yedek&&h.yedek.length){ for(const s of [h.seri].concat(h.yedek)){ const x=await tek({ad:h.ad, not:h.not, seri:s}); if(x) return x; } return null; }
     try{
       const u = h.seri ? '/api/evds2?series='+h.seri+'&gun=120'
                        : '/api/evds2?grup='+h.grup+'&adFiltre=&gun=120';
