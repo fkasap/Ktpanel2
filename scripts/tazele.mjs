@@ -4407,13 +4407,19 @@ async function dceFiyat() {
   const notlar = [], uyari = [];
   for (const [sem, k, ad] of DCE_SERI) {
     try {
-      const r = await fetch('https://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=' + sem, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126.0', 'Referer': 'https://finance.sina.com.cn/' }, signal: AbortSignal.timeout(30000) });
+      /* §489b (22 Eki): eski IndexService.getInnerFuturesDailyKLine 17 Tem 2024'te DONMUŞ (hata vermeden eski veri döner →
+         panelde 2024-07 "son" görünüyordu). Yeni uç InnerFuturesNewService.getDailyKLine (JSONP, nesne dizisi {d,o,h,l,c,v,p,s});
+         kullanıcının bilgisayarından 22 Eki'ye kadar canlı doğrulandı. Ayrıştırıcı iki biçimi de okur; tazelik bekçisi aşağıda. */
+      const r = await fetch('https://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_' + sem + '=/InnerFuturesNewService.getDailyKLine?symbol=' + sem, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/126.0', 'Referer': 'https://finance.sina.com.cn/' }, signal: AbortSignal.timeout(30000) });
       if (!r.ok) throw new Error('HTTP ' + r.status);
-      const t = await r.text(); const j = JSON.parse(t.slice(t.indexOf('['), t.lastIndexOf(']') + 1));
+      const t = await r.text(); const ham = JSON.parse(t.slice(t.indexOf('['), t.lastIndexOf(']') + 1));
+      const j = ham.map(x => Array.isArray(x) ? x : [x.d, x.o, x.h, x.l, x.c, x.v]);
       const ay = {}; for (const x of j) { const d = String(x[0]), v = parseFloat(x[4]); if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !(v > 1000 && v < 50000)) continue; (ay[d.slice(0, 7)] = ay[d.slice(0, 7)] || []).push(v); }
       const ks = Object.keys(ay).sort(); if (ks.length < 24) throw new Error(ks.length + ' ay');
       const mC = new Map(ks.map(a => [a, ay[a].reduce((s, x) => s + x, 0) / ay[a].length])), mU = new Map(ks.map(a => [a, mC.get(a) / kur(a)]));
       const sonGun = j.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(String(x[0]))).pop();
+      /* §489b tazelik bekçisi: son işlem günü 21 günden eskiyse uç donmuş demektir — yazma, hata ver (eski veri sessizce "güncel" sayılmasın) */
+      if (!sonGun || (Date.parse(bugun) - Date.parse(sonGun[0])) / 864e5 > 21) throw new Error('bayat uç: son işlem günü ' + (sonGun ? sonGun[0] : '—'));
       for (const [kk, m, br] of [[k + '_cny', mC, 'CNY/t'], [k + '_usd', mU, '$/t']]) {
         const A = aylikTuret(m); const kz = Object.keys(A.aylik); const son = kz[kz.length - 1];
         D.seriler[kk] = Object.assign({}, D.seriler[kk] || {}, { ad: 'DCE ' + ad + ' sürekli vadeli — Çin iç piyasa (' + br + ', ay ort.)', birim: br, siklik: 'aylik', hisse: ['PETKM'], kaynak: 'Sina Finance DCE ' + sem + ' günlük kapanış' + (br === '$/t' ? ' ÷ Yahoo CNY=X' : '') + ' (Actions §489)', _not: 'Asya polimer fiyatı (KDV %13 dahil). Petkim satış fiyatının Asya/Orta Doğu ayağı; Avrupa ayağı PlasticPortal.', aylik: A.aylik, ceyreklik: A.ceyreklik, yillik: A.yillik, son: { tarih: son, deger: +A.aylik[son].toFixed(br === '$/t' ? 0 : 0), gun: sonGun ? sonGun[0] : null, kapanis: sonGun ? +sonGun[4] : null }, guncelleme: bugun });
