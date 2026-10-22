@@ -1,17 +1,33 @@
 {
  "tarih": "2026-10-22",
  "kodlar": [
+  "AFYON",
+  "AKFGY",
+  "AKGRT",
+  "DZGYO",
+  "EBEBK",
+  "EREGL",
+  "ISDMR",
   "KLGYO",
+  "METRO",
   "TAVHL"
  ],
- "sayi": 2,
+ "sayi": 10,
  "ilk_gorulme": {
   "KLGYO": "2026-10-22",
-  "TAVHL": "2026-10-22"
+  "TAVHL": "2026-10-22",
+  "AFYON": "2026-10-22",
+  "AKFGY": "2026-10-22",
+  "AKGRT": "2026-10-22",
+  "DZGYO": "2026-10-22",
+  "EBEBK": "2026-10-22",
+  "EREGL": "2026-10-22",
+  "ISDMR": "2026-10-22",
+  "METRO": "2026-10-22"
  },
  "evren_disi": [],
  "evren_disi_sayi": 0,
- "pencere_sayi": 2,
+ "pencere_sayi": 10,
  "dusen_son": [],
- "guncelleme": "2026-10-22 13:06 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-22 19:11 UTC — otomatik (KAP FR · kümülatif §299)"
 }
