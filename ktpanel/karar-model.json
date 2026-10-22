@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-21g",
+ "surum": "2026-10-22a",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -90,13 +90,15 @@
     {
      "k": "gaz_avrupa",
      "rol": "maliyet",
-     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı"
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı",
+     "aile": "gaz"
     },
     {
      "k": "ptf",
      "rol": "gelir",
      "ad": "PTF günlük ort. (EPİAŞ) — üretim/ticaret segmenti",
-     "kaynak": "EPİAŞ Şeffaflık — Actions §466"
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466",
+     "aile": "elektrik"
     },
     {
      "k": "epdk_tarife",
@@ -257,27 +259,31 @@
     {
      "k": "gaz_avrupa",
      "rol": "maliyet",
-     "ad": "Doğalgaz Avrupa (WB)"
+     "ad": "Doğalgaz Avrupa (WB)",
+     "aile": "gaz"
     },
     {
      "k": "cimento_ufe",
      "rol": "gelir",
      "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
      "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
-     "not": "Yurt içi çimento satış fiyatının resmî aylık vekili; seviye değil yıllık/çeyreklik değişim okunur"
+     "not": "Yurt içi çimento satış fiyatının resmî aylık vekili; seviye değil yıllık/çeyreklik değişim okunur",
+     "aile": "cimento_yi"
     },
     {
      "k": "ptf_usd",
      "rol": "maliyet",
      "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
-     "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür)."
+     "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür).",
+     "aile": "elektrik"
     },
     {
      "k": "ufe_cimento",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 23.51 çimento — yurt içi fiyat",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "cimento_yi"
     },
     {
      "k": "ydufe_cimento",
@@ -420,24 +426,28 @@
      "rol": "gelir",
      "ad": "PTF spot elektrik, günlük ort. (EPİAŞ GÖP)",
      "kaynak": "EPİAŞ Şeffaflık — Actions §466",
-     "not": "Saatlik piyasa takas fiyatının gün ortalaması; spot satışın birim geliri"
+     "not": "Saatlik piyasa takas fiyatının gün ortalaması; spot satışın birim geliri",
+     "aile": "elektrik"
     },
     {
      "k": "ptf_usd",
      "rol": "gelir",
      "ad": "PTF $/MWh — YEKDEM $ tarifesiyle kıyas",
-     "kaynak": "EPİAŞ (TCMB alış kuru)"
+     "kaynak": "EPİAŞ (TCMB alış kuru)",
+     "aile": "elektrik"
     },
     {
      "k": "elektrik_ufe",
      "rol": "gelir",
      "ad": "Elektrik ÜFE (TÜİK, aylık) — toptan fiyat vekili",
-     "kaynak": "TCMB EVDS"
+     "kaynak": "TCMB EVDS",
+     "aile": "elektrik"
     },
     {
      "k": "gaz_avrupa",
      "rol": "gelir",
-     "ad": "Doğalgaz Avrupa (WB) — PTF’yi belirleyen marjinal yakıt"
+     "ad": "Doğalgaz Avrupa (WB) — PTF’yi belirleyen marjinal yakıt",
+     "aile": "gaz"
     },
     {
      "k": "usdtry",
@@ -546,14 +556,16 @@
      "rol": "maliyet",
      "ad": "TCMB AOFM — ağırlıklı ort. fonlama maliyeti (%)",
      "kaynak": "TCMB EVDS TP.APIFON4 (iş günü)",
-     "not": "Fonlama maliyetinin fiilî ölçüsü (politika faizinden daha gerçekçi). İndirim döngüsünde katılma hesabı maliyeti kredi getirisinden hızlı düşer → makas açılır: AOFM ↓ lehte, ↑ aleyhte. Değişim puan (p) okunur"
+     "not": "Fonlama maliyetinin fiilî ölçüsü (politika faizinden daha gerçekçi). İndirim döngüsünde katılma hesabı maliyeti kredi getirisinden hızlı düşer → makas açılır: AOFM ↓ lehte, ↑ aleyhte. Değişim puan (p) okunur",
+     "aile": "fonlama"
     },
     {
      "k": "tlref",
      "rol": "maliyet",
      "ad": "BIST TLREF gecelik referans faiz (%)",
      "kaynak": "TCMB EVDS TP.BISTTLREF.ORAN",
-     "not": "Piyasa gecelik faizi; kira sertifikası/mevduat fiyatlamasının günlük çapası"
+     "not": "Piyasa gecelik faizi; kira sertifikası/mevduat fiyatlamasının günlük çapası",
+     "aile": "fonlama"
     },
     {
      "k": "tufe",
@@ -566,7 +578,8 @@
      "rol": "maliyet",
      "ad": "TL katılma hesabı kâr payı oranı (%) — fonlama maliyeti",
      "kaynak": "TCMB EVDS TP.KBH.TRY.30 (haftalık)",
-     "not": "Katılım bankasının mevduat karşılığı maliyeti. Kâr payı makası = kredi/sukuk getirisi − bu oran. AOFM düşüşünden 4–8 hafta sonra iner; düşüş hızı makasın açılma hızı."
+     "not": "Katılım bankasının mevduat karşılığı maliyeti. Kâr payı makası = kredi/sukuk getirisi − bu oran. AOFM düşüşünden 4–8 hafta sonra iner; düşüş hızı makasın açılma hızı.",
+     "aile": "fonlama"
     },
     {
      "k": "usdtry",
@@ -667,14 +680,16 @@
      "k": "kap_yeni_is_altny",
      "rol": "gelir",
      "ad": "Açıklanan sözleşme/siparişler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)",
-     "kaynak": "KAP ÖDA (Actions §469, günlük)"
+     "kaynak": "KAP ÖDA (Actions §469, günlük)",
+     "aile": "siparis"
     },
     {
      "k": "kap_backlog_altny",
      "rol": "gelir",
      "ad": "Beyan edilen backlog — KAP metni (mn $, seyrek)",
      "kaynak": "KAP ÖDA metni (\"güncel backlog … USD\")",
-     "not": "Şirket sözleşme açıklamalarında grup backlog'unu beyan ediyor (Tem 2026: 334 mn $). Yalnız bahsedilen aylar"
+     "not": "Şirket sözleşme açıklamalarında grup backlog'unu beyan ediyor (Tem 2026: 334 mn $). Yalnız bahsedilen aylar",
+     "aile": "siparis"
     },
     {
      "k": "usdtry",
@@ -819,14 +834,16 @@
      "rol": "gelir",
      "ad": "Açıklanan sözleşmeler — KAP, çeyrek toplamı (mn $)",
      "kaynak": "aselsan.com KAP açıklamaları (Actions §467, günlük)",
-     "not": "KAP eşiği üstü sözleşmeler; resmî yeni iş alımının ~%45-70'i (2024: 4,4/6,5 · 2025: 6,4/9,6 mlr $). Büyük sözleşme akışının öncü göstergesi — seviye değil y/y okunur; çeyrekler topaklı"
+     "not": "KAP eşiği üstü sözleşmeler; resmî yeni iş alımının ~%45-70'i (2024: 4,4/6,5 · 2025: 6,4/9,6 mlr $). Büyük sözleşme akışının öncü göstergesi — seviye değil y/y okunur; çeyrekler topaklı",
+     "aile": "siparis"
     },
     {
      "k": "asels_backlog",
      "rol": "gelir",
      "ad": "Resmî bakiye sipariş — backlog (mlr $, çeyrek sonu)",
      "kaynak": "Şirket çeyrek sonuçları (elle: 2024 sonu 14,0 · 2025 sonu 20,4 · 2Ç26 23,2)",
-     "not": "Backlog/hasılat ≈ 5 yıl görünürlük (23,2 mlr $ / ~4,8 mlr $ TTM). Yeni iş alımı: 2024 6,5 · 2025 9,6 · 1Y26 4,9 mlr $"
+     "not": "Backlog/hasılat ≈ 5 yıl görünürlük (23,2 mlr $ / ~4,8 mlr $ TTM). Yeni iş alımı: 2024 6,5 · 2025 9,6 · 1Y26 4,9 mlr $",
+     "aile": "siparis"
     },
     {
      "k": "usdtry",
@@ -1064,20 +1081,23 @@
     {
      "k": "bugday_wb",
      "rol": "maliyet",
-     "ad": "Buğday (WB) — temel gıda maliyet vekili"
+     "ad": "Buğday (WB) — temel gıda maliyet vekili",
+     "aile": "bugday"
     },
     {
      "k": "ptf",
      "rol": "maliyet",
      "ad": "Elektrik PTF (TL/MWh) — mağaza/depo elektriği",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
-     "not": "Satışın ~%1'i civarı küçük kalem; ama FAVÖK marjı ~%5–7 olduğundan elektrik şoku marjda hissedilir."
+     "not": "Satışın ~%1'i civarı küçük kalem; ama FAVÖK marjı ~%5–7 olduğundan elektrik şoku marjda hissedilir.",
+     "aile": "elektrik"
     },
     {
      "k": "asgari_ucret_reel",
      "rol": "maliyet",
      "ad": "Asgari ücret reel (÷TÜFE) — mağaza/depo personeli (en büyük gider kalemi)",
-     "kaynak": "türetilmiş (Actions §485)"
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
     },
     {
      "k": "perakende_gida_hacim",
@@ -1316,20 +1336,23 @@
     {
      "k": "gaz_avrupa",
      "rol": "maliyet",
-     "ad": "Doğalgaz Avrupa (WB)"
+     "ad": "Doğalgaz Avrupa (WB)",
+     "aile": "gaz"
     },
     {
      "k": "ptf_usd",
      "rol": "maliyet",
      "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
-     "not": "Çimentoda elektrik ~100–110 kWh/t; beyaz çimento daha enerji yoğun."
+     "not": "Çimentoda elektrik ~100–110 kWh/t; beyaz çimento daha enerji yoğun.",
+     "aile": "elektrik"
     },
     {
      "k": "ufe_cimento",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 23.51 çimento — yurt içi fiyat",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "cimento_yi"
     },
     {
      "k": "ydufe_cimento",
@@ -1352,7 +1375,8 @@
      "k": "cimento_ufe",
      "rol": "gelir",
      "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T69"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
+     "aile": "cimento_yi"
     }
    ],
    "birincil": "komur_termal"
@@ -1578,55 +1602,64 @@
      "k": "ges_montaj_makasi_usd",
      "rol": "marj",
      "ad": "Montaj makası — modül − hücre ($/W)",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_modul_avrupa_usd",
      "rol": "gelir",
      "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W) — TR/AB rakip fiyatı",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_modul_usd",
      "rol": "gelir",
      "ad": "Modül TOPCon, Çin dışı piyasalar ($/W)",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_modul_abd_usd",
      "rol": "gelir",
      "ad": "Modül, ABD projeleri ($/W) — tarife duvarı arkası",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_hucre_usd",
      "rol": "maliyet",
      "ad": "Hücre TOPCon 182, Çin ihraç ($/W) — ana girdi",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_polisilikon_rmb",
      "rol": "maliyet",
      "ad": "Polisilikon (RMB/kg) — zincirin öncüsü",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_pvi_montaj_makasi_usd",
      "rol": "marj",
      "ad": "Montaj makası — PVinsights (ikinci kaynak, $/W)",
-     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)",
+     "aile": "panel"
     },
     {
      "k": "ges_pvi_modul_usd",
      "rol": "gelir",
      "ad": "Modül N-mono 182 — PVinsights ($/W)",
-     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)",
+     "aile": "panel"
     },
     {
      "k": "ges_pvi_hucre_usd",
      "rol": "maliyet",
      "ad": "Hücre N-mono 182 — PVinsights ($/W)",
-     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)",
+     "aile": "panel"
     },
     {
      "k": "usdtry",
@@ -1765,7 +1798,8 @@
      "rol": "gelir",
      "ad": "Konut Fiyat Endeksi (TCMB KFE, aylık)",
      "kaynak": "TCMB EVDS TP.KFE.TR",
-     "not": "Konut fiyatlarının resmî aylık ölçüsü (hedonik). Teslimat geliri satış anındaki fiyatla tanınır; KFE yıllık değişimi birim gelir büyümesinin tabanı. Reel okuma için TÜFE ile kıyaslanır"
+     "not": "Konut fiyatlarının resmî aylık ölçüsü (hedonik). Teslimat geliri satış anındaki fiyatla tanınır; KFE yıllık değişimi birim gelir büyümesinin tabanı. Reel okuma için TÜFE ile kıyaslanır",
+     "aile": "konut_marj"
     },
     {
      "k": "tufe",
@@ -1777,7 +1811,8 @@
      "k": "aofm",
      "rol": "maliyet",
      "ad": "TCMB AOFM (%) — konut kredisi faizinin çapası",
-     "kaynak": "TCMB EVDS"
+     "kaynak": "TCMB EVDS",
+     "aile": "fonlama"
     },
     {
      "k": "on_satis",
@@ -1791,45 +1826,52 @@
      "rol": "gelir",
      "ad": "Konut satışı — ilk el (adet/ay) · geliştirici talebi",
      "kaynak": "TCMB EVDS TP.AKONUTSAT3.KTRTOPLAM (TÜİK)",
-     "not": "Emlak Konut ilk el satıcı; ilk el satış hacmi ön satış ve fiyat gücünün piyasa ölçüsü. Gelir teslimatta tanındığı için çeyrek FAVÖK'e 4–8 çeyrek gecikmeli yansır."
+     "not": "Emlak Konut ilk el satıcı; ilk el satış hacmi ön satış ve fiyat gücünün piyasa ölçüsü. Gelir teslimatta tanındığı için çeyrek FAVÖK'e 4–8 çeyrek gecikmeli yansır.",
+     "aile": "konut_satis"
     },
     {
      "k": "konut_ipotekli",
      "rol": "gelir",
      "ad": "Konut satışı — ipotekli (adet/ay) · kredi koşulları",
      "kaynak": "TCMB EVDS TP.AKONUTSAT2.KTRTOPLAM (TÜİK)",
-     "not": "Faiz indirimi döngüsünün ilk göründüğü yer; ipotekli pay yükselirse talep kredi ile genişliyor."
+     "not": "Faiz indirimi döngüsünün ilk göründüğü yer; ipotekli pay yükselirse talep kredi ile genişliyor.",
+     "aile": "konut_satis"
     },
     {
      "k": "konut_toplam",
      "rol": "gelir",
      "ad": "Konut satışı — toplam (adet/ay)",
-     "kaynak": "TCMB EVDS TP.AKONUTSAT1.KTRTOPLAM (TÜİK)"
+     "kaynak": "TCMB EVDS TP.AKONUTSAT1.KTRTOPLAM (TÜİK)",
+     "aile": "konut_satis"
     },
     {
      "k": "ekgyo_kfe_ime",
      "rol": "marj",
      "ad": "Konut fiyatı ÷ inşaat maliyeti (KFE ÷ İME ikamet) — geliştirici reel makası",
      "kaynak": "türetilmiş TCMB KFE ÷ TÜİK İME (Actions §486)",
-     "not": ">100 ve yükseliyorsa konut fiyatı maliyetten hızlı artıyor → satılan projede marj genişler. EKGYO gelir paylaşımı modelinde yüklenici maliyeti dolaylı, kendi uygulama (anahtar teslim) projelerinde doğrudan etkiler."
+     "not": ">100 ve yükseliyorsa konut fiyatı maliyetten hızlı artıyor → satılan projede marj genişler. EKGYO gelir paylaşımı modelinde yüklenici maliyeti dolaylı, kendi uygulama (anahtar teslim) projelerinde doğrudan etkiler.",
+     "aile": "konut_marj"
     },
     {
      "k": "ime_konut",
      "rol": "maliyet",
      "ad": "İnşaat maliyet endeksi — konut (TÜİK, 2015=100)",
-     "kaynak": "TÜİK veri portalı SDMX DF_UFE_INSAAT_V1 (Actions §486)"
+     "kaynak": "TÜİK veri portalı SDMX DF_UFE_INSAAT_V1 (Actions §486)",
+     "aile": "konut_marj"
     },
     {
      "k": "ime_konut_malzeme",
      "rol": "maliyet",
      "ad": "İME konut — malzeme",
-     "kaynak": "TÜİK (Actions §486)"
+     "kaynak": "TÜİK (Actions §486)",
+     "aile": "konut_marj"
     },
     {
      "k": "ime_konut_iscilik",
      "rol": "maliyet",
      "ad": "İME konut — işçilik",
-     "kaynak": "TÜİK (Actions §486)"
+     "kaynak": "TÜİK (Actions §486)",
+     "aile": "konut_marj"
     },
     {
      "k": "insaat_uretim_bina",
@@ -1938,7 +1980,8 @@
     {
      "k": "gaz_avrupa",
      "rol": "maliyet",
-     "ad": "Doğalgaz Avrupa (WB) — dolaylı"
+     "ad": "Doğalgaz Avrupa (WB) — dolaylı",
+     "aile": "gaz"
     },
     {
      "k": "usdtry",
@@ -2089,20 +2132,23 @@
      "k": "elektrik_ufe",
      "rol": "gelir",
      "ad": "Elektrik ÜFE (TÜİK Yİ-ÜFE 4.1.1) — perakende tarife/toptan fiyat vekili",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T120"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T120",
+     "aile": "elektrik"
     },
     {
      "k": "aofm",
      "rol": "gelir",
      "ad": "TCMB AOFM (%) — RAB üzerinden finansal gelir faizle oynar",
-     "kaynak": "TCMB EVDS"
+     "kaynak": "TCMB EVDS",
+     "aile": "fonlama"
     },
     {
      "k": "ptf",
      "rol": "maliyet",
      "ad": "Elektrik PTF (TL/MWh) — perakende alış maliyeti",
      "kaynak": "EPİAŞ GÖP (Actions §466)",
-     "not": "Dağıtım geliri düzenlenmiş (PTF'den bağımsız); perakende tarafında serbest tüketici marjı = satış tarifesi − PTF. PTF tarifeden hızlı artarsa perakende marjı daralır (son kaynak tedarik tarifesi gecikmeli ayarlanır)."
+     "not": "Dağıtım geliri düzenlenmiş (PTF'den bağımsız); perakende tarafında serbest tüketici marjı = satış tarifesi − PTF. PTF tarifeden hızlı artarsa perakende marjı daralır (son kaynak tedarik tarifesi gecikmeli ayarlanır).",
+     "aile": "elektrik"
     },
     {
      "k": "usdtry",
@@ -2252,14 +2298,16 @@
      "k": "celik_ufe",
      "rol": "gelir",
      "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T74"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
     },
     {
      "k": "hurda_lme",
      "rol": "maliyet",
      "ad": "Hurda CFR TR (LME)",
      "bekliyor": true,
-     "kaynak": "lme.com 403 → Playwright yedeği (sonraki koşu)"
+     "kaynak": "lme.com 403 → Playwright yedeği (sonraki koşu)",
+     "aile": "hurda"
     },
     {
      "k": "demir_cevheri",
@@ -2276,13 +2324,15 @@
      "rol": "maliyet",
      "ad": "Yurt içi hurda — Kardemir Özel Ekstra ($/t) · LME hurdanın yerli karşılığı",
      "kaynak": "kardemir.com açık API (Actions §472)",
-     "not": "EREGL yüksek fırın üreticisi; hurda konvertör şarjının ~%15–20'si. Yurt içi hurda fiyatı Türkiye çelik piyasasının genel nabzı (ark ocaklı rakiplerin maliyeti → yurt içi fiyat tabanı)."
+     "not": "EREGL yüksek fırın üreticisi; hurda konvertör şarjının ~%15–20'si. Yurt içi hurda fiyatı Türkiye çelik piyasasının genel nabzı (ark ocaklı rakiplerin maliyeti → yurt içi fiyat tabanı).",
+     "aile": "hurda"
     },
     {
      "k": "ufe_celik_2410",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 24.10 demir-çelik ürünleri — yurt içi fiyat",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "celik_yi"
     },
     {
      "k": "usdtry",
@@ -2418,36 +2468,42 @@
     {
      "k": "bakir",
      "rol": "maliyet",
-     "ad": "Bakır (COMEX) — trafo/pano sargısı ana girdisi"
+     "ad": "Bakır (COMEX) — trafo/pano sargısı ana girdisi",
+     "aile": "trafo_metal"
     },
     {
      "k": "ges_montaj_makasi_usd",
      "rol": "marj",
      "ad": "Panel montaj makası — modül − hücre ($/W) · Peak PV",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_pvi_montaj_makasi_usd",
      "rol": "marj",
      "ad": "Panel montaj makası — PVinsights (ikinci kaynak, $/W)",
-     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)",
+     "aile": "panel"
     },
     {
      "k": "ges_modul_usd",
      "rol": "gelir",
      "ad": "GES modül fiyatı ($/W) — Peak PV satış fiyatı",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_hucre_usd",
      "rol": "maliyet",
      "ad": "Hücre TOPCon 182 ($/W) — panel ana girdisi",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "aluminyum",
      "rol": "maliyet",
-     "ad": "Alüminyum — sargı/gövde, panel çerçevesi, GES konstrüksiyonu"
+     "ad": "Alüminyum — sargı/gövde, panel çerçevesi, GES konstrüksiyonu",
+     "aile": "trafo_metal"
     },
     {
      "k": "usdtry",
@@ -2459,7 +2515,12 @@
     }
    ],
    "birincil": "bakir",
-   "sektor_not": "Girişim Elektrik (GESAN) bağlı ortaklığı (GESAN payı %50,43, 2Ç26). İki iş kolu: (1) TRAFO/PANO — dağıtım ve ölçü trafoları, AG-OG şalt, mobil trafo merkezi, GES konstrüksiyonu, depolama; (2) PANEL — %60 bağlı ortaklık Peak PV Solar (Temelli 7. fabrika, 2023→). 6A26 bölüm tablosu (GESAN dipnotu, bin TL): Peak PV hasılat 3,93 mlr (6A25 1,44 → ×2,7), brüt kâr 215 mn (marj %5,5; 6A25 −44 mn); Europower trafo/pano hasılat 3,44 mlr, brüt kâr 2,32 mlr (marj %67 — grup içi fiyatlama etkisi olabilir). Yani gelirin yarısı panel ama BRÜT KÂRIN ~%90'ı trafo/pano → birincil sürücü bakır. Panel tarafında modül fiyatı SATIŞ fiyatıdır (↑ gelir lehine) — maliyet artışı fiyata yansır; kârı belirleyen modül − hücre makası (hücre ithal). Peak PV satışlarının önemli kısmı grup içi (GESAN EPC projelerine; 6A26 grup eliminasyonu 2,18 mlr). Güç trafosu fabrikası EP World GESAN altında (EUPWR'da değil)."
+   "sektor_not": "Girişim Elektrik (GESAN) bağlı ortaklığı (GESAN payı %50,43, 2Ç26). İki iş kolu: (1) TRAFO/PANO — dağıtım ve ölçü trafoları, AG-OG şalt, mobil trafo merkezi, GES konstrüksiyonu, depolama; (2) PANEL — %60 bağlı ortaklık Peak PV Solar (Temelli 7. fabrika, 2023→). 6A26 bölüm tablosu (GESAN dipnotu, bin TL): Peak PV hasılat 3,93 mlr (6A25 1,44 → ×2,7), brüt kâr 215 mn (marj %5,5; 6A25 −44 mn); Europower trafo/pano hasılat 3,44 mlr, brüt kâr 2,32 mlr (marj %67 — grup içi fiyatlama etkisi olabilir). Yani gelirin yarısı panel ama BRÜT KÂRIN ~%90'ı trafo/pano → birincil sürücü bakır. Panel tarafında modül fiyatı SATIŞ fiyatıdır (↑ gelir lehine) — maliyet artışı fiyata yansır; kârı belirleyen modül − hücre makası (hücre ithal). Peak PV satışlarının önemli kısmı grup içi (GESAN EPC projelerine; 6A26 grup eliminasyonu 2,18 mlr). Güç trafosu fabrikası EP World GESAN altında (EUPWR'da değil).",
+   "agirlik": {
+    "trafo_metal": 0.9,
+    "panel": 0.1
+   },
+   "agirlik_kaynak": "6A26 bölüm brüt kârı (GESAN dipnotu): trafo/pano ~%90, Peak PV panel ~%10"
   },
   {
    "kod": "GESAN",
@@ -2588,42 +2649,49 @@
     {
      "k": "bakir",
      "rol": "maliyet",
-     "ad": "Bakır (COMEX) — trafo/pano (Europower, EP World) ve kablo girdisi"
+     "ad": "Bakır (COMEX) — trafo/pano (Europower, EP World) ve kablo girdisi",
+     "aile": "trafo_metal"
     },
     {
      "k": "ges_montaj_makasi_usd",
      "rol": "marj",
      "ad": "Panel montaj makası — modül − hücre ($/W) · Peak PV (konsolide)",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_modul_usd",
      "rol": "gelir",
      "ad": "GES modül fiyatı ($/W) — Peak PV satışı; EPC sözleşme bedeline yansır",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_modul_avrupa_usd",
      "rol": "gelir",
      "ad": "Modül, Avrupa projeleri Çin malı FOB ($/W) — ithal rakip fiyatı",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ges_pvi_modul_usd",
      "rol": "gelir",
      "ad": "Modül N-mono 182 — PVinsights ($/W)",
-     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)"
+     "kaynak": "PVinsights haftalık spot + Wayback (Actions §483b)",
+     "aile": "panel"
     },
     {
      "k": "ges_hucre_usd",
      "rol": "maliyet",
      "ad": "Hücre TOPCon 182 ($/W) — panel ana girdisi",
-     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)"
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "ptf_usd",
      "rol": "gelir",
-     "ad": "Elektrik PTF ($/MWh) — GES yatırım getirisi (EPC talebi)"
+     "ad": "Elektrik PTF ($/MWh) — GES yatırım getirisi (EPC talebi)",
+     "aile": "elektrik"
     },
     {
      "k": "usdtry",
@@ -2635,7 +2703,13 @@
     }
    ],
    "birincil": "bakir",
-   "sektor_not": "Grup şirketi: kendi işi elektrik TAAHHÜT/EPC (YG trafo merkezi, iletim/dağıtım, GES kurulumu; 6A26 hasılat 3,62 mlr TL, brüt marj %14) + %100 EP World (~100 mn $ güç trafosu fabrikası, 1.000 MVA/550 kV; 2Y25 üretime geçti, 6A26 hasılat henüz 1,6 mn TL) + %50,43 Europower (EUPWR: trafo/pano + %60 Peak PV panel) KONSOLİDE. 6A26 konsolide brüt kârın ~%75'i Europower trafo/pano, ~%16'sı taahhüt, ~%7'si panel → birincil sürücü bakır. Panel fiyatı konsolide düzeyde çift yönlü: dışarıya satılan panelde gelir, grubun kendi GES projesinde kullanılan panel elimine olur ve EPC bedeline piyasa fiyatından yansır → net etkiyi yine modül − hücre makası belirler. EP World devreye girdikçe güç trafosu (bakır + elektrik çeliği GOES, serbest seri yok) ağırlığı artar. Proje bazlı gelir: çeyrek oynak (2Ç26 FAVÖK negatif). Tek kurum tahmini → sürücüler yön, KAP iş ilanları belirleyici."
+   "sektor_not": "Grup şirketi: kendi işi elektrik TAAHHÜT/EPC (YG trafo merkezi, iletim/dağıtım, GES kurulumu; 6A26 hasılat 3,62 mlr TL, brüt marj %14) + %100 EP World (~100 mn $ güç trafosu fabrikası, 1.000 MVA/550 kV; 2Y25 üretime geçti, 6A26 hasılat henüz 1,6 mn TL) + %50,43 Europower (EUPWR: trafo/pano + %60 Peak PV panel) KONSOLİDE. 6A26 konsolide brüt kârın ~%75'i Europower trafo/pano, ~%16'sı taahhüt, ~%7'si panel → birincil sürücü bakır. Panel fiyatı konsolide düzeyde çift yönlü: dışarıya satılan panelde gelir, grubun kendi GES projesinde kullanılan panel elimine olur ve EPC bedeline piyasa fiyatından yansır → net etkiyi yine modül − hücre makası belirler. EP World devreye girdikçe güç trafosu (bakır + elektrik çeliği GOES, serbest seri yok) ağırlığı artar. Proje bazlı gelir: çeyrek oynak (2Ç26 FAVÖK negatif). Tek kurum tahmini → sürücüler yön, KAP iş ilanları belirleyici.",
+   "agirlik": {
+    "trafo_metal": 0.75,
+    "elektrik": 0.16,
+    "panel": 0.07
+   },
+   "agirlik_kaynak": "6A26 konsolide brüt kâr: Europower trafo/pano ~%75, taahhüt/EPC ~%16 (PTF $ → EPC talebi vekili), panel ~%7"
   },
   {
    "kod": "GLRMK",
@@ -2897,13 +2971,15 @@
      "k": "asgari_ucret",
      "rol": "maliyet",
      "ad": "Asgari ücret brüt (TL) — şoför maliyeti",
-     "kaynak": "Resmî Gazete adım tablosu (Actions §485)"
+     "kaynak": "Resmî Gazete adım tablosu (Actions §485)",
+     "aile": "asgari"
     },
     {
      "k": "asgari_ucret_reel",
      "rol": "maliyet",
      "ad": "Asgari ücret reel (÷TÜFE) — şoför maliyeti; sözleşme eskalasyonu TÜFE ise reel ücret ↑ marjı sıkar",
-     "kaynak": "türetilmiş (Actions §485)"
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
     },
     {
      "k": "kara_tasima_hacim",
@@ -3030,40 +3106,47 @@
     {
      "k": "ure",
      "rol": "gelir",
-     "ad": "Üre, Karadeniz (WB)"
+     "ad": "Üre, Karadeniz (WB)",
+     "aile": "gubre"
     },
     {
      "k": "dap",
      "rol": "gelir",
-     "ad": "DAP (WB)"
+     "ad": "DAP (WB)",
+     "aile": "gubre"
     },
     {
      "k": "gubre_ufe",
      "rol": "gelir",
      "ad": "Temel kimyasal-gübre ÜFE (TÜİK Yİ-ÜFE 3.11.1) — yurt içi gübre fiyatı",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T53"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T53",
+     "aile": "gubre"
     },
     {
      "k": "gaz_avrupa",
      "rol": "maliyet",
-     "ad": "Doğalgaz Avrupa (WB)"
+     "ad": "Doğalgaz Avrupa (WB)",
+     "aile": "gaz"
     },
     {
      "k": "ttf",
      "rol": "maliyet",
-     "ad": "TTF (günlük)"
+     "ad": "TTF (günlük)",
+     "aile": "gaz"
     },
     {
      "k": "gubre_girdi",
      "rol": "gelir",
      "ad": "Çiftçi gübre alış fiyat endeksi (yurt içi satış fiyatı)",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "gubre"
     },
     {
      "k": "ufe_gubre_2015",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 20.15 gübre ve azot bileşikleri",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "gubre"
     },
     {
      "k": "usdtry",
@@ -3292,19 +3375,22 @@
      "rol": "marj",
      "ad": "Haddeleme spread’i — Kardemir profil − kütük ($/t)",
      "kaynak": "türetilmiş: kardemir.com IPE/NPI/NPU 180-200 − kütük S235JR (Actions §472)",
-     "not": "Kocaer kütük alıp profil haddeler: kâr/ton ≈ profil − kütük − dönüşüm maliyeti. İki fiyat da Kardemir’in yurt içi listesi (Kocaer satışı ağırlıkla ihracat) → seviye değil yön; profil listesi seyrek güncellenir"
+     "not": "Kocaer kütük alıp profil haddeler: kâr/ton ≈ profil − kütük − dönüşüm maliyeti. İki fiyat da Kardemir’in yurt içi listesi (Kocaer satışı ağırlıkla ihracat) → seviye değil yön; profil listesi seyrek güncellenir",
+     "aile": "hadde"
     },
     {
      "k": "kardemir_profil_usd",
      "rol": "gelir",
      "ad": "Kardemir profil liste — IPE/NPI/NPU 180-200 Std ($/t)",
-     "kaynak": "kardemir.com açık API (Actions §472)"
+     "kaynak": "kardemir.com açık API (Actions §472)",
+     "aile": "hadde"
     },
     {
      "k": "kardemir_kutuk_usd",
      "rol": "maliyet",
      "ad": "Kardemir kütük liste — S235JR ($/t), ana girdi",
-     "kaynak": "kardemir.com açık API (Actions §472)"
+     "kaynak": "kardemir.com açık API (Actions §472)",
+     "aile": "hadde"
     },
     {
      "k": "ydufe_celik",
@@ -3321,7 +3407,8 @@
      "k": "celik_ufe",
      "rol": "gelir",
      "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1)",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T74"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
     },
     {
      "k": "hrc_abd",
@@ -3467,56 +3554,65 @@
      "rol": "gelir",
      "ad": "Kardemir kütük liste fiyatı — 150×150 S235JR ($/t)",
      "kaynak": "kardemir.com açık API (Actions §472) — 2014→, liste adımı, ay ortalaması",
-     "not": "Şirketin KENDİ liste fiyatı, vekil değil. Satışa açılan günlerde yayımlanır, bir sonraki listeye kadar geçerli (basamaklı). 2016–2021 TL fiyatlanmış, günün kuruyla $’a çevrilir. Çeyrek ortalamasının y/y değişimi = birim gelir büyümesinin tabanı"
+     "not": "Şirketin KENDİ liste fiyatı, vekil değil. Satışa açılan günlerde yayımlanır, bir sonraki listeye kadar geçerli (basamaklı). 2016–2021 TL fiyatlanmış, günün kuruyla $’a çevrilir. Çeyrek ortalamasının y/y değişimi = birim gelir büyümesinin tabanı",
+     "aile": "kardemir_metal"
     },
     {
      "k": "kardemir_spread_cevher_usd",
      "rol": "marj",
      "ad": "Kütük − demir cevheri (1,6 t) — kok hariç kısmi spread ($/t)",
      "kaynak": "türetilmiş: kardemir.com kütük − 1,6 × WB demir cevheri (aylık)",
-     "not": "Yüksek fırın üreticisinin ham madde makası; kok kömürü (≈0,7 t/t) dışarıda → mutlak seviye değil YÖN okunur"
+     "not": "Yüksek fırın üreticisinin ham madde makası; kok kömürü (≈0,7 t/t) dışarıda → mutlak seviye değil YÖN okunur",
+     "aile": "kardemir_metal"
     },
     {
      "k": "kardemir_marj_hurda_usd",
      "rol": "marj",
      "ad": "Kütük − hurda Özel Ekstra ($/t) — yurt içi metal marjı",
      "kaynak": "türetilmiş: kardemir.com kütük − hurda alım (TL→$)",
-     "not": "Yurt içi uzun çelik piyasasının sağlığı; Kardemir’de hurda şarjın küçük kısmı (BOF) — kârı cevher+kok spread’i belirler"
+     "not": "Yurt içi uzun çelik piyasasının sağlığı; Kardemir’de hurda şarjın küçük kısmı (BOF) — kârı cevher+kok spread’i belirler",
+     "aile": "kardemir_metal"
     },
     {
      "k": "kardemir_nervurlu_usd",
      "rol": "gelir",
      "ad": "Kardemir inşaat demiri liste — Ø12-32 ($/t, günün kuruyla)",
-     "kaynak": "kardemir.com (TL liste ÷ USD/TRY)"
+     "kaynak": "kardemir.com (TL liste ÷ USD/TRY)",
+     "aile": "kardemir_metal"
     },
     {
      "k": "kardemir_hurda_usd",
      "rol": "maliyet",
      "ad": "Kardemir hurda alım — Özel Ekstra ($/t)",
      "kaynak": "kardemir.com açık API (TL ilan ÷ USD/TRY)",
-     "not": "Türkiye hurda piyasasının açık, tarihli ölçüsü (SteelOrbis HMS 80:20 ücretli; bu seri bedava ve şirketin kendi alımı)"
+     "not": "Türkiye hurda piyasasının açık, tarihli ölçüsü (SteelOrbis HMS 80:20 ücretli; bu seri bedava ve şirketin kendi alımı)",
+     "aile": "kardemir_metal"
     },
     {
      "k": "demir_cevheri",
      "rol": "maliyet",
-     "ad": "Demir cevheri 62% CFR Çin (WB, aylık)"
+     "ad": "Demir cevheri 62% CFR Çin (WB, aylık)",
+     "aile": "kardemir_metal"
     },
     {
      "k": "komur_termal",
      "rol": "maliyet",
-     "ad": "Kömür (WB, termal — kok vekili, zayıf)"
+     "ad": "Kömür (WB, termal — kok vekili, zayıf)",
+     "aile": "kardemir_metal"
     },
     {
      "k": "celik_ufe",
      "rol": "gelir",
      "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi çelik fiyatı",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T74"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "kardemir_metal"
     },
     {
      "k": "ufe_celik_2410",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 24.10 demir-çelik ürünleri — yurt içi fiyat",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "kardemir_metal"
     },
     {
      "k": "usdtry",
@@ -3678,7 +3774,8 @@
      "k": "asgari_ucret_reel",
      "rol": "maliyet",
      "ad": "Asgari ücret reel (÷TÜFE) — mağaza personeli maliyeti",
-     "kaynak": "türetilmiş (Actions §485)"
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
     },
     {
      "k": "perakende_giyim_hacim",
@@ -3840,27 +3937,31 @@
      "rol": "gelir",
      "ad": "SUT fiyat endeksi — SGK fiyat listesi genel artışları (2020-12=100)",
      "kaynak": "SGK EK-2B/EK-2C listeleri sürüm kıyası (otomatik, §475) + elle tarihçe (MLP Care KAP notları, RG)",
-     "not": "SGK’nın özel hastaneye ödediği fiyat listesi; genel artışlar SGK’nın yayımladığı listeden ölçülür (Ara 2025: hizmet başı +%20, paket ayrı). 2021–2025 tarihçe elle (+15 · +40 · +31 · +51 · +50). İlave ücret tavanı SUT’un %200’ü → artış SGK ödemesini ve hasta farkını birlikte yükseltir; y/y okunur"
+     "not": "SGK’nın özel hastaneye ödediği fiyat listesi; genel artışlar SGK’nın yayımladığı listeden ölçülür (Ara 2025: hizmet başı +%20, paket ayrı). 2021–2025 tarihçe elle (+15 · +40 · +31 · +51 · +50). İlave ücret tavanı SUT’un %200’ü → artış SGK ödemesini ve hasta farkını birlikte yükseltir; y/y okunur",
+     "aile": "sut"
     },
     {
      "k": "sut_reel",
      "rol": "gelir",
      "ad": "SUT reel fiyat — SUT ÷ TÜFE (2020-12=100)",
      "kaynak": "türetilmiş (§474)",
-     "not": "SGK hastasının reel fiyatı: 100’ün altı = SUT enflasyonun gerisinde (2026-09: ~72). Artışta sıçrar, aylarca erir — çeyrek ortalaması okunur"
+     "not": "SGK hastasının reel fiyatı: 100’ün altı = SUT enflasyonun gerisinde (2026-09: ~72). Artışta sıçrar, aylarca erir — çeyrek ortalaması okunur",
+     "aile": "sut"
     },
     {
      "k": "ttb_endeks",
      "rol": "gelir",
      "ad": "TTB ÖHU katsayısı — özel hekimlik tarifesi (2022-12=100)",
      "kaynak": "Adım tablosu: MLP Care KAP notları (Oca/Tem güncellemeleri)",
-     "not": "Özel sigorta ve cepten ödemede hekim ücretinin çapası; TÜFE’nin üstünde arttı → özel segmentte fiyatlama gücü"
+     "not": "Özel sigorta ve cepten ödemede hekim ücretinin çapası; TÜFE’nin üstünde arttı → özel segmentte fiyatlama gücü",
+     "aile": "ttb"
     },
     {
      "k": "ttb_reel",
      "rol": "gelir",
      "ad": "TTB reel — TTB ÷ TÜFE (2022-12=100)",
-     "kaynak": "türetilmiş (§474)"
+     "kaynak": "türetilmiş (§474)",
+     "aile": "ttb"
     },
     {
      "k": "tufe",
@@ -3971,25 +4072,29 @@
     {
      "k": "bugday",
      "rol": "maliyet",
-     "ad": "Buğday CBOT (günlük)"
+     "ad": "Buğday CBOT (günlük)",
+     "aile": "bugday"
     },
     {
      "k": "bugday_wb",
      "rol": "maliyet",
-     "ad": "Buğday ABD HRW (WB)"
+     "ad": "Buğday ABD HRW (WB)",
+     "aile": "bugday"
     },
     {
      "k": "obams_makas",
      "rol": "marj",
      "ad": "Makarna fiyatı ÷ buğday fiyatı (yurt içi makas)",
      "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
-     "not": "Yİ-ÜFE makarna ÷ TÜİK buğday çiftçi fiyatı; >100 ve yükseliyorsa marj genişliyor. Ekim 2026: makarna +%18,4, buğday +%18,8 y/y → yatay."
+     "not": "Yİ-ÜFE makarna ÷ TÜİK buğday çiftçi fiyatı; >100 ve yükseliyorsa marj genişliyor. Ekim 2026: makarna +%18,4, buğday +%18,8 y/y → yatay.",
+     "aile": "bugday"
     },
     {
      "k": "ufe_makarna",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 10.73 makarna — yurt içi fiyat",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "bugday"
     },
     {
      "k": "ydufe_makarna",
@@ -4001,7 +4106,8 @@
      "k": "bugday_tl",
      "rol": "maliyet",
      "ad": "Buğday çiftçi fiyatı (TL/kg)",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "bugday"
     },
     {
      "k": "eurusd",
@@ -4151,55 +4257,64 @@
      "rol": "marj",
      "ad": "Polimer − ham petrol makası — PE/PP Avrupa − 7,5×Brent ($/t)",
      "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)",
-     "not": "Nafta Brent'e yakın fiyatlanır; makas Petkim brüt kârının yön göstergesi (etilen/propilen verimi, enerji hariç)."
+     "not": "Nafta Brent'e yakın fiyatlanır; makas Petkim brüt kârının yön göstergesi (etilen/propilen verimi, enerji hariç).",
+     "aile": "polimer"
     },
     {
      "k": "pe_pp",
      "rol": "gelir",
      "ad": "PE/PP Avrupa reçine fiyatı ($/t) — HDPE/LDPE/LLDPE film + PP homo",
-     "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)"
+     "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)",
+     "aile": "polimer"
     },
     {
      "k": "petkm_asya_makas_usd",
      "rol": "marj",
      "ad": "Asya polimer − ham petrol makası — DCE (LLDPE+PP)/2 − 7,5×Brent ($/t)",
-     "kaynak": "Sina Finance DCE (Actions §489)"
+     "kaynak": "Sina Finance DCE (Actions §489)",
+     "aile": "polimer"
     },
     {
      "k": "dce_lldpe_usd",
      "rol": "gelir",
      "ad": "DCE LLDPE vadeli — Asya PE fiyatı ($/t)",
-     "kaynak": "Sina Finance DCE (Actions §489)"
+     "kaynak": "Sina Finance DCE (Actions §489)",
+     "aile": "polimer"
     },
     {
      "k": "dce_pp_usd",
      "rol": "gelir",
      "ad": "DCE PP vadeli — Asya PP fiyatı ($/t)",
-     "kaynak": "Sina Finance DCE (Actions §489)"
+     "kaynak": "Sina Finance DCE (Actions §489)",
+     "aile": "polimer"
     },
     {
      "k": "dce_pvc_usd",
      "rol": "gelir",
      "ad": "DCE PVC vadeli — Asya PVC fiyatı ($/t)",
-     "kaynak": "Sina Finance DCE (Actions §489)"
+     "kaynak": "Sina Finance DCE (Actions §489)",
+     "aile": "polimer"
     },
     {
      "k": "ufe_plastik",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
     },
     {
      "k": "ydufe_plastik",
      "rol": "gelir",
      "ad": "YD-ÜFE 20.16 plastik — ihracat fiyatı (TL)",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
     },
     {
      "k": "petkm_ufe_makas",
      "rol": "marj",
      "ad": "Plastik yurt içi fiyatı ÷ Brent TL (endeks)",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
     },
     {
      "k": "plastik_uretim",
@@ -4213,12 +4328,14 @@
      "rol": "gelir",
      "ad": "Yİ-ÜFE 20.1 temel kimyasal + birincil formda plastik (yurt içi fiyat)",
      "kaynak": "TCMB EVDS TP.TUFE1YI.T53",
-     "not": "EVDS'de 20.16 (yalnız plastik) üretici fiyatı ayrı yok; 20.1 grubu plastik + gübre + temel kimyasal birlikte. TL endeks → $ yön için USDTRY ile okunur."
+     "not": "EVDS'de 20.16 (yalnız plastik) üretici fiyatı ayrı yok; 20.1 grubu plastik + gübre + temel kimyasal birlikte. TL endeks → $ yön için USDTRY ile okunur.",
+     "aile": "polimer"
     },
     {
      "k": "brent_yh",
      "rol": "maliyet",
-     "ad": "Brent — nafta girdi vekili"
+     "ad": "Brent — nafta girdi vekili",
+     "aile": "polimer"
     },
     {
      "k": "usdtry",
@@ -4479,23 +4596,27 @@
     {
      "k": "ure",
      "rol": "gelir",
-     "ad": "Üre (WB) — Toros Tarım"
+     "ad": "Üre (WB) — Toros Tarım",
+     "aile": "gubre"
     },
     {
      "k": "dap",
      "rol": "gelir",
-     "ad": "DAP (WB)"
+     "ad": "DAP (WB)",
+     "aile": "gubre"
     },
     {
      "k": "gubre_ufe",
      "rol": "gelir",
      "ad": "Temel kimyasal-gübre ÜFE (TÜİK) — yurt içi gübre fiyatı",
-     "kaynak": "TCMB EVDS TP.TUFE1YI.T53"
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T53",
+     "aile": "gubre"
     },
     {
      "k": "gaz_avrupa",
      "rol": "maliyet",
-     "ad": "Doğalgaz Avrupa (WB)"
+     "ad": "Doğalgaz Avrupa (WB)",
+     "aile": "gaz"
     },
     {
      "k": "tkfen_backlog",
@@ -4508,13 +4629,15 @@
      "k": "gubre_girdi",
      "rol": "gelir",
      "ad": "Çiftçi gübre alış fiyat endeksi (Toros Tarım satış fiyatı)",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "gubre"
     },
     {
      "k": "ufe_gubre_2015",
      "rol": "gelir",
      "ad": "Yİ-ÜFE 20.15 gübre ve azot bileşikleri",
-     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "gubre"
     },
     {
      "k": "eurusd",
@@ -5264,13 +5387,15 @@
      "k": "asgari_ucret",
      "rol": "maliyet",
      "ad": "Asgari ücret brüt (TL) — şoför/personel maliyeti",
-     "kaynak": "Resmî Gazete adım tablosu (Actions §485)"
+     "kaynak": "Resmî Gazete adım tablosu (Actions §485)",
+     "aile": "asgari"
     },
     {
      "k": "asgari_ucret_reel",
      "rol": "maliyet",
      "ad": "Asgari ücret reel (÷TÜFE) — şoför maliyeti",
-     "kaynak": "türetilmiş (Actions §485)"
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
     },
     {
      "k": "kara_tasima_hacim",

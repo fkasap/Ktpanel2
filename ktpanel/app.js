@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261022a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261022b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2613,14 +2613,42 @@ function kararSurucuOku(M,H){
   });
   return out;
 }
+/* §492 AİLE: aynı ekonomik büyüklüğü ölçen seriler tek oy (kullanıcı onaylı öz-eleştiri: "çift sayım").
+   karar-model.json surucu_seriler[].aile — ör. panel ailesi: modül, hücre, makas (InfoLink + PVinsights).
+   Temsilci: ★ birincil > veri olan marj (makas zaten gelir−maliyet) > veri olan ilk seri. Aile içinde veri olan marj
+   yoksa gelir ve maliyet AYRI kalır (ENJSA: tarife geliri vs PTF maliyeti — biri diğerinin kopyası değil, makasın iki ayağı).
+   Diğer üyeler "teyit": temsilciyle aynı yönde mi, ayrışıyor mu, ayrıca yazılır. */
+function kararSurucuAile(M,S){
+  const ham={}; S.forEach(s=>{ const a=s.d.aile||s.d.k; (ham[a]=ham[a]||[]).push(s); });
+  const G=[];
+  Object.keys(ham).forEach(a=>{
+    const L=ham[a]; const marjVar=L.some(s=>!s.yok&&s.rol.ad==='marj');
+    const alt={}; L.forEach(s=>{ const k=marjVar? a : a+'|'+s.rol.ad; (alt[k]=alt[k]||[]).push(s); });
+    Object.keys(alt).forEach(k=>{
+      const U=alt[k];
+      const rep=U.find(s=>s.birincil&&!s.yok)||U.find(s=>!s.yok&&s.rol.ad==='marj')||U.find(s=>!s.yok)||U.find(s=>s.birincil)||U[0];
+      const teyit=U.filter(s=>s!==rep);
+      const ayr=teyit.filter(s=>!s.yok&&rep&&!rep.yok&&((s.yon==='lehte'&&rep.yon==='aleyhte')||(s.yon==='aleyhte'&&rep.yon==='lehte'))).length;
+      const cL=teyit.filter(s=>!s.yok&&s.yon==='lehte').length, cA=teyit.filter(s=>!s.yok&&s.yon==='aleyhte').length;
+      G.push({aile:a, rep, teyit, ayrisma:ayr, birincil:U.some(s=>s.birincil), ilk:!G.some(x=>x.aile===a), cL, cA});
+    });
+  });
+  return G;
+}
 function kararTezMetin(M,H,F,PK,boz){
   const hq=H.hedef||{}; const model=hq.kaynak==='model'; const banka=M.tip==='konsensus_banka';
   const fmtV=(v)=> v==null?'—':trN(v, Math.abs(v)<1?3:Math.abs(v)<10?2:Math.abs(v)<1000?1:0);
   const pct=(v,fark)=> kararIsaret(v, fark?1:0, fark?' p':'%');
   const bugun=new Date().toLocaleDateString('tr-TR');
-  const S=kararSurucuOku(M,H);
+  const S=kararSurucuOku(M,H); const A=kararSurucuAile(M,S); const R=A.map(g=>g.rep);
   const say={lehte:0,aleyhte:0,nötr:0,kur:0,belirsiz:0,yok:0}; let net=0;
-  S.forEach(s=>{ if(s.yok){ say.yok++; return; } say[s.yon]=(say[s.yon]||0)+1; const w=s.birincil?2:1; if(s.yon==='lehte') net+=w; else if(s.yon==='aleyhte') net-=w; });
+  R.forEach(s=>{ if(s.yok){ say.yok++; return; } say[s.yon]=(say[s.yon]||0)+1; const w=s.birincil?2:1; if(s.yon==='lehte') net+=w; else if(s.yon==='aleyhte') net-=w; });
+  /* §492 kâr ağırlığı (yalnız bölüm verisi olan hisselerde: M.agirlik {aile: pay}) — "kaç oy" yerine "kârın yüzde kaçı" */
+  let AG=null;
+  if(M.agirlik){ AG={leh:0, aleyh:0, notr:0, olcusuz:0, toplam:0};
+    Object.keys(M.agirlik).forEach(a=>{ const pay=+M.agirlik[a]||0; AG.toplam+=pay; const gs=A.filter(g=>g.aile===a&&!g.rep.yok);
+      const t=gs.reduce((x,g)=>x+(g.rep.yon==='lehte'?1:g.rep.yon==='aleyhte'?-1:0),0);
+      if(!gs.length) AG.olcusuz+=pay; else if(t>0) AG.leh+=pay; else if(t<0) AG.aleyh+=pay; else AG.notr+=pay; }); }
   const T=[];
   /* başlık */
   T.push((M.ad||M.kod)+' ('+M.kod+') · '+kararQAd(hq.q||H.hedefQ)+' tezi · '+bugun);
@@ -2645,10 +2673,12 @@ function kararTezMetin(M,H,F,PK,boz){
   else if(H.konsSicil&&H.konsSicil.tum&&H.konsSicil.tum.length) T.push('Konsensüs sicili ince ('+H.konsSicil.tum.length+' çeyrek, çoğu <3 kurum): gürültü, karar dayanağı değil.');
   if(H.kosu&&H.kosu.tl!=null) T.push('Koşu hızı '+kararQAd(H.kosu.q)+' ('+H.kosu.gun+' gün): '+trN(H.kosu.tl,0)+' mlr ₺ ('+kararIsaret(H.kosu.degisim,0,'%')+' hedef çeyreğe göre).');
   /* 3 sürücüler */
-  T.push(''); T.push('3) SÜRÜCÜLER ('+S.length+' seri · lehte '+say.lehte+' · aleyhte '+say.aleyhte+' · nötr '+say['nötr']+(say.kur?' · kur '+say.kur:'')+(say.yok?' · veri bekleyen '+say.yok:'')+')');
+  T.push(''); T.push('3) SÜRÜCÜLER ('+S.length+' seri → '+A.length+' bağımsız sürücü · lehte '+say.lehte+' · aleyhte '+say.aleyhte+' · nötr '+say['nötr']+(say.kur?' · kur '+say.kur:'')+(say.yok?' · veri bekleyen '+say.yok:'')+')');
   if(!S.length) T.push('Eşlenmiş sektör sürücüsü yok.');
-  S.forEach(s=>{
-    const bas=(s.birincil?'★ ':'• ')+s.ad+' ['+s.rol.ad+(s.birincil?', birincil':'')+']: ';
+  const payOf=(g)=> M.agirlik&&M.agirlik[g.aile]!=null? M.agirlik[g.aile] : null;
+  const satir=(s,g)=>{
+    const pay=g?payOf(g):null;
+    const bas=(s.birincil?'★ ':'• ')+s.ad+' ['+s.rol.ad+(s.birincil?', birincil':'')+(pay!=null?', kâr payı ~%'+trN(pay*100,0)+(g.ilk?'':' (aile)'):'')+']: ';
     if(s.yok){ T.push(bas+'kaynak bekliyor'+(s.d.kaynak?' ('+s.d.kaynak+')':'')+'.'); return; }
     const st=s.st, b=st.ser.birim||'';
     let sat=bas;
@@ -2660,10 +2690,19 @@ function kararTezMetin(M,H,F,PK,boz){
     sat+=' → '+okuma+(s.olcu!=null&&s.yon!=='kur'?' ('+s.olcuAd+' '+pct(s.olcu,s.fark)+', '+s.rol.aciklama+')':'')+(s.ivme?'; '+s.ivme:'')+'.';
     if(s.d.not) sat+=' Not: '+s.d.not;
     T.push(sat);
-  });
+  };
+  const teyitSatir=(s,g)=>{
+    if(s.yok){ T.push('   ↳ '+s.ad+' ['+s.rol.ad+']: kaynak bekliyor.'); return; }
+    const uy= g.rep.yok? '' : ((s.yon==='lehte'&&g.rep.yon==='aleyhte')||(s.yon==='aleyhte'&&g.rep.yon==='lehte'))? ' — AYRIŞIYOR' : (s.yon===g.rep.yon&&s.yon!=='nötr'? ' — uyumlu' : '');
+    T.push('   ↳ '+s.ad+' ['+s.rol.ad+']: '+(s.olcu!=null? s.olcuAd+' '+pct(s.olcu,s.fark) : 'ölçü yok')+' → '+(s.yon==='lehte'?'lehte':s.yon==='aleyhte'?'aleyhte':s.yon==='kur'?'kur':'nötr')+uy+'.');
+  };
+  A.forEach(g=>{ satir(g.rep,g); g.teyit.forEach(s=>teyitSatir(s,g));
+    if(!g.rep.yok&&g.rep.yon==='nötr'&&Math.max(g.cL,g.cA)>=2&&g.cL!==g.cA) T.push('   ↳ Temsilci nötr ama aile çoğunluğu '+(g.cL>g.cA?'lehte ('+g.cL+' seri)':'aleyhte ('+g.cA+' seri)')+': '+(g.cL>g.cA?'marj/maliyet tarafı fiyattan daha iyi — kâr/ton fiyat okumasının söylediğinden güçlü olabilir':'maliyet/marj tarafı bozuluyor — fiyat okuması tabloyu olduğundan iyi gösteriyor olabilir')+'.');
+    if(g.ayrisma) T.push('   ⚠ Aile içinde '+g.ayrisma+' seri temsilciyle ters yönde: '+(g.rep.rol.ad==='marj'?'makas bileşenleri farklı hızda hareket ediyor — net etkiyi makas belirler':'kaynaklar/bileşenler ayrışıyor — temsilciye tek başına güvenme')+'.'); });
   if(S.length){
-    const b=S.find(s=>s.birincil&&!s.yok);
-    T.push('Net sürücü okuması (birincil ×2): '+(net>0?'+':net<0?'−':'')+Math.abs(net)+' → '+(net>=2?'sürücüler belirgin lehte':net<=-2?'sürücüler belirgin aleyhte':net>0?'hafif lehte':net<0?'hafif aleyhte':'dengeli')+(b?'; birincil sürücü ('+b.ad+') '+(b.yon==='lehte'?'lehte':b.yon==='aleyhte'?'aleyhte':'nötr')+(b.ivme?', '+b.ivme:''):'')+'.');
+    const b=R.find(s=>s.birincil&&!s.yok);
+    if(AG) T.push('Kâr ağırlıklı okuma ('+(M.agirlik_kaynak||'bölüm verisi')+'): lehte %'+trN(AG.leh*100,0)+' · aleyhte %'+trN(AG.aleyh*100,0)+' · nötr %'+trN(AG.notr*100,0)+(AG.olcusuz?' · ölçülemeyen %'+trN(AG.olcusuz*100,0)+' (veri bekliyor)':'')+(AG.toplam<0.95?' · kalan %'+trN((1-AG.toplam)*100,0)+' eşlenmemiş':'')+'.');
+    T.push('Net sürücü okuması (bağımsız sürücüler, birincil ×2): '+(net>0?'+':net<0?'−':'')+Math.abs(net)+' → '+(net>=2?'sürücüler belirgin lehte':net<=-2?'sürücüler belirgin aleyhte':net>0?'hafif lehte':net<0?'hafif aleyhte':'dengeli')+(b?'; birincil sürücü ('+b.ad+') '+(b.yon==='lehte'?'lehte':b.yon==='aleyhte'?'aleyhte':'nötr')+(b.ivme?', '+b.ivme:''):'')+'.');
   }
   /* 4 fiyatlanma */
   T.push(''); T.push('4) FİYATLANMA');
@@ -2681,27 +2720,33 @@ function kararTezMetin(M,H,F,PK,boz){
   T.push(''); T.push('6) SENTEZ');
   const bekYon = model? (hq.konsFark>10?1:hq.konsFark<-10?-1:0) : (hq.yoyUsd!=null? (hq.yoyUsd>15?1:hq.yoyUsd<-15?-1:0) : (hq.yoyTl!=null?(hq.yoyTl>40?1:hq.yoyTl<0?-1:0):0));
   const fiyatYon = F.ceyrek&&F.ceyrek.goreli!=null&&!F.supheli? (F.ceyrek.goreli>30?1:F.ceyrek.goreli<-10?-1:0) : 0;   /* +1: fiyatlanmış */
-  const sNet = net>=2?1:net<=-2?-1:0;
+  const agKapsam= AG? AG.leh+AG.aleyh+AG.notr : 0;
+  const sNet = (AG&&agKapsam>=0.5)? ((AG.leh-AG.aleyh)>=0.25?1:(AG.leh-AG.aleyh)<=-0.25?-1:0) : (net>=2?1:net<=-2?-1:0);
   const parca=[];
-  parca.push(sNet>0?'Sürücüler lehte':sNet<0?'Sürücüler aleyhte':'Sürücüler dengeli');
+  const agNot=(AG&&agKapsam>=0.5)? ' (kâr payı %'+trN((sNet>0?AG.leh:sNet<0?AG.aleyh:AG.notr)*100,0)+')' : '';
+  parca.push((sNet>0?'Sürücüler lehte':sNet<0?'Sürücüler aleyhte':'Sürücüler dengeli')+agNot);
   parca.push(bekYon>0?(model?'model konsensüsün üstünde':'beklenti güçlü büyüme gösteriyor'):bekYon<0?(model?'model konsensüsün altında':'beklenti zayıf'):(model?'model konsensüsle aynı yerde':'beklenti nötr'));
   parca.push(fiyatYon>0?'fakat fiyat bunun büyük kısmını almış':fiyatYon<0?'ve fiyat henüz yansıtmamış':'fiyatlanma ılımlı');
   let sonuc=parca.join(', ')+'.';
   if(sNet>0&&bekYon<=0) sonuc+=' Sürücü-beklenti ayrışması: kurumlar sürücüdeki iyileşmeyi henüz tahmine taşımamış olabilir — bilanço pozitif sürpriz adayı; revizyonlar izlenmeli.';
-  else if(sNet<0&&bekYon>=0) sonuc+=' Sürücüler bozulurken beklenti yüksek: negatif sürpriz riski; konsensüs aşağı revizyonu izlenmeli.';
+  else if(sNet<0&&bekYon>0) sonuc+=' Sürücüler bozulurken beklenti yüksek: negatif sürpriz riski; konsensüs aşağı revizyonu izlenmeli.';
+  else if(sNet<0&&bekYon===0) sonuc+=' Sürücüler aleyhte, beklenti ise nötr: kurumlar bozulmayı tahmine yeterince taşımamış olabilir — negatif sürpriz riski; konsensüs revizyonu izlenmeli.';
   else if(sNet>0&&bekYon>0&&fiyatYon<=0) sonuc+=' Sürücü, beklenti ve fiyat aynı hikâyeyi destekliyor; tezin kenarı fiyatın henüz yetişmemiş olması.';
   else if(fiyatYon>0) sonuc+=' Kenar daralmış: tez doğru çıksa da getiri bilanço sonrası revizyon döngüsüne bağlı.';
-  const bS=S.find(s=>s.birincil&&!s.yok);
+  const bS=R.find(s=>s.birincil&&!s.yok);
   if(bS&&/tersine dönüyor/.test(bS.ivme)) sonuc+=' Dikkat: birincil sürücü ('+bS.ad+') koşu çeyreğinde dönüyor — bilanço iyi gelse de rehberlik/sonraki çeyrek zayıf okunabilir.';
   else if(bS&&/toparlanıyor/.test(bS.ivme)) sonuc+=' Birincil sürücü ('+bS.ad+') koşu çeyreğinde toparlanıyor — zayıf bilanço geçici okunabilir.';
   if(say.yok) sonuc+=' Kapsam: '+say.yok+' sürücü verisi bekliyor; okuma eksik.';
   sonuc+=' Karar desteği: '+PK.etiket.aciklama;
   T.push(sonuc);
+  /* §492 tek cümle tez — Journal'da taranan satır (başlığın altına) */
+  const tek='Tez: '+parca.join(', ')+(bS?' · birincil '+bS.ad+' '+(bS.yon==='lehte'?'lehte':bS.yon==='aleyhte'?'aleyhte':'nötr')+(bS.ivme?' ('+bS.ivme+')':''):'')+(say.yok?' · '+say.yok+' sürücü veri bekliyor':'')+'.';
+  T.splice(2,0,tek);
   /* katalizörler */
   const K=[];
   const esikV= model? hq.alt : (hq.kons? (banka?hq.kons.net_tl_mlr:hq.kons.favok_tl_mlr) : null);
   if(esikV==null) K.push('Bilanço '+(M.bilanco&&M.bilanco.beklenen?kararTrTarih(M.bilanco.beklenen):'—')+': konsensüs yok — sonuç sürücü okumasıyla (bölüm 3) karşılaştırılacak.'); else K.push('Bilanço '+(M.bilanco&&M.bilanco.beklenen?kararTrTarih(M.bilanco.beklenen):'—')+': '+(banka?'net kâr':'FAVÖK')+' ≥ '+(model?trN(hq.alt,0)+' mlr ₺ (model alt bandı)':(hq.kons?trN(banka?hq.kons.net_tl_mlr:hq.kons.favok_tl_mlr,2)+' mlr ₺ (konsensüs)':'—'))+'.');
-  S.filter(s=>!s.yok&&(s.birincil||s.yon==='lehte')).slice(0,4).forEach(s=>{
+  R.filter(s=>!s.yok&&(s.birincil||s.yon==='lehte')).slice(0,4).forEach(s=>{
     if(s.st.hedef==null||s.rol.isaret===0) return;
     if(s.kurYY!=null){ K.push((s.birincil?'★ ':'')+s.ad+': yıllık artışı ('+kararIsaret(s.st.dY,0,'%')+') kurun yıllık artışını ('+kararIsaret(s.kurYY,0,'%')+') '+(s.rol.isaret>0?'aşmaya':'altında kalmaya')+' devam etmeli — TL endeks nominal büyür, ölçü $ bazıdır.'); return; }
     const yukari=s.rol.isaret>0; const kq=H.kosuQ?kararQAd(H.kosuQ):'koşu çeyreği', hqAd=kararQAd(H.hedefQ);
@@ -2713,7 +2758,7 @@ function kararTezMetin(M,H,F,PK,boz){
   /* bozucular: mevcut liste + sürücü eşikleri */
   const B=boz.slice();
   const modelde=new Set((model&&M.surucular?M.surucular:[]).map(d=>d.seri));   /* model sürücüleri zaten kararBozucular'da var */
-  S.filter(s=>!s.yok&&s.rol.isaret!==0&&!modelde.has(s.d.k)&&(s.birincil||s.yon==='lehte'||s.yon==='aleyhte')).slice(0,5).forEach(s=>{
+  R.filter(s=>!s.yok&&s.rol.isaret!==0&&!modelde.has(s.d.k)&&(s.birincil||s.yon==='lehte'||s.yon==='aleyhte')).slice(0,5).forEach(s=>{
     const yukari=s.rol.isaret>0, b=s.fark?'%':'';
     if(s.kurYY!=null){ B.push((s.birincil?'★ ':'')+s.ad+': yıllık artışı kurun yıllık artışının '+(yukari?'altına inerse ($ bazında geriler)':'üstüne çıkmaya devam ederse ($ bazında maliyet baskısı)')+' — şu an TL '+kararIsaret(s.st.dY,0,'%')+' vs kur '+kararIsaret(s.kurYY,0,'%')+'.'); return; }
     const asildi=(esik)=> s.st.kosu!=null&&(yukari? s.st.kosu<esik : s.st.kosu>esik) ? ' ⚠ ŞU AN AŞILMIŞ ('+(H.kosuQ?kararQAd(H.kosuQ):'koşu')+' ort. '+fmtV(s.st.kosu)+b+')' : '';
