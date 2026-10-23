@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261022d';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261023a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9477,7 +9477,8 @@ function multipleRender(){
   const ebitdaT = K ? K.ebitda/MN : h.ebitda;
   const netBorcT = K ? (Number.isFinite(K.netBorc)?K.netBorc/MN:h.netBorc) : h.netBorc;
   const mcap=h.fiyat*h.adet, ev=mcap+netBorcT, carpan=ev/ebitdaT, marj=ebitdaT/ciroT*100;
-  if($('mulKaynak')) $('mulKaynak').textContent = K ? ('KAP canlı · TTM '+K.donem) : 'Fintables snapshot';
+  /* §496: dosya artık kendi KAP verimizden (faktör evreni TTM) kurulur; evren dışı hisseler "eski" diye AÇIKÇA yazılır */
+  if($('mulKaynak')) $('mulKaynak').textContent = K ? ('KAP canlı · TTM '+K.donem) : (h.kaynak==='kap' ? ('KAP (kendi verimiz) · TTM '+(h.donem||'—')+(h.adet_not&&/×/.test(h.adet_not)?' · adet: '+h.adet_not:'')) : '⚠ ESKİ veri — bu hisse kendi KAP evrenimizde yok, bilanço kalemleri güncellenmiyor');
   $('mulSnapshot').innerHTML=
     '<div class="kv"><span class="k">Güncel fiyat</span><span class="num">'+trN(h.fiyat,2)+' ₺</span></div>'+
     '<div class="kv"><span class="k">Piyasa değeri</span><span class="num">'+trN(mcap/1000,1)+' mlr ₺</span></div>'+
@@ -9486,7 +9487,7 @@ function multipleRender(){
     '<div class="kv"><span class="k">EBITDA (TTM)'+((K&&K.cekirdekVar)?' <span class="thin" style="font-size:9px">geniş</span>':'')+'</span><span class="num">'+trN(ebitdaT/1000,1)+' mlr ₺</span></div>'+
     ((K&&K.cekirdekVar&&Number.isFinite(K.ebitdaCekirdek))?('<div class="kv"><span class="k thin" style="font-size:10px">çekirdek tanımla (diğer gelirler hariç)</span><span class="num thin" style="font-size:10px">'+trN(K.ebitdaCekirdek/MN/1000,1)+' mlr ₺ · '+trN(ev/(K.ebitdaCekirdek/MN),1)+'x</span></div>'):'')+
     '<div class="kv"><span class="k">EBITDA marjı</span><span class="num">%'+trN(marj,1)+'</span></div>'+
-    '<div class="kv"><span class="k"><b>Mevcut EV/EBITDA</b></span><span class="num" style="color:var(--mm2);font-weight:700">'+trN(carpan,1)+'x</span></div>';
+    '<div class="kv"><span class="k"><b>Mevcut EV/EBITDA</b></span><span class="num" style="color:var(--mm2);font-weight:700">'+(ebitdaT>0?trN(carpan,1)+'x':'— <span class="thin" style="font-weight:400">(FAVÖK negatif, çarpan anlamsız)</span>')+'</span></div>';
   /* §349: her yıl KENDİ büyüme ve marj değişimini alır; ufuk 3 yıl.
      Tek oranla 5 yıl uzatmak uzak yıllarda gerçekçi değildi. */
   const B=[1,2,3].map(i=>parseFloat((($('mulB'+i)||{}).value))||0);
