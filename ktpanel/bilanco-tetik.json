@@ -96,6 +96,7 @@
   "SELVA",
   "SMART",
   "SNGYO",
+  "SOHOE",
   "SOKE",
   "SRVGY",
   "SUWEN",
@@ -113,7 +114,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 111,
+ "sayi": 112,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -384,7 +385,10 @@
   "AFYON": "2026-10-23",
   "AKFGY": "2026-10-23",
   "AKGRT": "2026-10-23",
-  "METRO": "2026-10-23"
+  "METRO": "2026-10-23",
+  "DENIZ": "2026-10-23",
+  "MARMR": "2026-10-23",
+  "SOHOE": "2026-10-23"
  },
  "evren_disi": [
   "ADESE",
@@ -426,6 +430,7 @@
   "CLEBI",
   "CMSAN",
   "DENGE",
+  "DENIZ",
   "DESA",
   "DGNMO",
   "DIMES",
@@ -480,6 +485,7 @@
   "LRSHO",
   "LYDHO",
   "MARKA",
+  "MARMR",
   "MASFN",
   "MDIAZ",
   "MEKMD",
@@ -547,13 +553,14 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 159,
- "pencere_sayi": 8,
+ "evren_disi_sayi": 161,
+ "pencere_sayi": 12,
  "dusen_son": [
   "DZGYO",
   "EBEBK",
   "EREGL",
-  "ISDMR"
+  "ISDMR",
+  "KLSYN"
  ],
- "guncelleme": "2026-10-23 14:11 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-23 19:07 UTC — otomatik (KAP FR · kümülatif §299)"
 }
