@@ -4484,16 +4484,23 @@ async function multipleKendi() {
     const ts = R.timestamp || [], c = (R.indicators && R.indicators.quote && R.indicators.quote[0] && R.indicators.quote[0].close) || [];
     const spGun = new Set(sp.map(x => new Date(x.date * 1000).toISOString().slice(0, 10)));
     let onceki = null, oncekiT = null;
-    for (let i = 0; i < ts.length; i++) { const v = c[i]; if (!(v > 0)) continue;
-      if (onceki && ts[i] > basT) { const o = v / onceki, gun = new Date(ts[i] * 1000).toISOString().slice(0, 10);
-        if (!spGun.has(gun) && (o < 0.85 || o > 1.25) && (ts[i] - oncekiT) < 6 * 864e2) { carpan *= onceki / v; not.push(gun + ' ×' + (onceki / v).toFixed(3) + ' (fiyat boşluğu, yaklaşık)'); } }
-      onceki = v; oncekiT = ts[i]; }
+    /* §496c (ilk canlı koşu): GUBRF/IZFAS/MAGEN'de BUGÜNKÜ çubuk −%16 göründü — seans içi eksik/hatalı veri, bedelsiz değil.
+       Kural: (1) bugünün çubuğu kullanılmaz, (2) boşluk KALICI olmalı — sonraki iki kapanış da yeni seviyenin ±%12'sinde. */
+    const bugunG = new Date().toISOString().slice(0, 10);
+    const I = []; for (let i = 0; i < ts.length; i++) if (c[i] > 0 && new Date(ts[i] * 1000).toISOString().slice(0, 10) < bugunG) I.push(i);
+    for (let j = 1; j < I.length; j++) { const i = I[j], p = I[j - 1]; if (ts[i] <= basT) continue;
+      const v = c[i], onceki = c[p], o = v / onceki, gun = new Date(ts[i] * 1000).toISOString().slice(0, 10);
+      if (spGun.has(gun) || !(o < 0.85 || o > 1.25) || (ts[i] - ts[p]) >= 6 * 864e2) continue;
+      const sonraki = I.slice(j + 1, j + 3).map(q => c[q]); if (sonraki.length < 2 || !sonraki.every(x => Math.abs(x / v - 1) < 0.12)) continue;
+      carpan *= onceki / v; not.push(gun + ' ×' + (onceki / v).toFixed(3) + ' (fiyat boşluğu, yaklaşık)'); }
     return { carpan, not, son: c.filter(x => x > 0).pop() || null };
   };
   let kendi = 0, eski = 0, duzeltme = 0; const hata = [], notlar = [];
   for (const h of (M.hisseler || [])) {
     const s = S[h.k];
-    const gecerli = s && !s.eksik && s.ciro > 0 && Number.isFinite(s.favok) && Number.isFinite(s.netBorc) && s.adet > 0 && donemSonu(s.donem);
+    /* §496b: çarpan ÇEKİRDEK FAVÖK ile (panel KAP kartı §351b ile aynı tanım); yoksa geniş tanıma düşülür ve işaretlenir */
+    const fv = s && Number.isFinite(s.favokCek) && s.favokCek !== 0 ? s.favokCek : (s ? s.favok : null);
+    const gecerli = s && !s.eksik && s.ciro > 0 && Number.isFinite(fv) && Number.isFinite(s.netBorc) && s.adet > 0 && donemSonu(s.donem);
     if (!gecerli) {
       h.kaynak = 'eski'; eski++;
       /* §328 hatasının geri alınması: `_kurumsal` ölçeklemesi Yahoo'da karşılığı olan bir split DEĞİLSE (fon krizi tabanı)
@@ -4507,7 +4514,8 @@ async function multipleKendi() {
       continue; }
     let carpan = 1, kn = [];
     if (Date.now() - t0 < SURE) { try { const k = await kurumsal(h.k, donemSonu(s.donem)); carpan = k.carpan; kn = k.not; } catch (e) { hata.push(h.k + ':' + String(e.message || e).slice(0, 20)); } await uyku(250); }
-    h.ciro = Math.round(s.ciro / 1e6); h.ebitda = Math.round(s.favok / 1e6); h.netBorc = Math.round(s.netBorc / 1e6);
+    h.ciro = Math.round(s.ciro / 1e6); h.ebitda = Math.round(fv / 1e6); h.netBorc = Math.round(s.netBorc / 1e6);
+    h.favok_tanim = (Number.isFinite(s.favokCek) && s.favokCek !== 0) ? 'çekirdek' : 'geniş'; if (Number.isFinite(s.favok)) h.ebitda_genis = Math.round(s.favok / 1e6);
     h.adet = +((s.adet / 1e6) * carpan).toFixed(3);
     h.donem = s.donem; h.kaynak = 'kap'; h.adet_not = kn.length ? 'bilanço sermayesi ' + Math.round(s.adet / 1e6) + ' mn × ' + kn.join(' × ') : 'bilanço sermayesi (' + s.donem + ')';
     delete h._kurumsal;
@@ -5888,7 +5896,7 @@ async function faktorEvren() {
      sonuç sessizce yanlış çıkar). Number.isFinite tip dönüşümü YAPMAZ.
      Bu blokta tüm kontroller Number.isFinite'e çevrildi.
      DERS: null KONTROLÜNDE isFinite DEĞİL Number.isFinite. */
-  const YONTEM = '362';    /* §362: faktör değişkenleri eklendi — eski kayıtlar yeniden çekilir */
+  const YONTEM = '496';    /* §362: faktör değişkenleri · §496b: ÇEKİRDEK FAVÖK eklendi — eski kayıtlar arşivden (ağsız) yeniden kurulur */
   const yas = (k) => {
     const r = D.sirketler[k];
     /* §361g NULL KONTROLÜ GERİ (canlı çöküş: "Cannot read properties of
@@ -5967,6 +5975,10 @@ async function faktorEvren() {
     ticariBorc: 'kap-fr_CurrentTradePayables',
     /* §455: faktör skorlarının eksik metrikleri için (FVÖK marjı, NOPAT, ROIC, Altman Z) */
     vergiOncesi: 'ifrs-full_ProfitLossBeforeTax', vergi: 'ifrs-full_IncomeTaxExpenseContinuingOperations',
+    /* §496b ÇEKİRDEK FAVÖK bileşenleri — panelin KAP kartındaki §351b tanımıyla AYNI (brüt − pazarlama − GYG − Ar-Ge + amortisman).
+       Geniş tanım (faaliyet kârı + amortisman) "diğer faaliyet gelir/giderlerini" (kur farkı, vade farkı, reeskont) içerir:
+       ULUSE/MNDTR/CELHA'da bu kalem faaliyet kârını eksiye çevirip FAVÖK'ü ~0'a indirdi → EV/EBITDA 150–400x çıktı. */
+    pazarlama: 'kap-fr_MarketingExpense', gyg: 'ifrs-full_AdministrativeExpense', arge: 'ifrs-full_ResearchAndDevelopmentExpense',
     gecmisKar: 'kap-fr_PriorYearsProfitsOrLosses'   /* §458: KAP bilançoda 'Geçmiş Yıllar Kâr/Zararları' bu kodla (ifrs-full_RetainedEarnings yok — ASELS arşivinde ölçüldü) */
   };
   let basarili = 0, eksikli = 0, dusen = 0, arsivYazilan = 0;
@@ -6096,12 +6108,14 @@ async function faktorEvren() {
       const isletmeNA = akis('isletmeNA'), capex = akis('capex');
       const odFaiz = akis('odenenFaiz'), odTemettu = akis('odenenTemettu');
       const favok = (Number.isFinite(faal) && Number.isFinite(am)) ? faal + am : null;
+      /* §496b: çekirdek — gider kalemleri KAP'ta EKSİ işaretli gelir; olmayan kalem 0 sayılır (Ar-Ge çoğu şirkette yok) */
+      const favokCek = (Number.isFinite(brut) && Number.isFinite(am)) ? brut + (akis('pazarlama') || 0) + (akis('gyg') || 0) + (akis('arge') || 0) + am : null;
       const finBorc = S(stok('kvB'), stok('kvUV'), stok('uvB'));
       const likit = S(stok('nakit'), stok('finYat'));
       const kayit = {
         ts: new Date().toISOString().slice(0, 19) + 'Z', y: YONTEM,
         donem: son.yil + '/' + son.donem, ceyrek: kalemler.filter(x => x).length,
-        ciro, brut, favok, netKar,
+        ciro, brut, favok, favokCek, netKar,
         ozk: stok('ozk'), aktif: stok('aktif'), donen: stok('donen'), kvY: stok('kvY'),
         finBorc, likit,
         netBorc: (Number.isFinite(finBorc) && Number.isFinite(likit)) ? finBorc - likit : null,
