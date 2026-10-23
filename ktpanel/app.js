@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261023a';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261023b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10975,8 +10975,11 @@ async function karneRezervCanli(){
     // Net (aylık TL bilanço, EVDS günlük kuruyla server'da çevrildi)
     if(j.net && j.net.degerUSD!=null && $('karneNet')){
       const n=j.net;
-      $('karneNet').innerHTML=trN(n.degerUSD,1)+' <span class="thin" style="font-size:8px">· '+(n.tarih||'')+' · canlı (EVDS kur '+trN(n.kur,1)+')</span>';
-      $('karneNet').className='up';
+      /* §498: TEK RAKAM — TCMB analitik bilanço (iş günü) A.1 − P.1, aynı günün kuruyla. Yanında 5 iş günlük değişim. */
+      const d5 = n.degisim5!=null ? ' ('+(n.degisim5>=0?'+':'')+trN(n.degisim5,1)+' 5 iş günü)' : '';
+      $('karneNet').innerHTML=trN(n.degerUSD,1)+d5+' <span class="thin" style="font-size:8px">· '+(n.tarih||'')+'</span>';
+      $('karneNet').title='TCMB analitik bilanço (EVDS TP.AB.A02 − TP.AB.A10, iş günü) ÷ aynı günün USD/TRY alış kuru ('+trN(n.kur,2)+')';
+      $('karneNet').className=(n.degisim5==null||n.degisim5>=0)?'up':'down';
     }
     // Swap hariç net = canlı net − swap stoku (rezerv.json'dan, web güncellemeli).
     // Swap stoku EVDS'de yok (yurtdışı ikili swap gizli); yavaş değişir, json'da saklanır.
@@ -11002,12 +11005,14 @@ async function karneRezervCanli(){
            bülten rakamı rezerv.json.webDogrulama'da (haftalık elle işlenir). 14 günden taze ise
            BİRİNCİL o; EVDS aylık ikincil olarak yanına yazılır. Bülten bayatsa eski hesap + uyarı. */
         const wd=rj.webDogrulama||{}; let wdYas=null; try{ const p=String(wd.tarih||'').split('-'); if(p.length===3) wdYas=Math.round((Date.now()-new Date(p[2]+'-'+p[1]+'-'+p[0]+'T00:00:00').getTime())/86400000); }catch(e){}
-        const resmi = (wd.net!=null && wd.swapHaricNet!=null && wdYas!=null && wdYas<=14);
+        /* §498: gazete/aracı kurum hesabı (webDogrulama) artık BİRİNCİL değil — kullanıcı kuralı "data kaynaklarından".
+           Net doğrudan TCMB'den; swap hariç = net − swap stoku (tek elle girdi, yaşı hücrede). */
+        const resmi = false;
         if(resmi){
           if($('karneNet')) $('karneNet').innerHTML=trN(wd.net,1)+' <span class="thin" style="font-size:8px">· TCMB haftalık bülten · '+wd.tarih+' · EVDS aylık '+trN(j.net.degerUSD,1)+'</span>';
           $('karneSwapHaric').innerHTML=trN(wd.swapHaricNet,1)+' <span class="thin" style="font-size:8px">· TCMB bülteni ('+wd.tarih+') · swap stoku '+trN(swapStoku,1)+'</span>';
         } else {
-          $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· EVDS net − swap '+trN(swapStoku,1)+' (stok '+gun+') · bülten '+(wdYas!=null?wdYas+' günlük':'yok')+'</span>'+
+          $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· net − swap stoku '+trN(swapStoku,1)+' ('+gun+')</span>'+
             (bayat?' <span style="color:#E8933B;font-size:9px;font-weight:600">\u26a0 stok '+stokYas+' günlük — "rezervleri güncelle"</span>':'');
         }
         $('karneSwapHaric').className='up';
