@@ -5647,14 +5647,25 @@ async function kapArsiv() {
     let n = 0;
     try { const d = JSON.parse(await fs.readFile(path.join(KOK, KLASOR, kod + '.json'), 'utf8'));
       n = Object.keys(d.donemler || {}).length; } catch (e) { n = 0; }
-    durum.push({ kod, n });
+    durum.push({ kod, n, enYeni: null });
   }
+  /* §500 (23 Eki) YENİ DÖNEM ÖNCELİĞİ: EREGL 3Ç26'yı 22 Eki'de açıkladı ama arşiv yavaş yolda GLRMK/EFOR'u (eski çeyrek
+     tamamlama) işledi; 15 çeyreği dolmuş bir şirkete ise YENİ çeyrek HİÇ eklenmiyordu (n < 15 süzgeci). bist-takvim.json
+     `gerceklesen` (bu sezon açıklayanlar) + `donem` (3Ç26 → 2026/3): arşivin en yeni dönemi bundan eskiyse şirket EN ÖNE
+     alınır ve tavanı aşsa da işlenir (en eski çeyrek düşülür). */
+  let takvimDonem = null, takvimGercek = {};
+  try { const bt = await oku('bist-takvim.json'); const m = String(bt.donem || '').match(/^([1-4])Ç(\d{2})$/); if (m) takvimDonem = { y: 2000 + +m[2], q: +m[1] }; takvimGercek = bt.gerceklesen || {}; } catch (e) {}
+  for (const x of durum) { try { const d = JSON.parse(await fs.readFile(path.join(KOK, KLASOR, x.kod + '.json'), 'utf8'));
+    const ks = Object.keys(d.donemler || {}).filter(k => /^\d{4}\/[1-4]$/.test(k)).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (b1 - a1) || (b2 - a2); });
+    if (ks.length) { const [y, q] = ks[0].split('/').map(Number); x.enYeni = { y, q }; } } catch (e) {} }
+  const yeniBekliyor = (x) => !!(takvimDonem && takvimGercek[x.kod] && (!x.enYeni || x.enYeni.y * 10 + x.enYeni.q < takvimDonem.y * 10 + takvimDonem.q));
   /* §381b ÖNCELİK SIRASI: tüm evren ~69 koşu-günü sürüyor. Alfabetik ya da
      salt "en eksik" sırası, en çok bakılan şirketleri en sona atabilir.
      Öncelik: (1) bilanço tetiğindekiler — yeni bildirim geldi, taze veri
      değerli; (2) XK030 (en büyük 30, en çok bakılan); (3) XK100; (4) kalanlar.
      Her grup içinde en eksik olan önce. Böylece arşiv "işe yarar" sırayla
      dolar; tam tur bitmeden de kullanılabilir hale gelir. */
+  const yeniSet = new Set(durum.filter(yeniBekliyor).map(x => x.kod));
   let tetik = [], xk030 = [], xk100 = [];
   try { const bt = await oku('bilanco-tetik.json'); tetik = bt.kodlar || []; } catch (e) {}
   try { const eu = await oku('endeks-uyeler.json'); xk030 = (eu.uyeler || {}).XK030 || []; xk100 = (eu.uyeler || {}).XK100 || []; } catch (e) {}
@@ -5662,7 +5673,7 @@ async function kapArsiv() {
      şeyin önünde (0), yavaş yolda bile ilk 2 slotu alır. Kullanıcı "ASELS arşivde yok" dedi;
      dosyaya yazar, sıradaki koşu getirir. Dosya yoksa/bozuksa sessizce boş. */
   let elleOncelik = []; try { const eo = await oku('kap-arsiv-oncelik.json'); elleOncelik = (Array.isArray(eo) ? eo : (eo.kodlar || [])).map(x => String(x).toUpperCase()); } catch (e) {}
-  const oncelik = (k) => elleOncelik.includes(k) ? -1 : (tetik.includes(k) ? 0 : (xk030.includes(k) ? 1 : (xk100.includes(k) ? 2 : 3)));
+  const oncelik = (k) => (yeniSet.has(k) ? -2 : (elleOncelik.includes(k) ? -1 : (tetik.includes(k) ? 0 : (xk030.includes(k) ? 1 : (xk100.includes(k) ? 2 : 3)))));
   /* §382b BELLEKTE OLANI TERCİH ET: faktör evreni (§361) bu koşuda zaten
      bazı şirketlerin dönem listesini çekti. Arşiv onları seçerse liste
      BEDAVA gelir — yeni KAP isteği yok. Aynı öncelik grubunda, listesi
@@ -5684,7 +5695,7 @@ async function kapArsiv() {
     if (elleOncelik.includes(k)) return 0;   /* §446: elle öncelikli kod iki başarısızlıkla sona atılmaz */
     return r.n >= 2 ? 1 : 0;
   };
-  const sira = durum.filter(x => x.n < CEYREK_TAVAN)
+  const sira = durum.filter(x => x.n < CEYREK_TAVAN || yeniBekliyor(x))
     .sort((a, b) => (cezali(a.kod) - cezali(b.kod)) || (oncelik(a.kod) - oncelik(b.kod)) || (bellekte(a.kod) - bellekte(b.kod)) || (a.n - b.n))
     .slice(0, PARTI);
   if (!sira.length) {
@@ -5694,7 +5705,10 @@ async function kapArsiv() {
   if (!HIZLI) await new Promise(r => setTimeout(r, 30000));   /* §383b: KAP dinlensin (köprü yolunda) */
   let eklenen = 0, yeniSirket = 0, dusen = 0;
   const notlar = [];
+  const t0 = Date.now(), BUTCE = 200000;   /* §500: olcKos 4 dk tavanından ÖNCE dur — yarım koşu da yazılsın, rapor kaybolmasın */
+  let butceDoldu = 0;
   for (const { kod, n: mevcut } of sira) {
+    if (Date.now() - t0 > BUTCE) { butceDoldu++; continue; }
     try {
       const jd = await kapDonemler(kod, 4);            /* §382: koşu-içi önbellek */
       const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, CEYREK_TAVAN) : [];
@@ -5730,6 +5744,8 @@ async function kapArsiv() {
         await uyku(HIZLI ? 600 : 2500);
         if (buTur >= (HIZLI ? 15 : 4)) break;                             /* koşu başına şirket sınırı */
       }
+      { const ks = Object.keys(D.donemler).filter(k => /^\d{4}\/[1-4]$/.test(k)).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (a1 - b1) || (a2 - b2); });
+        while (ks.length > CEYREK_TAVAN) delete D.donemler[ks.shift()]; }   /* §500: yeni çeyrek eklenince en eski düşer */
       D.guncelleme = new Date().toISOString().slice(0, 19) + 'Z';
       D.ceyrek = Object.keys(D.donemler).length;
       await fs.writeFile(path.join(KOK, KLASOR, kod + '.json'), JSON.stringify(D), 'utf8');
@@ -5746,7 +5762,7 @@ async function kapArsiv() {
     (yeniSirket ? (' · ' + yeniSirket + ' yeni dosya') : '') +
     (notlar.length ? ('\n- ' + notlar.slice(0, 6).join(' · ')) : '') +
     '\n- öncelik: bilanço tetiği → XK030 → XK100 → kalanlar (en çok bakılan önce dolar)' +
-    (dusen ? ('\n- ' + dusen + ' düştü') : '') +
+    (dusen ? ('\n- ' + dusen + ' düştü') : '') + (yeniSet.size ? ('\n- §500 yeni dönem önceliği: ' + [...yeniSet].join(', ')) : '') + (butceDoldu ? ('\n- ⏱ süre bütçesi doldu, ' + butceDoldu + ' şirket sonraki koşuya') : '') +
     (bekleyen ? ('\n- ' + bekleyen + ' şirket 3+ kez düştü, 6 saat dinlendiriliyor (sırayı tıkamasın)') : '') +
     '\n- ⓘ Ham tablolar `' + KLASOR + '/<KOD>.json` içinde, şirket başına en fazla ' + CEYREK_TAVAN +
     ' çeyrek. Yayımlanmış bildirim değişmediği için bir kez yazılır; panel KAP yerine buradan okuyabilir (15 istek → 1).');
