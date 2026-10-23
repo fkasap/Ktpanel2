@@ -1,29 +1,29 @@
 {
  "guncelleme": "2026-10-23",
- "fiyat_tarihi": "2026-10-22",
- "not": "XKTUM + büyük hisseler · TTM ciro/EBITDA · negatif EBITDA hariç · ödenmiş sermaye=adet | 29 Tem: fiyatlar Fintables mumlar_gunluk_gh ile tazelendi. Bilanço kalemleri (ciro/ebitda/netBorc) 1Ç26 — 2Ç26 henüz aciklanmadi, dogrusu bu.",
+ "fiyat_tarihi": "2026-10-23",
+ "not": "Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:\"eski\" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.",
  "hisseler": [
   {
    "k": "AKFYE",
-   "fiyat": 3.98,
-   "adet": 7176,
-   "ciro": 6616,
-   "ebitda": 3589,
-   "netBorc": 11366,
+   "fiyat": 3.79,
+   "adet": 7181.772,
+   "ciro": 5631,
+   "ebitda": 4247,
+   "netBorc": 11347,
    "hacim": 293,
-   "_kurumsal": {
-    "tarih": "2026-09-19",
-    "oran": 0.1667
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 1197 mn × 2026-09-21 ×6.000 (Yahoo)"
   },
   {
    "k": "ALCTL",
-   "fiyat": 63.35,
+   "fiyat": 62,
    "adet": 38,
    "ciro": 5243,
    "ebitda": 604,
    "netBorc": -1225,
-   "hacim": 76
+   "hacim": 76,
+   "kaynak": "eski"
   },
   {
    "k": "ALKA",
@@ -32,947 +32,1128 @@
    "ciro": 3056,
    "ebitda": 152,
    "netBorc": 199,
-   "hacim": 23
+   "hacim": 23,
+   "kaynak": "eski"
   },
   {
    "k": "ALKIM",
-   "fiyat": 9.99,
+   "fiyat": 9.77,
    "adet": 300,
-   "ciro": 5522,
-   "ebitda": 263,
-   "netBorc": -91,
-   "hacim": 41
+   "ciro": 4975,
+   "ebitda": 259,
+   "netBorc": 89,
+   "hacim": 41,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ALKLC",
-   "fiyat": 30.46,
+   "fiyat": 31.8,
    "adet": 112,
-   "ciro": 5681,
-   "ebitda": 1049,
-   "netBorc": 2326,
-   "hacim": 519
+   "ciro": 5410,
+   "ebitda": 750,
+   "netBorc": 3032,
+   "hacim": 519,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ALTNY",
-   "fiyat": 10.97,
+   "fiyat": 10.55,
    "adet": 1000,
-   "ciro": 3179,
-   "ebitda": 656,
-   "netBorc": 1906,
-   "hacim": 478
+   "ciro": 2930,
+   "ebitda": 530,
+   "netBorc": 2266,
+   "hacim": 478,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ALVES",
-   "fiyat": 0.49,
+   "fiyat": 0.48,
    "adet": 1600,
-   "ciro": 11857,
-   "ebitda": 2489,
-   "netBorc": 3969,
-   "hacim": 147
+   "ciro": 12361,
+   "ebitda": 2292,
+   "netBorc": 4414,
+   "hacim": 147,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ANGEN",
-   "fiyat": 6.86,
+   "fiyat": 6.76,
    "adet": 220,
    "ciro": 814,
    "ebitda": 85,
    "netBorc": 361,
-   "hacim": 72
+   "hacim": 72,
+   "kaynak": "eski"
   },
   {
    "k": "ARASE",
-   "fiyat": 70.75,
+   "fiyat": 69.3,
    "adet": 250,
    "ciro": 38416,
    "ebitda": 9118,
    "netBorc": 1001,
-   "hacim": 34
+   "hacim": 34,
+   "kaynak": "eski"
   },
   {
    "k": "ARDYZ",
-   "fiyat": 56.85,
+   "fiyat": 56.1,
    "adet": 322,
    "ciro": 5969,
    "ebitda": 2514,
    "netBorc": 1354,
-   "hacim": 270
+   "hacim": 270,
+   "kaynak": "eski"
   },
   {
    "k": "ASELS",
-   "fiyat": 338.25,
+   "fiyat": 326.5,
    "adet": 4560,
-   "ciro": 203046,
-   "ebitda": 53985,
-   "netBorc": 22084,
-   "hacim": 13924
+   "ciro": 197983,
+   "ebitda": 55533,
+   "netBorc": 33824,
+   "hacim": 13924,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ATAKP",
-   "fiyat": 34.64,
+   "fiyat": 34.14,
    "adet": 138,
    "ciro": 4143,
    "ebitda": 490,
    "netBorc": -370,
-   "hacim": 20
+   "hacim": 20,
+   "kaynak": "eski"
   },
   {
    "k": "AVPGY",
-   "fiyat": 47.86,
+   "fiyat": 47.44,
    "adet": 400,
    "ciro": 7757,
    "ebitda": 3031,
    "netBorc": -1595,
-   "hacim": 42
+   "hacim": 42,
+   "kaynak": "eski"
   },
   {
    "k": "BAHKM",
-   "fiyat": 137.9,
+   "fiyat": 140.1,
    "adet": 55,
    "ciro": 985,
    "ebitda": 127,
    "netBorc": -379,
-   "hacim": 50
+   "hacim": 50,
+   "kaynak": "eski"
   },
   {
    "k": "BAKAB",
-   "fiyat": 26.24,
+   "fiyat": 24.9,
    "adet": 72,
-   "ciro": 6568,
-   "ebitda": 456,
-   "netBorc": 612,
-   "hacim": 56
+   "ciro": 5943,
+   "ebitda": 424,
+   "netBorc": 610,
+   "hacim": 56,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "BASGZ",
-   "fiyat": 34.88,
+   "fiyat": 34.42,
    "adet": 700,
    "ciro": 54074,
    "ebitda": 7150,
    "netBorc": -4763,
-   "hacim": 21
+   "hacim": 21,
+   "kaynak": "eski"
   },
   {
    "k": "BERA",
-   "fiyat": 10.04,
-   "adet": 683,
-   "ciro": 21238,
-   "ebitda": 2612,
-   "netBorc": -1429,
-   "hacim": 158
+   "fiyat": 9.89,
+   "adet": 683.2,
+   "ciro": 18847,
+   "ebitda": 2631,
+   "netBorc": -976,
+   "hacim": 158,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "BIENY",
-   "fiyat": 11,
+   "fiyat": 10.64,
    "adet": 361,
-   "ciro": 13773,
-   "ebitda": 2235,
-   "netBorc": 5130,
-   "hacim": 32
+   "ciro": 12726,
+   "ebitda": 1554,
+   "netBorc": 7211,
+   "hacim": 32,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "BIMAS",
-   "fiyat": 369,
-   "adet": 600,
-   "ciro": 813017,
-   "ebitda": 51050,
-   "netBorc": 28117,
-   "hacim": 4017
+   "fiyat": 372,
+   "adet": 1200,
+   "ciro": 761455,
+   "ebitda": 46263,
+   "netBorc": 32387,
+   "hacim": 4017,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "BMSTL",
-   "fiyat": 35.74,
+   "fiyat": 35.36,
    "adet": 150,
    "ciro": 2552,
    "ebitda": 229,
    "netBorc": 526,
-   "hacim": 190
+   "hacim": 190,
+   "kaynak": "eski"
   },
   {
    "k": "BORSK",
-   "fiyat": 4.78,
+   "fiyat": 4.82,
    "adet": 960,
    "ciro": 5256,
    "ebitda": 618,
    "netBorc": 853,
-   "hacim": 37
+   "hacim": 37,
+   "kaynak": "eski"
   },
   {
    "k": "BOSSA",
-   "fiyat": 5.27,
+   "fiyat": 5.21,
    "adet": 1300,
    "ciro": 7024,
    "ebitda": 1011,
    "netBorc": 1804,
-   "hacim": 23
+   "hacim": 23,
+   "kaynak": "eski"
   },
   {
    "k": "BRISA",
-   "fiyat": 68.35,
+   "fiyat": 67.35,
    "adet": 305,
    "ciro": 46799,
    "ebitda": 6985,
    "netBorc": 6162,
-   "hacim": 14
+   "hacim": 14,
+   "kaynak": "eski"
   },
   {
    "k": "BRLSM",
-   "fiyat": 7.94,
+   "fiyat": 7.7,
    "adet": 224,
-   "ciro": 5667,
-   "ebitda": 449,
-   "netBorc": 553,
-   "hacim": 156
+   "ciro": 5807,
+   "ebitda": 482,
+   "netBorc": 805,
+   "hacim": 156,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "BSOKE",
-   "fiyat": 4.75,
-   "adet": 2194,
+   "fiyat": 4.9,
+   "adet": 1600.084,
    "ciro": 6333,
    "ebitda": 276,
    "netBorc": 2970,
    "hacim": 142,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.7293
-   }
+   "kaynak": "eski"
   },
   {
    "k": "CANTE",
-   "fiyat": 0.96,
+   "fiyat": 0.95,
    "adet": 10000,
-   "ciro": 7361,
-   "ebitda": 2341,
-   "netBorc": -1479,
-   "hacim": 427
+   "ciro": 6573,
+   "ebitda": 1217,
+   "netBorc": -2088,
+   "hacim": 427,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "CELHA",
-   "fiyat": 24.6,
-   "adet": 385,
-   "ciro": 2352,
-   "ebitda": 205,
-   "netBorc": 366,
-   "hacim": 175
+   "fiyat": 24.4,
+   "adet": 385.5,
+   "ciro": 2014,
+   "ebitda": 28,
+   "netBorc": 404,
+   "hacim": 175,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "CEMTS",
-   "fiyat": 6.73,
+   "fiyat": 6.5,
    "adet": 500,
    "ciro": 6738,
    "ebitda": 827,
    "netBorc": -291,
-   "hacim": 20
+   "hacim": 20,
+   "kaynak": "eski"
   },
   {
    "k": "CEMZY",
-   "fiyat": 5.83,
+   "fiyat": 5.58,
    "adet": 402,
    "ciro": 2992,
    "ebitda": 647,
    "netBorc": 279,
-   "hacim": 251
+   "hacim": 251,
+   "kaynak": "eski"
   },
   {
    "k": "CIMSA",
-   "fiyat": 38.54,
-   "adet": 945,
-   "ciro": 50495,
-   "ebitda": 9103,
-   "netBorc": 23376,
-   "hacim": 323
+   "fiyat": 38.2,
+   "adet": 945.591,
+   "ciro": 44490,
+   "ebitda": 8832,
+   "netBorc": 26254,
+   "hacim": 323,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "CMBTN",
-   "fiyat": 1108,
+   "fiyat": 1048,
    "adet": 1,
    "ciro": 4867,
    "ebitda": 55,
    "netBorc": 357,
-   "hacim": 80
+   "hacim": 80,
+   "kaynak": "eski"
   },
   {
    "k": "CVKMD",
-   "fiyat": 12.02,
-   "adet": 3780,
-   "ciro": 3411,
-   "ebitda": 929,
-   "netBorc": 2784,
-   "hacim": 524
+   "fiyat": 12.01,
+   "adet": 3672.587,
+   "ciro": 3886,
+   "ebitda": 1095,
+   "netBorc": 3718,
+   "hacim": 524,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 1400 mn × 2026-08-03 ×2.623 (fiyat boşluğu, yaklaşık)"
   },
   {
    "k": "CWENE",
-   "fiyat": 15,
-   "adet": 1078,
-   "ciro": 19029,
-   "ebitda": 3785,
-   "netBorc": 8070,
-   "hacim": 1526
+   "fiyat": 14.56,
+   "adet": 1078.29,
+   "ciro": 17814,
+   "ebitda": 3776,
+   "netBorc": 9426,
+   "hacim": 1526,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "DAPGM",
-   "fiyat": 2.39,
+   "fiyat": 2.31,
    "adet": 2650,
-   "ciro": 9396,
-   "ebitda": 6556,
-   "netBorc": 1273,
-   "hacim": 1349
+   "ciro": 8334,
+   "ebitda": 5997,
+   "netBorc": 1289,
+   "hacim": 1349,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "DARDL",
-   "fiyat": 0.96,
-   "adet": 2344,
-   "ciro": 14576,
-   "ebitda": 796,
-   "netBorc": 4992,
-   "hacim": 27
+   "fiyat": 0.93,
+   "adet": 2344.397,
+   "ciro": 13162,
+   "ebitda": 859,
+   "netBorc": 5856,
+   "hacim": 27,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "DCTTR",
-   "fiyat": 3.88,
+   "fiyat": 4.03,
    "adet": 390,
-   "ciro": 1819,
-   "ebitda": 116,
-   "netBorc": 349,
-   "hacim": 94
+   "ciro": 783,
+   "ebitda": -125,
+   "netBorc": 227,
+   "hacim": 94,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "DYOBY",
-   "fiyat": 8.52,
+   "fiyat": 8.17,
    "adet": 300,
    "ciro": 10124,
    "ebitda": 1643,
    "netBorc": 5761,
-   "hacim": 39
+   "hacim": 39,
+   "kaynak": "eski"
   },
   {
    "k": "EBEBK",
-   "fiyat": 75.3,
+   "fiyat": 77.15,
    "adet": 160,
    "ciro": 32004,
    "ebitda": 4338,
    "netBorc": 40,
-   "hacim": 37
+   "hacim": 37,
+   "kaynak": "eski"
   },
   {
    "k": "EDATA",
-   "fiyat": 3.59,
-   "adet": 551,
+   "fiyat": 3.24,
+   "adet": 402.23,
    "ciro": 2632,
    "ebitda": 69,
    "netBorc": -314,
    "hacim": 87,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.73
-   }
+   "kaynak": "eski"
   },
   {
    "k": "EFOR",
    "fiyat": 17.87,
    "adet": 2178,
-   "ciro": 14340,
-   "ebitda": 1987,
-   "netBorc": 962,
-   "hacim": 1633
+   "ciro": 12657,
+   "ebitda": 1343,
+   "netBorc": 2864,
+   "hacim": 1633,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "EGEPO",
-   "fiyat": 4.38,
+   "fiyat": 4.33,
    "adet": 500,
    "ciro": 1543,
    "ebitda": 293,
    "netBorc": -151,
-   "hacim": 64
+   "hacim": 64,
+   "kaynak": "eski"
   },
   {
    "k": "EGGUB",
-   "fiyat": 82.05,
+   "fiyat": 81.65,
    "adet": 100,
-   "ciro": 3898,
-   "ebitda": 1760,
-   "netBorc": -52,
-   "hacim": 51
+   "ciro": 3746,
+   "ebitda": 2067,
+   "netBorc": -204,
+   "hacim": 51,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "EGPRO",
-   "fiyat": 27.3,
+   "fiyat": 26.78,
    "adet": 545,
-   "ciro": 13981,
-   "ebitda": 3441,
-   "netBorc": -548,
-   "hacim": 90
+   "ciro": 13121,
+   "ebitda": 3296,
+   "netBorc": -431,
+   "hacim": 90,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "EKGYO",
-   "fiyat": 17.75,
+   "fiyat": 17.36,
    "adet": 3800,
-   "ciro": 101157,
-   "ebitda": 22940,
-   "netBorc": 37699,
-   "hacim": 2129
+   "ciro": 88249,
+   "ebitda": 19556,
+   "netBorc": 22045,
+   "hacim": 2129,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "EKSUN",
-   "fiyat": 3.58,
+   "fiyat": 3.43,
    "adet": 600,
-   "ciro": 12195,
-   "ebitda": 326,
-   "netBorc": 2383,
-   "hacim": 52
+   "ciro": 11117,
+   "ebitda": 431,
+   "netBorc": 2036,
+   "hacim": 52,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ELITE",
-   "fiyat": 16.72,
-   "adet": 129,
-   "ciro": 2660,
-   "ebitda": 624,
-   "netBorc": -55,
-   "hacim": 45
+   "fiyat": 16.35,
+   "adet": 129.6,
+   "ciro": 2427,
+   "ebitda": 474,
+   "netBorc": 18,
+   "hacim": 45,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ENJSA",
-   "fiyat": 113.1,
-   "adet": 1181,
-   "ciro": 251864,
-   "ebitda": 48258,
-   "netBorc": 69176,
-   "hacim": 179
+   "fiyat": 111.8,
+   "adet": 1181.069,
+   "ciro": 224308,
+   "ebitda": 45041,
+   "netBorc": 80967,
+   "hacim": 179,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "EREGL",
-   "fiyat": 35.1,
+   "fiyat": 32.1,
    "adet": 7000,
-   "ciro": 215050,
-   "ebitda": 22143,
-   "netBorc": 31471,
-   "hacim": 5496
+   "ciro": 238520,
+   "ebitda": 25265,
+   "netBorc": 39512,
+   "hacim": 5496,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "EUPWR",
-   "fiyat": 37.62,
+   "fiyat": 35.48,
    "adet": 660,
-   "ciro": 16295,
-   "ebitda": 3942,
-   "netBorc": 2506,
-   "hacim": 2684
+   "ciro": 14929,
+   "ebitda": 3661,
+   "netBorc": 2938,
+   "hacim": 2684,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "FONET",
-   "fiyat": 3.52,
+   "fiyat": 3.47,
    "adet": 936,
-   "ciro": 983,
-   "ebitda": 434,
+   "ciro": 966,
+   "ebitda": 468,
    "netBorc": -99,
-   "hacim": 211
+   "hacim": 211,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "FORTE",
-   "fiyat": 81.25,
+   "fiyat": 79,
    "adet": 67,
    "ciro": 3352,
    "ebitda": 911,
    "netBorc": 1703,
-   "hacim": 152
+   "hacim": 152,
+   "kaynak": "eski"
   },
   {
    "k": "GENIL",
-   "fiyat": 4.02,
-   "adet": 6116,
-   "ciro": 22682,
-   "ebitda": 2920,
-   "netBorc": 3441,
+   "fiyat": 3.98,
+   "adet": 4500,
+   "ciro": 22167,
+   "ebitda": 3102,
+   "netBorc": 5095,
    "hacim": 464,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.7357
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GENTS",
-   "fiyat": 3.33,
+   "fiyat": 3.31,
    "adet": 750,
    "ciro": 5607,
    "ebitda": 763,
    "netBorc": -321,
-   "hacim": 50
+   "hacim": 50,
+   "kaynak": "eski"
   },
   {
    "k": "GEREL",
-   "fiyat": 19.95,
-   "adet": 372,
-   "ciro": 2861,
-   "ebitda": 218,
-   "netBorc": 1311,
-   "hacim": 461
+   "fiyat": 20.6,
+   "adet": 372.475,
+   "ciro": 2724,
+   "ebitda": 961,
+   "netBorc": 2039,
+   "hacim": 461,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GESAN",
-   "fiyat": 30.3,
+   "fiyat": 29.28,
    "adet": 460,
-   "ciro": 24301,
-   "ebitda": 5314,
-   "netBorc": 4575,
-   "hacim": 670
+   "ciro": 20072,
+   "ebitda": 4082,
+   "netBorc": 4640,
+   "hacim": 670,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GLRMK",
-   "fiyat": 112.4,
-   "adet": 322,
-   "ciro": 50818,
-   "ebitda": 6723,
-   "netBorc": 2319,
-   "hacim": 551
+   "fiyat": 110.2,
+   "adet": 322.6,
+   "ciro": 46388,
+   "ebitda": 6504,
+   "netBorc": -384,
+   "hacim": 551,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GOKNR",
-   "fiyat": 12.18,
+   "fiyat": 11.91,
    "adet": 350,
-   "ciro": 16544,
-   "ebitda": 1586,
-   "netBorc": 2408,
-   "hacim": 195
+   "ciro": 14532,
+   "ebitda": 2227,
+   "netBorc": 1544,
+   "hacim": 195,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GOLTS",
-   "fiyat": 223.4,
+   "fiyat": 221.1,
    "adet": 18,
-   "ciro": 7471,
-   "ebitda": 811,
-   "netBorc": 2291,
-   "hacim": 28
+   "ciro": 7210,
+   "ebitda": 803,
+   "netBorc": 2438,
+   "hacim": 28,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GOODY",
-   "fiyat": 1.91,
+   "fiyat": 1.86,
    "adet": 270,
    "ciro": 28729,
    "ebitda": 354,
    "netBorc": 493,
-   "hacim": 220
+   "hacim": 220,
+   "kaynak": "eski"
   },
   {
    "k": "GRSEL",
-   "fiyat": 256,
+   "fiyat": 251.75,
    "adet": 102,
-   "ciro": 12729,
-   "ebitda": 4203,
-   "netBorc": -1580,
-   "hacim": 142
+   "ciro": 11605,
+   "ebitda": 3907,
+   "netBorc": -1509,
+   "hacim": 142,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GRTHO",
-   "fiyat": 57.6,
-   "adet": 171,
-   "ciro": 7543,
-   "ebitda": 918,
-   "netBorc": -929,
+   "fiyat": 59.55,
+   "adet": 125,
+   "ciro": 6120,
+   "ebitda": 577,
+   "netBorc": -1021,
    "hacim": 399,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.7297
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "GUBRF",
-   "fiyat": 331.5,
-   "adet": 334,
-   "ciro": 61994,
-   "ebitda": 13827,
-   "netBorc": -4535,
-   "hacim": 1301
+   "fiyat": 298.5,
+   "adet": 396.66,
+   "ciro": 59204,
+   "ebitda": 12507,
+   "netBorc": -5307,
+   "hacim": 1301,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 334 mn × 2026-10-23 ×1.188 (fiyat boşluğu, yaklaşık)"
   },
   {
    "k": "HATSN",
-   "fiyat": 22.22,
-   "adet": 303,
+   "fiyat": 22.08,
+   "adet": 220.978,
    "ciro": 5057,
    "ebitda": 145,
    "netBorc": 261,
    "hacim": 322,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.7293
-   }
+   "kaynak": "eski"
   },
   {
    "k": "HOROZ",
-   "fiyat": 40,
+   "fiyat": 38.9,
    "adet": 90,
    "ciro": 13669,
    "ebitda": 1637,
    "netBorc": 3019,
-   "hacim": 241
+   "hacim": 241,
+   "kaynak": "eski"
   },
   {
    "k": "HRKET",
-   "fiyat": 8.53,
-   "adet": 1610,
-   "ciro": 7088,
-   "ebitda": 1545,
-   "netBorc": 5947,
+   "fiyat": 8.2,
+   "adet": 1612.8,
+   "ciro": 6518,
+   "ebitda": 1802,
+   "netBorc": 6320,
    "hacim": 370,
-   "_kurumsal": {
-    "tarih": "2026-09-19",
-    "oran": 0.0714
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 115 mn × 2026-09-21 ×14.000 (Yahoo)"
   },
   {
    "k": "IMASM",
-   "fiyat": 1.31,
+   "fiyat": 1.27,
    "adet": 925,
-   "ciro": 2977,
-   "ebitda": 247,
-   "netBorc": 578,
-   "hacim": 57
+   "ciro": 2664,
+   "ebitda": 421,
+   "netBorc": 616,
+   "hacim": 57,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "INTEM",
-   "fiyat": 150,
+   "fiyat": 147,
    "adet": 19,
    "ciro": 2106,
    "ebitda": 377,
    "netBorc": 57,
-   "hacim": 16
+   "hacim": 16,
+   "kaynak": "eski"
   },
   {
    "k": "ISDMR",
-   "fiyat": 55.25,
+   "fiyat": 52.1,
    "adet": 2900,
    "ciro": 125716,
    "ebitda": 13413,
    "netBorc": -14161,
-   "hacim": 83
+   "hacim": 83,
+   "kaynak": "eski"
   },
   {
    "k": "IZFAS",
-   "fiyat": 14.3,
-   "adet": 243,
-   "ciro": 506,
-   "ebitda": 42,
-   "netBorc": 61,
+   "fiyat": 13.45,
+   "adet": 208.58,
+   "ciro": 491,
+   "ebitda": 38,
+   "netBorc": -12,
    "hacim": 299,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.7294
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 177 mn × 2026-10-23 ×1.177 (fiyat boşluğu, yaklaşık)"
   },
   {
    "k": "JANTS",
-   "fiyat": 11.32,
+   "fiyat": 10.67,
    "adet": 700,
-   "ciro": 6961,
-   "ebitda": 476,
-   "netBorc": 109,
-   "hacim": 83
+   "ciro": 6591,
+   "ebitda": 795,
+   "netBorc": 969,
+   "hacim": 83,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KARSN",
-   "fiyat": 7.01,
+   "fiyat": 6.8,
    "adet": 900,
    "ciro": 21051,
    "ebitda": 3919,
    "netBorc": 8308,
-   "hacim": 212
+   "hacim": 212,
+   "kaynak": "eski"
   },
   {
    "k": "KATMR",
-   "fiyat": 1.14,
-   "adet": 2153,
-   "ciro": 2418,
-   "ebitda": 676,
-   "netBorc": 2019,
-   "hacim": 223
+   "fiyat": 1.12,
+   "adet": 2153.25,
+   "ciro": 2373,
+   "ebitda": 770,
+   "netBorc": 2189,
+   "hacim": 223,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KBORU",
-   "fiyat": 8.7,
+   "fiyat": 8.55,
    "adet": 600,
    "ciro": 6416,
    "ebitda": 820,
    "netBorc": 3381,
-   "hacim": 241
+   "hacim": 241,
+   "kaynak": "eski"
   },
   {
    "k": "KCAER",
-   "fiyat": 9.11,
+   "fiyat": 8.79,
    "adet": 1915,
-   "ciro": 25668,
-   "ebitda": 3281,
-   "netBorc": 2939,
-   "hacim": 180
+   "ciro": 21805,
+   "ebitda": 2216,
+   "netBorc": 2413,
+   "hacim": 180,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KCHOL",
-   "fiyat": 196.1,
+   "fiyat": 195.8,
    "adet": 2536,
    "ciro": 2057239,
    "ebitda": 243910,
    "netBorc": 868235,
-   "hacim": 3867
+   "hacim": 3867,
+   "kaynak": "eski"
   },
   {
    "k": "KIMMR",
-   "fiyat": 8.99,
+   "fiyat": 8.77,
    "adet": 240,
    "ciro": 15853,
    "ebitda": 1261,
    "netBorc": 464,
-   "hacim": 18
+   "hacim": 18,
+   "kaynak": "eski"
   },
   {
    "k": "KLSYN",
-   "fiyat": 14.83,
+   "fiyat": 14.66,
    "adet": 431,
    "ciro": 2074,
    "ebitda": 385,
    "netBorc": 288,
-   "hacim": 91
+   "hacim": 91,
+   "kaynak": "eski"
   },
   {
    "k": "KNFRT",
-   "fiyat": 7.04,
+   "fiyat": 6.83,
    "adet": 264,
-   "ciro": 7255,
-   "ebitda": 98,
-   "netBorc": 166,
-   "hacim": 56
+   "ciro": 7228,
+   "ebitda": 218,
+   "netBorc": 206,
+   "hacim": 56,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KOCMT",
-   "fiyat": 2.27,
+   "fiyat": 2.23,
    "adet": 2500,
    "ciro": 18647,
    "ebitda": 234,
    "netBorc": -288,
-   "hacim": 590
+   "hacim": 590,
+   "kaynak": "eski"
   },
   {
    "k": "KONKA",
-   "fiyat": 6.8,
+   "fiyat": 6.63,
    "adet": 390,
    "ciro": 3299,
    "ebitda": 249,
    "netBorc": -263,
-   "hacim": 40
+   "hacim": 40,
+   "kaynak": "eski"
   },
   {
    "k": "KONYA",
-   "fiyat": 2905,
+   "fiyat": 2800,
    "adet": 4,
    "ciro": 6970,
    "ebitda": 887,
    "netBorc": 537,
-   "hacim": 70
+   "hacim": 70,
+   "kaynak": "eski"
   },
   {
    "k": "KOPOL",
-   "fiyat": 2.72,
+   "fiyat": 2.7,
    "adet": 1296,
    "ciro": 5212,
    "ebitda": 627,
    "netBorc": 2681,
-   "hacim": 222
+   "hacim": 222,
+   "kaynak": "eski"
   },
   {
    "k": "KOTON",
-   "fiyat": 8.73,
+   "fiyat": 8.55,
    "adet": 829,
    "ciro": 36112,
    "ebitda": 7943,
    "netBorc": 8188,
-   "hacim": 132
+   "hacim": 132,
+   "kaynak": "eski"
   },
   {
    "k": "KRDMD",
-   "fiyat": 39.88,
+   "fiyat": 38.18,
    "adet": 1140,
-   "ciro": 70032,
-   "ebitda": 8026,
-   "netBorc": 3645,
-   "hacim": 2414
+   "ciro": 64575,
+   "ebitda": 6686,
+   "netBorc": 317,
+   "hacim": 2414,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KRONT",
-   "fiyat": 16.46,
-   "adet": 171,
-   "ciro": 605,
-   "ebitda": 256,
-   "netBorc": -30,
-   "hacim": 59
+   "fiyat": 16.47,
+   "adet": 171.222,
+   "ciro": 550,
+   "ebitda": 248,
+   "netBorc": -61,
+   "hacim": 59,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KRVGD",
-   "fiyat": 2.07,
+   "fiyat": 2.03,
    "adet": 2160,
-   "ciro": 16800,
-   "ebitda": 1699,
-   "netBorc": 4989,
-   "hacim": 19
+   "ciro": 14204,
+   "ebitda": 2079,
+   "netBorc": 4793,
+   "hacim": 19,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KUTPO",
-   "fiyat": 59.6,
-   "adet": 39,
-   "ciro": 4743,
-   "ebitda": 891,
-   "netBorc": -134,
-   "hacim": 16
+   "fiyat": 58.05,
+   "adet": 39.917,
+   "ciro": 4238,
+   "ebitda": 675,
+   "netBorc": -102,
+   "hacim": 16,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KZBGY",
-   "fiyat": 1.13,
+   "fiyat": 1.04,
    "adet": 4000,
    "ciro": 1814,
    "ebitda": 1347,
    "netBorc": 4109,
-   "hacim": 149
+   "hacim": 149,
+   "kaynak": "eski"
   },
   {
    "k": "LKMNH",
-   "fiyat": 10.93,
+   "fiyat": 10.79,
    "adet": 216,
-   "ciro": 4792,
-   "ebitda": 1117,
-   "netBorc": 2398,
-   "hacim": 18
+   "ciro": 4507,
+   "ebitda": 1296,
+   "netBorc": 2548,
+   "hacim": 18,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "LMKDC",
-   "fiyat": 19.47,
+   "fiyat": 19.2,
    "adet": 516,
    "ciro": 9306,
    "ebitda": 3541,
    "netBorc": -2319,
-   "hacim": 129
+   "hacim": 129,
+   "kaynak": "eski"
   },
   {
    "k": "MAGEN",
-   "fiyat": 5.54,
-   "adet": 4045,
-   "ciro": 1596,
-   "ebitda": 530,
-   "netBorc": 7810,
+   "fiyat": 5.2,
+   "adet": 3495.665,
+   "ciro": 1399,
+   "ebitda": 579,
+   "netBorc": 7222,
    "hacim": 730,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.7293
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 2950 mn × 2026-10-23 ×1.185 (fiyat boşluğu, yaklaşık)"
   },
   {
    "k": "MAKIM",
-   "fiyat": 12.05,
+   "fiyat": 12.18,
    "adet": 112,
-   "ciro": 1574,
-   "ebitda": 211,
-   "netBorc": 145,
-   "hacim": 138
+   "ciro": 1462,
+   "ebitda": 269,
+   "netBorc": 223,
+   "hacim": 138,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MARBL",
-   "fiyat": 7.38,
-   "adet": 228,
-   "ciro": 3352,
-   "ebitda": 451,
-   "netBorc": 939,
-   "hacim": 43
+   "fiyat": 7.1,
+   "adet": 228.6,
+   "ciro": 3547,
+   "ebitda": 440,
+   "netBorc": 971,
+   "hacim": 43,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MAVI",
-   "fiyat": 34.4,
-   "adet": 794,
-   "ciro": 51954,
-   "ebitda": 9439,
-   "netBorc": -3878,
-   "hacim": 186
+   "fiyat": 34.18,
+   "adet": 794.512,
+   "ciro": 47433,
+   "ebitda": 9080,
+   "netBorc": -3186,
+   "hacim": 186,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MEDTR",
-   "fiyat": 17.7,
+   "fiyat": 16.85,
    "adet": 119,
    "ciro": 3022,
    "ebitda": 295,
    "netBorc": -448,
-   "hacim": 17
+   "hacim": 17,
+   "kaynak": "eski"
   },
   {
    "k": "MERCN",
-   "fiyat": 8.99,
-   "adet": 190,
-   "ciro": 3181,
-   "ebitda": 563,
-   "netBorc": 1264,
-   "hacim": 159
+   "fiyat": 8.89,
+   "adet": 190.371,
+   "ciro": 2939,
+   "ebitda": 560,
+   "netBorc": 1524,
+   "hacim": 159,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MGROS",
-   "fiyat": 440.5,
+   "fiyat": 439,
    "adet": 181,
    "ciro": 460797,
    "ebitda": 30528,
    "netBorc": 7603,
-   "hacim": 1398
+   "hacim": 1398,
+   "kaynak": "eski"
   },
   {
    "k": "MNDTR",
-   "fiyat": 3.44,
-   "adet": 1049,
-   "ciro": 17234,
-   "ebitda": 680,
-   "netBorc": 962,
-   "hacim": 9
+   "fiyat": 3.36,
+   "adet": 1049.041,
+   "ciro": 15131,
+   "ebitda": 30,
+   "netBorc": 1020,
+   "hacim": 9,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MOBTL",
-   "fiyat": 8.21,
+   "fiyat": 8.06,
    "adet": 1025,
-   "ciro": 17903,
-   "ebitda": 1072,
-   "netBorc": 2575,
-   "hacim": 56
+   "ciro": 16647,
+   "ebitda": 987,
+   "netBorc": 2176,
+   "hacim": 56,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MPARK",
-   "fiyat": 394.75,
-   "adet": 191,
-   "ciro": 61494,
-   "ebitda": 17825,
-   "netBorc": 15113,
-   "hacim": 255
+   "fiyat": 391.25,
+   "adet": 191.012,
+   "ciro": 57077,
+   "ebitda": 16248,
+   "netBorc": 13250,
+   "hacim": 255,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "NETAS",
-   "fiyat": 67,
+   "fiyat": 64.95,
    "adet": 64,
    "ciro": 13337,
    "ebitda": 364,
    "netBorc": 2712,
-   "hacim": 45
+   "hacim": 45,
+   "kaynak": "eski"
   },
   {
    "k": "NTGAZ",
-   "fiyat": 9.61,
+   "fiyat": 9.58,
    "adet": 690,
    "ciro": 8926,
    "ebitda": 2053,
    "netBorc": -506,
-   "hacim": 42
+   "hacim": 42,
+   "kaynak": "eski"
   },
   {
    "k": "ONCSM",
-   "fiyat": 87,
-   "adet": 32,
-   "ciro": 799,
-   "ebitda": 252,
-   "netBorc": 100,
+   "fiyat": 88.3,
+   "adet": 23.85,
+   "ciro": 735,
+   "ebitda": 294,
+   "netBorc": 148,
    "hacim": 81,
-   "_kurumsal": {
-    "tarih": "2026-09-21",
-    "oran": 0.73
-   }
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ORGE",
-   "fiyat": 18.79,
+   "fiyat": 18.08,
    "adet": 400,
    "ciro": 4079,
    "ebitda": 2237,
@@ -981,295 +1162,360 @@
    "_kurumsal": {
     "tarih": "2026-08-19",
     "oran": 0.2002
-   }
+   },
+   "kaynak": "eski"
   },
   {
    "k": "OZYSR",
-   "fiyat": 10.58,
+   "fiyat": 10.21,
    "adet": 103,
    "ciro": 7915,
    "ebitda": 442,
    "netBorc": 1796,
-   "hacim": 54
+   "hacim": 54,
+   "kaynak": "eski"
   },
   {
    "k": "PARSN",
-   "fiyat": 52,
+   "fiyat": 51,
    "adet": 86,
    "ciro": 5568,
    "ebitda": 194,
    "netBorc": 5365,
-   "hacim": 59
+   "hacim": 59,
+   "kaynak": "eski"
   },
   {
    "k": "PASEU",
-   "fiyat": 30.82,
+   "fiyat": 32.48,
    "adet": 672,
-   "ciro": 2493,
-   "ebitda": 77,
-   "netBorc": 1074,
-   "hacim": 1312
+   "ciro": 2144,
+   "ebitda": 183,
+   "netBorc": 1617,
+   "hacim": 1312,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "PGSUS",
-   "fiyat": 126.4,
+   "fiyat": 125.4,
    "adet": 500,
    "ciro": 163300,
    "ebitda": 35967,
    "netBorc": 169534,
-   "hacim": 1921
+   "hacim": 1921,
+   "kaynak": "eski"
   },
   {
    "k": "PKART",
-   "fiyat": 68.75,
+   "fiyat": 67.65,
    "adet": 22,
    "ciro": 2775,
    "ebitda": 253,
    "netBorc": -62,
-   "hacim": 102
+   "hacim": 102,
+   "kaynak": "eski"
   },
   {
    "k": "PLTUR",
-   "fiyat": 14.08,
-   "adet": 244,
-   "ciro": 9038,
-   "ebitda": 2410,
-   "netBorc": 1436,
-   "hacim": 46
+   "fiyat": 13.63,
+   "adet": 244.75,
+   "ciro": 8545,
+   "ebitda": 2622,
+   "netBorc": 1799,
+   "hacim": 46,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "POLHO",
-   "fiyat": 13.15,
-   "adet": 758,
-   "ciro": 6766,
-   "ebitda": 972,
-   "netBorc": 1475,
-   "hacim": 96
+   "fiyat": 12.97,
+   "adet": 758.5,
+   "ciro": 5835,
+   "ebitda": 1089,
+   "netBorc": 2045,
+   "hacim": 96,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "QUAGR",
-   "fiyat": 1.36,
+   "fiyat": 1.3,
    "adet": 2640,
-   "ciro": 11372,
-   "ebitda": 2006,
-   "netBorc": 3906,
-   "hacim": 215
+   "ciro": 9019,
+   "ebitda": 1239,
+   "netBorc": 4194,
+   "hacim": 215,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "RGYAS",
-   "fiyat": 173.8,
+   "fiyat": 171.1,
    "adet": 331,
    "ciro": 14986,
    "ebitda": 9915,
    "netBorc": 22716,
-   "hacim": 250
+   "hacim": 250,
+   "kaynak": "eski"
   },
   {
    "k": "SAFKR",
-   "fiyat": 11.4,
+   "fiyat": 11.56,
    "adet": 200,
-   "ciro": 2092,
-   "ebitda": 405,
-   "netBorc": -144,
-   "hacim": 114
+   "ciro": 2487,
+   "ebitda": 371,
+   "netBorc": -177,
+   "hacim": 114,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SAHOL",
-   "fiyat": 87.55,
+   "fiyat": 85.9,
    "adet": 2100,
    "ciro": 267951,
    "ebitda": 109400,
    "netBorc": 272327,
-   "hacim": 2792
+   "hacim": 2792,
+   "kaynak": "eski"
   },
   {
    "k": "SARKY",
-   "fiyat": 15.64,
+   "fiyat": 15.27,
    "adet": 1000,
-   "ciro": 93562,
-   "ebitda": 2835,
-   "netBorc": 10542,
-   "hacim": 155
+   "ciro": 91904,
+   "ebitda": 3504,
+   "netBorc": 8775,
+   "hacim": 155,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SAYAS",
-   "fiyat": 32.82,
+   "fiyat": 31.44,
    "adet": 77,
    "ciro": 2515,
    "ebitda": 494,
    "netBorc": 77,
-   "hacim": 61
+   "hacim": 61,
+   "kaynak": "eski"
   },
   {
    "k": "SEKUR",
-   "fiyat": 3.5,
-   "adet": 187,
-   "ciro": 1709,
-   "ebitda": 237,
-   "netBorc": 616,
-   "hacim": 38
+   "fiyat": 3.44,
+   "adet": 187.641,
+   "ciro": 1955,
+   "ebitda": 195,
+   "netBorc": 703,
+   "hacim": 38,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SELEC",
-   "fiyat": 66.3,
+   "fiyat": 72.9,
    "adet": 621,
-   "ciro": 192149,
-   "ebitda": 7264,
-   "netBorc": -7299,
-   "hacim": 683
+   "ciro": 180818,
+   "ebitda": 8197,
+   "netBorc": -7804,
+   "hacim": 683,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SISE",
-   "fiyat": 34.08,
+   "fiyat": 33.86,
    "adet": 3063,
    "ciro": 245055,
    "ebitda": 21230,
    "netBorc": 123599,
-   "hacim": 2257
+   "hacim": 2257,
+   "kaynak": "eski"
   },
   {
    "k": "SNGYO",
-   "fiyat": 2.42,
+   "fiyat": 2.36,
    "adet": 4000,
-   "ciro": 7136,
-   "ebitda": 2411,
-   "netBorc": 8699,
-   "hacim": 69
+   "ciro": 4954,
+   "ebitda": 2861,
+   "netBorc": 4990,
+   "hacim": 69,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SNICA",
-   "fiyat": 1.9,
+   "fiyat": 1.84,
    "adet": 600,
    "ciro": 3568,
    "ebitda": 361,
    "netBorc": 938,
-   "hacim": 204
+   "hacim": 204,
+   "kaynak": "eski"
   },
   {
    "k": "SOKE",
-   "fiyat": 7.26,
-   "adet": 386,
-   "ciro": 8586,
-   "ebitda": 364,
-   "netBorc": -262,
-   "hacim": 108
+   "fiyat": 7.31,
+   "adet": 1600,
+   "ciro": 5458,
+   "ebitda": 257,
+   "netBorc": 2764,
+   "hacim": 108,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SUNTK",
-   "fiyat": 18,
-   "adet": 474,
-   "ciro": 13944,
-   "ebitda": 1691,
-   "netBorc": -326,
-   "hacim": 57
+   "fiyat": 18.01,
+   "adet": 474.6,
+   "ciro": 11728,
+   "ebitda": 1143,
+   "netBorc": 15,
+   "hacim": 57,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "SUWEN",
-   "fiyat": 4.03,
+   "fiyat": 3.9,
    "adet": 560,
-   "ciro": 6519,
-   "ebitda": 1281,
-   "netBorc": 2199,
-   "hacim": 28
+   "ciro": 5867,
+   "ebitda": 1031,
+   "netBorc": 2145,
+   "hacim": 28,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "TARKM",
-   "fiyat": 319.25,
+   "fiyat": 310.25,
    "adet": 21,
    "ciro": 2264,
    "ebitda": 481,
    "netBorc": 1220,
-   "hacim": 62
+   "hacim": 62,
+   "kaynak": "eski"
   },
   {
    "k": "TCELL",
-   "fiyat": 93.3,
+   "fiyat": 88.5,
    "adet": 2200,
    "ciro": 257538,
    "ebitda": 116370,
    "netBorc": 48826,
-   "hacim": 2328
+   "hacim": 2328,
+   "kaynak": "eski"
   },
   {
    "k": "TEZOL",
-   "fiyat": 7.01,
+   "fiyat": 7,
    "adet": 500,
-   "ciro": 6017,
-   "ebitda": 444,
-   "netBorc": -1251,
-   "hacim": 63
+   "ciro": 5122,
+   "ebitda": 299,
+   "netBorc": -1049,
+   "hacim": 63,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "THYAO",
-   "fiyat": 259,
+   "fiyat": 256,
    "adet": 1380,
    "ciro": 1036721,
    "ebitda": 169311,
    "netBorc": 530394,
-   "hacim": 17222
+   "hacim": 17222,
+   "kaynak": "eski"
   },
   {
    "k": "TKNSA",
-   "fiyat": 12.13,
+   "fiyat": 11.86,
    "adet": 201,
    "ciro": 92546,
    "ebitda": 4524,
    "netBorc": 7293,
-   "hacim": 47
+   "hacim": 47,
+   "kaynak": "eski"
   },
   {
    "k": "TOASO",
-   "fiyat": 223.7,
+   "fiyat": 223.1,
    "adet": 500,
    "ciro": 414924,
    "ebitda": 12573,
    "netBorc": 48215,
-   "hacim": 1177
+   "hacim": 1177,
+   "kaynak": "eski"
   },
   {
    "k": "TUKAS",
-   "fiyat": 1.91,
+   "fiyat": 1.85,
    "adet": 4500,
    "ciro": 9505,
    "ebitda": 2626,
    "netBorc": 6084,
-   "hacim": 125
+   "hacim": 125,
+   "kaynak": "eski"
   },
   {
    "k": "TUPRS",
-   "fiyat": 352.25,
-   "adet": 1926,
-   "ciro": 964413,
-   "ebitda": 71340,
-   "netBorc": -74706,
-   "hacim": 5739
+   "fiyat": 355.25,
+   "adet": 1926.796,
+   "ciro": 1029025,
+   "ebitda": 97455,
+   "netBorc": -130718,
+   "hacim": 5739,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "TUREX",
-   "fiyat": 5.1,
+   "fiyat": 4.94,
    "adet": 1080,
-   "ciro": 8874,
-   "ebitda": 2292,
-   "netBorc": 74,
-   "hacim": 104
+   "ciro": 7985,
+   "ebitda": 2142,
+   "netBorc": -454,
+   "hacim": 104,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ULKER",
-   "fiyat": 77.9,
+   "fiyat": 76.8,
    "adet": 369,
    "ciro": 121763,
    "ebitda": 18217,
    "netBorc": 41084,
-   "hacim": 577
+   "hacim": 577,
+   "kaynak": "eski"
   },
   {
    "k": "ULUSE",
-   "fiyat": 137.1,
+   "fiyat": 136.6,
    "adet": 80,
-   "ciro": 9302,
-   "ebitda": 815,
-   "netBorc": 1406,
-   "hacim": 120
+   "ciro": 10616,
+   "ebitda": 30,
+   "netBorc": 1511,
+   "hacim": 120,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "USAK",
@@ -1278,44 +1524,55 @@
    "ciro": 5461,
    "ebitda": 567,
    "netBorc": 2082,
-   "hacim": 129
+   "hacim": 129,
+   "kaynak": "eski"
   },
   {
    "k": "VAKKO",
-   "fiyat": 46.48,
+   "fiyat": 45.86,
    "adet": 160,
-   "ciro": 22003,
-   "ebitda": 2557,
-   "netBorc": 1281,
-   "hacim": 14
+   "ciro": 19841,
+   "ebitda": 2690,
+   "netBorc": 1635,
+   "hacim": 14,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "YATAS",
-   "fiyat": 24,
-   "adet": 149,
-   "ciro": 24995,
-   "ebitda": 2824,
-   "netBorc": 7336,
-   "hacim": 30
+   "fiyat": 23.4,
+   "adet": 149.799,
+   "ciro": 23309,
+   "ebitda": 2939,
+   "netBorc": 8119,
+   "hacim": 30,
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "YEOTK",
-   "fiyat": 23.7,
+   "fiyat": 22.42,
    "adet": 830,
-   "ciro": 20339,
-   "ebitda": 4548,
-   "netBorc": 6689,
+   "ciro": 19443,
+   "ebitda": 4080,
+   "netBorc": 6157,
    "hacim": 671,
-   "_245t": "Bedelsiz %133,8 (58,77 ihraç + 75,03 iç kaynak), 31 Tem dağıtıldı — Fintables. Pay 355→830mn, referans 96,1→39,0. PD korunumu doğrulandı (fark %-5,1 = Cuma günü fiyat hareketi dahil)."
+   "_245t": "Bedelsiz %133,8 (58,77 ihraç + 75,03 iç kaynak), 31 Tem dağıtıldı — Fintables. Pay 355→830mn, referans 96,1→39,0. PD korunumu doğrulandı (fark %-5,1 = Cuma günü fiyat hareketi dahil).",
+   "donem": "2026/2",
+   "kaynak": "kap",
+   "adet_not": "bilanço sermayesi 355 mn × 2026-07-31 ×2.338 (Yahoo)"
   },
   {
    "k": "YUNSA",
-   "fiyat": 5.23,
+   "fiyat": 5.1,
    "adet": 480,
    "ciro": 3564,
    "ebitda": 523,
    "netBorc": -227,
-   "hacim": 37
+   "hacim": 37,
+   "kaynak": "eski"
   }
  ],
  "_kurumsal_islem": {
@@ -1331,5 +1588,7 @@
    "ONCSM ×0.730"
   ],
   "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
- }
+ },
+ "kaynak": "KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496",
+ "bilanco_guncelleme": "2026-10-23"
 }

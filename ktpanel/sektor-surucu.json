@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-23T06:53:12Z",
+ "guncelleme": "2026-10-23T08:00:38Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -321,7 +321,7 @@
    "ilk": "2026-10-01",
    "son": "2026-10-22",
    "usdtry_ort": 49.382,
-   "usdtry_son": 49.7323,
+   "usdtry_son": 49.7327,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.7323
+  "2026-10": 49.7327
  },
  "seriler": {
   "altin": {
@@ -5237,12 +5237,12 @@
     ],
     [
      "2026-10-23",
-     4029.5
+     4029.7
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 4029.5
+    "deger": 4029.7
    },
    "guncelleme": "2026-10-23"
   },
@@ -7277,12 +7277,12 @@
     ],
     [
      "2026-10-23",
-     54.15
+     53.975
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 54.15
+    "deger": 53.975
    },
    "guncelleme": "2026-10-23"
   },
@@ -9317,12 +9317,12 @@
     ],
     [
      "2026-10-23",
-     6.46
+     6.4435
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 6.46
+    "deger": 6.4435
    },
    "guncelleme": "2026-10-23"
   },
@@ -11351,12 +11351,12 @@
     ],
     [
      "2026-10-23",
-     3085.25
+     3098.5
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 3085.25
+    "deger": 3098.5
    },
    "guncelleme": "2026-10-23"
   },
@@ -15425,11 +15425,15 @@
     [
      "2026-10-22",
      90.043
+    ],
+    [
+     "2026-10-23",
+     93.7
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 90.043
+    "tarih": "2026-10-23",
+    "deger": 93.7
    },
    "guncelleme": "2026-10-23"
   },
@@ -17462,12 +17466,12 @@
     ],
     [
      "2026-10-23",
-     2.723
+     3.12
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 2.723
+    "deger": 3.12
    },
    "guncelleme": "2026-10-23"
   },
@@ -19498,12 +19502,12 @@
     ],
     [
      "2026-10-23",
-     626.75
+     626.5
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 626.75
+    "deger": 626.5
    },
    "guncelleme": "2026-10-23"
   },
@@ -21538,12 +21542,12 @@
     ],
     [
      "2026-10-23",
-     114.37
+     109.53
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 114.37
+    "deger": 109.53
    },
    "guncelleme": "2026-10-23"
   },
@@ -23641,12 +23645,12 @@
     ],
     [
      "2026-10-23",
-     1.1215
+     1.1201
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 1.1215
+    "deger": 1.1201
    },
    "guncelleme": "2026-10-23"
   },
@@ -25741,12 +25745,12 @@
     ],
     [
      "2026-10-23",
-     49.7323
+     49.7327
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 49.7323
+    "deger": 49.7327
    },
    "guncelleme": "2026-10-23"
   },
@@ -38663,11 +38667,15 @@
     [
      "2026-10-21",
      36.8509
+    ],
+    [
+     "2026-10-22",
+     36.8769
     ]
    ],
    "son": {
-    "tarih": "2026-10-21",
-    "deger": 36.8509
+    "tarih": "2026-10-22",
+    "deger": 36.8769
    },
    "guncelleme": "2026-10-23"
   },
@@ -52154,7 +52162,7 @@
     "2026-07": 569,
     "2026-08": 576.49,
     "2026-09": 612.99,
-    "2026-10": 617.66
+    "2026-10": 617.65
    },
    "son": {
     "tarih": "2026-10-21",
@@ -54029,7 +54037,7 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (31 hafta)"
+    "k1 ad değişimi, oran 1 (32 hafta)"
    ],
    "_not": "Zincirin en üstü; Çin aşırı kapasitesinin termometresi. Polisilikon → wafer → hücre → modül fiyat geçişi 1–3 ay gecikmeli.",
    "siklik": "aylik",
@@ -54085,6 +54093,10 @@
     ],
     [
      "2025-03-19",
+     40
+    ],
+    [
+     "2025-03-26",
      40
     ],
     [
@@ -54281,13 +54293,13 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (31 hafta)"
+    "k1 ad değişimi, oran 1 (32 hafta)"
    ],
    "siklik": "aylik",
    "aylik": {
     "2025-01": 21,
     "2025-02": 21,
-    "2025-03": 20.5,
+    "2025-03": 20.33,
     "2025-04": 19.5,
     "2025-05": 19,
     "2025-06": 19,
@@ -54336,6 +54348,10 @@
     ],
     [
      "2025-03-19",
+     20
+    ],
+    [
+     "2025-03-26",
      20
     ],
     [
@@ -54536,7 +54552,7 @@
    "aylik": {
     "2025-01": 1.18,
     "2025-02": 1.18,
-    "2025-03": 1.19,
+    "2025-03": 1.193,
     "2025-04": 1.237,
     "2025-05": 0.967,
     "2025-06": 0.937,
@@ -54585,6 +54601,10 @@
     ],
     [
      "2025-03-19",
+     1.2
+    ],
+    [
+     "2025-03-26",
      1.2
     ],
     [
@@ -54781,14 +54801,14 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (43 hafta)"
+    "k1 ad değişimi, oran 1 (44 hafta)"
    ],
    "_not": "Modül üreticisinin ana girdisi (modül maliyetinin ~%50–60'ı). Türkiye'de hücre üretimi sınırlı → ithal hücre fiyatı ≈ maliyet.",
    "siklik": "aylik",
    "aylik": {
     "2025-01": 0.039,
     "2025-02": 0.039,
-    "2025-03": 0.0395,
+    "2025-03": 0.04,
     "2025-04": 0.0403,
     "2025-05": 0.0353,
     "2025-06": 0.032,
@@ -54838,6 +54858,10 @@
     [
      "2025-03-19",
      0.04
+    ],
+    [
+     "2025-03-26",
+     0.041
     ],
     [
      "2025-04-02",
@@ -55037,7 +55061,7 @@
    "aylik": {
     "2025-01": 0.29,
     "2025-02": 0.29,
-    "2025-03": 0.2975,
+    "2025-03": 0.3,
     "2025-04": 0.3012,
     "2025-05": 0.26,
     "2025-06": 0.245,
@@ -55087,6 +55111,10 @@
     [
      "2025-03-19",
      0.3
+    ],
+    [
+     "2025-03-26",
+     0.305
     ],
     [
      "2025-04-02",
@@ -55338,6 +55366,10 @@
      0.09
     ],
     [
+     "2025-03-26",
+     0.09
+    ],
+    [
      "2025-04-02",
      0.09
     ],
@@ -55535,7 +55567,7 @@
    "aylik": {
     "2025-01": 0.69,
     "2025-02": 0.6912,
-    "2025-03": 0.725,
+    "2025-03": 0.73,
     "2025-04": 0.7375,
     "2025-05": 0.6833,
     "2025-06": 0.68,
@@ -55585,6 +55617,10 @@
     [
      "2025-03-19",
      0.73
+    ],
+    [
+     "2025-03-26",
+     0.74
     ],
     [
      "2025-04-02",
@@ -55780,7 +55816,7 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (41 hafta)"
+    "k1 ad değişimi, oran 1 (42 hafta)"
    ],
    "_not": "TR üreticisinin Avrupa'daki rakip fiyatı (Çin malı FOB). Türkiye'de Çin modülüne ek gümrük vergisi/anti-damping uygulanır → yurt içi fiyat bunun üstünde; makas korunma ölçüsüdür.",
    "siklik": "aylik",
@@ -55836,6 +55872,10 @@
     ],
     [
      "2025-03-19",
+     0.09
+    ],
+    [
+     "2025-03-26",
      0.09
     ],
     [
@@ -56031,14 +56071,14 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (41 hafta)"
+    "k1 ad değişimi, oran 1 (42 hafta)"
    ],
    "_not": "ABD pazarı tarife duvarı arkasında (AD/CVD, Section 201/301) → Çin'in 2–3 katı. CW Enerji'nin ABD yatırımı bu fiyat bandına bakar.",
    "siklik": "aylik",
    "aylik": {
     "2025-01": 0.27,
     "2025-02": 0.27,
-    "2025-03": 0.265,
+    "2025-03": 0.2633,
     "2025-04": 0.2625,
     "2025-05": 0.27,
     "2025-06": 0.27,
@@ -56088,6 +56128,10 @@
     [
      "2025-03-19",
      0.265
+    ],
+    [
+     "2025-03-26",
+     0.26
     ],
     [
      "2025-04-02",
@@ -56290,7 +56334,7 @@
    "aylik": {
     "2025-01": 0.0946,
     "2025-02": 0.0952,
-    "2025-03": 0.1,
+    "2025-03": 0.1007,
     "2025-04": 0.1011,
     "2025-05": 0.0947,
     "2025-06": 0.0946,
@@ -56340,6 +56384,10 @@
     [
      "2025-03-19",
      0.1007
+    ],
+    [
+     "2025-03-26",
+     0.102
     ],
     [
      "2025-04-02",
@@ -56541,7 +56589,7 @@
    "aylik": {
     "2025-01": 0.051,
     "2025-02": 0.051,
-    "2025-03": 0.0505,
+    "2025-03": 0.05,
     "2025-04": 0.0497,
     "2025-05": 0.0527,
     "2025-06": 0.056,
@@ -56591,6 +56639,10 @@
     [
      "2025-03-19",
      0.05
+    ],
+    [
+     "2025-03-26",
+     0.049
     ],
     [
      "2025-04-02",
@@ -67366,7 +67418,7 @@
     "tarih": "2026-08",
     "deger": 141.7328
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "insaat_uretim_toplam": {
    "ad": "İnşaat üretim endeksi — toplam (TÜİK)",
@@ -67449,7 +67501,7 @@
     "tarih": "2026-08",
     "deger": 126.6388
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kara_tasima_hacim": {
    "ad": "Hizmet üretim endeksi — kara taşımacılığı H49 (TÜİK)",
@@ -70258,7 +70310,7 @@
     "2026-07": 1111.8696,
     "2026-08": 1161.4202,
     "2026-09": 1250.4145,
-    "2026-10": 1313.5931
+    "2026-10": 1313.8688
    },
    "ceyreklik": {
     "2007Q3": 1672.0354,
@@ -70766,7 +70818,7 @@
     "2026-07": 1177.8692,
     "2026-08": 1218.3031,
     "2026-09": 1298.184,
-    "2026-10": 1403.1054
+    "2026-10": 1403.3999
    },
    "ceyreklik": {
     "2014Q2": 1759.4096,
@@ -71378,7 +71430,7 @@
     "2026-07": 672.0902,
     "2026-08": 681.7061,
     "2026-09": 734.7548,
-    "2026-10": 738.2693
+    "2026-10": 738.4242
    },
    "ceyreklik": {
     "2009Q3": 1036.8848,
@@ -71628,7 +71680,7 @@
     "2026-07": 387.6588,
     "2026-08": 371.2249,
     "2026-09": 251.6985,
-    "2026-10": 406.3996
+    "2026-10": 408.7872
    },
    "ceyreklik": {
     "2015Q1": 780.0415,
@@ -71694,7 +71746,7 @@
    },
    "son": {
     "tarih": "2026-10",
-    "deger": 406
+    "deger": 409
    },
    "guncelleme": "2026-10-23"
   }
@@ -83756,6 +83808,37 @@
     "182*182-210mm/210mm Mono TOPCon - EU (USD)": 0.088,
     "3.2mm Coating PV Glass(RMB)": 19.5,
     "2.0mm Coating PV Glass(RMB)": 12
+   },
+   "2025-03-26": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 20,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 40,
+    "Polysilicon Price - Granular polysilicon (RMB)": 38,
+    "Mono P Type Wafer - 182-183.75mm / 150um (USD)": 0.16,
+    "Mono P Type Wafer - 182-183.75mm / 150um (RMB)": 1.15,
+    "Mono N Type Wafer - 182-183.75mm / 130um (USD)": 0.152,
+    "Mono N Type Wafer - 182-183.75mm / 130um (RMB)": 1.2,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1.45,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 1.55,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (USD)": 0.04,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (RMB)": 0.31,
+    "TOPCon Cell - 182-183.75mm / 25.0%+ (USD)": 0.041,
+    "TOPCon Cell - 182-183.75mm / 25.0%+ (RMB)": 0.305,
+    "TOPCon Cell - 182*210mm / 25.0%+ (RMB)": 0.34,
+    "TOPCon Cell - 210mm / 25.0%+ (RMB)": 0.3,
+    "182*182-210mm Mono PERC Module (USD)": 0.08,
+    "182*182-210mm Mono PERC Module (RMB)": 0.65,
+    "182*182-210mm Mono TOPCon Module (USD)": 0.09,
+    "182*182-210mm Mono TOPCon Module (RMB)": 0.74,
+    "210mm Mono HJT Module (USD)": 0.105,
+    "210mm Mono HJT Module (RMB)": 0.85,
+    "182*182-210mm/210mm TOPCon Module - Ground-mounted project": 0.69,
+    "182*182-210mm/210mm TOPCon Module - Distributed project": 0.76,
+    "182*182-210mm Mono PERC - India made (USD)": 0.15,
+    "182*182-210mm/210mm Mono TOPCon - India (USD)": 0.09,
+    "182*182-210mm/210mm Mono PERC - US (USD)": 0.24,
+    "182*182-210mm/210mm Mono TOPCon - US (USD)": 0.26,
+    "182*182-210mm/210mm Mono PERC - EU (USD)": 0.08,
+    "182*182-210mm/210mm Mono TOPCon - EU (USD)": 0.09
    }
   },
   "wb": {
@@ -83825,7 +83908,9 @@
    "20250205164718": 1,
    "20250122153303": 1,
    "20250117124034": 1,
-   "20250115165234": 1
+   "20250115165234": 1,
+   "20250408084033": 1,
+   "20250326114907": 1
   },
   "_not": "InfoLink spot fiyat tablosu (ortalama sütunu) — hafta: yayın tarihi → {InfoLink satır adı: ortalama}; wb: işlenmiş Wayback görüntü zaman damgaları",
   "pv": {
