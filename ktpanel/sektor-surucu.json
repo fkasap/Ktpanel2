@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-23T13:13:09Z",
+ "guncelleme": "2026-10-23T14:11:57Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -321,7 +321,7 @@
    "ilk": "2026-10-01",
    "son": "2026-10-23",
    "usdtry_ort": 49.382,
-   "usdtry_son": 49.7329,
+   "usdtry_son": 49.7326,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.7329
+  "2026-10": 49.7326
  },
  "seriler": {
   "altin": {
@@ -5237,12 +5237,12 @@
     ],
     [
      "2026-10-23",
-     4040.7
+     4031.5
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 4040.7
+    "deger": 4031.5
    },
    "guncelleme": "2026-10-23"
   },
@@ -7277,12 +7277,12 @@
     ],
     [
      "2026-10-23",
-     53.945
+     54.015
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 53.945
+    "deger": 54.015
    },
    "guncelleme": "2026-10-23"
   },
@@ -9317,12 +9317,12 @@
     ],
     [
      "2026-10-23",
-     6.4725
+     6.4875
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 6.4725
+    "deger": 6.4875
    },
    "guncelleme": "2026-10-23"
   },
@@ -11351,12 +11351,12 @@
     ],
     [
      "2026-10-23",
-     3090.75
+     3115
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 3090.75
+    "deger": 3115
    },
    "guncelleme": "2026-10-23"
   },
@@ -15432,12 +15432,12 @@
     ],
     [
      "2026-10-23",
-     93.5
+     94.025
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 93.5
+    "deger": 94.025
    },
    "guncelleme": "2026-10-23"
   },
@@ -17470,12 +17470,12 @@
     ],
     [
      "2026-10-23",
-     3.104
+     3.067
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 3.104
+    "deger": 3.067
    },
    "guncelleme": "2026-10-23"
   },
@@ -19506,12 +19506,12 @@
     ],
     [
      "2026-10-23",
-     626.5
+     628.5
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 626.5
+    "deger": 628.5
    },
    "guncelleme": "2026-10-23"
   },
@@ -21546,12 +21546,12 @@
     ],
     [
      "2026-10-23",
-     109.96
+     111.23
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 109.96
+    "deger": 111.23
    },
    "guncelleme": "2026-10-23"
   },
@@ -23649,12 +23649,12 @@
     ],
     [
      "2026-10-23",
-     1.1204
+     1.1207
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 1.1204
+    "deger": 1.1207
    },
    "guncelleme": "2026-10-23"
   },
@@ -25749,12 +25749,12 @@
     ],
     [
      "2026-10-23",
-     49.7329
+     49.7326
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
-    "deger": 49.7329
+    "deger": 49.7326
    },
    "guncelleme": "2026-10-23"
   },
@@ -51496,13 +51496,13 @@
     [
      "2026-10-23",
      391.5,
-     "22 Oct 2026"
+     "21 Oct 2026"
     ]
    ],
    "son": {
     "tarih": "2026-10-23",
     "deger": 391.5,
-    "etiket": "22 Oct 2026"
+    "etiket": "21 Oct 2026"
    },
    "guncelleme": "2026-10-23",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
@@ -56864,7 +56864,7 @@
     "2025-01": 4.83,
     "2025-02": 4.83,
     "2025-03": 5.04,
-    "2025-04": 4.54,
+    "2025-04": 4.49,
     "2025-05": 4.29,
     "2025-06": 4.27,
     "2025-07": 4.94,
@@ -56948,6 +56948,10 @@
     [
      "2025-04-23",
      4.49
+    ],
+    [
+     "2025-04-30",
+     4.39
     ],
     [
      "2025-05-21",
@@ -57035,7 +57039,7 @@
    ],
    "kaynak": "PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması",
    "zincir": [
-    "k1 ×0.933 (32 örtüşme, 2 hafta)"
+    "k1 ×0.933 (33 örtüşme, 2 hafta)"
    ],
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
@@ -57051,7 +57055,7 @@
     "2025-01": 0.142,
     "2025-02": 0.142,
     "2025-03": 0.147,
-    "2025-04": 0.139,
+    "2025-04": 0.134,
     "2025-05": 0.115,
     "2025-06": 0.112,
     "2025-07": 0.124,
@@ -57135,6 +57139,10 @@
     [
      "2025-04-23",
      0.137
+    ],
+    [
+     "2025-04-30",
+     0.124
     ],
     [
      "2025-05-21",
@@ -57236,7 +57244,7 @@
     "2025-01": 0.035,
     "2025-02": 0.035,
     "2025-03": 0.038,
-    "2025-04": 0.0335,
+    "2025-04": 0.033,
     "2025-05": 0.032,
     "2025-06": 0.0305,
     "2025-07": 0.028,
@@ -57320,6 +57328,10 @@
     [
      "2025-04-23",
      0.033
+    ],
+    [
+     "2025-04-30",
+     0.032
     ],
     [
      "2025-05-21",
@@ -57421,7 +57433,7 @@
     "2025-01": 0.078,
     "2025-02": 0.078,
     "2025-03": 0.085,
-    "2025-04": 0.081,
+    "2025-04": 0.0807,
     "2025-05": 0.077,
     "2025-06": 0.0755,
     "2025-07": 0.073,
@@ -57504,6 +57516,10 @@
     ],
     [
      "2025-04-23",
+     0.08
+    ],
+    [
+     "2025-04-30",
      0.08
     ],
     [
@@ -57607,7 +57623,7 @@
     "2025-01": 0.043,
     "2025-02": 0.043,
     "2025-03": 0.047,
-    "2025-04": 0.0475,
+    "2025-04": 0.0477,
     "2025-05": 0.045,
     "2025-06": 0.045,
     "2025-07": 0.045,
@@ -57691,6 +57707,10 @@
     [
      "2025-04-23",
      0.047
+    ],
+    [
+     "2025-04-30",
+     0.048
     ],
     [
      "2025-05-21",
@@ -71696,7 +71716,7 @@
     "2026-07": 387.6588,
     "2026-08": 371.2249,
     "2026-09": 251.6985,
-    "2026-10": 412.4009
+    "2026-10": 411.8406
    },
    "ceyreklik": {
     "2015Q1": 780.0415,
@@ -71764,6 +71784,230 @@
     "tarih": "2026-10",
     "deger": 412
    },
+   "guncelleme": "2026-10-23"
+  },
+  "eregl_favok_ton_usd": {
+   "ad": "EREGL FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı (yassı + uzun mamul satışı (pelet/cevher hariç))",
+   "birim": "$/t",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 123.3,
+    "2024Q2": 101,
+    "2024Q3": 70.4,
+    "2024Q4": 34.8,
+    "2025Q1": 59.8,
+    "2025Q2": 60.2,
+    "2025Q3": 60.1,
+    "2025Q4": 79.1,
+    "2026Q1": 62.7,
+    "2026Q2": 68.3
+   },
+   "hisse": [
+    "EREGL"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 68.3
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
+   "_not": "Hacimden arındırılmış kârlılık: bu çeyrek iyi mi sorusunun ton başına cevabı. Tek çeyrek stok/hedge etkisiyle oynar — eğilime bak.",
+   "guncelleme": "2026-10-23"
+  },
+  "eregl_ciro_ton_usd": {
+   "ad": "EREGL gerçekleşen ort. satış fiyatı ($/t) — ciro ÷ ton",
+   "birim": "$/t",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 815.8,
+    "2024Q2": 797.6,
+    "2024Q3": 755,
+    "2024Q4": 726.2,
+    "2025Q1": 775.9,
+    "2025Q2": 602.7,
+    "2025Q3": 671.9,
+    "2025Q4": 647.7,
+    "2026Q1": 643,
+    "2026Q2": 672.9
+   },
+   "hisse": [
+    "EREGL"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 672.9
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
+   "_not": "Liste fiyatı değil GERÇEKLEŞEN: ürün karması + iskonto + ihracat payı dahil. Vekil fiyat serilerinden (HRC, kütük listesi) sapması karma/iskonto bilgisidir.",
+   "guncelleme": "2026-10-23"
+  },
+  "eregl_maliyet_ton_usd": {
+   "ad": "EREGL ton başına maliyet+gider ($/t) — (ciro − FAVÖK) ÷ ton",
+   "birim": "$/t",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 692.6,
+    "2024Q2": 696.7,
+    "2024Q3": 684.5,
+    "2024Q4": 691.4,
+    "2025Q1": 716.1,
+    "2025Q2": 542.6,
+    "2025Q3": 611.8,
+    "2025Q4": 568.5,
+    "2026Q1": 580.3,
+    "2026Q2": 604.6
+   },
+   "hisse": [
+    "EREGL"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 604.6
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
+   "_not": "Hammadde (cevher, kok, hurda) + enerji + işçilik + genel giderler (amortisman hariç). Sabit gider payı hacim artınca düşer.",
+   "guncelleme": "2026-10-23"
+  },
+  "eregl_satis_ton": {
+   "ad": "EREGL satış tonajı (bin ton, çeyreklik) — yassı + uzun mamul satışı (pelet/cevher hariç)",
+   "birim": "bin ton",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 1979,
+    "2024Q2": 1956,
+    "2024Q3": 1924,
+    "2024Q4": 2192,
+    "2025Q1": 1902,
+    "2025Q2": 1769,
+    "2025Q3": 1931,
+    "2025Q4": 2228,
+    "2026Q1": 2123,
+    "2026Q2": 2117
+   },
+   "hisse": [
+    "EREGL"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 2117
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
+   "_not": "Faaliyet raporundaki kümülatif tonajın çeyrek farkı. ELLE: tazele.mjs TON_KUM (her bilanço haftası).",
+   "guncelleme": "2026-10-23"
+  },
+  "krdmd_favok_ton_usd": {
+   "ad": "KRDMD FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı (esas ürünler (ham çelik + haddelenmiş çelik))",
+   "birim": "$/t",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 78.3,
+    "2024Q2": 29.9,
+    "2024Q3": 34,
+    "2024Q4": 53.2,
+    "2025Q1": 46.1,
+    "2025Q2": 48.2,
+    "2025Q3": 66.6,
+    "2025Q4": 88.5,
+    "2026Q1": 78.5,
+    "2026Q2": 78.1
+   },
+   "hisse": [
+    "KRDMD"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 78.1
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
+   "_not": "Hacimden arındırılmış kârlılık: bu çeyrek iyi mi sorusunun ton başına cevabı. Tek çeyrek stok/hedge etkisiyle oynar — eğilime bak.",
+   "guncelleme": "2026-10-23"
+  },
+  "krdmd_ciro_ton_usd": {
+   "ad": "KRDMD gerçekleşen ort. satış fiyatı ($/t) — ciro ÷ ton",
+   "birim": "$/t",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 669.1,
+    "2024Q2": 687.7,
+    "2024Q3": 647.2,
+    "2024Q4": 669.5,
+    "2025Q1": 598.3,
+    "2025Q2": 611,
+    "2025Q3": 601.1,
+    "2025Q4": 615.1,
+    "2026Q1": 619.8,
+    "2026Q2": 637.2
+   },
+   "hisse": [
+    "KRDMD"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 637.2
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
+   "_not": "Liste fiyatı değil GERÇEKLEŞEN: ürün karması + iskonto + ihracat payı dahil. Vekil fiyat serilerinden (HRC, kütük listesi) sapması karma/iskonto bilgisidir.",
+   "guncelleme": "2026-10-23"
+  },
+  "krdmd_maliyet_ton_usd": {
+   "ad": "KRDMD ton başına maliyet+gider ($/t) — (ciro − FAVÖK) ÷ ton",
+   "birim": "$/t",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 590.8,
+    "2024Q2": 657.8,
+    "2024Q3": 613.1,
+    "2024Q4": 616.3,
+    "2025Q1": 552.2,
+    "2025Q2": 562.7,
+    "2025Q3": 534.5,
+    "2025Q4": 526.6,
+    "2026Q1": 541.3,
+    "2026Q2": 559.1
+   },
+   "hisse": [
+    "KRDMD"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 559.1
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
+   "_not": "Hammadde (cevher, kok, hurda) + enerji + işçilik + genel giderler (amortisman hariç). Sabit gider payı hacim artınca düşer.",
+   "guncelleme": "2026-10-23"
+  },
+  "krdmd_satis_ton": {
+   "ad": "KRDMD satış tonajı (bin ton, çeyreklik) — esas ürünler (ham çelik + haddelenmiş çelik)",
+   "birim": "bin ton",
+   "siklik": "aylik",
+   "aylik": {},
+   "ceyreklik": {
+    "2024Q1": 563.4,
+    "2024Q2": 492.9,
+    "2024Q3": 657.5,
+    "2024Q4": 546.4,
+    "2025Q1": 635.6,
+    "2025Q2": 600.8,
+    "2025Q3": 642.4,
+    "2025Q4": 621.5,
+    "2026Q1": 561.7,
+    "2026Q2": 699.4
+   },
+   "hisse": [
+    "KRDMD"
+   ],
+   "son": {
+    "tarih": "2026Q2",
+    "deger": 699.4
+   },
+   "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
+   "_not": "Faaliyet raporundaki kümülatif tonajın çeyrek farkı. ELLE: tazele.mjs TON_KUM (her bilanço haftası).",
    "guncelleme": "2026-10-23"
   }
  },
@@ -84620,6 +84864,26 @@
      "Mono PERC Module in China": 0.101,
      "182mm 580/625Wp N-Mono Module": 0.113,
      "ThinFilm Solar Module": 0.185
+    },
+    "2025-04-30": {
+     "PV Grade PolySilicon (9N/9N+)": 4.39,
+     "156 mm Multi Solar Wafer": 0.078,
+     "182mm Mono Solar Wafer": 0.133,
+     "210mm Mono Solar Wafer": 0.189,
+     "182.2mm x 183.75mm N Mono Wafer": 0.124,
+     "Multi Cell Price": 0.029,
+     "Poly PERC Cell": 0.03,
+     "China Mono PERC Cell": 0.031,
+     "166mm Mono PERC Cell": 0.032,
+     "182mm Mono PERC Cell": 0.033,
+     "210mm Mono PERC Cell": 0.033,
+     "182mm N-Mono Cell": 0.032,
+     "Poly Module": 0.073,
+     "182mm 550/595Wp PERC Module": 0.074,
+     "210mm 600/660Wp PERC Module": 0.077,
+     "Mono PERC Module in China": 0.072,
+     "182mm 580/625Wp N-Mono Module": 0.08,
+     "ThinFilm Solar Module": 0.2
     }
    },
    "wb": {
@@ -84645,7 +84909,7 @@
     "20250613160349": 1,
     "20250525230627": 1,
     "20250524123904": 1,
-    "20250430224415": -2,
+    "20250430224415": 1,
     "20250427034936": 1,
     "20250421214827": 1,
     "20250419074601": 1,
