@@ -551,9 +551,11 @@ async function rezervModu(req, res){
     // Brüt rezerv (haftalık) — son ~6 hafta, değişim için
     const brutItems = await cek(['TP.AB.TOPLAM','TP.AB.C1','TP.AB.C2'], '&startDate=01-06-2026');
     // Net rezerv bileşenleri (aylık) — dış varlıklar, döviz yükümlülükleri
-    const netItems = await cek(['TP.AB.A02','TP.AB.A10'], '&startDate=01-01-2026');
+    /* §498 (23 Eki): A02/A10 AYLIK DEĞİL, İŞ GÜNÜ serisi (EVDS meta: frequencyStr "İŞ GÜNÜ", grup bie_abanlbil).
+       Net rezerv = A.1 Dış Varlıklar − P.1 Toplam Döviz Yükümlülükleri; her gün KENDİ günün kuruyla dolara çevrilir. */
+    const netItems = await cek(['TP.AB.A02','TP.AB.A10'], '&startDate=01-08-2026');
     // USD/TRY kuru (günlük) — net rezervi USD'ye çevirmek için, son ~10 gün
-    const kurItems = await cek(['TP.DK.USD.A.YTL'], '&startDate=01-07-2026');
+    const kurItems = await cek(['TP.DK.USD.A.YTL'], '&startDate=01-08-2026');
     if (!brutItems && !netItems) return res.status(200).json({ ok:false, err:'EVDS yanıt vermedi (timeout)' });
 
     const sonGecerli = (items, alan) => {
@@ -580,6 +582,14 @@ async function rezervModu(req, res){
     // Güncel kur (EVDS günlük, en son geçerli değer)
     const kur = sonGecerli(kurItems, 'TP_DK_USD_A_YTL');
 
+    /* §498 günlük net rezerv serisi — aynı günün kuru (yoksa önceki iş günü) */
+    const kurHar = {}; (kurItems || []).forEach(it => { const x = parseFloat(String(it['TP_DK_USD_A_YTL'] ?? '').replace(',', '.')); if (isFinite(x)) kurHar[it.Tarih] = x; });
+    const kurGun = Object.keys(kurHar);
+    const kurBul = (t) => { if (kurHar[t]) return kurHar[t]; const ts = (s) => { const p = String(s).split('-'); return p[0].length === 4 ? s : p[2] + '-' + p[1] + '-' + p[0]; }; const h = ts(t); let en = null; kurGun.forEach(k => { if (ts(k) <= h && (!en || ts(k) > ts(en))) en = k; }); return en ? kurHar[en] : null; };
+    const netSeri = [];
+    (netItems || []).forEach(it => { const a = parseFloat(String(it['TP_AB_A02'] ?? '').replace(',', '.')), y = parseFloat(String(it['TP_AB_A10'] ?? '').replace(',', '.')); const k = kurBul(it.Tarih);
+      if (isFinite(a) && isFinite(y) && k) netSeri.push({ t: it.Tarih, v: +(((a - y) / 1e6) / k).toFixed(2), kur: k }); });
+    const netSon = netSeri.length ? netSeri[netSeri.length - 1] : null, net5 = netSeri.length > 5 ? netSeri[netSeri.length - 6] : null;
     res.setHeader('Cache-Control','s-maxage=3600, stale-while-revalidate=7200');
     return res.status(200).json({ ok:true, kaynak:'TCMB EVDS3',
       brut: brutSon ? {
@@ -596,11 +606,13 @@ async function rezervModu(req, res){
         farkBinTL: disVarlik.v - dovizYuk.v,
         // Net rezerv USD = (fark bin TL / 1e6 = mlr TL) / kur = mlr USD
         // Kur EVDS'den (TP.DK.USD.A.YTL, günlük en güncel) — canlı kur değil, tutarlı
-        degerUSD: kur ? +(((disVarlik.v - dovizYuk.v)/1e6)/kur.v).toFixed(1) : null,
-        kur: kur ? +kur.v.toFixed(2) : null,
-        kurTarih: kur ? kur.t : null,
-        tarih: disVarlik.t,
-        frekans: 'aylık TL · güncel kur'
+        degerUSD: netSon ? +netSon.v.toFixed(1) : (kur ? +(((disVarlik.v - dovizYuk.v)/1e6)/kur.v).toFixed(1) : null),
+        kur: netSon ? +netSon.kur.toFixed(2) : (kur ? +kur.v.toFixed(2) : null),
+        kurTarih: netSon ? netSon.t : (kur ? kur.t : null),
+        tarih: netSon ? netSon.t : disVarlik.t,
+        degisim5: (netSon && net5) ? +(netSon.v - net5.v).toFixed(1) : null, onceTarih: net5 ? net5.t : null,
+        seri: netSeri.slice(-30),
+        frekans: 'iş günü (TCMB analitik bilanço) · aynı günün kuru'
       } : null,
       // Swap hariç net = net − swap stoku. Swap stoku CLIENT'ta rezerv.json'dan okunup
       // net.degerUSD'den düşülür (EVDS'de temiz swap stoku yok — yurtdışı ikili swap gizli).
