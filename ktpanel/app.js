@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261023b';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261023c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2686,7 +2686,7 @@ function kararTezMetin(M,H,F,PK,boz){
     let sat=bas;
     if(st.ytd) sat+=st.ytd.yil+' toplamı '+trN(st.ytd.toplam,0)+' ('+st.ytd.adet+' adet'+(st.ytd.yy!=null?', geçen yılın aynı tarihine göre '+kararIsaret(st.ytd.yy,0,'%'):'')+')';
     else sat+='son '+fmtV(st.son&&st.son.deger)+(st.fark?'%':' '+b)+' ('+kararTrTarih(st.son&&st.son.tarih)+')'+(st.yoySon!=null?', yıllık '+kararIsaret(st.yoySon,1,'%'):'');
-    if(st.hedef!=null) sat+=' · '+kararQAd(H.hedefQ)+' ort '+fmtV(st.hedef)+(st.dQ!=null?' (ç/ç '+pct(st.dQ,st.fark)+')':'')+(st.dY!=null?' (y/y '+pct(st.dY,st.fark)+')':'');
+    if(st.hedef!=null) sat+=' · '+(st.gercekQ? kararQAd(st.gercekQ)+' gerçekleşen ' : kararQAd(H.hedefQ)+' ort ')+fmtV(st.hedef)+(st.dQ!=null?' (ç/ç '+pct(st.dQ,st.fark)+')':'')+(st.dY!=null?' (y/y '+pct(st.dY,st.fark)+')':'');
     if(st.kosu!=null&&H.kosuQ) sat+=' · '+kararQAd(H.kosuQ)+' koşu '+fmtV(st.kosu)+(st.dK!=null?' ('+pct(st.dK,st.fark)+')':'');
     const okuma = s.yon==='lehte'?'LEHTE':s.yon==='aleyhte'?'ALEYHTE':s.yon==='kur'?'KUR ('+(s.olcu>0?'TL zayıfladı: $ gelirli/ihracat kısmı lehte, ithal girdi aleyhte':'TL güçlendi: ithal girdi lehte, $ gelirli kısım aleyhte')+')':s.yon==='belirsiz'?'ölçülemedi':'NÖTR';
     sat+=' → '+okuma+(s.olcu!=null&&s.yon!=='kur'?' ('+s.olcuAd+' '+pct(s.olcu,s.fark)+', '+s.rol.aciklama+')':'')+(s.ivme?'; '+s.ivme:'')+'.';
@@ -2751,6 +2751,8 @@ function kararTezMetin(M,H,F,PK,boz){
   R.filter(s=>!s.yok&&(s.birincil||s.yon==='lehte')).slice(0,4).forEach(s=>{
     if(s.st.hedef==null||s.rol.isaret===0) return;
     if(s.kurYY!=null){ K.push((s.birincil?'★ ':'')+s.ad+': yıllık artışı ('+kararIsaret(s.st.dY,0,'%')+') kurun yıllık artışını ('+kararIsaret(s.kurYY,0,'%')+') '+(s.rol.isaret>0?'aşmaya':'altında kalmaya')+' devam etmeli — TL endeks nominal büyür, ölçü $ bazıdır.'); return; }
+    /* §499: gerçekleşen çeyrek serisi — bir sonraki bilançoda son gerçekleşenin korunması */
+    if(s.st.gercekQ){ const sq=kararQAd(kararQOnce(s.st.gercekQ,-1).replace(/^(\d{4})Q5$/,(m,y)=>(+y+1)+'Q1')); K.push((s.birincil?'★ ':'')+s.ad+': '+sq+' bilançosunda '+(s.rol.isaret>0?'≥ ':'≤ ')+fmtV(s.st.hedef)+(s.fark?'%':'')+' ('+kararQAd(s.st.gercekQ)+' gerçekleşen) — '+s.rol.ad+' metriği.'); return; }
     const yukari=s.rol.isaret>0; const kq=H.kosuQ?kararQAd(H.kosuQ):'koşu çeyreği', hqAd=kararQAd(H.hedefQ);
     const simdi = s.st.kosu==null? null : (yukari? s.st.kosu>=s.st.hedef : s.st.kosu<=s.st.hedef);   /* koşu şu an lehte tarafta mı */
     K.push((s.birincil?'★ ':'')+s.ad+': '+kq+' ortalaması'+(s.st.kosu!=null?' (şu an '+fmtV(s.st.kosu)+(s.fark?'%':'')+')':'')+' '+hqAd+' ortalamasının ('+fmtV(s.st.hedef)+(s.fark?'%':'')+') '+(simdi===false?(yukari?'üstüne çıkmalı':'altına inmeli'):(yukari?'üstünde kalmalı':'altında kalmalı'))+' — '+s.rol.ad+' sürücüsü; '+(s.yon==='aleyhte'?'aleyhte baskı hafifler':simdi===false?'lehte rüzgâr geri gelir':'lehte rüzgâr sürer')+'.');
@@ -2763,11 +2765,12 @@ function kararTezMetin(M,H,F,PK,boz){
   R.filter(s=>!s.yok&&s.rol.isaret!==0&&!modelde.has(s.d.k)&&(s.birincil||s.yon==='lehte'||s.yon==='aleyhte')).slice(0,5).forEach(s=>{
     const yukari=s.rol.isaret>0, b=s.fark?'%':'';
     if(s.kurYY!=null){ B.push((s.birincil?'★ ':'')+s.ad+': yıllık artışı kurun yıllık artışının '+(yukari?'altına inerse ($ bazında geriler)':'üstüne çıkmaya devam ederse ($ bazında maliyet baskısı)')+' — şu an TL '+kararIsaret(s.st.dY,0,'%')+' vs kur '+kararIsaret(s.kurYY,0,'%')+'.'); return; }
+    const oncAd = s.st.gercekQ ? kararQAd(kararQOnce(s.st.gercekQ,1))+' gerçekleşeninin' : kararQAd(kararQOnce(H.hedefQ,1))+' ortalamasının';
     const asildi=(esik)=> s.st.kosu!=null&&(yukari? s.st.kosu<esik : s.st.kosu>esik) ? ' ⚠ ŞU AN AŞILMIŞ ('+(H.kosuQ?kararQAd(H.kosuQ):'koşu')+' ort. '+fmtV(s.st.kosu)+b+')' : '';
-    if(s.yon==='lehte'&&s.st.onceki!=null) B.push((s.birincil?'★ ':'')+s.ad+' '+kararQAd(kararQOnce(H.hedefQ,1))+' ortalamasının ('+fmtV(s.st.onceki)+b+') '+(yukari?'altına inerse':'üstüne çıkarsa')+' — lehte rüzgâr tersine döner.'+asildi(s.st.onceki));
+    if(s.yon==='lehte'&&s.st.onceki!=null) B.push((s.birincil?'★ ':'')+s.ad+' '+oncAd+' ('+fmtV(s.st.onceki)+b+') '+(yukari?'altına inerse':'üstüne çıkarsa')+' — lehte rüzgâr tersine döner.'+asildi(s.st.onceki));
     else if(s.yon==='aleyhte'&&s.st.son&&s.st.son.deger!=null){ const e=s.fark? s.st.son.deger+(yukari?-1:1) : s.st.son.deger*(yukari?0.9:1.1);
       B.push((s.birincil?'★ ':'')+s.ad+' '+fmtV(e)+b+' '+(yukari?'altına inerse':'üstüne çıkarsa')+' (son seviyeden '+(s.fark?'1 p':'%10')+' daha '+(yukari?'düşük':'yüksek')+') — '+(s.birincil?'birincil sürücüde ':'')+'aleyhte baskı derinleşir'+(M.tip==='konsensus'?'; konsensüs bunu içermiyor olabilir':'')+'.'); }
-    else if(s.birincil&&s.st.onceki!=null) B.push('★ '+s.ad+' '+kararQAd(kararQOnce(H.hedefQ,1))+' ortalamasının ('+fmtV(s.st.onceki)+b+') '+(yukari?'altına inerse':'üstüne çıkarsa')+' — birincil sürücü aleyhe döner.'+asildi(s.st.onceki));
+    else if(s.birincil&&s.st.onceki!=null) B.push('★ '+s.ad+' '+oncAd+' ('+fmtV(s.st.onceki)+b+') '+(yukari?'altına inerse':'üstüne çıkarsa')+' — birincil sürücü aleyhe döner.'+asildi(s.st.onceki));
   });
   const B2=B.length>1? B.filter(x=>!/bozucu tanımlanamadı/.test(x)) : B;
   return {tez:T.join('\n'), kat:K.map(x=>'• '+x).join('\n'), boz:B2.map(x=>'• '+x).join('\n')};
@@ -2799,7 +2802,12 @@ function kararSeriStat(k, hedefQ, kosuQ){
   const ortQ=(q)=>{ if(!q) return null;
     if(ser.siklik==='aylik'){ if(ser.ceyreklik&&ser.ceyreklik[q]!=null) return ser.ceyreklik[q]; const ay=Object.keys(ser.aylik||{}).filter(a=>a.slice(0,4)===q.slice(0,4)&&Math.floor((+a.slice(5)-1)/3)+1===+q.slice(-1)); return ay.length? ay.reduce((s,a)=>s+ser.aylik[a],0)/ay.length : null; }
     const a=kararQAralik(q); const v=(ser.gunluk||[]).filter(x=>x[0]>=a.bas&&x[0]<=a.son&&typeof x[1]==='number').map(x=>x[1]); return v.length? v.reduce((s,x)=>s+x,0)/v.length : null; };
-  const hedef=ortQ(hedefQ), onceki=hedefQ? ortQ(kararQOnce(hedefQ,1)) : null, gecen=hedefQ? ortQ(kararQOnce(hedefQ,4)) : null, kosu=ortQ(kosuQ);
+  let hedef=ortQ(hedefQ), onceki=hedefQ? ortQ(kararQOnce(hedefQ,1)) : null, gecen=hedefQ? ortQ(kararQOnce(hedefQ,4)) : null, kosu=ortQ(kosuQ);
+  /* §499: GERÇEKLEŞEN çeyrek metriği (ton başına FAVÖK gibi bilançodan türeyen seri) hedef çeyrekte henüz yoktur — bilanço
+     açıklanınca oluşur. O zaman SON GERÇEKLEŞEN çeyrek referans alınır: ç/ç ve y/y oradan okunur, "koşu" kavramı yoktur. */
+  let gercekQ=null;
+  if(hedef==null && ser.ceyreklik && Object.keys(ser.ceyreklik).length){ const qs=Object.keys(ser.ceyreklik).filter(q=>/^\d{4}Q[1-4]$/.test(q)).sort(); gercekQ=qs[qs.length-1];
+    if(gercekQ){ hedef=ser.ceyreklik[gercekQ]; onceki=ortQ(kararQOnce(gercekQ,1)); gecen=ortQ(kararQOnce(gercekQ,4)); kosu=null; } }
   /* §466: faiz gibi yüzde birimli seride değişim ORAN değil FARK (puan) okunur: AOFM 39,5→38 = −1,5 p, −%3,8 değil */
   const fark = ser.birim==='%';
   const d=(a,b)=> (a!=null&&b!=null)? (fark? a-b : (b!==0? (a/b-1)*100 : null)) : null;
@@ -2811,7 +2819,8 @@ function kararSeriStat(k, hedefQ, kosuQ){
   else { const g=(ser.gunluk||[]).filter(x=>typeof x[1]==='number'); const son=g[g.length-1]; if(son){ const basD=new Date(son[0]+'T00:00:00'); basD.setFullYear(basD.getFullYear()-1); const bas=basD.toISOString().slice(0,10); const w=g.filter(x=>x[0]>=bas); const adim=Math.max(1,Math.floor(w.length/26)); spark=w.filter((x,i)=>i%adim===0||i===w.length-1).map(x=>x[1]); } }
   /* §471: akış serisinde yıl içi kümülatif (Actions yillik_kum): bu yılın toplamı ve geçen yılın aynı tarihine göre y/y */
   let ytd=null; if(ser.akis && ser.yillik_kum && ser.yillik_kum.yillar){ const y=String(ser.yillik_kum.bugun||'').slice(0,4); const o=ser.yillik_kum.yillar[y]; const g=(ser.yillik_kum.yillar[String(+y-1)]||{}).ayni_tarih; if(o) ytd={yil:y, toplam:o.toplam, adet:o.adet, yy:o.yy_ayni_tarih, gecen:g, mmdd:ser.yillik_kum.mmdd}; else if(g!=null) ytd={yil:y, toplam:0, adet:0, yy:null, gecen:g, mmdd:ser.yillik_kum.mmdd}; /* §473: bu yıl hiç kayıt yoksa Actions yillik_kum'da yıl satırı olmaz → 0 toplam, geçen yılın aynı tarihiyle (KATMR 2026) */ }
-  return {ser, son:ser.son, hedef, onceki, gecen, kosu, dQ:d(hedef,onceki), dY:d(hedef,gecen), dK:d(kosu,hedef), spark, fark, yoySon, akis:!!ser.akis, ytd};
+  if(gercekQ && (!spark||spark.length<3)){ spark=Object.keys(ser.ceyreklik).sort().slice(-8).map(q=>ser.ceyreklik[q]); }   /* §499: çeyrek serisinde kıvılcım = son 8 çeyrek */
+  return {ser, son:ser.son, hedef, onceki, gecen, kosu, dQ:d(hedef,onceki), dY:d(hedef,gecen), dK:d(kosu,hedef), spark, fark, yoySon, akis:!!ser.akis, ytd, gercekQ};
 }
 function kararSpark(v, renk){
   if(!v||v.length<3) return '';
@@ -2831,7 +2840,7 @@ function kararSektorPanel(M,H){
       const ser=st.ser; const renkYon=(v)=>{ if(v==null||rol.isaret===0) return ''; return (v*rol.isaret>=0)?'up':'down'; };
       const dkYon=(v)=>{ if(v==null||rol.isaret===0) return ''; return (v*rol.isaret>=0)?'up':'down'; };
       const fmt=(v)=> v==null?'—':trN(v, Math.abs(v)<1?3:Math.abs(v)<10?2:Math.abs(v)<1000?1:0);   /* §483: $/W (0,114) üç ondalık */
-      h+='<tr><td style="font-family:var(--sans);max-width:380px;white-space:normal">'+esc(d.ad||ser.ad||d.k)+(d.not?' <span class="sub" title="'+esc(d.not)+'">ⓘ</span>':'')+'<div class="sub">'+esc(String(ser.kaynak||d.kaynak||'').slice(0,110))+(ser.birim?' · '+esc(ser.birim):'')+'</div></td>'+
+      h+='<tr><td style="font-family:var(--sans);max-width:380px;white-space:normal">'+esc(d.ad||ser.ad||d.k)+(d.not?' <span class="sub" title="'+esc(d.not)+'">ⓘ</span>':'')+'<div class="sub">'+(st.gercekQ?'<b>'+esc(kararQAd(st.gercekQ))+' gerçekleşen</b> · ':'')+esc(String(ser.kaynak||d.kaynak||'').slice(0,110))+(ser.birim?' · '+esc(ser.birim):'')+'</div></td>'+
          '<td style="color:var(--muted)">'+rol.ad+' <span class="sub">'+rol.aciklama+'</span></td>'+
          (st.ytd? '<td><b>'+trN(st.ytd.toplam,0)+'</b><div class="sub">'+esc(st.ytd.yil)+' toplamı · '+st.ytd.adet+' sözleşme'+(st.ytd.toplam>0&&st.ytd.yy!=null?' · y/y '+kararIsaret(st.ytd.yy,0,'%'):(st.ytd.gecen!=null?' · geçen yıl aynı tarih '+trN(st.ytd.gecen,0):''))+'</div></td>' : '<td><b>'+fmt(st.son&&st.son.deger)+(st.fark?'%':'')+'</b><div class="sub">'+esc(kararTrTarih(st.son&&st.son.tarih))+(st.yoySon!=null?' · yıllık '+kararIsaret(st.yoySon,1,'%'):'')+'</div></td>')+
          '<td>'+fmt(st.hedef)+'</td>'+

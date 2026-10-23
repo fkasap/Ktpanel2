@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-22a",
+ "surum": "2026-10-23a",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -2289,6 +2289,34 @@
    "sektor_not": "Entegre yassı çelik (yüksek fırın): girdi demir cevheri + kok kömürü, satış HRC/CRC/galvaniz. Kâr/ton = yassı fiyat − (cevher+kömür) − enerji; fonksiyonel para birimi USD, TL güçlenince TL FAVÖK baskılanır. Çin ihracatı ve AB koruma önlemleri fiyatı belirler; stok etkisi fiyat dönüşlerinde 1 çeyrek gecikmeli görünür.",
    "surucu_seriler": [
     {
+     "k": "eregl_favok_ton_usd",
+     "rol": "marj",
+     "aile": "ton_ekonomisi",
+     "ad": "FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı",
+     "kaynak": "KAP arşivi + faaliyet raporu tonajı (Actions §499)"
+    },
+    {
+     "k": "eregl_ciro_ton_usd",
+     "rol": "gelir",
+     "aile": "ton_ekonomisi",
+     "ad": "Gerçekleşen ort. satış fiyatı ($/t)",
+     "kaynak": "KAP arşivi + faaliyet raporu tonajı (Actions §499)"
+    },
+    {
+     "k": "eregl_maliyet_ton_usd",
+     "rol": "maliyet",
+     "aile": "ton_ekonomisi",
+     "ad": "Ton başına maliyet + gider ($/t, amortisman hariç)",
+     "kaynak": "KAP arşivi + faaliyet raporu tonajı (Actions §499)"
+    },
+    {
+     "k": "eregl_satis_ton",
+     "rol": "gelir",
+     "aile": "hacim",
+     "ad": "Satış tonajı (bin ton, çeyreklik)",
+     "kaynak": "Faaliyet raporu (KAP) — elle, her bilanço haftası (Actions §499)"
+    },
+    {
      "k": "hrc_abd",
      "rol": "gelir",
      "ad": "HRC (ABD Midwest vekili)",
@@ -3549,6 +3577,34 @@
    "guidance": null,
    "sektor_not": "Uzun çelik ağırlıklı ENTEGRE (yüksek fırın) üretici: kütük, inşaat demiri, kangal, ray, profil. Girdi demir cevheri + kok kömürü; hurda şarjın küçük kısmı. Kâr/ton = kütük/inşaat demiri fiyatı − (cevher + kok) − enerji; yurt içi inşaat talebi ve ihracat (Irak, AB) hacmi belirler. Kardemir kendi liste fiyatını ve hurda alım fiyatını açık yayımlar → sürücüler vekil değil, gerçekleşen fiyat. Nakit pozisyonu kur farkı geliri yaratır (TL zayıflamasında net kâr şişer).",
    "surucu_seriler": [
+    {
+     "k": "krdmd_favok_ton_usd",
+     "rol": "marj",
+     "aile": "ton_ekonomisi",
+     "ad": "FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı",
+     "kaynak": "KAP arşivi + faaliyet raporu tonajı (Actions §499)"
+    },
+    {
+     "k": "krdmd_ciro_ton_usd",
+     "rol": "gelir",
+     "aile": "ton_ekonomisi",
+     "ad": "Gerçekleşen ort. satış fiyatı ($/t)",
+     "kaynak": "KAP arşivi + faaliyet raporu tonajı (Actions §499)"
+    },
+    {
+     "k": "krdmd_maliyet_ton_usd",
+     "rol": "maliyet",
+     "aile": "ton_ekonomisi",
+     "ad": "Ton başına maliyet + gider ($/t, amortisman hariç)",
+     "kaynak": "KAP arşivi + faaliyet raporu tonajı (Actions §499)"
+    },
+    {
+     "k": "krdmd_satis_ton",
+     "rol": "gelir",
+     "aile": "hacim",
+     "ad": "Satış tonajı (bin ton, çeyreklik)",
+     "kaynak": "Faaliyet raporu (KAP) — elle, her bilanço haftası (Actions §499)"
+    },
     {
      "k": "kardemir_kutuk_usd",
      "rol": "gelir",
