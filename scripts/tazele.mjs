@@ -4529,6 +4529,82 @@ async function multipleKendi() {
   raporlar.push('### Multiple kendi verimizden (§496) — ✓ ' + kendi + ' hisse KAP · ' + eski + ' eski (evren dışı)' + (duzeltme ? '\n- kurumsal işlem düzeltmesi: ' + notlar.join(' | ') : '') + (hata.length ? '\n- ⚠ Yahoo: ' + hata.join(' · ') : '') + ' · ' + Math.round((Date.now() - t0) / 1000) + ' sn');
 }
 
+/* ── §499 TON BAŞINA FAVÖK (23 Eki) — EREGL · KRDMD ───────────────────────────────────────────────────────────────────
+   Kullanıcı: "EREGL/Kardemir gibi şirketlerde ton başına FAVÖK sürücüsü önemli; kendi verilerimizle hesaplayabilir miyiz?"
+   Pay: çeyreklik ÇEKİRDEK FAVÖK (brüt − pazarlama − GYG − Ar-Ge + amortisman) kendi KAP arşivimizden (kap-arsiv/<KOD>.json):
+     · çeyrek kalemi: rapordaki 3 aylık sütun (yoksa kümülatif farkı); amortisman yalnız nakit akışında kümülatif → fark.
+     · KRDMD TL fonksiyonel + TMS 29: ara dönem rakamları dönem sonu satın alma gücünde → önceki kümülatif TÜFE oranıyla
+       taşınır, dolara DÖNEM SONU kuruyla çevrilir. EREGL'de çeyrekler toplamı kümülatife birebir eşit (TMS 29 etkisi yok,
+       USD fonksiyonel) → ÇEYREK ORTALAMA kuru.
+     Doğrulama (yalnız kıyas, kaynak değil): Fintables usd_ceyreklik ile 10 çeyrekte ±3 mn $ içinde.
+   Payda: SATIŞ TONAJI — şirket faaliyet raporu (KAP), kümülatif; elle (ritüel: her bilanço haftası, şirket başına 1 sayı):
+     EREGL "Yassı Mamul Satışları + Uzun Mamul Satışları" (bin ton; pelet/cevher hariç — çoğu grup içi)
+     KRDMD "Tablo: Satış Miktar ve Tutarları — Esas Ürünler" (ton; ham çelik + haddelenmiş çelik)
+   Çıktı (sektor-surucu.json, çeyreklik): <kod>_favok_ton_usd · _ciro_ton_usd (gerçekleşen ort. satış fiyatı) ·
+   _maliyet_ton_usd (= ciro/t − FAVÖK/t: nakit maliyet + giderler) · _satis_ton (bin ton). */
+const TON_KUM = {
+  EREGL: { birim: 'bin ton', tanim: 'yassı + uzun mamul satışı (pelet/cevher hariç)', ias29: false,
+    k: { '2024Q1': 1979, '2024Q2': 3935, '2024Q3': 5859, '2024Q4': 8051, '2025Q1': 1902, '2025Q2': 3671, '2025Q3': 5602, '2025Q4': 7830, '2026Q1': 2123, '2026Q2': 4240, '2026Q3': 6384 },
+    kaynak: 'EREGL faaliyet raporları (KAP) — "Yassı/Uzun Mamul Satışları" tablosu, kümülatif' },
+  KRDMD: { birim: 'bin ton', tanim: 'esas ürünler (ham çelik + haddelenmiş çelik)', ias29: true,
+    k: { '2024Q1': 563.384, '2024Q2': 1056.235, '2024Q3': 1713.706, '2024Q4': 2260.093, '2025Q1': 635.578, '2025Q2': 1236.371, '2025Q3': 1878.819, '2025Q4': 2500.324, '2026Q1': 561.682, '2026Q2': 1261.131 },
+    kaynak: 'KRDMD faaliyet raporları (KAP) — "Satış Miktar ve Tutarları · Esas Ürünler", kümülatif' }
+};
+async function tonBasina() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### Ton başına FAVÖK (§499) — ⏭ sektor-surucu.json yok'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const AYS = D.usdtry_ay_sonu || {}; const TF = (D.seriler.tufe && D.seriler.tufe.aylik) || {};
+  const G = (D.seriler.usdtry && D.seriler.usdtry.gunluk) || [];
+  const ayK = (y, m) => String(y) + '-' + String(m).padStart(2, '0');
+  const kurOrt = (y, q) => { /* günlük varsa çeyrek ortalaması; yoksa ay sonlarından yamuk ortalama */
+    const a = ayK(y, 3 * q - 2), b = ayK(y, 3 * q); const g = G.filter(x => x && x[0] >= a && x[0].slice(0, 7) <= b && x[1] > 0).map(x => x[1]);
+    if (g.length > 40) return g.reduce((s, x) => s + x, 0) / g.length;
+    const p = [ayK(q === 1 ? y - 1 : y, q === 1 ? 12 : 3 * q - 3), ayK(y, 3 * q - 2), ayK(y, 3 * q - 1), ayK(y, 3 * q)].map(k => AYS[k]);
+    return p.every(x => x > 0) ? (p[0] / 2 + p[1] + p[2] + p[3] / 2) / 3 : null; };
+  const kurSon = (y, q) => AYS[ayK(y, 3 * q)] || null;
+  const cpiOran = (y, q) => { const a = TF[ayK(y, 3 * q)], b = TF[ayK(y, 3 * q - 3)]; return (a > 0 && b > 0) ? a / b : null; };
+  const TAG = { R: 'ifrs-full_Revenue', B: 'ifrs-full_GrossProfit', P: 'kap-fr_MarketingExpense', Y: 'ifrs-full_AdministrativeExpense', A: 'ifrs-full_ResearchAndDevelopmentExpense', AM: 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense' };
+  const sonuc = [], uyari = [];
+  for (const [kod, T] of Object.entries(TON_KUM)) {
+    let A; try { A = await oku('kap-arsiv/' + kod + '.json'); } catch (e) { uyari.push(kod + ': arşiv yok'); continue; }
+    const K = {};
+    for (const [key, d] of Object.entries(A.donemler || {})) { const c = (d.birim && d.birim.carpan) || 1; const k = {};
+      (d.tablolar || []).forEach(t => (t.satirlar || []).forEach(s => { if (s.xbrl && !k[s.xbrl] && s.degerler && s.degerler.length) k[s.xbrl] = s.degerler.map(v => Number.isFinite(v) ? v * c : null); }));
+      K[key] = k; }
+    const seri = { favok: {}, ciro: {}, maliyet: {}, ton: {} };
+    for (const key of Object.keys(K).sort()) {
+      const [y, q] = key.split('/').map(Number); if (y < 2024) continue;
+      const qq = y + 'Q' + q; const Dk = K[key], Pk = q > 1 ? K[y + '/' + (q - 1)] : null;
+      const f = (q > 1 && T.ias29) ? cpiOran(y, q) : 1; if (q > 1 && T.ias29 && !f) continue;
+      const qv = (tag) => { const v = Dk[tag]; if (!v) return 0; if (q === 1) return v[0];
+        if (v.length >= 4 && Number.isFinite(v[2])) return v[2]; const p = Pk && Pk[tag]; return (p && Number.isFinite(p[0])) ? v[0] - p[0] * f : null; };
+      const ciro = qv(TAG.R); const brut = qv(TAG.B); if (!Number.isFinite(ciro) || !Number.isFinite(brut)) continue;
+      const am = Dk[TAG.AM]; const pam = Pk && Pk[TAG.AM];
+      const amq = !am ? null : (q === 1 ? am[0] : (pam ? am[0] - pam[0] * f : null)); if (!Number.isFinite(amq)) continue;
+      const favok = brut + (qv(TAG.P) || 0) + (qv(TAG.Y) || 0) + (qv(TAG.A) || 0) + amq;
+      const kur = T.ias29 ? kurSon(y, q) : kurOrt(y, q); if (!(kur > 0)) continue;
+      const tc = T.k[qq], tp = q > 1 ? T.k[y + 'Q' + (q - 1)] : 0; if (!Number.isFinite(tc) || !Number.isFinite(tp)) continue;
+      const ton = (tc - tp) * 1000; if (!(ton > 0)) continue;
+      seri.favok[qq] = +(favok / kur / ton).toFixed(1); seri.ciro[qq] = +(ciro / kur / ton).toFixed(1);
+      seri.maliyet[qq] = +((ciro - favok) / kur / ton).toFixed(1); seri.ton[qq] = +(ton / 1000).toFixed(1);
+    }
+    const qs = Object.keys(seri.favok).sort(); if (!qs.length) { uyari.push(kod + ': hesaplanacak çeyrek yok'); continue; }
+    const sonQ = qs[qs.length - 1]; const kk = kod.toLowerCase();
+    const yaz1 = (ek, ad, birim, map, notu) => { D.seriler[kk + ek] = Object.assign({}, D.seriler[kk + ek] || {}, { ad, birim, siklik: 'aylik', aylik: {}, ceyreklik: map, hisse: [kod],
+      son: { tarih: sonQ, deger: map[sonQ] }, kaynak: 'türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, ' + (T.ias29 ? 'TMS 29 · dönem sonu kuru' : 'çeyrek ort. kuru') + ') ÷ ' + T.kaynak + ' (§499)', _not: notu, guncelleme: bugun }); };
+    yaz1('_favok_ton_usd', kod + ' FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı (' + T.tanim + ')', '$/t', seri.favok, 'Hacimden arındırılmış kârlılık: bu çeyrek iyi mi sorusunun ton başına cevabı. Tek çeyrek stok/hedge etkisiyle oynar — eğilime bak.');
+    yaz1('_ciro_ton_usd', kod + ' gerçekleşen ort. satış fiyatı ($/t) — ciro ÷ ton', '$/t', seri.ciro, 'Liste fiyatı değil GERÇEKLEŞEN: ürün karması + iskonto + ihracat payı dahil. Vekil fiyat serilerinden (HRC, kütük listesi) sapması karma/iskonto bilgisidir.');
+    yaz1('_maliyet_ton_usd', kod + ' ton başına maliyet+gider ($/t) — (ciro − FAVÖK) ÷ ton', '$/t', seri.maliyet, 'Hammadde (cevher, kok, hurda) + enerji + işçilik + genel giderler (amortisman hariç). Sabit gider payı hacim artınca düşer.');
+    yaz1('_satis_ton', kod + ' satış tonajı (bin ton, çeyreklik) — ' + T.tanim, 'bin ton', seri.ton, 'Faaliyet raporundaki kümülatif tonajın çeyrek farkı. ELLE: tazele.mjs TON_KUM (her bilanço haftası).');
+    sonuc.push(kod + ' ' + sonQ + ': FAVÖK/t ' + seri.favok[sonQ] + ' $ · fiyat/t ' + seri.ciro[sonQ] + ' · maliyet/t ' + seri.maliyet[sonQ] + ' · ' + seri.ton[sonQ] + ' bin t (' + qs.length + ' çeyrek)');
+    const bekleyen = Object.keys(T.k).filter(q => !seri.favok[q]); if (bekleyen.length) uyari.push(kod + ' tonaj var, bilanço arşivde yok: ' + bekleyen.join(','));
+  }
+  if (!sonuc.length) { raporlar.push('### Ton başına FAVÖK (§499) — ✗ ' + uyari.join(' · ')); return; }
+  D.seriler_guncelleme = bugun; await yaz(dosya, D); degisenler.push('ton başına FAVÖK (' + sonuc.length + ')');
+  raporlar.push('### Ton başına FAVÖK (§499) — ✓ ' + sonuc.join(' | ') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -6457,7 +6533,8 @@ async function bultenKesif() {
     await olcKos('Multiple kendi verimizden (§496)', ()=>multipleKendi());   /* §496: faktör evreninin KAP TTM'i → multiple.json (Fintables yok) */   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
-    await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
+    await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
+    await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());   /* §499: KAP arşivi çekirdek FAVÖK ÷ faaliyet raporu tonajı (EREGL/KRDMD) */   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
     await olcKos('Bülten keşfi', ()=>bultenKesif());   /* SS326 */   /* §250k: günlük tarihsel için keşif */
@@ -6466,6 +6543,7 @@ async function bultenKesif() {
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
+  if (KSET.has('kaparsiv') || KSET.has('multiple')) await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());
   if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
   if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
