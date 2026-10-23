@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-22T11:29:55Z",
+ "guncelleme": "2026-10-23T06:53:12Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -208,7 +208,7 @@
    "n": 13,
    "ilk": "2024-10-04",
    "son": "2024-12-27",
-   "usdtry_ort": 34.631,
+   "usdtry_ort": 34.639,
    "usdtry_son": 35.3052,
    "tam": true
   },
@@ -320,8 +320,8 @@
    "n": 16,
    "ilk": "2026-10-01",
    "son": "2026-10-22",
-   "usdtry_ort": 49.359,
-   "usdtry_son": 49.6246,
+   "usdtry_ort": 49.382,
+   "usdtry_son": 49.7323,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.6246
+  "2026-10": 49.7323
  },
  "seriler": {
   "altin": {
@@ -5233,14 +5233,18 @@
     ],
     [
      "2026-10-22",
-     4087.3999
+     4060.3999
+    ],
+    [
+     "2026-10-23",
+     4029.5
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 4087.3999
+    "tarih": "2026-10-23",
+    "deger": 4029.5
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "gumus": {
    "ad": "Gümüş (COMEX SI=F)",
@@ -7269,14 +7273,18 @@
     ],
     [
      "2026-10-22",
-     55.865
+     54.764
+    ],
+    [
+     "2026-10-23",
+     54.15
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 55.865
+    "tarih": "2026-10-23",
+    "deger": 54.15
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "bakir": {
    "ad": "Bakır (COMEX HG=F)",
@@ -9305,14 +9313,18 @@
     ],
     [
      "2026-10-22",
-     6.4125
+     6.3625
+    ],
+    [
+     "2026-10-23",
+     6.46
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 6.4125
+    "tarih": "2026-10-23",
+    "deger": 6.46
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "aluminyum": {
    "ad": "Alüminyum (CME ALI=F)",
@@ -11335,14 +11347,18 @@
     ],
     [
      "2026-10-22",
-     3088
+     3193
+    ],
+    [
+     "2026-10-23",
+     3085.25
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 3088
+    "tarih": "2026-10-23",
+    "deger": 3085.25
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "hrc_abd": {
    "ad": "ABD Midwest HRC (CME HRC=F) — TR HRC vekili",
@@ -13369,14 +13385,14 @@
     ],
     [
      "2026-10-22",
-     1370
+     1286
     ]
    ],
    "son": {
     "tarih": "2026-10-22",
-    "deger": 1370
+    "deger": 1286
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ttf": {
    "ad": "TTF doğalgaz (TTF=F)",
@@ -15405,13 +15421,17 @@
     [
      "2026-10-21",
      87.426
+    ],
+    [
+     "2026-10-22",
+     90.043
     ]
    ],
    "son": {
-    "tarih": "2026-10-21",
-    "deger": 87.426
+    "tarih": "2026-10-22",
+    "deger": 90.043
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "henryhub": {
    "ad": "Henry Hub doğalgaz (NG=F)",
@@ -17438,14 +17458,18 @@
     ],
     [
      "2026-10-22",
-     2.758
+     2.796
+    ],
+    [
+     "2026-10-23",
+     2.723
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 2.758
+    "tarih": "2026-10-23",
+    "deger": 2.723
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "bugday": {
    "ad": "Buğday CBOT (ZW=F)",
@@ -19470,14 +19494,18 @@
     ],
     [
      "2026-10-22",
-     626
+     624.75
+    ],
+    [
+     "2026-10-23",
+     626.75
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 626
+    "tarih": "2026-10-23",
+    "deger": 626.75
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "brent_yh": {
    "ad": "Brent (ICE BZ=F) — Neste çaprazı",
@@ -21506,14 +21534,18 @@
     ],
     [
      "2026-10-22",
-     111.86
+     113.17
+    ],
+    [
+     "2026-10-23",
+     114.37
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 111.86
+    "tarih": "2026-10-23",
+    "deger": 114.37
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "eurusd": {
    "ad": "EUR/USD",
@@ -23601,18 +23633,22 @@
     ],
     [
      "2026-10-21",
-     1.1225
+     1.1235
     ],
     [
      "2026-10-22",
      1.1201
+    ],
+    [
+     "2026-10-23",
+     1.1215
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 1.1201
+    "tarih": "2026-10-23",
+    "deger": 1.1215
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "usdtry": {
    "ad": "USD/TRY",
@@ -25697,18 +25733,22 @@
     ],
     [
      "2026-10-21",
-     49.597
+     49.6225
     ],
     [
      "2026-10-22",
      49.6246
+    ],
+    [
+     "2026-10-23",
+     49.7323
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 49.6246
+    "tarih": "2026-10-23",
+    "deger": 49.7323
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ure": {
    "ad": "Üre, Karadeniz (WB)",
@@ -25928,7 +25968,7 @@
     "tarih": "2026-09",
     "deger": 407.5
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dap": {
    "ad": "DAP (WB)",
@@ -26148,7 +26188,7 @@
     "tarih": "2026-09",
     "deger": 800.6
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "demir_cevheri": {
    "ad": "Demir cevheri cfr (WB)",
@@ -26368,7 +26408,7 @@
     "tarih": "2026-09",
     "deger": 97.7
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "komur_termal": {
    "ad": "Kömür, Avustralya termal (WB)",
@@ -26589,7 +26629,7 @@
     "tarih": "2026-09",
     "deger": 147.1
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "gaz_avrupa": {
    "ad": "Doğalgaz Avrupa TTF (WB)",
@@ -26811,7 +26851,7 @@
     "tarih": "2026-09",
     "deger": 25.42
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "altin_wb": {
    "ad": "Altın (WB)",
@@ -27030,7 +27070,7 @@
     "tarih": "2026-09",
     "deger": 4319
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "gumus_wb": {
    "ad": "Gümüş (WB)",
@@ -27249,7 +27289,7 @@
     "tarih": "2026-09",
     "deger": 64.6
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "cinko": {
    "ad": "Çinko LME (WB)",
@@ -27468,7 +27508,7 @@
     "tarih": "2026-09",
     "deger": 4021
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kursun": {
    "ad": "Kurşun LME (WB)",
@@ -27687,7 +27727,7 @@
     "tarih": "2026-09",
     "deger": 1873
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "bakir_wb": {
    "ad": "Bakır LME (WB)",
@@ -27906,7 +27946,7 @@
     "tarih": "2026-09",
     "deger": 14474
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "aluminyum_wb": {
    "ad": "Alüminyum LME (WB)",
@@ -28123,7 +28163,7 @@
     "tarih": "2026-09",
     "deger": 3283
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "bugday_wb": {
    "ad": "Buğday ABD HRW (WB)",
@@ -28342,7 +28382,7 @@
     "tarih": "2026-09",
     "deger": 347
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kakao": {
    "ad": "Kakao (WB)",
@@ -28559,7 +28599,7 @@
     "tarih": "2026-09",
     "deger": 5.92
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "seker_dunya": {
    "ad": "Şeker dünya (WB)",
@@ -28776,7 +28816,7 @@
     "tarih": "2026-09",
     "deger": 0.41
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "brent_wb": {
    "ad": "Brent (WB)",
@@ -28995,7 +29035,7 @@
     "tarih": "2026-09",
     "deger": 116.8
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "tufe": {
    "ad": "TÜFE genel (2025=100; 2025 öncesi 2003 bazından zincirli)",
@@ -29221,7 +29261,7 @@
     "tarih": "2026-09",
     "deger": 137.23
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_zincir": "yeni baz TP.TUKFIY2025.GENEL 2021-12'den; öncesi TP.FG.J0 × 0.031414"
   },
   "tufe_gida": {
@@ -29442,7 +29482,7 @@
     "tarih": "2026-09",
     "deger": 134.04
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_zincir": "yeni baz TP.TUKFIY2025.01 2022-01'den; öncesi TP.FG.J01 × 0.022316"
   },
   "tufe_giyim": {
@@ -29663,7 +29703,7 @@
     "tarih": "2026-09",
     "deger": 112.06
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_zincir": "yeni baz TP.TUKFIY2025.03 2015-01'den; öncesi TP.FG.J03 × 0.137039"
   },
   "yiufe": {
@@ -29882,7 +29922,7 @@
     "tarih": "2026-09",
     "deger": 5901.26
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "cimento_ufe": {
    "ad": "Yİ-ÜFE 3.14.5 çimento, kireç ve alçı (2003=100)",
@@ -30103,7 +30143,7 @@
     "tarih": "2026-09",
     "deger": 6454.84
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "celik_ufe": {
    "ad": "Yİ-ÜFE 3.15.1 ana demir-çelik ve ferro alaşımlar (2003=100)",
@@ -30325,7 +30365,7 @@
     "tarih": "2026-09",
     "deger": 6926.89
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "elektrik_ufe": {
    "ad": "Yİ-ÜFE 4.1.1 elektrik üretim-iletim-dağıtım (2003=100)",
@@ -30548,7 +30588,7 @@
     "tarih": "2026-09",
     "deger": 3050.64
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "gubre_ufe": {
    "ad": "Yİ-ÜFE 3.11.1 temel kimyasallar, gübre ve azot bileşikleri (2003=100)",
@@ -30769,7 +30809,7 @@
     "tarih": "2026-09",
     "deger": 9900.26
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kfe": {
    "ad": "Konut Fiyat Endeksi — TCMB KFE (aylık)",
@@ -30951,7 +30991,7 @@
     "tarih": "2026-09",
     "deger": 239.38
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "aofm": {
    "ad": "TCMB ağırlıklı ortalama fonlama maliyeti (AOFM, %)",
@@ -34818,13 +34858,17 @@
     [
      "2026-10-21",
      37
+    ],
+    [
+     "2026-10-22",
+     37
     ]
    ],
    "son": {
-    "tarih": "2026-10-21",
+    "tarih": "2026-10-22",
     "deger": 37
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "tlref": {
    "ad": "BIST TLREF gecelik referans faiz (%)",
@@ -38625,7 +38669,7 @@
     "tarih": "2026-10-21",
     "deger": 36.8509
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "epdk_tarife": {
    "ad": "EPDK doğal gaz dağıtım tarifesi endeksi — SKB aylık TÜFE(z−2) güncellemesi, 2022-01=100 (türetilmiş)",
@@ -38813,13 +38857,13 @@
     "tarih": "2026-11",
     "deger": 722.2404
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Dönem içi kural: bedel(z) = bedel(z−1) × (1 + TÜFE aylık(z−2)). Son iki ay ileri taşındı (TÜFE açıklandı, tarife belli). 2027-01 dördüncü dönem başında EPDK seviyeyi yeniden kurar — kırılma notu o zaman eklenir. Şirket/bölge/kademe TL/Sm3 düzeyi değil, değişim okunur."
   },
   "ptf": {
    "kaynak": "EPİAŞ Şeffaflık · GÖP PTF saatlik → günlük ortalama (TGT)",
    "siklik": "gunluk",
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Saatlik piyasa takas fiyatının gün ortalaması (≥20 saat). Gün Öncesi Piyasası yarının fiyatını ~14:00 TR açıklar; akşam koşusu yarını da alır.",
    "ad": "PTF — gün öncesi piyasa takas fiyatı, günlük ort.",
    "birim": "TL/MWh",
@@ -44393,17 +44437,21 @@
     [
      "2026-10-22",
      3186.06
+    ],
+    [
+     "2026-10-23",
+     3242.01
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 3186.06
+    "tarih": "2026-10-23",
+    "deger": 3242.01
    }
   },
   "ptf_usd": {
    "kaynak": "EPİAŞ Şeffaflık · GÖP PTF saatlik → günlük ortalama (TGT)",
    "siklik": "gunluk",
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Saatlik piyasa takas fiyatının gün ortalaması (≥20 saat). Gün Öncesi Piyasası yarının fiyatını ~14:00 TR açıklar; akşam koşusu yarını da alır.",
    "ad": "PTF — günlük ort., ABD doları (TCMB alış kuruyla, EPİAŞ)",
    "birim": "$/MWh",
@@ -49974,11 +50022,15 @@
     [
      "2026-10-22",
      64.38
+    ],
+    [
+     "2026-10-23",
+     65.48
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 64.38
+    "tarih": "2026-10-23",
+    "deger": 65.48
    }
   },
   "asels_kap_siparis": {
@@ -50211,7 +50263,7 @@
     "ay": "2026-10",
     "ay_toplam": 4921.4
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "n": 211,
    "sozlesmeler": [
     {
@@ -50440,14 +50492,14 @@
       "toplam": 4365.3,
       "adet": 46,
       "tutarsiz": 0,
-      "ayni_tarih": 2768.1,
-      "ayni_tarih_adet": 30,
+      "ayni_tarih": 2863.2,
+      "ayni_tarih_adet": 31,
       "son": {
        "t": "2024-12-31",
        "usd_mn": 105.5,
        "ozet": "ASELSAN ile Türkiye Cumhuriyeti Cumhurbaşkanlığı Savunma Sanayii Başkanlığı arasında Petrol ve Doğal Gaz Boru Hatları Gü"
       },
-      "yy_ayni_tarih": -25.1,
+      "yy_ayni_tarih": -22.5,
       "yy_toplam": -1.9
      },
      "2025": {
@@ -50461,7 +50513,7 @@
        "usd_mn": 264.3,
        "ozet": "ASELSAN ile Askeri Fabrika ve Tersane İşletme A.Ş. (ASFAT) arasında deniz platformları savaş sistemlerine yönelik; Elekt"
       },
-      "yy_ayni_tarih": 47.5,
+      "yy_ayni_tarih": 42.6,
       "yy_toplam": 46.5
      },
      "2026": {
@@ -50479,8 +50531,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-10-22",
-    "mmdd": "10-22"
+    "bugun": "2026-10-23",
+    "mmdd": "10-23"
    }
   },
   "asels_backlog": {
@@ -50608,7 +50660,7 @@
     "deger": 3.9,
     "ay": "2025-08"
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "n": 14,
    "sozlesmeler": [
     {
@@ -50766,8 +50818,8 @@
       "yy_toplam": -43.4
      }
     },
-    "bugun": "2026-10-22",
-    "mmdd": "10-22"
+    "bugun": "2026-10-23",
+    "mmdd": "10-23"
    }
   },
   "kap_yeni_is_altny": {
@@ -50872,7 +50924,7 @@
     "deger": 134.1,
     "ay": "2026-07"
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "n": 28,
    "sozlesmeler": [
     {
@@ -51030,8 +51082,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-10-22",
-    "mmdd": "10-22"
+    "bugun": "2026-10-23",
+    "mmdd": "10-23"
    }
   },
   "kap_yeni_is_glrmk": {
@@ -51133,7 +51185,7 @@
     "deger": 440.5,
     "ay": "2026-03"
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "n": 19,
    "sozlesmeler": [
     {
@@ -51279,8 +51331,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-10-22",
-    "mmdd": "10-22"
+    "bugun": "2026-10-23",
+    "mmdd": "10-23"
    }
   },
   "kap_yeni_is_asels": {
@@ -51332,7 +51384,7 @@
     "tarih": "2026-10-08",
     "deger": 125
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "n": 39,
    "gizli": true
   },
@@ -51352,7 +51404,7 @@
     "tarih": "2026-07",
     "deger": 334
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "n": 1,
    "_not": "Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar)."
   },
@@ -51380,14 +51432,19 @@
      "2026-10-22",
      582.5,
      "21 Oct 2026"
+    ],
+    [
+     "2026-10-23",
+     585,
+     "22 Oct 2026"
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 582.5,
-    "etiket": "21 Oct 2026"
+    "tarih": "2026-10-23",
+    "deger": 585,
+    "etiket": "22 Oct 2026"
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
   },
   "hurda_lme": {
@@ -51415,14 +51472,19 @@
      "2026-10-22",
      391.5,
      "21 Oct 2026"
+    ],
+    [
+     "2026-10-23",
+     391.5,
+     "22 Oct 2026"
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
+    "tarih": "2026-10-23",
     "deger": 391.5,
-    "etiket": "21 Oct 2026"
+    "etiket": "22 Oct 2026"
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
   },
   "metal_marji_tr": {
@@ -51446,13 +51508,17 @@
     [
      "2026-10-22",
      191
+    ],
+    [
+     "2026-10-23",
+     193.5
     ]
    ],
    "son": {
-    "tarih": "2026-10-22",
-    "deger": 191
+    "tarih": "2026-10-23",
+    "deger": 193.5
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur."
   },
   "kardemir_kutuk_usd": {
@@ -51619,7 +51685,7 @@
     "2026-07": 518.23,
     "2026-08": 527.26,
     "2026-09": 535,
-    "2026-10": 548.64
+    "2026-10": 549.35
    },
    "son": {
     "tarih": "2026-10-13",
@@ -51689,7 +51755,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_nervurlu_tl": {
    "ad": "Kardemir inşaat demiri liste fiyatı — Ø12-32 (TL/t, KDV hariç)",
@@ -51853,7 +51919,7 @@
     "2026-07": 26790.32,
     "2026-08": 27595.32,
     "2026-09": 29845,
-    "2026-10": 30510
+    "2026-10": 30496.96
    },
    "son": {
     "tarih": "2026-10-21",
@@ -51923,7 +51989,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_nervurlu_usd": {
    "ad": "Kardemir inşaat demiri liste fiyatı — Ø12-32 ($/t, günün kuruyla)",
@@ -52088,11 +52154,11 @@
     "2026-07": 569,
     "2026-08": 576.49,
     "2026-09": 612.99,
-    "2026-10": 618.13
+    "2026-10": 617.66
    },
    "son": {
     "tarih": "2026-10-21",
-    "deger": 609.11,
+    "deger": 608.8,
     "orijinal": "30210 TL"
    },
    "adimlar": [
@@ -52158,7 +52224,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_profil_usd": {
    "ad": "Kardemir profil liste fiyatı — IPE/NPI/NPU 180-200 Std ($/t)",
@@ -52393,7 +52459,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_filmasin_usd": {
    "ad": "Kardemir filmaşin liste fiyatı — Ø5.5 SAE1008 ($/t)",
@@ -52521,7 +52587,7 @@
     "2026-07": 600,
     "2026-08": 603.87,
     "2026-09": 638.33,
-    "2026-10": 653.18
+    "2026-10": 652.39
    },
    "son": {
     "tarih": "2026-10-21",
@@ -52591,7 +52657,7 @@
     ]
    ],
    "ilk": "2016-11-14",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_hurda_tl": {
    "ad": "Kardemir hurda alım fiyatı — Özel Ekstra (TL/t)",
@@ -52825,7 +52891,7 @@
     ]
    ],
    "ilk": "2014-02-11",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_hurda_usd": {
    "ad": "Kardemir hurda alım fiyatı — Özel Ekstra ($/t, günün kuruyla)",
@@ -52989,7 +53055,7 @@
     "2026-07": 379.89,
     "2026-08": 371.15,
     "2026-09": 392.76,
-    "2026-10": 407.63
+    "2026-10": 407.49
    },
    "son": {
     "tarih": "2026-09-25",
@@ -53059,7 +53125,7 @@
     ]
    ],
    "ilk": "2014-02-11",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_marj_hurda_usd": {
    "ad": "Kardemir yurt içi metal marjı — kütük liste − hurda Özel Ekstra ($/t)",
@@ -53223,14 +53289,14 @@
     "2026-07": 138.34,
     "2026-08": 156.11,
     "2026-09": 142.24,
-    "2026-10": 141.01
+    "2026-10": 141.86
    },
    "son": {
     "tarih": "2026-10-13",
     "deger": 153.96,
     "bilesen": "565 − 411.04"
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kardemir_spread_cevher_usd": {
    "ad": "Kardemir kütük − demir cevheri (1,6 t) — kok hariç kısmi spread ($/t)",
@@ -53389,7 +53455,7 @@
     "deger": 408.68,
     "bilesen": "565 − 1.6×97.7"
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "kcaer_hadde_spread_usd": {
    "ad": "Haddeleme spread'i — Kardemir profil − kütük ($/t)",
@@ -53554,14 +53620,14 @@
     "2026-07": 153.71,
     "2026-08": 142.74,
     "2026-09": 135,
-    "2026-10": 121.36
+    "2026-10": 120.65
    },
    "son": {
     "tarih": "2026-10-13",
     "deger": 105,
     "bilesen": "670 − 565"
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "sut_endeks": {
    "ad": "SUT fiyat endeksi — SGK Sağlık Uygulama Tebliği genel fiyat artışları (2020-12=100)",
@@ -53687,7 +53753,7 @@
      "kaynak": "OTOMATİK: SGK İşlenmiş Güncel SUT 2025-12-10 — EK2B medyan +%19.98 · EK2C medyan +%30"
     }
    ],
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "SGK'nın özel hastanelere ödediği fiyat listesinin (EK-2/A muayene · EK-2/B hizmet başı · EK-2/C paket) GENEL artışlarından kurulan basamak endeksi; kalem bazlı SHFK düzeltmeleri alınmaz. Oran RG metninde yazmaz → 2026'dan itibaren SGK'nın yayımladığı EK-2B/EK-2C listeleri sürüm sürüm kıyaslanır (medyan değişim, §475); öncesi MLP Care'in açıkladığı etkin oran. İlave ücret tavanı SUT'un %200'ü → SUT artışı SGK ödemesini ve hastadan alınabilecek farkı birlikte yükseltir. Son artıştan (2026-01-01, +%25) bu yana TÜFE +%24.3 (2026-09) → SUT reel %-19.6.",
    "erozyon": {
     "ay": "2026-09",
@@ -53779,7 +53845,7 @@
     "tarih": "2026-09",
     "deger": 69.01
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "SGK hastasının özel hastane için reel fiyatı: 100'ün altı = SUT, 2020 sonuna göre enflasyonun gerisinde. Artış ayında sıçrar, aylar geçtikçe erir (testere dişi) — çeyrek ortalaması okunur. MLP'de SGK payı hasılatın küçük kısmı; asıl marj sürücüsü ödeme tipi miksi (özel sigortaya kayış)."
   },
   "ttb_endeks": {
@@ -53888,7 +53954,7 @@
      "kaynak": "TTB Ara 2025 kararı (MLP 2025 notu)"
     }
    ],
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Türk Tabipleri Birliği Özel Hekimlik Uygulamaları katsayısı: özel sağlık sigortası ve cepten ödemelerde hekim ücretinin çapası → MLP yurt içi özel fiyatlamasının vekili. TÜFE'nin üstünde arttı (2023–26). Son artıştan (2026-01-01) bu yana TÜFE +%24.3."
   },
   "ttb_reel": {
@@ -53951,7 +54017,7 @@
     "tarih": "2026-09",
     "deger": 141.67
    },
-   "guncelleme": "2026-10-22",
+   "guncelleme": "2026-10-23",
    "_not": "Özel fiyatlamanın reel seyri; 100'ün üstü = TTB tarifesi enflasyonun önünde."
   },
   "ges_polisilikon_rmb": {
@@ -54204,7 +54270,7 @@
     "yillik_degisim": -23.1
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_polisilikon_usd": {
    "ad": "Polisilikon — Çin dışı menşe ($/kg)",
@@ -54455,7 +54521,7 @@
     "yillik_degisim": 2.8
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_wafer_rmb": {
    "ad": "Wafer — n-tipi 182 mm (RMB/adet)",
@@ -54704,7 +54770,7 @@
     "yillik_degisim": -25.9
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_hucre_usd": {
    "ad": "Hücre — TOPCon 182 mm, Çin ihraç ($/W)",
@@ -54956,7 +55022,7 @@
     "yillik_degisim": 9.5
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_hucre_rmb": {
    "ad": "Hücre — TOPCon 182 mm, Çin iç piyasa (RMB/W)",
@@ -55205,7 +55271,7 @@
     "yillik_degisim": -4.8
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_modul_usd": {
    "ad": "Modül — TOPCon çift yüzlü, Çin dışı piyasalar ($/W)",
@@ -55454,7 +55520,7 @@
     "yillik_degisim": 29.5
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_modul_rmb": {
    "ad": "Modül — TOPCon çift yüzlü, Çin iç piyasa (RMB/W)",
@@ -55703,7 +55769,7 @@
     "yillik_degisim": 3.8
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_modul_avrupa_usd": {
    "ad": "Modül — TOPCon, Avrupa projeleri, Çin üretimi ($/W)",
@@ -55955,7 +56021,7 @@
     "yillik_degisim": 33.7
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_modul_abd_usd": {
    "ad": "Modül — TOPCon, ABD projeleri ($/W)",
@@ -56206,7 +56272,7 @@
     "yillik_degisim": 0
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_modul_cin_usd": {
    "ad": "Modül — TOPCon, Çin iç piyasa ($/W, RMB ÷ USD/CNY)",
@@ -56458,7 +56524,7 @@
     "yillik_degisim": 10.3
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_montaj_makasi_usd": {
    "ad": "GES montaj makası — modül − hücre ($/W)",
@@ -56709,7 +56775,7 @@
     "yillik_degisim": 47.8
    },
    "ilk": "2025-01-15",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_pvi_polisilikon_usd": {
    "ad": "Polisilikon PV grade 9N — PVinsights ($/kg)",
@@ -56894,7 +56960,7 @@
     "yillik_degisim": -22
    },
    "ilk": "2024-02-21",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_pvi_wafer_usd": {
    "ad": "Wafer N-mono 182,2×183,75 mm — PVinsights ($/adet)",
@@ -57081,7 +57147,7 @@
     "yillik_degisim": -11.4
    },
    "ilk": "2024-02-21",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_pvi_hucre_usd": {
    "ad": "Hücre N-mono 182 mm — PVinsights ($/W)",
@@ -57266,7 +57332,7 @@
     "yillik_degisim": 11.1
    },
    "ilk": "2024-02-21",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_pvi_modul_usd": {
    "ad": "Modül N-mono 182 mm 580/625Wp — PVinsights ($/W)",
@@ -57451,7 +57517,7 @@
     "yillik_degisim": 14.1
    },
    "ilk": "2024-02-21",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ges_pvi_montaj_makasi_usd": {
    "ad": "GES montaj makası — modül − hücre, PVinsights ($/W)",
@@ -57637,7 +57703,7 @@
     "yillik_degisim": 16.7
    },
    "ilk": "2024-02-21",
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "tkfen_backlog": {
    "ad": "Tekfen taahhüt bakiye iş (backlog) — kalan işlerin parasal toplamı (mn $, çeyrek sonu; elle)",
@@ -59692,14 +59758,14 @@
     ],
     [
      "2026-10-22",
-     81.41
+     80.79
     ]
    ],
    "son": {
     "tarih": "2026-10-22",
-    "deger": 81.41
+    "deger": 80.79
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "plastik_uretim": {
    "ad": "Sanayi üretim endeksi — C20.16 birincil formda plastik hammadde (2021=100, takvim etkisinden arındırılmış) §485",
@@ -59917,7 +59983,7 @@
     "tarih": "2026-08",
     "deger": 98.56
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "konut_ilk_el": {
    "ad": "Konut satışı — ilk el, Türkiye (TÜİK, adet/ay) §485",
@@ -60137,7 +60203,7 @@
     "tarih": "2026-09",
     "deger": 51519
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "konut_toplam": {
    "ad": "Konut satışı — toplam, Türkiye (TÜİK, adet/ay) §485",
@@ -60357,7 +60423,7 @@
     "tarih": "2026-09",
     "deger": 142390
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "konut_ipotekli": {
    "ad": "Konut satışı — ipotekli (krediyle), Türkiye (TÜİK, adet/ay) §485",
@@ -60577,7 +60643,7 @@
     "tarih": "2026-09",
     "deger": 23397
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "katilim_kar_payi": {
    "ad": "TL katılma hesapları kâr payı oranı — toplam, akım (%, haftalık Cuma) §485",
@@ -61796,13 +61862,17 @@
     [
      "2026-10-09",
      42.96
+    ],
+    [
+     "2026-10-16",
+     42.35
     ]
    ],
    "son": {
-    "tarih": "2026-10-09",
-    "deger": 42.96
+    "tarih": "2026-10-16",
+    "deger": 42.35
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "asgari_ucret": {
    "ad": "Asgari ücret — brüt aylık (TL, yürürlükteki tutar; adım)",
@@ -62306,7 +62376,7 @@
     "tarih": "2026-08",
     "deger": 2449.67
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ime_konut_malzeme": {
    "ad": "İnşaat maliyet endeksi — ikamet amaçlı binalar, malzeme (2015=100)",
@@ -62524,7 +62594,7 @@
     "tarih": "2026-08",
     "deger": 2212.4
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ime_konut_iscilik": {
    "ad": "İnşaat maliyet endeksi — ikamet amaçlı binalar, işçilik (2015=100)",
@@ -62742,7 +62812,7 @@
     "tarih": "2026-08",
     "deger": 2981.02
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ime_insaat": {
    "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)",
@@ -62962,7 +63032,7 @@
     "tarih": "2026-08",
     "deger": 2501.4
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ekgyo_kfe_ime": {
    "ad": "Konut fiyatı ÷ konut inşaat maliyeti (KFE ÷ İME ikamet, 2021-01=100)",
@@ -63078,7 +63148,7 @@
     "tarih": "2026-08",
     "deger": 151.3258
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ufe_plastik": {
    "ad": "Yİ-ÜFE 20.16 birincil formda plastik (TÜİK, 2003=100)",
@@ -63502,7 +63572,7 @@
     "tarih": "2026-09",
     "deger": 6946.05
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ufe_cimento": {
    "ad": "Yİ-ÜFE 23.51 çimento (TÜİK)",
@@ -63927,7 +63997,7 @@
     "tarih": "2026-09",
     "deger": 6482.69
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ufe_makarna": {
    "ad": "Yİ-ÜFE 10.73 makarna, şehriye, kuskus (TÜİK)",
@@ -64351,7 +64421,7 @@
     "tarih": "2026-09",
     "deger": 5356.46
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ufe_celik_2410": {
    "ad": "Yİ-ÜFE 24.10 ana demir-çelik ürünleri (TÜİK)",
@@ -64777,7 +64847,7 @@
     "tarih": "2026-09",
     "deger": 6926.89
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ufe_kumas": {
    "ad": "Yİ-ÜFE 13.20 dokuma kumaş (TÜİK)",
@@ -65201,7 +65271,7 @@
     "tarih": "2026-09",
     "deger": 3692.83
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ufe_gubre_2015": {
    "ad": "Yİ-ÜFE 20.15 kimyasal gübre ve azot bileşikleri (TÜİK)",
@@ -65626,7 +65696,7 @@
     "tarih": "2026-09",
     "deger": 10127.37
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ydufe_plastik": {
    "ad": "YD-ÜFE 20.16 plastik — ihracat fiyatı (TÜİK)",
@@ -65931,7 +66001,7 @@
     "tarih": "2026-09",
     "deger": 3531.22
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ydufe_cimento": {
    "ad": "YD-ÜFE 23.51 çimento — ihracat fiyatı (TÜİK)",
@@ -66237,7 +66307,7 @@
     "tarih": "2026-09",
     "deger": 3223.24
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ydufe_makarna": {
    "ad": "YD-ÜFE 10.73 makarna — ihracat fiyatı (TÜİK)",
@@ -66542,7 +66612,7 @@
     "tarih": "2026-09",
     "deger": 2770
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "ydufe_celik": {
    "ad": "YD-ÜFE 24.10 demir-çelik — ihracat fiyatı (TÜİK)",
@@ -66849,7 +66919,7 @@
     "tarih": "2026-09",
     "deger": 5615.64
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "bugday_tl": {
    "ad": "Buğday — çiftçi satış fiyatı (TÜİK tarım ÜFE madde fiyatı, TL/kg)",
@@ -66916,7 +66986,7 @@
     "tarih": "2026-09",
     "deger": 15.82
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "gubre_girdi": {
    "ad": "Tarımsal girdi fiyat endeksi — gübre ve toprak geliştiriciler (TÜİK, 2020=100)",
@@ -67050,7 +67120,7 @@
     "tarih": "2026-08",
     "deger": 1340.19
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "perakende_gida_hacim": {
    "ad": "Perakende satış hacim endeksi — gıda, içecek, tütün (TÜİK, takvim arındırılmış)",
@@ -67131,7 +67201,7 @@
     "tarih": "2026-07",
     "deger": 172.3334
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "perakende_giyim_hacim": {
    "ad": "Perakende satış hacim endeksi — tekstil, giyim, ayakkabı (TÜİK, takvim arındırılmış)",
@@ -67212,7 +67282,7 @@
     "tarih": "2026-07",
     "deger": 154.5743
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "insaat_uretim_bina": {
    "ad": "İnşaat üretim endeksi — binalar (TÜİK, takvim arındırılmış)",
@@ -67461,7 +67531,7 @@
     "tarih": "2026-07",
     "deger": 131.8919
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "obams_makas": {
    "ad": "Makarna fiyatı ÷ buğday fiyatı — Yİ-ÜFE 10.73 ÷ buğday TL/kg (2024-01=100)",
@@ -67528,7 +67598,7 @@
     "tarih": "2026-09",
     "deger": 91.7384
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "petkm_ufe_makas": {
    "ad": "Plastik yurt içi fiyatı ÷ Brent (TL) — Yİ-ÜFE 20.16 ÷ (Brent $ × USDTRY) (2021-09=100)",
@@ -67634,7 +67704,7 @@
     "tarih": "2026-09",
     "deger": 70.0021
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "pp_hdpe_film_eur": {
    "ad": "HDPE film — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -67985,7 +68055,7 @@
     "tarih": "2026-10",
     "deger": 1.43
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "pp_ldpe_film_eur": {
    "ad": "LDPE film — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -68336,7 +68406,7 @@
     "tarih": "2026-10",
     "deger": 1.63
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "pp_lldpe_eur": {
    "ad": "LLDPE standart — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -68687,7 +68757,7 @@
     "tarih": "2026-10",
     "deger": 1.48
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "pp_pp_homo_eur": {
    "ad": "PP homo — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -69038,7 +69108,7 @@
     "tarih": "2026-10",
     "deger": 1.61
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "pe_pp": {
    "ad": "PE/PP Avrupa reçine fiyatı — HDPE film, LDPE film, LLDPE, PP homo ortalaması ($/t)",
@@ -69291,7 +69361,7 @@
     "2026-06": 2171.972,
     "2026-08": 1779.3232,
     "2026-09": 1740.1862,
-    "2026-10": 1724.9693
+    "2026-10": 1724.5866
    },
    "ceyreklik": {
     "2006Q2": 1415.5273,
@@ -69388,9 +69458,9 @@
    },
    "son": {
     "tarih": "2026-10",
-    "deger": 1724.9693
+    "deger": 1724.5866
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "petkm_polimer_makas_usd": {
    "ad": "Polimer − ham petrol makası — PE/PP Avrupa − 7,5 × Brent ($/t)",
@@ -69537,7 +69607,7 @@
     "2026-06": 1531.472,
     "2026-08": 1097.5732,
     "2026-09": 864.1862,
-    "2026-10": 934.1084
+    "2026-10": 928.9072
    },
    "ceyreklik": {
     "2015Q1": 926.525,
@@ -69593,9 +69663,9 @@
    },
    "son": {
     "tarih": "2026-10",
-    "deger": 934.1084
+    "deger": 928.9072
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dce_lldpe_cny": {
    "ad": "DCE LLDPE sürekli vadeli — Çin iç piyasa (CNY/t, ay ort.)",
@@ -69721,7 +69791,7 @@
     "2016-10": 9490.3125,
     "2016-11": 9767.0455,
     "2016-12": 10042.0455,
-    "2017-01": 10015.2778,
+    "2017-01": 10019.2105,
     "2017-02": 10047.7778,
     "2017-03": 9349.3478,
     "2017-04": 8946.1111,
@@ -69748,70 +69818,97 @@
     "2019-01": 8647.0455,
     "2019-02": 8626.3333,
     "2019-03": 8536.1905,
-    "2019-04": 8391.9048,
+    "2019-04": 8396.75,
     "2019-05": 7911.5,
     "2019-06": 7668.6842,
     "2019-07": 7837.6087,
-    "2019-08": 7401.3636,
+    "2019-08": 7416.1364,
     "2019-09": 7455.75,
     "2019-10": 7341.6667,
     "2019-11": 7186.1905,
-    "2019-12": 7289.5455,
+    "2019-12": 7290.9091,
     "2020-01": 7344.375,
     "2020-02": 6864.5,
-    "2020-03": 6428.1818,
+    "2020-03": 6417.2727,
     "2020-04": 6059.2857,
     "2020-05": 6407.2222,
     "2020-06": 6735,
     "2020-07": 7108.6957,
-    "2020-08": 7165,
+    "2020-08": 7172.1429,
     "2020-09": 7402.7273,
-    "2020-10": 7323.4375,
+    "2020-10": 7295.625,
     "2020-11": 7647.619,
-    "2020-12": 7810.2174,
+    "2020-12": 7809.7826,
     "2021-01": 7707,
     "2021-02": 8369.6667,
     "2021-03": 8806.9565,
-    "2021-04": 8330,
-    "2021-05": 8023.4211,
+    "2021-04": 8330.7143,
+    "2021-05": 8022.5,
     "2021-06": 7830.4762,
     "2021-07": 8279.0909,
-    "2021-08": 8192.9545,
+    "2021-08": 8194.5455,
     "2021-09": 8778.75,
-    "2021-10": 9388.2353,
+    "2021-10": 9355.625,
     "2021-11": 8792.9545,
-    "2021-12": 8482.2609,
+    "2021-12": 8496.0435,
     "2022-01": 8827.1579,
     "2022-02": 8916.125,
     "2022-03": 9148,
-    "2022-04": 8889.95,
+    "2022-04": 8880.6316,
     "2022-05": 8690,
     "2022-06": 8770.6667,
     "2022-07": 8030.4286,
-    "2022-08": 7744.3043,
+    "2022-08": 7755.7391,
     "2022-09": 8041.4762,
     "2022-10": 7837.8125,
     "2022-11": 7862.5455,
-    "2022-12": 8116.5455,
+    "2022-12": 8117,
     "2023-01": 8232.0625,
     "2023-02": 8252.95,
-    "2023-03": 8157.6087,
-    "2023-04": 8155.5263,
+    "2023-03": 8157.8261,
+    "2023-04": 8158.7368,
     "2023-05": 7741.6,
     "2023-06": 7787.1,
     "2023-07": 8057.9048,
-    "2023-08": 8230.4348,
+    "2023-08": 8232.913,
     "2023-09": 8355.05,
     "2023-10": 8038.3529,
     "2023-11": 8065.6364,
-    "2023-12": 8113.0476,
+    "2023-12": 8111.4762,
     "2024-01": 8166.9545,
-    "2024-02": 8168.4,
+    "2024-02": 8178.4667,
     "2024-03": 8224.0952,
-    "2024-04": 8398.05,
+    "2024-04": 8392.8,
     "2024-05": 8548.3,
-    "2024-06": 8540.7778,
-    "2024-07": 8479.0769
+    "2024-06": 8540.8421,
+    "2024-07": 8400.2609,
+    "2024-08": 8146.0455,
+    "2024-09": 7963.6316,
+    "2024-10": 8174.4444,
+    "2024-11": 8305.381,
+    "2024-12": 8228.9545,
+    "2025-01": 7878.2222,
+    "2025-02": 7833.1667,
+    "2025-03": 7773.8571,
+    "2025-04": 7263.5714,
+    "2025-05": 7112.8421,
+    "2025-06": 7227.55,
+    "2025-07": 7299.4348,
+    "2025-08": 7339.6667,
+    "2025-09": 7201.3636,
+    "2025-10": 6957.5882,
+    "2025-11": 6801.25,
+    "2025-12": 6534.5652,
+    "2026-01": 6764.55,
+    "2026-02": 6769.5,
+    "2026-03": 8304.2727,
+    "2026-04": 8332.381,
+    "2026-05": 8034.6667,
+    "2026-06": 7522.8095,
+    "2026-07": 7478.4348,
+    "2026-08": 7785,
+    "2026-09": 8350.1429,
+    "2026-10": 8763.6364
    },
    "ceyreklik": {
     "2007Q3": 12536.0109,
@@ -69852,7 +69949,7 @@
     "2016Q2": 8353.449,
     "2016Q3": 8906.2039,
     "2016Q4": 9766.4678,
-    "2017Q1": 9804.1345,
+    "2017Q1": 9805.4454,
     "2017Q2": 8948.2946,
     "2017Q3": 9635.6384,
     "2017Q4": 9640.4074,
@@ -69861,27 +69958,36 @@
     "2018Q3": 9446.8473,
     "2018Q4": 8882.6498,
     "2019Q1": 8603.1898,
-    "2019Q2": 7990.6963,
-    "2019Q3": 7564.9074,
-    "2019Q4": 7272.4676,
-    "2020Q1": 6879.0189,
+    "2019Q2": 7992.3114,
+    "2019Q3": 7569.8317,
+    "2019Q4": 7272.9221,
+    "2020Q1": 6875.3826,
     "2020Q2": 6400.5026,
-    "2020Q3": 7225.4743,
-    "2020Q4": 7593.758,
+    "2020Q3": 7227.8553,
+    "2020Q4": 7584.3422,
     "2021Q1": 8294.5411,
-    "2021Q2": 8061.2991,
-    "2021Q3": 8416.9318,
-    "2021Q4": 8887.8169,
+    "2021Q2": 8061.2302,
+    "2021Q3": 8417.4621,
+    "2021Q4": 8881.541,
     "2022Q1": 8963.761,
-    "2022Q2": 8783.5389,
-    "2022Q3": 7938.7364,
-    "2022Q4": 7938.9678,
-    "2023Q1": 8214.2071,
-    "2023Q2": 7894.7421,
-    "2023Q3": 8214.4632,
-    "2023Q4": 8072.3456,
-    "2024Q1": 8186.4832,
-    "2024Q2": 8495.7093
+    "2022Q2": 8780.4328,
+    "2022Q3": 7942.548,
+    "2022Q4": 7939.1193,
+    "2023Q1": 8214.2795,
+    "2023Q2": 7895.8123,
+    "2023Q3": 8215.2893,
+    "2023Q4": 8071.8218,
+    "2024Q1": 8189.8388,
+    "2024Q2": 8493.9807,
+    "2024Q3": 8169.9793,
+    "2024Q4": 8236.26,
+    "2025Q1": 7828.4153,
+    "2025Q2": 7201.3212,
+    "2025Q3": 7280.155,
+    "2025Q4": 6764.4678,
+    "2026Q1": 7279.4409,
+    "2026Q2": 7963.2857,
+    "2026Q3": 7871.1926
    },
    "yillik": {
     "2008": 12389.9006,
@@ -69893,21 +69999,23 @@
     "2014": 10610.8913,
     "2015": 8822.9629,
     "2016": 8903.3053,
-    "2017": 9507.1187,
+    "2017": 9507.4464,
     "2018": 9301.892,
-    "2019": 7857.8153,
-    "2020": 7024.6885,
-    "2021": 8415.1472,
-    "2022": 8406.251,
-    "2023": 8098.9395
+    "2019": 7859.5637,
+    "2020": 7022.0207,
+    "2021": 8413.6936,
+    "2022": 8406.4653,
+    "2023": 8099.3007,
+    "2024": 8272.5147,
+    "2025": 7268.5898
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 8479,
-    "gun": "2024-07-17",
-    "kapanis": 8383
+    "tarih": "2026-10",
+    "deger": 8764,
+    "gun": "2026-10-22",
+    "kapanis": 8725
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dce_lldpe_usd": {
    "ad": "DCE LLDPE sürekli vadeli — Çin iç piyasa ($/t, ay ort.)",
@@ -70033,7 +70141,7 @@
     "2016-10": 1399.0495,
     "2016-11": 1416.068,
     "2016-12": 1446.1888,
-    "2017-01": 1455.5609,
+    "2017-01": 1456.1324,
     "2017-02": 1462.5373,
     "2017-03": 1354.87,
     "2017-04": 1304.8967,
@@ -70060,70 +70168,97 @@
     "2019-01": 1287.625,
     "2019-02": 1290.1698,
     "2019-03": 1269.9357,
-    "2019-04": 1216.0595,
+    "2019-04": 1216.7616,
     "2019-05": 1152.0875,
     "2019-06": 1114.0514,
     "2019-07": 1097.1511,
-    "2019-08": 1039.2546,
+    "2019-08": 1041.3289,
     "2019-09": 1056.8936,
     "2019-10": 1040.7216,
     "2019-11": 1021.9851,
-    "2019-12": 1043.4953,
+    "2019-12": 1043.6905,
     "2020-01": 1058.9234,
     "2020-02": 981.9193,
-    "2020-03": 907.0001,
+    "2020-03": 905.4609,
     "2020-04": 849.0794,
     "2020-05": 905.026,
     "2020-06": 961.1405,
     "2020-07": 1035.5888,
-    "2020-08": 1051.2956,
+    "2020-08": 1052.3436,
     "2020-09": 1102.5807,
-    "2020-10": 1090.7711,
+    "2020-10": 1086.6286,
     "2020-11": 1162.9591,
-    "2020-12": 1197.482,
+    "2020-12": 1197.4154,
     "2021-01": 1199.2344,
     "2021-02": 1292.0339,
     "2021-03": 1350.5323,
-    "2021-04": 1308.2262,
-    "2021-05": 1241.4199,
+    "2021-04": 1308.3384,
+    "2021-05": 1241.2774,
     "2021-06": 1212.0542,
     "2021-07": 1280.5821,
-    "2021-08": 1266.3773,
+    "2021-08": 1266.6232,
     "2021-09": 1370.6731,
-    "2021-10": 1465.8353,
+    "2021-10": 1460.7437,
     "2021-11": 1376.6955,
-    "2021-12": 1331.1563,
+    "2021-12": 1333.3193,
     "2022-01": 1389.8848,
     "2022-02": 1411.6727,
     "2022-03": 1412.415,
-    "2022-04": 1334.7672,
+    "2022-04": 1333.3681,
     "2022-05": 1297.0536,
     "2022-06": 1300.6684,
     "2022-07": 1162.0114,
-    "2022-08": 1087.0877,
+    "2022-08": 1088.6929,
     "2022-09": 1108.955,
     "2022-10": 1080.8689,
     "2022-11": 1098.2129,
-    "2022-12": 1176.7715,
+    "2022-12": 1176.8374,
     "2023-01": 1219.9625,
     "2023-02": 1188.518,
-    "2023-03": 1183.8492,
-    "2023-04": 1152.0732,
+    "2023-03": 1183.8807,
+    "2023-04": 1152.5267,
     "2023-05": 1067.5418,
     "2023-06": 1096.3423,
     "2023-07": 1106.308,
-    "2023-08": 1128.3533,
+    "2023-08": 1128.6931,
     "2023-09": 1142.6335,
     "2023-10": 1099.3221,
     "2023-11": 1139.3912,
-    "2023-12": 1147.7587,
+    "2023-12": 1147.5364,
     "2024-01": 1151.2319,
-    "2024-02": 1135.1306,
+    "2024-02": 1136.5295,
     "2024-03": 1137.1656,
-    "2024-04": 1160.994,
+    "2024-04": 1160.2682,
     "2024-05": 1176.2852,
-    "2024-06": 1177.9246,
-    "2024-07": 1194.9936
+    "2024-06": 1177.9335,
+    "2024-07": 1183.8857,
+    "2024-08": 1162.0109,
+    "2024-09": 1119.3051,
+    "2024-10": 1148.9352,
+    "2024-11": 1146.6928,
+    "2024-12": 1127.5475,
+    "2025-01": 1097.1079,
+    "2025-02": 1075.2017,
+    "2025-03": 1069.9097,
+    "2025-04": 1008.3112,
+    "2025-05": 991.7377,
+    "2025-06": 1007.1275,
+    "2025-07": 1020.4718,
+    "2025-08": 1030.9389,
+    "2025-09": 1012.8785,
+    "2025-10": 978.5913,
+    "2025-11": 961.1987,
+    "2025-12": 934.0297,
+    "2026-01": 973.5967,
+    "2026-02": 989.5628,
+    "2026-03": 1207.9733,
+    "2026-04": 1229.0554,
+    "2026-05": 1182.6817,
+    "2026-06": 1113.6653,
+    "2026-07": 1111.8696,
+    "2026-08": 1161.4202,
+    "2026-09": 1250.4145,
+    "2026-10": 1313.5931
    },
    "ceyreklik": {
     "2007Q3": 1672.0354,
@@ -70164,7 +70299,7 @@
     "2016Q2": 1263.0149,
     "2016Q3": 1327.3454,
     "2016Q4": 1420.4354,
-    "2017Q1": 1424.3227,
+    "2017Q1": 1424.5132,
     "2017Q2": 1317.2432,
     "2017Q3": 1452.2484,
     "2017Q4": 1463.9339,
@@ -70173,27 +70308,36 @@
     "2018Q3": 1370.685,
     "2018Q4": 1281.8509,
     "2019Q1": 1282.5768,
-    "2019Q2": 1160.7328,
-    "2019Q3": 1064.4331,
-    "2019Q4": 1035.4007,
-    "2020Q1": 982.6143,
+    "2019Q2": 1160.9668,
+    "2019Q3": 1065.1245,
+    "2019Q4": 1035.4657,
+    "2020Q1": 982.1012,
     "2020Q2": 905.082,
-    "2020Q3": 1063.155,
-    "2020Q4": 1150.4041,
+    "2020Q3": 1063.5044,
+    "2020Q4": 1149.001,
     "2021Q1": 1280.6002,
-    "2021Q2": 1253.9001,
-    "2021Q3": 1305.8775,
-    "2021Q4": 1391.229,
+    "2021Q2": 1253.89,
+    "2021Q3": 1305.9595,
+    "2021Q4": 1390.2528,
     "2022Q1": 1404.6575,
-    "2022Q2": 1310.8297,
-    "2022Q3": 1119.3514,
-    "2022Q4": 1118.6178,
-    "2023Q1": 1197.4432,
-    "2023Q2": 1105.3191,
-    "2023Q3": 1125.7649,
-    "2023Q4": 1128.824,
-    "2024Q1": 1141.176,
-    "2024Q2": 1171.7346
+    "2022Q2": 1310.3634,
+    "2022Q3": 1119.8864,
+    "2022Q4": 1118.6397,
+    "2023Q1": 1197.4537,
+    "2023Q2": 1105.4703,
+    "2023Q3": 1125.8782,
+    "2023Q4": 1128.7499,
+    "2024Q1": 1141.6423,
+    "2024Q2": 1171.4956,
+    "2024Q3": 1155.0672,
+    "2024Q4": 1141.0585,
+    "2025Q1": 1080.7398,
+    "2025Q2": 1002.3921,
+    "2025Q3": 1021.4297,
+    "2025Q4": 957.9399,
+    "2026Q1": 1057.0443,
+    "2026Q2": 1175.1341,
+    "2026Q3": 1174.5681
    },
    "yillik": {
     "2008": 1793.1093,
@@ -70205,21 +70349,23 @@
     "2014": 1724.6441,
     "2015": 1403.3067,
     "2016": 1331.4923,
-    "2017": 1414.4371,
+    "2017": 1414.4847,
     "2018": 1393.7092,
-    "2019": 1135.7859,
-    "2020": 1025.3138,
-    "2021": 1307.9017,
-    "2022": 1238.3641,
-    "2023": 1139.3378
+    "2019": 1136.0335,
+    "2020": 1024.9221,
+    "2021": 1307.6756,
+    "2022": 1238.3868,
+    "2023": 1139.388,
+    "2024": 1152.3159,
+    "2025": 1015.6254
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 1195,
-    "gun": "2024-07-17",
-    "kapanis": 8383
+    "tarih": "2026-10",
+    "deger": 1314,
+    "gun": "2026-10-22",
+    "kapanis": 8725
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dce_pp_cny": {
    "ad": "DCE PP sürekli vadeli — Çin iç piyasa (CNY/t, ay ort.)",
@@ -70266,7 +70412,7 @@
     "2016-10": 7912.4375,
     "2016-11": 8532.9091,
     "2016-12": 9168.3182,
-    "2017-01": 8882.1667,
+    "2017-01": 8890.4737,
     "2017-02": 9044.1111,
     "2017-03": 8278.3043,
     "2017-04": 7853,
@@ -70293,70 +70439,97 @@
     "2019-01": 8715,
     "2019-02": 8733.0667,
     "2019-03": 8695.5714,
-    "2019-04": 8702.6667,
+    "2019-04": 8705.7,
     "2019-05": 8347.95,
     "2019-06": 8156.8947,
     "2019-07": 8713.4348,
-    "2019-08": 8060.4091,
+    "2019-08": 8147.4545,
     "2019-09": 8177.85,
     "2019-10": 8085.1667,
     "2019-11": 7968.0952,
-    "2019-12": 7664.7273,
+    "2019-12": 7721.3636,
     "2020-01": 7552.6875,
     "2020-02": 6946.6,
-    "2020-03": 6610.0909,
-    "2020-04": 6709.8571,
+    "2020-03": 6617.5455,
+    "2020-04": 6721.381,
     "2020-05": 7029.3889,
     "2020-06": 7423.8,
     "2020-07": 7571.8696,
-    "2020-08": 7683.7143,
+    "2020-08": 7703.4286,
     "2020-09": 7779.6364,
-    "2020-10": 7870.2353,
-    "2020-11": 8342.8095,
-    "2020-12": 8313.1739,
-    "2021-01": 8034.15,
-    "2021-02": 8672.4667,
+    "2020-10": 7825.625,
+    "2020-11": 8342.619,
+    "2020-12": 8315.1304,
+    "2021-01": 8034.1,
+    "2021-02": 8672.3333,
     "2021-03": 9171.7391,
-    "2021-04": 8642.2381,
-    "2021-05": 8595.5789,
+    "2021-04": 8659.0952,
+    "2021-05": 8602.8333,
     "2021-06": 8336.3333,
     "2021-07": 8530.4091,
-    "2021-08": 8349.0455,
+    "2021-08": 8370.7273,
     "2021-09": 8917.15,
-    "2021-10": 9433.5882,
+    "2021-10": 9388.6875,
     "2021-11": 8430.6364,
-    "2021-12": 8060.6957,
+    "2021-12": 8083.9565,
     "2022-01": 8408.2105,
     "2022-02": 8528.0625,
-    "2022-03": 9018.1304,
-    "2022-04": 8722.6,
+    "2022-03": 9018.0435,
+    "2022-04": 8715.8947,
     "2022-05": 8636.4211,
     "2022-06": 8675.2381,
     "2022-07": 8050.1905,
-    "2022-08": 7811,
+    "2022-08": 7852.913,
     "2022-09": 7941.5714,
     "2022-10": 7674.4375,
     "2022-11": 7662.4545,
-    "2022-12": 7790.1364,
+    "2022-12": 7783.4091,
     "2023-01": 7882.8125,
     "2023-02": 7900.5,
-    "2023-03": 7675.3043,
-    "2023-04": 7561.8947,
+    "2023-03": 7675.4783,
+    "2023-04": 7568.8947,
     "2023-05": 7096.35,
     "2023-06": 6987.95,
     "2023-07": 7252,
-    "2023-08": 7509.3478,
+    "2023-08": 7512.9565,
     "2023-09": 7886.95,
     "2023-10": 7493.4706,
     "2023-11": 7601.6364,
-    "2023-12": 7501.4762,
+    "2023-12": 7503.8095,
     "2024-01": 7390.5455,
-    "2024-02": 7408.9333,
+    "2024-02": 7412.0667,
     "2024-03": 7502.619,
-    "2024-04": 7595.35,
+    "2024-04": 7594.25,
     "2024-05": 7700.1,
-    "2024-06": 7711.1667,
-    "2024-07": 7736.5385
+    "2024-06": 7709.6316,
+    "2024-07": 7681.7391,
+    "2024-08": 7567.5909,
+    "2024-09": 7361.5263,
+    "2024-10": 7531.5,
+    "2024-11": 7478.5714,
+    "2024-12": 7442.5,
+    "2025-01": 7394.8889,
+    "2025-02": 7385.9444,
+    "2025-03": 7303.381,
+    "2025-04": 7153.5238,
+    "2025-05": 7008.7368,
+    "2025-06": 7062.4,
+    "2025-07": 7089.8696,
+    "2025-08": 7064,
+    "2025-09": 6926.1364,
+    "2025-10": 6642.8235,
+    "2025-11": 6429.65,
+    "2025-12": 6266.1304,
+    "2026-01": 6582.3,
+    "2026-02": 6685.0714,
+    "2026-03": 8498.1364,
+    "2026-04": 8637.7619,
+    "2026-05": 8711.9444,
+    "2026-06": 8096.2381,
+    "2026-07": 7922.3478,
+    "2026-08": 8166.2857,
+    "2026-09": 8669.1429,
+    "2026-10": 9360.8182
    },
    "ceyreklik": {
     "2014Q2": 10917.9397,
@@ -70370,7 +70543,7 @@
     "2016Q2": 6902.5389,
     "2016Q3": 7700.1795,
     "2016Q4": 8537.8883,
-    "2017Q1": 8734.8607,
+    "2017Q1": 8737.6297,
     "2017Q2": 7786.1606,
     "2017Q3": 8672.5342,
     "2017Q4": 9024.4688,
@@ -70379,46 +70552,57 @@
     "2018Q3": 9723.3008,
     "2018Q4": 9328.2305,
     "2019Q1": 8714.546,
-    "2019Q2": 8402.5038,
-    "2019Q3": 8317.2313,
-    "2019Q4": 7905.9964,
-    "2020Q1": 7036.4595,
-    "2020Q2": 7054.3487,
-    "2020Q3": 7678.4068,
-    "2020Q4": 8175.4062,
-    "2021Q1": 8626.1186,
-    "2021Q2": 8524.7168,
-    "2021Q3": 8598.8682,
-    "2021Q4": 8641.6401,
-    "2022Q1": 8651.4678,
-    "2022Q2": 8678.0864,
-    "2022Q3": 7934.254,
-    "2022Q4": 7709.0095,
-    "2023Q1": 7819.5389,
-    "2023Q2": 7215.3982,
-    "2023Q3": 7549.4326,
-    "2023Q4": 7532.1944,
-    "2024Q1": 7434.0326,
-    "2024Q2": 7668.8722
+    "2019Q2": 8403.5149,
+    "2019Q3": 8346.2464,
+    "2019Q4": 7924.8752,
+    "2020Q1": 7038.9443,
+    "2020Q2": 7058.19,
+    "2020Q3": 7684.9782,
+    "2020Q4": 8161.1248,
+    "2021Q1": 8626.0575,
+    "2021Q2": 8532.7539,
+    "2021Q3": 8606.0955,
+    "2021Q4": 8634.4268,
+    "2022Q1": 8651.4388,
+    "2022Q2": 8675.8513,
+    "2022Q3": 7948.225,
+    "2022Q4": 7706.767,
+    "2023Q1": 7819.5969,
+    "2023Q2": 7217.7316,
+    "2023Q3": 7550.6355,
+    "2023Q4": 7532.9722,
+    "2024Q1": 7435.0771,
+    "2024Q2": 7667.9939,
+    "2024Q3": 7536.9521,
+    "2024Q4": 7484.1905,
+    "2025Q1": 7361.4048,
+    "2025Q2": 7074.8869,
+    "2025Q3": 7026.6687,
+    "2025Q4": 6446.2013,
+    "2026Q1": 7255.1693,
+    "2026Q2": 8481.9815,
+    "2026Q3": 8252.5921
    },
    "yillik": {
     "2015": 7613.8647,
     "2016": 7388.141,
-    "2017": 8554.5061,
+    "2017": 8555.1983,
     "2018": 9349.9228,
-    "2019": 8335.0694,
-    "2020": 7486.1553,
-    "2021": 8597.8359,
-    "2022": 8243.2044,
-    "2023": 7529.141
+    "2019": 8347.2956,
+    "2020": 7485.8093,
+    "2021": 8599.8334,
+    "2022": 8245.5705,
+    "2023": 7530.234,
+    "2024": 7531.0534,
+    "2025": 6977.2904
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 7737,
-    "gun": "2024-07-17",
-    "kapanis": 7664
+    "tarih": "2026-10",
+    "deger": 9361,
+    "gun": "2026-10-22",
+    "kapanis": 9376
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dce_pp_usd": {
    "ad": "DCE PP sürekli vadeli — Çin iç piyasa ($/t, ay ort.)",
@@ -70465,7 +70649,7 @@
     "2016-10": 1166.4412,
     "2016-11": 1237.1376,
     "2016-12": 1320.3604,
-    "2017-01": 1290.8812,
+    "2017-01": 1292.0885,
     "2017-02": 1316.4453,
     "2017-03": 1199.6586,
     "2017-04": 1145.4535,
@@ -70492,70 +70676,97 @@
     "2019-01": 1297.744,
     "2019-02": 1306.133,
     "2019-03": 1293.647,
-    "2019-04": 1261.0916,
+    "2019-04": 1261.5311,
     "2019-05": 1215.6442,
     "2019-06": 1184.9751,
     "2019-07": 1219.754,
-    "2019-08": 1131.7938,
+    "2019-08": 1144.0162,
     "2019-09": 1159.2552,
     "2019-10": 1146.1168,
     "2019-11": 1133.1838,
-    "2019-12": 1097.2024,
+    "2019-12": 1105.3099,
     "2020-01": 1088.9582,
     "2020-02": 993.6632,
-    "2020-03": 932.667,
-    "2020-04": 940.2431,
+    "2020-03": 933.7189,
+    "2020-04": 941.8579,
     "2020-05": 992.9077,
     "2020-06": 1059.438,
     "2020-07": 1103.0636,
-    "2020-08": 1127.4047,
+    "2020-08": 1130.2973,
     "2020-09": 1158.7185,
-    "2020-10": 1172.2125,
-    "2020-11": 1268.6754,
-    "2020-12": 1274.5966,
-    "2021-01": 1250.14,
-    "2021-02": 1338.7775,
+    "2020-10": 1165.5682,
+    "2020-11": 1268.6464,
+    "2020-12": 1274.8966,
+    "2021-01": 1250.1323,
+    "2021-02": 1338.7569,
     "2021-03": 1406.4712,
-    "2021-04": 1357.2632,
-    "2021-05": 1329.9468,
+    "2021-04": 1359.9106,
+    "2021-05": 1331.0692,
     "2021-06": 1290.3543,
     "2021-07": 1319.4551,
-    "2021-08": 1290.5041,
+    "2021-08": 1293.8554,
     "2021-09": 1392.2823,
-    "2021-10": 1472.9165,
+    "2021-10": 1465.9059,
     "2021-11": 1319.9681,
-    "2021-12": 1264.9983,
+    "2021-12": 1268.6487,
     "2022-01": 1323.9192,
     "2022-02": 1350.2316,
-    "2022-03": 1392.3636,
-    "2022-04": 1309.6408,
+    "2022-03": 1392.3502,
+    "2022-04": 1308.634,
     "2022-05": 1289.0565,
     "2022-06": 1286.5165,
     "2022-07": 1164.871,
-    "2022-08": 1096.45,
+    "2022-08": 1102.3334,
     "2022-09": 1095.1777,
     "2022-10": 1058.3387,
     "2022-11": 1070.2649,
-    "2022-12": 1129.4473,
+    "2022-12": 1128.4719,
     "2023-01": 1168.2048,
     "2023-02": 1137.7612,
-    "2023-03": 1113.8562,
-    "2023-04": 1068.2151,
+    "2023-03": 1113.8814,
+    "2023-04": 1069.2039,
     "2023-05": 978.5639,
     "2023-06": 983.8303,
     "2023-07": 995.6615,
-    "2023-08": 1029.4957,
+    "2023-08": 1029.9905,
     "2023-09": 1078.6163,
     "2023-10": 1024.8042,
     "2023-11": 1073.8443,
-    "2023-12": 1061.2393,
+    "2023-12": 1061.5694,
     "2024-01": 1041.7876,
-    "2024-02": 1029.5905,
+    "2024-02": 1030.0259,
     "2024-03": 1037.4053,
-    "2024-04": 1050.0242,
+    "2024-04": 1049.8721,
     "2024-05": 1059.569,
-    "2024-06": 1063.5065,
-    "2024-07": 1090.3444
+    "2024-06": 1063.2948,
+    "2024-07": 1082.6213,
+    "2024-08": 1079.496,
+    "2024-09": 1034.6779,
+    "2024-10": 1058.5681,
+    "2024-11": 1032.5383,
+    "2024-12": 1019.786,
+    "2025-01": 1029.7997,
+    "2025-02": 1013.8148,
+    "2025-03": 1005.1585,
+    "2025-04": 993.0347,
+    "2025-05": 977.2224,
+    "2025-06": 984.1146,
+    "2025-07": 991.1743,
+    "2025-08": 992.2184,
+    "2025-09": 974.1676,
+    "2025-10": 934.3193,
+    "2025-11": 908.6817,
+    "2025-12": 895.6605,
+    "2026-01": 947.3662,
+    "2026-02": 977.2211,
+    "2026-03": 1236.1735,
+    "2026-04": 1274.1001,
+    "2026-05": 1282.3752,
+    "2026-06": 1198.5548,
+    "2026-07": 1177.8692,
+    "2026-08": 1218.3031,
+    "2026-09": 1298.184,
+    "2026-10": 1403.1054
    },
    "ceyreklik": {
     "2014Q2": 1759.4096,
@@ -70569,7 +70780,7 @@
     "2016Q2": 1043.5926,
     "2016Q3": 1147.8899,
     "2016Q4": 1241.3131,
-    "2017Q1": 1268.995,
+    "2017Q1": 1269.3975,
     "2017Q2": 1146.1265,
     "2017Q3": 1307.0393,
     "2017Q4": 1370.5823,
@@ -70578,46 +70789,57 @@
     "2018Q3": 1410.61,
     "2018Q4": 1345.9549,
     "2019Q1": 1299.1747,
-    "2019Q2": 1220.5703,
-    "2019Q3": 1170.2677,
-    "2019Q4": 1125.501,
-    "2020Q1": 1005.0961,
-    "2020Q2": 997.5296,
-    "2020Q3": 1129.7289,
-    "2020Q4": 1238.4948,
-    "2021Q1": 1331.7962,
-    "2021Q2": 1325.8548,
-    "2021Q3": 1334.0805,
-    "2021Q4": 1352.6276,
-    "2022Q1": 1355.5048,
-    "2022Q2": 1295.0713,
-    "2022Q3": 1118.8329,
-    "2022Q4": 1086.017,
-    "2023Q1": 1139.9407,
-    "2023Q2": 1010.2031,
-    "2023Q3": 1034.5912,
-    "2023Q4": 1053.2959,
-    "2024Q1": 1036.2611,
-    "2024Q2": 1057.6999
+    "2019Q2": 1220.7168,
+    "2019Q3": 1174.3418,
+    "2019Q4": 1128.2035,
+    "2020Q1": 1005.4468,
+    "2020Q2": 998.0679,
+    "2020Q3": 1130.6931,
+    "2020Q4": 1236.3704,
+    "2021Q1": 1331.7868,
+    "2021Q2": 1327.1114,
+    "2021Q3": 1335.1976,
+    "2021Q4": 1351.5076,
+    "2022Q1": 1355.5003,
+    "2022Q2": 1294.7357,
+    "2022Q3": 1120.794,
+    "2022Q4": 1085.6918,
+    "2023Q1": 1139.9491,
+    "2023Q2": 1010.5327,
+    "2023Q3": 1034.7561,
+    "2023Q4": 1053.406,
+    "2024Q1": 1036.4063,
+    "2024Q2": 1057.5786,
+    "2024Q3": 1065.5984,
+    "2024Q4": 1036.9641,
+    "2025Q1": 1016.2577,
+    "2025Q2": 984.7906,
+    "2025Q3": 985.8534,
+    "2025Q4": 912.8872,
+    "2026Q1": 1053.5869,
+    "2026Q2": 1251.6767,
+    "2026Q3": 1231.4521
    },
    "yillik": {
     "2015": 1211.5623,
     "2016": 1103.7815,
-    "2017": 1273.1858,
+    "2017": 1273.2864,
     "2018": 1398.8825,
-    "2019": 1203.8784,
-    "2020": 1092.7124,
-    "2021": 1336.0898,
-    "2022": 1213.8565,
-    "2023": 1059.5077
+    "2019": 1205.6092,
+    "2020": 1092.6445,
+    "2021": 1336.4008,
+    "2022": 1214.1805,
+    "2023": 1059.661,
+    "2024": 1049.1369,
+    "2025": 974.9472
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 1090,
-    "gun": "2024-07-17",
-    "kapanis": 7664
+    "tarih": "2026-10",
+    "deger": 1403,
+    "gun": "2026-10-22",
+    "kapanis": 9376
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dce_pvc_cny": {
    "ad": "DCE PVC sürekli vadeli — Çin iç piyasa (CNY/t, ay ort.)",
@@ -70649,7 +70871,7 @@
     "2010-10": 7940.9375,
     "2010-11": 8522.9545,
     "2010-12": 8284.1304,
-    "2011-01": 8206.25,
+    "2011-01": 8214.2857,
     "2011-02": 8471,
     "2011-03": 8195,
     "2011-04": 8392.8947,
@@ -70721,7 +70943,7 @@
     "2016-10": 6636.25,
     "2016-11": 7542.0455,
     "2016-12": 6607.5,
-    "2017-01": 6401.6667,
+    "2017-01": 6391.3158,
     "2017-02": 6690,
     "2017-03": 6428.6957,
     "2017-04": 5784.7222,
@@ -70748,70 +70970,97 @@
     "2019-01": 6443.6364,
     "2019-02": 6455,
     "2019-03": 6455.9524,
-    "2019-04": 6815.2381,
+    "2019-04": 6813.75,
     "2019-05": 6906.75,
     "2019-06": 6724.7368,
     "2019-07": 6852.3913,
-    "2019-08": 6622.9545,
+    "2019-08": 6631.1364,
     "2019-09": 6498,
     "2019-10": 6373.6111,
     "2019-11": 6576.4286,
-    "2019-12": 6610.6818,
+    "2019-12": 6621.8182,
     "2020-01": 6504.6875,
     "2020-02": 6272,
-    "2020-03": 5946.1364,
+    "2020-03": 5933.8636,
     "2020-04": 5386.6667,
     "2020-05": 5882.7778,
     "2020-06": 6256.75,
     "2020-07": 6516.087,
-    "2020-08": 6600.9524,
+    "2020-08": 6623.5714,
     "2020-09": 6614.5455,
-    "2020-10": 6795.5882,
-    "2020-11": 7296.9048,
-    "2020-12": 7615.2174,
-    "2021-01": 7196.75,
-    "2021-02": 7956.3333,
+    "2020-10": 6808.75,
+    "2020-11": 7297.1429,
+    "2020-12": 7640.6522,
+    "2021-01": 7197,
+    "2021-02": 7956,
     "2021-03": 8686.5217,
-    "2021-04": 8821.6667,
-    "2021-05": 8946.0526,
+    "2021-04": 8829.7619,
+    "2021-05": 8950.8333,
     "2021-06": 8649.7619,
     "2021-07": 9026.8182,
-    "2021-08": 9178.4091,
+    "2021-08": 9198.8636,
     "2021-09": 10222.75,
-    "2021-10": 11125,
+    "2021-10": 11060.3125,
     "2021-11": 8696.6364,
-    "2021-12": 8366.2609,
+    "2021-12": 8358.087,
     "2022-01": 8618.8947,
     "2022-02": 8801.9375,
-    "2022-03": 9064.2609,
-    "2022-04": 9018.85,
+    "2022-03": 9064.3043,
+    "2022-04": 9008.1053,
     "2022-05": 8483.5789,
     "2022-06": 8002.2857,
     "2022-07": 6545.5238,
-    "2022-08": 6473.8696,
+    "2022-08": 6532.8696,
     "2022-09": 6259.3333,
     "2022-10": 5911.5,
     "2022-11": 5875.7273,
-    "2022-12": 6238.9545,
+    "2022-12": 6231.7727,
     "2023-01": 6437.3125,
     "2023-02": 6323.7,
-    "2023-03": 6270.5652,
-    "2023-04": 6131.7368,
+    "2023-03": 6270.8261,
+    "2023-04": 6130.5789,
     "2023-05": 5810.05,
     "2023-06": 5750.1,
     "2023-07": 5973.8095,
-    "2023-08": 6211.4348,
+    "2023-08": 6209,
     "2023-09": 6385.15,
     "2023-10": 5994.3529,
     "2023-11": 6021.7273,
-    "2023-12": 5914.2381,
+    "2023-12": 5907.2381,
     "2024-01": 5867.1364,
-    "2024-02": 5831,
+    "2024-02": 5850.6667,
     "2024-03": 5903,
-    "2024-04": 5882.05,
+    "2024-04": 5875.3,
     "2024-05": 6244.7,
-    "2024-06": 6165.1579,
-    "2024-07": 5970
+    "2024-06": 6173.0526,
+    "2024-07": 5876.0435,
+    "2024-08": 5548.5,
+    "2024-09": 5387.1579,
+    "2024-10": 5511.5556,
+    "2024-11": 5322.6667,
+    "2024-12": 5124.9545,
+    "2025-01": 5212.6111,
+    "2025-02": 5226.2222,
+    "2025-03": 5090.9048,
+    "2025-04": 4987.2381,
+    "2025-05": 4873.7895,
+    "2025-06": 4847.25,
+    "2025-07": 5036.1739,
+    "2025-08": 5024.1429,
+    "2025-09": 4902.5455,
+    "2025-10": 4719.8824,
+    "2025-11": 4562.85,
+    "2025-12": 4579.6522,
+    "2026-01": 4884.8,
+    "2026-02": 4973.3571,
+    "2026-03": 5540.9091,
+    "2026-04": 5200.9524,
+    "2026-05": 5027.6667,
+    "2026-06": 4660.2857,
+    "2026-07": 4520.4783,
+    "2026-08": 4569.4762,
+    "2026-09": 4906.619,
+    "2026-10": 4925.3636
    },
    "ceyreklik": {
     "2009Q3": 7069.8259,
@@ -70820,7 +71069,7 @@
     "2010Q2": 7519.2688,
     "2010Q3": 7396.1962,
     "2010Q4": 8249.3408,
-    "2011Q1": 8290.75,
+    "2011Q1": 8293.4286,
     "2011Q2": 8196.1236,
     "2011Q3": 7919.8171,
     "2011Q4": 6755.0388,
@@ -70844,7 +71093,7 @@
     "2016Q2": 5162.7414,
     "2016Q3": 5750.534,
     "2016Q4": 6928.5985,
-    "2017Q1": 6506.7875,
+    "2017Q1": 6503.3372,
     "2017Q2": 5894.4453,
     "2017Q3": 7071.4355,
     "2017Q4": 6428.8634,
@@ -70853,51 +71102,62 @@
     "2018Q3": 6949.0516,
     "2018Q4": 6433.851,
     "2019Q1": 6451.5296,
-    "2019Q2": 6815.575,
-    "2019Q3": 6657.7819,
-    "2019Q4": 6520.2405,
-    "2020Q1": 6240.9413,
+    "2019Q2": 6815.0789,
+    "2019Q3": 6660.5092,
+    "2019Q4": 6523.9526,
+    "2020Q1": 6236.8504,
     "2020Q2": 5842.0648,
-    "2020Q3": 6577.195,
-    "2020Q4": 7235.9035,
-    "2021Q1": 7946.535,
-    "2021Q2": 8805.8271,
-    "2021Q3": 9475.9924,
-    "2021Q4": 9395.9658,
-    "2022Q1": 8828.3644,
-    "2022Q2": 8501.5715,
-    "2022Q3": 6426.2422,
-    "2022Q4": 6008.7273,
-    "2023Q1": 6343.8592,
-    "2023Q2": 5897.2956,
-    "2023Q3": 6190.1314,
-    "2023Q4": 5976.7728,
-    "2024Q1": 5867.0455,
-    "2024Q2": 6097.3026
+    "2020Q3": 6584.7346,
+    "2020Q4": 7248.8484,
+    "2021Q1": 7946.5072,
+    "2021Q2": 8810.119,
+    "2021Q3": 9482.8106,
+    "2021Q4": 9371.6786,
+    "2022Q1": 8828.3788,
+    "2022Q2": 8497.99,
+    "2022Q3": 6445.9089,
+    "2022Q4": 6006.3333,
+    "2023Q1": 6343.9462,
+    "2023Q2": 5896.9096,
+    "2023Q3": 6189.3198,
+    "2023Q4": 5974.4394,
+    "2024Q1": 5873.601,
+    "2024Q2": 6097.6842,
+    "2024Q3": 5603.9005,
+    "2024Q4": 5319.7256,
+    "2025Q1": 5176.5794,
+    "2025Q2": 4902.7592,
+    "2025Q3": 4987.6208,
+    "2025Q4": 4620.7949,
+    "2026Q1": 5133.0221,
+    "2026Q2": 4962.9683,
+    "2026Q3": 4665.5245
    },
    "yillik": {
     "2010": 7688.735,
-    "2011": 7790.4324,
+    "2011": 7791.102,
     "2012": 6698.6552,
     "2013": 6575.2591,
     "2014": 5957.7318,
     "2015": 5187.5734,
     "2016": 5711.0246,
-    "2017": 6475.3829,
+    "2017": 6474.5203,
     "2018": 6695.5196,
-    "2019": 6611.2818,
-    "2020": 6474.0261,
-    "2021": 8906.0801,
-    "2022": 7441.2263,
-    "2023": 6102.0148
+    "2019": 6612.7676,
+    "2020": 6478.1245,
+    "2021": 8902.7789,
+    "2022": 7444.6528,
+    "2023": 6101.1538,
+    "2024": 5723.7278,
+    "2025": 4921.9385
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 5970,
-    "gun": "2024-07-17",
-    "kapanis": 5886
+    "tarih": "2026-10",
+    "deger": 4925,
+    "gun": "2026-10-22",
+    "kapanis": 5016
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "dce_pvc_usd": {
    "ad": "DCE PVC sürekli vadeli — Çin iç piyasa ($/t, ay ort.)",
@@ -70929,7 +71189,7 @@
     "2010-10": 1189.3863,
     "2010-11": 1281.551,
     "2010-12": 1252.8175,
-    "2011-01": 1248.5736,
+    "2011-01": 1249.7962,
     "2011-02": 1290.7207,
     "2011-03": 1255.9772,
     "2011-04": 1296.4402,
@@ -71001,7 +71261,7 @@
     "2016-10": 978.3073,
     "2016-11": 1093.478,
     "2016-12": 951.5683,
-    "2017-01": 930.3801,
+    "2017-01": 928.8758,
     "2017-02": 973.7849,
     "2017-03": 931.6208,
     "2017-04": 843.7705,
@@ -71028,70 +71288,97 @@
     "2019-01": 959.517,
     "2019-02": 965.4213,
     "2019-03": 960.4571,
-    "2019-04": 987.5869,
+    "2019-04": 987.3712,
     "2019-05": 1005.7739,
     "2019-06": 976.9215,
     "2019-07": 959.235,
-    "2019-08": 929.9552,
+    "2019-08": 931.104,
     "2019-09": 921.1272,
     "2019-10": 903.4944,
     "2019-11": 935.2677,
-    "2019-12": 946.3163,
+    "2019-12": 947.9105,
     "2020-01": 937.856,
     "2020-02": 897.1663,
-    "2020-03": 838.9847,
+    "2020-03": 837.2531,
     "2020-04": 754.8263,
     "2020-05": 830.9478,
     "2020-06": 892.8903,
     "2020-07": 949.2581,
-    "2020-08": 968.5348,
+    "2020-08": 971.8536,
     "2020-09": 985.187,
-    "2020-10": 1012.1519,
-    "2020-11": 1109.6266,
-    "2020-12": 1167.5841,
-    "2021-01": 1119.8379,
-    "2021-02": 1228.2272,
+    "2020-10": 1014.1123,
+    "2020-11": 1109.6628,
+    "2020-12": 1171.4839,
+    "2021-01": 1119.8768,
+    "2021-02": 1228.1758,
     "2021-03": 1332.0639,
-    "2021-04": 1385.4425,
-    "2021-05": 1384.1736,
+    "2021-04": 1386.7138,
+    "2021-05": 1384.9133,
     "2021-06": 1338.8689,
     "2021-07": 1396.238,
-    "2021-08": 1418.698,
+    "2021-08": 1421.8597,
     "2021-09": 1596.1326,
-    "2021-10": 1737.0057,
+    "2021-10": 1726.9057,
     "2021-11": 1361.6152,
-    "2021-12": 1312.9519,
+    "2021-12": 1311.6692,
     "2022-01": 1357.0926,
     "2022-02": 1393.5937,
-    "2022-03": 1399.486,
-    "2022-04": 1354.1207,
+    "2022-03": 1399.4927,
+    "2022-04": 1352.5075,
     "2022-05": 1266.2436,
     "2022-06": 1186.7194,
     "2022-07": 947.1442,
-    "2022-08": 908.7536,
+    "2022-08": 917.0356,
     "2022-09": 863.1896,
     "2022-10": 815.2219,
     "2022-11": 820.7011,
-    "2022-12": 904.5503,
+    "2022-12": 903.509,
     "2023-01": 953.9869,
     "2023-02": 910.6842,
-    "2023-03": 909.9975,
-    "2023-04": 866.1869,
+    "2023-03": 910.0354,
+    "2023-04": 866.0233,
     "2023-05": 801.1873,
     "2023-06": 809.554,
     "2023-07": 820.1727,
-    "2023-08": 851.5581,
+    "2023-08": 851.2243,
     "2023-09": 873.2307,
     "2023-10": 819.7854,
     "2023-11": 850.6586,
-    "2023-12": 836.6916,
+    "2023-12": 835.7013,
     "2024-01": 827.0445,
-    "2024-02": 810.3113,
+    "2024-02": 813.0443,
     "2024-03": 816.2221,
-    "2024-04": 813.1679,
+    "2024-04": 812.2347,
     "2024-05": 859.2993,
-    "2024-06": 850.2845,
-    "2024-07": 841.3783
+    "2024-06": 851.3733,
+    "2024-07": 828.1366,
+    "2024-08": 791.4782,
+    "2024-09": 757.1763,
+    "2024-10": 774.6606,
+    "2024-11": 734.8806,
+    "2024-12": 702.2313,
+    "2025-01": 725.8994,
+    "2025-02": 717.3654,
+    "2025-03": 700.6571,
+    "2025-04": 692.3162,
+    "2025-05": 679.5484,
+    "2025-06": 675.4431,
+    "2025-07": 704.0646,
+    "2025-08": 705.6975,
+    "2025-09": 689.5476,
+    "2025-10": 663.8559,
+    "2025-11": 644.8529,
+    "2025-12": 654.6007,
+    "2026-01": 703.0512,
+    "2026-02": 727.0033,
+    "2026-03": 806.0032,
+    "2026-04": 767.1587,
+    "2026-05": 740.0593,
+    "2026-06": 689.9016,
+    "2026-07": 672.0902,
+    "2026-08": 681.7061,
+    "2026-09": 734.7548,
+    "2026-10": 738.2693
    },
    "ceyreklik": {
     "2009Q3": 1036.8848,
@@ -71100,7 +71387,7 @@
     "2010Q2": 1108.0789,
     "2010Q3": 1101.6732,
     "2010Q4": 1241.2516,
-    "2011Q1": 1265.0905,
+    "2011Q1": 1265.498,
     "2011Q2": 1268.7224,
     "2011Q3": 1242.7713,
     "2011Q4": 1065.3501,
@@ -71124,7 +71411,7 @@
     "2016Q2": 780.5381,
     "2016Q3": 856.9306,
     "2016Q4": 1007.7845,
-    "2017Q1": 945.2619,
+    "2017Q1": 944.7605,
     "2017Q2": 867.7961,
     "2017Q3": 1065.7157,
     "2017Q4": 976.4409,
@@ -71133,51 +71420,62 @@
     "2018Q3": 1008.3967,
     "2018Q4": 928.6179,
     "2019Q1": 961.7985,
-    "2019Q2": 990.0941,
-    "2019Q3": 936.7725,
-    "2019Q4": 928.3595,
-    "2020Q1": 891.3357,
+    "2019Q2": 990.0222,
+    "2019Q3": 937.1554,
+    "2019Q4": 928.8909,
+    "2020Q1": 890.7585,
     "2020Q2": 826.2215,
-    "2020Q3": 967.66,
-    "2020Q4": 1096.4542,
-    "2021Q1": 1226.7097,
-    "2021Q2": 1369.495,
-    "2021Q3": 1470.3562,
-    "2021Q4": 1470.5243,
-    "2022Q1": 1383.3908,
-    "2022Q2": 1269.0279,
-    "2022Q3": 906.3625,
-    "2022Q4": 846.8244,
-    "2023Q1": 924.8895,
-    "2023Q2": 825.6427,
-    "2023Q3": 848.3205,
-    "2023Q4": 835.7119,
-    "2024Q1": 817.8593,
-    "2024Q2": 840.9172
+    "2020Q3": 968.7662,
+    "2020Q4": 1098.4197,
+    "2021Q1": 1226.7055,
+    "2021Q2": 1370.1653,
+    "2021Q3": 1471.4101,
+    "2021Q4": 1466.73,
+    "2022Q1": 1383.393,
+    "2022Q2": 1268.4902,
+    "2022Q3": 909.1231,
+    "2022Q4": 846.4773,
+    "2023Q1": 924.9022,
+    "2023Q2": 825.5882,
+    "2023Q3": 848.2092,
+    "2023Q4": 835.3818,
+    "2024Q1": 818.7703,
+    "2024Q2": 840.9691,
+    "2024Q3": 792.2637,
+    "2024Q4": 737.2575,
+    "2025Q1": 714.6406,
+    "2025Q2": 682.4359,
+    "2025Q3": 699.7699,
+    "2025Q4": 654.4365,
+    "2026Q1": 745.3526,
+    "2026Q2": 732.3732,
+    "2026Q3": 696.1837
    },
    "yillik": {
     "2010": 1141.1238,
-    "2011": 1210.4836,
+    "2011": 1210.5855,
     "2012": 1063.53,
     "2013": 1073.0923,
     "2014": 968.3373,
     "2015": 825.052,
     "2016": 852.8472,
-    "2017": 963.8036,
+    "2017": 963.6783,
     "2018": 1002.3246,
-    "2019": 954.2561,
-    "2020": 945.4178,
-    "2021": 1384.2713,
-    "2022": 1101.4014,
-    "2023": 858.6412
+    "2019": 954.4667,
+    "2020": 946.0415,
+    "2021": 1383.7527,
+    "2022": 1101.8709,
+    "2023": 858.5203,
+    "2024": 797.3152,
+    "2025": 687.8207
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 841,
-    "gun": "2024-07-17",
-    "kapanis": 5886
+    "tarih": "2026-10",
+    "deger": 738,
+    "gun": "2026-10-22",
+    "kapanis": 5016
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   },
   "petkm_asya_makas_usd": {
    "ad": "Asya polimer − ham petrol makası — DCE (LLDPE+PP)/2 KDV hariç − 7,5×Brent ($/t)",
@@ -71213,7 +71511,7 @@
     "2016-10": 762.4229,
     "2016-11": 825.9848,
     "2016-12": 818.3868,
-    "2017-01": 803.4899,
+    "2017-01": 804.2769,
     "2017-02": 813.3883,
     "2017-03": 740.3224,
     "2017-04": 686.7258,
@@ -71240,70 +71538,97 @@
     "2019-01": 699.2186,
     "2019-02": 668.0565,
     "2019-03": 636.3286,
-    "2019-04": 562.0846,
+    "2019-04": 562.5897,
     "2019-05": 518.9189,
     "2019-06": 542.5184,
     "2019-07": 545.1792,
-    "2019-08": 515.8909,
+    "2019-08": 522.2169,
     "2019-09": 513.3468,
     "2019-10": 522.1276,
     "2019-11": 483.3646,
-    "2019-12": 452.9614,
+    "2019-12": 456.6351,
     "2020-01": 473.3901,
     "2020-02": 461.6515,
-    "2020-03": 566.512,
-    "2020-04": 616.9856,
+    "2020-03": 566.2964,
+    "2020-04": 617.7001,
     "2020-05": 607.2937,
     "2020-06": 594.8113,
     "2020-07": 625.3064,
-    "2020-08": 631.7767,
+    "2020-08": 633.5203,
     "2020-09": 692.3249,
-    "2020-10": 697.5702,
-    "2020-11": 751.9445,
-    "2020-12": 719.5901,
-    "2021-01": 674.294,
-    "2021-02": 699.0758,
+    "2020-10": 692.7973,
+    "2020-11": 751.9316,
+    "2020-12": 719.6934,
+    "2021-01": 674.2906,
+    "2021-02": 699.0667,
     "2021-03": 730.9131,
-    "2021-04": 693.4201,
-    "2021-05": 627.7729,
+    "2021-04": 694.6412,
+    "2021-05": 628.2065,
     "2021-06": 559.0104,
     "2021-07": 592.4589,
-    "2021-08": 606.3635,
+    "2021-08": 607.9551,
     "2021-09": 663.0466,
-    "2021-10": 672.5827,
+    "2021-10": 667.2277,
     "2021-11": 587.214,
-    "2021-12": 591.491,
+    "2021-12": 594.0633,
     "2022-01": 559.5482,
     "2022-02": 503.5815,
-    "2022-03": 374.0525,
-    "2022-04": 376.592,
+    "2022-03": 374.0465,
+    "2022-04": 375.5275,
     "2022-05": 301.2965,
     "2022-06": 244.0221,
     "2022-07": 212.844,
-    "2022-08": 226.6671,
+    "2022-08": 229.9807,
     "2022-09": 298.78,
     "2022-10": 248.302,
     "2022-11": 276.2535,
-    "2022-12": 413.7008,
+    "2022-12": 413.2984,
     "2023-01": 433.4612,
     "2023-02": 409.0771,
-    "2023-03": 427.9338,
-    "2023-04": 351.6785,
+    "2023-03": 427.9589,
+    "2023-04": 352.3166,
     "2023-05": 337.6065,
     "2023-06": 358.6804,
     "2023-07": 329.325,
-    "2023-08": 308.3004,
+    "2023-08": 308.6697,
     "2023-09": 277.8539,
     "2023-10": 256.6289,
     "2023-11": 355.3077,
-    "2023-12": 393.1827,
+    "2023-12": 393.2304,
     "2024-01": 368.8626,
-    "2024-02": 329.3412,
+    "2024-02": 330.1528,
     "2024-03": 321.6995,
-    "2024-04": 302.5766,
+    "2024-04": 302.1882,
     "2024-05": 374.316,
-    "2024-06": 372.2837,
-    "2024-07": 371.4615
+    "2024-06": 372.1939,
+    "2024-07": 363.1292,
+    "2024-08": 385.0672,
+    "2024-09": 395.8398,
+    "2024-10": 409.0214,
+    "2024-11": 406.2615,
+    "2024-12": 396.6476,
+    "2025-01": 347.1096,
+    "2025-02": 360.3436,
+    "2025-03": 373.6718,
+    "2025-04": 377.8013,
+    "2025-05": 389.7213,
+    "2025-06": 344.8306,
+    "2025-07": 357.6089,
+    "2025-08": 383.7023,
+    "2025-09": 369.2239,
+    "2025-10": 361.1706,
+    "2025-11": 350.3807,
+    "2025-12": 339.3474,
+    "2026-01": 348.9836,
+    "2026-02": 337.0084,
+    "2026-03": 303.7309,
+    "2026-04": 204.5909,
+    "2026-05": 284.4831,
+    "2026-06": 382.6062,
+    "2026-07": 387.6588,
+    "2026-08": 371.2249,
+    "2026-09": 251.6985,
+    "2026-10": 406.3996
    },
    "ceyreklik": {
     "2015Q1": 780.0415,
@@ -71314,7 +71639,7 @@
     "2016Q2": 675.8728,
     "2016Q3": 751.7369,
     "2016Q4": 802.2648,
-    "2017Q1": 785.7335,
+    "2017Q1": 785.9959,
     "2017Q2": 712.9866,
     "2017Q3": 832.6738,
     "2017Q4": 793.2107,
@@ -71323,59 +71648,70 @@
     "2018Q3": 664.6615,
     "2018Q4": 657.2459,
     "2019Q1": 667.8679,
-    "2019Q2": 541.174,
-    "2019Q3": 524.8056,
-    "2019Q4": 486.1512,
-    "2020Q1": 500.5179,
-    "2020Q2": 606.3635,
-    "2020Q3": 649.8027,
-    "2020Q4": 723.0349,
-    "2021Q1": 701.4276,
-    "2021Q2": 626.7345,
-    "2021Q3": 620.623,
-    "2021Q4": 617.0959,
-    "2022Q1": 479.0607,
-    "2022Q2": 307.3035,
-    "2022Q3": 246.097,
-    "2022Q4": 312.7521,
-    "2023Q1": 423.4907,
-    "2023Q2": 349.3218,
-    "2023Q3": 305.1598,
-    "2023Q4": 335.0398,
-    "2024Q1": 339.9678,
-    "2024Q2": 349.7254
+    "2019Q2": 541.3423,
+    "2019Q3": 526.9143,
+    "2019Q4": 487.3758,
+    "2020Q1": 500.446,
+    "2020Q2": 606.6017,
+    "2020Q3": 650.3839,
+    "2020Q4": 721.4741,
+    "2021Q1": 701.4235,
+    "2021Q2": 627.286,
+    "2021Q3": 621.1535,
+    "2021Q4": 616.1683,
+    "2022Q1": 479.0587,
+    "2022Q2": 306.9487,
+    "2022Q3": 247.2016,
+    "2022Q4": 312.618,
+    "2023Q1": 423.4991,
+    "2023Q2": 349.5345,
+    "2023Q3": 305.2829,
+    "2023Q4": 335.0557,
+    "2024Q1": 340.2383,
+    "2024Q2": 349.566,
+    "2024Q3": 381.3454,
+    "2024Q4": 403.9768,
+    "2025Q1": 360.375,
+    "2025Q2": 370.7844,
+    "2025Q3": 370.1784,
+    "2025Q4": 350.2996,
+    "2026Q1": 329.9076,
+    "2026Q2": 290.5601,
+    "2026Q3": 336.8607
    },
    "yillik": {
     "2015": 764.2717,
     "2016": 747.1798,
-    "2017": 781.1512,
+    "2017": 781.2167,
     "2018": 702.535,
-    "2019": 554.9997,
-    "2020": 619.9298,
-    "2021": 641.4702,
-    "2022": 336.3033,
-    "2023": 353.253
+    "2019": 555.8751,
+    "2020": 619.7264,
+    "2021": 641.5078,
+    "2022": 336.4567,
+    "2023": 353.343,
+    "2024": 368.7816,
+    "2025": 362.9093
    },
    "son": {
-    "tarih": "2024-07",
-    "deger": 371
+    "tarih": "2026-10",
+    "deger": 406
    },
-   "guncelleme": "2026-10-22"
+   "guncelleme": "2026-10-23"
   }
  },
  "wb": {
   "url": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
   "guncel": "Updated on October 02, 2026",
-  "guncelleme": "2026-10-22",
+  "guncelleme": "2026-10-23",
   "sutun": 15,
   "satir": 801,
   "ilk": "1960M01",
   "son": "2026M09",
   "_not": "Monthly Prices sayfası: satır 5 adlar, 6 birimler, 7+ aylık veri; eksik \"…\". 2015-01 sonrası saklanır; çeyreklik = 3 tam ayın ortalaması, yıllık = 12 ay."
  },
- "seriler_guncelleme": "2026-10-22",
+ "seriler_guncelleme": "2026-10-23",
  "evds": {
-  "guncelleme": "2026-10-22",
+  "guncelleme": "2026-10-23",
   "seriler": 17,
   "kaynak": "evds3.tcmb.gov.tr/igmevdsms-dis",
   "kodlar": {
@@ -71398,10 +71734,10 @@
   }
  },
  "epias": {
-  "guncelleme": "2026-10-22",
-  "gun": 1391,
+  "guncelleme": "2026-10-23",
+  "gun": 1392,
   "ilk": "2023-01-01",
-  "son": "2026-10-22",
+  "son": "2026-10-23",
   "kimlik_adlari": "EPIAS_ID+EPIAS_KEY",
   "kaynak": "seffaflik.epias.com.tr/electricity-service/v1/markets/dam/data/mcp"
  },
@@ -81921,7 +82257,7 @@
     "kaynak": "TTB Ara 2025 kararı (MLP 2025 notu)"
    }
   ],
-  "son_tarama": "2026-10-22"
+  "son_tarama": "2026-10-23"
  },
  "ges": {
   "surum": "483",
@@ -84227,7 +84563,7 @@
   }
  },
  "plastik": {
-  "son_deneme": "2026-10-22",
+  "son_deneme": "2026-10-23",
   "yollar": {
    "tohum": 4
   },

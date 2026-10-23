@@ -1,5 +1,5 @@
 {
- "tarih": "2026-10-22",
+ "tarih": "2026-10-23",
  "kodlar": [
   "AKHAN",
   "AKYHO",
@@ -380,11 +380,18 @@
   "TSPOR": "2026-10-12",
   "MILKS": "2026-10-16",
   "ULUFA": "2026-10-20",
-  "KLGYO": "2026-10-22"
+  "KLGYO": "2026-10-22",
+  "AFYON": "2026-10-23",
+  "AKFGY": "2026-10-23",
+  "AKGRT": "2026-10-23",
+  "METRO": "2026-10-23"
  },
  "evren_disi": [
   "ADESE",
+  "AFYON",
   "AGYO",
+  "AKFGY",
+  "AKGRT",
   "AKSFA",
   "ALARK",
   "ALFAS",
@@ -479,6 +486,7 @@
   "MEPET",
   "MERIT",
   "MERKO",
+  "METRO",
   "MIATK",
   "MILKS",
   "MNDRS",
@@ -539,10 +547,13 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 155,
- "pencere_sayi": 2,
+ "evren_disi_sayi": 159,
+ "pencere_sayi": 8,
  "dusen_son": [
-  "TAVHL"
+  "DZGYO",
+  "EBEBK",
+  "EREGL",
+  "ISDMR"
  ],
- "guncelleme": "2026-10-22 11:29 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-23 06:52 UTC — otomatik (KAP FR · kümülatif §299)"
 }
