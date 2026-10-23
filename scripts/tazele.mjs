@@ -26,7 +26,10 @@ import { KURALLAR, denetle } from './denetim.mjs';
    zorunda), o yüzden veri dizini aranarak bulunur. Ayar dosyası tutmak yerine
    arama yapmak daha sağlam: klasör adı değişirse de çalışır. */
 import { existsSync } from 'node:fs';
-const ADAYLAR = [process.cwd(), path.join(process.cwd(), 'ktpanel'),
+/* §497 (23 Eki) SIRA DEĞİŞTİ: alt klasör ÖNCE. 22 Eki 12:52'de app.js + index.html yanlışlıkla repo KÖKÜNE yüklendi
+   (31 Tem'de de aynısı olmuştu); kök listede ilk olduğu için veri dizini '.' seçildi, iki koşu veriyi köke yazdı,
+   ktpanel/ (Vercel'in yayınladığı klasör) tazelenmedi. Vercel Root Directory = ktpanel olduğundan doğru aday odur. */
+const ADAYLAR = [path.join(process.cwd(), 'ktpanel'), process.cwd(),
                  path.join(process.cwd(), 'panel'), path.join(process.cwd(), 'public')];
 const KOK = ADAYLAR.find(d => existsSync(path.join(d, 'index.html'))) || process.cwd();
 const bugun = new Date().toISOString().slice(0, 10);
@@ -424,13 +427,21 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
      (gunluk normal hareket ±%25'i asamaz zaten; asiri degerler kaynak arizasidir).
      Karantina KALKMADI ama anlami degisti: artik "elle bak" degil,
      "olceklendi, bir sonraki kosuda normal akar" demek. */
-  const olcekli = [];
+  const olcekli = [], piyasaHareketi = [];
   if (karantina.size) {
     liste.forEach(x => {
       const k = x[kodAlan];
       if (!karantina.has(k) || !f[k] || !x[fiyatAlan]) return;
       const oran = f[k].fiyat / x[fiyatAlan];
       if (!(oran > 0.05 && oran < 0.95) && !(oran > 1.05 && oran < 20)) return;
+      /* §495 (23 Eki) TABAN SERİSİ BÖLÜNME SANILDI: 21 Eyl'de BSOKE/EDATA/GENIL/GRTHO/HATSN/IZFAS/MAGEN/ONCSM aynı gün
+         ×0,729–0,736 "bölündü" — gerçekte fon krizinde ÜÇ GÜN TABAN (0,9³ = 0,729). multiple.json'da adet ÷0,73 ile şişti,
+         EV/EBITDA %35–55 yanlış çıktı (kullanıcı yakaladı). Ölçüt artık BIST fiyat marjı: iki fiyat tarihi arasında n iş günü
+         varsa doğal hareket en çok 0,9ⁿ…1,1ⁿ. Oran bu bandın İÇİNDEYSE bu bir piyasa hareketidir → yalnız fiyat güncellenir,
+         p0/adet ÖLÇEKLENMEZ. Bölünme/bedelsiz ancak bant DIŞINDA kalırsa kabul edilir (ORGE 5:1 = 0,20 → yine yakalanır). */
+      { const t0 = Date.parse(d.fiyat_tarihi || ''), t1 = Date.parse(f[k].tarih || '');
+        let ig = 1; if (isFinite(t0) && isFinite(t1) && t1 > t0) { ig = 0; for (let t = t0 + 864e5; t <= t1; t += 864e5) { const g = new Date(t).getUTCDay(); if (g !== 0 && g !== 6) ig++; } ig = Math.max(1, ig); }
+        if (oran >= Math.pow(0.9, ig) * 0.99 && oran <= Math.pow(1.1, ig) * 1.01) { x[fiyatAlan] = f[k].fiyat; piyasaHareketi.push(k + ' ' + ((oran - 1) * 100).toFixed(1) + '% / ' + ig + ' iş günü'); return; } }
       /* SS328b YAN ETKI DUZELTMESI (ayni oturumda yakalandi): ilk yazim yalniz
          p0'i olcekliyordu. AMA bu fonksiyon multiple.json'da da kosuyor ve
          orada `adet` (pay adedi) var — carpanlar fiyat×adet ile hesaplanir.
@@ -457,7 +468,8 @@ async function fiyatTazele(dosya, ad, kodAlan, fiyatAlan, listeYolu) {
       not: 'Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328).' };
     aykiriSonuc.mesaj = (aykiriSonuc.mesaj || '') + ' → OTOMATIK ÖLÇEKLENDİ: ' + olcekli.join(' · ');
   }
-  const kalanKarantina = [...karantina].filter(k => !olcekli.some(o => o.startsWith(k + ' ')));
+  if (piyasaHareketi.length) aykiriSonuc.mesaj = (aykiriSonuc.mesaj || '') + ' → PİYASA HAREKETİ (fiyat marjı içinde, ölçeklenmedi): ' + piyasaHareketi.join(' · ');
+  const kalanKarantina = [...karantina].filter(k => !olcekli.some(o => o.startsWith(k + ' ')) && !piyasaHareketi.some(o => o.startsWith(k + ' ')));
   if (kalanKarantina.length) d._karantina = { kodlar: kalanKarantina, tarih: bugun,
     not: 'Fiyat referansla ±%25 üstü ayrıştı ama ölçekleme aralığı dışında — kaynak arızası olabilir, fiyat tazelenmedi.' };
   else delete d._karantina;
@@ -4440,6 +4452,75 @@ async function dceFiyat() {
   raporlar.push('### DCE polimer vadelileri (§489) — ✓ ' + notlar.join(' · ') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : ''));
 }
 
+/* ── §496 MULTIPLE KENDİ VERİMİZDEN (23 Eki) — Değerleme › EV/EBITDA ─────────────────────────────────────────────────
+   Kullanıcı: "Fintables'a bağlı olmak istemiyorum; 2Ç bilançolarını çektik, neden kendimiz hesaplamıyoruz?"
+   Haklı: faktorEvren() (§361d) KAP finansal tablolarından her XKTUM şirketi için TTM ciro/FAVÖK, son bilanço net borç ve
+   ödenmiş sermayeyi ZATEN hesaplıyor (faktor-evren.json). multiple.json ise 1Ç26 elle kopyasında kalmıştı ve pay adedi
+   §328 ölçeklemesiyle bozulmuştu (fon krizi tabanı bölünme sanıldı; BIMAS/CEMZY/GOODY/OZYSR/BMSTL bedelsizleri kaçtı).
+   ÇÖZÜM — her koşuda multiple.json'un bilanço kalemleri faktor-evren.json'dan yeniden kurulur:
+     ciro = TTM satış · ebitda = TTM FAVÖK (faaliyet kârı + amortisman) · netBorc = finansal borç − nakit (dönem sonu)
+     adet = bilançodaki ödenmiş sermaye (nominal 1₺) × DÖNEM SONUNDAN SONRAKİ kurumsal işlemler:
+       (a) Yahoo split olayları (BIST bedelsizlerini kaydediyor — BIMAS 2:1 · CEMZY 5,72 · GOODY 5,63 · OZYSR 4,1 · BMSTL 2:1 ölçüldü)
+       (b) Yahoo'nun KAÇIRDIĞI bedelsiz: ham kapanışta BIST fiyat marjını (±%10) aşan tek günlük boşluk (CVKMD 3 Ağu
+           37,82 → 14,42; Yahoo split kaydı YOK). Oran boşluktan alınır → yaklaşık (o günün ±%10 hareketi kadar), işaretlenir.
+     Bir sonraki bilançoda sermaye kalemi gerçeği gösterir ve yaklaşık düzeltme kendiliğinden düşer.
+   Kapsam dışı (faktör evreninde olmayan, katılım dışı) hisseler ESKİ değerle kalır ve `kaynak:'eski'` ile işaretlenir —
+   kart bunu açıkça yazar. Fintables'a dönüş YOK. */
+async function multipleKendi() {
+  const dosya = 'multiple.json';
+  if (!(await varMi(dosya)) || !(await varMi('faktor-evren.json'))) { raporlar.push('### Multiple kendi verimizden (§496) — ⏭ dosya yok'); return; }
+  const M = await oku(dosya), FE = await oku('faktor-evren.json'); const S = FE.sirketler || {};
+  const t0 = Date.now(), SURE = 120000;
+  const uyku = ms => new Promise(r => setTimeout(r, ms));
+  const donemSonu = (d) => { const m = String(d || '').match(/^(\d{4})\/([1-4])$/); if (!m) return null; const ay = +m[2] * 3; return new Date(Date.UTC(+m[1], ay, 0)); };
+  const kurumsal = async (kod, bas) => {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(kod + '.IS') + '?interval=1d&range=1y&events=split', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const R = (await r.json())?.chart?.result?.[0]; if (!R) throw new Error('boş');
+    let carpan = 1; const not = []; const basT = bas.getTime() / 1000;
+    const sp = Object.values((R.events && R.events.splits) || {}).filter(x => x.date > basT && x.numerator > 0 && x.denominator > 0);
+    sp.forEach(x => { carpan *= x.numerator / x.denominator; not.push(new Date(x.date * 1000).toISOString().slice(0, 10) + ' ×' + (x.numerator / x.denominator).toFixed(3) + ' (Yahoo)'); });
+    /* Yahoo'nun bilmediği işlem: ham kapanışta marj dışı boşluk. Bilinen split günleri hariç (Yahoo onları zaten düzeltmiştir). */
+    const ts = R.timestamp || [], c = (R.indicators && R.indicators.quote && R.indicators.quote[0] && R.indicators.quote[0].close) || [];
+    const spGun = new Set(sp.map(x => new Date(x.date * 1000).toISOString().slice(0, 10)));
+    let onceki = null, oncekiT = null;
+    for (let i = 0; i < ts.length; i++) { const v = c[i]; if (!(v > 0)) continue;
+      if (onceki && ts[i] > basT) { const o = v / onceki, gun = new Date(ts[i] * 1000).toISOString().slice(0, 10);
+        if (!spGun.has(gun) && (o < 0.85 || o > 1.25) && (ts[i] - oncekiT) < 6 * 864e2) { carpan *= onceki / v; not.push(gun + ' ×' + (onceki / v).toFixed(3) + ' (fiyat boşluğu, yaklaşık)'); } }
+      onceki = v; oncekiT = ts[i]; }
+    return { carpan, not, son: c.filter(x => x > 0).pop() || null };
+  };
+  let kendi = 0, eski = 0, duzeltme = 0; const hata = [], notlar = [];
+  for (const h of (M.hisseler || [])) {
+    const s = S[h.k];
+    const gecerli = s && !s.eksik && s.ciro > 0 && Number.isFinite(s.favok) && Number.isFinite(s.netBorc) && s.adet > 0 && donemSonu(s.donem);
+    if (!gecerli) {
+      h.kaynak = 'eski'; eski++;
+      /* §328 hatasının geri alınması: `_kurumsal` ölçeklemesi Yahoo'da karşılığı olan bir split DEĞİLSE (fon krizi tabanı)
+         adet eski haline döner (adet × oran). Gerçek split ise dokunulmaz. */
+      if (h._kurumsal && h._kurumsal.oran > 0 && Date.now() - t0 < SURE) {
+        try { const g = new Date(Date.parse(h._kurumsal.tarih) - 10 * 864e5); const k = await kurumsal(h.k, g);
+          const yahooSplit = k.not.some(x => /Yahoo/.test(x));
+          if (!yahooSplit) { h.adet = +(h.adet * h._kurumsal.oran).toFixed(3); notlar.push(h.k + ' §328 geri alındı (adet ×' + h._kurumsal.oran + ', split değil)'); delete h._kurumsal; duzeltme++; }
+        } catch (e) { hata.push(h.k + ':' + String(e.message || e).slice(0, 20)); }
+        await uyku(250); }
+      continue; }
+    let carpan = 1, kn = [];
+    if (Date.now() - t0 < SURE) { try { const k = await kurumsal(h.k, donemSonu(s.donem)); carpan = k.carpan; kn = k.not; } catch (e) { hata.push(h.k + ':' + String(e.message || e).slice(0, 20)); } await uyku(250); }
+    h.ciro = Math.round(s.ciro / 1e6); h.ebitda = Math.round(s.favok / 1e6); h.netBorc = Math.round(s.netBorc / 1e6);
+    h.adet = +((s.adet / 1e6) * carpan).toFixed(3);
+    h.donem = s.donem; h.kaynak = 'kap'; h.adet_not = kn.length ? 'bilanço sermayesi ' + Math.round(s.adet / 1e6) + ' mn × ' + kn.join(' × ') : 'bilanço sermayesi (' + s.donem + ')';
+    delete h._kurumsal;
+    if (kn.length) { duzeltme++; notlar.push(h.k + ' ' + kn.join(' · ')); }
+    kendi++;
+  }
+  M.kaynak = 'KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496';
+  M.bilanco_guncelleme = bugun; M.guncelleme = bugun;
+  M.not = 'Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:"eski" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.';
+  await yaz(dosya, M); degisenler.push('multiple bilanço (' + kendi + ' kendi · ' + eski + ' eski)');
+  raporlar.push('### Multiple kendi verimizden (§496) — ✓ ' + kendi + ' hisse KAP · ' + eski + ' eski (evren dışı)' + (duzeltme ? '\n- kurumsal işlem düzeltmesi: ' + notlar.join(' | ') : '') + (hata.length ? '\n- ⚠ Yahoo: ' + hata.join(' · ') : '') + ' · ' + Math.round((Date.now() - t0) / 1000) + ' sn');
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -6358,7 +6439,8 @@ async function bultenKesif() {
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
     await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat());   /* §483: InfoLink haftalık spot (polisilikon/wafer/hücre/modül) + Wayback geriye doldurma ≤40 görüntü/koşu → CWENE/GESAN */
     await olcKos('SUT endeksi (§474)', ()=>sutEndeks());   /* §474: SUT/TTB adım tabloları → endeks + reel (÷TÜFE) · Resmî Gazete fihrist izleyici (son 14 gün) → MPARK */
-    await olcKos('Faktör evreni (§361)', ()=>faktorEvren());   /* SS361: kademeli KAP çekimi */
+    await olcKos('Faktör evreni (§361)', ()=>faktorEvren());
+    await olcKos('Multiple kendi verimizden (§496)', ()=>multipleKendi());   /* §496: faktör evreninin KAP TTM'i → multiple.json (Fintables yok) */   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
@@ -6375,7 +6457,8 @@ async function bultenKesif() {
   if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
-  if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* elle: --katman=fm */
+  if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());
+  if (KSET.has('fm') || KSET.has('multiple')) await olcKos('Multiple kendi verimizden (§496)', ()=>multipleKendi());   /* elle: --katman=multiple */   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
   if (ister('hepsi')) await olcKos('SEC ticker yedeği (§448)', async () => {
