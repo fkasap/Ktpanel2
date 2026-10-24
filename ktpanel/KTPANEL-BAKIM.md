@@ -36,6 +36,20 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§518–§521 KART KART TARAMA (24 Eki akşam, kullanıcı: "sekmelere tek tek, kartlara tek tek bak"): 38 sekme/alt sekmede her .card
+  için başlık · etiket tarihi/yaşı · boş satır · hata işareti çıkarıldı + index.html'deki elle tarihli etiketler kaynaktan tarandı.
+  §518 Dış ticaret açığı MAYIS'ta kalmıştı (4,34; diğerleri Ağu/Eyl): grup ARAMASI eşleşmiyordu → seri kodu doğrudan,
+       TP.IHRISICREV4.TT ihracat − TP.ITHISICREV4.TT ithalat (TÜİK genel ticaret, bin $). Ağu 2026: 23,47 − 28,71 = 5,24 mlr $ açık.
+  §519 Ebu Nöbet "TAZELENMELİ" listesi kartın ADI yerine DOSYASINI yazıyordu → üç satır "index.html" (BOK 9 Eyl · ECB 13 Eyl ·
+       12 Eki kartları) ayırt edilemiyordu. ajan.js artık katman adını yazar (dosya küçük harfle yanında). ajan.js?v=20261024a.
+  §520 ECB & Politika ve BOK & Piyasa kartlarının karar satırı CANLI DOĞRULAMALI: ECB SDW DFR (yürürlük tarihi) · BOK ECOS
+       (sonDegisimTarihi). Damga metni canlı oranı + son değişim gününü içeriyorsa "canlı ✓", içermiyorsa canlı satır + "önceki not" +
+       etikette "⚠ METİN ESKİ". Bugün ikisi de uyumlu (ECB %2,50/16 Eyl · BOK %3,00/27 Ağu). BoJ'un politika faizi için canlı seri yok.
+  §521 Bekçiye genel ELLE KART kuralları: (1) tarihi GEÇMİŞ "sıradaki/planlı/takvimde/bekleniyor … <tarih>" → uyarı; (2) 30 günden eski
+       .tag.snap → bilgi. Canlı panelde sınandı: "Sıradaki TCMB kararı 22 Eki'de" (Piyasa) · "Sıradaki BOK 22 Eki" (Asya Okuma & Bağlar)
+       + 4 eski etiket (Getiri eğrisi görseli 27 Tem · Avrupa mega-cap 27 Tem · BOK 9 Eyl · ECB 10 Eyl); yanlış alarm yok.
+  AÇIK (otomasyon borcu, elle kartlar): Gündem Özeti (12 Eki; makro-takvim.json + PPK + bilanço takviminden ÜRETİLEBİLİR) ·
+       Makroihtiyati (12 Eki) · Fon krizi kartı · BoJ/BOK/Fed/ECB okuma notları · Avrupa mega-cap araştırma · Getiri eğrisi görsel şekli.
 §517 DAMGA ↔ CANLI DENETİMİ (bekçi ekran katmanı): aynı gün üç kart elle yazılmış eski rakam taşıdı (§459a, §493, §514). Bekçi artık
   tüm sekmeleri gezdikten sonra DOM'un TAMAMINI tarar: canlı serisi olan büyüklük (politika faizi ← TP.PY.P02.1H · TÜFE yıllık ←
   TP.TUKFIY2025.GENEL'in kendi y/y'si, seriler katmanında hesaplanır) bir .kv satırında ya da cümlede başka değerle yazılmışsa uyarı.

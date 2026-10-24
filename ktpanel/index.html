@@ -1652,8 +1652,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div id="krMakroBody"><div class="sub">ECOS yükleniyor…</div></div>
   </div>
   <div class="card">
-    <div class="lbl">BOK &amp; PİYASA <span class="tag snap">9 EYL · ECOS DOĞRULAMALI</span></div>
-    <div class="kv"><span class="k">Politika faizi</span><span style="font-weight:600" class="down">%3,00 — 27 Ağu +25bp (İKİNCİ artırım; ilki 16 Tem, 3,5 yılda ilkti) · canlı kart doğrular</span></div>
+    <div class="lbl">BOK &amp; PİYASA <span class="tag snap" id="bokTag">9 EYL · ECOS DOĞRULAMALI</span></div>
+    <div class="kv"><span class="k">Politika faizi</span><span style="font-weight:600" class="down" id="bokPolitika">%3,00 — 27 Ağu +25bp (İKİNCİ artırım; ilki 16 Tem, 3,5 yılda ilkti) · canlı kart doğrular</span></div>
     <div class="kv"><span class="k">Gerekçe</span><span>ilk artırımın gerekçesi won ~1.480 + enflasyon zirvesiydi; 9 Eyl itibarıyla won 1.341 (+%5,6 aylık), TÜFE %3,1 — sıkılaştırma İŞLİYOR</span></div>
     <div class="kv"><span class="k">KOSPI kaosu</span><span class="down">16 Tem −%6,4 (6.820) · hafta −%8,8 · yılda 28 gün ±%5 · sidecar/CB REKOR</span></div>
     <div class="kv"><span class="k">Çip devleri</span><span>Samsung −%8,8 · SK Hynix −%11,5 — "bellek fiyatı zirveyi geçti mi" endişesi</span></div>
@@ -1679,8 +1679,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="note" style="font-size:10px">Yahoo canlı. DAX Almanya/sanayi — Avrupa'nın çevrim göstergesi ve Türkiye'nin en büyük ihracat pazarının nabzı; DAX zayıflarsa TR ihracatçı/sanayi hikayesine dolaylı baskı. Euro Stoxx 50 bölge geneli, FTSE 100 emtia+finans ağırlıklı (küresel gelir, İngiltere ekonomisinden çok emtiaya duyarlı), CAC lüks/tüketim (Çin talebinin vekili), MIB İtalya — bölgenin faiz-spread duyarlı ucu.</div>
   </div>
   <div class="card">
-    <div class="lbl">ECB &amp; POLİTİKA <span class="tag snap">10 EYL · İKİNCİ ARTIRIM</span></div>
-    <div class="kv"><span class="k">Son hamle</span><span style="font-weight:600">10 Eyl: %2,25 → %2,50 ARTIRIM (Berlin; yürürlük 16 Eyl) — Haziran'dan sonra İKİNCİ; gerekçe enerji şoku, HICP %3,3, enerji hariç %2,2</span></div>
+    <div class="lbl">ECB &amp; POLİTİKA <span class="tag snap" id="ecbTag">10 EYL · İKİNCİ ARTIRIM</span></div>
+    <div class="kv"><span class="k">Son hamle</span><span style="font-weight:600" id="ecbSonHamle">10 Eyl: %2,25 → %2,50 ARTIRIM (Berlin; yürürlük 16 Eyl) — Haziran'dan sonra İKİNCİ; gerekçe enerji şoku, HICP %3,3, enerji hariç %2,2</span></div>
     <div class="kv"><span class="k">Sıradaki toplantı</span><span>29 Eki (Ekim toplantısı). Kurul: toplantı-toplantı, veriye bağlı; enerji ücretlere sızarsa üçüncü artırım. ECB projeksiyonu: 2026 HICP %3,0 · 2027 %2,5</span></div>
     <div class="kv"><span class="k">Koro</span><span>BoJ 16 Haz/18 Eyl + ECB 17 Haz/10 Eyl + BOK 16 Tem/27 Ağu + Fed 16 Eyl +25bp — koro tamamlandı <span class="thin" id="ecbFedYas"></span> — koro tamamlandı — BOK 27 Ağu (%3,00), ECB 10 Eyl (%2,50), Fed 16 Eyl (%3,75-4,00), BoJ 18 Eyl (%1,25); TCMB 22 Eki'de tek başına indirime bakıyor</span></div>
     <!-- §270b Brent rakamsizlastirildi (Fed kartiyla ayni gerekce: 102$ 15 gun
@@ -1938,8 +1938,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261024e"></script>
-<script src="/ajan.js?v=20261007a"></script>
+<script src="/app.js?v=20261024f"></script>
+<script src="/ajan.js?v=20261024a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

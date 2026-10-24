@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024e';   // SS516 HKMA ikinci yol (Actions yedegi)
+const KTP_SURUM = '20261024f';   // SS518-520 kart taramasi: dis ticaret, nobet adlari, MB kartlari canli dogrulama
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -3892,15 +3892,22 @@ async function makroKartlar(){
     }
   }catch(e){}
   // 4) Dış ticaret dengesi (aylık + 12 ay toplam)
+  /* §518 (24 Eki, kart taraması): grup ARAMASI (mkGrupBul 'dış ticaret' + /denge|açık/) artık eşleşmiyordu → kart MAYIS damgasında
+     kaldı (4,34 mlr $; diğer göstergeler Ağu/Eyl). Seri kodu doğrudan — TÜİK genel ticaret sistemi (ISIC Rev.4) toplamları, bin $:
+     TP.IHRISICREV4.TT ihracat · TP.ITHISICREV4.TT ithalat. Ölçüldü: Ağu 2026 ihracat 23,47 · ithalat 28,71 → açık 5,24 mlr $.
+     Açık = ithalat − ihracat; karşılama oranı = ihracat/ithalat. Aylar iki seride TARİHLE eşlenir (sıra varsayılmaz). */
   try{
-    const g=await mkGrupBul('dış ticaret', /dış ticaret/);
-    const s=g?await mkSeri(g,/denge|açık/,900,/hizmet|endeks|oran|yüzde/):null;
-    if(s&&s.items.length>=12){
-      const son=s.items[s.items.length-1], d=mkDonem(son.t);
-      const yillik=s.items.slice(-12).reduce((t,x)=>t+x.v,0);
-      if($('disticVal'))$('disticVal').textContent=trN(Math.abs(mkMlr(son.v)),2)+' mlr $';
-      if($('disticSub'))$('disticSub').innerHTML='yıllık '+trN(Math.abs(mkMlr(yillik)),1)+' mlr'+mkCanli;
-      if($('disticTag')&&d.etiket)$('disticTag').textContent=d.etiket;
+    const [ih,it]=await Promise.all([mkSeriKod('TP.IHRISICREV4.TT',500), mkSeriKod('TP.ITHISICREV4.TT',500)]);
+    if(ih&&it){
+      const M=new Map(it.items.map(x=>[x.t,x.v]));
+      const ortak=ih.items.filter(x=>M.has(x.t)).map(x=>({t:x.t, ih:x.v, it:M.get(x.t)}));
+      if(ortak.length>=12){
+        const son=ortak[ortak.length-1], d=mkDonem(son.t), son12=ortak.slice(-12);
+        const acik=(son.it-son.ih)/1e6, yil=son12.reduce((t,x)=>t+(x.it-x.ih),0)/1e6, kars=son.ih/son.it*100;
+        if($('disticVal'))$('disticVal').textContent=trN(Math.abs(acik),2)+' mlr $'+(acik<0?' fazla':'');
+        if($('disticSub'))$('disticSub').innerHTML='yıllık '+trN(Math.abs(yil),1)+' mlr · karşılama %'+trN(kars,1)+mkCanli;
+        if($('disticTag')&&d.etiket)$('disticTag').textContent=d.etiket;
+      }
     }
   }catch(e){}
   // 5) Rezervler (TCMB brüt)
@@ -8712,6 +8719,7 @@ async function boot(){
     ['Veri Tazeliği', planInit],
     ['Sağlık bekçisi', saglikInit],
     ['Ülke kredi notu', krediNotuInit],
+    ['MB damga kartları canlı doğrulama', mbKartCanli],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
        ondan önce bitince eklediği otomatik satırlar siliniyordu — kullanıcı
@@ -10128,6 +10136,33 @@ async function krediNotuInit(){
   const son=G[G.length-1];
   if($('knTag')&&son) $('knTag').textContent=tk(son.tarih).toLocaleUpperCase('tr-TR')+' · '+son.ajans.toLocaleUpperCase('tr-TR')+' '+(son.teyit?'TEYİT':(son.eski&&son.eski.not!==son.yeni.not?'NOT DEĞİŞTİ':'GÖRÜNÜM DEĞİŞTİ'));
   if($('knSnap')) { $('knSnap').textContent='HMB TABLOSU · '+tk(D.guncelleme).toLocaleUpperCase('tr-TR'); $('knSnap').title=(D.kaynak||'')+' · HMB son düzenleme '+String(D.hmb_modified||'').slice(0,10); }
+}
+
+/* ---- §520 MERKEZ BANKASI DAMGA KARTLARI CANLI DOĞRULAMA (24 Eki kart taraması) ----
+   BOK & Piyasa (9 Eyl) ve ECB & Politika (10 Eyl) kartları index.html'e ELLE yazılmıştı; karar satırları bugün canlıyla uyumlu
+   ama bir sonraki toplantıda (ECB 29 Eki) sessizce eskiyecekti. Canlı kaynaklar panelde ZATEN var: ECB SDW DFR değişim-tarihi
+   serisi (market?mod=ecb → seriler.dfr {deger, fark, tarih=yürürlük}) ve BOK ECOS (market?mod=ecos → faiz {deger, oncekiSeviye,
+   sonDegisimTarihi}). Kural: damga metni canlı oranı VE son değişim gününü içeriyorsa metin korunur + "canlı ✓"; içermiyorsa satır
+   canlı değerle değişir, eski metin altta "önceki not" olarak kalır ve kart etiketi "⚠ METİN ESKİ" der. BoJ'un politika faizi için
+   canlı seri yok (yalnız gecelik çağrı) — o kart damgalı kalır; bekçi geçmiş "sıradaki" tarihini ayrıca yakalar. */
+async function mbKartCanli(){
+  const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const gunAy=t=>{ const m=String(t||'').match(/^(\d{4})-?(\d{2})-?(\d{2})/); return m? (+m[3])+' '+ay[+m[2]-1] : null; };
+  const yuzde=v=>'%'+trN(v,2);
+  const uygula=(id,tagId,oran,onceki,tarih,kaynak)=>{
+    const el=$(id); if(!el||!Number.isFinite(oran)) return;
+    const gt=gunAy(tarih), eskiMetin=el.innerHTML, duz=el.textContent;
+    const uyum = duz.includes(yuzde(oran)) && (!gt || duz.includes(gt));
+    if(uyum){ el.insertAdjacentHTML('beforeend',' <span class="thin" style="font-size:9px;color:var(--up)" title="'+esc(kaynak)+'">· canlı ✓</span>'); return; }
+    const bp=Number.isFinite(onceki)?Math.round((oran-onceki)*100):null;
+    el.innerHTML=yuzde(oran)+(gt?' — '+gt:'')+(bp!=null?' ('+yuzde(onceki)+' → '+yuzde(oran)+', '+(bp>0?'+':'')+bp+'bp)':'')+' <span class="thin" style="font-size:9px">· canlı · '+esc(kaynak)+'</span>'+
+      '<div class="sub" style="font-size:9.5px;font-weight:400;margin-top:2px">önceki not (elle): '+eskiMetin+'</div>';
+    const tg=$(tagId); if(tg&&!/METİN ESKİ/.test(tg.textContent)) tg.textContent=tg.textContent+' · ⚠ METİN ESKİ';
+  };
+  try{ const j=await (await fetch('/api/market?mod=ecb')).json(); const d=j&&j.seriler&&j.seriler.dfr;
+    if(d&&Number.isFinite(d.deger)) uygula('ecbSonHamle','ecbTag',d.deger,Number.isFinite(d.fark)?+(d.deger-d.fark).toFixed(2):null,d.tarih,'ECB SDW DFR (yürürlük tarihi)'); }catch(e){}
+  try{ const j=await (await fetch('/api/market?mod=ecos')).json(); const f=j&&j.seriler&&j.seriler.faiz;
+    if(f&&Number.isFinite(f.deger)) uygula('bokPolitika','bokTag',f.deger,Number.isFinite(f.oncekiSeviye)?f.oncekiSeviye:null,f.sonDegisimTarihi,'BOK ECOS'); }catch(e){}
 }
 
 /* ---- Portföy Yönetimi ---- */
