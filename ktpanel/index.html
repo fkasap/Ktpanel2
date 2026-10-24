@@ -297,7 +297,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
   <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin:3px 2px 12px"><span>KORKU</span><span>NÖTR</span><span>AÇGÖZLÜLÜK</span></div>
   <div id="riskBaroBilesen"></div>
-  <div class="note">Buffett kuralı: "Başkaları açgözlüyken korkulu, korkuluyken açgözlü ol." VIX (küresel korku), TR CDS (ülke risk primi) ve BIST günlük momentumundan bileşik bir 0–100 skor; VIX ve BIST canlı, CDS ~15 Haz statik. Uçlar (0–25 / 75–100) çoğu zaman dönüş noktalarıdır — teyit ister, tek başına sinyal değildir.</div>
+  <div class="note">Dokuz bileşenli 0–100 skor: <b>küresel</b> (VIX), <b>ülke riski</b> (CDS seviyesi + son 1 aydaki YÖNÜ), <b>trend</b> (XU100 1 ve 3 ay), <b>piyasa yapısı</b> (52 haftalık zirveden uzaklık · kaç sektörün artıda olduğu · gerçekleşen oynaklık) ve <b>anlık</b> günlük hareket (yalnız %5). Tek günün yönü artık skoru taşımaz; bir ayda %15 düşüp son gün yatay kapanan piyasa "nötr" görünmez. Okuma: uçlar (0–25 / 75–100) çoğu zaman dönüş bölgesidir — "başkaları korkarken açgözlü ol" kuralı ancak trend ve genişlik dönmeye başlayınca uygulanabilir; skor tek başına alım sinyali değildir, teyit ister.</div>
 </div>
 <div class="card" style="margin-top:10px">
   <div class="lbl">GLOBAL RİSK BAROMETRESİ <span class="tag snap">VIX·DXY·BRENT·10Y·30Y·CDS CANLI (§421)</span></div>
@@ -1941,7 +1941,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261024g"></script>
+<script src="/app.js?v=20261024h"></script>
 <script src="/ajan.js?v=20261024a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

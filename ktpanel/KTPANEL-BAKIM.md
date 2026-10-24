@@ -36,6 +36,13 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§525 RİSK İŞTAHI BAROMETRESİ ÇOK UFUKLU (kullanıcı: "BIST 30 son ayda çöktü, barometre nötr diyor — saçmaladı"). ESKİ: VIX %35 + CDS
+  seviyesi %25 + BIST GÜNLÜK %40 → ağırlığın en büyüğü tek güne bağlıydı (24 Eki: 47 NÖTR). YENİ dokuz bileşen: VIX %15 · CDS seviyesi %10 ·
+  CDS yönü 1A %10 · XU100 1A %20 · XU100 3A %10 · 52h zirveden uzaklık %10 · sektör genişliği (1A artıda / 15) %10 · gerçekleşen
+  oynaklık 20g %10 · günlük %5. Kaynak: endeks-arsiv.json · sektor.json · cds.json · piyasa akışı (yeni dış kaynak YOK). Eksik bileşen
+  düşer, ağırlık yeniden ölçeklenir ve yazılır. Arşiv boşluğu koruması: referans kapanış hedef günden ≤10 gün önce değilse sektor.json
+  benchmark getirisi (Temmuz boşluğu 3A'yı −%21,3 gösteriyordu; doğrusu −%11,9). 24 Eki sonucu: 27 KORKU (trend 0 · genişlik 0/15 ·
+  zirveden −%24,1 · CDS 1A +14bp · RV %28,4). Sıradaki aday bileşenler: yabancı hisse akışı (haftalık EVDS) · hisse fonu net akışı.
 §523 FONKSİYON BÖLGESİ SABİTLENDİ — vercel.json "regions": ["fra1"]. Vercel kayıtları (24 Eki 16:29–16:42Z) aynı deploy'un istek
   TR'den gelince fra1'de, bekçiden (GitHub ABD) gelince pdx1'de koştuğunu gösterdi; /api/bddk pdx1'de "Task timed out after 45 seconds",
   fra1'de sağlam. HKMA 405/502 ve BDDK zaman aşımı aynı kökten: kaynak TR/AB, fonksiyon ABD batı kıyısında. Bütün kaynaklar TR/AB

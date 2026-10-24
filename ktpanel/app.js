@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024g';   // SS522 Gundem ozeti otomatik
+const KTP_SURUM = '20261024h';   // SS525 Risk barometresi cok ufuklu
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -5812,6 +5812,28 @@ function yabHaftaCanliYaz(){
         }).join(' → ');
   }catch(e){}
 }
+/* §525 RİSK İŞTAHI BAROMETRESİ — ÇOK UFUKLU (24 Eki, kullanıcı: "BIST 30 son ayda çöktü, barometre NÖTR diyor").
+   ESKİ: VIX %35 + CDS seviyesi %25 + BIST'in O GÜNKÜ değişimi %40. Ağırlığın en büyüğü TEK GÜNE bağlıydı: bir ayda −%15 düşen piyasa
+   son gün yatay kapanınca 47 NÖTR. Ölçüm 24 Eki: XU100 1A −%16,1 · 3A −%11,9 · 15/15 sektör 1A eksi · XU030 zirveden −%19,6.
+   YENİ — risk iştahı bir fon yöneticisinin baktığı gibi birkaç ufukta ölçülür (her bileşen 0 korku … 100 açgözlülük):
+     küresel   VIX seviyesi ................................ %15   28 → 0 · 13 → 100
+     ülke      CDS seviyesi ................................ %10   330 → 0 · 190 → 100
+               CDS YÖNÜ (1 ay değişim) ..................... %10   +40bp → 0 · −40bp → 100   (seviye değil, kötüleşme hızı)
+     trend     XU100 1 ay getirisi ......................... %20   −%15 → 0 · +%15 → 100
+               XU100 3 ay getirisi ......................... %10   −%25 → 0 · +%25 → 100
+     yapı      52 haftalık zirveden uzaklık (drawdown) ..... %10   −%25 → 0 · zirvede 100
+               sektör genişliği (1A artıdaki sektör payı) .. %10   0/15 → 0 · 15/15 → 100
+               gerçekleşen oynaklık (20 gün, yıllık) ....... %10   %45 → 0 · %15 → 100
+     anlık     günlük değişim .............................. %5    −%3 → 0 · +%3 → 100
+   Kaynaklar panelde ZATEN var: endeks-arsiv.json (günlük kapanış) · sektor.json (15 sektör) · cds.json (seri) · piyasa akışı.
+   Verisi olmayan bileşen hesaptan düşer, kalan ağırlıklar yeniden ölçeklenir ve kart bunu yazar (uydurma değer yok). */
+let __RB_EK=null;
+async function riskBaroEkYukle(){
+  try{ await endArsivYukle(); }catch(e){}
+  let cds=null; try{ const r=await fetch('/cds.json',{cache:'no-store'}); if(r.ok) cds=await r.json(); }catch(e){}
+  let sk=SEKTOR; if(!sk){ try{ const r=await fetch('/sektor.json',{cache:'no-store'}); if(r.ok) sk=await r.json(); }catch(e){} }
+  __RB_EK={cds, sk}; renderRiskBaro();
+}
 function renderRiskBaro(){
   if(!$('riskBaroSkor'))return;
   const m=window.__market;
@@ -5820,15 +5842,40 @@ function renderRiskBaro(){
   const vix=(m&&m.vix)?m.vix.p:17, bist=(m&&m.xu100)?m.xu100.chg:0,
         cds=cdsCanli?CDS_CANLI.deger:RISK_CDS;
   const cl=x=>Math.max(0,Math.min(100,x));
-  const vixS=cl((28-vix)/(28-13)*100), cdsS=cl((330-cds)/(330-190)*100), bistS=cl((bist+3)/6*100);
-  const skor=Math.round(vixS*0.35+cdsS*0.25+bistS*0.40);
+  const EK=__RB_EK||{};
+  /* XU100 günlük kapanış serisi (endeks arşivi) — tarih bazlı ufuk (dizin değil: arşivde eski dönemler seyrek) */
+  const XU=(ENDARS&&ENDARS.gunler)? Object.keys(ENDARS.gunler).filter(g=>ENDARS.gunler[g]&&ENDARS.gunler[g].XU100>0).sort().map(g=>[g,ENDARS.gunler[g].XU100]) : [];
+  const sonXU=XU.length? XU[XU.length-1] : null;
+  const gerideki=(gun)=>{ if(!sonXU) return null; const d=new Date(sonXU[0]+'T12:00:00'); d.setDate(d.getDate()-gun); const t=d.toISOString().slice(0,10); let v=null; for(const x of XU){ if(x[0]<=t) v=x; else break; } return v; };
+  /* referans kapanış hedef günden en çok 10 gün önce olmalı — arşivde boşluk varsa (Temmuz 2026) ufuk sessizce uzamasın;
+     o durumda Actions'ın hesapladığı sektor.json benchmark getirisi kullanılır */
+  const getiri=(gun)=>{ const a=gerideki(gun); if(!a||!sonXU) return null; const hedef=new Date(sonXU[0]+'T12:00:00'); hedef.setDate(hedef.getDate()-gun);
+    return ((hedef-new Date(a[0]+'T12:00:00'))/864e5<=10)? (sonXU[1]/a[1]-1)*100 : null; };
+  const bm=(EK.sk&&EK.sk.benchmark&&EK.sk.benchmark.g)||null;
+  let r1A=getiri(30); if(r1A==null&&bm&&isFinite(bm[2])) r1A=bm[2];
+  let r3A=getiri(91); if(r3A==null&&bm&&isFinite(bm[3])) r3A=bm[3];
+  let dd=null; if(sonXU){ const bas=gerideki(365); const pen=XU.filter(x=>!bas||x[0]>=bas[0]); if(pen.length>=60){ const mx=Math.max(...pen.map(x=>x[1])); dd=(sonXU[1]/mx-1)*100; } }
+  let rv=null; { const k=XU.slice(-21); if(k.length===21&&(new Date(k[20][0])-new Date(k[0][0]))/864e5<=40){ const r=[]; for(let i=1;i<k.length;i++) r.push(Math.log(k[i][1]/k[i-1][1])); const o=r.reduce((a,b)=>a+b,0)/r.length; rv=Math.sqrt(r.reduce((a,b)=>a+(b-o)*(b-o),0)/r.length)*Math.sqrt(252)*100; } }
+  let gen=null, genN=0; { const L=(EK.sk&&EK.sk.sektorler)||[]; const v=L.filter(x=>x.g&&isFinite(x.g[2])); if(v.length>=8){ genN=v.length; gen=v.filter(x=>x.g[2]>0).length; } }
+  let cdsD=null; { const S=EK.cds&&EK.cds.seri; if(Array.isArray(S)&&S.length>20){ const son=S[S.length-1]; const d=new Date(son[0]+'T12:00:00'); d.setDate(d.getDate()-30); const t=d.toISOString().slice(0,10); let a=null; for(const x of S){ if(x[0]<=t) a=x; else break; } if(a) cdsD=(cdsCanli?cds:son[1])-a[1]; } }
+  const B=[
+    {ad:'VIX (küresel korku)', w:.15, v:cl((28-vix)/(28-13)*100), det:'%'+trN(vix,2)},
+    {ad:'TR CDS seviyesi', w:.10, v:cl((330-cds)/(330-190)*100), det:null},
+    {ad:'TR CDS yönü (1 ay)', w:.10, v:cdsD==null?null:cl((40-cdsD)/80*100), det:cdsD==null?'veri yok':(cdsD>=0?'+':'')+trN(cdsD,0)+' bp'},
+    {ad:'XU100 trend — 1 ay', w:.20, v:r1A==null?null:cl((r1A+15)/30*100), det:r1A==null?'veri yok':(r1A>=0?'+':'')+trN(r1A,1)+'%'},
+    {ad:'XU100 trend — 3 ay', w:.10, v:r3A==null?null:cl((r3A+25)/50*100), det:r3A==null?'veri yok':(r3A>=0?'+':'')+trN(r3A,1)+'%'},
+    {ad:'Zirveden uzaklık (52 hafta)', w:.10, v:dd==null?null:cl((dd+25)/25*100), det:dd==null?'veri yok':trN(dd,1)+'%'},
+    {ad:'Sektör genişliği (1 ay artıda)', w:.10, v:gen==null?null:gen/genN*100, det:gen==null?'veri yok':gen+'/'+genN+' sektör'},
+    {ad:'Gerçekleşen oynaklık (20g)', w:.10, v:rv==null?null:cl((45-rv)/30*100), det:rv==null?'veri yok':'yıllık %'+trN(rv,1)},
+    {ad:'BIST günlük', w:.05, v:cl((bist+3)/6*100), det:(bist>=0?'+':'')+trN(bist,2)+'%'}
+  ];
+  const var_=B.filter(b=>b.v!=null), wT=var_.reduce((a,b)=>a+b.w,0);
+  const skor=Math.round(var_.reduce((a,b)=>a+b.v*b.w,0)/(wT||1));
   const e=skor>=75?['AŞIRI AÇGÖZLÜLÜK','var(--up)']:skor>=58?['AÇGÖZLÜLÜK','var(--up)']:skor>=43?['NÖTR','#E8933B']:skor>=25?['KORKU','var(--down)']:['AŞIRI KORKU','var(--down)'];
-  $('riskBaroSkor').innerHTML='<span style="font-family:var(--mono);font-size:34px;font-weight:700;color:'+e[1]+'">'+skor+'</span> <span style="font-weight:700;font-size:13px;letter-spacing:.5px;color:'+e[1]+'">'+e[0]+'</span> <span class="sub" style="display:inline">/100</span>';
+  $('riskBaroSkor').innerHTML='<span style="font-family:var(--mono);font-size:34px;font-weight:700;color:'+e[1]+'">'+skor+'</span> <span style="font-weight:700;font-size:13px;letter-spacing:.5px;color:'+e[1]+'">'+e[0]+'</span> <span class="sub" style="display:inline">/100'+(wT<0.999?' · '+Math.round(wT*100)+'% ağırlıkla (eksik bileşen)':'')+'</span>';
   $('riskBaroIbre').style.left='calc('+skor+'% - 2px)';
-  const bl=(ad,v,det)=>'<div class="kv"><span class="k">'+ad+'</span><span><b>'+Math.round(v)+'</b>/100 <span class="sub" style="display:inline">'+det+'</span></span></div>';
-  /* §253 CDS satiri artik YASINI SOYLUYOR. VIX ve BIST canli; CDS elle.
-     Yas 10 gunu gecerse etiket kirmizilasir — barometrenin %25'inin bayat
-     oldugu SESSIZ kalmaz. */
+  const bl=(ad,v,det,w)=>'<div class="kv"><span class="k">'+ad+' <span class="thin" style="font-size:9px">%'+Math.round(w*100)+'</span></span><span>'+(v==null?'<span class="sub" style="display:inline">—</span>':'<b>'+Math.round(v)+'</b>/100')+' <span class="sub" style="display:inline">'+det+'</span></span></div>';
+  /* §253 CDS satiri artik YASINI SOYLUYOR. */
   const cdsGun=cdsCanli?CDS_CANLI.tarih:RISK_CDS_DAMGA;
   let cdsYas=null;
   try{ cdsYas=Math.floor((new Date()-new Date(cdsGun))/86400000); }catch(e){}
@@ -5838,9 +5885,13 @@ function renderRiskBaro(){
   const cdsEski=(cdsYas!=null&&cdsYas>10);
   const cdsDgs=(cdsCanli&&isFinite(CDS_CANLI.degisim)&&CDS_CANLI.degisim!==0)
     ? ' <span class="'+(CDS_CANLI.degisim<0?'up':'down')+'">'+(CDS_CANLI.degisim>0?'+':'')+trN(CDS_CANLI.degisim,1)+'</span>' : '';
-  const cdsDet=trN(cds,0)+' bp'+cdsDgs+' <span class="thin" style="font-size:9px;color:'+(cdsEski?'var(--down)':'var(--muted)')+'">· '
+  B[1].det=trN(cds,0)+' bp'+cdsDgs+' <span class="thin" style="font-size:9px;color:'+(cdsEski?'var(--down)':'var(--muted)')+'">· '
     +cdsTar+(cdsYas!=null?' ('+cdsYas+'g)':'')+(cdsCanli?' · canlı':' · damgalı')+(cdsEski?' ⚠':'')+'</span>';
-  $('riskBaroBilesen').innerHTML=bl('VIX (küresel korku)',vixS,'%'+trN(vix,2))+bl('TR CDS (ülke riski)',cdsS,cdsDet)+bl('BIST momentum (günlük)',bistS,(bist>=0?'+':'')+trN(bist,2)+'%');
+  const grp=(baslik)=>'<div class="sub" style="font-size:9px;font-family:var(--mono);letter-spacing:.6px;margin:6px 0 0">'+baslik+'</div>';
+  $('riskBaroBilesen').innerHTML=grp('KÜRESEL')+bl(B[0].ad,B[0].v,B[0].det,B[0].w)+grp('ÜLKE RİSKİ')+bl(B[1].ad,B[1].v,B[1].det,B[1].w)+bl(B[2].ad,B[2].v,B[2].det,B[2].w)+
+    grp('TREND')+bl(B[3].ad,B[3].v,B[3].det,B[3].w)+bl(B[4].ad,B[4].v,B[4].det,B[4].w)+grp('PİYASA YAPISI')+bl(B[5].ad,B[5].v,B[5].det,B[5].w)+bl(B[6].ad,B[6].v,B[6].det,B[6].w)+bl(B[7].ad,B[7].v,B[7].det,B[7].w)+
+    grp('ANLIK')+bl(B[8].ad,B[8].v,B[8].det,B[8].w)+
+    '<div class="sub" style="font-size:9.5px;margin-top:6px">Ağırlıklı ortalama · her bileşen 0 = korku, 100 = açgözlülük · arşiv '+(sonXU?sonXU[0]:'—')+' kapanışı. Tek günlük hareket artık skorun yalnız %5\'i (§525).</div>';
 }
 
 /* ---- Tek tus canli yenileme ---- */
@@ -8721,6 +8772,7 @@ async function boot(){
     ['Ülke kredi notu', krediNotuInit],
     ['MB damga kartları canlı doğrulama', mbKartCanli],
     ['Gündem özeti (otomatik)', ()=>setTimeout(gundemCanli,3000)],
+    ['Risk barometresi ek veriler', ()=>setTimeout(riskBaroEkYukle,2000)],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
        ondan önce bitince eklediği otomatik satırlar siliniyordu — kullanıcı
