@@ -8,8 +8,63 @@ const https = require('node:https');
 // BDDK sunucusu ara sertifikayı göndermiyor (UNABLE_TO_VERIFY_LEAF_SIGNATURE).
 // Zincir doğrulamasını atlıyoruz AMA sunucunun sunduğu sertifikanın gerçekten bddk.org.tr'ye
 // ait olduğunu elle doğruluyoruz — böylece "herkese açık" bir TLS'e düşmüyoruz.
-function bddkIstek(yol, govde, ekBaslik){
+/* §501b (24 Eki 2026): insecureHTTPParser YETMEDİ — "Invalid header token" başlık ADINDAKİ geçersiz karakterden geliyor ve
+   llhttp'nin hoşgörü modu yalnız başlık DEĞERLERİNİ kapsıyor. Çözüm: Node HTTP ayrıştırıcısı hata verirse aynı istek ham TLS
+   soketiyle (tls.connect) tekrar gönderilir, yanıt başlıkları ELLE ve hoşgörülü ayrıştırılır (geçersiz satır atlanır ve teşhise
+   yazılır). Sertifika denetimi (alan adı · kendinden imzalı · geçerlilik · PIN) ham yolda da AYNI fonksiyonla yapılır. */
+async function bddkIstek(yol, govde, ekBaslik){
   if(global.__BDDK_TEST_ISTEK) return global.__BDDK_TEST_ISTEK(yol, govde, ekBaslik);
+  try { return await bddkIstekNode(yol, govde, ekBaslik); }
+  catch(e){
+    const m=String(e&&e.message||e);
+    if(!/Parse Error|HPE_|Invalid header/i.test(m)) throw e;
+    const y = await bddkIstekHam(yol, govde, ekBaslik);
+    SON_TESHIS = Object.assign(SON_TESHIS||{}, { yol:'ham TLS (§501b)', nodeHata:m.slice(0,80) });
+    return y;
+  }
+}
+function bddkSertifikaDenetle(c){
+  const ad = ((c&&c.subject&&c.subject.CN)||'') + ' ' + ((c&&c.subjectaltname)||'');
+  if(!/bddk\.org\.tr/i.test(ad)) return 'Sertifika alan adı eşleşmedi: '+ad.slice(0,80);
+  const issCN=(c&&c.issuer&&c.issuer.CN)||'', subCN=(c&&c.subject&&c.subject.CN)||'';
+  if(issCN && subCN && issCN===subCN && !(c&&c.issuerCertificate&&c.issuerCertificate!==c)) return 'Kendinden imzalı sertifika: '+subCN.slice(0,60);
+  if(c&&c.valid_from&&c.valid_to){ const v1=Date.parse(c.valid_from), v2=Date.parse(c.valid_to), t=Date.now(); if(isFinite(v1)&&isFinite(v2)&&(t<v1||t>v2)) return 'Sertifika geçerlilik dışı: '+c.valid_from+' → '+c.valid_to; }
+  const fp=(c&&(c.fingerprint256||c.fingerprint))||'';
+  if(BDDK_PINLER_GLOBAL.length && fp && !BDDK_PINLER_GLOBAL.some(p=>p.toUpperCase()===fp.toUpperCase())) return 'TLS PIN UYUSMADI (SS309) - GELEN PARMAK IZI: '+fp+' · CN '+subCN+' · veren '+issCN+' · gecerlilik '+((c&&c.valid_to)||'?');
+  SON_TESHIS = Object.assign(SON_TESHIS||{}, { tls:{ fp, cn:subCN, veren:issCN, bitis:(c&&c.valid_to)||null, pin:'AKTİF' } });
+  return null;
+}
+function bddkIstekHam(yol, govde, ekBaslik){
+  const tls = require('node:tls');
+  return new Promise((coz, red)=>{
+    const so = tls.connect({ host:'www.bddk.org.tr', port:443, servername:'www.bddk.org.tr', rejectUnauthorized:false, ALPNProtocols:['http/1.1'] }, ()=>{
+      const hata = bddkSertifikaDenetle(so.getPeerCertificate(true)); if(hata){ so.destroy(); return red(new Error(hata)); }
+      const B = Object.assign({ 'Host':'www.bddk.org.tr', 'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
+        'Accept-Encoding':'identity', 'Connection':'close' }, ekBaslik||{});
+      if(govde) B['Content-Length'] = Buffer.byteLength(govde);
+      so.write((govde?'POST ':'GET ')+yol+' HTTP/1.1\r\n'+Object.entries(B).map(([k,v])=>k+': '+v).join('\r\n')+'\r\n\r\n');
+      if(govde) so.write(govde);
+    });
+    const parcalar=[]; so.setTimeout(20000, ()=>so.destroy(new Error('zaman aşımı (ham)')));
+    so.on('data', d=>parcalar.push(d)); so.on('error', red);
+    so.on('end', ()=>{ try{
+      const tum = Buffer.concat(parcalar); const ayr = tum.indexOf('\r\n\r\n'); if(ayr<0) return red(new Error('ham yanıt: başlık sonu yok'));
+      const satirlar = tum.slice(0, ayr).toString('latin1').split('\r\n'); const ilk = satirlar.shift()||'';
+      const durum = +((ilk.match(/^HTTP\/\d\.\d\s+(\d{3})/)||[])[1]||0);
+      const H = {}, cerez = [], bozuk = [];
+      for(const s of satirlar){ const i=s.indexOf(':'); const ad = i>0 ? s.slice(0,i).trim().toLowerCase() : '';
+        if(!ad || !/^[!#$%&'*+.^_`|~0-9a-z-]+$/.test(ad)){ bozuk.push(s.slice(0,60)); continue; }
+        const v=s.slice(i+1).trim(); if(ad==='set-cookie') cerez.push(v); else H[ad]=v; }
+      let govdeB = tum.slice(ayr+4);
+      if(/chunked/i.test(H['transfer-encoding']||'')){ const out=[]; let p=0;
+        while(p<govdeB.length){ const e=govdeB.indexOf('\r\n',p); if(e<0) break; const n=parseInt(govdeB.slice(p,e).toString('latin1'),16); if(!(n>0)) break; out.push(govdeB.slice(e+2,e+2+n)); p=e+2+n+2; }
+        govdeB = Buffer.concat(out); }
+      if(bozuk.length) SON_TESHIS = Object.assign(SON_TESHIS||{}, { bozukBaslik: bozuk.slice(0,3) });
+      coz({ durum, ctype:H['content-type']||'', metin:govdeB.toString('utf8'), cerez });
+    }catch(e){ red(e); } });
+  });
+}
+function bddkIstekNode(yol, govde, ekBaslik){
   return new Promise((coz, red)=>{
     /* §490 (21 Eki 2026): panel "Bankacılık · VERİ YOK". Teşhis: 'Sertifika alan adı eşleşmedi: ' — BOŞ ad. Sertifika YANIT
        anında okunuyordu (s.socket.getPeerCertificate); TLS oturumu yeniden kullanıldığında (session resumption / keep-alive
@@ -51,7 +106,7 @@ function bddkIstek(yol, govde, ekBaslik){
         /* §490b (21 Eki 2026): sertifika 15 Kas bitişinden ~3,5 hafta önce YENİLENDİ — canlı teshis=1 yeni parmak izi 56:2D:30:…:5A:B3.
            Kabul gerekçesi: PIN kontrolünden ÖNCE çalışan üç kontrol geçti (alan adı *.bddk.org.tr, kendinden imzalı değil, geçerlilik
            penceresi içinde). Eski pin 15 Kas'a kadar listede kalır (BDDK eski sertifikaya dönerse kırılmasın); sonra silinir. */
-        const BDDK_PINLER = ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3',
+        const BDDK_PINLER = BDDK_PINLER_GLOBAL.length ? BDDK_PINLER_GLOBAL : ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3',
                              '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79'];
         const BDDK_PIN = BDDK_PINLER[0];
         const issCN = (c&&c.issuer&&c.issuer.CN)||'';
@@ -85,6 +140,8 @@ function bddkIstek(yol, govde, ekBaslik){
   });
 }
 let SON_TESHIS=null;
+const BDDK_PINLER_GLOBAL = ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3',
+                            '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79'];
 module.exports = async (req, res) => {
   SON_TESHIS=null;
   res.setHeader('Access-Control-Allow-Origin', '*');
