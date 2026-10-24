@@ -229,9 +229,13 @@ async function katmanEkran(onceki) {
   } finally { await tarayici.close().catch(() => {}); }
   /* yeni ↔ süregelen: önceki koşunun ekran işaretleriyle karşılaştır */
   const eskiS = (onceki && onceki.ekran && onceki.ekran.sekmeler) || {};
+  /* §509b İKİ TUR ONAYI (ilk canlı koşu, 24 Eki 14:16): HKMA "HTTP 405" ve FRED "alınamadı" tek turluk kaynak hıçkırığıydı —
+     dakikalar sonra ikisi de sağlamdı. Ekran işareti ilk turda BİLGİ ("gözlemde"), bir sonraki turda da duruyorsa UYARI olur.
+     Sert kırılmaları seri/köprü katmanları zaten anında yakalar; JS istisnası da anında kritik. */
   for (const [sk, liste] of Object.entries(sonuc.sekmeler)) for (const x of liste) {
-    const yeni = !(eskiS[sk] || []).includes(x);
-    ekle(yeni ? 'uyari' : 'bilgi', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, yeni ? 'Bu koşuda ilk kez görüldü.' : 'Süregelen.');
+    const onceden = (eskiS[sk] || []).includes(x);
+    if (/^\(bekçi:/.test(x)) { ekle('uyari', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, 'Bekçinin kendi gezinme hatası.'); continue; }
+    ekle(onceden ? 'uyari' : 'bilgi', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, onceden ? 'En az iki turdur ekranda.' : 'İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.');
   }
   const eskiJ = new Set((onceki && onceki.ekran && onceki.ekran.jsHata) || []);
   for (const e of sonuc.jsHata) ekle(eskiJ.has(e) ? 'uyari' : 'kritik', 'ekran', 'js|' + e.slice(0, 80), 'JS istisnası: ' + e, 'Sayfa kodunda yakalanmamış hata — bir kart ya da sekme hiç çizilmiyor olabilir.');
