@@ -850,6 +850,17 @@ async function bulutOku(){
 }
 
 
+/* §527 BAYAT HAFTALIK NOT ARŞİV OLARAK BASILIR (25 Eki). Bekçi: "Haftalık Yorum'da politika faizi %37 yazıyor, canlı %36".
+   Kaynak 24–30 Ağu haftasının AI notuydu — 61 gün önce yazılmış, hâlâ "bu hafta" gibi duruyordu. Not 10 günden eskiyse
+   içerik data-tarihsel kabına konur (bekçi güncel değer iddiası saymaz), başına yaşı yazılır, etikete ARŞİV eklenir. */
+function haftalikBas(ym, secili){
+  const yas = secili.ts ? Math.floor((Date.now()-secili.ts)/864e5) : null;
+  const yh=$('yorumHafta');
+  if(yas!=null && yas>10){
+    ym.innerHTML='<div data-tarihsel="AI haftalık not · '+yas+' gün önce"><div class="sub" style="font-size:10px;color:var(--down);margin-bottom:8px">⚠ ARŞİV — bu not '+yas+' gün önce ('+new Date(secili.ts).toLocaleDateString('tr-TR')+') yazıldı; içindeki rakamlar o günündür. Güncel duruş için Taktiksel Dağılım (kurallı model) ve canlı kartlar esas alınır.</div>'+secili.html+'</div>';
+    if(yh) yh.textContent=(secili.etiket||'HAFTALIK NOT')+' · ARŞİV ('+yas+' GÜN)';
+  } else { ym.innerHTML=secili.html; if(secili.etiket&&yh) yh.textContent=secili.etiket; }   /* §422c */
+}
 /* Açılışta senkron hızlı basım — eski (fabrika) notlar hiç görünmesin */
 function hizliGeriYukle(){
   try{
@@ -862,9 +873,7 @@ function hizliGeriYukle(){
        geri yüklemede hangisi daha yeniyse o basılır (ikisi de ⌫ ile korunur). */
     const HK=k.__HAFTALIK__, AK=k.__AYLIK__;
     const secili = (AK&&HK) ? ((AK.ts||0)>(HK.ts||0)?AK:HK) : (AK||HK);
-    if(ym&&secili&&secili.html){ ym.innerHTML=secili.html;
-      if(secili.etiket&&$('yorumHafta')) $('yorumHafta').textContent=secili.etiket;   /* §422c */
-      n++; }
+    if(ym&&secili&&secili.html){ haftalikBas(ym, secili); n++; }
     if(k.__GUNDEM__&&k.__GUNDEM__.html&&$('ajanNot')){
       $('ajanNot').innerHTML='<div style="font-size:12px;line-height:1.6">'+k.__GUNDEM__.html.replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div>'+
         '<div class="sub" style="font-size:9px;margin-top:4px">🤖Ebu · son üretim</div>';
@@ -895,9 +904,7 @@ async function notlariGeriYukle(){
        geri yüklemede hangisi daha yeniyse o basılır (ikisi de ⌫ ile korunur). */
     const HK=k.__HAFTALIK__, AK=k.__AYLIK__;
     const secili = (AK&&HK) ? ((AK.ts||0)>(HK.ts||0)?AK:HK) : (AK||HK);
-    if(ym&&secili&&secili.html){ ym.innerHTML=secili.html;
-      if(secili.etiket&&$('yorumHafta')) $('yorumHafta').textContent=secili.etiket;   /* §422c */
-      n++; }
+    if(ym&&secili&&secili.html){ haftalikBas(ym, secili); n++; }
     const bugun=bugunStr();
     Object.keys(k).forEach(anah=>{
       if(!anah.startsWith('__GUN2_')) return;
