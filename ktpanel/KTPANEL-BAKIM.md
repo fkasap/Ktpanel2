@@ -6,6 +6,37 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §509 (24 Eki 2026) — SAĞLIK BEKÇİSİ: PANEL KENDİNİ DENETLER
+
+Kullanıcı: "mantığımız her şeyi otomatik yapmak, sistem yaşayan bir sistem olacak." 24 Eki taramasında bulunan hataların
+çoğu SESSİZ kırılmaydı (boş seri → sessiz yedek; tarih biçimi değişti → Δ boş). Elle taramayı sistem her gün kendisi yapar.
+DOSYALAR: scripts/saglik.mjs · .github/workflows/saglik.yml · ktpanel/test/kopru-testi.js (KOPRU_JSON çıktısı) ·
+  ktpanel/app.js saglikInit() + index.html #saglikBody (Veri Durumu çekmecesi, düğmede ● rozet) · çıktı ktpanel/saglik.json
+ZAMANLAMA: hafta içi 10:20 ve 19:00 TSİ, Cumartesi 08:30 (haftalık özet maili). Elle: Actions › Sağlık Bekçisi › Run workflow.
+KATMANLAR — el ile eşik/liste YOK, hepsi kendi kendine kalibre:
+  1 seriler    app.js'te tırnak içinde geçen her TP.* kodu otomatik izlenir (yeni seri eklendiği an). Bayatlık eşiği serinin
+               kendi gözlem aralığından: günlük 7 · haftalık 21 · aylık ~98 · çeyreklik ~250 gün. Boş birincil = KRİTİK,
+               boş yedek (yedek:[...] içinde) = uyarı. BİLEREK durmuş seri kodun yanına yorumla işaretlenir:
+               "saglik:tarihsel TP.X" (ilk örnek TP.FG.J0 — eski baz TÜFE, zincirleme için; ilk denemede yanlış alarm verdi).
+  2 dosyalar   ktpanel/*.json|csv için ktpanel-bot commit geçmişinden ritim (iş günü medyanı) öğrenilir; ritmin 3 katı aşılırsa
+               uyarı, 9 katı kritik. Bot <3 kez yazmışsa dosya OTOMASYON BORCU listesine girer (elle güncellenen = hedef sıfır).
+               İlk ölçüm: 27 otomatik dosya sağlıklı · 15 borç (sukuk-ihrac 86g, degerleme 85g, yevren 82g, guidance/pyssektor 60g,
+               inceleme-ai 57g, yabanci 22g, analist/halkaarz 19g, rezerv, karar-model, bist-takvim, sut-ek2b, guncelleme-plani…).
+  3 köprüler   test/kopru-testi.js (şema) artık her turda koşar; sonuçlar JSON ile bekçiye akar.
+  4 tutarlılık POLITIKA_DAMGA ↔ TP.PY.P02.1H · iş gününde eğri Δ hepsi boş mu (§503 sınıfı).
+  5 ekran      Playwright paneli açar, her sekme + alt sekme; "veri yok/alınamadı/NaN/undefined/HTTP 4xx-5xx" işaretleri ve JS
+               istisnaları. Önceki turla kıyas: YENİ → uyarı (JS istisnası → kritik), süregelen → bilgi (kaç gündür).
+GÜVENLİK: CRON_SECRET YALNIZ panel alan adına giden isteklere eklenir (route), üçüncü tarafa sızmaz. Bekçi hiçbir şey yazmaz:
+  /api/* POST/PUT, ?mod=mail ve /api/ajanktp (AI maliyeti) taklit yanıtla kesilir.
+MAIL: yalnız YENİ kritik ya da DÜZELEN kritik varsa + Cumartesi özet. Yol: POST /api/data?mod=mail (Resend, MAIL_TO). Uyarı enflasyonu yok.
+HAFIZA: her bulgu `ilk` tarihini taşır (kaç gündür), düzelenler 7 gün listede kalır, son 60 turun kritik/uyarı sayısı `gecmis`'te.
+GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıyor). GITHUB_TOKEN otomatik.
+İLK GERÇEK YAKALAMA (deneme koşusu): TP.FG.J0 296 gün bayat → aslında BİLEREK durmuş eski baz TÜFE (§444f zincirleme) → kodun
+  yanına "saglik:tarihsel" işareti kondu. Ders: istisna da veri gibi KODUN YANINDA yaşar, ayrı listede değil.
+§510 BDDK pin'leri tarihli: eski sertifika pini 16 Kas'ta kendiliğinden düşer ("15 Kas'ta elle sil" ritüeli kalktı). api/bddk.js
+§511 VKŞ ünvanı KAP'tan: haritada olmayan kodun resmî ünvanı tek şirketli bildiriminin KAP sayfasındaki "companyTitle"
+  alanından okunur (ATAVK → Ata Varlık Kiralama). Yanıtta `kapUnvan` alanı. api/_lib/sukuk.js. KAP 7 sn'de dönmezse eski davranış.
+
 # BAKIM EK — §502–§508 (24 Eki 2026) — PANEL TARAMASI (21 sekme + 17 alt sekme, 101 /api ucu)
 
 Tüm /api uçları HTTP 200; sorunlar GÖVDE ve EKRAN düzeyindeydi.
