@@ -10125,8 +10125,8 @@ async function krediNotuInit(){
     '<div class="kv"><span class="k">Sıradaki değerlendirme</span><span>'+(ileri.length? ileri.map(t=>esc(t.ajans)+' <b>'+tk(t.tarih)+'</b>').join(' · ') : '<span class="sub">takvimde ileri tarih yok — ajans takvimleri yayımlanınca eklenir</span>')+'</span></div>'+
     (G.length?'<details style="margin-top:4px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:var(--mm2)">HAMLE GEÇMİŞİ ('+G.length+')</summary>'+G.slice().reverse().map(g=>'<div class="sub" style="font-size:10px;padding:2px 0">'+tk(g.tarih)+' · '+esc(g.ajans)+' · '+(g.teyit?'teyit '+esc(nt(g.yeni.not))+'/'+esc(g.yeni.gorunum):esc(nt(g.eski.not))+'/'+esc(g.eski.gorunum)+' → <b>'+esc(nt(g.yeni.not))+'/'+esc(g.yeni.gorunum)+'</b>')+' <span class="thin">· '+esc(g.kaynak||'')+'</span></div>').join('')+'</details>':'');
   const son=G[G.length-1];
-  if($('knTag')&&son) $('knTag').textContent=tk(son.tarih).toUpperCase()+' · '+son.ajans.toUpperCase()+' '+(son.teyit?'TEYİT':(son.eski&&son.eski.not!==son.yeni.not?'NOT DEĞİŞTİ':'GÖRÜNÜM DEĞİŞTİ'));
-  if($('knSnap')) { $('knSnap').textContent='HMB TABLOSU · '+tk(D.guncelleme).toUpperCase(); $('knSnap').title=(D.kaynak||'')+' · HMB son düzenleme '+String(D.hmb_modified||'').slice(0,10); }
+  if($('knTag')&&son) $('knTag').textContent=tk(son.tarih).toLocaleUpperCase('tr-TR')+' · '+son.ajans.toLocaleUpperCase('tr-TR')+' '+(son.teyit?'TEYİT':(son.eski&&son.eski.not!==son.yeni.not?'NOT DEĞİŞTİ':'GÖRÜNÜM DEĞİŞTİ'));
+  if($('knSnap')) { $('knSnap').textContent='HMB TABLOSU · '+tk(D.guncelleme).toLocaleUpperCase('tr-TR'); $('knSnap').title=(D.kaynak||'')+' · HMB son düzenleme '+String(D.hmb_modified||'').slice(0,10); }
 }
 
 /* ---- Portföy Yönetimi ---- */
