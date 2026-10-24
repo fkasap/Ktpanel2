@@ -4605,6 +4605,64 @@ async function tonBasina() {
   raporlar.push('### Ton başına FAVÖK (§499) — ✓ ' + sonuc.join(' | ') + (uyari.length ? '\n- ⚠ ' + uyari.join(' · ') : ''));
 }
 
+/* ── §515 ÜLKE KREDİ NOTU — HMB RESMÎ TABLOSU (24 Eki) ─────────────────────────────────────────────────────────────────
+   Kullanıcı: kart "S&P 16 Eki takvimde" diyordu, tarih geçmişti; tüm kart index.html'e elle yazılmıştı. Kaynak: Hazine ve Maliye
+   Bakanlığı'nın kendi tablosu — en.hmb.gov.tr/credit-ratings bir React sayfası, içeriği WordPress JSON ucundan gelir:
+     https://en.hmb.gov.tr/portal/v2/pages?slug=credit-ratings  →  [0].content.rendered (HTML tablo) · [0].modified (son düzenleme)
+   24 Eki ölçüldü: Fitch BB- Stable · Moody's Ba3 Stable · S&P BB- Stable · modified 2026-04-14.
+   HMB karar duyurusu YAYIMLAMIYOR (son ilgili yazı 2018) → tarih kendimiz tutulur: not/görünüm değişikliği İLK GÖRÜLDÜĞÜ gün
+   `gecmis`e yazılır. Takvimdeki değerlendirme günü geçtikten 3 gün sonra tabloda değişiklik yoksa sonuç "değişiklik yok" olarak
+   kendiliğinden işaretlenir. Denetim: üç ajansın üçü de geçerli not ölçeğinde olmalı — yoksa dosya YAZILMAZ (eski kalır). */
+const KN_TOHUM_GECMIS = [   /* yalnız dosya YOKKEN kullanılır — panelin önceki kartından devralınan 2026 kayıtları */
+  { tarih: '2026-01-23', ajans: 'Fitch', eski: { not: 'BB-', gorunum: 'Durağan' }, yeni: { not: 'BB-', gorunum: 'Pozitif' }, kaynak: 'panel arşivi' },
+  { tarih: '2026-04-10', ajans: 'Fitch', eski: { not: 'BB-', gorunum: 'Pozitif' }, yeni: { not: 'BB-', gorunum: 'Durağan' }, kaynak: 'panel arşivi' },
+  { tarih: '2026-07-17', ajans: 'Fitch', teyit: true, yeni: { not: 'BB-', gorunum: 'Durağan' }, kaynak: 'panel arşivi' },
+  { tarih: '2026-07-24', ajans: "Moody's", teyit: true, yeni: { not: 'Ba3', gorunum: 'Durağan' }, kaynak: 'panel arşivi' }
+];
+const KN_TOHUM_TAKVIM = [ { ajans: 'S&P', tarih: '2026-10-16' } ];
+async function krediNotu() {
+  const dosya = 'kredi-notu.json';
+  const U = 'https://en.hmb.gov.tr/portal/v2/pages?slug=credit-ratings';
+  let j;
+  try { const r = await fetch(U, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', accept: 'application/json' }, signal: AbortSignal.timeout(20000) });
+    if (!r.ok) { raporlar.push('### Ülke kredi notu (§515) — ⏭ HMB HTTP ' + r.status); return; } j = await r.json(); }
+  catch (e) { raporlar.push('### Ülke kredi notu (§515) — ⏭ HMB erişilemedi: ' + String(e.message || e).slice(0, 60)); return; }
+  const P = Array.isArray(j) ? j[0] : null; const html = P && P.content && P.content.rendered;
+  if (!html) { raporlar.push('### Ülke kredi notu (§515) — ✗ HMB yanıtında içerik yok'); return; }
+  const coz = s => String(s).replace(/<[^>]+>/g, ' ').replace(/&#8217;|&rsquo;/g, "'").replace(/&amp;/g, '&').replace(/&#8211;|&ndash;/g, '-').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+  const GOR = { stable: 'Durağan', positive: 'Pozitif', negative: 'Negatif', developing: 'Gelişen' };
+  const ajansAd = s => /fitch/i.test(s) ? 'Fitch' : /moody/i.test(s) ? "Moody's" : /s\s*&\s*p|standard/i.test(s) ? 'S&P' : /jcr/i.test(s) ? 'JCR' : /dbrs/i.test(s) ? 'DBRS' : null;
+  const OLCEK = /^(AAA|AA|A|BBB|BB|B|CCC|CC|C|D|RD|SD)[+-]?$|^(Aaa|Aa[1-3]|A[1-3]|Baa[1-3]|Ba[1-3]|B[1-3]|Caa[1-3]|Ca|C)$/;
+  const yeni = {};
+  for (const tr of html.match(/<tr[\s\S]*?<\/tr>/gi) || []) {
+    const td = (tr.match(/<td[\s\S]*?<\/td>/gi) || []).map(coz); if (td.length < 3) continue;
+    const a = ajansAd(td[0]); if (!a) continue;
+    const not = td[1].replace(/[–−]/g, '-').replace(/\s/g, ''); const gk = td[2].toLowerCase();
+    const gorunum = Object.keys(GOR).find(k => gk.includes(k));
+    yeni[a] = { not, gorunum: gorunum ? GOR[gorunum] : td[2], izleme: /watch|izleme/i.test(td[2]) || undefined };
+  }
+  const eksik = ['Fitch', "Moody's", 'S&P'].filter(a => !(yeni[a] && OLCEK.test(yeni[a].not)));
+  if (eksik.length) { raporlar.push('### Ülke kredi notu (§515) — ✗ DENETİM: ' + eksik.join(', ') + ' okunamadı/ölçek dışı (' + JSON.stringify(yeni).slice(0, 160) + ') — dosya yazılmadı'); denetimDustu = true; return; }
+  const D = (await varMi(dosya)) ? await oku(dosya) : { gecmis: KN_TOHUM_GECMIS.slice(), takvim: KN_TOHUM_TAKVIM.slice() };
+  D.gecmis = D.gecmis || []; D.takvim = D.takvim || [];
+  const eski = D.notlar || null; const degisen = [];
+  if (eski) for (const [a, v] of Object.entries(yeni)) { const e = eski[a];
+    if (e && (e.not !== v.not || e.gorunum !== v.gorunum)) { D.gecmis.push({ tarih: bugun, ajans: a, eski: { not: e.not, gorunum: e.gorunum }, yeni: { not: v.not, gorunum: v.gorunum }, kaynak: 'HMB tablosu (değişikliğin ilk görüldüğü gün)' }); degisen.push(a + ' ' + e.not + '/' + e.gorunum + ' → ' + v.not + '/' + v.gorunum); } }
+  /* takvim: günü 3+ gün geçen değerlendirme kendiliğinden sonuçlanır */
+  const gun = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+  for (const t of D.takvim) { if (t.sonuc || gun(t.tarih, bugun) < 3) continue;
+    const d = D.gecmis.find(g => g.ajans === t.ajans && g.tarih >= t.tarih && !g.teyit);
+    t.sonuc = d ? ('değişti: ' + d.eski.not + '/' + d.eski.gorunum + ' → ' + d.yeni.not + '/' + d.yeni.gorunum) : 'değişiklik yok (HMB tablosu ' + bugun + ')';
+    if (!d) D.gecmis.push({ tarih: t.tarih, ajans: t.ajans, teyit: true, yeni: { not: yeni[t.ajans].not, gorunum: yeni[t.ajans].gorunum }, kaynak: 'takvim + HMB tablosu (değişiklik yok)' }); }
+  D.gecmis.sort((a, b) => a.tarih < b.tarih ? -1 : 1);
+  for (const [a, v] of Object.entries(yeni)) { const s = D.gecmis.filter(g => g.ajans === a).pop(); if (s) v.son = { tarih: s.tarih, tip: s.teyit ? 'teyit' : (s.eski && s.eski.not !== s.yeni.not ? 'not' : 'görünüm') }; }
+  D.notlar = yeni; D.hmb_modified = P.modified || null; D.kaynak = 'T.C. Hazine ve Maliye Bakanlığı · en.hmb.gov.tr/credit-ratings (portal/v2 JSON)';
+  D.guncelleme = bugun;
+  await yaz(dosya, D);
+  if (degisen.length || !eski) degisenler.push('kredi notu' + (degisen.length ? ' (' + degisen.join('; ') + ')' : ''));
+  raporlar.push('### Ülke kredi notu (§515) — ✓ ' + Object.entries(yeni).map(([a, v]) => a + ' ' + v.not + '/' + v.gorunum).join(' · ') + ' · HMB tablo düzenleme ' + String(P.modified || '?').slice(0, 10) + (degisen.length ? ' · ⚠ DEĞİŞİKLİK: ' + degisen.join('; ') : '') + (D.takvim.filter(t => !t.sonuc).length ? ' · bekleyen takvim: ' + D.takvim.filter(t => !t.sonuc).map(t => t.ajans + ' ' + t.tarih).join(', ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -6518,6 +6576,7 @@ async function bultenKesif() {
        DERS: BIR KATMAN BASKA KATMANIN CIKTISINI OKUYORSA, ZINCIRDE ONDAN
        SONRA GELMELI. Bagimlilik sirasi tesadufe birakilmaz (SS310'un Node ikizi). */
     await cdsTazele();
+    await olcKos('Ülke kredi notu (§515)', ()=>krediNotu());   /* §515: HMB resmî tablosu — akşam + cumartesi */
   }
   if (ister('risk')) {
     await riskTazele();
@@ -6581,6 +6640,7 @@ async function bultenKesif() {
   if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
   if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
+  if (KSET.has('kredinotu') && !ister('fiyat')) await olcKos('Ülke kredi notu (§515)', ()=>krediNotu());   /* elle: --katman=kredinotu */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());

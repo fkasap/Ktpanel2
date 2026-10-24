@@ -138,7 +138,7 @@ async function katmanDosyalar() {
 }
 
 /* ── 3 · KÖPRÜLER (test/kopru-testi.js) ──────────────────────────────────────────────────────── */
-async function katmanKopruler() {
+async function katmanKopruler(onceki) {
   const t = Date.now();
   const test = path.join(DIZIN, 'test', 'kopru-testi.js');
   if (!fss.existsSync(test) || !SIR) { katmanDurum.kopruler = { sure: 0, not: !SIR ? 'CRON_SECRET yok — atlandı' : 'test dosyası yok' }; return []; }
@@ -146,10 +146,13 @@ async function katmanKopruler() {
   await new Promise(coz => { const p = spawn(process.execPath, [test], { env: { ...process.env, KOPRU_JSON: jsonYol }, stdio: ['ignore', 'ignore', 'ignore'] });
     const z = setTimeout(() => { try { p.kill('SIGKILL'); } catch (e) {} coz(); }, 240000); p.on('exit', () => { clearTimeout(z); coz(); }); });
   let S = []; try { S = JSON.parse(await fs.readFile(jsonYol, 'utf8')); } catch (e) { ekle('uyari', 'kopruler', 'cikti', 'Köprü testi çıktı üretmedi', 'test/kopru-testi.js KOPRU_JSON desteği yüklü mü?'); }
+  /* §509c: köprü UYARISI da iki tur onayından geçer (AV kotası, HKMA 502 gibi tek turluk kaynak hıçkırıkları); kritik uçta HATA anında. */
+  const eskiK = new Set(((onceki && onceki.kopruler) || []).filter(x => x.sonuc !== 'GECTI').map(x => x.ad));
   for (const x of S) {
     if (x.sonuc === 'GECTI') continue;
-    const sev = (x.sonuc === 'HATA' || x.sonuc === 'KIMLIK') ? (x.kritik ? 'kritik' : 'uyari') : 'uyari';
-    ekle(sev, 'kopruler', x.ad, x.ad + ' — ' + (x.sonuc === 'KIMLIK' ? 'kimlik (401)' : x.sonuc.toLowerCase()), x.not || '');
+    const sert = (x.sonuc === 'HATA' || x.sonuc === 'KIMLIK');
+    const sev = sert && x.kritik ? 'kritik' : (sert || eskiK.has(x.ad)) ? 'uyari' : 'bilgi';
+    ekle(sev, 'kopruler', x.ad, x.ad + ' — ' + (x.sonuc === 'KIMLIK' ? 'kimlik (401)' : x.sonuc.toLowerCase()), (x.not || '') + (sev === 'bilgi' ? ' · ilk tur — bir sonraki turda da sürerse uyarı' : ''));
   }
   katmanDurum.kopruler = { sure: Math.round((Date.now() - t) / 1000), not: S.length + ' uç · ' + S.filter(x => x.sonuc === 'GECTI').length + ' geçti' };
   return S.map(x => ({ ad: x.ad, sonuc: x.sonuc, ms: x.ms, not: x.not || '' }));
@@ -275,7 +278,7 @@ async function mailAt(rapor, yeniKritik, duzelen) {
     try { return await f(); } catch (e) { ekle('uyari', 'bekci', ad, 'Bekçi katmanı çöktü: ' + ad, String(e.stack || e).slice(0, 200)); katmanDurum[ad] = { sure: 0, not: 'çöktü' }; return null; } };
   const seriler = (await guvenli('seriler', () => katmanSeriler(appSrc))) || {};
   const dosya = (await guvenli('dosyalar', () => katmanDosyalar())) || { oto: [], borc: [] };
-  const kopru = (await guvenli('kopruler', () => katmanKopruler())) || [];
+  const kopru = (await guvenli('kopruler', () => katmanKopruler(onceki))) || [];
   await guvenli('tutarlilik', () => katmanTutarlilik(appSrc, seriler));
   const ekran = await guvenli('ekran', () => katmanEkran(onceki));
 
