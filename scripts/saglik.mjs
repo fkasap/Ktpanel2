@@ -95,6 +95,8 @@ async function katmanSeriler(appSrc) {
       const limit = g <= 3 ? 7 : g <= 10 ? 21 : Math.round(g * 2.5 + 20);
       const siklik = g <= 3 ? 'günlük' : g <= 10 ? 'haftalık' : g <= 40 ? 'aylık' : g <= 120 ? 'çeyreklik' : 'yıllık';
       sonuc[kod] = { rol, durum: 'ok', siklik, son: gozlem.length ? gozlem[gozlem.length - 1].v : (son && son.deger), tarih: sonT ? sonT.toISOString().slice(0, 10) : null, yas, limit };
+      /* §517: aylık seride 12 ay önceki gözlem varsa yıllık % (endeks → enflasyon): damga↔canlı denetimi TÜFE'yi bununla kıyaslar */
+      if (siklik === 'aylık' && gozlem.length >= 13) { const a = gozlem[gozlem.length - 1], b = gozlem[gozlem.length - 13]; if (b.v > 0 && gunFark(b.t, a.t) > 330 && gunFark(b.t, a.t) < 400) sonuc[kod].yy = +((a.v / b.v - 1) * 100).toFixed(2); }
       if (tarihsel.has(kod)) sonuc[kod].tarihsel = true;
       if (yas != null && yas > limit && !tarihsel.has(kod)) {
         sonuc[kod].durum = 'bayat';
@@ -173,7 +175,7 @@ async function katmanTutarlilik(appSrc, seriler) {
 }
 
 /* ── 5 · EKRAN (Playwright) ──────────────────────────────────────────────────────────────────── */
-async function katmanEkran(onceki) {
+async function katmanEkran(onceki, seriler) {
   const t = Date.now();
   if (ARG.ekran === '0') { katmanDurum.ekran = { sure: 0, not: 'kapalı (--ekran=0)' }; return null; }
   if (!SIR) { katmanDurum.ekran = { sure: 0, not: 'CRON_SECRET yok — atlandı' }; return null; }
@@ -229,6 +231,34 @@ async function katmanEkran(onceki) {
         }
       } catch (e) { sonuc.sekmeler[s.tab + '·' + s.ad] = ['(bekçi: sekme açılamadı — ' + String(e.message || e).slice(0, 60) + ')']; }
     }
+    /* ── §517 DAMGA ↔ CANLI: tüm sekmeler gezildikten sonra DOM'un TAMAMI (gizli sekmeler dahil — elle damga HTML'de durur) taranır.
+       Canlı serisi olan büyüklük bir satırda/cümlede başka değerle yazılmışsa uyarı. Bugün üç kart bu sınıftan çıktı (§459a · §493 · §514).
+       Kurallar serilerden kurulur; seri yoksa kural düşer (uydurma kıyas yok). */
+    const S = seriler || {}; const KUR = [];
+    const p1 = S['TP.PY.P02.1H']; if (p1 && p1.durum === 'ok') KUR.push({ ad: 'politika faizi', rx: 'politika faiz', deger: p1.son, tol: 0.01, kaynak: 'TP.PY.P02.1H ' + p1.tarih });
+    const tf = S['TP.TUKFIY2025.GENEL']; if (tf && tf.yy != null) KUR.push({ ad: 'TÜFE yıllık', rx: 'TÜFE[^.%]{0,25}yıllık|yıllık (?:TÜFE|enflasyon)|enflasyon yıllık', deger: tf.yy, tol: 0.2, kaynak: 'TP.TUKFIY2025.GENEL y/y ' + tf.tarih });
+    if (KUR.length) {
+      sonuc.damga = await sayfa.evaluate((KUR) => {
+        const sayi = t => { const m = String(t).match(/%\s?(\d{1,2}(?:[.,]\d{1,2})?)(?!\d)|(\d{1,2}(?:[.,]\d{1,2})?)\s?%/); return m ? parseFloat((m[1] || m[2]).replace(',', '.')) : null; };
+        const out = [];
+        /* Kapsam: yalnız TÜRKİYE büyüklükleri — yabancı merkez bankası sekmeleri (Asya t16 · ABD t17 · Avrupa t18) dışarıda.
+           Beklenti/tahmin/fark bağlamı da dışarıda ("yıl sonu ≈%34,7", "politika faizine makas") — onlar güncel değer iddia etmez. */
+        const YABANCI = el => !!el.closest('#t16,#t17,#t18');
+        const HARIC = /yıl sonu|beklenti|beklenen|tahmin|medyan|hedef|≈|~%|makas|fark|forward|ima|anket|senaryo|patika/i;
+        for (const k of KUR) { const R = new RegExp(k.rx, 'i');
+          /* (a) anahtar-değer satırı: .kv içinde etiket kuralı tutar, değer hücresindeki ilk % sayısı */
+          document.querySelectorAll('.kv').forEach(kv => { const et = kv.querySelector('.k'); if (!et || !R.test(et.textContent) || YABANCI(kv) || HARIC.test(et.textContent)) return;
+            const d = kv.cloneNode(true); d.querySelector('.k').remove(); const v = sayi(d.textContent);
+            if (v != null && Math.abs(v - k.deger) > k.tol) out.push({ kural: k.ad, deger: v, canli: k.deger, kaynak: k.kaynak, yer: (kv.closest('[id^=t],[id^=mk-],[id^=sv-],[id^=sk-],[id^=ft-]') || {}).id || '?', metin: kv.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) }); });
+          /* (b) düz metin: anahtar kelimeden sonraki 30 karakter içinde % sayısı (tarih geçen geçmiş cümleleri atlanır) */
+          document.querySelectorAll('.note,p,li,.sub').forEach(el => { if (el.closest('.kv') || YABANCI(el)) return;
+            String(el.textContent).replace(/\s+/g, ' ').split(/(?<=[.;!?])\s+/).forEach(c => { const m = c.match(R); if (!m) return;
+              const sonra = c.slice(m.index + m[0].length, m.index + m[0].length + 30); if (/\b\d{1,2}\s(?:Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)/i.test(c) || HARIC.test(c.slice(Math.max(0, m.index - 25), m.index + m[0].length + 30))) return;
+              const v = sayi(sonra); if (v != null && Math.abs(v - k.deger) > k.tol) out.push({ kural: k.ad, deger: v, canli: k.deger, kaynak: k.kaynak, yer: (el.closest('[id^=t],[id^=mk-],[id^=sv-],[id^=sk-],[id^=ft-]') || {}).id || '?', metin: c.slice(0, 160) }); }); });
+        }
+        const g = new Set(); return out.filter(x => { const a = x.kural + '|' + x.metin; if (g.has(a)) return false; g.add(a); return true; }).slice(0, 30);
+      }, KUR).catch(e => [{ kural: 'bekçi', metin: 'damga taraması çöktü: ' + String(e.message || e).slice(0, 80) }]);
+    }
   } finally { await tarayici.close().catch(() => {}); }
   /* yeni ↔ süregelen: önceki koşunun ekran işaretleriyle karşılaştır */
   const eskiS = (onceki && onceki.ekran && onceki.ekran.sekmeler) || {};
@@ -240,6 +270,7 @@ async function katmanEkran(onceki) {
     if (/^\(bekçi:/.test(x)) { ekle('uyari', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, 'Bekçinin kendi gezinme hatası.'); continue; }
     ekle(onceden ? 'uyari' : 'bilgi', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, onceden ? 'En az iki turdur ekranda.' : 'İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.');
   }
+  for (const x of (sonuc.damga || [])) ekle('uyari', 'ekran', 'damga|' + x.kural + '|' + String(x.metin).slice(0, 60), 'Ekranda eski damga (' + x.yer + '): ' + x.kural + ' %' + x.deger + ' yazıyor, canlı %' + x.canli, '“' + x.metin + '” — kaynak ' + x.kaynak + '. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.');
   const eskiJ = new Set((onceki && onceki.ekran && onceki.ekran.jsHata) || []);
   for (const e of sonuc.jsHata) ekle(eskiJ.has(e) ? 'uyari' : 'kritik', 'ekran', 'js|' + e.slice(0, 80), 'JS istisnası: ' + e, 'Sayfa kodunda yakalanmamış hata — bir kart ya da sekme hiç çizilmiyor olabilir.');
   katmanDurum.ekran = { sure: Math.round((Date.now() - t) / 1000), not: Object.keys(sonuc.sekmeler).length + ' sekme/alt sekme' + (sonuc.yarim ? ' (bütçe doldu, yarım)' : '') };
@@ -280,7 +311,7 @@ async function mailAt(rapor, yeniKritik, duzelen) {
   const dosya = (await guvenli('dosyalar', () => katmanDosyalar())) || { oto: [], borc: [] };
   const kopru = (await guvenli('kopruler', () => katmanKopruler(onceki))) || [];
   await guvenli('tutarlilik', () => katmanTutarlilik(appSrc, seriler));
-  const ekran = await guvenli('ekran', () => katmanEkran(onceki));
+  const ekran = await guvenli('ekran', () => katmanEkran(onceki, seriler));
 
   /* Koşmayan katmanın (seçilmedi/atlandı/çöktü) önceki bulguları TAŞINIR — yoksa bir sonraki turda hepsi "yeni" ve
      "düzeldi" diye sahte bildirim üretirdi (ör. Playwright kurulamayan turda ekran bulguları). */
