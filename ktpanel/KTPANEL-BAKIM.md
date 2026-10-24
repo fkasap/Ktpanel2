@@ -36,6 +36,11 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§516 HKMA İKİNCİ YOL: bekçinin ekran katmanı 4 tur üst üste "HKMA HTTP 405/502" gördü; köprü testi bir turda geçti; TR'den aynı uç
+  önbellekten sağlam (HIT). Yorum: HKMA, Vercel'in ABD çıkışını ARALIKLI reddediyor (3 deneme de yetmiyor). Bülten AYLIK → canlıya bağımlılık
+  gereksiz. tazele hkmaYedek() aynı bülteni GitHub sunucusundan çekip ktpanel/hkma.json'a yazar (fiyat katmanı: akşam + cumartesi);
+  market.js hkmaModu canlı yol düşerse /hkma.json'u döner (yedek:true · canliHata · kaynak tarihli), kart bunu altında yazar.
+  Hesap iki yolda birebir aynı. Dosya Actions'ın — kullanıcı yüklemez. DERS: aralıklı kaynakta yeniden deneme yetmez, İKİNCİ ÇIKIŞ YOLU gerekir.
 §515 ÜLKE KREDİ NOTU OTOMATİK (kullanıcı HMB sayfasını gösterdi): kart index.html'e elle yazılmıştı, "S&P 16 EKİ TAKVİMDE" tarih
   geçince de duruyordu. Kaynak HMB resmî tablosu — en.hmb.gov.tr/credit-ratings React sayfası; içerik WordPress JSON ucundan:
   /portal/v2/pages?slug=credit-ratings → [0].content.rendered (tablo) + [0].modified. 24 Eki: Fitch BB-/Stable · Moody's Ba3/Stable ·

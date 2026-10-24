@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024d';   // SS515 Ulke kredi notu HMB tablosundan (otomatik)
+const KTP_SURUM = '20261024e';   // SS516 HKMA ikinci yol (Actions yedegi)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1353,6 +1353,7 @@ async function hkMakro(){
       hh+='<div class="kv"><span class="k">HK devlet tahvili 10Y</span><span>%'+trN(V.y10.deger,2)+'</span></div>';
     if(V.bazFaiz&&V.bazFaiz.deger!=null)
       hh+='<div class="kv"><span class="k">Baz faiz (Fed takipçisi)</span><span>%'+trN(V.bazFaiz.deger,2)+' <span style="color:var(--muted);font-size:9px">'+(V.ay||'')+'</span></span></div>';
+    if(hh&&d.yedek) hh+='<div class="sub" style="font-size:9.5px;margin-top:4px">Kaynak: '+esc(d.kaynak||'Actions yedeği')+' — canlı HKMA çağrısı düştü ('+esc(d.canliHata||'')+'); bülten aylık olduğundan değer güncel ay için geçerli. §516</div>';
     el.innerHTML=hh||'<div class="sub">HKMA verisi boş.</div>';
   }catch(e){ el.innerHTML='<div class="sub">HKMA hatası: '+String(e).slice(0,60)+'</div>'; }
 }
