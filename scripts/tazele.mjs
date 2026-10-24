@@ -4663,6 +4663,40 @@ async function krediNotu() {
   raporlar.push('### Ülke kredi notu (§515) — ✓ ' + Object.entries(yeni).map(([a, v]) => a + ' ' + v.not + '/' + v.gorunum).join(' · ') + ' · HMB tablo düzenleme ' + String(P.modified || '?').slice(0, 10) + (degisen.length ? ' · ⚠ DEĞİŞİKLİK: ' + degisen.join('; ') : '') + (D.takvim.filter(t => !t.sonuc).length ? ' · bekleyen takvim: ' + D.takvim.filter(t => !t.sonuc).map(t => t.ajans + ' ' + t.tarih).join(', ') : ''));
 }
 
+/* ── §516 HKMA YEDEĞİ (24 Eki) ───────────────────────────────────────────────────────────────────────────────────────────
+   Sağlık bekçisi üç tur üst üste (ABD çıkışından) /api/market?mod=hkma'da "HKMA HTTP 405/502" gördü; TR'den aynı uç sağlamdı →
+   HKMA, Vercel'in çıkış IP'sini ARALIKLI reddediyor. Bülten aylık olduğundan Actions aynı veriyi KENDİ sunucusundan çeker ve
+   ktpanel/hkma.json'a yazar; köprü canlı yol düşünce bu dosyayı döner (yedek:true). İki bağımsız çıkış yolu = tek noktadan kırılma yok.
+   Hesap market.js hkmaModu ile BİREBİR aynı (alan adları dahil) — iki yol aynı şekli döndürür. Okunamazsa dosya korunur. */
+async function hkmaYedek() {
+  const dosya = 'hkma.json';
+  const u = 'https://api.hkma.gov.hk/public/market-data-and-statistics/monthly-statistical-bulletin/financial/monetary-statistics';
+  let j = null, durum = '';
+  for (const bekle of [0, 1500, 4000]) {
+    if (bekle) await new Promise(x => setTimeout(x, bekle));
+    try { const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', Accept: 'application/json' }, signal: AbortSignal.timeout(20000) });
+      durum = 'HTTP ' + r.status; if (r.ok) { j = await r.json(); break; } } catch (e) { durum = String(e.message || e).slice(0, 50); }
+  }
+  if (!(j && j.header && j.header.success && j.result && j.result.records)) { raporlar.push('### HKMA yedeği (§516) — ⏭ ' + durum + ' · mevcut hkma.json korunuyor'); return; }
+  const aylik = j.result.records.filter(x => x.end_of_month && !/-00$/.test(x.end_of_month));
+  if (aylik.length < 2) { raporlar.push('### HKMA yedeği (§516) — ✗ yeterli aylık kayıt yok'); return; }
+  const son = aylik[0], once = aylik[1];
+  const f = (a, b) => a != null && b != null ? +(a - b).toFixed(3) : null;
+  const veri = {
+    ay: son.end_of_month,
+    hkdUsd: { deger: son.exrate_hkd_usd, fark: f(son.exrate_hkd_usd, once.exrate_hkd_usd), bandKonum: son.exrate_hkd_usd != null ? +(((son.exrate_hkd_usd - 7.75) / 0.10) * 100).toFixed(0) : null },
+    aggrBalance: { deger: son.aggr_balance, fark: f(son.aggr_balance, once.aggr_balance) },
+    hiborON: { deger: son.hibor_fixing_overnight, fark: f(son.hibor_fixing_overnight, once.hibor_fixing_overnight) },
+    hibor3M: { deger: son.hibor_fixing_3m, fark: f(son.hibor_fixing_3m, once.hibor_fixing_3m) },
+    y10: { deger: son.yield_govbond_10y, fark: f(son.yield_govbond_10y, once.yield_govbond_10y) },
+    bazFaiz: { deger: son.discount_window_base_rate }
+  };
+  const eski = (await varMi(dosya)) ? await oku(dosya) : null;
+  await yaz(dosya, { guncelleme: bugun, alinma: new Date().toISOString(), kaynak: 'HKMA Monthly Statistical Bulletin (Actions yedeği · §516)', veri });
+  if (!eski || !eski.veri || eski.veri.ay !== veri.ay) degisenler.push('HKMA yedeği (' + veri.ay + ')');
+  raporlar.push('### HKMA yedeği (§516) — ✓ ' + veri.ay + ' · USD/HKD ' + veri.hkdUsd.deger + ' · HIBOR 3A ' + veri.hibor3M.deger);
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -6577,6 +6611,7 @@ async function bultenKesif() {
        SONRA GELMELI. Bagimlilik sirasi tesadufe birakilmaz (SS310'un Node ikizi). */
     await cdsTazele();
     await olcKos('Ülke kredi notu (§515)', ()=>krediNotu());   /* §515: HMB resmî tablosu — akşam + cumartesi */
+    await olcKos('HKMA yedeği (§516)', ()=>hkmaYedek());   /* §516: köprünün ikinci yolu */
   }
   if (ister('risk')) {
     await riskTazele();
