@@ -36,6 +36,7 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§526 KURALLI TAKTİK DURUŞ MODELİ (kullanıcı: "yerli hisse ÜSTÜ diyor, endeks çöktü; ABD 10/30Y uçuyor, altın nötr"). ESKİ: Taktiksel Dağılım kartı Ağustos'ta elle yazılmış fabrika dizisi + 'CANLI TÜRETİM' sahte etiketi. YENİ: taktikModel() — Yahoo seri (XU100, ^GSPC, ^TNX, GC=F, DX-Y.NYB, TRY=X) + sektor.json genişlik + cds.json + politikaCanli() + ENF_CANLI.bek + VIX; her sinyal +1/0/−1, toplam ≥+2 ÜSTÜ / ≤−2 ALTI (±4 AŞIRI). Metin sinyallerden yazılır; eski tez details[data-tarihsel] içinde çelişki notuyla. api/market.js seriModu: ^ = . - içeren kodlara .IS eklenmez. Sınır: trend ağırlıklı, dönüşte geç kalır; değerleme sinyali yok (sıradaki).
 §525 RİSK İŞTAHI BAROMETRESİ ÇOK UFUKLU (kullanıcı: "BIST 30 son ayda çöktü, barometre nötr diyor — saçmaladı"). ESKİ: VIX %35 + CDS
   seviyesi %25 + BIST GÜNLÜK %40 → ağırlığın en büyüğü tek güne bağlıydı (24 Eki: 47 NÖTR). YENİ dokuz bileşen: VIX %15 · CDS seviyesi %10 ·
   CDS yönü 1A %10 · XU100 1A %20 · XU100 3A %10 · 52h zirveden uzaklık %10 · sektör genişliği (1A artıda / 15) %10 · gerçekleşen
@@ -1178,6 +1179,7 @@ sıfırı, taze veriyi bayat gösterir. Önce ölç (veri mi etiket mi), sonra d
 DEPLOY: ktpanel/{index.html, app.js (20261012c), guncelleme-plani.json, KTPANEL-BAKIM.md}.
 
 # BAKIM EK — §459 (12 Eki 2026)
+
 
 ## §459 SONUC (12 Eki 15:17 kosusu, 38247664450) + §459h/i
 Ilk kosuda uc beklenti de tuttu: (1) fm.json TERFI ETTI — adet 113 ≥ 100, XKTUM agirlik
