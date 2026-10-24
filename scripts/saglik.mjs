@@ -247,16 +247,17 @@ async function katmanEkran(onceki, seriler) {
         const HARIC = /yıl sonu|beklenti|beklenen|tahmin|medyan|hedef|≈|~%|makas|fark|forward|ima|anket|senaryo|patika/i;
         for (const k of KUR) { const R = new RegExp(k.rx, 'i');
           /* (a) anahtar-değer satırı: .kv içinde etiket kuralı tutar, değer hücresindeki ilk % sayısı */
-          document.querySelectorAll('.kv').forEach(kv => { const et = kv.querySelector('.k'); if (!et || !R.test(et.textContent) || YABANCI(kv) || kv.closest('details') || HARIC.test(et.textContent)) return;
+          document.querySelectorAll('.kv').forEach(kv => { const et = kv.querySelector('.k'); if (!et || !R.test(et.textContent) || YABANCI(kv) || kv.closest('details,[data-tarihsel]') || HARIC.test(et.textContent)) return;
             const d = kv.cloneNode(true); d.querySelector('.k').remove(); const v = sayi(d.textContent);
             if (v != null && Math.abs(v - k.deger) > k.tol) out.push({ kural: k.ad, deger: v, canli: k.deger, kaynak: k.kaynak, yer: (kv.closest('[id^=t],[id^=mk-],[id^=sv-],[id^=sk-],[id^=ft-]') || {}).id || '?', metin: kv.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) }); });
           /* (b) düz metin: anahtar kelimeden sonraki 30 karakter içinde % sayısı (tarih geçen geçmiş cümleleri atlanır) */
-          document.querySelectorAll('.note,p,li,.sub').forEach(el => { if (el.closest('.kv') || YABANCI(el) || el.closest('details')) return;
+          document.querySelectorAll('.note,p,li,.sub').forEach(el => { if (el.closest('.kv') || YABANCI(el) || el.closest('details,[data-tarihsel]')) return;
             String(el.textContent).replace(/\s+/g, ' ').split(/(?<=[.;!?])\s+/).forEach(c => { const m = c.match(R); if (!m) return;
               const sonra = c.slice(m.index + m[0].length, m.index + m[0].length + 30); if (/\b\d{1,2}\s(?:Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)/i.test(c) || HARIC.test(c.slice(Math.max(0, m.index - 25), m.index + m[0].length + 30))) return;
               const v = sayi(sonra); if (v != null && Math.abs(v - k.deger) > k.tol) out.push({ kural: k.ad, deger: v, canli: k.deger, kaynak: k.kaynak, yer: (el.closest('[id^=t],[id^=mk-],[id^=sv-],[id^=sk-],[id^=ft-]') || {}).id || '?', metin: c.slice(0, 160) }); }); });
         }
-        const g = new Set(); return out.filter(x => { const a = x.kural + '|' + x.metin; if (g.has(a)) return false; g.add(a); return true; }).slice(0, 30);
+        const norm = t => String(t).replace(/[“”"\s]+/g, ' ').trim(); const bilinen = new Set(out.filter(x => x.yer !== '?').map(x => x.kural + '|' + norm(x.metin)));
+        const g = new Set(); return out.filter(x => { const a = x.kural + '|' + norm(x.metin); if (x.yer === '?' && bilinen.has(a)) return false; if (g.has(a)) return false; g.add(a); return true; }).slice(0, 30);
       }, KUR).catch(e => [{ kural: 'bekçi', metin: 'damga taraması çöktü: ' + String(e.message || e).slice(0, 80) }]);
     }
     /* ── §521 ELLE KART YAŞI (24 Eki kart taraması): (1) "sıradaki/planlı/takvimde … <tarih>" ifadesinin tarihi GEÇMİŞSE kart eskimiştir
@@ -270,7 +271,7 @@ async function katmanEkran(onceki, seriler) {
       const yer = el => (el.closest('[id^=t]') || {}).id || '?';
       const out = [];
       const RX = /(sıradaki[^.;|]{0,30}?|planlı değerlendirme|takvimde|bekleniyor|sonraki toplantı)\D{0,25}?(\d{1,2})(?:\s*[–-]\s*(\d{1,2}))?\s(Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)[a-zçğıöşü]*\.?(?:\s(20\d\d))?/gi;
-      document.querySelectorAll('.card .kv, .card .note').forEach(el => { if (el.closest('details')) return;   /* katlı arşiv notu (ör. Gündem eski elle not) taranmaz */
+      document.querySelectorAll('.card .kv, .card .note').forEach(el => { if (el.closest('details,[data-tarihsel]')) return;   /* katlı arşiv notu (ör. Gündem eski elle not) taranmaz */
         const t = el.textContent.replace(/\s+/g, ' '); let m;
         while ((m = RX.exec(t))) { const d = tarih(m[3] || m[2], m[4], m[5]); if (!d) continue;
           if (!m[5] && d - bugun > 200 * 864e5) d.setFullYear(d.getFullYear() - 1);
