@@ -5387,7 +5387,23 @@ async function gyoNav() {
       .filter(d => d && d.period_isPublished && d.period_code === 'NAD')
       .sort((a, b) => (b.period_orderNo || 0) - (a.period_orderNo || 0));
     if (!yayin.length) { raporlar.push('### GYO NAV (§364) — ⏭ yayımlanmış dönem yok'); return; }
-    const donem = String(yayin[0].period_value);
+    /* §512 (24 Eki): TSPB 2026/06 dönemini YAYIMLADI ama içi BOŞ (sektör NAD 0, üyelerde rapor yok) → katman
+       "hiçbir şirket için veri alınamadı" deyip ERKEN DÖNÜYORDU: güncel fiyat/iskonto da tazelenmiyordu.
+       Kural: yayımlanmış dönemler yeniden eskiye denenir; sektör toplamı ("all") DOLU olan ilk dönem kullanılır.
+       TSPB yeni dönemi doldurduğu gün katman kendiliğinden ona geçer — kimsenin bir şey yapması gerekmez. */
+    let donem = null; const bosDonemler = [];
+    for (const p of yayin.slice(0, 4)) {
+      try {
+        const ra = await fetch(T + '/reports/getmemReport/all/' + p.period_value, { signal: AbortSignal.timeout(20000) });
+        const ja = ra.ok ? await ra.json() : null; const a0 = Array.isArray(ja) ? ja[0] : null;
+        const ta = a0 && (a0.report_segments || []).find(s => s && s.name === 'Toplam Veriler');
+        if (ta && ta.t5 && Number(ta.t5.valueTl) > 0) { donem = String(p.period_value); break; }
+        bosDonemler.push(String(p.period_value));
+      } catch (e) { bosDonemler.push(String(p.period_value) + '?'); }
+      await uyku(300);
+    }
+    if (!donem) { raporlar.push('### GYO NAV (§364) — ⏭ son ' + bosDonemler.length + ' yayımlanmış dönemin hepsi boş (' + bosDonemler.join(', ') + ')'); return; }
+    if (bosDonemler.length) raporlar.push('- §512 GYO NAV: en yeni yayımlanmış dönem(ler) henüz boş (' + bosDonemler.join(', ') + ') → dolu olan ' + donem + ' kullanıldı; TSPB doldurunca kendiliğinden geçilir');
 
     /* 2) Üyeler */
     const rm = await fetch(T + '/base/getmembers/all', { signal: AbortSignal.timeout(20000) });
