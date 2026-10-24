@@ -1,0 +1,77 @@
+# KTPanel — §509 SAĞLIK BEKÇİSİ
+#
+# NE YAPAR: panelin kendini denetlediği katman (scripts/saglik.mjs). Her gün:
+#   seriler (app.js'ten otomatik keşif, bayat/boş) · dosyalar (bot ritmi durdu mu, otomasyon borcu) ·
+#   köprüler (test/kopru-testi.js şema) · tutarlılık (damga ↔ canlı) · ekran (Playwright, her sekme/alt sekme)
+# ÇIKTI: ktpanel/saglik.json (panel "Veri Durumu" çekmecesinde gösterir) · Actions özeti ·
+#   YENİ kritik bulgu / düzelen kritik varsa mail (Resend köprüsü, MAIL_TO) · Cumartesi haftalık özet maili.
+# NEDEN AYRI İŞ: tazele işinin 20 dk tavanını yemesin; kendi kırmızı/yeşili olsun.
+# Bekçi HİÇBİR VERİ YAZMAZ (yalnız saglik.json); paneli açarken yazma/mail/AI çağrılarını keser.
+
+name: Sağlık Bekçisi
+
+on:
+  schedule:
+    # Hafta içi 10:20 TSİ (07:20 UTC) — sabah fon koşusundan (09:10) sonra, gün içi kullanımdan önce
+    - cron: '20 7 * * 1-5'
+    # Hafta içi 19:00 TSİ (16:00 UTC) — akşam tazelemesinden (18:10) sonra: o koşunun kırdığını aynı akşam yakala
+    - cron: '0 16 * * 1-5'
+    # Cumartesi 08:30 TSİ (05:30 UTC) — haftalık tam tur (cumartesi tazelemesinden sonra) + haftalık özet maili
+    - cron: '30 5 * * 6'
+  workflow_dispatch:
+    inputs:
+      ekran:
+        description: 'Ekran taraması (Playwright) yapılsın mı? (1 | 0)'
+        required: false
+        default: '1'
+      mail:
+        description: 'Mail atılsın mı? (1 | 0)'
+        required: false
+        default: '1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tazele              # tazele ile AYNI grup: aynı anda push yarışı olmasın (§418)
+  cancel-in-progress: false
+
+jobs:
+  bekci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Bağımlılıklar
+        continue-on-error: true
+        run: |
+          if [ -f package-lock.json ]; then npm ci || npm install --no-audit --no-fund; else npm install --no-audit --no-fund; fi
+
+      # Ekran katmanı için; kurulamazsa bekçi ekranı atlar, diğer dört katman yine koşar.
+      - name: Playwright
+        if: github.event.inputs.ekran != '0'
+        continue-on-error: true
+        timeout-minutes: 6
+        run: npx playwright install --with-deps chromium
+
+      - name: Bekçi
+        id: bekci
+        run: node scripts/saglik.mjs --ekran="${{ github.event.inputs.ekran || '1' }}" --mail="${{ github.event.inputs.mail || '1' }}"
+        env:
+          TZ: Europe/Istanbul
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Kaydet
+        if: always()
+        run: |
+          git config user.name  "ktpanel-saglik"
+          git config user.email "bot@users.noreply.github.com"
+          git add ktpanel/saglik.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "saglik.json değişmedi"; exit 0; fi
+          git commit -m "sağlık: ${{ steps.bekci.outputs.ozet }}"
+          if ! git push; then git pull --rebase --autostash origin main && git push; fi
