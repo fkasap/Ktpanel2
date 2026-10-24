@@ -1,17 +1,17 @@
 {
- "guncelleme": "2026-10-24T11:16:42Z",
+ "guncelleme": "2026-10-24T11:31:05Z",
  "surum": "§509",
- "sure_sn": 394,
+ "sure_sn": 376,
  "ozet": {
   "kritik": 0,
-  "uyari": 3,
+  "uyari": 2,
   "bilgi": 0,
-  "yeni": 3,
-  "duzelen": 0
+  "yeni": 0,
+  "duzelen": 1
  },
  "katmanlar": {
   "seriler": {
-   "sure": 6,
+   "sure": 7,
    "not": "36 seri (app.js'ten keşfedildi)"
   },
   "dosyalar": {
@@ -19,15 +19,15 @@
    "not": "27 otomatik dosya izlendi · 15 elle güncellenen (otomasyon borcu)"
   },
   "kopruler": {
-   "sure": 104,
+   "sure": 83,
    "not": "0 uç · 0 geçti"
   },
   "tutarlilik": {
-   "sure": 10,
+   "sure": 9,
    "not": "2 kural"
   },
   "ekran": {
-   "sure": 271,
+   "sure": 274,
    "not": "38 sekme/alt sekme"
   }
  },
@@ -37,20 +37,10 @@
    "seviye": "uyari",
    "katman": "ekran",
    "baslik": "t16·Asya-Pasifik: HKMA: HKMA HTTP 405",
-   "ayrinti": "Bu koşuda ilk kez görüldü.",
+   "ayrinti": "En az iki turdur ekranda.",
    "ilk": "2026-10-24",
    "gun": 0,
-   "yeni": true
-  },
-  {
-   "id": "ekran:t17·ABD|FRED: veri alınamadı — env FRED_KEY deploy sonrası kontrol",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "t17·ABD: FRED: veri alınamadı — env FRED_KEY deploy sonrası kontrol",
-   "ayrinti": "Bu koşuda ilk kez görüldü.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true
+   "yeni": false
   },
   {
    "id": "kopruler:cikti",
@@ -60,20 +50,23 @@
    "ayrinti": "test/kopru-testi.js KOPRU_JSON desteği yüklü mü?",
    "ilk": "2026-10-24",
    "gun": 0,
-   "yeni": true
+   "yeni": false
   }
  ],
- "duzelen": [],
+ "duzelen": [
+  {
+   "id": "ekran:t17·ABD|FRED: veri alınamadı — env FRED_KEY deploy sonrası kontrol",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "t17·ABD: FRED: veri alınamadı — env FRED_KEY deploy sonrası kontrol",
+   "ayrinti": "Bu koşuda ilk kez görüldü.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": true,
+   "duzeldi": "2026-10-24"
+  }
+ ],
  "seriler": {
-  "TP.APIFON2.TOP": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 986548.9,
-   "tarih": "2026-10-23",
-   "yas": 1,
-   "limit": 7
-  },
   "TP.APIFON3": {
    "rol": "birincil",
    "durum": "ok",
@@ -101,6 +94,15 @@
    "yas": 1,
    "limit": 7
   },
+  "TP.APIFON2.TOP": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 986548.9,
+   "tarih": "2026-10-23",
+   "yas": 1,
+   "limit": 7
+  },
   "TP.BISPOLFAIZ.TUR": {
    "rol": "yedek",
    "durum": "ok",
@@ -119,14 +121,14 @@
    "yas": 23,
    "limit": 98
   },
-  "TP.DK.USD.A.YTL": {
+  "TP.ENFBEK.IYA12ENF": {
    "rol": "birincil",
    "durum": "ok",
-   "siklik": "günlük",
-   "son": 49.5389,
-   "tarih": "2026-10-23",
-   "yas": 1,
-   "limit": 7
+   "siklik": "aylık",
+   "son": 31.8,
+   "tarih": "2026-10-01",
+   "yas": 23,
+   "limit": 98
   },
   "TP.ENFBEK.PKA12ENF": {
    "rol": "birincil",
@@ -137,14 +139,24 @@
    "yas": 23,
    "limit": 98
   },
-  "TP.ENFBEK.IYA12ENF": {
+  "TP.FG.J0": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "aylık",
-   "son": 31.8,
-   "tarih": "2026-10-01",
-   "yas": 23,
-   "limit": 98
+   "son": 3683.83,
+   "tarih": "2026-01-01",
+   "yas": 296,
+   "limit": 98,
+   "tarihsel": true
+  },
+  "TP.DK.USD.A.YTL": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 49.5389,
+   "tarih": "2026-10-23",
+   "yas": 1,
+   "limit": 7
   },
   "TP.BISTTLREF.ORAN": {
    "rol": "birincil",
@@ -164,34 +176,6 @@
    "yas": 8,
    "limit": 21
   },
-  "TP.HPBITABLO5.11": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -570.872,
-   "tarih": "2026-10-16",
-   "yas": 8,
-   "limit": 21
-  },
-  "TP.FG.J0": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 3683.83,
-   "tarih": "2026-01-01",
-   "yas": 296,
-   "limit": 98,
-   "tarihsel": true
-  },
-  "TP.HPBITABLO5.6": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -365.443,
-   "tarih": "2026-10-16",
-   "yas": 8,
-   "limit": 21
-  },
   "TP.KTF10": {
    "rol": "birincil",
    "durum": "ok",
@@ -201,11 +185,20 @@
    "yas": 8,
    "limit": 21
   },
-  "TP.KTF11": {
+  "TP.HPBITABLO5.11": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 43.63,
+   "son": -570.872,
+   "tarih": "2026-10-16",
+   "yas": 8,
+   "limit": 21
+  },
+  "TP.HPBITABLO5.6": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -365.443,
    "tarih": "2026-10-16",
    "yas": 8,
    "limit": 21
@@ -219,20 +212,20 @@
    "yas": 8,
    "limit": 21
   },
+  "TP.KTF11": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 43.63,
+   "tarih": "2026-10-16",
+   "yas": 8,
+   "limit": 21
+  },
   "TP.KTF12": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
    "son": 41.5,
-   "tarih": "2026-10-16",
-   "yas": 8,
-   "limit": 21
-  },
-  "TP.KTF17": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 48.44,
    "tarih": "2026-10-16",
    "yas": 8,
    "limit": 21
@@ -246,11 +239,11 @@
    "yas": 8,
    "limit": 21
   },
-  "TP.MKNETHAR.M8": {
+  "TP.KTF17": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": -44.36,
+   "son": 48.44,
    "tarih": "2026-10-16",
    "yas": 8,
    "limit": 21
@@ -264,15 +257,6 @@
    "yas": 8,
    "limit": 21
   },
-  "TP.TRY.MT02": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 43.22,
-   "tarih": "2026-10-16",
-   "yas": 8,
-   "limit": 21
-  },
   "TP.PY.P02.1H": {
    "rol": "birincil",
    "durum": "ok",
@@ -282,11 +266,20 @@
    "yas": 1,
    "limit": 7
   },
-  "TP.TRY.MT03": {
+  "TP.TRY.MT02": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 42.53,
+   "son": 43.22,
+   "tarih": "2026-10-16",
+   "yas": 8,
+   "limit": 21
+  },
+  "TP.MKNETHAR.M8": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -44.36,
    "tarih": "2026-10-16",
    "yas": 8,
    "limit": 21
@@ -317,6 +310,15 @@
    "tarih": "2026-09-01",
    "yas": 53,
    "limit": 98
+  },
+  "TP.TRY.MT03": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 42.53,
+   "tarih": "2026-10-16",
+   "yas": 8,
+   "limit": 21
   },
   "TP.TUFE1YI.T123": {
    "rol": "birincil",
@@ -363,11 +365,11 @@
    "yas": 53,
    "limit": 98
   },
-  "TP.TUKFIY2025.GENEL": {
+  "TP.TUKFIY2025.04": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "aylık",
-   "son": 137.23,
+   "son": 152.1,
    "tarih": "2026-09-01",
    "yas": 53,
    "limit": 98
@@ -381,11 +383,11 @@
    "yas": 53,
    "limit": 98
   },
-  "TP.TUKFIY2025.04": {
+  "TP.TUKFIY2025.GENEL": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "aylık",
-   "son": 152.1,
+   "son": 137.23,
    "tarih": "2026-09-01",
    "yas": 53,
    "limit": 98
@@ -696,9 +698,7 @@
     "HKMA: HKMA HTTP 405"
    ],
    "t18·Avrupa": [],
-   "t17·ABD": [
-    "FRED: veri alınamadı — env FRED_KEY deploy sonrası kontrol"
-   ],
+   "t17·ABD": [],
    "t7·Haberler": [],
    "t27·Sektörel Veriler": [],
    "t27·Sektörel Veriler › Katılım Fonları": [],
@@ -721,16 +721,14 @@
    "t26·GYO NAV": []
   },
   "jsHata": [],
-  "konsol": [
-   "Failed to load resource: the server responded with a status of 404 ()"
-  ]
+  "konsol": []
  },
  "gecmis": [
   {
    "tarih": "2026-10-24",
    "kritik": 0,
-   "uyari": 3
+   "uyari": 2
   }
  ],
- "mail": "gönderildi"
+ "mail": "atlandı"
 }
