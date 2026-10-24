@@ -65,11 +65,13 @@ async function asyaModu(req, res){
 async function seriModu(req, res){
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=3600');
-  const kod = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z0-9.]/g, '').slice(0, 12);
+  /* §526: küresel semboller de (^GSPC ^TNX GC=F DX-Y.NYB TRY=X) — taktik duruş modeli trend/faiz/kur geçmişi ister.
+     Nokta, ^ ya da = içeren kod Yahoo sembolüdür (.IS eklenmez); düz kod BIST hissesi/endeksidir. */
+  const kod = String((req.query && req.query.kod) || '').toUpperCase().replace(/[^A-Z0-9.^=-]/g, '').slice(0, 14);
   if (!kod) return res.status(200).json({ ok:false, err:'kod gerekli' });
   const gun = Math.min(Math.max(parseInt(req.query && req.query.gun) || 365, 60), 1825);
   const aralik = gun <= 95 ? '3mo' : gun <= 200 ? '6mo' : gun <= 400 ? '1y' : gun <= 800 ? '2y' : '5y';
-  const sembol = /\./.test(kod) ? kod : (kod + '.IS');
+  const sembol = /[.^=]/.test(kod) ? kod : (kod + '.IS');
   try{
     const url = 'https://query1.finance.yahoo.com/v8/finance/chart/' +
       encodeURIComponent(sembol) + '?interval=1d&range=' + aralik;
