@@ -33,6 +33,12 @@ HAFIZA: her bulgu `ilk` tarihini taşır (kaç gündür), düzelenler 7 gün lis
 GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıyor). GITHUB_TOKEN otomatik.
 İLK GERÇEK YAKALAMA (deneme koşusu): TP.FG.J0 296 gün bayat → aslında BİLEREK durmuş eski baz TÜFE (§444f zincirleme) → kodun
   yanına "saglik:tarihsel" işareti kondu. Ders: istisna da veri gibi KODUN YANINDA yaşar, ayrı listede değil.
+§509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
+  uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
+  İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§512 GYO NAV boş dönem: TSPB 2026/06'yı yayımladı ama boş → katman erken dönüp güncel fiyat/iskontoyu da tazelemiyordu. Artık yayımlanmış
+  dönemler yeniden eskiye denenir, sektör toplamı dolu olan ilki kullanılır (ölçüldü: 202606 boş → 202512, NAD 1.408 mlr ₺).
+  TSPB doldurduğu gün kendiliğinden geçer. scripts/tazele.mjs (taban dosya + gen zinciri).
 §510 BDDK pin'leri tarihli: eski sertifika pini 16 Kas'ta kendiliğinden düşer ("15 Kas'ta elle sil" ritüeli kalktı). api/bddk.js
 §511 VKŞ ünvanı KAP'tan: haritada olmayan kodun resmî ünvanı tek şirketli bildiriminin KAP sayfasındaki "companyTitle"
   alanından okunur (ATAVK → Ata Varlık Kiralama). Yanıtta `kapUnvan` alanı. api/_lib/sukuk.js. KAP 7 sn'de dönmezse eski davranış.
