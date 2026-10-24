@@ -372,5 +372,7 @@ async function calistir(u){
   } else {
     console.log(`${R.yesil}Tüm köprüler sağlam.${R.sifir}`);
   }
+  /* §509: sağlık bekçisi (scripts/saglik.mjs) sonuçları makine okunur biçimde ister — KOPRU_JSON=<yol> verilirse yazılır */
+  if(process.env.KOPRU_JSON){ try{ require('fs').writeFileSync(process.env.KOPRU_JSON, JSON.stringify(sonuclar.map(x=>({ad:x.u.ad, kritik:!!x.u.kritik, sonuc:x.s.sonuc, ms:x.s.ms, not:x.s.not||''})))); }catch(e){ console.error('KOPRU_JSON yazılamadı:', e.message); } }
   process.exit(hata.length ? 1 : 0);
 })();
