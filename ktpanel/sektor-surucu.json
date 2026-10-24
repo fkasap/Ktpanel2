@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-24T12:33:01Z",
+ "guncelleme": "2026-10-24T13:23:10Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -57554,6 +57554,7 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-06": 7.72,
     "2023-07": 7.96,
     "2023-09": 9.3,
     "2024-02": 8.22,
@@ -57584,6 +57585,10 @@
     "2026-10": 5.07
    },
    "haftalik": [
+    [
+     "2023-06-28",
+     7.72
+    ],
     [
      "2023-07-05",
      7.72
@@ -57742,7 +57747,7 @@
     "deger": 5.07,
     "yillik_degisim": -22
    },
-   "ilk": "2023-07-05",
+   "ilk": "2023-06-28",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_wafer_usd": {
@@ -57754,11 +57759,12 @@
    ],
    "kaynak": "PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması",
    "zincir": [
-    "k1 ×0.933 (33 örtüşme, 5 hafta)"
+    "k1 ×0.933 (33 örtüşme, 6 hafta)"
    ],
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-06": 0.323,
     "2023-07": 0.315,
     "2023-09": 0.34,
     "2024-02": 0.231,
@@ -57789,6 +57795,10 @@
     "2026-10": 0.14
    },
    "haftalik": [
+    [
+     "2023-06-28",
+     0.323
+    ],
     [
      "2023-07-05",
      0.309
@@ -57947,7 +57957,7 @@
     "deger": 0.14,
     "yillik_degisim": -11.4
    },
-   "ilk": "2023-07-05",
+   "ilk": "2023-06-28",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_hucre_usd": {
@@ -57962,6 +57972,7 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-06": 0.099,
     "2023-07": 0.0975,
     "2023-09": 0.084,
     "2024-02": 0.056,
@@ -57992,6 +58003,10 @@
     "2026-10": 0.04
    },
    "haftalik": [
+    [
+     "2023-06-28",
+     0.099
+    ],
     [
      "2023-07-05",
      0.096
@@ -58150,7 +58165,7 @@
     "deger": 0.04,
     "yillik_degisim": 11.1
    },
-   "ilk": "2023-07-05",
+   "ilk": "2023-06-28",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_modul_usd": {
@@ -58165,6 +58180,7 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-06": 0.168,
     "2023-07": 0.167,
     "2023-09": 0.151,
     "2024-02": 0.113,
@@ -58195,6 +58211,10 @@
     "2026-10": 0.0895
    },
    "haftalik": [
+    [
+     "2023-06-28",
+     0.168
+    ],
     [
      "2023-07-05",
      0.167
@@ -58353,7 +58373,7 @@
     "deger": 0.089,
     "yillik_degisim": 14.1
    },
-   "ilk": "2023-07-05",
+   "ilk": "2023-06-28",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_montaj_makasi_usd": {
@@ -58369,6 +58389,7 @@
    "_not": "InfoLink makasının ikinci kaynaktan teyidi; iki makas aynı yöne gidiyorsa sinyal güçlü.",
    "siklik": "aylik",
    "aylik": {
+    "2023-06": 0.069,
     "2023-07": 0.0695,
     "2023-09": 0.067,
     "2024-02": 0.057,
@@ -58399,6 +58420,10 @@
     "2026-10": 0.0495
    },
    "haftalik": [
+    [
+     "2023-06-28",
+     0.069
+    ],
     [
      "2023-07-05",
      0.071
@@ -58557,7 +58582,7 @@
     "deger": 0.049,
     "yillik_degisim": 16.7
    },
-   "ilk": "2023-07-05",
+   "ilk": "2023-06-28",
    "guncelleme": "2026-10-24"
   },
   "tkfen_backlog": {
@@ -86262,6 +86287,26 @@
      "Mono PERC Module in China": 0.15,
      "182mm 580/625Wp N-Mono Module": 0.167,
      "ThinFilm Solar Module": 0.211
+    },
+    "2023-06-28": {
+     "PV Grade PolySilicon (9N/9N+)": 7.72,
+     "156 mm Multi Solar Wafer": 0.178,
+     "166mm Mono Solar Wafer": 0.294,
+     "182mm Mono Solar Wafer": 0.346,
+     "210mm Mono Solar Wafer": 0.502,
+     "Multi Cell Price": 0.081,
+     "Poly PERC Cell": 0.084,
+     "China Mono PERC Cell": 0.087,
+     "166mm Mono PERC Cell": 0.091,
+     "182mm Mono PERC Cell": 0.087,
+     "210mm Mono PERC Cell": 0.093,
+     "182mm N-Mono Cell": 0.099,
+     "Poly Module": 0.148,
+     "182mm 550/595Wp PERC Module": 0.155,
+     "210mm 600/660Wp PERC Module": 0.162,
+     "Mono PERC Module in China": 0.151,
+     "182mm 580/625Wp N-Mono Module": 0.168,
+     "ThinFilm Solar Module": 0.212
     }
    },
    "wb": {
@@ -86311,7 +86356,7 @@
     "20240223162048": 1,
     "20230725075343": 1,
     "20230705150735": 1,
-    "20230701044510": -1,
+    "20230701044510": 1,
     "20230929230651": 1,
     "20230607114640": -1,
     "20230511160023": -1,

@@ -38,6 +38,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### Ülke kredi notu (§515) — ✓ Fitch BB-/Durağan · Moody's Ba3/Durağan · S&P BB-/Durağan · HMB tablo düzenleme 2026-04-14
 
+### HKMA yedeği (§516) — ✓ 2026-09 · USD/HKD 7.847 · HIBOR 3A 3.24167
+
 ### Risk metrikleri — ✓ GEÇTİ
 - ✓ **kapsam**: 141/141 (%100)
 - ✓ **aykırı değer**: temiz (sınır ±%3)
@@ -54,7 +56,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 ### TEFAS çekim tanısı (bilgi)
 - yol: yok
-- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <15620903500622528860> [Go Back]`
+- yakalanan JSON: 0 / toplam yanıt: 1 · sayfa: "Request Rejected" · gövde: `The requested URL was rejected. Please consult with your administrator. Your support ID is: <13936271198866041112> [Go Back]`
 
 - §410 konsol dosyası YOK: arac/gelen/tefas-tam-*.json okunamadı (ENOENT) — üretmek için: ktpanel/arac/tefas-konsol.js
 
@@ -123,8 +125,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - brent_yh 116.72 (2026-10-23, 506 gün)
 - eurusd 1.1204 (2026-10-23, 521 gün)
 - usdtry 49.6887 (2026-10-23, 521 gün)
+- hurda_lme 395 $/t (23 Oct 2026, 5 nokta, playwright)
 - demir_lme 585 $/t (23 Oct 2026, 5 nokta, playwright)
-- hurda_lme 395 $/t (23 Oct 2026, 5 nokta, playwright·2.tur)
 - metal_marji_tr 190 $/t
 - wb 15 seri · 2026M09 · "Updated on October 02, 2026" (aynı sayı)
 
@@ -148,7 +150,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - epdk_tarife 722.24 (2026-11, TÜFE z−2 türevi, 119 ay)
 
 ### EPİAŞ PTF (§466) — ✓ 2621.59 TL/MWh · 52.89 $/MWh (2026-10-25)
-- 1394 gün (2023-01-01→) · bu koşuda 12 gün/288 saat · 1 parça
+- 1394 gün (2023-01-01→) · bu koşuda 11 gün/264 saat · 1 parça
 - son 30 gün ort. 2724 TL/MWh · yıllık -0.3% · kimlik: EPIAS_ID+EPIAS_KEY
 
 ### ASELSAN sözleşme akışı (§467) — ✓ 212 sözleşme (2017-01-06→2026-10-23) · kur Yahoo 10y
@@ -168,14 +170,10 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - kütük − 1,6×cevher 408.68 $/t (kok hariç) · KCAER hadde spread'i (profil − kütük) 105 $/t · kur: günlük 2603 · ay başı 262
 
 ### GES zinciri fiyatları (§483) — ✓ 2026-10-21 · modül 0.114 $/W (y/y +29.5%) · hücre 0.046 $/W (y/y +9.5%) · polisilikon 40 RMB/kg (y/y -23.1%) · montaj makası 0.068 $/W (y/y +47.8%)
-- arşiv: 67 hafta (2024-08-21→2026-10-21) · Wayback 183 görüntü, bu koşu 13 · 96 görüntü sonraki koşulara
+- arşiv: 67 hafta (2024-08-21→2026-10-21) · Wayback 183 görüntü, bu koşu 3 · 96 görüntü sonraki koşulara
 - polisilikon_rmb 67 hafta [k1 ad değişimi, oran 1 (46 hafta)] · polisilikon_usd 67 hafta [k1 ad değişimi, oran 1 (46 hafta)] · wafer_rmb 67 hafta · hucre_usd 67 hafta [k1 ad değişimi, oran 1 (58 hafta)] · hucre_rmb 67 hafta · modul_usd 67 hafta · modul_rmb 67 hafta · modul_avrupa_usd 67 hafta [k1 ad değişimi, oran 1 (56 hafta)] · modul_abd_usd 67 hafta [k1 ad değişimi, oran 1 (56 hafta)] · CNY kuru 2602 gün
-- archive.org hız sınırı (HTTP 429) ×8 — görüntüler sonraki koşulara (hata sayılmadı)
-- PVinsights (§483b): ✓ canlı 2026-10-21 · modül 0.089 $/W (y/y +14.1%) · hücre 0.04 $/W (y/y +11.1%) · polisilikon 5.07 $/kg (y/y -22%) · makas 0.049 $/W (y/y +16.7%) · arşiv 38 hafta (2023-07-05→2026-10-21) · Wayback 87 görüntü, bu koşu 6 · 40 sonraki koşulara · polisilikon_usd 38 · wafer_usd 38 [k1 ×0.933 (33 örtüşme, 5 hafta)] · hucre_usd 38 · modul_usd 38
-- ⚠ pvinsights arşiv 20230607114640: fetch failed
-- ⚠ pvinsights arşiv 20230511160023: fetch failed
-- ⚠ pvinsights arşiv 20230405233420: fetch failed
-- ⚠ pvinsights arşiv 20230331121048: fetch failed
+- archive.org hız sınırı (HTTP 429) ×6 — görüntüler sonraki koşulara (hata sayılmadı)
+- PVinsights (§483b): ✓ canlı 2026-10-21 · modül 0.089 $/W (y/y +14.1%) · hücre 0.04 $/W (y/y +11.1%) · polisilikon 5.07 $/kg (y/y -22%) · makas 0.049 $/W (y/y +16.7%) · arşiv 39 hafta (2023-06-28→2026-10-21) · Wayback 87 görüntü, bu koşu 4 · 39 sonraki koşulara · polisilikon_usd 39 · wafer_usd 39 [k1 ×0.933 (33 örtüşme, 6 hafta)] · hucre_usd 39 · modul_usd 39
 
 ### Elle seriler (§484 backlog · §485 asgari ücret) — ✓ tkfen_backlog 2026Q2 = 413 mn $ (4 çeyrek) · asgari_ucret 33030 TL (2026-10, son adım 2026-01-01) · reel 24069 (2026-09) · değişiklik yok
 
@@ -198,7 +196,7 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 - ⚠ ÖLÇÜM TURU: parti 6 şirketle sınırlı; KAP hız sınırı ve şablon uyumu görülünce büyütülecek. Panel HENÜZ bağlı değil (multiple.json korunuyor).
 
 ### Multiple kendi verimizden (§496) — ✓ 80 hisse KAP · 61 eski (evren dışı)
-- kurumsal işlem düzeltmesi: AKFYE 2026-09-21 ×6.000 (Yahoo) | CVKMD 2026-08-03 ×2.623 (fiyat boşluğu, yaklaşık) | HRKET 2026-09-21 ×14.000 (Yahoo) | YEOTK 2026-07-31 ×2.338 (Yahoo) · 25 sn
+- kurumsal işlem düzeltmesi: AKFYE 2026-09-21 ×6.000 (Yahoo) | CVKMD 2026-08-03 ×2.623 (fiyat boşluğu, yaklaşık) | HRKET 2026-09-21 ×14.000 (Yahoo) | YEOTK 2026-07-31 ×2.338 (Yahoo) · 27 sn
 
 ### Fonzi gerçekleşen (§457) — ✓ 232 hisse · endeks XKTUM -17.1 · XK100 -20.5 · XK030 -20 · XU100 -14 · fon-portfoy.json/tasfiye.gerceklesen
 
@@ -260,9 +258,8 @@ Katman: `hepsi` · Veri dizini: `ktpanel`
 
 
 ---
-**Sonuç:** TR 5Y CDS (253.74 bp) · kredi notu · katılım fonları (getiri-modu 36) · bilanço tetiği (112 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (16) · EVDS serileri (17) · EPİAŞ PTF (1394 gün) · ASELSAN sözleşme akışı (212) · GES zinciri fiyatları (6 hafta) · TÜİK İME (5) · TÜİK tablolar (19) · DCE polimer (4) · faktör evreni (146/238) · multiple bilanço (80 kendi · 61 eski) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %86) · fm-oto · KAP arşivi (+0 çeyrek) · ton başına FAVÖK (2) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
+**Sonuç:** TR 5Y CDS (253.74 bp) · HKMA yedeği (2026-09) · katılım fonları (getiri-modu 36) · bilanço tetiği (112 bekliyor) · endeks üyelikleri · endeks arşivi · sicil serisi · sektör ısı (15 sektör) · küresel makro takvim (19 olay) · sürücü serileri (16) · EVDS serileri (17) · EPİAŞ PTF (1394 gün) · ASELSAN sözleşme akışı (212) · GES zinciri fiyatları (1 hafta) · TÜİK İME (5) · TÜİK tablolar (19) · DCE polimer (4) · faktör evreni (146/238) · multiple bilanço (80 kendi · 61 eski) · fonzi gerçekleşen · fm.json (§455 kendi hesap · ağırlık %86) · fm-oto · KAP arşivi (+0 çeyrek) · ton başına FAVÖK (2) · GYO NAV (46 şirket) · VAP fon akışı (8 ay) · fon portföy (36 rapor) · sec-tickers
 
 ### Süre bütçesi (§326)
-- ⏱ Sürücü serileri (§464) — 87 sn
-- ⏱ GES zinciri fiyatları (§483) — 201 sn
-- toplam: 520 sn
+- ⏱ GES zinciri fiyatları (§483) — 90 sn
+- toplam: 357 sn
