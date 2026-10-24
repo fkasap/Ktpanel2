@@ -342,10 +342,13 @@ async function hkmaModu(req, res){
   res.setHeader('Access-Control-Allow-Origin', '*');
   try{
     const u='https://api.hkma.gov.hk/public/market-data-and-statistics/monthly-statistical-bulletin/financial/monetary-statistics';
+    /* §509c: bekçi iki turda HKMA'dan 405 ve 502 gördü, dakikalar sonra sağlam — kaynak ARALIKLI reddediyor. Önceden yalnız
+       bağlantı HATASINDA yeniden deneniyordu; artık HTTP 4xx/5xx yanıtında da üç deneme (0,8 sn · 2 sn arayla). */
     let r=null;
-    try{ r=await fetch(u,{headers:{'User-Agent':'Mozilla/5.0 (KTPanel)'},signal:AbortSignal.timeout(14000)}); }
-    catch(e1){ await new Promise(x=>setTimeout(x,800));
-      try{ r=await fetch(u,{headers:{'User-Agent':'Mozilla/5.0 (KTPanel)'},signal:AbortSignal.timeout(12000)}); }catch(e2){ r=null; } }
+    for(const bekle of [0, 800, 2000]){
+      if(bekle) await new Promise(x=>setTimeout(x,bekle));
+      try{ r=await fetch(u,{headers:{'User-Agent':'Mozilla/5.0 (KTPanel)','Accept':'application/json'},signal:AbortSignal.timeout(12000)}); if(r.ok) break; }catch(e){ r=null; }
+    }
     if(!r) return res.status(200).json({ok:false,err:'HKMA: bağlantı kurulamadı (iki deneme)',veri:null});
     if(!r.ok) return res.status(200).json({ok:false,err:'HKMA HTTP '+r.status,veri:null});
     const j=await r.json();
