@@ -259,6 +259,32 @@ async function katmanEkran(onceki, seriler) {
         const g = new Set(); return out.filter(x => { const a = x.kural + '|' + x.metin; if (g.has(a)) return false; g.add(a); return true; }).slice(0, 30);
       }, KUR).catch(e => [{ kural: 'bekçi', metin: 'damga taraması çöktü: ' + String(e.message || e).slice(0, 80) }]);
     }
+    /* ── §521 ELLE KART YAŞI (24 Eki kart taraması): (1) "sıradaki/planlı/takvimde … <tarih>" ifadesinin tarihi GEÇMİŞSE kart eskimiştir
+       (ECB "Sıradaki toplantı 29 Eki", BoJ "Sıradaki 29–30 Eki", Gündem "S&P CUMA" sınıfı); (2) elle basılmış kart etiketi (.tag.snap)
+       30 günden eskiyse. Kural genel: yeni bir damgalı kart eklenince kendiliğinden kapsanır. Kuruluş/başlangıç etiketleri hariç. */
+    sonuc.elleKart = await sayfa.evaluate(() => {
+      const AY = { oca: 0, 'şub': 1, sub: 1, mar: 2, nis: 3, may: 4, haz: 5, tem: 6, 'ağu': 7, agu: 7, eyl: 8, eki: 9, kas: 10, ara: 11 };
+      const simdi = new Date(); const bugun = new Date(simdi.getFullYear(), simdi.getMonth(), simdi.getDate());
+      const tarih = (g, a, y) => { const m = AY[String(a).toLocaleLowerCase('tr-TR').slice(0, 3)]; if (m == null) return null; return new Date(y ? +y : bugun.getFullYear(), m, +g); };
+      const kartAd = el => { const c = el.closest('.card'); const l = c && c.querySelector('.lbl'); return l ? l.childNodes[0].textContent.replace(/\s+/g, ' ').trim().slice(0, 50) : '?'; };
+      const yer = el => (el.closest('[id^=t]') || {}).id || '?';
+      const out = [];
+      const RX = /(sıradaki[^.;|]{0,30}?|planlı değerlendirme|takvimde|bekleniyor|sonraki toplantı)\D{0,25}?(\d{1,2})(?:\s*[–-]\s*(\d{1,2}))?\s(Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)[a-zçğıöşü]*\.?(?:\s(20\d\d))?/gi;
+      document.querySelectorAll('.card .kv, .card .note').forEach(el => {
+        const t = el.textContent.replace(/\s+/g, ' '); let m;
+        while ((m = RX.exec(t))) { const d = tarih(m[3] || m[2], m[4], m[5]); if (!d) continue;
+          if (!m[5] && d - bugun > 200 * 864e5) d.setFullYear(d.getFullYear() - 1);
+          const gecen = Math.round((bugun - d) / 864e5);
+          if (gecen >= 1 && gecen < 200) out.push({ tur: 'sıradaki', yer: yer(el), kart: kartAd(el), gun: gecen, metin: t.slice(Math.max(0, m.index - 10), m.index + m[0].length + 10).trim() }); }
+      });
+      document.querySelectorAll('.card .lbl .tag.snap').forEach(el => {
+        const t = el.textContent.trim(); if (/KURULUŞ|BAŞLANGIÇ|KURULDU/i.test(t)) return;
+        const m = t.match(/(\d{1,2})\s*(?:[–-]\s*\d{1,2}\s*)?(OCA|ŞUB|MAR|NİS|NIS|MAY|HAZ|TEM|AĞU|AGU|EYL|EKİ|EKI|KAS|ARA)/i); if (!m) return;
+        const d = tarih(m[1], m[2]); if (!d) return; if (d > bugun) d.setFullYear(d.getFullYear() - 1);
+        const gun = Math.round((bugun - d) / 864e5); if (gun > 30) out.push({ tur: 'etiket', yer: yer(el), kart: kartAd(el), gun, metin: t.slice(0, 90) });
+      });
+      const g = new Set(); return out.filter(x => { const a = x.tur + '|' + x.kart + '|' + x.metin; if (g.has(a)) return false; g.add(a); return true; }).slice(0, 40);
+    }).catch(e => []);
   } finally { await tarayici.close().catch(() => {}); }
   /* yeni ↔ süregelen: önceki koşunun ekran işaretleriyle karşılaştır */
   const eskiS = (onceki && onceki.ekran && onceki.ekran.sekmeler) || {};
@@ -270,6 +296,7 @@ async function katmanEkran(onceki, seriler) {
     if (/^\(bekçi:/.test(x)) { ekle('uyari', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, 'Bekçinin kendi gezinme hatası.'); continue; }
     ekle(onceden ? 'uyari' : 'bilgi', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, onceden ? 'En az iki turdur ekranda.' : 'İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.');
   }
+  for (const x of (sonuc.elleKart || [])) ekle(x.tur === 'sıradaki' ? 'uyari' : 'bilgi', 'ekran', 'elle|' + x.tur + '|' + x.kart, (x.tur === 'sıradaki' ? 'Geçmiş tarihli "sıradaki" (' + x.yer + ' · ' + x.kart + '): ' + x.gun + ' gün önce' : 'Elle kart ' + x.gun + ' gündür güncellenmedi (' + x.yer + ' · ' + x.kart + ')'), '“' + x.metin + '” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.');
   for (const x of (sonuc.damga || [])) ekle('uyari', 'ekran', 'damga|' + x.kural + '|' + String(x.metin).slice(0, 60), 'Ekranda eski damga (' + x.yer + '): ' + x.kural + ' %' + x.deger + ' yazıyor, canlı %' + x.canli, '“' + x.metin + '” — kaynak ' + x.kaynak + '. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.');
   const eskiJ = new Set((onceki && onceki.ekran && onceki.ekran.jsHata) || []);
   for (const e of sonuc.jsHata) ekle(eskiJ.has(e) ? 'uyari' : 'kritik', 'ekran', 'js|' + e.slice(0, 80), 'JS istisnası: ' + e, 'Sayfa kodunda yakalanmamış hata — bir kart ya da sekme hiç çizilmiyor olabilir.');
