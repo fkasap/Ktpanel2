@@ -41,6 +41,18 @@ const kucult = s => String(s||'').replace(/İ/g,'i').replace(/I/g,'ı').toLowerC
 const vksMi  = k => Object.prototype.hasOwnProperty.call(VKS, String(k||'').toUpperCase())
                  || /^[A-Z]{2,4}(VK|VKS)$/.test(String(k||'').toUpperCase());
 
+/* §511 (24 Eki) ÜNVAN KAP'TAN OTOMATİK: haritada olmayan VKŞ kodunun resmî ünvanı, o kodun TEK BAŞINA yaptığı bir bildirimin
+   KAP sayfasından okunur ("companyTitle" alanı — 24 Eki ölçüldü: ATAVK → "ATA VARLIK KİRALAMA A.Ş."). Kaynak KAP'ın kendisi
+   olduğu için "yalnız teyitli" politikası korunur; tahmin yok. Sıcak fonksiyonda bellekte tutulur (soğuk başlangıçta yeniden okunur).
+   Elle harita (VKS) yalnız hız/öncelik için kalır; yeni kod geldiğinde kimsenin bir şey eklemesi gerekmez. */
+const UNVAN_ONBELLEK = new Map();
+const trBaslik = s => String(s||'').replace(/\s+A\.?\s?Ş\.?\s*$/i,'').toLocaleLowerCase('tr-TR').split(/\s+/).filter(Boolean)
+  .map(w => w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1)).join(' ');
+async function kapUnvan(url){
+  try{ const r = await fetch(url, { headers:{ 'user-agent':'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(7000) });
+    if(!r.ok) return null; const h = await r.text();
+    const m = h.match(/companyTitle\\*"\s*:\s*\\*"([^"\\]{4,120})/); return m ? trBaslik(m[1]) : null; }catch(e){ return null; }
+}
 function tipBul(baslik){
   for (const [re, ad] of TIP) if (re.test(baslik)) return ad;
   return String(baslik||'').replace(/\s*—.*$/,'').slice(0,60) || 'Kira Sertifikası İşlemi';
@@ -120,10 +132,20 @@ module.exports = async (req, res) => {
         not: (fon ? ('fon kullanıcısı: ' + fon + ' · ') : '') +
              t.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'}) + ' KAP',
         url: it.url || null,
-        kaynak: 'canlı'
+        kaynak: 'canlı',
+        tekKod: kodlar.length === 1    /* §511: ünvan okumak için yalnız tek şirketli bildirim kullanılır */
       });
     });
   }catch(e){ kapHata = String(e.message || e); }
+
+  /* §511: bilinmeyen kodların ünvanı KAP'tan (en çok 8 kod, paralel) */
+  const unvanKaynak = {};
+  try{
+    const ara = Array.from(bilinmeyen).filter(k => !UNVAN_ONBELLEK.has(k)).slice(0, 8);
+    await Promise.all(ara.map(async k => { const x = canli.find(c => c.kod === k && c.url && c.tekKod); UNVAN_ONBELLEK.set(k, x ? await kapUnvan(x.url) : null); }));
+    canli.forEach(c => { const u = UNVAN_ONBELLEK.get(c.kod); if (u && !VKS[c.kod]) { c.ihracci = u; unvanKaynak[c.kod] = u; } delete c.tekKod; });
+    Object.keys(unvanKaynak).forEach(k => bilinmeyen.delete(k));
+  }catch(e){}
 
   // 3) BİRLEŞTİR — aynı gün+kod+tip tekrarını ele, tarihe göre yeniden sırala
   const anahtar = x => x.tarih + '|' + x.kod + '|' + x.tip;
@@ -155,7 +177,8 @@ module.exports = async (req, res) => {
     ustPencereGun,
     hamAdet,
     tavanaDayandi,
-    bilinmeyenKodlar: Array.from(bilinmeyen),   // haritaya eklenmesi gerekenler
+    bilinmeyenKodlar: Array.from(bilinmeyen),   // KAP'tan da ünvan okunamayanlar
+    kapUnvan: unvanKaynak,                      // §511: ünvanı KAP sayfasından otomatik okunanlar
     kapHata,                                    // canlı akış düştüyse sebep (arşiv yine görünür)
     icKimlik: !!process.env.CRON_SECRET,         // §199: iç isteklere kimlik eklendi mi
     ihraclar: birlesik.slice(0, limit)
