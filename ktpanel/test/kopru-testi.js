@@ -247,14 +247,12 @@ const UCLAR = [
      canlı taramada HTTP 502 / "SPG_KEY doğrudan Bearer kabul edilmedi" ile
      bozuk bulundu — SESSİZCE bozulmuştu, ne kadardır bilinmiyor. Testin
      varlık sebebi tam bu (§60/§92/§95-101 sınıfı). */
-  { ad:'edgar · ABD bilanço (§398)', yol:'/api/edgar?ticker=AAPL', kritik:false, dogrula:d=>{
+  /* §509c (24 Eki, bekçinin ilk dolu köprü turu): test ?ticker=AAPL gönderiyordu, uç ?t= bekliyor (mod=tablo) → "HTTP 400 · ticker
+     gerekli" ASILSIZ ALARMI. Yol panelin GERÇEK çağrısından alındı (app.js: /api/edgar?mod=tablo&t=…&n=…) — §116 bir kez daha. */
+  { ad:'edgar · ABD bilanço (§398)', yol:'/api/edgar?mod=tablo&t=AAPL&n=4', kritik:false, dogrula:d=>{
       if(d.ok===false) return 'ok:false — '+(d.err||'');
-      const K = Object.keys(d||{});
-      if(!K.length) return 'boş yanıt';
-      /* şema kaynaktan okunur, hatırlanmaz (§116): ciro/donem/veri hangi adla
-         gelirse gelsin, en az bir dolu alan bekliyoruz */
-      const dolu = K.filter(k=>d[k]!=null && !['surum','ok'].includes(k));
-      if(!dolu.length) return 'yalnız surum/ok döndü — veri alanı yok';
+      if(!d.seri || !Object.keys(d.seri).length) return 'seri boş — '+Object.keys(d||{}).slice(0,8).join(',');
+      if(d.son_bitis){ const g=Math.floor((Date.now()-Date.parse(d.son_bitis))/864e5); if(g>200) return 'son dönem '+d.son_bitis+' ('+g+' gün) — EDGAR çekimi bayat'; }
       return true; } },
 
   /* §286f TR 5Y CDS (§253). Dokuz kaynak denendikten sonra worldgovernmentbonds
