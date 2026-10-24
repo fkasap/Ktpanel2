@@ -106,8 +106,7 @@ function bddkIstekNode(yol, govde, ekBaslik){
         /* §490b (21 Eki 2026): sertifika 15 Kas bitişinden ~3,5 hafta önce YENİLENDİ — canlı teshis=1 yeni parmak izi 56:2D:30:…:5A:B3.
            Kabul gerekçesi: PIN kontrolünden ÖNCE çalışan üç kontrol geçti (alan adı *.bddk.org.tr, kendinden imzalı değil, geçerlilik
            penceresi içinde). Eski pin 15 Kas'a kadar listede kalır (BDDK eski sertifikaya dönerse kırılmasın); sonra silinir. */
-        const BDDK_PINLER = BDDK_PINLER_GLOBAL.length ? BDDK_PINLER_GLOBAL : ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3',
-                             '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79'];
+        const BDDK_PINLER = BDDK_PINLER_GLOBAL;   /* §510: tek liste (tarihli) — ikinci kopya kaldırıldı (§112) */
         const BDDK_PIN = BDDK_PINLER[0];
         const issCN = (c&&c.issuer&&c.issuer.CN)||'';
         const subCN = (c&&c.subject&&c.subject.CN)||'';
@@ -140,8 +139,12 @@ function bddkIstekNode(yol, govde, ekBaslik){
   });
 }
 let SON_TESHIS=null;
-const BDDK_PINLER_GLOBAL = ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3',
-                            '45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79'];
+/* §510 (24 Eki): pinler SON GEÇERLİLİK tarihini taşır → eski sertifikanın pini kendi bitişinde KENDİLİĞİNDEN düşer
+   (önceden "15 Kas'ta elle sil" ritüeliydi). null = süresiz (güncel sertifika; yenilenince bekçi/teşhis yeni izi raporlar). */
+const BDDK_PINLER_GLOBAL = [
+  ['56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3', null],          /* *.bddk.gov.tr · GlobalSign GCC R46 OV 2025 · bitiş May 2027 */
+  ['45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79', '2026-11-16']   /* eski sertifika · bitiş 15 Kas 2026 */
+].filter(([, son]) => !son || Date.now() < Date.parse(son + 'T00:00:00Z')).map(([fp]) => fp);
 module.exports = async (req, res) => {
   SON_TESHIS=null;
   res.setHeader('Access-Control-Allow-Origin', '*');
