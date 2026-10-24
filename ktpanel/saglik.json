@@ -1,17 +1,17 @@
 {
- "guncelleme": "2026-10-24T20:42:35Z",
+ "guncelleme": "2026-10-24T21:21:11Z",
  "surum": "§509",
- "sure_sn": 329,
+ "sure_sn": 340,
  "ozet": {
   "kritik": 0,
-  "uyari": 10,
-  "bilgi": 6,
-  "yeni": 3,
+  "uyari": 4,
+  "bilgi": 8,
+  "yeni": 0,
   "duzelen": 6
  },
  "katmanlar": {
   "seriler": {
-   "sure": 5,
+   "sure": 10,
    "not": "40 seri (app.js'ten keşfedildi)"
   },
   "dosyalar": {
@@ -19,7 +19,7 @@
    "not": "27 otomatik dosya izlendi · 17 elle güncellenen (otomasyon borcu)"
   },
   "kopruler": {
-   "sure": 47,
+   "sure": 51,
    "not": "31 uç · 28 geçti"
   },
   "tutarlilik": {
@@ -27,71 +27,11 @@
    "not": "2 kural"
   },
   "ekran": {
-   "sure": 269,
+   "sure": 272,
    "not": "38 sekme/alt sekme"
   }
  },
  "bulgular": [
-  {
-   "id": "ekran:damga|politika faizi|““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği sena",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kaya” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true
-  },
-  {
-   "id": "ekran:damga|politika faizi|““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40)",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true
-  },
-  {
-   "id": "ekran:damga|politika faizi|““Mevduat politika faizinin (%37) belirgin üstündeyse fonlam",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true
-  },
-  {
-   "id": "ekran:damga|politika faizi|“Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senar",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false
-  },
-  {
-   "id": "ekran:damga|politika faizi|“Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) ",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false
-  },
-  {
-   "id": "ekran:damga|politika faizi|“Mevduat politika faizinin (%37) belirgin üstündeyse fonlama",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false
-  },
   {
    "id": "ekran:damga|politika faizi|Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) p",
    "seviye": "uyari",
@@ -133,10 +73,30 @@
    "yeni": false
   },
   {
-   "id": "ekran:t16·Asya-Pasifik|Kaynak: HKMA Monthly Bulletin · Actions yedeği (2026-10-24) ",
+   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|MODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 leht",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "t16·Asya-Pasifik: Kaynak: HKMA Monthly Bulletin · Actions yedeği (2026-10-24) — canlı HKMA çağrısı düştü (HTTP 405); bülten aylık olduğundan değer güncel ay için geçerli. §516",
+   "baslik": "t2·Makro Veriler › Haftalık Yorum: MODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok). Eski tez ÜSTÜ diyordu (fabrika metni (Ağu 2026, elle)) — veriler bunu desteklemiyor.",
+   "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": true
+  },
+  {
+   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|MODEL: ÜSTÜ — sinyal toplamı +2 (3/4 sinyal ölçüldü · 2 leht",
+   "seviye": "bilgi",
+   "katman": "ekran",
+   "baslik": "t2·Makro Veriler › Haftalık Yorum: MODEL: ÜSTÜ — sinyal toplamı +2 (3/4 sinyal ölçüldü · 2 lehte, 0 aleyhte, 1 nötr, 1 veri yok). Eski tezle aynı yönde.",
+   "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": true
+  },
+  {
+   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 00:22 Yerli Hisse (",
+   "seviye": "bilgi",
+   "katman": "ekran",
+   "baslik": "t2·Makro Veriler › Haftalık Yorum: TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 00:22 Yerli Hisse (BIST) vs XKTUM / XK100↓ALTIMODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok)",
    "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
    "ilk": "2026-10-24",
    "gun": 0,
@@ -146,7 +106,7 @@
    "id": "ekran:elle|etiket|AVRUPA MEGA-CAP",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "Elle kart 89 gündür güncellenmedi (t18 · AVRUPA MEGA-CAP)",
+   "baslik": "Elle kart 90 gündür güncellenmedi (t18 · AVRUPA MEGA-CAP)",
    "ayrinti": "“FİYAT ARAŞTIRMA 27 TEM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
    "gun": 0,
@@ -156,7 +116,7 @@
    "id": "ekran:elle|etiket|BOK & PİYASA",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "Elle kart 45 gündür güncellenmedi (t16 · BOK & PİYASA)",
+   "baslik": "Elle kart 46 gündür güncellenmedi (t16 · BOK & PİYASA)",
    "ayrinti": "“9 EYL · ECOS DOĞRULAMALI” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
    "gun": 0,
@@ -166,7 +126,7 @@
    "id": "ekran:elle|etiket|ECB & POLİTİKA",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "Elle kart 44 gündür güncellenmedi (t18 · ECB & POLİTİKA)",
+   "baslik": "Elle kart 45 gündür güncellenmedi (t18 · ECB & POLİTİKA)",
    "ayrinti": "“10 EYL · İKİNCİ ARTIRIM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
    "gun": 0,
@@ -176,8 +136,8 @@
    "id": "ekran:elle|etiket|GETİRİ EĞRİSİ GÖRSELİ",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "Elle kart 89 gündür güncellenmedi (t2 · GETİRİ EĞRİSİ GÖRSELİ)",
-   "ayrinti": "“TR 2026-10-24 · DE·JP 27 TEM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
+   "baslik": "Elle kart 90 gündür güncellenmedi (t2 · GETİRİ EĞRİSİ GÖRSELİ)",
+   "ayrinti": "“TR·ABD 2026-10-24 · DE·JP 3A/10Y (AYLIK) · şekil 27 TEM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
    "gun": 0,
    "yeni": false
@@ -186,7 +146,7 @@
    "id": "ekran:elle|etiket|HAFTALIK ARAŞTIRMA NOTU",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "Elle kart 61 gündür güncellenmedi (t2 · HAFTALIK ARAŞTIRMA NOTU)",
+   "baslik": "Elle kart 62 gündür güncellenmedi (t2 · HAFTALIK ARAŞTIRMA NOTU)",
    "ayrinti": "“24–30 AĞU · REPO REJİMİ DÖNDÜ” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
    "gun": 0,
@@ -194,6 +154,72 @@
   }
  ],
  "duzelen": [
+  {
+   "id": "ekran:damga|politika faizi|““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği sena",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
+   "ayrinti": "“““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kaya” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": true,
+   "duzeldi": "2026-10-24"
+  },
+  {
+   "id": "ekran:damga|politika faizi|““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40)",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
+   "ayrinti": "“““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": true,
+   "duzeldi": "2026-10-24"
+  },
+  {
+   "id": "ekran:damga|politika faizi|““Mevduat politika faizinin (%37) belirgin üstündeyse fonlam",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
+   "ayrinti": "“““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": true,
+   "duzeldi": "2026-10-24"
+  },
+  {
+   "id": "ekran:damga|politika faizi|“Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senar",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
+   "ayrinti": "““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": false,
+   "duzeldi": "2026-10-24"
+  },
+  {
+   "id": "ekran:damga|politika faizi|“Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) ",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
+   "ayrinti": "““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": false,
+   "duzeldi": "2026-10-24"
+  },
+  {
+   "id": "ekran:damga|politika faizi|“Mevduat politika faizinin (%37) belirgin üstündeyse fonlama",
+   "seviye": "uyari",
+   "katman": "ekran",
+   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
+   "ayrinti": "““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
+   "ilk": "2026-10-24",
+   "gun": 0,
+   "yeni": false,
+   "duzeldi": "2026-10-24"
+  },
   {
    "id": "kopruler:bddk · panel",
    "seviye": "uyari",
@@ -317,11 +343,11 @@
   }
  ],
  "seriler": {
-  "TP.APIFON2.TOP": {
+  "TP.APIFON4": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 986548.9,
+   "son": 36.04,
    "tarih": "2026-10-23",
    "yas": 2,
    "limit": 7
@@ -335,20 +361,20 @@
    "yas": 2,
    "limit": 7
   },
+  "TP.APIFON2.TOP": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 986548.9,
+   "tarih": "2026-10-23",
+   "yas": 2,
+   "limit": 7
+  },
   "TP.APIFON3": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
    "son": -529823.9,
-   "tarih": "2026-10-23",
-   "yas": 2,
-   "limit": 7
-  },
-  "TP.APIFON4": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 36.04,
    "tarih": "2026-10-23",
    "yas": 2,
    "limit": 7
@@ -382,16 +408,6 @@
    "yas": 2,
    "limit": 7
   },
-  "TP.ENFBEK.PKA12ENF": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 23.89,
-   "tarih": "2026-10-01",
-   "yas": 24,
-   "limit": 98,
-   "yy": 2.71
-  },
   "TP.ENFBEK.IYA12ENF": {
    "rol": "birincil",
    "durum": "ok",
@@ -402,14 +418,15 @@
    "limit": 98,
    "yy": -12.4
   },
-  "TP.DK.USD.A.YTL": {
+  "TP.ENFBEK.PKA12ENF": {
    "rol": "birincil",
    "durum": "ok",
-   "siklik": "günlük",
-   "son": 49.5389,
-   "tarih": "2026-10-23",
-   "yas": 2,
-   "limit": 7
+   "siklik": "aylık",
+   "son": 23.89,
+   "tarih": "2026-10-01",
+   "yas": 24,
+   "limit": 98,
+   "yy": 2.71
   },
   "TP.FG.J0": {
    "rol": "birincil",
@@ -421,6 +438,15 @@
    "limit": 98,
    "yy": 30.65,
    "tarihsel": true
+  },
+  "TP.DK.USD.A.YTL": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 49.5389,
+   "tarih": "2026-10-23",
+   "yas": 2,
+   "limit": 7
   },
   "TP.HPBITABLO5.1": {
    "rol": "birincil",
@@ -449,6 +475,15 @@
    "yas": 9,
    "limit": 21
   },
+  "TP.HPBITABLO5.6": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -365.443,
+   "tarih": "2026-10-16",
+   "yas": 9,
+   "limit": 21
+  },
   "TP.IHRISICREV4.TT": {
    "rol": "birincil",
    "durum": "ok",
@@ -468,15 +503,6 @@
    "yas": 85,
    "limit": 98,
    "yy": 10.47
-  },
-  "TP.HPBITABLO5.6": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -365.443,
-   "tarih": "2026-10-16",
-   "yas": 9,
-   "limit": 21
   },
   "TP.KTF10": {
    "rol": "birincil",
@@ -505,20 +531,20 @@
    "yas": 9,
    "limit": 21
   },
-  "TP.MKNETHAR.M7": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -88.75,
-   "tarih": "2026-10-16",
-   "yas": 9,
-   "limit": 21
-  },
   "TP.KTF17": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
    "son": 48.44,
+   "tarih": "2026-10-16",
+   "yas": 9,
+   "limit": 21
+  },
+  "TP.MKNETHAR.M7": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -88.75,
    "tarih": "2026-10-16",
    "yas": 9,
    "limit": 21
@@ -676,16 +702,6 @@
    "limit": 98,
    "yy": 29.93
   },
-  "TP.TUKFIY2025.GENEL": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 137.23,
-   "tarih": "2026-09-01",
-   "yas": 54,
-   "limit": 98,
-   "yy": 29.73
-  },
   "TP.TUKFIY2025.07": {
    "rol": "birincil",
    "durum": "ok",
@@ -695,6 +711,16 @@
    "yas": 54,
    "limit": 98,
    "yy": 35.11
+  },
+  "TP.TUKFIY2025.GENEL": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 137.23,
+   "tarih": "2026-09-01",
+   "yas": 54,
+   "limit": 98,
+   "yy": 29.73
   }
  },
  "dosyalar": [
@@ -996,187 +1022,187 @@
   {
    "ad": "market · küresel endeksler",
    "sonuc": "GECTI",
-   "ms": 1017,
+   "ms": 1138,
    "not": ""
   },
   {
    "ad": "market · toplu fiyat",
    "sonuc": "GECTI",
-   "ms": 254,
+   "ms": 292,
    "not": ""
   },
   {
    "ad": "market · SEKTÖR serisi (RS tabanı)",
    "sonuc": "UYARI",
-   "ms": 852,
+   "ms": 790,
    "not": "13/15 sektörde 1A serisi YOK — RS damgalı tabandan (§114). BAR SAYILARI: XKMYA:1 XGIDA:1 XMANA:1 XUSIN:67 XHOLD:1 XELKT:1 XUHIZ:1 XILTM:1 XINSA:1 XUTEK:1 XSGRT:1 XTRZM:1 XGMYO:1 XUMAL:1 XBANK:67 | varyant: yok"
   },
   {
    "ad": "market · Avrupa mega-cap",
    "sonuc": "GECTI",
-   "ms": 691,
+   "ms": 657,
    "not": ""
   },
   {
    "ad": "market · FRED (ABD tahvil)",
    "sonuc": "GECTI",
-   "ms": 752,
+   "ms": 875,
    "not": ""
   },
   {
    "ad": "market · ECB (sunucu bacagı)",
    "sonuc": "GECTI",
-   "ms": 598,
+   "ms": 652,
    "not": ""
   },
   {
    "ad": "market · BoJ",
    "sonuc": "GECTI",
-   "ms": 1377,
+   "ms": 1799,
    "not": ""
   },
   {
    "ad": "market · HKMA",
    "sonuc": "GECTI",
-   "ms": 1131,
+   "ms": 1359,
    "not": ""
   },
   {
    "ad": "evds2 · TÜFE endeksi",
    "sonuc": "GECTI",
-   "ms": 1200,
+   "ms": 1175,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (DİBS)",
    "sonuc": "GECTI",
-   "ms": 3511,
+   "ms": 3688,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (sukuk)",
    "sonuc": "GECTI",
-   "ms": 3511,
+   "ms": 3606,
    "not": ""
   },
   {
    "ad": "evds2 · TLREF",
    "sonuc": "GECTI",
-   "ms": 460,
+   "ms": 500,
    "not": ""
   },
   {
    "ad": "evds2 · kart harcamaları",
    "sonuc": "GECTI",
-   "ms": 520,
+   "ms": 1073,
    "not": ""
   },
   {
    "ad": "evds2 · rezerv",
    "sonuc": "GECTI",
-   "ms": 380,
+   "ms": 758,
    "not": ""
   },
   {
    "ad": "evds2 · yabancı akış",
    "sonuc": "GECTI",
-   "ms": 307,
+   "ms": 360,
    "not": ""
   },
   {
    "ad": "evds2 · ECB (HICP + GSYH)",
    "sonuc": "GECTI",
-   "ms": 1410,
+   "ms": 1187,
    "not": ""
   },
   {
    "ad": "kap · bildirim akışı",
    "sonuc": "GECTI",
-   "ms": 761,
+   "ms": 868,
    "not": ""
   },
   {
    "ad": "kap · sukuk akışı",
    "sonuc": "GECTI",
-   "ms": 1352,
+   "ms": 1515,
    "not": ""
   },
   {
    "ad": "katfon · TEFAS",
    "sonuc": "GECTI",
-   "ms": 181,
+   "ms": 233,
    "not": ""
   },
   {
    "ad": "tefas · AUM/pay (mod=gnl)",
    "sonuc": "UYARI",
-   "ms": 583,
+   "ms": 664,
    "not": "liste boş"
   },
   {
    "ad": "edgar · ABD bilanço (§398)",
    "sonuc": "GECTI",
-   "ms": 734,
+   "ms": 921,
    "not": ""
   },
   {
    "ad": "tcmb · TR 5Y CDS",
    "sonuc": "GECTI",
-   "ms": 443,
+   "ms": 560,
    "not": ""
   },
   {
    "ad": "tcmb · kurlar",
    "sonuc": "GECTI",
-   "ms": 3410,
+   "ms": 3384,
    "not": ""
   },
   {
    "ad": "data · bulut depo (KV)",
    "sonuc": "GECTI",
-   "ms": 403,
+   "ms": 348,
    "not": ""
   },
   {
    "ad": "ajanktp · KV sağlık",
    "sonuc": "GECTI",
-   "ms": 247,
+   "ms": 356,
    "not": ""
   },
   {
    "ad": "usnews · AV haber akışı",
    "sonuc": "UYARI",
-   "ms": 488,
+   "ms": 465,
    "not": "ok:false — Alpha Vantage kota/limit mesajı döndü — birkaç saat sonra normale döner"
   },
   {
    "ad": "usnews · Finnhub kazanç",
    "sonuc": "GECTI",
-   "ms": 896,
+   "ms": 390,
    "not": ""
   },
   {
    "ad": "usnews · kripto",
    "sonuc": "GECTI",
-   "ms": 561,
+   "ms": 334,
    "not": ""
   },
   {
    "ad": "bddk · panel",
    "sonuc": "GECTI",
-   "ms": 10556,
+   "ms": 12221,
    "not": ""
   },
   {
    "ad": "bddk · sahiplik",
    "sonuc": "GECTI",
-   "ms": 7695,
+   "ms": 8539,
    "not": ""
   },
   {
    "ad": "dosya · fon-akis.json",
    "sonuc": "GECTI",
-   "ms": 238,
+   "ms": 250,
    "not": ""
   }
  ],
@@ -1188,7 +1214,11 @@
    "t2·Makro Veriler › Faiz & Piyasa": [],
    "t2·Makro Veriler › Enflasyon & Reel Ekonomi": [],
    "t2·Makro Veriler › Bankacılık": [],
-   "t2·Makro Veriler › Haftalık Yorum": [],
+   "t2·Makro Veriler › Haftalık Yorum": [
+    "MODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok). Eski tez ÜSTÜ diyordu (fabrika metni (Ağu 2026, elle)) — veriler bunu desteklemiyor.",
+    "TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 00:22 Yerli Hisse (BIST) vs XKTUM / XK100↓ALTIMODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok)",
+    "MODEL: ÜSTÜ — sinyal toplamı +2 (3/4 sinyal ölçüldü · 2 lehte, 0 aleyhte, 1 nötr, 1 veri yok). Eski tezle aynı yönde."
+   ],
    "t2·Makro Veriler › Tahminler": [],
    "t2·Makro Veriler › Enflasyon Patikası": [],
    "t11·EQUITY": [],
@@ -1197,9 +1227,7 @@
    "t10·FIX INCOME › Getiri Eğrisi": [],
    "t10·FIX INCOME › İhraç Takvimi": [],
    "t15·COMMODITY": [],
-   "t16·Asya-Pasifik": [
-    "Kaynak: HKMA Monthly Bulletin · Actions yedeği (2026-10-24) — canlı HKMA çağrısı düştü (HTTP 405); bülten aylık olduğundan değer güncel ay için geçerli. §516"
-   ],
+   "t16·Asya-Pasifik": [],
    "t18·Avrupa": [],
    "t17·ABD": [],
    "t7·Haberler": [],
@@ -1231,54 +1259,6 @@
     "deger": 37,
     "canli": 36,
     "kaynak": "TP.PY.P02.1H 2026-10-23",
-    "yer": "?",
-    "metin": "““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kaya"
-   },
-   {
-    "kural": "politika faizi",
-    "deger": 37,
-    "canli": 36,
-    "kaynak": "TP.PY.P02.1H 2026-10-23",
-    "yer": "?",
-    "metin": "““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23."
-   },
-   {
-    "kural": "politika faizi",
-    "deger": 37,
-    "canli": 36,
-    "kaynak": "TP.PY.P02.1H 2026-10-23",
-    "yer": "?",
-    "metin": "““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23."
-   },
-   {
-    "kural": "politika faizi",
-    "deger": 37,
-    "canli": 36,
-    "kaynak": "TP.PY.P02.1H 2026-10-23",
-    "yer": "?",
-    "metin": "“Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar"
-   },
-   {
-    "kural": "politika faizi",
-    "deger": 37,
-    "canli": 36,
-    "kaynak": "TP.PY.P02.1H 2026-10-23",
-    "yer": "?",
-    "metin": "“Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23."
-   },
-   {
-    "kural": "politika faizi",
-    "deger": 37,
-    "canli": 36,
-    "kaynak": "TP.PY.P02.1H 2026-10-23",
-    "yer": "?",
-    "metin": "“Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23."
-   },
-   {
-    "kural": "politika faizi",
-    "deger": 37,
-    "canli": 36,
-    "kaynak": "TP.PY.P02.1H 2026-10-23",
     "yer": "mk-yorum",
     "metin": "Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;"
    }
@@ -1288,35 +1268,35 @@
     "tur": "etiket",
     "yer": "t2",
     "kart": "GETİRİ EĞRİSİ GÖRSELİ",
-    "gun": 89,
-    "metin": "TR 2026-10-24 · DE·JP 27 TEM"
+    "gun": 90,
+    "metin": "TR·ABD 2026-10-24 · DE·JP 3A/10Y (AYLIK) · şekil 27 TEM"
    },
    {
     "tur": "etiket",
     "yer": "t2",
     "kart": "HAFTALIK ARAŞTIRMA NOTU",
-    "gun": 61,
+    "gun": 62,
     "metin": "24–30 AĞU · REPO REJİMİ DÖNDÜ"
    },
    {
     "tur": "etiket",
     "yer": "t16",
     "kart": "BOK & PİYASA",
-    "gun": 45,
+    "gun": 46,
     "metin": "9 EYL · ECOS DOĞRULAMALI"
    },
    {
     "tur": "etiket",
     "yer": "t18",
     "kart": "ECB & POLİTİKA",
-    "gun": 44,
+    "gun": 45,
     "metin": "10 EYL · İKİNCİ ARTIRIM"
    },
    {
     "tur": "etiket",
     "yer": "t18",
     "kart": "AVRUPA MEGA-CAP",
-    "gun": 89,
+    "gun": 90,
     "metin": "FİYAT ARAŞTIRMA 27 TEM"
    }
   ]
@@ -1325,8 +1305,8 @@
   {
    "tarih": "2026-10-24",
    "kritik": 0,
-   "uyari": 10
+   "uyari": 4
   }
  ],
- "mail": "atlandı"
+ "mail": "gönderildi"
 }
