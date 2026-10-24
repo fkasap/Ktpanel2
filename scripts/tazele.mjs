@@ -5695,9 +5695,11 @@ async function kapArsiv() {
     if (elleOncelik.includes(k)) return 0;   /* §446: elle öncelikli kod iki başarısızlıkla sona atılmaz */
     return r.n >= 2 ? 1 : 0;
   };
-  const sira = durum.filter(x => x.n < CEYREK_TAVAN || yeniBekliyor(x))
-    .sort((a, b) => (cezali(a.kod) - cezali(b.kod)) || (oncelik(a.kod) - oncelik(b.kod)) || (bellekte(a.kod) - bellekte(b.kod)) || (a.n - b.n))
-    .slice(0, PARTI);
+  const siraTum = durum.filter(x => x.n < CEYREK_TAVAN || yeniBekliyor(x))
+    .sort((a, b) => (cezali(a.kod) - cezali(b.kod)) || (oncelik(a.kod) - oncelik(b.kod)) || (bellekte(a.kod) - bellekte(b.kod)) || (a.n - b.n));
+  /* §500b: yeni dönem bekleyenler PARTİ sınırına takılmaz (sezonda günde birkaç şirket — EREGL 2'li partide EBEBK/ISDMR'nin
+     arkasında kaldı); her biri en fazla birkaç istek. Kalan slotlar eski düzenle. Süre bütçesi yine geçerli. */
+  const sira = siraTum.filter(x => yeniSet.has(x.kod)).slice(0, 12).concat(siraTum.filter(x => !yeniSet.has(x.kod)).slice(0, PARTI));
   if (!sira.length) {
     raporlar.push('### KAP arşivi (§381) — ✓ TAM: ' + uyeler.length + ' şirket × ' + CEYREK_TAVAN + ' çeyrek');
     return;
