@@ -71,7 +71,10 @@ module.exports = async (req, res) => {
   }
 
   // ---- Çekirdek: ayrıştırma / takvim / IRR ----
-  const trTar=s=>{const m=String(s).match(/(\d{2})\.(\d{2})\.(\d{4})/);return m?new Date(+m[3],+m[2]-1,+m[1]):null;};
+  /* §503 (24 Eki): EVDS3 'Tarih' alanını artık "24-10-2026" (tire) döndürüyor; eski desen yalnız noktayı tanıyordu →
+     trTar null → önceki gözlemle gün farkı 99 → Günlük Δ HER VADEDE "—" (ve valör tarihi yerine 'bugün' kullanılıyordu).
+     Ayraç olarak . - / üçü de kabul. */
+  const trTar=s=>{const m=String(s).match(/(\d{2})[.\-\/](\d{2})[.\-\/](\d{4})/);return m?new Date(+m[3],+m[2]-1,+m[1]):null;};
   const isoTar=s=>{const m=String(s).match(/(\d{4})-(\d{2})-(\d{2})/);return m?new Date(+m[1],+m[2]-1,+m[3]):null;};
   function seriAyristir(kod, ad, harf){
     if(!/Değer|Deger/i.test(ad))return null;
