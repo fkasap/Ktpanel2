@@ -585,15 +585,15 @@
    "k": "EREGL",
    "fiyat": 31.6,
    "adet": 7000,
-   "ciro": 238520,
-   "ebitda": 24591,
-   "netBorc": 39512,
+   "ciro": 256853,
+   "ebitda": 27831,
+   "netBorc": 50537,
    "hacim": 5496,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 25265
+   "ebitda_genis": 28515
   },
   {
    "k": "EUPWR",
