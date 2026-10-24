@@ -18,6 +18,13 @@ function bddkIstek(yol, govde, ekBaslik){
     let elSikisma = null;
     const opt = { host:'www.bddk.org.tr', path:yol, method: govde?'POST':'GET', agent:false,
       servername:'www.bddk.org.tr', rejectUnauthorized:false, timeout:20000,
+      /* §501 (24 Eki 2026): panel yine "veri yok"; teshis=1 → "Parse Error: Invalid header token" (anasayfa dahil, her istekte).
+         Sertifika değil: BDDK sunucusu (ya da önündeki WAF/yük dengeleyici) RFC dışı bir yanıt başlığı göndermeye başladı ve Node'un
+         katı HTTP ayrıştırıcısı (llhttp) yanıtı daha gövdeye gelmeden reddediyor. Tarayıcılar bu toleransı zaten gösterir.
+         insecureHTTPParser yalnız BU isteğin yanıt başlıklarını hoşgörülü okur; TLS doğrulaması (alan adı · kendinden imzalı ·
+         geçerlilik · PIN) aynen çalışır. Risk değerlendirmesi: istemci tek ve sabit bir hosta gidiyor, istek kaçakçılığı
+         (request smuggling) sunucu tarafı bir saldırıdır, burada yüzeyi yok. */
+      insecureHTTPParser:true,
       headers: Object.assign({ 'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' }, ekBaslik||{}) };
     if(govde) opt.headers['Content-Length'] = Buffer.byteLength(govde);
     const r = https.request(opt, (s)=>{
