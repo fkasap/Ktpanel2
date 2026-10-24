@@ -138,6 +138,8 @@ async function finnhubKripto(req, res){
 }
 
 export default async function handler(req, res){
+  /* §513: hata yanıtı uzun önbelleğe girmez (ESM dosya — _lib/onbellek.js ile aynı kural, satır içi) */
+  { const _j = res.json && res.json.bind(res); if (_j && !res.__hob) { res.__hob = true; res.json = b => { try { if (b && typeof b === 'object' && !Array.isArray(b) && (b.ok === false || (b.ok == null && b.err) || (b.son && typeof b.son === 'object' && !Array.isArray(b.son) && !Object.keys(b.son).length))) res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=60'); } catch (e) {} return _j(b); }; } }
   if(req.query.mod==='kazanc') return finnhubKazanc(req, res);
   if(req.query.mod==='kripto') return finnhubKripto(req, res);
   res.setHeader('Cache-Control', 's-maxage=5400, stale-while-revalidate=1800');

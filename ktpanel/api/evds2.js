@@ -322,6 +322,7 @@ async function dvzModu(req, res, cfg){
 }
 
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   const mod = String((req.query && req.query.mod) || '').toLowerCase();
   if (mod === 'tlref') return _tlref(req, res);
   if (mod === 'egri')  return _egri(req, res);

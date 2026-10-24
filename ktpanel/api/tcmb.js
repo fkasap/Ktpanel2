@@ -1,5 +1,6 @@
 // TCMB resmi kurlar — sunucu tarafında today.xml'den çekilir (CORS engeli yok)
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   res.setHeader('Access-Control-Allow-Origin', '*');
   /* §248c SPK MODU (?spk=1&yil&ay): fonksiyon limitini korumak için ayrı uç
      açmak yerine kamu-veri kardeşine bindirildi (api/spk.js İPTAL, hiç deploy

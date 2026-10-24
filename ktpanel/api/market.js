@@ -662,6 +662,7 @@ async function lmeModu(req, res){
   }catch(e){ return res.status(200).json({ ok:false, err:String(e&&e.message||e).slice(0,100) }); }
 }
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   if(req.query.mod==='ai') return aiModu(req, res);
   if(req.query.mod==='lme') return lmeModu(req, res);   /* §464e */
   if(req.query.mod==='seri') return seriModu(req, res);

@@ -182,6 +182,7 @@ function capaSec(dizi, hedefMs, istenen){
 }
 
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   res.setHeader('Access-Control-Allow-Origin', '*');
   // §142: fon fiyatı günde bir kez yayımlanır — 30 dk yerine 6 saat önbellek.
   // Altı pencere çekildiği için istek pahalı; sık tazelemenin faydası yok.

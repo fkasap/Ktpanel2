@@ -388,6 +388,8 @@ async function _bilancoAyristir(id){
 const _SURUM = 'kap-2026-08-20-u';   /* §338b seri cekim */
 
 export default async function handler(req, res){
+  /* §513: hata yanıtı uzun önbelleğe girmez (ESM dosya — _lib/onbellek.js ile aynı kural, satır içi) */
+  { const _j = res.json && res.json.bind(res); if (_j && !res.__hob) { res.__hob = true; res.json = b => { try { if (b && typeof b === 'object' && !Array.isArray(b) && (b.ok === false || (b.ok == null && b.err) || (b.son && typeof b.son === 'object' && !Array.isArray(b.son) && !Object.keys(b.son).length))) res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=60'); } catch (e) {} return _j(b); }; } }
   res.setHeader('X-KTPanel-Surum', _SURUM);
   const _mod = String((req.query && req.query.mod) || '').toLowerCase();
   /* §245c OPAK 500 → KONUŞAN HATA.

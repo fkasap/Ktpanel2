@@ -26,6 +26,7 @@ const BAS = () => ({
     'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&0x3|0x8)).toString(16); })
 });
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   res.setHeader('Access-Control-Allow-Origin', '*');
   const mod = req.query.mod || 'getiri';
   const tip = (req.query.tip || 'YAT').toUpperCase();

@@ -370,6 +370,7 @@ async function fiyatCek(ticker) {
 }
 
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   const mod = String((req.query && req.query.mod) || 'tablo').toLowerCase();
   if (mod === 'ara') return araModu(req, res);
   return tabloModu(req, res);

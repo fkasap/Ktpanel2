@@ -146,6 +146,7 @@ const BDDK_PINLER_GLOBAL = [
   ['45:74:48:FA:85:FA:69:D4:99:5D:A4:9B:52:96:72:D7:C3:B1:F9:32:BE:44:5B:B4:7D:C7:53:6E:03:91:40:79', '2026-11-16']   /* eski sertifika · bitiş 15 Kas 2026 */
 ].filter(([, son]) => !son || Date.now() < Date.parse(son + 'T00:00:00Z')).map(([fp]) => fp);
 module.exports = async (req, res) => {
+  require('./_lib/onbellek.js')(res);   /* §513: hata yanıtı uzun önbelleğe girmez */
   SON_TESHIS=null;
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=43200, stale-while-revalidate=86400');  // aylık veri → 12 saat
