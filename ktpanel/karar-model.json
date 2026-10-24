@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-23a",
+ "surum": "2026-10-24",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -17,7 +17,7 @@
    "tip": "konsensus",
    "surucu_plani": "Doğalgaz dağıtım (EPDK tarifesi) · abone büyümesi · elektrik üretimi (PTF)",
    "kaynak_notu": "Dağıtım: epdk_tarife (TÜFE z−2 türevi) · üretim/ticaret: EPİAŞ PTF; konsensüs yok → fiyat mercekleri",
-   "sermaye_mn": 2600.0,
+   "sermaye_mn": 2600,
    "favok": {
     "2024Q1": {
      "usd": 37
@@ -64,7 +64,7 @@
     "2025Q3": 28.9,
     "2025Q4": 22.5,
     "2026Q1": 22.58,
-    "2026Q2": 40.0,
+    "2026Q2": 40,
     "2026Q3": 43.3
    },
    "fiyat_son": {
@@ -75,7 +75,7 @@
    "konsensus": null,
    "konsensus_gecmis": [],
    "hedef_fiyat": {
-    "ort": 65.0,
+    "ort": 65,
     "kurum": 1,
     "tarih": "2026-09-14",
     "kaynak": "analist.json"
@@ -169,14 +169,14 @@
    },
    "fiyat_ceyrek_sonu": {
     "2024Q3": 154.2,
-    "2024Q4": 180.0,
+    "2024Q4": 180,
     "2025Q1": 165.1,
     "2025Q2": 132.8,
     "2025Q3": 137.6,
     "2025Q4": 165.4,
     "2026Q1": 199.2,
     "2026Q2": 227.7,
-    "2026Q3": 205.0
+    "2026Q3": 205
    },
    "fiyat_son": {
     "tarih": "2026-10-19",
@@ -465,7 +465,7 @@
    "tip": "konsensus_banka",
    "surucu_plani": "Kâr payı makası: politika faizi/TLREF − katılma hesabı maliyeti · kredi büyümesi · TÜFEX benzeri sukuk getirisi · karşılık",
    "kaynak_notu": "Banka şablonu: hedef metrik NET KÂR; AOFM/TLREF/TÜFE EVDS §466 (günlük/aylık)",
-   "sermaye_mn": 2500.0,
+   "sermaye_mn": 2500,
    "favok": {},
    "fiyat_ceyrek_sonu": {
     "2024Q3": 6.01,
@@ -596,7 +596,7 @@
    "tip": "konsensus",
    "surucu_plani": "Savunma siparişleri · teslimat",
    "kaynak_notu": "Tek kurum tahmini; zayıf kapsam · KAP Yeni İş İlişkisi akışı Actions §469 (günlük)",
-   "sermaye_mn": 1000.0,
+   "sermaye_mn": 1000,
    "favok": {
     "2024Q1": {
      "usd": 1
@@ -706,7 +706,7 @@
    "tip": "konsensus",
    "surucu_plani": "Sipariş akışı (KAP açıklanan sözleşmeler, $) → backlog → teslimat takvimi (4Ç ağır) · USD/EUR endeksli sözleşmeler × TL maliyet · book-to-bill = yeni iş / hasılat",
    "kaynak_notu": "KAP sözleşme açıklamaları aselsan.com webapi (Actions §467, günlük); resmî backlog/yeni iş çeyrek sonuçlarından elle (asels_backlog)",
-   "sermaye_mn": 4560.0,
+   "sermaye_mn": 4560,
    "favok": {
     "2024Q1": {
      "usd": 110
@@ -750,10 +750,10 @@
     "2024Q4": 72.5,
     "2025Q1": 119.9,
     "2025Q2": 150.8,
-    "2025Q3": 215.0,
+    "2025Q3": 215,
     "2025Q4": 231.7,
     "2026Q1": 320.25,
-    "2026Q2": 345.0,
+    "2026Q2": 345,
     "2026Q3": 336.5
    },
    "fiyat_son": {
@@ -946,7 +946,7 @@
    "tip": "konsensus",
    "surucu_plani": "TÜFE gıda (TÜİK/EVDS aylık) · mağaza sayısı · asgari ücret (marj) · reel sepet",
    "kaynak_notu": "TCMB EVDS §466: TÜFE gıda (2025=100, zincirli); mağaza sayısı KAP çeyreklik",
-   "sermaye_mn": 1200.0,
+   "sermaye_mn": 1200,
    "favok": {
     "2024Q1": {
      "usd": 144
@@ -1266,7 +1266,7 @@
     "net_tl_mlr": 1.76,
     "kurum": 2,
     "satis_tl_mlr": 14.98,
-    "favok_min": 3.0,
+    "favok_min": 3,
     "favok_max": 3.05,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
     "tarih": "2026-10-20"
@@ -1389,7 +1389,7 @@
    "tip": "konsensus",
    "surucu_plani": "Altın (GC=F) · gümüş (SI=F) · kurşun/çinko (LME) × USDTRY · üretim (ons) — şirket aylık KAP açıklaması",
    "kaynak_notu": "Yahoo günlük; üretim hacmi şirket sunumu/KAP",
-   "sermaye_mn": 3780.0,
+   "sermaye_mn": 3780,
    "favok": {
     "2024Q1": {
      "usd": 6
@@ -1441,7 +1441,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-19",
-    "fiyat": 12.0
+    "fiyat": 12
    },
    "bolunme": {
     "2026Q3": 0.3333
@@ -1553,7 +1553,7 @@
     "2025Q3": 22.11,
     "2025Q4": 28.04,
     "2026Q1": 29.36,
-    "2026Q2": 38.0,
+    "2026Q2": 38,
     "2026Q3": 18.15
    },
    "fiyat_son": {
@@ -1680,7 +1680,7 @@
    "tip": "konsensus",
    "surucu_plani": "Aylık ön satış (KAP: satış rakamları) · teslimat takvimi (gelir tanıma) · konut fiyat endeksi (TCMB KFE)",
    "kaynak_notu": "TCMB EVDS §466: KFE aylık; KAP aylık ön satış bildirimi (ayrıştırıcı Faz 3)",
-   "sermaye_mn": 3800.0,
+   "sermaye_mn": 3800,
    "favok": {
     "2024Q1": {
      "usd": 12
@@ -1723,7 +1723,7 @@
     "2024Q3": 11.7,
     "2024Q4": 13.26,
     "2025Q1": 12.59,
-    "2025Q2": 18.0,
+    "2025Q2": 18,
     "2025Q3": 19.87,
     "2025Q4": 20.44,
     "2026Q1": 19.21,
@@ -1894,7 +1894,7 @@
    "tip": "konsensus",
    "surucu_plani": "Doğalgaz dağıtım (EPDK tarifesi, TÜFE endeksli) · abone/hacim",
    "kaynak_notu": "Tarife kuralı EPDK Metodoloji md. 26 (TÜFE z−2, aylık) → epdk_tarife türetilmiş (EVDS); hacim/abone KAP faaliyet raporu; konsensüs yok → fiyat mercekleri",
-   "sermaye_mn": 9000.0,
+   "sermaye_mn": 9000,
    "favok": {
     "2024Q1": {
      "usd": 33
@@ -1952,7 +1952,7 @@
    "konsensus": null,
    "konsensus_gecmis": [],
    "hedef_fiyat": {
-    "ort": 20.0,
+    "ort": 20,
     "kurum": 1,
     "tarih": "2026-09-14",
     "kaynak": "analist.json"
@@ -2165,7 +2165,7 @@
    "tip": "konsensus",
    "surucu_plani": "Yassı çelik–hurda makası: HRC (CME HRC=F vekili · Türkiye HRC ihracat) − hurda (LME Steel Scrap CFR TR); demir cevheri+kok kömürü (Dünya Bankası aylık) · USD/TRY",
    "kaynak_notu": "Dünya Bankası pembe sayfa aylık (ücretsiz xlsx) + Yahoo HRC=F; Türkiye HRC/hurda günlük kaynağı (SteelOrbis/Platts) ücretli — vekil kalitesi orta",
-   "sermaye_mn": 7000.0,
+   "sermaye_mn": 7000,
    "favok": {
     "2024Q1": {
      "usd": 243
@@ -2202,6 +2202,11 @@
     "2026Q2": {
      "usd": 145,
      "tl": 6.582
+    },
+    "2026Q3": {
+     "tl": 7.977,
+     "usd": 166.6,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -2273,6 +2278,14 @@
      "ort_favok_tl": 6.73,
      "ort_net_tl": 6.11,
      "gercek_favok_tl": 6.582
+    },
+    {
+     "q": "2026Q3",
+     "n": 5,
+     "ort_favok_tl": 8.451,
+     "ort_net_tl": 2.013,
+     "gercek_favok_tl": 7.977,
+     "_kaynak": "Actions §463"
     }
    ],
    "hedef_fiyat": {
@@ -2378,7 +2391,7 @@
    "evren": "izleme",
    "surucu_plani": "Bakır (trafo/pano) · panel makası modül − hücre (Peak PV) · modül satış fiyatı · USDTRY/EURUSD (ihracat)",
    "kaynak_notu": "Konsensüs Fintables (1 kurum); bakır/alüminyum Yahoo; modül fiyatı InfoLink haftalık (Actions §483). Elektrik çeliği (GOES) serbest seri yok.",
-   "sermaye_mn": 660.0,
+   "sermaye_mn": 660,
    "favok": {
     "2024Q1": {
      "usd": 10
@@ -2559,7 +2572,7 @@
    "evren": "izleme",
    "surucu_plani": "Bakır (konsolide trafo/pano + EP World güç trafosu) · panel makası (Peak PV) · modül fiyatı (EPC bedeli) · PTF $ · USDTRY",
    "kaynak_notu": "Konsensüs Fintables (1 kurum); modül fiyatı InfoLink haftalık (Actions §483); bakır Yahoo HG=F; PTF EPİAŞ.",
-   "sermaye_mn": 460.0,
+   "sermaye_mn": 460,
    "favok": {
     "2024Q1": {
      "usd": 21
@@ -2663,7 +2676,7 @@
     }
    ],
    "hedef_fiyat": {
-    "ort": 162.0,
+    "ort": 162,
     "kurum": 1,
     "tarih": "2026-06-10",
     "kaynak": "Fintables hedef fiyat (son 6 ay)"
@@ -2787,13 +2800,13 @@
     }
    },
    "fiyat_ceyrek_sonu": {
-    "2025Q1": 154.0,
+    "2025Q1": 154,
     "2025Q2": 134.3,
     "2025Q3": 175.2,
-    "2025Q4": 175.0,
+    "2025Q4": 175,
     "2026Q1": 181.7,
     "2026Q2": 171.6,
-    "2026Q3": 132.0
+    "2026Q3": 132
    },
    "fiyat_son": {
     "tarih": "2026-10-19",
@@ -2878,7 +2891,7 @@
    "tip": "konsensus",
    "surucu_plani": "Filo · personel taşımacılığı sözleşme fiyatları · akaryakıt · asgari ücret",
    "kaynak_notu": "Sürücü zayıf; konsensüs/sicil",
-   "sermaye_mn": 102.0,
+   "sermaye_mn": 102,
    "favok": {
     "2024Q1": {
      "usd": 19
@@ -2922,10 +2935,10 @@
     "2024Q4": 194.85,
     "2025Q1": 227.26,
     "2025Q2": 285.2,
-    "2025Q3": 368.0,
-    "2025Q4": 320.0,
+    "2025Q3": 368,
+    "2025Q4": 320,
     "2026Q1": 309.5,
-    "2026Q2": 306.0,
+    "2026Q2": 306,
     "2026Q3": 277.5
    },
    "fiyat_son": {
@@ -2972,7 +2985,7 @@
     }
    ],
    "hedef_fiyat": {
-    "ort": 493.0,
+    "ort": 493,
     "kurum": 2,
     "tarih": "2026-08-18",
     "kaynak": "analist.json"
@@ -3030,7 +3043,7 @@
    "tip": "konsensus",
    "surucu_plani": "Üre/amonyak (Dünya Bankası aylık Urea/DAP) − doğalgaz (TTF=F) · Razi (İran) kapasite · tarım sezonu",
    "kaynak_notu": "Dünya Bankası aylık ücretsiz; TTF Yahoo günlük",
-   "sermaye_mn": 334.0,
+   "sermaye_mn": 334,
    "favok": {
     "2024Q1": {
      "usd": 23
@@ -3071,11 +3084,11 @@
    },
    "fiyat_ceyrek_sonu": {
     "2024Q3": 204.5,
-    "2024Q4": 287.0,
-    "2025Q1": 263.0,
+    "2024Q4": 287,
+    "2025Q1": 263,
     "2025Q2": 228.3,
     "2025Q3": 285.25,
-    "2025Q4": 348.0,
+    "2025Q4": 348,
     "2026Q1": 473.25,
     "2026Q2": 442.75,
     "2026Q3": 411.25
@@ -3105,7 +3118,7 @@
      "q": "2025Q4",
      "n": 1,
      "ort_favok_tl": 4.98,
-     "ort_net_tl": 3.0,
+     "ort_net_tl": 3,
      "gercek_favok_tl": 3.104
     },
     {
@@ -3282,7 +3295,7 @@
    "tip": "konsensus",
    "surucu_plani": "Profil − kütük haddeleme spread’i (Kardemir listesi) · EUR/USD · ihracat navlunu",
    "kaynak_notu": "kardemir.com açık API §472: profil (IPE 180-200) − kütük haddeleme spread’i birincil; EUR/USD; EVDS çelik ÜFE. İhracat fiyatı yok (AB profil piyasası ücretli)",
-   "sermaye_mn": 1915.0,
+   "sermaye_mn": 1915,
    "favok": {
     "2024Q1": {
      "usd": 16
@@ -3343,8 +3356,8 @@
     "net_tl_mlr": 0.203,
     "kurum": 1,
     "satis_tl_mlr": 6.54,
-    "favok_min": 1.0,
-    "favok_max": 1.0,
+    "favok_min": 1,
+    "favok_max": 1,
     "kaynak": "Fintables hisse_senedi_araci_kurum_tahminleri (ort.)",
     "tarih": "2026-10-20"
    },
@@ -3454,7 +3467,7 @@
    "tip": "konsensus",
    "surucu_plani": "Kütük liste fiyatı ($) · kütük − cevher(1,6 t) spread’i (kok hariç) · kütük − hurda yurt içi marjı · yurt içi inşaat talebi",
    "kaynak_notu": "kardemir.com açık API §472: kütük/nervürlü liste ($,TL) + hurda alım (Özel Ekstra) 2014→ (ay ort., liste adımı); türetilmiş kütük−cevher ve kütük−hurda spread’leri; WB cevher aylık; EVDS çelik ÜFE",
-   "sermaye_mn": 1140.0,
+   "sermaye_mn": 1140,
    "favok": {
     "2024Q1": {
      "usd": 46
@@ -3770,7 +3783,7 @@
      "q": "2025Q3",
      "n": 1,
      "ort_favok_tl": 2.4,
-     "ort_net_tl": 1.0,
+     "ort_net_tl": 1,
      "gercek_favok_tl": 3.255
     },
     {
@@ -3906,13 +3919,13 @@
    },
    "fiyat_ceyrek_sonu": {
     "2024Q3": 356.21,
-    "2024Q4": 382.0,
-    "2025Q1": 317.0,
+    "2024Q4": 382,
+    "2025Q1": 317,
     "2025Q2": 341.5,
-    "2025Q3": 332.0,
+    "2025Q3": 332,
     "2025Q4": 380.5,
     "2026Q1": 425.5,
-    "2026Q2": 430.0,
+    "2026Q2": 430,
     "2026Q3": 417.75
    },
    "fiyat_son": {
@@ -4408,7 +4421,7 @@
    "tip": "konsensus",
    "surucu_plani": "İmalat — şirkete özgü",
    "kaynak_notu": "Tek kurum tahmini",
-   "sermaye_mn": 170.0,
+   "sermaye_mn": 170,
    "favok": {
     "2024Q1": {
      "usd": 3
@@ -4455,7 +4468,7 @@
     "2025Q3": 50.55,
     "2025Q4": 58.4,
     "2026Q1": 86.85,
-    "2026Q2": 164.0,
+    "2026Q2": 164,
     "2026Q3": 120.5
    },
    "fiyat_son": {
@@ -4533,7 +4546,7 @@
    "tip": "konsensus",
    "surucu_plani": "Toros Tarım: üre/DAP − doğalgaz (GUBRF ile aynı) · taahhüt backlog (USD) · Tekfen Tarım",
    "kaynak_notu": "Segment bazlı: gübre sürücüsü nicel, taahhüt backlog şirket açıklaması",
-   "sermaye_mn": 370.0,
+   "sermaye_mn": 370,
    "favok": {
     "2024Q1": {
      "usd": 24
@@ -4579,7 +4592,7 @@
     "2025Q2": 108.29,
     "2025Q3": 81.12,
     "2025Q4": 70.4,
-    "2026Q1": 98.0,
+    "2026Q1": 98,
     "2026Q2": 134.8,
     "2026Q3": 231.4
    },
@@ -4790,7 +4803,7 @@
     },
     {
      "q": "2023Q1",
-     "favok_usd": 650.0,
+     "favok_usd": 650,
      "favok_tl": 39.93,
      "satis_usd": 5045.4,
      "net_usd": 88.5,
@@ -4844,7 +4857,7 @@
      "q": "2024Q1",
      "favok_usd": 306.4,
      "favok_tl": 18.299,
-     "satis_usd": 5359.0,
+     "satis_usd": 5359,
      "net_usd": 10.4,
      "net_tl": 0.62,
      "dizel": 29.5,
@@ -4896,7 +4909,7 @@
      "q": "2025Q1",
      "favok_usd": 269.6,
      "favok_tl": 13.656,
-     "satis_usd": 4385.0,
+     "satis_usd": 4385,
      "net_usd": 2.7,
      "net_tl": 0.136,
      "dizel": 20.11,
@@ -4909,7 +4922,7 @@
      "q": "2025Q2",
      "favok_usd": 359.1,
      "favok_tl": 18.349,
-     "satis_usd": 4735.0,
+     "satis_usd": 4735,
      "net_usd": 229.7,
      "net_tl": 11.736,
      "dizel": 18.74,
@@ -4976,7 +4989,7 @@
     "2022Q4": "4Ç22 Fintables’ta boş (TMS-29 geçişi); FY22 FAVÖK ≈ 3,5 mlr $ (NRM 18,7 $/v × ~190 mn v) varsayımıyla 9A22’den türetildi — regresyon ÖRNEKLEMİNE ALINMADI, yalnızca TTM bandında kullanıldı"
    },
    "operasyon": {
-    "uretim_mn_ton_ceyrek": 7.0,
+    "uretim_mn_ton_ceyrek": 7,
     "bbl_per_ton": 7.33,
     "orta_damitik_pay": 0.47,
     "benzin_pay": 0.17,
@@ -5062,8 +5075,8 @@
      "q": "2022Q2",
      "fiyat": 25.59,
      "usdtry": 16.6784,
-     "pd_usd_mn": 2956.0,
-     "favok_ttm_usd": 2338.0,
+     "pd_usd_mn": 2956,
+     "favok_ttm_usd": 2338,
      "pd_favok": 1.26,
      "yaklasik": false
     },
@@ -5071,8 +5084,8 @@
      "q": "2022Q3",
      "fiyat": 28.01,
      "usdtry": 18.5,
-     "pd_usd_mn": 2917.0,
-     "favok_ttm_usd": 3001.0,
+     "pd_usd_mn": 2917,
+     "favok_ttm_usd": 3001,
      "pd_favok": 0.97,
      "yaklasik": false
     },
@@ -5080,8 +5093,8 @@
      "q": "2022Q4",
      "fiyat": 51.26,
      "usdtry": 18.6877,
-     "pd_usd_mn": 5285.0,
-     "favok_ttm_usd": 3472.0,
+     "pd_usd_mn": 5285,
+     "favok_ttm_usd": 3472,
      "pd_favok": 1.52,
      "yaklasik": true
     },
@@ -5089,8 +5102,8 @@
      "q": "2023Q1",
      "fiyat": 55.2,
      "usdtry": 19.1582,
-     "pd_usd_mn": 5552.0,
-     "favok_ttm_usd": 3773.0,
+     "pd_usd_mn": 5552,
+     "favok_ttm_usd": 3773,
      "pd_favok": 1.47,
      "yaklasik": true
     },
@@ -5098,8 +5111,8 @@
      "q": "2023Q2",
      "fiyat": 57.8,
      "usdtry": 26.0569,
-     "pd_usd_mn": 4274.0,
-     "favok_ttm_usd": 3472.0,
+     "pd_usd_mn": 4274,
+     "favok_ttm_usd": 3472,
      "pd_favok": 1.23,
      "yaklasik": true
     },
@@ -5107,8 +5120,8 @@
      "q": "2023Q3",
      "fiyat": 121.46,
      "usdtry": 27.4205,
-     "pd_usd_mn": 8535.0,
-     "favok_ttm_usd": 3682.0,
+     "pd_usd_mn": 8535,
+     "favok_ttm_usd": 3682,
      "pd_favok": 2.32,
      "yaklasik": true
     },
@@ -5116,8 +5129,8 @@
      "q": "2023Q4",
      "fiyat": 109.24,
      "usdtry": 29.4748,
-     "pd_usd_mn": 7141.0,
-     "favok_ttm_usd": 3360.0,
+     "pd_usd_mn": 7141,
+     "favok_ttm_usd": 3360,
      "pd_favok": 2.13,
      "yaklasik": false
     },
@@ -5125,8 +5138,8 @@
      "q": "2024Q1",
      "fiyat": 135.22,
      "usdtry": 32.3847,
-     "pd_usd_mn": 8045.0,
-     "favok_ttm_usd": 3016.0,
+     "pd_usd_mn": 8045,
+     "favok_ttm_usd": 3016,
      "pd_favok": 2.67,
      "yaklasik": false
     },
@@ -5134,8 +5147,8 @@
      "q": "2024Q2",
      "fiyat": 134.36,
      "usdtry": 32.6485,
-     "pd_usd_mn": 7929.0,
-     "favok_ttm_usd": 2682.0,
+     "pd_usd_mn": 7929,
+     "favok_ttm_usd": 2682,
      "pd_favok": 2.96,
      "yaklasik": false
     },
@@ -5143,8 +5156,8 @@
      "q": "2024Q3",
      "fiyat": 135.51,
      "usdtry": 34.1942,
-     "pd_usd_mn": 7636.0,
-     "favok_ttm_usd": 1929.0,
+     "pd_usd_mn": 7636,
+     "favok_ttm_usd": 1929,
      "pd_favok": 3.96,
      "yaklasik": false
     },
@@ -5152,8 +5165,8 @@
      "q": "2024Q4",
      "fiyat": 123.9,
      "usdtry": 35.335,
-     "pd_usd_mn": 6756.0,
-     "favok_ttm_usd": 1385.0,
+     "pd_usd_mn": 6756,
+     "favok_ttm_usd": 1385,
      "pd_favok": 4.88,
      "yaklasik": false
     },
@@ -5161,8 +5174,8 @@
      "q": "2025Q1",
      "fiyat": 127.47,
      "usdtry": 37.917,
-     "pd_usd_mn": 6478.0,
-     "favok_ttm_usd": 1348.0,
+     "pd_usd_mn": 6478,
+     "favok_ttm_usd": 1348,
      "pd_favok": 4.8,
      "yaklasik": false
     },
@@ -5170,8 +5183,8 @@
      "q": "2025Q2",
      "fiyat": 129.32,
      "usdtry": 39.7825,
-     "pd_usd_mn": 6263.0,
-     "favok_ttm_usd": 1311.0,
+     "pd_usd_mn": 6263,
+     "favok_ttm_usd": 1311,
      "pd_favok": 4.78,
      "yaklasik": false
     },
@@ -5179,8 +5192,8 @@
      "q": "2025Q3",
      "fiyat": 179.15,
      "usdtry": 41.5658,
-     "pd_usd_mn": 8305.0,
-     "favok_ttm_usd": 1349.0,
+     "pd_usd_mn": 8305,
+     "favok_ttm_usd": 1349,
      "pd_favok": 6.16,
      "yaklasik": false
     },
@@ -5188,8 +5201,8 @@
      "q": "2025Q4",
      "fiyat": 177.14,
      "usdtry": 42.9498,
-     "pd_usd_mn": 7947.0,
-     "favok_ttm_usd": 1453.0,
+     "pd_usd_mn": 7947,
+     "favok_ttm_usd": 1453,
      "pd_favok": 5.47,
      "yaklasik": false
     },
@@ -5197,8 +5210,8 @@
      "q": "2026Q1",
      "fiyat": 258.25,
      "usdtry": 44.4513,
-     "pd_usd_mn": 11194.0,
-     "favok_ttm_usd": 1546.0,
+     "pd_usd_mn": 11194,
+     "favok_ttm_usd": 1546,
      "pd_favok": 7.24,
      "yaklasik": false
     },
@@ -5206,8 +5219,8 @@
      "q": "2026Q2",
      "fiyat": 227.5,
      "usdtry": 46.644,
-     "pd_usd_mn": 9398.0,
-     "favok_ttm_usd": 2384.0,
+     "pd_usd_mn": 9398,
+     "favok_ttm_usd": 2384,
      "pd_favok": 3.94,
      "yaklasik": false
     }
@@ -5307,7 +5320,7 @@
      "tl": 17.735
     },
     "2023Q1": {
-     "usd": 650.0,
+     "usd": 650,
      "tl": 39.93
     },
     "2023Q2": {
@@ -5363,7 +5376,7 @@
    "tip": "konsensus",
    "surucu_plani": "GRSEL ile aynı",
    "kaynak_notu": "Konsensüs yok → yalnız fiyatlanma",
-   "sermaye_mn": 1080.0,
+   "sermaye_mn": 1080,
    "favok": {
     "2024Q1": {
      "usd": 7
