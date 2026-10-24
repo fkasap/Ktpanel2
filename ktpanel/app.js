@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024a';   // SS502-506 Ekim taramasi: politika faizi TP.PY.P02.1H, PPK agaci, pano, ayrisma
+const KTP_SURUM = '20261024b';   // SS509 saglik bekcisi (Veri Durumu cekmecesi)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8709,6 +8709,7 @@ async function boot(){
     ['Multiple', multipleInit],
     ['Sukuk', sukukInit],
     ['Veri Tazeliği', planInit],
+    ['Sağlık bekçisi', saglikInit],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
        ondan önce bitince eklediği otomatik satırlar siliniyordu — kullanıcı
@@ -10047,6 +10048,51 @@ async function planInit(){
   }
 }
 
+/* ---- §509 SAĞLIK BEKÇİSİ (saglik.json · scripts/saglik.mjs · .github/workflows/saglik.yml) ----
+   Panel kendini her gün denetler: EVDS serileri (app.js'ten otomatik keşif), bot dosya ritmi, köprü şemaları,
+   damga↔canlı tutarlılığı ve her sekmenin ekranı. Burada yalnız OKUNUR ve gösterilir — hesap bekçide (§112 tek sahip).
+   Düğmedeki rozet: kırmızı = kritik sayısı, turuncu = yalnız uyarı. */
+async function saglikInit(){
+  const el=$('saglikBody'); if(!el) return;
+  let S=null;
+  try{ const r=await fetch('/saglik.json',{cache:'no-store'}); if(r.ok) S=await r.json(); }catch(e){}
+  if(!S){ el.innerHTML='<div class="sub">Bekçi henüz koşmadı (saglik.json yok). Actions › Sağlık Bekçisi › Run workflow ile ilk tur başlatılabilir.</div>'; return; }
+  const O=S.ozet||{}, B=S.bulgular||[];
+  const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const t=new Date(S.guncelleme); const tStr=isNaN(t)?'—':(t.getDate()+' '+ay[t.getMonth()]+' '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0'));
+  const yasSaat=isNaN(t)?null:(Date.now()-t.getTime())/36e5;
+  const d=$('saglikDamga'); if(d) d.textContent='(son tur '+tStr+(yasSaat!=null&&yasSaat>30?' · ⚠ bekçi '+Math.round(yasSaat/24)+' gündür koşmadı':'')+')';
+  const renk={kritik:'#DE4B5E',uyari:'#E8933B',bilgi:'#8FA098'};
+  const KAT={seriler:'seri',dosyalar:'dosya',kopruler:'köprü',tutarlilik:'tutarlılık',ekran:'ekran',bekci:'bekçi'};
+  const satir=b=>'<div style="display:flex;gap:7px;padding:6px 0;border-bottom:1px solid var(--line);font-size:10.5px;line-height:1.45">'+
+    '<span style="flex:none;width:7px;height:7px;border-radius:50%;margin-top:4px;background:'+renk[b.seviye]+'"></span>'+
+    '<span style="flex:1"><span style="font-family:var(--mono);font-size:9px;color:var(--muted)">'+esc(KAT[b.katman]||b.katman)+'</span> '+esc(b.baslik)+
+    ' <span style="font-family:var(--mono);font-size:9px;color:'+(b.yeni?renk.kritik:'var(--muted)')+'">'+(b.yeni?'YENİ':(b.gun||0)+' gündür')+'</span>'+
+    (b.ayrinti?'<div class="sub" style="font-size:9.5px">'+esc(b.ayrinti)+'</div>':'')+'</span></div>';
+  const ana=B.filter(x=>x.seviye!=='bilgi');
+  const bilgi=B.filter(x=>x.seviye==='bilgi');
+  const kat=Object.entries(S.katmanlar||{}).map(([k,v])=>esc(KAT[k]||k)+' '+esc(v.not||'')+' · '+(v.sure||0)+' sn').join('<br>');
+  const borc=(S.borc||[]);
+  const duz=(S.duzelen||[]);
+  const ges=(S.gecmis||[]).slice(-30);
+  const spark=ges.length>1?(()=>{ const W=220,H=26,mx=Math.max(1,...ges.map(g=>g.kritik+g.uyari));
+    const x=i=>i/(ges.length-1)*W, y=v=>H-2-(v/mx)*(H-4);
+    const yol=k=>ges.map((g,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(k(g)).toFixed(1)).join(' ');
+    return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:26px;margin:4px 0 2px"><path d="'+yol(g=>g.kritik+g.uyari)+'" fill="none" stroke="#E8933B" stroke-width="1.5"/><path d="'+yol(g=>g.kritik)+'" fill="none" stroke="#DE4B5E" stroke-width="1.5"/></svg><div class="sub" style="font-size:9px">son '+ges.length+' tur · kırmızı kritik · turuncu toplam</div>'; })():'';
+  el.innerHTML=
+    '<div style="display:flex;gap:10px;align-items:baseline;margin-bottom:4px"><b style="font-size:15px;color:'+(O.kritik?renk.kritik:O.uyari?renk.uyari:'#0FA26B')+'">'+(O.kritik?O.kritik+' kritik':O.uyari?'kritik yok':'sağlıklı')+'</b>'+
+    '<span class="sub">'+(O.uyari||0)+' uyarı · '+(O.yeni||0)+' yeni · '+(O.duzelen||0)+' düzelen</span></div>'+spark+
+    (ana.length?ana.slice(0,40).map(satir).join(''):'<div class="sub" style="padding:6px 0">Kritik ya da uyarı yok.</div>')+
+    (duz.length?'<details style="margin-top:8px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:#0FA26B">DÜZELEN ('+duz.length+', son 7 gün)</summary>'+duz.map(x=>'<div class="sub" style="font-size:10px;padding:3px 0">✓ '+esc(x.baslik)+' <span class="thin">· '+esc(x.duzeldi||'')+'</span></div>').join('')+'</details>':'')+
+    (bilgi.length?'<details style="margin-top:6px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:var(--muted)">SÜREGELEN EKRAN NOTLARI ('+bilgi.length+')</summary>'+bilgi.slice(0,60).map(satir).join('')+'</details>':'')+
+    (borc.length?'<details style="margin-top:6px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:var(--mm2)">OTOMASYON BORCU — elle güncellenen '+borc.length+' dosya</summary><div class="sub" style="font-size:9.5px;margin:4px 0">Bot bu dosyaları hiç (ya da 3\'ten az) yazmamış: güncelliği insana bağlı. Hedef bu listeyi sıfırlamak.</div>'+borc.map(x=>'<div style="font-family:var(--mono);font-size:10px;padding:2px 0">'+esc(x.dosya)+' <span class="thin">· son '+esc(x.son)+' · '+x.gun+' gün</span></div>').join('')+'</details>':'')+
+    '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:var(--muted)">KATMANLAR</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">'+kat+'<br>mail: '+esc(S.mail||'—')+'</div></details>';
+  const trig=$('drawerTrigger');
+  if(trig){ const e0=trig.querySelector('.saglikRozet'); if(e0) e0.remove();
+    if(O.kritik||O.uyari){ const r=document.createElement('span'); r.className='saglikRozet'; r.title='Sağlık bekçisi: '+(O.kritik||0)+' kritik · '+(O.uyari||0)+' uyarı';
+      r.textContent=O.kritik?(' ●'+O.kritik+'K'):' ●'; r.style.cssText='color:'+(O.kritik?renk.kritik:renk.uyari)+';margin-left:5px;font-size:10px;font-weight:700'; trig.appendChild(r); } }
+}
+
 /* ---- Portföy Yönetimi ---- */
 let ANALIST=null, MFIYAT={}, MHACIM={}, MADET={}, MULTIPLE_TARIH='', MRISK={};
 async function pyInit(){
@@ -11366,6 +11412,7 @@ async function hzKur(){
   const donemler=Object.entries(ars.donemler).map(([k,D])=>({D:Object.assign({donem:k},D),a:hzDonemAnahtar({donem:k})})).filter(x=>x.a).sort((x,y)=>(x.a.yil-y.a.yil)||(x.a.c-y.a.c));
   const sonD=donemler[donemler.length-1];
   if(taban!=='nominal'){ d.textContent='EVDS serileri…';
+    /* saglik:tarihsel TP.FG.J0 — §509 bekçisine: bu seri BİLEREK durmuş (eski baz), bayat sayılmaz; yalnız boşalırsa uyarır. */
     /* §444f (canlı MAVI: "TÜFE hedef yok"): TÜİK 2026'da bazı 2025=100'e taşıdı; TP.FG.J0 2026-1'de bitiyor.
        Yeni seri TP.TUKFIY2025.GENEL esas; ondan önceki aylar eski seriden, örtüşen ilk ayın oranıyla ZİNCİRLENİR.
        Künyede hangi seri + bağ katsayısı yazılır. Fintables'ın "TÜFE 30.04.2026 = 4.028" eski baza zincirlenmiş hâlidir. */
