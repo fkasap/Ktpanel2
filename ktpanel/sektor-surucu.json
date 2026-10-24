@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-24T11:24:42Z",
+ "guncelleme": "2026-10-24T11:39:35Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -51513,14 +51513,14 @@
     ],
     [
      "2026-10-24",
-     391.5,
-     "22 Oct 2026"
+     395,
+     "23 Oct 2026"
     ]
    ],
    "son": {
     "tarih": "2026-10-24",
-    "deger": 391.5,
-    "etiket": "22 Oct 2026"
+    "deger": 395,
+    "etiket": "23 Oct 2026"
    },
    "guncelleme": "2026-10-24",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
@@ -51553,12 +51553,12 @@
     ],
     [
      "2026-10-24",
-     193.5
+     190
     ]
    ],
    "son": {
     "tarih": "2026-10-24",
-    "deger": 193.5
+    "deger": 190
    },
    "guncelleme": "2026-10-24",
    "_not": "KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur."
@@ -57249,6 +57249,7 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-07": 8.2,
     "2023-09": 9.3,
     "2024-02": 8.22,
     "2024-04": 5.87,
@@ -57278,6 +57279,10 @@
     "2026-10": 5.07
    },
    "haftalik": [
+    [
+     "2023-07-19",
+     8.2
+    ],
     [
      "2023-09-27",
      9.3
@@ -57428,7 +57433,7 @@
     "deger": 5.07,
     "yillik_degisim": -22
    },
-   "ilk": "2023-09-27",
+   "ilk": "2023-07-19",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_wafer_usd": {
@@ -57440,11 +57445,12 @@
    ],
    "kaynak": "PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması",
    "zincir": [
-    "k1 ×0.933 (33 örtüşme, 3 hafta)"
+    "k1 ×0.933 (33 örtüşme, 4 hafta)"
    ],
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-07": 0.322,
     "2023-09": 0.34,
     "2024-02": 0.231,
     "2024-04": 0.183,
@@ -57474,6 +57480,10 @@
     "2026-10": 0.14
    },
    "haftalik": [
+    [
+     "2023-07-19",
+     0.322
+    ],
     [
      "2023-09-27",
      0.34
@@ -57624,7 +57634,7 @@
     "deger": 0.14,
     "yillik_degisim": -11.4
    },
-   "ilk": "2023-09-27",
+   "ilk": "2023-07-19",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_hucre_usd": {
@@ -57639,6 +57649,7 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-07": 0.099,
     "2023-09": 0.084,
     "2024-02": 0.056,
     "2024-04": 0.049,
@@ -57668,6 +57679,10 @@
     "2026-10": 0.04
    },
    "haftalik": [
+    [
+     "2023-07-19",
+     0.099
+    ],
     [
      "2023-09-27",
      0.084
@@ -57818,7 +57833,7 @@
     "deger": 0.04,
     "yillik_degisim": 11.1
    },
-   "ilk": "2023-09-27",
+   "ilk": "2023-07-19",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_modul_usd": {
@@ -57833,6 +57848,7 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
+    "2023-07": 0.167,
     "2023-09": 0.151,
     "2024-02": 0.113,
     "2024-04": 0.107,
@@ -57862,6 +57878,10 @@
     "2026-10": 0.0895
    },
    "haftalik": [
+    [
+     "2023-07-19",
+     0.167
+    ],
     [
      "2023-09-27",
      0.151
@@ -58012,7 +58032,7 @@
     "deger": 0.089,
     "yillik_degisim": 14.1
    },
-   "ilk": "2023-09-27",
+   "ilk": "2023-07-19",
    "guncelleme": "2026-10-24"
   },
   "ges_pvi_montaj_makasi_usd": {
@@ -58028,6 +58048,7 @@
    "_not": "InfoLink makasının ikinci kaynaktan teyidi; iki makas aynı yöne gidiyorsa sinyal güçlü.",
    "siklik": "aylik",
    "aylik": {
+    "2023-07": 0.068,
     "2023-09": 0.067,
     "2024-02": 0.057,
     "2024-04": 0.058,
@@ -58057,6 +58078,10 @@
     "2026-10": 0.0495
    },
    "haftalik": [
+    [
+     "2023-07-19",
+     0.068
+    ],
     [
      "2023-09-27",
      0.067
@@ -58207,7 +58232,7 @@
     "deger": 0.049,
     "yillik_degisim": 16.7
    },
-   "ilk": "2023-09-27",
+   "ilk": "2023-07-19",
    "guncelleme": "2026-10-24"
   },
   "tkfen_backlog": {
@@ -84911,7 +84936,8 @@
    "20241120215803": 1,
    "20241227105708": 1,
    "20241127154315": 1,
-   "20241117205846": 1
+   "20241117205846": 1,
+   "20241204174738": 1
   },
   "_not": "InfoLink spot fiyat tablosu (ortalama sütunu) — hafta: yayın tarihi → {InfoLink satır adı: ortalama}; wb: işlenmiş Wayback görüntü zaman damgaları",
   "pv": {
@@ -85635,6 +85661,26 @@
      "Mono PERC Module in China": 0.139,
      "182mm 580/625Wp N-Mono Module": 0.151,
      "ThinFilm Solar Module": 0.202
+    },
+    "2023-07-19": {
+     "PV Grade PolySilicon (9N/9N+)": 8.2,
+     "156 mm Multi Solar Wafer": 0.173,
+     "166mm Mono Solar Wafer": 0.311,
+     "182mm Mono Solar Wafer": 0.345,
+     "210mm Mono Solar Wafer": 0.466,
+     "Multi Cell Price": 0.08,
+     "Poly PERC Cell": 0.087,
+     "China Mono PERC Cell": 0.09,
+     "166mm Mono PERC Cell": 0.094,
+     "182mm Mono PERC Cell": 0.09,
+     "210mm Mono PERC Cell": 0.089,
+     "182mm N-Mono Cell": 0.099,
+     "Poly Module": 0.147,
+     "182mm 550/595Wp PERC Module": 0.154,
+     "210mm 600/660Wp PERC Module": 0.161,
+     "Mono PERC Module in China": 0.15,
+     "182mm 580/625Wp N-Mono Module": 0.167,
+     "ThinFilm Solar Module": 0.211
     }
    },
    "wb": {
@@ -85682,7 +85728,7 @@
     "20240417212615": 1,
     "20240227191827": 1,
     "20240223162048": 1,
-    "20230725075343": -1,
+    "20230725075343": 1,
     "20230705150735": -1,
     "20230701044510": -1,
     "20230929230651": 1
