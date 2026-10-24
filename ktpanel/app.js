@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024f';   // SS518-520 kart taramasi: dis ticaret, nobet adlari, MB kartlari canli dogrulama
+const KTP_SURUM = '20261024g';   // SS522 Gundem ozeti otomatik
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8720,6 +8720,7 @@ async function boot(){
     ['Sağlık bekçisi', saglikInit],
     ['Ülke kredi notu', krediNotuInit],
     ['MB damga kartları canlı doğrulama', mbKartCanli],
+    ['Gündem özeti (otomatik)', ()=>setTimeout(gundemCanli,3000)],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
        ondan önce bitince eklediği otomatik satırlar siliniyordu — kullanıcı
@@ -10163,6 +10164,76 @@ async function mbKartCanli(){
     if(d&&Number.isFinite(d.deger)) uygula('ecbSonHamle','ecbTag',d.deger,Number.isFinite(d.fark)?+(d.deger-d.fark).toFixed(2):null,d.tarih,'ECB SDW DFR (yürürlük tarihi)'); }catch(e){}
   try{ const j=await (await fetch('/api/market?mod=ecos')).json(); const f=j&&j.seriler&&j.seriler.faiz;
     if(f&&Number.isFinite(f.deger)) uygula('bokPolitika','bokTag',f.deger,Number.isFinite(f.oncekiSeviye)?f.oncekiSeviye:null,f.sonDegisimTarihi,'BOK ECOS'); }catch(e){}
+}
+
+/* ---- §522 GÜNDEM ÖZETİ OTOMATİK (24 Eki) ----
+   Kart elle yazılıyordu ("12 EKİ: ABD TÜFE ÇAR · S&P CUMA · PPK 22 EKİ") ve olaylar geçtikten sonra da duruyordu. Artık panelin
+   zaten otomatik akan takvimlerinden DERLENİR — hiçbir satır elle yazılmaz:
+     TR: PPK (PPK_VARSAYILAN) · TCMB haftalık rezerv (her Perşembe 14:30) · TÜİK TÜFE (ayın 3'ü 10:00, hafta sonuysa ilk iş günü) ·
+         Hazine ihaleleri (hazine-takvim.json) · ülke notu takvimi (kredi-notu.json) · BIST bilançoları (bist-takvim.json beklenen +
+         SPK son günleri: solo çeyrek sonu+30, konsolide +40 gün)
+     Küresel: FOMC (FOMC_2026) · ECB (ECB_TAKVIM, ECB resmî duyurusu) · BoJ (BOJ_TAKVIM, boj.or.jp) · makro-takvim.json yüksek etkili veriler
+   Geçen 7 gün: politika kararı (seriden, §514) · not hamlesi · açıklanan bilançolar · yüksek etkili veriler. Piyasa: endeks arşivinden
+   5 iş günü değişimi + CDS. Eski elle not kartın altında katlı durur. BOK'un 2026 takvimi birincil kaynaktan doğrulanamadığı için YOK. */
+const ECB_TAKVIM=['2026-10-29','2026-12-17'];   /* ECB basın duyurusu 24 Nis 2025 (Governing Council para politikası toplantıları) */
+const BOJ_TAKVIM=[['2026-10-29','2026-10-30'],['2026-12-17','2026-12-18'],['2027-01-21','2027-01-22'],['2027-03-17','2027-03-18'],
+  ['2027-04-27','2027-04-28'],['2027-06-10','2027-06-11'],['2027-07-21','2027-07-22'],['2027-09-21','2027-09-22'],['2027-10-28','2027-10-29'],['2027-12-16','2027-12-17']];   /* boj.or.jp/en/mopo/mpmsche_minu */
+/* Sabit tarihli resmî tatiller (BIST/TCMB kapalı). Dinî bayramlar ay takvimine bağlı — doğrulanmadan YAZILMAZ (eklenecekse kaynakla). */
+const TR_TATIL={'2026-10-28':'Cumhuriyet Bayramı arifesi — BIST yarım gün','2026-10-29':'Cumhuriyet Bayramı — BIST/TCMB kapalı',
+  '2027-01-01':'Yılbaşı','2027-04-23':'23 Nisan','2027-05-01':'1 Mayıs','2027-05-19':'19 Mayıs','2027-07-15':'15 Temmuz','2027-08-30':'30 Ağustos','2027-10-28':'Cumhuriyet Bayramı arifesi — BIST yarım gün','2027-10-29':'Cumhuriyet Bayramı — BIST/TCMB kapalı'};
+async function gundemCanli(){
+  const el=$('gundemCanli'); if(!el) return;
+  const AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'], GUN=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+  const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const bug=new Date(); bug.setHours(0,0,0,0); const ekle=(d,n)=>{const x=new Date(d); x.setDate(x.getDate()+n); return x;};
+  const g0=iso(bug), g7=iso(ekle(bug,7)), gm7=iso(ekle(bug,-7));
+  const ileri=t=>t>=g0&&t<=g7, geri=t=>t>=gm7&&t<g0;
+  const etk=t=>{ const d=new Date(t+'T12:00:00'); return GUN[d.getDay()]+' '+d.getDate()+' '+AYK[d.getMonth()]; };
+  const J=async u=>{ try{ const r=await fetch(u,{cache:'no-store'}); return r.ok? await r.json() : null; }catch(e){ return null; } };
+  const [MT,BT,HT,KN,EA,CD]=await Promise.all([J('/makro-takvim.json'),J('/bist-takvim.json'),J('/hazine-takvim.json'),J('/kredi-notu.json'),
+    (typeof ENDARS!=='undefined'&&ENDARS)? Promise.resolve(ENDARS) : J('/endeks-arsiv.json'), J('/cds.json')]);
+  const O=[], G=[];   /* {t, metin, tur} */
+  /* TR */
+  (typeof PPK_VARSAYILAN!=='undefined'?PPK_VARSAYILAN:[]).forEach(x=>{ if(ileri(x.tarih)) O.push({t:x.tarih, metin:'<b>TCMB PPK</b> faiz kararı 14:00', tur:'tr'}); });
+  for(let i=0;i<=7;i++){ const d=ekle(bug,i), t=iso(d); if(TR_TATIL[t]) O.push({t, metin:'<span class="down">'+esc(TR_TATIL[t])+'</span>', tur:'tr'});
+    if(d.getDay()===4) O.push({t, metin:'TCMB haftalık rezerv 14:30'+(/kapalı/.test(TR_TATIL[t]||'')?' <span class="thin">(tatil — yayın günü kayabilir)</span>':''), tur:'tr'}); }
+  for(const ay of [bug.getMonth(), bug.getMonth()+1]){ let d=new Date(bug.getFullYear(), ay, 3); while(d.getDay()===0||d.getDay()===6) d=ekle(d,1);
+    if(ileri(iso(d))){ const onc=new Date(d.getFullYear(), d.getMonth()-1, 1); O.push({t:iso(d), metin:'<b>TÜİK TÜFE</b> ('+AYK[onc.getMonth()]+') 10:00', tur:'tr'}); } }
+  ((HT&&HT.ihraclar)||[]).forEach(x=>{ if(ileri(x.t)) O.push({t:x.t, metin:'Hazine: '+esc(x.ad)+(x.vade?' ('+esc(x.vade)+')':'')+(x.katilim?' <span class="up">· katılım</span>':''), tur:'hz'}); });
+  ((KN&&KN.takvim)||[]).forEach(x=>{ if(!x.sonuc&&ileri(x.tarih)) O.push({t:x.tarih, metin:'<b>'+esc(x.ajans)+'</b> Türkiye not değerlendirmesi', tur:'tr'}); });
+  if(BT){ const bek=BT.beklenen||{}, gun={}; Object.entries(bek).forEach(([k,t])=>{ if(ileri(t)) (gun[t]=gun[t]||[]).push(k); });
+    const onem=new Set(((KARAR&&KARAR.model&&KARAR.model.modeller)||[]).map(m=>m.kod));
+    Object.entries(gun).forEach(([t,l])=>{ l.sort((a,b)=>(onem.has(b)-onem.has(a))); O.push({t, metin:'BIST bilanço (tahmini'+(/kapalı/.test(TR_TATIL[t]||'')?', tatil — kayar':'')+'): '+l.length+' şirket — '+l.slice(0,5).map(k=>onem.has(k)?'<b>'+esc(k)+'</b>':esc(k)).join(', ')+(l.length>5?'…':''), tur:'bist'}); });
+    const m=String(BT.donem||'').match(/([1-4])Ç(\d\d)/); if(m){ const qs=new Date(2000+ +m[2], +m[1]*3, 0); [[30,'solo'],[40,'konsolide']].forEach(([n,ad])=>{ let d=ekle(qs,n); while(d.getDay()===0||d.getDay()===6) d=ekle(d,1); if(ileri(iso(d))) O.push({t:iso(d), metin:'SPK son gün: '+BT.donem+' '+ad+' bilançolar', tur:'bist'}); }); }
+    Object.entries(BT.gerceklesen||{}).forEach(([k,t])=>{ if(geri(t)) G.push({t, metin:k, tur:'bistG'}); }); }
+  /* Küresel */
+  (typeof FOMC_2026!=='undefined'?FOMC_2026:[]).forEach(x=>{ if(ileri(x[1])) O.push({t:x[1], metin:'<b>FOMC</b> kararı 21:00 TSİ'+(x[2]?' · SEP':''), tur:'gl'}); });
+  ECB_TAKVIM.forEach(t=>{ if(ileri(t)) O.push({t, metin:'<b>ECB</b> faiz kararı 15:15 TSİ', tur:'gl'}); });
+  BOJ_TAKVIM.forEach(x=>{ if(ileri(x[1])) O.push({t:x[1], metin:'<b>BoJ</b> kararı (sabah, TSİ)', tur:'gl'}); });
+  const ANA=new Set(['USD','EUR','GBP','JPY','CNY','TRY']);
+  ((MT&&MT.olaylar)||[]).forEach(x=>{ if(x.etki!=='High'||!ANA.has(x.ulke)) return; const d=new Date(x.t), t=iso(d), sa=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const m=esc(x.ulke)+' '+esc(x.olay)+(x.beklenti?' <span class="thin">(bkl. '+esc(x.beklenti)+')</span>':'')+' '+sa;
+    if(ileri(t)) O.push({t, metin:m, tur:'gl'}); else if(geri(t)) G.push({t, metin:esc(x.ulke)+' '+esc(x.olay), tur:'gl'}); });
+  /* Geçen 7 gün: politika kararı + not hamlesi */
+  try{ const P=await politikaCanli(); if(P&&P.karar){ const m=String(P.karar.tarih).match(/^(\d{2})-(\d{2})-(\d{4})/); const t=m?m[3]+'-'+m[2]+'-'+m[1]:null;
+    if(t&&geri(t)) G.push({t, metin:'<b>TCMB</b> '+(P.karar.bp>0?'+':'−')+Math.abs(P.karar.bp)+'bp → %'+trN(P.karar.yeni,2), tur:'tr'}); } }catch(e){}
+  ((KN&&KN.gecmis)||[]).forEach(x=>{ if(geri(x.tarih)) G.push({t:x.tarih, metin:'<b>'+esc(x.ajans)+'</b> '+(x.teyit?'teyit '+esc(x.yeni.not)+'/'+esc(x.yeni.gorunum):esc(x.eski.not)+' → '+esc(x.yeni.not)), tur:'tr'}); });
+  /* Piyasa (5 iş günü) */
+  let piy='';
+  try{ const gn=(EA&&EA.gunler)||{}; const gl=Object.keys(gn).filter(g=>gn[g]&&gn[g].XU100>0).sort(); if(gl.length>5){ const a=gn[gl[gl.length-1]], b=gn[gl[gl.length-6]];
+      const d=(k)=> (a[k]>0&&b[k]>0)? ((a[k]/b[k]-1)*100) : null; const f=v=>v==null?'—':'<span class="'+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+trN(v,1)+'%</span>';
+      piy='XU100 '+f(d('XU100'))+' · XKTUM '+f(d('XKTUM'))+' · XK030 '+f(d('XK030'))+' <span class="thin">('+gl[gl.length-6].slice(5)+' → '+gl[gl.length-1].slice(5)+')</span>'; } }catch(e){}
+  try{ if(CD&&CD.seri&&CD.seri.length>5){ const a=CD.seri[CD.seri.length-1][1], b=CD.seri[CD.seri.length-6][1]; piy+=(piy?' · ':'')+'CDS '+trN(a,0)+' <span class="'+(a<=b?'up':'down')+'">('+(a>=b?'+':'')+trN(a-b,0)+')</span>'; } }catch(e){}
+  /* Çizim */
+  const grup=L=>{ const by={}; L.sort((a,b)=>a.t<b.t?-1:1).forEach(x=>(by[x.t]=by[x.t]||[]).push(x)); return Object.entries(by); };
+  const sat=(etiket,html)=>'<div class="kv"><span class="k">'+etiket+'</span><span>'+html+'</span></div>';
+  const ileriHtml=O.length? grup(O).map(([t,l])=>'<div style="margin:2px 0"><b style="color:var(--mm2)">'+etk(t)+'</b> · '+l.map(x=>x.metin).join(' · ')+'</div>').join('') : '<span class="sub">takvimlerde önümüzdeki 7 günde olay yok'+(MT&&!(MT.olaylar||[]).some(x=>x.t.slice(0,10)>=g0)?' (küresel veri takvimi pazar günü yenilenir)':'')+'</span>';
+  const bistG=G.filter(x=>x.tur==='bistG'); const digerG=G.filter(x=>x.tur!=='bistG');
+  const geriHtml=(digerG.length? grup(digerG).map(([t,l])=>etk(t)+': '+l.map(x=>x.metin).join(', ')).join(' · ') : '')+
+    (bistG.length? (digerG.length?'<br>':'')+'Bilanço açıklayan: '+bistG.length+' şirket ('+bistG.map(x=>esc(x.metin)).slice(0,8).join(', ')+(bistG.length>8?'…':'')+')' : '');
+  el.innerHTML=sat('Önümüzdeki 7 gün',ileriHtml)+(geriHtml?sat('Geçen 7 gün',geriHtml):'')+(piy?sat('Piyasa (5 iş günü)',piy):'')+
+    '<div class="sub" style="font-size:9.5px;margin-top:4px">Otomatik derleme — PPK/FOMC/ECB/BoJ takvimleri · TÜİK/TCMB yayın ritmi · Hazine ihale programı · ülke notu takvimi · BIST bilanço takvimi (tahmini, geçen yıl deseni) · ForexFactory yüksek etkili veriler. Elle satır yok. §522</div>';
+  const tg=$('gundemTag'); if(tg) tg.textContent='OTOMATİK · '+etk(g0).toLocaleUpperCase('tr-TR')+' → '+etk(g7).toLocaleUpperCase('tr-TR');
 }
 
 /* ---- Portföy Yönetimi ---- */

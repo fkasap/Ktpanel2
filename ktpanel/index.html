@@ -1925,12 +1925,15 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   
 
 <div class="card">
-    <div class="lbl">GÜNDEM ÖZETİ <span class="tag snap">12 EKİ: ABD TÜFE ÇAR · S&amp;P CUMA · 3Ç26 SEZONU KAPIDA · PPK 22 EKİ</span></div>
+    <div class="lbl">GÜNDEM ÖZETİ <span class="tag snap" id="gundemTag">OTOMATİK</span></div>
+    <div id="gundemCanli"><div class="sub">gündem derleniyor…</div></div>
+    <details id="gundemEski" style="margin-top:8px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:var(--muted)">ELLE YAZILMIŞ ESKİ NOT (12 Eki haftası)</summary>
     <div class="kv"><span class="k">Haftanın omurgası</span><span style="color:var(--mm2);font-weight:600">Çarşamba 14 Eki ABD TÜFE (Eyl) 15:30 → Perşembe 15 Eki TCMB rezerv (9 Eki haftası) → Cuma 16 Eki S&amp;P Türkiye (BB−/durağan, 16/16 analist "değişmez") · aynı hafta ABD büyük bankalar ve ASML 3Ç — küresel kazanç sezonu açılıyor</span></div>
     <div class="kv"><span class="k">Geçen haftadan devir</span><span>Rezerv 6. hafta düşüş: brüt 167,4 · swap hariç net <b>37,9</b> (−18 mlr $ beş haftada) · 1 Eki makroihtiyati gevşeme (KOBİ sınırı %5, ZK bloke tesis indirimi) · Kredi Eğilim Anketi: TL kredi standartları gevşemeye döndü · Eylül TÜFE yıllık %29,7 (3 Eki) → 22 Eki PPK'da ilk indirim tartışması canlı, karşı ağırlık rezerv + fon krizi</span></div>
     <div class="kv"><span class="k">Fon cephesi</span><span class="down">Fon krizinin dördüncü haftası: 9→12 Eki net akış −6,9 mlr ₺ (giriş 49,4 / çıkış −56,4) · PYŞ 1G: Kuveyt Türk −10,8 mlr, Pardus −2,3 mlr çıkış; İş +6,1, YKB +3,4 giriş · MKK Eylül: toplam fon büyüklüğü 8.833 mlr ₺, ayda −1.757 mlr (serbest fonlar 6.444→5.458)</span></div>
     <div class="kv"><span class="k">Piyasa skoru (9 Eki)</span><span>XU100 12.266 (1H −0,0 · 1A −15,4 · 3A −11,9) · XKTUM 16.253 · XK100 14.411 · CDS 247,8 (+0,6) · 3A lideri XKMYA %+24,2 · beklenen BIST 3Ç26 ilk açıklama ~19 Eki (EREGL/ISDMR), 87 şirket 9 Kas konsolide sınırında</span></div>
     <div class="note">Hafta, <b>dış kazanç sezonu + içeride not ve rezerv</b> ekseninde ilerliyor. <b>Çarşamba ABD TÜFE</b>, Fed'in 27–28 Eki'de ikinci artırıma gidip gitmeyeceğinin tek manşet verisi; sıcak gelirse dolar/getiri kanalından TL ve CDS'e baskı, soğuk gelirse 22 Eki PPK için alan açılır. <b>Cuma S&amp;P</b> beklenti dahilinde teyit senaryosu; sürpriz ancak görünümde olur ve bunun için fon krizinin sisteme yayılması gerekir — S&amp;P'nin 2 Eki notu ("izole kaldıkça baskı yok") bunu söylüyor. <b>Perşembe rezerv</b> asıl stres göstergesi: swap hariç net 40 mlr $ eşiğinin altında kaldıkça TCMB'nin 22 Eki'de indirim alanı daralır; 1 Eki ZK gevşemesi bu yüzden önemli — faiz indirmeden likidite veriyor. Katılım cephesinde akış hâlâ negatif ama çıkışlar tek PYŞ'lerde yoğunlaşıyor (Kuveyt Türk); endeks çıpası XKTUM 3 haftadır yatay. <b>Önümüzdeki hafta</b> 3Ç26 sezonu EREGL/ISDMR ile açılır; bankalar 23–30 Eki. Duruş: dörtlü aynen (haftalık notta gerekçeli).</div>
+    </details>
   </div>
 </div>
 <div class="card" style="margin-top:10px;padding:6px 10px">
@@ -1938,7 +1941,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261024f"></script>
+<script src="/app.js?v=20261024g"></script>
 <script src="/ajan.js?v=20261024a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

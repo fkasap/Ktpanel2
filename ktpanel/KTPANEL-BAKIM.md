@@ -36,6 +36,14 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§522 GÜNDEM ÖZETİ OTOMATİK: kart elle yazılıyordu (12 Eki: "S&P Cuma · PPK 22 Eki" olaylar geçtikten sonra da duruyordu). Artık
+  gundemCanli() panelin otomatik takvimlerinden derler: PPK_VARSAYILAN · TCMB haftalık rezerv (Per 14:30) · TÜİK TÜFE (ayın 3'ü 10:00,
+  hafta sonu → ilk iş günü) · hazine-takvim.json ihraçları · kredi-notu.json takvimi · bist-takvim.json beklenen (+ SPK son günleri:
+  çeyrek sonu +30 solo / +40 konsolide) · FOMC_2026 · ECB_TAKVIM (29 Eki, 17 Ara — ECB basın duyurusu) · BOJ_TAKVIM (2026 kalan +
+  2027 tam — boj.or.jp) · makro-takvim.json yüksek etkili (USD/EUR/GBP/JPY/CNY/TRY). Geçen 7 gün: TCMB kararı (seriden) · not hamlesi ·
+  açıklanan bilançolar · veriler. Piyasa: endeks arşivi 5 iş günü + CDS. TR_TATIL: sabit resmî tatiller (dinî bayramlar doğrulanmadan
+  yazılmaz). BOK takvimi birincil kaynakta doğrulanamadı → yok. Eski elle not kartın altında <details> içinde; bekçi details içini taramaz.
+  Sınır: ForexFactory "bu hafta" dosyası pazar günü yenilenir — cumartesi küresel veri satırı boş olabilir (MB/TR takvimleri yine dolu).
 §518–§521 KART KART TARAMA (24 Eki akşam, kullanıcı: "sekmelere tek tek, kartlara tek tek bak"): 38 sekme/alt sekmede her .card
   için başlık · etiket tarihi/yaşı · boş satır · hata işareti çıkarıldı + index.html'deki elle tarihli etiketler kaynaktan tarandı.
   §518 Dış ticaret açığı MAYIS'ta kalmıştı (4,34; diğerleri Ağu/Eyl): grup ARAMASI eşleşmiyordu → seri kodu doğrudan,
