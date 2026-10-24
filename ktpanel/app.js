@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024c';   // SS514 Fonlama Rejimi karti canli (politika/koridor/son karar EVDS)
+const KTP_SURUM = '20261024d';   // SS515 Ulke kredi notu HMB tablosundan (otomatik)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -8710,6 +8710,7 @@ async function boot(){
     ['Sukuk', sukukInit],
     ['Veri Tazeliği', planInit],
     ['Sağlık bekçisi', saglikInit],
+    ['Ülke kredi notu', krediNotuInit],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
        ondan önce bitince eklediği otomatik satırlar siliniyordu — kullanıcı
@@ -10091,6 +10092,41 @@ async function saglikInit(){
   if(trig){ const e0=trig.querySelector('.saglikRozet'); if(e0) e0.remove();
     if(O.kritik||O.uyari){ const r=document.createElement('span'); r.className='saglikRozet'; r.title='Sağlık bekçisi: '+(O.kritik||0)+' kritik · '+(O.uyari||0)+' uyarı';
       r.textContent=O.kritik?(' ●'+O.kritik+'K'):' ●'; r.style.cssText='color:'+(O.kritik?renk.kritik:renk.uyari)+';margin-left:5px;font-size:10px;font-weight:700'; trig.appendChild(r); } }
+}
+
+/* ---- §515 ÜLKE KREDİ NOTU (kredi-notu.json · tazele.mjs krediNotu · kaynak HMB resmî tablosu) ----
+   Kart eskiden index.html'e elle yazılmıştı ("S&P 16 EKİ TAKVİMDE" tarih geçtikten sonra da duruyordu). Artık Actions her akşam
+   HMB tablosunu okur; değişiklik ilk görüldüğü gün geçmişe yazılır, takvimdeki değerlendirme günü geçince sonuç kendiliğinden
+   işaretlenir. Burada yalnız çizilir. Dosya yoksa index.html'deki son bilinen hal kalır. */
+/* not merdiveni: küçük sıra = yüksek not (S&P/Fitch ve Moody's aynı basamakta eşlenir) */
+const KN_SIRA=n=>{ const L=['AAA','AA+','AA','AA-','A+','A','A-','BBB+','BBB','BBB-','BB+','BB','BB-','B+','B','B-','CCC+','CCC','CCC-','CC','C','D'];
+  const M=['Aaa','Aa1','Aa2','Aa3','A1','A2','A3','Baa1','Baa2','Baa3','Ba1','Ba2','Ba3','B1','B2','B3','Caa1','Caa2','Caa3','Ca','C'];
+  const x=String(n||'').replace(/[−–]/g,'-'); let i=L.indexOf(x); if(i<0) i=M.indexOf(x); return i<0?99:i; };
+async function krediNotuInit(){
+  const el=$('knSatirlar'); if(!el) return;
+  let D=null; try{ const r=await fetch('/kredi-notu.json',{cache:'no-store'}); if(r.ok) D=await r.json(); }catch(e){}
+  if(!D||!D.notlar) return;
+  const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const tk=t=>{ const m=String(t||'').match(/^(\d{4})-(\d{2})-(\d{2})/); return m? (+m[3])+' '+ay[+m[2]-1]+(m[1]!==String(new Date().getFullYear())?' '+m[1]:'') : '—'; };
+  const nt=s=>String(s||'').replace(/-$/,'−').replace(/-/g,'−');
+  const G=D.gecmis||[];
+  const satir=a=>{ const v=D.notlar[a]; if(!v) return '';
+    const s=G.filter(g=>g.ajans===a).pop();
+    let iz='';
+    if(s){ if(s.teyit) iz='teyit · '+tk(s.tarih);
+      else if(s.eski&&s.eski.not!==s.yeni.not){ const yuk=KN_SIRA(s.yeni.not)<KN_SIRA(s.eski.not); iz='<b style="color:'+(yuk?'var(--up)':'var(--down)')+'">not '+(yuk?'↑ ':'↓ ')+nt(s.eski.not)+' → '+nt(s.yeni.not)+'</b> · '+tk(s.tarih); }
+      else iz='görünüm '+(s.eski?s.eski.gorunum:'')+' → '+s.yeni.gorunum+' · '+tk(s.tarih); }
+    const gr=v.gorunum==='Pozitif'?'var(--up)':v.gorunum==='Negatif'?'var(--down)':'';
+    return '<div class="kv"><span class="k">'+esc(a)+'</span><span><b>'+esc(nt(v.not))+'</b> · <span style="color:'+gr+'">'+esc(v.gorunum)+'</span>'+(v.izleme?' <span class="sub">(izlemede)</span>':'')+(iz?' <span class="sub">('+iz+')</span>':'')+'</span></div>'; };
+  const bugun=new Date().toISOString().slice(0,10);
+  const ileri=(D.takvim||[]).filter(t=>!t.sonuc&&t.tarih>=bugun).sort((a,b)=>a.tarih<b.tarih?-1:1);
+  const gecen=(D.takvim||[]).filter(t=>t.sonuc).sort((a,b)=>a.tarih<b.tarih?1:-1).slice(0,3);
+  el.innerHTML=["Fitch","Moody's","S&P"].map(satir).join('')+Object.keys(D.notlar).filter(a=>!["Fitch","Moody's","S&P"].includes(a)).map(satir).join('')+
+    '<div class="kv"><span class="k">Sıradaki değerlendirme</span><span>'+(ileri.length? ileri.map(t=>esc(t.ajans)+' <b>'+tk(t.tarih)+'</b>').join(' · ') : '<span class="sub">takvimde ileri tarih yok — ajans takvimleri yayımlanınca eklenir</span>')+'</span></div>'+
+    (G.length?'<details style="margin-top:4px"><summary style="cursor:pointer;font-size:10px;font-family:var(--mono);color:var(--mm2)">HAMLE GEÇMİŞİ ('+G.length+')</summary>'+G.slice().reverse().map(g=>'<div class="sub" style="font-size:10px;padding:2px 0">'+tk(g.tarih)+' · '+esc(g.ajans)+' · '+(g.teyit?'teyit '+esc(nt(g.yeni.not))+'/'+esc(g.yeni.gorunum):esc(nt(g.eski.not))+'/'+esc(g.eski.gorunum)+' → <b>'+esc(nt(g.yeni.not))+'/'+esc(g.yeni.gorunum)+'</b>')+' <span class="thin">· '+esc(g.kaynak||'')+'</span></div>').join('')+'</details>':'');
+  const son=G[G.length-1];
+  if($('knTag')&&son) $('knTag').textContent=tk(son.tarih).toUpperCase()+' · '+son.ajans.toUpperCase()+' '+(son.teyit?'TEYİT':(son.eski&&son.eski.not!==son.yeni.not?'NOT DEĞİŞTİ':'GÖRÜNÜM DEĞİŞTİ'));
+  if($('knSnap')) { $('knSnap').textContent='HMB TABLOSU · '+tk(D.guncelleme).toUpperCase(); $('knSnap').title=(D.kaynak||'')+' · HMB son düzenleme '+String(D.hmb_modified||'').slice(0,10); }
 }
 
 /* ---- Portföy Yönetimi ---- */

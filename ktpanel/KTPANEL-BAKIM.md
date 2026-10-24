@@ -36,6 +36,20 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§515 ÜLKE KREDİ NOTU OTOMATİK (kullanıcı HMB sayfasını gösterdi): kart index.html'e elle yazılmıştı, "S&P 16 EKİ TAKVİMDE" tarih
+  geçince de duruyordu. Kaynak HMB resmî tablosu — en.hmb.gov.tr/credit-ratings React sayfası; içerik WordPress JSON ucundan:
+  /portal/v2/pages?slug=credit-ratings → [0].content.rendered (tablo) + [0].modified. 24 Eki: Fitch BB-/Stable · Moody's Ba3/Stable ·
+  S&P BB-/Stable · modified 2026-04-14. HMB karar duyurusu yayımlamıyor (son ilgili yazı 2018) → değişiklik İLK GÖRÜLDÜĞÜ gün
+  kredi-notu.json gecmis'e yazılır; takvimdeki değerlendirme günü +3 gün geçince sonuç kendiliğinden ("değişiklik yok"/"değişti").
+  Denetim: üç ajans geçerli ölçekte değilse dosya yazılmaz. Katman: tazele krediNotu() — fiyat katmanında (akşam + cumartesi) ve
+  elle --katman=kredinotu. Dosya Actions'ın; ilk koşuda tohum geçmişle (Oca/Nis/Tem 2026 panel arşivi) kurulur — kullanıcı YÜKLEMEZ.
+  Kart: app.js krediNotuInit() (not merdiveniyle ↑/↓ renk, hamle geçmişi, sıradaki değerlendirme). Dosya yoksa index.html son hali.
+  Gün simülasyonuyla sınandı: 24 Eki S&P "değişiklik yok" kapandı · 5 Kas taklit Moody's Ba3→Ba2/Pozitif yakalandı, ertesi gün tekrar yok.
+  AÇIK: ajansların 2027 takvimi (yayımlanınca takvim'e eklenecek) — otomatik kaynağı aranacak.
+§509c BEKÇİNİN İLK DOLU KÖPRÜ TURU (12:14): 31 uç · 26 geçti. edgar HTTP 400 = TEST HATASI (?ticker= yerine ?t=, mod=tablo) → test
+  düzeltildi + bayatlık kontrolü. HKMA bu kez 502 → hkmaModu artık HTTP 4xx/5xx yanıtında da 3 deneme. Köprü UYARILARI da iki tur
+  onayından geçer (AV kotası gibi tek turluk). Süregelen bilinen sınırlar: SEKTÖR 1A serisi (Yahoo, §114 damgalı taban) ·
+  tefas mod=gnl boş (TEFAS bot koruması; fon katmanı Playwright'la Actions'ta çalışıyor).
 §514 FONLAMA REJİMİ KARTI CANLI (kullanıcı: "politika faizi EVDS'den canlı değil mi, neden 37?"): kartta politika faizi %37,
   koridor %35,50–%40,00 ve başlık "10 EYL: SABİT %37 · SIRADAKİ 22 EKİ" index.html'e ELLE yazılmıştı; aynı kart aşağıda "22 Eki −100bp
   → %36" diyordu. TLREF makası TANIMSIZ POLITIKA_FAIZ'e bakıp hep 37'ye düşüyordu (−115bp; doğrusu −15bp). Artık politikaCanli():
