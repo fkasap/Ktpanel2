@@ -36,6 +36,13 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§517 DAMGA ↔ CANLI DENETİMİ (bekçi ekran katmanı): aynı gün üç kart elle yazılmış eski rakam taşıdı (§459a, §493, §514). Bekçi artık
+  tüm sekmeleri gezdikten sonra DOM'un TAMAMINI tarar: canlı serisi olan büyüklük (politika faizi ← TP.PY.P02.1H · TÜFE yıllık ←
+  TP.TUKFIY2025.GENEL'in kendi y/y'si, seriler katmanında hesaplanır) bir .kv satırında ya da cümlede başka değerle yazılmışsa uyarı.
+  Kapsam dışı: yabancı MB sekmeleri (t16/t17/t18) · beklenti/tahmin/fark bağlamı (yıl sonu, ≈, makas, forward, anket…) · tarih geçen
+  geçmiş cümleleri. Canlı panelde sınandı: ilk sürüm 7 bulgu (5 yanlış alarm: BoJ/BOK/FOMC faizleri, yıl sonu tahmini, TLREF makas
+  etiketi) → daraltılmış kural 2 bulgu, ikisi de GERÇEK: Haftalık Yorum notu "politika faizi %37,00'de sabit" (19–25 Eki notu, eski
+  girdiyle üretilmiş). Yeni kural eklemek: KUR dizisine {ad, rx, deger, tol, kaynak} — değer daima bir seriden gelir.
 §516 HKMA İKİNCİ YOL: bekçinin ekran katmanı 4 tur üst üste "HKMA HTTP 405/502" gördü; köprü testi bir turda geçti; TR'den aynı uç
   önbellekten sağlam (HIT). Yorum: HKMA, Vercel'in ABD çıkışını ARALIKLI reddediyor (3 deneme de yetmiyor). Bülten AYLIK → canlıya bağımlılık
   gereksiz. tazele hkmaYedek() aynı bülteni GitHub sunucusundan çekip ktpanel/hkma.json'a yazar (fiyat katmanı: akşam + cumartesi);
