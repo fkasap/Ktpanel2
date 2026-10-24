@@ -1,0 +1,96 @@
+{
+ "gecmis": [
+  {
+   "tarih": "2026-01-23",
+   "ajans": "Fitch",
+   "eski": {
+    "not": "BB-",
+    "gorunum": "Durağan"
+   },
+   "yeni": {
+    "not": "BB-",
+    "gorunum": "Pozitif"
+   },
+   "kaynak": "panel arşivi"
+  },
+  {
+   "tarih": "2026-04-10",
+   "ajans": "Fitch",
+   "eski": {
+    "not": "BB-",
+    "gorunum": "Pozitif"
+   },
+   "yeni": {
+    "not": "BB-",
+    "gorunum": "Durağan"
+   },
+   "kaynak": "panel arşivi"
+  },
+  {
+   "tarih": "2026-07-17",
+   "ajans": "Fitch",
+   "teyit": true,
+   "yeni": {
+    "not": "BB-",
+    "gorunum": "Durağan"
+   },
+   "kaynak": "panel arşivi"
+  },
+  {
+   "tarih": "2026-07-24",
+   "ajans": "Moody's",
+   "teyit": true,
+   "yeni": {
+    "not": "Ba3",
+    "gorunum": "Durağan"
+   },
+   "kaynak": "panel arşivi"
+  },
+  {
+   "tarih": "2026-10-16",
+   "ajans": "S&P",
+   "teyit": true,
+   "yeni": {
+    "not": "BB-",
+    "gorunum": "Durağan"
+   },
+   "kaynak": "takvim + HMB tablosu (değişiklik yok)"
+  }
+ ],
+ "takvim": [
+  {
+   "ajans": "S&P",
+   "tarih": "2026-10-16",
+   "sonuc": "değişiklik yok (HMB tablosu 2026-10-24)"
+  }
+ ],
+ "notlar": {
+  "Fitch": {
+   "not": "BB-",
+   "gorunum": "Durağan",
+   "son": {
+    "tarih": "2026-07-17",
+    "tip": "teyit"
+   }
+  },
+  "Moody's": {
+   "not": "Ba3",
+   "gorunum": "Durağan",
+   "son": {
+    "tarih": "2026-07-24",
+    "tip": "teyit"
+   }
+  },
+  "S&P": {
+   "not": "BB-",
+   "gorunum": "Durağan",
+   "son": {
+    "tarih": "2026-10-16",
+    "tip": "teyit"
+   }
+  }
+ },
+ "hmb_modified": "2026-04-14T10:12:09",
+ "kaynak": "T.C. Hazine ve Maliye Bakanlığı · en.hmb.gov.tr/credit-ratings (portal/v2 JSON)",
+ "guncelleme": "2026-10-24"
+}
