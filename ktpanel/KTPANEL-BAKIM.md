@@ -6,6 +6,168 @@ hangi kart ne zaman eskir, tek bakis). Bu dosya ders arsividir.
 Son güncelleme: 2026-10-20
 
 
+# BAKIM EK — §502–§508 (24 Eki 2026) — PANEL TARAMASI (21 sekme + 17 alt sekme, 101 /api ucu)
+
+Tüm /api uçları HTTP 200; sorunlar GÖVDE ve EKRAN düzeyindeydi.
+§502 POLİTİKA FAİZİ: TP.PF.FF.GUN panel API'sinde BOŞ ({"son":{}}) → yedek BIS (TP.BISPOLFAIZ.TUR) 37 (2026-8) gösteriyordu; gerçek 36
+     (22 Eki PPK −100bp). Doğru birincil seri TP.PY.P02.1H = "TCMB Kotasyonları (Satış) 1 Haftalık" (bie_pyintbnk, iş günü).
+     Ölçüldü: 21 Eki 37 → 22 Eki 36. Koridor: TP.PY.P02.ON 39 (üst) / TP.PY.P01.ON 34,5 (alt). TAHMIN_ADAY + ZINCIR POLİTİKA güncellendi.
+     Etki: Tahminler (politika, ex-ante reel, zincir bp farkları), getiri eğrisi okuma kartı, haftalık not girdisi.
+§503 GETİRİ EĞRİSİ "Günlük Δ" HEP "—": api/_lib/egri.js trTar yalnız "dd.mm.yyyy" tanıyordu; EVDS3 Tarih artık "dd-mm-yyyy".
+     → gün farkı 99 → Δ null (ve valör tarihi yerine bugün). Ayraç . - / kabul. DOSYA: ktpanel/api/_lib/egri.js
+§504 PPK OLASILIK AĞACI: 10 Eyl ve 22 Eki toplantıları hâlâ ileride sayılıyordu → %36 başlangıcın üstüne iki fazla toplantı bileşikleniyordu
+     (patika + alfa kartı). ppkOku() geçmiş toplantıları düşürür, varsayılan takvimdeki ileri toplantıyı ekler; kullanıcı olasılıkları korunur.
+     RİTÜEL: TCMB 2027 PPK takvimini yayımlayınca PPK_VARSAYILAN'a ekle.
+§505 HAFTALIK YORUM PANOSU: açılıştan 2,5 sn sonra tek kopya → beklenti/güven/carry kaynakları henüz "—" (dört boş hücre). Kaynaklar dolana
+     dek 6 sn arayla ≤8 yeniden deneme. Lider sektör eksiyse "+-2,2%" basıyordu → işaret değerden.
+     NOT: 19–25 Eki notu yanlış girdiyle üretildi ("politika %37 sabit", hane↔piyasa beklentisi karışık) → düzeltme sonrası YENİDEN ÜRET.
+§506 PORTFÖY AYRIŞMA SERİSİ: kayıt takvim gününe yazılıyordu → cumartesi açılışı cuma getirisini İKİNCİ satır olarak ekliyordu
+     (ölçüldü: 23 Eki p −0,91 seans içi + "24 Eki" p −0,26 kesin). Kayıt seans gününe (Cmt/Paz → Cuma); eski hafta sonu satırları okurken cumaya katlanır.
+§507 KARAR MOTORU hedefQ: EREGL 3Ç26'yı açıklayınca hedef 2023Q4 (geçmişteki boşluk) çıktı → sürücü Δ "—", ileri PD/FAVÖK yanlış dönem.
+     Hedef yalnız son açıklanan çeyrekten SONRA aranır; hepsi açıklandıysa hedef = son tam çeyrek + `aciklandi` (BEKLENTİ hücresi "gerçek · açıklandı · bek. X").
+     3Ç bilançoları geldikçe her şirkette devreye girer. tez_test 32/32 hata 0.
+§508 Yönetim risk bütçesi: "%25,6'i" ek hatası → "toplam varlıktaki payı %25,6".
+DOKUNULMAYAN (bilinçli / kaynak kaynaklı):
+  · Enflasyon "KATKI pp" "—": EVDS'de TÜFE ağırlık serisi YOK (arandı). TÜİK yıllık ağırlıkları elle girilirse katkı = ağırlık × grup y/y hesaplanabilir.
+  · GYO NAV 2025/12: TSPB 2026/06 dönemini AÇMIŞ ama içi boş (sektör NAD 0, üyelerde rapor yok) — panel kaynağın son dolu dönemini doğru gösteriyor.
+    Büyük iskonto farkları (TDGYO, PEKGY) bedelsiz DEĞİL: Yahoo'da split yok, Ara kapanışı TSPB dönem sonu fiyatıyla örtüşüyor → gerçek fiyat düşüşü.
+  · Katılım fonları 3Y "—" 26/46 fonda, GOP/EP1/VPA'da YTD/1Y de boş: TEFAS resmî getiri alanı null dönüyor; TEFAS bot korumalı, doğrulanamadı.
+  · Kira sertifikası akışında ünvanı haritada olmayan VKŞ: ATAVK, KLVKS, AKTVK, KTSVK, ZKBVK, HDFVK (KAP ünvanlarıyla haritaya eklenecek).
+DOSYALAR: ktpanel/app.js (v=20261024a) · ktpanel/index.html · ktpanel/api/_lib/egri.js
+
+# BAKIM EK — §501 (24 Eki 2026) — BANKACILIK "VERİ YOK": BDDK YANIT BAŞLIĞI BOZUK
+teshis=1: "Parse Error: Invalid header token" (anasayfa + rapor, her istekte). Sertifika/PIN DEĞİL — BDDK'nın sunucusu ya da önündeki
+ağ cihazı RFC dışı bir başlık dönüyor, Node'un katı HTTP ayrıştırıcısı yanıtı reddediyor (tarayıcı açıyor: site ayakta, Ağustos verisi).
+Düzeltme: api/bddk.js https.request seçeneklerine insecureHTTPParser:true (yalnız bu istek). TLS doğrulamaları değişmedi.
+Ders: teşhis çıktısında `hata` alanı sertifikadan önce okunur — "Parse Error" ağ katmanı, "PIN/Sertifika" TLS katmanı.
+§501b: insecureHTTPParser YETMEDİ (aynı hata) — llhttp hoşgörüsü yalnız başlık DEĞERİ; bozukluk başlık ADINDA. Çözüm: Node ayrıştırıcısı
+"Parse Error" verirse istek ham TLS soketiyle (tls.connect) yeniden gönderilir, başlıklar elle ve hoşgörülü ayrıştırılır (chunked
+desteği, Set-Cookie toplanır), geçersiz satır teşhise `bozukBaslik` olarak yazılır. Sertifika denetimi ortak fonksiyonda (bddkSertifikaDenetle).
+Yerel test: bozuk başlıklı sahte sunucu → 200, gövde ve çerez doğru, bozukBaslik dolu.
+
+# BAKIM EK — §500 (23 Eki 2026) — KAP ARŞİVİ: YENİ DÖNEM ÖNCELİĞİ + SÜRE BÜTÇESİ
+EREGL 3Ç26'yı 22 Eki'de açıkladı; arşiv iki koşuda da almadı. (1) Yavaş yol eski çeyrek tamamlıyordu (GLRMK/EFOR); 15 çeyreği
+dolu şirkete yeni çeyrek HİÇ eklenmiyordu (n < 15 süzgeci). (2) --katman=kaparsiv 4 dk katman tavanına çarptı, rapor kayboldu.
+Düzeltme: bist-takvim.json `gerceklesen` + `donem` (3Ç26 → 2026/3) — arşivin en yeni dönemi daha eskiyse şirket EN ÖNE (−2),
+tavan dolu olsa da işlenir, en eski çeyrek düşer. İç süre bütçesi 200 sn: aşılırsa kalan şirketler sonraki koşuya, rapor yazılır.
+
+# BAKIM EK — §499 (23 Eki 2026) — TON BAŞINA FAVÖK (EREGL · KRDMD), KENDİ VERİMİZDEN
+Pay: çeyreklik ÇEKİRDEK FAVÖK, KAP arşivimizden (rapordaki 3 aylık sütun; amortisman kümülatif farkı). KRDMD TMS 29 (TL fonksiyonel):
+önceki kümülatif TÜFE oranıyla taşınır, DÖNEM SONU kuru; EREGL çeyrekler toplamı kümülatife eşit → çeyrek ORTALAMA kuru.
+Doğrulama (yalnız kıyas): Fintables usd_ceyreklik ile 10 çeyrekte ±3 mn $.
+Payda: satış tonajı — faaliyet raporu (KAP) kümülatif; tazele.mjs TON_KUM (ELLE). RİTÜEL: her bilanço haftası şirket başına 1 sayı
+(EREGL "Yassı + Uzun Mamul Satışları" bin ton · KRDMD "Satış Miktar ve Tutarları — Esas Ürünler" ton). İlk doldurma faaliyet raporu
+metninden (Fintables doküman araması yalnız bulmak için kullanıldı; sayılar şirket raporunun kendisi).
+Seriler: <kod>_favok_ton_usd / _ciro_ton_usd (gerçekleşen fiyat) / _maliyet_ton_usd / _satis_ton → karar-model surucu_seriler
+(aile ton_ekonomisi: tek oy, temsilci FAVÖK/t; hacim ayrı aile). app.js kararSeriStat: hedef çeyrekte değer yoksa SON GERÇEKLEŞEN
+çeyrek referans (gercekQ), kıvılcım son 8 çeyrek; tez katalizörü "3Ç26 bilançosunda ≥ X (2Ç26 gerçekleşen)".
+Bulgu: vekil fiyat/makas serileri (kütük listesi, kütük − cevher, HRC ABD) FAVÖK/t'yi AÇIKLAMIYOR (10 çeyrek, r ≈ 0 ya da negatif);
+KRDMD marj genişlemesi MALİYET tarafından (maliyet/t 2024Ç2 658 → 2026Ç2 559 $), fiyat/t yatay. Sürücü modeli için kok kömürü
+(termal değil) ve şirketin kendi girdi maliyeti gerekiyor — açık iş.
+DEPLOY: scripts/tazele.mjs + ktpanel/karar-model.json + app.js (v=20261023c) + index.html. Sonra --katman=multiple (ya da kaparsiv).
+
+# BAKIM EK — §498 (23 Eki 2026) — REZERV KARNESİ: NET REZERV TEK RAKAM, TCMB GÜNLÜK
+Kullanıcı: "net rezervlerde 2 rakam var". Tasarımdı (§441): birincil = webDogrulama (Bloomberg HT hesabı, 9 Eki 57,7),
+yanında "EVDS aylık". İki sorun: (1) kaynak gazete hesabıydı (kullanıcı kuralı: data kaynakları); (2) "aylık" YANLIŞ etiket —
+TP.AB.A02 (A.1 Dış Varlıklar) ve TP.AB.A10 (P.1 Toplam Döviz Yükümlülükleri) EVDS'de İŞ GÜNÜ serisi (meta ile doğrulandı).
+api/evds2.js rezervModu: günlük net seri, her gün KENDİ kuruyla; degisim5 (5 iş günü) + son 30 gözlem. Kart tek rakam +
+5 günlük değişim; kaynak tooltip'te. Swap hariç = net − swapStoku (tek elle girdi, rezerv.json). webDogrulama birincil değil.
+Ölçüm (EVDS): 18 Eyl 52,6 · 30 Eyl 51,2 · 9 Eki 52,3 · 16 Eki 46,1 · 22 Eki 41,8 mlr $ — iki haftada −10,5; A10 121,5 → 127,0
+(döviz yükümlülükleri ↑), A02 173,8 → 168,8. Not: bu tanım bülten hesabından ~5 mlr $ düşük çıkıyor (9 Eki 52,3 vs 57,7).
+AÇIK: swapStoku (13,5, 9 Eki) gazete türevi — TCMB "Uluslararası Rezervler ve Döviz Likiditesi" (IMF şablonu, aylık,
+swap kısa pozisyonları) EVDS'den bağlanmalı. DEPLOY: ktpanel/api/evds2.js + app.js (v=20261023b) + index.html.
+
+# BAKIM EK — §496b/§496c (23 Eki 2026) — İLK CANLI KOŞUNUN DERSLERİ
+Koşu 39921493118: 78 hisse KAP · 63 eski. Doğru yakalananlar: AKFYE ×6 (Yahoo), HRKET ×14, YEOTK ×2,34, CVKMD ×2,62 (fiyat boşluğu),
+BSOKE/EDATA/HATSN §328 geri alındı. İki hata:
+(1) §496c: GUBRF/IZFAS/MAGEN "2026-10-23 fiyat boşluğu" — BUGÜNKÜ seans içi çubuk; bedelsiz değil. Kural: bugünün çubuğu atılır,
+    boşluk kalıcı olmalı (sonraki iki kapanış yeni seviyenin ±%12'sinde).
+(2) §496b: ULUSE 415x · MNDTR 152x · CELHA 350x — faktör evreni FAVÖK'ü GENİŞ tanımla (faaliyet kârı + amortisman) hesaplıyordu;
+    "diğer faaliyet giderleri" (kur/vade farkı) faaliyet kârını eksiye çevirdi. ÇEKİRDEK FAVÖK eklendi (brüt − pazarlama − GYG − Ar-Ge
+    + amortisman; panel KAP kartı §351b ile aynı tanım) → faktor-evren `favokCek`; multiple bunu kullanır, geniş tanım `ebitda_genis`.
+    YONTEM '362' → '496': kayıtlar sonraki `hepsi` koşusunda arşivden AĞSIZ yeniden kurulur.
+AÇIK: SOKE — KAP arşivinde ödenmiş sermaye 1.600 mn (2025/4–2026/2 sabit), Fintables 386,5 mn; Yahoo'da split yok. Kaynak tablosu
+elle kontrol edilmeli (KAP genel bilgi formu).
+
+# BAKIM EK — §497 (23 Eki 2026) — KÖKE YÜKLENEN app.js/index.html VERİ DİZİNİNİ KAYDIRDI
+22 Eki 12:52 "Add files via upload" (5293136) app.js + index.html'i repo KÖKÜNE ekledi (31 Tem'de de olmuş, aynı gün silinmişti).
+tazele.mjs veri dizinini index.html arayarak buluyordu ve KÖK listede ilkti → 13:19 ve 22:19 koşuları veriyi KÖKE yazdı
+(bilanco-tetik, bist-takvim, cds, endeks-arsiv, endeks-uyeler, faktor-evren, fm-girdi.csv, fm-sektor, gyo-nav, hazine-sonuc,
+kap-arsiv/, makro-takvim, sektor-surucu, sut-ek2b, vap-fon-akis); ktpanel/ (Vercel) o saatten beri tazelenmedi.
+Denetim yakaladı ("KÖKTE KOD: app.js · index.html") ve 22:19 koşusu ✗ bitti. Düzeltme: ADAYLAR sırası ktpanel/ ÖNCE.
+Kullanıcı kökteki bu dosyaları siler (Claude push etmez). Kural: yüklemeler HER ZAMAN ktpanel/ (ya da scripts/, .github/workflows/) içine.
+
+# BAKIM EK — §495/§496 (23 Eki 2026) — EV/EBITDA KENDİ KAP VERİMİZDEN (Fintables YOK)
+Kullanıcı: Değerleme'de mevcut EV/EBITDA yanlış; "Fintables'a bağlı olmak istemiyorum, 2Ç bilançolarını çektik, kendimiz
+hesaplayalım". Teşhis (Fintables yalnız KIYAS için kullanıldı, veri kaynağı olarak DEĞİL): 141 hissenin 39'u >%25 sapıyordu.
+Kök nedenler: (1) multiple.json bilanço kalemleri 1Ç26 elle kopyasında kalmıştı; (2) pay adedi bozuktu — §328 fon krizi
+tabanlarını (21 Eyl, ×0,729 = 0,9³) bölünme sandı (BSOKE/EDATA/GENIL/GRTHO/HATSN/IZFAS/MAGEN/ONCSM), bazı bedelsizler kaçtı.
+§496 multipleKendi() (tazele_ek13.mjs → gen_tazele14.py): her `hepsi` koşusunda faktörEvren'den SONRA ve elle --katman=multiple
+(ya da fm) ile çalışır. Bilanço kalemleri faktor-evren.json'dan (§361d TTM, kendi KAP çekimimiz); adet = bilanço ödenmiş
+sermayesi × dönem sonrası Yahoo split olayları × Yahoo'nun kaçırdığı marj dışı fiyat boşlukları (CVKMD 3 Ağu ×2,7 — yaklaşık,
+işaretli). Evren dışı (katılım dışı, 63 hisse) "eski" kalır, kartta ⚠ yazar; §328 hatalı ölçeklemesi Yahoo'da split yoksa geri alınır.
+§495 tazele §328 bekçisi: n iş günü için 0,9ⁿ…1,1ⁿ içindeki oran PİYASA HAREKETİ, ölçekleme yok.
+Kıyas (Fintables'a karşı, yalnız doğrulama): BIMAS 10,6 vs 8,5 · TUPRS 5,6 vs 4,9 — FAVÖK tanımı ve enflasyon muhasebesi
+TTM farkı (§361d notu); sıralama tutarlı. AÇIK KARAR: 63 evren dışı hisse — KAP çekimini bunlara genişletmek mi, listeden çıkarmak mı.
+DEPLOY: scripts/tazele.mjs + .github/workflows/tazele.yml + app.js (v=20261023a) + index.html; multiple.json YÜKLENMEZ (Actions kurar).
+
+# BAKIM EK — §493 (22 Eki 2026) — PPK 22 EKİ: BİRİNCİL KAYNAKTAN İŞLENDİ
+Kullanıcı kuralı: "gazetelerden toplamayalım, data kaynaklarından" — PPK kararı TCMB basın duyurusundan (2026-45) alınır,
+seviye EVDS'den. Karar: politika %37 → %36, gecelik borç verme 40 → 39, borçlanma 35,5 → 34,5.
+index.html: kritik takvim satırı ✓, kritik takvim notu, 03 başlığı (sıradaki 10 Ara), PPK kv kartı (karar + metin özeti),
+arka plan notu, makroihtiyati "Okuma" ve sentez notu. TARİHLİ YORUMLAR (haftalık yorum, fon krizi notu, küresel koro)
+o günün fotoğrafı olarak BIRAKILDI — geçmiş metin yeniden yazılmaz.
+app.js: TAHMIN_ADAY ve ZINCIR POLİTİKA halkası önce TP.PF.FF.GUN (TCMB kendi günlük serisi, bie_pfaizler),
+yedek TP.BISPOLFAIZ.TUR (BIS derlemesi gecikmeli). POLITIKA_DAMGA 36 (Duyuru 2026-45), OKU_POLITIKA yedeği 36.
+Doğrulanmadı: /api/evds2 TP.PF.FF.GUN'u döndürüyor mu (evds-mcp HTTP 400 verdi — tarih biçimi olabilir); zincir yedeğe düşer.
+Enflasyon Patikası modeli (EP_VARSAYILAN) dokunulmadı: Ekim ilk karar senaryo girdisi zaten Baz %36 = gerçekleşen.
+app.js v=20261022d. DEPLOY: app.js + index.html.
+
+# BAKIM EK — §489b (22 Eki 2026) — DCE UCU DONMUŞTU: YENİ UÇ + TAZELİK BEKÇİSİ
+Panel taraması: dce_lldpe/pp/pvc ve petkm_asya_makas son veri 2024-07. Sebep: Sina IndexService.getInnerFuturesDailyKLine
+17 Tem 2024'te donmuş — HATA VERMEDEN eski dizi döndürüyor (§489 kurulurken WebFetch'in gördüğü de bu donmuş diziydi).
+Yeni uç: /futures/api/jsonp.php/var%20_L0=/InnerFuturesNewService.getDailyKLine?symbol=L0 (JSONP, nesne {d,o,h,l,c,v,p,s});
+kullanıcının bilgisayarından (built-in browser) 22 Eki'ye kadar canlı: L0 8.725 · PP0 9.376 · V0 5.016 CNY/t.
+Bekçi: son işlem günü >21 gün eskiyse seri YAZILMAZ, rapor ✗ "bayat uç". Ders: "veri geldi" ≠ "güncel veri geldi" —
+her yeni kaynakta son tarih kontrolü şart. Ön yüz (tez): akış dışı seride son veri >365 gün → BAYAT, okumaya alınmaz.
+Kaynak: tazele_ek12.mjs → gen zinciri. DEPLOY: scripts/tazele.mjs + app.js (v=20261022c) + index.html.
+
+# BAKIM EK — §492 (22 Eki 2026) — TEZ: ÇİFT SAYIM GİDERİLDİ + KÂR PAYI AĞIRLIĞI + TEK CÜMLE TEZ
+Öz-eleştiri (kullanıcı onayı "devam et"): aynı büyüklüğü ölçen seriler ayrı oy sayılıyordu (EUPWR iki panel makası,
+EKGYO üç İME, PETKM 13 seri). karar-model.json surucu_seriler[].aile (apply_492.py: global harita + model-özel
+OZEL: PETKM brent→polimer, EUPWR/GESAN bakır(+alüminyum)→trafo_metal, KRDMD 9 seri→kardemir_metal, KCAER hadde).
+JS kararSurucuAile: aile = tek bağımsız sürücü; temsilci ★ birincil > veri olan marj > veri olan ilk seri; aile içinde
+veri olan marj YOKSA gelir/maliyet ayrı kalır (ENJSA tarife vs PTF = makasın iki ayağı, kopya değil). Diğerleri
+"↳ teyit" (uyumlu / AYRIŞIYOR); temsilci nötr ama çoğunluk bir yöndeyse ayrıca yazılır (KRDMD: kütük nötr, 4 marj/maliyet lehte).
+M.agirlik {aile: kâr payı} + agirlik_kaynak — YALNIZ bölüm verisi olan hisselerde: EUPWR (trafo_metal .90, panel .10),
+GESAN (trafo_metal .75, elektrik .16, panel .07). Ağırlık varsa sentez "kâr payı %X" ile okunur (kapsam ≥%50 ise).
+Tezin 3. satırı "Tez: …" tek cümle (Journal taraması). Türkçe ek sorunu: "%90’ı" yerine "kâr payı %90" kalıbı.
+Açık soru: trafo/pano'da bakır saf maliyet mi, fiyata endeksli mi (eskalasyon) — rol buna göre değişir.
+Test: 32 model hatasız. app.js v=20261022b, karar-model.json surum 2026-10-22a. DEPLOY: app.js + index.html + karar-model.json.
+
+# BAKIM EK — §491 (22 Eki 2026) — JOURNAL "TEZE AKTAR" TAM TEZ YAZIYOR
+Kullanıcı: "çok yüzeysel aktarıyor; sürücülere kadar inceleyip hepsine değinse ve bir tez yazsa".
+Eski kararTezeAktar tek satır yazıyordu (TUPRS crack + FAVÖK); Tier B/C'de sektör sürücüleri hiç geçmiyordu.
+Yeni: kararSurucuOku(M,H) + kararTezMetin(M,H,F,PK,boz) → 6 bölümlü tez: (1) iş modeli (sektor_not)
+(2) kâr beklentisi + konsensüs sicili + koşu (3) HER surucu_seriler satırı rolüyle okunur → LEHTE/ALEYHTE/NÖTR/KUR,
+ivme (koşu vs hedef çeyrek), ★ birincil ×2 net skor (4) fiyatlanma (5) puan kartı (6) sentez (sürücü × beklenti × fiyat).
+Ölçü: endeks/akış → y/y; diğerleri ç/ç; % birimli seride puan (eşik 0,5 p, diğerleri %2).
+TL fiyat endeksleri (ÜFE/KFE/İME/TÜFE) nominal büyür → USDTRY y/y ile $ bazına çevrilir (aksi hâlde hep "lehte").
+Katalizör/bozucu sürücü eşiklerinden türetilir (önceki çeyrek ortalaması; aleyhte seride son seviye ±%10);
+eşik koşu çeyreğinde zaten aşıldıysa "⚠ ŞU AN AŞILMIŞ". Model sürücüleri (TUPRS) kararBozucular'da olduğu için tekrarlanmaz.
+Journal kartı .jfield white-space:pre-wrap (satır sonları görünür); textarea otomatik yükseklik (≤560 px).
+Test: scratchpad/karar/tez_test.mjs — 32 modelin hepsi hatasız, undefined/NaN yok. app.js v=20261022a. DEPLOY: app.js + index.html.
+
+# BAKIM EK — §490b (21 Eki 2026, 16:10) — BDDK SERTİFİKASI ERKEN YENİLENMİŞ: PIN GÜNCELLENDİ
+
+§490 sonrası teshis=1: sertifika artık OKUNUYOR (boş ad sorunu çözüldü), bu sefer "TLS PIN UYUSMADI" — yeni parmak izi
+56:2D:30:53:1A:86:8D:23:B0:ED:B4:3C:51:36:64:6B:A9:66:DE:CB:90:A9:AE:66:AB:B9:91:62:BB:21:5A:B3. Yani bugünkü kopuşun ASIL nedeni BDDK'nın
+sertifikayı 15 Kas bitişinden önce yenilemesiydi; §490 ön adımdı. Kabul: pin kontrolünden önce koşan alan adı / kendinden imzalı değil /
+geçerlilik kontrolleri yeni sertifikada geçti (aksi halde o mesajlar gelirdi). crt.sh 502 verdi (bağımsız ikinci teyit yapılamadı).
+BDDK_PIN → BDDK_PINLER listesi [yeni, eski]; eski 15 Kas sonrası silinir. Hata mesajı artık CN/veren/geçerlilik de yazar.
+RİTÜEL: hata "TLS PIN UYUSMADI" → mesajdaki CN ve veren *.bddk.org.tr + bilinen CA ise yeni izi listenin BAŞINA ekle.
+DEPLOY: ktpanel/api/bddk.js · BAKIM.
+
 # BAKIM EK — §490 (21 Eki 2026, 16:20) — BANKACILIK "VERİ YOK": BDDK SERTİFİKA OKUMASI BOŞ DÖNÜYOR
 
 Panel Makro › Bankacılık: üç kart (özet, sahiplik, sektörel kredi) "VERİ YOK". /api/bddk?panel=1|sahiplik=1|sektor=1 → ok:false.

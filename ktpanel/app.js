@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261023c';   // SS449 Ekim taramasi: rezerv, MB tablosu, Fed/BoJ, takvim
+const KTP_SURUM = '20261024a';   // SS502-506 Ekim taramasi: politika faizi TP.PY.P02.1H, PPK agaci, pano, ayrisma
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2342,9 +2342,14 @@ function kararHesap(M){
   const S=KARAR.surucu, C=S.ceyrek||{};
   const qs=Object.keys(C).sort();
   const gercekQ=new Set(Object.keys(M.favok||{}).filter(q=>M.favok[q]&&(M.favok[q].usd!=null||M.favok[q].tl!=null)));
-  const hedefQ=qs.filter(q=>C[q].tam && !gercekQ.has(q)).pop() || null;
+  /* §507 (24 Eki, taramada): EREGL 3Ç26'yı açıklayınca "tam ve açıklanmamış son çeyrek" 2023Q4 çıktı (geçmişteki bir boşluk)
+     → sürücü Δ, PD/FAVÖK ileri ve göreli getiri 3 yıl önceye göre hesaplanıyordu. Kural: hedef yalnız SON AÇIKLANAN çeyrekten
+     SONRA aranır; tam çeyreklerin hepsi açıklandıysa hedef = son tam çeyrek ve `aciklandi` bayrağı (beklenti yerine gerçek). */
+  const sonGercek=[...gercekQ].sort().pop();
+  let hedefQ=qs.filter(q=>C[q].tam && !gercekQ.has(q) && (!sonGercek || q>sonGercek)).pop() || null, aciklandi=false;
+  if(!hedefQ){ const t=qs.filter(q=>C[q].tam).pop(); if(t && gercekQ.has(t)){ hedefQ=t; aciklandi=true; } }
   const kosuQ=qs.filter(q=>!C[q].tam).pop() || null;
-  const out={hedefQ, kosuQ, fit:null, disinda:[], maks:{}, duyarlilik:{}, bbl:0, tip:M.tip};
+  const out={hedefQ, kosuQ, aciklandi, fit:null, disinda:[], maks:{}, duyarlilik:{}, bbl:0, tip:M.tip};
   const fx=hedefQ? (C[hedefQ].usdtry_ort||C[hedefQ].usdtry_son||kararFxQ(hedefQ)) : null;
   const gecen=hedefQ? M.favok[kararQOnce(hedefQ,4)] : null, onceki=hedefQ? M.favok[kararQOnce(hedefQ,1)] : null;
   const K=M.konsensus; const konsVar=!!(K && hedefQ && K.donem===hedefQ && (K.favok_tl_mlr>0 || (M.tip==='konsensus_banka'&&K.net_tl_mlr)));
@@ -2474,7 +2479,7 @@ function kararPanoHtml(){
   let h='<details class="sektorWrap" style="margin-top:8px"'+(KARAR.panoAcik?' open':'')+' id="kararPanoWrap"><summary>KARAR PANOSU</summary>';
   h+='<div style="overflow-x:auto;margin-top:6px"><table class="arzTbl" id="kararPanoTbl"><thead><tr><th>KOD</th><th>SEKTÖR · TIER</th><th>BEKLENTİ '+(hq?kararQAd(hq):'')+'</th><th>YoY ₺</th><th title="Birincil sürücünün hedef çeyrek ortalaması / önceki çeyrek; fiyat endekslerinde (TÜFE/ÜFE/KFE) yıllık değişim (y/y)">SÜRÜCÜ Δ ÇEYREK</th><th>KONS. SİCİLİ</th><th>ÇEYREK GÖRELİ</th><th>PD/FAVÖK İLERİ</th><th>HEDEF</th><th>PUAN</th><th>SİNYAL</th></tr></thead><tbody>';
   L.forEach(({M,H,F,P})=>{
-    const hd=H.hedef||{}; const bek = hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
+    const hd=H.hedef||{}; const gq=H.aciklandi&&M.favok&&M.favok[H.hedefQ]; const bek = (gq&&gq.tl!=null)? trN(gq.tl,1)+' <span class="sub">gerçek · açıklandı'+(hd.tl!=null?' · bek. '+trN(hd.tl,1):'')+'</span>' : hd.tl!=null? trN(hd.tl,1)+' <span class="sub">'+(hd.kaynak==='model'?'model':(M.tip==='konsensus_banka'?'net · ':'')+(hd.kons?hd.kons.kurum+' kurum':''))+'</span>' : '<span class="sub">—</span>';
     const yoy = hd.kaynak==='model'? (hd.yoyUsd!=null? kararIsaret(hd.yoyUsd,0,'% $'):'—') : (hd.yoyTl!=null? kararIsaret(hd.yoyTl,0,'%'):'—');
     const bo=kararBirincilOzet(M,H);
     /* §473: akış serisinde bu yıl hiç açıklama yoksa "−100% y/y" yanıltır → "yıl içi 0 · geçen yıl aynı tarih X" (KATMR 2026, GLRMK 2026) */
@@ -6466,13 +6471,13 @@ function riskButceHesap(){
     const wTp = toplamVarlik ? deger(p)/toplamVarlik*100 : 0;
     if(wTp > A.maxAgirlik)
       ihlal.push({kod, tip:'ağırlık', deger:wTp, tavan:A.maxAgirlik,
-        not:'toplam varlığın %'+trN(wTp,1)+'\u0027i — tavan %'+A.maxAgirlik+
+        not:'toplam varlıktaki payı %'+trN(wTp,1)+' — tavan %'+A.maxAgirlik+
             (MRISK[kod]?'':' · (risk kapsamı dışı)')});
   });
   kal.forEach(x=>{
     if(x.ctrPay > A.maxCtrPay)
       ihlal.push({kod:x.kod, tip:'risk katkısı', deger:x.ctrPay, tavan:A.maxCtrPay,
-        not:'portföy riskinin %'+trN(x.ctrPay,1)+'\u0027ini tek başına taşıyor — tavan %'+A.maxCtrPay});
+        not:'portföy riskindeki payı %'+trN(x.ctrPay,1)+' (tek başına) — tavan %'+A.maxCtrPay});
   });
   if(volP > A.maxVol)
     ihlal.push({kod:'PORTFÖY', tip:'volatilite', deger:volP, tavan:A.maxVol,
@@ -7289,10 +7294,12 @@ function yabCarryTazele(){
 //   ?list=bie_bispolfaiz → 49 ülke, desen TP.BISPOLFAIZ.<ISO3>
 // UYARI: bu bir BIS DERLEMESİDİR. TCMB'nin kendi duyurusundan gecikmeli gelebilir;
 // PPK günü akşamı henüz eski değeri gösterebilir. Kart tarihi yazıyor, ona bak.
-// §493 (22 Eki): EVDS'de TCMB'nin KENDİ günlük politika faizi serisi var — TP.PF.FF.GUN ("TCMB Politika Faizi",
-// grup bie_pfaizler; EVDS aramasıyla bulundu). BIS derlemesi gecikmeli (PPK günü eski değeri gösterebilir) → yedeğe düştü.
+// §493 (22 Eki) → §502 (24 Eki): TP.PF.FF.GUN panel API'sinde BOŞ dönüyor (EVDS3'te de bulunamadı) → BIS'e düşüp 37 (2026-8)
+// gösteriyordu, YANLIŞ. Doğru birincil kaynak: TP.PY.P02.1H — "TCMB Kotasyonları (Satış) 1 Haftalık" (grup bie_pyintbnk).
+// 1 hafta repo ihale faizi = politika faizinin TANIMI; iş günü serisi. Ölçüldü: 21 Eki 37 → 22 Eki 36 (PPK günü aynı gün).
+// (TP.PY.P02.ON = üst bant/borç verme 39, TP.PY.P01.ON = alt bant/borçlanma 34,5 → koridor 34,5–39.)
 const TAHMIN_ADAY = [
-  {tip:'seri', kod:'TP.PF.FF.GUN'},
+  {tip:'seri', kod:'TP.PY.P02.1H'},
   {tip:'seri', kod:'TP.BISPOLFAIZ.TUR'},
   {tip:'grup', grup:'bie_bispolfaiz', ad:'Türkiye'},
   {tip:'grup', grup:'bie_bispolfaiz', ad:'TUR'}
@@ -7302,7 +7309,7 @@ const TAHMIN_ADAY = [
 // politika faizi ile fonun fiilen kazandığı oran aynı şey değil. Sapmanın ölçülebilmesi
 // için dördünün de AYNI EKRANDA olması gerekiyordu — şimdi var.
 const ZINCIR = [
-  {ad:'POLİTİKA', not:'PPK kararı', seri:'TP.PF.FF.GUN', yedek:['TP.BISPOLFAIZ.TUR']},   /* §493: önce TCMB'nin kendi serisi */
+  {ad:'POLİTİKA', not:'PPK kararı', seri:'TP.PY.P02.1H', yedek:['TP.BISPOLFAIZ.TUR']},   /* §502: TCMB 1 hafta repo kotasyonu (birincil) */
   {ad:'AOFM', not:'TCMB efektif fonlama', seri:'TP.APIFON4'},
   {ad:'TLREF', not:'gecelik referans', grup:'bie_bisttlref'},
   {ad:'PİYASA REPO', not:'BİST O/N — fonun fiilen kazandığı', grup:'bie_onrepofbap'}
@@ -7408,9 +7415,18 @@ const PPK_VARSAYILAN = [
    PPK_KOLLAR = kolon listesinin TEK SAHİBİ (§112) — eskiden başlık ve gövde
    satırında ayrı ayrı gömülüydü; biri değişip öteki unutulunca tablo kayardı. */
 const PPK_KOLLAR = ['-250','-150','-100','0','+100','+250'];
-function ppkOku(){ try{ const s=JSON.parse(localStorage.getItem('ppk_olasilik_v1')||'null');
-  return (Array.isArray(s)&&s.length)?s:JSON.parse(JSON.stringify(PPK_VARSAYILAN)); }
-  catch(e){ return JSON.parse(JSON.stringify(PPK_VARSAYILAN)); } }
+/* §504 (24 Eki, taramada): ağaç 10 Eyl ve 22 Eki toplantılarını hâlâ "ileride" sayıyordu → bugünkü %36'nın ÜSTÜNE
+   geçmiş toplantıların beklenen hareketi de bileşikleniyordu (patika ve alfa kartı iki toplantı fazla indirim içeriyordu).
+   Kural: tarihi BUGÜNDEN ÖNCE olan toplantı listeden düşer (başlangıç faizi zaten gerçekleşeni içerir);
+   varsayılan takvimdeki ileri toplantı kullanıcı listesinde yoksa eklenir. Kullanıcının girdiği olasılıklar korunur. */
+function ppkOku(){
+  const bugun=new Date().toISOString().slice(0,10);
+  const ileri=l=>l.filter(t=>t&&t.tarih&&t.tarih>=bugun);
+  let s=null; try{ s=JSON.parse(localStorage.getItem('ppk_olasilik_v1')||'null'); }catch(e){}
+  const v=ileri(JSON.parse(JSON.stringify(PPK_VARSAYILAN)));
+  if(!(Array.isArray(s)&&s.length)) return v;
+  const l=ileri(s); v.forEach(t=>{ if(!l.some(x=>x.tarih===t.tarih)) l.push(t); });
+  return l.sort((a,b)=>a.tarih<b.tarih?-1:1); }
 function ppkYaz(l){ try{ localStorage.setItem('ppk_olasilik_v1', JSON.stringify(l)); }catch(e){} }
 function ppkPatika(baslangic, liste){
   let faiz = baslangic; const out = [];
@@ -8358,14 +8374,21 @@ function ayrEtiketTazele(){
    BİLEŞİK, TOPLAMA DEĞİL: Π(1+r) − 1. Günlük getirileri toplamak 3 ayda
    yarım puana varan sapma verir. */
 const AYR_SERI_KEY = 'ayr_seri_v1';
-function ayrSeriOku(){ try{ const s=JSON.parse(localStorage.getItem(AYR_SERI_KEY)||'[]');
-  return Array.isArray(s)?s:[]; }catch(e){ return []; } }
+/* §506 (24 Eki, taramada): kayıt tarihi TAKVİM günüydü → panel cumartesi/pazar açılınca cuma seansının getirisi
+   AYRI bir satır olarak tekrar yazılıyordu (ölçüldü: 23 Eki seans içi p −0,91 + "24 Eki" kesin kapanış p −0,26 →
+   cuma İKİ KEZ bileşikleniyordu). Kural: kayıt SEANS gününe yazılır (Cmt/Paz → önceki Cuma); hafta sonu satırı
+   cumanın üstüne yazar, çünkü kapanış sonrası değer kesin olandır. Eski hafta sonu satırları okurken cumaya katlanır. */
+function ayrSeansGunu(d){ const t=new Date((d||new Date().toISOString().slice(0,10))+'T12:00:00Z'); const g=t.getUTCDay();
+  if(g===6) t.setUTCDate(t.getUTCDate()-1); else if(g===0) t.setUTCDate(t.getUTCDate()-2); return t.toISOString().slice(0,10); }
+function ayrSeriOku(){ try{ const s=JSON.parse(localStorage.getItem(AYR_SERI_KEY)||'[]'); if(!Array.isArray(s)) return [];
+  const m=new Map(); s.filter(x=>x&&x.d).sort((a,b)=>a.d<b.d?-1:1).forEach(x=>{ const d=ayrSeansGunu(x.d); m.set(d+'|'+x.e, Object.assign({},x,{d})); });
+  return [...m.values()].sort((a,b)=>a.d<b.d?-1:1); }catch(e){ return []; } }
 function ayrSeriYaz(l){ try{ localStorage.setItem(AYR_SERI_KEY, JSON.stringify(l.slice(-400))); }catch(e){} }
 
 function ayrGunKaydet(endeksKod){
   const R = ayrismaHesap('chg', endeksKod||'XK100');
   if(R.hata) return null;
-  const bugun = new Date().toISOString().slice(0,10);
+  const bugun = ayrSeansGunu();   /* §506: seans günü */
   let s = ayrSeriOku();
   const kayit = {d:bugun, p:+R.rP.toFixed(4), b:+R.rB.toFixed(4), e:endeksKod||'XK100', n:R.satir.length};
   const i = s.findIndex(x=>x && x.d===bugun && x.e===kayit.e);
@@ -11093,8 +11116,14 @@ function canliIsiklari(){
   }catch(e){}
 }
 
+/* §505 (24 Eki, taramada): pano açılıştan 2,5 sn sonra TEK KEZ kopyalıyordu; beklenti/güven/carry kaynakları o anda
+   henüz "—" idi → panoda dört boş hücre ve o boşlukla üretilen haftalık notta karışan rakamlar (hane ↔ piyasa beklentisi).
+   Kaynaklar dolana kadar 6 sn arayla en çok 8 kez yeniden kopyalanır; hepsi dolunca durur. */
+let _yorumPanoDeneme=0;
 function yorumPano(){
   if(!$('yXU100'))return;
+  setTimeout(()=>{ const bos=['yPiyaBek','yHaneBek','yGuven','yCarry','yLider','yAOFM','yTUFE'].some(id=>{const e=$(id);return e&&e.textContent.trim()==='—';});
+    if(bos&&_yorumPanoDeneme++<8) yorumPano(); },6000);
   // 1) Endeks haftalık (ENDEKSLER dizisindeki 4. eleman = değişim %)
   const eBul=k=>{const e=ENDEKSLER.find(x=>x[0]===k);return e?e[3]:null;};
   const xu=eBul('XU100'), xk=eBul('XKTUM');
@@ -11106,7 +11135,8 @@ function yorumPano(){
     if(arr.length){
       const sr=arr.filter(x=>x.g&&x.g[1]!=null).map(x=>({ad:x.ad,h:x.g[1]})).sort((p,q)=>q.h-p.h);
       const L=sr[0], G=sr[sr.length-1];
-      if(L&&$('yLider'))$('yLider').innerHTML='<span class="up">'+esc(L.ad)+' +'+trN(L.h,1)+'%</span>';
+      /* §505: lider de eksi olabilir (bütün sektörler düştüğü hafta) → "+-2,2%" basıyordu; işaret değerden gelir */
+      if(L&&$('yLider'))$('yLider').innerHTML='<span class="'+(L.h>=0?'up':'down')+'">'+esc(L.ad)+' '+(L.h>=0?'+':'')+trN(L.h,1)+'%</span>';
       if(G&&$('yGeride'))$('yGeride').innerHTML='<span class="'+(G.h>=0?'':'down')+'">'+esc(G.ad)+' '+(G.h>=0?'+':'')+trN(G.h,1)+'%</span>';
     }
   }catch(e){}
