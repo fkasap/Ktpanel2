@@ -349,11 +349,21 @@ async function hkmaModu(req, res){
       if(bekle) await new Promise(x=>setTimeout(x,bekle));
       try{ r=await fetch(u,{headers:{'User-Agent':'Mozilla/5.0 (KTPanel)','Accept':'application/json'},signal:AbortSignal.timeout(12000)}); if(r.ok) break; }catch(e){ r=null; }
     }
-    if(!r) return res.status(200).json({ok:false,err:'HKMA: bağlantı kurulamadı (iki deneme)',veri:null});
-    if(!r.ok) return res.status(200).json({ok:false,err:'HKMA HTTP '+r.status,veri:null});
+    /* §516 İKİNCİ YOL: bekçi üç turdur (ABD çıkışından) HKMA 405/502 görüyor; TR'den aynı uç sağlam → HKMA, Vercel'in çıkış IP'sini
+       ARALIKLI reddediyor. Bülten AYLIK — canlı çağrıya bağımlı kalmak gereksiz. Actions her akşam aynı bülteni kendi sunucusundan
+       çekip hkma.json'a yazar (tazele §516); canlı yol düşerse o dosya döner ve yanıt `yedek:true` + tarih taşır. */
+    const yedekDon=async(sebep)=>{
+      try{ const kok='https://'+(req.headers['x-forwarded-host']||req.headers.host);
+        const h=process.env.CRON_SECRET?{authorization:'Bearer '+process.env.CRON_SECRET}:{};
+        const y=await fetch(kok+'/hkma.json',{headers:h,signal:AbortSignal.timeout(6000)}); const Y=y.ok?await y.json():null;
+        if(Y&&Y.veri) return res.status(200).json({ok:true,kaynak:'HKMA Monthly Bulletin · Actions yedeği ('+(Y.guncelleme||'?')+')',yedek:true,canliHata:sebep,alinma:Y.alinma||null,veri:Y.veri});
+      }catch(e){}
+      return res.status(200).json({ok:false,err:'HKMA: '+sebep+' · yedek (hkma.json) da yok',veri:null});
+    };
+    if(!r) return yedekDon('bağlantı kurulamadı (3 deneme)');
+    if(!r.ok) return yedekDon('HTTP '+r.status);
     const j=await r.json();
-    if(!(j.header&&j.header.success&&j.result&&j.result.records)) 
-      return res.status(200).json({ok:false,err:'HKMA yanıt yapısı beklenmedik',veri:null});
+    if(!(j.header&&j.header.success&&j.result&&j.result.records)) return yedekDon('yanıt yapısı beklenmedik');
     // Aylık kayıtlar (YYYY-MM), yıllık '-00' özetleri atla
     const aylik=j.result.records.filter(x=>x.end_of_month && !/-00$/.test(x.end_of_month));
     if(aylik.length<2) return res.status(200).json({ok:false,err:'yeterli aylık kayıt yok',veri:null});
