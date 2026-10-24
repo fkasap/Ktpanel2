@@ -635,7 +635,8 @@ function nobetCiz(){
     }
     if(T && T.bayat.length){
       h += '<div><span class="lbl" style="color:#E8933B">\u23f0 TAZELENMEL\u0130 \u00b7 '+T.bayat.length+'</span>'+
-        T.bayat.slice(0,6).map(x=>'<div style="font-size:11px;margin-top:3px"><b>'+esc(x.dosya)+'</b> '+
+        /* §519 (24 Eki): dosya adı yerine KATMAN adı — elle damgalı kartların hepsi "index.html" diye görünüyordu (3 satır, hangisi belirsiz) */
+        T.bayat.slice(0,6).map(x=>'<div style="font-size:11px;margin-top:3px"><b>'+esc(String(x.ad||x.dosya).replace(/\s*\(.*?\)\s*/g,' ').trim().slice(0,60))+'</b> <span class="thin" style="font-size:9px">'+esc(x.dosya)+'</span> '+
           '<span class="sub" style="font-size:9px">'+x.gun+' g\u00fcn'+(x.sez?' \u00b7 \u26a1sezon':'')+'</span></div>').join('')+'</div>';
     } else if(T){
       h += '<div class="sub" style="font-size:11px">\u2713 T\u00fcm damgal\u0131 katmanlar vadesinde ('+T.toplam+' katman)</div>';
@@ -692,7 +693,7 @@ function nobetBaglam(){
   if(B && B.liste.length) s += '\nKART BEKLEYEN B\u0130LAN\u00c7OLAR: ' +
     B.liste.map(x=>x.kod+(x.portfoyde?'(portf\u00f6yde)':'')).join(', ');
   if(T && T.bayat.length) s += '\nTAZELENMEL\u0130 DOSYALAR: ' +
-    T.bayat.map(x=>x.dosya+' ('+x.gun+'g'+(x.sez?', sezon':'')+')').join(', ');
+    T.bayat.map(x=>(x.ad||x.dosya)+' ('+x.gun+'g'+(x.sez?', sezon':'')+')').join(', ');
   return s;
 }
 
