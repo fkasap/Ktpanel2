@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024i';   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025a';   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -9128,6 +9128,8 @@ async function taktikModel(){
   const m=window.__market||{}; const vix=(m.vix&&isFinite(m.vix.p))?m.vix.p:null;
   const L=(sk&&sk.sektorler)||[]; const gv=L.filter(x=>x.g&&isFinite(x.g[2])); const gen=gv.length>=8? gv.filter(x=>x.g[2]>0).length : null;
   let cdsD=null; { const S=cds&&cds.seri; if(Array.isArray(S)&&S.length>20) cdsD=fark(S,30); }
+  /* §528: PKA beklentisi (ENF_CANLI) ayrı bir yükleyiciden gelir; model ondan önce koşarsa ex-ante "veri yok" kalıyordu (25 Eki canlı). 12 sn'ye kadar beklenir. */
+  for(let i=0;i<24&&!(window.ENF_CANLI&&isFinite(window.ENF_CANLI.bek));i++) await new Promise(r=>setTimeout(r,500));
   const bek=(window.ENF_CANLI&&isFinite(window.ENF_CANLI.bek))?window.ENF_CANLI.bek:null;
   const exAnte=(P&&isFinite(P.deger)&&bek!=null)? ((1+P.deger/100)/(1+bek/100)-1)*100 : null;
   let polYon=null, polGun=null; if(P&&P.karar){ const mm=String(P.karar.tarih).match(/^(\d{2})-(\d{2})-(\d{4})/); if(mm){ polGun=Math.round((Date.now()-new Date(+mm[3],+mm[2]-1,+mm[1]))/864e5); if(polGun<=120) polYon=P.karar.bp; } }
