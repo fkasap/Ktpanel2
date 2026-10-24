@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261024b';   // SS509 saglik bekcisi (Veri Durumu cekmecesi)
+const KTP_SURUM = '20261024c';   // SS514 Fonlama Rejimi karti canli (politika/koridor/son karar EVDS)
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -10808,7 +10808,59 @@ async function aofmHizli(){
     }catch(e){}
   });
 }
+/* §514 (24 Eki, kullanıcı: "politika faizi EVDS'den canlı değil mi, neden 37?") — Fonlama Rejimi kartında politika faizi,
+   koridor ve başlık etiketi index.html'e ELLE yazılmıştı (10 Eyl'den kalma: %37 · %35,50–%40,00 · "SIRADAKİ 22 EKİ"); TLREF makası da
+   TANIMSIZ bir POLITIKA_FAIZ değişkenine bakıp her seferinde 37'ye düşüyordu (−115bp yerine doğrusu −15bp). Artık hepsi TCMB'nin
+   kendi kotasyon serilerinden: TP.PY.P02.1H (1 hafta repo = politika faizi) · TP.PY.P01.ON (koridor alt, borçlanma) ·
+   TP.PY.P02.ON (koridor üst, borç verme). Son karar da SERİNİN KENDİSİNDEN türetilir (değerin değiştiği son gün ve adım) — PPK günü
+   akşamı elle etiket güncellemek gerekmez. Sonuç window.POL_CANLI'ya yazılır; Tahminler/eğri okuma aynı tek kaynağı kullanır (§112).
+   Fonlama kanalı ve sistem likiditesi de elle metin değil: AOFM'nin koridordaki yeri ve TCMB net fonlamasının işaretinden okunur. */
+let _POL_SOZ=null;
+function politikaCanli(){
+  if(_POL_SOZ) return _POL_SOZ;
+  _POL_SOZ=(async()=>{
+    const K='TP.PY.P02.1H', A='TP.PY.P01.ON', U='TP.PY.P02.ON';
+    const d=await (await fetch('/api/evds2?series='+encodeURIComponent([K,A,U].join(','))+'&gun=500&full=1')).json();
+    const son=d.son||{}, ham=d.ham||[], al=k=>k.replace(/\./g,'_');
+    const p=son[K]&&parseFloat(son[K].deger); if(!(p>5&&p<90)) throw new Error('politika serisi boş');
+    let onceki=null, karar=null;
+    ham.forEach(x=>{ const v=parseFloat(x[al(K)]); if(!isFinite(v)) return; if(onceki!=null&&v!==onceki) karar={tarih:x.Tarih, eski:onceki, yeni:v, bp:Math.round((v-onceki)*100)}; onceki=v; });
+    const o={deger:p, tarih:son[K].tarih, alt:son[A]?parseFloat(son[A].deger):null, ust:son[U]?parseFloat(son[U].deger):null, karar, kaynak:'EVDS3 '+K};
+    window.POL_CANLI=o; try{ if(typeof egriRender==='function') egriRender(); }catch(e){}
+    const ay=['OCA','ŞUB','MAR','NİS','MAY','HAZ','TEM','AĞU','EYL','EKİ','KAS','ARA'];
+    const trT=s=>{ const m=String(s||'').match(/^(\d{2})-(\d{2})-(\d{4})/); return m? (+m[1])+' '+ay[+m[2]-1] : String(s||''); };
+    const canli=' <span class="thin" style="font-size:9px">· canlı</span>';
+    if($('polLive')){ $('polLive').innerHTML='%'+trN(p,2)+canli; $('polLive').title='EVDS3 · '+K+' · '+o.tarih; }
+    if($('koridorLive')&&o.alt!=null&&o.ust!=null){ $('koridorLive').innerHTML='%'+trN(o.alt,2)+' – %'+trN(o.ust,2)+canli; $('koridorLive').title='EVDS3 · '+A+' / '+U+' · '+o.tarih; }
+    if($('polTag')){
+      const bugun=new Date().toISOString().slice(0,10);
+      const sira=(typeof PPK_VARSAYILAN!=='undefined'?PPK_VARSAYILAN:[]).map(t=>t.tarih).filter(t=>t>=bugun).sort()[0];
+      const siraT=sira? (+sira.slice(8,10))+' '+ay[+sira.slice(5,7)-1] : null;
+      $('polTag').textContent=(karar? trT(karar.tarih)+': '+(karar.bp>0?'+':'−')+Math.abs(karar.bp)+'BP → %'+trN(karar.yeni,0) : 'POLİTİKA %'+trN(p,2))+(siraT?' · SIRADAKİ '+siraT:'');
+      $('polTag').title='Son karar politika faizi serisinin değiştiği son günden türetildi (EVDS3 '+K+')';
+    }
+    return o;
+  })().catch(e=>{ _POL_SOZ=null; return null; });
+  return _POL_SOZ;
+}
+let NETF_SON=null;
+function fonlamaKanalCiz(){
+  const P=window.POL_CANLI; const a=(typeof AOFM_SON!=='undefined')?AOFM_SON:null;
+  if($('fonKanal')&&P&&Number.isFinite(a)){
+    let t;
+    if(P.ust!=null&&a>=P.ust-0.25) t='Gecelik · <b>üst bant</b> (O/N borç verme) — haftalık repo kısılmış';
+    else if(P.alt!=null&&a<=P.alt+0.25) t='Gecelik · <b>alt bant</b> — TCMB likidite çekiyor (sterilizasyon)';
+    else if(Math.abs(a-P.deger)<=0.5) t='<b>Haftalık repo</b> (politika faizi) — normal kanal';
+    else t='Karma — AOFM politika faizinin '+(a>P.deger?'üstünde':'altında')+' ('+Math.round((a-P.deger)*100)+'bp)';
+    $('fonKanal').innerHTML=t+' <span class="thin" style="font-size:9px">· AOFM %'+trN(a,2)+' koridorda</span>';
+    const ae=$('aofmLive'); if(ae) ae.className=(P.ust!=null&&a>=P.ust-0.25)?'down':((P.alt!=null&&a<=P.alt+0.25)?'up':'');   /* §514: renk elle 'down' sabitti (üst bant dönemi) */
+  }
+  if($('sisLik')&&Number.isFinite(NETF_SON)){
+    $('sisLik').innerHTML=NETF_SON<0? '<b>Fazla</b> · TCMB net '+trN(-NETF_SON/1000,1)+' mlr ₺ çekiyor' : '<b>Açık</b> · TCMB net '+trN(NETF_SON/1000,1)+' mlr ₺ fonluyor';
+  }
+}
 async function loadAOFM(){
+  const _polS=politikaCanli();   /* §514: paralel başlar; TLREF makası ve kanal okuması bunu bekler */
   // 1) Anlık değerler — her seri BAĞIMSIZ istek (biri geçersizse diğerleri etkilenmez)
   const koyGrup=async(id,grup,adF,fmt)=>{
     try{
@@ -10843,16 +10895,18 @@ async function loadAOFM(){
        kartta "%6600 (+656313bp)" yazacaktı. Doğrusu .ORAN: %36,90 (25 Ağu),
        27 Ağu bülteninin %36,84'üyle bir günlük farkla tutarlı.
        DERS: seri kodu HATIRLANMAZ, çağrılıp DÖNEN DEĞER OKUNUR. */
-    koy('tlrefLive','TP.BISTTLREF.ORAN',x=>{
-      const POL = (typeof POLITIKA_FAIZ!=='undefined' && POLITIKA_FAIZ) ? POLITIKA_FAIZ : 37.00;
+    _polS.then(()=>koy('tlrefLive','TP.BISTTLREF.ORAN',x=>{
+      /* §514: POLITIKA_FAIZ hiç tanımlı değildi → hep 37'ye düşüyordu. Canlı → damga sırası. */
+      const POL = (window.POL_CANLI&&Number.isFinite(window.POL_CANLI.deger)) ? window.POL_CANLI.deger : POLITIKA_DAMGA.deger;
       const bp=Math.round((x-POL)*100);
       const renk = bp<=-25 ? 'var(--up)' : (bp>=25 ? 'var(--down)' : 'var(--mm2)');
       return '%'+trN(x,2)+' <span style="color:'+renk+';font-weight:600">('+(bp>0?'+':'')+bp+'bp)</span>';
-    }),
-    koy('fonMiktar','TP.APIFON3',x=>trN(x/1000,1)+(x<0?' <span class="thin" style="font-size:9px">(net çekiş)</span>':'')),
+    })),
+    koy('fonMiktar','TP.APIFON3',x=>{NETF_SON=x;return trN(x/1000,1)+(x<0?' <span class="thin" style="font-size:9px">(net çekiş)</span>':'');}),
     koyGrup('rekLive','bie_rktufey','',x=>{REK_SON=x;return trN(x,1);}),
     koyGrup('rezervLive','bie_abres2','Toplam',x=>trN(x/1000,1))
   ]);
+  try{ await _polS; fonlamaKanalCiz(); }catch(e){}
   karneRezervCanli();
   /* §421 GÖSTERGE TAHVİL (2Y bileşik) — Promise.all DİZİSİNİN İÇİNE değil,
      bittikten SONRA çağrılır (dizi öğesi ifade olmalı; IIFE oraya konunca

@@ -449,16 +449,16 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <h2 style="margin-top:0">03 Türkiye — Para Politikası &amp; Likidite <span class="thin">(TCMB · efektif fonlama · rezervler · 22 Eki PPK sonrası · sıradaki 10 Ara)</span></h2>
 <div class="grid g2">
   <div class="card">
-    <div class="lbl">FONLAMA REJİMİ <span class="tag">SIKI DURUŞ</span> <span class="tag snap">10 EYL: SABİT %37 · SIRADAKİ 22 EKİ · REZERV 6 HAFTA DÜŞÜŞTE (brüt 167,4 · swap hariç 37,9) · 1 EKİ ZK GEVŞEMESİ · FON KRİZİ 17 EYL</span></div>
-    <div class="kv"><span class="k">Politika faizi (1 hafta repo)</span><span>%37,00</span></div>
-    <div class="kv"><span class="k">Koridor (borç alma – verme)</span><span>%35,50 – %40,00</span></div>
+    <div class="lbl">FONLAMA REJİMİ <span class="tag">SIKI DURUŞ</span> <span class="tag snap" id="polTag">22 EKİ: −100BP → %36 · SIRADAKİ 10 ARA</span></div>
+    <div class="kv"><span class="k">Politika faizi (1 hafta repo)</span><span id="polLive">%36,00</span></div>
+    <div class="kv"><span class="k">Koridor (borç alma – verme)</span><span id="koridorLive">%34,50 – %39,00</span></div>
     <div class="kv"><span class="k">AOFM — efektif fonlama</span><span class="down" style="font-weight:600" id="aofmLive">≈%40,00</span></div>
     <div class="kv"><span class="k">TLREF — piyasa gecelik <span class="thin">(politika faizine makas)</span></span><span style="font-weight:600" id="tlrefLive">—</span></div>
     <div class="kv"><span class="k">Gösterge tahvil <span class="thin">(2Y bileşik · piyasa fiyatlaması)</span></span><span style="font-weight:600" id="gosterge2y">—</span></div>
     <div class="kv"><span class="k">TCMB Net Fonlama (mlr ₺)</span><span id="fonMiktar">—</span></div>
     <div class="kv"><span class="k">Haftalık repo ihaleleri</span><span style="color:var(--up)"><b>23 Ağu 2026'da YENİDEN AÇILDI</b></span></div>
-    <div class="kv"><span class="k">Fonlama kanalı</span><span>Gecelik (üst bant) O/N</span></div>
-    <div class="kv"><span class="k">Sistem likiditesi</span><span>Fazla · net APİ + swap ile çekiliyor</span></div>
+    <div class="kv"><span class="k">Fonlama kanalı</span><span id="fonKanal">—</span></div>
+    <div class="kv"><span class="k">Sistem likiditesi</span><span id="sisLik">—</span></div>
     <div class="kv"><span class="k">22 Eki PPK kararı</span><span style="color:var(--mm2);font-weight:600">−100 bp → %36 · koridor %34,50–%39,00 (−100 bp)</span></div><div class="kv"><span class="k">Karar metni</span><span>ana eğilimde dezenflasyon sürüyor · iç talep zayıf, arz şoku geçişi sınırlı · enerji fiyatları yukarı yönlü risk · adımlar "toplantı bazında, temkinli", büyüklük/zamanlama taahhüdü yok · kalıcı bozulmada sıkılaştırma</span></div><div class="kv"><span class="k">Sonraki toplantı</span><span><b>10 Aralık</b> (7 hafta) · toplantı özeti 5 iş günü içinde</span></div>
     <div class="note"><b style="color:var(--up)">GÜNCEL — 23 Ağustos 2026 (Duyuru 2026-35):</b> TCMB, 1 Mart 2026'da ara verdiği <b>bir hafta vadeli repo ihalelerine yeniden başladı.</b> Bu, panelin aylardır "rejim riski" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar ve <b>AOFM ~300bp düşer — PPK hiç toplanmadan, karar açıklanmadan.</b> Örtülü sıkılaşma sona eriyor, yerini <em>örtülü indirime</em> bırakıyor.<br><br>
     <b>Neden önemli:</b> Mart'taki adım kur oynaklığına karşı alınmıştı (aynı gün TL uzlaşmalı vadeli döviz satımı da başlatıldı). Geri alınması, TCMB'nin <b>kur tarafında rahatladığını</b> düşündüğünü söyler. Beş buçuk aylık olağanüstü duruş kapanıyor.<br><br>
@@ -1936,7 +1936,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261024b"></script>
+<script src="/app.js?v=20261024c"></script>
 <script src="/ajan.js?v=20261007a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

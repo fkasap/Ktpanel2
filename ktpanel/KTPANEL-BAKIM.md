@@ -36,6 +36,13 @@ GEREKEN: GitHub secret CRON_SECRET (zaten var; tazele ve köprü testi kullanıy
 §509b İLK CANLI TUR (24 Eki 14:16, run 40089221439): 0 kritik · 3 uyarı · 394 sn · haftalık mail gönderildi. 36 seri sağlıklı, damga↔canlı
   uyumlu, eğri Δ dolu (§503 canlıda). HKMA 405 + FRED tek turluk kaynak hıçkırığı çıktı (dakikalar sonra sağlam) → ekran işaretine
   İKİ TUR ONAYI: ilk tur "bilgi · gözlemde", ikinci turda da sürerse uyarı. Köprü boş: kopru-testi.js ktpanel/test/ yerine ktpanel/'e yüklenmişti.
+§514 FONLAMA REJİMİ KARTI CANLI (kullanıcı: "politika faizi EVDS'den canlı değil mi, neden 37?"): kartta politika faizi %37,
+  koridor %35,50–%40,00 ve başlık "10 EYL: SABİT %37 · SIRADAKİ 22 EKİ" index.html'e ELLE yazılmıştı; aynı kart aşağıda "22 Eki −100bp
+  → %36" diyordu. TLREF makası TANIMSIZ POLITIKA_FAIZ'e bakıp hep 37'ye düşüyordu (−115bp; doğrusu −15bp). Artık politikaCanli():
+  TP.PY.P02.1H + koridor TP.PY.P01.ON/TP.PY.P02.ON; son karar serinin değiştiği son günden (seri geçmişi: 23 Eki 25 40,5→39,5 ·
+  11 Ara 39,5→38 · 22 Oca 38→37 · 22 Eki 37→36); sıradaki toplantı PPK_VARSAYILAN'dan. Fonlama kanalı = AOFM'nin koridordaki yeri,
+  sistem likiditesi = TCMB net fonlamasının işareti, AOFM rengi de buna göre. window.POL_CANLI tek kaynak.
+  DERS: canlı kartın içinde elle yazılmış rakam ÜÇÜNCÜ kez (§459a, §493) — bekçinin tutarlılık katmanına "damga ↔ canlı" kuralları eklenecek.
 §513 HATA YANITI ÖNBELLEĞE GİRMEZ: handler'lar Cache-Control (s-maxage 1–6 saat) EN BAŞTA koyup hata halinde 200+{ok:false}
   dönüyordu → Vercel CDN HATAYI da saatlerce saklıyordu. Kanıt (24 Eki): HKMA bir kez 405 verdi; bekçinin iki turu (11:16, 11:31) 405
   gördü, aynı dakikalarda önbelleği atlayan istek sağlamdı; 11:30 deploy önbelleği sıfırlayınca düzeldi. Çözüm api/_lib/onbellek.js:
