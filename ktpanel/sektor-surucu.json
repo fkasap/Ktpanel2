@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-25T09:16:15Z",
+ "guncelleme": "2026-10-25T10:45:08Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -85538,7 +85538,9 @@
    "20240911125749": 1,
    "20240822105454": 1,
    "20240821131505": 1,
-   "20241104133534": 1
+   "20241104133534": 1,
+   "20241114134037": 1,
+   "20240925122512": 1
   },
   "_not": "InfoLink spot fiyat tablosu (ortalama sütunu) — hafta: yayın tarihi → {InfoLink satır adı: ortalama}; wb: işlenmiş Wayback görüntü zaman damgaları",
   "pv": {
