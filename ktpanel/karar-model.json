@@ -5793,7 +5793,7 @@
     }
    ],
    "birincil": "kfe",
-   "sermaye_mn": null,
+   "sermaye_mn": 400,
    "favok": {
     "2025Q4": {
      "tl": 0.54,
@@ -5880,7 +5880,7 @@
     }
    ],
    "birincil": "ptf",
-   "sermaye_mn": null,
+   "sermaye_mn": 705,
    "favok": {
     "2025Q4": {
      "tl": 0.915,
@@ -5965,7 +5965,23 @@
    ],
    "birincil": "epdk_tarife",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2025Q4": {
+     "tl": 2.519,
+     "usd": 59.6,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 4.171,
+     "usd": 95.4,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.511,
+     "usd": 11.2,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2024Q1": 15.7507,
     "2024Q2": 27.7024,

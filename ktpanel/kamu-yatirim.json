@@ -25,7 +25,7 @@
     "artis": 36.4,
     "oran": 73.5
    },
-   "kaynak": "SBB haftalık 23 Eki 2026 s.78 (HMB) — tohum",
+   "kaynak": "SBB haftalık (HMB) Turkiye-Ekonomisinde-Haftalik-Gelismeler-ve-Genel-Gorunum-Raporu_23-Ekim-2026.pdf",
    "tufe_yy": 29.7
   }
  },
@@ -95,5 +95,6 @@
   "kalan": 899303,
   "aylik_kalan": 299767.6666666667,
   "aylik_gerceklesen": 98113.22222222222
- }
+ },
+ "kontrol": "2026-10-25"
 }

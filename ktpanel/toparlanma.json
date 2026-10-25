@@ -1190,7 +1190,7 @@
    "dipten": 0,
    "beta": 1.39,
    "kalite": 0.35,
-   "skor": 3.56,
+   "skor": 3.6,
    "baski": false
   },
   {
@@ -1201,8 +1201,8 @@
    "dd": -80.3,
    "dipten": 0,
    "beta": 1.24,
-   "kalite": 1.67,
-   "skor": 3.42,
+   "kalite": 1.65,
+   "skor": 3.46,
    "baski": false
   },
   {
@@ -1213,8 +1213,8 @@
    "dd": -65.7,
    "dipten": 0,
    "beta": 1.11,
-   "kalite": 0.47,
-   "skor": 2.16,
+   "kalite": 0.48,
+   "skor": 2.2,
    "baski": false
   },
   {
@@ -1226,7 +1226,19 @@
    "dipten": 0,
    "beta": 1.07,
    "kalite": 0.12,
-   "skor": 2,
+   "skor": 2.05,
+   "baski": true
+  },
+  {
+   "k": "PASEU",
+   "s": "Industrials",
+   "w": 0.21,
+   "r3": -76.6,
+   "dd": -88.9,
+   "dipten": 11.6,
+   "beta": 0.88,
+   "kalite": -0.13,
+   "skor": 1.87,
    "baski": true
   },
   {
@@ -1237,21 +1249,9 @@
    "dd": -57.9,
    "dipten": 0,
    "beta": 1.14,
-   "kalite": 1.14,
-   "skor": 1.83,
+   "kalite": 1.15,
+   "skor": 1.87,
    "baski": false
-  },
-  {
-   "k": "PASEU",
-   "s": "Industrials",
-   "w": 0.21,
-   "r3": -76.6,
-   "dd": -88.9,
-   "dipten": 11.6,
-   "beta": 0.88,
-   "kalite": -0.14,
-   "skor": 1.82,
-   "baski": true
   },
   {
    "k": "SELEC",
@@ -1261,8 +1261,8 @@
    "dd": -81.8,
    "dipten": 23.5,
    "beta": 0.95,
-   "kalite": 0.2,
-   "skor": 1.74,
+   "kalite": 0.19,
+   "skor": 1.79,
    "baski": true
   },
   {
@@ -1274,7 +1274,7 @@
    "dipten": 2,
    "beta": 1.18,
    "kalite": 1.01,
-   "skor": 1.7,
+   "skor": 1.73,
    "baski": false
   },
   {
@@ -1286,7 +1286,7 @@
    "dipten": 0,
    "beta": 1.08,
    "kalite": -0.03,
-   "skor": 1.42,
+   "skor": 1.46,
    "baski": false
   },
   {
@@ -1298,7 +1298,7 @@
    "dipten": 0,
    "beta": 1.17,
    "kalite": 0.4,
-   "skor": 1.32,
+   "skor": 1.35,
    "baski": true
   },
   {
@@ -1309,8 +1309,8 @@
    "dd": -67.6,
    "dipten": 3.4,
    "beta": 0.94,
-   "kalite": 0.52,
-   "skor": 1.31,
+   "kalite": 0.51,
+   "skor": 1.35,
    "baski": true
   },
   {
@@ -1322,7 +1322,7 @@
    "dipten": 0,
    "beta": 0.96,
    "kalite": 0.17,
-   "skor": 1.2,
+   "skor": 1.25,
    "baski": false
   }
  ],
