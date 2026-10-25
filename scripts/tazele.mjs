@@ -5091,6 +5091,168 @@ async function toparlanmaUret(PXgelen) {
     ' · %>50g ' + sG[1].deger + ' · 6a dip ' + C.asamalar[0].sinyaller[1].deger + '% · RV20 ' + C.asamalar[1].sinyaller[0].deger + '% · Zweig ' + sG[0].deger + ' · momentum riski ' + (C.momentum_riski.yuksek ? 'YÜKSEK' : 'normal') + ' · sepet ' + C.sepet.length);
 }
 
+/* ── §531 ÇEYREK KARAR MOTORU XK050'YE GENİŞLEDİ (25 Eki) ───────────────────────────────────────────────────────────────
+   Kullanıcı: "çeyrek karar panosunu XK030 için yapmıştık, XK050'ye genişletebilir miyiz?" Katalog (karar-model.json) elle kurulmuştu:
+   30 XK030 + 2 izleme. Genişleme ELLE değil Actions'ta yapılır ve kendini sürdürür:
+     1 EVREN — endeks-uyeler.json XK050 üyesi olup katalogda olmayan her hisseye kayıt açılır (tohum varsa sektör notu + sürücü
+       eşlemesi, yoksa iskelet). Üyelikten çıkan "cikti" etiketi alır, silinmez (sicil korunur). BIST çeyreklik revizyonu kendiliğinden yansır.
+     2 VERİ — her modelde eksik olan doldurulur, elle girilmiş olana DOKUNULMAZ:
+       fiyat_son (Yahoo ham kapanış, her koşu) · fiyat_ceyrek_sonu (yeni kayıtta Yahoo DÜZELTİLMİŞ kapanış, tüm çeyrekler — bölünme
+       düzeltmesi gerekmez; eski kayıtta yalnız eksik SON iki çeyrek, HAM kapanışla — Fintables ham + bolunme düzeninden sapmasın) ·
+       sermaye_mn (faktor-evren adet → yoksa KAP arşivi Ödenmiş Sermaye, 1 ₺ nominal) · bilanco.beklenen (bist-takvim.json).
+     3 FAVÖK — KAP arşivinde olmayan yeni kodlar kap-arsiv-oncelik.json'un başına yazılır; §381 arşivi çekince §462b kararOrneklem
+       gerçek FAVÖK'ü kendisi doldurur (PD/FAVÖK bandı 4 çeyrekten sonra çizilir).
+   Konsensüs yeni hisselerde YOK (Fintables'a bağlanmıyoruz) → puan kartı fiyat mercekleriyle (göreli getiri · PD/FAVÖK bandı · hedef) çalışır. */
+const KARAR_TOHUM_050 = {
+  ARASE: { ad: 'Doğu Aras Enerji Yatırımları', sektor: 'Elektrik Dağıtım ve Perakende', tier: 'B', birincil: 'tufe',
+    surucu_plani: 'Dağıtım: RAB × reel getiri, TÜFE endeksli (EPDK) · perakende: son kaynak tedarik tarifesi − PTF maliyeti',
+    sektor_not: 'Doğu Anadolu\'da elektrik dağıtım bölgesi (düzenlenmiş: düzenlemeye esas varlık tabanı üzerinden reel getiri, TÜFE ile endeksli) + aynı bölgede görevli perakende satış. Dağıtım geliri enflasyonla taşınır; perakende marjı tarife ile PTF arasındaki farka duyarlıdır. Kayıp-kaçak oranı bölge için kritik bir operasyonel değişkendir.',
+    sur: [['tufe', 'gelir'], ['elektrik_ufe', 'gelir'], ['ptf', 'maliyet'], ['aofm', 'maliyet'], ['usdtry', 'kur']] },
+  ATAKP: { ad: 'Atakey Patates Gıda', sektor: 'Gıda (Dondurulmuş Ürün)', tier: 'C', birincil: 'usdtry',
+    surucu_plani: 'Dondurulmuş patates ürünleri · ihracat kuru · gıda fiyatları; ham patates fiyatı için serbest seri yok',
+    sektor_not: 'Dondurulmuş patates ürünleri üreticisi; yurt içi kanal (restoran zincirleri, perakende) ve ihracat. Ana girdi ham patatesin hasat dönemi fiyatı ve enerji maliyetidir; ihracat payı kur geçişini belirler.',
+    sur: [['tufe_gida', 'gelir'], ['ptf', 'maliyet'], ['eurusd', 'kur'], ['usdtry', 'kur']] },
+  AVPGY: { ad: 'Avrupakent GYO', sektor: 'GYO (Konut Projesi)', tier: 'B', birincil: 'kfe',
+    surucu_plani: 'Konut fiyatı (KFE) · konut satışı · inşaat maliyeti (İME konut) — proje teslimi geliri dalgalandırır',
+    sektor_not: 'İstanbul odaklı konut projesi geliştirici GYO. Gelir proje teslim takvimine bağlı olduğu için çeyrekten çeyreğe çok oynaktır; ön satış ve konut fiyatı ivmesi öncü göstergedir. Maliyet tarafı inşaat maliyet endeksi ve finansman faizidir.',
+    sur: [['kfe', 'gelir'], ['konut_toplam', 'gelir'], ['konut_ilk_el', 'gelir'], ['ime_konut', 'maliyet'], ['aofm', 'maliyet'], ['usdtry', 'kur']] },
+  AYDEM: { ad: 'Aydem Yenilenebilir Enerji', sektor: 'Elektrik Üretimi (Yenilenebilir)', tier: 'A', birincil: 'ptf',
+    surucu_plani: 'PTF (EPİAŞ) · $ cinsinden PTF · hidroloji/rüzgâr üretim hacmi (serbest seri yok)',
+    sektor_not: 'Hidroelektrik ağırlıklı, rüzgâr/güneş/jeotermal ile çeşitlenmiş yenilenebilir üretici. Gelir = üretim hacmi × satış fiyatı; YEKDEM dışındaki santraller doğrudan PTF\'ye maruzdur. Hidroloji (yağış) hacmi, PTF fiyatı belirler; borç yapısı döviz ağırlıklı olduğundan kur finansman giderini büyütür.',
+    sur: [['ptf', 'gelir'], ['ptf_usd', 'gelir'], ['elektrik_ufe', 'gelir'], ['usdtry', 'kur']] },
+  BASGZ: { ad: 'Başkent Doğalgaz Dağıtım', sektor: 'Doğalgaz Dağıtım', tier: 'B', birincil: 'epdk_tarife',
+    surucu_plani: 'EPDK dağıtım tarifesi (sistem kullanım bedeli, TÜFE z−2) · abone/tüketim (kış ağır)',
+    sektor_not: 'Ankara doğalgaz dağıtım lisansı (düzenlenmiş). Birim sistem kullanım bedeli EPDK metodolojisiyle TÜFE\'ye bağlı güncellenir; hacim mevsimseldir (1Ç ve 4Ç güçlü). Gaz alım fiyatı büyük ölçüde geçişlidir, marjı tarife belirler.',
+    sur: [['epdk_tarife', 'gelir'], ['tufe', 'gelir'], ['gaz_avrupa', 'maliyet'], ['usdtry', 'kur']] },
+  BETAE: { ad: 'Beta Enerji ve Teknoloji', sektor: 'Enerji Teknolojileri (Transformatör)', tier: 'C', birincil: 'bakir',
+    surucu_plani: 'Bakır · alüminyum (sargı/gövde) · ihracat kuru (80+ ülke) — elektrik çeliği için serbest seri yok',
+    sektor_not: 'Güç ve dağıtım transformatörleri ile anahtarlama ürünleri üreticisi (Adana), servis-bakım hizmeti; 80\'den fazla ülkeye ihracat. Marjı metal girdi (bakır, alüminyum, elektrik çeliği) fiyatları ile sözleşme fiyatı arasındaki zamanlama belirler; şebeke yatırımları ve ihracat talebi siparişi taşır.',
+    sur: [['bakir', 'maliyet'], ['aluminyum', 'maliyet'], ['eurusd', 'kur'], ['usdtry', 'kur']] },
+  BUCIM: { ad: 'Bursa Çimento', sektor: 'Çimento', tier: 'B', birincil: 'komur_termal',
+    surucu_plani: 'Çimento ÜFE (fiyat) · kömür/petkok ve elektrik (maliyet) · inşaat üretimi (hacim)',
+    sektor_not: 'Marmara bölgesinde çimento ve klinker üreticisi. Enerji (kömür/petkok, elektrik) maliyetin en büyük kalemidir; yurt içi fiyat ÜFE çimento ile izlenir, hacim konut ve altyapı inşaatına bağlıdır.',
+    sur: [['komur_termal', 'maliyet'], ['ptf_usd', 'maliyet'], ['cimento_ufe', 'gelir'], ['ufe_cimento', 'gelir'], ['ydufe_cimento', 'gelir'], ['insaat_uretim_bina', 'gelir'], ['usdtry', 'kur']] },
+  EGGUB: { ad: 'Ege Gübre', sektor: 'Gübre', tier: 'A', birincil: 'ure',
+    surucu_plani: 'Üre · DAP (gelir) · doğalgaz/TTF (maliyet) · gübre ÜFE',
+    sektor_not: 'Kimyevi gübre üretim ve ticareti, ayrıca liman işletmeciliği (Aliağa). Gübre fiyatları küresel üre/DAP ile, maliyet doğalgaz ile hareket eder; tarım sezonu 1Ç ve 3Ç talebini belirler. Liman geliri dövizlidir ve dengeleyicidir.',
+    sur: [['ure', 'gelir'], ['dap', 'gelir'], ['gubre_ufe', 'gelir'], ['ttf', 'maliyet'], ['gaz_avrupa', 'maliyet'], ['usdtry', 'kur']] },
+  EGPRO: { ad: 'Ege Profil', sektor: 'PVC Profil (Yapı)', tier: 'B', birincil: 'dce_pvc_usd',
+    surucu_plani: 'PVC reçine (maliyet) · plastik ÜFE (fiyat) · inşaat üretimi (hacim) · ihracat kuru',
+    sektor_not: 'PVC pencere ve kapı profili üreticisi; yurt içi yapı sektörü ve ihracat. Ana girdi PVC reçinesidir; marj reçine fiyatı ile profil fiyat ayarlaması arasındaki gecikmeye duyarlıdır. Hacim konut ve renovasyon talebine bağlıdır.',
+    sur: [['dce_pvc_usd', 'maliyet'], ['ufe_plastik', 'gelir'], ['insaat_uretim_bina', 'gelir'], ['eurusd', 'kur'], ['usdtry', 'kur']] },
+  ISDMR: { ad: 'İskenderun Demir ve Çelik', sektor: 'Demir Çelik (Entegre)', tier: 'A', birincil: 'hrc_abd',
+    surucu_plani: 'Çelik makası: yassı/uzun ürün fiyatı − demir cevheri, koklaşabilir kömür, hurda',
+    sektor_not: 'Entegre demir-çelik üreticisi (Erdemir grubu); yassı ve uzun ürün. FAVÖK büyük ölçüde çelik fiyatı ile cevher + kömür maliyeti arasındaki makastan gelir; ürün fiyatları dolar bazlıdır, maliyetin önemli kısmı ithal girdidir.',
+    sur: [['hrc_abd', 'gelir'], ['celik_ufe', 'gelir'], ['ufe_celik_2410', 'gelir'], ['ydufe_celik', 'gelir'], ['demir_cevheri', 'maliyet'], ['komur_termal', 'maliyet'], ['hurda_lme', 'maliyet'], ['usdtry', 'kur']] },
+  KARSN: { ad: 'Karsan Otomotiv', sektor: 'Otomotiv (Ticari Araç)', tier: 'C', birincil: 'eurusd',
+    surucu_plani: 'Avrupa toplu taşıma ihaleleri (elektrikli otobüs) · EUR/USD · sipariş akışı (KAP)',
+    sektor_not: 'Ticari araç ve otobüs üreticisi; elektrikli küçük/orta otobüslerde Avrupa ihracatı ağırlıklı. Gelir euro bazlı ihaleler ve teslim takvimine bağlıdır; batarya ve bileşen maliyeti marjı belirler.',
+    sur: [['eurusd', 'kur'], ['aluminyum', 'maliyet'], ['bakir', 'maliyet'], ['usdtry', 'kur']] },
+  KBORU: { ad: 'Kuzey Boru', sektor: 'Altyapı Boruları (Plastik/CTP)', tier: 'B', birincil: 'pe_pp',
+    surucu_plani: 'Polietilen reçine (maliyet) · plastik ÜFE · kamu altyapı (DSİ) ihaleleri',
+    sektor_not: 'HDPE, koruge, CTP ve PPR/PE-RT boru üreticisi (Aksaray, Balıkesir, Malatya, Gaziantep). Satışların büyük kısmı kamuya (DSİ sulama ve altyapı) ve kamu projelerindeki müteahhitlere; hammadde polimer reçinedir. Kamu yatırım bütçesi ve tahsilat hızı belirleyicidir; kaldıraç yüksektir.',
+    sur: [['pe_pp', 'maliyet'], ['dce_lldpe_usd', 'maliyet'], ['ufe_plastik', 'gelir'], ['insaat_uretim_bina', 'gelir'], ['usdtry', 'kur']] },
+  LMKDC: { ad: 'Limak Doğu Anadolu Çimento', sektor: 'Çimento', tier: 'B', birincil: 'komur_termal',
+    surucu_plani: 'Çimento ÜFE (fiyat) · kömür/petkok ve elektrik (maliyet) · bölgesel inşaat hacmi',
+    sektor_not: 'Doğu Anadolu\'da çimento ve klinker üreticisi. Bölgesel pazar (kamu altyapı, deprem bölgesi yeniden yapılanması) hacmi belirler; enerji maliyeti marjın ana sürücüsüdür.',
+    sur: [['komur_termal', 'maliyet'], ['ptf_usd', 'maliyet'], ['cimento_ufe', 'gelir'], ['ufe_cimento', 'gelir'], ['insaat_uretim_bina', 'gelir'], ['usdtry', 'kur']] },
+  MOPAS: { ad: 'Mopaş Marketçilik', sektor: 'Gıda Perakende', tier: 'B', birincil: 'tufe_gida',
+    surucu_plani: 'Gıda TÜFE (sepet fiyatı) · perakende gıda hacmi · asgari ücret (personel) · elektrik',
+    sektor_not: 'Süpermarket zinciri (Marmara ağırlıklı). Ciro gıda enflasyonu ve mağaza sayısıyla büyür; marjı personel (asgari ücret), kira ve enerji maliyetleri sıkıştırır. TMS-29 parasal kazanç/kayıp net kârı belirgin etkiler.',
+    sur: [['tufe_gida', 'gelir'], ['perakende_gida_hacim', 'gelir'], ['asgari_ucret_reel', 'maliyet'], ['ptf', 'maliyet'], ['usdtry', 'kur']] },
+  NETCD: { ad: 'Netcad Yazılım', sektor: 'Yazılım (CBS)', tier: 'C', birincil: 'usdtry',
+    surucu_plani: 'Kamu/belediye projeleri · lisans + hizmet · ihracat; dış sürücü yok',
+    sektor_not: 'Coğrafi bilgi sistemleri (CBS), mühendislik ve kent bilgi sistemi yazılımları; müşteri tabanı ağırlıkla kamu ve belediyeler, yurt dışı projeler de var. Gelir proje teslimine bağlı dalgalanır; maliyetin çoğu personeldir.',
+    sur: [['tufe', 'gelir'], ['asgari_ucret_reel', 'maliyet'], ['usdtry', 'kur']] },
+  NTGAZ: { ad: 'Naturelgaz', sektor: 'Doğalgaz (CNG/LNG Dağıtım)', tier: 'B', birincil: 'ttf',
+    surucu_plani: 'Doğalgaz alım fiyatı (BOTAŞ, TTF dolaylı) · satış fiyatı ayarlaması · hacim (sanayi)',
+    sektor_not: 'Boru hattı ulaşmayan sanayi ve konut müşterilerine sıkıştırılmış (CNG) ve sıvılaştırılmış (LNG) doğalgaz tedarik/dağıtım. Marj alım fiyatı ile satış fiyatı arasındaki farkla belirlenir; hacim sanayi üretimine bağlıdır.',
+    sur: [['ttf', 'maliyet'], ['gaz_avrupa', 'maliyet'], ['tufe', 'gelir'], ['usdtry', 'kur']] },
+  PARSN: { ad: 'Parsan Makina Parçaları', sektor: 'Makine Parçaları (Transmisyon)', tier: 'C', birincil: 'celik_ufe',
+    surucu_plani: 'Çelik girdi (maliyet) · ihracat kuru · ağır vasıta/iş makinesi talebi',
+    sektor_not: 'Ulaşım araçları, tarım ve iş makineleri için dişli kutusu, transmisyon aksamı ve makine-motor parçaları üreticisi (dövme + işleme). Ana girdi özel çeliktir; talep ağır vasıta ve iş makinesi döngüsüne bağlıdır.',
+    sur: [['celik_ufe', 'maliyet'], ['hurda_lme', 'maliyet'], ['eurusd', 'kur'], ['usdtry', 'kur']] },
+  POLHO: { ad: 'Polisan Holding', sektor: 'Kimya / Boya (Holding)', tier: 'C', birincil: 'brent_yh',
+    surucu_plani: 'Petrokimya girdi (boya/kimya) · inşaat ve sanayi talebi · liman gelirleri',
+    sektor_not: 'Boya (iştirak), yapı kimyasalları ve kimya ile liman işletmeciliği faaliyetleri olan holding. Boya ve kimya marjı petrokimya türevi girdilerin fiyatına, hacim inşaat ve sanayi talebine bağlıdır; konsolide sonuçta iştirak gelirleri belirgin yer tutar.',
+    sur: [['brent_yh', 'maliyet'], ['ufe_plastik', 'maliyet'], ['insaat_uretim_bina', 'gelir'], ['usdtry', 'kur']] },
+  SNGYO: { ad: 'Sinpaş GYO', sektor: 'GYO (Konut Projesi)', tier: 'B', birincil: 'kfe',
+    surucu_plani: 'Konut fiyatı (KFE) · konut satışı · inşaat maliyeti (İME konut) — teslim takvimi',
+    sektor_not: 'Konut ve karma proje geliştirici GYO (İstanbul ve Ankara ağırlıklı). Gelir teslimle tanındığı için çeyrekler arası dalgalanma büyüktür; ön satış hızı ve konut fiyat ivmesi öncüdür, finansman maliyeti marjı belirler.',
+    sur: [['kfe', 'gelir'], ['konut_toplam', 'gelir'], ['konut_ilk_el', 'gelir'], ['ime_konut', 'maliyet'], ['aofm', 'maliyet'], ['usdtry', 'kur']] },
+  VAKKO: { ad: 'Vakko Tekstil', sektor: 'Hazır Giyim Perakende (Lüks)', tier: 'B', birincil: 'tufe_giyim',
+    surucu_plani: 'Giyim TÜFE (fiyat) · perakende giyim hacmi · asgari ücret · kur (ithal ürün/turist)',
+    sektor_not: 'Üst segment hazır giyim, aksesuar ve perakende (mağaza + online). Ciro giyim fiyatları ve yüksek gelirli tüketici talebiyle hareket eder; sezon geçişleri (2Ç/4Ç) ve stok yönetimi marjı belirler.',
+    sur: [['tufe_giyim', 'gelir'], ['perakende_giyim_hacim', 'gelir'], ['asgari_ucret_reel', 'maliyet'], ['eurusd', 'kur'], ['usdtry', 'kur']] }
+};
+async function kararYahoo(kodlar, aralik) {
+  const PX = {}; let i = 0;
+  const tek = async kod => { try {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(kod + '.IS') + '?interval=1d&range=' + aralik, { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) return; const d = (await r.json())?.chart?.result?.[0]; if (!d) return;
+    const adj = d.indicators?.adjclose?.[0]?.adjclose || [], ham = d.indicators?.quote?.[0]?.close || [], ts = d.timestamp || [];
+    const o = { t: [], adj: [], ham: [] }; for (let j = 0; j < ts.length; j++) if (typeof ham[j] === 'number' && ham[j] > 0) { o.t.push(new Date(ts[j] * 1000).toISOString().slice(0, 10)); o.ham.push(ham[j]); o.adj.push(typeof adj[j] === 'number' && adj[j] > 0 ? adj[j] : ham[j]); }
+    if (o.t.length >= 20) PX[kod] = o; } catch (e) {} };
+  const isci = async () => { while (i < kodlar.length) { const k = kodlar[i++]; await tek(k); } };
+  await Promise.all(Array.from({ length: 6 }, isci)); return PX;
+}
+async function kararEvren() {
+  const dosya = 'karar-model.json'; if (!(await varMi(dosya))) return;
+  const M = await oku(dosya); const L = M.modeller || []; const byK = new Map(L.map(m => [m.kod, m]));
+  let uy = {}; try { uy = (await oku('endeks-uyeler.json')).uyeler || {}; } catch (e) {}
+  const X30 = new Set(uy.XK030 || []), X50 = new Set(uy.XK050 || []);
+  if (X50.size < 40 || X30.size < 25) { raporlar.push('### Karar evreni XK050 (§531) — ⏭ endeks üyeliği okunamadı (XK050 ' + X50.size + ')'); return; }
+  let SS = {}; try { SS = (await oku('sektor-surucu.json')).seriler || {}; } catch (e) {}
+  const surNesne = (k, rol) => { for (const m of L) for (const s of (m.surucu_seriler || [])) if (s.k === k) return Object.assign({}, s, { rol }); const v = SS[k]; return { k, rol, ad: (v && v.ad) || k }; };
+  const eklenen = [], cikan = [], donen = [];
+  for (const kod of X50) { if (byK.has(kod)) continue; const T = KARAR_TOHUM_050[kod];
+    const m = { kod, ad: T ? T.ad : kod, sektor: T ? T.sektor : '—', tier: T ? T.tier : 'C', tip: 'konsensus', evren: 'XK050',
+      surucu_plani: T ? T.surucu_plani : 'sürücü eşlemesi bekliyor', kaynak_notu: '§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)',
+      sektor_not: T ? T.sektor_not : 'XK050\'ye sonradan giren hisse — tohum notu ve sürücü eşlemesi yok; ortak iskelet (göreli getiri · PD/FAVÖK bandı) çalışır.',
+      surucu_seriler: (T ? T.sur : [['usdtry', 'kur']]).filter(([k]) => SS[k] || k === 'usdtry').map(([k, r]) => surNesne(k, r)), birincil: T ? T.birincil : 'usdtry',
+      sermaye_mn: null, favok: {}, fiyat_ceyrek_sonu: {}, fiyat_son: null, bolunme: null, konsensus: null, konsensus_gecmis: [], hedef_fiyat: null, bilanco: null, guidance: null, _eklendi: bugun };
+    L.push(m); byK.set(kod, m); eklenen.push(kod); }
+  /* üyelik etiketi: XK030 → (boş) · yalnız XK050 → 'XK050' · ikisinde de yok → 'cikti' (izleme kayıtlarına dokunulmaz) */
+  for (const m of L) { if (m.evren === 'izleme') continue;
+    const yeniE = X30.has(m.kod) ? null : (X50.has(m.kod) ? 'XK050' : 'cikti');
+    if ((m.evren || null) !== yeniE) { if (yeniE === 'cikti') cikan.push(m.kod); else if (m.evren === 'cikti') donen.push(m.kod);
+      if (yeniE) m.evren = yeniE; else delete m.evren; if (yeniE === 'cikti') m.cikti_tarih = bugun; else delete m.cikti_tarih; } }
+  /* veri doldurma */
+  let FE = {}; try { FE = (await oku('faktor-evren.json')).sirketler || {}; } catch (e) {}
+  let BT = {}; try { BT = (await oku('bist-takvim.json')).beklenen || {}; } catch (e) {}
+  let C = {}; try { C = (await oku('sektor-surucu.json')).ceyrek || {}; } catch (e) {}
+  const qs = Object.keys(C).filter(q => q >= '2024Q1' && C[q] && C[q].tam).sort(); const son2 = qs.slice(-2);
+  const qSon = q => { const y = +q.slice(0, 4), n = +q.slice(-1); return new Date(Date.UTC(y, n * 3, 0)).toISOString().slice(0, 10); };
+  const gerekYeni = L.filter(m => m.evren !== 'izleme' && (!m.fiyat_ceyrek_sonu || !Object.keys(m.fiyat_ceyrek_sonu).length)).map(m => m.kod);
+  const gerekHepsi = L.map(m => m.kod);
+  const PX3 = gerekYeni.length ? await kararYahoo(gerekYeni, '3y') : {};
+  const PX1 = await kararYahoo(gerekHepsi.filter(k => !PX3[k]), '6mo'); const PXa = Object.assign({}, PX1, PX3);
+  const kapanis = (o, d, alan) => { let a = -1; for (let j = 0; j < o.t.length; j++) { if (o.t[j] <= d) a = j; else break; } if (a < 0 || (Date.parse(d) - Date.parse(o.t[a])) / 864e5 > 7) return null; return o[alan][a]; };
+  let fSon = 0, fQ = 0, fSer = 0, fBil = 0; const oncelik = [];
+  for (const m of L) { const o = PXa[m.kod];
+    if (o) { const n = o.t.length - 1; m.fiyat_son = { tarih: o.t[n], fiyat: +o.ham[n].toFixed(4), kaynak: 'Yahoo (Actions §531)' }; fSon++;
+      m.fiyat_ceyrek_sonu = m.fiyat_ceyrek_sonu || {};
+      const yeni = !Object.keys(m.fiyat_ceyrek_sonu).length;
+      for (const q of (yeni ? qs : son2)) { if (m.fiyat_ceyrek_sonu[q] != null) continue; const v = kapanis(o, qSon(q), yeni ? 'adj' : 'ham'); if (v > 0) { m.fiyat_ceyrek_sonu[q] = +v.toFixed(4); fQ++; } }
+      if (yeni && Object.keys(m.fiyat_ceyrek_sonu).length) m._fiyat_notu = 'çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez'; }
+    if (!(m.sermaye_mn > 0)) { const F = FE[m.kod]; let adet = F && F.adet > 0 ? F.adet : null;
+      if (!adet) { try { const K = await oku('kap-arsiv/' + m.kod + '.json'); const dk = Object.keys(K.donemler || {}).sort().pop(); const dn = dk && K.donemler[dk];
+        for (const t of ((dn && dn.tablolar) || [])) { const s = (t.satirlar || []).find(s => s.xbrl === 'ifrs-full_IssuedCapital'); if (s && s.degerler && s.degerler[0] > 0) { adet = s.degerler[0] * ((dn.birim && dn.birim.carpan) || 1000); break; } } } catch (e) {} }
+      if (adet) { m.sermaye_mn = +(adet / 1e6).toFixed(1); fSer++; } }
+    const bt = BT[m.kod]; if (bt && (!m.bilanco || m.bilanco.beklenen !== bt)) { m.bilanco = { beklenen: bt, kaynak: 'bist-takvim.json' }; fBil++; }
+    if (m.tip !== 'konsensus_banka' && !(await varMi('kap-arsiv/' + m.kod + '.json'))) oncelik.push(m.kod); }
+  /* KAP arşivi önceliği: arşivde olmayan katalog kodları listenin BAŞINA */
+  let oncelikYaz = 0;
+  if (oncelik.length) { try { const eo = await oku('kap-arsiv-oncelik.json'); const liste = Array.isArray(eo) ? eo : (eo.kodlar || []); const yeniL = [...oncelik.filter(k => !liste.includes(k)), ...liste];
+    if (yeniL.length !== liste.length) { oncelikYaz = yeniL.length - liste.length; if (Array.isArray(eo)) await yaz('kap-arsiv-oncelik.json', yeniL); else { eo.kodlar = yeniL; eo._531 = bugun + ': karar kataloğundaki (XK050) arşivde olmayan ' + oncelikYaz + ' kod başa alındı — §462b gerçek FAVÖK bunlardan okunur.'; await yaz('kap-arsiv-oncelik.json', eo); } } } catch (e) {} }
+  M._aciklama = 'Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.';
+  M._531 = { guncelleme: bugun, xk050: X50.size, katalog: L.length, eklenen_toplam: L.filter(m => m._eklendi).length };
+  M.modeller = L;
+  await yaz(dosya, M); if (eklenen.length || cikan.length || fQ || fSer) degisenler.push('karar evreni (' + [eklenen.length ? '+' + eklenen.length + ' XK050' : '', cikan.length ? cikan.length + ' çıktı' : '', fQ ? fQ + ' çeyrek fiyatı' : ''].filter(Boolean).join(' · ') + ')');
+  raporlar.push('### Karar evreni XK050 (§531) — ✓ katalog ' + L.length + ' (XK050 ' + X50.size + ')' + (eklenen.length ? ' · eklendi: ' + eklenen.join(', ') : '') + (cikan.length ? ' · üyelikten çıktı: ' + cikan.join(', ') : '') + (donen.length ? ' · geri döndü: ' + donen.join(', ') : '') +
+    ' · fiyat_son ' + fSon + ' · çeyrek fiyatı +' + fQ + ' · sermaye +' + fSer + ' · bilanço tarihi ' + fBil + (oncelik.length ? ' · KAP arşivi bekleyen ' + oncelik.length + ' (' + oncelik.slice(0, 12).join(', ') + (oncelik.length > 12 ? '…' : '') + ')' + (oncelikYaz ? ', öncelik listesine +' + oncelikYaz : '') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -7057,6 +7219,7 @@ async function bultenKesif() {
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('Faktör karnesi (§529)', ()=>fmKarneUret(FM_PX_SON));   /* §529: nokta-zaman skor → sonraki getiri · sicil ayrıştırması */
     await olcKos('Toparlanma monitörü (§530)', ()=>toparlanmaUret(FM_PX_SON));   /* §530: genişlik · Zweig itkisi · kapitülasyon · RV20 · CDS · dönüş sepeti */
+    await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* §531: XK050 üyeliği → katalog · fiyat/sermaye/bilanço tarihi · KAP arşiv önceliği (arşivden ÖNCE) */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
     await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());   /* §499: KAP arşivi çekirdek FAVÖK ÷ faaliyet raporu tonajı (EREGL/KRDMD) */   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
@@ -7066,6 +7229,7 @@ async function bultenKesif() {
   }
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
+  if (KSET.has('karar') || KSET.has('kaparsiv')) await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* elle: --katman=karar (kaparsiv ile birlikte: önce öncelik, sonra arşiv) */
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
   if (KSET.has('kaparsiv') || KSET.has('multiple')) await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());
