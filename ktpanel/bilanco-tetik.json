@@ -1,5 +1,5 @@
 {
- "tarih": "2026-10-24",
+ "tarih": "2026-10-25",
  "kodlar": [
   "AKHAN",
   "AKYHO",
@@ -86,6 +86,7 @@
   "POLHO",
   "QUAGR",
   "REEDR",
+  "RODRG",
   "RUBNS",
   "SAFKR",
   "SARKY",
@@ -114,7 +115,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 112,
+ "sayi": 113,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -388,7 +389,8 @@
   "METRO": "2026-10-23",
   "DENIZ": "2026-10-23",
   "MARMR": "2026-10-23",
-  "SOHOE": "2026-10-23"
+  "SOHOE": "2026-10-23",
+  "RODRG": "2026-10-25"
  },
  "evren_disi": [
   "ADESE",
@@ -554,9 +556,7 @@
   "YYAPI"
  ],
  "evren_disi_sayi": 161,
- "pencere_sayi": 4,
- "dusen_son": [
-  "KLSYN"
- ],
- "guncelleme": "2026-10-24 13:23 UTC — otomatik (KAP FR · kümülatif §299)"
+ "pencere_sayi": 1,
+ "dusen_son": [],
+ "guncelleme": "2026-10-25 09:16 UTC — otomatik (KAP FR · kümülatif §299)"
 }

@@ -5,9 +5,9 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-10-23",
+ "tarih": "2026-10-25",
  "donem": "3Ç26",
- "adet": 212,
+ "adet": 211,
  "beklenen": {
   "HATSN": "2026-10-21",
   "GOODY": "2026-10-22",
@@ -203,7 +203,6 @@
   "PLTUR": "2026-11-09",
   "QUAGR": "2026-11-09",
   "REEDR": "2026-11-09",
-  "RODRG": "2026-11-09",
   "SARKY": "2026-11-09",
   "SDTTR": "2026-11-09",
   "SEGMN": "2026-11-09",
@@ -237,7 +236,8 @@
   "EREGL": "2026-10-22",
   "ISDMR": "2026-10-22",
   "EBEBK": "2026-10-22",
-  "SOHOE": "2026-10-23"
+  "SOHOE": "2026-10-23",
+  "RODRG": "2026-10-24"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {

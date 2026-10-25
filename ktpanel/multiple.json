@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-24",
+ "guncelleme": "2026-10-25",
  "fiyat_tarihi": "2026-10-23",
  "not": "Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:\"eski\" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.",
  "hisseler": [
@@ -1754,5 +1754,5 @@
   "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
  },
  "kaynak": "KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496",
- "bilanco_guncelleme": "2026-10-24"
+ "bilanco_guncelleme": "2026-10-25"
 }
