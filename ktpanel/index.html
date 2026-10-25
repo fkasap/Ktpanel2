@@ -300,6 +300,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="note">Dokuz bileşenli 0–100 skor: <b>küresel</b> (VIX), <b>ülke riski</b> (CDS seviyesi + son 1 aydaki YÖNÜ), <b>trend</b> (XU100 1 ve 3 ay), <b>piyasa yapısı</b> (52 haftalık zirveden uzaklık · kaç sektörün artıda olduğu · gerçekleşen oynaklık) ve <b>anlık</b> günlük hareket (yalnız %5). Tek günün yönü artık skoru taşımaz; bir ayda %15 düşüp son gün yatay kapanan piyasa "nötr" görünmez. Okuma: uçlar (0–25 / 75–100) çoğu zaman dönüş bölgesidir — "başkaları korkarken açgözlü ol" kuralı ancak trend ve genişlik dönmeye başlayınca uygulanabilir; skor tek başına alım sinyali değildir, teyit ister.</div>
 </div>
 <div class="card" style="margin-top:10px">
+  <div class="lbl">TOPARLANMA MONİTÖRÜ <span class="thin">(dönüş başladı mı?)</span> <span class="tag" id="tpTag">—</span></div>
+  <div id="tpBody" style="margin-top:4px"><div class="sub">hesaplanıyor…</div></div>
+  <div class="note" style="font-size:10px">Üç aşama sırayla okunur: <b>1 baskı tükeniyor</b> (kapitülasyon günü ya da 6 aylık dip yapan hisse sayısının daralması; fon tasfiye listesindeki hisselerin evrenin gerisinde kalmayı bırakması) → <b>2 oynaklık sakinleşiyor</b> (eşit ağırlıklı evrenin 20 günlük oynaklığı tepesinin dörtte üçünün altına iner, CDS daralır) → <b>3 katılım geldi</b> (Zweig 1986 genişlik itkisi: yükselen hisse oranının 10 günlük üssel ortalaması 10 iş günü içinde 0,40'ın altından 0,615'in üstüne çıkar; ya da 50 günlük ortalamasının üstündeki hisse oranı %20'nin altından %50'nin üstüne döner). İlk iki aşama "dip yakın olabilir" der, yalnız üçüncüsü dönüşü teyit eder. Evren: XKTUM üyeleri, eşit ağırlık. Kaynak: Yahoo düzeltilmiş kapanış + hacim (Actions §530) · cds.json · fon-portfoy.json · fm.json.</div>
+</div>
+<div class="card" style="margin-top:10px">
   <div class="lbl">GLOBAL RİSK BAROMETRESİ <span class="tag snap">VIX·DXY·BRENT·10Y·30Y·CDS CANLI (§421)</span></div>
   <div class="grid mac" style="margin-bottom:6px">
     <div><div class="lbl" style="margin:0">VIX (korku)</div><div class="val" id="vixV">16,72 <span class="sub" style="display:inline">+%0,78</span></div></div>
@@ -1946,7 +1951,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261025b"></script>
+<script src="/app.js?v=20261025c"></script>
 <script src="/ajan.js?v=20261025a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

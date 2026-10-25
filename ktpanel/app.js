@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025b';   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025c';   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2117,6 +2117,48 @@ function fmkEwSeri(){
   if(!b) return null;
   const m=new Map(); S.forEach(p=>{ if(p.d>=b.d) m.set(p.d, +(((1+p.ew/100)/(1+b.ew/100)-1)*100).toFixed(3)); });
   return m;
+}
+
+/* ---- §530 TOPARLANMA MONİTÖRÜ (25 Eki) ----
+   Risk barometresi "ne kadar korkuluyor" der; bu kart "dönüş BAŞLADI MI" diye sorar. Hesap Actions'ta (tazele §530, toparlanma.json):
+   üç aşama (baskı → oynaklık → katılım) + dönüş sepeti. Dibi günü gününe yakalamaz — dönüşün kanıt biriktirdiği anı görünür kılar.
+   Kart üretmez, okur; eşikler dosyanın içinde ve kartın altında yazılı. */
+async function toparlanmaInit(){
+  const el=$('tpBody'); if(!el) return;
+  let D=null; try{ const r=await fetch('/toparlanma.json',{cache:'no-store'}); D=r.ok?await r.json():null; }catch(e){}
+  if(!D||!Array.isArray(D.asamalar)){ el.innerHTML='<div class="sub">Monitör henüz üretilmedi — Actions\'ın bir sonraki fiyat koşusu toparlanma.json\'u yazacak (§530).</div>'; return; }
+  const tg=$('tpTag'); if(tg) tg.textContent='SON '+fmkTar(D.son).toLocaleUpperCase('tr-TR')+' · '+D.evren+' HİSSE';
+  const AD=['Düşüş sürüyor','Baskı tükeniyor','Oynaklık sakinleşiyor','Dönüş teyitli'], RENK=['var(--down)','#E8933B','#3D7BD9','var(--up)'];
+  const serit='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:4px 0 10px">'+AD.map((a,i)=>{ const akt=i===D.asama, gecti=i<D.asama;
+    return '<div style="border-radius:6px;padding:6px 8px;font-size:10px;border:1px solid '+(akt?RENK[i]:'var(--line)')+';background:'+(akt?RENK[i]:(gecti?'var(--mmL)':'transparent'))+';color:'+(akt?'#fff':'var(--text)')+'"><b style="font-family:var(--mono)">'+i+'</b> · '+a+'</div>'; }).join('')+'</div>';
+  const durum=t=>t===true?'<span class="up">✓</span>':(t===false?'<span class="thin">○</span>':'<span class="thin">—</span>');
+  const deger=s=>{ if(s.deger==null) return '—'; if(typeof s.deger==='string') return esc(s.deger); const b=s.birim==='%'?'%':(s.birim==='bp'?' bp':(s.birim==='puan'?' puan':''));
+    return (s.birim==='bp'||s.birim==='puan')&&s.deger>0?'+'+trN(s.deger,s.birim==='bp'?0:1)+b:trN(s.deger,(s.birim==='bp'?0:(s.birim?1:3)))+b; };
+  const tablo='<table aria-label="Toparlanma sinyalleri"><thead><tr><th>Aşama · sinyal</th><th class="num">Şu an</th><th>Eşik</th><th></th></tr></thead><tbody>'+
+    D.asamalar.map(A=>'<tr style="border-top:1px solid var(--line2)"><td colspan="3"><b>'+A.no+' · '+esc(A.ad)+'</b></td><td>'+durum(A.tamam)+'</td></tr>'+
+      A.sinyaller.map(s=>'<tr><td style="padding-left:14px">'+esc(s.ad)+(s.not?' <span class="thin" style="font-size:9px">'+esc(s.not)+'</span>':'')+'</td><td class="num">'+deger(s)+(s.tepe!=null?' <span class="thin" style="font-size:9px">('+(A.no===3?'dip ':'tepe ')+trN(s.tepe,1)+'%)</span>':'')+'</td><td class="sub" style="font-size:9.5px">'+esc(s.esik)+'</td><td>'+durum(s.tamam)+'</td></tr>').join('')).join('')+'</tbody></table>';
+  // grafik: eşit ağırlıklı evren (çizgi, sol ölçek) + %>50g (alan, 0–100) + 6 aylık dip oranı (kırmızı ince)
+  const S=D.seri||[]; let graf='';
+  if(S.length>=20){ const W=700,H=150, X=i=>5+i/(S.length-1)*(W-10);
+    const ev=S.map(p=>p.ew).filter(v=>v!=null), mn=Math.min(...ev), mx=Math.max(...ev), rg=(mx-mn)||1, Ye=v=>H-8-((v-mn)/rg)*(H-24), Yp=v=>H-8-(v/100)*(H-24);
+    const cizgi=(f,Y)=>S.map((p,i)=>f(p)==null?null:X(i).toFixed(1)+','+Y(f(p)).toFixed(1)).filter(Boolean).join(' ');
+    const alan='5,'+(H-8)+' '+cizgi(p=>p.ab50,Yp)+' '+X(S.length-1).toFixed(1)+','+(H-8);
+    graf='<div class="chbox" style="height:150px;margin:8px 0 2px"><svg viewBox="0 0 700 150" preserveAspectRatio="none" style="width:100%;height:100%">'+
+      '<polygon points="'+alan+'" fill="rgba(48,186,143,.14)" stroke="none"/>'+
+      [20,50].map(v=>'<line x1="5" x2="695" y1="'+Yp(v).toFixed(1)+'" y2="'+Yp(v).toFixed(1)+'" stroke="#C8D8D0" stroke-dasharray="4 3" stroke-width="1"/><text x="690" y="'+(Yp(v)-2).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="#8FA098">%'+v+'</text>').join('')+
+      '<polyline points="'+cizgi(p=>p.dip,Yp)+'" fill="none" stroke="#DE4B5E" stroke-width="1" opacity=".75"/>'+
+      '<polyline points="'+cizgi(p=>p.ew,Ye)+'" fill="none" stroke="#152720" stroke-width="2"/>'+
+      '<text x="8" y="12" font-family="IBM Plex Mono" font-size="9" fill="#152720">Eşit ağ. XKTUM evreni</text><text x="150" y="12" font-family="IBM Plex Mono" font-size="9" fill="#128A66">%&gt;50g ortalama (alan)</text><text x="295" y="12" font-family="IBM Plex Mono" font-size="9" fill="#DE4B5E">6 aylık dip yapanlar %</text>'+
+      '</svg></div><div class="sub" style="font-size:9px;display:flex;justify-content:space-between"><span>'+fmkTar(S[0].d)+'</span><span>'+fmkTar(S[S.length-1].d)+'</span></div>'; }
+  const M=D.momentum_riski||{};
+  const mom='<div class="note'+(M.yuksek?' warn':'')+'" style="font-size:10px;margin-top:8px"><b>Momentum riski: '+(M.yuksek?'YÜKSEK':'normal')+'</b> — eşit ağırlıklı evren 6 ayda '+fmkY(M.ew6a,1)+'%, RV20 %'+trN(M.rv20||0,1)+' (yıllık medyan %'+trN(M.rv_medyan||0,1)+'). '+
+    (M.yuksek?'Daniel & Moskowitz (2016) koşulu: ayı piyasası + yüksek oynaklık. Bu rejimde dönüş gelirse önden en çok dövülmüş, yüksek betalı hisseler koşar; faktör modelinin şimdiki savunmacı eğimi (değer + düşük risk) o dalgada geride kalabilir. Teyit (aşama 3) gelince eğimi gözden geçirmek için hazırlıklı ol.':'Koşul yok; faktör eğimi için özel bir dönüş riski görünmüyor.')+'</div>';
+  const sep=(D.sepet||[]).length?'<div class="lbl" style="margin:10px 0 4px">DÖNÜŞ SEPETİ <span class="thin">(son 3 ayda en çok düşen + yüksek beta · kalite z ≥ −0,25 · XKTUM ağırlığı ≥ %0,05)</span></div>'+
+    '<table aria-label="Dönüş sepeti"><thead><tr><th>Hisse</th><th>Sektör</th><th class="num">3 ay</th><th class="num">6a zirveden</th><th class="num">20g dipten</th><th class="num">Beta</th><th class="num">Kalite z</th></tr></thead><tbody>'+
+    D.sepet.map(x=>'<tr><td><b>'+esc(x.k)+'</b>'+(x.baski?' <span class="tag" style="background:#E8933B;color:#fff" title="§452 tasfiye fonlarının elindeydi — zorunlu satış baskısı">TASFİYE</span>':'')+'</td><td class="sub">'+esc(SEKTOR_TR[x.s]||x.s||'—')+'</td><td class="num down">'+fmkY(x.r3,1)+'%</td><td class="num">'+fmkY(x.dd,1)+'%</td><td class="num '+(x.dipten>0?'up':'')+'">'+fmkY(x.dipten,1)+'%</td><td class="num">'+trN(x.beta,2)+'</td><td class="num">'+fmkY(x.kalite,2)+'</td></tr>').join('')+'</tbody></table>'+
+    '<div class="sub" style="font-size:9.5px;margin-top:3px">Bu bir alım listesi değil, <b>hazırlık listesi</b>dir: dönüş teyit edilirse ilk dalgayı genelde bu profil taşır. Teyitten önce bu hisseler düşmeye devam edebilir; kalite filtresi ilk dalgadan sonra geri düşen "çöp ralli" adaylarını ayıklamak içindir.</div>':'';
+  const gec=(D.gecmis||[]).slice(-1)[0];
+  el.innerHTML=serit+tablo+graf+mom+sep+(D.asama_degisim?'<div class="sub" style="font-size:9.5px;margin-top:6px">Son aşama değişimi: '+esc(D.asama_degisim)+'</div>':'');
 }
 
 /* ---- Hisse fiyatları otomatik tazeleme (panel açılışı + Portföy sekmesi) ---- */
@@ -8859,6 +8901,7 @@ async function boot(){
     ['MB damga kartları canlı doğrulama', mbKartCanli],
     ['Gündem özeti (otomatik)', ()=>setTimeout(gundemCanli,3000)],
     ['Risk barometresi ek veriler', ()=>setTimeout(riskBaroEkYukle,2000)],
+    ['Toparlanma monitörü', ()=>setTimeout(toparlanmaInit,2600)],   /* §530 */
     ['Taktik duruş modeli (kurallı)', ()=>setTimeout(taktikModel,4500)],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
@@ -8961,6 +9004,7 @@ async function boot(){
        hala denetleniyor; DOLULUK sekme/asenkron sonrasi konusudur. */
     ['Reel getiri','reelAtifBody', true],
     ['Getiri atfı','atifBody'],['Risk metrikleri','riskMetBody'],['Likidite','likiditeBody'],
+    ['Toparlanma monitörü','tpBody'],
     ['Model karnesi','fmKarneBody', true],
     ['Sicil ayrıştırması','fmAyrBody', true],   /* §529: t6 açılınca dolar (fm-karne.json) */
     ['Endeksten ayrışma','ayrBody', true]        /* ← TEMBEL: t3 açılınca dolar */
