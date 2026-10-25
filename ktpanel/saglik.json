@@ -1,17 +1,17 @@
 {
- "guncelleme": "2026-10-24T21:21:11Z",
+ "guncelleme": "2026-10-25T07:13:48Z",
  "surum": "§509",
- "sure_sn": 340,
+ "sure_sn": 342,
  "ozet": {
   "kritik": 0,
   "uyari": 4,
-  "bilgi": 8,
+  "bilgi": 9,
   "yeni": 0,
-  "duzelen": 6
+  "duzelen": 0
  },
  "katmanlar": {
   "seriler": {
-   "sure": 10,
+   "sure": 6,
    "not": "40 seri (app.js'ten keşfedildi)"
   },
   "dosyalar": {
@@ -19,7 +19,7 @@
    "not": "27 otomatik dosya izlendi · 17 elle güncellenen (otomasyon borcu)"
   },
   "kopruler": {
-   "sure": 51,
+   "sure": 61,
    "not": "31 uç · 28 geçti"
   },
   "tutarlilik": {
@@ -27,7 +27,7 @@
    "not": "2 kural"
   },
   "ekran": {
-   "sure": 272,
+   "sure": 268,
    "not": "38 sekme/alt sekme"
   }
  },
@@ -39,7 +39,7 @@
    "baslik": "Ekranda eski damga (mk-yorum): politika faizi %37 yazıyor, canlı %36",
    "ayrinti": "“Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -49,7 +49,7 @@
    "baslik": "market · SEKTÖR serisi (RS tabanı) — uyari",
    "ayrinti": "13/15 sektörde 1A serisi YOK — RS damgalı tabandan (§114). BAR SAYILARI: XKMYA:1 XGIDA:1 XMANA:1 XUSIN:67 XHOLD:1 XELKT:1 XUHIZ:1 XILTM:1 XINSA:1 XUTEK:1 XSGRT:1 XTRZM:1 XGMYO:1 XUMAL:1 XBANK:67 | varyant: yok",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -59,7 +59,7 @@
    "baslik": "tefas · AUM/pay (mod=gnl) — uyari",
    "ayrinti": "liste boş",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -69,36 +69,46 @@
    "baslik": "usnews · AV haber akışı — uyari",
    "ayrinti": "ok:false — Alpha Vantage kota/limit mesajı döndü — birkaç saat sonra normale döner",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
-   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|MODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 leht",
+   "id": "ekran:t16·Asya-Pasifik|Kaynak: HKMA Monthly Bulletin · Actions yedeği (2026-10-24) ",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "t2·Makro Veriler › Haftalık Yorum: MODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok). Eski tez ÜSTÜ diyordu (fabrika metni (Ağu 2026, elle)) — veriler bunu desteklemiyor.",
+   "baslik": "t16·Asya-Pasifik: Kaynak: HKMA Monthly Bulletin · Actions yedeği (2026-10-24) — canlı HKMA çağrısı düştü (HTTP 405); bülten aylık olduğundan değer güncel ay için geçerli. §516",
    "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
-   "ilk": "2026-10-24",
+   "ilk": "2026-10-25",
    "gun": 0,
    "yeni": true
   },
   {
-   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|MODEL: ÜSTÜ — sinyal toplamı +2 (3/4 sinyal ölçüldü · 2 leht",
+   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|MODEL: NÖTR — sinyal toplamı -1 (5/6 sinyal ölçüldü · 0 leht",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "t2·Makro Veriler › Haftalık Yorum: MODEL: ÜSTÜ — sinyal toplamı +2 (3/4 sinyal ölçüldü · 2 lehte, 0 aleyhte, 1 nötr, 1 veri yok). Eski tezle aynı yönde.",
+   "baslik": "t2·Makro Veriler › Haftalık Yorum: MODEL: NÖTR — sinyal toplamı -1 (5/6 sinyal ölçüldü · 0 lehte, 1 aleyhte, 4 nötr, 1 veri yok). Eski tezle aynı yönde.",
    "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
-   "ilk": "2026-10-24",
+   "ilk": "2026-10-25",
    "gun": 0,
    "yeni": true
   },
   {
-   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 00:22 Yerli Hisse (",
+   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|MODEL: NÖTR — sinyal toplamı 0 (4/5 sinyal ölçüldü · 0 lehte",
    "seviye": "bilgi",
    "katman": "ekran",
-   "baslik": "t2·Makro Veriler › Haftalık Yorum: TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 00:22 Yerli Hisse (BIST) vs XKTUM / XK100↓ALTIMODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok)",
+   "baslik": "t2·Makro Veriler › Haftalık Yorum: MODEL: NÖTR — sinyal toplamı 0 (4/5 sinyal ölçüldü · 0 lehte, 0 aleyhte, 4 nötr, 1 veri yok). Eski tez ALTI diyordu (fabrika metni (Ağu 2026, elle)) — veriler bunu desteklemiyor.",
    "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
-   "ilk": "2026-10-24",
+   "ilk": "2026-10-25",
+   "gun": 0,
+   "yeni": true
+  },
+  {
+   "id": "ekran:t2·Makro Veriler › Haftalık Yorum|TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 10:15 Yerli Hisse (",
+   "seviye": "bilgi",
+   "katman": "ekran",
+   "baslik": "t2·Makro Veriler › Haftalık Yorum: TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 10:15 Yerli Hisse (BIST) vs XKTUM / XK100↓ALTIMODEL: ALTI — sinyal toplamı -2 (6/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 2 nötr). Eski tez Ü",
+   "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
+   "ilk": "2026-10-25",
    "gun": 0,
    "yeni": true
   },
@@ -109,7 +119,7 @@
    "baslik": "Elle kart 90 gündür güncellenmedi (t18 · AVRUPA MEGA-CAP)",
    "ayrinti": "“FİYAT ARAŞTIRMA 27 TEM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -119,7 +129,7 @@
    "baslik": "Elle kart 46 gündür güncellenmedi (t16 · BOK & PİYASA)",
    "ayrinti": "“9 EYL · ECOS DOĞRULAMALI” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -129,7 +139,7 @@
    "baslik": "Elle kart 45 gündür güncellenmedi (t18 · ECB & POLİTİKA)",
    "ayrinti": "“10 EYL · İKİNCİ ARTIRIM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -137,9 +147,9 @@
    "seviye": "bilgi",
    "katman": "ekran",
    "baslik": "Elle kart 90 gündür güncellenmedi (t2 · GETİRİ EĞRİSİ GÖRSELİ)",
-   "ayrinti": "“TR·ABD 2026-10-24 · DE·JP 3A/10Y (AYLIK) · şekil 27 TEM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
+   "ayrinti": "“TR·ABD 2026-10-25 · DE·JP 3A/10Y (AYLIK) · şekil 27 TEM” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   },
   {
@@ -149,7 +159,7 @@
    "baslik": "Elle kart 62 gündür güncellenmedi (t2 · HAFTALIK ARAŞTIRMA NOTU)",
    "ayrinti": "“24–30 AĞU · REPO REJİMİ DÖNDÜ” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "yeni": false
   }
  ],
@@ -361,20 +371,20 @@
    "yas": 2,
    "limit": 7
   },
-  "TP.APIFON2.TOP": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 986548.9,
-   "tarih": "2026-10-23",
-   "yas": 2,
-   "limit": 7
-  },
   "TP.APIFON3": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
    "son": -529823.9,
+   "tarih": "2026-10-23",
+   "yas": 2,
+   "limit": 7
+  },
+  "TP.APIFON2.TOP": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 986548.9,
    "tarih": "2026-10-23",
    "yas": 2,
    "limit": 7
@@ -399,15 +409,6 @@
    "limit": 98,
    "yy": -19.56
   },
-  "TP.BISTTLREF.ORAN": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 35.8498,
-   "tarih": "2026-10-23",
-   "yas": 2,
-   "limit": 7
-  },
   "TP.ENFBEK.IYA12ENF": {
    "rol": "birincil",
    "durum": "ok",
@@ -417,6 +418,15 @@
    "yas": 24,
    "limit": 98,
    "yy": -12.4
+  },
+  "TP.BISTTLREF.ORAN": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 35.8498,
+   "tarih": "2026-10-23",
+   "yas": 2,
+   "limit": 7
   },
   "TP.ENFBEK.PKA12ENF": {
    "rol": "birincil",
@@ -439,15 +449,6 @@
    "yy": 30.65,
    "tarihsel": true
   },
-  "TP.DK.USD.A.YTL": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 49.5389,
-   "tarih": "2026-10-23",
-   "yas": 2,
-   "limit": 7
-  },
   "TP.HPBITABLO5.1": {
    "rol": "birincil",
    "durum": "ok",
@@ -456,6 +457,15 @@
    "tarih": "2026-10-16",
    "yas": 9,
    "limit": 21
+  },
+  "TP.DK.USD.A.YTL": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 49.5389,
+   "tarih": "2026-10-23",
+   "yas": 2,
+   "limit": 7
   },
   "TP.HPBITABLO5.11": {
    "rol": "birincil",
@@ -522,20 +532,20 @@
    "yas": 9,
    "limit": 21
   },
-  "TP.KTF12": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 41.5,
-   "tarih": "2026-10-16",
-   "yas": 9,
-   "limit": 21
-  },
   "TP.KTF17": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
    "son": 48.44,
+   "tarih": "2026-10-16",
+   "yas": 9,
+   "limit": 21
+  },
+  "TP.KTF12": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 41.5,
    "tarih": "2026-10-16",
    "yas": 9,
    "limit": 21
@@ -567,15 +577,6 @@
    "yas": 2,
    "limit": 7
   },
-  "TP.TRY.MT01": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 42.74,
-   "tarih": "2026-10-16",
-   "yas": 9,
-   "limit": 21
-  },
   "TP.PY.P02.1H": {
    "rol": "birincil",
    "durum": "ok",
@@ -584,6 +585,15 @@
    "tarih": "2026-10-23",
    "yas": 2,
    "limit": 7
+  },
+  "TP.TRY.MT01": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 42.74,
+   "tarih": "2026-10-16",
+   "yas": 9,
+   "limit": 21
   },
   "TP.PY.P02.ON": {
    "rol": "birincil",
@@ -603,15 +613,6 @@
    "yas": 9,
    "limit": 21
   },
-  "TP.TRY.MT03": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 42.53,
-   "tarih": "2026-10-16",
-   "yas": 9,
-   "limit": 21
-  },
   "TP.TUFE1YI.T1": {
    "rol": "birincil",
    "durum": "ok",
@@ -621,6 +622,15 @@
    "yas": 54,
    "limit": 98,
    "yy": 27.38
+  },
+  "TP.TRY.MT03": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 42.53,
+   "tarih": "2026-10-16",
+   "yas": 9,
+   "limit": 21
   },
   "TP.TUFE1YI.T105": {
    "rol": "birincil",
@@ -652,16 +662,6 @@
    "limit": 98,
    "yy": 29.7
   },
-  "TP.TUFE1YI.T16": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 7050.02,
-   "tarih": "2026-09-01",
-   "yas": 54,
-   "limit": 98,
-   "yy": 24.89
-  },
   "TP.TUFE1YI.T49": {
    "rol": "birincil",
    "durum": "ok",
@@ -671,6 +671,16 @@
    "yas": 54,
    "limit": 98,
    "yy": 116.75
+  },
+  "TP.TUFE1YI.T16": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 7050.02,
+   "tarih": "2026-09-01",
+   "yas": 54,
+   "limit": 98,
+   "yy": 24.89
   },
   "TP.TUFE1YI.T52": {
    "rol": "birincil",
@@ -916,45 +926,45 @@
  ],
  "borc": [
   {
+   "dosya": "degerleme.json",
+   "son": "2026-07-31",
+   "gun": 86,
+   "bot": 0
+  },
+  {
    "dosya": "sukuk-ihrac.json",
    "son": "2026-07-30",
    "gun": 86,
    "bot": 0
   },
   {
-   "dosya": "degerleme.json",
-   "son": "2026-07-31",
-   "gun": 85,
-   "bot": 0
-  },
-  {
    "dosya": "yevren.json",
    "son": "2026-08-03",
-   "gun": 82,
+   "gun": 83,
    "bot": 0
   },
   {
    "dosya": "guidance.json",
    "son": "2026-08-25",
-   "gun": 60,
+   "gun": 61,
    "bot": 0
   },
   {
    "dosya": "pyssektor.json",
    "son": "2026-08-25",
-   "gun": 60,
+   "gun": 61,
    "bot": 0
   },
   {
    "dosya": "inceleme-ai.json",
    "son": "2026-08-28",
-   "gun": 57,
+   "gun": 58,
    "bot": 0
   },
   {
    "dosya": "yabanci.json",
    "son": "2026-10-02",
-   "gun": 22,
+   "gun": 23,
    "bot": 0
   },
   {
@@ -972,8 +982,14 @@
   {
    "dosya": "kap-arsiv-oncelik.json",
    "son": "2026-10-19",
-   "gun": 5,
+   "gun": 6,
    "bot": 0
+  },
+  {
+   "dosya": "sut-ek2b.json",
+   "son": "2026-10-20",
+   "gun": 5,
+   "bot": 1
   },
   {
    "dosya": "guncelleme-plani.json",
@@ -982,15 +998,9 @@
    "bot": 0
   },
   {
-   "dosya": "sut-ek2b.json",
-   "son": "2026-10-20",
-   "gun": 4,
-   "bot": 1
-  },
-  {
    "dosya": "rezerv.json",
    "son": "2026-10-21",
-   "gun": 3,
+   "gun": 4,
    "bot": 0
   },
   {
@@ -1000,21 +1010,21 @@
    "bot": 2
   },
   {
+   "dosya": "hkma.json",
+   "son": "2026-10-24",
+   "gun": 1,
+   "bot": 1
+  },
+  {
    "dosya": "karar-model.json",
    "son": "2026-10-24",
    "gun": 1,
    "bot": 1
   },
   {
-   "dosya": "hkma.json",
-   "son": "2026-10-24",
-   "gun": 0,
-   "bot": 1
-  },
-  {
    "dosya": "kredi-notu.json",
    "son": "2026-10-24",
-   "gun": 0,
+   "gun": 1,
    "bot": 1
   }
  ],
@@ -1022,67 +1032,67 @@
   {
    "ad": "market · küresel endeksler",
    "sonuc": "GECTI",
-   "ms": 1138,
+   "ms": 976,
    "not": ""
   },
   {
    "ad": "market · toplu fiyat",
    "sonuc": "GECTI",
-   "ms": 292,
+   "ms": 250,
    "not": ""
   },
   {
    "ad": "market · SEKTÖR serisi (RS tabanı)",
    "sonuc": "UYARI",
-   "ms": 790,
+   "ms": 745,
    "not": "13/15 sektörde 1A serisi YOK — RS damgalı tabandan (§114). BAR SAYILARI: XKMYA:1 XGIDA:1 XMANA:1 XUSIN:67 XHOLD:1 XELKT:1 XUHIZ:1 XILTM:1 XINSA:1 XUTEK:1 XSGRT:1 XTRZM:1 XGMYO:1 XUMAL:1 XBANK:67 | varyant: yok"
   },
   {
    "ad": "market · Avrupa mega-cap",
    "sonuc": "GECTI",
-   "ms": 657,
+   "ms": 660,
    "not": ""
   },
   {
    "ad": "market · FRED (ABD tahvil)",
    "sonuc": "GECTI",
-   "ms": 875,
+   "ms": 724,
    "not": ""
   },
   {
    "ad": "market · ECB (sunucu bacagı)",
    "sonuc": "GECTI",
-   "ms": 652,
+   "ms": 402,
    "not": ""
   },
   {
    "ad": "market · BoJ",
    "sonuc": "GECTI",
-   "ms": 1799,
+   "ms": 1597,
    "not": ""
   },
   {
    "ad": "market · HKMA",
    "sonuc": "GECTI",
-   "ms": 1359,
+   "ms": 13788,
    "not": ""
   },
   {
    "ad": "evds2 · TÜFE endeksi",
    "sonuc": "GECTI",
-   "ms": 1175,
+   "ms": 1181,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (DİBS)",
    "sonuc": "GECTI",
-   "ms": 3688,
+   "ms": 3257,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (sukuk)",
    "sonuc": "GECTI",
-   "ms": 3606,
+   "ms": 3272,
    "not": ""
   },
   {
@@ -1094,115 +1104,115 @@
   {
    "ad": "evds2 · kart harcamaları",
    "sonuc": "GECTI",
-   "ms": 1073,
+   "ms": 514,
    "not": ""
   },
   {
    "ad": "evds2 · rezerv",
    "sonuc": "GECTI",
-   "ms": 758,
+   "ms": 661,
    "not": ""
   },
   {
    "ad": "evds2 · yabancı akış",
    "sonuc": "GECTI",
-   "ms": 360,
+   "ms": 524,
    "not": ""
   },
   {
    "ad": "evds2 · ECB (HICP + GSYH)",
    "sonuc": "GECTI",
-   "ms": 1187,
+   "ms": 2378,
    "not": ""
   },
   {
    "ad": "kap · bildirim akışı",
    "sonuc": "GECTI",
-   "ms": 868,
+   "ms": 604,
    "not": ""
   },
   {
    "ad": "kap · sukuk akışı",
    "sonuc": "GECTI",
-   "ms": 1515,
+   "ms": 1182,
    "not": ""
   },
   {
    "ad": "katfon · TEFAS",
    "sonuc": "GECTI",
-   "ms": 233,
+   "ms": 171,
    "not": ""
   },
   {
    "ad": "tefas · AUM/pay (mod=gnl)",
    "sonuc": "UYARI",
-   "ms": 664,
+   "ms": 1097,
    "not": "liste boş"
   },
   {
    "ad": "edgar · ABD bilanço (§398)",
    "sonuc": "GECTI",
-   "ms": 921,
+   "ms": 1309,
    "not": ""
   },
   {
    "ad": "tcmb · TR 5Y CDS",
    "sonuc": "GECTI",
-   "ms": 560,
+   "ms": 440,
    "not": ""
   },
   {
    "ad": "tcmb · kurlar",
    "sonuc": "GECTI",
-   "ms": 3384,
+   "ms": 3455,
    "not": ""
   },
   {
    "ad": "data · bulut depo (KV)",
    "sonuc": "GECTI",
-   "ms": 348,
+   "ms": 361,
    "not": ""
   },
   {
    "ad": "ajanktp · KV sağlık",
    "sonuc": "GECTI",
-   "ms": 356,
+   "ms": 225,
    "not": ""
   },
   {
    "ad": "usnews · AV haber akışı",
    "sonuc": "UYARI",
-   "ms": 465,
+   "ms": 307,
    "not": "ok:false — Alpha Vantage kota/limit mesajı döndü — birkaç saat sonra normale döner"
   },
   {
    "ad": "usnews · Finnhub kazanç",
    "sonuc": "GECTI",
-   "ms": 390,
+   "ms": 385,
    "not": ""
   },
   {
    "ad": "usnews · kripto",
    "sonuc": "GECTI",
-   "ms": 334,
+   "ms": 278,
    "not": ""
   },
   {
    "ad": "bddk · panel",
    "sonuc": "GECTI",
-   "ms": 12221,
+   "ms": 10924,
    "not": ""
   },
   {
    "ad": "bddk · sahiplik",
    "sonuc": "GECTI",
-   "ms": 8539,
+   "ms": 7815,
    "not": ""
   },
   {
    "ad": "dosya · fon-akis.json",
    "sonuc": "GECTI",
-   "ms": 250,
+   "ms": 371,
    "not": ""
   }
  ],
@@ -1215,9 +1225,9 @@
    "t2·Makro Veriler › Enflasyon & Reel Ekonomi": [],
    "t2·Makro Veriler › Bankacılık": [],
    "t2·Makro Veriler › Haftalık Yorum": [
-    "MODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok). Eski tez ÜSTÜ diyordu (fabrika metni (Ağu 2026, elle)) — veriler bunu desteklemiyor.",
-    "TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 00:22 Yerli Hisse (BIST) vs XKTUM / XK100↓ALTIMODEL: ALTI — sinyal toplamı -2 (5/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 1 nötr, 1 veri yok)",
-    "MODEL: ÜSTÜ — sinyal toplamı +2 (3/4 sinyal ölçüldü · 2 lehte, 0 aleyhte, 1 nötr, 1 veri yok). Eski tezle aynı yönde."
+    "MODEL: NÖTR — sinyal toplamı 0 (4/5 sinyal ölçüldü · 0 lehte, 0 aleyhte, 4 nötr, 1 veri yok). Eski tez ALTI diyordu (fabrika metni (Ağu 2026, elle)) — veriler bunu desteklemiyor.",
+    "TAKTİKSEL DAĞILIM KURALLI MODEL · 25 EKİ 10:15 Yerli Hisse (BIST) vs XKTUM / XK100↓ALTIMODEL: ALTI — sinyal toplamı -2 (6/6 sinyal ölçüldü · 1 lehte, 3 aleyhte, 2 nötr). Eski tez Ü",
+    "MODEL: NÖTR — sinyal toplamı -1 (5/6 sinyal ölçüldü · 0 lehte, 1 aleyhte, 4 nötr, 1 veri yok). Eski tezle aynı yönde."
    ],
    "t2·Makro Veriler › Tahminler": [],
    "t2·Makro Veriler › Enflasyon Patikası": [],
@@ -1227,7 +1237,9 @@
    "t10·FIX INCOME › Getiri Eğrisi": [],
    "t10·FIX INCOME › İhraç Takvimi": [],
    "t15·COMMODITY": [],
-   "t16·Asya-Pasifik": [],
+   "t16·Asya-Pasifik": [
+    "Kaynak: HKMA Monthly Bulletin · Actions yedeği (2026-10-24) — canlı HKMA çağrısı düştü (HTTP 405); bülten aylık olduğundan değer güncel ay için geçerli. §516"
+   ],
    "t18·Avrupa": [],
    "t17·ABD": [],
    "t7·Haberler": [],
@@ -1269,7 +1281,7 @@
     "yer": "t2",
     "kart": "GETİRİ EĞRİSİ GÖRSELİ",
     "gun": 90,
-    "metin": "TR·ABD 2026-10-24 · DE·JP 3A/10Y (AYLIK) · şekil 27 TEM"
+    "metin": "TR·ABD 2026-10-25 · DE·JP 3A/10Y (AYLIK) · şekil 27 TEM"
    },
    {
     "tur": "etiket",
@@ -1306,7 +1318,12 @@
    "tarih": "2026-10-24",
    "kritik": 0,
    "uyari": 4
+  },
+  {
+   "tarih": "2026-10-25",
+   "kritik": 0,
+   "uyari": 4
   }
  ],
- "mail": "gönderildi"
+ "mail": "gerek yok"
 }
