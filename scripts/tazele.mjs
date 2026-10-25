@@ -5303,18 +5303,26 @@ async function kamuYatirim() {
   D._not = '§533 kamu yatırım nabzı: merkezi yönetim sermaye giderleri (yıl içi kümülatif, milyon ₺) · kaynak HMB, SBB haftalık raporu üzerinden; bütçe çerçevesi 2027 Bütçe Gerekçesi.';
   let durum = '';
   try {
-    const cp = await import('node:child_process'); const os = await import('node:os');
-    let pdfVar = true; try { cp.execFileSync('pdftotext', ['-v'], { stdio: 'ignore' }); } catch (e) { pdfVar = false; }
-    if (!pdfVar) durum = '⏭ pdftotext yok (poppler yalnız hepsi/fonportfoy koşusunda) — tohum/arşiv ile devam';
+    /* §533b (25 Eki canlı koşu): pdftotext -raw sayfa başlığını tabloyla aynı sayfaya koymadı → "sayfa bulunamadı". Tarayıcıda doğrulanan
+       metin pdf.js'ten geliyordu; Actions da AYNI kütüphaneyi kullanır (pdfjs-dist 3.11.174, koşu anında geçici klasöre kurulur — repo
+       package.json'una dokunmaz). Günde en çok bir indirme. */
+    const cp = await import('node:child_process'); const os = await import('node:os'); const { createRequire } = await import('node:module');
+    if (D.kontrol === bugun && !KSET.has('kamuyatirim')) durum = '⏭ bugün kontrol edildi';
     else {
       const lst = await fetch('https://www.sbb.gov.tr/turkiye-ekonomisinde-haftalik-gelismeler/', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(20000) });
       const html = lst.ok ? await lst.text() : ''; const m = html.match(/https?:\/\/www\.sbb\.gov\.tr\/wp-content\/uploads\/[^"']+Haftalik-Gelismeler[^"']+\.pdf/i);
       if (!m) durum = '✗ SBB liste sayfasında rapor bağlantısı yok (HTTP ' + lst.status + ')';
       else { const r = await fetch(m[0], { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(60000) });
-        const buf = Buffer.from(await r.arrayBuffer()); const tmp = path.join(os.tmpdir(), 'sbb-haftalik.pdf'); await fs.writeFile(tmp, buf);
-        const metin = cp.execFileSync('pdftotext', ['-raw', tmp, '-'], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-        const sayfa = metin.split('\f').find(p => /Merkezi Yönetim Bütçe Dengesi \(Milyon TL\)/.test(p) && /Bütçe Hedefi/.test(p) && /Gerç\.?\s*Oranı/.test(p));
-        if (!sayfa) durum = '✗ raporda bütçe dengesi sayfası bulunamadı';
+        const buf = new Uint8Array(await r.arrayBuffer());
+        const kok = path.join(os.tmpdir(), 'ktp-pdfjs');
+        if (!existsSync(path.join(kok, 'node_modules', 'pdfjs-dist', 'package.json'))) cp.execSync('npm i --prefix "' + kok + '" --no-audit --no-fund --silent pdfjs-dist@3.11.174', { stdio: 'ignore', timeout: 120000 });
+        const pdfjs = createRequire(path.join(kok, 'x.js'))('pdfjs-dist/legacy/build/pdf.js');
+        const doc = await pdfjs.getDocument({ data: buf, useSystemFonts: true, isEvalSupported: false }).promise;
+        let sayfa = null;
+        for (let i = doc.numPages; i >= 1 && !sayfa; i--) { const t = (await (await doc.getPage(i)).getTextContent()).items.map(x => x.str).join(' ').replace(/\s+/g, ' ');
+          if (/Merkezi Yönetim Bütçe Dengesi \(Milyon TL\)/.test(t) && /Bütçe Hedefi/.test(t) && /Sermaye Giderleri/.test(t)) sayfa = t; }
+        D.kontrol = bugun;
+        if (!sayfa) durum = '✗ raporda bütçe dengesi sayfası bulunamadı (' + doc.numPages + ' sayfa)';
         else { const AY = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
           const pm = sayfa.match(/Ocak\s*[-–]\s*(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(\d{4})/);
           const sayi = s => parseFloat(String(s).replace(/\./g, '').replace(',', '.'));
@@ -5323,9 +5331,9 @@ async function kamuYatirim() {
           if (!pm || !sg) durum = '✗ dönem/satır ayrıştırılamadı';
           else if (!(sg.bu > sg.onceki * 0.5 && sg.bu < sg.hedef * 1.6)) { durum = '✗ DENETİM: sermaye gideri tutarsız (' + JSON.stringify(sg) + ') — yazılmadı'; denetimDustu = true; }
           else { const ay = AY.indexOf(pm[1]) + 1, yil = +pm[2]; const k = yil + '-' + String(ay).padStart(2, '0');
-            const yeni = !D.donemler[k] || D.donemler[k].kaynak.includes('tohum');
+            const yeni = !D.donemler[k] || String(D.donemler[k].kaynak || '').includes('tohum');
             D.donemler[k] = { yil, ay, sermaye: sg, transfer: st, harcama: hr, kaynak: 'SBB haftalık (HMB) ' + m[0].split('/').pop() };
-            durum = '✓ ' + k + ' sermaye gideri ' + Math.round(sg.bu / 1000) + ' mlr ₺ (y/y %' + sg.artis + ', bütçenin %' + sg.oran + "'i)" + (yeni ? ' · YENİ dönem' : ''); } } }
+            durum = '✓ ' + k + ' sermaye gideri ' + Math.round(sg.bu / 1000) + ' mlr ₺ (y/y %' + sg.artis + ', bütçenin %' + sg.oran + "'i)" + (yeni ? ' · YENİ dönem' : ' · değişmedi'); } } }
     }
   } catch (e) { durum = '✗ ' + String(e.message || e).slice(0, 90); }
   /* reel y/y: aynı ayın TÜFE yıllığıyla (sektor-surucu.json tufe) */
