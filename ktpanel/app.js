@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025e';   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025f';   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2438,6 +2438,7 @@ async function kararInit(force){
       fetch('/karar-model.json',{cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('karar-model.json HTTP '+r.status); return r.json(); })
     ]);
     KARAR.surucu=s; KARAR.model=m; KARAR.hazir=true; KARAR.hata=null;
+    try{ const rk=await fetch('/kamu-yatirim.json',{cache:'no-store'}); KARAR.kamu=rk.ok?await rk.json():null; }catch(e){ KARAR.kamu=null; }   /* §533 kamu yatırım nabzı */
     (m.modeller||[]).forEach(x=>{ if(!x.favok) x.favok={}; if(x.orneklem) x.orneklem.forEach(r=>{ x.favok[r.q]=x.favok[r.q]||{}; if(x.favok[r.q].usd==null) x.favok[r.q].usd=r.favok_usd; if(x.favok[r.q].tl==null) x.favok[r.q].tl=r.favok_tl; }); });
     const sel=$('kararKod');
     if(sel && !sel.options.length){
@@ -2584,6 +2585,17 @@ function kararPuan(M, H, F){
     if(bo&&!bo.bekliyor&&bo.dQ!=null&&isFinite(bo.dQ)){ const yon=bo.dQ*(bo.isaret||0);
       if(bo.yy||bo.ytd||!bo.isaret||bo.ytdSifir) ekle('Sürücü yönü ('+bo.ad+')', kararIsaret(bo.dQ,0,'%')+(bo.yy?' y/y':''), 0, bo.yy?'Fiyat endeksi yıllık değişimi enflasyonla birlikte okunur — puanlanmaz':bo.ytd?'Akış serisi (yıl içi kümülatif) topaklıdır — bilgi':'Kur/nötr rollü sürücü — bilgi', true);
       else ekle('Sürücü yönü ('+bo.ad+' · '+kararQAd(H.hedefQ)+' ort. vs önceki çeyrek)', kararIsaret(bo.dQ,0,'%'), yon>10?1:yon<-10?-1:0, yon>10?'Birincil sürücü hissenin lehine döndü ('+(bo.rol||'')+')':yon<-10?'Birincil sürücü hissenin aleyhine ('+(bo.rol||'')+')':'Sürücü değişimi ±%10 içinde'); } }
+  /* §533 YÖNETİM HEDEFİ İZİ: şirketin açıkladığı yıllık FAVÖK aralığı (guidance.favok_tl_mlr) ↔ KAP gerçekleşen. Yıl içi toplam + son
+     çeyrek koşu hızı, hedefe kalan çeyrek başına gereken FAVÖK ile karşılaştırılır (alt uç / orta nokta). */
+  { const G=M.guidance; if(G&&Array.isArray(G.favok_tl_mlr)&&G.yil){ const FV=M.favok||{}; const yq=[1,2,3,4].map(n=>G.yil+'Q'+n); const ger=yq.filter(q=>FV[q]&&FV[q].tl!=null);
+      if(ger.length&&ger.length<4){ const ytd=ger.reduce((a,q)=>a+FV[q].tl,0), kalan=4-ger.length, son=FV[ger[ger.length-1]].tl; const [lo,hi]=G.favok_tl_mlr; const gLo=(lo-ytd)/kalan, gOrt=((lo+hi)/2-ytd)/kalan;
+        ekle('Yönetim hedefi izi ('+G.yil+' FAVÖK '+trN(lo,1)+'–'+trN(hi,1)+' mlr ₺)', 'yıl içi '+trN(ytd,2)+' · son çeyrek '+trN(son,2)+' · gereken '+trN(Math.max(0,gLo),2)+'–'+trN(Math.max(0,gOrt),2)+'/çeyrek', son>=gOrt?1:son<gLo?-1:0,
+          son>=gOrt?'Son çeyrek koşu hızı hedef aralığının ortasına yetiyor':son<gLo?'Son çeyrek koşu hızı hedefin alt ucuna bile yetmiyor: revizyon riski':'Koşu hızı alt uca yetiyor, ortaya yetmiyor'+(G.kaynak?' · kaynak: '+G.kaynak:'')); }
+      else if(ger.length===4){ const fy=yq.reduce((a,q)=>a+FV[q].tl,0); ekle('Yönetim hedefi ('+G.yil+') — sonuç', trN(fy,2)+' mlr ₺', 0, fy>=G.favok_tl_mlr[0]?'Hedef aralığı tutturuldu':'Hedefin altında kalındı', true); } } }
+  /* §533 KAMU YATIRIM MERCEĞİ: kamu altyapı harcamasına duyarlı hisselerde merkezi yönetim sermaye giderinin yıl içi REEL y/y'si (HMB, SBB üzerinden) */
+  if(M.kamu_duyarli&&KARAR.kamu&&KARAR.kamu.son){ const v=KARAR.kamu.donemler[KARAR.kamu.son], im=KARAR.kamu.ima; const s=v&&v.sermaye;
+    if(s&&s.reel_yy!=null){ const r=s.reel_yy; ekle('Kamu yatırım harcaması (merkezi yönetim sermaye gideri · Ocak–'+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][v.ay-1]+' '+v.yil+')', 'reel '+kararIsaret(r,0,'%')+' · nominal '+kararIsaret(s.artis,0,'%'), r>5?1:r<-5?-1:0,
+      (r>5?'Kamu sermaye harcaması reel büyüyor: hacim desteği':r<-5?'Kamu sermaye harcaması reel daralıyor: ihale/hacim baskısı':'Kamu harcaması reel yatay')+(im&&im.kalan_ay>0?' · yıl sonu tahmini kalan '+im.kalan_ay+' ayda aylık '+trN(im.aylik_kalan/1000,0)+' mlr ₺ ima ediyor (yıl içi ort. '+trN(im.aylik_gerceklesen/1000,0)+') — gerçekleşirse son çeyrekte yükleme':'')); } }
   if(F.hedefMesafe!=null){ const m=F.hedefMesafe, k=F.hedefF.kurum||0, bayat=!!F.hedefF.bayat, asiri=Math.abs(m)>60;
     if(bayat||k<3||asiri) ekle('Hedef fiyat mesafesi ('+k+' kurum'+(F.hedefF.tarih?' · son '+kararTrTarih(F.hedefF.tarih):'')+')', kararIsaret(m,0,'%'), 0, bayat?'Hedefler 6+ aydır yenilenmemiş (bayat) — puanlanmaz':k<3?'3’ten az kurum: tekil görüş, puanlanmaz':'Mesafe ±%60’ı aşıyor: hedefler fiyat şokundan sonra revize edilmemiş görünüyor (bedelsiz/çöküş) — puanlanmaz', true);
     else ekle('Hedef fiyat mesafesi ('+k+' kurum ort.)', kararIsaret(m,0,'%'), m>15?1:m<0?-1:0, m>15?'Kurum hedefleri belirgin yukarıda':m<0?'Fiyat kurum hedeflerinin üstünde: revizyon gelmezse tavan':'Hedefler fiyata yakın: revizyon döngüsü belirleyici'); }
