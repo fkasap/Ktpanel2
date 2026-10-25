@@ -47,13 +47,18 @@ async function main() {
     await uyku(3000);
     /* EMNİYET: api/ajanktp mod=yaz bulut hafızayı BÜTÜNÜYLE değiştirir (KV SET). Taze tarayıcıda localStorage boş; not doğrudan yazılsa
        diğer tüm kayıtlar (kart notları, gündem, taktik) silinirdi. Önce bulut hafıza yerel depoya indirilir; yoksa HİÇ yazılmaz. */
-    const bulut = await sayfa.evaluate(async () => { try { if (typeof notlariGeriYukle === 'function') await notlariGeriYukle(); const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return Object.keys(k).length; } catch (e) { return -1; } });
+    const bulut = await sayfa.evaluate(() => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return Object.keys(k).length; } catch (e) { return -1; } });   /* panelin açılış akışı buluttan indirir (ajan.js notlariGeriYukle) */
     if (!(bulut > 0)) { ozet.push('bulut hafıza okunamadı (' + bulut + ' kayıt) — üzerine yazma riski, not YAZILMADI'); return 1; }
     ozet.push('bulut hafıza yüklendi: ' + bulut + ' kayıt');
     const kipler = KIP === 'ikisi' ? ['hafta', 'ay'] : [KIP];
     for (const kip of kipler) {
-      const oncekiTs = await sayfa.evaluate(() => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return (k.__HAFTALIK__ || {}).ts || 0; } catch (e) { return 0; } });
-      const sonuc = await sayfa.evaluate(async (kip) => { if (typeof haftalikYorumYaz !== 'function') return 'fonksiyon yok'; try { await haftalikYorumYaz(true, kip); return 'çağrıldı'; } catch (e) { return 'hata: ' + String(e && e.message || e).slice(0, 120); } }, kip);
+      const oncekiTs = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return (k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}).ts || 0; } catch (e) { return 0; } }, kip);
+      /* §538b (ilk koşu 25 Eki 20:01: "fonksiyon yok"): ajan.js bir IIFE — haftalikYorumYaz pencereye açık DEĞİL. Panelin kendi düğmesi
+         (#ajanHaftalikBtn / #ajanAylikBtn) aynı fonksiyonu çağırır; bot düğmeye basar. Bulut hafıza da panelin kendi açılış akışıyla
+         (notlariGeriYukle, IIFE içi) zaten yerel depoya inmiş olur — üstteki kayıt sayısı onu doğrular. */
+      const sonuc = await sayfa.evaluate((kip) => { const b = document.getElementById(kip === 'ay' ? 'ajanAylikBtn' : 'ajanHaftalikBtn'); if (!b) return 'düğme yok'; b.click(); return 'düğmeye basıldı'; }, kip);
+      /* ajan günlüğünde "yazılıyor" → bitiş: iki AI çağrısı (~6 sn × 2) + taktik türetimi; en çok 150 sn beklenir */
+      for (let i = 0; i < 30; i++) { await uyku(5000); const ts = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return (k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}).ts || 0; } catch (e) { return 0; } }, kip); if (ts > oncekiTs) break; }
       await uyku(8000);   /* notKaydet → bulut yazımı tamamlansın */
       const durum = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); const K = k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}; const log = (window.AJAN && AJAN.log || []).slice(0, 4); return { ts: K.ts || 0, etiket: K.etiket || '', uzunluk: (K.html || '').length, log }; } catch (e) { return { hata: String(e) }; } }, kip);
       const yeni = durum.ts && durum.ts > oncekiTs;
