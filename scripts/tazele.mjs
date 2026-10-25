@@ -693,6 +693,7 @@ async function riskTazele() {
   });
   const ortGun = Math.round(ortalama(basarili.map(k => yeni[k].gun)));
   d.guncelleme = bugun;
+  d.kaynak = 'Yahoo Finance 1y günlük kapanış (Actions §540: eski "Fintables" etiketi kaldırıldı — hesap zaten Yahoo serisinden)';
   d.yontem = `vol = günlük getiri std × √252 · beta = kov(hisse, ${eKod}) / var(${eKod}) · ortalama ${ortGun} ortak işlem günü · kaynak Yahoo 1y`;
   await yaz(dosya, d);
   if (n) degisenler.push(`risk metrikleri (${n})`);
