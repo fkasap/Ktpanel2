@@ -5185,6 +5185,21 @@ const KARAR_TOHUM_050 = {
     sektor_not: 'Üst segment hazır giyim, aksesuar ve perakende (mağaza + online). Ciro giyim fiyatları ve yüksek gelirli tüketici talebiyle hareket eder; sezon geçişleri (2Ç/4Ç) ve stok yönetimi marjı belirler.',
     sur: [['tufe_giyim', 'gelir'], ['perakende_giyim_hacim', 'gelir'], ['asgari_ucret_reel', 'maliyet'], ['eurusd', 'kur'], ['usdtry', 'kur']] }
 };
+/* §533 ELLE DÜZELTME TOHUMU — mevcut kayıtların yanlış/boş kalan alanları (Actions uygular; `_duzeltme` damgası değişince bir kez yazar).
+   TCKRC (25 Eki, kullanıcı: "kıraç galvanizin sürücüleri neler"): ad "Tekirdağ Çıkrıkçılar?" ve sürücü yalnız kurdu. Kaynak: Ziraat Yatırım
+   toplantı notu (Matriks, 2026): 2025 ciro dağılımı otokorkuluk %65 · GES konstrüksiyonu %20 · sıcak daldırma galvaniz %15; ihracat %42;
+   Bozüyük tesisi Tem 2025 (220 bin t galvaniz · 180 bin t metal imalat); 2026 hedefi ciro 8 mlr ₺, FAVÖK 2,5–3 mlr ₺. */
+const KARAR_DUZELT = {
+  TCKRC: { _duzeltme: '533a', ad: 'Kıraç Galvaniz Telekomünikasyon Metal Makine İnşaat Elektrik', sektor: 'Metal (Otokorkuluk · GES Konstrüksiyonu · Galvaniz)', tier: 'B', birincil: 'cinko',
+    surucu_plani: 'Çinko (galvaniz sarfı) · çelik saç/profil · doğalgaz (banyo ısıtma) · kamu yol yatırımı (otokorkuluk) · GES kurulumu · EUR/USD (ihracat %42)',
+    kaynak_notu: 'Ciro dağılımı ve 2026 hedefi: Ziraat Yatırım toplantı notu (Matriks/TradingView). Kamu yatırım nabzı §533 (HMB/SBB bütçe gerçekleşmesi).',
+    sektor_not: 'Ciro 2025: otokorkuluk (yol güvenlik bariyeri, alıcı ağırlıkla kamu/KGM ihaleleri) %65 · güneş santrali taşıyıcı konstrüksiyonu %20 · sıcak daldırma galvaniz hizmeti %15; savunma (shelter, konteyner, gözetleme kulesi) yeni alan, ilk yıllarda cironun %10–15\'i hedefleniyor. İhracat %42 (Romanya şirketi, Gürcistan). Bozüyük entegre tesisi Temmuz 2025\'te devreye girdi: kapasite ~5 kat (220 bin t galvaniz, 180 bin t metal imalat). Marjı çinko ve çelik girdi fiyatı ile ihale fiyatı arasındaki zamanlama, hacmi kamu yol bütçesi ve GES kurulum hızı belirler.',
+    sur: [['cinko', 'maliyet'], ['hrc_abd', 'maliyet'], ['celik_ufe', 'maliyet'], ['ttf', 'maliyet'], ['ges_modul_usd', 'gelir'], ['eurusd', 'kur'], ['usdtry', 'kur']],
+    guidance: { yil: 2026, favok_tl_mlr: [2.5, 3.0], ciro_tl_mlr: 8, marj: '%35–40', kko: '%80', kaynak: 'Ziraat Yatırım toplantı notu (Matriks/TradingView)', tarih: '2026' },
+    kamu_duyarli: true }
+};
+/* kamu altyapı harcamasına duyarlı hisseler — §533 kamu yatırım merceği puan kartına girer */
+const KARAR_KAMU = ['TCKRC', 'KBORU', 'AKCNS', 'CIMSA', 'BUCIM', 'LMKDC', 'GLRMK', 'KATMR', 'TKFEN'];
 async function kararYahoo(kodlar, aralik) {
   const PX = {}; let i = 0;
   const tek = async kod => { try {
@@ -5212,6 +5227,12 @@ async function kararEvren() {
       surucu_seriler: (T ? T.sur : [['usdtry', 'kur']]).filter(([k]) => SS[k] || k === 'usdtry').map(([k, r]) => surNesne(k, r)), birincil: T ? T.birincil : 'usdtry',
       sermaye_mn: null, favok: {}, fiyat_ceyrek_sonu: {}, fiyat_son: null, bolunme: null, konsensus: null, konsensus_gecmis: [], hedef_fiyat: null, bilanco: null, guidance: null, _eklendi: bugun };
     L.push(m); byK.set(kod, m); eklenen.push(kod); }
+  /* §533 elle düzeltme tohumu + kamu duyarlılık bayrağı */
+  const duzelen = [];
+  for (const [kod, D] of Object.entries(KARAR_DUZELT)) { const m = byK.get(kod); if (!m || m._duzeltme === D._duzeltme) continue;
+    for (const [k, v] of Object.entries(D)) { if (k === 'sur') m.surucu_seriler = v.filter(([kk]) => SS[kk] || kk === 'usdtry').map(([kk, r]) => surNesne(kk, r)); else m[k] = v; }
+    duzelen.push(kod); }
+  for (const m of L) { const olmali = KARAR_KAMU.includes(m.kod); if (!!m.kamu_duyarli !== olmali) { if (olmali) m.kamu_duyarli = true; else delete m.kamu_duyarli; } }
   /* üyelik etiketi: XK030 → (boş) · yalnız XK050 → 'XK050' · ikisinde de yok → 'cikti' (izleme kayıtlarına dokunulmaz) */
   for (const m of L) { if (m.evren === 'izleme') continue;
     const yeniE = X30.has(m.kod) ? null : (X50.has(m.kod) ? 'XK050' : 'cikti');
@@ -5248,9 +5269,73 @@ async function kararEvren() {
   M._aciklama = 'Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.';
   M._531 = { guncelleme: bugun, xk050: X50.size, katalog: L.length, eklenen_toplam: L.filter(m => m._eklendi).length };
   M.modeller = L;
-  await yaz(dosya, M); if (eklenen.length || cikan.length || fQ || fSer) degisenler.push('karar evreni (' + [eklenen.length ? '+' + eklenen.length + ' XK050' : '', cikan.length ? cikan.length + ' çıktı' : '', fQ ? fQ + ' çeyrek fiyatı' : ''].filter(Boolean).join(' · ') + ')');
-  raporlar.push('### Karar evreni XK050 (§531) — ✓ katalog ' + L.length + ' (XK050 ' + X50.size + ')' + (eklenen.length ? ' · eklendi: ' + eklenen.join(', ') : '') + (cikan.length ? ' · üyelikten çıktı: ' + cikan.join(', ') : '') + (donen.length ? ' · geri döndü: ' + donen.join(', ') : '') +
+  await yaz(dosya, M); if (eklenen.length || cikan.length || fQ || fSer || duzelen.length) degisenler.push('karar evreni (' + [eklenen.length ? '+' + eklenen.length + ' XK050' : '', cikan.length ? cikan.length + ' çıktı' : '', fQ ? fQ + ' çeyrek fiyatı' : ''].filter(Boolean).join(' · ') + ')');
+  raporlar.push('### Karar evreni XK050 (§531) — ✓ katalog ' + L.length + ' (XK050 ' + X50.size + ')' + (eklenen.length ? ' · eklendi: ' + eklenen.join(', ') : '') + (cikan.length ? ' · üyelikten çıktı: ' + cikan.join(', ') : '') + (donen.length ? ' · geri döndü: ' + donen.join(', ') : '') + (duzelen.length ? ' · düzeltildi: ' + duzelen.join(', ') : '') +
     ' · fiyat_son ' + fSon + ' · çeyrek fiyatı +' + fQ + ' · sermaye +' + fSer + ' · bilanço tarihi ' + fBil + (oncelik.length ? ' · KAP arşivi bekleyen ' + oncelik.length + ' (' + oncelik.slice(0, 12).join(', ') + (oncelik.length > 12 ? '…' : '') + ')' + (oncelikYaz ? ', öncelik listesine +' + oncelikYaz : '') : ''));
+}
+
+/* ── §533 KAMU YATIRIM NABZI (25 Eki) ─────────────────────────────────────────────────────────────────────────────────
+   Kullanıcı: SBB 2027 Bütçe Gerekçesi + "Türkiye Ekonomisinde Haftalık Gelişmeler" — "harcamalar var, bir incele". Otokorkuluk (TCKRC),
+   DSİ boruları (KBORU), çimento ve müteahhitlik hisseleri için asıl hacim sürücüsü kamu sermaye harcamasıdır; panelde yoktu.
+   (1) AYLIK GERÇEKLEŞME: SBB haftalık raporu her hafta HMB'nin son "Merkezi Yönetim Bütçe Dengesi (Ocak–Ay)" tablosunu taşır
+       (yıl içi kümülatif: geçen yıl · bu yıl · bütçe hedefi · artış % · gerçekleşme %). Liste sayfasından son PDF bulunur, pdftotext ile
+       o sayfa okunur (poppler yalnız Cumartesi/hepsi koşusunda kurulu → haftada bir; ay verisi ayda bir değişir). Dönem anahtarı YYYY-AA.
+   (2) BÜTÇE ÇERÇEVESİ (2027 Bütçe Gerekçesi, SBB Ekim 2026 — elle tohum, yılda bir): 2026 yıl sonu tahmini ve 2027–29 ödenekleri,
+       KGM yol ve DSİ sulama hedefleri, savunma/GSYH patikası. Sayılar PDF'ten aynen (milyon ₺ / km / milyon ha / %).
+   Panel: karar puan kartında kamu_duyarli hisselere "Kamu yatırım harcaması (reel y/y)" merceği; yıl sonu tahmininin ima ettiği kalan
+   çeyrek harcaması bilgi olarak yazılır. */
+const KAMU_BUTCE = {
+  kaynak: 'SBB 2027 Yılı Bütçe Gerekçesi (Ekim 2026) — https://www.sbb.gov.tr/wp-content/uploads/2026/10/2027-Butce-Gerekcesi.pdf',
+  sermaye_gideri: { '2026_ys': 1782322, '2027': 1854783, '2028': 2346587, '2029': 2923361, _birim: 'milyon ₺', _not: '2026 yıl sonu gerçekleşme tahmini (s.13); 2027–29 ödenek (s.135)' },
+  sermaye_transferi: { '2026_ys': 325055, '2027': 750372, '2028': 408318, '2029': 446941, _birim: 'milyon ₺' },
+  yatirim_hizlandirma_2027: 246700, yatirim_toplam_2027: 2851800,
+  kgm: { bolunmus_yol_km: { '2026_ys': 30395, '2027': 30675, '2028': 31250, '2029': 31600 }, otoyol_km: { '2026_ys': 3848, '2027': 3893, '2028': 4297, '2029': 4297 }, bsk_km: { '2026_ys': 33617, '2027': 34400, '2028': 35500, '2029': 36150 }, _kaynak: 'Program performans bilgisi s.260 (KGM)' },
+  dsi: { sulama_mn_ha: { '2026_ys': 7.34, '2027': 7.40, '2028': 7.46, '2029': 7.53 }, _kaynak: 's.248 (DSİ)' },
+  savunma_gsyh: { '2026_ys': 2.33, '2027': 2.85, '2028': 3.41, '2029': 3.50, _kaynak: 's.230 (MSB, NATO DPCS tanımı)' }
+};
+const KAMU_TOHUM_DONEM = { '2026-09': { yil: 2026, ay: 9, sermaye: { onceki: 762669, bu: 883019, hedef: 1312319, artis: 15.8, oran: 67.3 }, transfer: { onceki: 83562, bu: 222668, hedef: 525369, artis: 166.5, oran: 42.4 }, harcama: { onceki: 10222202, bu: 13948130, hedef: 18978815, artis: 36.4, oran: 73.5 }, kaynak: 'SBB haftalık 23 Eki 2026 s.78 (HMB) — tohum' } };
+async function kamuYatirim() {
+  const dosya = 'kamu-yatirim.json';
+  let D = null; try { if (await varMi(dosya)) D = await oku(dosya); } catch (e) {}
+  if (!D || typeof D !== 'object') D = { donemler: {} };
+  D.donemler = D.donemler || {}; for (const [k, v] of Object.entries(KAMU_TOHUM_DONEM)) if (!D.donemler[k]) D.donemler[k] = v;
+  D.butce = KAMU_BUTCE;
+  D._not = '§533 kamu yatırım nabzı: merkezi yönetim sermaye giderleri (yıl içi kümülatif, milyon ₺) · kaynak HMB, SBB haftalık raporu üzerinden; bütçe çerçevesi 2027 Bütçe Gerekçesi.';
+  let durum = '';
+  try {
+    const cp = await import('node:child_process'); const os = await import('node:os');
+    let pdfVar = true; try { cp.execFileSync('pdftotext', ['-v'], { stdio: 'ignore' }); } catch (e) { pdfVar = false; }
+    if (!pdfVar) durum = '⏭ pdftotext yok (poppler yalnız hepsi/fonportfoy koşusunda) — tohum/arşiv ile devam';
+    else {
+      const lst = await fetch('https://www.sbb.gov.tr/turkiye-ekonomisinde-haftalik-gelismeler/', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(20000) });
+      const html = lst.ok ? await lst.text() : ''; const m = html.match(/https?:\/\/www\.sbb\.gov\.tr\/wp-content\/uploads\/[^"']+Haftalik-Gelismeler[^"']+\.pdf/i);
+      if (!m) durum = '✗ SBB liste sayfasında rapor bağlantısı yok (HTTP ' + lst.status + ')';
+      else { const r = await fetch(m[0], { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(60000) });
+        const buf = Buffer.from(await r.arrayBuffer()); const tmp = path.join(os.tmpdir(), 'sbb-haftalik.pdf'); await fs.writeFile(tmp, buf);
+        const metin = cp.execFileSync('pdftotext', ['-raw', tmp, '-'], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+        const sayfa = metin.split('\f').find(p => /Merkezi Yönetim Bütçe Dengesi \(Milyon TL\)/.test(p) && /Bütçe Hedefi/.test(p) && /Gerç\.?\s*Oranı/.test(p));
+        if (!sayfa) durum = '✗ raporda bütçe dengesi sayfası bulunamadı';
+        else { const AY = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+          const pm = sayfa.match(/Ocak\s*[-–]\s*(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(\d{4})/);
+          const sayi = s => parseFloat(String(s).replace(/\./g, '').replace(',', '.'));
+          const satir = ad => { const R = new RegExp(ad + '\\s+([\\d.]+)\\s+([\\d.]+)\\s+([\\d.]+)\\s+(-?[\\d,]+)\\s+(-?[\\d,]+)'); const x = sayfa.match(R); return x ? { onceki: sayi(x[1]), bu: sayi(x[2]), hedef: sayi(x[3]), artis: sayi(x[4]), oran: sayi(x[5]) } : null; };
+          const sg = satir('Sermaye Giderleri'), st = satir('Sermaye Transferleri'), hr = satir('HARCAMALAR');
+          if (!pm || !sg) durum = '✗ dönem/satır ayrıştırılamadı';
+          else if (!(sg.bu > sg.onceki * 0.5 && sg.bu < sg.hedef * 1.6)) { durum = '✗ DENETİM: sermaye gideri tutarsız (' + JSON.stringify(sg) + ') — yazılmadı'; denetimDustu = true; }
+          else { const ay = AY.indexOf(pm[1]) + 1, yil = +pm[2]; const k = yil + '-' + String(ay).padStart(2, '0');
+            const yeni = !D.donemler[k] || D.donemler[k].kaynak.includes('tohum');
+            D.donemler[k] = { yil, ay, sermaye: sg, transfer: st, harcama: hr, kaynak: 'SBB haftalık (HMB) ' + m[0].split('/').pop() };
+            durum = '✓ ' + k + ' sermaye gideri ' + Math.round(sg.bu / 1000) + ' mlr ₺ (y/y %' + sg.artis + ', bütçenin %' + sg.oran + "'i)" + (yeni ? ' · YENİ dönem' : ''); } } }
+    }
+  } catch (e) { durum = '✗ ' + String(e.message || e).slice(0, 90); }
+  /* reel y/y: aynı ayın TÜFE yıllığıyla (sektor-surucu.json tufe) */
+  try { const T = ((await oku('sektor-surucu.json')).seriler || {}).tufe; const A = (T && T.aylik) || {};
+    for (const [k, v] of Object.entries(D.donemler)) { const y0 = (v.yil - 1) + k.slice(4); if (A[k] && A[y0] && v.sermaye) { v.tufe_yy = +((A[k] / A[y0] - 1) * 100).toFixed(1); v.sermaye.reel_yy = +(((1 + v.sermaye.artis / 100) / (1 + v.tufe_yy / 100) - 1) * 100).toFixed(1); } } } catch (e) {}
+  const son = Object.keys(D.donemler).sort().pop(); D.son = son; D.guncelleme = bugun;
+  /* yıl sonu tahmininin ima ettiği kalan harcama (yalnız bütçe yılı = son dönem yılı) */
+  try { const v = D.donemler[son]; const ys = D.butce.sermaye_gideri[v.yil + '_ys']; if (ys && v.sermaye) D.ima = { yil: v.yil, kalan_ay: 12 - v.ay, kalan: ys - v.sermaye.bu, aylik_kalan: (ys - v.sermaye.bu) / Math.max(1, 12 - v.ay), aylik_gerceklesen: v.sermaye.bu / v.ay }; } catch (e) {}
+  await yaz(dosya, D); if (/YENİ/.test(durum)) degisenler.push('kamu yatırım (' + son + ')');
+  raporlar.push('### Kamu yatırım nabzı (§533) — ' + (durum || '✓ arşiv') + ' · son dönem ' + son + (D.donemler[son] && D.donemler[son].sermaye && D.donemler[son].sermaye.reel_yy != null ? ' · reel y/y %' + D.donemler[son].sermaye.reel_yy : ''));
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
@@ -7219,6 +7304,7 @@ async function bultenKesif() {
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('Faktör karnesi (§529)', ()=>fmKarneUret(FM_PX_SON));   /* §529: nokta-zaman skor → sonraki getiri · sicil ayrıştırması */
     await olcKos('Toparlanma monitörü (§530)', ()=>toparlanmaUret(FM_PX_SON));   /* §530: genişlik · Zweig itkisi · kapitülasyon · RV20 · CDS · dönüş sepeti */
+    await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* §533: HMB bütçe gerçekleşmesi (SBB haftalık) + 2027 bütçe çerçevesi */
     await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* §531: XK050 üyeliği → katalog · fiyat/sermaye/bilanço tarihi · KAP arşiv önceliği (arşivden ÖNCE) */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
@@ -7229,6 +7315,7 @@ async function bultenKesif() {
   }
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
+  if (KSET.has('karar') || KSET.has('kamuyatirim')) await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* elle: --katman=kamuyatirim */
   if (KSET.has('karar') || KSET.has('kaparsiv')) await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* elle: --katman=karar (kaparsiv ile birlikte: önce öncelik, sonra arşiv) */
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
