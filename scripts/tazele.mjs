@@ -4697,6 +4697,244 @@ async function hkmaYedek() {
   raporlar.push('### HKMA yedeği (§516) — ✓ ' + veri.ay + ' · USD/HKD ' + veri.hkdUsd.deger + ' · HIBOR 3A ' + veri.hibor3M.deger);
 }
 
+/* ── §529 FAKTÖR KARNESİ + SİCİL AYRIŞTIRMASI (25 Eki) ──────────────────────────────────────────────────────────────────
+   Kullanıcı: "faktör modelim var ama zaten panelde?" — var; ama iki şeyi ölçemiyordu:
+   (1) MODEL KARNESİ bozuktu: "ilk 10 / son 10" getirisini fm.json'un BUGÜNKÜ skorlarıyla multiple.json'un BUGÜNKÜ fiyatı arasında
+       ölçüyordu. İkisi de §455/§496 ile her gün tazelendiği için ölçülen ufuk ~0 gündü → "+0,0% (7 hisse)". Skoru ölçmek için
+       NOKTA-ZAMAN (point-in-time) skor gerekir: o gün bilinen skor → sonraki getiri.
+   (2) Sicil (Top-40 eşit ağırlık, 14 Tem) XKTUM'un 6,3 puan gerisindeydi ve NEDENİ görünmüyordu.
+   YENİ: fm-arsiv.json — skor fotoğrafları (Koyfin dönemi 14 Tem · 24 Ağu git geçmişinden, sonra her hafta ilk fotoğraf).
+   fm-karne.json — her fotoğraf × ufuk (1A=21 iş günü · 3A=63 · bugüne) için faktör başına SIRA IC'si (Spearman), sektör-nötr IC,
+   kompozit beşli dilim getirileri; ve sicil penceresi (kuruluştan · 3A · 1A) için ayrıştırma:
+     fark (model − XKTUM) = AĞIRLIK ETKİSİ (eşit ağırlıklı evren − XKTUM) + SEÇİM ETKİSİ (model − eşit ağırlıklı evren);
+     seçim etkisi = sektör dağılımı + sektör içi seçim (Brinson-Fachler, eşit ağırlıklı evrene karşı)
+                  = Σ aktif faktör maruziyeti × faktör getirisi (yatay kesit EKK) + hisseye özgü kalan.
+   Fiyat: fmHesapla'nın zaten çektiği Yahoo adjclose (bölünme/bedelsiz/temettü düzeltilmiş); evrenden çıkan hisseler ayrıca çekilir.
+   Endeks: endeks-arsiv.json XKTUM (resmî). Bu blok VERİ ÜRETMEZ, ÖLÇER — fm.json'a dokunmaz. */
+const FMK_FAK = ['VALUE', 'GROWTH', 'QUALITY', 'MOMENTUM', 'LOW_RISK'];
+const FMK_DEFW = { QUALITY: 0.30, VALUE: 0.25, MOMENTUM: 0.20, LOW_RISK: 0.15, GROWTH: 0.10 };
+/* Git geçmişindeki değişmez fotoğraflar (commit SHA). Arşiv ilk kez kurulurken raw.githubusercontent'tan okunur. */
+const FMK_TOHUM = [
+  { sha: 'eb7b967e8af4cece853b9b26469b8de60aa27869', kaynak: 'Koyfin CSV (elle, 14 Tem)' },
+  { sha: '519718280bdf4d1fb7f2bab4ce42212f0e2a463e', kaynak: 'Koyfin CSV (elle, 24 Ağu)' },
+  { sha: '96fd92561b5fd1f52d3102e98142c994fbee30e3', kaynak: '§455 KAP+Yahoo' },
+  { sha: '69cd71151517cfc26158a1e4a584abc6c57cc892', kaynak: '§455 KAP+Yahoo' }
+];
+let FM_PX_SON = null;   /* fmHesapla'nın çektiği fiyatlar — karne aynı koşuda yeniden çekmesin */
+
+function fmkSpearman(x, y) {
+  const n = x.length; if (n < 8 || y.length !== n) return null;
+  const sira = a => { const ix = a.map((v, i) => [v, i]).sort((p, q) => p[0] - q[0]); const r = new Array(n); let i = 0;
+    while (i < n) { let j = i; while (j + 1 < n && ix[j + 1][0] === ix[i][0]) j++; const o = (i + j) / 2 + 1; for (let k = i; k <= j; k++) r[ix[k][1]] = o; i = j + 1; } return r; };
+  const rx = sira(x), ry = sira(y), m = (n + 1) / 2; let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < n; i++) { const a = rx[i] - m, b = ry[i] - m; sxy += a * b; sxx += a * a; syy += b * b; }
+  return (sxx > 0 && syy > 0) ? sxy / Math.sqrt(sxx * syy) : null;
+}
+function fmkEkk(X, y) {   /* sabitli EKK, normal denklemler + kısmi pivotlu Gauss; sabit dışı köşegene çok küçük sırt (tekillik emniyeti) */
+  const n = X.length; if (!n) return null; const p = X[0].length + 1; if (n < p + 10) return null;
+  const A = Array.from({ length: p }, () => new Array(p).fill(0)), b = new Array(p).fill(0);
+  for (let i = 0; i < n; i++) { const r = [1, ...X[i]]; for (let a = 0; a < p; a++) { b[a] += r[a] * y[i]; for (let c = 0; c < p; c++) A[a][c] += r[a] * r[c]; } }
+  for (let a = 1; a < p; a++) A[a][a] += 1e-8 * n;
+  for (let c = 0; c < p; c++) { let pv = c; for (let r = c + 1; r < p; r++) if (Math.abs(A[r][c]) > Math.abs(A[pv][c])) pv = r;
+    [A[c], A[pv]] = [A[pv], A[c]]; [b[c], b[pv]] = [b[pv], b[c]]; if (Math.abs(A[c][c]) < 1e-12) return null;
+    for (let r = 0; r < p; r++) if (r !== c) { const f = A[r][c] / A[c][c]; if (!f) continue; for (let k = c; k < p; k++) A[r][k] -= f * A[c][k]; b[r] -= f * b[c]; } }
+  const beta = b.map((v, i) => v / A[i][i]);
+  const yh = X.map(r => beta[0] + r.reduce((s, v, k) => s + v * beta[k + 1], 0)); const my = y.reduce((s, v) => s + v, 0) / n;
+  const sst = y.reduce((s, v) => s + (v - my) ** 2, 0), sse = y.reduce((s, v, i) => s + (v - yh[i]) ** 2, 0);
+  return { beta, r2: sst > 0 ? 1 - sse / sst : null };
+}
+/* SAF ÇEKİRDEK (Node + tarayıcı): G = { anliklar:[{tarih,kaynak,defw,h:{KOD:{s,f:[5]}}}], takvim:[iş günleri, artan], son,
+   kapanis:(kod,tarih)=>fiyat|null, endeks:(tarih)=>XKTUM|null, xkW:{KOD:ağırlık%}|null, xkTarih, track:{inception,holdings:[{t,w}]} } */
+function fmKarneCekirdek(G) {
+  const T = G.takvim, son = G.son;
+  const idx = d => { let lo = 0, hi = T.length - 1, a = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (T[m] <= d) { a = m; lo = m + 1; } else hi = m - 1; } return a; };
+  const kaydir = (d, n) => { const i = idx(d); if (i < 0) return null; const k = i + n; return (k >= 0 && k < T.length && T[k] <= son) ? T[k] : null; };
+  const getiri = (k, a, b) => { const p0 = G.kapanis(k, a), p1 = G.kapanis(k, b); return (p0 > 0 && p1 > 0) ? p1 / p0 - 1 : null; };
+  const ort = a => a.length ? a.reduce((s, v) => s + v, 0) / a.length : null;
+  const yv = (v, d = 2) => (v == null || !isFinite(v)) ? null : +(+v).toFixed(d);
+  const sayi = v => typeof v === 'number' && isFinite(v);
+  const kompozit = (f, w) => { let s = 0, ws = 0; FMK_FAK.forEach((k, i) => { const v = f && f[i]; if (sayi(v) && (w[k] || 0) > 0) { s += w[k] * v; ws += w[k]; } }); return ws > 0 ? s / ws : null; };
+  const sekNotr = R => { const g = {}; R.forEach(x => { (g[x.s] = g[x.s] || []).push(x.r); }); const gm = ort(R.map(x => x.r)); const m = {};
+    Object.entries(g).forEach(([s, a]) => { m[s] = a.length >= 3 ? ort(a) : gm; }); return R.map(x => x.r - m[x.s]); };
+  const tIst = (v, n) => (v == null || n <= 2) ? null : v * Math.sqrt((n - 2) / Math.max(1e-9, 1 - v * v));
+  const winsor = (a, p) => { const s = [...a].sort((x, y) => x - y); const lo = s[Math.floor(p * (s.length - 1))], hi = s[Math.ceil((1 - p) * (s.length - 1))]; return a.map(v => Math.min(hi, Math.max(lo, v))); };
+  const ANL = [...G.anliklar].sort((a, b) => a.tarih < b.tarih ? -1 : 1);
+
+  /* 1) KARNE — fotoğraf × ufuk */
+  const UFUK = [{ ad: '1A', n: 21 }, { ad: '3A', n: 63 }, { ad: 'bugune', n: null }];
+  const karne = [];
+  for (const S of ANL) {
+    if (idx(S.tarih) < 0) continue;
+    const w = S.defw || FMK_DEFW;
+    const satir = Object.entries(S.h).map(([k, v]) => ({ k, s: (v && v.s) || 'Bilinmiyor', f: (v && v.f) || [], c: kompozit(v && v.f, w) })).filter(x => x.c != null);
+    const bitisler = new Set();
+    for (const U of UFUK) {
+      const bitis = U.n ? kaydir(S.tarih, U.n) : son; if (!bitis || bitisler.has(bitis)) continue;
+      const isg = idx(bitis) - idx(S.tarih); if (isg < 5) continue; bitisler.add(bitis);
+      const R = satir.map(x => ({ ...x, r: getiri(x.k, S.tarih, bitis) })).filter(x => x.r != null);
+      if (R.length < 30) continue;
+      const rs = sekNotr(R); const ic = {}, icSn = {}, t = {};
+      FMK_FAK.forEach((f, i) => { const P = R.map((x, j) => [x.f[i], x.r, rs[j]]).filter(p => sayi(p[0]));
+        const v = fmkSpearman(P.map(p => p[0]), P.map(p => p[1])), vs = fmkSpearman(P.map(p => p[0]), P.map(p => p[2]));
+        ic[f] = yv(v, 3); icSn[f] = yv(vs, 3); t[f] = yv(tIst(v, P.length), 2); });
+      const vK = fmkSpearman(R.map(x => x.c), R.map(x => x.r));
+      ic.KOMPOZIT = yv(vK, 3); icSn.KOMPOZIT = yv(fmkSpearman(R.map(x => x.c), rs), 3); t.KOMPOZIT = yv(tIst(vK, R.length), 2);
+      const sr = [...R].sort((a, b) => b.c - a.c); const q = [];
+      for (let g = 0; g < 5; g++) q.push(yv(ort(sr.slice(Math.floor(g * sr.length / 5), Math.floor((g + 1) * sr.length / 5)).map(x => x.r)) * 100, 2));
+      const i10 = ort(sr.slice(0, 10).map(x => x.r)), s10 = ort(sr.slice(-10).map(x => x.r));
+      karne.push({ tarih: S.tarih, kaynak: S.kaynak, ufuk: U.ad, bitis, isgunu: isg, n: R.length, evren: satir.length,
+        ic, ic_sn: icSn, t, anlam_esik: yv(2 / Math.sqrt(R.length), 3), kuintil: q, makas: (q[0] != null && q[4] != null) ? yv(q[0] - q[4], 2) : null,
+        ilk10: yv(i10 * 100, 2), son10: yv(s10 * 100, 2), makas10: yv((i10 - s10) * 100, 2), evren_ort: yv(ort(R.map(x => x.r)) * 100, 2) });
+    }
+  }
+  /* 2) BİRİKEN KANIT — sabit ufuklarda faktör başına ortalama IC */
+  const kanit = {};
+  for (const u of ['1A', '3A']) { const L = karne.filter(x => x.ufuk === u); if (!L.length) continue; kanit[u] = {};
+    [...FMK_FAK, 'KOMPOZIT'].forEach(f => { const v = L.map(x => x.ic[f]).filter(sayi); if (v.length) kanit[u][f] = { ort: yv(ort(v), 3), n: v.length, pozitif: v.filter(x => x > 0).length }; }); }
+
+  /* 3) SİCİL AYRIŞTIRMASI */
+  const ayr = []; const H0 = (G.track && G.track.holdings) || []; const ink = G.track && G.track.inception;
+  const pen = []; if (ink && idx(ink) >= 0) pen.push({ ad: 'kurulus', bas: T[idx(ink)] });
+  const b3 = kaydir(son, -63), b1 = kaydir(son, -21);
+  if (b3 && (!ink || b3 > ink)) pen.push({ ad: '3A', bas: b3 }); if (b1 && (!ink || b1 > ink)) pen.push({ ad: '1A', bas: b1 });
+  const Hs = new Set(H0.map(h => h.t)); const Hw = new Map(H0.map(h => [h.t, sayi(h.w) && h.w > 0 ? h.w : 1]));
+  for (const W of pen) {
+    const S = ANL.filter(a => a.tarih <= W.bas).pop(); if (!S) { ayr.push({ pencere: W.ad, bas: W.bas, hata: 'pencere başından önce skor fotoğrafı yok' }); continue; }
+    const evr = new Map(); Object.entries(S.h).forEach(([k, v]) => evr.set(k, { k, s: (v && v.s) || 'Bilinmiyor', f: (v && v.f) || [] }));
+    H0.forEach(h => { if (!evr.has(h.t)) { const x = ANL.map(a => a.h[h.t]).find(Boolean); evr.set(h.t, { k: h.t, s: (x && x.s) || 'Bilinmiyor', f: [], ek: true }); } });
+    const U = [...evr.values()].map(x => ({ ...x, r: getiri(x.k, W.bas, son) })).filter(x => x.r != null);
+    const HP = U.filter(x => Hs.has(x.k));
+    if (HP.length < H0.length * 0.8 || U.length < 40) { ayr.push({ pencere: W.ad, bas: W.bas, hata: 'kapsam yetersiz: sepet ' + HP.length + '/' + H0.length + ' · evren ' + U.length }); continue; }
+    const wT = HP.reduce((s, x) => s + Hw.get(x.k), 0); const wp = new Map(HP.map(x => [x.k, Hw.get(x.k) / wT]));
+    const Rp = HP.reduce((s, x) => s + wp.get(x.k) * x.r, 0), Rew = ort(U.map(x => x.r));
+    const e0 = G.endeks(W.bas), e1 = G.endeks(son); const Rb = (e0 > 0 && e1 > 0) ? e1 / e0 - 1 : null;
+    /* piyasa değeri ağırlıklı yeniden kurulum: başlangıç ağırlığı = bugünkü ağırlık ÷ (1 + bas→xkTarih getirisi) */
+    let Rcw = null, konst = null, xkKap = null; const w0m = new Map();
+    if (G.xkW) { const K = [];
+      for (const [k, w] of Object.entries(G.xkW)) { if (!(w > 0)) continue; const rx = getiri(k, W.bas, G.xkTarih || son), r = getiri(k, W.bas, son); if (rx == null || r == null) continue; K.push({ k, w0: w / (1 + rx), r }); }
+      const t0 = K.reduce((s, x) => s + x.w0, 0);
+      if (K.length >= 30 && t0 > 0) { K.forEach(x => { x.w0 /= t0; w0m.set(x.k, x.w0); }); K.sort((p, q) => q.w0 - p.w0); xkKap = K.length;
+        Rcw = K.reduce((s, x) => s + x.w0 * x.r, 0);
+        const ilk = K.slice(0, 3), iw = ilk.reduce((s, x) => s + x.w0, 0), ik = ilk.reduce((s, x) => s + x.w0 * x.r, 0);
+        konst = { ilk3: ilk.map(x => ({ k: x.k, w0: yv(x.w0 * 100, 1), r: yv(x.r * 100, 1), modelde: Hs.has(x.k), model_w: Hs.has(x.k) ? yv(wp.get(x.k) * 100, 1) : 0 })),
+          ilk3_agirlik: yv(iw * 100, 1), ilk3_katki: yv(ik * 100, 2), kalan_getiri: yv((Rcw - ik) / Math.max(1e-9, 1 - iw) * 100, 2) }; } }
+    /* Brinson-Fachler — kıyas: AYNI evrenin eşit ağırlıklısı (Σ dağılım + Σ seçim = Rp − Rew, tam) */
+    const sek = {}; U.forEach(x => { const o = sek[x.s] = sek[x.s] || { s: x.s, nU: 0, rU: 0, wP: 0, rP: 0, nP: 0 }; o.nU++; o.rU += x.r; if (wp.has(x.k)) { o.wP += wp.get(x.k); o.rP += wp.get(x.k) * x.r; o.nP++; } });
+    let dT = 0, sT = 0;
+    const B = Object.values(sek).map(o => { const wu = o.nU / U.length, ru = o.rU / o.nU, rp = o.wP > 0 ? o.rP / o.wP : null;
+      const d = (o.wP - wu) * (ru - Rew), s = o.wP > 0 ? o.wP * (rp - ru) : 0; dT += d; sT += s;
+      return { s: o.s, n_evren: o.nU, n_model: o.nP, wp: yv(o.wP * 100, 1), wu: yv(wu * 100, 1), rp: rp == null ? null : yv(rp * 100, 1), ru: yv(ru * 100, 1), dagilim: yv(d * 100, 2), secim: yv(s * 100, 2) }; })
+      .sort((a, b) => (Math.abs(b.dagilim) + Math.abs(b.secim)) - (Math.abs(a.dagilim) + Math.abs(a.secim)));
+    /* Faktör: yatay kesit EKK  r_i = a + Σ b_k z_ik (+ büyüklük) — eksik z = 0 (evren ortalaması), z ±3'te kırpılır, getiri %2/%98 winsor */
+    const FX = U.map(x => FMK_FAK.map((f, i) => sayi(x.f[i]) ? Math.max(-3, Math.min(3, x.f[i])) : 0));
+    let boy = false;
+    if (w0m.size) { const lw = U.map(x => w0m.has(x.k) ? Math.log(w0m.get(x.k)) : null); const v = lw.filter(sayi).sort((a, b) => a - b);
+      if (v.length >= U.length * 0.8) { const p10 = v[Math.floor(0.1 * (v.length - 1))]; const L2 = lw.map(z => sayi(z) ? z : p10); const m = ort(L2), sd = Math.sqrt(ort(L2.map(z => (z - m) ** 2))) || 1;
+        L2.forEach((z, i) => FX[i].push((z - m) / sd)); boy = true; } }
+    const AD = boy ? [...FMK_FAK, 'BUYUKLUK'] : FMK_FAK.slice();
+    const O = fmkEkk(FX, winsor(U.map(x => x.r), 0.02)); let faktor = null;
+    if (O) { const ix = new Map(U.map((x, i) => [x.k, i])); let kT = 0;
+      const L = AD.map((f, j) => { const hm = HP.reduce((s, x) => s + wp.get(x.k) * FX[ix.get(x.k)][j], 0), um = ort(FX.map(r => r[j])); const k = (hm - um) * O.beta[j + 1]; kT += k;
+        return { f, model: yv(hm, 2), evren: yv(um, 2), aktif: yv(hm - um, 2), getiri_1s: yv(O.beta[j + 1] * 100, 2), katki: yv(k * 100, 2) }; });
+      faktor = { r2: yv(O.r2, 3), n: U.length, boyut: boy, satirlar: L, toplam: yv(kT * 100, 2), kalan: yv(((Rp - Rew) - kT) * 100, 2) }; }
+    /* kuruluş penceresi: eşit ağırlıklı evrenin GÜNLÜK serisi — sicil grafiğinde üçüncü çizgi (faktörün asıl kıyası) */
+    let seri = null;
+    if (W.ad === 'kurulus') { seri = []; const p0 = new Map(U.map(x => [x.k, G.kapanis(x.k, W.bas)]));
+      for (let i = idx(W.bas); i <= idx(son); i++) { const d = T[i]; const v = [];
+        for (const x of U) { const a = p0.get(x.k), b = G.kapanis(x.k, d); if (a > 0 && b > 0) v.push(b / a - 1); }
+        if (v.length >= U.length * 0.8) seri.push({ d, ew: yv(ort(v) * 100, 2) }); } }
+    const kat = HP.map(x => ({ k: x.k, s: x.s, r: x.r, katki: wp.get(x.k) * (x.r - Rew) })).sort((a, b) => b.katki - a.katki);
+    const fk = x => ({ k: x.k, s: x.s, r: yv(x.r * 100, 1), katki: yv(x.katki * 100, 2) });
+    ayr.push({ pencere: W.ad, bas: W.bas, bitis: son, anlik: S.tarih, anlik_kaynak: S.kaynak, anlik_yas_isgunu: idx(W.bas) - idx(S.tarih),
+      n_sepet: HP.length, n_sepet_toplam: H0.length, n_evren: U.length,
+      Rp: yv(Rp * 100, 2), Rew: yv(Rew * 100, 2), Rb: Rb == null ? null : yv(Rb * 100, 2), Rcw: Rcw == null ? null : yv(Rcw * 100, 2), xk_kapsam: xkKap,
+      fark: Rb == null ? null : yv((Rp - Rb) * 100, 2), agirlik_etkisi: Rb == null ? null : yv((Rew - Rb) * 100, 2), secim_etkisi: yv((Rp - Rew) * 100, 2),
+      konsantrasyon: konst, sektor: { satirlar: B, dagilim: yv(dT * 100, 2), secim: yv(sT * 100, 2) }, faktor,
+      en_iyi: kat.slice(0, 5).map(fk), en_kotu: kat.slice(-5).reverse().map(fk), ...(seri ? { seri } : {}) });
+  }
+  return { karne, kanit, ayristirma: ayr };
+}
+
+/* Yahoo adjclose — fmHesapla'daki 'tek' ile aynı kural (seans bitmeden günün barı kullanılmaz) */
+async function fmkFiyatCek(kodlar) {
+  const PX = {}; let i = 0;
+  const bugunTR = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }); const saatTR = +new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', hour12: false });
+  const tek = async kod => { try {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(kod + '.IS') + '?interval=1d&range=1y', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) return; const d = (await r.json())?.chart?.result?.[0]; if (!d) return;
+    const adj = d.indicators?.adjclose?.[0]?.adjclose, ham = d.indicators?.quote?.[0]?.close, ts = d.timestamp || [];
+    const cc = (Array.isArray(adj) && adj.some(x => typeof x === 'number')) ? adj : (ham || []);
+    let sonIdx = ts.length - 1; while (sonIdx >= 0 && new Date(ts[sonIdx] * 1000).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }) === bugunTR && saatTR < 19) sonIdx--;
+    const o = { t: [], c: [] }; for (let j = 0; j <= sonIdx; j++) if (typeof cc[j] === 'number' && cc[j] > 0) { o.t.push(new Date(ts[j] * 1000).toISOString().slice(0, 10)); o.c.push(cc[j]); }
+    if (o.c.length >= 20) PX[kod] = o;
+  } catch (e) {} };
+  const isci = async () => { while (i < kodlar.length) { const k = kodlar[i++]; await tek(k); } };
+  await Promise.all(Array.from({ length: 6 }, isci));
+  return PX;
+}
+async function fmArsivGuncelle() {
+  const dosya = 'fm-arsiv.json';
+  let A = null; try { if (await varMi(dosya)) A = await oku(dosya); } catch (e) {}
+  if (!A || !Array.isArray(A.anliklar)) A = { anliklar: [] };
+  A._not = '§529 faktör skoru NOKTA-ZAMAN arşivi: o gün bilinen skor (fm.json data) — karne bunlardan sonraki getiriyi ölçer. Koyfin dönemi (14 Tem · 24 Ağu) git geçmişinden; sonra her ISO haftanın ilk fotoğrafı. 26 haftadan eskiler ayda bire seyreltilir; Koyfin tohumları kalıcı.';
+  const ekle = (F, kaynak) => { const m = (F && F.meta) || {}; const tarih = m.tarih; if (!tarih || !Array.isArray(F.data) || F.data.length < 30) return false;
+    if (A.anliklar.some(a => a.tarih === tarih)) return false;
+    const h = {}; F.data.forEach(r => { if (r && r.t && Array.isArray(r.f)) h[r.t] = { s: r.s || 'Bilinmiyor', f: r.f.map(v => (typeof v === 'number' && isFinite(v)) ? +v.toFixed(3) : null) }; });
+    A.anliklar.push({ tarih, kaynak, defw: m.defw || FMK_DEFW, n: Object.keys(h).length, h }); return true; };
+  let tohum = 0;
+  if (!A.tohum_tamam) { const repo = process.env.GITHUB_REPOSITORY || 'fkasap/Ktpanel2'; const yol = path.relative(process.cwd(), path.join(KOK, 'fm.json')).split(path.sep).join('/');
+    let hepsi = true;
+    for (const t of FMK_TOHUM) { try { const r = await fetch('https://raw.githubusercontent.com/' + repo + '/' + t.sha + '/' + yol, { signal: AbortSignal.timeout(20000) });
+        if (!r.ok) { hepsi = false; continue; } if (ekle(await r.json(), t.kaynak)) tohum++; } catch (e) { hepsi = false; } }
+    if (hepsi) A.tohum_tamam = bugun; }
+  /* bugünkü fotoğraf: aynı ISO haftada §455 fotoğrafı yoksa eklenir */
+  let yeni = false;
+  try { const F = await oku('fm.json'); const tarih = F.meta && F.meta.tarih;
+    const hafta = d => { const x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7)); return x.toISOString().slice(0, 10); };   /* haftanın pazartesisi */
+    if (tarih && !A.anliklar.some(a => hafta(a.tarih) === hafta(tarih))) yeni = ekle(F, String((F.meta && F.meta._kaynak) || '').indexOf('§455') >= 0 ? '§455 KAP+Yahoo' : 'fm.json'); } catch (e) {}
+  /* seyreltme: Koyfin tohumu kalıcı; 26 haftadan eski §455 fotoğrafları ayda bire */
+  A.anliklar.sort((a, b) => a.tarih < b.tarih ? -1 : 1);
+  const sinir = new Date(Date.now() - 182 * 864e5).toISOString().slice(0, 10); const ayG = new Set();
+  A.anliklar = A.anliklar.filter(a => { if (/Koyfin/.test(a.kaynak) || a.tarih >= sinir) return true; const ay = a.tarih.slice(0, 7); if (ayG.has(ay)) return false; ayG.add(ay); return true; });
+  A.guncelleme = bugun;
+  await fs.writeFile(path.join(KOK, dosya), JSON.stringify(A), 'utf8');   /* tek satır: girintili yazım 4 kat şişirir */
+  if (tohum || yeni) degisenler.push('fm-arsiv' + (tohum ? ' (tohum ' + tohum + ')' : ' (+1 fotoğraf)'));
+  return { A, tohum, yeni };
+}
+async function fmKarneUret(PXgelen) {
+  const { A, tohum, yeni } = await fmArsivGuncelle();
+  if (A.anliklar.length < 1) { raporlar.push('### Faktör karnesi (§529) — ⏭ arşivde skor fotoğrafı yok'); return; }
+  let ar = {}; try { ar = (await oku('endeks-arsiv.json')).gunler || {}; } catch (e) {}
+  const sinir = new Date(Date.now() - 400 * 864e5).toISOString().slice(0, 10);
+  const takvim = Object.keys(ar).filter(g => g >= sinir && ar[g] && ar[g].XKTUM > 0).sort();
+  if (takvim.length < 30) { raporlar.push('### Faktör karnesi (§529) — ⏭ endeks arşivinde XKTUM takvimi yok'); return; }
+  let track = null; try { track = await oku('track.json'); } catch (e) {}
+  let xk = null; try { xk = await oku('xktum.json'); } catch (e) {}
+  const gerek = new Set(); A.anliklar.forEach(a => Object.keys(a.h).forEach(k => gerek.add(k))); ((track && track.holdings) || []).forEach(h => gerek.add(h.t)); Object.keys((xk && xk.uyeler) || {}).forEach(k => gerek.add(k));
+  const PX = Object.assign({}, PXgelen || {}); const eksik = [...gerek].filter(k => !PX[k]).slice(0, 320);
+  if (eksik.length) Object.assign(PX, await fmkFiyatCek(eksik));
+  const kapanis = (k, d) => { const o = PX[k]; if (!o || !o.t.length) return null; let lo = 0, hi = o.t.length - 1, a = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (o.t[m] <= d) { a = m; lo = m + 1; } else hi = m - 1; }
+    if (a < 0) return null; return ((Date.parse(d) - Date.parse(o.t[a])) / 864e5 <= 7) ? o.c[a] : null; };
+  /* son = fiyat kapsamı ≥%70 olan en yeni iş günü (Yahoo bir gün geride kalabilir) */
+  const kodL = Object.keys(PX); let son = null;
+  for (let i = takvim.length - 1; i >= Math.max(0, takvim.length - 6); i--) { const d = takvim[i]; const v = kodL.filter(k => PX[k].t[PX[k].t.length - 1] >= d).length; if (v >= kodL.length * 0.7) { son = d; break; } }
+  if (!son) { raporlar.push('### Faktör karnesi (§529) — ✗ fiyat kapsamı yetersiz (' + kodL.length + ' seri)'); return; }
+  const endeks = d => { let a = null; for (const g of takvim) { if (g <= d) a = g; else break; } return a ? ar[a].XKTUM : null; };
+  const C = fmKarneCekirdek({ anliklar: A.anliklar, takvim, son, kapanis, endeks, xkW: (xk && xk.uyeler) || null, xkTarih: (xk && xk.fiyat_tarihi) || son,
+    track: track ? { inception: track.inception, holdings: track.holdings } : null });
+  if (!C.karne.length && !C.ayristirma.length) { raporlar.push('### Faktör karnesi (§529) — ✗ karne de ayrıştırma da boş (fotoğraf ' + A.anliklar.length + ', fiyat ' + kodL.length + ') — dosya yazılmadı'); return; }
+  const ts = track && Array.isArray(track.series) && track.series.length ? track.series[track.series.length - 1] : null;
+  const out = { guncelleme: bugun, son, kaynak: 'fm-arsiv.json (nokta-zaman skor) · Yahoo adjclose · endeks-arsiv.json XKTUM · track.json · xktum.json',
+    _yontem: '§529 IC = Spearman sıra korelasyonu (skor ↔ sonraki getiri). Sektör-nötr IC: getiriden sektör ortalaması çıkarılır. |IC| > 2/√n ≈ %95 anlamlılık (tek kesit). Örtüşen pencereler bağımsız değildir. Ayrıştırma: eşit ağırlıklı evren kıyası; faktör katkısı = aktif maruziyet × EKK faktör getirisi, kalan = hisseye özgü.',
+    fotograflar: A.anliklar.map(a => ({ tarih: a.tarih, kaynak: a.kaynak, n: a.n })), track_resmi: ts ? { tarih: ts.d, model: ts.model, endeks: ts.endeks, inception: track.inception } : null, ...C };
+  await yaz('fm-karne.json', out); degisenler.push('fm-karne');
+  const ana = C.ayristirma.find(x => x.pencere === 'kurulus' && !x.hata);
+  const ic0 = C.karne.find(x => track && x.tarih === track.inception && x.ufuk === 'bugune');
+  raporlar.push('### Faktör karnesi (§529) — ✓ ' + A.anliklar.length + ' fotoğraf' + (tohum ? ' (tohum +' + tohum + ')' : '') + (yeni ? ' · bu hafta +1' : '') + ' · ' + C.karne.length + ' karne satırı · son ' + son +
+    (ana ? ' · sicil: model ' + ana.Rp + '% / eşit ağ. evren ' + ana.Rew + '% / XKTUM ' + ana.Rb + '% → ağırlık etkisi ' + ana.agirlik_etkisi + ' · seçim ' + ana.secim_etkisi : '') +
+    (ic0 ? ' · kuruluş fotoğrafı kompozit IC ' + ic0.ic.KOMPOZIT + ' (n ' + ic0.n + ')' : '') + (eksik.length ? ' · ek fiyat ' + eksik.length : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -5988,6 +6226,7 @@ async function fmHesapla() {
     if (o.c.length >= 60) PX[kod] = o;
   } catch (e) {} };
   { let i = 0; const isci = async () => { while (i < uyeler.length) { const k = uyeler[i++]; await tek(k); } }; await Promise.all(Array.from({ length: 8 }, isci)); }
+  FM_PX_SON = PX;   /* §529: karne aynı fiyatları kullanır (yeniden çekmez) */
   /* §457 FONZİ GERÇEKLEŞEN (7 Eki): fon krizi penceresi 15 Eyl → 30 Eyl (dip) hisse bazında gerçekleşen
      getiri — Yahoo adjclose (bölünme/bedelsiz düzeltilmiş; Fintables ham kapanışında HRKET 80→8 gibi
      bölünmeler çöküş gibi görünür). Stres testi "o kriz tekrar olsa" sorusunu bununla cevaplar. */
@@ -6660,6 +6899,7 @@ async function bultenKesif() {
     await olcKos('Faktör evreni (§361)', ()=>faktorEvren());
     await olcKos('Multiple kendi verimizden (§496)', ()=>multipleKendi());   /* §496: faktör evreninin KAP TTM'i → multiple.json (Fintables yok) */   /* SS361: kademeli KAP çekimi */
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
+    await olcKos('Faktör karnesi (§529)', ()=>fmKarneUret(FM_PX_SON));   /* §529: nokta-zaman skor → sonraki getiri · sicil ayrıştırması */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
     await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());   /* §499: KAP arşivi çekirdek FAVÖK ÷ faaliyet raporu tonajı (EREGL/KRDMD) */   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
@@ -6679,6 +6919,7 @@ async function bultenKesif() {
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
   if (KSET.has('kardemir')) await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* elle: --katman=kardemir — yalnız Kardemir açık API (geriye doldurma ~2 dk/koşu) */
   if (KSET.has('fm')) await olcKos('Faktör skorları (§455)', ()=>fmHesapla());
+  if (KSET.has('fm') || KSET.has('fmkarne')) await olcKos('Faktör karnesi (§529)', ()=>fmKarneUret(KSET.has('fm') ? FM_PX_SON : null));   /* elle: --katman=fmkarne (fiyatları kendisi çeker) */
   if (KSET.has('fm') || KSET.has('multiple')) await olcKos('Multiple kendi verimizden (§496)', ()=>multipleKendi());   /* elle: --katman=multiple */   /* elle: --katman=fm */
   /* §448 SEC ticker yedeği: Cumartesi (hepsi) SEC'den company_tickers.json'u alıp repoya yazar; Vercel'in
      SEC'e erişimi engellenirse edgar.js bu yedeği okur. GitHub runner'ı SEC engelliyorsa rapor söyler. */
