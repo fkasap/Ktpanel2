@@ -856,7 +856,15 @@ async function bulutOku(){
 function haftalikBas(ym, secili){
   const yas = secili.ts ? Math.floor((Date.now()-secili.ts)/864e5) : null;
   const yh=$('yorumHafta');
-  if(yas!=null && yas>10){
+  /* §534 (25 Eki tarama): 22 Eki 16:56'da yazılan not "politika faizi %37" diyordu — PPK aynı gün −100bp'yi akşam açıkladı, not karardan
+     SAATLER önce üretilmişti. 3 günlük not bayat sayılmıyordu ama içeriği eskimişti. Kural: nottan SONRA PPK kararı geldiyse not ARŞİV'e
+     düşer (kararın tarihi ve adımı yazılır). Karar tarihi tek kaynaktan: POL_CANLI.karar (§514, EVDS serisinden türetilir). */
+  let ppk=null; try{ const k=window.POL_CANLI&&window.POL_CANLI.karar; const m=k&&String(k.tarih).match(/^(\d{2})-(\d{2})-(\d{4})/);
+    if(m&&secili.ts){ const kt=new Date(+m[3],+m[2]-1,+m[1],14,0,0).getTime(); if(kt>secili.ts) ppk={gun:(+m[1])+' '+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][+m[2]-1], bp:k.bp, yeni:k.yeni}; } }catch(e){}
+  if(ppk){
+    ym.innerHTML='<div data-tarihsel="AI haftalık not · PPK öncesi"><div class="sub" style="font-size:10px;color:var(--down);margin-bottom:8px">⚠ ARŞİV — bu not '+new Date(secili.ts).toLocaleString('tr-TR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})+'\'te, '+ppk.gun+' PPK kararından ('+(ppk.bp>0?'+':'−')+Math.abs(ppk.bp)+' bp → %'+String(ppk.yeni).replace('.',',')+') ÖNCE yazıldı; faiz rakamları eskidir. Güncel duruş için Fonlama kartı ve Taktiksel Dağılım esas alınır; yeni not Pazartesi kendiliğinden yazılır.</div>'+secili.html+'</div>';
+    if(yh) yh.textContent=(secili.etiket||'HAFTALIK NOT')+' · PPK ÖNCESİ (ARŞİV)';
+  } else if(yas!=null && yas>10){
     ym.innerHTML='<div data-tarihsel="AI haftalık not · '+yas+' gün önce"><div class="sub" style="font-size:10px;color:var(--down);margin-bottom:8px">⚠ ARŞİV — bu not '+yas+' gün önce ('+new Date(secili.ts).toLocaleDateString('tr-TR')+') yazıldı; içindeki rakamlar o günündür. Güncel duruş için Taktiksel Dağılım (kurallı model) ve canlı kartlar esas alınır.</div>'+secili.html+'</div>';
     if(yh) yh.textContent=(secili.etiket||'HAFTALIK NOT')+' · ARŞİV ('+yas+' GÜN)';
   } else { ym.innerHTML=secili.html; if(secili.etiket&&yh) yh.textContent=secili.etiket; }   /* §422c */
@@ -1248,7 +1256,8 @@ async function haftalikYorumYaz(zorla, kip){
      "sozdizimi temiz" tanimin VAR oldugunu gostermez. */
   const cekEl=(id)=>{ const e=$(id); return e?(e.textContent||'').replace(/\s+/g,' ').trim():null; };
   const cekirdek=[
-    ['Politika faizi / AOFM', cekEl('aofmLive')],
+    ['Politika faizi (1 hafta repo, EVDS canlı)', cekEl('polLive')], ['Son PPK kararı', cekEl('polTag')],   /* §534: not karar gününde yazılırsa doğru rakamı görsün */
+    ['AOFM', cekEl('aofmLive')],
     ['TLREF (politika faizine makas)', cekEl('tlrefLive')],
     ['Gosterge tahvil 2Y', cekEl('gosterge2y')],
     ['ABD 10Y', cekEl('us10y')], ['ABD 30Y (egim)', cekEl('us30y')],
