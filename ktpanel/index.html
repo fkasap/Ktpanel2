@@ -297,7 +297,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
   <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin:3px 2px 12px"><span>KORKU</span><span>NÖTR</span><span>AÇGÖZLÜLÜK</span></div>
   <div id="riskBaroBilesen"></div>
-  <div class="note">Dokuz bileşenli 0–100 skor: <b>küresel</b> (VIX), <b>ülke riski</b> (CDS seviyesi + son 1 aydaki YÖNÜ), <b>trend</b> (XU100 1 ve 3 ay), <b>piyasa yapısı</b> (52 haftalık zirveden uzaklık · kaç sektörün artıda olduğu · gerçekleşen oynaklık) ve <b>anlık</b> günlük hareket (yalnız %5). Tek günün yönü artık skoru taşımaz; bir ayda %15 düşüp son gün yatay kapanan piyasa "nötr" görünmez. Okuma: uçlar (0–25 / 75–100) çoğu zaman dönüş bölgesidir — "başkaları korkarken açgözlü ol" kuralı ancak trend ve genişlik dönmeye başlayınca uygulanabilir; skor tek başına alım sinyali değildir, teyit ister.</div>
+  <div class="note">On bir bileşenli 0–100 skor (§537: <b>akış</b> — yabancı hisse net alımı 4 hafta, EVDS; katılım hisse fonlarına akış 1 ay / AUM, TEFAS pay adedi × fiyat — para girişi iştah, çıkışı korku): <b>küresel</b> (VIX), <b>ülke riski</b> (CDS seviyesi + son 1 aydaki YÖNÜ), <b>trend</b> (XU100 1 ve 3 ay), <b>piyasa yapısı</b> (52 haftalık zirveden uzaklık · kaç sektörün artıda olduğu · gerçekleşen oynaklık) ve <b>anlık</b> günlük hareket (yalnız %5). Tek günün yönü artık skoru taşımaz; bir ayda %15 düşüp son gün yatay kapanan piyasa "nötr" görünmez. Okuma: uçlar (0–25 / 75–100) çoğu zaman dönüş bölgesidir — "başkaları korkarken açgözlü ol" kuralı ancak trend ve genişlik dönmeye başlayınca uygulanabilir; skor tek başına alım sinyali değildir, teyit ister.</div>
 </div>
 <div class="card" style="margin-top:10px">
   <div class="lbl">TOPARLANMA MONİTÖRÜ <span class="thin">(dönüş başladı mı?)</span> <span class="tag" id="tpTag">—</span></div>
@@ -617,8 +617,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
       </svg></div>
     </div>
     <div>
-      <div class="sub" style="text-align:center;font-weight:600;color:var(--purple);margin-bottom:2px">ALMANYA — normal (yatık)</div><div id="egriDECanli" class="sub" style="text-align:center;font-size:10px"></div>
-      <svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Almanya getiri eğrisi">
+      <div class="sub" style="text-align:center;font-weight:600;color:var(--purple);margin-bottom:2px">ALMANYA / AVRO AAA — normal (yatık)</div><div id="egriDECanli" class="sub" style="text-align:center;font-size:10px"></div>
+      <div id="egriDEKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Almanya getiri eğrisi">
         <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
         <polyline points="20,110 113.3,95 206.7,66.5 300,20" fill="none" stroke="#8B6FD8" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="20" cy="110" r="3.2" fill="#8B6FD8"/>
@@ -628,11 +628,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
         <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">2Y</text>
         <text x="206.7" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">10Y</text>
         <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">30Y</text>
-      </svg>
+      </svg></div>
     </div>
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:#E8933B;margin-bottom:2px">JAPONYA — çok dik</div><div id="egriJPCanli" class="sub" style="text-align:center;font-size:10px"></div>
-      <svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Japonya getiri eğrisi">
+      <div id="egriJPKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Japonya getiri eğrisi">
         <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
         <polyline points="20,110 113.3,93.2 206.7,61 300,20" fill="none" stroke="#E8933B" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="20" cy="110" r="3.2" fill="#E8933B"/>
@@ -642,7 +642,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
         <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">2Y</text>
         <text x="206.7" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">10Y</text>
         <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">30Y</text>
-      </svg>
+      </svg></div>
     </div>
   </div>
   <div class="note">Dört eğri, dört makro rejim: <em>Türkiye ters</em> (2Y %41 &gt; 10Y %33) — piyasa dezenflasyon ve indirim bekliyor, "yüksek faiz kalıcı değil" tezi. <em>ABD dik-normal</em> — sağlıklı büyüme + term premium. <em>Almanya yatık-normal</em> — ECB normalleşmesi, ılımlı büyüme. <em>Japonya çok dik</em> — on yılların deflasyonundan çıkış; BoJ sıkılaşması ve ¥370 trn'lik mali genişleme endişesi uzun ucu (30Y ≈%3,9) yukarı çekiyor. Klasik ders: ters eğri (TR) yavaşlama/dezenflasyon habercisi, dik eğriler (JP, US) canlanma/enflasyon. Türkiye'nin tersliği gelişmiş ülkelerin dikliğiyle taban tabana zıt — EM dezenflasyon hikâyesinin fiyata yansıması. <em>Not:</em> Almanya/Japonya ara vadeleri (5Y) yaklaşık; 2Y, 10Y ve uzun uç kesin verilerdir.</div>
@@ -1727,18 +1727,20 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div id="avEnfBody"><div class="sub">HICP yükleniyor…</div></div>
 <div class="note" style="font-size:10px"><b>Çekirdek ve hizmet, ECB'nin asıl baktığı yerdir.</b> Manşet enerji ve gıdayla oynar; ECB'nin kontrol edebildiği kısım çekirdektir. <b>Hizmet enflasyonu</b> ücretlere bağlı olduğu için en yapışkan kalemdir — manşet hedefe inse bile hizmet %3'ün üstünde kalıyorsa indirim gecikir. Ülke kırılımı parçalanma riskini gösterir: Almanya ile Güney arasındaki fark açılırsa tek para politikası herkese aynı gelmez. Kaynak: ECB Data Portal · ICP akışı · yıllık değişim (ANR).</div></div>
   <div class="card">
-    <div class="lbl">AVRUPA MEGA-CAP <span class="tag snap">FİYAT CANLI · ARAŞTIRMA 27 TEM</span></div>
+    <div class="lbl">AVRUPA MEGA-CAP <span class="tag snap" id="avMegaTag">FİYAT CANLI · NOT 27 TEM (ARŞİV)</span></div>
 <!-- §282 CANLI FİYAT SATIRI. Kart 17 gündür elle ve donmuş; altındaki
      araştırma notları DEĞERLİ (çeyrek rakamları, rehberlik) ve kalıyor,
      ama FİYATLAR canlıya bağlandı. Yahoo ücretsiz ve sınırsız —
      Marketstack kotası (ayda 100) buraya harcanmadı. -->
 <div id="avMegaFiyat" style="font-size:10px;color:var(--muted);margin:2px 0 6px"></div>
+<div data-tarihsel="Avrupa mega-cap araştırma notu · 27 Tem 2026"><div class="sub" style="font-size:9.5px;margin-bottom:4px">⚠ Aşağıdaki not 27 Tem 2026 tarihli (2Ç bilanço sezonu) — ARŞİV; fiyat satırı canlı.</div>
     <div class="kv"><span class="k">ASML <span class="sub">(Q2: 15 Tem, açıklandı)</span></span><span>ciro €9,3 mlr beat · <b>2026 görünüm €36-40→€43-45 mlr'a YÜKSELTİLDİ</b></span></div>
     <div class="kv"><span class="k">ASML değerleme</span><span>Avrupa'nın İLK 700 mlr $ şirketi — LVMH/Novo/SAP'ı geçti</span></div>
     <div class="kv"><span class="k">LVMH · SAP · Novo</span><span class="down">yılbaşından ~−%30 · Stoxx 600 kaybının %53'ü bu üçünden</span></div>
     <div class="kv"><span class="k">Novo Nordisk <span class="sub">(Q2: 5 Ağu)</span></span><span>2026 rehberlik: satış/kâr −%4-12 — GLP-1 rekabeti + jenerikler</span></div>
     <div class="note" style="font-size:10px"><b>"İki Avrupa" teması:</b> AI tedarik zinciri (ASML: 2027 EUV siparişleri dolu, +%30 kapasite, 2028'e ek +%30 planı — kapasiteyi karneyle dağıtıyor) uçarken eski şampiyonlar (lüks/yazılım/ilaç) çöküyor — endeks yeşili tema ayrışmasını gizler. Türkiye bağı: LVMH zayıflığı = Çin lüks talebi sinyali (CAC notuyla bağlı); ASML gücü = AI capex temasının sağlamlığı → ABD sekmesindeki mega-cap kartıyla aynı hikayenin iki kıtası. Novo'nun 5 Ağu bilançosu Avrupa'nın "değer tuzağı mı dip mi" sorusunun ilk cevabı.</div>
   </div>
+</div>
 </div>
 </div><div class="tab" id="t17"><h2>ABD</h2>
 
@@ -1951,7 +1953,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261025f"></script>
+<script src="/app.js?v=20261025g"></script>
 <script src="/ajan.js?v=20261025b"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

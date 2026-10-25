@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025f';   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025g';   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2439,6 +2439,7 @@ async function kararInit(force){
     ]);
     KARAR.surucu=s; KARAR.model=m; KARAR.hazir=true; KARAR.hata=null;
     try{ const rk=await fetch('/kamu-yatirim.json',{cache:'no-store'}); KARAR.kamu=rk.ok?await rk.json():null; }catch(e){ KARAR.kamu=null; }   /* §533 kamu yatırım nabzı */
+    try{ const rd=await fetch('/degerleme.json',{cache:'no-store'}); const dj=rd.ok?await rd.json():null; KARAR.deg={}; ((dj&&dj.hisseler)||[]).forEach(h=>{ KARAR.deg[h.k]=h; }); KARAR.degMeta=dj?{guncelleme:dj.guncelleme, kendi:/§539/.test(String(dj.kaynak||''))}:null; }catch(e){ KARAR.deg={}; }   /* §539 PD/DD bandı */
     (m.modeller||[]).forEach(x=>{ if(!x.favok) x.favok={}; if(x.orneklem) x.orneklem.forEach(r=>{ x.favok[r.q]=x.favok[r.q]||{}; if(x.favok[r.q].usd==null) x.favok[r.q].usd=r.favok_usd; if(x.favok[r.q].tl==null) x.favok[r.q].tl=r.favok_tl; }); });
     const sel=$('kararKod');
     if(sel && !sel.options.length){
@@ -2592,6 +2593,11 @@ function kararPuan(M, H, F){
         ekle('Yönetim hedefi izi ('+G.yil+' FAVÖK '+trN(lo,1)+'–'+trN(hi,1)+' mlr ₺)', 'yıl içi '+trN(ytd,2)+' · son çeyrek '+trN(son,2)+' · gereken '+trN(Math.max(0,gLo),2)+'–'+trN(Math.max(0,gOrt),2)+'/çeyrek', son>=gOrt?1:son<gLo?-1:0,
           son>=gOrt?'Son çeyrek koşu hızı hedef aralığının ortasına yetiyor':son<gLo?'Son çeyrek koşu hızı hedefin alt ucuna bile yetmiyor: revizyon riski':'Koşu hızı alt uca yetiyor, ortaya yetmiyor'+(G.kaynak?' · kaynak: '+G.kaynak:'')); }
       else if(ger.length===4){ const fy=yq.reduce((a,q)=>a+FV[q].tl,0); ekle('Yönetim hedefi ('+G.yil+') — sonuç', trN(fy,2)+' mlr ₺', 0, fy>=G.favok_tl_mlr[0]?'Hedef aralığı tutturuldu':'Hedefin altında kalındı', true); } } }
+  /* §539 PD/DD z MERCEĞİ (kendi verimiz, degerleme.json): FAVÖK çarpanı olmayan hissede (banka/holding/GYO ya da zararda) PUANLANIR —
+     yoksa karar panosunda "kapsam yok" kalıyordu (BINHO). FAVÖK çarpanı puanlandıysa çift sayım olmasın diye bilgi satırı. */
+  { const dg=KARAR.deg&&KARAR.deg[M.kod]; const c=dg&&dg.canli; if(c&&c.z!=null&&dg.n>=5&&KARAR.degMeta&&KARAR.degMeta.kendi){ const z=c.z; const puanli=(F.fwd!=null&&F.fwdYuzdelik!=null)||(F.fwd==null&&F.ttm!=null&&F.ttmYuzdelik!=null);
+      const okuma=z<=-1.5?'Bandının çok altında (ucuz — kârlılık düşüşü fiyatlanmış olabilir)':z<=-0.5?'Bandının altında (ucuz)':z>=1.5?'Bandının çok üstünde (pahalı)':z>=0.5?'Bandının üstünde (pahalı)':'Bant ortasında';
+      ekle('Değerleme: PD/DD z ('+trN(c.pddd,2)+'x · bant ort. '+trN(dg.ort,2)+'x ± '+trN(dg.sapma,2)+' · '+dg.n+' çeyrek · güven '+dg.guven+')', (z>=0?'+':'')+trN(z,2)+'σ', puanli?0:(z<=-0.5?1:z>=0.5?-1:0), okuma+(puanli?' — FAVÖK çarpanı zaten puanlandı, bilgi':'')+(dg.guven==='düşük'?' · bant oynak (cv '+trN(dg.cv,2)+'), temkinli oku':''), puanli); } }
   /* §533 KAMU YATIRIM MERCEĞİ: kamu altyapı harcamasına duyarlı hisselerde merkezi yönetim sermaye giderinin yıl içi REEL y/y'si (HMB, SBB üzerinden) */
   if(M.kamu_duyarli&&KARAR.kamu&&KARAR.kamu.son){ const v=KARAR.kamu.donemler[KARAR.kamu.son], im=KARAR.kamu.ima; const s=v&&v.sermaye;
     if(s&&s.reel_yy!=null){ const r=s.reel_yy; ekle('Kamu yatırım harcaması (merkezi yönetim sermaye gideri · Ocak–'+['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'][v.ay-1]+' '+v.yil+')', 'reel '+kararIsaret(r,0,'%')+' · nominal '+kararIsaret(s.artis,0,'%'), r>5?1:r<-5?-1:0,
@@ -5988,7 +5994,16 @@ async function riskBaroEkYukle(){
   try{ await endArsivYukle(); }catch(e){}
   let cds=null; try{ const r=await fetch('/cds.json',{cache:'no-store'}); if(r.ok) cds=await r.json(); }catch(e){}
   let sk=SEKTOR; if(!sk){ try{ const r=await fetch('/sektor.json',{cache:'no-store'}); if(r.ok) sk=await r.json(); }catch(e){} }
-  __RB_EK={cds, sk}; renderRiskBaro();
+  /* §537 AKIŞ BİLEŞENLERİ: (a) yabancı hisse net alım — EVDS haftalık menkul kıymet (mod=yab), son 4 hafta toplamı mn $;
+     (b) katılım hisse fonlarına akış — fon-akis.json (pay adedi × fiyat, 22 iş günü) × fon-portfoy.json evreni (tasfiye hariç), AUM'a oran.
+     Para GİRİŞİ iştah; ÇIKIŞI korku. Her ikisi de "satıcı kim" sorusunun cevabıdır (fon tasfiyesi bu düşüşün motoruydu). */
+  let yab4=null, yabTar=null; try{ let ry=YAB_CANLI; if(!ry){ const r=await fetch('/api/evds2?mod=yab&hafta=8'); ry=r.ok?await r.json():null; }
+    if(ry&&ry.ok&&Array.isArray(ry.seri)&&ry.seri.length>=4){ const L=ry.seri.slice(-4); yab4=L.reduce((a,w)=>a+(isFinite(w.hisse)?w.hisse:0),0); yabTar=L[L.length-1].tarih; } }catch(e){}
+  let fonAk=null, fonN=0, fonTar=null; try{ const [fa,fp]=await Promise.all([fetch('/fon-akis.json',{cache:'no-store'}).then(r=>r.ok?r.json():null), fetch('/fon-portfoy.json',{cache:'no-store'}).then(r=>r.ok?r.json():null)]);
+    if(fa&&fa.gunler&&fp&&fp.evren){ const G=Object.keys(fa.gunler).sort(); if(G.length>=15){ const gS=G[G.length-1], gT=G[Math.max(0,G.length-23)]; const T=(fp.tasfiye&&fp.tasfiye.kodlar)||{}; let s=0,aum=0;
+      for(const k of Object.keys(fp.evren)){ if(T[k]) continue; const a=fa.gunler[gS][k], b=fa.gunler[gT][k]; if(a&&b&&a[1]>0){ s+=(a[0]-b[0])*a[1]; aum+=a[0]*a[1]; fonN++; } }
+      if(fonN>=15&&aum>0){ fonAk=s/aum*100; fonTar=gS; } } } }catch(e){}
+  __RB_EK={cds, sk, yab4, yabTar, fonAk, fonN, fonTar}; renderRiskBaro();
 }
 function renderRiskBaro(){
   if(!$('riskBaroSkor'))return;
@@ -6015,14 +6030,16 @@ function renderRiskBaro(){
   let gen=null, genN=0; { const L=(EK.sk&&EK.sk.sektorler)||[]; const v=L.filter(x=>x.g&&isFinite(x.g[2])); if(v.length>=8){ genN=v.length; gen=v.filter(x=>x.g[2]>0).length; } }
   let cdsD=null; { const S=EK.cds&&EK.cds.seri; if(Array.isArray(S)&&S.length>20){ const son=S[S.length-1]; const d=new Date(son[0]+'T12:00:00'); d.setDate(d.getDate()-30); const t=d.toISOString().slice(0,10); let a=null; for(const x of S){ if(x[0]<=t) a=x; else break; } if(a) cdsD=(cdsCanli?cds:son[1])-a[1]; } }
   const B=[
-    {ad:'VIX (küresel korku)', w:.15, v:cl((28-vix)/(28-13)*100), det:'%'+trN(vix,2)},
-    {ad:'TR CDS seviyesi', w:.10, v:cl((330-cds)/(330-190)*100), det:null},
-    {ad:'TR CDS yönü (1 ay)', w:.10, v:cdsD==null?null:cl((40-cdsD)/80*100), det:cdsD==null?'veri yok':(cdsD>=0?'+':'')+trN(cdsD,0)+' bp'},
-    {ad:'XU100 trend — 1 ay', w:.20, v:r1A==null?null:cl((r1A+15)/30*100), det:r1A==null?'veri yok':(r1A>=0?'+':'')+trN(r1A,1)+'%'},
-    {ad:'XU100 trend — 3 ay', w:.10, v:r3A==null?null:cl((r3A+25)/50*100), det:r3A==null?'veri yok':(r3A>=0?'+':'')+trN(r3A,1)+'%'},
-    {ad:'Zirveden uzaklık (52 hafta)', w:.10, v:dd==null?null:cl((dd+25)/25*100), det:dd==null?'veri yok':trN(dd,1)+'%'},
-    {ad:'Sektör genişliği (1 ay artıda)', w:.10, v:gen==null?null:gen/genN*100, det:gen==null?'veri yok':gen+'/'+genN+' sektör'},
-    {ad:'Gerçekleşen oynaklık (20g)', w:.10, v:rv==null?null:cl((45-rv)/30*100), det:rv==null?'veri yok':'yıllık %'+trN(rv,1)},
+    {ad:'VIX (küresel korku)', w:.12, v:cl((28-vix)/(28-13)*100), det:'%'+trN(vix,2)},
+    {ad:'TR CDS seviyesi', w:.08, v:cl((330-cds)/(330-190)*100), det:null},
+    {ad:'TR CDS yönü (1 ay)', w:.08, v:cdsD==null?null:cl((40-cdsD)/80*100), det:cdsD==null?'veri yok':(cdsD>=0?'+':'')+trN(cdsD,0)+' bp'},
+    {ad:'XU100 trend — 1 ay', w:.17, v:r1A==null?null:cl((r1A+15)/30*100), det:r1A==null?'veri yok':(r1A>=0?'+':'')+trN(r1A,1)+'%'},
+    {ad:'XU100 trend — 3 ay', w:.08, v:r3A==null?null:cl((r3A+25)/50*100), det:r3A==null?'veri yok':(r3A>=0?'+':'')+trN(r3A,1)+'%'},
+    {ad:'Zirveden uzaklık (52 hafta)', w:.08, v:dd==null?null:cl((dd+25)/25*100), det:dd==null?'veri yok':trN(dd,1)+'%'},
+    {ad:'Sektör genişliği (1 ay artıda)', w:.08, v:gen==null?null:gen/genN*100, det:gen==null?'veri yok':gen+'/'+genN+' sektör'},
+    {ad:'Gerçekleşen oynaklık (20g)', w:.06, v:rv==null?null:cl((45-rv)/30*100), det:rv==null?'veri yok':'yıllık %'+trN(rv,1)},
+    {ad:'Yabancı hisse akışı (4 hafta)', w:.10, v:EK.yab4==null?null:cl((EK.yab4+600)/1200*100), det:EK.yab4==null?'veri yok':(EK.yab4>=0?'+':'')+trN(EK.yab4,0)+' mn $'},
+    {ad:'Katılım hisse fonu akışı (1 ay / AUM)', w:.10, v:EK.fonAk==null?null:cl((EK.fonAk+6)/12*100), det:EK.fonAk==null?'veri yok':(EK.fonAk>=0?'+':'')+trN(EK.fonAk,1)+'% · '+EK.fonN+' fon'},
     {ad:'BIST günlük', w:.05, v:cl((bist+3)/6*100), det:(bist>=0?'+':'')+trN(bist,2)+'%'}
   ];
   const var_=B.filter(b=>b.v!=null), wT=var_.reduce((a,b)=>a+b.w,0);
@@ -6046,7 +6063,8 @@ function renderRiskBaro(){
   const grp=(baslik)=>'<div class="sub" style="font-size:9px;font-family:var(--mono);letter-spacing:.6px;margin:6px 0 0">'+baslik+'</div>';
   $('riskBaroBilesen').innerHTML=grp('KÜRESEL')+bl(B[0].ad,B[0].v,B[0].det,B[0].w)+grp('ÜLKE RİSKİ')+bl(B[1].ad,B[1].v,B[1].det,B[1].w)+bl(B[2].ad,B[2].v,B[2].det,B[2].w)+
     grp('TREND')+bl(B[3].ad,B[3].v,B[3].det,B[3].w)+bl(B[4].ad,B[4].v,B[4].det,B[4].w)+grp('PİYASA YAPISI')+bl(B[5].ad,B[5].v,B[5].det,B[5].w)+bl(B[6].ad,B[6].v,B[6].det,B[6].w)+bl(B[7].ad,B[7].v,B[7].det,B[7].w)+
-    grp('ANLIK')+bl(B[8].ad,B[8].v,B[8].det,B[8].w)+
+    grp('AKIŞ — SATICI KİM?')+bl(B[8].ad,B[8].v,B[8].det,B[8].w)+bl(B[9].ad,B[9].v,B[9].det,B[9].w)+
+    grp('ANLIK')+bl(B[10].ad,B[10].v,B[10].det,B[10].w)+
     '<div class="sub" style="font-size:9.5px;margin-top:6px">Ağırlıklı ortalama · her bileşen 0 = korku, 100 = açgözlülük · arşiv '+(sonXU?sonXU[0]:'—')+' kapanışı. Tek günlük hareket artık skorun yalnız %5\'i (§525).</div>';
 }
 
@@ -10454,11 +10472,15 @@ async function mbKartCanli(){
     const el=$(id); if(!el||!Number.isFinite(oran)) return;
     const gt=gunAy(tarih), eskiMetin=el.innerHTML, duz=el.textContent;
     const uyum = duz.includes(yuzde(oran)) && (!gt || duz.includes(gt));
-    if(uyum){ el.insertAdjacentHTML('beforeend',' <span class="thin" style="font-size:9px;color:var(--up)" title="'+esc(kaynak)+'">· canlı ✓</span>'); return; }
+    /* §535 (25 Eki tarama): etiket elle tarihte ("9 EYL · ECOS DOĞRULAMALI") kalıyordu, bekçi 46 gün bayat sayıyordu — oysa değer canlıyla
+       teyitli. Etiket artık her iki durumda CANLI veriden kurulur: seviye + son değişim günü + kaynak; metin uyumsuzsa ⚠ eklenir. */
+    const canliEtiket=yuzde(oran)+(gt?' · SON DEĞİŞİM '+gt.toLocaleUpperCase('tr-TR'):'')+' · '+kaynak.split(' ')[0].toLocaleUpperCase('tr-TR')+' CANLI';
+    if(uyum){ el.insertAdjacentHTML('beforeend',' <span class="thin" style="font-size:9px;color:var(--up)" title="'+esc(kaynak)+'">· canlı ✓</span>');
+      const tg=$(tagId); if(tg) tg.textContent=canliEtiket+' ✓'; return; }
     const bp=Number.isFinite(onceki)?Math.round((oran-onceki)*100):null;
     el.innerHTML=yuzde(oran)+(gt?' — '+gt:'')+(bp!=null?' ('+yuzde(onceki)+' → '+yuzde(oran)+', '+(bp>0?'+':'')+bp+'bp)':'')+' <span class="thin" style="font-size:9px">· canlı · '+esc(kaynak)+'</span>'+
       '<div class="sub" style="font-size:9.5px;font-weight:400;margin-top:2px">önceki not (elle): '+eskiMetin+'</div>';
-    const tg=$(tagId); if(tg&&!/METİN ESKİ/.test(tg.textContent)) tg.textContent=tg.textContent+' · ⚠ METİN ESKİ';
+    const tg=$(tagId); if(tg) tg.textContent=canliEtiket+' · ⚠ METİN ESKİ';
   };
   try{ const j=await (await fetch('/api/market?mod=ecb')).json(); const d=j&&j.seriler&&j.seriler.dfr;
     if(d&&Number.isFinite(d.deger)) uygula('ecbSonHamle','ecbTag',d.deger,Number.isFinite(d.fark)?+(d.deger-d.fark).toFixed(2):null,d.tarih,'ECB SDW DFR (yürürlük tarihi)'); }catch(e){}
@@ -10800,9 +10822,17 @@ async function egriGorselRender(){
       el.innerHTML='canlı (FRED aylık'+(ay?' · '+ay:'')+'): 3A %'+trN(k.deger,2)+' · 10Y %'+trN(u.deger,2)+' · eğim <span class="'+(egim>=0?'up':'down')+'">'+(egim>=0?'+':'')+egim+'bp</span>'; return true; };
     deOk=yaz('IR3TIB01DEM156N','IRLTLT01DEM156N','egriDECanli'); jpOk=yaz('IR3TIB01JPM156N','IRLTLT01JPM156N','egriJPCanli');
   }catch(e){}
+  /* §536: DE/JP eğrisinin ŞEKLİ de canlı — egri-dis.json (Actions: MOF JGB günlük · ECB avro AAA spot). Dosya yoksa statik şekil kalır. */
+  let disTarih=null;
+  try{ const r=await fetch('/egri-dis.json',{cache:'no-store'}); const d=r.ok?await r.json():null;
+    const ciz=(blok,kap,renk,ek)=>{ const el=document.getElementById(kap); if(!el||!blok||!blok.vadeler) return false;
+      const nok=Object.entries(blok.vadeler).map(([k,v])=>({x:k,v:+v,yil:parseFloat(k)})).filter(n=>isFinite(n.v)&&isFinite(n.yil)&&[1,2,3,5,7,10,15,20,30].includes(n.yil)).sort((a,b)=>a.yil-b.yil);
+      const svg=egriSvgUret(nok,renk,false); if(!svg) return false; el.innerHTML=svg;
+      const c=document.getElementById(ek); if(c) c.insertAdjacentHTML('beforeend',(c.innerHTML?' · ':'')+'<span class="thin">eğri '+esc(blok.tarih)+' · '+esc(String(blok.kaynak||'').split(' — ')[0])+'</span>'); return true; };
+    if(d){ const a=ciz(d.de,'egriDEKap','#8B6FD8','egriDECanli'), b=ciz(d.jp,'egriJPKap','#E8933B','egriJPCanli'); if(a||b) disTarih=(d.de&&d.de.tarih)||(d.jp&&d.jp.tarih); } }catch(e){}
   const tag=document.getElementById('egriGorselTag');
-  if(tag&&(trOk||usOk)){
-    tag.textContent=(trOk&&usOk?'TR·ABD CANLI':trOk?'TR CANLI':'ABD CANLI')+(damga?' '+damga:'')+' · DE·JP '+((deOk&&jpOk)?'3A/10Y CANLI (AYLIK) · şekil 27 TEM':'27 TEM');
+  if(tag&&(trOk||usOk||disTarih)){
+    const yerli=[trOk?'TR':null, usOk?'ABD':null].filter(Boolean); tag.textContent=(yerli.length?yerli.join('·')+' CANLI'+(damga?' '+damga:''):'TR·ABD 27 TEM')+' · DE·JP '+(disTarih?'CANLI '+disTarih:((deOk&&jpOk)?'3A/10Y CANLI (AYLIK) · şekil 27 TEM':'27 TEM'));
   }
 }
 
