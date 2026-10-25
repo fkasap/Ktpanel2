@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025d';   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025e';   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -2568,13 +2568,29 @@ function kararPuan(M, H, F){
     else ekle('Fiyatlanma: çeyrek içi göreli getiri (XU100’e karşı)', kararIsaret(g,0,'%'), g>30?-1:g<-10?1:0, g>30?'Hisse çeyrekte endeksten çok ayrıştı: iyi haberin büyük kısmı fiyatta':g<-10?'Hisse endeksin gerisinde kaldı: beklenti fiyata yansımamış':'Göreli hareket ılımlı'); }
   if(F.fwd!=null&&F.fwdYuzdelik!=null){ const y=F.fwdYuzdelik; ekle('Değerleme: PD/FAVÖK ileri ('+trN(F.fwd,1)+'x) kendi bandında', '%'+trN(y,0)+' yüzdelik', y<25?1:y>75?-1:0, y<25?'Kendi tarihine göre ucuz (döngü tepesi iskontosu olabilir — kalıcılık sorusu açık)':y>75?'Kendi tarihine göre pahalı':'Bant ortasında'); }
   else if(F.fwd!=null) ekle('Değerleme: PD/FAVÖK ileri', trN(F.fwd,1)+'x', 0, 'Bant için yeterli çeyrek yok (≥4 gerekli)', true);
+  /* §532 KAPSAM GENİŞLETME (25 Eki, kullanıcı: "zayıf kapsam / kapsam yok diyor"). Teşhis: 52 hissenin 36'sında yalnız göreli getiri
+     puanlanabiliyordu — değerleme merceği İLERİ PD/FAVÖK istiyordu (beklenti = konsensüs/model), hedef ≥3 kurum istiyordu; konsensüsü
+     olmayan (yeni XK050 + XK030'un yarısı) hisse hep "KAPSAM YOK" kalıyordu. Fintables'a dönmeden, KENDİ verimizden üç mercek:
+     (1) değerleme: ileri yoksa SON 4 ÇEYREK (TTM) PD/FAVÖK kendi bandında; (2) gerçekleşen FAVÖK ivmesi: KAP'tan son açıklanan çeyrek $ y/y
+     (kazanç momentumu — Chan, Jegadeesh & Lakonishok 1996); (3) sürücü yönü: sürücü modeli olmayan hissede birincil sürücünün hedef
+     çeyrek değişimi, rolüne göre işaretli (fiyat endeksi y/y enflasyonla şiştiği için puanlanmaz, bilgi). */
+  if(F.fwd==null&&F.ttm!=null){ if(F.ttmYuzdelik!=null){ const y=F.ttmYuzdelik; ekle('Değerleme: PD/FAVÖK son 4 çeyrek ('+trN(F.ttm,1)+'x) kendi bandında', '%'+trN(y,0)+' yüzdelik', y<25?1:y>75?-1:0, (y<25?'Kendi tarihine göre ucuz':y>75?'Kendi tarihine göre pahalı':'Bant ortasında')+' — beklenti olmadığı için geriye dönük (TTM) çarpan'); }
+    else ekle('Değerleme: PD/FAVÖK son 4 çeyrek', trN(F.ttm,1)+'x', 0, 'Bant için yeterli çeyrek yok (KAP arşivi doldukça oluşur)', true); }
+  { const FV=M.favok||{}; const fq=Object.keys(FV).filter(q=>FV[q]&&FV[q].usd!=null).sort(); const lq=fq[fq.length-1];
+    if(lq){ const gq=(+lq.slice(0,4)-1)+lq.slice(4); const a=FV[lq].usd, b=FV[gq]&&FV[gq].usd;
+      if(b!=null&&b>0&&a!=null){ const yy=(a/b-1)*100; ekle('Gerçekleşen FAVÖK ivmesi ('+kararQAd(lq)+' $ y/y · KAP)', kararIsaret(yy,0,'%'), yy>15?1:yy<-15?-1:0, yy>15?'Son açıklanan çeyrekte dolar FAVÖK belirgin büyüdü: kazanç momentumu destekliyor':yy<-15?'Son açıklanan çeyrekte dolar FAVÖK geriledi: kazanç momentumu aleyhte':'Dolar FAVÖK yatay'); }
+      else if(b!=null&&b<=0) ekle('Gerçekleşen FAVÖK ivmesi ('+kararQAd(lq)+')', '—', 0, 'Geçen yılın aynı çeyreğinde FAVÖK negatif: oran anlamsız', true); } }
+  if(!(H.kosu&&H.kosu.degisim!=null)){ const bo=kararBirincilOzet(M,H);
+    if(bo&&!bo.bekliyor&&bo.dQ!=null&&isFinite(bo.dQ)){ const yon=bo.dQ*(bo.isaret||0);
+      if(bo.yy||bo.ytd||!bo.isaret||bo.ytdSifir) ekle('Sürücü yönü ('+bo.ad+')', kararIsaret(bo.dQ,0,'%')+(bo.yy?' y/y':''), 0, bo.yy?'Fiyat endeksi yıllık değişimi enflasyonla birlikte okunur — puanlanmaz':bo.ytd?'Akış serisi (yıl içi kümülatif) topaklıdır — bilgi':'Kur/nötr rollü sürücü — bilgi', true);
+      else ekle('Sürücü yönü ('+bo.ad+' · '+kararQAd(H.hedefQ)+' ort. vs önceki çeyrek)', kararIsaret(bo.dQ,0,'%'), yon>10?1:yon<-10?-1:0, yon>10?'Birincil sürücü hissenin lehine döndü ('+(bo.rol||'')+')':yon<-10?'Birincil sürücü hissenin aleyhine ('+(bo.rol||'')+')':'Sürücü değişimi ±%10 içinde'); } }
   if(F.hedefMesafe!=null){ const m=F.hedefMesafe, k=F.hedefF.kurum||0, bayat=!!F.hedefF.bayat, asiri=Math.abs(m)>60;
     if(bayat||k<3||asiri) ekle('Hedef fiyat mesafesi ('+k+' kurum'+(F.hedefF.tarih?' · son '+kararTrTarih(F.hedefF.tarih):'')+')', kararIsaret(m,0,'%'), 0, bayat?'Hedefler 6+ aydır yenilenmemiş (bayat) — puanlanmaz':k<3?'3’ten az kurum: tekil görüş, puanlanmaz':'Mesafe ±%60’ı aşıyor: hedefler fiyat şokundan sonra revize edilmemiş görünüyor (bedelsiz/çöküş) — puanlanmaz', true);
     else ekle('Hedef fiyat mesafesi ('+k+' kurum ort.)', kararIsaret(m,0,'%'), m>15?1:m<0?-1:0, m>15?'Kurum hedefleri belirgin yukarıda':m<0?'Fiyat kurum hedeflerinin üstünde: revizyon gelmezse tavan':'Hedefler fiyata yakın: revizyon döngüsü belirleyici'); }
   const puanli=P.filter(p=>!p.bilgi); const toplam=puanli.reduce((s,x)=>s+x.puan,0), n=puanli.length;
   const oran=n? toplam/n : 0;
   let etiket;
-  if(n<2) etiket={ad:'KAPSAM YOK', sinif:'', aciklama:'Puanlanabilir bileşen 2’den az (konsensüs/hedef yok) — yalnız fiyat merceği; sinyal verilmez.'};
+  if(n<2) etiket={ad:'KAPSAM YOK', sinif:'', aciklama:'Puanlanabilir bileşen 2’den az — KAP arşivi bu hissede henüz kısa (TTM ve y/y için ≥5 çeyrek gerekir); arşiv doldukça kendiliğinden kapsama girer.'};
   else if(n===2) etiket={ad:'ZAYIF KAPSAM', sinif:'', aciklama:'Yalnız iki bileşen puanlanabildi ('+(toplam>=0?'+':'')+toplam+'/2): yön için konsensüs ya da sürücü modeli gerekli; fiyat mercekleri tek başına sinyal sayılmaz.'};
   else if(oran>=0.5) etiket={ad:'OLUMLU', sinif:'up', aciklama:'Beklenti güçlü, fiyatlanma tam değil — pozisyon koru/artır adayı.'};
   else if(oran<=-0.5) etiket={ad:'OLUMSUZ', sinif:'down', aciklama:'Beklenti ile fiyat ayrışmış — azaltma adayı.'};
