@@ -348,20 +348,24 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <h2>04 Merkez Bankaları &amp; Beklentiler</h2>
 <div class="grid g2">
   <div class="card">
-    <table><thead><tr><th>Banka</th><th class="num">Faiz</th><th>Son Karar</th><th>Sıradaki</th></tr></thead><tbody>
-      <tr><td><b>TCMB</b></td><td class="num" style="color:var(--mm2);font-weight:600">%37,00</td><td>Sabit (10 Eyl)</td><td>22 Eki</td></tr>
+    <!-- §540 (25 Eki veri denetimi): tablo tamamen elle yazılmıştı; TCMB satırı 22 Eki −100bp'ten sonra hâlâ "%37 · Sabit (10 Eyl) ·
+         sıradaki 22 Eki" diyordu. Artık mbOzetCanli(): TCMB = EVDS politika serisi, Fed = FRED hedef aralık, ECB = ECB SDW DFR, BOK = ECOS;
+         sıradaki toplantı panelin resmî takvim sabitlerinden (PPK_VARSAYILAN, FOMC_2026, ECB_TAKVIM, BOJ_TAKVIM). BoJ/BoE politika faizi
+         için canlı seri yok: elle satır korunur, geçmiş "sıradaki" tarihi görünür biçimde işaretlenir. -->
+    <table><thead><tr><th>Banka</th><th class="num">Faiz</th><th>Son Karar</th><th>Sıradaki</th></tr></thead><tbody id="mbOzetTb">
+      <tr data-mb="tcmb"><td><b>TCMB</b></td><td class="num" style="color:var(--mm2);font-weight:600">%36,00</td><td class="up">▼ −100bp (22 Eki)</td><td>10 Ara</td></tr>
       <!-- §284b SIRADAKİ FOMC 15-16 EYLÜL. "29 Tem ÇAR" GEÇMİŞTİ (bugün 13 Ağu)
      ve Fed & Politika kartı ZATEN "15 Eyl–16 Eyl" diyordu — aynı ekranda
      iki farklı tarih. Ağustos'ta FOMC yok, o yüzden sıradaki Eylül. -->
-<tr><td>Fed</td><td class="num">%3,75–4,00</td><td class="down">▲ +25bp (16 Eyl, 12-0)</td><td>27–28 Eki</td></tr>
-      <tr><td>ECB</td><td class="num">%2,50</td><td class="down">▲ +25bp (10 Eyl)</td><td>29 Eki</td></tr>
-      <tr><td>BoJ</td><td class="num">%1,25</td><td class="down">▲ +25bp (18 Eyl) · 31 yılın zirvesi</td><td>29–30 Eki</td></tr>
-      <tr><td>BOK</td><td class="num">%3,00</td><td class="down">▲ +25bp (27 Ağu)</td><td>22 Eki</td></tr>
-      <tr><td>BoE</td><td class="num">%3,75</td><td>Sabit (17 Eyl)</td><td>5 Kas</td></tr>
+<tr data-mb="fed"><td>Fed</td><td class="num">%3,75–4,00</td><td class="down">▲ +25bp (16 Eyl, 12-0)</td><td>27–28 Eki</td></tr>
+      <tr data-mb="ecb"><td>ECB</td><td class="num">%2,50</td><td class="down">▲ +25bp (10 Eyl)</td><td>29 Eki</td></tr>
+      <tr data-mb="boj"><td>BoJ</td><td class="num">%1,25</td><td class="down">▲ +25bp (18 Eyl) · 31 yılın zirvesi</td><td>29–30 Eki</td></tr>
+      <tr data-mb="bok"><td>BOK</td><td class="num">%3,00</td><td class="down">▲ +25bp (27 Ağu) · 22 Eki sabit</td><td><span class="sub">takvim teyitsiz</span></td></tr>
+      <tr data-mb="boe"><td>BoE</td><td class="num">%3,75</td><td>Sabit (son değişim 18 Ara 2025 · BoE)</td><td>5 Kas</td></tr>
     </tbody></table>
-    <div class="kv" style="margin-top:6px"><span class="k">TCMB koridor / AOFM</span><span>%35,5–40,0 / ≈%37 (örtülü sıkılaşma bitti, 23 Ağu)</span></div>
+    <div class="kv" style="margin-top:6px"><span class="k">TCMB koridor / AOFM</span><span id="mbKoridor">%34,50–39,00 / AOFM ≈%36</span></div>
     <div class="kv"><span class="k">Karahan 2026 sonu TÜFE öngörüsü</span><span>%26</span></div>
-    <div class="note" style="font-size:9px"><b>Koro:</b> BoJ + ECB + BOK son iki ayda artırdı, Fed Eylül artırımı ≈%82 <span class="thin fedYas82"></span> fiyatlanıyor — TCMB dört-merkez sıkılaşmasına karşı tek başına indirim patikasında (haftalık notta "ters akıntı" teması).</div>
+    <div class="note" style="font-size:9px"><b>Koro:</b> 2026'da BoJ, ECB ve BOK ikişer kez, Fed bir kez (16 Eyl, 2023'ten beri ilk) artırdı; TCMB 22 Eki'de tek başına −100bp indirdi (haftalık notta "ters akıntı" teması). <span class="thin">Kaynak: federalreserve.gov · ecb.europa.eu · BOK ECOS · bankofengland.co.uk — 25 Eki doğrulandı.</span></div>
   </div>
   <div class="card">
     <div class="kv" style="border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:4px"><span class="k" style="font-weight:700;color:var(--mm2)">Enflasyon: beklenti → gerçekleşen</span><span id="ppkGercek" style="font-weight:600">—</span></div>
@@ -376,14 +380,14 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
      eylem yok demektir. Aylık, EVDS canlı. -->
 <div class="kv" style="margin-top:6px;border-top:1px dotted var(--line);padding-top:5px"><span class="k"><b>Hane halkı yatırım tercihi</b> <span class="thin">TCMB anketi · SORU_20</span></span><span id="haneTercihYas" class="thin"></span></div>
 <div id="haneTercihBody"><div class="sub" style="font-size:10px">EVDS yükleniyor…</div></div>
-    <div class="kv"><span class="k">Yıl sonu TÜFE (anket)</span><span>%29,14</span></div>
+    <div class="kv"><span class="k">Yıl sonu TÜFE (anket) <span class="thin" id="pkaAy"></span></span><span id="pkaYsTufe">%29,63</span></div>
     <!-- §284c 12 AY BEKLENTİSİ CANLIYA. app.js'te OKU_BEK 23,95'e güncellenmişti
      (§252d) ama bu satır %23,81'de kalmıştı. 24 ay elle kalıyor — o ayrı
      bir anket serisi ve panelde canlı karşılığı yok. -->
-<div class="kv"><span class="k">12 / 24 ay TÜFE</span><span><span id="mbBek12">%23,81</span> / %18,29</span></div>
-    <div class="kv"><span class="k">Yıl sonu politika faizi</span><span>≈%34,7 · Eylül'de indirim</span></div>
-    <div class="kv"><span class="k">Yıl sonu / 12 ay USD/TRY</span><span>51,47 / 55,72</span></div>
-    <div class="kv"><span class="k">2026 büyüme / cari açık</span><span>%3,2 / 49,2 mlr $</span></div>
+<div class="kv"><span class="k">12 / 24 ay TÜFE</span><span><span id="mbBek12">%23,89</span> / <span id="pka24">%17,94</span></span></div>
+    <div class="kv"><span class="k">Yıl sonu politika faizi</span><span id="pkaYsFaiz">%35,00</span></div>
+    <div class="kv"><span class="k">Yıl sonu / 12 ay USD/TRY</span><span id="pkaKur">51,55 / 59,26</span></div>
+    <div class="kv"><span class="k">2026 büyüme / cari açık</span><span id="pkaBuyCari">%2,9 / 48,5 mlr $</span></div>
     <!-- §284 CANLIYA BAĞLANDI. "≈ %13" SABİT yazılıydı ve exAnteHesapla()
      ile ÇELİŞİYORDU (o %10,5 veriyor: (1,37/1,2395-1)×100).
      %13 muhtemelen beklenti ~%21 iken hesaplanmış bir damga.
@@ -414,7 +418,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
       <tr><td><b>29 Eki</b></td><td><b style="color:var(--purple)">ECB</b> · <b style="color:#E8933B">BoJ 29–30 Eki</b> · <span class="sub">30 Eki: 3Ç26 SPK sınırı (konsolide olmayan)</span></td></tr>
       <tr><td>~3 Kas</td><td><b style="color:var(--mm2)">TÜİK Ekim TÜFE</b> · <b style="color:var(--blue)">BoE 5 Kas</b> · <span class="sub">9 Kas: 3Ç26 konsolide sınırı (87 şirket o gün bekleniyor)</span></td></tr>
     </tbody></table>
-    <div class="sub" style="font-size:9px;margin-top:6px">~ işareti: tarih henüz kesinleşmedi, kurumun olağan takvimine göre tahmin. <b>Ters yön gerçekleşti:</b> Fed/BoJ/ECB/BOK ikişer artırım yaptı, TCMB 22 Eki'de tek başına 100 bp indirdi (%37 → %36) — rezerv erimesi (brüt 167,4 · swap hariç 37,9), fon krizi (17 Eyl) ve küresel sıkılaşma karşı ağırlığına rağmen; gerekçe: ana eğilimde dezenflasyon sürüyor, iç talep zayıf.</div>
+    <div class="sub" style="font-size:9px;margin-top:6px">~ işareti: tarih henüz kesinleşmedi, kurumun olağan takvimine göre tahmin. <b>Ters yön gerçekleşti:</b> 2026'da BoJ/ECB/BOK ikişer, Fed bir kez (16 Eyl) artırdı; TCMB 22 Eki'de tek başına 100 bp indirdi (%37 → %36) — rezerv erimesi (2 Eki haftası brüt 167,4 · swap hariç 37,9; 9 Eki'de 44,2'ye toparlandı), fon krizi (17 Eyl) ve küresel sıkılaşma karşı ağırlığına rağmen; gerekçe: ana eğilimde dezenflasyon sürüyor, iç talep zayıf.</div>
     <div id="makroOto"></div><!-- SS319 kuresel makro burada dogar: elle tablo+dipnot AYNEN korunur, otomatik bolum altina gelir -->
   </div>
   <div class="card" data-ebu-oncelik="yuksek" style="padding:8px 12px;display:flex;flex-direction:column">
@@ -1672,10 +1676,10 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
   <div class="card">
     <div class="lbl">OKUMA &amp; BAĞLAR <span class="tag snap">5 EKİ · CLAUDE</span></div>
-    <div class="kv"><span class="k">Küresel koro</span><span style="font-weight:600">BoJ 16 Haz + 18 Eyl · ECB 17 Haz + 10 Eyl · BOK 16 Tem + 27 Ağu · Fed 16 Eyl (+25bp, 12-0) — dört merkez ikişer artırım; TCMB tek başına indirim yolunda</span></div>
+    <div class="kv"><span class="k">Küresel koro</span><span style="font-weight:600">BoJ 16 Haz + 18 Eyl · ECB 17 Haz + 10 Eyl · BOK 16 Tem + 27 Ağu · Fed 16 Eyl (+25bp, 12-0) — üç merkez ikişer, Fed bir kez artırdı; TCMB 22 Eki'de tek başına −100bp</span></div>
     <div class="kv"><span class="k">Kore'nin rolü</span><span>küresel çip döngüsünün kanaryası — ihracatı en erken açıklanan büyük ekonomi</span></div>
     <div class="kv"><span class="k">Son toplantı</span><span>BOK 22 Eki: %3,00'te SABİT (ECOS — son değişim 27 Ağu); TCMB aynı gün −100bp indirdi → koro ayrıştı</span></div>
-    <div class="note" style="font-size:10px">Türkiye bağı: (1) Koro tamamlandı — dört merkez ikişer artırım yaptı; EM fonlama koşulları daralırken TCMB 22 Eki'de tek başına indirime bakıyor, üstelik rezerv 5 haftadır eriyor ve yurt içinde fon krizi var — indirim alanı daraldı. (2) Bellek-zirvesi endişesi ABD mega-cap AI temasının ilk çatlak sinyali olabilir — MSFT/META bilançolarında AI capex rehberliğini bu gözle oku. (3) KOSPI'nin sidecar rekoru = Asya risk iştahı kırılgan; sert Asya geceleri BIST açılışına taşar (Asya seansı TR sabahından önce biter — sabah ilk bakılacak yer burası).</div>
+    <div class="note" style="font-size:10px">Türkiye bağı: (1) Koro: BoJ/ECB/BOK ikişer, Fed bir kez artırdı; EM fonlama koşulları daralırken TCMB 22 Eki'de tek başına −100bp indirdi — rezerv Eylül–Ekim başı eridi, yurt içinde fon krizi yaşandı; indirimin sürmesi rezerv ve kur dengesine bağlı. (2) Bellek-zirvesi endişesi ABD mega-cap AI temasının ilk çatlak sinyali olabilir — MSFT/META bilançolarında AI capex rehberliğini bu gözle oku. (3) KOSPI'nin sidecar rekoru = Asya risk iştahı kırılgan; sert Asya geceleri BIST açılışına taşar (Asya seansı TR sabahından önce biter — sabah ilk bakılacak yer burası).</div>
   </div>
 </div>
 <div class="note" style="margin-top:12px"><b>Fon yöneticisi için okuma:</b> Asya-Pasifik seansı, Türkiye açılışından önce kapanır — yani sabah BIST'e oturmadan önce gecenin risk iştahını buradan okursun. <b>Nikkei ve KOSPI</b> küresel teknoloji/ihracat iştahının öncü göstergesi; sert düşüşleri yüksek-beta gelişen piyasalara (Türkiye dahil) taşar. <b>Hang Seng ve Shanghai</b> Çin talep sinyali — emtia ve ihracatçı hisseler için önemli. <b>USD/JPY</b> küresel taşıma işlemi (carry trade) barometresi: yen güçlenirse (USD/JPY düşerse) küresel kaldıraç çözülür, riskli varlıklar soğur. <b>USD/CNH</b> Çin'in kur duruşu; ani yuan zayıflaması bölgesel bulaşma yaratır. Endeksler Yahoo'dan (gün kapanışı), forex Twelve Data'dan (~gecikmeli). Asya saatleri Türkiye'nin gecesi/sabahı olduğu için genelde son kapanış görürsün.</div>
@@ -1786,7 +1790,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
      fiyatlama OYNAK oldugu kendi metninde yazili. Alttaki not ise "piyasa
      YUKSEK OLASILIKLA fiyatlamakta" diye KESIN konusuyordu — ikisi zit.
      Rakam kaldirilmadi (gecmis bir olcum, degerli) ama yasi yazildi. -->
-<div class="kv"><span class="k">Eylül ARTIRIM olasılığı</span><span class="down"><b>16 Eyl: +25bp → %3,75–4,00 (12-0)</b> — 2023'ten beri ilk artırım; nokta grafiği yıl sonu %4,1–4,4 (bir artırım daha fiyatlanıyor); gerekçe enerji şoku + hedef üstü enflasyon <span class="thin" id="fedOlasilikYas"></span>; kurul derin bölünmüş (son toplantılarda 4-8 muhalefet). Güncel fiyatlama panelde İZLENMİYOR</span></div>
+<div class="kv"><span class="k">Son karar</span><span class="down"><b>16 Eyl: +25bp → %3,75–4,00 (12-0, oybirliği)</b> — 2023'ten beri ilk artırım (federalreserve.gov: 2026'daki tek değişiklik); Eylül nokta grafiği yıl sonu %4,1–4,4 (bir artırım daha ima ediyor); gerekçe enerji şoku + hedef üstü enflasyon <span class="thin" id="fedOlasilikYas"></span>. Güncel vadeli fiyatlama panelde İZLENMİYOR</span></div>
     <!-- §270b RAKAMSIZLASTIRILDI. "zirve 102$, duzeltmede ~91$" 15 gun eskiydi;
      canli Brent 86,25. Sayi ustteki serit ve Global Risk kartinda ZATEN canli —
      burada tekrarlamak iki sahipli deger yaratiyordu. Metin artik YONU anlatiyor. -->
@@ -1953,8 +1957,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261025g"></script>
-<script src="/ajan.js?v=20261025b"></script>
+<script src="/app.js?v=20261025h"></script>
+<script src="/ajan.js?v=20261025c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

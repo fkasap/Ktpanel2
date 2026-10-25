@@ -264,6 +264,8 @@ function kartKesfet(veriSart){
     // → onu çağıran YEDİ tüketicinin hepsi ölüyor. Ebu tamamen sustu.
     // Doğru değişken `nt` (not öğesi, hemen yukarıda tanımlı).
     if(nt.closest && nt.closest('[data-ebu="hayir"]')) return;
+    /* §540 TABAN DAMGASI: notun fabrika (HTML/app.js) metninin parmak izi, Ebu üzerine yazmadan ÖNCE alınır. Bkz. notGeriYuklenir(). */
+    try{ if(nt.dataset && !nt.dataset.tabanH && nt.dataset.ebu!=='1') nt.dataset.tabanH=String(h32((nt.textContent||'').replace(/\s+/g,' ').trim())); }catch(e){}
     const kart=nt.closest('.card');
     let ad='', veri='';
     if(kart&&kartAd.has(kart)){                            // KART İÇİ NOT (eski davranış — anahtarlar korunur)
@@ -793,6 +795,7 @@ function notNobetci(){
       kartKesfet(false).forEach(K=>{
         if(!k[K.ad]||!k[K.ad].html) return;
         if(K.nt.dataset.ebu==='1') return;              // Ebu'nunki duruyor
+        if(!notGeriYuklenir(K,k[K.ad])) return;         /* §540 */
         K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); geri++;
       });
       if(geri) kayit('Nöbetçi: '+geri+' not yeniden çizimden sonra geri kondu 🤖');
@@ -870,11 +873,26 @@ function haftalikBas(ym, secili){
   } else { ym.innerHTML=secili.html; if(secili.etiket&&yh) yh.textContent=secili.etiket; }   /* §422c */
 }
 /* Açılışta senkron hızlı basım — eski (fabrika) notlar hiç görünmesin */
+/* §540 (25 Eki veri denetimi) ESKİ NOT FABRİKA METNİNİ EZMESİN. "Makroihtiyati İzleme Notu" 89 gün önce yazılmış Ebu notunu
+   gösteriyordu ("en son politika faizi — Eylül beklentisi"); oysa index.html'deki fabrika metni 22 Eki indirimiyle güncellenmişti.
+   Kartın canlı verisi olmadığı için hash hiç değişmiyor, not motoru da yeniden yazmıyordu — eski not her açılışta yeni metnin ÜSTÜNE
+   basılıyordu. Kural: (a) kayıt yazıldığı andaki fabrika metninin parmak izini taşır; fabrika metni o zamandan beri değiştiyse kayıt
+   basılmaz ve not motoru yeni metinden yeniden yazar. (b) Parmak izi olmayan eski kayıtlar 30 günden yaşlıysa basılmaz (aynı sebeple). */
+const NOT_MAX_YAS_MS=30*864e5;
+function notGeriYuklenir(K, r){
+  try{
+    if(!r||!r.html) return false;
+    const t=K&&K.nt&&K.nt.dataset? K.nt.dataset.tabanH : null;
+    if(r.taban && t && r.taban!==t) return false;
+    if(!r.taban && r.ts && (Date.now()-r.ts)>NOT_MAX_YAS_MS) return false;
+    return true;
+  }catch(e){ return true; }
+}
 function hizliGeriYukle(){
   try{
     const k=JSON.parse(localStorage.getItem('ajan_notlar')||'{}');
     let n=0;
-    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
+    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html&&notGeriYuklenir(K,k[K.ad])){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
     /* §423d EN YENİ KAYIT KAZANIR: haftalık ve aylık AYRI anahtarlarda tutulur;
@@ -905,7 +923,7 @@ async function notlariGeriYukle(){
         '<div class="sub" style="font-size:9px;margin-top:4px">🤖 '+(k.__GUNDEM__.kaynak==='cron'?'sabah cron\u0027u — sen uyurken yazıldı':'Claude Haiku')+' · yükleme: '+saat()+'</div>';
     }
     let n=0;
-    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
+    kartKesfet(false).forEach(K=>{ if(k[K.ad]&&k[K.ad].html&&notGeriYuklenir(K,k[K.ad])){ K.nt.innerHTML=k[K.ad].html; K.nt.dataset.ebu='1'; notYasEtiketi(K.nt,k[K.ad]); n++; } });
     try{ notCiftTemizle(); }catch(e){}   /* §274b */
     const ym=$('yorumMetin');
     /* §423d EN YENİ KAYIT KAZANIR: haftalık ve aylık AYRI anahtarlarda tutulur;
@@ -1051,6 +1069,45 @@ async function aiCagir(prompt, maxTok){
   }
 }
 
+/* §540 (25 Eki veri denetimi) GERÇEK ÇAPASI + ÇELİŞKİ KAPISI.
+   Denetimde AI notlarında üç tip olgu hatası bulundu — rakam UYDURMA değil, rakamı YANLIŞ YERE BAĞLAMA:
+     • "Politika faizi %36'da sabit tutulurken" (22 Eki −100bp indirim; Fonlama Rejimi, Haftalık Not)
+     • "Enflasyon beklentisi %29,7 … hane halkı 12-ay beklentisi %23,9" (29,7 GERÇEKLEŞEN TÜFE, 23,9 PİYASA beklentisi, hane 43,8)
+     • "Çekirdek %28,71 ile manşetin üstünde" (manşet 29,73)
+   Model kart metnini 420 karakterden okuyor ve etiket–sayı eşlemesini karıştırıyor. Çare iki katlı: (1) her isteme panelin canlı
+   kaynaklarından kurulan, ETİKETİ SAYIYLA BİRLİKTE veren bir "sabit gerçekler" bloğu; (2) yazılan metin bu gerçeklerle çelişiyorsa
+   (politika faizine "sabit" demek, gerçekleşen TÜFE'ye "beklenti" demek) not REDDEDİLİR — eski not kalır, kart sonraki turda
+   adresli uyarıyla yeniden denenir (§245n mekanizması). */
+function _el(id){ const e=document.getElementById(id); return e?(e.textContent||'').replace(/\s+/g,' ').replace(/· canlı/g,'').trim():''; }
+function gercekCapasi(){
+  const L=[]; const P=window.POL_CANLI, E=window.ENF_CANLI;
+  const f=(v,d)=>Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
+  if(P&&isFinite(P.deger)){ L.push('TCMB politika faizi (1 hafta repo): %'+f(P.deger,2)+(P.alt!=null&&P.ust!=null?' · koridor %'+f(P.alt,2)+'–%'+f(P.ust,2):''));
+    if(P.karar&&P.karar.bp) L.push('Son PPK kararı '+P.karar.tarih+': '+(P.karar.bp>0?'+':'−')+Math.abs(P.karar.bp)+' bp (%'+f(P.karar.eski,2)+' → %'+f(P.karar.yeni,2)+') — bu bir '+(P.karar.bp<0?'İNDİRİM':'ARTIRIM')+'dir; politika faizine "sabit tutuldu" DENMEZ.'); }
+  if(E&&isFinite(E.tufe)) L.push('GERÇEKLEŞEN yıllık TÜFE ('+(E.ay||'son ay')+'): %'+f(E.tufe,2)+' — bu bir BEKLENTİ DEĞİLDİR.');
+  if(E&&isFinite(E.bek)) L.push('PİYASA katılımcıları 12-ay TÜFE beklentisi: %'+f(E.bek,2));
+  const hn=_el('ppkHane'); if(hn&&/\d/.test(hn)) L.push('HANE HALKI 12-ay TÜFE beklentisi: '+hn);
+  const cds=_el('glbCds'); if(cds&&/\d/.test(cds)) L.push('TR 5Y CDS: '+cds.slice(0,40));
+  /* §540: denetimde "USD/KRW aylık −%4 → won zayıflıyor" (tersi doğru) ve "BOK faizi yükseltmeye devam ediyor" (22 Eki'de sabit) bulundu */
+  L.push('Kur notasyonu: USD/TRY, USD/KRW, USD/JPY gibi kotasyonlarda oran YÜKSELİRSE yerel para DEĞER KAYBEDER, DÜŞERSE DEĞER KAZANIR.');
+  L.push('Bir merkez bankası SON toplantısında faizi değiştirmediyse "artırmaya/indirmeye devam ediyor" yazma — "son toplantıda sabit tuttu" yaz. Çekirdek/manşet karşılaştırmasında hangisinin büyük olduğunu sayıdan kontrol et.');
+  return L.length? 'SABİT GERÇEKLER (panelin canlı kaynaklarından; metnin bunlarla ÇELİŞEMEZ, etiketleri karıştırma):\n'+L.map(x=>'• '+x).join('\n')+'\n' : '';
+}
+function capaIhlal(metin){
+  try{
+    const t=String(metin||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+    const cum=t.split(/(?<=[.!?;])\s+/);
+    const P=window.POL_CANLI, E=window.ENF_CANLI;
+    if(P&&P.karar&&P.karar.bp){ const m=String(P.karar.tarih||'').match(/^(\d{2})-(\d{2})-(\d{4})/); const gun=m? (Date.now()-new Date(m[3]+'-'+m[2]+'-'+m[1]).getTime())/864e5 : 0;
+      if(gun<=56){ const k=cum.find(c=>/politika faiz/i.test(c)&&/\b(sabit|değişmedi|değiştirilmedi|korundu|sabitlendi)/i.test(c)&&!/(indir|düşür|kes|artır|yükselt|[−-]\s?\d{2,3}\s?(bp|baz))/i.test(c));
+        if(k) return 'politika faizi "sabit" denmiş, oysa son karar '+P.karar.tarih+' '+(P.karar.bp>0?'+':'−')+Math.abs(P.karar.bp)+'bp: "'+k.slice(0,90)+'"'; } }
+    if(E&&isFinite(E.tufe)){ const v1=Number(E.tufe).toLocaleString('tr-TR',{maximumFractionDigits:1,minimumFractionDigits:1}), v2=Number(E.tufe).toLocaleString('tr-TR',{maximumFractionDigits:2,minimumFractionDigits:2});
+      const k=cum.find(c=>/beklenti/i.test(c)&&(c.includes('%'+v1)||c.includes('%'+v2)||c.includes('% '+v1))&&!/(gerçekleş|fiili|manşet|cari TÜFE|yıllık TÜFE|TÜFE yıllık|enflasyon %)/i.test(c));
+      if(k) return 'gerçekleşen TÜFE ('+v2+') beklenti olarak yazılmış: "'+k.slice(0,90)+'"';
+      if(isFinite(E.bek)){ const b1=Number(E.bek).toLocaleString('tr-TR',{maximumFractionDigits:1,minimumFractionDigits:1}); const k2=cum.find(c=>/hane/i.test(c)&&c.includes('%'+b1)&&!/piyasa/i.test(c)); if(k2) return 'piyasa beklentisi ('+b1+') hane halkına yazılmış: "'+k2.slice(0,90)+'"'; } }
+    return null;
+  }catch(e){ return null; }
+}
 async function notMotoru(){
   if(AJAN.notKilit) return;               // aynı anda iki parti çalışmasın
   AJAN.notKilit=true;
@@ -1064,7 +1121,7 @@ async function _notMotoru(){
   const kirli=hepsi.filter(K=>{
     const hh=h32(K.veri); K.hash=hh;
     const eski=kayitli[K.ad];
-    if(eski&&eski.hash===hh) return false;                       // veri değişmedi
+    if(eski&&eski.hash===hh&&notGeriYuklenir(K,eski)) return false;   // veri değişmedi (§540: fabrika metni de değişmediyse)
     // Kesinti sırasında yazılmış notlar soğumayı BEKLEMEZ — veri dönünce hemen düzeltilir
     const kesintiNotu = eski && eski.html && /kesinti|alınamadı|mevcut değildir|erişilemedi/i.test(eski.html);
     /* §169 SOĞUMA DELMESİ — "olay kartları" beklemez.
@@ -1098,7 +1155,7 @@ async function _notMotoru(){
     'rakamı tabloya bırak. Endeks/hisse KODU yazabilirsin, oranını YAZMA. İşaretsiz (damgalı) kartlarda rakam serbesttir. \n'+
     'ÇIKTI BİÇİMİ (JSON DEĞİL): her not için önce ### ve numara, altına notun kendisi. Örnek:\n'+
     '###1\n(1 numaralı kartın yeni notu)\n###2\n(2 numaralı kartın yeni notu)\n'+
-    'Başka hiçbir açıklama yazma.\n\n'+
+    'Başka hiçbir açıklama yazma.\n\n'+gercekCapasi()+'\n'+
     parti.map((x,i)=>{
       /* §245n ADRESLİ UYARI. Genel kural istemde zaten vardı ama model bazı
          kartlarda ısrarla rakam yazıyordu; ret sessiz kalınca aynı kart tur
@@ -1157,6 +1214,8 @@ async function _notMotoru(){
          TAMAMINI şüpheli kılar. Eskilik görünür bir kusur, çelişki gizli bir yalan.
          İSTİSNA: eşik/hedef ifadeleri meşru ("%2 hedefi", "%20 eşiği") — sabittir,
          tabloyla çelişmez. Onlar geçer. */
+      const _capa = capaIhlal(yeni);
+      if(_capa){ kayit('§540 çelişki kapısı: '+x.ad.slice(0,30)+' notu REDDEDİLDİ — '+_capa); AJAN.__redSayac=AJAN.__redSayac||{}; AJAN.__redSayac[x.ad]=(AJAN.__redSayac[x.ad]||0)+1; return; }
       const _oranVar = /%\s*[-−+]?\d|[-−+]?\d+[.,]\d+\s*%/.test(yeni);
       /* §245n MUAFİYET KALIBI DAR GELİYORDU. Eski desen sayı ile anahtar
          kelimenin BİTİŞİK olmasını istiyordu (%\s*[\d.,]+\s*(hedef|eşik…)).
@@ -1182,7 +1241,7 @@ async function _notMotoru(){
       if(AJAN.__redSayac) delete AJAN.__redSayac[x.ad];   // temiz yazdı → sayaç sıfırlanır
       x.nt.innerHTML=imzaEkle(temizle(yeni));   // §110: önce eski imza kalıntıları silinir
       x.nt.dataset.ebu='1';
-      kayitli[x.ad]={ html:x.nt.innerHTML, hash:x.hash, ts:simdi, saat:saat() };
+      kayitli[x.ad]={ html:x.nt.innerHTML, hash:x.hash, ts:simdi, saat:saat(), taban:(x.nt.dataset&&x.nt.dataset.tabanH)||undefined };
       g++;
     } else {
       /* §245n: not YOK ya da çok kısa — bu GERÇEK anahtar/biçim sorunudur.
@@ -1268,7 +1327,7 @@ async function haftalikYorumYaz(zorla, kip){
   const prompt='Sen KTPanel\u0027in baş stratejistisin. Görevin: paneldeki CANLI verilerden haftalık portföy-yönetimi yorumu yazmak. '+
     'Aşağıda (A) panelin şu anki canlı kart özetleri, (B) örnek yapı olarak mevcut haftalık yorum var. '+
     'Yeni yorumu yaz: 5-7 numaralı bölüm (0\u0027dan başlayan başlıklar), her bölüm <div style="background:#F0F7F4;border-left:3px solid #177245;border-radius:0 6px 6px 0;padding:11px 13px;margin:0 0 14px"><b style="color:#177245;font-size:12px">N · BAŞLIK</b><br>metin</div> kalıbında; '+
-    'her bölümün sonunda <b>Portföy çevirisi:</b> cümlesi; rakamları SADECE canlı verilerden al, uydurma; multi-asset fon yöneticisi tonu; Türkçe; toplam 350-500 kelime — SON BÖLÜMÜ MUTLAKA TAMAMLA. YALNIZCA HTML döndür, başka hiçbir şey yazma.\n\n(A) ÇEKİRDEK GÖSTERGELER — haftanın omurgası; TEK TEK SAYMA, aralarındaki BAĞI kur:\n'+cekirdek+'\n\n(A2) PANEL KART ÖZETLERİ:\n'+ozet+'\n\n(B) MEVCUT YORUM (yapı örneği):\n'+mevcut;
+    'her bölümün sonunda <b>Portföy çevirisi:</b> cümlesi; rakamları SADECE canlı verilerden al, uydurma; multi-asset fon yöneticisi tonu; Türkçe; toplam 350-500 kelime — SON BÖLÜMÜ MUTLAKA TAMAMLA. YALNIZCA HTML döndür, başka hiçbir şey yazma.\n\n(A) ÇEKİRDEK GÖSTERGELER — haftanın omurgası; TEK TEK SAYMA, aralarındaki BAĞI kur:\n'+cekirdek+'\n\n'+gercekCapasi()+'\n(A2) PANEL KART ÖZETLERİ:\n'+ozet+'\n\n(B) MEVCUT YORUM (yapı örneği):\n'+mevcut;
   /* §424b İKİ PARÇALI ÜRETİM. Tek çağrıda 5 bölüm × 400 kelime = 2300 token
      isteniyordu ve sunucu 25 sn'de kesiyordu. Artık bölüm 1-3 ve 4-5 AYRI
      çağrılarla üretilip birleştiriliyor: her biri ~1300 token / ~6 sn.
@@ -1283,8 +1342,15 @@ async function haftalikYorumYaz(zorla, kip){
                  +'\n\n(ZATEN YAZILAN 1-3. BÖLÜMLER — TEKRARLAMA):\n'+m1.slice(0,1200);
   const m2=await aiCagir(p2, 1300);
   if(!m2) kayit('Haftalık yorum: 2. parça alınamadı — 1-3. bölümler basıldı');
-  const metin=m1+(m2||'');
+  let metin=m1+(m2||'');
   if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Haftalık yorum: yanıt kesildi — basılmadı'); return; }
+  /* §540 çelişki kapısı — haftalık not: bir kez düzeltme turu, yine çelişirse BASILMAZ (eski not kalır) */
+  { let ih=capaIhlal(metin);
+    if(ih){ kayit('Haftalık yorum §540: çelişki — '+ih+' · düzeltme turu');
+      const d1=await aiCagir(p1+'\n\n⛔ ÖNCEKİ TASLAĞIN OLGU HATASI İÇERİYORDU: '+ih+'. SABİT GERÇEKLER bloğuna uy.', 1400);
+      const d2=d1? await aiCagir(p2+'\n\n⛔ SABİT GERÇEKLER bloğuna uy; politika faizi ve TÜFE etiketlerini karıştırma.', 1300) : null;
+      if(d1){ metin=d1+(d2||''); ih=capaIhlal(metin); }
+      if(ih){ kayit('Haftalık yorum §540: düzeltme sonrası da çelişki ('+ih+') — basılmadı, eski not korundu'); return; } } }
   const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
   if(html.length<300){ kayit('Haftalık yorum: yanıt kısa, uygulanmadı'); return; }
   ym.innerHTML=temizle(html,true)+'<div class="sub" style="font-size:9px;margin-top:6px">🤖 ajan tarafından panel verilerinden yazıldı · '+saat()+' · ⌫ ile fabrika yorumuna dönülür</div>';
@@ -1402,9 +1468,14 @@ async function ozelGorevler(){
       /* SS337: birlesik takvim (SS336) ile kaynak metin ~1700 karakteri asti;
        1600'lik kirpma tam olarak YAKLASAN satirlari kesiyordu (once elle
        gecmis olaylar geldigi icin). 2600'e cikarildi. */
+      /* §540: GÖRÜŞ notu "hedge ağırlığı %15–20 artırılmalı" gibi KAYNAKTA OLMAYAN oranlı talimat ve "%29,7'den %23,9'a düşmesi" gibi
+         etiket karışıklığı üretmişti → sabit gerçekler bloğu + talimat yasağı + çelişki kapısı. */
+      'Pozisyon büyüklüğü / ağırlık yüzdesi TALİMATI verme ("…%15 artırılmalı" yazma): kaynakta olmayan oran uydurmaktır; okuma ve risk dengesini yaz.\n'+
+      gercekCapasi()+'\n'+
       '(A) KAYNAK VERİ ('+G.veriLbl+'):\n'+veri.slice(0,2600)+'\n\n(B) PANEL CANLI ÖZETLERİ:\n'+baglam+'\n\n(C) MEVCUT METİN (üslup örneği):\n'+mevcut;
     const metin=await aiCagir(prompt, 3000);   /* SS337b: 520 kelimelik HTML icin tavan yukseltildi */
     if(!metin){ kayit('Özel görev '+G.ad+': AI erişilemedi'); continue; }
+    { const ih=capaIhlal(metin); if(ih){ kayit('Özel görev '+G.ad+' §540 çelişki kapısı: '+ih+' — basılmadı (90 dk sonra yeniden)'); kayitli[anah]=Object.assign({},eski||{},{ts:simdi}); notKaydet(kayitli); continue; } }
     if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Özel görev '+G.ad+': yanıt kesildi — basılmadı, sonraki turda kısaltılmış denenir'); continue; }
     const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
     if(html.length<200){ kayit('Özel görev '+G.ad+': yanıt kısa, uygulanmadı'); continue; }

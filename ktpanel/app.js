@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025g';   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025h';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -249,6 +249,7 @@ function renderKuresel(){
     const nm=(bold?"<b>"+ad+"</b>":ad)+' <span style="color:var(--muted);font-size:9px">'+b+"</span>";
     const d=m[k];
     if(!d||d.p==null)return "<tr><td>"+nm+'</td><td class="num">—</td><td class="num">—</td></tr>';
+    if(d.chg==null||!isFinite(d.chg))return "<tr><td>"+nm+'</td><td class="num">'+trN(d.p,2)+'</td><td class="num" title="'+(d.supheli||'günlük değişim yok')+'" style="color:var(--muted)">— <span style="font-size:8px">bayat</span></td></tr>';   /* §540 */
     const s=d.chg>=0?"+":"",cls=d.chg>=0?"up":"down";
     return "<tr><td>"+nm+'</td><td class="num">'+trN(d.p,2)+'</td><td class="num '+cls+'">'+s+trN(d.chg,2)+"</td></tr>";
   }).join("");
@@ -742,9 +743,10 @@ async function abdSekme(){
             const cls=f==null?'':((f>0)===ters?'down':'up'); const sgn=f!=null&&f>0?'+':'';
             const deger = birim==='bp' ? trN(v.deger*100,0)+'bp'
                         : birim==='bin' ? trN(v.deger/1000,0)+' bin'
+                        : birim==='mnK' ? trN(v.deger/1000,2)+' mn'   /* §540: seri ZATEN bin cinsinden (JOLTS 7.079 bin = 7,08 mn; "7 bin" yazıyordu) */
                         : birim==='%' ? '%'+trN(v.deger,2)
                         : trN(v.deger,birim==='puan1'?1:2);
-            const farkStr = f!=null ? ' <span class="'+cls+'" style="font-size:10px">('+sgn+trN(birim==='bp'?f*100:(birim==='bin'?f/1000:f),birim==='bp'||birim==='bin'?0:2)+')</span>' : '';
+            const farkStr = f!=null ? ' <span class="'+cls+'" style="font-size:10px">('+sgn+trN(birim==='bp'?f*100:(birim==='bin'||birim==='mnK'?f/1000:f),birim==='bp'||birim==='bin'?0:2)+')</span>' : '';
             return '<div class="kv"><span class="k">'+ad+'</span><span'+(vurgu?' style="font-weight:600"':'')+'>'+deger+farkStr+' <span style="color:var(--muted);font-size:9px">'+v.tarih+'</span></span></div>';
           };
           let rh='';
@@ -758,9 +760,9 @@ async function abdSekme(){
              takvim (§319) bu olayların TARİHİNİ ve BEKLENTİSİNİ veriyordu ama
              ForexFactory GERÇEKLEŞEN değeri taşımıyor (alanlarında "actual" yok
              — ölçüldü). Gerçekleşen için FRED doğru kaynak. */
-          rh+=rSatir('JTSJOL','JOLTS açık pozisyon — işgücü talebi','bin',true,false);
+          rh+=rSatir('JTSJOL','JOLTS açık pozisyon — işgücü talebi','mnK',true,false);
           rh+=rSatir('JTSQUR','İstifa oranı — işçi güveni','%',true,false);
-          rh+=rSatir('WCESTUS1','Ham petrol stoku (EIA, haftalık)','bin',true,false);
+          rh+=rSatir('WCESTUS1','Ham petrol stoku (EIA, haftalık · varil)','mnK',true,false);
           rh+=rSatir('WPULEUS3','Rafineri kapasite kullanımı','%',true,false);
           rh+=rSatir('DCOILWTICO','WTI spot','puan1',true,false);
           $('usRiskBody').innerHTML = rh||'<div class="sub">Risk serileri boş.</div>';
@@ -1065,7 +1067,7 @@ async function asyaRender(){
     const sgn=d.chg>=0?'+':'',cls=d.chg>=0?'up':'down';
     html+='<tr><td><b>'+ad+'</b> <span style="color:var(--muted);font-size:9px">'+ul+'</span></td>'+
       '<td class="num" style="font-weight:600">'+trN(d.p,0)+'</td>'+
-      '<td class="num '+cls+'">'+sgn+trN(d.chg,2)+'%</td>'+
+      '<td class="num '+(d.chg==null?'':cls)+'">'+(d.chg==null?'— <span style="font-size:8px" title="'+(d.supheli||'')+'">bayat</span>':sgn+trN(d.chg,2)+'%')+'</td>'+
       '<td class="num '+hcls(d.h1)+'">'+h(d.h1)+'</td>'+
       '<td class="num '+hcls(d.a1)+'">'+h(d.a1)+'</td></tr>';
   });
@@ -1200,7 +1202,10 @@ async function tlFaizKart(){
         const yorum=makas<0?'NEGATİF — mevduat krediden pahalı, sert marj baskısı':(makas<2?'çok dar — NFM baskısı sürüyor':(makas<5?'dar-normal — toparlanma sınırlı':'sağlıklı — marj alanı var'));
         mk.innerHTML='<div class="kv"><span class="k">Ticari kredi − 3 aya kadar mevduat</span><span class="'+cls+'" style="font-weight:700;font-size:15px">'+(makas>=0?'+':'')+trN(makas,1)+' puan</span></div>'+
           '<div class="kv"><span class="k">Okuma</span><span>'+yorum+'</span></div>'+
-          '<div class="kv"><span class="k">Politika faizine göre mevduat</span><span>'+(m3>=37?'+':'')+trN(m3-37,1)+' puan '+(m3>37?'(fonlama politika ÜSTÜnde — pahalı)':'')+'</span></div>';
+          (()=>{ /* §540: politika faizi ELLE 37 yazılıydı — 22 Eki −100bp sonrası makas 1 puan şişik görünüyordu. Canlı POL_CANLI'dan. */
+            const pf=(window.POL_CANLI&&window.POL_CANLI.deger>0)?window.POL_CANLI.deger:((typeof POLITIKA_DAMGA!=='undefined'&&POLITIKA_DAMGA.deger>0)?POLITIKA_DAMGA.deger:null);
+            if(pf==null) return '<div class="kv"><span class="k">Politika faizine göre mevduat</span><span class="sub">politika faizi henüz yüklenmedi</span></div>';
+            return '<div class="kv"><span class="k">Politika faizine göre mevduat <span class="thin">(%'+trN(pf,2)+' · canlı)</span></span><span>'+(m3>=pf?'+':'')+trN(m3-pf,1)+' puan '+(m3>pf?'(fonlama politika ÜSTÜnde — pahalı)':'(fonlama politika altında)')+'</span></div>'; })();
       } else mk.innerHTML='<div class="sub">Makas için iki seri de gerekli.</div>';
     }
   }catch(e){ el.innerHTML='<div class="sub">Faiz kartı hatası.</div>'; }
@@ -1441,7 +1446,7 @@ function emtiaRender(){
       const hcls=(v)=>v==null?'':(v>=0?'up':'down');
       return '<tr><td title="'+ctx.replace(/"/g,"'")+'"><b>'+ad+'</b> <span style="color:var(--muted);font-size:9px">'+br+'</span></td>'+
         '<td class="num" style="font-weight:600">'+trN(d.p,2)+'</td>'+
-        '<td class="num '+cls+'">'+s+trN(d.chg,2)+'%</td>'+
+        '<td class="num '+(d.chg==null?'':cls)+'">'+(d.chg==null?'— <span style="font-size:8px">bayat</span>':s+trN(d.chg,2)+'%')+'</td>'+
         '<td class="num '+hcls(d.h1)+'">'+h(d.h1)+'</td>'+
         '<td class="num '+hcls(d.a1)+'">'+h(d.a1)+'</td></tr>';
     }).join('');
@@ -3146,7 +3151,7 @@ function usRender(){
 async function usCek(){
   try{
     const r=await fetch('/api/usnews');USN=await r.json();
-    $('usDurum').textContent=(USN.ok?'canlı · ':'kaynak sorunu · ')+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    $('usDurum').textContent=(USN.ok?('canlı'+(USN.kaynak?' ('+USN.kaynak+')':'')+' · '):'kaynak sorunu · ')+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});   /* §540 */
   }catch(e){$('usDurum').textContent='bağlantı hatası';USN=USN||{items:[]};}
   usRender();
 }
@@ -3933,7 +3938,10 @@ async function loadEnflasyonBeklenti(){
     // Merkez Bankaları kartındaki canlı beklenti-gerçekleşen satırları
     const sonDeg=(arr)=>{for(let i=arr.length-1;i>=0;i--){if(arr[i]!=null)return arr[i];}return null;};
     const gGercek=sonDeg(seriler[0].d), gPiya=sonDeg(seriler[3].d), gHane=sonDeg(seriler[1].d);
-    const sonTarih=tarihler[tarihler.length-1], [ty,tm]=sonTarih.split('-').map(Number);
+    /* §540 (25 Eki denetim): ay etiketi eksenin SON tarihinden alınıyordu (= beklenti anketinin ayı, Eki) — gerçekleşen TÜFE ise Eyl.
+       Kart "fiili %29,7 · Eki 26" diyordu. Etiket gerçekleşen serinin son DOLU gözleminin ayından. */
+    let _gi=tarihler.length-1; for(let i=seriler[0].d.length-1;i>=0;i--){ if(seriler[0].d[i]!=null){ _gi=i; break; } }
+    const sonTarih=tarihler[Math.min(_gi,tarihler.length-1)], [ty,tm]=sonTarih.split('-').map(Number);
     if($('ppkGercek')&&gGercek!=null)$('ppkGercek').innerHTML='fiili %'+trN(gGercek,1)+' <span class="thin" style="font-size:9px">· '+ayAd[tm]+' '+String(ty).slice(2)+' · canlı</span>';
     if($('ppkPiya')&&gPiya!=null){$('ppkPiya').innerHTML='%'+trN(gPiya,1)+' <span class="thin" style="font-size:9px">· canlı</span>';
       if($('ppkPiyaTag')&&gGercek!=null){const makas=gPiya-gGercek;$('ppkPiyaTag').textContent='(makas '+(makas>=0?'+':'')+trN(makas,1)+'pp)';}}
@@ -4073,9 +4081,21 @@ async function makroKartlar(){
     }
   }catch(e){}
   // 5) Rezervler (TCMB brüt)
+  /* §540 (25 Eki veri denetimi): kutu "Ağu 230,5 mlr $ · TCMB brüt rezerv" diyordu — Rezerv Karnesi aynı ekranda 169,1 (16 Eki).
+     Arama bie_abreserv grubunun İLK eşleşen serisini seçiyordu: TP.AB.B6 "Toplam Rezervler" = resmi rezerv (B4) + BANKALARIN muhabir
+     mevcudu ve efektif kasası (B3, ~44 mlr $). TCMB brüt rezervi B4'tür (Haz 147,4 ≈ haftalık dip 149,2). Önce haftalık brüt
+     (Rezerv Karnesi'yle TEK kaynak, mod=rezerv), o yoksa aylık TP.AB.B4. */
   try{
-    const g=await mkGrupBul('rezerv', /toplam uluslararası rezerv|merkez bankası rezerv/);
-    const s=g?await mkSeri(g,/toplam rezerv|brüt|toplam/,400,/altın hariç|net/):null;
+    const rz=await (await fetch('/api/evds2?mod=rezerv')).json().catch(()=>null);
+    const b=rz&&rz.brut;
+    if(b&&Number.isFinite(b.deger)){
+      if($('rezervVal'))$('rezervVal').textContent=trN(b.deger,1)+' mlr $';
+      if($('rezervSub'))$('rezervSub').innerHTML='TCMB brüt rezerv · haftalık'+(Number.isFinite(b.degisim)?' ('+(b.degisim>=0?'+':'')+trN(b.degisim,1)+')':'')+mkCanli;
+      const m=String(b.tarih||'').match(/^(\d{2})-(\d{2})-(\d{4})/); const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+      if($('rezervTag')&&m)$('rezervTag').textContent=(+m[1])+' '+AY[+m[2]-1];
+      throw 'tamam';
+    }
+    const s=await mkSeriKod('TP.AB.B4',400);
     if(s&&s.items.length){
       const son=s.items[s.items.length-1], d=mkDonem(son.t);
       if($('rezervVal'))$('rezervVal').textContent=trN(mkMlr(son.v),1)+' mlr $';
@@ -4778,7 +4798,7 @@ function pariteKart(){
     '</div>'+
     '<table style="font-size:11px"><thead><tr><th class="num">Vade</th><th>Sukuk (TRD)</th><th class="num">Getiri</th><th>DİBS (TRT)</th><th class="num">Getiri</th><th class="num">Fark</th></tr></thead><tbody>'+satir+'</tbody></table>'+
     yon+
-    '<div class="note" style="margin-top:10px">Bu tablo <b>model tahmini değil</b>: aynı gün itfa olan iki gerçek Hazine kâğıdının getiri farkı. İkisi de aynı borçlu, aynı kredi riski olduğu için fark ~0 (parite) beklenir. <b>Fark pozitifse</b> (DİBS yüksek) sukuk görece ucuz; <b>negatifse</b> sukuk pahalı — katılım talebi arzı aşıyor demektir. İzlenecek olan farkın seviyesi değil <b>yönü</b>: sürekli daralması, BDDK\'da gördüğümüz yapısal katılım talebinin (fon kullandırma %65,9 vs sektör %87,9) fiyata yansımaya başladığını gösterir.<br><br><b>⚡ Otomatik alarm:</b> Herhangi bir çiftte makas <b>25 baz puanı</b> aşarsa her sabah (hafta içi 08:15) mailine düşer — ucuz bacağı al, pahalı bacağı sat sinyaliyle. İkisi de Hazine olduğundan kredi riski nötr; yalnız fiyat farkına oynanır. Kaynak: TCMB EVDS · bie_pydibs.</div>'+
+    '<div class="note" style="margin-top:10px">Bu tablo <b>model tahmini değil</b>: aynı gün itfa olan iki gerçek Hazine kâğıdının getiri farkı. İkisi de aynı borçlu, aynı kredi riski olduğu için fark ~0 (parite) beklenir. <b>Fark pozitifse</b> (DİBS yüksek) sukuk görece ucuz; <b>negatifse</b> sukuk pahalı — katılım talebi arzı aşıyor demektir. İzlenecek olan farkın seviyesi değil <b>yönü</b>: sürekli daralması, BDDK\'da gördüğümüz yapısal katılım talebinin (fon kullandırma '+((typeof BNK!=='undefined'&&BNK&&BNK.ok&&BNK.gruplar&&BNK.gruplar['10003']&&BNK.gruplar['10003'].oran)?('%'+bnkSay(BNK.gruplar['10003'].oran.krediMevduat,1)+' vs sektör %'+bnkSay(((BNK.gruplar['10001']||{}).oran||{}).krediMevduat,1)+' · BDDK canlı'):'oranı sektörün belirgin altında — Bankacılık kartında canlı')+') fiyata yansımaya başladığını gösterir.<br><br><b>⚡ Otomatik alarm:</b> Herhangi bir çiftte makas <b>25 baz puanı</b> aşarsa her sabah (hafta içi 08:15) mailine düşer — ucuz bacağı al, pahalı bacağı sat sinyaliyle. İkisi de Hazine olduğundan kredi riski nötr; yalnız fiyat farkına oynanır. Kaynak: TCMB EVDS · bie_pydibs.</div>'+
     '<div style="margin-top:8px"><button onclick="pariteTestAlarm(this)" style="font-size:10px;padding:4px 10px;border:1px solid var(--line2);border-radius:5px;background:none;cursor:pointer;font-family:inherit;color:var(--muted)">⚡ Test alarmı gönder</button> <span id="pariteTestDurum" class="sub" style="font-size:10px"></span></div>';
 }
 async function egriCek(){
@@ -5360,7 +5380,10 @@ async function pysInit(){
       ? ('TEFAS · ACTIONS · '+(PYS.__canliGun||'')+' · '+c.join('/'))
       : (((PYS.kaynak||'').indexOf('Fintables')>=0?'FİNTABLES · ':'DAMGALI · ')+(PYS.guncelleme||''));   /* §248d */
   }
-  if($('pysNot')) $('pysNot').innerHTML='Kaynak: '+esc(PYS.kaynak||'')+'. Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı. Döviz serbest fonların yıllık 269 mlr ₺ ile açık ara lider olması dolarizasyon talebinin kurumsal kanıtı.'+
+  /* §540 (25 Eki veri denetimi): not "Kaynak: Fintables (canlı sorgu)" ve "döviz serbest fonların yıllık 269 mlr ₺" diyordu — oysa günlük
+     pencere Actions'ın TEFAS köprüsünden; Fintables yalnız DAMGALI aylık/yıllık blokta ve o blok tarihli bir anlık görüntü. Kaynak, hangi
+     pencereye aitse onunla birlikte yazılır; damgadaki sabit rakam cümle içinde tekrarlanmaz. */
+  if($('pysNot')) $('pysNot').innerHTML=(PYS.__canli? 'Kaynak: günlük/haftalık — TEFAS (Actions köprüsü, '+esc(PYS.__canliGun||'')+'); aylık/yıllık blok damgalı anlık görüntü ('+esc(PYS.kaynak||'')+(PYS.guncelleme?' · '+esc(PYS.guncelleme):'')+').' : 'Kaynak (damgalı anlık görüntü): '+esc(PYS.kaynak||'')+(PYS.guncelleme?' · '+esc(PYS.guncelleme):'')+'.')+' Pozitif net giriş = para o kanala akıyor; PYŞ sıralaması dağıtım gücünün, tür sıralaması yatırımcı tercihinin fotoğrafı.'+
     (PYS.__canli ? (' <b>§360:</b> Günlük/Haftalık pencereler <b>Actions\'ın TEFAS köprüsünden</b> türetiliyor (pay adedi × fiyat farkı, '+esc(PYS.__canliGun||'')+'). Aylık pencere 22 iş günü birikince açılır; o zamana dek damgalı blok görünür — yetersiz seriyle "aylık" demek yanıltıcı olurdu.') : '');
   pysCiz();
   spkCek();   /* §248b: AUM bloğu */
@@ -8945,6 +8968,8 @@ async function boot(){
     ['Sağlık bekçisi', saglikInit],
     ['Ülke kredi notu', krediNotuInit],
     ['MB damga kartları canlı doğrulama', mbKartCanli],
+    ['MB özet tablosu canlı (§540)', ()=>setTimeout(mbOzetCanli,1500)],
+    ['PKA anket satırları canlı (§540)', ()=>setTimeout(pkaCanli,1800)],
     ['Gündem özeti (otomatik)', ()=>setTimeout(gundemCanli,3000)],
     ['Risk barometresi ek veriler', ()=>setTimeout(riskBaroEkYukle,2000)],
     ['Toparlanma monitörü', ()=>setTimeout(toparlanmaInit,2600)],   /* §530 */
@@ -9085,10 +9110,17 @@ async function sinyalRender(){
     const bloklar=[]; Object.values((SON&&SON.kayitlar)||{}).forEach(k=>(k.ihaleler||[]).forEach(A=>bloklar.push(Object.assign({t:k.tarih},A))));
     bloklar.sort((a,b)=>(b.t||'').localeCompare(a.t||''));
     const tufe=bloklar.find(b=>/T\u00dcFE/i.test(b.senet||'')&&b.bilesik);
-    const sabitler=bloklar.filter(b=>/Sabit/i.test(b.senet||'')&&b.bilesik);
-    const uzun=sabitler.length?sabitler.reduce((a,b)=>a.bilesik.gerceklesme<b.bilesik.gerceklesme?a:b):null;
-    const kisaAday=bloklar.filter(b=>b.bilesik&&!/T\u00dcFE/i.test(b.senet||''));
-    const kisa=kisaAday.length?kisaAday.reduce((a,b)=>a.bilesik.gerceklesme>b.bilesik.gerceklesme?a:b):null;
+    /* §540 (25 Eki veri denetimi): EĞRİ satırı "Ters 1098bp (%46,1→%35,1)" diyordu — EVDS eğrisi aynı gün 3A %36,5 · 2Y %39,7 · 10Y %36,0.
+       Sebep: TÜM ihale arşivinden en YÜKSEK getirili ihale (aylar önceki şok dönemi) ile en DÜŞÜK getirili sabit kupon karşılaştırılıyordu —
+       vade değil getiri seçiliyordu, tarih penceresi yoktu. Artık: son 45 günün ihaleleri, vade ISIN'den (TRTggaayy…), kısa uç = en kısa
+       vadeli TL ihraç (TÜFE hariç), uzun uç = en uzun vadeli sabit kupon. */
+    const vadeIsin=b=>{ const m=String(b.isin||'').match(/^TR[TD](\d{2})(\d{2})(\d{2})/); return m? Date.UTC(2000+ +m[3], +m[2]-1, +m[1]) : null; };
+    const _sinir=new Date(Date.now()-45*864e5).toISOString().slice(0,10);
+    const yakin=bloklar.filter(b=>b.bilesik&&(b.t||'')>=_sinir&&vadeIsin(b)!=null&&!/USD|EUR|dolar|avro|alt\u0131n/i.test(b.senet||''));
+    const sabitler=yakin.filter(b=>/Sabit/i.test(b.senet||''));
+    const uzun=sabitler.length?sabitler.reduce((a,b)=>vadeIsin(a)>vadeIsin(b)?a:b):null;
+    const kisaAday=yakin.filter(b=>!/T\u00dcFE/i.test(b.senet||''));
+    const kisa=kisaAday.length?kisaAday.reduce((a,b)=>vadeIsin(a)<vadeIsin(b)?a:b):null;
     let topBp=null,kuyruk=0;
     try{const L=ppkOku(); const pat=ppkPatika(0,L); topBp=Math.round(pat.reduce((x,y)=>x+y.beklenenBp,0));
         L.forEach(t=>{kuyruk+=(+(t.p&&t.p['+100']||0))+(+(t.p&&t.p['+250']||0));});}catch(e){}
@@ -9102,8 +9134,8 @@ async function sinyalRender(){
       m:'Takdiriniz \u03a3'+topBp+'bp \u2014 '+(topBp<=-200?'yumu\u015fama g\u00fc\u00e7l\u00fc: sabit kira kilidi lehine':'temkinli patika')+
         (kuyruk>0?' \u00b7 art\u0131r\u0131m kuyru\u011fu %'+kuyruk+': sabit vade \u00f6l\u00e7\u00fcl\u00fc tutulur':'')});
     if(terslik!=null) R.push({r:terslik>=300?'down':'',t:'E\u011eR\u0130',
-      m:'Ters '+terslik+'bp (%'+trN(kisa.bilesik.gerceklesme,1)+'\u2192%'+trN(uzun.bilesik.gerceklesme,1)+' \u00b7 '+(uzun.senet||'')+') \u2014 dezenflasyon '+
-        (terslik>=300?'DER\u0130N fiyatlanm\u0131\u015f: uzun sabit primli; patikaniz piyasadan g\u00fcvercin de\u011filse kilit pahal\u0131':'k\u0131smen fiyatl\u0131')});
+      m:(terslik>=0?'Ters ':'Pozitif ')+Math.abs(terslik)+'bp (%'+trN(kisa.bilesik.gerceklesme,1)+' '+(kisa.isin||'')+' \u2192 %'+trN(uzun.bilesik.gerceklesme,1)+' '+(uzun.isin||'')+' \u00b7 son 45 g\u00fcn ihaleleri) \u2014 dezenflasyon '+
+        (terslik>=300?'DER\u0130N fiyatlanm\u0131\u015f: uzun sabit primli; patikaniz piyasadan g\u00fcvercin de\u011filse kilit pahal\u0131':(terslik>0?'k\u0131smen fiyatl\u0131':'fiyatlanmam\u0131\u015f (e\u011fri pozitif)'))});
     if(makas!=null) R.push({r:makas>=2?'down':'up',t:'REEL',
       m:'Ex-ante %'+trN(ex,1)+' \u2212 T\u00dcFE-endeksli ihra\u00e7 reeli %'+trN(tufe.bilesik.gerceklesme,2)+' = '+trN(makas,1)+' pt \u2192 enflasyon korumas\u0131 '+
         (makas>=2?'PAHALI (nominal g\u00f6rece cazip)':'makul fiyatl\u0131')});
@@ -10486,6 +10518,65 @@ async function mbKartCanli(){
     if(d&&Number.isFinite(d.deger)) uygula('ecbSonHamle','ecbTag',d.deger,Number.isFinite(d.fark)?+(d.deger-d.fark).toFixed(2):null,d.tarih,'ECB SDW DFR (yürürlük tarihi)'); }catch(e){}
   try{ const j=await (await fetch('/api/market?mod=ecos')).json(); const f=j&&j.seriler&&j.seriler.faiz;
     if(f&&Number.isFinite(f.deger)) uygula('bokPolitika','bokTag',f.deger,Number.isFinite(f.oncekiSeviye)?f.oncekiSeviye:null,f.sonDegisimTarihi,'BOK ECOS'); }catch(e){}
+}
+
+/* ---- §540 PİYASA KATILIMCILARI ANKETİ CANLI (25 Eki veri denetimi) ----
+   Merkez Bankaları kartındaki PKA satırları (yıl sonu TÜFE %29,14 · 24 ay %18,29 · yıl sonu faiz ≈%34,7 "Eylül'de indirim" · USD/TRY
+   51,47/55,72 · büyüme %3,2 / cari açık 49,2) ELLE yazılmış, birkaç anket eskiydi. Ekim 2026 anketi (EVDS bie_pkauo): 29,63 · 17,94 ·
+   35,00 · 51,55/59,26 · %2,92 / −48,5 mlr $. Artık TCMB'nin kendi serisinden, anket ayıyla. */
+async function pkaCanli(){
+  const K={ys:'TP.PKAUO.S01.D.U', a24:'TP.PKAUO.S01.F.U', faiz:'TP.PKAUO.S04.H.U', k1:'TP.PKAUO.S05.B.U', k2:'TP.PKAUO.S05.C.U', cari:'TP.PKAUO.S06.A.U', buy:'TP.PKAUO.S07.A.U'};
+  try{ const d=await (await fetch('/api/evds2?series='+Object.values(K).join(',')+'&gun=120&full=1')).json(); const S=d.son||{}; const v=k=>S[K[k]]&&Number.isFinite(parseFloat(S[K[k]].deger))?parseFloat(S[K[k]].deger):null;
+    const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']; const t=(S[K.ys]||{}).tarih||''; const m=String(t).match(/^(\d{4})-(\d{1,2})/); const ay=m? AY[+m[2]-1]+' '+m[1].slice(2) : '';
+    const c=' <span class="thin" style="font-size:8px">· canlı</span>';
+    if($('pkaAy')&&ay) $('pkaAy').textContent='· PKA '+ay;
+    if($('pkaYsTufe')&&v('ys')!=null) $('pkaYsTufe').innerHTML='%'+trN(v('ys'),2)+c;
+    if($('pka24')&&v('a24')!=null) $('pka24').textContent='%'+trN(v('a24'),2);
+    if($('pkaYsFaiz')&&v('faiz')!=null) $('pkaYsFaiz').innerHTML='%'+trN(v('faiz'),2)+c;
+    if($('pkaKur')&&v('k1')!=null&&v('k2')!=null) $('pkaKur').innerHTML=trN(v('k1'),2)+' / '+trN(v('k2'),2)+c;
+    if($('pkaBuyCari')&&v('buy')!=null&&v('cari')!=null) $('pkaBuyCari').innerHTML='%'+trN(v('buy'),1)+' / '+trN(Math.abs(v('cari'))/1000,1)+' mlr $ '+(v('cari')<0?'açık':'fazla')+c;
+  }catch(e){}
+}
+/* ---- §540 MERKEZ BANKALARI ÖZET TABLOSU CANLI (25 Eki veri denetimi) ----
+   "04 Merkez Bankaları & Beklentiler" tablosu elle yazılmıştı ve 22 Eki PPK'dan sonra TCMB satırı "%37 · Sabit (10 Eyl) · sıradaki
+   22 Eki" diye kalmıştı — aynı ekranın Fonlama Rejimi kartı %36 derken. Kural: seviye ve son değişim CANLI kaynaktan; sıradaki toplantı
+   panelin resmî takvim sabitlerinden; canlı serisi olmayan satırda (BoJ, BoE) elle metin kalır ama "sıradaki" tarihi geçmişse görünür
+   biçimde işaretlenir. Hiçbir tarih tahmin edilmez. */
+async function mbOzetCanli(){
+  const tb=$('mbOzetTb'); if(!tb) return;
+  const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const g=t=>{ let m=String(t||'').match(/^(\d{4})-?(\d{2})-?(\d{2})/); if(m) return (+m[3])+' '+AY[+m[2]-1]; m=String(t||'').match(/^(\d{2})-(\d{2})-(\d{4})/); return m? (+m[1])+' '+AY[+m[2]-1] : String(t||''); };
+  const bugun=new Date().toISOString().slice(0,10);
+  const satir=k=>tb.querySelector('tr[data-mb="'+k+'"]');
+  const yaz=(k,faiz,son,sira,kaynak)=>{ const tr=satir(k); if(!tr) return; const td=tr.children;
+    if(faiz!=null) td[1].innerHTML=faiz+(kaynak?' <span class="thin" style="font-size:8px" title="'+esc(kaynak)+'">· canlı</span>':'');
+    if(son!=null) td[2].innerHTML=son; if(sira!=null) td[3].innerHTML=sira; };
+  const kontrolSira=k=>{ const tr=satir(k); if(!tr) return; const td=tr.children[3]; const m=td.textContent.match(/(\d{1,2})\s*(Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)/);
+    if(!m) return; const ay=AY.indexOf(m[2]); const y=new Date().getFullYear(); const t=y+'-'+String(ay+1).padStart(2,'0')+'-'+String(+m[1]).padStart(2,'0');
+    if(t<bugun) td.innerHTML='<span class="sub" title="elle yazılan tarih geçti">'+esc(td.textContent)+' geçti — takvim?</span>'; };
+  const ok=(x)=>(x>0?'▲ +':'▼ −')+Math.abs(x)+'bp';
+  /* TCMB */
+  try{ const P=await politikaCanli(); if(P){ const sira=(typeof PPK_VARSAYILAN!=='undefined'?PPK_VARSAYILAN:[]).map(x=>x.tarih).filter(t=>t>=bugun).sort()[0];
+      yaz('tcmb','<span style="color:var(--mm2);font-weight:600">%'+trN(P.deger,2)+'</span>', P.karar? '<span class="'+(P.karar.bp<0?'up':'down')+'">'+ok(P.karar.bp)+' ('+g(P.karar.tarih)+')</span>' : 'Sabit', sira? g(sira) : '<span class="sub">takvim bekleniyor</span>', P.kaynak);
+      if($('mbKoridor')&&P.alt!=null&&P.ust!=null){ const a=(typeof AOFM_SON==='number'&&isFinite(AOFM_SON))?AOFM_SON:null;
+        $('mbKoridor').innerHTML='%'+trN(P.alt,2)+'–'+trN(P.ust,2)+(a?' / AOFM %'+trN(a,2):'')+' <span class="thin" style="font-size:8px">· canlı</span>'; } } }catch(e){}
+  /* Fed — FRED hedef aralık */
+  try{ const j=await (await fetch('/api/market?mod=fred')).json(); const S=(j&&j.seriler)||{}; const L=S.DFEDTARL, U=S.DFEDTARU;
+    const sira=(typeof FOMC_2026!=='undefined'?FOMC_2026:[]).filter(x=>x[1]>=bugun)[0];
+    if(L&&U&&Number.isFinite(L.deger)&&Number.isFinite(U.deger)){ const tr=satir('fed'); const elleUyum=tr&&tr.children[1].textContent.includes(trN(L.deger,2))&&tr.children[1].textContent.includes(trN(U.deger,2));
+      yaz('fed','%'+trN(L.deger,2)+'–'+trN(U.deger,2), elleUyum? null : '<span class="sub">⚠ seviye değişti (FRED) — karar metni güncellenmeli</span>', sira? (+sira[0].slice(8,10))+'–'+g(sira[1]) : null, 'FRED DFEDTARL/DFEDTARU · '+(U.tarih||'')); }
+    else if(sira) yaz('fed',null,null,(+sira[0].slice(8,10))+'–'+g(sira[1])); }catch(e){}
+  /* ECB — SDW DFR (yürürlük tarihi) */
+  try{ const j=await (await fetch('/api/market?mod=ecb')).json(); const d=j&&j.seriler&&j.seriler.dfr; const sira=(typeof ECB_TAKVIM!=='undefined'?ECB_TAKVIM:[]).filter(t=>t>=bugun)[0];
+    if(d&&Number.isFinite(d.deger)){ const bp=Number.isFinite(d.fark)&&d.fark!==0?Math.round(d.fark*100):null;
+      yaz('ecb','%'+trN(d.deger,2), bp!=null? '<span class="'+(bp>0?'down':'up')+'">'+ok(bp)+' (yürürlük '+g(d.tarih)+')</span>' : null, sira? g(sira) : '<span class="sub">takvim bekleniyor</span>', 'ECB SDW DFR'); } }catch(e){}
+  /* BOK — ECOS */
+  try{ const j=await (await fetch('/api/market?mod=ecos')).json(); const f=j&&j.seriler&&j.seriler.faiz;
+    if(f&&Number.isFinite(f.deger)){ const bp=Number.isFinite(f.oncekiSeviye)?Math.round((f.deger-f.oncekiSeviye)*100):null;
+      yaz('bok','%'+trN(f.deger,2), bp? '<span class="'+(bp>0?'down':'up')+'">'+ok(bp)+' ('+g(f.sonDegisimTarihi)+')</span>' : null, null, 'BOK ECOS'); } }catch(e){}
+  /* BoJ — politika faizi canlı serisi yok; sıradaki resmî takvimden */
+  try{ const sira=(typeof BOJ_TAKVIM!=='undefined'?BOJ_TAKVIM:[]).filter(x=>x[1]>=bugun)[0]; if(sira) yaz('boj',null,null,(+sira[0].slice(8,10))+'–'+g(sira[1])); }catch(e){}
+  ['boe','bok'].forEach(kontrolSira);
 }
 
 /* ---- §522 GÜNDEM ÖZETİ OTOMATİK (24 Eki) ----
