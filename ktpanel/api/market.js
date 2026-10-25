@@ -734,11 +734,16 @@ module.exports = async (req, res) => {
       const m = res0.meta || {};
       const rawC = (((res0.indicators || {}).quote || [])[0] || {}).close || [];
       const rawT = res0.timestamp || [];
+      const rawV = (((res0.indicators || {}).quote || [])[0] || {}).volume || [];
       // Zaman damgası ile kapanışı BİRLİKTE süz — ayrı süzmek hizalamayı bozar
       const bar = [];
       for (let i = 0; i < rawC.length; i++) {
-        if (typeof rawC[i] === 'number' && isFinite(rawC[i])) bar.push({ t: rawT[i] || null, c: rawC[i] });
+        if (typeof rawC[i] === 'number' && isFinite(rawC[i])) bar.push({ t: rawT[i] || null, c: rawC[i], v: rawV[i] });
       }
+      /* §540 (25 Eki veri denetimi): ASX 200 23 Eki barı 22 Eki'nin AYNI kopyası, hacim 0 — Yahoo besleme boşluğu. Panel "−0,00%"
+         yazıyordu (gerçek değişim değil, eksik veri). Hacmi 0 ve kapanışı bir öncekiyle aynı olan son bar BAYAT sayılır. */
+      let bayatBar = false;
+      if (bar.length > 1) { const s1 = bar[bar.length - 1], s0 = bar[bar.length - 2]; if (s1.v === 0 && Math.abs(s1.c - s0.c) < 1e-9) bayatBar = true; }
       const L = bar.length;
       if (!L) return null;
       const p = (typeof m.regularMarketPrice === 'number') ? m.regularMarketPrice : bar[L - 1].c;
@@ -750,7 +755,10 @@ module.exports = async (req, res) => {
       // (7408.29998) döndürdüğü için bu test piyasa kapalıyken hep false dönüyor,
       // aynı seans yeni seans sanılıyor ve 1G değişimi kendi kendine bölünüp %0,00
       // çıkıyordu. (IBEX gibi tam sayı değerli endeksler tesadüfen doğru çalışıyordu.)
-      const gunIst = (ts) => ts ? new Date(ts * 1000).toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' }) : null;
+      /* §540: seans günü BORSANIN saat diliminde. İstanbul saatiyle hesaplanınca Nasdaq'ın son kotasyonu (17:15 ET = 00:15 TSİ) ertesi
+         güne düşüyor, "yeni seans" sanılıyor ve günlük değişim kendine bölünüp +0,00% çıkıyordu (24 Eki ölçümü: ^IXIC gun 10-24, bar 10-23). */
+      const TZ = (typeof m.exchangeTimezoneName === 'string' && m.exchangeTimezoneName) ? m.exchangeTimezoneName : 'Europe/Istanbul';
+      const gunIst = (ts) => { if (!ts) return null; try { return new Date(ts * 1000).toLocaleDateString('en-CA', { timeZone: TZ }); } catch (e) { return new Date(ts * 1000).toLocaleDateString('en-CA', { timeZone: 'Europe/Istanbul' }); } };
       const sonBarGun = gunIst(bar[L - 1].t);
       const pGun = (typeof m.regularMarketTime === 'number') ? gunIst(m.regularMarketTime) : null;
       let yeniSeans;
@@ -778,6 +786,7 @@ module.exports = async (req, res) => {
       // kapanışı varsa ona düş; en azından günlük değişim canlı olsun.
       if (chg == null && gunPrev) { chg = (p / gunPrev - 1) * 100; kaynak = 'meta'; }
       let supheli = null;
+      if (bayatBar && !yeniSeans) { chg = null; kaynak = 'bayat'; supheli = 'son bar hacimsiz kopya (besleme boşluğu)'; }
       if (chg != null && Math.abs(chg) > 12) {
         const alt = gunPrev ? ((p / gunPrev - 1) * 100) : null;
         if (alt != null && Math.abs(alt) < Math.abs(chg)) { supheli = 'seri-meta farki'; chg = alt; kaynak = 'meta'; }

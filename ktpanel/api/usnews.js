@@ -137,6 +137,28 @@ async function finnhubKripto(req, res){
   }
 }
 
+/* §540 (25 Eki veri denetimi): "CANLI ABD AKIŞI" kartı "kaynak sorunu" gösteriyordu — Alpha Vantage ücretsiz kotası (~25/gün) doldu.
+   Hata yanıtı 60 sn önbelleğe girdiği için her açılış AV'ye yeniden gidip kotayı daha da yakıyordu. Yedek: Finnhub genel piyasa
+   haberleri (ücretsiz tier, FINNHUB_KEY zaten kripto/kazanç için tanımlı). Finnhub duygu skoru vermez → yön NÖTR (y:0) yazılır,
+   kaynağı yanıtta "finnhub" olarak belirtilir; uydurma yön üretilmez. */
+const AD = { AAPL:/\bApple\b/i, MSFT:/\bMicrosoft\b/i, GOOGL:/\b(Alphabet|Google)\b/i, AMZN:/\bAmazon\b/i, NVDA:/\bNvidia\b/i, META:/\bMeta\b|\bFacebook\b/i, TSLA:/\bTesla\b/i,
+  AVGO:/\bBroadcom\b/i, AMD:/\bAMD\b/, TSM:/\bTSMC\b|Taiwan Semiconductor/i, ASML:/\bASML\b/, MU:/\bMicron\b/i, INTC:/\bIntel\b/i, QCOM:/\bQualcomm\b/i, ORCL:/\bOracle\b/i,
+  CRM:/\bSalesforce\b/i, ADBE:/\bAdobe\b/i, IBM:/\bIBM\b/, NFLX:/\bNetflix\b/i, DIS:/\bDisney\b/i, JPM:/\bJPMorgan\b/i, GS:/Goldman Sachs/i, MS:/Morgan Stanley/i,
+  BAC:/Bank of America/i, WFC:/Wells Fargo/i, V:/\bVisa\b/, MA:/\bMastercard\b/i, BLK:/\bBlackRock\b/i, UNH:/UnitedHealth/i, PFE:/\bPfizer\b/i, LLY:/Eli Lilly|\bLilly\b/i,
+  WMT:/\bWalmart\b/i, COST:/\bCostco\b/i, HD:/Home Depot/i, MCD:/McDonald/i, KO:/Coca-Cola/i, XOM:/Exxon/i, CVX:/\bChevron\b/i, BA:/\bBoeing\b/i, PLTR:/\bPalantir\b/i };
+async function finnhubYedek(){
+  const KEY = process.env.FINNHUB_KEY; if(!KEY) return null;
+  const izle = new Set(IZLEME); const out = [];
+  for (const kat of ['general','merger']){
+    try{ const r = await fetch('https://finnhub.io/api/v1/news?category='+kat+'&token='+KEY, { signal: AbortSignal.timeout(8000) }); if(!r.ok) continue;
+      const j = await r.json(); (Array.isArray(j)?j:[]).forEach(h=>{ const bas=String(h.headline||''); const rel=String(h.related||'').split(',').map(x=>x.trim()).filter(x=>izle.has(x));
+        const ad=Object.keys(AD).filter(k=>AD[k].test(bas)); const k=[...new Set([...rel,...ad])].slice(0,4); if(!k.length) return;
+        out.push({ k, b: bas.slice(0,170), src: String(h.source||'').slice(0,30), t: /earnings|results|quarter|guidance/i.test(bas)?'FR':'HBR', o: /earnings|results|guidance/i.test(bas)?2:1, y:0,
+          ts: h.datetime? new Date(h.datetime*1000).toISOString() : '', url: h.url||'#' }); }); }catch(e){}
+  }
+  const tekil=[]; const g=new Set(); out.sort((a,b)=>a.ts<b.ts?1:-1).forEach(x=>{ if(!g.has(x.b)){ g.add(x.b); tekil.push(x); } });
+  return tekil.length? tekil.slice(0,60) : null;
+}
 export default async function handler(req, res){
   /* §513: hata yanıtı uzun önbelleğe girmez (ESM dosya — _lib/onbellek.js ile aynı kural, satır içi) */
   { const _j = res.json && res.json.bind(res); if (_j && !res.__hob) { res.__hob = true; res.json = b => { try { if (b && typeof b === 'object' && !Array.isArray(b) && (b.ok === false || (b.ok == null && b.err) || (b.son && typeof b.son === 'object' && !Array.isArray(b.son) && !Object.keys(b.son).length))) res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=60'); } catch (e) {} return _j(b); }; } }
@@ -158,10 +180,12 @@ export default async function handler(req, res){
       const r = await fetch(u, { signal: AbortSignal.timeout(9000) });
       if (!r.ok) continue;
       const j = await r.json();
-      if (j.Note || j.Information) return res.status(200).json({ ok:false, err:'Alpha Vantage kota/limit mesajı döndü — birkaç saat sonra normale döner', items:[] });
+      if (j.Note || j.Information){ const y = await finnhubYedek(); if (y) return res.status(200).json({ ok:true, alinma:new Date().toISOString(), kaynak:'finnhub (AV kotası doldu — yön skoru yok)', items:y });
+        return res.status(200).json({ ok:false, err:'Alpha Vantage kota/limit mesajı döndü — birkaç saat sonra normale döner', items:[] }); }
       const items = (j.feed||[]).map(normalize).filter(Boolean).slice(0,60);
       if (items.length) return res.status(200).json({ ok:true, alinma:new Date().toISOString(), items });
     }
+    { const y = await finnhubYedek(); if (y) return res.status(200).json({ ok:true, alinma:new Date().toISOString(), kaynak:'finnhub (yedek — yön skoru yok)', items:y }); }
     return res.status(200).json({ ok:false, err:'Kaynak yanıt verdi ama izleme listesine uyan haber çözülemedi', items:[] });
   }catch(e){
     return res.status(200).json({ ok:false, err:'AV kaynağına ulaşılamadı: '+String(e.message||e).slice(0,100), items:[] });
