@@ -3,6 +3,19 @@
  "kaynak": "https://www.cnbce.com/borsa/hisseler/bist-katilim-30-hisseleri",
  "tarih": "2026-10-19",
  "kodlar": [
+  "ARASE",
+  "ATAKP",
+  "AVPGY",
+  "AYDEM",
+  "BASGZ",
+  "BETAE",
+  "KARSN",
+  "KBORU",
+  "LMKDC",
+  "MOPAS",
+  "NETCD",
+  "NTGAZ",
+  "PARSN",
   "AHGAZ",
   "AKCNS",
   "AKFYE",
@@ -43,5 +56,6 @@
   "TUREX",
   "YEOTK"
  ],
- "_463": "19 Eki 2026: XK030 (Ekim üyeliği) kapsamında arşivde OLMAYAN 9 kod başa alındı — Karar Motoru (Journal §463) bilanço sonrası gerçek FAVÖK’ü buradan okur. ALBRK banka şablonu: arşivlenir ama FAVÖK türetilmez."
+ "_463": "19 Eki 2026: XK030 (Ekim üyeliği) kapsamında arşivde OLMAYAN 9 kod başa alındı — Karar Motoru (Journal §463) bilanço sonrası gerçek FAVÖK’ü buradan okur. ALBRK banka şablonu: arşivlenir ama FAVÖK türetilmez.",
+ "_531": "2026-10-25: karar kataloğundaki (XK050) arşivde olmayan 13 kod başa alındı — §462b gerçek FAVÖK bunlardan okunur."
 }

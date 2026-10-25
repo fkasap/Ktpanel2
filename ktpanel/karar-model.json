@@ -1,7 +1,7 @@
 {
- "surum": "2026-10-24",
+ "surum": "2026-10-25",
  "_bolum": "§462 · §463",
- "_aciklama": "Çeyrek Karar Motoru kataloğu — XK030 (Ekim 2026 üyeliği, 30 hisse). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr).",
+ "_aciklama": "Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
  "_tier": {
   "A": "Günlük dış sürücü (emtia/makas) — regresyon modeli kurulabilir",
@@ -68,8 +68,9 @@
     "2026Q3": 43.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 45.74
+    "tarih": "2026-10-23",
+    "fiyat": 43.8,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -179,8 +180,9 @@
     "2026Q3": 205
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 186.9
+    "tarih": "2026-10-23",
+    "fiyat": 180.5,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -364,8 +366,9 @@
     "2026Q3": 3.47
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 3.93
+    "tarih": "2026-10-23",
+    "fiyat": 3.65,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
     "2026Q3": 0.1667
@@ -479,8 +482,9 @@
     "2026Q3": 8.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 8.49
+    "tarih": "2026-10-23",
+    "fiyat": 8.04,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -647,8 +651,9 @@
     "2026Q3": 12.84
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 11.75
+    "tarih": "2026-10-23",
+    "fiyat": 10.42,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -757,8 +762,9 @@
     "2026Q3": 336.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 335.5
+    "tarih": "2026-10-23",
+    "fiyat": 338,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -917,8 +923,9 @@
     "2026Q3": 11.55
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 10.46
+    "tarih": "2026-10-23",
+    "fiyat": 9.8,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -997,8 +1004,9 @@
     "2026Q3": 418.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 375.75
+    "tarih": "2026-10-23",
+    "fiyat": 373,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
     "2026Q2": 0.5058
@@ -1171,8 +1179,9 @@
     "2026Q3": 6.23
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 4.61
+    "tarih": "2026-10-23",
+    "fiyat": 3.57,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -1256,8 +1265,9 @@
     "2026Q3": 41.68
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 38.46
+    "tarih": "2026-10-23",
+    "fiyat": 37.44,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -1440,8 +1450,9 @@
     "2026Q3": 12.11
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 12
+    "tarih": "2026-10-23",
+    "fiyat": 11.98,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
     "2026Q3": 0.3333
@@ -1557,8 +1568,9 @@
     "2026Q3": 18.15
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 16.82
+    "tarih": "2026-10-23",
+    "fiyat": 14.64,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -1731,8 +1743,9 @@
     "2026Q3": 18.44
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 18.92
+    "tarih": "2026-10-23",
+    "fiyat": 17.02,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -1945,8 +1958,9 @@
     "2026Q3": 13.22
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 13.47
+    "tarih": "2026-10-23",
+    "fiyat": 12.25,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -2049,8 +2063,9 @@
     "2026Q3": 105.4
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 113.3
+    "tarih": "2026-10-23",
+    "fiyat": 112.9,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -2221,8 +2236,9 @@
     "2026Q3": 35.94
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 35.94
+    "tarih": "2026-10-23",
+    "fiyat": 31.6,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -2442,8 +2458,9 @@
     "2026Q3": 54.35
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 43.38
+    "tarih": "2026-10-23",
+    "fiyat": 36.18,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -2623,8 +2640,9 @@
     "2026Q3": 42.6
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 33.46
+    "tarih": "2026-10-23",
+    "fiyat": 30.12,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -2809,8 +2827,9 @@
     "2026Q3": 132
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 125.5
+    "tarih": "2026-10-23",
+    "fiyat": 106.4,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -2942,8 +2961,9 @@
     "2026Q3": 277.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 269.25
+    "tarih": "2026-10-23",
+    "fiyat": 247,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -3094,8 +3114,9 @@
     "2026Q3": 411.25
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 368.5
+    "tarih": "2026-10-23",
+    "fiyat": 298.5,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -3255,8 +3276,9 @@
     "2026Q3": 1.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 1.26
+    "tarih": "2026-10-23",
+    "fiyat": 1.1,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -3346,8 +3368,9 @@
     "2026Q3": 10.75
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 9.89
+    "tarih": "2026-10-23",
+    "fiyat": 8.7,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -3518,8 +3541,9 @@
     "2026Q3": 43.98
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 41.4
+    "tarih": "2026-10-23",
+    "fiyat": 38.6,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -3749,8 +3773,9 @@
     "2026Q3": 36.94
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 35.78
+    "tarih": "2026-10-23",
+    "fiyat": 35.04,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -3929,8 +3954,9 @@
     "2026Q3": 417.75
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 409.25
+    "tarih": "2026-10-23",
+    "fiyat": 387,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -4109,8 +4135,9 @@
     "2026Q3": 4.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 4.01
+    "tarih": "2026-10-23",
+    "fiyat": 3.38,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -4249,8 +4276,9 @@
     "2026Q3": 18.91
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 19.63
+    "tarih": "2026-10-23",
+    "fiyat": 18.06,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": {
@@ -4472,8 +4500,9 @@
     "2026Q3": 120.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 112.7
+    "tarih": "2026-10-23",
+    "fiyat": 94.75,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -4597,8 +4626,9 @@
     "2026Q3": 231.4
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 181.8
+    "tarih": "2026-10-23",
+    "fiyat": 174.8,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -5337,8 +5367,9 @@
     }
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 368.25
+    "tarih": "2026-10-23",
+    "fiyat": 360.75,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "sektor_not": "Rafineri: kâr, ürün fiyatı ile ham petrol arasındaki farktır (crack); hacim görece sabit (KKO %90-100) olduğundan FAVÖK neredeyse tamamen crack × kurdur. Orta damıtık (dizel/jet) payı ~%47 → dizel crack belirleyici. Stok etkisi hedge ile nötr. 3Ç/4Ç bakım dönemleri hacmi kısar.",
@@ -5427,8 +5458,9 @@
     "2026Q3": 5.6
    },
    "fiyat_son": {
-    "tarih": "2026-10-19",
-    "fiyat": 5.51
+    "tarih": "2026-10-23",
+    "fiyat": 4.98,
+    "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
    "konsensus": null,
@@ -5478,6 +5510,1679 @@
     }
    ],
    "birincil": "brent_yh"
+  },
+  {
+   "kod": "ARASE",
+   "ad": "Doğu Aras Enerji Yatırımları",
+   "sektor": "Elektrik Dağıtım ve Perakende",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Dağıtım: RAB × reel getiri, TÜFE endeksli (EPDK) · perakende: son kaynak tedarik tarifesi − PTF maliyeti",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Doğu Anadolu'da elektrik dağıtım bölgesi (düzenlenmiş: düzenlemeye esas varlık tabanı üzerinden reel getiri, TÜFE ile endeksli) + aynı bölgede görevli perakende satış. Dağıtım geliri enflasyonla taşınır; perakende marjı tarife ile PTF arasındaki farka duyarlıdır. Kayıp-kaçak oranı bölge için kritik bir operasyonel değişkendir.",
+   "surucu_seriler": [
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
+     "k": "elektrik_ufe",
+     "rol": "gelir",
+     "ad": "Elektrik ÜFE (TÜİK, aylık) — toptan fiyat vekili",
+     "kaynak": "TCMB EVDS",
+     "aile": "elektrik"
+    },
+    {
+     "k": "ptf",
+     "rol": "maliyet",
+     "ad": "PTF günlük ort. (EPİAŞ) — üretim/ticaret segmenti",
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466",
+     "aile": "elektrik"
+    },
+    {
+     "k": "aofm",
+     "rol": "maliyet",
+     "ad": "TCMB AOFM — ağırlıklı ort. fonlama maliyeti (%)",
+     "kaynak": "TCMB EVDS TP.APIFON4 (iş günü)",
+     "not": "Fonlama maliyetinin fiilî ölçüsü (politika faizinden daha gerçekçi). İndirim döngüsünde katılma hesabı maliyeti kredi getirisinden hızlı düşer → makas açılır: AOFM ↓ lehte, ↑ aleyhte. Değişim puan (p) okunur",
+     "aile": "fonlama"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "tufe",
+   "sermaye_mn": null,
+   "favok": {
+    "2025Q4": {
+     "tl": 2.012,
+     "usd": 47.6,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 2.874,
+     "usd": 65.7,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 2.806,
+     "usd": 61.6,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 60.1426,
+    "2024Q2": 54.7894,
+    "2024Q3": 53.4623,
+    "2024Q4": 52.9892,
+    "2025Q1": 38.1711,
+    "2025Q2": 44.5109,
+    "2025Q3": 53.1197,
+    "2025Q4": 73.6108,
+    "2026Q1": 87.4682,
+    "2026Q2": 115.9,
+    "2026Q3": 97.25
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 69.95,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-05",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "ATAKP",
+   "ad": "Atakey Patates Gıda",
+   "sektor": "Gıda (Dondurulmuş Ürün)",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Dondurulmuş patates ürünleri · ihracat kuru · gıda fiyatları; ham patates fiyatı için serbest seri yok",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Dondurulmuş patates ürünleri üreticisi; yurt içi kanal (restoran zincirleri, perakende) ve ihracat. Ana girdi ham patatesin hasat dönemi fiyatı ve enerji maliyetidir; ihracat payı kur geçişini belirler.",
+   "surucu_seriler": [
+    {
+     "k": "tufe_gida",
+     "rol": "gelir",
+     "ad": "TÜFE gıda ve alkolsüz içecekler (TÜİK, 2025=100)",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.01 (+2003 bazı zincirli)",
+     "not": "Sepet büyümesinin resmî vekili: gıda enflasyonu ciro büyümesine yapışıktır; çeyrek ortalamasının yıllık değişimi = aynı mağaza nominal büyüme tabanı"
+    },
+    {
+     "k": "ptf",
+     "rol": "maliyet",
+     "ad": "PTF günlük ort. (EPİAŞ) — üretim/ticaret segmenti",
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466",
+     "aile": "elektrik"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "usdtry",
+   "sermaye_mn": null,
+   "favok": {
+    "2025Q4": {
+     "tl": 0.115,
+     "usd": 2.7,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.106,
+     "usd": 2.4,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.101,
+     "usd": 2.2,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 41.5632,
+    "2024Q2": 47.6541,
+    "2024Q3": 42.5861,
+    "2024Q4": 48.4137,
+    "2025Q1": 37.1873,
+    "2025Q2": 41.4824,
+    "2025Q3": 51.1616,
+    "2025Q4": 51.6061,
+    "2026Q1": 50.5196,
+    "2026Q2": 52.85,
+    "2026Q3": 32.68
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 34.72,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-29",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "AVPGY",
+   "ad": "Avrupakent GYO",
+   "sektor": "GYO (Konut Projesi)",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Konut fiyatı (KFE) · konut satışı · inşaat maliyeti (İME konut) — proje teslimi geliri dalgalandırır",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "İstanbul odaklı konut projesi geliştirici GYO. Gelir proje teslim takvimine bağlı olduğu için çeyrekten çeyreğe çok oynaktır; ön satış ve konut fiyatı ivmesi öncü göstergedir. Maliyet tarafı inşaat maliyet endeksi ve finansman faizidir.",
+   "surucu_seriler": [
+    {
+     "k": "kfe",
+     "rol": "gelir",
+     "ad": "Konut Fiyat Endeksi (TCMB KFE, aylık)",
+     "kaynak": "TCMB EVDS TP.KFE.TR",
+     "not": "Konut fiyatlarının resmî aylık ölçüsü (hedonik). Teslimat geliri satış anındaki fiyatla tanınır; KFE yıllık değişimi birim gelir büyümesinin tabanı. Reel okuma için TÜFE ile kıyaslanır",
+     "aile": "konut_marj"
+    },
+    {
+     "k": "konut_toplam",
+     "rol": "gelir",
+     "ad": "Konut satışı — toplam (adet/ay)",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT1.KTRTOPLAM (TÜİK)",
+     "aile": "konut_satis"
+    },
+    {
+     "k": "konut_ilk_el",
+     "rol": "gelir",
+     "ad": "Konut satışı — ilk el (adet/ay) · geliştirici talebi",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT3.KTRTOPLAM (TÜİK)",
+     "not": "Emlak Konut ilk el satıcı; ilk el satış hacmi ön satış ve fiyat gücünün piyasa ölçüsü. Gelir teslimatta tanındığı için çeyrek FAVÖK'e 4–8 çeyrek gecikmeli yansır.",
+     "aile": "konut_satis"
+    },
+    {
+     "k": "ime_konut",
+     "rol": "maliyet",
+     "ad": "İnşaat maliyet endeksi — konut (TÜİK, 2015=100)",
+     "kaynak": "TÜİK veri portalı SDMX DF_UFE_INSAAT_V1 (Actions §486)",
+     "aile": "konut_marj"
+    },
+    {
+     "k": "aofm",
+     "rol": "maliyet",
+     "ad": "TCMB AOFM — ağırlıklı ort. fonlama maliyeti (%)",
+     "kaynak": "TCMB EVDS TP.APIFON4 (iş günü)",
+     "not": "Fonlama maliyetinin fiilî ölçüsü (politika faizinden daha gerçekçi). İndirim döngüsünde katılma hesabı maliyeti kredi getirisinden hızlı düşer → makas açılır: AOFM ↓ lehte, ↑ aleyhte. Değişim puan (p) okunur",
+     "aile": "fonlama"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "kfe",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 36.6883,
+    "2024Q2": 34.0467,
+    "2024Q3": 42.9292,
+    "2024Q4": 45.9044,
+    "2025Q1": 48.0722,
+    "2025Q2": 55.9902,
+    "2025Q3": 54.2685,
+    "2025Q4": 48.0025,
+    "2026Q1": 45.6763,
+    "2026Q2": 56,
+    "2026Q3": 48.18
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 47.4,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-29",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "AYDEM",
+   "ad": "Aydem Yenilenebilir Enerji",
+   "sektor": "Elektrik Üretimi (Yenilenebilir)",
+   "tier": "A",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "PTF (EPİAŞ) · $ cinsinden PTF · hidroloji/rüzgâr üretim hacmi (serbest seri yok)",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Hidroelektrik ağırlıklı, rüzgâr/güneş/jeotermal ile çeşitlenmiş yenilenebilir üretici. Gelir = üretim hacmi × satış fiyatı; YEKDEM dışındaki santraller doğrudan PTF'ye maruzdur. Hidroloji (yağış) hacmi, PTF fiyatı belirler; borç yapısı döviz ağırlıklı olduğundan kur finansman giderini büyütür.",
+   "surucu_seriler": [
+    {
+     "k": "ptf",
+     "rol": "gelir",
+     "ad": "PTF günlük ort. (EPİAŞ) — üretim/ticaret segmenti",
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466",
+     "aile": "elektrik"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "gelir",
+     "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür).",
+     "aile": "elektrik"
+    },
+    {
+     "k": "elektrik_ufe",
+     "rol": "gelir",
+     "ad": "Elektrik ÜFE (TÜİK, aylık) — toptan fiyat vekili",
+     "kaynak": "TCMB EVDS",
+     "aile": "elektrik"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "ptf",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 27.7253,
+    "2024Q2": 33.9586,
+    "2024Q3": 26.1,
+    "2024Q4": 23.56,
+    "2025Q1": 19.17,
+    "2025Q2": 17.09,
+    "2025Q3": 18.5,
+    "2025Q4": 22.54,
+    "2026Q1": 30.84,
+    "2026Q2": 25.12,
+    "2026Q3": 23.5
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 21.26,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-09",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "BASGZ",
+   "ad": "Başkent Doğalgaz Dağıtım",
+   "sektor": "Doğalgaz Dağıtım",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "EPDK dağıtım tarifesi (sistem kullanım bedeli, TÜFE z−2) · abone/tüketim (kış ağır)",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Ankara doğalgaz dağıtım lisansı (düzenlenmiş). Birim sistem kullanım bedeli EPDK metodolojisiyle TÜFE'ye bağlı güncellenir; hacim mevsimseldir (1Ç ve 4Ç güçlü). Gaz alım fiyatı büyük ölçüde geçişlidir, marjı tarife belirler.",
+   "surucu_seriler": [
+    {
+     "k": "epdk_tarife",
+     "rol": "gelir",
+     "ad": "EPDK dağıtım tarifesi endeksi — SKB, aylık TÜFE(z−2) güncellemesi",
+     "kaynak": "türetilmiş: EVDS TÜFE · EPDK Metodoloji md. 26",
+     "not": "Dağıtım segmenti birim geliri; iki ay gecikmeli TÜFE ile her ay güncellenir"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı",
+     "aile": "gaz"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "epdk_tarife",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 15.7507,
+    "2024Q2": 27.7024,
+    "2024Q3": 23.8967,
+    "2024Q4": 26.2522,
+    "2025Q1": 24.6855,
+    "2025Q2": 31.4808,
+    "2025Q3": 36.8504,
+    "2025Q4": 44.7551,
+    "2026Q1": 47.6209,
+    "2026Q2": 47.44,
+    "2026Q3": 38.9
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 34,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-29",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "BETAE",
+   "ad": "Beta Enerji ve Teknoloji",
+   "sektor": "Enerji Teknolojileri (Transformatör)",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Bakır · alüminyum (sargı/gövde) · ihracat kuru (80+ ülke) — elektrik çeliği için serbest seri yok",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Güç ve dağıtım transformatörleri ile anahtarlama ürünleri üreticisi (Adana), servis-bakım hizmeti; 80'den fazla ülkeye ihracat. Marjı metal girdi (bakır, alüminyum, elektrik çeliği) fiyatları ile sözleşme fiyatı arasındaki zamanlama belirler; şebeke yatırımları ve ihracat talebi siparişi taşır.",
+   "surucu_seriler": [
+    {
+     "k": "bakir",
+     "rol": "maliyet",
+     "ad": "Bakır (COMEX) — trafo/pano sargısı ana girdisi",
+     "aile": "trafo_metal"
+    },
+    {
+     "k": "aluminyum",
+     "rol": "maliyet",
+     "ad": "Alüminyum — sargı/gövde, panel çerçevesi, GES konstrüksiyonu",
+     "aile": "trafo_metal"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "bakir",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2026Q3": 55.25
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 45.44,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": null,
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "BUCIM",
+   "ad": "Bursa Çimento",
+   "sektor": "Çimento",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Çimento ÜFE (fiyat) · kömür/petkok ve elektrik (maliyet) · inşaat üretimi (hacim)",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Marmara bölgesinde çimento ve klinker üreticisi. Enerji (kömür/petkok, elektrik) maliyetin en büyük kalemidir; yurt içi fiyat ÜFE çimento ile izlenir, hacim konut ve altyapı inşaatına bağlıdır.",
+   "surucu_seriler": [
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB) — petrokok vekili"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "maliyet",
+     "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür).",
+     "aile": "elektrik"
+    },
+    {
+     "k": "cimento_ufe",
+     "rol": "gelir",
+     "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
+     "not": "Yurt içi çimento satış fiyatının resmî aylık vekili; seviye değil yıllık/çeyreklik değişim okunur",
+     "aile": "cimento_yi"
+    },
+    {
+     "k": "ufe_cimento",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 23.51 çimento — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "cimento_yi"
+    },
+    {
+     "k": "ydufe_cimento",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 23.51 çimento — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "komur_termal",
+   "sermaye_mn": 1500,
+   "favok": {
+    "2025Q3": {
+     "tl": 0.16,
+     "usd": 3.9,
+     "_kaynak": "KAP"
+    },
+    "2025Q4": {
+     "tl": 0.666,
+     "usd": 15.8,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.053,
+     "usd": 1.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.71,
+     "usd": 15.6,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 7.9587,
+    "2024Q2": 8.1353,
+    "2024Q3": 7.1193,
+    "2024Q4": 9.0798,
+    "2025Q1": 7.3272,
+    "2025Q2": 6.83,
+    "2025Q3": 6.6,
+    "2025Q4": 8,
+    "2026Q1": 6.05,
+    "2026Q2": 5.68,
+    "2026Q3": 4.85
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 4.04,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-09",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "EGGUB",
+   "ad": "Ege Gübre",
+   "sektor": "Gübre",
+   "tier": "A",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Üre · DAP (gelir) · doğalgaz/TTF (maliyet) · gübre ÜFE",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Kimyevi gübre üretim ve ticareti, ayrıca liman işletmeciliği (Aliağa). Gübre fiyatları küresel üre/DAP ile, maliyet doğalgaz ile hareket eder; tarım sezonu 1Ç ve 3Ç talebini belirler. Liman geliri dövizlidir ve dengeleyicidir.",
+   "surucu_seriler": [
+    {
+     "k": "ure",
+     "rol": "gelir",
+     "ad": "Üre, Karadeniz (WB)",
+     "aile": "gubre"
+    },
+    {
+     "k": "dap",
+     "rol": "gelir",
+     "ad": "DAP (WB)",
+     "aile": "gubre"
+    },
+    {
+     "k": "gubre_ufe",
+     "rol": "gelir",
+     "ad": "Temel kimyasal-gübre ÜFE (TÜİK Yİ-ÜFE 3.11.1) — yurt içi gübre fiyatı",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T53",
+     "aile": "gubre"
+    },
+    {
+     "k": "ttf",
+     "rol": "maliyet",
+     "ad": "TTF (günlük)",
+     "aile": "gaz"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı",
+     "aile": "gaz"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "ure",
+   "sermaye_mn": 100,
+   "favok": {
+    "2024Q3": {
+     "tl": 0.307,
+     "usd": 9.2,
+     "_kaynak": "KAP"
+    },
+    "2024Q4": {
+     "tl": 0.192,
+     "usd": 5.5,
+     "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": 0.279,
+     "usd": 7.7,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 0.284,
+     "usd": 7.3,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 0.237,
+     "usd": 5.8,
+     "_kaynak": "KAP"
+    },
+    "2025Q4": {
+     "tl": 0.711,
+     "usd": 16.8,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.442,
+     "usd": 10.1,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.54,
+     "usd": 11.9,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 40.4757,
+    "2024Q2": 38.0688,
+    "2024Q3": 68.7726,
+    "2024Q4": 60.9293,
+    "2025Q1": 59.6858,
+    "2025Q2": 87.3433,
+    "2025Q3": 116.1636,
+    "2025Q4": 90.9704,
+    "2026Q1": 114.2031,
+    "2026Q2": 99.5,
+    "2026Q3": 95.3
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 76.75,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-05",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "EGPRO",
+   "ad": "Ege Profil",
+   "sektor": "PVC Profil (Yapı)",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "PVC reçine (maliyet) · plastik ÜFE (fiyat) · inşaat üretimi (hacim) · ihracat kuru",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "PVC pencere ve kapı profili üreticisi; yurt içi yapı sektörü ve ihracat. Ana girdi PVC reçinesidir; marj reçine fiyatı ile profil fiyat ayarlaması arasındaki gecikmeye duyarlıdır. Hacim konut ve renovasyon talebine bağlıdır.",
+   "surucu_seriler": [
+    {
+     "k": "dce_pvc_usd",
+     "rol": "maliyet",
+     "ad": "DCE PVC vadeli — Asya PVC fiyatı ($/t)",
+     "kaynak": "Sina Finance DCE (Actions §489)",
+     "aile": "polimer"
+    },
+    {
+     "k": "ufe_plastik",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "dce_pvc_usd",
+   "sermaye_mn": 545,
+   "favok": {
+    "2025Q1": {
+     "tl": 0.555,
+     "usd": 15.3,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 0.476,
+     "usd": 12.2,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 0.653,
+     "usd": 16,
+     "_kaynak": "KAP"
+    },
+    "2025Q4": {
+     "tl": 1.06,
+     "usd": 25.1,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 1.057,
+     "usd": 24.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.7,
+     "usd": 15.4,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 28.5872,
+    "2024Q2": 27.3569,
+    "2024Q3": 21.5625,
+    "2024Q4": 22.1967,
+    "2025Q1": 23.4004,
+    "2025Q2": 18.0399,
+    "2025Q3": 27.1548,
+    "2025Q4": 23.43,
+    "2026Q1": 28.6151,
+    "2026Q2": 38.3123,
+    "2026Q3": 33.66
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 26.52,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-09",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "ISDMR",
+   "ad": "İskenderun Demir ve Çelik",
+   "sektor": "Demir Çelik (Entegre)",
+   "tier": "A",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Çelik makası: yassı/uzun ürün fiyatı − demir cevheri, koklaşabilir kömür, hurda",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Entegre demir-çelik üreticisi (Erdemir grubu); yassı ve uzun ürün. FAVÖK büyük ölçüde çelik fiyatı ile cevher + kömür maliyeti arasındaki makastan gelir; ürün fiyatları dolar bazlıdır, maliyetin önemli kısmı ithal girdidir.",
+   "surucu_seriler": [
+    {
+     "k": "hrc_abd",
+     "rol": "gelir",
+     "ad": "HRC (ABD Midwest vekili)",
+     "not": "TR yassı ihracat fiyatına vekil; gümrük farkı nedeniyle seviye değil yön okunur"
+    },
+    {
+     "k": "celik_ufe",
+     "rol": "gelir",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
+    },
+    {
+     "k": "ufe_celik_2410",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 24.10 demir-çelik ürünleri — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "celik_yi"
+    },
+    {
+     "k": "ydufe_celik",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 24.10 demir-çelik — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "demir_cevheri",
+     "rol": "maliyet",
+     "ad": "Demir cevheri (WB)"
+    },
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB) — petrokok vekili"
+    },
+    {
+     "k": "hurda_lme",
+     "rol": "maliyet",
+     "ad": "Hurda CFR TR (LME)",
+     "bekliyor": true,
+     "kaynak": "lme.com 403 → Playwright yedeği (sonraki koşu)",
+     "aile": "hurda"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "hrc_abd",
+   "sermaye_mn": 2900,
+   "favok": {
+    "2026Q1": {
+     "tl": 3.152,
+     "usd": 72.1,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 3.617,
+     "usd": 79.4,
+     "_kaynak": "KAP"
+    },
+    "2026Q3": {
+     "tl": 4.937,
+     "usd": 103.1,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 31.7739,
+    "2024Q2": 35.1346,
+    "2024Q3": 35.7085,
+    "2024Q4": 37.5226,
+    "2025Q1": 33.8759,
+    "2025Q2": 33.0058,
+    "2025Q3": 35.7731,
+    "2025Q4": 32.865,
+    "2026Q1": 38.8862,
+    "2026Q2": 56.25,
+    "2026Q3": 60.85
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 52.25,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": null,
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "KARSN",
+   "ad": "Karsan Otomotiv",
+   "sektor": "Otomotiv (Ticari Araç)",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Avrupa toplu taşıma ihaleleri (elektrikli otobüs) · EUR/USD · sipariş akışı (KAP)",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Ticari araç ve otobüs üreticisi; elektrikli küçük/orta otobüslerde Avrupa ihracatı ağırlıklı. Gelir euro bazlı ihaleler ve teslim takvimine bağlıdır; batarya ve bileşen maliyeti marjı belirler.",
+   "surucu_seriler": [
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "aluminyum",
+     "rol": "maliyet",
+     "ad": "Alüminyum — sargı/gövde, panel çerçevesi, GES konstrüksiyonu",
+     "aile": "trafo_metal"
+    },
+    {
+     "k": "bakir",
+     "rol": "maliyet",
+     "ad": "Bakır (COMEX) — trafo/pano sargısı ana girdisi",
+     "aile": "trafo_metal"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "eurusd",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 10.07,
+    "2024Q2": 16.44,
+    "2024Q3": 17.25,
+    "2024Q4": 12.11,
+    "2025Q1": 11.25,
+    "2025Q2": 9.25,
+    "2025Q3": 10.51,
+    "2025Q4": 9.2,
+    "2026Q1": 9.44,
+    "2026Q2": 12.73,
+    "2026Q3": 9.08
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 6.76,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-02",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "KBORU",
+   "ad": "Kuzey Boru",
+   "sektor": "Altyapı Boruları (Plastik/CTP)",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Polietilen reçine (maliyet) · plastik ÜFE · kamu altyapı (DSİ) ihaleleri",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "HDPE, koruge, CTP ve PPR/PE-RT boru üreticisi (Aksaray, Balıkesir, Malatya, Gaziantep). Satışların büyük kısmı kamuya (DSİ sulama ve altyapı) ve kamu projelerindeki müteahhitlere; hammadde polimer reçinedir. Kamu yatırım bütçesi ve tahsilat hızı belirleyicidir; kaldıraç yüksektir.",
+   "surucu_seriler": [
+    {
+     "k": "pe_pp",
+     "rol": "maliyet",
+     "ad": "PE/PP Avrupa reçine fiyatı ($/t) — HDPE/LDPE/LLDPE film + PP homo",
+     "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)",
+     "aile": "polimer"
+    },
+    {
+     "k": "dce_lldpe_usd",
+     "rol": "maliyet",
+     "ad": "DCE LLDPE vadeli — Asya PE fiyatı ($/t)",
+     "kaynak": "Sina Finance DCE (Actions §489)",
+     "aile": "polimer"
+    },
+    {
+     "k": "ufe_plastik",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "pe_pp",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 117.1012,
+    "2024Q2": 78.1832,
+    "2024Q3": 77.1506,
+    "2024Q4": 76.4622,
+    "2025Q1": 10.6457,
+    "2025Q2": 12.12,
+    "2025Q3": 14.63,
+    "2025Q4": 14.5,
+    "2026Q1": 18.37,
+    "2026Q2": 26.8,
+    "2026Q3": 11.11
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 8.47,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-29",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "LMKDC",
+   "ad": "Limak Doğu Anadolu Çimento",
+   "sektor": "Çimento",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Çimento ÜFE (fiyat) · kömür/petkok ve elektrik (maliyet) · bölgesel inşaat hacmi",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Doğu Anadolu'da çimento ve klinker üreticisi. Bölgesel pazar (kamu altyapı, deprem bölgesi yeniden yapılanması) hacmi belirler; enerji maliyeti marjın ana sürücüsüdür.",
+   "surucu_seriler": [
+    {
+     "k": "komur_termal",
+     "rol": "maliyet",
+     "ad": "Kömür (WB) — petrokok vekili"
+    },
+    {
+     "k": "ptf_usd",
+     "rol": "maliyet",
+     "ad": "Elektrik PTF ($/MWh) — öğütme/klinker elektrik maliyeti",
+     "kaynak": "EPİAŞ GÖP (Actions §466)",
+     "not": "Çimentoda elektrik ~100–110 kWh/t; enerji maliyetinin ~%25–35'i (gerisi petrokok/kömür).",
+     "aile": "elektrik"
+    },
+    {
+     "k": "cimento_ufe",
+     "rol": "gelir",
+     "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
+     "not": "Yurt içi çimento satış fiyatının resmî aylık vekili; seviye değil yıllık/çeyreklik değişim okunur",
+     "aile": "cimento_yi"
+    },
+    {
+     "k": "ufe_cimento",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 23.51 çimento — yurt içi fiyat",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "cimento_yi"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "komur_termal",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 29.2568,
+    "2024Q2": 20.0456,
+    "2024Q3": 20.7752,
+    "2024Q4": 28.363,
+    "2025Q1": 29.2568,
+    "2025Q2": 25.2748,
+    "2025Q3": 25.5016,
+    "2025Q4": 26.7493,
+    "2026Q1": 28.9422,
+    "2026Q2": 26.2,
+    "2026Q3": 23.12
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 19.5,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-29",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "MOPAS",
+   "ad": "Mopaş Marketçilik",
+   "sektor": "Gıda Perakende",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Gıda TÜFE (sepet fiyatı) · perakende gıda hacmi · asgari ücret (personel) · elektrik",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Süpermarket zinciri (Marmara ağırlıklı). Ciro gıda enflasyonu ve mağaza sayısıyla büyür; marjı personel (asgari ücret), kira ve enerji maliyetleri sıkıştırır. TMS-29 parasal kazanç/kayıp net kârı belirgin etkiler.",
+   "surucu_seriler": [
+    {
+     "k": "tufe_gida",
+     "rol": "gelir",
+     "ad": "TÜFE gıda ve alkolsüz içecekler (TÜİK, 2025=100)",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.01 (+2003 bazı zincirli)",
+     "not": "Sepet büyümesinin resmî vekili: gıda enflasyonu ciro büyümesine yapışıktır; çeyrek ortalamasının yıllık değişimi = aynı mağaza nominal büyüme tabanı"
+    },
+    {
+     "k": "perakende_gida_hacim",
+     "rol": "gelir",
+     "ad": "Perakende satış hacmi — gıda (sabit fiyat)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — mağaza/depo personeli (en büyük gider kalemi)",
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
+    },
+    {
+     "k": "ptf",
+     "rol": "maliyet",
+     "ad": "PTF günlük ort. (EPİAŞ) — üretim/ticaret segmenti",
+     "kaynak": "EPİAŞ Şeffaflık — Actions §466",
+     "aile": "elektrik"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "tufe_gida",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2025Q1": 24.9734,
+    "2025Q2": 34.4899,
+    "2025Q3": 38.3786,
+    "2025Q4": 39.2775,
+    "2026Q1": 39.3166,
+    "2026Q2": 31.9887,
+    "2026Q3": 18.59
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 14.55,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-05",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "NETCD",
+   "ad": "Netcad Yazılım",
+   "sektor": "Yazılım (CBS)",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Kamu/belediye projeleri · lisans + hizmet · ihracat; dış sürücü yok",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Coğrafi bilgi sistemleri (CBS), mühendislik ve kent bilgi sistemi yazılımları; müşteri tabanı ağırlıkla kamu ve belediyeler, yurt dışı projeler de var. Gelir proje teslimine bağlı dalgalanır; maliyetin çoğu personeldir.",
+   "surucu_seriler": [
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — mağaza/depo personeli (en büyük gider kalemi)",
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "usdtry",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2026Q1": 142.7506,
+    "2026Q2": 151.3,
+    "2026Q3": 80
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 79.75,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": null,
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "NTGAZ",
+   "ad": "Naturelgaz",
+   "sektor": "Doğalgaz (CNG/LNG Dağıtım)",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Doğalgaz alım fiyatı (BOTAŞ, TTF dolaylı) · satış fiyatı ayarlaması · hacim (sanayi)",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Boru hattı ulaşmayan sanayi ve konut müşterilerine sıkıştırılmış (CNG) ve sıvılaştırılmış (LNG) doğalgaz tedarik/dağıtım. Marj alım fiyatı ile satış fiyatı arasındaki farkla belirlenir; hacim sanayi üretimine bağlıdır.",
+   "surucu_seriler": [
+    {
+     "k": "ttf",
+     "rol": "maliyet",
+     "ad": "TTF (günlük)",
+     "aile": "gaz"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı",
+     "aile": "gaz"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "ttf",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 4.3352,
+    "2024Q2": 4.6412,
+    "2024Q3": 4.003,
+    "2024Q4": 5.4215,
+    "2025Q1": 6.37,
+    "2025Q2": 8.2678,
+    "2025Q3": 8.5022,
+    "2025Q4": 9.8427,
+    "2026Q1": 10.9863,
+    "2026Q2": 11.39,
+    "2026Q3": 10.43
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 9.68,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-26",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "PARSN",
+   "ad": "Parsan Makina Parçaları",
+   "sektor": "Makine Parçaları (Transmisyon)",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Çelik girdi (maliyet) · ihracat kuru · ağır vasıta/iş makinesi talebi",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Ulaşım araçları, tarım ve iş makineleri için dişli kutusu, transmisyon aksamı ve makine-motor parçaları üreticisi (dövme + işleme). Ana girdi özel çeliktir; talep ağır vasıta ve iş makinesi döngüsüne bağlıdır.",
+   "surucu_seriler": [
+    {
+     "k": "celik_ufe",
+     "rol": "maliyet",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
+    },
+    {
+     "k": "hurda_lme",
+     "rol": "maliyet",
+     "ad": "Hurda CFR TR (LME)",
+     "bekliyor": true,
+     "kaynak": "lme.com 403 → Playwright yedeği (sonraki koşu)",
+     "aile": "hurda"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "celik_ufe",
+   "sermaye_mn": null,
+   "favok": {},
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 101.7,
+    "2024Q2": 114.8,
+    "2024Q3": 88,
+    "2024Q4": 87.1,
+    "2025Q1": 81.5,
+    "2025Q2": 81,
+    "2025Q3": 97.85,
+    "2025Q4": 104,
+    "2026Q1": 80.35,
+    "2026Q2": 88.35,
+    "2026Q3": 58.2
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 50.55,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-10-29",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "POLHO",
+   "ad": "Polisan Holding",
+   "sektor": "Kimya / Boya (Holding)",
+   "tier": "C",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Petrokimya girdi (boya/kimya) · inşaat ve sanayi talebi · liman gelirleri",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Boya (iştirak), yapı kimyasalları ve kimya ile liman işletmeciliği faaliyetleri olan holding. Boya ve kimya marjı petrokimya türevi girdilerin fiyatına, hacim inşaat ve sanayi talebine bağlıdır; konsolide sonuçta iştirak gelirleri belirgin yer tutar.",
+   "surucu_seriler": [
+    {
+     "k": "brent_yh",
+     "rol": "maliyet",
+     "ad": "Brent — akaryakıt maliyeti vekili"
+    },
+    {
+     "k": "ufe_plastik",
+     "rol": "maliyet",
+     "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "brent_yh",
+   "sermaye_mn": 758.5,
+   "favok": {
+    "2025Q3": {
+     "tl": 0.267,
+     "usd": 6.5,
+     "_kaynak": "KAP"
+    },
+    "2025Q4": {
+     "tl": 0.278,
+     "usd": 6.6,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.089,
+     "usd": 2,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.317,
+     "usd": 7,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 3.0511,
+    "2024Q2": 2.7629,
+    "2024Q3": 2.3369,
+    "2024Q4": 2.4334,
+    "2025Q1": 2.9116,
+    "2025Q2": 3.88,
+    "2025Q3": 23.14,
+    "2025Q4": 16.11,
+    "2026Q1": 20.46,
+    "2026Q2": 20.72,
+    "2026Q3": 17.72
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 13.05,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-06",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "SNGYO",
+   "ad": "Sinpaş GYO",
+   "sektor": "GYO (Konut Projesi)",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Konut fiyatı (KFE) · konut satışı · inşaat maliyeti (İME konut) — teslim takvimi",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Konut ve karma proje geliştirici GYO (İstanbul ve Ankara ağırlıklı). Gelir teslimle tanındığı için çeyrekler arası dalgalanma büyüktür; ön satış hızı ve konut fiyat ivmesi öncüdür, finansman maliyeti marjı belirler.",
+   "surucu_seriler": [
+    {
+     "k": "kfe",
+     "rol": "gelir",
+     "ad": "Konut Fiyat Endeksi (TCMB KFE, aylık)",
+     "kaynak": "TCMB EVDS TP.KFE.TR",
+     "not": "Konut fiyatlarının resmî aylık ölçüsü (hedonik). Teslimat geliri satış anındaki fiyatla tanınır; KFE yıllık değişimi birim gelir büyümesinin tabanı. Reel okuma için TÜFE ile kıyaslanır",
+     "aile": "konut_marj"
+    },
+    {
+     "k": "konut_toplam",
+     "rol": "gelir",
+     "ad": "Konut satışı — toplam (adet/ay)",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT1.KTRTOPLAM (TÜİK)",
+     "aile": "konut_satis"
+    },
+    {
+     "k": "konut_ilk_el",
+     "rol": "gelir",
+     "ad": "Konut satışı — ilk el (adet/ay) · geliştirici talebi",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT3.KTRTOPLAM (TÜİK)",
+     "not": "Emlak Konut ilk el satıcı; ilk el satış hacmi ön satış ve fiyat gücünün piyasa ölçüsü. Gelir teslimatta tanındığı için çeyrek FAVÖK'e 4–8 çeyrek gecikmeli yansır.",
+     "aile": "konut_satis"
+    },
+    {
+     "k": "ime_konut",
+     "rol": "maliyet",
+     "ad": "İnşaat maliyet endeksi — konut (TÜİK, 2015=100)",
+     "kaynak": "TÜİK veri portalı SDMX DF_UFE_INSAAT_V1 (Actions §486)",
+     "aile": "konut_marj"
+    },
+    {
+     "k": "aofm",
+     "rol": "maliyet",
+     "ad": "TCMB AOFM — ağırlıklı ort. fonlama maliyeti (%)",
+     "kaynak": "TCMB EVDS TP.APIFON4 (iş günü)",
+     "not": "Fonlama maliyetinin fiilî ölçüsü (politika faizinden daha gerçekçi). İndirim döngüsünde katılma hesabı maliyeti kredi getirisinden hızlı düşer → makas açılır: AOFM ↓ lehte, ↑ aleyhte. Değişim puan (p) okunur",
+     "aile": "fonlama"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "kfe",
+   "sermaye_mn": 4000,
+   "favok": {
+    "2025Q3": {
+     "tl": 0.084,
+     "usd": 2.1,
+     "_kaynak": "KAP"
+    },
+    "2025Q4": {
+     "tl": 1.446,
+     "usd": 34.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.767,
+     "usd": 17.5,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.324,
+     "usd": 7.1,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 1.5412,
+    "2024Q2": 1.9837,
+    "2024Q3": 2.9588,
+    "2024Q4": 3.14,
+    "2025Q1": 3.33,
+    "2025Q2": 4.34,
+    "2025Q3": 4.58,
+    "2025Q4": 4.54,
+    "2026Q1": 3.41,
+    "2026Q2": 3.77,
+    "2026Q3": 2.7
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 2.4,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-06",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+  },
+  {
+   "kod": "VAKKO",
+   "ad": "Vakko Tekstil",
+   "sektor": "Hazır Giyim Perakende (Lüks)",
+   "tier": "B",
+   "tip": "konsensus",
+   "evren": "XK050",
+   "surucu_plani": "Giyim TÜFE (fiyat) · perakende giyim hacmi · asgari ücret · kur (ithal ürün/turist)",
+   "kaynak_notu": "§531 Actions — XK050 genişlemesi: FAVÖK KAP arşivinden (§462b), fiyat Yahoo, konsensüs yok (fiyat mercekleri)",
+   "sektor_not": "Üst segment hazır giyim, aksesuar ve perakende (mağaza + online). Ciro giyim fiyatları ve yüksek gelirli tüketici talebiyle hareket eder; sezon geçişleri (2Ç/4Ç) ve stok yönetimi marjı belirler.",
+   "surucu_seriler": [
+    {
+     "k": "tufe_giyim",
+     "rol": "gelir",
+     "ad": "TÜFE giyim ve ayakkabı (TÜİK, 2025=100)",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.03 (+2003 bazı zincirli)",
+     "not": "Giyim fiyat enflasyonu = birim fiyat büyümesi; hacim tüketici güvenine bağlı. Mevsimsel indirim ayları (Oca, Tem) endeksi düşürür → çeyrek ortalaması okunur"
+    },
+    {
+     "k": "perakende_giyim_hacim",
+     "rol": "gelir",
+     "ad": "Perakende satış hacmi — giyim (sabit fiyat)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — mağaza/depo personeli (en büyük gider kalemi)",
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
+    }
+   ],
+   "birincil": "tufe_giyim",
+   "sermaye_mn": 160,
+   "favok": {
+    "2025Q3": {
+     "tl": 0.776,
+     "usd": 19,
+     "_kaynak": "KAP"
+    },
+    "2025Q4": {
+     "tl": 0.854,
+     "usd": 20.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.505,
+     "usd": 11.5,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.621,
+     "usd": 13.6,
+     "_kaynak": "KAP"
+    }
+   },
+   "fiyat_ceyrek_sonu": {
+    "2024Q1": 68.4015,
+    "2024Q2": 125.9415,
+    "2024Q3": 93.1026,
+    "2024Q4": 74.775,
+    "2025Q1": 61.6838,
+    "2025Q2": 50.2483,
+    "2025Q3": 54.4669,
+    "2025Q4": 53.5295,
+    "2026Q1": 82.4972,
+    "2026Q2": 74.3,
+    "2026Q3": 58.3
+   },
+   "fiyat_son": {
+    "tarih": "2026-10-23",
+    "fiyat": 46.62,
+    "kaynak": "Yahoo (Actions §531)"
+   },
+   "bolunme": null,
+   "konsensus": null,
+   "konsensus_gecmis": [],
+   "hedef_fiyat": null,
+   "bilanco": {
+    "beklenen": "2026-11-06",
+    "kaynak": "bist-takvim.json"
+   },
+   "guidance": null,
+   "_eklendi": "2026-10-25",
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
   }
  ],
  "_yol_haritasi": [
@@ -5507,5 +7212,11 @@
  "_485": "Grup 2 sürücüleri (21 Eki): MAVI + pamuk (Yahoo CT=F) + reel asgari ücret · GRSEL asgari ücret \"bekliyor\" KAPANDI + reel · TUREX/BIMAS + asgari ücret · PETKM + sanayi üretimi C20.16 plastik (hacim) + Yİ-ÜFE 20.1 (fiyat; 20.16 ayrı yok) · EKGYO + TÜİK konut satışı ilk el/ipotekli/toplam (EVDS AKONUTSAT) · ALBRK + TL katılma hesabı kâr payı oranı (EVDS KBH, haftalık). İnşaat maliyet endeksi EVDS'de yok → alınmadı.",
  "_486": "TÜİK İnşaat Maliyet Endeksi (kullanıcı linki 21 Eki): veri portalı bülten API → SDMX dataflow TR,DF_UFE_INSAAT_V1 → databrowser2 POST /data gövde [] (JSON-stat). EKGYO + KFE÷İME konut makası, İME konut toplam/malzeme/işçilik.",
  "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili.",
- "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası."
+ "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası.",
+ "_531": {
+  "guncelleme": "2026-10-25",
+  "xk050": 50,
+  "katalog": 52,
+  "eklenen_toplam": 20
+ }
 }
