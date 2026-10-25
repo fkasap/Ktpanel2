@@ -193,11 +193,15 @@
    "k": "BASGZ",
    "fiyat": 34,
    "adet": 700,
-   "ciro": 54074,
-   "ebitda": 7150,
-   "netBorc": -4763,
+   "ciro": 50548,
+   "ebitda": 6445,
+   "netBorc": -2244,
    "hacim": 21,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 6709,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "BERA",
