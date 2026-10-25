@@ -1,0 +1,47 @@
+# KTPanel — §538 HAFTALIK NOT (Pazartesi)
+# Haftalık Yorum'u panel açık olmadan da yazar: scripts/haftalik-not.mjs paneli Playwright ile açar, ajan.js'teki aynı fonksiyonu çağırır,
+# not panelin bulut hafızasına (api/ajanktp) yazılır. Ay başındaki ilk Pazartesi aylık not da yazılır. Repoya dosya yazmaz.
+name: Haftalık Not
+on:
+  schedule:
+    - cron: '30 4 * * 1'     # Pazartesi 07:30 TSİ — sabah fon koşusundan (09:10) önce, Asya kapanışı/ABD cuma kapanışı panelde
+  workflow_dispatch:
+    inputs:
+      kip:
+        description: 'hafta | ay | ikisi'
+        required: false
+        default: 'hafta'
+permissions:
+  contents: read
+concurrency:
+  group: tazele
+  cancel-in-progress: false
+jobs:
+  not:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Bağımlılıklar
+        continue-on-error: true
+        run: |
+          if [ -f package-lock.json ]; then npm ci || npm install --no-audit --no-fund; else npm install --no-audit --no-fund; fi
+      - name: Playwright
+        timeout-minutes: 6
+        run: npx playwright install --with-deps chromium
+      - name: Haftalık not
+        id: not
+        run: node scripts/haftalik-not.mjs --kip="${{ github.event.inputs.kip || '' }}"
+        env:
+          TZ: Europe/Istanbul
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+      - name: Hata ekran görüntüsü
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: haftalik-not-hata
+          path: rapor/haftalik-not-hata.png
+          if-no-files-found: ignore
