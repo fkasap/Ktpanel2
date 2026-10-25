@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025a';   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261025b';   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1711,14 +1711,22 @@ function trackRender(){
   const eSon=(son.endeks!=null&&isFinite(son.endeks))?son.endeks:null;
   const fark=(eSon==null)?null:(son.model-eSon);
   const fmtP=v=>(v==null||!isFinite(v))?'veri yok':((v>=0?'+':'')+v.toFixed(2).replace('.',',')+'%');
+  /* §529: üçüncü çizgi — aynı evrenin EŞİT AĞIRLIKLI getirisi (fm-karne.json). Faktörün asıl kıyası budur; XKTUM'a fark
+     ağırlık yönteminden de gelir (Sicil Ayrıştırması kartı). Seri yoksa kart ve çizgi eskisi gibi kalır. */
+  const EW=(typeof fmkEwSeri==='function')?fmkEwSeri():null;
+  const ewAl=d=>{ if(!EW) return null; if(EW.has(d)) return EW.get(d); let v=null; for(const [k,x] of EW){ if(k<=d) v=x; else break; } return v; };
+  const ewSon=EW?ewAl(son.d):null;
   $('trkSum').innerHTML=
     '<div class="card"><div class="lbl">Model (kuruluştan)</div><div class="val '+(son.model>=0?'up':'down')+'">'+fmtP(son.model)+'</div><div class="sub">'+(TRK.sepet||(TRK.holdings.length+' hisse'))+'</div></div>'+
     '<div class="card"><div class="lbl">'+TRK.endeks+' (kuruluştan)</div><div class="val '+(eSon==null?'':(eSon>=0?'up':'down'))+'">'+fmtP(son.endeks)+'</div><div class="sub">referans: '+trN(TRK.endeks_kapanis)+' ('+TRK.fiyat_tarihi+')</div></div>'+
     '<div class="card"><div class="lbl">Fark (alfa)</div><div class="val '+(fark==null?'':(fark>=0?'up':'down'))+'">'+fmtP(fark)+'</div><div class="sub">model − endeks</div></div>'+
-    '<div class="card"><div class="lbl">Veri noktası</div><div class="val">'+s.length+'</div><div class="sub">son: '+son.d+'</div></div>';
+    (ewSon!=null
+      ?'<div class="card"><div class="lbl">Eşit ağ. evren (aynı taban)</div><div class="val '+(ewSon>=0?'up':'down')+'">'+fmtP(ewSon)+'</div><div class="sub">model − evren: '+fmtP(son.model-ewSon)+' · seçim etkisi</div></div>'
+      :'<div class="card"><div class="lbl">Veri noktası</div><div class="val">'+s.length+'</div><div class="sub">son: '+son.d+'</div></div>');
   if(s.length>=2){
     $('trkChartBox').style.display='block';
-    const all=s.flatMap(p=>[p.model,p.endeks]).filter(v=>v!=null&&isFinite(v));
+    s.forEach(p=>{ p.__ew=EW?ewAl(p.d):null; });
+    const all=s.flatMap(p=>[p.model,p.endeks,p.__ew]).filter(v=>v!=null&&isFinite(v));
     const mn=Math.min.apply(null,all),mx=Math.max.apply(null,all),rng=(mx-mn)||1;
     const X=i=>(i/(s.length-1))*690+5, Y=v=>140-((v-mn)/rng)*130+5-0;
     const line=key=>s.map((p,i)=>(p[key]==null||!isFinite(p[key]))?null:(X(i).toFixed(1)+','+Y(p[key]).toFixed(1))).filter(Boolean).join(' ');
@@ -1726,12 +1734,15 @@ function trackRender(){
     $('trkChart').innerHTML=
       ((mn<0&&mx>0)?'<line x1="5" y1="'+zY.toFixed(1)+'" x2="695" y2="'+zY.toFixed(1)+'" stroke="#E2EBE6" stroke-width="1" stroke-dasharray="4 3"/>':'')+
       '<polyline points="'+line('endeks')+'" fill="none" stroke="#B9C9C1" stroke-width="2"/>'+
+      (EW?'<polyline points="'+line('__ew')+'" fill="none" stroke="#8B6FD8" stroke-width="1.6" stroke-dasharray="5 3"/>':'')+
       '<polyline points="'+line('model')+'" fill="none" stroke="#128A66" stroke-width="2.5"/>'+
       (eSon==null?'':'<circle cx="'+lx.toFixed(1)+'" cy="'+Y(eSon).toFixed(1)+'" r="3.2" fill="#B9C9C1"/>')+
       '<circle cx="'+lx.toFixed(1)+'" cy="'+Y(son.model).toFixed(1)+'" r="3.2" fill="#128A66"/>'+
       '<text x="8" y="14" font-family="IBM Plex Mono" font-size="10" font-weight="600" fill="#128A66">Model '+fmtP(son.model)+'</text>'+
-      '<text x="120" y="14" font-family="IBM Plex Mono" font-size="10" fill="#8FA098">'+TRK.endeks+' '+fmtP(eSon)+'</text>';
-    $('trkNote').textContent='İzlenen portföy: kuruluş günü varsayılan ağırlıklarla damgalanan resmi Top-'+FM.meta.topn+'. Getiriler Fintables kapanışlarıyla her damgalı güncellemede hesaplanır; temettü ve işlem maliyeti hariçtir.';
+      '<text x="120" y="14" font-family="IBM Plex Mono" font-size="10" fill="#8FA098">'+TRK.endeks+' '+fmtP(eSon)+'</text>'+
+      (ewSon!=null?'<text x="232" y="14" font-family="IBM Plex Mono" font-size="10" fill="#8B6FD8">Eşit ağ. evren '+fmtP(ewSon)+'</text>':'');
+    /* §529: not düzeltildi — sepet Top-40 EŞİT ağırlık (Top-'+FM.meta.topn+' değil); fiyat kaynağı Yahoo (Fintables değil, §455 sonrası) */
+    $('trkNote').textContent='İzlenen portföy: '+(TRK.sepet||('kuruluşta damgalanan '+TRK.holdings.length+' hisse'))+' — kuruluş günü varsayılan ağırlıklarla sıralanan ilk 40 hisse, kurulduktan sonra değişmez. Getiriler Yahoo kapanışlarıyla (yedek: Borsa İstanbul bülteni) her fiyat koşusunda hesaplanır; temettü ve işlem maliyeti hariçtir. '+s.length+' veri noktası, son '+son.d+'.'+(EW?' Kesikli mor çizgi: kuruluş günü evrenindeki tüm hisselerin eşit ağırlıklı getirisi — faktör seçiminin asıl kıyası.':'');
   }else{
     $('trkNote').innerHTML='Sicil <em>bugün</em> kuruldu — ilk performans noktası bir sonraki damgalı güncellemede ("güncelle" komutuyla) eklenecek. İzlenen portföy tabloda görünen seçim değil, kuruluşta damgalanan resmi Top-25\u0027tir: ağırlık kutucuklarıyla oynaman sicili etkilemez. Bu disiplin önemli: sicil ancak <em>önceden ilan edilmiş</em> kurallarla tutulursa anlamlıdır — sonradan ağırlık değiştirip "aslında şöyle yapsaydık" demek sicil değil, hikâye olur.';
   }
@@ -2000,37 +2011,112 @@ async function pozTazele(fiyatCek){
 function savePoz(){localStorage.setItem('poz_v1',JSON.stringify(poz));}
 
 
-/* ---- Faktör Model Karnesi: skor vs gerçekleşen getiri (canlı doğrulama) ---- */
-let FM_KARNE_FIYAT=null;
+/* ---- §529 MODEL KARNESİ — NOKTA-ZAMAN (25 Eki) ----
+   ESKİ: fm.json'un BUGÜNKÜ skoru × multiple.json'un BUGÜNKÜ fiyatı → canlı fiyat. İkisi de §455/§496 ile her gün tazelendiği
+   için ölçülen ufuk ~0 gündü; kart "+0,0% (7 hisse)" basıyordu (kesişim multiple.json kapsamıyla sınırlıydı). Bir skoru ölçmek
+   için o gün BİLİNEN skor ve SONRAKİ getiri gerekir. YENİ: fm-karne.json (Actions §529) — skor fotoğrafları (fm-arsiv.json:
+   Koyfin 14 Tem · 24 Ağu git geçmişinden, sonra her hafta) × ufuk (1A/3A/bugüne). Kart üretmez, okur.
+   Aynı dosya sicil ayrıştırmasını da taşır (fmAyrRender): model − XKTUM = ağırlık etkisi + seçim etkisi. */
+let FMK=null, FMK_SEC=null, FMK_PEN='kurulus';
+async function fmKarneYukle(){ if(FMK) return FMK; try{ const r=await fetch('/fm-karne.json',{cache:'no-store'}); FMK=r.ok?await r.json():null; }catch(e){ FMK=null; } return FMK; }
+const FMK_AD={VALUE:'Değer',GROWTH:'Büyüme',QUALITY:'Kalite',MOMENTUM:'Momentum',LOW_RISK:'Düşük risk',BUYUKLUK:'Büyüklük',KOMPOZIT:'Kompozit'};
+const fmkTar=d=>{ const AY=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']; const p=String(d||'').split('-'); return p.length===3?(+p[2])+' '+AY[+p[1]-1]:String(d||''); };
+const fmkY=(v,d=1)=>(v==null||!isFinite(v))?'—':((v>0?'+':'')+trN(v,d));
 async function fmKarne(){
-  const el=$('fmKarneBody'); if(!el||!FM||!FM.data)return;
-  try{
-    // Kompozit skor (eşit ağırlık — slider'dan bağımsız sabit referans)
-    const skorlu=FM.data.map(h=>({t:h.t, skor:h.f.reduce((a,b)=>a+b,0)/h.f.length}))
-      .sort((a,b)=>b.skor-a.skor);
-    const ilk=skorlu.slice(0,10), son=skorlu.slice(-10);
-    const kodlar=[...ilk,...son].map(x=>x.t);
-    if(!FM_KARNE_FIYAT){
-      const r=await fetch('/api/market?mod=fiyat&kodlar='+encodeURIComponent(kodlar.join(',')));
-      const d=r.ok?await r.json():null;
-      FM_KARNE_FIYAT=(d&&d.ok&&d.fiyat)?d.fiyat:{};
-    }
-    const getiri=(x)=>{
-      const snap=MFIYAT[x.t], canli=FM_KARNE_FIYAT[x.t];
-      return (snap&&canli&&isFinite(snap)&&isFinite(canli))?((canli/snap-1)*100):null;
-    };
-    const ort=(dizi)=>{const g=dizi.map(getiri).filter(v=>v!=null);return g.length?{o:g.reduce((a,b)=>a+b,0)/g.length,n:g.length}:null;};
-    const gI=ort(ilk), gS=ort(son);
-    if(!gI||!gS){el.innerHTML='<div class="sub">Karne için snapshot/canlı fiyat kesişimi yetersiz (kapsam: multiple.json).</div>';return;}
-    const makas=gI.o-gS.o;
-    const cls=makas>0?'up':'down';
-    const yorum=makas>1?'model ÇALIŞIYOR — yüksek skor kazandırıyor':(makas>-1?'nötr — ayrışma henüz zayıf':'TERS — düşük skor önde (rejim/model sorgusu)');
-    el.innerHTML=
-      '<div class="kv"><span class="k">İlk 10 (yüksek kompozit) ort. getiri</span><span class="'+(gI.o>=0?'up':'down')+'" style="font-weight:600">'+(gI.o>=0?'+':'')+trN(gI.o,1)+'% <span class="sub" style="display:inline">('+gI.n+' hisse)</span></span></div>'+
-      '<div class="kv"><span class="k">Son 10 (düşük kompozit) ort. getiri</span><span class="'+(gS.o>=0?'up':'down')+'">'+(gS.o>=0?'+':'')+trN(gS.o,1)+'% <span class="sub" style="display:inline">('+gS.n+' hisse)</span></span></div>'+
-      '<div class="kv"><span class="k">Skor makası (ilk − son)</span><span class="'+cls+'" style="font-weight:700;font-size:15px">'+(makas>=0?'+':'')+trN(makas,1)+' puan</span></div>'+
-      '<div class="kv"><span class="k">Okuma</span><span>'+yorum+'</span></div>';
-  }catch(e){ el.innerHTML='<div class="sub">Karne hesaplanamadı.</div>'; }
+  const el=$('fmKarneBody'); if(!el) return;
+  const K=await fmKarneYukle();
+  if(!K||!Array.isArray(K.karne)||!K.karne.length){
+    el.innerHTML='<div class="sub">Karne henüz üretilmedi. Actions\'ın bir sonraki fiyat koşusu skor fotoğraflarını (fm-arsiv.json) ve sonraki getirileri ölçüp fm-karne.json\'u yazacak. Eski karne kaldırıldı: bugünkü skoru bugünkü fiyatla karşılaştırdığı için ölçüm ufku sıfırdı.</div>';
+    fmAyrRender(); return; }
+  const tg=$('fmKarneTag'); if(tg) tg.textContent='SON FİYAT '+fmkTar(K.son).toLocaleUpperCase('tr-TR')+' · '+(K.fotograflar||[]).length+' FOTOĞRAF';
+  const UF=['1A','3A','bugune'], UFA={'1A':'1 ay sonra','3A':'3 ay sonra','bugune':'bugüne'};
+  const tarihler=[...new Set(K.karne.map(x=>x.tarih))].sort();
+  if(!FMK_SEC||!K.karne.find(z=>(z.tarih+'|'+z.ufuk)===FMK_SEC)){ const ink=K.track_resmi&&K.track_resmi.inception;
+    const v=K.karne.find(x=>x.tarih===ink&&x.ufuk==='bugune')||K.karne.slice().sort((a,b)=>b.isgunu-a.isgunu)[0]; FMK_SEC=v.tarih+'|'+v.ufuk; }
+  const hucre=(t,u)=>{ const x=K.karne.find(z=>z.tarih===t&&z.ufuk===u); if(!x) return '<td class="num" style="color:var(--muted)">—</td>';
+    const ic=x.ic.KOMPOZIT, an=ic!=null&&Math.abs(ic)>x.anlam_esik, renk=ic==null?'':(ic>0?'var(--up)':'var(--down)'), sec=(t+'|'+u)===FMK_SEC;
+    return '<td class="num" data-fmk="'+t+'|'+u+'" title="'+x.n+' hisse · '+x.isgunu+' iş günü" style="cursor:pointer;'+(sec?'background:var(--mmL);':'')+'"><b style="color:'+renk+'">'+(ic==null?'—':trN(ic,2))+'</b>'+(an?'':'<span class="thin">*</span>')+
+      '<div class="sub" style="font-size:9px">Q1−Q5 '+fmkY(x.makas,1)+'</div></td>'; };
+  const fotoAd=t=>{ const f=(K.fotograflar||[]).find(z=>z.tarih===t); return fmkTar(t)+(f?' <span class="thin" style="font-size:9px">'+esc(f.kaynak)+'</span>':''); };
+  let h='<table aria-label="Model karnesi" style="margin-bottom:6px"><thead><tr><th>Skor fotoğrafı</th>'+UF.map(u=>'<th class="num">'+UFA[u]+'</th>').join('')+'</tr></thead><tbody>'+
+    tarihler.map(t=>'<tr><td>'+fotoAd(t)+'</td>'+UF.map(u=>hucre(t,u)).join('')+'</tr>').join('')+'</tbody></table>'+
+    '<div class="sub" style="font-size:9.5px;margin-bottom:8px">Hücre = kompozit skorun sonraki getiriyle <b>sıra korelasyonu (IC)</b>; altında en yüksek %20 − en düşük %20 getiri farkı (puan). <span class="thin">*</span> = |IC| anlamlılık eşiğinin (2/√n) altında. Hücreye tıkla → ayrıntı.</div>';
+  const [st,su]=FMK_SEC.split('|'); const x=K.karne.find(z=>z.tarih===st&&z.ufuk===su)||K.karne[0];
+  const q=x.kuintil||[], mx=Math.max(...q.map(v=>Math.abs(v||0)),1);
+  const cub=q.map((v,i)=>{ const w=Math.round(Math.abs(v||0)/mx*100);
+    return '<div style="display:flex;align-items:center;gap:6px;font-size:10px;margin:2px 0"><span style="width:92px;font-family:var(--mono);color:var(--muted)">Q'+(i+1)+(i===0?' · en yüksek':i===4?' · en düşük':'')+'</span>'+
+      '<span style="flex:1;background:var(--line);border-radius:3px;height:9px;position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:'+w+'%;background:'+((v||0)>=0?'var(--up)':'var(--down)')+';opacity:'+(1-i*0.12).toFixed(2)+';border-radius:3px"></span></span>'+
+      '<span style="width:58px;text-align:right;font-family:var(--mono)">'+fmkY(v,1)+'%</span></div>'; }).join('');
+  const sat=['VALUE','GROWTH','QUALITY','MOMENTUM','LOW_RISK','KOMPOZIT'].map(f=>{ const v=x.ic[f], vs=x.ic_sn[f], t=x.t[f], an=v!=null&&Math.abs(v)>x.anlam_esik;
+    const yorum=v==null?'—':(an?(v>0?'<span class="up">çalıştı</span>':'<span class="down">ters çalıştı</span>'):'<span class="thin">belirsiz</span>');
+    return '<tr'+(f==='KOMPOZIT'?' style="font-weight:700;border-top:1px solid var(--line2)"':'')+'><td>'+FMK_AD[f]+'</td><td class="num">'+(v==null?'—':trN(v,2))+'</td><td class="num">'+(vs==null?'—':trN(vs,2))+'</td><td class="num">'+(t==null?'—':trN(t,1))+'</td><td>'+yorum+'</td></tr>'; }).join('');
+  const okuma=x.makas10>1?'model ÇALIŞIYOR — yüksek skor daha iyi getirdi':(x.makas10>-1?'nötr — ayrışma zayıf':'TERS — düşük skor önde (rejim ya da model sorgusu)');
+  h+='<div class="grid g2" style="gap:10px"><div><div class="lbl" style="margin-bottom:4px">'+fmkTar(x.tarih).toLocaleUpperCase('tr-TR')+' FOTOĞRAFI → '+fmkTar(x.bitis).toLocaleUpperCase('tr-TR')+' <span class="thin">('+x.isgunu+' iş günü · '+x.n+' hisse)</span></div>'+cub+
+    '<div class="sub" style="font-size:9.5px;margin-top:3px">Beşli dilimler kompozit skora göre, eşit ağırlık · evren ortalaması '+fmkY(x.evren_ort,1)+'%.</div>'+
+    '<div class="kv" style="margin-top:6px"><span class="k">İlk 10 / son 10 ort. getiri</span><span><span class="'+(x.ilk10>=0?'up':'down')+'">'+fmkY(x.ilk10,1)+'%</span> / <span class="'+(x.son10>=0?'up':'down')+'">'+fmkY(x.son10,1)+'%</span></span></div>'+
+    '<div class="kv"><span class="k">Makas (ilk 10 − son 10)</span><span class="'+(x.makas10>=0?'up':'down')+'" style="font-weight:700">'+fmkY(x.makas10,1)+' puan</span></div>'+
+    '<div class="kv"><span class="k">Okuma</span><span>'+okuma+'</span></div></div>'+
+    '<div><div class="lbl" style="margin-bottom:4px">FAKTÖR BAŞINA SIRA IC</div><table aria-label="Faktör IC"><thead><tr><th>Faktör</th><th class="num">IC</th><th class="num" title="getiriden sektör ortalaması çıkarılmış">Sektör-nötr</th><th class="num">t</th><th>Okuma</th></tr></thead><tbody>'+sat+'</tbody></table>'+
+    '<div class="sub" style="font-size:9.5px;margin-top:3px">Anlamlılık eşiği |IC| &gt; '+trN(x.anlam_esik,2)+' (2/√n, tek kesit). Sektör-nötr IC sektör bahsini ayıklar: seçim sektörün İÇİNDE de çalışıyor mu?</div></div></div>';
+  const kn=K.kanit&&K.kanit['1A'];
+  if(kn&&kn.KOMPOZIT) h+='<div class="sub" style="font-size:9.5px;margin-top:8px"><b>Biriken kanıt — 1 ay ufku, '+kn.KOMPOZIT.n+' fotoğraf:</b> '+['VALUE','GROWTH','QUALITY','MOMENTUM','LOW_RISK','KOMPOZIT'].filter(f=>kn[f]).map(f=>FMK_AD[f]+' '+trN(kn[f].ort,2)+' ('+kn[f].pozitif+'/'+kn[f].n+' pozitif)').join(' · ')+
+    '. Haftalık fotoğraflar biriktikçe bu satır güçlenir; yakın tarihli fotoğrafların pencereleri örtüştüğü için bağımsız gözlem sayısı fotoğraf sayısından azdır.</div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-fmk]').forEach(td=>td.addEventListener('click',()=>{ FMK_SEC=td.dataset.fmk; fmKarne(); }));
+  fmAyrRender();
+  if(typeof TRK!=='undefined'&&TRK&&TRK.series&&!TRK.__ewCizildi){ TRK.__ewCizildi=true; try{ trackRender(); }catch(e){} }
+}
+/* §529 SİCİL AYRIŞTIRMASI — "model XKTUM'un neden gerisinde/önünde?" sorusunu iki bacağa ayırır. */
+function fmAyrRender(){
+  const el=$('fmAyrBody'); if(!el) return;
+  const L=((FMK&&FMK.ayristirma)||[]).filter(a=>!a.hata);
+  if(!L.length){ el.innerHTML='<div class="sub">Ayrıştırma henüz üretilmedi (fm-karne.json · Actions §529).</div>'; return; }
+  if(!L.find(a=>a.pencere===FMK_PEN)) FMK_PEN=L[0].pencere;
+  const a=L.find(x=>x.pencere===FMK_PEN);
+  const PA={kurulus:'Kuruluştan','3A':'Son 3 ay','1A':'Son 1 ay'};
+  const dug=L.map(x=>'<button class="btn mini3" data-fmpen="'+x.pencere+'" style="margin:0 4px 4px 0;'+(x.pencere===FMK_PEN?'background:var(--mm2);color:#fff;':'')+'">'+PA[x.pencere]+' · '+fmkTar(x.bas)+'</button>').join('');
+  const kut=(lbl,v,sub)=>'<div class="card"><div class="lbl">'+lbl+'</div><div class="val '+(v>=0?'up':'down')+'">'+fmkY(v,1)+'%</div><div class="sub">'+sub+'</div></div>';
+  const mx=Math.max(Math.abs(a.fark||0),Math.abs(a.agirlik_etkisi||0),Math.abs(a.secim_etkisi||0),1);
+  const bar=v=>{ if(v==null||!isFinite(v)) return ''; const w=Math.min(50,Math.round(Math.abs(v)/mx*50));
+    return '<span style="display:inline-block;width:110px;height:8px;background:var(--line);border-radius:3px;position:relative;vertical-align:middle;margin-left:8px"><span style="position:absolute;'+(v>=0?'left:50%':'right:50%')+';top:0;bottom:0;width:'+w+'%;background:'+(v>=0?'var(--up)':'var(--down)')+';border-radius:3px"></span></span>'; };
+  const sat=(k,v,b)=>'<div class="kv"><span class="k">'+k+'</span><span class="'+(v>=0?'up':'down')+'" style="font-family:var(--mono)'+(b?';font-weight:700':'')+'">'+fmkY(v,1)+' puan'+bar(v)+'</span></div>';
+  let h='<div>'+dug+'</div>'+
+    '<div class="grid mac" style="margin:4px 0 8px">'+kut('Model sepeti',a.Rp,a.n_sepet+'/'+a.n_sepet_toplam+' hisse · eşit ağırlık')+kut('Eşit ağırlıklı evren',a.Rew,a.n_evren+' hisse · '+fmkTar(a.anlik)+' evreni')+(a.Rb!=null?kut('XKTUM (resmî)',a.Rb,'piyasa değeri ağırlıklı'):'')+'</div>'+
+    (a.fark!=null?sat('<b>Fark: model − XKTUM</b>',a.fark,true)+sat('= Ağırlık etkisi <span class="thin">(eşit ağırlıklı evren − XKTUM)</span>',a.agirlik_etkisi):'')+
+    sat((a.fark!=null?'+ ':'')+'Seçim etkisi <span class="thin">(model − eşit ağırlıklı evren)</span>',a.secim_etkisi);
+  if(a.konsantrasyon){ const c=a.konsantrasyon;
+    h+='<div class="note" style="font-size:10px;margin-top:6px"><b>Ağırlık etkisi nereden geliyor?</b> XKTUM pencere başında üç hissede yoğunlaşmıştı (üçünün toplam ağırlığı <b>%'+trN(c.ilk3_agirlik,1)+'</b>): '+
+      c.ilk3.map(z=>'<b>'+z.k+'</b> %'+trN(z.w0,1)+' ('+fmkY(z.r,1)+'%)').join(' · ')+'. Bu üçünün endekse katkısı '+fmkY(c.ilk3_katki,1)+' puan; endeksin geri kalanı '+fmkY(c.kalan_getiri,1)+'%. '+
+      'Model bu isimleri '+c.ilk3.map(z=>z.k+' %'+(z.modelde?trN(z.model_w,1):'0')).join(' · ')+' ağırlıkla taşıyor. Endeks dar bir lider grupla taşınırken eşit ağırlıklı her sepet bu farkı yapısal olarak yaşar — '+
+      'bu bir <em>faktör</em> hatası değil, <em>portföy inşası</em> (kıyas endeksinden ağırlık sapması) sonucudur.</div>'; }
+  const S=a.sektor||{satirlar:[]}, F=a.faktor;
+  const sekT=S.satirlar.filter(z=>Math.abs(z.dagilim)+Math.abs(z.secim)>=0.1).slice(0,9).map(z=>'<tr><td>'+esc(SEKTOR_TR[z.s]||z.s)+' <span class="thin">'+z.n_model+'/'+z.n_evren+'</span></td><td class="num">%'+trN(z.wp,1)+' / %'+trN(z.wu,1)+'</td><td class="num">'+(z.rp==null?'—':fmkY(z.rp,0))+' / '+fmkY(z.ru,0)+'</td><td class="num '+(z.dagilim>=0?'up':'down')+'">'+fmkY(z.dagilim,2)+'</td><td class="num '+(z.secim>=0?'up':'down')+'">'+fmkY(z.secim,2)+'</td></tr>').join('');
+  const fakT=F?F.satirlar.map(z=>'<tr><td>'+(FMK_AD[z.f]||z.f)+'</td><td class="num">'+fmkY(z.aktif,2)+'σ</td><td class="num">'+fmkY(z.getiri_1s,1)+'</td><td class="num '+(z.katki>=0?'up':'down')+'">'+fmkY(z.katki,2)+'</td></tr>').join(''):'';
+  h+='<div class="grid g2" style="gap:10px;margin-top:8px">'+
+    '<div><div class="lbl" style="margin-bottom:4px">SEÇİM ETKİSİNİN İÇİ · SEKTÖR (BRINSON)</div><table aria-label="Sektör ayrıştırması"><thead><tr><th>Sektör <span class="thin">model/evren adet</span></th><th class="num">Ağırlık M/E</th><th class="num">Getiri M/E %</th><th class="num">Dağılım</th><th class="num">Seçim</th></tr></thead><tbody>'+sekT+
+    '<tr style="font-weight:700;border-top:1px solid var(--line2)"><td>Toplam</td><td></td><td></td><td class="num">'+fmkY(S.dagilim,2)+'</td><td class="num">'+fmkY(S.secim,2)+'</td></tr></tbody></table>'+
+    '<div class="sub" style="font-size:9.5px;margin-top:3px"><b>Dağılım</b> = sektöre fazla/eksik ağırlık × sektörün evrene göre getirisi. <b>Seçim</b> = sektörün içinde doğru hisseyi seçmek. İkisinin toplamı seçim etkisine eşittir.</div></div>'+
+    (F?'<div><div class="lbl" style="margin-bottom:4px">SEÇİM ETKİSİNİN İÇİ · FAKTÖR</div><table aria-label="Faktör ayrıştırması"><thead><tr><th>Faktör</th><th class="num">Aktif maruziyet</th><th class="num" title="1σ maruziyet başına dönem getirisi, puan">Faktör getirisi</th><th class="num">Katkı</th></tr></thead><tbody>'+fakT+
+      '<tr><td>Hisseye özgü (kalan)</td><td></td><td></td><td class="num '+(F.kalan>=0?'up':'down')+'">'+fmkY(F.kalan,2)+'</td></tr>'+
+      '<tr style="font-weight:700;border-top:1px solid var(--line2)"><td>Toplam</td><td></td><td></td><td class="num">'+fmkY(a.secim_etkisi,2)+'</td></tr></tbody></table>'+
+      '<div class="sub" style="font-size:9.5px;margin-top:3px">Yatay kesit EKK (R² '+trN(F.r2,2)+', n '+F.n+'): her hissenin dönem getirisi '+fmkTar(a.anlik)+' skorlarına regres edilir'+(F.boyut?' (büyüklük = başlangıç XKTUM ağırlığının logaritması)':'')+'. Aktif maruziyet = modelin ortalama z-skoru − evreninki. Faktörler birbiriyle ilişkili olduğundan katkılar tek tek IC\'lerle birebir örtüşmez.</div></div>':'')+
+    '</div>';
+  const ls=L2=>(L2||[]).map(z=>'<span style="white-space:nowrap">'+z.k+' <span class="'+(z.r>=0?'up':'down')+'">'+fmkY(z.r,0)+'%</span> <span class="thin">('+fmkY(z.katki,2)+')</span></span>').join(' · ');
+  h+='<div class="kv" style="margin-top:6px"><span class="k">En çok katkı</span><span class="sub" style="text-align:right;max-width:72%">'+ls(a.en_iyi)+'</span></div>'+
+    '<div class="kv"><span class="k">En çok zarar</span><span class="sub" style="text-align:right;max-width:72%">'+ls(a.en_kotu)+'</span></div>'+
+    '<div class="sub" style="font-size:9.5px;margin-top:3px">Katkı = ağırlık × (hisse getirisi − eşit ağırlıklı evren), puan. Pencere '+fmkTar(a.bas)+' → '+fmkTar(a.bitis)+' · skorlar '+fmkTar(a.anlik)+' fotoğrafından ('+esc(a.anlik_kaynak||'')+')'+(a.anlik_yas_isgunu>0?', pencere başından '+a.anlik_yas_isgunu+' iş günü önce':'')+
+    (FMK.track_resmi&&a.pencere==='kurulus'?' · sicil dosyasının kendi hesabı: model '+fmkY(FMK.track_resmi.model,1)+'%, XKTUM '+fmkY(FMK.track_resmi.endeks,1)+'%':'')+'.</div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-fmpen]').forEach(b=>b.addEventListener('click',()=>{ FMK_PEN=b.dataset.fmpen; fmAyrRender(); }));
+}
+/* §529 eşit ağırlıklı evren serisi — sicil grafiğinin üçüncü çizgisi; kullanıcı tabanı (↺ SIFIRLA) varsa o güne yeniden tabanlanır */
+function fmkEwSeri(){
+  const a=FMK&&(FMK.ayristirma||[]).find(x=>x.pencere==='kurulus'&&Array.isArray(x.seri)&&x.seri.length);
+  if(!a||!TRK) return null;
+  const S=a.seri, baz=TRK.inception; let b=null; for(const p of S){ if(p.d<=baz) b=p; else break; }
+  if(!b) return null;
+  const m=new Map(); S.forEach(p=>{ if(p.d>=b.d) m.set(p.d, +(((1+p.ew/100)/(1+b.ew/100)-1)*100).toFixed(3)); });
+  return m;
 }
 
 /* ---- Hisse fiyatları otomatik tazeleme (panel açılışı + Portföy sekmesi) ---- */
@@ -8875,7 +8961,8 @@ async function boot(){
        hala denetleniyor; DOLULUK sekme/asenkron sonrasi konusudur. */
     ['Reel getiri','reelAtifBody', true],
     ['Getiri atfı','atifBody'],['Risk metrikleri','riskMetBody'],['Likidite','likiditeBody'],
-    ['Model karnesi','fmKarneBody'],
+    ['Model karnesi','fmKarneBody', true],
+    ['Sicil ayrıştırması','fmAyrBody', true],   /* §529: t6 açılınca dolar (fm-karne.json) */
     ['Endeksten ayrışma','ayrBody', true]        /* ← TEMBEL: t3 açılınca dolar */
   ];
   const kayip=[], bos=[], tembel=[];

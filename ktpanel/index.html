@@ -999,11 +999,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 
 
-</div><div class="tab" id="t6"><h2>09 Faktör Model <span class="thin">(Faktor_Basit v3.4 · evren: XKTUM · veri: <span id="fmKaynak">Universe CSV</span> · <span id="fmDamga">14 Tem 2026</span>)</span></h2>
+</div><div class="tab" id="t6"><h2>09 Faktör Model <span class="thin">(Faktor_Basit v3.4 · evren: XKTUM · veri: <span id="fmKaynak">—</span> · <span id="fmDamga">—</span>)</span></h2>
 <div class="card" style="margin-bottom:10px">
-  <div class="lbl">MODEL KARNESİ <span class="thin">(<span class="fmDamgaKisa">14 Tem</span> snapshot → bugün · canlı doğrulama)</span> <span class="ldot"></span></div>
+  <div class="lbl">MODEL KARNESİ <span class="thin">(nokta-zaman skor → sonraki getiri)</span> <span class="tag" id="fmKarneTag">—</span></div>
   <div id="fmKarneBody"><div class="sub">hesaplanıyor…</div></div>
-  <div class="note" style="font-size:10px">Modelin <b>kendini kanıtlama testi:</b> kompozit skora göre (eşit ağırlık) ilk 10 ile son 10 hissenin, model üretim tarihinden (<span class="fmDamgaKisa">14 Tem</span>) bugüne <em>gerçekleşen</em> ortalama getirisi — güncel fiyat Yahoo'dan canlı çekilir. <b>Makas pozitifse</b> yüksek skor gerçekten kazandırıyor demektir; kalıcı negatifse ya faktör rejimi döndü ya model tazelenmeli. Not: skorların kendisi <span class="fmDamgaKisa">14 Tem</span> fotoğrafıdır — yeniden üretim ayrı iştir (istenirse Fintables verisiyle yapılır); bu kart üretmeden <em>ölçer</em>.</div>
+  <div class="note" style="font-size:10px">Modelin <b>kendini kanıtlama testi</b> (§529): her skor fotoğrafı <em>o gün bilinen</em> skordur; karne o skoru <em>sonraki</em> getiriyle karşılaştırır. Yöntem dolayısıyla geçmişe bakarak bugünün skoruyla övünmek mümkün değildir. <b>IC</b> (sıra korelasyonu) +0,05 ve üstü hisse seçiminde kullanışlı, +0,10 ve üstü güçlü sayılır; tek bir kesitte anlamlılık için |IC| &gt; 2/√n gerekir. Fotoğraflar: Koyfin dönemi 14 Tem · 24 Ağu (git geçmişinden), sonra Actions her hafta bir fotoğraf ekler — kanıt kendiliğinden birikir. Dikkat: elimizdeki kanıtın çoğu <em>tek bir rejimden</em> (Eylül–Ekim küçük-orta ölçek çöküşü) geliyor; değer ve düşük risk çöküşlerde parlar, sert toparlanma rallilerinde geri kalabilir.</div>
 </div>
 <div class="grid mac" id="fmChips">
   <div class="card"><div class="lbl">Evren (likit)</div><div class="val" id="fmUni">—</div><div class="sub">XKTUM · mcap ≥ 2 mlr ₺</div></div>
@@ -1016,6 +1016,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="grid mac" id="trkSum" style="margin-top:4px"></div>
   <div class="chbox" id="trkChartBox" style="height:150px;display:none"><svg id="trkChart" viewBox="0 0 700 150" preserveAspectRatio="none" style="width:100%;height:100%"></svg></div>
   <div class="note" id="trkNote">Sicil yükleniyor…</div>
+</div>
+<div class="card" style="margin-top:10px">
+  <div class="lbl">SİCİL AYRIŞTIRMASI <span class="thin">(model XKTUM'dan neden ayrıştı?)</span></div>
+  <div id="fmAyrBody" style="margin-top:4px"><div class="sub">hesaplanıyor…</div></div>
+  <div class="note" style="font-size:10px">Fark iki bacağa ayrılır: <b>ağırlık etkisi</b> — aynı evreni eşit ağırlıkla tutmak piyasa değeri ağırlıklı endekse göre ne kazandırdı/kaybettirdi; <b>seçim etkisi</b> — model, evreninin eşit ağırlıklı ortalamasını yendi mi. Faktör modelinin becerisi ikinci bacakta ölçülür; birincisi portföy inşası kararıdır (kıyas endeksine ne kadar sadık kalınacağı). Kaynak: fm-karne.json (Actions §529) · Yahoo düzeltilmiş kapanış · endeks-arsiv.json XKTUM · xktum.json ağırlıkları.</div>
 </div>
 <div class="card" style="margin-top:10px">
   <div class="lbl">FAKTÖR AĞIRLIKLARI <span class="tag">ELLE AYARLA</span></div>
@@ -1046,7 +1051,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 <div class="grid g2" style="margin-top:10px">
   <div class="card"><div class="lbl">SEKTÖR AĞIRLIKLARI</div><div id="fmSec"></div></div>
-  <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar <span class="fmDamgaKisa">14 Tem</span> tarihli <span class="fmKaynakKisa">CSV</span>'den; Python modeli (v3.2) birebir çalıştırıldı, seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım tavsiyesi değildir.</div></div>
+  <div class="card"><div class="lbl">YÖNTEM ÖZETİ</div><div class="note" style="margin-top:4px">Metrikler <em>rank → normal</em> ile standardize (aykırı değere dayanıklı), VALUE/GROWTH/QUALITY <em>sektör içi</em>, MOMENTUM/LOW_RISK global kıyaslanır. Eksik veri doldurulmaz; negatif paydalı eksik oran "en kötü" sayılır — <em>bilgi taşıyan eksiklik</em>. Skorlar <span class="fmDamgaKisa">—</span> tarihli <span class="fmKaynakKisa">—</span> hesabından: KAP TTM bilançoları + Yahoo fiyat/hacim, fm-isle.py (v3.4) her fiyat koşusunda yeniden üretir (§455); seçim-ağırlık motoru JS'e portlandı ve doğrulandı. Rebalance tamponu (EXIT_RANK 40) damgalı güncellemelerde işletilir. Bilgilendirme amaçlıdır; yatırım kararı değildir.</div></div>
 </div>
 
 </div><!-- §365 SEKTÖREL VERİLER (21 Ağu, kullanıcı isteği): Katılım Fonları ve
@@ -1941,7 +1946,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261025a"></script>
+<script src="/app.js?v=20261025b"></script>
 <script src="/ajan.js?v=20261025a"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
