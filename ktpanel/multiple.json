@@ -107,11 +107,15 @@
    "k": "ARASE",
    "fiyat": 69.95,
    "adet": 250,
-   "ciro": 38416,
-   "ebitda": 9118,
-   "netBorc": 1001,
+   "ciro": 34701,
+   "ebitda": 9131,
+   "netBorc": 1547,
    "hacim": 34,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 9043,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ARDYZ",
@@ -140,12 +144,16 @@
   {
    "k": "ATAKP",
    "fiyat": 34.72,
-   "adet": 138,
-   "ciro": 4143,
-   "ebitda": 490,
-   "netBorc": -370,
+   "adet": 138.768,
+   "ciro": 3604,
+   "ebitda": 392,
+   "netBorc": -374,
    "hacim": 20,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 327,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "AVPGY",

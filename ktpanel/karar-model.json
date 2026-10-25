@@ -305,7 +305,8 @@
      "ad": "EUR/USD (ihracat)"
     }
    ],
-   "birincil": "komur_termal"
+   "birincil": "komur_termal",
+   "kamu_duyarli": true
   },
   {
    "kod": "AKFYE",
@@ -1389,7 +1390,8 @@
      "aile": "cimento_yi"
     }
    ],
-   "birincil": "komur_termal"
+   "birincil": "komur_termal",
+   "kamu_duyarli": true
   },
   {
    "kod": "CVKMD",
@@ -2900,7 +2902,8 @@
      "rol": "kur"
     }
    ],
-   "birincil": "kap_yeni_is_glrmk"
+   "birincil": "kap_yeni_is_glrmk",
+   "kamu_duyarli": true
   },
   {
    "kod": "GRSEL",
@@ -3307,7 +3310,8 @@
      "rol": "kur"
     }
    ],
-   "birincil": "kap_yeni_is_katmr"
+   "birincil": "kap_yeni_is_katmr",
+   "kamu_duyarli": true
   },
   {
    "kod": "KCAER",
@@ -4443,12 +4447,12 @@
   },
   {
    "kod": "TCKRC",
-   "ad": "Tekirdağ Çıkrıkçılar?",
-   "sektor": "İmalat",
-   "tier": "C",
+   "ad": "Kıraç Galvaniz Telekomünikasyon Metal Makine İnşaat Elektrik",
+   "sektor": "Metal (Otokorkuluk · GES Konstrüksiyonu · Galvaniz)",
+   "tier": "B",
    "tip": "konsensus",
-   "surucu_plani": "İmalat — şirkete özgü",
-   "kaynak_notu": "Tek kurum tahmini",
+   "surucu_plani": "Çinko (galvaniz sarfı) · çelik saç/profil · doğalgaz (banyo ısıtma) · kamu yol yatırımı (otokorkuluk) · GES kurulumu · EUR/USD (ihracat %42)",
+   "kaynak_notu": "Ciro dağılımı ve 2026 hedefi: Ziraat Yatırım toplantı notu (Matriks/TradingView). Kamu yatırım nabzı §533 (HMB/SBB bütçe gerçekleşmesi).",
    "sermaye_mn": 170,
    "favok": {
     "2024Q1": {
@@ -4553,19 +4557,64 @@
     "beklenen": "2026-11-09",
     "kaynak": "bist-takvim.json"
    },
-   "guidance": null,
-   "sektor_not": "İmalat (şirkete özgü ürün gamı). Tek-iki kurumluk tahmin; FAVÖK küçük ve oynak. Sürücü modeli için önce şirket faaliyet raporundan gelir kırılımı çıkarılmalı — şimdilik fiyat mercekleri.",
+   "guidance": {
+    "yil": 2026,
+    "favok_tl_mlr": [
+     2.5,
+     3
+    ],
+    "ciro_tl_mlr": 8,
+    "marj": "%35–40",
+    "kko": "%80",
+    "kaynak": "Ziraat Yatırım toplantı notu (Matriks/TradingView)",
+    "tarih": "2026"
+   },
+   "sektor_not": "Ciro 2025: otokorkuluk (yol güvenlik bariyeri, alıcı ağırlıkla kamu/KGM ihaleleri) %65 · güneş santrali taşıyıcı konstrüksiyonu %20 · sıcak daldırma galvaniz hizmeti %15; savunma (shelter, konteyner, gözetleme kulesi) yeni alan, ilk yıllarda cironun %10–15'i hedefleniyor. İhracat %42 (Romanya şirketi, Gürcistan). Bozüyük entegre tesisi Temmuz 2025'te devreye girdi: kapasite ~5 kat (220 bin t galvaniz, 180 bin t metal imalat). Marjı çinko ve çelik girdi fiyatı ile ihale fiyatı arasındaki zamanlama, hacmi kamu yol bütçesi ve GES kurulum hızı belirler.",
    "surucu_seriler": [
     {
-     "k": "usdtry",
-     "rol": "kur"
+     "k": "cinko",
+     "rol": "maliyet",
+     "ad": "Çinko (WB)"
+    },
+    {
+     "k": "hrc_abd",
+     "rol": "maliyet",
+     "ad": "HRC (ABD Midwest vekili)",
+     "not": "TR yassı ihracat fiyatına vekil; gümrük farkı nedeniyle seviye değil yön okunur"
+    },
+    {
+     "k": "celik_ufe",
+     "rol": "maliyet",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
+    },
+    {
+     "k": "ttf",
+     "rol": "maliyet",
+     "ad": "TTF (günlük)",
+     "aile": "gaz"
+    },
+    {
+     "k": "ges_modul_usd",
+     "rol": "gelir",
+     "ad": "Modül TOPCon, Çin dışı piyasalar ($/W)",
+     "kaynak": "InfoLink haftalık spot + Wayback geçmişi (Actions §483)",
+     "aile": "panel"
     },
     {
      "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "usdtry",
      "rol": "kur"
     }
    ],
-   "birincil": "usdtry"
+   "birincil": "cinko",
+   "_duzeltme": "533a",
+   "kamu_duyarli": true
   },
   {
    "kod": "TKFEN",
@@ -4744,7 +4793,8 @@
      "ad": "EUR/USD (taahhüt sözleşmeleri)"
     }
    ],
-   "birincil": "ure"
+   "birincil": "ure",
+   "kamu_duyarli": true
   },
   {
    "kod": "TUPRS",
@@ -5556,7 +5606,7 @@
     }
    ],
    "birincil": "tufe",
-   "sermaye_mn": null,
+   "sermaye_mn": 250,
    "favok": {
     "2025Q4": {
      "tl": 2.012,
@@ -5640,7 +5690,7 @@
     }
    ],
    "birincil": "usdtry",
-   "sermaye_mn": null,
+   "sermaye_mn": 138.8,
    "favok": {
     "2025Q4": {
      "tl": 0.115,
@@ -5744,7 +5794,23 @@
    ],
    "birincil": "kfe",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2025Q4": {
+     "tl": 0.54,
+     "usd": 12.8,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.701,
+     "usd": 16,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.537,
+     "usd": 11.8,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2024Q1": 36.6883,
     "2024Q2": 34.0467,
@@ -5815,7 +5881,23 @@
    ],
    "birincil": "ptf",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2025Q4": {
+     "tl": 0.915,
+     "usd": 21.6,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 1.376,
+     "usd": 31.5,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 1.382,
+     "usd": 30.3,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2024Q1": 27.7253,
     "2024Q2": 33.9586,
@@ -6075,7 +6157,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "kamu_duyarli": true
   },
   {
    "kod": "EGGUB",
@@ -6549,7 +6632,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "kamu_duyarli": true
   },
   {
    "kod": "LMKDC",
@@ -6632,7 +6716,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "kamu_duyarli": true
   },
   {
    "kod": "MOPAS",

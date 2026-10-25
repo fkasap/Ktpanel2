@@ -1,0 +1,99 @@
+{
+ "donemler": {
+  "2026-09": {
+   "yil": 2026,
+   "ay": 9,
+   "sermaye": {
+    "onceki": 762669,
+    "bu": 883019,
+    "hedef": 1312319,
+    "artis": 15.8,
+    "oran": 67.3,
+    "reel_yy": -10.7
+   },
+   "transfer": {
+    "onceki": 83562,
+    "bu": 222668,
+    "hedef": 525369,
+    "artis": 166.5,
+    "oran": 42.4
+   },
+   "harcama": {
+    "onceki": 10222202,
+    "bu": 13948130,
+    "hedef": 18978815,
+    "artis": 36.4,
+    "oran": 73.5
+   },
+   "kaynak": "SBB haftalık 23 Eki 2026 s.78 (HMB) — tohum",
+   "tufe_yy": 29.7
+  }
+ },
+ "butce": {
+  "kaynak": "SBB 2027 Yılı Bütçe Gerekçesi (Ekim 2026) — https://www.sbb.gov.tr/wp-content/uploads/2026/10/2027-Butce-Gerekcesi.pdf",
+  "sermaye_gideri": {
+   "2027": 1854783,
+   "2028": 2346587,
+   "2029": 2923361,
+   "2026_ys": 1782322,
+   "_birim": "milyon ₺",
+   "_not": "2026 yıl sonu gerçekleşme tahmini (s.13); 2027–29 ödenek (s.135)"
+  },
+  "sermaye_transferi": {
+   "2027": 750372,
+   "2028": 408318,
+   "2029": 446941,
+   "2026_ys": 325055,
+   "_birim": "milyon ₺"
+  },
+  "yatirim_hizlandirma_2027": 246700,
+  "yatirim_toplam_2027": 2851800,
+  "kgm": {
+   "bolunmus_yol_km": {
+    "2027": 30675,
+    "2028": 31250,
+    "2029": 31600,
+    "2026_ys": 30395
+   },
+   "otoyol_km": {
+    "2027": 3893,
+    "2028": 4297,
+    "2029": 4297,
+    "2026_ys": 3848
+   },
+   "bsk_km": {
+    "2027": 34400,
+    "2028": 35500,
+    "2029": 36150,
+    "2026_ys": 33617
+   },
+   "_kaynak": "Program performans bilgisi s.260 (KGM)"
+  },
+  "dsi": {
+   "sulama_mn_ha": {
+    "2027": 7.4,
+    "2028": 7.46,
+    "2029": 7.53,
+    "2026_ys": 7.34
+   },
+   "_kaynak": "s.248 (DSİ)"
+  },
+  "savunma_gsyh": {
+   "2027": 2.85,
+   "2028": 3.41,
+   "2029": 3.5,
+   "2026_ys": 2.33,
+   "_kaynak": "s.230 (MSB, NATO DPCS tanımı)"
+  }
+ },
+ "_not": "§533 kamu yatırım nabzı: merkezi yönetim sermaye giderleri (yıl içi kümülatif, milyon ₺) · kaynak HMB, SBB haftalık raporu üzerinden; bütçe çerçevesi 2027 Bütçe Gerekçesi.",
+ "son": "2026-09",
+ "guncelleme": "2026-10-25",
+ "ima": {
+  "yil": 2026,
+  "kalan_ay": 3,
+  "kalan": 899303,
+  "aylik_kalan": 299767.6666666667,
+  "aylik_gerceklesen": 98113.22222222222
+ }
+}
