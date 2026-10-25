@@ -5346,6 +5346,100 @@ async function kamuYatirim() {
   raporlar.push('### Kamu yatırım nabzı (§533) — ' + (durum || '✓ arşiv') + ' · son dönem ' + son + (D.donemler[son] && D.donemler[son].sermaye && D.donemler[son].sermaye.reel_yy != null ? ' · reel y/y %' + D.donemler[son].sermaye.reel_yy : ''));
 }
 
+/* ── §536 DE/JP GETİRİ EĞRİSİ CANLI (25 Eki) ─────────────────────────────────────────────────────────────────────────────
+   Getiri Eğrisi Görseli'nde Almanya ve Japonya eğrisinin ŞEKLİ 27 Tem'den beri statik SVG idi (yalnız 3A/10Y uçları FRED aylık ile canlıydı).
+   Birincil kaynaklar: JP — Japonya Maliye Bakanlığı (MOF) günlük JGB getiri CSV'si (1Y…40Y; doğrulandı 25 Eki: 2026/10/22 2Y 1,914 ·
+   10Y 2,914 · 30Y 3,952). DE — ECB Veri Portalı avro bölgesi AAA devlet tahvili spot eğrisi (SDMX CSV; AAA grubu fiilen Bund ağırlıklı —
+   etiket "Avro AAA (≈Bund)"). Çıktı: egri-dis.json {de:{tarih,vadeler}, jp:{tarih,vadeler}}; tutarsız (monoton olmayan sıra dışı,
+   aralık dışı) veri YAZILMAZ, eski kalır. Panel egriGorselRender bu dosyadan çizer. */
+async function egriDisUlke() {
+  const dosya = 'egri-dis.json'; let D = {}; try { if (await varMi(dosya)) D = await oku(dosya); } catch (e) {}
+  const notlar = []; let degisti = false;
+  const ok = v => typeof v === 'number' && isFinite(v) && v > -2 && v < 15;
+  /* JP — MOF */
+  try { const r = await fetch('https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)' }, signal: AbortSignal.timeout(30000) });
+    if (!r.ok) notlar.push('JP MOF HTTP ' + r.status);
+    else { const L = (await r.text()).split(/\r?\n/).map(x => x.trim()).filter(Boolean); const hi = L.findIndex(x => /^Date,/.test(x));
+      if (hi < 0) notlar.push('JP MOF başlık yok');
+      else { const H = L[hi].split(','); const satir = L.slice(hi + 1).filter(x => /^\d{4}\/\d{1,2}\/\d{1,2},/.test(x)).pop();
+        if (!satir) notlar.push('JP MOF veri satırı yok');
+        else { const c = satir.split(','); const v = {}; H.forEach((h, i) => { if (/^\d+Y$/.test(h)) { const x = parseFloat(c[i]); if (ok(x)) v[h] = x; } });
+          const [y, m, g] = c[0].split('/'); const tarih = y + '-' + String(m).padStart(2, '0') + '-' + String(g).padStart(2, '0');
+          if (['2Y', '5Y', '10Y', '30Y'].every(k => ok(v[k])) && Object.keys(v).length >= 6) { if (!D.jp || D.jp.tarih !== tarih) degisti = true; D.jp = { tarih, vadeler: v, kaynak: 'MOF Japan — jgbcme.csv (günlük JGB getirileri)' }; notlar.push('JP ' + tarih + ' 2Y ' + v['2Y'] + ' · 10Y ' + v['10Y'] + ' · 30Y ' + v['30Y']); }
+          else notlar.push('JP MOF DENETİM: vade eksik/aralık dışı'); } } } }
+  catch (e) { notlar.push('JP ' + String(e.message || e).slice(0, 60)); }
+  /* DE — ECB SDMX (avro bölgesi AAA spot) */
+  try { const V = ['1Y', '2Y', '3Y', '5Y', '7Y', '10Y', '15Y', '20Y', '30Y']; const key = V.map(x => 'SR_' + x).join('+');
+    const r = await fetch('https://data-api.ecb.europa.eu/service/data/YC/B.U2.EUR.4F.G_N_A.SV_C_YM.' + key + '?lastNObservations=1&format=csvdata', { headers: { 'User-Agent': 'Mozilla/5.0 (KtPanel/1.0)', 'Accept': 'text/csv' }, signal: AbortSignal.timeout(30000) });
+    if (!r.ok) notlar.push('DE ECB HTTP ' + r.status);
+    else { const L = (await r.text()).split(/\r?\n/).filter(Boolean); const H = L[0].split(','); const iK = H.indexOf('KEY'), iT = H.indexOf('TIME_PERIOD'), iV = H.indexOf('OBS_VALUE');
+      if (iK < 0 || iT < 0 || iV < 0) notlar.push('DE ECB sütun yok');
+      else { const v = {}; let tarih = null;
+        for (const s of L.slice(1)) { const c = s.split(','); const mk = String(c[iK]).match(/SR_(\d+Y)$/); const x = parseFloat(c[iV]); if (mk && ok(x)) { v[mk[1]] = x; tarih = c[iT]; } }
+        if (['2Y', '5Y', '10Y', '30Y'].every(k => ok(v[k])) && Object.keys(v).length >= 6) { if (!D.de || D.de.tarih !== tarih) degisti = true; D.de = { tarih, vadeler: v, kaynak: 'ECB Veri Portalı — avro bölgesi AAA devlet tahvili spot eğrisi (YC.B.U2.EUR.4F.G_N_A.SV_C_YM)' }; notlar.push('DE ' + tarih + ' 2Y ' + v['2Y'] + ' · 10Y ' + v['10Y'] + ' · 30Y ' + v['30Y']); }
+        else notlar.push('DE ECB DENETİM: vade eksik (' + Object.keys(v).join(',') + ')'); } } }
+  catch (e) { notlar.push('DE ' + String(e.message || e).slice(0, 60)); }
+  if (D.de || D.jp) { D.guncelleme = bugun; D._not = '§536 dış ülke getiri eğrileri — günlük, birincil kaynak; panel Getiri Eğrisi Görseli çizer.'; await yaz(dosya, D); if (degisti) degisenler.push('dış eğri (DE/JP)'); }
+  raporlar.push('### Dış getiri eğrileri (§536) — ' + ((D.de && D.jp) ? '✓ ' : '⚠ ') + notlar.join(' · '));
+}
+
+/* ── §539 PD/DD BANDI KENDİ VERİMİZDEN (25 Eki) ──────────────────────────────────────────────────────────────────────────
+   degerleme.json 31 Tem'de Fintables bilançosuyla elle üretilmişti (otomasyon borcu, 86 gün) ve panelde hiçbir yer okumuyordu. Aynı yöntem,
+   kendi kaynaklarımızla, her koşuda: ana ortak özkaynağı KAP arşivinden (ifrs-full_EquityAttributableToOwnersOfParent, dönem sonu), fiyat
+   Yahoo DÜZELTİLMİŞ çeyrek sonu kapanışı, pay adedi GÜNCEL (faktor-evren adet → KAP ödenmiş sermaye) — dosyanın kendi notu: fiyat serisi
+   geriye düzeltilmiş olduğu için eski sermayeyle çarpmak PD'yi bozar (ALKA vakası). Bant 2023Ç1 sonrası (TMS-29 dönemi), ≥6 çeyrek.
+   Evren: karar kataloğu ∪ XK050. Çıktı aynı şema (hisseler[]: k, ozk, srm, n, ort, sapma, dip, zirve, cv, guven + canlı z). Panel: karar
+   puan kartı "PD/DD z" merceği — FAVÖK çarpanı olmayan (banka/holding/GYO) hisselerde puanlanır, diğerlerinde bilgi (çift sayım olmasın). */
+async function degerlemeKendi() {
+  let kat = []; try { kat = (await oku('karar-model.json')).modeller.map(m => m.kod); } catch (e) {}
+  let uy = []; try { uy = ((await oku('endeks-uyeler.json')).uyeler || {}).XK050 || []; } catch (e) {}
+  const evren = [...new Set([...kat, ...uy])]; if (!evren.length) { raporlar.push('### PD/DD bandı (§539) — ⏭ evren yok'); return; }
+  let FE = {}; try { FE = (await oku('faktor-evren.json')).sirketler || {}; } catch (e) {}
+  let SEK = {}; try { SEK = (await oku('fm-sektor.json')).sektor || {}; } catch (e) {}
+  const PX = await kararYahoo(evren, '5y');
+  const kapanis = (o, d) => { let a = -1; for (let j = 0; j < o.t.length; j++) { if (o.t[j] <= d) a = j; else break; } if (a < 0 || (Date.parse(d) - Date.parse(o.t[a])) / 864e5 > 10) return null; return o.adj[a]; };
+  const qSon = (y, n) => new Date(Date.UTC(y, n * 3, 0)).toISOString().slice(0, 10);
+  const H = []; let eksikKap = 0, eksikPx = 0, kisa = 0;
+  for (const kod of evren) {
+    let K = null; try { K = await oku('kap-arsiv/' + kod + '.json'); } catch (e) { eksikKap++; continue; }
+    const o = PX[kod]; if (!o) { eksikPx++; continue; }
+    let adet = FE[kod] && FE[kod].adet > 0 ? FE[kod].adet : null; let ozkSon = null, donemSon = null;
+    const seri = [];
+    for (const dk of Object.keys(K.donemler || {}).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (a1 - b1) || (a2 - b2); })) {
+      const [y, n] = dk.split('/').map(Number); if (y < 2023) continue; const dn = K.donemler[dk]; const carpan = (dn.birim && dn.birim.carpan) || 1000;
+      let ozk = null, srm = null;
+      /* sanayi/holding/GYO şablonu: Bilanço tablosunda ana ortaklık özkaynağı. BANKA şablonu (ALBRK: tek 'Tablo ?'): ana ortaklık satırı yok,
+         'ÖZKAYNAKLAR' etiketli ifrs-full_Equity (bilanço) alınır — özkaynak değişim tablosundaki aynı xbrl'li 'Dönem Başı/Sonu' satırları DEĞİL. */
+      for (const t of (dn.tablolar || [])) { const bil = t.ad === 'Bilanço' || /^Tablo \?/.test(String(t.ad || ''));
+        for (const s of (t.satirlar || [])) { if (!s.degerler || !(s.degerler[0] > 0)) continue;
+          if (bil && s.xbrl === 'ifrs-full_EquityAttributableToOwnersOfParent') ozk = s.degerler[0] * carpan;
+          else if (bil && !ozk && s.xbrl === 'ifrs-full_Equity' && /^(TOPLAM )?ÖZKAYNAKLAR$/i.test(String(s.etiket || '').trim())) ozk = s.degerler[0] * carpan;
+          if (bil && s.xbrl === 'ifrs-full_IssuedCapital') srm = s.degerler[0] * carpan; } }
+      if (!ozk) continue; if (!adet && srm) adet = srm;
+      const px = kapanis(o, qSon(y, n)); if (!(px > 0)) continue;
+      seri.push({ q: y + 'Q' + n, pddd: null, px, ozk }); ozkSon = ozk; donemSon = y + '/' + n;
+    }
+    if (!adet) continue;
+    seri.forEach(s => { s.pddd = s.px * adet / s.ozk; });
+    if (seri.length < 5) { kisa++; continue; }   /* ≥5 çeyrek (BINHO 2025/2'den beri 5 dönem) */
+    const v = seri.map(s => s.pddd); const ort = v.reduce((a, b) => a + b, 0) / v.length; const sd = Math.sqrt(v.reduce((a, b) => a + (b - ort) ** 2, 0) / v.length);
+    const cv = ort > 0 ? sd / ort : null; const guven = cv == null ? 'düşük' : cv <= 0.35 ? 'yüksek' : cv <= 0.6 ? 'orta' : 'düşük';
+    const sonPx = o.adj[o.adj.length - 1]; const canli = sonPx * adet / ozkSon; const z = sd > 0 ? (canli - ort) / sd : null;
+    H.push({ k: kod, sektor: SEK[kod] || '', donem: donemSon, ozk: Math.round(ozkSon), srm: Math.round(adet), n: v.length, ort: +ort.toFixed(3), sapma: +sd.toFixed(3), dip: +Math.min(...v).toFixed(3), zirve: +Math.max(...v).toFixed(3), cv: cv == null ? null : +cv.toFixed(2), guven,
+      canli: { tarih: o.t[o.t.length - 1], fiyat: +sonPx.toFixed(4), pddd: +canli.toFixed(3), z: z == null ? null : +z.toFixed(2) }, seri: seri.map(s => ({ q: s.q, pddd: +s.pddd.toFixed(3) })) });
+  }
+  if (H.length < 20) { raporlar.push('### PD/DD bandı (§539) — ✗ yalnız ' + H.length + ' hisse (KAP eksik ' + eksikKap + ' · fiyat eksik ' + eksikPx + ' · kısa ' + kisa + ') — dosya yazılmadı'); return; }
+  H.sort((a, b) => a.k.localeCompare(b.k));
+  const out = { surum: 'degerleme-' + bugun, guncelleme: bugun,
+    yontem: 'PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD\'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.',
+    neden_pddd: 'Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.',
+    bant: { cok_ucuz: -1.5, ucuz: -0.5, adil_ust: 0.5, pahali_ust: 1.5 }, guven_esik: { yuksek: 0.35, orta: 0.6 },
+    kaynak: 'KAP arşivi (Actions §381) · Yahoo adjclose · faktor-evren.json — §539', evren: 'karar kataloğu ∪ XK050', hisseler: H };
+  await yaz('degerleme.json', out); degisenler.push('degerleme (' + H.length + ')');
+  const ucuz = H.filter(h => h.canli.z != null && h.canli.z <= -1).map(h => h.k + ' ' + h.canli.z), pahali = H.filter(h => h.canli.z != null && h.canli.z >= 1).map(h => h.k + ' ' + h.canli.z);
+  raporlar.push('### PD/DD bandı (§539) — ✓ ' + H.length + '/' + evren.length + ' hisse (KAP eksik ' + eksikKap + ' · kısa ' + kisa + ')' + (ucuz.length ? ' · z≤−1: ' + ucuz.slice(0, 8).join(', ') : '') + (pahali.length ? ' · z≥+1: ' + pahali.slice(0, 6).join(', ') : ''));
+}
+
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
    ELLE RITUELDI: haftalik Fintables koprusuyle Claude uretiyordu. OLCULDU
    (19 Agu): 15 sektor endeksinin TAMAMI zaten endeks-arsiv.json'da — kaynak
@@ -7312,9 +7406,11 @@ async function bultenKesif() {
     await olcKos('Faktör skorları (§455)', ()=>fmHesapla());   /* §455: Koyfin'siz fm.json — kendi bilanço + fiyatımızdan */
     await olcKos('Faktör karnesi (§529)', ()=>fmKarneUret(FM_PX_SON));   /* §529: nokta-zaman skor → sonraki getiri · sicil ayrıştırması */
     await olcKos('Toparlanma monitörü (§530)', ()=>toparlanmaUret(FM_PX_SON));   /* §530: genişlik · Zweig itkisi · kapitülasyon · RV20 · CDS · dönüş sepeti */
+    await olcKos('Dış getiri eğrileri (§536)', ()=>egriDisUlke());   /* §536: MOF JGB + ECB AAA spot → egri-dis.json */
     await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* §533: HMB bütçe gerçekleşmesi (SBB haftalık) + 2027 bütçe çerçevesi */
     await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* §531: XK050 üyeliği → katalog · fiyat/sermaye/bilanço tarihi · KAP arşiv önceliği (arşivden ÖNCE) */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
+    await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* §539: degerleme.json kendi verimizden (KAP özkaynak + Yahoo) — arşivden SONRA */
     await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
     await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());   /* §499: KAP arşivi çekirdek FAVÖK ÷ faaliyet raporu tonajı (EREGL/KRDMD) */   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
@@ -7323,10 +7419,12 @@ async function bultenKesif() {
   }
   /* §429d: hepsi/fiyat bloğunun DIŞINDA — tek başına --katman=fonportfoy da koşsun (canlı #181: blok içindeydi, 'değişiklik yok' bitti) */
   if (ister('fonportfoy')) await olcKos('Fon portföy dağılımı (§429)', ()=>fonPortfoy());
+  if (KSET.has('egri')) await olcKos('Dış getiri eğrileri (§536)', ()=>egriDisUlke());   /* elle: --katman=egri */
   if (KSET.has('karar') || KSET.has('kamuyatirim')) await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* elle: --katman=kamuyatirim */
   if (KSET.has('karar') || KSET.has('kaparsiv')) await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* elle: --katman=karar (kaparsiv ile birlikte: önce öncelik, sonra arşiv) */
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
+  if (KSET.has('kaparsiv') || KSET.has('degerleme')) await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* elle: --katman=degerleme */
   if (KSET.has('kaparsiv') || KSET.has('multiple')) await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());
   if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
   if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
