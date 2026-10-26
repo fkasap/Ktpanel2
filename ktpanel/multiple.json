@@ -384,16 +384,16 @@
   {
    "k": "CVKMD",
    "fiyat": 11.98,
-   "adet": 3672.587,
-   "ciro": 3886,
-   "ebitda": 1338,
-   "netBorc": 3718,
+   "adet": 3780,
+   "ciro": 5740,
+   "ebitda": 2546,
+   "netBorc": 1465,
    "hacim": 524,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi 1400 mn × 2026-08-03 ×2.623 (fiyat boşluğu, yaklaşık)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 1095
+   "ebitda_genis": 2177
   },
   {
    "k": "CWENE",
@@ -1124,12 +1124,16 @@
   {
    "k": "LMKDC",
    "fiyat": 19.5,
-   "adet": 516,
-   "ciro": 9306,
-   "ebitda": 3541,
-   "netBorc": -2319,
+   "adet": 516.18,
+   "ciro": 8112,
+   "ebitda": 2900,
+   "netBorc": -751,
    "hacim": 129,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 2936,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "MAGEN",

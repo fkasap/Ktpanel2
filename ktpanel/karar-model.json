@@ -6739,7 +6739,7 @@
     }
    ],
    "birincil": "komur_termal",
-   "sermaye_mn": null,
+   "sermaye_mn": 516.2,
    "favok": {
     "2025Q4": {
      "tl": 1.023,
@@ -6832,7 +6832,7 @@
     }
    ],
    "birincil": "tufe_gida",
-   "sermaye_mn": null,
+   "sermaye_mn": 273,
    "favok": {
     "2025Q4": {
      "tl": 0.827,
@@ -6907,7 +6907,18 @@
    ],
    "birincil": "usdtry",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2026Q1": {
+     "tl": 0.354,
+     "usd": 8.1,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.313,
+     "usd": 6.9,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2026Q1": 142.7506,
     "2026Q2": 151.3,
@@ -6963,7 +6974,23 @@
    ],
    "birincil": "ttf",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2025Q4": {
+     "tl": 0.558,
+     "usd": 13.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.994,
+     "usd": 22.7,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.34,
+     "usd": 7.5,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2024Q1": 4.3352,
     "2024Q2": 4.6412,
