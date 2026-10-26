@@ -226,10 +226,16 @@ module.exports = async (req, res) => {
           T=/^takipteki alacaklar/, KAR=/^dönem karı/, YK=/^toplam yabancı kaynaklar/,
           GN=/^gayrinakdi kredi/, ZK=/^beklenen zarar karşılıkları/;
     const gruplar={};
-    for(const kod of KODLAR){
+    /* §541e (26 Eki, bekçi #13 "bddk · panel — hata" + panel ölçümü 15,4 sn): 4 grup × 2 dönem ARDIŞIK çekiliyordu (+ katılımın bu dönemi
+       iki kez). Artık her grubun iki dönemi PARALEL, gruplar da paralel; katılımın bu dönemi dönem keşfinden yeniden kullanılır.
+       BDDK'ya aynı anda en çok 8 istek — tek kullanıcılı panel için kabul edilebilir yük; süre ~2 tur gidiş-dönüşe iner. */
+    const _c = await Promise.all(KODLAR.map(kod => Promise.all([
+      kod==='10003' ? Promise.resolve(kat.satirlar) : cek(1,kat.yil,kat.ay,kod,'TL').catch(()=>null),
+      cek(1,oy,oa,kod,'TL').catch(()=>null) ])));
+    for(let _i=0; _i<KODLAR.length; _i++){ const kod=KODLAR[_i];
       try{
-        const s=await cek(1,kat.yil,kat.ay,kod,'TL'); if(!s)continue;
-        const o=await cek(1,oy,oa,kod,'TL').catch(()=>null);
+        const s=_c[_i][0]; if(!s)continue;
+        const o=_c[_i][1];
         const g={ ad:GRUP[kod]||kod, aktif:al(s,A), krediler:al(s,K), mevduat:al(s,M), ozkaynak:al(s,O),
                   takip:al(s,T), donemKari:al(s,KAR), yabanciKaynak:al(s,YK), gayrinakdi:al(s,GN),
                   karsilik:al(s,ZK), tpyp:{ aktif:alTP(s,A), krediler:alTP(s,K), mevduat:alTP(s,M) } };
