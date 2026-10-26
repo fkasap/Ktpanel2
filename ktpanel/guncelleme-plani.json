@@ -318,9 +318,9 @@
    "ad": "Kore BOK & Piyasa kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-09",
+   "son": "2026-10-26",
    "limit_gun": 30,
-   "kaynak": "BOK toplantı takvimi + KOSPI olayları — canlı satırlar /api/market?mod=ecos"
+   "kaynak": "BOK toplantı takvimi + KOSPI olayları — faiz satırı/etiket CANLI (§520/§535, ECOS); anlatı satırları elle. 22 Eki: %3,00 sabit (§544)"
   },
   {
    "ad": "Kore Okuma & Bağlar kartı (koro dahil, damgalı)",
@@ -342,9 +342,9 @@
    "ad": "Haberler Gündem Özeti kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-12",
+   "son": "otomatik",
    "limit_gun": 7,
-   "kaynak": "Haftalık omurga — her Pazartesi ya da merkez bankası günü sonrası (§436)"
+   "kaynak": "§522 (24 Eki): kart panelin takvimlerinden OTOMATİK derlenir (PPK · FOMC · ECB · BoJ · TÜİK · rezerv · bilanço · makro-takvim); eski elle not katlı arşiv"
   },
   {
    "ad": "Piyasa Global Risk Barometresi (damgalı bağlam)",
@@ -358,9 +358,9 @@
    "ad": "ECB & Politika kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-09-13",
+   "son": "2026-10-26",
    "limit_gun": 30,
-   "kaynak": "ECB takvimi: 10 Eyl +25bp %2,50 → 29 Eki. Canlı DFR satırıyla çelişirse damgalı satır tazelenir (§439)"
+   "kaynak": "ECB takvimi: 10 Eyl +25bp %2,50 → 29 Eki. DFR satırı/etiket CANLI (§520/§535); koro metni 26 Eki düzeltildi (§540). 29 Eki sonrası anlatı tazelenir"
   },
   {
    "ad": "Fed & Politika kartı (damgalı)",
