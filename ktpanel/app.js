@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261025h';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261026a';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1179,17 +1179,20 @@ async function jpMakro(){
 async function tlFaizKart(){
   const el=$('tlFaizBody'); if(!el)return;
   try{
-    const r=await fetch('/api/evds2?series=TP.KTF10,TP.KTF11,TP.KTF12,TP.KTF17,TP.TRY.MT01,TP.TRY.MT02,TP.TRY.MT03&gun=45&full=1');
+    /* §541 (26 Eki, resmî EVDS-MCP ile denetim): makas TP.KTF17'den (tüzel kişi KMH + kurumsal kart DAHİL geniş ticari) hesaplanıyordu →
+       16 Eki +5,2 puan "sağlıklı". Standart ölçü TP.KTF18 (KMH ve kurumsal kart HARİÇ — EVDS ana sayfasının da gösterdiği seri): 41,86 −
+       3 ay mevduat 43,22 = −1,4 puan, yani NEGATİF. KMH'nin yüksek faizi geniş seriyi şişiriyor. Makas artık KTF18'den; KTF17 bilgi satırı. */
+    const r=await fetch('/api/evds2?series=TP.KTF10,TP.KTF11,TP.KTF12,TP.KTF17,TP.KTF18,TP.TRY.MT01,TP.TRY.MT02,TP.TRY.MT03&gun=45&full=1');
     if(!r.ok){el.innerHTML='<div class="sub">EVDS yanıt vermedi.</div>';return;}
     const d=await r.json(); const ham=d.ham||[];
     const s2=(k)=>{const al=k.replace(/\./g,'_');const it=ham.filter(x=>x[al]!=null&&x[al]!=='');
       if(!it.length)return null;const s=it[it.length-1],o=it.length>1?it[it.length-2]:null;
       return {s:parseFloat(s[al]),o:o?parseFloat(o[al]):null,t:s.Tarih||''};};
-    const L=[['TP.KTF17','Ticari kredi <span class="sub">(KMH dahil geniş kapsam)</span>',1],['TP.KTF10','İhtiyaç kredisi',0],['TP.KTF11','Taşıt',0],['TP.KTF12','Konut',0],
+    const L=[['TP.KTF18','Ticari kredi <span class="sub">(KMH ve kurumsal kart hariç)</span>',1],['TP.KTF17','Ticari kredi <span class="sub">(KMH dahil geniş kapsam)</span>',0],['TP.KTF10','İhtiyaç kredisi',0],['TP.KTF11','Taşıt',0],['TP.KTF12','Konut',0],
              ['TP.TRY.MT01','Mevduat — 1 aya kadar',0],['TP.TRY.MT02','Mevduat — 3 aya kadar',1],['TP.TRY.MT03','Mevduat — 6 aya kadar',0]];
     let hh='',var_mi=false,tic=null,m3=null,tarih='';
     L.forEach(([k,ad,vurgu])=>{const v=s2(k);if(!v)return;var_mi=true;tarih=v.t||tarih;
-      if(k==='TP.KTF17')tic=v.s; if(k==='TP.TRY.MT02')m3=v.s;
+      if(k==='TP.KTF18')tic=v.s; if(k==='TP.KTF17'&&tic==null)tic=v.s; if(k==='TP.TRY.MT02')m3=v.s;
       const f=v.o!=null?v.s-v.o:null;
       hh+='<div class="kv"><span class="k">'+ad+'</span><span'+(vurgu?' style="font-weight:600"':'')+'>%'+trN(v.s,1)+
         (f!=null?' <span class="'+(f>0.05?'down':(f<-0.05?'up':''))+'" style="font-size:10px">('+(f>=0?'+':'')+trN(f,1)+' hf)</span>':'')+'</span></div>';});
@@ -11788,11 +11791,17 @@ function yorumPano(){
   if(!$('yXU100'))return;
   setTimeout(()=>{ const bos=['yPiyaBek','yHaneBek','yGuven','yCarry','yLider','yAOFM','yTUFE'].some(id=>{const e=$(id);return e&&e.textContent.trim()==='—';});
     if(bos&&_yorumPanoDeneme++<8) yorumPano(); },6000);
-  // 1) Endeks haftalık (ENDEKSLER dizisindeki 4. eleman = değişim %)
-  const eBul=k=>{const e=ENDEKSLER.find(x=>x[0]===k);return e?e[3]:null;};
-  const xu=eBul('XU100'), xk=eBul('XKTUM');
-  if(xu!=null)$('yXU100').innerHTML='<span class="'+(xu>=0?'up':'down')+'">'+(xu>=0?'+':'')+trN(xu,1)+'%</span>';
-  if(xk!=null)$('yXKTUM').innerHTML='<span class="'+(xk>=0?'up':'down')+'">'+(xk>=0?'+':'')+trN(xk,1)+'%</span>';
+  /* 1) Endeks haftalık. §540b (25 Eki, Veri Tazele #403 karşılaştırması): ENDEKSLER Temmuz'dan kalma STATİK dizi (XU100 13.974!)
+     ve 4. elemanı GÜNLÜK değişimdi — pano "XU100 haftalık −0,7%" diyordu, gerçek 5 iş günü −5,2% (11.721,72 → 11.116,99, BIST
+     resmî arşivi). Artık endeks-arsiv.json'dan: son gün ile 5 iş günü önceki kapanış. */
+  (async()=>{ try{
+    if(ENDARS===null && typeof endArsivYukle==='function') await endArsivYukle();
+    const G=ENDARS&&ENDARS.gunler; if(!G) return; const gun=Object.keys(G).sort(); if(gun.length<6) return;
+    const son=gun[gun.length-1], once=gun[gun.length-6];
+    const h=k=>{ const a=G[son]&&G[son][k], b=G[once]&&G[once][k]; return (a>0&&b>0)? (a/b-1)*100 : null; };
+    const yaz=(id,v)=>{ if(v!=null&&$(id)) $(id).innerHTML='<span class="'+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+trN(v,1)+'%</span> <span class="thin" style="font-size:8px" title="BIST resmî kapanış arşivi">'+once.slice(8,10)+'.'+once.slice(5,7)+'→'+son.slice(8,10)+'.'+son.slice(5,7)+'</span>'; };
+    yaz('yXU100',h('XU100')); yaz('yXKTUM',h('XKTUM'));
+  }catch(e){} })();
   // 2) Sektör lider/geride (SEKTOR.sektorler, g[1]=haftalık)
   try{
     const arr=(SEKTOR&&(SEKTOR.sektorler||SEKTOR.data))||[];
@@ -13188,9 +13197,11 @@ function gyoNavCiz(){
   };
   const satirlar = kodlar.map(k=>{
     const x=S[k], f=fiyatOf(k);
-    const guncel = Number.isFinite(x.guncelIskonto) ? x.guncelIskonto
-      : ((Number.isFinite(f) && Number.isFinite(x.payNad) && x.payNad>0) ? (f/x.payNad-1)*100 : null);
-    return { k, ad:x.ad, nad:x.nad, payNad:x.payNad, isk:x.iskonto, guncel, borcluluk:x.borcluluk, fiyat:f };
+    /* §540b: NAD ≤ 0 (DZGYO: borç > portföy) iken iskonto TANIMSIZDIR — TSPB'nin −%1678'i "en iskontolu" diye listenin başına çıkıyordu. */
+    const negNad = !(x.nad>0);
+    const guncel = negNad ? null : (Number.isFinite(x.guncelIskonto) ? x.guncelIskonto
+      : ((Number.isFinite(f) && Number.isFinite(x.payNad) && x.payNad>0) ? (f/x.payNad-1)*100 : null));
+    return { k, ad:x.ad, nad:x.nad, payNad:x.payNad, isk:negNad?null:x.iskonto, guncel, borcluluk:x.borcluluk, fiyat:f, negNad };
   }).sort((a,b)=>{
     const av=Number.isFinite(a.guncel)?a.guncel:(Number.isFinite(a.isk)?a.isk:9e9);
     const bv=Number.isFinite(b.guncel)?b.guncel:(Number.isFinite(b.isk)?b.isk:9e9);
