@@ -1190,7 +1190,7 @@
    "dipten": 0,
    "beta": 1.39,
    "kalite": 0.3,
-   "skor": 3.64,
+   "skor": 3.6,
    "baski": false
   },
   {
@@ -1202,7 +1202,19 @@
    "dipten": 0,
    "beta": 1.24,
    "kalite": 1.54,
-   "skor": 3.51,
+   "skor": 3.46,
+   "baski": false
+  },
+  {
+   "k": "ONCSM",
+   "s": "Health Care",
+   "w": 0.05,
+   "r3": -66.8,
+   "dd": -76.1,
+   "dipten": 14.6,
+   "beta": 1.13,
+   "kalite": 1.8,
+   "skor": 2.61,
    "baski": false
   },
   {
@@ -1214,7 +1226,7 @@
    "dipten": 3.3,
    "beta": 1.07,
    "kalite": 0.47,
-   "skor": 2.4,
+   "skor": 2.35,
    "baski": false
   },
   {
@@ -1226,7 +1238,7 @@
    "dipten": 0,
    "beta": 1.11,
    "kalite": 0.42,
-   "skor": 2.23,
+   "skor": 2.19,
    "baski": false
   },
   {
@@ -1238,7 +1250,7 @@
    "dipten": 0,
    "beta": 1.07,
    "kalite": 0.08,
-   "skor": 2.07,
+   "skor": 2.03,
    "baski": true
   },
   {
@@ -1250,7 +1262,7 @@
    "dipten": 11.6,
    "beta": 0.88,
    "kalite": -0.2,
-   "skor": 1.9,
+   "skor": 1.86,
    "baski": true
   },
   {
@@ -1262,7 +1274,7 @@
    "dipten": 0,
    "beta": 1.14,
    "kalite": 1.06,
-   "skor": 1.89,
+   "skor": 1.85,
    "baski": false
   },
   {
@@ -1274,7 +1286,7 @@
    "dipten": 23.5,
    "beta": 0.95,
    "kalite": 0.11,
-   "skor": 1.81,
+   "skor": 1.77,
    "baski": true
   },
   {
@@ -1286,7 +1298,7 @@
    "dipten": 2,
    "beta": 1.18,
    "kalite": 0.88,
-   "skor": 1.75,
+   "skor": 1.71,
    "baski": false
   },
   {
@@ -1298,7 +1310,7 @@
    "dipten": 2.6,
    "beta": 1.18,
    "kalite": 3,
-   "skor": 1.74,
+   "skor": 1.7,
    "baski": false
   },
   {
@@ -1310,20 +1322,8 @@
    "dipten": 0,
    "beta": 1.08,
    "kalite": -0.17,
-   "skor": 1.47,
+   "skor": 1.44,
    "baski": false
-  },
-  {
-   "k": "GENIL",
-   "s": "Health Care",
-   "w": 0.23,
-   "r3": -57.2,
-   "dd": -67.6,
-   "dipten": 3.4,
-   "beta": 0.94,
-   "kalite": 0.42,
-   "skor": 1.37,
-   "baski": true
   }
  ],
  "onceki_asama": 0,
