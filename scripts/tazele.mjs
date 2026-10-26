@@ -2889,6 +2889,11 @@ const EVDS_KAYIT = {
   kfe:          { kod: 'TP.KFE.TR',                               ad: 'Konut Fiyat Endeksi — TCMB KFE (aylık)',                              birim: 'endeks', siklik: 'aylik',  aralik: [10, 100000], hisse: ['EKGYO'] },
   aofm:         { kod: 'TP.APIFON4',                              ad: 'TCMB ağırlıklı ortalama fonlama maliyeti (AOFM, %)',                  birim: '%',      siklik: 'gunluk', aralik: [0, 100],    hisse: ['ALBRK'], bas: '01-01-2021' },
   tlref:        { kod: 'TP.BISTTLREF.ORAN',                       ad: 'BIST TLREF gecelik referans faiz (%)',                                birim: '%',      siklik: 'gunluk', aralik: [0, 100],    hisse: ['ALBRK'], bas: '01-01-2021' },
+  /* §545 (26 Eki sürücü denetimi): ALBRK makası (dar tanımlı ticari kredi − 3A mevduat; §541) · güven endeksleri perakende/giyim talebi için */
+  ticari_kredi_faiz: { kod: 'TP.KTF18',                         ad: 'Ticari kredi faizi — TL, akım, KMH ve kurumsal kart HARİÇ (%, haftalık) §545', birim: '%', siklik: 'gunluk', aralik: [0, 100], hisse: ['ALBRK'], bas: '01-01-2021' },
+  mevduat_3ay:  { kod: 'TP.TRY.MT02',                           ad: 'TL mevduat faizi — 3 aya kadar vadeli, akım (%, haftalık) §545', birim: '%', siklik: 'gunluk', aralik: [0, 100], hisse: ['ALBRK'], bas: '01-01-2021' },
+  tuketici_guveni: { kod: 'TP.TG2.Y01',                         ad: 'Tüketici güven endeksi (TÜİK-TCMB, aylık) §545', birim: 'endeks', siklik: 'aylik', aralik: [30, 150], hisse: ['MAVI', 'VAKKO', 'BIMAS', 'MOPAS'] },
+  reel_kesim_guveni: { kod: 'TP.GY1.N2',                        ad: 'Reel kesim güven endeksi (TCMB İYA, aylık) §545', birim: 'endeks', siklik: 'aylik', aralik: [30, 150], hisse: ['PARSN', 'BETAE', 'KARSN'] },
   katilim_kar_payi: { kod: 'TP.KBH.TRY.30',                        ad: 'TL katılma hesapları kâr payı oranı — toplam, akım (%, haftalık Cuma) §485', birim: '%', siklik: 'gunluk', aralik: [0, 100], hisse: ['ALBRK'], bas: '01-01-2021' },
 };
 const EVDS_BAS_AYLIK = '01-01-2015';
@@ -3330,6 +3335,14 @@ const KAP_YENI_IS = {
   ALTNY: { seri: 'kap_yeni_is_altny', hisse: ['ALTNY'], bas: '2023-01-01', ad: 'Altınay açıklanan sözleşme/siparişler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
   GLRMK: { seri: 'kap_yeni_is_glrmk', hisse: ['GLRMK'], bas: '2023-01-01', ad: 'Gülermak açıklanan sözleşmeler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
   ASELS: { seri: 'kap_yeni_is_asels', hisse: [], bas: '2025-01-01', ad: 'ASELSAN — KAP Yeni İş İlişkisi (çapraz kontrol; birincil seri asels_kap_siparis)', capraz: 'asels_kap_siparis' },
+  /* §545 (26 Eki sürücü denetimi): sipariş/ihale akışı işin yarısı olan şirketler — aynı tarayıcı, ek şirket */
+  KARSN: { seri: 'kap_yeni_is_karsn', hisse: ['KARSN'], bas: '2024-01-01', ad: 'Karsan açıklanan sipariş/ihaleler (elektrikli otobüs) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
+  KBORU: { seri: 'kap_yeni_is_kboru', hisse: ['KBORU'], bas: '2024-01-01', ad: 'Kuzey Boru açıklanan sözleşmeler (DSİ/altyapı) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
+  TCKRC: { seri: 'kap_yeni_is_tckrc', hisse: ['TCKRC'], bas: '2024-01-01', ad: 'Kıraç Galvaniz açıklanan sözleşmeler (otokorkuluk/GES) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
+  GESAN: { seri: 'kap_yeni_is_gesan', hisse: ['GESAN'], bas: '2024-01-01', ad: 'Girişim Elektrik açıklanan sözleşmeler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
+  EUPWR: { seri: 'kap_yeni_is_eupwr', hisse: ['EUPWR'], bas: '2024-01-01', ad: 'Europower açıklanan sözleşmeler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
+  CWENE: { seri: 'kap_yeni_is_cwene', hisse: ['CWENE'], bas: '2024-01-01', ad: 'CW Enerji açıklanan sözleşmeler (GES) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
+  NETCD: { seri: 'kap_yeni_is_netcd', hisse: ['NETCD'], bas: '2024-01-01', ad: 'Netcad açıklanan sözleşmeler (kamu/belediye) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)' },
 };
 const KAP_YI_SAYFA_TAVAN = 40, KAP_YI_UYKU = 400;
 function kapYiMetin(html) {
@@ -4226,8 +4239,10 @@ const TUIK_TABLO = [
     ['ydufe_makarna', { URUN_UFE_NACE_CPA: 'C1073', DEGISIM: '1' }, 'YD-ÜFE 10.73 makarna — ihracat fiyatı (TÜİK)', ['OBAMS'], 'Oba ihracat ağırlıklı.'],
     ['ydufe_celik', { URUN_UFE_NACE_CPA: 'C2410', DEGISIM: '1' }, 'YD-ÜFE 24.10 demir-çelik — ihracat fiyatı (TÜİK)', ['KCAER', 'EREGL', 'KRDMD'], 'Kocaer satışı ağırlıkla ihracat.'],
   ] },
-  { df: 'DF_TARIM_URUNLERI_UFE_MADDE_FIYAT_V2', filtre: { TAORBA_2008_2_678: ['01_11_1'] }, seriler: [
+  { df: 'DF_TARIM_URUNLERI_UFE_MADDE_FIYAT_V2', filtre: { TAORBA_2008_2_678: ['01_11_1', '01_13_5'] }, seriler: [
     ['bugday_tl', { TAORBA_2008_2_678: '01_11_1', UNIT_MEASURE: 'TRY_KG' }, 'Buğday — çiftçi satış fiyatı (TÜİK tarım ÜFE madde fiyatı, TL/kg)', ['OBAMS'], 'Yurt içi buğday fiyatı (TMO alım fiyatı ve piyasa). 2024-01\'den.', 'TL/kg'],
+    /* §545: ATAKP ham madde — CPA 01.13.5 patates (kod ilk koşuda doğrulanır; gelmezse uyarı satırı, veri uydurulmaz) */
+    ['patates_tl', { TAORBA_2008_2_678: '01_13_5', UNIT_MEASURE: 'TRY_KG' }, 'Patates — çiftçi satış fiyatı (TÜİK tarım ÜFE madde fiyatı, TL/kg) §545', ['ATAKP'], 'Atakey\'in ana ham maddesi; sözleşmeli tarım olsa da piyasa fiyatı maliyet çıpasıdır.', 'TL/kg'],
   ] },
   { df: 'DF_TARIMSAL_GIRDI_FIYAT_ENDEKSI_DEGISIM_V2', filtre: { TARIMSAL_FIYAT_1437: ['20_3'] }, seriler: [
     ['gubre_girdi', { TARIMSAL_FIYAT_1437: '20_3', DEGISIM: '1' }, 'Tarımsal girdi fiyat endeksi — gübre ve toprak geliştiriciler (TÜİK, 2020=100)', ['GUBRF', 'TKFEN'], 'Çiftçinin ödediği gübre fiyatı = gübre üreticisinin yurt içi satış fiyatının resmî ölçüsü.'],
@@ -5205,8 +5220,41 @@ const KARAR_DUZELT = {
     guidance: { yil: 2026, favok_tl_mlr: [2.5, 3.0], ciro_tl_mlr: 8, marj: '%35–40', kko: '%80', kaynak: 'Ziraat Yatırım toplantı notu (Matriks/TradingView)', tarih: '2026' },
     kamu_duyarli: true }
 };
+/* §545 SÜRÜCÜ EKLEME TOHUMU (26 Eki, kullanıcı: "şirketleri tek tek gez, eksik sürücü var mı"): mevcut listeye EKLENİR (var olana
+   dokunulmaz, sıra korunur); `_sur_ek` damgası değişince bir kez uygulanır. Eşleşmeyen seri adı (henüz üretilmemiş) sessizce atlanır,
+   ilgili üretici koşunca sonraki koşuda girer. */
+const KARAR_SUR_EK_SURUM = '545a';
+const KARAR_SUR_EK = {
+  ALBRK: [['ticari_kredi_faiz', 'gelir'], ['mevduat_3ay', 'maliyet']],
+  KCAER: [['demir_lme', 'gelir'], ['metal_marji_tr', 'gelir'], ['usdtry', 'kur']],
+  ISDMR: [['demir_lme', 'gelir'], ['metal_marji_tr', 'gelir'], ['ydufe_celik', 'gelir']],
+  EREGL: [['ydufe_celik', 'gelir'], ['demir_lme', 'gelir']],
+  EGGUB: [['gubre_girdi', 'gelir'], ['ufe_gubre_2015', 'gelir'], ['bugday_tl', 'gelir']],
+  GUBRF: [['bugday_tl', 'gelir']], TKFEN: [['bugday_tl', 'gelir'], ['usdtry', 'kur']],
+  MAVI: [['tuketici_guveni', 'gelir']], VAKKO: [['tuketici_guveni', 'gelir'], ['ufe_kumas', 'maliyet'], ['pamuk', 'maliyet']],
+  BIMAS: [['tuketici_guveni', 'gelir'], ['asgari_ucret', 'maliyet']], MOPAS: [['tuketici_guveni', 'gelir'], ['asgari_ucret', 'maliyet']],
+  MPARK: [['asgari_ucret_reel', 'maliyet']],
+  ATAKP: [['patates_tl', 'maliyet'], ['gaz_avrupa', 'maliyet'], ['ydufe_makarna', 'gelir']],
+  KARSN: [['kap_yeni_is_karsn', 'gelir'], ['reel_kesim_guveni', 'gelir']],
+  KBORU: [['kap_yeni_is_kboru', 'gelir'], ['pp_hdpe_film_eur', 'maliyet']],
+  TCKRC: [['kap_yeni_is_tckrc', 'gelir'], ['demir_lme', 'maliyet']],
+  GESAN: [['kap_yeni_is_gesan', 'gelir']], EUPWR: [['kap_yeni_is_eupwr', 'gelir']], CWENE: [['kap_yeni_is_cwene', 'gelir']],
+  NETCD: [['kap_yeni_is_netcd', 'gelir']],
+  PARSN: [['reel_kesim_guveni', 'gelir'], ['kara_tasima_hacim', 'gelir']], BETAE: [['reel_kesim_guveni', 'gelir'], ['celik_ufe', 'maliyet']],
+  AVPGY: [['konut_ipotekli', 'gelir'], ['ekgyo_kfe_ime', 'gelir'], ['tufe', 'gelir']], SNGYO: [['konut_ipotekli', 'gelir'], ['ekgyo_kfe_ime', 'gelir'], ['tufe', 'gelir']],
+  AKCNS: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir']], CIMSA: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir']],
+  BUCIM: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir']], LMKDC: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir'], ['ydufe_cimento', 'gelir']],
+  POLHO: [['insaat_uretim_toplam', 'gelir'], ['pe_pp', 'maliyet'], ['eurusd', 'kur']],
+  AYDEM: [['gaz_avrupa', 'gelir'], ['henryhub', 'gelir']], AKFYE: [['henryhub', 'gelir']],
+  AHGAZ: [['henryhub', 'maliyet']], ENERY: [['henryhub', 'maliyet']], BASGZ: [['henryhub', 'maliyet']], NTGAZ: [['henryhub', 'maliyet']],
+  GRSEL: [['reel_kesim_guveni', 'gelir']], TUREX: [['reel_kesim_guveni', 'gelir']],
+  BERA: [['tufe_gida', 'gelir'], ['seker_dunya', 'gelir'], ['ufe_plastik', 'maliyet'], ['insaat_uretim_bina', 'gelir']],
+  BINHO: [['tufe', 'gelir'], ['reel_kesim_guveni', 'gelir']],
+  ENJSA: [['tlref', 'maliyet']], ARASE: [['tlref', 'maliyet']],
+  OBAMS: [['tuketici_guveni', 'gelir']], GLRMK: [['ime_insaat', 'maliyet']], KATMR: [['celik_ufe', 'maliyet']],
+};
 /* kamu altyapı harcamasına duyarlı hisseler — §533 kamu yatırım merceği puan kartına girer */
-const KARAR_KAMU = ['TCKRC', 'KBORU', 'AKCNS', 'CIMSA', 'BUCIM', 'LMKDC', 'GLRMK', 'KATMR', 'TKFEN'];
+const KARAR_KAMU = ['TCKRC', 'KBORU', 'AKCNS', 'CIMSA', 'BUCIM', 'LMKDC', 'GLRMK', 'KATMR', 'TKFEN', 'NETCD', 'KARSN'];   /* §545: NETCD (belediye/kamu CBS), KARSN (belediye otobüs ihaleleri) */
 async function kararYahoo(kodlar, aralik) {
   const PX = {}; let i = 0;
   const tek = async kod => { try {
@@ -5239,6 +5287,12 @@ async function kararEvren() {
   for (const [kod, D] of Object.entries(KARAR_DUZELT)) { const m = byK.get(kod); if (!m || m._duzeltme === D._duzeltme) continue;
     for (const [k, v] of Object.entries(D)) { if (k === 'sur') m.surucu_seriler = v.filter(([kk]) => SS[kk] || kk === 'usdtry').map(([kk, r]) => surNesne(kk, r)); else m[k] = v; }
     duzelen.push(kod); }
+  /* §545 sürücü ekleme: var olana dokunma, eksikleri sona ekle */
+  for (const [kod, ekler] of Object.entries(KARAR_SUR_EK)) { const m = byK.get(kod); if (!m || m._sur_ek === KARAR_SUR_EK_SURUM) continue;
+    m.surucu_seriler = m.surucu_seriler || []; const var_ = new Set(m.surucu_seriler.map(x => x.k)); let n = 0, bekleyen = 0;
+    for (const [kk, r] of ekler) { if (var_.has(kk)) continue; if (!(SS[kk] || kk === 'usdtry')) { bekleyen++; continue; } m.surucu_seriler.push(surNesne(kk, r)); var_.add(kk); n++; }
+    if (n) duzelen.push(kod + '+' + n + (bekleyen ? '(' + bekleyen + ' seri bekliyor)' : ''));
+    if (!bekleyen) m._sur_ek = KARAR_SUR_EK_SURUM; }   /* damga yalnız liste TAMAMEN uygulanınca — üretici koşunca kalan seri sonraki turda girer */
   for (const m of L) { const olmali = KARAR_KAMU.includes(m.kod); if (!!m.kamu_duyarli !== olmali) { if (olmali) m.kamu_duyarli = true; else delete m.kamu_duyarli; } }
   /* üyelik etiketi: XK030 → (boş) · yalnız XK050 → 'XK050' · ikisinde de yok → 'cikti' (izleme kayıtlarına dokunulmaz) */
   for (const m of L) { if (m.evren === 'izleme') continue;
