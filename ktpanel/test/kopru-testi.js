@@ -91,6 +91,12 @@ const UCLAR = [
       const varyant = {};
       kod.forEach(k => { const v = sec[k] && sec[k].varyant; if(v) varyant[v] = (varyant[v]||0)+1; });
       const ozet = Object.keys(varyant).map(v => v+'×'+varyant[v]).join(' · ');
+      /* §541c (26 Eki): Yahoo 13 BIST sektör endeksine bilerek seri vermiyor (§114, değişmez durum); panel o ufuklarda Actions'ın BIST
+         RESMÎ kapanış arşivinden üretilen sektor.json'a (§333, günlük) düşüyor — bu bir arıza değil, tasarım. Bekçi her gün aynı
+         uyarıyı veriyordu (gürültü). Uyarı artık yalnız Yahoo'nun BESLEDİĞİ iki endekste (XUSIN, XBANK) seri kaybolursa çıkar. */
+      const BESLENEN = ['XUSIN','XBANK'];
+      const kritikEksik = eksik.filter(k => BESLENEN.includes(k));
+      if(eksik.length && !kritikEksik.length) return true;
       if(eksik.length){
         const bar = kod.map(k=>k+':'+((sec[k]&&sec[k].n)!=null?sec[k].n:'?')).join(' ');
         return eksik.length+'/'+kod.length+' sektörde 1A serisi YOK — RS damgalı tabandan (§114). '+
