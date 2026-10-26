@@ -38,7 +38,20 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261026c';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261026d';
+/* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
+(function(){
+  function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
+    try{ localStorage.setItem('ktp_tema', t); }catch(e){}
+    const b=document.getElementById('temaBtn'); if(b) b.title='Tema: '+(t==='koyu'?'koyu (tıkla → açık)':'açık (tıkla → koyu)');
+    try{ window.dispatchEvent(new CustomEvent('ktp-tema',{detail:t})); }catch(e){} }
+  function kur(){ const b=document.getElementById('temaBtn'); if(!b) return;
+    const simdiki=document.documentElement.getAttribute('data-tema')==='koyu'?'koyu':'acik'; b.title='Tema: '+(simdiki==='koyu'?'koyu (tıkla → açık)':'açık (tıkla → koyu)');
+    b.addEventListener('click',()=>temaUygula(document.documentElement.getAttribute('data-tema')==='koyu'?'acik':'koyu')); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',kur); else kur();
+  window.KTP_TEMA=()=>document.documentElement.getAttribute('data-tema')==='koyu'?'koyu':'acik';
+})();
+   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -1740,7 +1753,7 @@ function trackRender(){
     const line=key=>s.map((p,i)=>(p[key]==null||!isFinite(p[key]))?null:(X(i).toFixed(1)+','+Y(p[key]).toFixed(1))).filter(Boolean).join(' ');
     const zY=Y(0),lx=X(s.length-1);
     $('trkChart').innerHTML=
-      ((mn<0&&mx>0)?'<line x1="5" y1="'+zY.toFixed(1)+'" x2="695" y2="'+zY.toFixed(1)+'" stroke="#E2EBE6" stroke-width="1" stroke-dasharray="4 3"/>':'')+
+      ((mn<0&&mx>0)?'<line x1="5" y1="'+zY.toFixed(1)+'" x2="695" y2="'+zY.toFixed(1)+'" style="stroke:var(--line)" stroke-width="1" stroke-dasharray="4 3"/>':'')+
       '<polyline points="'+line('endeks')+'" fill="none" stroke="#B9C9C1" stroke-width="2"/>'+
       (EW?'<polyline points="'+line('__ew')+'" fill="none" stroke="#8B6FD8" stroke-width="1.6" stroke-dasharray="5 3"/>':'')+
       '<polyline points="'+line('model')+'" fill="none" stroke="#128A66" stroke-width="2.5"/>'+
@@ -2153,10 +2166,10 @@ async function toparlanmaInit(){
     const alan='5,'+(H-8)+' '+cizgi(p=>p.ab50,Yp)+' '+X(S.length-1).toFixed(1)+','+(H-8);
     graf='<div class="chbox" style="height:150px;margin:8px 0 2px"><svg viewBox="0 0 700 150" preserveAspectRatio="none" style="width:100%;height:100%">'+
       '<polygon points="'+alan+'" fill="rgba(48,186,143,.14)" stroke="none"/>'+
-      [20,50].map(v=>'<line x1="5" x2="695" y1="'+Yp(v).toFixed(1)+'" y2="'+Yp(v).toFixed(1)+'" stroke="#C8D8D0" stroke-dasharray="4 3" stroke-width="1"/><text x="690" y="'+(Yp(v)-2).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="#8FA098">%'+v+'</text>').join('')+
+      [20,50].map(v=>'<line x1="5" x2="695" y1="'+Yp(v).toFixed(1)+'" y2="'+Yp(v).toFixed(1)+'" style="stroke:var(--line2)" stroke-dasharray="4 3" stroke-width="1"/><text x="690" y="'+(Yp(v)-2).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="#8FA098">%'+v+'</text>').join('')+
       '<polyline points="'+cizgi(p=>p.dip,Yp)+'" fill="none" stroke="#DE4B5E" stroke-width="1" opacity=".75"/>'+
-      '<polyline points="'+cizgi(p=>p.ew,Ye)+'" fill="none" stroke="#152720" stroke-width="2"/>'+
-      '<text x="8" y="12" font-family="IBM Plex Mono" font-size="9" fill="#152720">Eşit ağ. XKTUM evreni</text><text x="150" y="12" font-family="IBM Plex Mono" font-size="9" fill="#128A66">%&gt;50g ortalama (alan)</text><text x="295" y="12" font-family="IBM Plex Mono" font-size="9" fill="#DE4B5E">6 aylık dip yapanlar %</text>'+
+      '<polyline points="'+cizgi(p=>p.ew,Ye)+'" fill="none" stroke="currentColor" stroke-width="2"/>'+
+      '<text x="8" y="12" font-family="IBM Plex Mono" font-size="9" fill="currentColor">Eşit ağ. XKTUM evreni</text><text x="150" y="12" font-family="IBM Plex Mono" font-size="9" fill="#128A66">%&gt;50g ortalama (alan)</text><text x="295" y="12" font-family="IBM Plex Mono" font-size="9" fill="#DE4B5E">6 aylık dip yapanlar %</text>'+
       '</svg></div><div class="sub" style="font-size:9px;display:flex;justify-content:space-between"><span>'+fmkTar(S[0].d)+'</span><span>'+fmkTar(S[S.length-1].d)+'</span></div>'; }
   const M=D.momentum_riski||{};
   const mom='<div class="note'+(M.yuksek?' warn':'')+'" style="font-size:10px;margin-top:8px"><b>Momentum riski: '+(M.yuksek?'YÜKSEK':'normal')+'</b> — eşit ağırlıklı evren 6 ayda '+fmkY(M.ew6a,1)+'%, RV20 %'+trN(M.rv20||0,1)+' (yıllık medyan %'+trN(M.rv_medyan||0,1)+'). '+
@@ -4457,7 +4470,7 @@ function hrcRender(){
   const max=Math.max(...veriler.map(v=>v.yil));
   el.innerHTML='<div class="bar" style="font-weight:700;color:var(--muted)"><span class="bn">GRUP</span><span></span><span class="bv" style="font-family:var(--sans);font-size:9px">YILLIK %</span><span class="bk" style="font-family:var(--sans);font-size:9px">KATKI pp</span></div>'+
    veriler.map(v=>'<div class="bar"><span class="bn">'+(v.tip===2?'<b>':'')+esc(v.ad)+(v.tip===2?'</b>':'')+(v.tz?'<span style="color:var(--mm2);font-size:8px"> ●</span>':'')+'</span>'+
-     '<span class="bt"><span class="bf" style="width:'+(v.yil/max*100).toFixed(1)+'%'+(v.tip===2?';background:#152720':'')+'"></span></span>'+
+     '<span class="bt"><span class="bf" style="width:'+(v.yil/max*100).toFixed(1)+'%'+(v.tip===2?';background:var(--text)':'')+'"></span></span>'+
      '<span class="bv'+(v.tip===1?' down':'')+'">'+(v.tip===2?'<b>':'')+trN(v.yil,2)+(v.tip===2?'</b>':'')+'</span>'+
      '<span class="bk">'+v.katki+'</span></div>').join('');
   const d=$('hrcDamga');
@@ -7252,14 +7265,16 @@ function tkCiz(){
   const kut = $('tkChart'); if(!kut || !TK.bar) return;
   const LC = window.LightweightCharts; if(!LC) return;
   kut.innerHTML = '';
-  const koyu = false;
+  /* §542: grafik renkleri temadan (CSS değişkenleri); tema değişince yeniden çizilir */
+  const cs = getComputedStyle(document.documentElement), tv = n => (cs.getPropertyValue(n)||'').trim();
+  const koyu = document.documentElement.getAttribute('data-tema')==='koyu';
   const chart = LC.createChart(kut, {
-    layout:{ background:{color:'transparent'}, textColor:'#63756C',
+    layout:{ background:{color:'transparent'}, textColor:tv('--muted')||'#63756C',
              attributionLogo:true,          // ← Apache 2.0 atıf koşulu bununla karşılanır
              fontFamily:"'IBM Plex Mono',monospace", fontSize:10 },
-    grid:{ vertLines:{color:'#E2EBE6'}, horzLines:{color:'#E2EBE6'} },
-    rightPriceScale:{ borderColor:'#C8D8D0' },
-    timeScale:{ borderColor:'#C8D8D0', timeVisible:false },
+    grid:{ vertLines:{color:tv('--line')||'#E2EBE6'}, horzLines:{color:tv('--line')||'#E2EBE6'} },
+    rightPriceScale:{ borderColor:tv('--line2')||'#C8D8D0' },
+    timeScale:{ borderColor:tv('--line2')||'#C8D8D0', timeVisible:false },
     crosshair:{ mode:0 },
     height: 420
   });
@@ -7339,6 +7354,7 @@ function tkCiz(){
   }catch(e){ console.warn('[KTPanel] çizim katmanı:', (e&&e.message)||e); }
   chart.timeScale().fitContent();
   new ResizeObserver(()=>{ try{ chart.applyOptions({width:kut.clientWidth}); }catch(e){} }).observe(kut);
+  if(!window.__tkTemaDinle){ window.__tkTemaDinle=1; window.addEventListener('ktp-tema',()=>{ try{ tkCiz(); }catch(e){} }); }   /* §542 */
   tkOzet();
 }
 
@@ -10864,15 +10880,15 @@ function egriSvgUret(noktalar, renk, tepeEtiket){
   const pts=noktalar.map((n,i)=>X(i).toFixed(1)+','+Y(n.v).toFixed(1)).join(' ');
   const tepeI=vs.indexOf(max), sonI=noktalar.length-1;
   return '<svg viewBox="0 0 320 135" style="width:100%;height:auto">'+
-    '<line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>'+
+    '<line x1="18" y1="110" x2="302" y2="110" style="stroke:var(--line)" stroke-width="1"/>'+
     '<polyline points="'+pts+'" fill="none" stroke="'+renk+'" stroke-width="2.5" stroke-linejoin="round"/>'+
     '<circle cx="'+X(tepeI).toFixed(1)+'" cy="'+Y(max).toFixed(1)+'" r="3.2" fill="'+renk+'"/>'+
     '<circle cx="'+X(sonI).toFixed(1)+'" cy="'+Y(vs[sonI]).toFixed(1)+'" r="3.2" fill="'+renk+'"/>'+
     '<text x="'+X(tepeI).toFixed(1)+'" y="'+(Y(max)-6).toFixed(1)+'" font-family="IBM Plex Mono" font-size="9" fill="'+renk+'" text-anchor="middle">%'+trN(max,1)+(tepeEtiket?' ('+noktalar[tepeI].x+')':'')+'</text>'+
-    '<text x="'+(X(sonI)-2).toFixed(1)+'" y="'+(Y(vs[sonI])+(vs[sonI]===max?14:-5)).toFixed(1)+'" font-family="IBM Plex Mono" font-size="9" fill="#63756C" text-anchor="end">%'+trN(vs[sonI],1)+'</text>'+
-    '<text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">'+noktalar[0].x+'</text>'+
-    '<text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">'+noktalar[Math.floor(noktalar.length/2)].x+'</text>'+
-    '<text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">'+noktalar[sonI].x+'</text></svg>';
+    '<text x="'+(X(sonI)-2).toFixed(1)+'" y="'+(Y(vs[sonI])+(vs[sonI]===max?14:-5)).toFixed(1)+'" font-family="IBM Plex Mono" font-size="9" style="fill:var(--muted)" text-anchor="end">%'+trN(vs[sonI],1)+'</text>'+
+    '<text x="20" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)">'+noktalar[0].x+'</text>'+
+    '<text x="160" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="middle">'+noktalar[Math.floor(noktalar.length/2)].x+'</text>'+
+    '<text x="300" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="end">'+noktalar[sonI].x+'</text></svg>';
 }
 /* SS320c (19 Agu, SS312 ikinci avi): "yavas modul: Egri Gorseli 12388 ms" —
    kendi eklediğim kart boot'u 1 sn'den 14 sn'ye cikardi, SS318'in kazanimini

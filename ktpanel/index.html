@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<script>(function(){try{var t=localStorage.getItem('ktp_tema');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='koyu';if(t==='koyu')document.documentElement.setAttribute('data-tema','koyu');}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KTPanel</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23128A66'/><text x='50' y='55' font-family='Archivo,Arial,Helvetica,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='central'>KT</text></svg>">
@@ -10,7 +11,23 @@
 <style>
 :root{--bg:#F7FAF9;--card:#FFFFFF;--line:#E2EBE6;--line2:#C8D8D0;--text:#152720;--muted:#63756C;
 --mm:#30BA8F;--mm2:#128A66;--mmL:#E7F6F0;--up:#0FA26B;--down:#DE4B5E;--blue:#3D7BD9;--purple:#8B6FD8;
+--ink:#152720;--snap:#B9C9C1;--warnBg:#FFFDF3;--golge:rgba(0,0,0,.15);
 --mono:'IBM Plex Mono',monospace;--sans:'Archivo',sans-serif}
+/* §542 KOYU TEMA (26 Eki, kullanıcı: "veri durumunun soluna küçük bir işaret — siyah nokta koyu, beyaz nokta açık"). Tek değişken
+   seti; kartlar/tablolar/notlar kendiliğinden döner. Zemin salt siyah değil, panelin yeşil kimliğiyle uyumlu koyu yeşil-gri; kazanç/
+   kayıp tonları koyu zeminde bir ton açık (kırmızı kahveye kaymasın). Tercih localStorage 'ktp_tema'; sistem koyuysa ve tercih yoksa
+   koyu açılır. Açılışta yanıp sönme olmasın diye <head>'deki satır içi betik <html data-tema> özniteliğini CSS'ten önce basar. */
+html[data-tema="koyu"]{--bg:#0F1A16;--card:#172420;--line:#24332D;--line2:#33463E;--text:#E3ECE7;--muted:#97A89F;
+--mm:#30BA8F;--mm2:#4FD1A5;--mmL:#15302A;--up:#2ECC8F;--down:#F27A88;--blue:#79ACF5;--purple:#B09CF0;
+--ink:#E3ECE7;--snap:#3E4F48;--warnBg:#2A2416;--golge:rgba(0,0,0,.5);color-scheme:dark}
+html[data-tema="koyu"] .tag{color:#0F1A16}
+html[data-tema="koyu"] nav.tabs button.act{color:#0F1A16}
+html[data-tema="koyu"] img.tvlogo,html[data-tema="koyu"] #tv-attr-logo{filter:invert(.85)}
+html[data-tema="koyu"] .note b[style*="#0E5A3A"],html[data-tema="koyu"] .note b[style*="#177245"]{color:var(--mm2)!important}
+html[data-tema="koyu"] #yorumMetin div[style*="background:#F0F7F4"],html[data-tema="koyu"] .note div[style*="background:#F0F7F4"]{background:var(--mmL)!important}
+/* Nokta HEDEFİ gösterir: açık temada SİYAH nokta (tıkla → koyu), koyu temada BEYAZ nokta (tıkla → açık). */
+.temaBtn{display:inline-block;width:11px;height:11px;border-radius:50%;border:1.5px solid var(--line2);background:#111816;vertical-align:middle;margin-right:8px;cursor:pointer;padding:0}
+html[data-tema="koyu"] .temaBtn{background:#F7FAF9;border-color:#97A89F}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -61,7 +78,7 @@ body.veri-bekliyor .tag{opacity:.45;border:1px dashed rgba(255,255,255,.5);anima
 body.veri-bekliyor .tag::after{content:' ⏳'}
 body.veri-bekliyor .val,body.veri-bekliyor #endeksBody td b{opacity:.62}
 @keyframes ktNabiz{0%,100%{opacity:.45}50%{opacity:.78}}
-.tag.snap{background:#B9C9C1}
+.tag.snap{background:var(--snap)}
 table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
 th{font-family:var(--sans);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--line2)}
 td{padding:5.5px 8px;border-bottom:1px solid var(--line)}
@@ -75,7 +92,7 @@ tbody tr:hover{background:var(--mmL)}
 .btn.mini3{background:transparent;border:1px solid var(--mm);color:var(--mm2);padding:2px 8px;font-size:10px}
 .btn.mini3:hover{background:var(--mm);color:#fff}
 .btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--mm2);outline-offset:2px}
-input,select,textarea{background:#fff;border:1px solid var(--line2);color:var(--text);font-family:var(--mono);font-size:11.5px;padding:7px 9px;border-radius:7px}
+input,select,textarea{background:var(--card);border:1px solid var(--line2);color:var(--text);font-family:var(--mono);font-size:11.5px;padding:7px 9px;border-radius:7px}
 textarea{font-family:var(--sans);font-size:12px;resize:vertical;min-height:44px;width:100%}
 .note{font-size:10.5px;color:var(--muted);line-height:1.65;margin-top:8px;border-left:2px solid var(--mm);padding-left:9px}
 .note em{color:var(--mm2);font-style:normal;font-weight:600}
@@ -106,7 +123,7 @@ textarea{font-family:var(--sans);font-size:12px;resize:vertical;min-height:44px;
 @media(max-width:560px){.jform{grid-template-columns:1fr}}
 
 nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px;position:sticky;top:0;z-index:5;padding:8px 0;background:linear-gradient(180deg,var(--bg) 78%,transparent)}
-nav.tabs button{background:#fff;border:1px solid var(--line);color:var(--muted);font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;padding:8px 14px;border-radius:99px;cursor:pointer;transition:all .2s}
+nav.tabs button{background:var(--card);border:1px solid var(--line);color:var(--muted);font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;padding:8px 14px;border-radius:99px;cursor:pointer;transition:all .2s}
 nav.tabs button:hover{border-color:var(--mm);color:var(--mm2)}
 nav.tabs button.act{background:var(--mm2);border-color:var(--mm2);color:#fff;box-shadow:0 3px 12px rgba(18,138,102,.3)}
 nav.tabs#pySubnav{gap:0;margin:2px 0 10px;padding:0;background:none;position:static;border-bottom:1px solid var(--line)}
@@ -124,7 +141,7 @@ nav.tabs#pySubnav button.act{background:none;border-color:var(--mm2);color:var(-
 .bar .bk{font-family:var(--mono);text-align:right;color:var(--muted);font-size:9.5px}
 
 .fresh{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.fresh .fitem{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:3px 9px;font-family:var(--mono);font-size:9px;color:var(--muted)}
+.fresh .fitem{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:3px 9px;font-family:var(--mono);font-size:9px;color:var(--muted)}
 .fresh .fdot{width:7px;height:7px;border-radius:50%;flex:none}
 .fd-live{background:var(--mm);box-shadow:0 0 5px var(--mm);animation:pl 1.6s infinite}
 .fd-stamp{background:#E8B93B}
@@ -135,7 +152,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 .dtrig:hover{border-color:var(--mm);background:var(--mmL)}
 .dback{position:fixed;inset:0;background:rgba(10,30,24,.34);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
 .dback.open{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;right:0;height:100vh;width:330px;max-width:86vw;background:var(--bg);border-left:1px solid var(--line);box-shadow:-6px 0 30px rgba(0,0,0,.15);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);z-index:41;padding:20px;overflow-y:auto;box-sizing:border-box}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:330px;max-width:86vw;background:var(--bg);border-left:1px solid var(--line);box-shadow:-6px 0 30px var(--golge);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);z-index:41;padding:20px;overflow-y:auto;box-sizing:border-box}
 .drawer.open{transform:translateX(0)}
 .drawer-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--mm2)}
 .drawer-h h3{font-family:var(--sans);font-size:13px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--mm2);margin:0}
@@ -151,8 +168,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 .sektorWrap summary::before{content:"\25B8";transition:transform .2s;font-size:10px;color:var(--muted)}
 .sektorWrap[open] summary::before{transform:rotate(90deg)}
 .sektorWrap summary .thin{font-weight:400;letter-spacing:0;text-transform:none}
-.arzIn{width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box;background:#FFFDF3}
-.arzIn:focus{outline:none;border-color:var(--mm2);background:#fff}
+.arzIn{width:100%;padding:6px 9px;border:1px solid var(--line2);border-radius:6px;font-family:var(--mono);font-size:12px;box-sizing:border-box;background:var(--warnBg)}
+.arzIn:focus{outline:none;border-color:var(--mm2);background:var(--card)}
 .arzLb{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin:8px 0 2px}
 .arzLb .thin{text-transform:none;letter-spacing:0}
 .arzTbl{width:100%;border-collapse:collapse;font-size:11px}
@@ -173,7 +190,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 
 <header>
   <h1>KT<span>Panel</span><small>PİYASA · MAKRO · FON TAKİBİ</small></h1>
-  <div class="stamp"><div id="kullaniciAd">·</div><div id="baslikTarih">SON KAPANIŞ: 9 EKİ · GÜNCEL: 12 EKİ 2026</div><button class="dtrig" id="drawerTrigger">⊙ Veri Durumu</button><button class="dtrig" id="yardimTrigger" style="margin-top:4px">? Yardım</button><button class="dtrig" id="ajanTrigger" style="margin-top:4px" title="Ebu — Yaşayan Ajan">🤖 Ebu</button><a class="dtrig" href="/cikis" id="cikisTrigger" style="margin-top:4px;display:inline-block;text-decoration:none;color:var(--muted);border-color:var(--line)" title="Oturumu kapat — bu cihazda">⏻ Çıkış</a></div>
+  <div class="stamp"><div id="kullaniciAd">·</div><div id="baslikTarih">SON KAPANIŞ: 9 EKİ · GÜNCEL: 12 EKİ 2026</div><button class="temaBtn" id="temaBtn" title="Tema: açık / koyu (tıkla)" aria-label="Tema değiştir"></button><button class="dtrig" id="drawerTrigger">⊙ Veri Durumu</button><button class="dtrig" id="yardimTrigger" style="margin-top:4px">? Yardım</button><button class="dtrig" id="ajanTrigger" style="margin-top:4px" title="Ebu — Yaşayan Ajan">🤖 Ebu</button><a class="dtrig" href="/cikis" id="cikisTrigger" style="margin-top:4px;display:inline-block;text-decoration:none;color:var(--muted);border-color:var(--line)" title="Oturumu kapat — bu cihazda">⏻ Çıkış</a></div>
 </header>
 
 <!-- ==== Küçük kur çipleri ==== -->
@@ -595,57 +612,57 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:var(--mm2);margin-bottom:2px">TÜRKİYE — ters (hörgüçlü)</div>
       <div id="egriTRKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Türkiye getiri eğrisi">
-        <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
+        <line x1="18" y1="110" x2="302" y2="110" style="stroke:var(--line)" stroke-width="1"/>
         <polyline points="20,97.7 66.7,75.8 113.3,59.9 160,20 206.7,39.9 253.3,57.7 300,110" fill="none" stroke="#128A66" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="160" cy="20" r="3.2" fill="#128A66"/>
         <circle cx="300" cy="110" r="3.2" fill="#128A66"/>
         <text x="160" y="14" font-family="IBM Plex Mono" font-size="9" fill="#128A66" text-anchor="middle">%42,2 (2Y)</text>
-        <text x="298" y="105" font-family="IBM Plex Mono" font-size="9" fill="#63756C" text-anchor="end">%35,5</text>
-        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">3A</text>
-        <text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">2Y</text>
-        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">10Y</text>
+        <text x="298" y="105" font-family="IBM Plex Mono" font-size="9" style="fill:var(--muted)" text-anchor="end">%35,5</text>
+        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)">3A</text>
+        <text x="160" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="middle">2Y</text>
+        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="end">10Y</text>
       </svg></div>
     </div>
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:var(--blue);margin-bottom:2px">ABD — normal (dik)</div>
       <div id="egriUSKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="ABD getiri eğrisi">
-        <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
+        <line x1="18" y1="110" x2="302" y2="110" style="stroke:var(--line)" stroke-width="1"/>
         <polyline points="20,110 90,78.2 160,72 230,54.1 300,20" fill="none" stroke="#3D7BD9" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="20" cy="110" r="3.2" fill="#3D7BD9"/>
         <circle cx="300" cy="20" r="3.2" fill="#3D7BD9"/>
-        <text x="22" y="105" font-family="IBM Plex Mono" font-size="9" fill="#63756C">%4,4</text>
+        <text x="22" y="105" font-family="IBM Plex Mono" font-size="9" style="fill:var(--muted)">%4,4</text>
         <text x="300" y="14" font-family="IBM Plex Mono" font-size="9" fill="#3D7BD9" text-anchor="end">%5,17 (30Y)</text>
-        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">3A</text>
-        <text x="160" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">5Y</text>
-        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">30Y</text>
+        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)">3A</text>
+        <text x="160" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="middle">5Y</text>
+        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="end">30Y</text>
       </svg></div>
     </div>
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:var(--purple);margin-bottom:2px">ALMANYA / AVRO AAA — normal (yatık)</div><div id="egriDECanli" class="sub" style="text-align:center;font-size:10px"></div>
       <div id="egriDEKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Almanya getiri eğrisi">
-        <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
+        <line x1="18" y1="110" x2="302" y2="110" style="stroke:var(--line)" stroke-width="1"/>
         <polyline points="20,110 113.3,95 206.7,66.5 300,20" fill="none" stroke="#8B6FD8" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="20" cy="110" r="3.2" fill="#8B6FD8"/>
         <circle cx="300" cy="20" r="3.2" fill="#8B6FD8"/>
-        <text x="22" y="105" font-family="IBM Plex Mono" font-size="9" fill="#63756C">%2,80</text>
+        <text x="22" y="105" font-family="IBM Plex Mono" font-size="9" style="fill:var(--muted)">%2,80</text>
         <text x="300" y="14" font-family="IBM Plex Mono" font-size="9" fill="#8B6FD8" text-anchor="end">%3,40 (30Y)</text>
-        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">2Y</text>
-        <text x="206.7" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">10Y</text>
-        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">30Y</text>
+        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)">2Y</text>
+        <text x="206.7" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="middle">10Y</text>
+        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="end">30Y</text>
       </svg></div>
     </div>
     <div>
       <div class="sub" style="text-align:center;font-weight:600;color:#E8933B;margin-bottom:2px">JAPONYA — çok dik</div><div id="egriJPCanli" class="sub" style="text-align:center;font-size:10px"></div>
       <div id="egriJPKap"><svg viewBox="0 0 320 135" style="width:100%;height:auto" aria-label="Japonya getiri eğrisi">
-        <line x1="18" y1="110" x2="302" y2="110" stroke="#E2EBE6" stroke-width="1"/>
+        <line x1="18" y1="110" x2="302" y2="110" style="stroke:var(--line)" stroke-width="1"/>
         <polyline points="20,110 113.3,93.2 206.7,61 300,20" fill="none" stroke="#E8933B" stroke-width="2.5" stroke-linejoin="round"/>
         <circle cx="20" cy="110" r="3.2" fill="#E8933B"/>
         <circle cx="300" cy="20" r="3.2" fill="#E8933B"/>
-        <text x="22" y="105" font-family="IBM Plex Mono" font-size="9" fill="#63756C">%1,44</text>
+        <text x="22" y="105" font-family="IBM Plex Mono" font-size="9" style="fill:var(--muted)">%1,44</text>
         <text x="300" y="14" font-family="IBM Plex Mono" font-size="9" fill="#E8933B" text-anchor="end">%3,90 (30Y)</text>
-        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C">2Y</text>
-        <text x="206.7" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="middle">10Y</text>
-        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" fill="#63756C" text-anchor="end">30Y</text>
+        <text x="20" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)">2Y</text>
+        <text x="206.7" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="middle">10Y</text>
+        <text x="300" y="132" font-family="IBM Plex Mono" font-size="8" style="fill:var(--muted)" text-anchor="end">30Y</text>
       </svg></div>
     </div>
   </div>
@@ -1957,7 +1974,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261026c"></script>
+<script src="/app.js?v=20261026d"></script>
 <script src="/ajan.js?v=20261025c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
