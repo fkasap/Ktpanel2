@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261026a';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261026b';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -5703,8 +5703,8 @@ function renderRotasyon(){
   if(rn){ const top=canliUfuk+damgaliUfuk;
     rn.innerHTML = damgaliUfuk===0
       ? '<span class="sub" style="font-size:10px">RS ufuklarının tamamı canlı veriden.</span>'
-      : '<span class="sub" style="font-size:10px;color:var(--down)">⚠ '+damgaliUfuk+'/'+top+
-        ' RS ufku DAMGALI tabandan ('+(SEKTOR.tarih||'')+') — Yahoo bu sektör endekslerine 1H/1A/3A serisi vermiyor. '+
+      : '<span class="sub" style="font-size:10px">ℹ '+damgaliUfuk+'/'+top+
+        ' RS ufku BIST RESMÎ kapanış tabanından (sektor.json · '+(SEKTOR.tarih||'')+', Actions her gün üretir) — Yahoo bu sektör endekslerine 1H/1A/3A serisi vermiyor. '+
         'Sektör ve endeks AYNI tabandan alınır, karıştırılmaz (§114).</span>'; }
 }
 
