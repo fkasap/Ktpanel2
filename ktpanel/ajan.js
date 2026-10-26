@@ -1342,14 +1342,19 @@ async function haftalikYorumYaz(zorla, kip){
                  +'\n\n(ZATEN YAZILAN 1-3. BÖLÜMLER — TEKRARLAMA):\n'+m1.slice(0,1200);
   const m2=await aiCagir(p2, 1300);
   if(!m2) kayit('Haftalık yorum: 2. parça alınamadı — 1-3. bölümler basıldı');
-  let metin=m1+(m2||'');
+  /* §548b İKİ PARÇANIN EKİ (27 Eki 00:33, kullanıcı: "niye beyaz"): 2. parça "```html" çitiyle başlayınca ve 1. parça yarım bir
+     etiketle ("<b") bitince birleşik metin `<b```html <div ...>` oluyordu → tarayıcı <b> öğesine style verdi, koyu tema kuralı
+     div'i hedeflediği için 4. bölüm BEYAZ kaldı ve üst üste bindi. Her parça AYRI temizlenir: tüm ``` çitleri atılır, sondaki
+     açık kalmış etiket (< ile başlayıp > görmeyen kuyruk) kırpılır. */
+  const parcaTemiz=t=>String(t||'').replace(/```[a-z]*\s*/gi,'').replace(/<[^>]*$/,'').trim();
+  let metin=parcaTemiz(m1)+(m2?parcaTemiz(m2):'');
   if(window.AJAN_SON_STOP==='max_tokens'){ kayit('Haftalık yorum: yanıt kesildi — basılmadı'); return; }
   /* §540 çelişki kapısı — haftalık not: bir kez düzeltme turu, yine çelişirse BASILMAZ (eski not kalır) */
   { let ih=capaIhlal(metin);
     if(ih){ kayit('Haftalık yorum §540: çelişki — '+ih+' · düzeltme turu');
       const d1=await aiCagir(p1+'\n\n⛔ ÖNCEKİ TASLAĞIN OLGU HATASI İÇERİYORDU: '+ih+'. SABİT GERÇEKLER bloğuna uy.', 1400);
       const d2=d1? await aiCagir(p2+'\n\n⛔ SABİT GERÇEKLER bloğuna uy; politika faizi ve TÜFE etiketlerini karıştırma.', 1300) : null;
-      if(d1){ metin=d1+(d2||''); ih=capaIhlal(metin); }
+      if(d1){ metin=parcaTemiz(d1)+(d2?parcaTemiz(d2):''); ih=capaIhlal(metin); }
       if(ih){ kayit('Haftalık yorum §540: düzeltme sonrası da çelişki ('+ih+') — basılmadı, eski not korundu'); return; } } }
   const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
   if(html.length<300){ kayit('Haftalık yorum: yanıt kısa, uygulanmadı'); return; }
