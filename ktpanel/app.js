@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261026g';
+const KTP_SURUM = '20261027a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -9410,6 +9410,16 @@ async function taktikModel(){
 function taktikRender(){
   const el=$('taktikBody'), el2=$('taktikBody2');
   if(!el&&!el2)return;
+  /* §547d ÖNCE ESKİ TEZ, SONRA MODEL GÖRÜNÜYORDU (27 Eki 00:00, kullanıcı: "sonradan dönüyor işte buna"): taktikRender 2,8 sn'de
+     fabrika/ajan tezini basıyor, kurallı model 4,5 sn + altı Yahoo serisi + PKA beklemesi sonra üstüne yazıyordu → açılışta birkaç
+     saniye "ÜSTÜ" görünüp sonra "ALTI"ya dönüyordu. Model hazır değilken eski tez BASILMAZ; yer tutucu gösterilir. Model 45 sn
+     içinde gelmezse (seri alınamadı) eski tez "MODEL HESAPLANAMADI" etiketiyle basılır — sessiz geri dönüş yok. */
+  if(!TAKTIK_MODEL && !window.__TAKTIK_VAZGEC){
+    const yt='<div class="sub" style="padding:8px 0">kurallı model hesaplanıyor — XU100 · S&P · ABD 10Y · altın · DXY · USD/TRY serileri, CDS, PKA beklentisi… (eski tez, model gelmeden basılmaz)</div>';
+    if(el) el.innerHTML=yt; if(el2) el2.innerHTML=yt;
+    if(!window.__TAKTIK_ZAMAN){ window.__TAKTIK_ZAMAN=setTimeout(()=>{ if(!TAKTIK_MODEL){ window.__TAKTIK_VAZGEC=true; taktikRender(); const tg=$('taktikTag2'); if(tg){ tg.textContent='MODEL HESAPLANAMADI · eski tez gösteriliyor'; tg.style.background='var(--down)'; } } }, 45000); }
+    return;
+  }
   /* §246b: etiket statik '27 TEM'de kalıyordu — tablo CANLI verilerden
      türediği için damga da CANLI olmalı. Haftanın aralığı hesaplanır. */
   const tg=$('taktikTag2');
