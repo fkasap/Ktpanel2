@@ -394,7 +394,7 @@
    "Rp": -26.66,
    "Rew": -39.08,
    "Rb": -20.74,
-   "Rcw": -19.99,
+   "Rcw": -19.9,
    "xk_kapsam": 230,
    "fark": -5.92,
    "agirlik_etkisi": -18.34,
@@ -403,14 +403,14 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 17.4,
+      "w0": 17.5,
       "r": -3,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "BIMAS",
-      "w0": 13.3,
+      "w0": 13.4,
       "r": -2.4,
       "modelde": true,
       "model_w": 2.5
@@ -423,9 +423,9 @@
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 41.4,
-    "ilk3_katki": 2.97,
-    "kalan_getiri": -39.21
+    "ilk3_agirlik": 41.6,
+    "ilk3_katki": 2.96,
+    "kalan_getiri": -39.14
    },
    "sektor": {
     "satirlar": [
@@ -553,8 +553,8 @@
       "model": 0.32,
       "evren": -0.15,
       "aktif": 0.47,
-      "getiri_1s": 11.51,
-      "katki": 5.44
+      "getiri_1s": 11.52,
+      "katki": 5.45
      },
      {
       "f": "GROWTH",
@@ -569,7 +569,7 @@
       "model": 0.86,
       "evren": 0.15,
       "aktif": 0.71,
-      "getiri_1s": -0.57,
+      "getiri_1s": -0.56,
       "katki": -0.4
      },
      {
@@ -586,19 +586,19 @@
       "evren": 0.01,
       "aktif": 0.43,
       "getiri_1s": 7.97,
-      "katki": 3.45
+      "katki": 3.46
      },
      {
       "f": "BUYUKLUK",
       "model": 0.56,
       "evren": 0,
       "aktif": 0.56,
-      "getiri_1s": 3.18,
-      "katki": 1.78
+      "getiri_1s": 3.15,
+      "katki": 1.77
      }
     ],
-    "toplam": 10.03,
-    "kalan": 2.39
+    "toplam": 10.02,
+    "kalan": 2.4
    },
    "en_iyi": [
     {
@@ -972,7 +972,7 @@
    "Rp": -26.76,
    "Rew": -38.37,
    "Rb": -22.07,
-   "Rcw": -20.71,
+   "Rcw": -20.62,
    "xk_kapsam": 231,
    "fark": -4.7,
    "agirlik_etkisi": -16.3,
@@ -981,7 +981,7 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 17.7,
+      "w0": 17.8,
       "r": -5.6,
       "modelde": true,
       "model_w": 2.5
@@ -1001,9 +1001,9 @@
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 42.6,
-    "ilk3_katki": 1.41,
-    "kalan_getiri": -38.51
+    "ilk3_agirlik": 42.7,
+    "ilk3_katki": 1.4,
+    "kalan_getiri": -38.43
    },
    "sektor": {
     "satirlar": [
@@ -1131,8 +1131,8 @@
       "model": 0.32,
       "evren": -0.15,
       "aktif": 0.47,
-      "getiri_1s": 11.57,
-      "katki": 5.47
+      "getiri_1s": 11.58,
+      "katki": 5.48
      },
      {
       "f": "GROWTH",
@@ -1147,8 +1147,8 @@
       "model": 0.86,
       "evren": 0.15,
       "aktif": 0.71,
-      "getiri_1s": -1.13,
-      "katki": -0.81
+      "getiri_1s": -1.12,
+      "katki": -0.8
      },
      {
       "f": "MOMENTUM",
@@ -1171,12 +1171,12 @@
       "model": 0.55,
       "evren": 0,
       "aktif": 0.55,
-      "getiri_1s": 2.44,
-      "katki": 1.35
+      "getiri_1s": 2.41,
+      "katki": 1.33
      }
     ],
-    "toplam": 9.69,
-    "kalan": 1.91
+    "toplam": 9.68,
+    "kalan": 1.92
    },
    "en_iyi": [
     {
@@ -1256,7 +1256,7 @@
    "Rp": -18.6,
    "Rew": -22.32,
    "Rb": -15.83,
-   "Rcw": -15.55,
+   "Rcw": -15.52,
    "xk_kapsam": 238,
    "fark": -2.78,
    "agirlik_etkisi": -6.5,
@@ -1265,14 +1265,14 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 19.3,
+      "w0": 19.4,
       "r": -8.1,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 17.1,
+      "w0": 17,
       "r": -10.6,
       "modelde": true,
       "model_w": 2.5
@@ -1285,9 +1285,9 @@
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 51.8,
-    "ilk3_katki": -5.19,
-    "kalan_getiri": -21.5
+    "ilk3_agirlik": 52,
+    "ilk3_katki": -5.2,
+    "kalan_getiri": -21.48
    },
    "sektor": {
     "satirlar": [
@@ -1417,7 +1417,7 @@
     "secim": 2.94
    },
    "faktor": {
-    "r2": 0.176,
+    "r2": 0.175,
     "n": 215,
     "boyut": true,
     "satirlar": [
@@ -1442,7 +1442,7 @@
       "model": 0.57,
       "evren": 0,
       "aktif": 0.57,
-      "getiri_1s": 1.08,
+      "getiri_1s": 1.09,
       "katki": 0.62
      },
      {
@@ -1466,12 +1466,12 @@
       "model": 0.91,
       "evren": 0,
       "aktif": 0.91,
-      "getiri_1s": 0.84,
-      "katki": 0.77
+      "getiri_1s": 0.82,
+      "katki": 0.75
      }
     ],
-    "toplam": 4.15,
-    "kalan": -0.43
+    "toplam": 4.14,
+    "kalan": -0.42
    },
    "en_iyi": [
     {
