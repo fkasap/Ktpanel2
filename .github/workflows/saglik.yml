@@ -52,11 +52,21 @@ jobs:
           if [ -f package-lock.json ]; then npm ci || npm install --no-audit --no-fund; else npm install --no-audit --no-fund; fi
 
       # Ekran katmanı için; kurulamazsa bekçi ekranı atlar, diğer dört katman yine koşar.
+      # §548d (27 Eki): 26 Eki 23:58 turunda tarayıcı indirilemedi ("Executable doesn't exist … chromium_headless_shell") →
+      # ekran katmanı çöktü. Tarayıcı önbelleğe alınır (anahtar: playwright sürümü), kurulum iki denemeli, süre 9 dk.
+      - name: Playwright önbellek
+        if: github.event.inputs.ekran != '0'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json', 'package.json') }}
       - name: Playwright
         if: github.event.inputs.ekran != '0'
         continue-on-error: true
-        timeout-minutes: 6
-        run: npx playwright install --with-deps chromium
+        timeout-minutes: 9
+        run: |
+          npx playwright install --with-deps chromium || { echo "ilk deneme başarısız — bağımlılıksız ikinci deneme"; sleep 20; npx playwright install chromium; }
+          ls ~/.cache/ms-playwright || true
 
       - name: Bekçi
         id: bekci
