@@ -1190,7 +1190,7 @@
    "dipten": 2.5,
    "beta": 1.4,
    "kalite": 0.3,
-   "skor": 3.63,
+   "skor": 3.65,
    "baski": false
   },
   {
@@ -1202,7 +1202,7 @@
    "dipten": 1.3,
    "beta": 1.25,
    "kalite": 1.54,
-   "skor": 3.6,
+   "skor": 3.62,
    "baski": false
   },
   {
@@ -1214,7 +1214,7 @@
    "dipten": 7.5,
    "beta": 1.07,
    "kalite": 0.48,
-   "skor": 2.41,
+   "skor": 2.43,
    "baski": false
   },
   {
@@ -1225,8 +1225,8 @@
    "dd": -88.9,
    "dipten": 11.5,
    "beta": 0.87,
-   "kalite": -0.21,
-   "skor": 2.04,
+   "kalite": -0.2,
+   "skor": 2.06,
    "baski": true
   },
   {
@@ -1238,7 +1238,7 @@
    "dipten": 0,
    "beta": 1.31,
    "kalite": 1.45,
-   "skor": 2.04,
+   "skor": 2.05,
    "baski": true
   },
   {
@@ -1250,7 +1250,7 @@
    "dipten": 10,
    "beta": 1.1,
    "kalite": 0.43,
-   "skor": 2.01,
+   "skor": 2.03,
    "baski": false
   },
   {
@@ -1262,7 +1262,7 @@
    "dipten": 16.9,
    "beta": 0.95,
    "kalite": 0.11,
-   "skor": 1.98,
+   "skor": 2,
    "baski": true
   },
   {
@@ -1273,8 +1273,8 @@
    "dd": -64.6,
    "dipten": 10,
    "beta": 1.07,
-   "kalite": 0.08,
-   "skor": 1.96,
+   "kalite": 0.09,
+   "skor": 1.98,
    "baski": true
   },
   {
@@ -1286,7 +1286,7 @@
    "dipten": 4.1,
    "beta": 1.19,
    "kalite": 3,
-   "skor": 1.65,
+   "skor": 1.67,
    "baski": false
   },
   {
@@ -1297,8 +1297,8 @@
    "dd": -53.7,
    "dipten": 10,
    "beta": 1.12,
-   "kalite": 1.07,
-   "skor": 1.59,
+   "kalite": 1.06,
+   "skor": 1.61,
    "baski": false
   },
   {
@@ -1310,7 +1310,7 @@
    "dipten": 6.1,
    "beta": 1.18,
    "kalite": 0.88,
-   "skor": 1.57,
+   "skor": 1.58,
    "baski": false
   },
   {
@@ -1321,8 +1321,8 @@
    "dd": -68,
    "dipten": 2.1,
    "beta": 0.95,
-   "kalite": 0.42,
-   "skor": 1.48,
+   "kalite": 0.57,
+   "skor": 1.5,
    "baski": true
   }
  ],

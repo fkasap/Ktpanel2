@@ -398,7 +398,8 @@
   "TABGD": "2026-10-26",
   "TTRAK": "2026-10-26",
   "VAKFA": "2026-10-26",
-  "VAKFN": "2026-10-26"
+  "VAKFN": "2026-10-26",
+  "GOZDE": "2026-10-26"
  },
  "evren_disi": [
   "ADESE",
@@ -465,6 +466,7 @@
   "GEDIK",
   "GGBVK",
   "GLRYH",
+  "GOZDE",
   "GRTHO",
   "GSDDE",
   "GSDHO",
@@ -571,13 +573,15 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 169,
- "pencere_sayi": 14,
+ "evren_disi_sayi": 170,
+ "pencere_sayi": 17,
  "dusen_son": [
   "ANHYT",
   "ARCLK",
+  "BRISA",
+  "CIMSA",
   "GENIL",
   "TKNSA"
  ],
- "guncelleme": "2026-10-26 17:26 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-26 18:28 UTC — otomatik (KAP FR · kümülatif §299)"
 }

@@ -1252,6 +1252,11 @@
     "2026Q2": {
      "usd": 57,
      "tl": 2.619
+    },
+    "2026Q3": {
+     "tl": 3.165,
+     "usd": 66.1,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -1324,6 +1329,14 @@
      "ort_favok_tl": 2.52,
      "ort_net_tl": 0.8,
      "gercek_favok_tl": 2.619
+    },
+    {
+     "q": "2026Q3",
+     "n": 2,
+     "ort_favok_tl": 3.028,
+     "ort_net_tl": 1.76,
+     "gercek_favok_tl": 3.165,
+     "_kaynak": "Actions §463"
     }
    ],
    "hedef_fiyat": {

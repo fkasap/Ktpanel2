@@ -649,15 +649,15 @@
    "k": "GENIL",
    "fiyat": 3.95,
    "adet": 4500,
-   "ciro": 22167,
-   "ebitda": 2944,
-   "netBorc": 5095,
+   "ciro": 21097,
+   "ebitda": 3541,
+   "netBorc": 4982,
    "hacim": 464,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 3102
+   "ebitda_genis": 3608
   },
   {
    "k": "GENTS",
@@ -1629,11 +1629,15 @@
    "k": "TKNSA",
    "fiyat": 11.84,
    "adet": 201,
-   "ciro": 92546,
-   "ebitda": 4524,
-   "netBorc": 7293,
+   "ciro": 82377,
+   "ebitda": 3107,
+   "netBorc": 7127,
    "hacim": 47,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 153,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "TOASO",
