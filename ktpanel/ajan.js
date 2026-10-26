@@ -856,7 +856,20 @@ async function bulutOku(){
 /* §527 BAYAT HAFTALIK NOT ARŞİV OLARAK BASILIR (25 Eki). Bekçi: "Haftalık Yorum'da politika faizi %37 yazıyor, canlı %36".
    Kaynak 24–30 Ağu haftasının AI notuydu — 61 gün önce yazılmış, hâlâ "bu hafta" gibi duruyordu. Not 10 günden eskiyse
    içerik data-tarihsel kabına konur (bekçi güncel değer iddiası saymaz), başına yaşı yazılır, etikete ARŞİV eklenir. */
+/* §548c BOZUK NOT ONARIMI (27 Eki 00:45, kullanıcı: "4. başlık neden böyle duruyor"): §548b yeni yazımları temizler ama tarayıcıda
+   KAYITLI bozuk not (bölüm kutusu <div> yerine style'lı <b> olarak serileşmiş, içinde "```html" artığı) öyle kalıyordu.
+   Basmadan önce DOM'da onarılır: style'ı bölüm arka planı taşıyan <b> → <div>; adında < ya da ` geçen sahte nitelikler silinir;
+   metinde kalan ``` artıkları atılır. Onarılmış hâl kayda geri yazılmaz — sonraki 📝 zaten temiz üretir. */
+function notOnar(html){
+  try{ const t=document.createElement('div'); t.innerHTML=String(html||'').replace(/```[a-z]*/gi,'');
+    t.querySelectorAll('b[style*="F0F7F4"],b[style*="f0f7f4"],span[style*="F0F7F4"]').forEach(b=>{ const d=document.createElement('div'); d.setAttribute('style',b.getAttribute('style')); while(b.firstChild) d.appendChild(b.firstChild); b.replaceWith(d); });
+    /* bozuk <b> bölüm 3'ün İÇİNDE açılmıştı → onarınca iç içe kalıyor; üst bölümün ardına taşınır */
+    t.querySelectorAll('div[style*="F0F7F4"],div[style*="f0f7f4"]').forEach(d=>{ const anc=d.parentElement&&d.parentElement.closest('div[style*="F0F7F4"],div[style*="f0f7f4"]'); if(anc&&t.contains(anc)) anc.after(d); });
+    t.querySelectorAll('*').forEach(e=>{ [...e.attributes].forEach(at=>{ if(/[<`"]/.test(at.name)) e.removeAttribute(at.name); }); });
+    return t.innerHTML; }catch(e){ return html; }
+}
 function haftalikBas(ym, secili){
+  secili={...secili, html:notOnar(secili.html)};
   const yas = secili.ts ? Math.floor((Date.now()-secili.ts)/864e5) : null;
   const yh=$('yorumHafta');
   /* §534 (25 Eki tarama): 22 Eki 16:56'da yazılan not "politika faizi %37" diyordu — PPK aynı gün −100bp'yi akşam açıkladı, not karardan
@@ -1358,7 +1371,7 @@ async function haftalikYorumYaz(zorla, kip){
       if(ih){ kayit('Haftalık yorum §540: düzeltme sonrası da çelişki ('+ih+') — basılmadı, eski not korundu'); return; } } }
   const html=metin.replace(/^\s*```html?/i,'').replace(/```\s*$/,'').trim();
   if(html.length<300){ kayit('Haftalık yorum: yanıt kısa, uygulanmadı'); return; }
-  ym.innerHTML=temizle(html,true)+'<div class="sub" style="font-size:9px;margin-top:6px">🤖 ajan tarafından panel verilerinden yazıldı · '+saat()+' · ⌫ ile fabrika yorumuna dönülür</div>';
+  ym.innerHTML=notOnar(temizle(html,true))+'<div class="sub" style="font-size:9px;margin-top:6px">🤖 ajan tarafından panel verilerinden yazıldı · '+saat()+' · ⌫ ile fabrika yorumuna dönülür</div>';
   /* §422c ETİKET DE YAZILIR. §397'nin dersi: "etiket statik kaldığı için yeni,
      gövde eski görünüyordu" — o çelişki teşhisi kolaylaştırmıştı ama kalıcı
      hâli yanıltıcıdır. Artık hafta aralığı KODDAN hesaplanıyor (Pzt-Paz) ve
