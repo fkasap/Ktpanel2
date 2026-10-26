@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-25",
+ "guncelleme": "2026-10-26",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-10-23",
@@ -54,7 +54,7 @@
      "esik": "≤ 0 bp (daralma)",
      "tamam": false,
      "birim": "bp",
-     "not": "1 ay +13 bp"
+     "not": "1 ay +9 bp"
     }
    ]
   },
@@ -1189,8 +1189,8 @@
    "dd": -68.7,
    "dipten": 0,
    "beta": 1.39,
-   "kalite": 0.36,
-   "skor": 3.62,
+   "kalite": 0.37,
+   "skor": 3.59,
    "baski": false
   },
   {
@@ -1202,7 +1202,7 @@
    "dipten": 0,
    "beta": 1.24,
    "kalite": 1.65,
-   "skor": 3.49,
+   "skor": 3.45,
    "baski": false
   },
   {
@@ -1213,8 +1213,8 @@
    "dd": -65.7,
    "dipten": 0,
    "beta": 1.11,
-   "kalite": 0.48,
-   "skor": 2.22,
+   "kalite": 0.49,
+   "skor": 2.19,
    "baski": false
   },
   {
@@ -1225,20 +1225,8 @@
    "dd": -67.8,
    "dipten": 0,
    "beta": 1.07,
-   "kalite": 0.12,
-   "skor": 2.07,
-   "baski": true
-  },
-  {
-   "k": "PASEU",
-   "s": "Industrials",
-   "w": 0.21,
-   "r3": -76.6,
-   "dd": -88.9,
-   "dipten": 11.6,
-   "beta": 0.88,
-   "kalite": -0.13,
-   "skor": 1.9,
+   "kalite": 0.13,
+   "skor": 2.03,
    "baski": true
   },
   {
@@ -1249,9 +1237,21 @@
    "dd": -57.9,
    "dipten": 0,
    "beta": 1.14,
-   "kalite": 1.15,
-   "skor": 1.89,
+   "kalite": 1.17,
+   "skor": 1.85,
    "baski": false
+  },
+  {
+   "k": "PASEU",
+   "s": "Industrials",
+   "w": 0.21,
+   "r3": -76.6,
+   "dd": -88.9,
+   "dipten": 11.6,
+   "beta": 0.88,
+   "kalite": -0.13,
+   "skor": 1.85,
+   "baski": true
   },
   {
    "k": "SELEC",
@@ -1262,7 +1262,7 @@
    "dipten": 23.5,
    "beta": 0.95,
    "kalite": 0.19,
-   "skor": 1.81,
+   "skor": 1.77,
    "baski": true
   },
   {
@@ -1273,8 +1273,8 @@
    "dd": -51.3,
    "dipten": 2,
    "beta": 1.18,
-   "kalite": 1.01,
-   "skor": 1.75,
+   "kalite": 1.02,
+   "skor": 1.72,
    "baski": false
   },
   {
@@ -1286,8 +1286,20 @@
    "dipten": 0,
    "beta": 1.08,
    "kalite": -0.03,
-   "skor": 1.48,
+   "skor": 1.44,
    "baski": false
+  },
+  {
+   "k": "GLRMK",
+   "s": "Industrials",
+   "w": 0.48,
+   "r3": -31.5,
+   "dd": -48.1,
+   "dipten": 0,
+   "beta": 1.17,
+   "kalite": 0.41,
+   "skor": 1.33,
+   "baski": true
   },
   {
    "k": "GENIL",
@@ -1298,19 +1310,7 @@
    "dipten": 3.4,
    "beta": 0.94,
    "kalite": 0.52,
-   "skor": 1.37,
-   "baski": true
-  },
-  {
-   "k": "GLRMK",
-   "s": "Industrials",
-   "w": 0.48,
-   "r3": -31.5,
-   "dd": -48.1,
-   "dipten": 0,
-   "beta": 1.17,
-   "kalite": 0.4,
-   "skor": 1.37,
+   "skor": 1.33,
    "baski": true
   },
   {
@@ -1321,8 +1321,8 @@
    "dd": -66,
    "dipten": 0,
    "beta": 0.96,
-   "kalite": 0.18,
-   "skor": 1.27,
+   "kalite": 0.19,
+   "skor": 1.22,
    "baski": false
   }
  ],

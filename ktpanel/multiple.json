@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-25",
+ "guncelleme": "2026-10-26",
  "fiyat_tarihi": "2026-10-23",
  "not": "Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:\"eski\" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.",
  "hisseler": [
@@ -895,11 +895,15 @@
    "k": "KARSN",
    "fiyat": 6.76,
    "adet": 900,
-   "ciro": 21051,
-   "ebitda": 3919,
-   "netBorc": 8308,
+   "ciro": 19930,
+   "ebitda": 3130,
+   "netBorc": 8947,
    "hacim": 212,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 3225,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KATMR",
@@ -919,11 +923,15 @@
    "k": "KBORU",
    "fiyat": 8.47,
    "adet": 600,
-   "ciro": 6416,
-   "ebitda": 820,
-   "netBorc": 3381,
+   "ciro": 6467,
+   "ebitda": 853,
+   "netBorc": 4696,
    "hacim": 241,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 712,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "KCAER",
@@ -1766,5 +1774,5 @@
   "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
  },
  "kaynak": "KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496",
- "bilanco_guncelleme": "2026-10-25"
+ "bilanco_guncelleme": "2026-10-26"
 }

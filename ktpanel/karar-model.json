@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-25",
+ "surum": "2026-10-26",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -1438,6 +1438,11 @@
     "2026Q2": {
      "usd": 17,
      "tl": 0.789
+    },
+    "2026Q3": {
+     "tl": 1.398,
+     "usd": 29.2,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -6542,7 +6547,7 @@
     }
    ],
    "birincil": "eurusd",
-   "sermaye_mn": null,
+   "sermaye_mn": 900,
    "favok": {
     "2025Q4": {
      "tl": 1.909,
@@ -6634,7 +6639,7 @@
     }
    ],
    "birincil": "pe_pp",
-   "sermaye_mn": null,
+   "sermaye_mn": 600,
    "favok": {
     "2025Q4": {
      "tl": 0.129,
@@ -6735,7 +6740,23 @@
    ],
    "birincil": "komur_termal",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2025Q4": {
+     "tl": 1.023,
+     "usd": 24.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.363,
+     "usd": 8.3,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.747,
+     "usd": 16.4,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2024Q1": 29.2568,
     "2024Q2": 20.0456,
@@ -6812,7 +6833,23 @@
    ],
    "birincil": "tufe_gida",
    "sermaye_mn": null,
-   "favok": {},
+   "favok": {
+    "2025Q4": {
+     "tl": 0.827,
+     "usd": 19.6,
+     "_kaynak": "KAP"
+    },
+    "2026Q1": {
+     "tl": 0.533,
+     "usd": 12.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q2": {
+     "tl": 0.43,
+     "usd": 9.4,
+     "_kaynak": "KAP"
+    }
+   },
    "fiyat_ceyrek_sonu": {
     "2025Q1": 24.9734,
     "2025Q2": 34.4899,
@@ -7347,7 +7384,7 @@
  "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili.",
  "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası.",
  "_531": {
-  "guncelleme": "2026-10-25",
+  "guncelleme": "2026-10-26",
   "xk050": 50,
   "katalog": 52,
   "eklenen_toplam": 20
