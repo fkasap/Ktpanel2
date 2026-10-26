@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-05",
+ "guncelleme": "2026-10-26",
  "hisseler": [
   {
    "k": "AHGAZ",
@@ -11,7 +11,7 @@
    "k": "AKCNS",
    "kurum": 11,
    "hedef": 280.76,
-   "son": "2026-09-14"
+   "son": "2026-10-13"
   },
   {
    "k": "AKFYE",
@@ -21,8 +21,8 @@
   },
   {
    "k": "ALBRK",
-   "kurum": 10,
-   "hedef": 12.21,
+   "kurum": 9,
+   "hedef": 12.24,
    "son": "2026-09-07"
   },
   {
@@ -39,15 +39,16 @@
   },
   {
    "k": "ASELS",
-   "kurum": 25,
-   "hedef": 466.72,
-   "son": "2026-10-02"
+   "kurum": 26,
+   "hedef": 478.17,
+   "son": "2026-10-26"
   },
   {
    "k": "ATAKP",
    "kurum": 1,
    "hedef": 69.05,
-   "son": "2026-04-24"
+   "son": "2026-04-24",
+   "bayat": true
   },
   {
    "k": "ATATP",
@@ -70,8 +71,8 @@
   {
    "k": "BIMAS",
    "kurum": 27,
-   "hedef": 499.87,
-   "son": "2026-09-17"
+   "hedef": 508.03,
+   "son": "2026-10-26"
   },
   {
    "k": "BINHO",
@@ -83,7 +84,7 @@
    "k": "CIMSA",
    "kurum": 21,
    "hedef": 71.55,
-   "son": "2026-08-04"
+   "son": "2026-10-13"
   },
   {
    "k": "CWENE",
@@ -106,14 +107,14 @@
   {
    "k": "ENJSA",
    "kurum": 11,
-   "hedef": 152.41,
-   "son": "2026-08-26"
+   "hedef": 154.16,
+   "son": "2026-10-26"
   },
   {
    "k": "EREGL",
    "kurum": 21,
-   "hedef": 46.79,
-   "son": "2026-08-11"
+   "hedef": 47.11,
+   "son": "2026-10-26"
   },
   {
    "k": "FORTE",
@@ -131,7 +132,8 @@
    "k": "GOKNR",
    "kurum": 1,
    "hedef": 36.11,
-   "son": "2025-10-31"
+   "son": "2025-10-31",
+   "bayat": true
   },
   {
    "k": "GRSEL",
@@ -149,7 +151,7 @@
    "k": "ISDMR",
    "kurum": 1,
    "hedef": 68.2,
-   "son": "2026-08-11"
+   "son": "2026-10-23"
   },
   {
    "k": "KARSN",
@@ -167,13 +169,13 @@
    "k": "KCAER",
    "kurum": 6,
    "hedef": 21.04,
-   "son": "2026-08-06"
+   "son": "2026-10-13"
   },
   {
    "k": "KRDMD",
    "kurum": 17,
-   "hedef": 51.05,
-   "son": "2026-08-18"
+   "hedef": 51.1,
+   "son": "2026-10-13"
   },
   {
    "k": "LMKDC",
@@ -185,13 +187,13 @@
    "k": "LOGO",
    "kurum": 8,
    "hedef": 226.18,
-   "son": "2026-08-06"
+   "son": "2026-10-13"
   },
   {
    "k": "MAVI",
    "kurum": 21,
-   "hedef": 61.04,
-   "son": "2026-09-23"
+   "hedef": 61.12,
+   "son": "2026-10-13"
   },
   {
    "k": "MOGAN",
@@ -203,31 +205,33 @@
    "k": "MPARK",
    "kurum": 16,
    "hedef": 651.85,
-   "son": "2026-09-15"
+   "son": "2026-10-13"
   },
   {
    "k": "NTGAZ",
    "kurum": 1,
    "hedef": 16.58,
-   "son": "2026-04-07"
+   "son": "2026-04-07",
+   "bayat": true
   },
   {
    "k": "ONCSM",
    "kurum": 1,
    "hedef": 379.6,
-   "son": "2026-02-27"
+   "son": "2026-02-27",
+   "bayat": true
   },
   {
    "k": "ORGE",
    "kurum": 1,
    "hedef": 39.78,
-   "son": "2026-08-14"
+   "son": "2026-10-13"
   },
   {
    "k": "PETKM",
    "kurum": 14,
-   "hedef": 20.53,
-   "son": "2026-09-22"
+   "hedef": 20.58,
+   "son": "2026-10-26"
   },
   {
    "k": "SELEC",
@@ -245,7 +249,8 @@
    "k": "SNGYO",
    "kurum": 1,
    "hedef": 10.51,
-   "son": "2025-11-10"
+   "son": "2025-11-10",
+   "bayat": true
   },
   {
    "k": "TCKRC",
@@ -256,20 +261,20 @@
   {
    "k": "TKFEN",
    "kurum": 2,
-   "hedef": 130.7,
-   "son": "2026-07-27"
+   "hedef": 190.7,
+   "son": "2026-10-13"
   },
   {
    "k": "TKNSA",
-   "kurum": 4,
-   "hedef": 37.63,
+   "kurum": 3,
+   "hedef": 38.64,
    "son": "2026-08-06"
   },
   {
    "k": "TUPRS",
    "kurum": 23,
-   "hedef": 389.8,
-   "son": "2026-09-22"
+   "hedef": 392.5,
+   "son": "2026-10-26"
   },
   {
    "k": "YEOTK",
@@ -278,8 +283,9 @@
    "son": "2026-05-14"
   }
  ],
- "_kaynak": "Fintables hisse_senedi_araci_kurum_hedef_fiyatlari · pencere SON 1 YIL (2025-10-05..) · hedef = kurum başına EN GÜNCEL hedefin ortalaması, kurum = DISTINCT aracı kurum sayısı · evren: Ekim 2026 XK100 üyeleri (46 hissede hedef var)",
+ "_kaynak": "Fintables hisse_senedi_araci_kurum_hedef_fiyatlari · pencere SON 1 YIL (2025-10-26..) · hedef = kurum başına EN GÜNCEL hedefin ortalaması, kurum = DISTINCT aracı kurum sayısı · evren: Ekim 2026 XK100 üyeleri (46 hissede hedef var)",
  "_pencere_notu": "§252v: pencere 1 YIL olarak KORUNDU. 6 aylik pencere daha taze gorunur ama kurum sayilarini dusurur (ASELS 23->18, THYAO 30->22) — bu TAZELEME degil METODOLOJI DARALTMASI olurdu. Panelin kurum sayilariyla Fintables 1-yil sorgusu BIREBIR tuttu, pencere dogrulandi.",
  "_duzeltme": "2026-08-25: 55/55 hisse tazelendi (onceki 10 Agu). Pencere 1 YIL (>= 2025-08-25) — §252v geregi KORUNDU. 28 hissede hedef/kurum degisti. 4 hisse son 6 ayda raporsuz -> bayat:true (hedefi eskidir, guncel fiyatla kiyaslanmamalidir). Kaynak: Fintables hisse_senedi_araci_kurum_hedef_fiyatlari, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat).",
- "_ekim_turu": "5 Eki: 55 -> 46 hisse (XK100 Ekim revizyonu; çıkan üyeler düştü, girenlerin çoğunda hedef yok). Değişen hedef: 14 · örnek: AKFYE 27.5->4.59 · ASELS 442.66->466.72 · BIMAS 492.88->499.87 · CIMSA 71.15->71.55 · ENJSA 143.15->152.41 · EREGL 46.11->46.79"
+ "_ekim_turu": "5 Eki: 55 -> 46 hisse (XK100 Ekim revizyonu; çıkan üyeler düştü, girenlerin çoğunda hedef yok). Değişen hedef: 14 · örnek: AKFYE 27.5->4.59 · ASELS 442.66->466.72 · BIMAS 492.88->499.87 · CIMSA 71.15->71.55 · ENJSA 143.15->152.41 · EREGL 46.11->46.79",
+ "_ekim26_turu": "26 Eki: 46/46 hisse tazelendi (önceki 5 Eki, 21 gün; 3Ç26 sezonu başı). Değişen hedef/kurum: 11 · ALBRK 12.21->12.24 (10->9 kurum) · ASELS 466.72->478.17 (25->26 kurum) · BIMAS 499.87->508.03 (27->27 kurum) · ENJSA 152.41->154.16 (11->11 kurum) · EREGL 46.79->47.11 (21->21 kurum) · KRDMD 51.05->51.1 (17->17 kurum) · MAVI 61.04->61.12 (21->21 kurum) · PETKM 20.53->20.58 (14->14 kurum) · TKFEN 130.7->190.7 (2->2 kurum) · TKNSA 37.63->38.64 (4->3 kurum) · TUPRS 389.8->392.5 (23->23 kurum). 6 ayda raporsuz → bayat:true: ATAKP, GOKNR, NTGAZ, ONCSM, SNGYO. Elle tur (otomasyon borcu sürüyor: analist hedefleri için KAP/açık kaynak yok)."
 }

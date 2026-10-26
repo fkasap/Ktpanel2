@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-08-25",
+ "guncelleme": "2026-10-26",
  "yil": 2026,
  "sirketler": [
   {
@@ -70,7 +70,7 @@
   {
    "k": "TAVHL",
    "ad": "TAV Havalimanları",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Ciro (mn €) | 1.750-1.850 | 1.823 | 1.880-1.890 |\n| Toplam Yolcu (mn) | 110-120 | 113 | 112-118 (Önceki: 116-123) |\n| Dış Hat Yolcu (mn) | 75-83 | 75 | 72-77 (Önceki: 78-83) |\n| Net Borç/FAVÖK | 2,5-3x | 3,52x | — |\n| FAVÖK (mn €) | 520-590 | 560 | 580-630 (Önceki: 590-650) |\n| Yatırım Harcamaları (mn €) | 140-160 + Almatı | 201 | 300'den az (Önceki: 330'dan az) |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Ciro (mn €) | 1.750-1.850 | 1.823 | 1.880-1.980 |\n| Toplam Yolcu (mn) | 110-120 | 113 | 112-118 (Önceki: 116-123) |\n| Dış Hat Yolcu (mn) | 75-83 | 75 | 72-77 (Önceki: 78-83) |\n| Net Borç/FAVÖK | 2,5-3x | 3,52x | — |\n| FAVÖK (mn €) | 520-590 | 560 | 580-630 (Önceki: 590-650) |\n| Yatırım Harcamaları (mn €) | 140-160 + Almatı | 201 | 300'den az (Önceki: 330'dan az) |"
   },
   {
    "k": "TCELL",
@@ -103,5 +103,5 @@
    "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| TL Kredi Büyümesi | < Ortalama Enflasyon | %43 | +%30 |\n| YP Kredi Büyümesi | Orta-onlu seviyeler | %23 | Düşük tek haneli |\n| Net Faiz Marjı | 200-225 bp iyileşme | +151 bp | ≥100 bp iyileşme |\n| Komisyon Büyümesi | ≥%40 | %50 | ~Enflasyon |\n| Gider Artışı | <%50 | %53 | ≤%35 |\n| Toplam Kredi Riski Maliyeti | 150-175 bp | 167 bp | 150-175 bp |\n| Özsermaye Karlılığı | Orta %20'li | %21,4 | Yüksek-orta %20'li |"
   }
  ],
- "_not": "2026-08-25: 20/20 sirket tazelendi (onceki 17 Tem, 39 gun). 2C sezonu sonrasi revizyonlar islendi; tablolar artik '2025 Gerceklesen' sutunu ve '(Onceki: ...)' revizyon izlerini tasiyor — sirketin hedefini NE YONDE degistirdigi okunabiliyor. Kaynak: Fintables guidance view (yil=2026)."
+ "_not": "2026-10-26: 20/20 şirket Fintables guidance (yil=2026) ile satır satır karşılaştırıldı — 3Ç26 sezonu başında (6 şirket açıkladı, TAVHL dahil) HİÇBİR şirket 25 Ağu'dan beri 2026 beklentisini değiştirmedi; TAVHL ciro üst bandı yazım hatası düzeltildi (1.880-1.890 → 1.880-1.980 mn €). Önceki: 2026-08-25: 20/20 sirket tazelendi (onceki 17 Tem, 39 gun). 2C sezonu sonrasi revizyonlar islendi; tablolar artik '2025 Gerceklesen' sutunu ve '(Onceki: ...)' revizyon izlerini tasiyor — sirketin hedefini NE YONDE degistirdigi okunabiliyor. Kaynak: Fintables guidance view (yil=2026)."
 }
