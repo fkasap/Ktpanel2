@@ -251,8 +251,11 @@ async function katmanEkran(onceki, seriler) {
             const d = kv.cloneNode(true); d.querySelector('.k').remove(); const v = sayi(d.textContent);
             if (v != null && Math.abs(v - k.deger) > k.tol) out.push({ kural: k.ad, deger: v, canli: k.deger, kaynak: k.kaynak, yer: (kv.closest('[id^=t],[id^=mk-],[id^=sv-],[id^=sk-],[id^=ft-]') || {}).id || '?', metin: kv.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) }); });
           /* (b) düz metin: anahtar kelimeden sonraki 30 karakter içinde % sayısı (tarih geçen geçmiş cümleleri atlanır) */
+          /* §541c: #yorumMetin (Haftalık not) bir .note; fabrika yedeği onun İÇİNDE data-tarihsel div'de duruyor. closest() yalnız ATAYA bakar,
+             içerideki arşiv metni taranıyordu → "mk-yorum: politika faizi %37" sahte uyarısı. Tarihsel/katlı ALT öğeler metinden çıkarılır. */
+          const temiz = el => { const c = el.cloneNode(true); c.querySelectorAll('[data-tarihsel],details').forEach(x => x.remove()); return c.textContent; };
           document.querySelectorAll('.note,p,li,.sub').forEach(el => { if (el.closest('.kv') || YABANCI(el) || el.closest('details,[data-tarihsel],#drawer')) return;
-            String(el.textContent).replace(/\s+/g, ' ').split(/(?<=[.;!?])\s+/).forEach(c => { const m = c.match(R); if (!m) return;
+            String(temiz(el)).replace(/\s+/g, ' ').split(/(?<=[.;!?])\s+/).forEach(c => { const m = c.match(R); if (!m) return;
               const sonra = c.slice(m.index + m[0].length, m.index + m[0].length + 30); if (/\b\d{1,2}\s(?:Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)/i.test(c) || HARIC.test(c.slice(Math.max(0, m.index - 25), m.index + m[0].length + 30))) return;
               const v = sayi(sonra); if (v != null && Math.abs(v - k.deger) > k.tol) out.push({ kural: k.ad, deger: v, canli: k.deger, kaynak: k.kaynak, yer: (el.closest('[id^=t],[id^=mk-],[id^=sv-],[id^=sk-],[id^=ft-]') || {}).id || '?', metin: c.slice(0, 160) }); }); });
         }
@@ -272,7 +275,8 @@ async function katmanEkran(onceki, seriler) {
       const out = [];
       const RX = /(sıradaki[^.;|]{0,30}?|planlı değerlendirme|takvimde|bekleniyor|sonraki toplantı)\D{0,25}?(\d{1,2})(?:\s*[–-]\s*(\d{1,2}))?\s(Oca|Şub|Mar|Nis|May|Haz|Tem|Ağu|Eyl|Eki|Kas|Ara)[a-zçğıöşü]*\.?(?:\s(20\d\d))?/gi;
       document.querySelectorAll('.card .kv, .card .note').forEach(el => { if (el.closest('details,[data-tarihsel],#drawer')) return;   /* katlı arşiv notu (ör. Gündem eski elle not) taranmaz */
-        const t = el.textContent.replace(/\s+/g, ' '); let m;
+        const c0 = el.cloneNode(true); c0.querySelectorAll('[data-tarihsel],details').forEach(x => x.remove());   /* §541c: içerideki arşiv de taranmaz */
+        const t = c0.textContent.replace(/\s+/g, ' '); let m;
         while ((m = RX.exec(t))) { const d = tarih(m[3] || m[2], m[4], m[5]); if (!d) continue;
           if (!m[5] && d - bugun > 200 * 864e5) d.setFullYear(d.getFullYear() - 1);
           const gecen = Math.round((bugun - d) / 864e5);
