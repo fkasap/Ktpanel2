@@ -286,7 +286,14 @@ async function katmanEkran(onceki, seriler) {
         const t = el.textContent.trim(); if (/KURULUŞ|BAŞLANGIÇ|KURULDU/i.test(t)) return;
         const m = t.match(/(\d{1,2})\s*(?:[–-]\s*\d{1,2}\s*)?(OCA|ŞUB|MAR|NİS|NIS|MAY|HAZ|TEM|AĞU|AGU|EYL|EKİ|EKI|KAS|ARA)/i); if (!m) return;
         const d = tarih(m[1], m[2]); if (!d) return; if (d > bugun) d.setFullYear(d.getFullYear() - 1);
-        const gun = Math.round((bugun - d) / 864e5); if (gun > 30) out.push({ tur: 'etiket', yer: yer(el), kart: kartAd(el), gun, metin: t.slice(0, 90) });
+        const gun = Math.round((bugun - d) / 864e5); if (gun <= 30) return;
+        /* §547c ELLE SAYI DEDEKTÖRÜ: eski etiketli kartta canlıya bağlı olmayan, rakam taşıyan cümleler sayılır. Canlı/arşiv/Ebu
+           parçaları çıkarılır: id'si *Live/*Canli olan öğeler, [data-tarihsel], details, [data-ebu="1"], .tag. Rakam = %, bp, mlr, mn, ₺, $ eşlikli sayı. */
+        const kart = el.closest('.card'); let sayi = 0, ornek = '';
+        if (kart) { const c = kart.cloneNode(true); c.querySelectorAll('[data-tarihsel],details,[data-ebu="1"],.tag,[id$="Live"],[id$="Canli"],[id*="canli"],[id*="Live"],svg,select,input,button').forEach(x => x.remove());
+          const RK = /(?:%\s?\d|\d[.,]?\d*\s?(?:%|bp|mlr|mn|₺|\$))/;
+          c.textContent.replace(/\s+/g, ' ').split(/(?<=[.;!?])\s+/).forEach(cm => { const mm = cm.length > 8 && cm.match(RK); if (mm) { sayi++; if (!ornek) ornek = cm.slice(Math.max(0, mm.index - 60), mm.index + 50).trim(); } }); }
+        out.push({ tur: 'etiket', yer: yer(el), kart: kartAd(el), gun, metin: t.slice(0, 90), sayi, ornek });
       });
       const g = new Set(); return out.filter(x => { const a = x.tur + '|' + x.kart + '|' + x.metin; if (g.has(a)) return false; g.add(a); return true; }).slice(0, 40);
     }).catch(e => []);
@@ -301,7 +308,10 @@ async function katmanEkran(onceki, seriler) {
     if (/^\(bekçi:/.test(x)) { ekle('uyari', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, 'Bekçinin kendi gezinme hatası.'); continue; }
     ekle(onceden ? 'uyari' : 'bilgi', 'ekran', sk + '|' + x.slice(0, 60), sk + ': ' + x, onceden ? 'En az iki turdur ekranda.' : 'İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.');
   }
-  for (const x of (sonuc.elleKart || [])) ekle(x.tur === 'sıradaki' ? 'uyari' : 'bilgi', 'ekran', 'elle|' + x.tur + '|' + x.kart, (x.tur === 'sıradaki' ? 'Geçmiş tarihli "sıradaki" (' + x.yer + ' · ' + x.kart + '): ' + x.gun + ' gün önce' : 'Elle kart ' + x.gun + ' gündür güncellenmedi (' + x.yer + ' · ' + x.kart + ')'), '“' + x.metin + '” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.');
+  for (const x of (sonuc.elleKart || [])) ekle(x.tur === 'sıradaki' ? 'uyari' : (x.sayi >= 3 && x.gun > 60 ? 'uyari' : 'bilgi'), 'ekran', 'elle|' + x.tur + '|' + x.kart, (x.tur === 'sıradaki' ? 'Geçmiş tarihli "sıradaki" (' + x.yer + ' · ' + x.kart + '): ' + x.gun + ' gün önce' : 'Elle kart ' + x.gun + ' gündür güncellenmedi (' + x.yer + ' · ' + x.kart + ')' + (x.sayi ? ' · ' + x.sayi + ' rakamlı cümle' : '')), '“' + x.metin + '” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.' + (x.ornek ? ' Örnek rakamlı cümle: “' + x.ornek + '”' : ''));
+  /* §547c envanter: eski etiketli kartlarda toplam rakamlı cümle — "sayı taşıyan hiçbir cümle elle yazılmaz" kuralının kalan borcu */
+  { const E = (sonuc.elleKart || []).filter(x => x.tur === 'etiket' && x.sayi > 0); const top = E.reduce((a, x) => a + x.sayi, 0);
+    if (E.length) ekle('bilgi', 'ekran', 'elle-sayi-envanter', 'Elle rakam envanteri: ' + E.length + ' eski etiketli kartta ' + top + ' rakamlı cümle', E.slice().sort((a, b) => b.sayi - a.sayi).slice(0, 8).map(x => x.kart + ' (' + x.sayi + ', ' + x.gun + 'g)').join(' · ') + ' — 60 günden eski ve ≥3 cümle olanlar uyarıya yükselir.'); }
   for (const x of (sonuc.damga || [])) ekle('uyari', 'ekran', 'damga|' + x.kural + '|' + String(x.metin).slice(0, 60), 'Ekranda eski damga (' + x.yer + '): ' + x.kural + ' %' + x.deger + ' yazıyor, canlı %' + x.canli, '“' + x.metin + '” — kaynak ' + x.kaynak + '. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.');
   const eskiJ = new Set((onceki && onceki.ekran && onceki.ekran.jsHata) || []);
   for (const e of sonuc.jsHata) ekle(eskiJ.has(e) ? 'uyari' : 'kritik', 'ekran', 'js|' + e.slice(0, 80), 'JS istisnası: ' + e, 'Sayfa kodunda yakalanmamış hata — bir kart ya da sekme hiç çizilmiyor olabilir.');
@@ -360,7 +370,7 @@ async function mailAt(rapor, yeniKritik, duzelen) {
   const ozet = { kritik: bulgular.filter(b => b.seviye === 'kritik').length, uyari: bulgular.filter(b => b.seviye === 'uyari').length, bilgi: bulgular.filter(b => b.seviye === 'bilgi').length, yeni: bulgular.filter(b => b.yeni && b.seviye !== 'bilgi').length, duzelen: duzelen.length };
   const gecmis = [...(((onceki && onceki.gecmis) || []).filter(g => g.tarih !== bugunISO)), { tarih: bugunISO, kritik: ozet.kritik, uyari: ozet.uyari }].slice(-60);
   const rapor = {
-    guncelleme: simdi.toISOString().slice(0, 19) + 'Z', surum: '§509', sure_sn: Math.round((Date.now() - T0) / 1000),
+    guncelleme: simdi.toISOString().slice(0, 19) + 'Z', surum: '§547c', sure_sn: Math.round((Date.now() - T0) / 1000),
     ozet, katmanlar: katmanDurum, bulgular, duzelen: duzelen.concat(((onceki && onceki.duzelen) || []).filter(d => gunFark(new Date(d.duzeldi + 'T00:00:00Z'), simdi) <= 7 && !simdiId.has(d.id) && !duzelen.some(x => x.id === d.id))).slice(0, 40),
     seriler: kosan.has('seriler') ? seriler : ((onceki && onceki.seriler) || {}),
     dosyalar: kosan.has('dosyalar') ? dosya.oto : ((onceki && onceki.dosyalar) || []), borc: kosan.has('dosyalar') ? dosya.borc : ((onceki && onceki.borc) || []),
