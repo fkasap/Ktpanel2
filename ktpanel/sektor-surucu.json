@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-26T06:55:12Z",
+ "guncelleme": "2026-10-26T07:27:49Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -321,7 +321,7 @@
    "ilk": "2026-10-01",
    "son": "2026-10-23",
    "usdtry_ort": 49.404,
-   "usdtry_son": 49.7558,
+   "usdtry_son": 49.7586,
    "tam": false
   }
  },
@@ -3203,7 +3203,7 @@
   "2026-07": 47.5014,
   "2026-08": 48.2675,
   "2026-09": 49.028,
-  "2026-10": 49.7558
+  "2026-10": 49.7586
  },
  "seriler": {
   "altin": {
@@ -5241,12 +5241,12 @@
     ],
     [
      "2026-10-26",
-     4019.8
+     4017.1001
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 4019.8
+    "deger": 4017.1001
    },
    "guncelleme": "2026-10-26"
   },
@@ -7285,12 +7285,12 @@
     ],
     [
      "2026-10-26",
-     53.945
+     53.88
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 53.945
+    "deger": 53.88
    },
    "guncelleme": "2026-10-26"
   },
@@ -9329,12 +9329,12 @@
     ],
     [
      "2026-10-26",
-     6.4905
+     6.499
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 6.4905
+    "deger": 6.499
    },
    "guncelleme": "2026-10-26"
   },
@@ -17490,12 +17490,12 @@
     ],
     [
      "2026-10-26",
-     2.984
+     2.996
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 2.984
+    "deger": 2.996
    },
    "guncelleme": "2026-10-26"
   },
@@ -19530,12 +19530,12 @@
     ],
     [
      "2026-10-26",
-     624.5
+     622.75
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 624.5
+    "deger": 622.75
    },
    "guncelleme": "2026-10-26"
   },
@@ -21574,12 +21574,12 @@
     ],
     [
      "2026-10-26",
-     110.11
+     110.13
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 110.11
+    "deger": 110.13
    },
    "guncelleme": "2026-10-26"
   },
@@ -23681,12 +23681,12 @@
     ],
     [
      "2026-10-26",
-     1.1221
+     1.1211
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 1.1221
+    "deger": 1.1211
    },
    "guncelleme": "2026-10-26"
   },
@@ -25789,12 +25789,12 @@
     ],
     [
      "2026-10-26",
-     49.7558
+     49.7586
     ]
    ],
    "son": {
     "tarih": "2026-10-26",
-    "deger": 49.7558
+    "deger": 49.7586
    },
    "guncelleme": "2026-10-26"
   },
@@ -54155,14 +54155,16 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (61 hafta)"
+    "k1 ad değişimi, oran 1 (69 hafta)"
    ],
    "_not": "Zincirin en üstü; Çin aşırı kapasitesinin termometresi. Polisilikon → wafer → hücre → modül fiyat geçişi 1–3 ay gecikmeli.",
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 49,
-    "2024-05": 41.83,
-    "2024-06": 39,
+    "2024-02": 68,
+    "2024-03": 68,
+    "2024-04": 55.25,
+    "2024-05": 41.88,
+    "2024-06": 39.33,
     "2024-07": 39,
     "2024-08": 39.38,
     "2024-09": 39.75,
@@ -54191,6 +54193,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     68
+    ],
+    [
+     "2024-03-13",
+     68
+    ],
+    [
+     "2024-03-20",
+     68
+    ],
+    [
+     "2024-04-03",
+     63
+    ],
+    [
+     "2024-04-10",
+     57
+    ],
+    [
+     "2024-04-17",
+     52
+    ],
+    [
      "2024-04-24",
      49
     ],
@@ -54199,12 +54225,20 @@
      44
     ],
     [
+     "2024-05-15",
+     42
+    ],
+    [
      "2024-05-22",
      41
     ],
     [
      "2024-05-29",
      40.5
+    ],
+    [
+     "2024-06-12",
+     40
     ],
     [
      "2024-06-19",
@@ -54524,7 +54558,7 @@
     "deger": 40,
     "yillik_degisim": -23.1
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_polisilikon_usd": {
@@ -54536,10 +54570,12 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (61 hafta)"
+    "k1 ad değişimi, oran 1 (69 hafta)"
    ],
    "siklik": "aylik",
    "aylik": {
+    "2024-02": 21.5,
+    "2024-03": 21.5,
     "2024-04": 21.5,
     "2024-05": 21.5,
     "2024-06": 21.5,
@@ -54571,6 +54607,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     21.5
+    ],
+    [
+     "2024-03-13",
+     21.5
+    ],
+    [
+     "2024-03-20",
+     21.5
+    ],
+    [
+     "2024-04-03",
+     21.5
+    ],
+    [
+     "2024-04-10",
+     21.5
+    ],
+    [
+     "2024-04-17",
+     21.5
+    ],
+    [
      "2024-04-24",
      21.5
     ],
@@ -54579,11 +54639,19 @@
      21.5
     ],
     [
+     "2024-05-15",
+     21.5
+    ],
+    [
      "2024-05-22",
      21.5
     ],
     [
      "2024-05-29",
+     21.5
+    ],
+    [
+     "2024-06-12",
      21.5
     ],
     [
@@ -54904,7 +54972,7 @@
     "deger": 18.5,
     "yillik_degisim": 2.8
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_wafer_rmb": {
@@ -54918,8 +54986,10 @@
    "zincir": [],
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 1.5,
-    "2024-05": 1.2,
+    "2024-02": 2,
+    "2024-03": 1.875,
+    "2024-04": 1.6,
+    "2024-05": 1.212,
     "2024-06": 1.1,
     "2024-07": 1.1,
     "2024-08": 1.09,
@@ -54949,6 +55019,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     2
+    ],
+    [
+     "2024-03-13",
+     1.9
+    ],
+    [
+     "2024-03-20",
+     1.85
+    ],
+    [
+     "2024-04-03",
+     1.7
+    ],
+    [
+     "2024-04-10",
+     1.6
+    ],
+    [
+     "2024-04-17",
+     1.6
+    ],
+    [
      "2024-04-24",
      1.5
     ],
@@ -54957,11 +55051,19 @@
      1.4
     ],
     [
+     "2024-05-15",
+     1.25
+    ],
+    [
      "2024-05-22",
      1.1
     ],
     [
      "2024-05-29",
+     1.1
+    ],
+    [
+     "2024-06-12",
      1.1
     ],
     [
@@ -55282,7 +55384,7 @@
     "deger": 1,
     "yillik_degisim": -25.9
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_hucre_usd": {
@@ -55294,14 +55396,16 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (73 hafta)"
+    "k1 ad değişimi, oran 1 (81 hafta)"
    ],
    "_not": "Modül üreticisinin ana girdisi (modül maliyetinin ~%50–60'ı). Türkiye'de hücre üretimi sınırlı → ithal hücre fiyatı ≈ maliyet.",
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 0.06,
-    "2024-05": 0.0457,
-    "2024-06": 0.038,
+    "2024-02": 0.062,
+    "2024-03": 0.062,
+    "2024-04": 0.0605,
+    "2024-05": 0.0475,
+    "2024-06": 0.0387,
     "2024-07": 0.038,
     "2024-08": 0.038,
     "2024-09": 0.0372,
@@ -55330,6 +55434,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.062
+    ],
+    [
+     "2024-03-13",
+     0.062
+    ],
+    [
+     "2024-03-20",
+     0.062
+    ],
+    [
+     "2024-04-03",
+     0.062
+    ],
+    [
+     "2024-04-10",
+     0.06
+    ],
+    [
+     "2024-04-17",
+     0.06
+    ],
+    [
      "2024-04-24",
      0.06
     ],
@@ -55338,11 +55466,19 @@
      0.053
     ],
     [
+     "2024-05-15",
+     0.053
+    ],
+    [
      "2024-05-22",
      0.044
     ],
     [
      "2024-05-29",
+     0.04
+    ],
+    [
+     "2024-06-12",
      0.04
     ],
     [
@@ -55663,7 +55799,7 @@
     "deger": 0.046,
     "yillik_degisim": 9.5
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_hucre_rmb": {
@@ -55677,8 +55813,10 @@
    "zincir": [],
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 0.4,
-    "2024-05": 0.33,
+    "2024-02": 0.47,
+    "2024-03": 0.47,
+    "2024-04": 0.415,
+    "2024-05": 0.3325,
     "2024-06": 0.3,
     "2024-07": 0.2925,
     "2024-08": 0.2863,
@@ -55708,6 +55846,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.47
+    ],
+    [
+     "2024-03-13",
+     0.47
+    ],
+    [
+     "2024-03-20",
+     0.47
+    ],
+    [
+     "2024-04-03",
+     0.43
+    ],
+    [
+     "2024-04-10",
+     0.42
+    ],
+    [
+     "2024-04-17",
+     0.41
+    ],
+    [
      "2024-04-24",
      0.4
     ],
@@ -55716,11 +55878,19 @@
      0.38
     ],
     [
+     "2024-05-15",
+     0.34
+    ],
+    [
      "2024-05-22",
      0.31
     ],
     [
      "2024-05-29",
+     0.3
+    ],
+    [
+     "2024-06-12",
      0.3
     ],
     [
@@ -56041,7 +56211,7 @@
     "deger": 0.3,
     "yillik_degisim": -4.8
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_modul_usd": {
@@ -56052,11 +56222,15 @@
     "GESAN"
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
-   "zincir": [],
+   "zincir": [
+    "k1 ×1.118 (47 örtüşme, 3 hafta)"
+   ],
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 0.12,
-    "2024-05": 0.1167,
+    "2024-02": 0.1341,
+    "2024-03": 0.1341,
+    "2024-04": 0.1225,
+    "2024-05": 0.1162,
     "2024-06": 0.115,
     "2024-07": 0.1113,
     "2024-08": 0.11,
@@ -56086,6 +56260,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.1341
+    ],
+    [
+     "2024-03-13",
+     0.1341
+    ],
+    [
+     "2024-03-20",
+     0.1341
+    ],
+    [
+     "2024-04-03",
+     0.13
+    ],
+    [
+     "2024-04-10",
+     0.12
+    ],
+    [
+     "2024-04-17",
+     0.12
+    ],
+    [
      "2024-04-24",
      0.12
     ],
@@ -56094,11 +56292,19 @@
      0.12
     ],
     [
+     "2024-05-15",
+     0.115
+    ],
+    [
      "2024-05-22",
      0.115
     ],
     [
      "2024-05-29",
+     0.115
+    ],
+    [
+     "2024-06-12",
      0.115
     ],
     [
@@ -56419,7 +56625,7 @@
     "deger": 0.114,
     "yillik_degisim": 29.5
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_modul_rmb": {
@@ -56430,12 +56636,16 @@
     "GESAN"
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
-   "zincir": [],
+   "zincir": [
+    "k1 ×1.062 (47 örtüşme, 3 hafta)"
+   ],
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 0.92,
-    "2024-05": 0.8967,
-    "2024-06": 0.855,
+    "2024-02": 0.9766,
+    "2024-03": 0.9766,
+    "2024-04": 0.9375,
+    "2024-05": 0.8975,
+    "2024-06": 0.8633,
     "2024-07": 0.84,
     "2024-08": 0.795,
     "2024-09": 0.7525,
@@ -56464,6 +56674,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.9766
+    ],
+    [
+     "2024-03-13",
+     0.9766
+    ],
+    [
+     "2024-03-20",
+     0.9766
+    ],
+    [
+     "2024-04-03",
+     0.95
+    ],
+    [
+     "2024-04-10",
+     0.94
+    ],
+    [
+     "2024-04-17",
+     0.94
+    ],
+    [
      "2024-04-24",
      0.92
     ],
@@ -56472,11 +56706,19 @@
      0.92
     ],
     [
+     "2024-05-15",
+     0.9
+    ],
+    [
      "2024-05-22",
      0.89
     ],
     [
      "2024-05-29",
+     0.88
+    ],
+    [
+     "2024-06-12",
      0.88
     ],
     [
@@ -56797,7 +57039,7 @@
     "deger": 0.719,
     "yillik_degisim": 3.8
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_modul_avrupa_usd": {
@@ -56809,13 +57051,16 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (71 hafta)"
+    "k1 ad değişimi, oran 1 (76 hafta)",
+    "k2 ×1.100 (47 örtüşme, 3 hafta)"
    ],
    "_not": "TR üreticisinin Avrupa'daki rakip fiyatı (Çin malı FOB). Türkiye'de Çin modülüne ek gümrük vergisi/anti-damping uygulanır → yurt içi fiyat bunun üstünde; makas korunma ölçüsüdür.",
    "siklik": "aylik",
    "aylik": {
+    "2024-02": 0.132,
+    "2024-03": 0.132,
     "2024-04": 0.125,
-    "2024-05": 0.1217,
+    "2024-05": 0.1212,
     "2024-06": 0.12,
     "2024-07": 0.1162,
     "2024-08": 0.11,
@@ -56845,6 +57090,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.132
+    ],
+    [
+     "2024-03-13",
+     0.132
+    ],
+    [
+     "2024-03-20",
+     0.132
+    ],
+    [
+     "2024-04-03",
+     0.125
+    ],
+    [
+     "2024-04-10",
+     0.125
+    ],
+    [
+     "2024-04-17",
+     0.125
+    ],
+    [
      "2024-04-24",
      0.125
     ],
@@ -56853,11 +57122,19 @@
      0.125
     ],
     [
+     "2024-05-15",
+     0.12
+    ],
+    [
      "2024-05-22",
      0.12
     ],
     [
      "2024-05-29",
+     0.12
+    ],
+    [
+     "2024-06-12",
      0.12
     ],
     [
@@ -57178,7 +57455,7 @@
     "deger": 0.115,
     "yillik_degisim": 33.7
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_modul_abd_usd": {
@@ -57189,11 +57466,14 @@
    ],
    "kaynak": "InfoLink Consulting haftalık spot (infolink-group.com/spot-price, ortalama sütunu) · geçmiş: Internet Archive görüntüleri (Actions §483) · ay ortalaması",
    "zincir": [
-    "k1 ad değişimi, oran 1 (71 hafta)"
+    "k1 ad değişimi, oran 1 (76 hafta)",
+    "k2 ×1.120 (47 örtüşme, 3 hafta)"
    ],
    "_not": "ABD pazarı tarife duvarı arkasında (AD/CVD, Section 201/301) → Çin'in 2–3 katı. CW Enerji'nin ABD yatırımı bu fiyat bandına bakar.",
    "siklik": "aylik",
    "aylik": {
+    "2024-02": 0.3472,
+    "2024-03": 0.3472,
     "2024-04": 0.33,
     "2024-05": 0.33,
     "2024-06": 0.33,
@@ -57225,6 +57505,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.3472
+    ],
+    [
+     "2024-03-13",
+     0.3472
+    ],
+    [
+     "2024-03-20",
+     0.3472
+    ],
+    [
+     "2024-04-03",
+     0.33
+    ],
+    [
+     "2024-04-10",
+     0.33
+    ],
+    [
+     "2024-04-17",
+     0.33
+    ],
+    [
      "2024-04-24",
      0.33
     ],
@@ -57233,11 +57537,19 @@
      0.33
     ],
     [
+     "2024-05-15",
+     0.33
+    ],
+    [
      "2024-05-22",
      0.33
     ],
     [
      "2024-05-29",
+     0.33
+    ],
+    [
+     "2024-06-12",
      0.33
     ],
     [
@@ -57558,7 +57870,7 @@
     "deger": 0.27,
     "yillik_degisim": 0
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_modul_cin_usd": {
@@ -57575,9 +57887,11 @@
    "_not": "Çin iç piyasa fiyatı (KDV dahil teslim) $ cinsinden; ihraç FOB ile fark = Çin iç talebi/ihracat iadesi etkisi.",
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 0.1271,
-    "2024-05": 0.124,
-    "2024-06": 0.1179,
+    "2024-02": 0.1365,
+    "2024-03": 0.1356,
+    "2024-04": 0.1296,
+    "2024-05": 0.1241,
+    "2024-06": 0.119,
     "2024-07": 0.1157,
     "2024-08": 0.1112,
     "2024-09": 0.1063,
@@ -57606,6 +57920,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.1365
+    ],
+    [
+     "2024-03-13",
+     0.1356
+    ],
+    [
+     "2024-03-20",
+     0.1356
+    ],
+    [
+     "2024-04-03",
+     0.1313
+    ],
+    [
+     "2024-04-10",
+     0.1299
+    ],
+    [
+     "2024-04-17",
+     0.1299
+    ],
+    [
      "2024-04-24",
      0.1271
     ],
@@ -57614,12 +57952,20 @@
      0.1272
     ],
     [
+     "2024-05-15",
+     0.1245
+    ],
+    [
      "2024-05-22",
      0.1231
     ],
     [
      "2024-05-29",
      0.1217
+    ],
+    [
+     "2024-06-12",
+     0.1213
     ],
     [
      "2024-06-19",
@@ -57939,7 +58285,7 @@
     "deger": 0.1074,
     "yillik_degisim": 10.3
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_montaj_makasi_usd": {
@@ -57955,9 +58301,11 @@
    "_not": "Hücre alıp modül birleştiren üreticinin brüt kazancı/W (cam, çerçeve, EVA, işçilik bu makastan karşılanır). Daralma = Çin fiyat baskısı montajcıya geçiyor.",
    "siklik": "aylik",
    "aylik": {
-    "2024-04": 0.06,
-    "2024-05": 0.071,
-    "2024-06": 0.077,
+    "2024-02": 0.0721,
+    "2024-03": 0.0721,
+    "2024-04": 0.062,
+    "2024-05": 0.0688,
+    "2024-06": 0.0763,
     "2024-07": 0.0733,
     "2024-08": 0.072,
     "2024-09": 0.069,
@@ -57986,6 +58334,30 @@
    },
    "haftalik": [
     [
+     "2024-02-28",
+     0.0721
+    ],
+    [
+     "2024-03-13",
+     0.0721
+    ],
+    [
+     "2024-03-20",
+     0.0721
+    ],
+    [
+     "2024-04-03",
+     0.068
+    ],
+    [
+     "2024-04-10",
+     0.06
+    ],
+    [
+     "2024-04-17",
+     0.06
+    ],
+    [
      "2024-04-24",
      0.06
     ],
@@ -57994,11 +58366,19 @@
      0.067
     ],
     [
+     "2024-05-15",
+     0.062
+    ],
+    [
      "2024-05-22",
      0.071
     ],
     [
      "2024-05-29",
+     0.075
+    ],
+    [
+     "2024-06-12",
      0.075
     ],
     [
@@ -58319,7 +58699,7 @@
     "deger": 0.068,
     "yillik_degisim": 47.8
    },
-   "ilk": "2024-04-24",
+   "ilk": "2024-02-28",
    "guncelleme": "2026-10-26"
   },
   "ges_pvi_polisilikon_usd": {
@@ -58334,7 +58714,8 @@
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
-    "2023-03": 25.33,
+    "2023-01": 18.09,
+    "2023-03": 25.25,
     "2023-04": 24.5,
     "2023-06": 9.34,
     "2023-07": 7.96,
@@ -58368,8 +58749,24 @@
    },
    "haftalik": [
     [
+     "2023-01-04",
+     17.51
+    ],
+    [
+     "2023-01-25",
+     18.68
+    ],
+    [
+     "2023-03-15",
+     25.65
+    ],
+    [
      "2023-03-22",
      25.33
+    ],
+    [
+     "2023-03-29",
+     24.76
     ],
     [
      "2023-04-05",
@@ -58541,7 +58938,7 @@
     "deger": 5.07,
     "yillik_degisim": -22
    },
-   "ilk": "2023-03-22",
+   "ilk": "2023-01-04",
    "guncelleme": "2026-10-26"
   },
   "ges_pvi_wafer_usd": {
@@ -58553,12 +58950,13 @@
    ],
    "kaynak": "PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması",
    "zincir": [
-    "k1 ×0.933 (33 örtüşme, 9 hafta)"
+    "k1 ×0.933 (33 örtüşme, 13 hafta)"
    ],
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
-    "2023-03": 0.768,
+    "2023-01": 0.485,
+    "2023-03": 0.772,
     "2023-04": 0.779,
     "2023-06": 0.359,
     "2023-07": 0.315,
@@ -58592,8 +58990,24 @@
    },
    "haftalik": [
     [
+     "2023-01-04",
+     0.426
+    ],
+    [
+     "2023-01-25",
+     0.544
+    ],
+    [
+     "2023-03-15",
+     0.768
+    ],
+    [
      "2023-03-22",
      0.768
+    ],
+    [
+     "2023-03-29",
+     0.779
     ],
     [
      "2023-04-05",
@@ -58765,7 +59179,7 @@
     "deger": 0.14,
     "yillik_degisim": -11.4
    },
-   "ilk": "2023-03-22",
+   "ilk": "2023-01-04",
    "guncelleme": "2026-10-26"
   },
   "ges_pvi_hucre_usd": {
@@ -58777,12 +59191,13 @@
    ],
    "kaynak": "PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması",
    "zincir": [
-    "k1 ×1.028 (41 örtüşme, 1 hafta)"
+    "k1 ×1.029 (42 örtüşme, 4 hafta)"
    ],
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
-    "2023-03": 0.1429,
+    "2023-01": 0.1131,
+    "2023-03": 0.1473,
     "2023-04": 0.156,
     "2023-06": 0.1085,
     "2023-07": 0.0975,
@@ -58816,8 +59231,24 @@
    },
    "haftalik": [
     [
+     "2023-01-04",
+     0.1029
+    ],
+    [
+     "2023-01-25",
+     0.1234
+    ],
+    [
+     "2023-03-15",
+     0.143
+    ],
+    [
      "2023-03-22",
-     0.1429
+     0.143
+    ],
+    [
+     "2023-03-29",
+     0.156
     ],
     [
      "2023-04-05",
@@ -58989,7 +59420,7 @@
     "deger": 0.04,
     "yillik_degisim": 11.1
    },
-   "ilk": "2023-03-22",
+   "ilk": "2023-01-04",
    "guncelleme": "2026-10-26"
   },
   "ges_pvi_modul_usd": {
@@ -59001,12 +59432,13 @@
    ],
    "kaynak": "PVinsights haftalık spot (pvinsights.com ana sayfa, ortalama sütunu, $ KDV hariç) · geçmiş: Internet Archive görüntüleri (Actions §483b) · ay ortalaması",
    "zincir": [
-    "k1 ×1.064 (41 örtüşme, 1 hafta)"
+    "k1 ×1.064 (42 örtüşme, 4 hafta)"
    ],
    "_not": "İkinci kaynak (InfoLink ile yön teyidi). PVinsights fiyatı Çin spot ağırlıklı, KDV hariç; InfoLink Çin dışı satırlarından düşük olması tanım farkıdır.",
    "siklik": "aylik",
    "aylik": {
-    "2023-03": 0.2234,
+    "2023-01": 0.234,
+    "2023-03": 0.2213,
     "2023-04": 0.216,
     "2023-06": 0.1835,
     "2023-07": 0.167,
@@ -59040,8 +59472,24 @@
    },
    "haftalik": [
     [
+     "2023-01-04",
+     0.2372
+    ],
+    [
+     "2023-01-25",
+     0.2309
+    ],
+    [
+     "2023-03-15",
+     0.2245
+    ],
+    [
      "2023-03-22",
      0.2234
+    ],
+    [
+     "2023-03-29",
+     0.216
     ],
     [
      "2023-04-05",
@@ -59213,7 +59661,7 @@
     "deger": 0.089,
     "yillik_degisim": 14.1
    },
-   "ilk": "2023-03-22",
+   "ilk": "2023-01-04",
    "guncelleme": "2026-10-26"
   },
   "ges_pvi_montaj_makasi_usd": {
@@ -59229,7 +59677,8 @@
    "_not": "InfoLink makasının ikinci kaynaktan teyidi; iki makas aynı yöne gidiyorsa sinyal güçlü.",
    "siklik": "aylik",
    "aylik": {
-    "2023-03": 0.0805,
+    "2023-01": 0.1209,
+    "2023-03": 0.074,
     "2023-04": 0.06,
     "2023-06": 0.075,
     "2023-07": 0.0695,
@@ -59263,8 +59712,24 @@
    },
    "haftalik": [
     [
+     "2023-01-04",
+     0.1344
+    ],
+    [
+     "2023-01-25",
+     0.1074
+    ],
+    [
+     "2023-03-15",
+     0.0815
+    ],
+    [
      "2023-03-22",
-     0.0805
+     0.0804
+    ],
+    [
+     "2023-03-29",
+     0.06
     ],
     [
      "2023-04-05",
@@ -59436,7 +59901,7 @@
     "deger": 0.049,
     "yillik_degisim": 16.7
    },
-   "ilk": "2023-03-22",
+   "ilk": "2023-01-04",
    "guncelleme": "2026-10-26"
   },
   "tkfen_backlog": {
@@ -71996,7 +72461,7 @@
     "2026-07": 1111.8696,
     "2026-08": 1161.4202,
     "2026-09": 1250.4145,
-    "2026-10": 1315.4072
+    "2026-10": 1315.3087
    },
    "ceyreklik": {
     "2007Q3": 1672.0354,
@@ -72504,7 +72969,7 @@
     "2026-07": 1177.8692,
     "2026-08": 1218.3031,
     "2026-09": 1298.184,
-    "2026-10": 1407.3499
+    "2026-10": 1407.2444
    },
    "ceyreklik": {
     "2014Q2": 1759.4096,
@@ -73116,7 +73581,7 @@
     "2026-07": 672.0902,
     "2026-08": 681.7061,
     "2026-09": 734.7548,
-    "2026-10": 741.1157
+    "2026-10": 741.0602
    },
    "ceyreklik": {
     "2009Q3": 1036.8848,
@@ -73366,7 +73831,7 @@
     "2026-07": 387.6588,
     "2026-08": 371.2249,
     "2026-09": 251.6985,
-    "2026-10": 406.4264
+    "2026-10": 406.3278
    },
    "ceyreklik": {
     "2015Q1": 780.0415,
@@ -86851,6 +87316,296 @@
     "182/210mm Mono TOPCon - EU (USD)": 0.125,
     "3.2mm Coating PV Glass(RMB)": 26.5,
     "2.0mm Coating PV Glass(RMB)": 18.5
+   },
+   "2024-06-12": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 40,
+    "Polysilicon Price - Granular polysilicon (RMB)": 37,
+    "Mono P Type Wafer - 182-183.75mm / 150um (USD)": 0.155,
+    "Mono P Type Wafer - 182-183.75mm / 150um (RMB)": 1.25,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.224,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 1.8,
+    "Mono N Type Wafer - 182-183.75mm / 130um (RMB)": 1.1,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1.4,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 1.65,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (USD)": 0.04,
+    "Mono PERC Cell - 182-183.75mm / 23.1%+ (RMB)": 0.31,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.04,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.31,
+    "TOPCon Cell - 182-183.75mm / 24.7%+ (USD)": 0.04,
+    "TOPCon Cell - 182-183.75mm / 24.7%+ (RMB)": 0.3,
+    "TOPCon Cell - 182*210mm / 24.7%+ (RMB)": 0.33,
+    "182*182-210mm Mono PERC Module (USD)": 0.105,
+    "182*182-210mm Mono PERC Module (RMB)": 0.83,
+    "210mm Mono PERC Module (USD)": 0.105,
+    "210mm Mono PERC Module (RMB)": 0.85,
+    "182*182-210mm Mono TOPCon Module (USD)": 0.115,
+    "182*182-210mm Mono TOPCon Module (RMB)": 0.88,
+    "210mm Mono HJT Module (USD)": 0.14,
+    "210mm Mono HJT Module (RMB)": 1.1,
+    "182*182-210mm/210mm TOPCon Module - Ground-mounted project": 0.85,
+    "182*182-210mm/210mm TOPCon Module - Distributed project": 0.87,
+    "182*182-210mm Mono PERC - India made (USD)": 0.19,
+    "182*182-210mm/210mm Mono TOPCon - India (USD)": 0.11,
+    "182*182-210mm/210mm Mono PERC - US (USD)": 0.3,
+    "182*182-210mm/210mm Mono TOPCon - US (USD)": 0.33,
+    "182*182-210mm/210mm Mono PERC - EU (USD)": 0.115,
+    "182*182-210mm/210mm Mono TOPCon - EU (USD)": 0.12,
+    "3.2mm Coating PV Glass(RMB)": 26.5,
+    "2.0mm Coating PV Glass(RMB)": 18.5
+   },
+   "2024-05-15": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 42,
+    "Polysilicon Price - Granular polysilicon (RMB)": 39,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.174,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 1.4,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.237,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 1.9,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 1.25,
+    "Mono N Type Wafer - 182*210mm / 130um (RMB)": 1.7,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 2,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.044,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.32,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.047,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.34,
+    "TOPCon Cell - 182mm / 24.7%+ (USD)": 0.053,
+    "TOPCon Cell - 182mm / 24.7%+ (RMB)": 0.34,
+    "TOPCon Cell - 182*210mm / 24.7%+ (RMB)": 0.38,
+    "182mm Mono PERC Module (USD)": 0.105,
+    "182mm Mono PERC Module (RMB)": 0.85,
+    "210mm Mono PERC Module (USD)": 0.105,
+    "210mm Mono PERC Module (RMB)": 0.87,
+    "182mm Mono TOPCon Module (USD)": 0.115,
+    "182mm Mono TOPCon Module (RMB)": 0.9,
+    "210mm Mono HJT Module (USD)": 0.14,
+    "210mm Mono HJT Module (RMB)": 1.1,
+    "182/210mm TOPCon Module - Ground-mounted project": 0.88,
+    "182/210mm TOPCon Module - Distributed project": 0.9,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182mm Mono TOPCon - India (USD)": 0.11,
+    "182/210mm Mono PERC - US (USD)": 0.3,
+    "182/210mm Mono TOPCon - US (USD)": 0.33,
+    "182/210mm Mono PERC - EU (USD)": 0.115,
+    "182/210mm Mono TOPCon - EU (USD)": 0.12,
+    "3.2mm Coating PV Glass(RMB)": 26.5,
+    "2.0mm Coating PV Glass(RMB)": 18.5
+   },
+   "2024-04-17": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 52,
+    "Polysilicon Price - Granular polysilicon (RMB)": 48,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.211,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 1.7,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.262,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 2.1,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 1.6,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 2.3,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.048,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.35,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.047,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.35,
+    "TOPCon Cell - 182mm / 24.7%+ (USD)": 0.06,
+    "TOPCon Cell - 182mm / 24.7%+ (RMB)": 0.41,
+    "182mm Mono PERC Module (USD)": 0.115,
+    "182mm Mono PERC Module (RMB)": 0.88,
+    "210mm Mono PERC Module (USD)": 0.115,
+    "210mm Mono PERC Module (RMB)": 0.9,
+    "182mm Mono TOPCon Module (USD)": 0.12,
+    "182mm Mono TOPCon Module (RMB)": 0.94,
+    "210mm Mono HJT Module (USD)": 0.14,
+    "210mm Mono HJT Module (RMB)": 1.15,
+    "182/210mm TOPCon Module - Ground-mounted project": 0.88,
+    "182/210mm TOPCon Module - Distributed project": 0.94,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182mm Mono TOPCon - India (USD)": 0.115,
+    "182/210mm Mono PERC - US (USD)": 0.3,
+    "182/210mm Mono TOPCon - US (USD)": 0.33,
+    "182/210mm Mono PERC - EU (USD)": 0.12,
+    "182/210mm Mono TOPCon - EU (USD)": 0.125,
+    "3.2mm Coating PV Glass(RMB)": 26.5,
+    "2.0mm Coating PV Glass(RMB)": 18.5
+   },
+   "2024-04-10": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 57,
+    "Polysilicon Price - Granular polysilicon (RMB)": 55,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.211,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 1.7,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.268,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 2.2,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 1.6,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 2.5,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.048,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.36,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.047,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.35,
+    "TOPCon Cell - 182mm / 24.7%+ (USD)": 0.06,
+    "TOPCon Cell - 182mm / 24.7%+ (RMB)": 0.42,
+    "182mm Mono PERC Module (USD)": 0.115,
+    "182mm Mono PERC Module (RMB)": 0.88,
+    "210mm Mono PERC Module (USD)": 0.115,
+    "210mm Mono PERC Module (RMB)": 0.9,
+    "182mm Mono TOPCon Module (USD)": 0.12,
+    "182mm Mono TOPCon Module (RMB)": 0.94,
+    "210mm Mono HJT Module (USD)": 0.14,
+    "210mm Mono HJT Module (RMB)": 1.15,
+    "182/210mm TOPCon Module - Ground-mounted project": 0.88,
+    "182/210mm TOPCon Module - Distributed project": 0.95,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182mm Mono TOPCon - India (USD)": 0.115,
+    "182/210mm Mono PERC - US (USD)": 0.3,
+    "182/210mm Mono TOPCon - US (USD)": 0.33,
+    "182/210mm Mono PERC - EU (USD)": 0.12,
+    "182/210mm Mono TOPCon - EU (USD)": 0.125,
+    "3.2mm Coating PV Glass(RMB)": 26.5,
+    "2.0mm Coating PV Glass(RMB)": 18.5
+   },
+   "2024-04-03": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 63,
+    "Polysilicon Price - Granular polysilicon (RMB)": 56,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.211,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 1.7,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.287,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 2.3,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 1.7,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 2.7,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.36,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.35,
+    "TOPCon Cell - 182mm / 24.7%+ (USD)": 0.062,
+    "TOPCon Cell - 182mm / 24.7%+ (RMB)": 0.43,
+    "182mm Mono PERC Module (USD)": 0.12,
+    "182mm Mono PERC Module (RMB)": 0.9,
+    "210mm Mono PERC Module (USD)": 0.12,
+    "210mm Mono PERC Module (RMB)": 0.92,
+    "182mm Mono TOPCon Module (USD)": 0.13,
+    "182mm Mono TOPCon Module (RMB)": 0.95,
+    "210mm Mono HJT Module (USD)": 0.145,
+    "210mm Mono HJT Module (RMB)": 1.2,
+    "182/210mm TOPCon Module - Ground-mounted project": 0.89,
+    "182/210mm TOPCon Module - Distributed project": 0.96,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182mm Mono TOPCon - India (USD)": 0.115,
+    "182/210mm Mono PERC - US (USD)": 0.3,
+    "182/210mm Mono TOPCon - US (USD)": 0.33,
+    "182/210mm Mono PERC - EU (USD)": 0.12,
+    "182/210mm Mono TOPCon - EU (USD)": 0.125,
+    "3.2mm Coating PV Glass(RMB)": 26,
+    "2.0mm Coating PV Glass(RMB)": 16.5
+   },
+   "2024-03-20": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 68,
+    "Polysilicon Price - Granular polysilicon (RMB)": 61,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.236,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 1.9,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.325,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 2.6,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 1.85,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 2.95,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.38,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.37,
+    "TOPCon Cell - 182mm / 24.5%+ (USD)": 0.062,
+    "TOPCon Cell - 182mm / 24.5%+ (RMB)": 0.47,
+    "182mm Mono-facial Mono PERC Module (USD)": 0.115,
+    "182mm Mono-facial Mono PERC Module (RMB)": 0.9,
+    "210mm Mono-facial Mono PERC Module (USD)": 0.115,
+    "210mm Mono-facial Mono PERC Module (RMB)": 0.93,
+    "182mm Mono PERC Module (USD)": 0.12,
+    "182mm Mono PERC Module (RMB)": 0.92,
+    "210mm Mono PERC Module (USD)": 0.12,
+    "210mm Mono PERC Module (RMB)": 0.95,
+    "182/210mm Monofacial Module - Ground-mounted project": 0.9,
+    "182/210mm Monofacial Module - Distributed project": 0.88,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182/210mm Mono PERC-US(USD)": 0.31,
+    "182/210mm Mono PERC-EU(USD)": 0.12,
+    "182/210mm Mono PERC-Australia(USD)": 0.115,
+    "TOPCon Bifacial Module - 182mm (USD)": 0.13,
+    "TOPCon Bifacial Module - 182mm (RMB)": 0.96,
+    "HJT Bifacial Module - 210mm (USD)": 0.15,
+    "HJT Bifacial Module - 210mm (RMB)": 1.2,
+    "3.2mm Coating PV Glass(RMB)": 25.5,
+    "2.0mm Coating PV Glass(RMB)": 16.5
+   },
+   "2024-03-13": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 68,
+    "Polysilicon Price - Granular polysilicon (RMB)": 61,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.248,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 2,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.337,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 2.7,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 1.9,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 3,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.39,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.38,
+    "TOPCon Cell - 182mm / 24.5%+ (USD)": 0.062,
+    "TOPCon Cell - 182mm / 24.5%+ (RMB)": 0.47,
+    "182mm Mono-facial Mono PERC Module (USD)": 0.115,
+    "182mm Mono-facial Mono PERC Module (RMB)": 0.9,
+    "210mm Mono-facial Mono PERC Module (USD)": 0.115,
+    "210mm Mono-facial Mono PERC Module (RMB)": 0.93,
+    "182mm Mono PERC Module (USD)": 0.12,
+    "182mm Mono PERC Module (RMB)": 0.92,
+    "210mm Mono PERC Module (USD)": 0.12,
+    "210mm Mono PERC Module (RMB)": 0.95,
+    "182/210mm Monofacial Module - Ground-mounted project": 0.9,
+    "182/210mm Monofacial Module - Distributed project": 0.88,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182/210mm Mono PERC-US(USD)": 0.31,
+    "182/210mm Mono PERC-EU(USD)": 0.12,
+    "182/210mm Mono PERC-Australia(USD)": 0.115,
+    "TOPCon Bifacial Module - 182mm (USD)": 0.13,
+    "TOPCon Bifacial Module - 182mm (RMB)": 0.96,
+    "HJT Bifacial Module - 210mm (USD)": 0.15,
+    "HJT Bifacial Module - 210mm (RMB)": 1.2,
+    "3.2mm Coating PV Glass(RMB)": 25.5,
+    "2.0mm Coating PV Glass(RMB)": 16.5
+   },
+   "2024-02-28": {
+    "Polysilicon Price - Chunk polysilicon (USD)": 21.5,
+    "Polysilicon Price - Chunk polysilicon (RMB)": 68,
+    "Polysilicon Price - Granular polysilicon (RMB)": 61,
+    "Mono P Type Wafer - 182mm / 150um (USD)": 0.254,
+    "Mono P Type Wafer - 182mm / 150um (RMB)": 2.05,
+    "Mono P Type Wafer - 210mm / 150um (USD)": 0.349,
+    "Mono P Type Wafer - 210mm / 150um (RMB)": 2.8,
+    "Mono N Type Wafer - 182mm / 130um (RMB)": 2,
+    "Mono N Type Wafer - 210mm / 130um (RMB)": 3.1,
+    "Mono PERC Cell - 182mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 182mm / 23.1%+ (RMB)": 0.39,
+    "Mono PERC Cell - 210mm / 23.1%+ (USD)": 0.052,
+    "Mono PERC Cell - 210mm / 23.1%+ (RMB)": 0.38,
+    "TOPCon Cell - 182mm / 24.5%+ (USD)": 0.062,
+    "TOPCon Cell - 182mm / 24.5%+ (RMB)": 0.47,
+    "182mm Mono-facial Mono PERC Module (USD)": 0.115,
+    "182mm Mono-facial Mono PERC Module (RMB)": 0.9,
+    "210mm Mono-facial Mono PERC Module (USD)": 0.115,
+    "210mm Mono-facial Mono PERC Module (RMB)": 0.93,
+    "182mm Mono PERC Module (USD)": 0.12,
+    "182mm Mono PERC Module (RMB)": 0.92,
+    "210mm Mono PERC Module (USD)": 0.12,
+    "210mm Mono PERC Module (RMB)": 0.95,
+    "182/210mm Monofacial Module - Ground-mounted project": 0.9,
+    "182/210mm Monofacial Module - Distributed project": 0.88,
+    "182mm Mono PERC - India made (USD)": 0.22,
+    "182/210mm Mono PERC-US(USD)": 0.31,
+    "182/210mm Mono PERC-EU(USD)": 0.12,
+    "182/210mm Mono PERC-Australia(USD)": 0.115,
+    "TOPCon Bifacial Module - 182mm (USD)": 0.13,
+    "TOPCon Bifacial Module - 182mm (RMB)": 0.96,
+    "HJT Bifacial Module - 210mm (USD)": 0.15,
+    "HJT Bifacial Module - 210mm (RMB)": 1.2,
+    "3.2mm Coating PV Glass(RMB)": 25.5,
+    "2.0mm Coating PV Glass(RMB)": 16.5
    }
   },
   "wb": {
@@ -86962,7 +87717,19 @@
    "20240529134753": 1,
    "20240522160114": 1,
    "20240508143725": 1,
-   "20240424131017": 1
+   "20240424131017": 1,
+   "20240718085010": 1,
+   "20240710230509": 1,
+   "20240623195550": 1,
+   "20240613091534": 1,
+   "20240515141232": 1,
+   "20240511105633": 1,
+   "20240417143349": 1,
+   "20240410175845": 1,
+   "20240406120808": 1,
+   "20240320171242": 1,
+   "20240313154232": 1,
+   "20240229040642": 1
   },
   "_not": "InfoLink spot fiyat tablosu (ortalama sütunu) — hafta: yayın tarihi → {InfoLink satır adı: ortalama}; wb: işlenmiş Wayback görüntü zaman damgaları",
   "pv": {
@@ -87813,6 +88580,111 @@
      "210mm 600/660Wp PERC Module": 0.21,
      "Mono PERC Module in China": 0.208,
      "ThinFilm Solar Module": 0.231
+    },
+    "2023-03-29": {
+     "PV Grade PolySilicon (9N/9N+)": 24.76,
+     "156 mm Multi Solar Wafer": 0.35,
+     "166mm Mono Solar Wafer": 0.697,
+     "182mm Mono Solar Wafer": 0.835,
+     "210mm Mono Solar Wafer": 1.055,
+     "Multi Cell Price": 0.118,
+     "Poly PERC Cell": 0.132,
+     "China Mono PERC Cell": 0.138,
+     "166mm Mono PERC Cell": 0.14,
+     "182mm Mono PERC Cell": 0.138,
+     "210mm Mono PERC Cell": 0.143,
+     "182mm N-Mono Cell": 0.156,
+     "Poly Module": 0.188,
+     "182mm 550/595Wp PERC Module": 0.21,
+     "210mm 600/660Wp PERC Module": 0.21,
+     "Mono PERC Module in China": 0.208,
+     "182mm 580/625Wp N-Mono Module": 0.216,
+     "ThinFilm Solar Module": 0.231
+    },
+    "2023-03-15": {
+     "PV Grade PolySilicon (9N/9N+)": 25.65,
+     "156 mm Multi Solar Wafer": 0.35,
+     "156 mm High Eff Multi Solar Wafer": 0.352,
+     "166mm Mono Solar Wafer": 0.689,
+     "182mm Mono Solar Wafer": 0.823,
+     "158.75 / 161.75mm Mono Wafer": 0.661,
+     "161.7+/163.75mm Mono Wafer": 0.683,
+     "Multi Cell Price": 0.118,
+     "Poly PERC Cell": 0.132,
+     "Mono PERC Cell": 0.138,
+     "China Mono PERC Cell": 0.138,
+     "158.75/161.75mm Mono PERC Cell": 0.144,
+     "166mm Mono PERC Cell": 0.141,
+     "182mm Mono PERC Cell": 0.139,
+     "210mm Mono PERC Cell": 0.141,
+     "Poly Solar Module": 0.188,
+     "Poly Module in China": 0.185,
+     "Poly PERC Module": 0.2,
+     "Mono PERC Module": 0.212,
+     "158mm 410/415Wp PERC Module": 0.216,
+     "166mm 445/450Wp PERC Module": 0.209,
+     "182mm 550/595Wp PERC Module": 0.211,
+     "210mm 600/660Wp PERC Module": 0.211,
+     "Mono PERC Module in China": 0.209,
+     "ThinFilm Solar Module": 0.231
+    },
+    "2023-01-25": {
+     "PV Grade PolySilicon (9N/9N+)": 18.68,
+     "N Mono PolySilicon in China (12N/12N+)": 21.58,
+     "N Mono PolySilicon Outside China (12N/12N+)": 37.72,
+     "156 mm Multi Solar Wafer": 0.25,
+     "156 mm High Eff Multi Solar Wafer": 0.253,
+     "166mm Mono Solar Wafer": 0.489,
+     "182mm Mono Solar Wafer": 0.583,
+     "158.75 / 161.75mm Mono Wafer": 0.485,
+     "161.7+/163.75mm Mono Wafer": 0.501,
+     "Multi Cell Price": 0.105,
+     "Poly PERC Cell": 0.115,
+     "Mono PERC Cell": 0.12,
+     "China Mono PERC Cell": 0.119,
+     "158.75/161.75mm Mono PERC Cell": 0.125,
+     "166mm Mono PERC Cell": 0.122,
+     "182mm Mono PERC Cell": 0.12,
+     "210mm Mono PERC Cell": 0.12,
+     "Poly Solar Module": 0.192,
+     "Poly Module in China": 0.19,
+     "Poly PERC Module": 0.205,
+     "Mono PERC Module": 0.218,
+     "158mm 410/415Wp PERC Module": 0.222,
+     "166mm 445/450Wp PERC Module": 0.215,
+     "182mm 550/595Wp PERC Module": 0.217,
+     "210mm 600/660Wp PERC Module": 0.217,
+     "Mono PERC Module in China": 0.215,
+     "ThinFilm Solar Module": 0.232
+    },
+    "2023-01-04": {
+     "PV Grade PolySilicon (9N/9N+)": 17.51,
+     "N Mono PolySilicon in China (12N/12N+)": 19.81,
+     "N Mono PolySilicon Out of China (12N/12N+)": 37.38,
+     "156 mm Multi Solar Wafer": 0.212,
+     "156 mm High Eff Multi Solar Wafer": 0.215,
+     "166mm Mono Solar Wafer": 0.387,
+     "182mm Mono Solar Wafer": 0.456,
+     "158.75 / 161.75mm Mono Wafer": 0.393,
+     "161.7+/163.75mm Mono Wafer": 0.405,
+     "Multi Cell Price": 0.09,
+     "Poly PERC Cell": 0.096,
+     "Mono PERC Cell": 0.1,
+     "China Mono PERC Cell": 0.099,
+     "158.75/161.75mm Mono PERC Cell": 0.106,
+     "166mm Mono PERC Cell": 0.102,
+     "182mm Mono PERC Cell": 0.1,
+     "210mm Mono PERC Cell": 0.1,
+     "Poly Solar Module": 0.196,
+     "Poly Module in China": 0.192,
+     "Poly PERC Module": 0.21,
+     "Mono PERC Module": 0.223,
+     "158mm 410/415Wp PERC Module": 0.228,
+     "166mm 445/450Wp PERC Module": 0.221,
+     "182mm 550/595Wp PERC Module": 0.223,
+     "210mm 600/660Wp PERC Module": 0.224,
+     "Mono PERC Module in China": 0.218,
+     "ThinFilm Solar Module": 0.232
     }
    },
    "wb": {
@@ -87867,12 +88739,15 @@
     "20230607114640": 1,
     "20230511160023": 1,
     "20230405233420": 1,
-    "20230331121048": -1,
+    "20230331121048": 1,
     "20230323164718": 1,
     "20230219025758": -1,
-    "20230127072525": -1,
-    "20230108070839": -1,
-    "20230101203555": -1
+    "20230127072525": 1,
+    "20230108070839": 1,
+    "20230101203555": -1,
+    "20230318184002": 1,
+    "20221229054410": -1,
+    "20221220052407": -1
    }
   }
  },
