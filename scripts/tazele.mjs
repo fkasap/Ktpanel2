@@ -1254,13 +1254,19 @@ async function fonTazele() {
     const f = fonlar.find(x => x.k === k);
     return { kod: k, d: (fiyat[k] / f.yu - 1) * 100 };
   });
+  /* §541b (26 Eki, Veri Tazele #407 KALDI): HPH (Hedef Portföy, SPK 17 Eyl tasfiye listesinde) tek günde −%72,7 — bu bir veri hatası
+     değil, TASFİYE ARA ÖDEMESİ (nakde çevrilen varlık pay sahiplerine dağıtılınca birim pay değeri düşer). ±%2 dağıtım tuzağı kuralı
+     işleyen fonlar içindir; tasfiyedeki fonlar (fon-portfoy.json tasfiye.kodlar — tek kaynak) kuraldan muaf tutulur ve rapora bilgi
+     olarak yazılır. Bütün katmanın düşmesi (45 fonun fiyatı yazılmadı) bu tek fona bağlı kalmasın. */
+  let _tasf = new Set(); try { _tasf = new Set(Object.keys((((await oku('fon-portfoy.json')) || {}).tasfiye || {}).kodlar || {})); } catch (e) {}
+  const _tasfHareket = gunluk.filter(x => _tasf.has(x.kod) && Math.abs(x.d) > 2);
   const kontrol = [
     KURALLAR.kapsam(kapsanan.length, kodlar.length, 0.95),
-    KURALLAR.aykiri(gunluk, 'd', 2),
-    KURALLAR.donemArtan(fonlar, [1, 2, 3], 0.5)
+    KURALLAR.aykiri(gunluk.filter(x => !_tasf.has(x.kod)), 'd', 2),
+    KURALLAR.donemArtan(fonlar.filter(f => !_tasf.has(f.k)), [1, 2, 3], 0.5)
   ];
   const s = denetle('Katılım fonları', kontrol);
-  raporlar.push(s.rapor());
+  raporlar.push(s.rapor() + (_tasfHareket.length ? '\n- ℹ tasfiyedeki fon(lar)da büyük günlük hareket (ara ödeme, kural dışı): ' + _tasfHareket.map(x => x.kod + ' ' + x.d.toFixed(2) + '%').join(' · ') : ''));
   if (!s.gecti) { denetimDustu = true; return null; }
 
   /* Çapa yöntemi: dönem getirisi eski fiyattan geri hesaplanır, yeni fiyata
