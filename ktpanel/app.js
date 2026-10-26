@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261027a';
+const KTP_SURUM = '20261027b';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -9355,7 +9355,7 @@ async function ihracRender(){
 let TAKTIK_MODEL=null;
 async function taktikModel(){
   const seri=async(k,g)=>{ try{ const j=await (await fetch('/api/market?mod=seri&kod='+encodeURIComponent(k)+'&gun='+(g||200))).json(); return (j&&j.ok&&Array.isArray(j.bar))? j.bar.map(b=>[b.t,b.c]) : null; }catch(e){ return null; } };
-  const [XU,SP,TNX,GLD,DXY,TRY]=await Promise.all([seri('XU100'),seri('^GSPC'),seri('^TNX'),seri('GC=F'),seri('DX-Y.NYB'),seri('TRY=X')]);
+  const [XU,SP,TNX,GLD,DXY,TRY]=await Promise.all([seri('XU100',320),seri('^GSPC',320),seri('^TNX'),seri('GC=F',320),seri('DX-Y.NYB'),seri('TRY=X')]);   /* §548: 320 gün — SMA200 için */
   const geri=(S,gun)=>{ if(!S||S.length<10) return null; const son=S[S.length-1]; const h=new Date(son[0]+'T12:00:00'); h.setDate(h.getDate()-gun); const t=h.toISOString().slice(0,10); let a=null; for(const x of S){ if(x[0]<=t) a=x; else break; } if(!a||(h-new Date(a[0]+'T12:00:00'))/864e5>10) return null; return {son, a}; };
   const getiri=(S,gun)=>{ const g=geri(S,gun); return g? (g.son[1]/g.a[1]-1)*100 : null; };
   const fark=(S,gun)=>{ const g=geri(S,gun); return g? (g.son[1]-g.a[1]) : null; };
@@ -9375,34 +9375,85 @@ async function taktikModel(){
   const S=(ad,deger,birim,pos,neg,tersMetin)=>({ad, deger, birim, isaret: deger==null?null:(pos(deger)?1:(neg(deger)?-1:0)), ters:tersMetin});
   const yz=(v,d)=>(v>=0?'+':'')+trN(v,d==null?1:d);
   const r1=getiri(XU,30), r3=getiri(XU,91), s1=getiri(SP,30), s3=getiri(SP,91), g1=getiri(GLD,30), g3=getiri(GLD,91), d1=getiri(DXY,30), t1=getiri(TRY,30);
+  /* ═══ §548 MODEL GENİŞLETİLDİ (27 Eki 00:20, kullanıcı: "risk/çürüten ve dayanaklar çok aşırı yüzeysel"). §526 yalnız fiyat
+     hareketi + 3 makro sinyalle puanlıyordu; panelde ZATEN olan değerleme, kazanç momentumu, akış, toparlanma aşaması, eğri ve
+     reel faiz verisi modele girmiyordu. Eklenen sinyaller (hepsi +1/0/−1, eşiği yanında; veri yoksa sayılmaz):
+       · PD/DD z medyanı (degerleme.json, XK050∪karar kataloğu) · kazanç momentumu (karar-model FAVÖK $ y/y pozitif şirket payı)
+       · yabancı hisse akımı 4 hafta (mn $) · katılım hisse fonlarına akış 22 gün (% AUM) · toparlanma aşaması (§530)
+       · CDS seviyesi · PKA 12A beklenti − TÜFE (dezenflasyon beklentisi) · S&P ve ons SMA200 · ABD 10Y seviye · ABD reel getiri (TIPS)
+       · göreli performans (XU100 − S&P, 1A, $ bazında) · gram altın TL 1A · eğri eğimi 2Y−10Y · ex-post reel (AOFM−TÜFE, Fisher)
+     Karar eşiği artık ORANLA: skor/ölçülen ≥ +0,25 ve skor ≥ +2 → ÜSTÜ (≥ +0,5 AŞIRI); ≤ −0,25 ve ≤ −2 → ALTI (≤ −0,5 AŞIRI).
+     Çizim: DAYANAK yalnız lehte, RİSK yalnız aleyhte; nötrler ayrı "izlenen" satırında (artık dayanak gibi sıralanmaz). */
+  const J=async u=>{ try{ const r=await fetch(u,{cache:'no-store'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+  const [DEG,TOP,KM]=await Promise.all([J('/degerleme.json'),J('/toparlanma.json'),J('/karar-model.json')]);
+  for(let i=0;i<20&&!(typeof __RB_EK!=='undefined'&&__RB_EK);i++) await new Promise(r=>setTimeout(r,500));   /* risk barometresi: yab4 · fonAk */
+  const RB=(typeof __RB_EK!=='undefined'&&__RB_EK)||{};
+  let FR=window.US_FRED||null; if(!FR){ const f=await J('/api/market?mod=fred'); FR=(f&&f.ok&&f.seriler)||null; }
+  const medyan=a=>{ const b=a.filter(x=>isFinite(x)).sort((x,y)=>x-y); if(!b.length) return null; const m=b.length>>1; return b.length%2?b[m]:(b[m-1]+b[m])/2; };
+  const pdddZ=DEG&&Array.isArray(DEG.hisseler)? medyan(DEG.hisseler.map(h=>h&&h.canli&&h.canli.z)) : null;
+  let kazanc=null; try{ const M=(KM&&KM.modeller)||[]; let p=0,n=0; M.forEach(m=>{ const F=m.favok||{}; const Q=Object.keys(F).filter(q=>F[q]&&isFinite(F[q].usd)).sort(); if(Q.length<5) return; const son=Q[Q.length-1]; const m2=son.match(/^(\d{4})Q([1-4])$/); if(!m2) return; const onc=(+m2[1]-1)+'Q'+m2[2]; if(!F[onc]||!isFinite(F[onc].usd)||F[onc].usd<=0) return; n++; if(F[son].usd>F[onc].usd) p++; }); if(n>=10) kazanc=p/n*100; }catch(e){}
+  const yab4=isFinite(RB.yab4)?RB.yab4:null, fonAk=isFinite(RB.fonAk)?RB.fonAk:null;
+  const topAs=(TOP&&isFinite(TOP.asama))?TOP.asama:null, momYuk=!!(TOP&&TOP.momentum_riski&&TOP.momentum_riski.yuksek);
+  const cdsSev=(cds&&isFinite(cds.deger))?+cds.deger:null;
+  const tufeY=(typeof TUFE_YILLIK==='number'&&isFinite(TUFE_YILLIK))?TUFE_YILLIK:null;
+  const dezenf=(bek!=null&&tufeY!=null)?(tufeY-bek):null;                       /* + = beklenti manşetin altında (dezenflasyon bekleniyor) */
+  const sma=(S_,n)=>{ if(!S_||S_.length<n+1) return null; const L=S_.slice(-n); return L.reduce((a,x)=>a+x[1],0)/n; };
+  const smaFark=(S_)=>{ const m=sma(S_,200); return (m&&S_&&S_.length)? (S_[S_.length-1][1]/m-1)*100 : null; };
+  const spSma=smaFark(SP), gldSma=smaFark(GLD);
+  const tnxSev=(TNX&&TNX.length)?TNX[TNX.length-1][1]:null;
+  const tips=(FR&&FR.DFII10&&isFinite(FR.DFII10.deger))?+FR.DFII10.deger:null;
+  const goreli=(r1!=null&&s1!=null&&t1!=null)? (((1+r1/100)/(1+t1/100)-1)*100 - s1) : null;   /* XU100 $ bazlı 1A − S&P 1A, puan */
+  const gramTl=(g1!=null&&t1!=null)? ((1+g1/100)*(1+t1/100)-1)*100 : null;
+  let egim=null; try{ const E=(typeof EGRI_CANLI!=='undefined'&&EGRI_CANLI)||null; if(E&&E['2Y']&&E['10Y']&&isFinite(E['2Y'].getiri)&&isFinite(E['10Y'].getiri)) egim=(E['2Y'].getiri-E['10Y'].getiri)*100; }catch(e){}   /* bp; + = ters eğri */
+  const aofmV=(typeof AOFM_SON==='number'&&isFinite(AOFM_SON))?AOFM_SON:null;
+  const exPost=(aofmV!=null&&tufeY!=null)?(((1+aofmV/100)/(1+tufeY/100)-1)*100):null;
   const SIN={
     poz1:[ S('XU100 1 ay', r1, '%', v=>v>5, v=>v<-5),
            S('XU100 3 ay', r3, '%', v=>v>10, v=>v<-10),
            S('Sektör genişliği (1A artıda)', gen, '/'+gv.length, v=>v>=11, v=>v<=4),
            S('TR CDS 1 ay', cdsD, 'bp', v=>v<-15, v=>v>15),
            S('Ex-ante reel faiz (politika vs 12A bekl.)', exAnte, '%', v=>v<5, v=>v>10),
-           S('Politika yönü (son karar ≤120g)', polYon, 'bp', v=>v<0, v=>v>0) ],
+           S('Politika yönü (son karar ≤120g)', polYon, 'bp', v=>v<0, v=>v>0),
+           S('Değerleme: PD/DD z medyanı (XK050)', pdddZ, 'z', v=>v<-0.5, v=>v>0.5),
+           S('Kazanç momentumu: FAVÖK $ y/y artan şirket payı', kazanc, '%', v=>v>60, v=>v<40),
+           S('Yabancı hisse akımı 4 hafta', yab4, 'mn$', v=>v>300, v=>v<-300),
+           S('Katılım hisse fonlarına akış 22 gün', fonAk, '% AUM', v=>v>2, v=>v<-2),
+           S('Toparlanma aşaması (§530, 0-3)', topAs, 'aşama', v=>v>=2, v=>v<=0&&momYuk),
+           S('CDS seviyesi', cdsSev, 'bp!', v=>v<250, v=>v>350),
+           S('Dezenflasyon beklentisi (TÜFE − PKA 12A)', dezenf, 'puan', v=>v>3, v=>v<0) ],
     poz2:[ S('S&P 500 1 ay', s1, '%', v=>v>3, v=>v<-3),
            S('S&P 500 3 ay', s3, '%', v=>v>6, v=>v<-6),
            S('VIX', vix, '', v=>v<15, v=>v>25),
            S('ABD 10Y faiz 1 ay', tnx1A==null?null:tnx1A*100, 'bp', v=>v<-25, v=>v>25),
-           S('USD/TRY 1 ay (TL bazlı getiri)', t1, '%', v=>v>3, v=>v<0.5) ],
+           S('USD/TRY 1 ay (TL bazlı getiri)', t1, '%', v=>v>3, v=>v<0.5),
+           S('S&P 500 vs 200 günlük ortalama', spSma, '%', v=>v>0, v=>v<-3),
+           S('ABD 10Y seviyesi', tnxSev, '%!', v=>v<3.5, v=>v>4.5),
+           S('ABD reel getiri 10Y TIPS (çarpan baskısı)', tips, '%', v=>v<1, v=>v>2),
+           S('Göreli: XU100 $ − S&P, 1 ay (yurt içi zayıfsa dışarı lehte)', goreli, 'puan', v=>v<-5, v=>v>5) ],
     poz3:[ S('Ons altın 1 ay', g1, '%', v=>v>3, v=>v<-3),
            S('Ons altın 3 ay', g3, '%', v=>v>6, v=>v<-6),
            S('ABD 10Y faiz 1 ay (fırsat maliyeti)', tnx1A==null?null:tnx1A*100, 'bp', v=>v<-25, v=>v>25),
            S('Dolar endeksi (DXY) 1 ay', d1, '%', v=>v<-2, v=>v>2),
            S('VIX (güvenli liman talebi)', vix, '', v=>v>25, v=>v<13),
-           S('USD/TRY 1 ay (TL bazlı)', t1, '%', v=>v>3, v=>v<0.5) ],
+           S('USD/TRY 1 ay (TL bazlı)', t1, '%', v=>v>3, v=>v<0.5),
+           S('Ons vs 200 günlük ortalama', gldSma, '%', v=>v>0, v=>v<-5),
+           S('ABD reel getiri 10Y TIPS (altının fırsat maliyeti)', tips, '%', v=>v<1, v=>v>2),
+           S('Gram altın TL 1 ay (ons × kur)', gramTl, '%', v=>v>3, v=>v<-3) ],
     poz4:[ S('Ex-ante reel faiz (carry)', exAnte, '%', v=>v>8, v=>v<3),
            S('Politika yönü (indirim = süre lehine)', polYon, 'bp', v=>v<0, v=>v>0),
            S('TR CDS 1 ay', cdsD, 'bp', v=>v<-20, v=>v>20),
-           S('USD/TRY 1 ay (TL hızlı değer kaybı)', t1, '%', v=>v<2, v=>v>4) ]
+           S('USD/TRY 1 ay (TL hızlı değer kaybı)', t1, '%', v=>v<2, v=>v>4),
+           S('Ex-post reel (AOFM − TÜFE, Fisher)', exPost, '%', v=>v>3, v=>v<0),
+           S('Eğri eğimi 2Y−10Y (ters = indirim fiyatlı, süre lehine)', egim, 'bp', v=>v>200, v=>v<-100),
+           S('CDS seviyesi', cdsSev, 'bp!', v=>v<250, v=>v>350),
+           S('Dezenflasyon beklentisi (TÜFE − PKA 12A)', dezenf, 'puan', v=>v>3, v=>v<0) ]
   };
   const sonuc={};
-  Object.entries(SIN).forEach(([k,L])=>{ const v=L.filter(x=>x.isaret!=null); const t=v.reduce((a,b)=>a+b.isaret,0);
-    const durus= t>=4?'AŞIRI ÜSTÜ':t>=2?'ÜSTÜ':t<=-4?'AŞIRI ALTI':t<=-2?'ALTI':'NÖTR';
-    L.forEach(x=>{ x.metin = x.deger==null? x.ad+': veri yok' : x.ad+' '+(x.birim==='bp'?yz(x.deger,0)+' bp':x.birim==='%'?yz(x.deger)+'%':x.birim.startsWith('/')?x.deger+x.birim:trN(x.deger,2)); });
-    sonuc[k]={durus, skor:t, n:v.length, toplam:L.length, sinyaller:L}; });
+  Object.entries(SIN).forEach(([k,L])=>{ const v=L.filter(x=>x.isaret!=null); const t=v.reduce((a,b)=>a+b.isaret,0); const oran=v.length?t/v.length:0;
+    /* §548 oranla: 6 sinyalde +2 ile 13 sinyalde +2 aynı şey değil */
+    const durus= (t>=2&&oran>=0.5)?'AŞIRI ÜSTÜ':(t>=2&&oran>=0.25)?'ÜSTÜ':(t<=-2&&oran<=-0.5)?'AŞIRI ALTI':(t<=-2&&oran<=-0.25)?'ALTI':'NÖTR';
+    L.forEach(x=>{ x.metin = x.deger==null? x.ad+': veri yok' : x.ad+' '+(x.birim==='bp!'?trN(x.deger,0)+' bp':x.birim==='%!'?'%'+trN(x.deger,2):x.birim==='bp'?yz(x.deger,0)+' bp':x.birim==='%'?yz(x.deger)+'%':x.birim==='% AUM'?yz(x.deger)+'% AUM':x.birim==='mn$'?yz(x.deger,0)+' mn $':x.birim==='z'?yz(x.deger,2)+' z':x.birim==='puan'?yz(x.deger)+' p':x.birim==='aşama'?x.deger+'/3':x.birim.startsWith('/')?x.deger+x.birim:trN(x.deger,2)); });
+    sonuc[k]={durus, skor:t, oran, n:v.length, toplam:L.length, sinyaller:L}; });
   sonuc._ts=new Date().toISOString();
   sonuc._girdi={xuSon:XU&&XU[XU.length-1], spSon:SP&&SP[SP.length-1], tnxSon:TNX&&TNX[TNX.length-1], gldSon:GLD&&GLD[GLD.length-1]};
   TAKTIK_MODEL=sonuc; taktikRender();
@@ -9533,16 +9584,17 @@ function taktikRender(){
       v._eski={durus:eskiDurus, kaynak:eskiKaynak, teze:v.teze, dayanak:v.dayanak, risk:v.risk, tetik:v.tetik};
       v.durus=r.durus; v.renk=/ÜSTÜ/.test(r.durus)?'#0FA26B':(/ALTI/.test(r.durus)?'#D64545':'#8896A5');
       const art=r.sinyaller.filter(x=>x.isaret===1), eks=r.sinyaller.filter(x=>x.isaret===-1), not_=r.sinyaller.filter(x=>x.isaret===0), yok=r.sinyaller.filter(x=>x.isaret==null);
-      v.teze='<b>MODEL: '+r.durus+'</b> — sinyal toplamı <b>'+(r.skor>0?'+':'')+r.skor+'</b> ('+r.n+'/'+r.toplam+' sinyal ölçüldü · '+art.length+' lehte, '+eks.length+' aleyhte, '+not_.length+' nötr'+(yok.length?', '+yok.length+' veri yok':'')+'). '+
+      v.teze='<b>MODEL: '+r.durus+'</b> — sinyal toplamı <b>'+(r.skor>0?'+':'')+r.skor+'</b> · oran '+(r.oran>0?'+':'')+trN(r.oran,2)+' ('+r.n+'/'+r.toplam+' sinyal ölçüldü · '+art.length+' lehte, '+eks.length+' aleyhte, '+not_.length+' nötr'+(yok.length?', '+yok.length+' veri yok':'')+'). '+
         (eskiDurus!==r.durus?'<span style="color:var(--down)">Eski tez '+eskiDurus+' diyordu ('+eskiKaynak+') — veriler bunu desteklemiyor.</span>':'Eski tezle aynı yönde.');
       /* §547c İŞARET METNİN İÇİNDE (26 Eki, kullanıcı: "lehte sinyal yok diyor, sonra sıralıyor"): nötr sinyaller "+" ile basılınca
          "lehte sinyal yok" satırının altında artı işaretli satırlar çelişki gibi okunuyordu. Lehte "+", aleyhte "−", nötr "○",
          veri yok "?", boş küme "·". Çizici işaretli satıra ikinci işaret EKLEMEZ; fabrika (elle) listeleri eskisi gibi "+"/"−" alır. */
-      v.dayanak=(art.length?art.map(x=>'+ '+x.metin):['· lehte sinyal yok']).concat(not_.map(x=>'○ nötr · '+x.metin)).slice(0,6);
-      v.risk=(eks.length?eks.map(x=>'− '+x.metin):['· aleyhte sinyal yok']).concat(yok.map(x=>'? '+x.metin)).slice(0,6);
-      const esik = r.skor<=-2? 'NÖTR için toplam −1\'e çıkmalı: en yakın dönüş adayları — '+eks.slice(0,2).map(x=>x.ad).join(', ') :
-                   r.skor>=2? 'NÖTR\'e dönüş: toplam +1\'e inerse — izlenecek: '+art.slice(0,2).map(x=>x.ad).join(', ') :
-                   'ÜSTÜ için +2, ALTI için −2 gerekir — sınırdaki sinyaller: '+r.sinyaller.filter(x=>x.isaret===0).slice(0,2).map(x=>x.ad).join(', ');
+      v.dayanak=(art.length?art.map(x=>'+ '+x.metin):['· lehte sinyal yok']).slice(0,8);   /* §548: nötrler burada DEĞİL */
+      v.risk=(eks.length?eks.map(x=>'− '+x.metin):['· aleyhte sinyal yok']).slice(0,8);
+      v._izlenen=not_.map(x=>x.metin).concat(yok.map(x=>x.metin));
+      const esik = /ALTI/.test(r.durus)? 'NÖTR için oran −0,25 üstüne çıkmalı (skor '+r.skor+'/'+r.n+'): dönüş adayları — '+eks.slice(0,3).map(x=>x.ad).join(', ') :
+                   /ÜSTÜ/.test(r.durus)? 'NÖTR\'e dönüş: oran +0,25 altına inerse — izlenecek: '+art.slice(0,3).map(x=>x.ad).join(', ') :
+                   'ÜSTÜ için skor ≥+2 ve oran ≥+0,25, ALTI için tersi — sınırdaki sinyaller: '+not_.slice(0,3).map(x=>x.ad).join(', ');
       v.tetik=esik+'. Eşikler kartın altındaki yöntem notunda.';
       v._model=true; });
     if(tg){ const d=new Date(MD._ts); tg.textContent='KURALLI MODEL · '+d.getDate()+' '+['OCA','ŞUB','MAR','NİS','MAY','HAZ','TEM','AĞU','EYL','EKİ','KAS','ARA'][d.getMonth()]+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
@@ -9560,18 +9612,21 @@ function taktikRender(){
       '<div><div style="font-weight:700;color:var(--down);margin-bottom:2px">RİSK / ÇÜRÜTEN</div>'+v.risk.map(r=>'<div style="color:var(--muted);margin-bottom:1px">'+(/^[+−·○?] /.test(r)?r:'− '+r)+'</div>').join('')+'</div>'+
     '</div>'+
     '<div style="margin-top:7px;font-size:9.5px;padding-top:6px;border-top:1px dashed var(--line)"><b style="color:var(--mm2)">TETİK:</b> <span class="sub">'+v.tetik+'</span></div>'+
+    (v._izlenen&&v._izlenen.length?'<div class="sub" style="margin-top:4px;font-size:9px">○ İZLENEN (nötr · eşik içinde): '+v._izlenen.map(esc).join(' · ')+'</div>':'')+   /* §548 */
     (v._eski?'<details data-tarihsel="eski taktik tez" style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--muted)">ESKİ TEZ — '+esc(v._eski.kaynak)+' · duruş '+esc(v._eski.durus)+'</summary><div class="sub" style="font-size:9.5px;line-height:1.5;margin-top:4px">'+v._eski.teze+'</div></details>':'')+
     '</div>'
   ).join('')+
   '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:9px;color:var(--muted)"><span>Canlı girdi:</span>'+
    '<span>AOFM '+(aofm!=null?'%'+trN(aofm,0):'—')+'</span>·<span>TÜFE '+(tufe!=null?'%'+trN(tufe,1):'—')+'</span>·<span>reel carry (ex-post) '+(carry!=null?'+%'+trN(carry,1):'—')+'</span>·<span>REK '+(rek!=null?rek:'—')+'</span>'+
    (alfa!=null?'·<span>model α '+(alfa>=0?'+':'')+trN(alfa,1)+'pp</span>':'')+'</div>';
-  const yontem=MD?'<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">YÖNTEM — sinyal eşikleri (§526)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">'+
+  const yontem=MD?'<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">YÖNTEM — sinyal eşikleri (§526 · §548)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">'+
     '<b>Yerli hisse:</b> XU100 1A ±%5 · 3A ±%10 · genişlik ≥11/15 lehte, ≤4/15 aleyhte · CDS 1A ∓15bp · ex-ante reel faiz <%5 lehte, >%10 aleyhte · son PPK ≤120g indirim lehte.<br>'+
     '<b>Yabancı hisse:</b> S&P 1A ±%3 · 3A ±%6 · VIX <15 / >25 · ABD 10Y 1A ∓25bp · USD/TRY 1A >%3 lehte, <%0,5 aleyhte.<br>'+
     '<b>Altın:</b> ons 1A ±%3 · 3A ±%6 · ABD 10Y 1A ∓25bp · DXY 1A ∓%2 · VIX >25 lehte, <13 aleyhte · USD/TRY 1A >%3 lehte.<br>'+
     '<b>TL / sabit getirili:</b> ex-ante reel faiz >%8 lehte, <%3 aleyhte · son PPK indirim lehte (süre) · CDS 1A ∓20bp · USD/TRY 1A <%2 lehte, >%4 aleyhte.<br>'+
-    'Toplam ≥+2 ÜSTÜ · ≥+4 AŞIRI ÜSTÜ · ≤−2 ALTI · ≤−4 AŞIRI ALTI. Model bir başlangıç noktasıdır; yatırım kararı değildir — tezini sinyallerle karşılaştırmak içindir.</div></details>':'';
+    '<b>§548 eklenen (temel · akış · değerleme):</b> Yerli — PD/DD z medyanı <−0,5 ucuz / >0,5 pahalı (degerleme.json) · FAVÖK $ y/y artan şirket payı >%60 / <%40 (karar-model) · yabancı hisse akımı 4h >+300 / <−300 mn $ · katılım hisse fonlarına akış 22g >+%2 / <−%2 AUM · toparlanma aşaması ≥2 lehte, 0 + yüksek momentum riski aleyhte (§530) · CDS <250 / >350 · TÜFE−PKA 12A >3 p lehte, <0 aleyhte. '+
+    'Yabancı — S&P vs SMA200 >0 / <−%3 · ABD 10Y <%3,5 / >%4,5 · TIPS reel <%1 / >%2 · göreli XU100$−S&P 1A <−5 p dışarı lehte. Altın — ons vs SMA200 >0 / <−%5 · TIPS reel <%1 / >%2 · gram TL 1A ±%3. TL — ex-post reel (AOFM−TÜFE Fisher) >%3 / <0 · eğri 2Y−10Y >+200bp ters lehte, <−100 aleyhte · CDS · dezenflasyon beklentisi.<br>'+
+    'Karar: skor ≥+2 ve oran (skor/ölçülen) ≥+0,25 → ÜSTÜ (oran ≥+0,5 AŞIRI); simetrik ALTI. Veri gelmeyen sinyal sayılmaz ve yazılır. Model bir başlangıç noktasıdır; yatırım kararı değildir — tezini sinyallerle karşılaştırmak içindir.</div></details>':'';
   if(el)el.innerHTML=html+yontem;
   if(el2)el2.innerHTML=html+yontem;
 }
@@ -14271,7 +14326,8 @@ function bugunRender(){
   const es=[]; ESIK.dikkat.forEach(k=>{ const r=ESIK.degerlendir(k); if(r.durum==='gecti'||r.durum==='yakin'){ dikkatN+=(r.durum==='gecti'?1:0); es.push('<span style="color:'+(r.durum==='gecti'?'var(--down)':'#E8933B')+'" title="'+esc(k.neden)+'">'+esc(r.ad)+' '+esc(ESIK.bicim(k.seri,r.deger))+' <span class="thin">(eşik '+esc(ESIK.bicim(k.seri,k.esik))+(r.durum==='yakin'?' · yakın':'')+')</span></span>'); } });
   const tm=typeof TAKTIK_MODEL!=='undefined'?TAKTIK_MODEL:null;
   const sin=[]; if(tm){ const g=new Set(); ['poz1','poz2','poz3','poz4'].forEach(p=>((tm[p]&&tm[p].sinyaller)||[]).forEach(s=>{ if(s.isaret&&!g.has(s.ad)){ g.add(s.ad); sin.push('<span class="'+(s.isaret>0?'up':'down')+'">'+(s.isaret>0?'▲':'▼')+' '+esc(s.metin||s.ad)+'</span>'); } })); }
-  const h1=(es.length?es.join(' · ')+(sin.length?'<br>':''):'')+(sin.length?'<span class="thin">Taktik sinyaller (eşik dışı): </span>'+sin.join(' · '):'')||(tm?'<span class="sub">eşik dışına çıkan seri yok</span>':'<span class="sub">taktik model henüz hesaplanmadı…</span>');
+  const sinK=sin.slice(0,8), sinArt=sin.length-sinK.length;   /* §548: model genişleyince satır uzadı — 8 ile kes, kalanı say */
+  const h1=(es.length?es.join(' · ')+(sin.length?'<br>':''):'')+(sin.length?'<span class="thin">Taktik sinyaller (eşik dışı): </span>'+sinK.join(' · ')+(sinArt>0?' <span class="thin">… +'+sinArt+' sinyal (Makro › Taktiksel Dağılım)</span>':''):'')||(tm?'<span class="sub">eşik dışına çıkan seri yok</span>':'<span class="sub">taktik model henüz hesaplanmadı…</span>');
   /* 2) bugün + yarın olaylar (GUNDEM_OLAY §522) */
   const GO=window.GUNDEM_OLAY; let h2;
   if(GO&&Array.isArray(GO.O)){ const b=GO.O.filter(x=>x.t===g0), y=GO.O.filter(x=>x.t===g1);
