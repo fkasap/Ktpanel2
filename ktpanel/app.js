@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261026d';
+const KTP_SURUM = '20261026e';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -10428,9 +10428,12 @@ async function planInit(){
       else if(D.tip==='yaklasti'){renk='#E8933B';durum=et+' · vade yaklaştı'+iz+sz;}
       else{renk='#DE4B5E';durum=et+' · GÜNCELLE'+iz+sz;bayat++;}
     }
-    return '<span class="fitem"><span class="fdot" style="background:'+renk+'"></span>'+k.ad+' — <span style="color:'+renk+';font-weight:600">'+durum+'</span></span>';
+    /* §547 borç sınıfı rozeti (guncelleme-plani.json borc: a/b/c/metin — açıklama borc_aciklama) */
+    const bz=k.borc?' <span class="thin" style="font-size:8px;border:1px solid var(--line2);border-radius:3px;padding:0 3px" title="'+esc((plan.borc_aciklama||{})[k.borc]||'')+'">borç '+esc(k.borc)+'</span>':'';
+    return '<span class="fitem"><span class="fdot" style="background:'+renk+'"></span>'+k.ad+' — <span style="color:'+renk+';font-weight:600">'+durum+'</span>'+bz+'</span>';
   }).join('');
-  $('planBody').innerHTML=html;
+  const BA=plan.borc_aciklama||{}; const bs={}; plan.katmanlar.forEach(k=>{ if(k.borc) bs[k.borc]=(bs[k.borc]||0)+1; });
+  $('planBody').innerHTML=html+(Object.keys(bs).length?'<div class="sub" style="font-size:9px;margin-top:6px">Otomasyon borcu sınıfları (§547): '+Object.keys(bs).map(x=>'<b>'+esc(x)+'</b> '+bs[x]+' — '+esc(BA[x]||'')).join(' · ')+'</div>':'');
   const trig=$('drawerTrigger');
   if(trig){
     const eski=trig.querySelector('.bayatRozet'); if(eski)eski.remove();
@@ -10446,6 +10449,7 @@ async function saglikInit(){
   const el=$('saglikBody'); if(!el) return;
   let S=null;
   try{ const r=await fetch('/saglik.json',{cache:'no-store'}); if(r.ok) S=await r.json(); }catch(e){}
+  window.SAGLIK_SON=S||null;   /* §547: BUGÜN ekranı okur */
   if(!S){ el.innerHTML='<div class="sub">Bekçi henüz koşmadı (saglik.json yok). Actions › Sağlık Bekçisi › Run workflow ile ilk tur başlatılabilir.</div>'; return; }
   const O=S.ozet||{}, B=S.bulgular||[];
   const ay=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
@@ -10676,6 +10680,8 @@ async function gundemCanli(){
   el.innerHTML=sat('Önümüzdeki 7 gün',ileriHtml)+(geriHtml?sat('Geçen 7 gün',geriHtml):'')+(piy?sat('Piyasa (5 iş günü)',piy):'')+
     '<div class="sub" style="font-size:9.5px;margin-top:4px">Otomatik derleme — PPK/FOMC/ECB/BoJ takvimleri · TÜİK/TCMB yayın ritmi · Hazine ihale programı · ülke notu takvimi · BIST bilanço takvimi (tahmini, geçen yıl deseni) · ForexFactory yüksek etkili veriler. Elle satır yok. §522</div>';
   const tg=$('gundemTag'); if(tg) tg.textContent='OTOMATİK · '+etk(g0).toLocaleUpperCase('tr-TR')+' → '+etk(g7).toLocaleUpperCase('tr-TR');
+  window.GUNDEM_OLAY={O,G,g0};   /* §547: BUGÜN ekranı aynı derlemeyi okur — ikinci derleme yok */
+  try{ if(typeof bugunRender==='function') bugunRender(); }catch(e){}
 }
 
 /* ---- Portföy Yönetimi ---- */
@@ -14091,3 +14097,254 @@ function ftCiz(t, kod, yil, don, id, kayit){
     (kayit.gec?' <b style="color:var(--down)">(GECİKMİŞ)</b>':'')+
     ' · şablon: '+esc(t.sablon)+' · '+esc(DON[don])+'</div>';
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   §547 "BUGÜN" EKRANI · EŞİK KÜTÜPHANESİ · TEZ BOZAN KURALI (26 Eki)
+   Teşhis (sence panelimiz nasıl? → brainstorm): panel sinyal üretiyor, karar
+   üretmiyor. Eşikler kartlara dağınık yazılı, tezlerin bozan koşulu serbest
+   metin, bekçi uyarıları çekmecede saklı. Bu blok yeni veri ÇEKMEZ; mevcut
+   sahiplerden OKUR (§112 tek sahip): TAKTIK_MODEL (§526), CDS_CANLI, POL_CANLI,
+   ENF_CANLI, TUFE_YILLIK/AOFM_SON (§304), __market, ENDARS, GUNDEM_OLAY (§522),
+   SAGLIK_SON (§509), jrnl (tez defteri).
+   1) ESIK — tek yerde seri çözücüler + dikkat eşikleri. Başka kart kendi
+      eşiğini yazmaya devam edebilir; BUGÜN yalnız buradakileri okur.
+   2) Tez kuralı — tez kartına makine-okur {seri, yon, esik}. Serbest metin
+      "Tezi bozacaklar" DURUR; kural onun ölçülebilir hâlidir.
+   3) bugunRender — 5 satır: eşik geçenler · bugünkü olaylar · tehlikedeki
+      tezler · taktik duruş (değişti mi) · bekçi.
+   4) korMatrisRender — 60 iş günü getiri korelasyonu (Portföy).
+   5) tezDisiplinRender — pozisyon ↔ tez ↔ kural (Portföy).
+   Hiçbir satır elle sayı taşımaz; veri gelmeyen satır "veri yok" yazar.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const ESIK=(()=>{
+  const num=v=>(v==null||!isFinite(+v))?null:+v;
+  const mk=k=>{ const m=window.__market||{}; return (m[k]&&isFinite(m[k].p))?+m[k].p:null; };
+  const endArs=k=>{ try{ const gn=(ENDARS&&ENDARS.gunler)||{}; const gl=Object.keys(gn).filter(g=>gn[g]&&gn[g][k]>0).sort(); return gl.length?+gn[gl[gl.length-1]][k]:null; }catch(e){ return null; } };
+  let cdsYedek=null; (async()=>{ try{ const r=await fetch('/cds.json',{cache:'no-store'}); if(r.ok){ const j=await r.json(); const s=j&&j.seri; if(Array.isArray(s)&&s.length) cdsYedek=+s[s.length-1][1]; } }catch(e){} })();
+  const taktikSinyal=(poz,adBas)=>{ try{ const L=(TAKTIK_MODEL&&TAKTIK_MODEL[poz]&&TAKTIK_MODEL[poz].sinyaller)||[]; const x=L.find(s=>s.ad.indexOf(adBas)===0); return x?num(x.deger):null; }catch(e){ return null; } };
+  const seri={
+    cds:      {ad:'TR 5Y CDS', birim:'bp', d:0, oku:()=>(CDS_CANLI&&isFinite(CDS_CANLI.deger))?+CDS_CANLI.deger:cdsYedek},
+    vix:      {ad:'VIX', birim:'', d:1, oku:()=>mk('vix')},
+    politika: {ad:'TCMB politika faizi', birim:'%', d:2, oku:()=>(window.POL_CANLI&&isFinite(window.POL_CANLI.deger))?+window.POL_CANLI.deger:null},
+    aofm:     {ad:'AOFM', birim:'%', d:2, oku:()=>num(typeof AOFM_SON!=='undefined'?AOFM_SON:null)},
+    tufe:     {ad:'TÜFE yıllık', birim:'%', d:1, oku:()=>num(typeof TUFE_YILLIK!=='undefined'?TUFE_YILLIK:null)},
+    pka12:    {ad:'PKA 12 ay TÜFE beklentisi', birim:'%', d:1, oku:()=>(window.ENF_CANLI&&isFinite(window.ENF_CANLI.bek))?+window.ENF_CANLI.bek:null},
+    exante:   {ad:'Ex-ante reel faiz', birim:'%', d:1, oku:()=>taktikSinyal('poz1','Ex-ante')},
+    rek:      {ad:'Reel efektif kur (TÜFE)', birim:'', d:1, oku:()=>num(typeof REK_SON!=='undefined'?REK_SON:null)},
+    usdtry:   {ad:'USD/TRY', birim:'₺', d:2, oku:()=>num(window.__usdtry)},
+    brent:    {ad:'Brent', birim:'$', d:1, oku:()=>mk('brent')},
+    altin:    {ad:'Ons altın', birim:'$', d:0, oku:()=>mk('altin')},
+    dxy:      {ad:'Dolar endeksi (DXY)', birim:'', d:1, oku:()=>mk('dxy')},
+    us10y:    {ad:'ABD 10Y', birim:'%', d:2, oku:()=>{ try{ const s=TAKTIK_MODEL&&TAKTIK_MODEL._girdi&&TAKTIK_MODEL._girdi.tnxSon; return s?+s[1]:null; }catch(e){ return null; } }},
+    sp500:    {ad:'S&P 500', birim:'', d:0, oku:()=>mk('sp500')},
+    xu100:    {ad:'BIST 100', birim:'', d:0, oku:()=>mk('xu100')||endArs('XU100')},
+    xktum:    {ad:'BIST Katılım Tüm', birim:'', d:0, oku:()=>endArs('XKTUM')},
+    xk100:    {ad:'BIST Katılım 100', birim:'', d:0, oku:()=>endArs('XK100')},
+    xu100_1a: {ad:'XU100 1 ay getiri', birim:'%', d:1, oku:()=>taktikSinyal('poz1','XU100 1 ay')},
+    cds_1a:   {ad:'CDS 1 ay değişim', birim:'bp', d:0, oku:()=>taktikSinyal('poz1','TR CDS 1 ay')},
+    usdtry_1a:{ad:'USD/TRY 1 ay değişim', birim:'%', d:1, oku:()=>taktikSinyal('poz2','USD/TRY 1 ay')}
+  };
+  /* DİKKAT EŞİKLERİ — "neden bu sayı" tek yerde: CDS 300 = 2023-24 dezenflasyon programının kırılma bandı (300 üstü yabancı
+     akımı tersine döndü, §253); VIX 25 = §526 taktik modelin risk-off eşiği; ex-ante reel <3 = §526 carry sinyalinin negatif
+     eşiği; PKA 12A ≥ politika = beklenti çıpası kopmuş demektir; usdtry_1a >4 = §526 "TL hızlı değer kaybı"; cds_1a >20 = §526. */
+  const dikkat=[
+    {seri:'cds',       yon:'ust', esik:300, neden:'300 bp üstü: 2024 akım tersine dönüş bandı'},
+    {seri:'vix',       yon:'ust', esik:25,  neden:'risk-off eşiği (§526)'},
+    {seri:'exante',    yon:'alt', esik:3,   neden:'carry sinyali negatif bölge (§526)'},
+    {seri:'cds_1a',    yon:'ust', esik:20,  neden:'1 ayda +20 bp: risk primi hızlanıyor (§526)'},
+    {seri:'usdtry_1a', yon:'ust', esik:4,   neden:'TL aylık %4+ değer kaybı (§526)'},
+    {seri:'xu100_1a',  yon:'alt', esik:-10, neden:'aylık −%10: düzeltme rejimi'}
+  ];
+  const bicim=(k,v)=>{ const s=seri[k]; if(!s||v==null) return '—'; const neg=v<0; return (neg?'−':'')+(s.birim==='%'?'%':'')+trN(Math.abs(v),s.d)+(s.birim&&s.birim!=='%'?' '+s.birim:''); };
+  /* kural değerlendirme: {deger, durum: 'gecti'|'yakin'|'uzak'|'yok', mesafe} — yakın = eşiğe %10 (ya da 1 birim) içinde */
+  const degerlendir=(kural)=>{
+    if(!kural||!kural.seri) return {durum:'yok'};
+    let v=null, ad=kural.seri;
+    if(/^hisse:/.test(kural.seri)){ const kod=kural.seri.slice(6); v=(typeof jCanliFiyat==='function')?jCanliFiyat(kod):null; ad=kod+' fiyatı'; }
+    else { const s=seri[kural.seri]; if(!s) return {durum:'yok'}; try{ v=s.oku(); }catch(e){ v=null; } ad=s.ad; }
+    const e=+kural.esik; if(v==null||!isFinite(e)) return {durum:'yok', ad, deger:v};
+    const gecti = kural.yon==='alt' ? v<=e : v>=e;
+    const band = Math.max(Math.abs(e)*0.10, 1e-9);
+    const mesafe = kural.yon==='alt' ? (v-e) : (e-v);      /* pozitif = henüz geçmedi */
+    const yakin = !gecti && mesafe<=band;
+    return {durum: gecti?'gecti':yakin?'yakin':'uzak', ad, deger:v, esik:e, mesafe};
+  };
+  const secenekler=()=>Object.entries(seri).map(([k,s])=>[k,s.ad]);
+  return {seri, dikkat, bicim, degerlendir, secenekler};
+})();
+window.ESIK=ESIK;
+
+/* ── tez kuralı: form + kart + karne ── */
+function jKuralOku(j){ return (j&&j.kural&&j.kural.seri)?j.kural:null; }
+function jKuralMetin(j){
+  const k=jKuralOku(j); if(!k) return '';
+  const r=ESIK.degerlendir(k);
+  const ad=r.ad||k.seri;
+  const esikM=/^hisse:/.test(k.seri)?trN(+k.esik,2)+' ₺':ESIK.bicim(k.seri,+k.esik);
+  const simdi=r.deger==null?'veri yok':(/^hisse:/.test(k.seri)?trN(r.deger,2)+' ₺':ESIK.bicim(k.seri,r.deger));
+  const renk=r.durum==='gecti'?'var(--down)':r.durum==='yakin'?'#E8933B':'var(--muted)';
+  const et=r.durum==='gecti'?'BOZAN GERÇEKLEŞTİ':r.durum==='yakin'?'EŞİĞE YAKIN':r.durum==='uzak'?'uzak':'veri yok';
+  return '<span style="font-family:var(--mono);font-size:9.5px;color:'+renk+'" title="'+esc(ad+' '+(k.yon==='alt'?'≤':'≥')+' '+esikM)+'">⚙ '+esc(ad)+' '+(k.yon==='alt'?'≤':'≥')+' '+esc(esikM)+' · şimdi '+esc(simdi)+' · <b>'+et+'</b></span>';
+}
+function jKuralSor(i){
+  const j=jrnl[i]; if(!j) return;
+  const L=ESIK.secenekler();
+  const liste=L.map(([k,a],n)=>(n+1)+') '+a).join('\n');
+  const v=prompt(j.kod+' — bozan kural SERİSİ (numara yaz; hisse fiyatı için 0):\n\n0) '+j.kod+' hisse fiyatı\n'+liste, j.kural?(j.kural.seri.startsWith('hisse:')?'0':String(L.findIndex(x=>x[0]===j.kural.seri)+1)):'0');
+  if(v==null) return; const n=parseInt(v,10); if(!isFinite(n)||n<0||n>L.length) return;
+  const seri = n===0 ? 'hisse:'+String(j.kod).toUpperCase() : L[n-1][0];
+  const y=prompt('Yön: tez bozulur eğer seri eşiğin ALTINA inerse (a) / ÜSTÜNE çıkarsa (u):', j.kural?(j.kural.yon==='alt'?'a':'u'):'a');
+  if(y==null) return; const yon=/^u/i.test(y.trim())?'ust':'alt';
+  const e=prompt('Eşik değeri (sayı):', j.kural?String(j.kural.esik):'');
+  if(e==null) return; const esik=parseFloat(String(e).replace(',','.')); if(!isFinite(esik)) return;
+  j.kural={seri,yon,esik}; saveJ(); renderJ(); if(typeof jKarneRender==='function') jKarneRender(); if(typeof bugunRender==='function') bugunRender(); if(typeof tezDisiplinRender==='function') tezDisiplinRender();
+}
+/* renderJ'yi sarmalar: karta kural satırı + ⚙ düğmesi (renderJ'nin kendisine dokunulmadı — §112) */
+(function(){
+  if(typeof renderJ!=='function') return;
+  const _renderJ=renderJ;
+  window.renderJ=renderJ=function(){
+    _renderJ();
+    const el=$('jList'); if(!el) return;
+    el.querySelectorAll('.jcard').forEach((c,i)=>{
+      const j=jrnl[i]; if(!j) return;
+      const d=document.createElement('div'); d.className='jfield'; d.style.whiteSpace='normal';
+      d.innerHTML='<span class="jl">Bozan kural</span>'+(jKuralOku(j)?jKuralMetin(j):'<span class="sub" style="font-size:9.5px">yok — serbest metin ölçülemez</span>')+
+        ' <button class="btn mini2" data-jkural="'+i+'" style="margin-left:6px">⚙ '+(jKuralOku(j)?'düzenle':'kural ekle')+'</button>';
+      c.appendChild(d);
+    });
+    el.querySelectorAll('button[data-jkural]').forEach(b=>b.addEventListener('click',()=>jKuralSor(+b.dataset.jkural)));
+  };
+  /* form: Teze Kaydet'ten önce kural alanlarını oku */
+  const kaydet=$('jEkle'); let onceN=-1;
+  if(kaydet){
+    kaydet.addEventListener('click',()=>{ onceN=jrnl.length; }, true);   /* capture: asıl dinleyiciden ÖNCE sayım */
+    kaydet.addEventListener('click',()=>{
+    /* asıl dinleyici jrnl[0]'ı eklediyse (uzunluk arttı) kural alanlarını ona bağla */
+    const s=$('jBozSeri'), y=$('jBozYon'), e=$('jBozEsik'); if(!s||!y||!e) return;
+    const esik=parseFloat(String(e.value||'').replace(',','.'));
+    if(jrnl.length===onceN+1&&s.value&&isFinite(esik)){ const j=jrnl[0]; j.kural={seri:(s.value==='hisse'?'hisse:'+String(j.kod).toUpperCase():s.value), yon:y.value, esik}; saveJ(); renderJ(); if(typeof jKarneRender==='function') jKarneRender(); }
+    if(jrnl.length===onceN+1){ s.value=''; e.value=''; }
+  }, false); }
+  const s=$('jBozSeri'); if(s&&!s.options.length){ s.innerHTML='<option value="">bozan kural: seri seç (ops.)</option><option value="hisse">Hisse fiyatı (kod)</option>'+ESIK.secenekler().map(([k,a])=>'<option value="'+k+'">'+esc(a)+'</option>').join(''); }
+  try{ renderJ(); }catch(e){}
+})();
+/* jKarneRender'ı sarmalar: açık tez tablosuna KURAL sütunu yerine altına özet satır (tablo yapısına dokunmadan) */
+(function(){
+  if(typeof jKarneRender!=='function') return;
+  const _k=jKarneRender;
+  window.jKarneRender=jKarneRender=function(){
+    _k();
+    const el=$('jKarne'); if(!el||!jrnl.length) return;
+    const acik=jrnl.filter(j=>j.durum!=='kapali'&&jKuralOku(j));
+    if(!acik.length) return;
+    const d=document.createElement('div'); d.style.marginTop='8px';
+    d.innerHTML='<div class="lbl">BOZAN KURALLAR · CANLI <span class="thin" style="font-weight:400">(§547 · eşik kütüphanesinden okunur)</span></div>'+
+      acik.map(j=>'<div style="padding:3px 0;border-bottom:1px dashed var(--line)"><b style="font-size:11px">'+esc(j.kod)+'</b> '+jKuralMetin(j)+'</div>').join('');
+    el.appendChild(d);
+  };
+})();
+
+/* ── BUGÜN ── */
+let BUGUN_ONCEKI_TAKTIK=null;
+function bugunRender(){
+  const el=$('bugunBody'); if(!el) return;
+  const GUN=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'], AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const bug=new Date(); const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const g0=iso(bug); const yar=new Date(bug); yar.setDate(yar.getDate()+1); const g1=iso(yar);
+  const sat=(k,html)=>'<div class="kv" style="align-items:flex-start"><span class="k" style="flex:none;width:118px">'+k+'</span><span style="flex:1;text-align:left;font-family:var(--sans);font-size:11px;line-height:1.5">'+html+'</span></div>';
+  let dikkatN=0;
+  /* 1) eşik geçenler: ESIK.dikkat + taktik modelin aktif sinyalleri */
+  const es=[]; ESIK.dikkat.forEach(k=>{ const r=ESIK.degerlendir(k); if(r.durum==='gecti'||r.durum==='yakin'){ dikkatN+=(r.durum==='gecti'?1:0); es.push('<span style="color:'+(r.durum==='gecti'?'var(--down)':'#E8933B')+'" title="'+esc(k.neden)+'">'+esc(r.ad)+' '+esc(ESIK.bicim(k.seri,r.deger))+' <span class="thin">(eşik '+esc(ESIK.bicim(k.seri,k.esik))+(r.durum==='yakin'?' · yakın':'')+')</span></span>'); } });
+  const tm=typeof TAKTIK_MODEL!=='undefined'?TAKTIK_MODEL:null;
+  const sin=[]; if(tm){ const g=new Set(); ['poz1','poz2','poz3','poz4'].forEach(p=>((tm[p]&&tm[p].sinyaller)||[]).forEach(s=>{ if(s.isaret&&!g.has(s.ad)){ g.add(s.ad); sin.push('<span class="'+(s.isaret>0?'up':'down')+'">'+(s.isaret>0?'▲':'▼')+' '+esc(s.metin||s.ad)+'</span>'); } })); }
+  const h1=(es.length?es.join(' · ')+(sin.length?'<br>':''):'')+(sin.length?'<span class="thin">Taktik sinyaller (eşik dışı): </span>'+sin.join(' · '):'')||(tm?'<span class="sub">eşik dışına çıkan seri yok</span>':'<span class="sub">taktik model henüz hesaplanmadı…</span>');
+  /* 2) bugün + yarın olaylar (GUNDEM_OLAY §522) */
+  const GO=window.GUNDEM_OLAY; let h2;
+  if(GO&&Array.isArray(GO.O)){ const b=GO.O.filter(x=>x.t===g0), y=GO.O.filter(x=>x.t===g1);
+    h2=(b.length?'<b style="color:var(--mm2)">Bugün</b> · '+b.map(x=>x.metin).join(' · '):'<span class="sub">bugün takvimde olay yok</span>')+(y.length?'<br><b style="color:var(--muted)">Yarın</b> · '+y.map(x=>x.metin).join(' · '):''); }
+  else h2='<span class="sub">gündem derleniyor…</span>';
+  /* 3) tehlikedeki tezler */
+  const teh=[]; try{ (jrnl||[]).filter(j=>j.durum!=='kapali').forEach(j=>{ const k=jKuralOku(j); if(k){ const r=ESIK.degerlendir(k); if(r.durum==='gecti'){ dikkatN++; teh.push('<span style="color:var(--down)"><b>'+esc(j.kod)+'</b> bozan gerçekleşti ('+esc(r.ad)+' '+esc(/^hisse:/.test(k.seri)?trN(r.deger,2):ESIK.bicim(k.seri,r.deger))+')</span>'); } else if(r.durum==='yakin') teh.push('<span style="color:#E8933B"><b>'+esc(j.kod)+'</b> eşiğe yakın ('+esc(r.ad)+')</span>'); }
+      const gun=(typeof jCanliFiyat==='function')?jCanliFiyat(j.kod):null; const hed=parseFloat(String(j.hedef||'').replace(/[^\d,.-]/g,'').replace(',','.'))||null;
+      if(gun&&hed&&gun>=hed) teh.push('<span class="up"><b>'+esc(j.kod)+'</b> hedefe ulaştı ('+trN(gun,2)+' ≥ '+trN(hed,2)+') — kâr al/yeni hedef kararı</span>'); }); }catch(e){}
+  const acikN=(jrnl||[]).filter(j=>j.durum!=='kapali').length, kuralN=(jrnl||[]).filter(j=>j.durum!=='kapali'&&jKuralOku(j)).length;
+  const h3=teh.length?teh.join(' · '):(acikN?'<span class="sub">'+acikN+' açık tez · '+kuralN+' kurallı · tetiklenen yok'+(kuralN<acikN?' · <b>'+(acikN-kuralN)+' tezin ölçülebilir bozanı yok</b> (Muhakeme › ⚙)':'')+'</span>':'<span class="sub">açık tez yok</span>');
+  /* 4) taktik duruş + değişim */
+  let h4='<span class="sub">hesaplanıyor…</span>';
+  if(tm){ const AD={poz1:'Yerli hisse',poz2:'Yabancı hisse',poz3:'Altın',poz4:'TL sabit getirili'};
+    /* kayıt: son = bugünkü duruş, onc = bir önceki GÜNÜN duruşu ("dün ne değişti" bunu ister; gün içi yeniden hesaplar onc'u ezmez) */
+    let rec=null; try{ rec=JSON.parse(localStorage.getItem('ktp_taktik_onceki_v1')||'null'); }catch(e){}
+    const simdi={}; ['poz1','poz2','poz3','poz4'].forEach(p=>{ if(tm[p]) simdi[p]=tm[p].durus; });
+    if(!rec||!rec.son) rec={son:{d:simdi,gun:g0}, onc:null};
+    else if(rec.son.gun!==g0){ rec.onc={d:rec.son.d,gun:rec.son.gun}; rec.son={d:simdi,gun:g0}; }
+    else rec.son.d=simdi;
+    try{ localStorage.setItem('ktp_taktik_onceki_v1', JSON.stringify(rec)); }catch(e){}
+    const onc=rec.onc;
+    const degis=[]; if(onc&&onc.d){ Object.keys(simdi).forEach(p=>{ if(onc.d[p]&&onc.d[p]!==simdi[p]) degis.push('<b>'+AD[p]+'</b> '+esc(onc.d[p])+' → <b>'+esc(simdi[p])+'</b>'); }); }
+    if(degis.length) dikkatN++;
+    h4=Object.keys(simdi).map(p=>{ const d=simdi[p]; const c=/ÜSTÜ/.test(d)?'var(--up)':/ALTI/.test(d)?'var(--down)':'var(--muted)'; return AD[p]+' <b style="color:'+c+'">'+esc(d)+'</b>'; }).join(' · ')+
+      (degis.length?'<br><span style="color:#E8933B">Değişti ('+esc(onc.gun)+' → bugün): '+degis.join(' · ')+'</span>':'<br><span class="sub">'+(onc?'önceki kayda ('+esc(onc.gun)+') göre değişim yok':'ilk kayıt — karşılaştırma yarından itibaren')+'</span>');
+  }
+  /* 5) bekçi */
+  const S=window.SAGLIK_SON; let h5;
+  if(S&&S.ozet){ const O=S.ozet; if(O.kritik) dikkatN++;
+    const krit=(S.bulgular||[]).filter(b=>b.seviye==='kritik').slice(0,3).map(b=>esc(b.baslik)).join(' · ');
+    h5='<span style="color:'+(O.kritik?'var(--down)':O.uyari?'#E8933B':'var(--up)')+'"><b>'+(O.kritik?O.kritik+' kritik':O.uyari?'kritik yok':'sağlıklı')+'</b></span> · '+(O.uyari||0)+' uyarı · '+(O.yeni||0)+' yeni'+(krit?' — '+krit:'')+' <span class="thin">(⊙ Veri Durumu)</span>'; }
+  else h5='<span class="sub">bekçi raporu okunuyor…</span>';
+  el.innerHTML=sat('Eşik geçenler',h1)+sat('Takvim',h2)+sat('Tezler',h3)+sat('Taktik duruş',h4)+sat('Bekçi',h5);
+  const tg=$('bugunTag'); if(tg){ tg.textContent=GUN[bug.getDay()]+' '+bug.getDate()+' '+AYK[bug.getMonth()]+' · '+(dikkatN?dikkatN+' DİKKAT':'sakin'); tg.style.background=dikkatN?'var(--down)':''; }
+}
+(function(){
+  const w=$('bugunWrap'); if(w){ try{ if(localStorage.getItem('ktp_bugun_kapali')==='1') w.removeAttribute('open'); }catch(e){}
+    w.addEventListener('toggle',()=>{ try{ localStorage.setItem('ktp_bugun_kapali', w.open?'0':'1'); }catch(e){} }); }
+  [1500,4000,8000,14000,22000,35000,60000,120000].forEach(t=>setTimeout(()=>{ try{ bugunRender(); }catch(e){ console.error('[KTPanel] bugunRender', e&&e.message||e); }
+    /* canlı fiyat geç gelir: tez kartlarındaki kural satırı ve karne de tazelenir (8 ve 22 sn) */
+    if(t===8000||t===22000){ try{ renderJ(); }catch(e){} try{ jKarneRender(); }catch(e){} } }, t));
+  setInterval(()=>{ try{ bugunRender(); }catch(e){} }, 10*60*1000);
+})();
+
+/* ── KORELASYON TABLOSU (Portföy) — 60 iş günü günlük getiri korelasyonu, Yahoo kapanış (/api/market?mod=seri) ── */
+const KOR_SERI={};
+async function korMatrisRender(){
+  const el=$('korMatris'); if(!el) return;
+  const kodlar=[...new Set(poz.filter(p=>p.tip==='hisse'&&p.kod).map(p=>String(p.kod).toUpperCase()))].slice(0,12);
+  if(kodlar.length<2){ el.innerHTML='<div class="sub">En az iki hisse pozisyonu gerekir.</div>'; return; }
+  const anah=kodlar.join(','); if(el.dataset.anah===anah&&el.dataset.hazir==='1') return;
+  el.dataset.anah=anah; el.innerHTML='<div class="sub">seriler çekiliyor…</div>';
+  const cek=async k=>{ if(KOR_SERI[k]!==undefined) return KOR_SERI[k]; try{ const j=await (await fetch('/api/market?mod=seri&kod='+encodeURIComponent(k)+'&gun=120',{cache:'no-store'})).json(); KOR_SERI[k]=(j&&j.ok&&Array.isArray(j.bar)&&j.bar.length>30)?j.bar.map(b=>[b.t,+b.c]).filter(x=>x[1]>0):null; }catch(e){ KOR_SERI[k]=null; } return KOR_SERI[k]; };
+  const S={}; for(const k of kodlar) S[k]=await cek(k);
+  if(el.dataset.anah!==anah) return;
+  const var_=kodlar.filter(k=>S[k]); const yok=kodlar.filter(k=>!S[k]);
+  if(var_.length<2){ el.innerHTML='<div class="sub">Seri alınamadı: '+esc(yok.join(', '))+'</div>'; return; }
+  /* ortak tarih kümesi, son 60 gözlem */
+  let ortak=null; var_.forEach(k=>{ const t=new Set(S[k].map(x=>x[0])); ortak=ortak?new Set([...ortak].filter(x=>t.has(x))):t; });
+  const T=[...ortak].sort().slice(-61); if(T.length<25){ el.innerHTML='<div class="sub">Ortak gözlem az ('+T.length+').</div>'; return; }
+  const R={}; var_.forEach(k=>{ const m=new Map(S[k]); const r=[]; for(let i=1;i<T.length;i++) r.push(Math.log(m.get(T[i])/m.get(T[i-1]))); R[k]=r; });
+  const kor=(a,b)=>{ const n=a.length; const ma=a.reduce((s,x)=>s+x,0)/n, mb=b.reduce((s,x)=>s+x,0)/n; let sab=0,saa=0,sbb=0; for(let i=0;i<n;i++){ sab+=(a[i]-ma)*(b[i]-mb); saa+=(a[i]-ma)**2; sbb+=(b[i]-mb)**2; } return (saa>0&&sbb>0)?sab/Math.sqrt(saa*sbb):null; };
+  const renk=c=>{ if(c==null) return 'transparent'; const a=Math.min(1,Math.abs(c)); return c>=0?'rgba(222,75,94,'+(0.08+0.5*a).toFixed(2)+')':'rgba(61,123,217,'+(0.08+0.5*a).toFixed(2)+')'; };
+  let ort=0,n=0; const ciftler=[];
+  const html='<div style="overflow-x:auto"><table style="font-family:var(--mono);font-size:10px;border-collapse:collapse"><tr><th></th>'+var_.map(k=>'<th style="padding:3px 5px;font-size:9px">'+esc(k)+'</th>').join('')+'</tr>'+
+    var_.map(a=>'<tr><th style="text-align:left;padding:3px 5px;font-size:9px">'+esc(a)+'</th>'+var_.map(b=>{ if(a===b) return '<td style="padding:3px 5px;text-align:center;color:var(--muted)">1</td>'; const c=kor(R[a],R[b]); if(a<b&&c!=null){ ort+=c; n++; ciftler.push([a,b,c]); } return '<td style="padding:3px 5px;text-align:center;background:'+renk(c)+'">'+(c==null?'—':trN(c,2))+'</td>'; }).join('')+'</tr>').join('')+'</table></div>';
+  ciftler.sort((x,y)=>y[2]-x[2]);
+  const enY=ciftler.slice(0,3).map(x=>x[0]+'–'+x[1]+' '+trN(x[2],2)).join(' · ');
+  const enD=ciftler.slice(-2).map(x=>x[0]+'–'+x[1]+' '+trN(x[2],2)).join(' · ');
+  el.innerHTML=html+'<div class="sub" style="margin-top:5px">'+T[1]+' → '+T[T.length-1]+' · '+(T.length-1)+' gözlem · ortalama çift korelasyonu <b>'+trN(n?ort/n:0,2)+'</b>'+(enY?' · en yüksek: '+esc(enY):'')+(enD?' · en düşük: '+esc(enD):'')+(yok.length?' · seri yok: '+esc(yok.join(', ')):'')+'</div>'+
+    '<div class="note" style="margin-top:6px">Okuma: ortalama 0,6 üstü ise "sekiz hisse" aslında iki-üç bahistir; stres gününde birlikte düşerler. Faktör-uzayı benzerliği (üstteki kart) <em>neden</em> benzediklerini, bu tablo <em>fiilen</em> ne kadar birlikte hareket ettiklerini söyler. Günlük logaritmik getiri, Yahoo düzeltilmemiş kapanış; 60 gün kısa penceredir — rejim değişince hızla değişir.</div>';
+  el.dataset.hazir='1';
+}
+/* ── TEZ DİSİPLİNİ (Portföy): her pozisyonun tezi ve kuralı var mı, kural ne diyor ── */
+function tezDisiplinRender(){
+  const el=$('tezDisiplin'); if(!el) return;
+  const H=poz.filter(p=>p.tip==='hisse'&&p.kod);
+  if(!H.length){ el.innerHTML='<div class="sub">Hisse pozisyonu ekleyince dolar.</div>'; return; }
+  const rows=H.map(p=>{ const kod=String(p.kod).toUpperCase(); const j=(jrnl||[]).find(x=>String(x.kod).toUpperCase()===kod&&x.durum!=='kapali'); const k=j?jKuralOku(j):null; const r=k?ESIK.degerlendir(k):null;
+    const durum=!j?['tez yok','var(--down)']:!k?['kural yok','#E8933B']:r.durum==='gecti'?['BOZAN GERÇEKLEŞTİ','var(--down)']:r.durum==='yakin'?['eşiğe yakın','#E8933B']:r.durum==='uzak'?['tez sağlam','var(--up)']:['veri yok','var(--muted)'];
+    return '<tr><td><b>'+esc(kod)+'</b></td><td style="font-size:10px">'+(j?esc((j.tez||'').slice(0,70))+((j.tez||'').length>70?'…':''):'<span class="sub">Muhakeme sekmesinde yaz</span>')+'</td><td style="font-size:10px">'+(k?jKuralMetin(j):'—')+'</td><td style="color:'+durum[1]+';font-weight:600;font-size:10px;white-space:nowrap">'+durum[0]+'</td></tr>'; });
+  const n={tezYok:0,kuralYok:0,gecti:0}; H.forEach(p=>{ const kod=String(p.kod).toUpperCase(); const j=(jrnl||[]).find(x=>String(x.kod).toUpperCase()===kod&&x.durum!=='kapali'); if(!j) n.tezYok++; else if(!jKuralOku(j)) n.kuralYok++; else if(ESIK.degerlendir(j.kural).durum==='gecti') n.gecti++; });
+  el.innerHTML='<table><tr><th>Hisse</th><th>Tez</th><th>Bozan kural</th><th>Durum</th></tr>'+rows.join('')+'</table>'+
+    '<div class="note" style="margin-top:6px">'+(n.gecti?'<b style="color:var(--down)">'+n.gecti+' pozisyonda bozan koşul gerçekleşti</b> — tezi kapat ya da yeniden yaz; "biraz daha bekleyeyim" tezin değil duygunun cümlesidir. ':'')+(n.tezYok?n.tezYok+' pozisyonun tezi yok. ':'')+(n.kuralYok?n.kuralYok+' tezin ölçülebilir bozanı yok. ':'')+'Risk yönetiminin yarısı ne zaman yanıldığını önceden yazmaktır; bu tablo o yazıyı her açılışta piyasaya karşı okur.</div>';
+}
+try{ if(Array.isArray(POZ_GOREV)){ if(POZ_GOREV.indexOf('korMatrisRender')<0) POZ_GOREV.push('korMatrisRender'); if(POZ_GOREV.indexOf('tezDisiplinRender')<0) POZ_GOREV.push('tezDisiplinRender'); } }catch(e){}
+window.korMatrisRender=korMatrisRender; window.tezDisiplinRender=tezDisiplinRender; window.bugunRender=bugunRender;
+setTimeout(()=>{ try{ tezDisiplinRender(); }catch(e){} try{ korMatrisRender(); }catch(e){} }, 6000);

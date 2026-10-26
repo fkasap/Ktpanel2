@@ -95,6 +95,12 @@ tbody tr:hover{background:var(--mmL)}
 input,select,textarea{background:var(--card);border:1px solid var(--line2);color:var(--text);font-family:var(--mono);font-size:11.5px;padding:7px 9px;border-radius:7px}
 textarea{font-family:var(--sans);font-size:12px;resize:vertical;min-height:44px;width:100%}
 .note{font-size:10.5px;color:var(--muted);line-height:1.65;margin-top:8px;border-left:2px solid var(--mm);padding-left:9px}
+/* §547 Ebu yorumu ↔ veri görsel ayrımı: ajan.js'in yazdığı notlar data-ebu="1" taşır (§110). Göz "bu yorum, bu veri" ayrımını tipografiden yapar. */
+[data-ebu="1"]{font-style:italic;border-left:2px dotted var(--purple)!important;padding-left:9px}
+[data-ebu="1"]::before{content:'🤖 YORUM · veri değil · panel verilerinden yazıldı';display:block;font-style:normal;font-family:var(--mono);font-size:8.5px;letter-spacing:.4px;color:var(--purple);margin-bottom:3px}
+[data-ebu="1"] b{font-style:normal}
+.bugun summary{font-size:12px}
+.bugun .kv .k{width:118px;flex:none}
 .note em{color:var(--mm2);font-style:normal;font-weight:600}
 .note.warn{border-left-color:var(--down)}
 .note.warn em{color:var(--down)}
@@ -207,6 +213,13 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div class="chip"><span class="cl">GBP/USD</span><span class="cv" id="gbpusd">—</span></div>
   <div class="chip"><span class="cl">USD/JPY</span><span class="cv" id="usdjpy">—</span></div>
 </div>
+
+<!-- §547 BUGÜN — beş satır, hepsi mevcut sahiplerden türer (eşik kütüphanesi · §522 gündem · tez defteri · §526 taktik model · §509 bekçi).
+     Elle satır yok; Ebu dışı (data-ebu="hayir"). Katlama durumu tarayıcıda saklanır. -->
+<details class="sektorWrap bugun" id="bugunWrap" data-ebu="hayir" open>
+  <summary>BUGÜN <span class="tag" id="bugunTag" style="font-weight:400">derleniyor…</span> <span class="thin">(ne değişti · ne var · hangi tez tehlikede · duruş · bekçi)</span></summary>
+  <div class="card" style="margin-top:6px;padding:6px 12px 4px" id="bugunBody"><div class="sub">panel verileri toplanıyor…</div></div>
+</details>
 
 <!-- ==== Veri Durumu Drawer ==== -->
 <div class="dback" id="drawerBack"></div>
@@ -814,6 +827,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div style="margin:0 0 12px"><b style="color:var(--ink);font-size:12px">4 · FON SEKTÖRÜ: TEMMUZ REKORU, KOMPOZİSYON ÖNEMLİ</b><br>MKK resmî saklama verisi: sektör <b>10.052 mlr ₺</b>, Temmuz net değişim <b>+469 mlr</b>. Kompozisyon dikkat çekici — <b>Serbest Şemsiye 6.222 mlr (%62)</b>, yani sektörün üçte ikisi nitelikli yatırımcı tarafında; perakende değil. <b>Katılım Şemsiye 421 mlr (%4,2)</b>. TEFAS türevi günlük akışta son hafta net <b>+63,7 mlr</b>. Repo rejimi değişikliği bu tabloyu doğrudan etkiler: para piyasası carry'si düşerse serbest ve hisse fonlarına kayma başlayabilir. <b>İzlenecek:</b> haftalık PYŞ akışında para piyasası çıkışının hangi türe gittiği.</div>
 
 <div style="margin:0 0 12px"><b style="color:var(--ink);font-size:12px">5 · HİSSE TARAFI: BİLANÇO KUYRUĞU + GYO İSKONTOSU</b><br>Bilanço sezonu kuyruğunda <b>222 şirket</b> bekliyor (panel tetiği). Panelin yeni <b>FEK/KOPMA-σ</b> aracıyla ilk taramalar: MERCN 2/5 (nakit oranı 0,12 · KV borç %79 · V2 vetosu), CIMSA 3/5 (faiz kalemi doğrulanmalı), JANTS 3/5 (döviz kredisi bandı), ASELS ve NTGAZ ölçüm dışı — risk bilançoda değil. <b>Repo rejimi bu notları doğrudan iyileştirir:</b> λ kalibrasyonunda fonlama normalleşmesi rollover riskini düşürür; kısa vadeli borç ağırlıklı şirketler (MERCN, ARDYZ, KONKA) en çok rahatlayanlar olur. <b>GYO tarafı:</b> TSPB verisiyle sektör iskontosu <b>−%48,4</b>; en iskontolular ZERGY −%86,6 (borçluluk %13,2), OZGYO −%83,5 (borçluluk %3). Faiz düşerse iskonto kapanma teması güçlenir. <b>TR 5Y CDS 220 bp.</b><br><b>Riskler:</b> (1) repoya dönüş kur tarafında erken bir rahatlama okumasıysa TL baskısı geri gelir; (2) gıda enflasyonu yapışkan (Temmuz %37,53) — 3 Eylül verisi manşetin inişini bozabilir; (3) para piyasasından çıkan paranın nereye gittiği belirsiz, hisseye gelmeyebilir.</div></div></div>
+  <!-- §547 Ebu karnesi: haftalık notun yön çağrıları (AI'dan JSON olarak ayrıca istenir) ufuk dolunca eşik kütüphanesindeki seriyle karşılaştırılır. Ebu dışı. -->
+  <details class="sektorWrap" data-ebu="hayir" style="margin-top:10px;padding:8px 12px">
+    <summary style="font-size:11px">EBU KARNESİ <span class="thin">(haftalık notun yön çağrıları · bir hafta sonra gerçekleşenle · §547)</span></summary>
+    <div id="ebuKarne" style="margin-top:6px"><div class="sub">okunuyor…</div></div>
+  </details>
   <div class="note" style="font-size:9px;opacity:.7">Üstteki canlı pano panelin EVDS + BIST verilerinden otomatik doldurulur. Araştırma notu, bu verilerden hareketle yazılmış çok senaryolu bir analizdir — damgalı güncellemede (özellikle PPK sonrası) elle tazelenir. Senaryolar ve olasılıklar analitik çerçevedir, kesin öngörü değildir. Yatırım tavsiyesi değildir.</div>
 </div>
 <h2 style="margin-top:22px">Varlık Sınıfı Taktiksel Duruş <span class="thin">(sentezin pozisyon karşılığı · benchmark'a göre ağırlık)</span></h2>
@@ -945,6 +963,16 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   </div>
 </div>
 <div class="note" id="korNote" style="margin-top:8px"></div>
+<div class="grid g2" style="margin-top:10px">
+  <div class="card" data-ebu="hayir">
+    <div class="lbl">GETİRİ KORELASYONU <span class="thin" style="font-weight:400">(60 iş günü · günlük log getiri · Yahoo kapanış · §547)</span></div>
+    <div id="korMatris" style="margin-top:6px"><div class="sub">Hisse pozisyonu ekleyince dolar.</div></div>
+  </div>
+  <div class="card" data-ebu="hayir">
+    <div class="lbl">TEZ DİSİPLİNİ <span class="thin" style="font-weight:400">(pozisyon ↔ Muhakeme tezi ↔ bozan kural · §547)</span></div>
+    <div id="tezDisiplin" style="margin-top:6px"><div class="sub">Hisse pozisyonu ekleyince dolar.</div></div>
+  </div>
+</div>
 <h2 style="margin-top:18px">Senaryo &amp; Stres Testi <span class="thin">(makro şok → tahmini portföy etkisi)</span></h2>
 <div class="card">
   <div class="lbl">ŞOK SENARYOSU</div>
@@ -1013,6 +1041,12 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <textarea id="jTez" class="full" rows="6" placeholder="Yatırım tezi — neden aldın?"></textarea>
     <textarea id="jKat" placeholder="Katalizörler — tezi ne doğrular?"></textarea>
     <textarea id="jBoz" placeholder="Tezi bozacak gelişmeler — ne olursa satarsın?"></textarea>
+    <!-- §547 makine-okur bozan kural: seri · yön · eşik. Serbest metin durur; bu onun ölçülebilir hâli. -->
+    <div class="full" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="lbl" style="margin:0">BOZAN KURAL</span>
+      <select id="jBozSeri" style="font-size:11px;padding:4px 6px"></select>
+      <select id="jBozYon" style="font-size:11px;padding:4px 6px"><option value="alt">altına inerse</option><option value="ust">üstüne çıkarsa</option></select>
+      <input id="jBozEsik" type="text" inputmode="decimal" placeholder="eşik" style="width:90px">
+      <span class="sub" style="font-size:9.5px">(ops. · ölçülebilir bozan: BUGÜN ekranı ve Portföy tez disiplini bunu her açılışta piyasaya karşı okur)</span></div>
     <div class="full"><button class="btn" id="jEkle">Teze Kaydet</button></div>
   </div>
   <details class="sektorWrap" style="margin-top:10px" open>
@@ -1850,11 +1884,22 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="tab" id="t12"><h2>Kullanım Kılavuzu</h2>
 <div class="note" style="margin-top:6px">KTPanel, çok varlıklı bir katılım fonu yönetim masasıdır: piyasa takibi, makro analiz, portföy yönetimi, hisse ve sabit getirili değerleme ile faktör modelini tek ekranda birleştirir. Canlı veriler (kur, küresel endeksler, VIX) otomatik akar; diğer katmanlar "güncelle" ile tazelenir. Aşağıda önce her sekmenin ne işe yaradığı ve nasıl kullanılacağı, sonra geçen kavramların açıklaması var.</div>
 
+<!-- §547 PANEL NASIL OKUNUR — fon yöneticisi gözüyle okuma sırası. Ayrı sekme açılmadı (kullanıcı: Yardım'ın içine). Rakam yok; yalnız sıra ve soru. -->
+<h2 style="margin-top:18px">Panel Nasıl Okunur <span class="thin">(sabah rutini · hangi kart hangi soruya cevap verir)</span></h2>
+<div class="card"><div class="lbl">1 · BUGÜN (en üst, beş satır) — "Dün ne değişti, bugün neye bakacağım?"</div><div class="sub" style="margin-top:4px;line-height:1.6"><b>Eşik geçenler:</b> eşik kütüphanesindeki (CDS, VIX, ex-ante reel faiz, kur ve CDS aylık değişimi, XU100 aylık) serilerden dikkat bandına girenler + taktik modelin eşik dışı sinyalleri. <b>Takvim:</b> bugün ve yarın (PPK/FOMC/ECB/BoJ, TÜİK, Hazine, bilanço). <b>Tezler:</b> bozan kuralı gerçekleşen ya da eşiğe yaklaşan tezler ve hedefe ulaşanlar. <b>Taktik duruş:</b> dört varlık sınıfının kurallı duruşu ve dünden bugüne değişim. <b>Bekçi:</b> veri kalitesi — kritik varsa önce ona bak, çünkü yanlış veriyle doğru karar olmaz. Satırda "dikkat" yoksa güne sakin başlanır; varsa sırayla aşağıdaki sekmelere inilir.</div></div>
+<div class="card"><div class="lbl">2 · PİYASA — "Risk iştahı ne durumda?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Endeksler ve sektör ısı haritası genişliği (kaç sektör artıda), rotasyon kadranı (para hangi sektöre akıyor), küresel kutular, VIX. Fon yöneticisi burada <em>yön</em> değil <em>genişlik</em> arar: endeks artarken sektör genişliği daralıyorsa yükseliş kırılgandır.</div></div>
+<div class="card"><div class="lbl">3 · MAKRO — "Çerçeve değişti mi?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Fonlama rejimi (politika faizi, koridor, AOFM, TLREF makası), enflasyon ve PKA beklentisi, ex-ante reel faiz, rezervler, cari denge, yabancı akım. Burada aranan şey tek bir sayı değil <b>tutarlılık</b>tır: rezerv artarken CDS düşüyor ve PKA beklentisi geriliyorsa program çalışıyordur; biri ters gidiyorsa taktik duruş kartı neden "ÜSTÜ" dediğini açıklamak zorundadır.</div></div>
+<div class="card"><div class="lbl">4 · EQUITY › MUHAKEME — "Tezlerim hâlâ geçerli mi?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Çeyrek karar motoru (sürücü → model FAVÖK → konsensüs farkı → sinyal) ve tez defteri. Her tezin üç parçası vardır: <b>tez</b> (neden), <b>katalizör</b> (ne doğrular), <b>bozan</b> (ne olursa satarım). Bozanı ölçülebilir bir kurala bağla (seri · yön · eşik); panel o kuralı her açılışta piyasaya karşı okur. Bilanço ve PPK sonrası bu sekme açılır, kapanan tez karneye düşer.</div></div>
+<div class="card"><div class="lbl">5 · EQUITY › PORTFÖY ve YÖNETİM — "Pozisyonlarım tezimle uyumlu mu, risk nerede birikti?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Portföy: sektör konsantrasyonu, faktör kimliği, faktör-uzayı benzerliği, <b>getiri korelasyonu</b> (sekiz hisse kaç bahistir), <b>tez disiplini</b> (tezi/kuralı olmayan pozisyon kırmızı), stres testi (Fonzi dâhil). Yönetim: analist konsensüsü, getiri atfı, risk metrikleri, <b>likidite</b> (çıkış süresi). Okuma sırası: önce tez disiplini (yanıldığım yer var mı?), sonra korelasyon (gizli konsantrasyon), sonra likidite (çıkabilir miyim?).</div></div>
+<div class="card"><div class="lbl">6 · FAKTÖR MODEL · DEĞERLEME · GUIDANCE — "Yeni fikir nereden gelir?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Faktör karnesi aday üretir, değerleme (DCF/çarpan) fiyatı tartar, guidance ve karar motoru şirketin kendi sözünü ve çeyrek gidişini okur. Bir aday üç süzgeçten de geçiyorsa Muhakeme'de tez yazılır; geçmiyorsa fikir defterde kalır.</div></div>
+<div class="card"><div class="lbl">7 · YORUM ve EBU — "Bu bir veri mi, yorum mu?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Ebu'nun yazdığı her not mor noktalı çizgi ve "🤖 YORUM · veri değil" etiketiyle ayrılır; eğik yazıdır. Rakam taşıyan cümlelerin kaynağı kartın canlı verisidir (sabit gerçekler bloğu, §540). Haftalık notun yön çağrıları bir hafta sonra gerçekleşenle karşılaştırılır (<b>Ebu karnesi</b>, Haftalık Araştırma Notu'nun altında) — yorumun da sicili vardır.</div></div>
+<div class="card"><div class="lbl">8 · ⊙ VERİ DURUMU — "Bu sayıya güvenebilir miyim?"</div><div class="sub" style="margin-top:4px;line-height:1.6">Bekçi bulguları (kritik/uyarı/yeni), veri tazeliği (plan vs gerçekleşen), elle sayı dedektörü (damgalı kartlarda canlıya bağlı olmayan, eskimiş rakam taşıyan cümleler). Kırmızı bir satır varken o kartın yorumu okunmaz; önce veri düzeltilir.</div></div>
+
 <h2 style="margin-top:18px">Sekme Rehberi</h2>
 <div class="card"><div class="lbl">PİYASA</div><div class="sub" style="margin-top:4px">Günlük genel görünüm: BIST endeksleri, sektör ısı haritası ve rotasyon kadranı, küresel piyasalar, merkez bankası faizleri, halka arzlar, bilanço takvimi. <b>Nasıl:</b> Sabah ilk bakılan ekran; ısı haritasında yeşil/kırmızı yoğunluğu o günün risk iştahını, rotasyon kadranı hangi sektörün güçlenip zayıfladığını gösterir.</div></div>
 <div class="card"><div class="lbl">PORTFÖY YÖNETİMİ</div><div class="sub" style="margin-top:4px">Portföyünü ölçtüğün masa: <b>Analist Konsensüs</b> (ticker yaz → kaç kurum, hedef fiyat, potansiyel), <b>Getiri Atfı</b> (hangi pozisyon getiriye ne kattı), <b>Risk Metrikleri</b> (konsantrasyon + beta/vol/VaR/Sharpe), <b>Likidite</b> (çıkış süresi), <b>Ekonomik Takvim</b>. <b>Nasıl:</b> Önce Portföy sekmesinde pozisyon gir; buradaki tüm hesaplar o pozisyonlardan otomatik türer.</div></div>
 <div class="card"><div class="lbl">MAKRO</div><div class="sub" style="margin-top:4px">Ekonominin nabzı: para politikası (politika faizi + koridor), faiz eğrisi, yabancı para akışı + carry, risk iştahı barometreleri, rezerv karnesi, sanayi üretimi. <b>Nasıl:</b> Carry ve rezerv trendi TL varlıklara girişi; PPK tarihleri kritik dönüm noktalarını işaret eder.</div></div>
-<div class="card"><div class="lbl">PORTFÖY</div><div class="sub" style="margin-top:4px">Pozisyon yönetimi: <b>Command Center</b>'da hisse/nakit pozisyonları girersin (kod, adet, maliyet fiyatı). Altında Risk Lensi (makro duyarlılık), Çeşitlendirme Lensi (faktör-uzayı benzerliği), Senaryo & Stres (kur/faiz/petrol şoku). <b>Nasıl:</b> Buraya girdiğin pozisyonlar hem burada hem Equity sekmesinde kullanılır.</div></div>
+<div class="card"><div class="lbl">PORTFÖY</div><div class="sub" style="margin-top:4px">Pozisyon yönetimi: <b>Command Center</b>'da hisse/nakit pozisyonları girersin (kod, adet, maliyet fiyatı). Altında Risk Lensi (makro duyarlılık), Çeşitlendirme Lensi (faktör-uzayı benzerliği + 60 günlük getiri korelasyonu), Tez Disiplini (pozisyon ↔ tez ↔ bozan kural), Senaryo & Stres (kur/faiz/petrol şoku). <b>Nasıl:</b> Buraya girdiğin pozisyonlar hem burada hem Equity sekmesinde kullanılır.</div></div>
 <div class="card"><div class="lbl">DEĞERLEME (DCF + MULTIPLE)</div><div class="sub" style="margin-top:4px">İki değerleme aracı. <b>DCF:</b> gelecek serbest nakit akışlarını bugüne indirgeyip içsel değer bulur — TL nominal / USD / Reel bazda. <b>Multiple:</b> EV/EBITDA çarpanının büyümeyle yıllar içinde nasıl "eridiğini" gösterir. <b>Nasıl:</b> DCF'te FCF, WACC, büyüme, terminal gir; baz seçimine göre WACC aralığı değişir (nominal ~%45, USD ~%12). Aselsan gibi büyüme şirketlerinde multiple'a, olgun nakit-üreten şirketlerde DCF'e güven.</div></div>
 <div class="card"><div class="lbl">SUKUK</div><div class="sub" style="margin-top:4px">Kira sertifikası / tahvil fiyat↔getiri hesabı. <b>Yeni İhraç:</b> valörden ileri kupon üretir, birikmiş kupon yok. <b>İkincil Piyasa:</b> kupon günü sabit, birikmiş kupon hesaplanır, temiz/kirli fiyat ayrılır. <b>Nasıl:</b> İşlem tipini seç, valör/vade/kupon gir, "Üret"e bas, gerekirse kupon tarihlerini elle düzelt.</div></div>
 <div class="card"><div class="lbl">FAKTÖR MODEL</div><div class="sub" style="margin-top:4px">XKTUM evrenindeki hisselerin faktör skorları (değer, kalite, momentum vb.) + <b>canlı sicil</b>: faktör-seçilmiş model portföyün XKTUM endeksine karşı günlük performansı. <b>Nasıl:</b> Sicil grafiğinde model çizgisi endeksin üstündeyse pozitif alfa üretiyor demektir.</div></div>
@@ -1974,8 +2019,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261026d"></script>
-<script src="/ajan.js?v=20261025c"></script>
+<script src="/app.js?v=20261026e"></script>
+<script src="/ajan.js?v=20261026e"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
      erişim; bot hangi sekmede olduğunu ve seçili tickerı bağlam olarak görür. -->

@@ -1371,6 +1371,7 @@ async function haftalikYorumYaz(zorla, kip){
   if(yh){ const bas=(html.match(/<b[^>]*>\s*1\s*·\s*([^<]{4,60})/i)||[])[1];
     yh.textContent=bandi+(bas?' · '+bas.trim().toUpperCase().slice(0,34):''); }
   kayitli[ANAH]={ html:ym.innerHTML, etiket:(yh?yh.textContent:''), kip:(AYLIK?'ay':'hafta'), ts:Date.now(), saat:saat() };
+  try{ ebuCagriKaydet(html, AYLIK?'ay':'hafta'); }catch(e){ kayit('Ebu karnesi: çağrı çıkarılamadı — '+String(e&&e.message||e).slice(0,60)); }   /* §547 */
 
   /* ══ §423c TAKTİK DURUŞ TÜRETİMİ ══ Yorum yazıldıktan SONRA, AYNI verilerle
      dört varlık sınıfının duruşu istenir. Ayrı çağrı çünkü: (1) çıktı JSON
@@ -2059,3 +2060,48 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(g) g.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sohbetGonder(); } });
   }catch(e){}
 });
+
+/* ═══ §547 EBU KARNESİ — yorumun da sicili olsun ═══
+   Haftalık/aylık not basıldıktan sonra AI'dan AYRI, küçük bir çağrıyla notun yön çağrıları JSON olarak istenir
+   (seri anahtarları app.js ESIK kütüphanesinden; başka seri kabul edilmez). Her çağrı o anki baz değerle kaydedilir;
+   ufuk (7/30 gün) dolunca ilk açılışta gerçekleşen değer DONDURULUR (c.son) ve yön karşılaştırılır. Panel bunu
+   yazamazsa not yine basılır — karne yan üründür, yazıcıyı durdurmaz. */
+async function ebuCagriKaydet(html, kip){
+  if(!window.ESIK||typeof aiCagir!=='function') return;
+  const L=ESIK.secenekler().map(x=>x[0]).filter(k=>!/_1a$/.test(k));
+  const metin=String(html||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').slice(0,3500);
+  const ufuk=(kip==='ay'?30:7);
+  const p='Aşağıdaki portföy yorumundan en çok 5 YÖN ÇAĞRISI çıkar (yorum bir serinin önümüzdeki '+ufuk+' günde yükseleceğini ya da düşeceğini ima ediyorsa). '+
+    'Yalnız şu seri anahtarlarını kullan: '+L.join(', ')+'. YALNIZCA JSON dizi döndür, başka hiçbir şey yazma: '+
+    '[{"seri":"cds","yon":"asagi","gerekce":"kısa"}]. yon: "yukari" | "asagi". Yön çağrısı yoksa [] döndür.\n\nYORUM:\n'+metin;
+  const m=await aiCagir(p, 400); if(!m) return;
+  let arr=null; try{ arr=JSON.parse((String(m).match(/\[[\s\S]*\]/)||['[]'])[0]); }catch(e){ kayit('Ebu karnesi: JSON ayrıştırılamadı'); return; }
+  if(!Array.isArray(arr)) return;
+  let kay=[]; try{ kay=JSON.parse(localStorage.getItem('ajan_cagri_v1')||'[]'); }catch(e){}
+  const ts=Date.now(); let n=0;
+  arr.slice(0,5).forEach(c=>{ const s=c&&ESIK.seri[c.seri]; if(!s||!/^(yukari|asagi)$/.test(String(c.yon))) return; let v=null; try{ v=s.oku(); }catch(e){} if(v==null) return;
+    kay.push({ts, kip, seri:c.seri, yon:c.yon, baz:v, ufuk, gerekce:String(c.gerekce||'').slice(0,120)}); n++; });
+  try{ localStorage.setItem('ajan_cagri_v1', JSON.stringify(kay.slice(-80))); }catch(e){}
+  kayit('Ebu karnesi: '+n+' yön çağrısı kaydedildi (ufuk '+ufuk+' g)');
+  ebuKarneRender();
+}
+function ebuKarneRender(){
+  const el=$('ebuKarne'); if(!el) return;
+  if(!window.ESIK){ el.innerHTML='<div class="sub">eşik kütüphanesi yüklenmedi</div>'; return; }
+  let kay=[]; try{ kay=JSON.parse(localStorage.getItem('ajan_cagri_v1')||'[]'); }catch(e){}
+  if(!kay.length){ el.innerHTML='<div class="sub">Haftalık not yazıldıkça Ebu\u0027nun yön çağrıları burada birikir; ufuk dolunca gerçekleşenle karşılaştırılır. (📝 haftalık yorumu yaz → çağrılar otomatik çıkarılır)</div>'; return; }
+  const simdi=Date.now(); let degisti=false;
+  kay.forEach(c=>{ if(c.son==null && simdi-c.ts>=c.ufuk*864e5){ const s=ESIK.seri[c.seri]; let v=null; try{ v=s&&s.oku(); }catch(e){} if(v!=null){ c.son=v; c.sonTs=simdi; degisti=true; } } });
+  if(degisti){ try{ localStorage.setItem('ajan_cagri_v1', JSON.stringify(kay)); }catch(e){} }
+  const esc2=s=>String(s||'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  let is=0, top=0;
+  const rows=kay.slice().reverse().slice(0,24).map(c=>{ const s=ESIK.seri[c.seri]; const dolmus=c.son!=null; let v=c.son; if(v==null){ try{ v=s&&s.oku(); }catch(e){ v=null; } }
+    let sonuc; if(dolmus){ const g=c.son>c.baz?'yukari':c.son<c.baz?'asagi':'yatay'; if(g==='yatay') sonuc='<span class="sub">yatay</span>'; else { top++; const ok=(g===c.yon); if(ok) is++; sonuc=ok?'<span class="up">✓ isabet</span>':'<span class="down">✗</span>'; } }
+    else sonuc='<span class="sub">'+Math.max(0,Math.ceil((c.ufuk*864e5-(simdi-c.ts))/864e5))+' g kaldı</span>';
+    return '<tr><td style="white-space:nowrap">'+new Date(c.ts).toLocaleDateString('tr-TR')+'</td><td>'+esc2(s?s.ad:c.seri)+'</td><td>'+(c.yon==='yukari'?'<span class="up">▲</span>':'<span class="down">▼</span>')+'</td><td class="num">'+ESIK.bicim(c.seri,c.baz)+'</td><td class="num">'+(v==null?'—':ESIK.bicim(c.seri,v))+(dolmus?'':' <span class="sub">(şimdi)</span>')+'</td><td>'+sonuc+'</td><td class="sub" style="font-size:9px">'+esc2(c.gerekce)+'</td></tr>'; }).join('');
+  el.innerHTML='<div class="sub" style="margin-bottom:4px"><b>'+(top?'İsabet %'+Math.round(is/top*100)+' ('+is+'/'+top+' ufku dolan)':'Henüz ufku dolan çağrı yok')+'</b> · '+kay.length+' çağrı kayıtlı · ölçüt: ufuk dolduğunda serinin baz değere göre yönü (yatay sayılmaz)</div>'+
+    '<div style="overflow-x:auto"><table><tr><th>Tarih</th><th>Seri</th><th>Çağrı</th><th class="num">Baz</th><th class="num">Ufukta</th><th>Sonuç</th><th>Gerekçe</th></tr>'+rows+'</table></div>'+
+    '<div class="note" style="font-size:9.5px">Tez karnesinin yorum versiyonu: Ebu "CDS gerilemeli" diyorsa bir hafta sonra CDS gerçekten geriledi mi? Yön doğru ama büyüklük küçükse de isabet sayılır — bu karne kalibrasyonu değil, yönü ölçer. Düşük isabet notun kullanılmaması değil, daha az güvenle okunması demektir.</div>';
+}
+setTimeout(()=>{ try{ ebuKarneRender(); }catch(e){} }, 5000);
+setInterval(()=>{ try{ ebuKarneRender(); }catch(e){} }, 30*60*1000);
