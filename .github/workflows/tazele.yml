@@ -179,7 +179,8 @@ jobs:
       # Denetim raporu her koşuda görünsün — geçse de kalsa da
       - name: Denetim raporu
         if: always()
-        run: cat rapor/son-tazeleme.md >> $GITHUB_STEP_SUMMARY || echo "rapor yok"
+        # §540b: '$' GitHub özetinde LaTeX sanılıyordu (Kardemir satırı "/t·hurda…" diye harf harf dağıldı) → kaçışlanır
+        run: sed 's/\$/\\$/g' rapor/son-tazeleme.md >> $GITHUB_STEP_SUMMARY || echo "rapor yok"
 
       - name: Commit ve deploy
         if: steps.tazele.outputs.degisti == '1'
