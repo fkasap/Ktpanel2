@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261026b';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
+const KTP_SURUM = '20261026c';   // SS540 veri denetimi   // SS535-539 bekleyen işler   // SS533 Kamu yatırım + yönetim hedefi   // SS532 Karar puanı kapsam genişletme   // SS531 Karar motoru XK050   // SS530 Toparlanma monitörü   // SS529 Faktör karnesi nokta-zaman + sicil ayrıştırması   // SS526 Kuralli taktik durus modeli
 
 /* §311 KÜRESEL FETCH ZAMAN AŞIMI — ölçülerek bulundu:
    Asya forex "yükleniyor…" yazısı bir oturumda sonsuza dek asılı kaldı.
@@ -4352,18 +4352,28 @@ kartInit();
 
 async function bnkInit(){
   if(!$('bnkOzet'))return;
-  // Üç uç nokta bağımsız: biri düşerse diğerleri render olur
-  const [a,b,c]=await Promise.allSettled([
-    fetch('/api/bddk?panel=1').then(r=>r.json()),
-    fetch('/api/bddk?sahiplik=1').then(r=>r.json()),
-    fetch('/api/bddk?sektor=1').then(r=>r.json())
-  ]);
+  /* §541d (26 Eki 21:37, kullanıcı ekranı: "BANKACILIK SEKTÖRÜ · VERİ YOK" — sahiplik ve sektör kartları dolu). panel=1 ucu BDDK'dan
+     14 ardışık istek yapıyor; ölçüm 15,4 sn — BDDK yavaşken tek deneme düşüyor, kart AYLIK veri için boş kalıyordu. Çare: her uç
+     bağımsız İKİ deneme (6 sn arayla) + son başarılı yanıt tarayıcıda saklanır (45 gün; bülten aylık). Canlı gelmezse son iyi bülten
+     "önbellek" damgasıyla gösterilir — boş kart yerine tarihi belli doğru veri. */
+  const bddkCek=async(q)=>{
+    const anah='ktp_bddk_'+q;
+    for(let i=0;i<2;i++){
+      try{ const j=await (await fetch('/api/bddk?'+q,{signal:AbortSignal.timeout(50000)})).json();
+        if(j&&j.ok){ try{ localStorage.setItem(anah, JSON.stringify({ts:Date.now(), j})); }catch(e){} return j; } }catch(e){}
+      if(i===0) await new Promise(r=>setTimeout(r,6000));
+    }
+    try{ const o=JSON.parse(localStorage.getItem(anah)||'null'); if(o&&o.j&&o.j.ok&&(Date.now()-o.ts)<45*864e5){ o.j.__onbellek=new Date(o.ts).toLocaleDateString('tr-TR'); return o.j; } }catch(e){}
+    return null;
+  };
+  const [a,b,c]=await Promise.allSettled([bddkCek('panel=1'), bddkCek('sahiplik=1'), bddkCek('sektor=1')]);
   BNK    = a.status==='fulfilled' ? a.value : null;
   BNKS   = b.status==='fulfilled' ? b.value : null;
   BNKSEK = c.status==='fulfilled' ? c.value : null;
   bnkRender();
   bnkShpRender();
   bnkSekRender();
+  try{ if(BNK&&BNK.__onbellek&&$('bnkDamga')) $('bnkDamga').textContent+=' · önbellek '+BNK.__onbellek+' (BDDK şu an yanıt vermedi)'; }catch(e){}
 }
 /* ---- Özel Kapsamlı TÜFE (A–F) · EVDS otomatik ---- */
 const OKT_STATIK=[
