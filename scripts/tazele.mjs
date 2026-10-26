@@ -5424,8 +5424,11 @@ async function degerlemeKendi() {
     seri.forEach(s => { s.pddd = s.px * adet / s.ozk; });
     if (seri.length < 5) { kisa++; continue; }   /* ≥5 çeyrek (BINHO 2025/2'den beri 5 dönem) */
     const v = seri.map(s => s.pddd); const ort = v.reduce((a, b) => a + b, 0) / v.length; const sd = Math.sqrt(v.reduce((a, b) => a + (b - ort) ** 2, 0) / v.length);
-    const cv = ort > 0 ? sd / ort : null; const guven = cv == null ? 'düşük' : cv <= 0.35 ? 'yüksek' : cv <= 0.6 ? 'orta' : 'düşük';
-    const sonPx = o.adj[o.adj.length - 1]; const canli = sonPx * adet / ozkSon; const z = sd > 0 ? (canli - ort) / sd : null;
+    /* §540b (25 Eki, Veri Tazele #403): BERA z −5,32 · BINHO −4,84 — 5 çeyreklik bantta sapma çok küçük (BERA σ 0,034, ort 0,374) ve
+       z şişiyor; fiyat düşüşü gerçek (PD/DD 0,19) ama "5 sigma" istatistik değil kısa örneklem. σ tabanı ortalamanın %15'i; n<8 → güven düşük. */
+    const cv = ort > 0 ? sd / ort : null; const guven = (cv == null || v.length < 8) ? 'düşük' : cv <= 0.35 ? 'yüksek' : cv <= 0.6 ? 'orta' : 'düşük';
+    const sdEff = Math.max(sd, 0.15 * Math.abs(ort));
+    const sonPx = o.adj[o.adj.length - 1]; const canli = sonPx * adet / ozkSon; const z = sdEff > 0 ? (canli - ort) / sdEff : null;
     H.push({ k: kod, sektor: SEK[kod] || '', donem: donemSon, ozk: Math.round(ozkSon), srm: Math.round(adet), n: v.length, ort: +ort.toFixed(3), sapma: +sd.toFixed(3), dip: +Math.min(...v).toFixed(3), zirve: +Math.max(...v).toFixed(3), cv: cv == null ? null : +cv.toFixed(2), guven,
       canli: { tarih: o.t[o.t.length - 1], fiyat: +sonPx.toFixed(4), pddd: +canli.toFixed(3), z: z == null ? null : +z.toFixed(2) }, seri: seri.map(s => ({ q: s.q, pddd: +s.pddd.toFixed(3) })) });
   }
@@ -6311,7 +6314,9 @@ async function gyoNav() {
         iskonto: tt.t8 && tt.t8.valueTl, borcluluk: tt.t9 && tt.t9.valueTl };
     } catch (e) {}
 
-    const isk = Object.values(kayitlar).map(x => x.iskonto).filter(Number.isFinite).sort((a, b) => a - b);
+    /* §540b: özet satırı TSPB dönem sonu oranından ve NAD ≤ 0 şirketlerden kuruluyordu ("en iskontolu %-1678" DZGYO, NAD negatif;
+       "en primli %1032"). Artık canlı fiyatlı güncel iskonto, yalnız NAD > 0. */
+    const isk = Object.values(kayitlar).filter(x => x.nad > 0).map(x => Number.isFinite(x.guncelIskonto) ? x.guncelIskonto : x.iskonto).filter(Number.isFinite).sort((a, b) => a - b);
     const D = {
       guncelleme: new Date().toISOString().slice(0, 19) + 'Z',
       donem, donem_etiket: donem.slice(0, 4) + '/' + donem.slice(4),
