@@ -5223,7 +5223,7 @@ const KARAR_DUZELT = {
 /* §545 SÜRÜCÜ EKLEME TOHUMU (26 Eki, kullanıcı: "şirketleri tek tek gez, eksik sürücü var mı"): mevcut listeye EKLENİR (var olana
    dokunulmaz, sıra korunur); `_sur_ek` damgası değişince bir kez uygulanır. Eşleşmeyen seri adı (henüz üretilmemiş) sessizce atlanır,
    ilgili üretici koşunca sonraki koşuda girer. */
-const KARAR_SUR_EK_SURUM = '545a';
+const KARAR_SUR_EK_SURUM = '546a';
 const KARAR_SUR_EK = {
   ALBRK: [['ticari_kredi_faiz', 'gelir'], ['mevduat_3ay', 'maliyet']],
   KCAER: [['demir_lme', 'gelir'], ['metal_marji_tr', 'gelir'], ['usdtry', 'kur']],
@@ -5245,7 +5245,7 @@ const KARAR_SUR_EK = {
   AKCNS: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir']], CIMSA: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir']],
   BUCIM: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir']], LMKDC: [['ime_insaat', 'gelir'], ['insaat_uretim_toplam', 'gelir'], ['ydufe_cimento', 'gelir']],
   POLHO: [['insaat_uretim_toplam', 'gelir'], ['pe_pp', 'maliyet'], ['eurusd', 'kur']],
-  AYDEM: [['gaz_avrupa', 'gelir'], ['henryhub', 'gelir']], AKFYE: [['henryhub', 'gelir']],
+  AYDEM: [['hidro_uretim_gwh', 'gelir'], ['ruzgar_uretim_gwh', 'gelir'], ['yenilenebilir_pay', 'maliyet'], ['gaz_avrupa', 'gelir'], ['henryhub', 'gelir']], AKFYE: [['hidro_uretim_gwh', 'gelir'], ['ruzgar_uretim_gwh', 'gelir'], ['yenilenebilir_pay', 'maliyet'], ['henryhub', 'gelir']],
   AHGAZ: [['henryhub', 'maliyet']], ENERY: [['henryhub', 'maliyet']], BASGZ: [['henryhub', 'maliyet']], NTGAZ: [['henryhub', 'maliyet']],
   GRSEL: [['reel_kesim_guveni', 'gelir']], TUREX: [['reel_kesim_guveni', 'gelir']],
   BERA: [['tufe_gida', 'gelir'], ['seker_dunya', 'gelir'], ['ufe_plastik', 'maliyet'], ['insaat_uretim_bina', 'gelir']],
@@ -5502,6 +5502,61 @@ async function degerlemeKendi() {
   await yaz('degerleme.json', out); degisenler.push('degerleme (' + H.length + ')');
   const ucuz = H.filter(h => h.canli.z != null && h.canli.z <= -1).map(h => h.k + ' ' + h.canli.z), pahali = H.filter(h => h.canli.z != null && h.canli.z >= 1).map(h => h.k + ' ' + h.canli.z);
   raporlar.push('### PD/DD bandı (§539) — ✓ ' + H.length + '/' + evren.length + ' hisse (KAP eksik ' + eksikKap + ' · kısa ' + kisa + ')' + (ucuz.length ? ' · z≤−1: ' + ucuz.slice(0, 8).join(', ') : '') + (pahali.length ? ' · z≥+1: ' + pahali.slice(0, 6).join(', ') : ''));
+}
+
+/* ── §546 EPİAŞ GERÇEK ZAMANLI ÜRETİM — HİDRO / RÜZGÂR HACMİ (26 Eki) ─────────────────────────────────────────────
+   Kullanıcı: "AYDEM ve AKFYE'yi hallet". İki şirketin FAVÖK'ü PTF × ÜRETİM; PTF §466'da vardı, üretim hacmi (hidroloji, rüzgâr) için
+   serbest seri yoktu. EPİAŞ Şeffaflık aynı TGT kimliğiyle ülke geneli saatlik gerçekleşen üretimi kaynak bazında verir
+   (POST /electricity-service/v1/generation/data/realtime-generation · {startDate,endDate} · items[]: date, total, dammedHydro,
+   river, wind, sun, geothermal, naturalGas, importCoal, lignite …). Santral bazlı seri (UEVÇB) ayrı yetki ister; ülke toplamı
+   hidrolojik rejimin ve rüzgâr yılının vekilidir — aynı havzadaki santraller birlikte dolar/boşalır.
+   Üretilen günlük seriler (GWh): hidro_uretim_gwh (barajlı + akarsu) · ruzgar_uretim_gwh · yenilenebilir_pay (% — hidro+rüzgâr+
+   güneş+jeotermal ÷ toplam; pay yüksekken PTF düşer: hacim lehte, fiyat aleyhte — karar kartı ikisini birlikte okur).
+   Alan adları ilk koşuda doğrulanır: beklenen alanlar yoksa rapor gelen anahtarları yazar, seri YAZILMAZ. */
+const EPIAS_URETIM_BAS = '2024-01-01';
+async function epiasUretim() {
+  const dosya = 'sektor-surucu.json';
+  if (!(await varMi(dosya))) { raporlar.push('### EPİAŞ üretim (§546) — ⏭ sektor-surucu.json yok'); return; }
+  const kimlik = epiasKimlik(); if (!kimlik) { raporlar.push('### EPİAŞ üretim (§546) — ⏭ EPİAŞ kimliği yok (bkz. §466)'); return; }
+  const D = await oku(dosya); D.seriler = D.seriler || {};
+  const eski = (D.seriler.hidro_uretim_gwh && D.seriler.hidro_uretim_gwh.gunluk) || [];
+  let bas = EPIAS_URETIM_BAS;
+  if (eski.length) { const d = new Date(eski[eski.length - 1][0] + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 7); bas = d.toISOString().slice(0, 10); }
+  const trSimdi = new Date(Date.now() + 3 * 3600 * 1000); const dun = (() => { const d = new Date(trSimdi.toISOString().slice(0, 10) + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 1); return d.toISOString().slice(0, 10); })();
+  if (bas > dun) { raporlar.push('### EPİAŞ üretim (§546) — ⏭ güncel'); return; }
+  let tgt; try { tgt = await epiasTgt(kimlik); } catch (e) { raporlar.push('### EPİAŞ üretim (§546) — ✗ giriş: ' + String(e && e.message || e).slice(0, 120)); return; }
+  const parcalar = []; { let p = new Date(bas + 'T00:00:00Z'); const son = new Date(dun + 'T00:00:00Z'); while (p <= son) { const q = new Date(p); q.setUTCDate(q.getUTCDate() + 89); const e = q > son ? son : q; parcalar.push([p.toISOString().slice(0, 10), e.toISOString().slice(0, 10)]); p = new Date(e); p.setUTCDate(p.getUTCDate() + 1); } }
+  const gun = new Map(); let hata = null, anahtarlar = null, alanEksik = false, satir = 0;
+  const num = v => { const x = +v; return isFinite(x) ? x : 0; };
+  for (const [s, e] of parcalar) {
+    try {
+      const r = await fetch('https://seffaflik.epias.com.tr/electricity-service/v1/generation/data/realtime-generation', { method: 'POST', headers: { 'TGT': tgt, 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ startDate: s + 'T00:00:00+03:00', endDate: e + 'T23:00:00+03:00' }), signal: AbortSignal.timeout(90000) });
+      const t = await r.text(); if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + t.slice(0, 120).replace(/\s+/g, ' '));
+      const j = JSON.parse(t); const items = j.items || [];
+      if (items.length && !anahtarlar) { anahtarlar = Object.keys(items[0]); if (!('dammedHydro' in items[0]) || !('wind' in items[0]) || !('total' in items[0])) alanEksik = true; }
+      if (alanEksik) break;
+      for (const it of items) { const g = String(it.date || '').slice(0, 10); if (!/^\d{4}-\d{2}-\d{2}$/.test(g)) continue;
+        const b = gun.get(g) || { n: 0, toplam: 0, hidro: 0, ruzgar: 0, yen: 0 };
+        b.n++; b.toplam += num(it.total); b.hidro += num(it.dammedHydro) + num(it.river); b.ruzgar += num(it.wind);
+        b.yen += num(it.dammedHydro) + num(it.river) + num(it.wind) + num(it.sun) + num(it.geothermal); gun.set(g, b); satir++; }
+    } catch (err) { hata = (hata ? hata + ' | ' : '') + s + '..' + e + ': ' + String(err && err.message || err).slice(0, 100); }
+  }
+  if (alanEksik) { raporlar.push('### EPİAŞ üretim (§546) — ✗ beklenen alanlar yok (dammedHydro/wind/total) — gelen anahtarlar: ' + (anahtarlar || []).join(', ') + ' · seri YAZILMADI'); return; }
+  if (!gun.size) { raporlar.push('### EPİAŞ üretim (§546) — ✗ veri gelmedi' + (hata ? '\n- ' + hata : '')); return; }
+  const H = new Map(eski.map(x => [x[0], x[1]])), R = new Map(((D.seriler.ruzgar_uretim_gwh || {}).gunluk || []).map(x => [x[0], x[1]])), P = new Map(((D.seriler.yenilenebilir_pay || {}).gunluk || []).map(x => [x[0], x[1]]));
+  let eksikGun = 0;
+  for (const [g, b] of gun) { if (b.n < 20 || !(b.toplam > 0)) { eksikGun++; continue; } H.set(g, +(b.hidro / 1000).toFixed(1)); R.set(g, +(b.ruzgar / 1000).toFixed(1)); P.set(g, +(b.yen / b.toplam * 100).toFixed(1)); }
+  const sirala = m => [...m.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1);
+  const gH = sirala(H), gR = sirala(R), gP = sirala(P); if (!gH.length) { raporlar.push('### EPİAŞ üretim (§546) — ✗ tam gün yok'); return; }
+  const ortak = { kaynak: 'EPİAŞ Şeffaflık · gerçek zamanlı üretim, saatlik → günlük toplam (TGT) — §546', siklik: 'gunluk', guncelleme: bugun };
+  const son = a => ({ tarih: a[a.length - 1][0], deger: a[a.length - 1][1] });
+  D.seriler.hidro_uretim_gwh = Object.assign({}, D.seriler.hidro_uretim_gwh || {}, ortak, { ad: 'Hidroelektrik üretim — barajlı + akarsu, Türkiye günlük (GWh) §546', birim: 'GWh/gün', hisse: ['AYDEM', 'AKFYE'], gunluk: gH, son: son(gH), _not: 'Ülke toplamı; hidrolojik rejimin (kar erimesi, yağış, baraj doluluğu) vekili. Yıllık karşılaştırma: aynı takvim penceresi.' });
+  D.seriler.ruzgar_uretim_gwh = Object.assign({}, D.seriler.ruzgar_uretim_gwh || {}, ortak, { ad: 'Rüzgâr üretimi — Türkiye günlük (GWh) §546', birim: 'GWh/gün', hisse: ['AYDEM', 'AKFYE'], gunluk: gR, son: son(gR) });
+  D.seriler.yenilenebilir_pay = Object.assign({}, D.seriler.yenilenebilir_pay || {}, ortak, { ad: 'Yenilenebilir payı — hidro+rüzgâr+güneş+jeotermal ÷ toplam üretim (%) §546', birim: '%', hisse: ['AYDEM', 'AKFYE', 'ENJSA'], gunluk: gP, son: son(gP), _not: 'Pay yükselince PTF düşer (merit order): üretici için hacim lehte, fiyat aleyhte.' });
+  D.seriler_guncelleme = bugun; await yaz(dosya, D); degisenler.push('EPİAŞ üretim (' + gH.length + ' gün)');
+  const son30 = a => a.slice(-30).map(x => x[1]); const ort = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+  const yo = (a) => { const t = a[a.length - 1][0]; const y = (t.slice(0, 4) - 1) + t.slice(4); const g = a.filter(x => x[0] <= y).slice(-30).map(x => x[1]); const s = son30(a); return (g.length === 30 && s.length === 30) ? ((ort(s) / ort(g) - 1) * 100).toFixed(0) + '%' : null; };
+  raporlar.push('### EPİAŞ üretim (§546) — ✓ hidro ' + gH[gH.length - 1][1] + ' GWh · rüzgâr ' + gR[gR.length - 1][1] + ' GWh · yenilenebilir %' + gP[gP.length - 1][1] + ' (' + gH[gH.length - 1][0] + ')\n- ' + gH.length + ' gün (' + gH[0][0] + '→) · bu koşu ' + gun.size + ' gün/' + satir + ' saat · ' + parcalar.length + ' parça' + (eksikGun ? ' · ' + eksikGun + ' eksik gün atlandı' : '') + '\n- son 30 gün ort.: hidro ' + (ort(son30(gH)) || 0).toFixed(0) + ' GWh (y/y ' + (yo(gH) || '—') + ') · rüzgâr ' + (ort(son30(gR)) || 0).toFixed(0) + ' GWh (y/y ' + (yo(gR) || '—') + ')' + (hata ? '\n- ⚠ ' + hata : ''));
 }
 
 /* ── SS333 SEKTOR ISI + ROTASYON OTOMATIK (sektor.json) ─────────────────────
@@ -7461,7 +7516,7 @@ async function bultenKesif() {
     await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu());   /* §462: Neste crack + Brent → Karar Motoru hammaddesi (hepsi/fiyat → hafta içi akşam) */
     await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler());   /* §464: Yahoo emtia/kur · LME (fetch→Playwright→Vercel köprüsü) · Dünya Bankası aylık xlsx → sektor-surucu.json/seriler */
     await olcKos('EVDS serileri (§466)', ()=>evdsSeriler());   /* §466: TÜFE gıda/giyim (2025=100 zincirli) · Yİ-ÜFE çimento/çelik/elektrik/gübre · KFE · AOFM/TLREF — EVDS_KEY secret; yoksa ⏭ */
-    await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf());   /* §466: GÖP saatlik PTF → günlük ort. (TL ve $) — EPIAS_* secret; yoksa ⏭. Akşam koşusu yarının fiyatını da alır (GÖP ~14:00) */
+    await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('EPİAŞ üretim (§546)', ()=>epiasUretim());   /* §466: GÖP saatlik PTF → günlük ort. (TL ve $) — EPIAS_* secret; yoksa ⏭. Akşam koşusu yarının fiyatını da alır (GÖP ~14:00) */
     await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis());   /* §467: aselsan.com KAP açıklamaları → açıklanan sözleşmeler (USD, çeyrek toplamı) + resmî backlog tohumu */
     await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs());   /* §469: KATMR/ALTNY/GLRMK (+ASELS çapraz) ÖDA 'Yeni İş İlişkisi' → sözleşme akışı; artımlı, koşu başına ≤40 sayfa/şirket */
     await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat());   /* §472: kardemir.com açık API — kütük/nervürlü/profil/filmaşin liste ($,TL) + hurda alım (Özel Ekstra) 2014→; artımlı ≤100+100 sayfa/koşu; türetilmiş marj/spread */
@@ -7492,8 +7547,8 @@ async function bultenKesif() {
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
   if (KSET.has('kaparsiv') || KSET.has('degerleme')) await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* elle: --katman=degerleme */
   if (KSET.has('kaparsiv') || KSET.has('multiple')) await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
-  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('EPİAŞ üretim (§546)', ()=>epiasUretim()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('EPİAŞ üretim (§546)', ()=>epiasUretim()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
   if (KSET.has('kredinotu') && !ister('fiyat')) await olcKos('Ülke kredi notu (§515)', ()=>krediNotu());   /* elle: --katman=kredinotu */
   if (KSET.has('ges')) await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat());   /* elle: --katman=ges — yalnız InfoLink + Wayback (geriye doldurma ~1,5 dk/koşu, 5 koşuda tamam) */
