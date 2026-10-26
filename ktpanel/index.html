@@ -282,7 +282,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <button data-tab="t3">Portföy</button>
   <button data-tab="t9">Değerleme</button>
   <button data-tab="t21">Teknik</button>
-  <button data-tab="t4">Journal</button>
+  <button data-tab="t4">Muhakeme</button>
   <button data-tab="t6">Faktör Model</button>
   
   <button data-tab="t8">Guidance</button>
@@ -991,7 +991,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div id="ayrGrafik" style="margin-top:8px"></div>
 </details>
 </div><div class="tab" id="t4"><!-- ==== 01 Journal ==== -->
-<h2>01 Investment Journal</h2>
+<h2>01 Muhakeme — Karar Motoru &amp; Tez Defteri</h2>
 <!-- §462/§463 Çeyrek Karar Motoru (XK030): pano + seçili hisse detayı. Ebu dışı (data-ebu="hayir"): kart kendi verisini kendi çeker. -->
 <div class="card" id="kararCard" data-ebu="hayir" style="border-color:var(--mm2);margin-bottom:12px">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -999,7 +999,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div style="display:flex;gap:6px;align-items:center"><select id="kararKod" style="font-size:11px;padding:3px 6px"></select><button class="btn" id="kararYenile" style="padding:3px 9px!important;font-size:10px!important">Yenile</button></div>
   </div>
   <div id="kararPano"></div>
-  <div id="kararOzet" style="margin-top:8px"><div class="sub">Journal sekmesi açılınca yüklenir…</div></div>
+  <div id="kararOzet" style="margin-top:8px"><div class="sub">Muhakeme sekmesi açılınca yüklenir…</div></div>
   <div id="kararGrafik"></div>
   <div id="kararModel"></div>
   <div id="kararFiyat"></div>
@@ -1858,7 +1858,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <div class="card"><div class="lbl">DEĞERLEME (DCF + MULTIPLE)</div><div class="sub" style="margin-top:4px">İki değerleme aracı. <b>DCF:</b> gelecek serbest nakit akışlarını bugüne indirgeyip içsel değer bulur — TL nominal / USD / Reel bazda. <b>Multiple:</b> EV/EBITDA çarpanının büyümeyle yıllar içinde nasıl "eridiğini" gösterir. <b>Nasıl:</b> DCF'te FCF, WACC, büyüme, terminal gir; baz seçimine göre WACC aralığı değişir (nominal ~%45, USD ~%12). Aselsan gibi büyüme şirketlerinde multiple'a, olgun nakit-üreten şirketlerde DCF'e güven.</div></div>
 <div class="card"><div class="lbl">SUKUK</div><div class="sub" style="margin-top:4px">Kira sertifikası / tahvil fiyat↔getiri hesabı. <b>Yeni İhraç:</b> valörden ileri kupon üretir, birikmiş kupon yok. <b>İkincil Piyasa:</b> kupon günü sabit, birikmiş kupon hesaplanır, temiz/kirli fiyat ayrılır. <b>Nasıl:</b> İşlem tipini seç, valör/vade/kupon gir, "Üret"e bas, gerekirse kupon tarihlerini elle düzelt.</div></div>
 <div class="card"><div class="lbl">FAKTÖR MODEL</div><div class="sub" style="margin-top:4px">XKTUM evrenindeki hisselerin faktör skorları (değer, kalite, momentum vb.) + <b>canlı sicil</b>: faktör-seçilmiş model portföyün XKTUM endeksine karşı günlük performansı. <b>Nasıl:</b> Sicil grafiğinde model çizgisi endeksin üstündeyse pozitif alfa üretiyor demektir.</div></div>
-<div class="card"><div class="lbl">DİĞER</div><div class="sub" style="margin-top:4px"><b>Journal:</b> yatırım notların. <b>Katılım Fonları:</b> katılım fonu takibi. <b>Guidance:</b> şirketlerin 2026 beklentileri. <b>Haberler:</b> portföy + Top hisseler için KAP bildirimleri.</div></div>
+<div class="card"><div class="lbl">DİĞER</div><div class="sub" style="margin-top:4px"><b>Muhakeme:</b> çeyrek karar motoru + tez defteri (karne). <b>Katılım Fonları:</b> katılım fonu takibi. <b>Guidance:</b> şirketlerin 2026 beklentileri. <b>Haberler:</b> portföy + Top hisseler için KAP bildirimleri.</div></div>
 
 <h2 style="margin-top:18px">Kavram Sözlüğü</h2>
 <div class="card"><div class="lbl">DEĞERLEME</div>

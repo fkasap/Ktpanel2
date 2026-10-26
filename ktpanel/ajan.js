@@ -1969,7 +1969,7 @@ function sohbetOzet(soru){
     P.push('## AÇIK ÇEYREKLİK SERİ\n'+CS_SON.kod+' · '+((CS_SON.donemler||[]).length)+' çeyrek yüklü (enflasyon endeksli)'); });
 
   P.push('## PANELDE AYRICA VAR (detay için kullanıcıyı yönlendir)\n'+
-    'Faktör Model (t6) · Portföy (t3) · Değerleme + FEK/KOPMA-σ (t9) · Teknik (t21) · Journal (t4) · '+
+    'Faktör Model (t6) · Portföy (t3) · Değerleme + FEK/KOPMA-σ (t9) · Teknik (t21) · Muhakeme (t4) · '+
     'Guidance (t8) · Earnings AI (t14) · Halka Arzlar (t20) · Yabancı Hisse (t25) · Finansal Tablolar/Çeyreklik Seri (t23) · '+
     'GYO NAV (t26) · Sektörel Veriler: Katılım Fonları + PYŞ + MKK Fon (t27) · Sukuk (t10) · Commodity (t15) · '+
     'ABD/Avrupa/Asya makro · Haberler (t7)');
