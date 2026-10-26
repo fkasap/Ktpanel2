@@ -404,11 +404,14 @@
   "GOZDE": "2026-10-26",
   "ATAKP": "2026-10-26",
   "FRMPL": "2026-10-26",
-  "TATGD": "2026-10-26"
+  "TATGD": "2026-10-26",
+  "AGESA": "2026-10-26",
+  "QNBFK": "2026-10-26"
  },
  "evren_disi": [
   "ADESE",
   "AFYON",
+  "AGESA",
   "AGYO",
   "AKFGY",
   "AKGRT",
@@ -534,6 +537,7 @@
   "PAPIL",
   "PATEK",
   "PCILT",
+  "QNBFK",
   "QUICK",
   "RALYH",
   "RNPOL",
@@ -579,8 +583,8 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 171,
- "pencere_sayi": 20,
+ "evren_disi_sayi": 173,
+ "pencere_sayi": 22,
  "dusen_son": [
   "ANHYT",
   "ARCLK",
@@ -589,5 +593,5 @@
   "GENIL",
   "TKNSA"
  ],
- "guncelleme": "2026-10-26 18:59 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-26 19:54 UTC — otomatik (KAP FR · kümülatif §299)"
 }

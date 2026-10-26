@@ -1261,7 +1261,7 @@
    "dd": -82.8,
    "dipten": 16.9,
    "beta": 0.95,
-   "kalite": 0.1,
+   "kalite": 0.11,
    "skor": 2.03,
    "baski": true
   },
@@ -1309,7 +1309,7 @@
    "dd": -49.3,
    "dipten": 6.1,
    "beta": 1.18,
-   "kalite": 0.88,
+   "kalite": 0.89,
    "skor": 1.6,
    "baski": false
   },
@@ -1321,7 +1321,7 @@
    "dd": -68,
    "dipten": 2.1,
    "beta": 0.95,
-   "kalite": 0.56,
+   "kalite": 0.57,
    "skor": 1.52,
    "baski": true
   }

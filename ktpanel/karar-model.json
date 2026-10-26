@@ -117,9 +117,15 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "henryhub",
+     "rol": "maliyet",
+     "ad": "Henry Hub doğalgaz (NG=F)"
     }
    ],
-   "birincil": "gaz_avrupa"
+   "birincil": "gaz_avrupa",
+   "_sur_ek": "546a"
   },
   {
    "kod": "AKCNS",
@@ -303,10 +309,21 @@
      "k": "eurusd",
      "rol": "kur",
      "ad": "EUR/USD (ihracat)"
+    },
+    {
+     "k": "ime_insaat",
+     "rol": "gelir",
+     "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)"
+    },
+    {
+     "k": "insaat_uretim_toplam",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — toplam (TÜİK)"
     }
    ],
    "birincil": "komur_termal",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "AKFYE",
@@ -457,9 +474,30 @@
      "k": "usdtry",
      "rol": "kur",
      "ad": "USD/TRY (YEKDEM $ tarifesi)"
+    },
+    {
+     "k": "hidro_uretim_gwh",
+     "rol": "gelir",
+     "ad": "Hidroelektrik üretim — barajlı + akarsu, Türkiye günlük (GWh) §546"
+    },
+    {
+     "k": "ruzgar_uretim_gwh",
+     "rol": "gelir",
+     "ad": "Rüzgâr üretimi — Türkiye günlük (GWh) §546"
+    },
+    {
+     "k": "yenilenebilir_pay",
+     "rol": "maliyet",
+     "ad": "Yenilenebilir payı — hidro+rüzgâr+güneş+jeotermal ÷ toplam üretim (%) §546"
+    },
+    {
+     "k": "henryhub",
+     "rol": "gelir",
+     "ad": "Henry Hub doğalgaz (NG=F)"
     }
    ],
-   "birincil": "ptf"
+   "birincil": "ptf",
+   "_sur_ek": "546a"
   },
   {
    "kod": "ALBRK",
@@ -589,9 +627,20 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "ticari_kredi_faiz",
+     "rol": "gelir",
+     "ad": "Ticari kredi faizi — TL, akım, KMH ve kurumsal kart HARİÇ (%, haftalık) §545"
+    },
+    {
+     "k": "mevduat_3ay",
+     "rol": "maliyet",
+     "ad": "TL mevduat faizi — 3 aya kadar vadeli, akım (%, haftalık) §545"
     }
    ],
-   "birincil": "aofm"
+   "birincil": "aofm",
+   "_sur_ek": "546a"
   },
   {
    "kod": "ALTNY",
@@ -942,9 +991,35 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tufe_gida",
+     "rol": "gelir",
+     "ad": "TÜFE gıda ve alkolsüz içecekler (TÜİK, 2025=100)",
+     "kaynak": "TCMB EVDS TP.TUKFIY2025.01 (+2003 bazı zincirli)",
+     "not": "Sepet büyümesinin resmî vekili: gıda enflasyonu ciro büyümesine yapışıktır; çeyrek ortalamasının yıllık değişimi = aynı mağaza nominal büyüme tabanı"
+    },
+    {
+     "k": "seker_dunya",
+     "rol": "gelir",
+     "ad": "Şeker dünya (WB)"
+    },
+    {
+     "k": "ufe_plastik",
+     "rol": "maliyet",
+     "ad": "Yİ-ÜFE 20.16 plastik — yurt içi satış fiyatı (TL)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "polimer"
+    },
+    {
+     "k": "insaat_uretim_bina",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — binalar (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     }
    ],
-   "birincil": null
+   "birincil": null,
+   "_sur_ek": "546a"
   },
   {
    "kod": "BIMAS",
@@ -1117,9 +1192,22 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tuketici_guveni",
+     "rol": "gelir",
+     "ad": "Tüketici güven endeksi (TÜİK-TCMB, aylık) §545"
+    },
+    {
+     "k": "asgari_ucret",
+     "rol": "maliyet",
+     "ad": "Asgari ücret brüt (TL) — şoför maliyeti",
+     "kaynak": "Resmî Gazete adım tablosu (Actions §485)",
+     "aile": "asgari"
     }
    ],
-   "birincil": "tufe_gida"
+   "birincil": "tufe_gida",
+   "_sur_ek": "546a"
   },
   {
    "kod": "BINHO",
@@ -1203,9 +1291,21 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
+    },
+    {
+     "k": "reel_kesim_guveni",
+     "rol": "gelir",
+     "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545"
     }
    ],
-   "birincil": null
+   "birincil": null,
+   "_sur_ek": "546a"
   },
   {
    "kod": "CIMSA",
@@ -1401,10 +1501,21 @@
      "ad": "Çimento-kireç-alçı ÜFE (TÜİK Yİ-ÜFE 3.14.5)",
      "kaynak": "TCMB EVDS TP.TUFE1YI.T69",
      "aile": "cimento_yi"
+    },
+    {
+     "k": "ime_insaat",
+     "rol": "gelir",
+     "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)"
+    },
+    {
+     "k": "insaat_uretim_toplam",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — toplam (TÜİK)"
     }
    ],
    "birincil": "komur_termal",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "CVKMD",
@@ -2020,9 +2131,15 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "henryhub",
+     "rol": "maliyet",
+     "ad": "Henry Hub doğalgaz (NG=F)"
     }
    ],
-   "birincil": "epdk_tarife"
+   "birincil": "epdk_tarife",
+   "_sur_ek": "546a"
   },
   {
    "kod": "ENJSA",
@@ -2188,9 +2305,18 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tlref",
+     "rol": "maliyet",
+     "ad": "BIST TLREF gecelik referans faiz (%)",
+     "kaynak": "TCMB EVDS TP.BISTTLREF.ORAN",
+     "not": "Piyasa gecelik faizi; kira sertifikası/mevduat fiyatlamasının günlük çapası",
+     "aile": "fonlama"
     }
    ],
-   "birincil": "tufe"
+   "birincil": "tufe",
+   "_sur_ek": "546a"
   },
   {
    "kod": "EREGL",
@@ -2414,9 +2540,21 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "ydufe_celik",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 24.10 demir-çelik — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "demir_lme",
+     "rol": "gelir",
+     "ad": "LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri"
     }
    ],
-   "birincil": "hrc_abd"
+   "birincil": "hrc_abd",
+   "_sur_ek": "546a"
   },
   {
    "kod": "EUPWR",
@@ -2779,6 +2917,11 @@
     {
      "k": "eurusd",
      "rol": "kur"
+    },
+    {
+     "k": "kap_yeni_is_gesan",
+     "rol": "gelir",
+     "ad": "Girişim Elektrik açıklanan sözleşmeler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)"
     }
    ],
    "birincil": "bakir",
@@ -2788,7 +2931,8 @@
     "elektrik": 0.16,
     "panel": 0.07
    },
-   "agirlik_kaynak": "6A26 konsolide brüt kâr: Europower trafo/pano ~%75, taahhüt/EPC ~%16 (PTF $ → EPC talebi vekili), panel ~%7"
+   "agirlik_kaynak": "6A26 konsolide brüt kâr: Europower trafo/pano ~%75, taahhüt/EPC ~%16 (PTF $ → EPC talebi vekili), panel ~%7",
+   "_sur_ek": "546a"
   },
   {
    "kod": "GLRMK",
@@ -2918,10 +3062,16 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "ime_insaat",
+     "rol": "maliyet",
+     "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)"
     }
    ],
    "birincil": "kap_yeni_is_glrmk",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "GRSEL",
@@ -3072,9 +3222,15 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "reel_kesim_guveni",
+     "rol": "gelir",
+     "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545"
     }
    ],
-   "birincil": "brent_yh"
+   "birincil": "brent_yh",
+   "_sur_ek": "546a"
   },
   {
    "kod": "GUBRF",
@@ -3234,9 +3390,17 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "bugday_tl",
+     "rol": "gelir",
+     "ad": "Buğday çiftçi fiyatı (TL/kg)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "bugday"
     }
    ],
-   "birincil": "ure"
+   "birincil": "ure",
+   "_sur_ek": "546a"
   },
   {
    "kod": "KATMR",
@@ -3326,10 +3490,18 @@
     {
      "k": "eurusd",
      "rol": "kur"
+    },
+    {
+     "k": "celik_ufe",
+     "rol": "maliyet",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
     }
    ],
    "birincil": "kap_yeni_is_katmr",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "KCAER",
@@ -3500,9 +3672,24 @@
      "k": "hrc_abd",
      "rol": "gelir",
      "ad": "HRC ABD (ABD ihracat pazarı vekili)"
+    },
+    {
+     "k": "demir_lme",
+     "rol": "gelir",
+     "ad": "LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri"
+    },
+    {
+     "k": "metal_marji_tr",
+     "rol": "gelir",
+     "ad": "TR uzun çelik metal marjı (LME inşaat demiri FOB TR − hurda CFR TR)"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
     }
    ],
-   "birincil": "kcaer_hadde_spread_usd"
+   "birincil": "kcaer_hadde_spread_usd",
+   "_sur_ek": "546a"
   },
   {
    "kod": "KRDMD",
@@ -3913,9 +4100,15 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tuketici_guveni",
+     "rol": "gelir",
+     "ad": "Tüketici güven endeksi (TÜİK-TCMB, aylık) §545"
     }
    ],
-   "birincil": "tufe_giyim"
+   "birincil": "tufe_giyim",
+   "_sur_ek": "546a"
   },
   {
    "kod": "MPARK",
@@ -4094,9 +4287,17 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "asgari_ucret_reel",
+     "rol": "maliyet",
+     "ad": "Asgari ücret reel (÷TÜFE) — mağaza/depo personeli (en büyük gider kalemi)",
+     "kaynak": "türetilmiş (Actions §485)",
+     "aile": "asgari"
     }
    ],
-   "birincil": "sut_endeks"
+   "birincil": "sut_endeks",
+   "_sur_ek": "546a"
   },
   {
    "kod": "OBAMS",
@@ -4235,9 +4436,15 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tuketici_guveni",
+     "rol": "gelir",
+     "ad": "Tüketici güven endeksi (TÜİK-TCMB, aylık) §545"
     }
    ],
-   "birincil": "bugday"
+   "birincil": "bugday",
+   "_sur_ek": "546a"
   },
   {
    "kod": "PETKM",
@@ -4628,11 +4835,22 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "kap_yeni_is_tckrc",
+     "rol": "gelir",
+     "ad": "Kıraç Galvaniz açıklanan sözleşmeler (otokorkuluk/GES) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)"
+    },
+    {
+     "k": "demir_lme",
+     "rol": "maliyet",
+     "ad": "LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri"
     }
    ],
    "birincil": "cinko",
    "_duzeltme": "533a",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "TKFEN",
@@ -4809,10 +5027,22 @@
      "k": "eurusd",
      "rol": "kur",
      "ad": "EUR/USD (taahhüt sözleşmeleri)"
+    },
+    {
+     "k": "bugday_tl",
+     "rol": "gelir",
+     "ad": "Buğday çiftçi fiyatı (TL/kg)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "bugday"
+    },
+    {
+     "k": "usdtry",
+     "rol": "kur"
     }
    ],
    "birincil": "ure",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "TUPRS",
@@ -5575,9 +5805,15 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "reel_kesim_guveni",
+     "rol": "gelir",
+     "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545"
     }
    ],
-   "birincil": "brent_yh"
+   "birincil": "brent_yh",
+   "_sur_ek": "546a"
   },
   {
    "kod": "ARASE",
@@ -5621,6 +5857,14 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tlref",
+     "rol": "maliyet",
+     "ad": "BIST TLREF gecelik referans faiz (%)",
+     "kaynak": "TCMB EVDS TP.BISTTLREF.ORAN",
+     "not": "Piyasa gecelik faizi; kira sertifikası/mevduat fiyatlamasının günlük çapası",
+     "aile": "fonlama"
     }
    ],
    "birincil": "tufe",
@@ -5670,7 +5914,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "ATAKP",
@@ -5705,6 +5950,18 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "maliyet",
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı",
+     "aile": "gaz"
+    },
+    {
+     "k": "ydufe_makarna",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 10.73 makarna — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     }
    ],
    "birincil": "usdtry",
@@ -5828,6 +6085,28 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "konut_ipotekli",
+     "rol": "gelir",
+     "ad": "Konut satışı — ipotekli (adet/ay) · kredi koşulları",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT2.KTRTOPLAM (TÜİK)",
+     "not": "Faiz indirimi döngüsünün ilk göründüğü yer; ipotekli pay yükselirse talep kredi ile genişliyor.",
+     "aile": "konut_satis"
+    },
+    {
+     "k": "ekgyo_kfe_ime",
+     "rol": "gelir",
+     "ad": "Konut fiyatı ÷ inşaat maliyeti (KFE ÷ İME ikamet) — geliştirici reel makası",
+     "kaynak": "türetilmiş TCMB KFE ÷ TÜİK İME (Actions §486)",
+     "not": ">100 ve yükseliyorsa konut fiyatı maliyetten hızlı artıyor → satılan projede marj genişler. EKGYO gelir paylaşımı modelinde yüklenici maliyeti dolaylı, kendi uygulama (anahtar teslim) projelerinde doğrudan etkiler.",
+     "aile": "konut_marj"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
     }
    ],
    "birincil": "kfe",
@@ -5877,7 +6156,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "AYDEM",
@@ -5915,6 +6195,32 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "hidro_uretim_gwh",
+     "rol": "gelir",
+     "ad": "Hidroelektrik üretim — barajlı + akarsu, Türkiye günlük (GWh) §546"
+    },
+    {
+     "k": "ruzgar_uretim_gwh",
+     "rol": "gelir",
+     "ad": "Rüzgâr üretimi — Türkiye günlük (GWh) §546"
+    },
+    {
+     "k": "yenilenebilir_pay",
+     "rol": "maliyet",
+     "ad": "Yenilenebilir payı — hidro+rüzgâr+güneş+jeotermal ÷ toplam üretim (%) §546"
+    },
+    {
+     "k": "gaz_avrupa",
+     "rol": "gelir",
+     "ad": "Doğalgaz Avrupa (WB) — BOTAŞ tarifesine dolaylı",
+     "aile": "gaz"
+    },
+    {
+     "k": "henryhub",
+     "rol": "gelir",
+     "ad": "Henry Hub doğalgaz (NG=F)"
     }
    ],
    "birincil": "ptf",
@@ -5964,7 +6270,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "BASGZ",
@@ -5999,6 +6306,11 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "henryhub",
+     "rol": "maliyet",
+     "ad": "Henry Hub doğalgaz (NG=F)"
     }
    ],
    "birincil": "epdk_tarife",
@@ -6048,7 +6360,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "BETAE",
@@ -6081,6 +6394,18 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "reel_kesim_guveni",
+     "rol": "gelir",
+     "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545"
+    },
+    {
+     "k": "celik_ufe",
+     "rol": "maliyet",
+     "ad": "Ana demir-çelik ÜFE (TÜİK Yİ-ÜFE 3.15.1) — yurt içi yassı/uzun fiyat",
+     "kaynak": "TCMB EVDS TP.TUFE1YI.T74",
+     "aile": "celik_yi"
     }
    ],
    "birincil": "bakir",
@@ -6101,7 +6426,8 @@
    "bilanco": null,
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "BUCIM",
@@ -6157,6 +6483,16 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "ime_insaat",
+     "rol": "gelir",
+     "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)"
+    },
+    {
+     "k": "insaat_uretim_toplam",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — toplam (TÜİK)"
     }
    ],
    "birincil": "komur_termal",
@@ -6212,7 +6548,8 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "EGGUB",
@@ -6259,6 +6596,27 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "gubre_girdi",
+     "rol": "gelir",
+     "ad": "Çiftçi gübre alış fiyat endeksi (yurt içi satış fiyatı)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "gubre"
+    },
+    {
+     "k": "ufe_gubre_2015",
+     "rol": "gelir",
+     "ad": "Yİ-ÜFE 20.15 gübre ve azot bileşikleri",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "gubre"
+    },
+    {
+     "k": "bugday_tl",
+     "rol": "gelir",
+     "ad": "Buğday çiftçi fiyatı (TL/kg)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)",
+     "aile": "bugday"
     }
    ],
    "birincil": "ure",
@@ -6333,7 +6691,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "EGPRO",
@@ -6498,6 +6857,16 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "demir_lme",
+     "rol": "gelir",
+     "ad": "LME Steel Rebar FOB Turkey (Platts) · Month-2 kapanış (1 gün gecikmeli) — TR inşaat demiri"
+    },
+    {
+     "k": "metal_marji_tr",
+     "rol": "gelir",
+     "ad": "TR uzun çelik metal marjı (LME inşaat demiri FOB TR − hurda CFR TR)"
     }
    ],
    "birincil": "hrc_abd",
@@ -6544,7 +6913,8 @@
    "bilanco": null,
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "KARSN",
@@ -6577,6 +6947,16 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "kap_yeni_is_karsn",
+     "rol": "gelir",
+     "ad": "Karsan açıklanan sipariş/ihaleler (elektrikli otobüs) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)"
+    },
+    {
+     "k": "reel_kesim_guveni",
+     "rol": "gelir",
+     "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545"
     }
    ],
    "birincil": "eurusd",
@@ -6626,7 +7006,9 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a",
+   "kamu_duyarli": true
   },
   {
    "kod": "KBORU",
@@ -6669,6 +7051,16 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "kap_yeni_is_kboru",
+     "rol": "gelir",
+     "ad": "Kuzey Boru açıklanan sözleşmeler (DSİ/altyapı) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)"
+    },
+    {
+     "k": "pp_hdpe_film_eur",
+     "rol": "maliyet",
+     "ad": "HDPE film — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)"
     }
    ],
    "birincil": "pe_pp",
@@ -6719,7 +7111,8 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "LMKDC",
@@ -6769,6 +7162,22 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "ime_insaat",
+     "rol": "gelir",
+     "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)"
+    },
+    {
+     "k": "insaat_uretim_toplam",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — toplam (TÜİK)"
+    },
+    {
+     "k": "ydufe_cimento",
+     "rol": "gelir",
+     "ad": "YD-ÜFE 23.51 çimento — ihracat fiyatı",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     }
    ],
    "birincil": "komur_termal",
@@ -6819,7 +7228,8 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "_sur_ek": "546a"
   },
   {
    "kod": "MOPAS",
@@ -6862,6 +7272,18 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tuketici_guveni",
+     "rol": "gelir",
+     "ad": "Tüketici güven endeksi (TÜİK-TCMB, aylık) §545"
+    },
+    {
+     "k": "asgari_ucret",
+     "rol": "maliyet",
+     "ad": "Asgari ücret brüt (TL) — şoför maliyeti",
+     "kaynak": "Resmî Gazete adım tablosu (Actions §485)",
+     "aile": "asgari"
     }
    ],
    "birincil": "tufe_gida",
@@ -6907,7 +7329,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "NETCD",
@@ -6969,7 +7392,8 @@
    "bilanco": null,
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "kamu_duyarli": true
   },
   {
    "kod": "NTGAZ",
@@ -7003,6 +7427,11 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "henryhub",
+     "rol": "maliyet",
+     "ad": "Henry Hub doğalgaz (NG=F)"
     }
    ],
    "birincil": "ttf",
@@ -7052,7 +7481,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "PARSN",
@@ -7088,6 +7518,17 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "reel_kesim_guveni",
+     "rol": "gelir",
+     "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545"
+    },
+    {
+     "k": "kara_tasima_hacim",
+     "rol": "gelir",
+     "ad": "Hizmet üretim endeksi — kara taşımacılığı (hacim)",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
     }
    ],
    "birincil": "celik_ufe",
@@ -7137,7 +7578,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "POLHO",
@@ -7171,6 +7613,23 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "insaat_uretim_toplam",
+     "rol": "gelir",
+     "ad": "İnşaat üretim endeksi — toplam (TÜİK)"
+    },
+    {
+     "k": "pe_pp",
+     "rol": "maliyet",
+     "ad": "PE/PP Avrupa reçine fiyatı ($/t) — HDPE/LDPE/LLDPE film + PP homo",
+     "kaynak": "plasticportal.eu / Plastech.pl (Actions §488)",
+     "aile": "polimer"
+    },
+    {
+     "k": "eurusd",
+     "rol": "kur",
+     "ad": "EUR/USD (ihracat)"
     }
    ],
    "birincil": "brent_yh",
@@ -7225,7 +7684,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "SNGYO",
@@ -7279,6 +7739,28 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "konut_ipotekli",
+     "rol": "gelir",
+     "ad": "Konut satışı — ipotekli (adet/ay) · kredi koşulları",
+     "kaynak": "TCMB EVDS TP.AKONUTSAT2.KTRTOPLAM (TÜİK)",
+     "not": "Faiz indirimi döngüsünün ilk göründüğü yer; ipotekli pay yükselirse talep kredi ile genişliyor.",
+     "aile": "konut_satis"
+    },
+    {
+     "k": "ekgyo_kfe_ime",
+     "rol": "gelir",
+     "ad": "Konut fiyatı ÷ inşaat maliyeti (KFE ÷ İME ikamet) — geliştirici reel makası",
+     "kaynak": "türetilmiş TCMB KFE ÷ TÜİK İME (Actions §486)",
+     "not": ">100 ve yükseliyorsa konut fiyatı maliyetten hızlı artıyor → satılan projede marj genişler. EKGYO gelir paylaşımı modelinde yüklenici maliyeti dolaylı, kendi uygulama (anahtar teslim) projelerinde doğrudan etkiler.",
+     "aile": "konut_marj"
+    },
+    {
+     "k": "tufe",
+     "rol": "gelir",
+     "ad": "TÜFE genel (TÜİK) — tarifenin kaynağı",
+     "kaynak": "TCMB EVDS (zincirli)"
     }
    ],
    "birincil": "kfe",
@@ -7333,7 +7815,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   },
   {
    "kod": "VAKKO",
@@ -7374,6 +7857,24 @@
     {
      "k": "usdtry",
      "rol": "kur"
+    },
+    {
+     "k": "tuketici_guveni",
+     "rol": "gelir",
+     "ad": "Tüketici güven endeksi (TÜİK-TCMB, aylık) §545"
+    },
+    {
+     "k": "ufe_kumas",
+     "rol": "maliyet",
+     "ad": "Yİ-ÜFE 13.20 dokuma kumaş",
+     "kaynak": "TÜİK databrowser2 SDMX (Actions §487)"
+    },
+    {
+     "k": "pamuk",
+     "rol": "maliyet",
+     "ad": "Pamuk ICE (¢/lb) — denim/kumaş girdisi",
+     "kaynak": "Yahoo CT=F (Actions §464)",
+     "not": "Kumaş maliyetinin büyük kısmı pamuk ipliği; fiyat geçişi 2–3 sezon gecikmeli (sipariş önceden verilir). Mavi üretimi fason → etki tedarikçi fiyatı üzerinden."
     }
    ],
    "birincil": "tufe_giyim",
@@ -7428,7 +7929,8 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "_sur_ek": "546a"
   }
  ],
  "_yol_haritasi": [
