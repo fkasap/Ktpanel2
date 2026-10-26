@@ -181,7 +181,9 @@ async function katmanEkran(onceki, seriler) {
   if (!SIR) { katmanDurum.ekran = { sure: 0, not: 'CRON_SECRET yok — atlandı' }; return null; }
   let pw; try { pw = await import('playwright'); } catch (e) { katmanDurum.ekran = { sure: 0, not: 'playwright yok — atlandı' }; return null; }
   const BUTCE = 7 * 60 * 1000;
-  const tarayici = await pw.chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {});
+  let tarayici; try { tarayici = await pw.chromium.launch(process.env.PW_CHROME ? { executablePath: process.env.PW_CHROME } : {}); }
+  catch (e) { /* §548d: tarayıcı indirilememiş (Actions kurulum adımı düşmüş) — "katman çöktü" değil, "atlandı": önceki ekran bulguları taşınır, uyarı tek satır */
+    katmanDurum.ekran = { sure: 0, not: 'tarayıcı yok — atlandı' }; ekle('uyari', 'bekci', 'pw-tarayici', 'Ekran katmanı: Playwright tarayıcısı kurulamadı — ekran taraması atlandı', String(e.message || e).slice(0, 160) + ' · Actions "Playwright" adımına bak (saglik.yml §548d önbellek + iki deneme).'); return null; }
   const sonuc = { sekmeler: {}, jsHata: [], konsol: [] };
   try {
     const ctx = await tarayici.newContext({ viewport: { width: 1440, height: 900 }, locale: 'tr-TR', timezoneId: 'Europe/Istanbul' });
