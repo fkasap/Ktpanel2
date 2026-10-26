@@ -1811,9 +1811,15 @@
     {
      "k": "eurusd",
      "rol": "kur"
+    },
+    {
+     "k": "kap_yeni_is_cwene",
+     "rol": "gelir",
+     "ad": "CW Enerji açıklanan sözleşmeler (GES) — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)"
     }
    ],
-   "birincil": "ges_montaj_makasi_usd"
+   "birincil": "ges_montaj_makasi_usd",
+   "_sur_ek": "546a"
   },
   {
    "kod": "EKGYO",
@@ -2728,6 +2734,11 @@
     {
      "k": "eurusd",
      "rol": "kur"
+    },
+    {
+     "k": "kap_yeni_is_eupwr",
+     "rol": "gelir",
+     "ad": "Europower açıklanan sözleşmeler — KAP Yeni İş İlişkisi, çeyrek toplamı (mn $)"
     }
    ],
    "birincil": "bakir",
@@ -2736,7 +2747,8 @@
     "trafo_metal": 0.9,
     "panel": 0.1
    },
-   "agirlik_kaynak": "6A26 bölüm brüt kârı (GESAN dipnotu): trafo/pano ~%90, Peak PV panel ~%10"
+   "agirlik_kaynak": "6A26 bölüm brüt kârı (GESAN dipnotu): trafo/pano ~%90, Peak PV panel ~%10",
+   "_sur_ek": "546a"
   },
   {
    "kod": "GESAN",
