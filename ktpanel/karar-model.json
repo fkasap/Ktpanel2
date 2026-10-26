@@ -5724,6 +5724,26 @@
      "tl": 0.101,
      "usd": 2.2,
      "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": 0.103,
+     "usd": 2.8,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 0.113,
+     "usd": 2.9,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 0.132,
+     "usd": 3.2,
+     "_kaynak": "KAP"
+    },
+    "2026Q3": {
+     "tl": 0.159,
+     "usd": 3.3,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {

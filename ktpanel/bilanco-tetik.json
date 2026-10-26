@@ -5,6 +5,7 @@
   "AKYHO",
   "ALKIM",
   "ALTNY",
+  "ATAKP",
   "BAKAB",
   "BANVT",
   "BERA",
@@ -35,6 +36,7 @@
   "FONET",
   "FORMT",
   "FRIGO",
+  "FRMPL",
   "FZLGY",
   "GEDZA",
   "GEREL",
@@ -115,7 +117,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 113,
+ "sayi": 115,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -399,7 +401,10 @@
   "TTRAK": "2026-10-26",
   "VAKFA": "2026-10-26",
   "VAKFN": "2026-10-26",
-  "GOZDE": "2026-10-26"
+  "GOZDE": "2026-10-26",
+  "ATAKP": "2026-10-26",
+  "FRMPL": "2026-10-26",
+  "TATGD": "2026-10-26"
  },
  "evren_disi": [
   "ADESE",
@@ -545,6 +550,7 @@
   "TABGD",
   "TARFN",
   "TATEN",
+  "TATGD",
   "TBARV",
   "TBORG",
   "TIMUR",
@@ -573,8 +579,8 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 170,
- "pencere_sayi": 17,
+ "evren_disi_sayi": 171,
+ "pencere_sayi": 20,
  "dusen_son": [
   "ANHYT",
   "ARCLK",
@@ -583,5 +589,5 @@
   "GENIL",
   "TKNSA"
  ],
- "guncelleme": "2026-10-26 18:28 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-26 18:59 UTC — otomatik (KAP FR · kümülatif §299)"
 }

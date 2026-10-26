@@ -278,12 +278,16 @@
   {
    "k": "BRISA",
    "fiyat": 66.95,
-   "adet": 305,
-   "ciro": 46799,
-   "ebitda": 6985,
-   "netBorc": 6162,
+   "adet": 305.117,
+   "ciro": 42116,
+   "ebitda": 7432,
+   "netBorc": 7040,
    "hacim": 14,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 7586,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "BRLSM",
@@ -361,15 +365,15 @@
    "k": "CIMSA",
    "fiyat": 37.62,
    "adet": 945.591,
-   "ciro": 44490,
-   "ebitda": 8218,
-   "netBorc": 26254,
+   "ciro": 44746,
+   "ebitda": 8164,
+   "netBorc": 25835,
    "hacim": 323,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 8832
+   "ebitda_genis": 9221
   },
   {
    "k": "CMBTN",
