@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261026f';
+const KTP_SURUM = '20261026g';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -9525,8 +9525,11 @@ function taktikRender(){
       const art=r.sinyaller.filter(x=>x.isaret===1), eks=r.sinyaller.filter(x=>x.isaret===-1), not_=r.sinyaller.filter(x=>x.isaret===0), yok=r.sinyaller.filter(x=>x.isaret==null);
       v.teze='<b>MODEL: '+r.durus+'</b> — sinyal toplamı <b>'+(r.skor>0?'+':'')+r.skor+'</b> ('+r.n+'/'+r.toplam+' sinyal ölçüldü · '+art.length+' lehte, '+eks.length+' aleyhte, '+not_.length+' nötr'+(yok.length?', '+yok.length+' veri yok':'')+'). '+
         (eskiDurus!==r.durus?'<span style="color:var(--down)">Eski tez '+eskiDurus+' diyordu ('+eskiKaynak+') — veriler bunu desteklemiyor.</span>':'Eski tezle aynı yönde.');
-      v.dayanak=(art.length?art:[{metin:'lehte sinyal yok'}]).map(x=>x.metin).concat(not_.map(x=>'(nötr) '+x.metin)).slice(0,5);
-      v.risk=(eks.length?eks:[{metin:'aleyhte sinyal yok'}]).map(x=>x.metin).concat(yok.map(x=>x.metin)).slice(0,5);
+      /* §547c İŞARET METNİN İÇİNDE (26 Eki, kullanıcı: "lehte sinyal yok diyor, sonra sıralıyor"): nötr sinyaller "+" ile basılınca
+         "lehte sinyal yok" satırının altında artı işaretli satırlar çelişki gibi okunuyordu. Lehte "+", aleyhte "−", nötr "○",
+         veri yok "?", boş küme "·". Çizici işaretli satıra ikinci işaret EKLEMEZ; fabrika (elle) listeleri eskisi gibi "+"/"−" alır. */
+      v.dayanak=(art.length?art.map(x=>'+ '+x.metin):['· lehte sinyal yok']).concat(not_.map(x=>'○ nötr · '+x.metin)).slice(0,6);
+      v.risk=(eks.length?eks.map(x=>'− '+x.metin):['· aleyhte sinyal yok']).concat(yok.map(x=>'? '+x.metin)).slice(0,6);
       const esik = r.skor<=-2? 'NÖTR için toplam −1\'e çıkmalı: en yakın dönüş adayları — '+eks.slice(0,2).map(x=>x.ad).join(', ') :
                    r.skor>=2? 'NÖTR\'e dönüş: toplam +1\'e inerse — izlenecek: '+art.slice(0,2).map(x=>x.ad).join(', ') :
                    'ÜSTÜ için +2, ALTI için −2 gerekir — sınırdaki sinyaller: '+r.sinyaller.filter(x=>x.isaret===0).slice(0,2).map(x=>x.ad).join(', ');
@@ -9543,8 +9546,8 @@ function taktikRender(){
     '</div>'+
     '<div class="sub" style="font-size:10.5px;line-height:1.55;margin-bottom:7px">'+v.teze+'</div>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:9.5px">'+
-      '<div><div style="font-weight:700;color:var(--up);margin-bottom:2px">DAYANAK</div>'+v.dayanak.map(d=>'<div style="color:var(--muted);margin-bottom:1px">+ '+d+'</div>').join('')+'</div>'+
-      '<div><div style="font-weight:700;color:var(--down);margin-bottom:2px">RİSK / ÇÜRÜTEN</div>'+v.risk.map(r=>'<div style="color:var(--muted);margin-bottom:1px">− '+r+'</div>').join('')+'</div>'+
+      '<div><div style="font-weight:700;color:var(--up);margin-bottom:2px">DAYANAK</div>'+v.dayanak.map(d=>'<div style="color:var(--muted);margin-bottom:1px">'+(/^[+−·○?] /.test(d)?d:'+ '+d)+'</div>').join('')+'</div>'+
+      '<div><div style="font-weight:700;color:var(--down);margin-bottom:2px">RİSK / ÇÜRÜTEN</div>'+v.risk.map(r=>'<div style="color:var(--muted);margin-bottom:1px">'+(/^[+−·○?] /.test(r)?r:'− '+r)+'</div>').join('')+'</div>'+
     '</div>'+
     '<div style="margin-top:7px;font-size:9.5px;padding-top:6px;border-top:1px dashed var(--line)"><b style="color:var(--mm2)">TETİK:</b> <span class="sub">'+v.tetik+'</span></div>'+
     (v._eski?'<details data-tarihsel="eski taktik tez" style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--muted)">ESKİ TEZ — '+esc(v._eski.kaynak)+' · duruş '+esc(v._eski.durus)+'</summary><div class="sub" style="font-size:9.5px;line-height:1.5;margin-top:4px">'+v._eski.teze+'</div></details>':'')+
