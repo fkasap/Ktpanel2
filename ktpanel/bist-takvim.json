@@ -7,7 +7,7 @@
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
  "tarih": "2026-10-26",
  "donem": "3Ç26",
- "adet": 210,
+ "adet": 208,
  "beklenen": {
   "HATSN": "2026-10-21",
   "GOODY": "2026-10-22",
@@ -65,7 +65,6 @@
   "SNICA": "2026-10-29",
   "SURGY": "2026-10-29",
   "TARKM": "2026-10-29",
-  "TKNSA": "2026-10-29",
   "TUCLK": "2026-10-29",
   "VANGD": "2026-10-29",
   "YIGIT": "2026-10-29",
@@ -164,7 +163,6 @@
   "FONET": "2026-11-09",
   "FORTE": "2026-11-09",
   "FRIGO": "2026-11-09",
-  "GENIL": "2026-11-09",
   "GEREL": "2026-11-09",
   "GESAN": "2026-11-09",
   "GOKNR": "2026-11-09",
@@ -237,7 +235,10 @@
   "EBEBK": "2026-10-22",
   "SOHOE": "2026-10-23",
   "RODRG": "2026-10-24",
-  "CVKMD": "2026-10-26"
+  "CVKMD": "2026-10-26",
+  "TKNSA": "2026-10-26",
+  "GENIL": "2026-10-26",
+  "CITAS": "2026-10-26"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {

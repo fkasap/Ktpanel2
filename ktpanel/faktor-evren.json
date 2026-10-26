@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-26T11:42:47Z",
+ "guncelleme": "2026-10-26T17:31:40Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -393,7 +393,7 @@
    "kaynak": "arşiv"
   },
   "BINHO": {
-   "ts": "2026-10-26T11:42:30Z",
+   "ts": "2026-10-26T17:31:19Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5072,7 +5072,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-26T11:42:30Z",
+   "ts": "2026-10-26T17:31:19Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5277,10 +5277,44 @@
    "kaynak": "arşiv"
   },
   "CITAS": {
-   "eksik": true,
-   "neden": "liste boş",
-   "t": "2026-10-26",
+   "ts": "2026-10-26T17:31:27Z",
    "y": "496",
+   "donem": "2026/3",
+   "ceyrek": 2,
+   "ciro": null,
+   "brut": null,
+   "favok": null,
+   "favokCek": null,
+   "netKar": null,
+   "ozk": 7755609479,
+   "aktif": 9946481957,
+   "donen": 3660792407,
+   "kvY": 518918338,
+   "finBorc": 782775195,
+   "likit": 1955176666,
+   "netBorc": -1172401471,
+   "isletmeNA": null,
+   "capex": null,
+   "sna": null,
+   "tahakkuk": null,
+   "odFaiz": null,
+   "odTemettu": null,
+   "stoklar": 1389070380,
+   "ticariAlacak": 36361874,
+   "ticariBorc": 277180399,
+   "buyume": {
+    "ciro": 219.9,
+    "netKar": 637.4,
+    "brut": 216.4
+   },
+   "adet": 180000000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "faal": null,
+   "amort": null,
+   "vergiOncesi": null,
+   "vergi": null,
+   "gecmisKar": 2998033261,
+   "eksik": true,
    "kaynak": "KAP"
   },
   "TKNKA": {
@@ -5462,7 +5496,7 @@
    "kaynak": "arşiv"
   },
   "ALBRK": {
-   "ts": "2026-10-26T11:42:30Z",
+   "ts": "2026-10-26T17:31:19Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
