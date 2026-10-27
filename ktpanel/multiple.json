@@ -20,12 +20,16 @@
   {
    "k": "ALCTL",
    "fiyat": 62.55,
-   "adet": 38,
-   "ciro": 5243,
-   "ebitda": 604,
-   "netBorc": -1225,
+   "adet": 38.701,
+   "ciro": 5113,
+   "ebitda": 322,
+   "netBorc": -1261,
    "hacim": 76,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 322,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "ALKA",
@@ -798,12 +802,16 @@
   {
    "k": "HATSN",
    "fiyat": 20.4,
-   "adet": 220.978,
-   "ciro": 5057,
-   "ebitda": 145,
-   "netBorc": 261,
+   "adet": 221.5,
+   "ciro": 2929,
+   "ebitda": -599,
+   "netBorc": 350,
    "hacim": 322,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": -597,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "HOROZ",
