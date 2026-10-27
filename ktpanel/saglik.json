@@ -1,10 +1,10 @@
 {
- "guncelleme": "2026-10-27T13:18:22Z",
+ "guncelleme": "2026-10-27T20:34:26Z",
  "surum": "§547c",
- "sure_sn": 61,
+ "sure_sn": 83,
  "ozet": {
   "kritik": 0,
-  "uyari": 1,
+  "uyari": 2,
   "bilgi": 8,
   "yeni": 1,
   "duzelen": 0
@@ -19,8 +19,8 @@
    "not": "37 otomatik dosya izlendi · 12 elle güncellenen (otomasyon borcu)"
   },
   "kopruler": {
-   "sure": 45,
-   "not": "31 uç · 31 geçti"
+   "sure": 66,
+   "not": "31 uç · 30 geçti"
   },
   "tutarlilik": {
    "sure": 4,
@@ -33,6 +33,16 @@
  },
  "bulgular": [
   {
+   "id": "kopruler:tcmb · TR 5Y CDS",
+   "seviye": "uyari",
+   "katman": "kopruler",
+   "baslik": "tcmb · TR 5Y CDS — hata",
+   "ayrinti": "HTTP 502",
+   "ilk": "2026-10-27",
+   "gun": 0,
+   "yeni": true
+  },
+  {
    "id": "bekci:pw-tarayici",
    "seviye": "uyari",
    "katman": "bekci",
@@ -40,7 +50,7 @@
    "ayrinti": "browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-she · Actions \"Playwright\" adımına bak (saglik.yml §548d önbellek + iki deneme).",
    "ilk": "2026-10-27",
    "gun": 0,
-   "yeni": true
+   "yeni": false
   },
   {
    "id": "ekran:elle-sayi-envanter",
@@ -413,27 +423,27 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 570265,
-   "tarih": "2026-10-26",
-   "yas": 2,
+   "son": 620000,
+   "tarih": "2026-10-27",
+   "yas": 1,
+   "limit": 7
+  },
+  "TP.APIFON4": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 36,
+   "tarih": "2026-10-27",
+   "yas": 1,
    "limit": 7
   },
   "TP.APIFON2.TOP": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 1080194.25,
-   "tarih": "2026-10-26",
-   "yas": 2,
-   "limit": 7
-  },
-  "TP.APIFON3": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": -509929.25,
-   "tarih": "2026-10-26",
-   "yas": 2,
+   "son": 1098661.47,
+   "tarih": "2026-10-27",
+   "yas": 1,
    "limit": 7
   },
   "TP.BISPOLFAIZ.TUR": {
@@ -446,6 +456,15 @@
    "limit": 98,
    "yy": -13.95
   },
+  "TP.APIFON3": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": -478661.47,
+   "tarih": "2026-10-27",
+   "yas": 1,
+   "limit": 7
+  },
   "TP.ENFBEK.HBA12ENF": {
    "rol": "birincil",
    "durum": "ok",
@@ -455,15 +474,6 @@
    "yas": 27,
    "limit": 98,
    "yy": -19.56
-  },
-  "TP.APIFON4": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 36,
-   "tarih": "2026-10-26",
-   "yas": 2,
-   "limit": 7
   },
   "TP.ENFBEK.IYA12ENF": {
    "rol": "birincil",
@@ -475,14 +485,16 @@
    "limit": 98,
    "yy": -12.4
   },
-  "TP.BISTTLREF.ORAN": {
+  "TP.FG.J0": {
    "rol": "birincil",
    "durum": "ok",
-   "siklik": "günlük",
-   "son": 35.8404,
-   "tarih": "2026-10-26",
-   "yas": 2,
-   "limit": 7
+   "siklik": "aylık",
+   "son": 3683.83,
+   "tarih": "2026-01-01",
+   "yas": 300,
+   "limit": 98,
+   "yy": 30.65,
+   "tarihsel": true
   },
   "TP.ENFBEK.PKA12ENF": {
    "rol": "birincil",
@@ -494,16 +506,14 @@
    "limit": 98,
    "yy": 2.71
   },
-  "TP.FG.J0": {
+  "TP.BISTTLREF.ORAN": {
    "rol": "birincil",
    "durum": "ok",
-   "siklik": "aylık",
-   "son": 3683.83,
-   "tarih": "2026-01-01",
-   "yas": 300,
-   "limit": 98,
-   "yy": 30.65,
-   "tarihsel": true
+   "siklik": "günlük",
+   "son": 35.8404,
+   "tarih": "2026-10-26",
+   "yas": 2,
+   "limit": 7
   },
   "TP.DK.USD.A.YTL": {
    "rol": "birincil",
@@ -541,15 +551,6 @@
    "yas": 12,
    "limit": 21
   },
-  "TP.HPBITABLO5.6": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -365.443,
-   "tarih": "2026-10-16",
-   "yas": 12,
-   "limit": 21
-  },
   "TP.IHRISICREV4.TT": {
    "rol": "birincil",
    "durum": "ok",
@@ -559,6 +560,15 @@
    "yas": 88,
    "limit": 98,
    "yy": 8.14
+  },
+  "TP.HPBITABLO5.6": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -365.443,
+   "tarih": "2026-10-16",
+   "yas": 12,
+   "limit": 21
   },
   "TP.ITHISICREV4.TT": {
    "rol": "birincil",
@@ -615,15 +625,6 @@
    "yas": 12,
    "limit": 21
   },
-  "TP.MKNETHAR.M7": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -88.75,
-   "tarih": "2026-10-16",
-   "yas": 12,
-   "limit": 21
-  },
   "TP.PKAUO.S01.D.U": {
    "rol": "birincil",
    "durum": "ok",
@@ -634,6 +635,15 @@
    "limit": 98,
    "yy": -6.74
   },
+  "TP.MKNETHAR.M7": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -88.75,
+   "tarih": "2026-10-16",
+   "yas": 12,
+   "limit": 21
+  },
   "TP.MKNETHAR.M8": {
    "rol": "birincil",
    "durum": "ok",
@@ -642,16 +652,6 @@
    "tarih": "2026-10-16",
    "yas": 12,
    "limit": 21
-  },
-  "TP.PKAUO.S04.H.U": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 35,
-   "tarih": "2026-10-01",
-   "yas": 27,
-   "limit": 98,
-   "yy": -7.06
   },
   "TP.PKAUO.S01.F.U": {
    "rol": "birincil",
@@ -663,16 +663,6 @@
    "limit": 98,
    "yy": 3.34
   },
-  "TP.PKAUO.S05.B.U": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 51.5471,
-   "tarih": "2026-10-01",
-   "yas": 27,
-   "limit": 98,
-   "yy": 18.33
-  },
   "TP.PKAUO.S05.C.U": {
    "rol": "birincil",
    "durum": "ok",
@@ -682,6 +672,26 @@
    "yas": 27,
    "limit": 98,
    "yy": 19.11
+  },
+  "TP.PKAUO.S04.H.U": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 35,
+   "tarih": "2026-10-01",
+   "yas": 27,
+   "limit": 98,
+   "yy": -7.06
+  },
+  "TP.PKAUO.S05.B.U": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 51.5471,
+   "tarih": "2026-10-01",
+   "yas": 27,
+   "limit": 98,
+   "yy": 18.33
   },
   "TP.PKAUO.S06.A.U": {
    "rol": "birincil",
@@ -707,8 +717,17 @@
    "durum": "ok",
    "siklik": "günlük",
    "son": 34.5,
-   "tarih": "2026-10-26",
-   "yas": 2,
+   "tarih": "2026-10-27",
+   "yas": 1,
+   "limit": 7
+  },
+  "TP.PY.P02.1H": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 36,
+   "tarih": "2026-10-27",
+   "yas": 1,
    "limit": 7
   },
   "TP.TRY.MT01": {
@@ -725,17 +744,8 @@
    "durum": "ok",
    "siklik": "günlük",
    "son": 39,
-   "tarih": "2026-10-26",
-   "yas": 2,
-   "limit": 7
-  },
-  "TP.PY.P02.1H": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 36,
-   "tarih": "2026-10-26",
-   "yas": 2,
+   "tarih": "2026-10-27",
+   "yas": 1,
    "limit": 7
   },
   "TP.TRY.MT03": {
@@ -743,15 +753,6 @@
    "durum": "ok",
    "siklik": "haftalık",
    "son": 42.53,
-   "tarih": "2026-10-16",
-   "yas": 12,
-   "limit": 21
-  },
-  "TP.TRY.MT02": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 43.22,
    "tarih": "2026-10-16",
    "yas": 12,
    "limit": 21
@@ -765,6 +766,15 @@
    "yas": 57,
    "limit": 98,
    "yy": 27.38
+  },
+  "TP.TRY.MT02": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 43.22,
+   "tarih": "2026-10-16",
+   "yas": 12,
+   "limit": 21
   },
   "TP.TUFE1YI.T105": {
    "rol": "birincil",
@@ -836,16 +846,6 @@
    "limit": 98,
    "yy": 29.93
   },
-  "TP.TUKFIY2025.04": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 152.1,
-   "tarih": "2026-09-01",
-   "yas": 57,
-   "limit": 98,
-   "yy": 39.99
-  },
   "TP.TUKFIY2025.07": {
    "rol": "birincil",
    "durum": "ok",
@@ -855,6 +855,16 @@
    "yas": 57,
    "limit": 98,
    "yy": 35.11
+  },
+  "TP.TUKFIY2025.04": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 152.1,
+   "tarih": "2026-09-01",
+   "yas": 57,
+   "limit": 98,
+   "yy": 39.99
   },
   "TP.TUKFIY2025.GENEL": {
    "rol": "birincil",
@@ -877,8 +887,8 @@
   },
   {
    "dosya": "bist-takvim.json",
-   "son": "2026-10-26",
-   "isGunu": 1,
+   "son": "2026-10-27",
+   "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
@@ -1206,187 +1216,187 @@
   {
    "ad": "market · küresel endeksler",
    "sonuc": "GECTI",
-   "ms": 1193,
+   "ms": 1758,
    "not": ""
   },
   {
    "ad": "market · toplu fiyat",
    "sonuc": "GECTI",
-   "ms": 290,
+   "ms": 350,
    "not": ""
   },
   {
    "ad": "market · SEKTÖR serisi (RS tabanı)",
    "sonuc": "GECTI",
-   "ms": 861,
+   "ms": 897,
    "not": ""
   },
   {
    "ad": "market · Avrupa mega-cap",
    "sonuc": "GECTI",
-   "ms": 882,
+   "ms": 905,
    "not": ""
   },
   {
    "ad": "market · FRED (ABD tahvil)",
    "sonuc": "GECTI",
-   "ms": 1869,
+   "ms": 1682,
    "not": ""
   },
   {
    "ad": "market · ECB (sunucu bacagı)",
    "sonuc": "GECTI",
-   "ms": 1937,
+   "ms": 8243,
    "not": ""
   },
   {
    "ad": "market · BoJ",
    "sonuc": "GECTI",
-   "ms": 1807,
+   "ms": 1546,
    "not": ""
   },
   {
    "ad": "market · HKMA",
    "sonuc": "GECTI",
-   "ms": 1158,
+   "ms": 1191,
    "not": ""
   },
   {
    "ad": "evds2 · TÜFE endeksi",
    "sonuc": "GECTI",
-   "ms": 1337,
+   "ms": 1452,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (DİBS)",
    "sonuc": "GECTI",
-   "ms": 3684,
+   "ms": 17508,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (sukuk)",
    "sonuc": "GECTI",
-   "ms": 3747,
+   "ms": 4206,
    "not": ""
   },
   {
    "ad": "evds2 · TLREF",
    "sonuc": "GECTI",
-   "ms": 507,
+   "ms": 478,
    "not": ""
   },
   {
    "ad": "evds2 · kart harcamaları",
    "sonuc": "GECTI",
-   "ms": 1011,
+   "ms": 1134,
    "not": ""
   },
   {
    "ad": "evds2 · rezerv",
    "sonuc": "GECTI",
-   "ms": 749,
+   "ms": 764,
    "not": ""
   },
   {
    "ad": "evds2 · yabancı akış",
    "sonuc": "GECTI",
-   "ms": 356,
+   "ms": 357,
    "not": ""
   },
   {
    "ad": "evds2 · ECB (HICP + GSYH)",
    "sonuc": "GECTI",
-   "ms": 3412,
+   "ms": 1172,
    "not": ""
   },
   {
    "ad": "kap · bildirim akışı",
    "sonuc": "GECTI",
-   "ms": 819,
+   "ms": 1303,
    "not": ""
   },
   {
    "ad": "kap · sukuk akışı",
    "sonuc": "GECTI",
-   "ms": 1673,
+   "ms": 2203,
    "not": ""
   },
   {
    "ad": "katfon · TEFAS",
    "sonuc": "GECTI",
-   "ms": 640,
+   "ms": 697,
    "not": ""
   },
   {
    "ad": "tefas · AUM/pay (mod=gnl)",
    "sonuc": "GECTI",
-   "ms": 1034,
+   "ms": 1016,
    "not": ""
   },
   {
    "ad": "edgar · ABD bilanço (§398)",
    "sonuc": "GECTI",
-   "ms": 1306,
+   "ms": 1361,
    "not": ""
   },
   {
    "ad": "tcmb · TR 5Y CDS",
-   "sonuc": "GECTI",
-   "ms": 888,
-   "not": ""
+   "sonuc": "HATA",
+   "ms": 804,
+   "not": "HTTP 502"
   },
   {
    "ad": "tcmb · kurlar",
    "sonuc": "GECTI",
-   "ms": 3444,
+   "ms": 3425,
    "not": ""
   },
   {
    "ad": "data · bulut depo (KV)",
    "sonuc": "GECTI",
-   "ms": 660,
+   "ms": 780,
    "not": ""
   },
   {
    "ad": "ajanktp · KV sağlık",
    "sonuc": "GECTI",
-   "ms": 695,
+   "ms": 847,
    "not": ""
   },
   {
    "ad": "usnews · AV haber akışı",
    "sonuc": "GECTI",
-   "ms": 1059,
+   "ms": 1083,
    "not": ""
   },
   {
    "ad": "usnews · Finnhub kazanç",
    "sonuc": "GECTI",
-   "ms": 383,
+   "ms": 363,
    "not": ""
   },
   {
    "ad": "usnews · kripto",
    "sonuc": "GECTI",
-   "ms": 319,
+   "ms": 328,
    "not": ""
   },
   {
    "ad": "bddk · panel",
    "sonuc": "GECTI",
-   "ms": 2287,
+   "ms": 2793,
    "not": ""
   },
   {
    "ad": "bddk · sahiplik",
    "sonuc": "GECTI",
-   "ms": 4212,
+   "ms": 4666,
    "not": ""
   },
   {
    "ad": "dosya · fon-akis.json",
    "sonuc": "GECTI",
-   "ms": 225,
+   "ms": 270,
    "not": ""
   }
  ],
@@ -1497,7 +1507,7 @@
   {
    "tarih": "2026-10-27",
    "kritik": 0,
-   "uyari": 1
+   "uyari": 2
   }
  ],
  "mail": "gerek yok"
