@@ -5,13 +5,12 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-10-26",
+ "tarih": "2026-10-27",
  "donem": "3Ç26",
- "adet": 205,
+ "adet": 202,
  "beklenen": {
   "HATSN": "2026-10-21",
   "GOODY": "2026-10-22",
-  "ALCTL": "2026-10-23",
   "INTEM": "2026-10-23",
   "CEMTS": "2026-10-26",
   "EDATA": "2026-10-26",
@@ -43,7 +42,6 @@
   "EGEGY": "2026-10-29",
   "EGEPO": "2026-10-29",
   "ENJSA": "2026-10-29",
-  "ESCOM": "2026-10-29",
   "FORMT": "2026-10-29",
   "KBORU": "2026-10-29",
   "KIMMR": "2026-10-29",
@@ -207,7 +205,6 @@
   "SOKE": "2026-11-09",
   "SRVGY": "2026-11-09",
   "SUWEN": "2026-11-09",
-  "TCKRC": "2026-11-09",
   "TEZOL": "2026-11-09",
   "TGSAS": "2026-11-09",
   "TUREX": "2026-11-09",
@@ -239,7 +236,10 @@
   "CIMSA": "2026-10-26",
   "BRISA": "2026-10-26",
   "FRMPL": "2026-10-26",
-  "ATAKP": "2026-10-26"
+  "ATAKP": "2026-10-26",
+  "ALCTL": "2026-10-27",
+  "ESCOM": "2026-10-27",
+  "TCKRC": "2026-10-27"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
