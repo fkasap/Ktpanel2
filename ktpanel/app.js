@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261027b';
+const KTP_SURUM = '20261028a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -9452,11 +9452,14 @@ async function taktikModel(){
   Object.entries(SIN).forEach(([k,L])=>{ const v=L.filter(x=>x.isaret!=null); const t=v.reduce((a,b)=>a+b.isaret,0); const oran=v.length?t/v.length:0;
     /* §548 oranla: 6 sinyalde +2 ile 13 sinyalde +2 aynı şey değil */
     const durus= (t>=2&&oran>=0.5)?'AŞIRI ÜSTÜ':(t>=2&&oran>=0.25)?'ÜSTÜ':(t<=-2&&oran<=-0.5)?'AŞIRI ALTI':(t<=-2&&oran<=-0.25)?'ALTI':'NÖTR';
-    L.forEach(x=>{ x.metin = x.deger==null? x.ad+': veri yok' : x.ad+' '+(x.birim==='bp!'?trN(x.deger,0)+' bp':x.birim==='%!'?'%'+trN(x.deger,2):x.birim==='bp'?yz(x.deger,0)+' bp':x.birim==='%'?yz(x.deger)+'%':x.birim==='% AUM'?yz(x.deger)+'% AUM':x.birim==='mn$'?yz(x.deger,0)+' mn $':x.birim==='z'?yz(x.deger,2)+' z':x.birim==='puan'?yz(x.deger)+' p':x.birim==='aşama'?x.deger+'/3':x.birim.startsWith('/')?x.deger+x.birim:trN(x.deger,2)); });
+    L.forEach(x=>{ x.metin = x.deger==null? x.ad+': ölçülemedi' : x.ad+' '+(x.birim==='bp!'?trN(x.deger,0)+' bp':x.birim==='%!'?'%'+trN(x.deger,2):x.birim==='bp'?yz(x.deger,0)+' bp':x.birim==='%'?yz(x.deger)+'%':x.birim==='% AUM'?yz(x.deger)+'% AUM':x.birim==='mn$'?yz(x.deger,0)+' mn $':x.birim==='z'?yz(x.deger,2)+' z':x.birim==='puan'?yz(x.deger)+' p':x.birim==='aşama'?x.deger+'/3':x.birim.startsWith('/')?x.deger+x.birim:trN(x.deger,2)); });
     sonuc[k]={durus, skor:t, oran, n:v.length, toplam:L.length, sinyaller:L}; });
   sonuc._ts=new Date().toISOString();
   sonuc._girdi={xuSon:XU&&XU[XU.length-1], spSon:SP&&SP[SP.length-1], tnxSon:TNX&&TNX[TNX.length-1], gldSon:GLD&&GLD[GLD.length-1]};
   TAKTIK_MODEL=sonuc; taktikRender();
+  /* §548i (28 Eki canlı tarama): PKA beklentisi (ENF_CANLI) 12 sn'lik beklemeden sonra geldiğinde model bir daha koşmuyordu →
+     ex-ante reel faiz ve dezenflasyon beklentisi "ölçülemedi" kalıyordu (bek vardı, model önce bitmişti). Bir kez, 25 sn sonra yeniden koşar. */
+  if(bek==null && !window.__TAKTIK_TEKRAR){ window.__TAKTIK_TEKRAR=true; setTimeout(()=>{ if(window.ENF_CANLI&&isFinite(window.ENF_CANLI.bek)) taktikModel().catch(()=>{}); }, 25000); }
 }
 function taktikRender(){
   const el=$('taktikBody'), el2=$('taktikBody2');
@@ -9584,7 +9587,7 @@ function taktikRender(){
       v._eski={durus:eskiDurus, kaynak:eskiKaynak, teze:v.teze, dayanak:v.dayanak, risk:v.risk, tetik:v.tetik};
       v.durus=r.durus; v.renk=/ÜSTÜ/.test(r.durus)?'#0FA26B':(/ALTI/.test(r.durus)?'#D64545':'#8896A5');
       const art=r.sinyaller.filter(x=>x.isaret===1), eks=r.sinyaller.filter(x=>x.isaret===-1), not_=r.sinyaller.filter(x=>x.isaret===0), yok=r.sinyaller.filter(x=>x.isaret==null);
-      v.teze='<b>MODEL: '+r.durus+'</b> — sinyal toplamı <b>'+(r.skor>0?'+':'')+r.skor+'</b> · oran '+(r.oran>0?'+':'')+trN(r.oran,2)+' ('+r.n+'/'+r.toplam+' sinyal ölçüldü · '+art.length+' lehte, '+eks.length+' aleyhte, '+not_.length+' nötr'+(yok.length?', '+yok.length+' veri yok':'')+'). '+
+      v.teze='<b>MODEL: '+r.durus+'</b> — sinyal toplamı <b>'+(r.skor>0?'+':'')+r.skor+'</b> · oran '+(r.oran>0?'+':'')+trN(r.oran,2)+' ('+r.n+'/'+r.toplam+' sinyal ölçüldü · '+art.length+' lehte, '+eks.length+' aleyhte, '+not_.length+' nötr'+(yok.length?', '+yok.length+' ölçülemedi':'')+'). '+
         (eskiDurus!==r.durus?'<span style="color:var(--down)">Eski tez '+eskiDurus+' diyordu ('+eskiKaynak+') — veriler bunu desteklemiyor.</span>':'Eski tezle aynı yönde.');
       /* §547c İŞARET METNİN İÇİNDE (26 Eki, kullanıcı: "lehte sinyal yok diyor, sonra sıralıyor"): nötr sinyaller "+" ile basılınca
          "lehte sinyal yok" satırının altında artı işaretli satırlar çelişki gibi okunuyordu. Lehte "+", aleyhte "−", nötr "○",
@@ -12328,7 +12331,7 @@ async function fonpdInit(){
   const fonlar=Object.keys(FONPD.fonlar||{}).sort();
   if(!fonlar.length){ $('fonpdTablo').innerHTML='<div class="sub">depoda henüz rapor yok — ilk Cumartesi koşusundan sonra dolar (evren: '+Object.keys(FONPD.evren||{}).length+' fon)</div>'; return; }
   const TAS=(FONPD.tasfiye&&FONPD.tasfiye.kodlar)||{};   /* §452 */
-  sec.innerHTML=fonlar.map(k=>{ const f=FONPD.fonlar[k]; const n=Object.keys(f.donemler||{}).length; return '<option value="'+k+'">'+k+(TAS[k]?' ⚠ TASFİYE':'')+' — '+String(f.ad||'').replace(/^[A-Z0-9]+-/,'').slice(0,60)+' ('+n+' ay)</option>'; }).join('');
+  sec.innerHTML=fonlar.map(k=>{ const f=FONPD.fonlar[k]; const dl=Object.keys(f.donemler||{}).sort(), n=dl.length, sonD=n?dl[n-1].slice(2).replace('-','/'):'—'; /* §548g: "(6 ay)" depodaki rapor sayısıydı, "6. ayda kaldı" diye okundu — son dönem de yazılır */ return '<option value="'+k+'">'+k+(TAS[k]?' ⚠ TASFİYE':'')+' — '+String(f.ad||'').replace(/^[A-Z0-9]+-/,'').slice(0,60)+' ('+n+' rapor · son '+sonD+')</option>'; }).join('');
   $('fonpdDamga').textContent=FONPD.guncelleme?('depo '+FONPD.guncelleme+' · '+fonlar.length+' fon'):'—';
   ['fonpdSec','fonpdAy','fonpdSira','fonpdGor'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('change',fonpdRender); });
   fonpdRender(); fonpdEvrenRender();
