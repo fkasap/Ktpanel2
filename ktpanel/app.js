@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261028b';
+const KTP_SURUM = '20261028c';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -2698,11 +2698,18 @@ function kararRender(){
   if(hq&&hq.kons) oz+=chip((model?'KONSENSÜS':'BEKLENTİ · KONSENSÜS')+' · '+esc(hq.kons.kurum)+' kurum', trN(M.tip==='konsensus_banka'?hq.kons.net_tl_mlr:hq.kons.favok_tl_mlr,1)+' <span class="sub">mlr ₺'+(M.tip==='konsensus_banka'?' net kâr':'')+'</span>', (model?'model farkı <b class="'+(hq.konsFark>=0?'up':'down')+'">'+kararIsaret(hq.konsFark,0,'%')+'</b>':'YoY ₺ '+kararIsaret(hq.yoyTl,0,'%')+' · QoQ '+kararIsaret(hq.qoqTl,0,'%')+(hq.yoyUsd!=null?' · YoY $ '+kararIsaret(hq.yoyUsd,0,'%'):''))+(H.konsSicil.ort!=null?'<br>sicil: son '+H.konsSicil.liste.length+' çeyrek sürpriz ortancası '+kararIsaret(H.konsSicil.ort,0,'%'):'<br>'+(hq.kons.kurum<3?'⚠ ince konsensüs':'')));
   else if(hq) oz+=chip('BEKLENTİ · KONSENSÜS','—','bu çeyrek için kurum tahmini yok'+(H.konsSicil.ort!=null?'<br>sicil: son '+H.konsSicil.liste.length+' çeyrek '+kararIsaret(H.konsSicil.ort,0,'%'):''));
   oz+=chip('FİYATLANMA', F.ceyrek&&F.ceyrek.goreli!=null? 'göreli '+kararIsaret(F.ceyrek.goreli,0,'%')+(F.supheli?' ⚠':'') : (F.fwd!=null? 'PD/FAVÖK '+trN(F.fwd,1)+'x':'—'), (F.ceyrek?kararQAd(H.hedefQ)+': hisse '+kararIsaret(F.ceyrek.hisse,0,'%')+(F.ceyrek.xu!=null?' · XU100 '+kararIsaret(F.ceyrek.xu,0,'%'):''):'')+(F.fwd!=null?'<br>PD/FAVÖK ileri '+trN(F.fwd,1)+'x'+(F.medyan!=null?' · bant medyanı '+trN(F.medyan,1)+'x':''):''));
-  oz+=chip('SİNYAL · puan '+(PK.n<2?'—':(PK.toplam>=0?'+':'')+PK.toplam+'/'+PK.n), '<span class="'+PK.etiket.sinif+'">'+PK.etiket.ad+'</span>', esc(PK.etiket.aciklama)+(M.bilanco&&M.bilanco.beklenen?'<br>bilanço (beklenen): '+kararTrTarih(M.bilanco.beklenen):''));
+  /* §549d (28 Eki): açıklanmış çeyrekte çipler hâlâ "BEKLENTİ · KONSENSÜS" ve "bilanço (beklenen): 3 Kas" diyordu (ASELS 3Ç26 KAP'ta, karar-model'de).
+     Gerçekleşen FAVÖK çipi eklendi (KAP · çekirdek) + konsensüs farkı; takvim satırı "açıklandı" der. Ayrıntı tablosu (hasılat · FAVÖK · net kâr vs konsensüs) kap-arsiv'den asenkron gelir (#kararGercek). */
+  const gqF=H.aciklandi&&M.favok&&M.favok[H.hedefQ];
+  if(gqF&&gqF.tl!=null){ const gecenG=M.favok[kararQOnce(H.hedefQ,4)]; const yyG=(gecenG&&gecenG.usd>0&&gqF.usd!=null)?(gqF.usd/gecenG.usd-1)*100:null; const kf=(hq&&hq.kons&&hq.kons.favok_tl_mlr>0)?(gqF.tl/hq.kons.favok_tl_mlr-1)*100:null;
+    oz+=chip('GERÇEKLEŞEN · '+kararQAd(H.hedefQ)+' FAVÖK <span class="thin">(KAP · çekirdek)</span>', trN(gqF.tl,1)+' <span class="sub">mlr ₺</span>', (gqF.usd!=null?trN(gqF.usd/1000,2)+' mlr $ · YoY $ '+kararIsaret(yyG,0,'%'):'')+(kf!=null?'<br>konsensüse göre <b class="'+(kf>=0?'up':'down')+'">'+kararIsaret(kf,0,'%')+'</b>':'<br>konsensüs yoktu'), kf==null?'':(kf>=0?'up':'down')); }
+  oz+=chip('SİNYAL · puan '+(PK.n<2?'—':(PK.toplam>=0?'+':'')+PK.toplam+'/'+PK.n), '<span class="'+PK.etiket.sinif+'">'+PK.etiket.ad+'</span>', esc(PK.etiket.aciklama)+(H.aciklandi?'<br>bilanço: <b>açıklandı</b> ('+kararQAd(H.hedefQ)+' KAP arşivinde)':(M.bilanco&&M.bilanco.beklenen?'<br>bilanço (beklenen): '+kararTrTarih(M.bilanco.beklenen):'')));
   oz+='</div>';
+  if(H.aciklandi) oz+='<div id="kararGercek" style="margin-top:8px"><div class="sub">gerçekleşen kalemler KAP arşivinden okunuyor…</div></div>';
   if(model&&H.disinda.length) oz+='<div class="note" style="margin-top:8px;border-color:#C9612B">⚠ Ekstrapolasyon: '+H.disinda.map(d=>esc(d.ad)+' '+trN(hq.c[d.k],1)+' $/v, örneklem maksimumu '+trN(H.maks[d.k],1)).join(' · ')+'. Model doğrusal uzatıyor; aşağıdan-yukarı kontrol (verim × hacim): '+(hq.asagidan!=null? trN(hq.asagidan/1000,2)+' mlr $ ≈ '+trN(hq.asagidanTl,0)+' mlr ₺':'—')+'. İki yöntem yakınsa güven artar; ayrışıyorsa düşük olanı baz al.</div>';
   if(M.bolunme) oz+='<div class="sub" style="margin-top:6px">Fiyat serisi düzeltmesi: '+Object.entries(M.bolunme).map(([q,c])=>kararQAd(q)+' öncesi ×'+trN(c,4)).join(' · ')+' (bedelsiz/bölünme; Fintables çeyrek sonu kapanışı düzeltilmemişti).</div>';
   $('kararOzet').innerHTML=oz;
+  if(H.aciklandi){ try{ kararGercekRender(M,H); }catch(e){ console.error('[KTPanel] kararGercekRender', e&&e.message||e); } }
   /* ── Grafikler ── */
   $('kararGrafik').innerHTML= kararSektorPanel(M,H) + (model? kararSurucuGrafik(M,H) : '');
   /* ── Model / beklenti bölümü ── */
@@ -14539,3 +14546,33 @@ window.alokRender=alokRender; window.secimRender=secimRender;
 (function(){ ['secimHacim','secimTasfiye'].forEach(id=>{ const e=$(id); if(e) e.addEventListener('change',()=>{ try{ secimRender(); }catch(x){} }); });
   [5000,20000,60000].forEach(t=>setTimeout(()=>{ try{ alokRender(); }catch(e){ console.error('[KTPanel] alokRender',e&&e.message||e); } try{ secimRender(); }catch(e){ console.error('[KTPanel] secimRender',e&&e.message||e); } },t));
   setInterval(()=>{ try{ alokRender(); }catch(e){} }, 5*60*1000); })();
+
+/* §549d GERÇEKLEŞEN vs KONSENSÜS — hasılat · FAVÖK · net kâr (Hesap Zinciri ayrıştırıcısıyla aynı tanımlar: HZ_BY_AD / hzHesapla; bağımsız çeyrek
+   = raporun 3 aylık sütunu, Ç1 doğrudan, yoksa kümülatif farkı). Konsensüs karar-model (satis_tl_mlr · favok_tl_mlr · net_tl_mlr). Yalnız FAVÖK'e bakmak
+   yetmez: hasılat beklentiyi tutup FAVÖK kaçırdıysa marj, ikisi tutup net kaçırdıysa finansman/parasal pozisyon konuşuyordur. */
+KARAR.arsiv=KARAR.arsiv||{};
+async function kararGercekRender(M,H){
+  const el=$('kararGercek'); if(!el||!H.hedefQ) return;
+  const kod=M.kod; let A=KARAR.arsiv[kod];
+  if(A===undefined){ try{ const r=await fetch('/kap-arsiv/'+kod+'.json',{cache:'no-store'}); A=r.ok?await r.json():null; }catch(e){ A=null; } KARAR.arsiv[kod]=A; }
+  if(!A||!A.donemler||typeof hzHesapla!=='function'){ el.innerHTML='<div class="sub">KAP arşivi yok — kalem kıyası yapılamadı.</div>'; return; }
+  const m=H.hedefQ.match(/^(\d{4})Q([1-4])$/); if(!m){ el.innerHTML=''; return; }
+  const key=m[1]+'/'+m[2], onceKey=(+m[1]-1)+'/'+m[2];
+  const ceyrek=(k)=>{ const D=A.donemler[k]; if(!D) return null; const S=hzSatirSozlugu(D), carpan=(D.birim&&D.birim.carpan)||1, memo={}; const out={};
+    ['Hasılat','FAVÖK','Net dönem kârı'].forEach(ad=>{ const t=HZ_BY_AD[ad]; if(!t) return; const q=+k.split('/')[1];
+      if(q===1){ const r=hzHesapla(S,t,carpan,0,memo); out[ad]=r.ok?{v:r.deger,not:'Ç1'}:null; return; }
+      const r3=hzHesapla(S,t,carpan,2,memo); if(r3.ok){ out[ad]={v:r3.deger,not:'3 aylık sütun'}; return; }
+      const rK=hzHesapla(S,t,carpan,0,memo); const oK=A.donemler[k.split('/')[0]+'/'+(q-1)]; if(rK.ok&&oK){ const S2=hzSatirSozlugu(oK), c2=(oK.birim&&oK.birim.carpan)||1; const r2=hzHesapla(S2,t,c2,0,{}); if(r2.ok){ out[ad]={v:rK.deger-r2.deger,not:'kümülatif farkı (TMS 29 payı içerir)'}; return; } }
+      out[ad]=null; }); return out; };
+  const bu=ceyrek(key), once=ceyrek(onceKey);
+  /* FAVÖK zincirden çıkmazsa (amortismanın 3 aylık sütunu çoğu raporda yok) karar-model'in çekirdek FAVÖK'ü kullanılır — kaynağı yazılır */
+  if(bu&&!bu['FAVÖK']&&M.favok&&M.favok[H.hedefQ]&&M.favok[H.hedefQ].tl!=null){ bu['FAVÖK']={v:M.favok[H.hedefQ].tl*1e9, not:'çekirdek FAVÖK (karar-model · KAP)'}; const o=M.favok[kararQOnce(H.hedefQ,4)]; if(once&&!once['FAVÖK']&&o&&o.tl!=null) once['FAVÖK']={v:o.tl*1e9,not:'çekirdek'}; }
+  if(!bu){ el.innerHTML='<div class="sub">'+esc(key)+' KAP arşivinde henüz yok.</div>'; return; }
+  const K=(M.konsensus&&M.konsensus.donem===H.hedefQ)?M.konsensus:null;
+  const KM={'Hasılat':K&&K.satis_tl_mlr,'FAVÖK':K&&K.favok_tl_mlr,'Net dönem kârı':K&&K.net_tl_mlr};
+  const mlr=v=>v==null?'—':trN(v/1e9,2);
+  const rows=['Hasılat','FAVÖK','Net dönem kârı'].map(ad=>{ const g=bu[ad], o=once&&once[ad]; const yy=(g&&o&&o.v>0)?(g.v/o.v-1)*100:null; const kons=KM[ad]; const fark=(g&&kons>0)?(g.v/1e9/kons-1)*100:null;
+    return '<tr><td><b>'+ad+'</b>'+(ad==='FAVÖK'?' <span class="thin">(EFK + amortisman)</span>':'')+'</td><td class="num">'+(g?mlr(g.v):'—')+'</td><td class="num" style="color:var(--muted)">'+(kons>0?trN(kons,2):'—')+'</td><td class="num '+(fark==null?'':fark>=0?'up':'down')+'" style="font-weight:600">'+(fark==null?'—':kararIsaret(fark,0,'%'))+'</td><td class="num">'+(yy==null?'—':kararIsaret(yy,0,'%'))+'</td><td class="sub" style="font-size:9px">'+esc(g?g.not:'hesaplanamadı')+'</td></tr>'; }).join('');
+  el.innerHTML='<div class="lbl">GERÇEKLEŞEN vs KONSENSÜS · '+kararQAd(H.hedefQ)+' <span class="thin" style="font-weight:400">(KAP arşivi · nominal TL · mlr ₺)</span></div><table style="font-size:11px"><tr><th>Kalem</th><th class="num">Gerçek</th><th class="num">Konsensüs</th><th class="num">Fark</th><th class="num">YoY (nominal)</th><th>Yöntem</th></tr>'+rows+'</table>'+
+    '<div class="sub" style="font-size:9.5px;margin-top:3px">Okuma: hasılat tuttu, FAVÖK kaçtıysa marj; ikisi tuttu, net kaçtıysa finansman/parasal pozisyon. YoY nominal TL\u0027dir (TÜFE %30 civarı); reel kıyas için Hesap Zinciri › TÜFE tabanı. FAVÖK burada EFK + amortisman; karar motorunun "çekirdek" FAVÖK\u0027ü pazarlama/GYG/Ar-Ge eklenmiş hâlidir, ikisi farklı olabilir.</div>';
+}
