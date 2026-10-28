@@ -879,5 +879,99 @@
   "neden": "3C25 Finansal Rapor bildirimi KAP penceresinde bulunamadi: 2025-26 halka arzlari (ALBTN, ARENA, BETAE, BKRGY, BORSK, CITAS, EMPAE, FRMPL, GOLDA, INTET, KPEKS, MCARD, NETGL, SOHOE, SSAAT, TKNKA, UCAYM, ULUSE) gecen yil raporlamadi; MAVI/TKFEN mali yili farkli (MAVI 3C: 31 Eki donem sonu → Aralik; TKFEN gecen yil 14 Kas); AKHAN/LXGYO/MEYSU/NETCD bildirim basligi farkli olabilir. Bu kodlar sezon icinde gerceklesen tarihleriyle takvime girer (Actions §459)."
  },
  "_spk_son": "2026-11-09",
- "_sezon_bas": "2026-10-01"
+ "_sezon_bas": "2026-10-01",
+ "bildirim": {
+  "KONKA": {
+   "tarih": "2026-10-28",
+   "id": "1688614"
+  },
+  "GOLDA": {
+   "tarih": "2026-10-27",
+   "id": "1688595"
+  },
+  "GOODY": {
+   "tarih": "2026-10-27",
+   "id": "1688594"
+  },
+  "KRGYO": {
+   "tarih": "2026-10-27",
+   "id": "1688584"
+  },
+  "AKCNS": {
+   "tarih": "2026-10-27",
+   "id": "1688577"
+  },
+  "CATES": {
+   "tarih": "2026-10-27",
+   "id": "1688559"
+  },
+  "HATSN": {
+   "tarih": "2026-10-27",
+   "id": "1688522"
+  },
+  "EDATA": {
+   "tarih": "2026-10-27",
+   "id": "1688500"
+  },
+  "PNSUT": {
+   "tarih": "2026-10-27",
+   "id": "1688449"
+  },
+  "ASELS": {
+   "tarih": "2026-10-27",
+   "id": "1688432"
+  },
+  "INTEM": {
+   "tarih": "2026-10-27",
+   "id": "1688429"
+  },
+  "BASGZ": {
+   "tarih": "2026-10-27",
+   "id": "1688401"
+  },
+  "ALCTL": {
+   "tarih": "2026-10-27",
+   "id": "1688390"
+  },
+  "CITAS": {
+   "tarih": "2026-10-26",
+   "id": "1688371"
+  },
+  "ESCOM": {
+   "tarih": "2026-10-27",
+   "id": "1688342"
+  },
+  "TCKRC": {
+   "tarih": "2026-10-27",
+   "id": "1688316"
+  },
+  "FRMPL": {
+   "tarih": "2026-10-26",
+   "id": "1687699"
+  },
+  "ATAKP": {
+   "tarih": "2026-10-26",
+   "id": "1687692"
+  },
+  "CIMSA": {
+   "tarih": "2026-10-26",
+   "id": "1687687"
+  },
+  "BRISA": {
+   "tarih": "2026-10-26",
+   "id": "1687669"
+  },
+  "TKNSA": {
+   "tarih": "2026-10-26",
+   "id": "1687643"
+  },
+  "GENIL": {
+   "tarih": "2026-10-26",
+   "id": "1687639"
+  },
+  "CVKMD": {
+   "tarih": "2026-10-26",
+   "id": "1687049"
+  }
+ }
 }
