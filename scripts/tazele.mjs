@@ -1443,6 +1443,20 @@ function frKayitlari(items, yil, per) {
   });
   return m;
 }
+/* §549c: aynı FR kayıtlarından bildirim kimliği (disclosureIndex) — KAP arşivi dönem listesi alamazsa (ASELS/BETAE "fetch failed",
+   28 Eki) yeni çeyreği doğrudan bu kimlikle çeker. Şirket başına en büyük kimlik (düzeltme bildirimi yeniyi ezer). */
+function frIdler(items, yil, per) {
+  const m = {};
+  (items || []).forEach(b => {
+    if (String(b.disclosureClass || b.disclosureType || '').toUpperCase() !== 'FR') return;
+    if (!/^Finansal Rapor/i.test(String(b.subject || ''))) return;
+    if (+b.year !== yil || +b.period !== per) return;
+    const k = String(b.stockCodes || b.stockCode || '').split(/[,;\s]+/)[0].trim().toUpperCase(); if (!/^[A-Z]{4,6}$/.test(k)) return;
+    const id = b.disclosureIndex || b.id; if (!id) return;
+    if (!m[k] || +id > +m[k]) m[k] = String(id);
+  });
+  return m;
+}
 async function bilancoTakvimIsle(tetikItems) {
   const dosya = 'bist-takvim.json';
   const S = sezonBul(bugun);
@@ -1490,6 +1504,10 @@ async function bilancoTakvimIsle(tetikItems) {
   const bu = frKayitlari(kaynakItems, S.yil, S.per); let yeni = 0;
   d.gerceklesen = d.gerceklesen || {}; d.beklenen = d.beklenen || {};
   Object.keys(bu).forEach(k => { if (!evren.has(k)) return; if (!d.gerceklesen[k]) { d.gerceklesen[k] = bu[k]; yeni++; } if (d.beklenen[k]) delete d.beklenen[k]; if (d.farkli_mali_yil && d.farkli_mali_yil[k]) delete d.farkli_mali_yil[k]; });
+  /* §549c bildirim kimlikleri: gerçekleşen her kod için {tarih, id} — arşivin "yeni dönem" yolu bunu okur */
+  try { const ids = frIdler(kaynakItems, S.yil, S.per); d.bildirim = d.bildirim || {}; let yeniId = 0;
+    Object.keys(ids).forEach(k => { if (!evren.has(k)) return; if (!d.bildirim[k] || d.bildirim[k].id !== ids[k]) { d.bildirim[k] = { tarih: bu[k] || d.gerceklesen[k] || bugun, id: ids[k] }; yeniId++; } });
+    if (yeniId) degisti = true; } catch (e) {}
   if (yeni) { d.adet = Object.keys(d.beklenen).length; d.tarih = bugun; degisti = true;
     raporlar.push('### BIST bilanço takvimi (§459) — ✓ ' + yeni + ' şirket açıkladı (' + Object.keys(bu).filter(k => evren.has(k)).slice(0, 12).join(', ') + ') · beklenen ' + d.adet + ' · gerçekleşen ' + Object.keys(d.gerceklesen).length); }
   else if (d.donem === S.donem) raporlar.push('### BIST bilanço takvimi (§459) — ✓ ' + S.donem + ' · beklenen ' + Object.keys(d.beklenen).length + ' · gerçekleşen ' + Object.keys(d.gerceklesen).length + ' · bugün yeni açıklama yok');
@@ -6503,6 +6521,10 @@ async function kapDonemler(kod, yil) {
         else sonuc = { ok: false, donemler: [], err: 'doğrudan: liste boş' };
       } else sonuc = { ok: false, donemler: [], err: 'doğrudan: member/filter boş' };
     } catch (e) { sonuc = { ok: false, donemler: [], err: 'doğrudan: ' + String(e && e.message || e).slice(0, 40) }; }
+    /* §549c: "fetch failed" ağ kopması (KAP kısa süreli kesiyor) — 6 sn sonra tek tekrar; yine düşerse arşiv takvim kimliğine döner */
+    if (!sonuc.ok && /fetch failed|timeout|aborted/i.test(sonuc.err || '') && !kapDonemler._tekrar) {
+      kapDonemler._tekrar = true; await new Promise(r => setTimeout(r, 6000)); _DONEM_BELLEK.delete(ank);
+      try { const s2 = await kapDonemler(kod, yil); if (s2 && s2.ok) sonuc = s2; } catch (e) {} kapDonemler._tekrar = false; }
   }
   _DONEM_BELLEK.set(ank, sonuc);
   return sonuc;
@@ -6625,8 +6647,8 @@ async function kapArsiv() {
      tamamlama) işledi; 15 çeyreği dolmuş bir şirkete ise YENİ çeyrek HİÇ eklenmiyordu (n < 15 süzgeci). bist-takvim.json
      `gerceklesen` (bu sezon açıklayanlar) + `donem` (3Ç26 → 2026/3): arşivin en yeni dönemi bundan eskiyse şirket EN ÖNE
      alınır ve tavanı aşsa da işlenir (en eski çeyrek düşülür). */
-  let takvimDonem = null, takvimGercek = {};
-  try { const bt = await oku('bist-takvim.json'); const m = String(bt.donem || '').match(/^([1-4])Ç(\d{2})$/); if (m) takvimDonem = { y: 2000 + +m[2], q: +m[1] }; takvimGercek = bt.gerceklesen || {}; } catch (e) {}
+  let takvimDonem = null, takvimGercek = {}, takvimBildirim = {};
+  try { const bt = await oku('bist-takvim.json'); const m = String(bt.donem || '').match(/^([1-4])Ç(\d{2})$/); if (m) takvimDonem = { y: 2000 + +m[2], q: +m[1] }; takvimGercek = bt.gerceklesen || {}; takvimBildirim = bt.bildirim || {}; } catch (e) {}   /* §549c: bildirim kimlikleri */
   for (const x of durum) { try { const d = JSON.parse(await fs.readFile(path.join(KOK, KLASOR, x.kod + '.json'), 'utf8'));
     const ks = Object.keys(d.donemler || {}).filter(k => /^\d{4}\/[1-4]$/.test(k)).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (b1 - a1) || (b2 - a2); });
     if (ks.length) { const [y, q] = ks[0].split('/').map(Number); x.enYeni = { y, q }; } } catch (e) {} }
@@ -6685,7 +6707,11 @@ async function kapArsiv() {
     if (Date.now() - t0 > BUTCE) { butceDoldu++; continue; }
     try {
       const jd = await kapDonemler(kod, 4);            /* §382: koşu-içi önbellek */
-      const donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, CEYREK_TAVAN) : [];
+      let donemler = (jd && jd.ok && jd.donemler) ? jd.donemler.slice(0, CEYREK_TAVAN) : [];
+      /* §549c: dönem listesi gelmediyse ama bu şirket yeni çeyrek bekliyorsa ve takvim bildirim kimliğini biliyorsa, tek dönemle devam —
+         liste için KAP'a gitmeden (ASELS 3Ç26: iki koşu "doğrudan: fetch failed" ile düşmüştü, panelde 2026/2'de kaldı) */
+      if (!donemler.length && yeniSet.has(kod) && takvimDonem && takvimBildirim[kod] && takvimBildirim[kod].id) {
+        donemler = [{ yil: takvimDonem.y, donem: takvimDonem.q, id: String(takvimBildirim[kod].id), kod }]; notlar.push(kod + ': dönem listesi yok → takvim bildirim kimliği ' + takvimBildirim[kod].id); }
       if (!donemler.length) {
         dusen++;
         SAY[kod] = { n: ((SAY[kod] || {}).n || 0) + 1, son: simdi };
