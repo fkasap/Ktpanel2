@@ -1208,7 +1208,7 @@
   {
    "k": "CVKMD",
    "s": "Materials",
-   "w": 0.46,
+   "w": 0.45,
    "r3": -66.9,
    "dd": -74,
    "dipten": 5.9,
@@ -1225,7 +1225,7 @@
    "dd": -89.6,
    "dipten": 0,
    "beta": 0.9,
-   "kalite": -0.16,
+   "kalite": -0.15,
    "skor": 2.25,
    "baski": true
   },
@@ -1249,7 +1249,7 @@
    "dd": -84,
    "dipten": 8.7,
    "beta": 0.95,
-   "kalite": 0.14,
+   "kalite": 0.15,
    "skor": 2.06,
    "baski": true
   },
@@ -1261,14 +1261,14 @@
    "dd": -65,
    "dipten": 8.6,
    "beta": 1.06,
-   "kalite": 0.12,
+   "kalite": 0.13,
    "skor": 1.99,
    "baski": true
   },
   {
    "k": "EUPWR",
    "s": "Industrials",
-   "w": 0.55,
+   "w": 0.54,
    "r3": -53.1,
    "dd": -61.8,
    "dipten": 11.4,

@@ -468,7 +468,8 @@
   "SARAE": "2026-10-27",
   "TSGYO": "2026-10-27",
   "UFUK": "2026-10-27",
-  "KONKA": "2026-10-28"
+  "KONKA": "2026-10-28",
+  "IZENR": "2026-10-28"
  },
  "evren_disi": [
   "ADEL",
@@ -571,6 +572,7 @@
   "ISKPL",
   "ISVEA",
   "ISYAT",
+  "IZENR",
   "IZMDC",
   "KARCL",
   "KAYSE",
@@ -683,13 +685,13 @@
   "YAPRK",
   "YYAPI"
  ],
- "evren_disi_sayi": 211,
- "pencere_sayi": 57,
+ "evren_disi_sayi": 212,
+ "pencere_sayi": 58,
  "dusen_son": [
   "AKBNK",
   "ALCTL",
   "ASELS",
   "ESCOM"
  ],
- "guncelleme": "2026-10-28 09:25 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-28 10:02 UTC — otomatik (KAP FR · kümülatif §299)"
 }

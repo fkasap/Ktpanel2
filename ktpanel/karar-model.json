@@ -69,7 +69,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 45.92,
+    "fiyat": 46,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -125,7 +125,181 @@
     }
    ],
    "birincil": "gaz_avrupa",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -7.708,
+     "borc": 1.496,
+     "nakit": 9.204
+    },
+    "2024Q2": {
+     "nb": -2.993,
+     "borc": 2.836,
+     "nakit": 5.829
+    },
+    "2024Q3": {
+     "nb": -2.849,
+     "borc": 4.042,
+     "nakit": 6.891
+    },
+    "2024Q4": {
+     "nb": -5.007,
+     "borc": 6.238,
+     "nakit": 11.245
+    },
+    "2025Q1": {
+     "nb": -10.393,
+     "borc": 7.319,
+     "nakit": 17.712
+    },
+    "2025Q2": {
+     "nb": -7.848,
+     "borc": 8.104,
+     "nakit": 15.952
+    },
+    "2025Q3": {
+     "nb": -12.402,
+     "borc": 8.18,
+     "nakit": 20.582
+    },
+    "2025Q4": {
+     "nb": -17.098,
+     "borc": 8.439,
+     "nakit": 25.537
+    },
+    "2026Q1": {
+     "nb": -36.724,
+     "borc": 8.145,
+     "nakit": 44.869
+    },
+    "2026Q2": {
+     "nb": -29.96,
+     "borc": 8.225,
+     "nakit": 38.184
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 1.364,
+     "capex": -0.847,
+     "kira": -0.017,
+     "fcf": 0.5,
+     "favok": 1.144,
+     "donusum": 43.7,
+     "capex_am": 1.36,
+     "ay": 3,
+     "fcf_ttm": -0.741,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -0.818,
+     "capex": -6.553,
+     "kira": -0.109,
+     "fcf": -7.48,
+     "favok": 1.603,
+     "donusum": -466.5,
+     "capex_am": 6.44,
+     "ay": 6,
+     "fcf_ttm": -9.222,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 2.506,
+     "capex": -8.145,
+     "kira": -0.095,
+     "fcf": -5.733,
+     "favok": 2.042,
+     "donusum": -280.8,
+     "capex_am": 5.28,
+     "ay": 9,
+     "fcf_ttm": -10.155,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 7.462,
+     "capex": -10.336,
+     "kira": -0.067,
+     "fcf": -2.941,
+     "favok": 3.75,
+     "donusum": -78.4,
+     "capex_am": 4.97,
+     "ay": 12,
+     "fcf_ttm": -2.941,
+     "favok_ttm": 3.75
+    },
+    "2025Q1": {
+     "cfo": 7.321,
+     "capex": -0.992,
+     "kira": -0.004,
+     "fcf": 6.334,
+     "favok": 2.448,
+     "donusum": 258.7,
+     "capex_am": 1.26,
+     "ay": 3,
+     "fcf_ttm": 2.695,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 5.874,
+     "capex": -3.329,
+     "kira": -0.06,
+     "fcf": 2.493,
+     "favok": 4.09,
+     "donusum": 61,
+     "capex_am": 2.38,
+     "ay": 6,
+     "fcf_ttm": 9.654,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 11.693,
+     "capex": -5.172,
+     "kira": -0.093,
+     "fcf": 6.557,
+     "favok": 5.862,
+     "donusum": 111.9,
+     "capex_am": 2.19,
+     "ay": 9,
+     "fcf_ttm": 11.983,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 15.998,
+     "capex": -5.905,
+     "kira": -0.127,
+     "fcf": 9.981,
+     "favok": 9.891,
+     "donusum": 100.9,
+     "capex_am": 1.74,
+     "ay": 12,
+     "fcf_ttm": 9.981,
+     "favok_ttm": 9.891
+    },
+    "2026Q1": {
+     "cfo": 19.267,
+     "capex": -0.801,
+     "kira": -0.021,
+     "fcf": 18.446,
+     "favok": 5.829,
+     "donusum": 316.4,
+     "capex_am": 0.68,
+     "ay": 3,
+     "fcf_ttm": 20.139,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 11.942,
+     "capex": -3.189,
+     "kira": -0.043,
+     "fcf": 8.71,
+     "favok": 9.981,
+     "donusum": 87.3,
+     "capex_am": 1.27,
+     "ay": 6,
+     "fcf_ttm": 15.398,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "AKCNS",
@@ -192,7 +366,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 183.1,
+    "fiyat": 182.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -336,7 +510,198 @@
    ],
    "birincil": "komur_termal",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -0.588,
+     "borc": 2.432,
+     "nakit": 3.02
+    },
+    "2024Q2": {
+     "nb": 0.186,
+     "borc": 2.554,
+     "nakit": 2.368
+    },
+    "2024Q3": {
+     "nb": -0.614,
+     "borc": 3.012,
+     "nakit": 3.626
+    },
+    "2024Q4": {
+     "nb": -1.986,
+     "borc": 2.818,
+     "nakit": 4.804
+    },
+    "2025Q1": {
+     "nb": 0.319,
+     "borc": 3.981,
+     "nakit": 3.662
+    },
+    "2025Q2": {
+     "nb": 0.936,
+     "borc": 4.117,
+     "nakit": 3.181
+    },
+    "2025Q3": {
+     "nb": 0.575,
+     "borc": 4.362,
+     "nakit": 3.786
+    },
+    "2025Q4": {
+     "nb": -1.101,
+     "borc": 4.935,
+     "nakit": 6.036
+    },
+    "2026Q1": {
+     "nb": -0.072,
+     "borc": 4.455,
+     "nakit": 4.526
+    },
+    "2026Q2": {
+     "nb": 0.446,
+     "borc": 4.439,
+     "nakit": 3.993
+    },
+    "2026Q3": {
+     "nb": -0.479,
+     "borc": 4.302,
+     "nakit": 4.78
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -0.278,
+     "capex": -0.243,
+     "kira": -0.058,
+     "fcf": -0.579,
+     "favok": 0.47,
+     "donusum": -123.2,
+     "capex_am": 0.98,
+     "ay": 3,
+     "fcf_ttm": 1.162,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 0.481,
+     "capex": -0.515,
+     "kira": -0.09,
+     "fcf": -0.124,
+     "favok": 1.531,
+     "donusum": -8.1,
+     "capex_am": 0.95,
+     "ay": 6,
+     "fcf_ttm": 0.548,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 1.766,
+     "capex": -0.691,
+     "kira": -0.157,
+     "fcf": 1.265,
+     "favok": 2.862,
+     "donusum": 44.2,
+     "capex_am": 0.77,
+     "ay": 9,
+     "fcf_ttm": 0.694,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 3.646,
+     "capex": -1.168,
+     "kira": -0.196,
+     "fcf": 2.285,
+     "favok": 3.859,
+     "donusum": 59.2,
+     "capex_am": 0.92,
+     "ay": 12,
+     "fcf_ttm": 2.285,
+     "favok_ttm": 3.859
+    },
+    "2025Q1": {
+     "cfo": -0.398,
+     "capex": -0.185,
+     "kira": -0.043,
+     "fcf": -0.622,
+     "favok": 0.186,
+     "donusum": -333.9,
+     "capex_am": 0.52,
+     "ay": 3,
+     "fcf_ttm": 2.463,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -0.672,
+     "capex": -0.463,
+     "kira": -0.096,
+     "fcf": -1.22,
+     "favok": 0.906,
+     "donusum": -134.8,
+     "capex_am": 0.61,
+     "ay": 6,
+     "fcf_ttm": 1.232,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 0.308,
+     "capex": -0.815,
+     "kira": -0.2,
+     "fcf": -0.694,
+     "favok": 2.057,
+     "donusum": -33.7,
+     "capex_am": 0.66,
+     "ay": 9,
+     "fcf_ttm": 0.367,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 3.145,
+     "capex": -2.05,
+     "kira": -0.271,
+     "fcf": 0.836,
+     "favok": 3.337,
+     "donusum": 25,
+     "capex_am": 1.19,
+     "ay": 12,
+     "fcf_ttm": 0.836,
+     "favok_ttm": 3.337
+    },
+    "2026Q1": {
+     "cfo": -0.697,
+     "capex": -0.298,
+     "kira": -0.14,
+     "fcf": -1.129,
+     "favok": 0.431,
+     "donusum": -261.9,
+     "capex_am": 0.6,
+     "ay": 3,
+     "fcf_ttm": 0.527,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.278,
+     "capex": -0.914,
+     "kira": -0.242,
+     "fcf": -1.43,
+     "favok": 0.801,
+     "donusum": -178.6,
+     "capex_am": 0.86,
+     "ay": 6,
+     "fcf_ttm": 1.018,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 1.291,
+     "capex": -1.451,
+     "kira": -0.393,
+     "fcf": -0.549,
+     "favok": 2.486,
+     "donusum": -22.1,
+     "capex_am": 0.86,
+     "ay": 9,
+     "fcf_ttm": 1.188,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "AKFYE",
@@ -398,7 +763,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 3.46,
+    "fiyat": 3.44,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
@@ -510,7 +875,181 @@
     }
    ],
    "birincil": "ptf",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 9.245,
+     "borc": 10.863,
+     "nakit": 1.618
+    },
+    "2024Q2": {
+     "nb": 9.085,
+     "borc": 9.827,
+     "nakit": 0.743
+    },
+    "2024Q3": {
+     "nb": 7.588,
+     "borc": 10.298,
+     "nakit": 2.71
+    },
+    "2024Q4": {
+     "nb": 6.926,
+     "borc": 8.085,
+     "nakit": 1.159
+    },
+    "2025Q1": {
+     "nb": 8.316,
+     "borc": 10.432,
+     "nakit": 2.117
+    },
+    "2025Q2": {
+     "nb": 9.691,
+     "borc": 11.54,
+     "nakit": 1.849
+    },
+    "2025Q3": {
+     "nb": 9.631,
+     "borc": 12.867,
+     "nakit": 3.236
+    },
+    "2025Q4": {
+     "nb": 10.616,
+     "borc": 12.741,
+     "nakit": 2.125
+    },
+    "2026Q1": {
+     "nb": 11.367,
+     "borc": 12.802,
+     "nakit": 1.436
+    },
+    "2026Q2": {
+     "nb": 11.347,
+     "borc": 12.583,
+     "nakit": 1.235
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -0.166,
+     "capex": -0.016,
+     "kira": -0.008,
+     "fcf": -0.19,
+     "favok": 0.746,
+     "donusum": -25.5,
+     "capex_am": 0.04,
+     "ay": 3,
+     "fcf_ttm": 0.106,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 1.013,
+     "capex": -0.021,
+     "kira": -0.021,
+     "fcf": 0.978,
+     "favok": 1.598,
+     "donusum": 61.2,
+     "capex_am": 0.02,
+     "ay": 6,
+     "fcf_ttm": -0.165,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 2.548,
+     "capex": -0.253,
+     "kira": -0.044,
+     "fcf": 2.251,
+     "favok": 2.228,
+     "donusum": 101,
+     "capex_am": 0.16,
+     "ay": 9,
+     "fcf_ttm": -0.199,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 1.004,
+     "capex": -1.982,
+     "kira": -0.142,
+     "fcf": -1.117,
+     "favok": 2.9,
+     "donusum": -38.5,
+     "capex_am": 1.71,
+     "ay": 12,
+     "fcf_ttm": -1.117,
+     "favok_ttm": 2.9
+    },
+    "2025Q1": {
+     "cfo": -0.834,
+     "capex": -0.5,
+     "kira": -0.023,
+     "fcf": -1.357,
+     "favok": 0.594,
+     "donusum": -228.6,
+     "capex_am": 1.39,
+     "ay": 3,
+     "fcf_ttm": -4.198,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.508,
+     "capex": -1.995,
+     "kira": -0.028,
+     "fcf": -1.505,
+     "favok": 1.457,
+     "donusum": -103.3,
+     "capex_am": 2.56,
+     "ay": 6,
+     "fcf_ttm": -3.83,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 1.815,
+     "capex": -3.644,
+     "kira": -0.06,
+     "fcf": -1.883,
+     "favok": 2.369,
+     "donusum": -79.5,
+     "capex_am": 2.76,
+     "ay": 9,
+     "fcf_ttm": -6.076,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 3.99,
+     "capex": -5.351,
+     "kira": -0.135,
+     "fcf": -1.491,
+     "favok": 3.185,
+     "donusum": -46.8,
+     "capex_am": 3,
+     "ay": 12,
+     "fcf_ttm": -1.491,
+     "favok_ttm": 3.185
+    },
+    "2026Q1": {
+     "cfo": 0.338,
+     "capex": -0.139,
+     "kira": -0.067,
+     "fcf": 0.133,
+     "favok": 0.87,
+     "donusum": 15.3,
+     "capex_am": 0.22,
+     "ay": 3,
+     "fcf_ttm": 0.387,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.175,
+     "capex": -0.169,
+     "kira": -0.079,
+     "fcf": 0.933,
+     "favok": 1.646,
+     "donusum": 56.7,
+     "capex_am": 0.13,
+     "ay": 6,
+     "fcf_ttm": 1.481,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ALBRK",
@@ -535,7 +1074,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 8.17,
+    "fiyat": 8.14,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -715,7 +1254,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 10.35,
+    "fiyat": 10.28,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -764,7 +1303,175 @@
      "rol": "kur"
     }
    ],
-   "birincil": "kap_yeni_is_altny"
+   "birincil": "kap_yeni_is_altny",
+   "netborc": {
+    "2024Q1": {
+     "nb": 0.278,
+     "borc": 0.349,
+     "nakit": 0.072
+    },
+    "2024Q2": {
+     "nb": -0.47,
+     "borc": 0.543,
+     "nakit": 1.012
+    },
+    "2024Q3": {
+     "nb": -0.305,
+     "borc": 0.595,
+     "nakit": 0.901
+    },
+    "2024Q4": {
+     "nb": -0.057,
+     "borc": 0.754,
+     "nakit": 0.811
+    },
+    "2025Q1": {
+     "nb": 0.263,
+     "borc": 0.927,
+     "nakit": 0.664
+    },
+    "2025Q2": {
+     "nb": 0.587,
+     "borc": 1.226,
+     "nakit": 0.639
+    },
+    "2025Q3": {
+     "nb": 1.113,
+     "borc": 1.61,
+     "nakit": 0.498
+    },
+    "2025Q4": {
+     "nb": 1.593,
+     "borc": 1.944,
+     "nakit": 0.351
+    },
+    "2026Q1": {
+     "nb": 1.906,
+     "borc": 2.205,
+     "nakit": 0.299
+    },
+    "2026Q2": {
+     "nb": 2.266,
+     "borc": 2.645,
+     "nakit": 0.379
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 0.093,
+     "capex": -0.121,
+     "kira": -0.001,
+     "fcf": -0.029,
+     "favok": 0.056,
+     "donusum": -52.1,
+     "capex_am": 5.31,
+     "ay": 3
+    },
+    "2024Q2": {
+     "cfo": -0.072,
+     "capex": -0.282,
+     "kira": -0.001,
+     "fcf": -0.355,
+     "favok": 0.323,
+     "donusum": -110,
+     "capex_am": 5.16,
+     "ay": 6
+    },
+    "2024Q3": {
+     "cfo": 0.037,
+     "capex": -0.504,
+     "kira": -0.001,
+     "fcf": -0.468,
+     "favok": 0.41,
+     "donusum": -114.1,
+     "capex_am": 5.31,
+     "ay": 9
+    },
+    "2024Q4": {
+     "cfo": -0.095,
+     "capex": -0.809,
+     "kira": 0,
+     "fcf": -0.904,
+     "favok": 0.709,
+     "donusum": -127.5,
+     "capex_am": 5.55,
+     "ay": 12,
+     "fcf_ttm": -0.904,
+     "favok_ttm": 0.709
+    },
+    "2025Q1": {
+     "cfo": -0.002,
+     "capex": -0.241,
+     "kira": 0,
+     "fcf": -0.243,
+     "favok": 0.248,
+     "donusum": -98.2,
+     "capex_am": 4.72,
+     "ay": 3,
+     "fcf_ttm": -1.105,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -0.026,
+     "capex": -0.478,
+     "kira": 0,
+     "fcf": -0.504,
+     "favok": 0.357,
+     "donusum": -141.1,
+     "capex_am": 4.4,
+     "ay": 6,
+     "fcf_ttm": -1.005,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": -0.214,
+     "capex": -0.755,
+     "kira": 0,
+     "fcf": -0.968,
+     "favok": 0.54,
+     "donusum": -179.4,
+     "capex_am": 4.22,
+     "ay": 9,
+     "fcf_ttm": -1.189,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": -0.275,
+     "capex": -1.152,
+     "kira": 0,
+     "fcf": -1.427,
+     "favok": 0.736,
+     "donusum": -193.9,
+     "capex_am": 4.21,
+     "ay": 12,
+     "fcf_ttm": -1.427,
+     "favok_ttm": 0.736
+    },
+    "2026Q1": {
+     "cfo": 0.216,
+     "capex": -0.302,
+     "kira": 0,
+     "fcf": -0.086,
+     "favok": 0.171,
+     "donusum": -50,
+     "capex_am": 3.15,
+     "ay": 3,
+     "fcf_ttm": -1.182,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.407,
+     "capex": -0.662,
+     "kira": -0.001,
+     "fcf": -0.256,
+     "favok": 0.336,
+     "donusum": -76.4,
+     "capex_am": 3.22,
+     "ay": 6,
+     "fcf_ttm": -1.017,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ASELS",
@@ -831,7 +1538,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 358.25,
+    "fiyat": 358.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -938,7 +1645,198 @@
      "ad": "EUR/USD (Avro sözleşmeler: 2025-26 hava savunma)"
     }
    ],
-   "birincil": "asels_kap_siparis"
+   "birincil": "asels_kap_siparis",
+   "netborc": {
+    "2024Q1": {
+     "nb": 19.737,
+     "borc": 22.811,
+     "nakit": 3.074
+    },
+    "2024Q2": {
+     "nb": 24.969,
+     "borc": 26.888,
+     "nakit": 1.919
+    },
+    "2024Q3": {
+     "nb": 29.788,
+     "borc": 33.385,
+     "nakit": 3.597
+    },
+    "2024Q4": {
+     "nb": 15.925,
+     "borc": 32.562,
+     "nakit": 16.637
+    },
+    "2025Q1": {
+     "nb": 20.113,
+     "borc": 32.945,
+     "nakit": 12.832
+    },
+    "2025Q2": {
+     "nb": 21.041,
+     "borc": 36.833,
+     "nakit": 15.792
+    },
+    "2025Q3": {
+     "nb": 23.769,
+     "borc": 38.206,
+     "nakit": 14.438
+    },
+    "2025Q4": {
+     "nb": 13.97,
+     "borc": 43.057,
+     "nakit": 29.086
+    },
+    "2026Q1": {
+     "nb": 22.084,
+     "borc": 53.09,
+     "nakit": 31.006
+    },
+    "2026Q2": {
+     "nb": 33.824,
+     "borc": 73.293,
+     "nakit": 39.469
+    },
+    "2026Q3": {
+     "nb": 55.163,
+     "borc": 87.008,
+     "nakit": 31.845
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -2.972,
+     "capex": -2.632,
+     "kira": 0,
+     "fcf": -5.449,
+     "favok": 3.398,
+     "donusum": -160.4,
+     "capex_am": 3.82,
+     "ay": 3,
+     "fcf_ttm": -7.386,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -1.899,
+     "capex": -8.797,
+     "kira": 0,
+     "fcf": -10.452,
+     "favok": 8.695,
+     "donusum": -120.2,
+     "capex_am": 6.23,
+     "ay": 6,
+     "fcf_ttm": -3.827,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 0.903,
+     "capex": -15.158,
+     "kira": 0,
+     "fcf": -13.864,
+     "favok": 14.396,
+     "donusum": -96.3,
+     "capex_am": 6.76,
+     "ay": 9,
+     "fcf_ttm": -8.143,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 21.417,
+     "capex": -21.299,
+     "kira": 0,
+     "fcf": 0.783,
+     "favok": 30.234,
+     "donusum": 2.6,
+     "capex_am": 6.46,
+     "ay": 12,
+     "fcf_ttm": 0.783,
+     "favok_ttm": 30.234
+    },
+    "2025Q1": {
+     "cfo": 4.228,
+     "capex": -5.954,
+     "kira": 0,
+     "fcf": -1.684,
+     "favok": 5.142,
+     "donusum": -32.7,
+     "capex_am": 5.08,
+     "ay": 3,
+     "fcf_ttm": 6.624,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 13.635,
+     "capex": -13.013,
+     "kira": 0,
+     "fcf": 0.776,
+     "favok": 13.467,
+     "donusum": 5.8,
+     "capex_am": 5.79,
+     "ay": 6,
+     "fcf_ttm": 15.674,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 24.095,
+     "capex": -24.015,
+     "kira": 0,
+     "fcf": 0.224,
+     "favok": 22.668,
+     "donusum": 1,
+     "capex_am": 6.41,
+     "ay": 9,
+     "fcf_ttm": 19.486,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 48.902,
+     "capex": -38.168,
+     "kira": 0,
+     "fcf": 11.224,
+     "favok": 47.329,
+     "donusum": 23.7,
+     "capex_am": 6.88,
+     "ay": 12,
+     "fcf_ttm": 11.224,
+     "favok_ttm": 47.329
+    },
+    "2026Q1": {
+     "cfo": 5.863,
+     "capex": -13.559,
+     "kira": 0,
+     "fcf": -7.219,
+     "favok": 8.633,
+     "donusum": -83.6,
+     "capex_am": 7.16,
+     "ay": 3,
+     "fcf_ttm": 6.208,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 15.206,
+     "capex": -33.746,
+     "kira": 0,
+     "fcf": -17.799,
+     "favok": 23.233,
+     "donusum": -76.6,
+     "capex_am": 7.78,
+     "ay": 6,
+     "fcf_ttm": -7.6,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 22.998,
+     "capex": -61.585,
+     "kira": 0,
+     "fcf": -38.451,
+     "favok": 40.555,
+     "donusum": -94.8,
+     "capex_am": 7.86,
+     "ay": 9,
+     "fcf_ttm": -27.518,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "BERA",
@@ -1000,7 +1898,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 9.6,
+    "fiyat": 9.55,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1045,7 +1943,92 @@
     }
    ],
    "birincil": null,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": -0.479,
+     "borc": 1.961,
+     "nakit": 2.439
+    },
+    "2025Q3": {
+     "nb": -0.441,
+     "borc": 1.987,
+     "nakit": 2.428
+    },
+    "2025Q4": {
+     "nb": -1.059,
+     "borc": 1.255,
+     "nakit": 2.314
+    },
+    "2026Q1": {
+     "nb": -1.43,
+     "borc": 1.333,
+     "nakit": 2.763
+    },
+    "2026Q2": {
+     "nb": -0.976,
+     "borc": 1.176,
+     "nakit": 2.152
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": 0.608,
+     "capex": -0.214,
+     "kira": 0,
+     "fcf": 0.394,
+     "favok": 0.71,
+     "donusum": 55.4,
+     "capex_am": 1.77,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 0.229,
+     "capex": -0.272,
+     "kira": 0,
+     "fcf": -0.043,
+     "favok": 1.49,
+     "donusum": -2.9,
+     "capex_am": 1.33,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 0.253,
+     "capex": -0.463,
+     "kira": 0,
+     "fcf": -0.21,
+     "favok": 2.39,
+     "donusum": -8.8,
+     "capex_am": 1.23,
+     "ay": 12,
+     "fcf_ttm": -0.21,
+     "favok_ttm": 2.39
+    },
+    "2026Q1": {
+     "cfo": 0.49,
+     "capex": -0.038,
+     "kira": 0,
+     "fcf": 0.543,
+     "favok": 0.484,
+     "donusum": 112.1,
+     "capex_am": 0.3,
+     "ay": 3,
+     "fcf_ttm": -0.674,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.372,
+     "capex": -0.283,
+     "kira": 0,
+     "fcf": 0.284,
+     "favok": 0.823,
+     "donusum": 34.5,
+     "capex_am": 1.18,
+     "ay": 6,
+     "fcf_ttm": -0.73,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "BIMAS",
@@ -1107,7 +2090,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 364.25,
+    "fiyat": 364.75,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
@@ -1233,7 +2216,181 @@
     }
    ],
    "birincil": "tufe_gida",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 17.549,
+     "borc": 26.988,
+     "nakit": 9.438
+    },
+    "2024Q2": {
+     "nb": 25.961,
+     "borc": 30.658,
+     "nakit": 4.697
+    },
+    "2024Q3": {
+     "nb": 14.449,
+     "borc": 33.913,
+     "nakit": 19.464
+    },
+    "2024Q4": {
+     "nb": 28.736,
+     "borc": 36.976,
+     "nakit": 8.24
+    },
+    "2025Q1": {
+     "nb": 18.601,
+     "borc": 42.09,
+     "nakit": 23.49
+    },
+    "2025Q2": {
+     "nb": 32.834,
+     "borc": 46.461,
+     "nakit": 13.627
+    },
+    "2025Q3": {
+     "nb": 29.821,
+     "borc": 48.852,
+     "nakit": 19.031
+    },
+    "2025Q4": {
+     "nb": 38.574,
+     "borc": 52.726,
+     "nakit": 14.152
+    },
+    "2026Q1": {
+     "nb": 28.117,
+     "borc": 58.075,
+     "nakit": 29.958
+    },
+    "2026Q2": {
+     "nb": 32.387,
+     "borc": 62.593,
+     "nakit": 30.205
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 5.905,
+     "capex": -3.465,
+     "kira": -1.392,
+     "fcf": 1.118,
+     "favok": 4.449,
+     "donusum": 25.1,
+     "capex_am": 1.06,
+     "ay": 3,
+     "fcf_ttm": 8.226,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 13.013,
+     "capex": -8.427,
+     "kira": -3.138,
+     "fcf": 1.577,
+     "favok": 8.48,
+     "donusum": 18.6,
+     "capex_am": 1.17,
+     "ay": 6,
+     "fcf_ttm": -1.744,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 30.123,
+     "capex": -13.515,
+     "kira": -5.281,
+     "fcf": 11.882,
+     "favok": 14.671,
+     "donusum": 81,
+     "capex_am": 1.13,
+     "ay": 9,
+     "fcf_ttm": 4.127,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 31.204,
+     "capex": -18.452,
+     "kira": -7.674,
+     "fcf": 5.822,
+     "favok": 22.558,
+     "donusum": 25.8,
+     "capex_am": 1.07,
+     "ay": 12,
+     "fcf_ttm": 5.822,
+     "favok_ttm": 22.558
+    },
+    "2025Q1": {
+     "cfo": 23.181,
+     "capex": -5.136,
+     "kira": -2.419,
+     "fcf": 15.697,
+     "favok": 5.282,
+     "donusum": 297.2,
+     "capex_am": 0.83,
+     "ay": 3,
+     "fcf_ttm": 18.63,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 22.296,
+     "capex": -10.473,
+     "kira": -5.233,
+     "fcf": 6.704,
+     "favok": 15.023,
+     "donusum": 44.6,
+     "capex_am": 0.85,
+     "ay": 6,
+     "fcf_ttm": 10.395,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 38.96,
+     "capex": -15.379,
+     "kira": -8.538,
+     "fcf": 15.537,
+     "favok": 29.385,
+     "donusum": 52.9,
+     "capex_am": 0.77,
+     "ay": 9,
+     "fcf_ttm": 5.52,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 40.903,
+     "capex": -21.283,
+     "kira": -11.322,
+     "fcf": 8.789,
+     "favok": 43.485,
+     "donusum": 20.2,
+     "capex_am": 0.8,
+     "ay": 12,
+     "fcf_ttm": 8.789,
+     "favok_ttm": 43.485
+    },
+    "2026Q1": {
+     "cfo": 23.921,
+     "capex": -4.799,
+     "kira": -3.527,
+     "fcf": 15.916,
+     "favok": 10.112,
+     "donusum": 157.4,
+     "capex_am": 0.66,
+     "ay": 3,
+     "fcf_ttm": 4.163,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 37.907,
+     "capex": -11.724,
+     "kira": -7.605,
+     "fcf": 19.007,
+     "favok": 24.393,
+     "donusum": 77.9,
+     "capex_am": 0.78,
+     "ay": 6,
+     "fcf_ttm": 18.941,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "BINHO",
@@ -1295,7 +2452,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 3.53,
+    "fiyat": 3.51,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1331,7 +2488,92 @@
     }
    ],
    "birincil": null,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 0.054,
+     "borc": 0.225,
+     "nakit": 0.172
+    },
+    "2025Q3": {
+     "nb": -0.484,
+     "borc": 0.197,
+     "nakit": 0.681
+    },
+    "2025Q4": {
+     "nb": -0.33,
+     "borc": 0.165,
+     "nakit": 0.494
+    },
+    "2026Q1": {
+     "nb": -0.441,
+     "borc": 0.26,
+     "nakit": 0.702
+    },
+    "2026Q2": {
+     "nb": -0.321,
+     "borc": 0.235,
+     "nakit": 0.556
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": -0.211,
+     "capex": 0,
+     "kira": 0,
+     "fcf": -0.19,
+     "favok": -0.082,
+     "donusum": null,
+     "capex_am": 0,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 0.16,
+     "capex": 0,
+     "kira": 0,
+     "fcf": 0.16,
+     "favok": -0.154,
+     "donusum": null,
+     "capex_am": 0,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": -3.134,
+     "capex": 0,
+     "kira": 0,
+     "fcf": -3.134,
+     "favok": -0.197,
+     "donusum": null,
+     "capex_am": 0,
+     "ay": 12,
+     "fcf_ttm": -3.134,
+     "favok_ttm": -0.197
+    },
+    "2026Q1": {
+     "cfo": -0.214,
+     "capex": 0,
+     "kira": 0,
+     "fcf": -0.214,
+     "favok": -0.034,
+     "donusum": null,
+     "capex_am": 0.16,
+     "ay": 3,
+     "fcf_ttm": -2.854,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.165,
+     "capex": -0.015,
+     "kira": 0,
+     "fcf": -0.179,
+     "favok": -0.074,
+     "donusum": null,
+     "capex_am": 4.76,
+     "ay": 6,
+     "fcf_ttm": -2.695,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "CIMSA",
@@ -1398,7 +2640,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 39.64,
+    "fiyat": 39.7,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1541,7 +2783,198 @@
    ],
    "birincil": "komur_termal",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 3.791,
+     "borc": 8.851,
+     "nakit": 5.061
+    },
+    "2024Q2": {
+     "nb": 4.717,
+     "borc": 10.42,
+     "nakit": 5.703
+    },
+    "2024Q3": {
+     "nb": 3.15,
+     "borc": 23.017,
+     "nakit": 19.867
+    },
+    "2024Q4": {
+     "nb": 13.803,
+     "borc": 21.49,
+     "nakit": 7.687
+    },
+    "2025Q1": {
+     "nb": 18.143,
+     "borc": 23.082,
+     "nakit": 4.939
+    },
+    "2025Q2": {
+     "nb": 20.761,
+     "borc": 26.477,
+     "nakit": 5.717
+    },
+    "2025Q3": {
+     "nb": 21.273,
+     "borc": 26.673,
+     "nakit": 5.4
+    },
+    "2025Q4": {
+     "nb": 19.482,
+     "borc": 29.218,
+     "nakit": 9.737
+    },
+    "2026Q1": {
+     "nb": 23.376,
+     "borc": 28.512,
+     "nakit": 5.136
+    },
+    "2026Q2": {
+     "nb": 26.254,
+     "borc": 31.059,
+     "nakit": 4.805
+    },
+    "2026Q3": {
+     "nb": 25.835,
+     "borc": 33.411,
+     "nakit": 7.575
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -0.235,
+     "capex": -0.435,
+     "kira": 0,
+     "fcf": -0.495,
+     "favok": 0.578,
+     "donusum": -85.5,
+     "capex_am": 1.13,
+     "ay": 3,
+     "fcf_ttm": 0.332,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 0.649,
+     "capex": -1.349,
+     "kira": 0,
+     "fcf": -0.57,
+     "favok": 2.054,
+     "donusum": -27.7,
+     "capex_am": 1.87,
+     "ay": 6,
+     "fcf_ttm": 0.656,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 5.549,
+     "capex": -2.042,
+     "kira": 0,
+     "fcf": 3.678,
+     "favok": 3.898,
+     "donusum": 94.4,
+     "capex_am": 1.77,
+     "ay": 9,
+     "fcf_ttm": 2.221,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 6.406,
+     "capex": -3.824,
+     "kira": 0,
+     "fcf": 2.699,
+     "favok": 5.086,
+     "donusum": 53.1,
+     "capex_am": 1.95,
+     "ay": 12,
+     "fcf_ttm": 2.699,
+     "favok_ttm": 5.086
+    },
+    "2025Q1": {
+     "cfo": -0.713,
+     "capex": -1.218,
+     "kira": 0,
+     "fcf": -1.911,
+     "favok": 1.094,
+     "donusum": -174.7,
+     "capex_am": 1.62,
+     "ay": 3,
+     "fcf_ttm": 1.471,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.405,
+     "capex": -2.85,
+     "kira": 0,
+     "fcf": -2.428,
+     "favok": 3.189,
+     "donusum": -76.1,
+     "capex_am": 1.78,
+     "ay": 6,
+     "fcf_ttm": 1.057,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 3.465,
+     "capex": -3.935,
+     "kira": 0,
+     "fcf": -0.446,
+     "favok": 5.805,
+     "donusum": -7.7,
+     "capex_am": 1.53,
+     "ay": 9,
+     "fcf_ttm": -2.798,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 8.404,
+     "capex": -7.57,
+     "kira": 0,
+     "fcf": 0.865,
+     "favok": 8.238,
+     "donusum": 10.5,
+     "capex_am": 1.81,
+     "ay": 12,
+     "fcf_ttm": 0.865,
+     "favok_ttm": 8.238
+    },
+    "2026Q1": {
+     "cfo": -3.241,
+     "capex": -0.575,
+     "kira": 0,
+     "fcf": -3.79,
+     "favok": 1.47,
+     "donusum": -257.8,
+     "capex_am": 0.5,
+     "ay": 3,
+     "fcf_ttm": -0.398,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -1.592,
+     "capex": -2.24,
+     "kira": 0,
+     "fcf": -3.828,
+     "favok": 4.192,
+     "donusum": -91.3,
+     "capex_am": 0.93,
+     "ay": 6,
+     "fcf_ttm": 0.245,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 0.704,
+     "capex": -2.907,
+     "kira": 0,
+     "fcf": -2.047,
+     "favok": 7.457,
+     "donusum": -27.4,
+     "capex_am": 0.76,
+     "ay": 9,
+     "fcf_ttm": -1.285,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "CVKMD",
@@ -1608,7 +3041,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 12.48,
+    "fiyat": 12.38,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
@@ -1664,7 +3097,198 @@
      "rol": "kur"
     }
    ],
-   "birincil": "altin"
+   "birincil": "altin",
+   "netborc": {
+    "2024Q1": {
+     "nb": -0.289,
+     "borc": 0.224,
+     "nakit": 0.513
+    },
+    "2024Q2": {
+     "nb": -0.008,
+     "borc": 0.394,
+     "nakit": 0.402
+    },
+    "2024Q3": {
+     "nb": -0.298,
+     "borc": 0.767,
+     "nakit": 1.065
+    },
+    "2024Q4": {
+     "nb": 1.569,
+     "borc": 2.166,
+     "nakit": 0.597
+    },
+    "2025Q1": {
+     "nb": 2.062,
+     "borc": 2.432,
+     "nakit": 0.37
+    },
+    "2025Q2": {
+     "nb": 0.852,
+     "borc": 2.129,
+     "nakit": 1.277
+    },
+    "2025Q3": {
+     "nb": 1.416,
+     "borc": 2.727,
+     "nakit": 1.311
+    },
+    "2025Q4": {
+     "nb": 1.009,
+     "borc": 2.252,
+     "nakit": 1.242
+    },
+    "2026Q1": {
+     "nb": 2.785,
+     "borc": 3.692,
+     "nakit": 0.907
+    },
+    "2026Q2": {
+     "nb": 3.718,
+     "borc": 4.272,
+     "nakit": 0.554
+    },
+    "2026Q3": {
+     "nb": 1.465,
+     "borc": 4.681,
+     "nakit": 3.216
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -0.115,
+     "capex": -0.176,
+     "kira": 0,
+     "fcf": -0.285,
+     "favok": 0.186,
+     "donusum": -153.5,
+     "capex_am": 4.24,
+     "ay": 3,
+     "fcf_ttm": -0.856,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -0.072,
+     "capex": -0.506,
+     "kira": 0,
+     "fcf": -0.563,
+     "favok": 0.465,
+     "donusum": -121.2,
+     "capex_am": 6.27,
+     "ay": 6,
+     "fcf_ttm": -0.806,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 0.588,
+     "capex": -1.248,
+     "kira": 0,
+     "fcf": -0.644,
+     "favok": 0.744,
+     "donusum": -86.6,
+     "capex_am": 8.91,
+     "ay": 9,
+     "fcf_ttm": -0.857,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 7.014,
+     "capex": -1.891,
+     "kira": 0,
+     "fcf": 5.141,
+     "favok": 1.03,
+     "donusum": 499.3,
+     "capex_am": 6.14,
+     "ay": 12,
+     "fcf_ttm": 5.141,
+     "favok_ttm": 1.03
+    },
+    "2025Q1": {
+     "cfo": 0.145,
+     "capex": -0.479,
+     "kira": 0,
+     "fcf": -0.281,
+     "favok": 0.202,
+     "donusum": -139.2,
+     "capex_am": 6.19,
+     "ay": 3,
+     "fcf_ttm": 5.255,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 2.298,
+     "capex": -1.294,
+     "kira": 0,
+     "fcf": 1.125,
+     "favok": 0.437,
+     "donusum": 257.4,
+     "capex_am": 8.4,
+     "ay": 6,
+     "fcf_ttm": 7.027,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 2.552,
+     "capex": -1.746,
+     "kira": 0,
+     "fcf": 0.944,
+     "favok": 0.623,
+     "donusum": 151.6,
+     "capex_am": 7.87,
+     "ay": 9,
+     "fcf_ttm": 6.944,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 3.39,
+     "capex": -2.166,
+     "kira": 0,
+     "fcf": 1.439,
+     "favok": 0.849,
+     "donusum": 169.5,
+     "capex_am": 5.87,
+     "ay": 12,
+     "fcf_ttm": 1.439,
+     "favok_ttm": 0.849
+    },
+    "2026Q1": {
+     "cfo": 0.155,
+     "capex": -1.509,
+     "kira": 0,
+     "fcf": -1.348,
+     "favok": 0.259,
+     "donusum": -521.3,
+     "capex_am": 12.39,
+     "ay": 3,
+     "fcf_ttm": 0.459,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.918,
+     "capex": -2.265,
+     "kira": 0,
+     "fcf": -3.139,
+     "favok": 1.066,
+     "donusum": -294.5,
+     "capex_am": 6.75,
+     "ay": 6,
+     "fcf_ttm": -3.186,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 2.088,
+     "capex": -3.491,
+     "kira": 0,
+     "fcf": -1.337,
+     "favok": 2.505,
+     "donusum": -53.4,
+     "capex_am": 6.07,
+     "ay": 9,
+     "fcf_ttm": -1.123,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "CWENE",
@@ -1726,7 +3350,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 14.36,
+    "fiyat": 14.35,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1845,7 +3469,181 @@
     }
    ],
    "birincil": "ges_montaj_makasi_usd",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 1.959,
+     "borc": 2.367,
+     "nakit": 0.408
+    },
+    "2024Q2": {
+     "nb": 2.526,
+     "borc": 3.221,
+     "nakit": 0.694
+    },
+    "2024Q3": {
+     "nb": 2.988,
+     "borc": 3.339,
+     "nakit": 0.351
+    },
+    "2024Q4": {
+     "nb": 2.882,
+     "borc": 3.526,
+     "nakit": 0.644
+    },
+    "2025Q1": {
+     "nb": 5.502,
+     "borc": 6.023,
+     "nakit": 0.521
+    },
+    "2025Q2": {
+     "nb": 5.705,
+     "borc": 5.918,
+     "nakit": 0.213
+    },
+    "2025Q3": {
+     "nb": 6.826,
+     "borc": 7.924,
+     "nakit": 1.098
+    },
+    "2025Q4": {
+     "nb": 7.044,
+     "borc": 7.728,
+     "nakit": 0.684
+    },
+    "2026Q1": {
+     "nb": 8.07,
+     "borc": 8.979,
+     "nakit": 0.909
+    },
+    "2026Q2": {
+     "nb": 9.426,
+     "borc": 9.904,
+     "nakit": 0.477
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 0.998,
+     "capex": -0.391,
+     "kira": -0.01,
+     "fcf": 0.602,
+     "favok": 0.547,
+     "donusum": 110.1,
+     "capex_am": 4.77,
+     "ay": 3,
+     "fcf_ttm": -2.881,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 0.61,
+     "capex": -0.74,
+     "kira": -0.022,
+     "fcf": -0.107,
+     "favok": 0.68,
+     "donusum": -15.8,
+     "capex_am": 3.91,
+     "ay": 6,
+     "fcf_ttm": -0.806,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 0.518,
+     "capex": -0.975,
+     "kira": -0.037,
+     "fcf": -0.415,
+     "favok": 1.398,
+     "donusum": -29.7,
+     "capex_am": 3.05,
+     "ay": 9,
+     "fcf_ttm": 0.098,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": -1.284,
+     "capex": -1.397,
+     "kira": -0.053,
+     "fcf": -2.586,
+     "favok": 2.102,
+     "donusum": -123,
+     "capex_am": 3.03,
+     "ay": 12,
+     "fcf_ttm": -2.586,
+     "favok_ttm": 2.102
+    },
+    "2025Q1": {
+     "cfo": -2.466,
+     "capex": -0.901,
+     "kira": -0.016,
+     "fcf": -3.343,
+     "favok": 0.502,
+     "donusum": -666.6,
+     "capex_am": 6.67,
+     "ay": 3,
+     "fcf_ttm": -6.76,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.073,
+     "capex": -3.92,
+     "kira": -0.037,
+     "fcf": -3.829,
+     "favok": 0.866,
+     "donusum": -442.2,
+     "capex_am": 13.45,
+     "ay": 6,
+     "fcf_ttm": -6.27,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 0.095,
+     "capex": -7.315,
+     "kira": -0.06,
+     "fcf": -5.361,
+     "favok": 2.381,
+     "donusum": -225.1,
+     "capex_am": 15.36,
+     "ay": 9,
+     "fcf_ttm": -7.394,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": -0.021,
+     "capex": -5.64,
+     "kira": -0.084,
+     "fcf": -5.435,
+     "favok": 3.174,
+     "donusum": -171.2,
+     "capex_am": 8.11,
+     "ay": 12,
+     "fcf_ttm": -5.435,
+     "favok_ttm": 3.174
+    },
+    "2026Q1": {
+     "cfo": 0.214,
+     "capex": -0.662,
+     "kira": -0.023,
+     "fcf": -0.392,
+     "favok": 0.949,
+     "donusum": -41.3,
+     "capex_am": 2.41,
+     "ay": 3,
+     "fcf_ttm": -1.451,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.062,
+     "capex": -1.877,
+     "kira": -0.04,
+     "fcf": -1.741,
+     "favok": 2.044,
+     "donusum": -85.2,
+     "capex_am": 3.23,
+     "ay": 6,
+     "fcf_ttm": -2.117,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "EKGYO",
@@ -1907,7 +3705,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 17.07,
+    "fiyat": 17.08,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2060,7 +3858,181 @@
      "rol": "kur"
     }
    ],
-   "birincil": "kfe"
+   "birincil": "kfe",
+   "netborc": {
+    "2024Q1": {
+     "nb": -1.383,
+     "borc": 3.725,
+     "nakit": 5.108
+    },
+    "2024Q2": {
+     "nb": -4.879,
+     "borc": 3.347,
+     "nakit": 8.227
+    },
+    "2024Q3": {
+     "nb": 2.841,
+     "borc": 6.057,
+     "nakit": 3.216
+    },
+    "2024Q4": {
+     "nb": 4.586,
+     "borc": 12.925,
+     "nakit": 8.339
+    },
+    "2025Q1": {
+     "nb": 8.028,
+     "borc": 12.724,
+     "nakit": 4.696
+    },
+    "2025Q2": {
+     "nb": 13.083,
+     "borc": 21.359,
+     "nakit": 8.276
+    },
+    "2025Q3": {
+     "nb": 24.915,
+     "borc": 39.043,
+     "nakit": 14.128
+    },
+    "2025Q4": {
+     "nb": 30.374,
+     "borc": 47.569,
+     "nakit": 17.195
+    },
+    "2026Q1": {
+     "nb": 37.7,
+     "borc": 55.745,
+     "nakit": 18.045
+    },
+    "2026Q2": {
+     "nb": 22.045,
+     "borc": 62.614,
+     "nakit": 40.569
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -10.48,
+     "capex": -0.064,
+     "kira": 0,
+     "fcf": -10.543,
+     "favok": 0.389,
+     "donusum": -2710.7,
+     "capex_am": 0.82,
+     "ay": 3,
+     "fcf_ttm": -10.595,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -8.052,
+     "capex": -0.429,
+     "kira": 0,
+     "fcf": -8.481,
+     "favok": 1.84,
+     "donusum": -460.8,
+     "capex_am": 2.98,
+     "ay": 6,
+     "fcf_ttm": -15.545,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": -17.928,
+     "capex": -0.242,
+     "kira": 0,
+     "fcf": -18.168,
+     "favok": 3.044,
+     "donusum": -596.7,
+     "capex_am": 2.91,
+     "ay": 9,
+     "fcf_ttm": -30.534,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": -22.516,
+     "capex": -0.586,
+     "kira": 0,
+     "fcf": -23.1,
+     "favok": 4.822,
+     "donusum": -479.1,
+     "capex_am": 2.62,
+     "ay": 12,
+     "fcf_ttm": -23.1,
+     "favok_ttm": 4.822
+    },
+    "2025Q1": {
+     "cfo": -3.764,
+     "capex": -0.587,
+     "kira": 0,
+     "fcf": -4.35,
+     "favok": 5.066,
+     "donusum": -85.9,
+     "capex_am": 10.41,
+     "ay": 3,
+     "fcf_ttm": -12.89,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -7.874,
+     "capex": -0.717,
+     "kira": 0,
+     "fcf": -8.591,
+     "favok": 12.803,
+     "donusum": -67.1,
+     "capex_am": 4.33,
+     "ay": 6,
+     "fcf_ttm": -20.24,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": -45.004,
+     "capex": -0.914,
+     "kira": 0,
+     "fcf": -45.917,
+     "favok": 16.747,
+     "donusum": -274.2,
+     "capex_am": 2.85,
+     "ay": 9,
+     "fcf_ttm": -46.283,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": -38.168,
+     "capex": -0.558,
+     "kira": -0.176,
+     "fcf": -38.843,
+     "favok": 21.988,
+     "donusum": -176.7,
+     "capex_am": 1.11,
+     "ay": 12,
+     "fcf_ttm": -38.843,
+     "favok_ttm": 21.988
+    },
+    "2026Q1": {
+     "cfo": -8.212,
+     "capex": -0.162,
+     "kira": -0.176,
+     "fcf": -8.55,
+     "favok": 5.375,
+     "donusum": -159.1,
+     "capex_am": 0.98,
+     "ay": 3,
+     "fcf_ttm": -41.742,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -12.022,
+     "capex": -0.097,
+     "kira": 0,
+     "fcf": -12.069,
+     "favok": 11.876,
+     "donusum": -101.6,
+     "capex_am": 0.97,
+     "ay": 6,
+     "fcf_ttm": -38.759,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ENERY",
@@ -2171,7 +4143,181 @@
     }
    ],
    "birincil": "epdk_tarife",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -3.247,
+     "borc": 1.272,
+     "nakit": 4.52
+    },
+    "2024Q2": {
+     "nb": 0.695,
+     "borc": 1.275,
+     "nakit": 0.58
+    },
+    "2024Q3": {
+     "nb": 1.106,
+     "borc": 2.16,
+     "nakit": 1.054
+    },
+    "2024Q4": {
+     "nb": -1.936,
+     "borc": 2.52,
+     "nakit": 4.457
+    },
+    "2025Q1": {
+     "nb": -3.911,
+     "borc": 3.2,
+     "nakit": 7.111
+    },
+    "2025Q2": {
+     "nb": -3.822,
+     "borc": 3.631,
+     "nakit": 7.453
+    },
+    "2025Q3": {
+     "nb": -2.83,
+     "borc": 3.483,
+     "nakit": 6.313
+    },
+    "2025Q4": {
+     "nb": -2.277,
+     "borc": 3.791,
+     "nakit": 6.068
+    },
+    "2026Q1": {
+     "nb": -5.423,
+     "borc": 3.352,
+     "nakit": 8.775
+    },
+    "2026Q2": {
+     "nb": -4.94,
+     "borc": 3.498,
+     "nakit": 8.439
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 1.908,
+     "capex": -0.496,
+     "kira": -0.011,
+     "fcf": 1.402,
+     "favok": 1.046,
+     "donusum": 134,
+     "capex_am": 1.17,
+     "ay": 3,
+     "fcf_ttm": -0.423,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 2.76,
+     "capex": -1.408,
+     "kira": -0.015,
+     "fcf": 1.339,
+     "favok": 1.349,
+     "donusum": 99.2,
+     "capex_am": 1.81,
+     "ay": 6,
+     "fcf_ttm": 0.247,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 4.109,
+     "capex": -2.296,
+     "kira": -0.023,
+     "fcf": 1.79,
+     "favok": 1.727,
+     "donusum": 103.6,
+     "capex_am": 1.89,
+     "ay": 9,
+     "fcf_ttm": -3.515,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 5.958,
+     "capex": -2.98,
+     "kira": -0.031,
+     "fcf": 2.948,
+     "favok": 3.039,
+     "donusum": 97,
+     "capex_am": 1.76,
+     "ay": 12,
+     "fcf_ttm": 2.948,
+     "favok_ttm": 3.039
+    },
+    "2025Q1": {
+     "cfo": 3.494,
+     "capex": -0.776,
+     "kira": -0.007,
+     "fcf": 2.711,
+     "favok": 1.934,
+     "donusum": 140.2,
+     "capex_am": 1.28,
+     "ay": 3,
+     "fcf_ttm": 3.716,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 5.473,
+     "capex": -2.966,
+     "kira": -0.03,
+     "fcf": 2.477,
+     "favok": 3.021,
+     "donusum": 82,
+     "capex_am": 2.6,
+     "ay": 6,
+     "fcf_ttm": 3.617,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 6.468,
+     "capex": -4.527,
+     "kira": -0.042,
+     "fcf": 2.019,
+     "favok": 3.877,
+     "donusum": 52.1,
+     "capex_am": 2.34,
+     "ay": 9,
+     "fcf_ttm": 3.165,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 7.077,
+     "capex": -4.695,
+     "kira": -0.059,
+     "fcf": 2.33,
+     "favok": 5.936,
+     "donusum": 39.3,
+     "capex_am": 1.71,
+     "ay": 12,
+     "fcf_ttm": 2.33,
+     "favok_ttm": 5.936
+    },
+    "2026Q1": {
+     "cfo": 4.718,
+     "capex": -0.471,
+     "kira": -0.008,
+     "fcf": 4.241,
+     "favok": 3.728,
+     "donusum": 113.7,
+     "capex_am": 0.54,
+     "ay": 3,
+     "fcf_ttm": 3.023,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 5.286,
+     "capex": -2.285,
+     "kira": -0.014,
+     "fcf": 2.988,
+     "favok": 5.403,
+     "donusum": 55.3,
+     "capex_am": 1.22,
+     "ay": 6,
+     "fcf_ttm": 2.046,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ENJSA",
@@ -2233,7 +4379,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 112.7,
+    "fiyat": 113.2,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2348,7 +4494,181 @@
     }
    ],
    "birincil": "tufe",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 32.945,
+     "borc": 35.63,
+     "nakit": 2.686
+    },
+    "2024Q2": {
+     "nb": 38.048,
+     "borc": 41.161,
+     "nakit": 3.113
+    },
+    "2024Q3": {
+     "nb": 38.153,
+     "borc": 46.705,
+     "nakit": 8.552
+    },
+    "2024Q4": {
+     "nb": 44.463,
+     "borc": 53.951,
+     "nakit": 9.488
+    },
+    "2025Q1": {
+     "nb": 49.274,
+     "borc": 60.455,
+     "nakit": 11.181
+    },
+    "2025Q2": {
+     "nb": 51.608,
+     "borc": 57.753,
+     "nakit": 6.146
+    },
+    "2025Q3": {
+     "nb": 52.124,
+     "borc": 61.663,
+     "nakit": 9.539
+    },
+    "2025Q4": {
+     "nb": 63.317,
+     "borc": 67.496,
+     "nakit": 4.179
+    },
+    "2026Q1": {
+     "nb": 69.177,
+     "borc": 88.578,
+     "nakit": 19.401
+    },
+    "2026Q2": {
+     "nb": 80.967,
+     "borc": 93.145,
+     "nakit": 12.178
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 3.509,
+     "capex": -0.359,
+     "kira": -0.136,
+     "fcf": 3.015,
+     "favok": 7.33,
+     "donusum": 41.1,
+     "capex_am": 0.35,
+     "ay": 3,
+     "fcf_ttm": -4.947,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 9.773,
+     "capex": 0,
+     "kira": -0.284,
+     "fcf": 10.348,
+     "favok": 13.343,
+     "donusum": 77.6,
+     "capex_am": 0,
+     "ay": 6,
+     "fcf_ttm": -4.553,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 20.007,
+     "capex": 0,
+     "kira": -0.463,
+     "fcf": 20.64,
+     "favok": 21.821,
+     "donusum": 94.6,
+     "capex_am": 0,
+     "ay": 9,
+     "fcf_ttm": 8.811,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 24.623,
+     "capex": -2.038,
+     "kira": -0.701,
+     "fcf": 21.884,
+     "favok": 31.252,
+     "donusum": 70,
+     "capex_am": 0.43,
+     "ay": 12,
+     "fcf_ttm": 21.884,
+     "favok_ttm": 31.252
+    },
+    "2025Q1": {
+     "cfo": 4.884,
+     "capex": -0.526,
+     "kira": -0.204,
+     "fcf": 4.153,
+     "favok": 9.181,
+     "donusum": 45.2,
+     "capex_am": 0.37,
+     "ay": 3,
+     "fcf_ttm": 21.874,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 17.656,
+     "capex": -1.011,
+     "kira": -0.437,
+     "fcf": 16.208,
+     "favok": 19.541,
+     "donusum": 82.9,
+     "capex_am": 0.35,
+     "ay": 6,
+     "fcf_ttm": 26.44,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 32.265,
+     "capex": -1.779,
+     "kira": -0.71,
+     "fcf": 29.776,
+     "favok": 30.941,
+     "donusum": 96.2,
+     "capex_am": 0.39,
+     "ay": 9,
+     "fcf_ttm": 27.071,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 40.5,
+     "capex": -2.925,
+     "kira": -1.095,
+     "fcf": 36.48,
+     "favok": 43.277,
+     "donusum": 84.3,
+     "capex_am": 0.46,
+     "ay": 12,
+     "fcf_ttm": 36.48,
+     "favok_ttm": 43.277
+    },
+    "2026Q1": {
+     "cfo": 9.447,
+     "capex": -1.114,
+     "kira": -0.41,
+     "fcf": 7.923,
+     "favok": 12.65,
+     "donusum": 62.6,
+     "capex_am": 0.56,
+     "ay": 3,
+     "fcf_ttm": 38.968,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 22.599,
+     "capex": -1.934,
+     "kira": -0.876,
+     "fcf": 19.789,
+     "favok": 27.212,
+     "donusum": 72.7,
+     "capex_am": 0.47,
+     "ay": 6,
+     "fcf_ttm": 34.857,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "EREGL",
@@ -2415,7 +4735,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 31.3,
+    "fiyat": 31.22,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2586,7 +4906,198 @@
     }
    ],
    "birincil": "hrc_abd",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 54.384,
+     "borc": 80.645,
+     "nakit": 26.261
+    },
+    "2024Q2": {
+     "nb": 61.756,
+     "borc": 91.403,
+     "nakit": 29.647
+    },
+    "2024Q3": {
+     "nb": 68.599,
+     "borc": 120.958,
+     "nakit": 52.359
+    },
+    "2024Q4": {
+     "nb": 64.442,
+     "borc": 121.288,
+     "nakit": 56.846
+    },
+    "2025Q1": {
+     "nb": 56.163,
+     "borc": 128.158,
+     "nakit": 71.994
+    },
+    "2025Q2": {
+     "nb": 49.816,
+     "borc": 135.299,
+     "nakit": 85.483
+    },
+    "2025Q3": {
+     "nb": 47.507,
+     "borc": 146.8,
+     "nakit": 99.292
+    },
+    "2025Q4": {
+     "nb": 41.278,
+     "borc": 158.341,
+     "nakit": 117.063
+    },
+    "2026Q1": {
+     "nb": 31.471,
+     "borc": 155.627,
+     "nakit": 124.156
+    },
+    "2026Q2": {
+     "nb": 39.512,
+     "borc": 161.074,
+     "nakit": 121.561
+    },
+    "2026Q3": {
+     "nb": 50.537,
+     "borc": 162.945,
+     "nakit": 112.408
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 2.562,
+     "capex": -5.164,
+     "kira": -0.034,
+     "fcf": -2.632,
+     "favok": 7.517,
+     "donusum": -35,
+     "capex_am": 2.6,
+     "ay": 3,
+     "fcf_ttm": -13.386,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 7.815,
+     "capex": -13.288,
+     "kira": -0.094,
+     "fcf": -5.532,
+     "favok": 13.905,
+     "donusum": -39.8,
+     "capex_am": 3.23,
+     "ay": 6,
+     "fcf_ttm": -8.554,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 12.742,
+     "capex": -21.918,
+     "kira": -0.145,
+     "fcf": -9.277,
+     "favok": 18.451,
+     "donusum": -50.3,
+     "capex_am": 3.47,
+     "ay": 9,
+     "fcf_ttm": -11.512,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 31.258,
+     "capex": -35.083,
+     "kira": -0.224,
+     "fcf": -4.019,
+     "favok": 21.092,
+     "donusum": -19.1,
+     "capex_am": 3.97,
+     "ay": 12,
+     "fcf_ttm": -4.019,
+     "favok_ttm": 21.092
+    },
+    "2025Q1": {
+     "cfo": 19.077,
+     "capex": -11.233,
+     "kira": -0.086,
+     "fcf": 7.761,
+     "favok": 4.127,
+     "donusum": 188,
+     "capex_am": 4.74,
+     "ay": 3,
+     "fcf_ttm": 6.374,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 34.036,
+     "capex": -7.688,
+     "kira": -0.28,
+     "fcf": 26.071,
+     "favok": 8.261,
+     "donusum": 315.6,
+     "capex_am": 1.54,
+     "ay": 6,
+     "fcf_ttm": 27.584,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 47.212,
+     "capex": -10.978,
+     "kira": -0.374,
+     "fcf": 35.865,
+     "favok": 12.998,
+     "donusum": 275.9,
+     "capex_am": 1.38,
+     "ay": 9,
+     "fcf_ttm": 41.123,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 65.056,
+     "capex": -15.338,
+     "kira": -0.476,
+     "fcf": 49.25,
+     "favok": 20.451,
+     "donusum": 240.8,
+     "capex_am": 1.36,
+     "ay": 12,
+     "fcf_ttm": 49.25,
+     "favok_ttm": 20.451
+    },
+    "2026Q1": {
+     "cfo": 18.062,
+     "capex": -2.853,
+     "kira": -0.122,
+     "fcf": 15.095,
+     "favok": 5.82,
+     "donusum": 259.4,
+     "capex_am": 0.78,
+     "ay": 3,
+     "fcf_ttm": 56.584,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 21.285,
+     "capex": -4.784,
+     "kira": -0.33,
+     "fcf": 16.189,
+     "favok": 12.402,
+     "donusum": 130.5,
+     "capex_am": 0.64,
+     "ay": 6,
+     "fcf_ttm": 39.367,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 23.476,
+     "capex": -9.982,
+     "kira": -0.434,
+     "fcf": 13.089,
+     "favok": 20.378,
+     "donusum": 64.2,
+     "capex_am": 0.86,
+     "ay": 9,
+     "fcf_ttm": 26.474,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "EUPWR",
@@ -2649,7 +5160,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 41.38,
+    "fiyat": 41,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2774,7 +5285,181 @@
     "panel": 0.1
    },
    "agirlik_kaynak": "6A26 bölüm brüt kârı (GESAN dipnotu): trafo/pano ~%90, Peak PV panel ~%10",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -1.012,
+     "borc": 0.553,
+     "nakit": 1.565
+    },
+    "2024Q2": {
+     "nb": -1.299,
+     "borc": 0.501,
+     "nakit": 1.8
+    },
+    "2024Q3": {
+     "nb": -0.883,
+     "borc": 0.665,
+     "nakit": 1.548
+    },
+    "2024Q4": {
+     "nb": -0.337,
+     "borc": 0.636,
+     "nakit": 0.973
+    },
+    "2025Q1": {
+     "nb": -0.096,
+     "borc": 0.76,
+     "nakit": 0.856
+    },
+    "2025Q2": {
+     "nb": 0.655,
+     "borc": 1.34,
+     "nakit": 0.685
+    },
+    "2025Q3": {
+     "nb": 1.468,
+     "borc": 1.938,
+     "nakit": 0.47
+    },
+    "2025Q4": {
+     "nb": 2.322,
+     "borc": 2.856,
+     "nakit": 0.534
+    },
+    "2026Q1": {
+     "nb": 2.507,
+     "borc": 2.953,
+     "nakit": 0.446
+    },
+    "2026Q2": {
+     "nb": 2.938,
+     "borc": 3.207,
+     "nakit": 0.269
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -0.338,
+     "capex": -0.056,
+     "kira": 0,
+     "fcf": -0.395,
+     "favok": 0.323,
+     "donusum": -122.3,
+     "capex_am": 1.57,
+     "ay": 3,
+     "fcf_ttm": -2.769,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 0.357,
+     "capex": -0.264,
+     "kira": 0,
+     "fcf": 0.093,
+     "favok": 0.645,
+     "donusum": 14.5,
+     "capex_am": 3.34,
+     "ay": 6,
+     "fcf_ttm": 0.062,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 0.183,
+     "capex": -0.503,
+     "kira": 0,
+     "fcf": -0.306,
+     "favok": 1.119,
+     "donusum": -27.3,
+     "capex_am": 3.66,
+     "ay": 9,
+     "fcf_ttm": 0.377,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 0.396,
+     "capex": -0.86,
+     "kira": 0,
+     "fcf": -0.427,
+     "favok": 1.503,
+     "donusum": -28.4,
+     "capex_am": 4.14,
+     "ay": 12,
+     "fcf_ttm": -0.427,
+     "favok_ttm": 1.503
+    },
+    "2025Q1": {
+     "cfo": -0.074,
+     "capex": -0.174,
+     "kira": 0,
+     "fcf": -0.246,
+     "favok": 0.442,
+     "donusum": -55.7,
+     "capex_am": 2.33,
+     "ay": 3,
+     "fcf_ttm": 0.048,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -0.555,
+     "capex": -0.479,
+     "kira": 0,
+     "fcf": -1.034,
+     "favok": 0.553,
+     "donusum": -186.8,
+     "capex_am": 2.94,
+     "ay": 6,
+     "fcf_ttm": -1.9,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": -0.824,
+     "capex": -0.992,
+     "kira": 0,
+     "fcf": -1.798,
+     "favok": 1.613,
+     "donusum": -111.5,
+     "capex_am": 3.7,
+     "ay": 9,
+     "fcf_ttm": -2.195,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": -0.802,
+     "capex": -1.879,
+     "kira": 0,
+     "fcf": -2.673,
+     "favok": 2.368,
+     "donusum": -112.9,
+     "capex_am": 4.91,
+     "ay": 12,
+     "fcf_ttm": -2.673,
+     "favok_ttm": 2.368
+    },
+    "2026Q1": {
+     "cfo": 0.4,
+     "capex": -0.319,
+     "kira": 0,
+     "fcf": 0.091,
+     "favok": 1.915,
+     "donusum": 4.8,
+     "capex_am": 2.7,
+     "ay": 3,
+     "fcf_ttm": -2.259,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.548,
+     "capex": -0.689,
+     "kira": 0,
+     "fcf": -0.127,
+     "favok": 2.272,
+     "donusum": -5.6,
+     "capex_am": 2.66,
+     "ay": 6,
+     "fcf_ttm": -1.477,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "GESAN",
@@ -2837,7 +5522,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 32.84,
+    "fiyat": 32.68,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2970,7 +5655,92 @@
     "panel": 0.07
    },
    "agirlik_kaynak": "6A26 konsolide brüt kâr: Europower trafo/pano ~%75, taahhüt/EPC ~%16 (PTF $ → EPC talebi vekili), panel ~%7",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 1.594,
+     "borc": 2.528,
+     "nakit": 0.934
+    },
+    "2025Q3": {
+     "nb": 2.228,
+     "borc": 2.873,
+     "nakit": 0.645
+    },
+    "2025Q4": {
+     "nb": 3.238,
+     "borc": 4.064,
+     "nakit": 0.826
+    },
+    "2026Q1": {
+     "nb": 4.575,
+     "borc": 5.092,
+     "nakit": 0.516
+    },
+    "2026Q2": {
+     "nb": 4.64,
+     "borc": 6.158,
+     "nakit": 1.517
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": -0.747,
+     "capex": -0.528,
+     "kira": 0,
+     "fcf": -1.271,
+     "favok": 1.352,
+     "donusum": -94,
+     "capex_am": 2.4,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": -0.629,
+     "capex": -1.049,
+     "kira": 0,
+     "fcf": -1.673,
+     "favok": 2.74,
+     "donusum": -61.1,
+     "capex_am": 2.92,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": -0.731,
+     "capex": -1.935,
+     "kira": 0,
+     "fcf": -2.639,
+     "favok": 3.75,
+     "donusum": -70.4,
+     "capex_am": 3.8,
+     "ay": 12,
+     "fcf_ttm": -2.639,
+     "favok_ttm": 3.75
+    },
+    "2026Q1": {
+     "cfo": -0.973,
+     "capex": -0.013,
+     "kira": 0,
+     "fcf": -0.665,
+     "favok": 2.344,
+     "donusum": -28.4,
+     "capex_am": 0.08,
+     "ay": 3,
+     "fcf_ttm": -2.963,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -1.068,
+     "capex": -0.013,
+     "kira": 0,
+     "fcf": -0.39,
+     "favok": 2.422,
+     "donusum": -16.1,
+     "capex_am": 0.04,
+     "ay": 6,
+     "fcf_ttm": -1.349,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "GLRMK",
@@ -3030,7 +5800,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 106.7,
+    "fiyat": 106.1,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3109,7 +5879,130 @@
    ],
    "birincil": "kap_yeni_is_glrmk",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q4": {
+     "nb": -1.726,
+     "borc": 6.908,
+     "nakit": 8.634
+    },
+    "2025Q1": {
+     "nb": -1.258,
+     "borc": 8.397,
+     "nakit": 9.655
+    },
+    "2025Q2": {
+     "nb": 1.019,
+     "borc": 10.709,
+     "nakit": 9.69
+    },
+    "2025Q3": {
+     "nb": 0.646,
+     "borc": 11.263,
+     "nakit": 10.617
+    },
+    "2025Q4": {
+     "nb": -0.686,
+     "borc": 14.206,
+     "nakit": 14.892
+    },
+    "2026Q1": {
+     "nb": 2.319,
+     "borc": 15.217,
+     "nakit": 12.898
+    },
+    "2026Q2": {
+     "nb": -0.384,
+     "borc": 17.732,
+     "nakit": 18.116
+    }
+   },
+   "nakit": {
+    "2024Q4": {
+     "cfo": 3.213,
+     "capex": -1.592,
+     "kira": 0,
+     "fcf": 1.967,
+     "favok": 4.461,
+     "donusum": 44.1,
+     "capex_am": 1.7,
+     "ay": 12,
+     "fcf_ttm": 1.967,
+     "favok_ttm": 4.461
+    },
+    "2025Q1": {
+     "cfo": -2.261,
+     "capex": -0.347,
+     "kira": 0,
+     "fcf": -2.51,
+     "favok": 1.112,
+     "donusum": -225.7,
+     "capex_am": 1.69,
+     "ay": 3,
+     "fcf_ttm": -1.132,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -3.253,
+     "capex": -0.932,
+     "kira": 0,
+     "fcf": -3.973,
+     "favok": 2.495,
+     "donusum": -159.2,
+     "capex_am": 1.93,
+     "ay": 6,
+     "fcf_ttm": 0.264,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 2.036,
+     "capex": -1.292,
+     "kira": 0,
+     "fcf": 0.95,
+     "favok": 4.545,
+     "donusum": 20.9,
+     "capex_am": 1.89,
+     "ay": 9,
+     "fcf_ttm": 0.612,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 3.162,
+     "capex": -1.535,
+     "kira": 0,
+     "fcf": 2.035,
+     "favok": 6.099,
+     "donusum": 33.4,
+     "capex_am": 1.32,
+     "ay": 12,
+     "fcf_ttm": 2.035,
+     "favok_ttm": 6.099
+    },
+    "2026Q1": {
+     "cfo": -1.482,
+     "capex": -0.366,
+     "kira": 0,
+     "fcf": -1.788,
+     "favok": 1.467,
+     "donusum": -121.9,
+     "capex_am": 1.27,
+     "ay": 3,
+     "fcf_ttm": 3.532,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -4.16,
+     "capex": -1.519,
+     "kira": 0,
+     "fcf": -5.578,
+     "favok": 3.058,
+     "donusum": -182.4,
+     "capex_am": 2.7,
+     "ay": 6,
+     "fcf_ttm": 1.706,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "GRSEL",
@@ -3171,7 +6064,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 248.7,
+    "fiyat": 249.2,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3268,7 +6161,92 @@
     }
    ],
    "birincil": "brent_yh",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": -0.875,
+     "borc": 0.584,
+     "nakit": 1.459
+    },
+    "2025Q3": {
+     "nb": -1.773,
+     "borc": 0.459,
+     "nakit": 2.231
+    },
+    "2025Q4": {
+     "nb": -1.603,
+     "borc": 0.522,
+     "nakit": 2.125
+    },
+    "2026Q1": {
+     "nb": -1.58,
+     "borc": 0.512,
+     "nakit": 2.092
+    },
+    "2026Q2": {
+     "nb": -1.509,
+     "borc": 0.394,
+     "nakit": 1.902
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": 0.84,
+     "capex": -1.187,
+     "kira": 0,
+     "fcf": -0.148,
+     "favok": 1.685,
+     "donusum": -8.8,
+     "capex_am": 3.39,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 2.286,
+     "capex": -1.794,
+     "kira": 0,
+     "fcf": 0.976,
+     "favok": 2.602,
+     "donusum": 37.5,
+     "capex_am": 4.27,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 2.831,
+     "capex": -2.419,
+     "kira": 0,
+     "fcf": 0.844,
+     "favok": 3.746,
+     "donusum": 22.5,
+     "capex_am": 6.81,
+     "ay": 12,
+     "fcf_ttm": 0.844,
+     "favok_ttm": 3.746
+    },
+    "2026Q1": {
+     "cfo": 0.209,
+     "capex": -0.582,
+     "kira": 0,
+     "fcf": -0.087,
+     "favok": 1.129,
+     "donusum": -7.7,
+     "capex_am": 5.88,
+     "ay": 3,
+     "fcf_ttm": 0.31,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.562,
+     "capex": -1.023,
+     "kira": 0,
+     "fcf": -0.083,
+     "favok": 2.276,
+     "donusum": -3.6,
+     "capex_am": 4.39,
+     "ay": 6,
+     "fcf_ttm": 0.847,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "GUBRF",
@@ -3330,7 +6308,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 278.5,
+    "fiyat": 278,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3438,7 +6416,181 @@
     }
    ],
    "birincil": "ure",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 6.805,
+     "borc": 8.136,
+     "nakit": 1.331
+    },
+    "2024Q2": {
+     "nb": 4.546,
+     "borc": 8.047,
+     "nakit": 3.501
+    },
+    "2024Q3": {
+     "nb": 4.892,
+     "borc": 9.074,
+     "nakit": 4.182
+    },
+    "2024Q4": {
+     "nb": 4.377,
+     "borc": 10.178,
+     "nakit": 5.801
+    },
+    "2025Q1": {
+     "nb": 4.456,
+     "borc": 10.808,
+     "nakit": 6.352
+    },
+    "2025Q2": {
+     "nb": 2.999,
+     "borc": 9.426,
+     "nakit": 6.427
+    },
+    "2025Q3": {
+     "nb": 0.153,
+     "borc": 8.608,
+     "nakit": 8.455
+    },
+    "2025Q4": {
+     "nb": -1.026,
+     "borc": 9.658,
+     "nakit": 10.684
+    },
+    "2026Q1": {
+     "nb": -4.535,
+     "borc": 9.775,
+     "nakit": 14.31
+    },
+    "2026Q2": {
+     "nb": -5.307,
+     "borc": 9.737,
+     "nakit": 15.043
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -0.361,
+     "capex": -0.666,
+     "kira": 0,
+     "fcf": -1.02,
+     "favok": 0.603,
+     "donusum": -169.3,
+     "capex_am": 1.47,
+     "ay": 3,
+     "fcf_ttm": -3.083,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 2.675,
+     "capex": -1.044,
+     "kira": 0,
+     "fcf": 1.642,
+     "favok": 0.84,
+     "donusum": 195.6,
+     "capex_am": 1.85,
+     "ay": 6,
+     "fcf_ttm": -0.765,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 4.628,
+     "capex": -1.792,
+     "kira": 0,
+     "fcf": 2.839,
+     "favok": 2.133,
+     "donusum": 133.1,
+     "capex_am": 1.85,
+     "ay": 9,
+     "fcf_ttm": -2.041,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 6.094,
+     "capex": -2.209,
+     "kira": 0,
+     "fcf": 3.892,
+     "favok": 3.875,
+     "donusum": 100.4,
+     "capex_am": 1.54,
+     "ay": 12,
+     "fcf_ttm": 3.892,
+     "favok_ttm": 3.875
+    },
+    "2025Q1": {
+     "cfo": 0.188,
+     "capex": -0.299,
+     "kira": 0,
+     "fcf": -0.111,
+     "favok": 2.737,
+     "donusum": -4.1,
+     "capex_am": 0.88,
+     "ay": 3,
+     "fcf_ttm": 2.806,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 3.024,
+     "capex": -0.697,
+     "kira": 0,
+     "fcf": 2.327,
+     "favok": 5.25,
+     "donusum": 44.3,
+     "capex_am": 0.99,
+     "ay": 6,
+     "fcf_ttm": 4.035,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 6.655,
+     "capex": -1.197,
+     "kira": 0,
+     "fcf": 5.458,
+     "favok": 8.07,
+     "donusum": 67.6,
+     "capex_am": 1.05,
+     "ay": 9,
+     "fcf_ttm": 6.982,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 8.375,
+     "capex": -1.772,
+     "kira": 0,
+     "fcf": 6.617,
+     "favok": 11.058,
+     "donusum": 59.8,
+     "capex_am": 1.09,
+     "ay": 12,
+     "fcf_ttm": 6.617,
+     "favok_ttm": 11.058
+    },
+    "2026Q1": {
+     "cfo": 3.042,
+     "capex": -0.489,
+     "kira": 0,
+     "fcf": 2.553,
+     "favok": 4.948,
+     "donusum": 51.6,
+     "capex_am": 1.61,
+     "ay": 3,
+     "fcf_ttm": 8.519,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 8.946,
+     "capex": -2.03,
+     "kira": 0,
+     "fcf": 6.917,
+     "favok": 8.501,
+     "donusum": 81.4,
+     "capex_am": 2.6,
+     "ay": 6,
+     "fcf_ttm": 10.46,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "KATMR",
@@ -3500,7 +6652,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 1.09,
+    "fiyat": 1.08,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3539,7 +6691,92 @@
    ],
    "birincil": "kap_yeni_is_katmr",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 1.025,
+     "borc": 1.189,
+     "nakit": 0.164
+    },
+    "2025Q3": {
+     "nb": 1.324,
+     "borc": 1.648,
+     "nakit": 0.323
+    },
+    "2025Q4": {
+     "nb": 1.702,
+     "borc": 2.089,
+     "nakit": 0.387
+    },
+    "2026Q1": {
+     "nb": 2.019,
+     "borc": 2.187,
+     "nakit": 0.168
+    },
+    "2026Q2": {
+     "nb": 2.189,
+     "borc": 2.314,
+     "nakit": 0.125
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": -0.724,
+     "capex": -0.026,
+     "kira": 0,
+     "fcf": -0.647,
+     "favok": 0.343,
+     "donusum": -188.7,
+     "capex_am": 0.56,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": -1.032,
+     "capex": -0.031,
+     "kira": 0,
+     "fcf": -0.947,
+     "favok": 0.455,
+     "donusum": -208.2,
+     "capex_am": 0.43,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": -1.314,
+     "capex": -0.086,
+     "kira": 0,
+     "fcf": -1.228,
+     "favok": 0.606,
+     "donusum": -202.5,
+     "capex_am": 0.79,
+     "ay": 12,
+     "fcf_ttm": -1.228,
+     "favok_ttm": 0.606
+    },
+    "2026Q1": {
+     "cfo": -0.01,
+     "capex": -0.037,
+     "kira": 0,
+     "fcf": -0.045,
+     "favok": 0.254,
+     "donusum": -17.6,
+     "capex_am": 1.72,
+     "ay": 3,
+     "fcf_ttm": -1.156,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.041,
+     "capex": -0.069,
+     "kira": 0,
+     "fcf": -0.102,
+     "favok": 0.277,
+     "donusum": -36.8,
+     "capex_am": 1.51,
+     "ay": 6,
+     "fcf_ttm": -0.476,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "KCAER",
@@ -3727,7 +6964,181 @@
     }
    ],
    "birincil": "kcaer_hadde_spread_usd",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 0.846,
+     "borc": 2.761,
+     "nakit": 1.915
+    },
+    "2024Q2": {
+     "nb": 2.045,
+     "borc": 4.089,
+     "nakit": 2.044
+    },
+    "2024Q3": {
+     "nb": 3.288,
+     "borc": 5.354,
+     "nakit": 2.066
+    },
+    "2024Q4": {
+     "nb": 1.602,
+     "borc": 4.676,
+     "nakit": 3.074
+    },
+    "2025Q1": {
+     "nb": 2.294,
+     "borc": 4.955,
+     "nakit": 2.661
+    },
+    "2025Q2": {
+     "nb": 2.805,
+     "borc": 5.413,
+     "nakit": 2.608
+    },
+    "2025Q3": {
+     "nb": 3.125,
+     "borc": 5.96,
+     "nakit": 2.834
+    },
+    "2025Q4": {
+     "nb": 2.015,
+     "borc": 7.192,
+     "nakit": 5.178
+    },
+    "2026Q1": {
+     "nb": 2.94,
+     "borc": 8.352,
+     "nakit": 5.413
+    },
+    "2026Q2": {
+     "nb": 2.413,
+     "borc": 8.443,
+     "nakit": 6.03
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 1.03,
+     "capex": -0.472,
+     "kira": 0,
+     "fcf": 0.801,
+     "favok": 0.489,
+     "donusum": 163.8,
+     "capex_am": 6.95,
+     "ay": 3,
+     "fcf_ttm": 0.846,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 0.314,
+     "capex": -0.383,
+     "kira": 0,
+     "fcf": -0.06,
+     "favok": 1.029,
+     "donusum": -5.8,
+     "capex_am": 2.45,
+     "ay": 6,
+     "fcf_ttm": 0.771,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": -0.031,
+     "capex": -0.919,
+     "kira": -0.018,
+     "fcf": -0.956,
+     "favok": 1.646,
+     "donusum": -58.1,
+     "capex_am": 3.65,
+     "ay": 9,
+     "fcf_ttm": -1.054,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 1.913,
+     "capex": -1.34,
+     "kira": -0.001,
+     "fcf": 0.597,
+     "favok": 2.036,
+     "donusum": 29.3,
+     "capex_am": 3.8,
+     "ay": 12,
+     "fcf_ttm": 0.597,
+     "favok_ttm": 2.036
+    },
+    "2025Q1": {
+     "cfo": 0.825,
+     "capex": -0.217,
+     "kira": 0,
+     "fcf": 0.943,
+     "favok": 0.653,
+     "donusum": 144.3,
+     "capex_am": 2,
+     "ay": 3,
+     "fcf_ttm": 1.181,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -0.969,
+     "capex": -0.488,
+     "kira": -0.044,
+     "fcf": -1.489,
+     "favok": 1.499,
+     "donusum": -99.3,
+     "capex_am": 2.08,
+     "ay": 6,
+     "fcf_ttm": -0.154,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": -1.213,
+     "capex": -0.913,
+     "kira": -0.091,
+     "fcf": -2.202,
+     "favok": 2.182,
+     "donusum": -100.9,
+     "capex_am": 2.51,
+     "ay": 9,
+     "fcf_ttm": -0.33,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 0.157,
+     "capex": -1.278,
+     "kira": 0,
+     "fcf": -1.012,
+     "favok": 3.109,
+     "donusum": -32.5,
+     "capex_am": 2.48,
+     "ay": 12,
+     "fcf_ttm": -1.012,
+     "favok_ttm": 3.109
+    },
+    "2026Q1": {
+     "cfo": -1.019,
+     "capex": -0.128,
+     "kira": 0,
+     "fcf": -1.148,
+     "favok": 0.715,
+     "donusum": -160.5,
+     "capex_am": 0.86,
+     "ay": 3,
+     "fcf_ttm": -2.955,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -1.125,
+     "capex": -0.417,
+     "kira": 0,
+     "fcf": -1,
+     "favok": 1.761,
+     "donusum": -56.8,
+     "capex_am": 1.27,
+     "ay": 6,
+     "fcf_ttm": -0.087,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "KRDMD",
@@ -3789,7 +7200,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 37.98,
+    "fiyat": 37.56,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3959,7 +7370,181 @@
      "rol": "kur"
     }
    ],
-   "birincil": "kardemir_kutuk_usd"
+   "birincil": "kardemir_kutuk_usd",
+   "netborc": {
+    "2024Q1": {
+     "nb": -3.402,
+     "borc": 1.874,
+     "nakit": 5.277
+    },
+    "2024Q2": {
+     "nb": 0.037,
+     "borc": 1.78,
+     "nakit": 1.742
+    },
+    "2024Q3": {
+     "nb": 0.973,
+     "borc": 4.535,
+     "nakit": 3.562
+    },
+    "2024Q4": {
+     "nb": 1.865,
+     "borc": 4.66,
+     "nakit": 2.796
+    },
+    "2025Q1": {
+     "nb": 5.046,
+     "borc": 7.797,
+     "nakit": 2.751
+    },
+    "2025Q2": {
+     "nb": 6.867,
+     "borc": 9.849,
+     "nakit": 2.983
+    },
+    "2025Q3": {
+     "nb": 7.249,
+     "borc": 9.603,
+     "nakit": 2.354
+    },
+    "2025Q4": {
+     "nb": 5.768,
+     "borc": 8.714,
+     "nakit": 2.945
+    },
+    "2026Q1": {
+     "nb": 3.646,
+     "borc": 8.19,
+     "nakit": 4.544
+    },
+    "2026Q2": {
+     "nb": 0.317,
+     "borc": 7.728,
+     "nakit": 7.41
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 0.444,
+     "capex": -0.212,
+     "kira": 0,
+     "fcf": 0.232,
+     "favok": 1.428,
+     "donusum": 16.2,
+     "capex_am": 0.46,
+     "ay": 3,
+     "fcf_ttm": -1.998,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -3.213,
+     "capex": -0.479,
+     "kira": 0,
+     "fcf": -3.691,
+     "favok": 2.029,
+     "donusum": -181.9,
+     "capex_am": 0.48,
+     "ay": 6,
+     "fcf_ttm": -1.94,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": -3.779,
+     "capex": -1.244,
+     "kira": 0,
+     "fcf": -5.018,
+     "favok": 2.975,
+     "donusum": -168.7,
+     "capex_am": 0.77,
+     "ay": 9,
+     "fcf_ttm": 0.684,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": -0.793,
+     "capex": -2.783,
+     "kira": 0,
+     "fcf": -3.406,
+     "favok": 4.187,
+     "donusum": -81.3,
+     "capex_am": 1.24,
+     "ay": 12,
+     "fcf_ttm": -3.406,
+     "favok_ttm": 4.187
+    },
+    "2025Q1": {
+     "cfo": -2.18,
+     "capex": -0.619,
+     "kira": 0,
+     "fcf": -2.796,
+     "favok": 1.111,
+     "donusum": -251.8,
+     "capex_am": 0.89,
+     "ay": 3,
+     "fcf_ttm": -7.66,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -2.662,
+     "capex": -1.397,
+     "kira": 0,
+     "fcf": -4.039,
+     "favok": 2.332,
+     "donusum": -173.2,
+     "capex_am": 0.98,
+     "ay": 6,
+     "fcf_ttm": -3.793,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": -0.705,
+     "capex": -2.905,
+     "kira": 0,
+     "fcf": -3.58,
+     "favok": 4.285,
+     "donusum": -83.6,
+     "capex_am": 1.32,
+     "ay": 9,
+     "fcf_ttm": -2.485,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 2.476,
+     "capex": -4.857,
+     "kira": 0,
+     "fcf": -2.341,
+     "favok": 6.834,
+     "donusum": -34.3,
+     "capex_am": 1.55,
+     "ay": 12,
+     "fcf_ttm": -2.341,
+     "favok_ttm": 6.834
+    },
+    "2026Q1": {
+     "cfo": 4.365,
+     "capex": -0.955,
+     "kira": -0.004,
+     "fcf": 3.461,
+     "favok": 1.96,
+     "donusum": 176.6,
+     "capex_am": 0.97,
+     "ay": 3,
+     "fcf_ttm": 4.76,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 8.32,
+     "capex": -2.333,
+     "kira": 0,
+     "fcf": 6.064,
+     "favok": 4.646,
+     "donusum": 130.5,
+     "capex_am": 1.16,
+     "ay": 6,
+     "fcf_ttm": 9.058,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "MAVI",
@@ -4021,7 +7606,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 33.88,
+    "fiyat": 33.62,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4146,7 +7731,181 @@
     }
    ],
    "birincil": "tufe_giyim",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -4.019,
+     "borc": 2.577,
+     "nakit": 6.595
+    },
+    "2024Q2": {
+     "nb": -3.612,
+     "borc": 2.616,
+     "nakit": 6.228
+    },
+    "2024Q3": {
+     "nb": -1.904,
+     "borc": 2.276,
+     "nakit": 4.179
+    },
+    "2024Q4": {
+     "nb": -3.957,
+     "borc": 2.378,
+     "nakit": 6.335
+    },
+    "2025Q1": {
+     "nb": -4.215,
+     "borc": 2.987,
+     "nakit": 7.203
+    },
+    "2025Q2": {
+     "nb": -2.554,
+     "borc": 3.335,
+     "nakit": 5.889
+    },
+    "2025Q3": {
+     "nb": -2.068,
+     "borc": 3.641,
+     "nakit": 5.71
+    },
+    "2025Q4": {
+     "nb": -4.057,
+     "borc": 4.462,
+     "nakit": 8.519
+    },
+    "2026Q1": {
+     "nb": -3.878,
+     "borc": 5.389,
+     "nakit": 9.267
+    },
+    "2026Q2": {
+     "nb": -3.186,
+     "borc": 6.299,
+     "nakit": 9.485
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 2.298,
+     "capex": -0.22,
+     "kira": -0.254,
+     "fcf": 1.825,
+     "favok": 1.98,
+     "donusum": 92.2,
+     "capex_am": 0.49,
+     "ay": 3,
+     "fcf_ttm": 4.438,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 3.425,
+     "capex": -0.507,
+     "kira": -0.518,
+     "fcf": 2.413,
+     "favok": 3.324,
+     "donusum": 72.6,
+     "capex_am": 0.51,
+     "ay": 6,
+     "fcf_ttm": 3.916,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 2.801,
+     "capex": -0.827,
+     "kira": -0.811,
+     "fcf": 1.166,
+     "favok": 5.383,
+     "donusum": 21.7,
+     "capex_am": 0.52,
+     "ay": 9,
+     "fcf_ttm": 1.972,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 6.216,
+     "capex": -1.43,
+     "kira": -1.175,
+     "fcf": 3.622,
+     "favok": 7.012,
+     "donusum": 51.7,
+     "capex_am": 0.61,
+     "ay": 12,
+     "fcf_ttm": 3.622,
+     "favok_ttm": 7.012
+    },
+    "2025Q1": {
+     "cfo": 1.771,
+     "capex": -0.428,
+     "kira": -0.405,
+     "fcf": 0.94,
+     "favok": 1.997,
+     "donusum": 47.1,
+     "capex_am": 0.64,
+     "ay": 3,
+     "fcf_ttm": 2.047,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 2.638,
+     "capex": -1.215,
+     "kira": -0.857,
+     "fcf": 0.569,
+     "favok": 3.553,
+     "donusum": 16,
+     "capex_am": 0.84,
+     "ay": 6,
+     "fcf_ttm": 0.987,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 4.473,
+     "capex": -1.831,
+     "kira": -1.353,
+     "fcf": 1.332,
+     "favok": 6.506,
+     "donusum": 20.5,
+     "capex_am": 0.77,
+     "ay": 9,
+     "fcf_ttm": 3.405,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 8.871,
+     "capex": -2.612,
+     "kira": -1.937,
+     "fcf": 4.376,
+     "favok": 8.841,
+     "donusum": 49.5,
+     "capex_am": 0.76,
+     "ay": 12,
+     "fcf_ttm": 4.376,
+     "favok_ttm": 8.841
+    },
+    "2026Q1": {
+     "cfo": 1.674,
+     "capex": -0.669,
+     "kira": -0.614,
+     "fcf": 0.403,
+     "favok": 2.414,
+     "donusum": 16.7,
+     "capex_am": 0.68,
+     "ay": 3,
+     "fcf_ttm": 3.535,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 4.264,
+     "capex": -1.325,
+     "kira": -1.291,
+     "fcf": 1.652,
+     "favok": 4.486,
+     "donusum": 36.8,
+     "capex_am": 0.63,
+     "ay": 6,
+     "fcf_ttm": 5.278,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "MPARK",
@@ -4208,7 +7967,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 388.25,
+    "fiyat": 385.75,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4335,7 +8094,175 @@
     }
    ],
    "birincil": "sut_endeks",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 3.622,
+     "borc": 6.179,
+     "nakit": 2.557
+    },
+    "2024Q2": {
+     "nb": 3.997,
+     "borc": 6.368,
+     "nakit": 2.371
+    },
+    "2024Q3": {
+     "nb": 3.777,
+     "borc": 7.168,
+     "nakit": 3.392
+    },
+    "2024Q4": {
+     "nb": 5.261,
+     "borc": 7.989,
+     "nakit": 2.728
+    },
+    "2025Q1": {
+     "nb": 6.94,
+     "borc": 10.555,
+     "nakit": 3.615
+    },
+    "2025Q2": {
+     "nb": 8.798,
+     "borc": 17.585,
+     "nakit": 8.786
+    },
+    "2025Q3": {
+     "nb": 12.212,
+     "borc": 20.058,
+     "nakit": 7.846
+    },
+    "2025Q4": {
+     "nb": 11.958,
+     "borc": 19.999,
+     "nakit": 8.041
+    },
+    "2026Q1": {
+     "nb": 15.113,
+     "borc": 21.094,
+     "nakit": 5.981
+    },
+    "2026Q2": {
+     "nb": 13.25,
+     "borc": 21.506,
+     "nakit": 8.256
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 1.845,
+     "capex": -0.133,
+     "kira": -0.328,
+     "fcf": 1.385,
+     "favok": 2.034,
+     "donusum": 68.1,
+     "capex_am": 0.22,
+     "ay": 3
+    },
+    "2024Q2": {
+     "cfo": 2.716,
+     "capex": -0.769,
+     "kira": -0.661,
+     "fcf": 1.291,
+     "favok": 4.102,
+     "donusum": 31.5,
+     "capex_am": 0.6,
+     "ay": 6
+    },
+    "2024Q3": {
+     "cfo": 6.016,
+     "capex": -2.455,
+     "kira": -1.013,
+     "fcf": 2.552,
+     "favok": 7.088,
+     "donusum": 36,
+     "capex_am": 1.28,
+     "ay": 9
+    },
+    "2024Q4": {
+     "cfo": 7.643,
+     "capex": -3.514,
+     "kira": -1.435,
+     "fcf": 2.698,
+     "favok": 10.203,
+     "donusum": 26.4,
+     "capex_am": 1.3,
+     "ay": 12,
+     "fcf_ttm": 2.698,
+     "favok_ttm": 10.203
+    },
+    "2025Q1": {
+     "cfo": 2.328,
+     "capex": -0.79,
+     "kira": -0.553,
+     "fcf": 1.003,
+     "favok": 2.944,
+     "donusum": 34.1,
+     "capex_am": 1,
+     "ay": 3,
+     "fcf_ttm": 1.788,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 3.824,
+     "capex": -2.318,
+     "kira": -1.125,
+     "fcf": 0.382,
+     "favok": 6.018,
+     "donusum": 6.4,
+     "capex_am": 1.36,
+     "ay": 6,
+     "fcf_ttm": 1.351,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 5.158,
+     "capex": -5.712,
+     "kira": -1.715,
+     "fcf": -2.266,
+     "favok": 10.455,
+     "donusum": -21.7,
+     "capex_am": 1.96,
+     "ay": 9,
+     "fcf_ttm": -2.97,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 11.287,
+     "capex": -7.864,
+     "kira": -2.316,
+     "fcf": 1.112,
+     "favok": 15.328,
+     "donusum": 7.3,
+     "capex_am": 1.71,
+     "ay": 12,
+     "fcf_ttm": 1.112,
+     "favok_ttm": 15.328
+    },
+    "2026Q1": {
+     "cfo": 1.652,
+     "capex": -1.713,
+     "kira": -0.81,
+     "fcf": -0.869,
+     "favok": 4.81,
+     "donusum": -18.1,
+     "capex_am": 0.95,
+     "ay": 3,
+     "fcf_ttm": -1.069,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 7.567,
+     "capex": -3.869,
+     "kira": -1.646,
+     "fcf": 2.732,
+     "favok": 9.955,
+     "donusum": 27.4,
+     "capex_am": 0.97,
+     "ay": 6,
+     "fcf_ttm": 3.338,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "OBAMS",
@@ -4397,7 +8324,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 3.83,
+    "fiyat": 3.79,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4482,7 +8409,181 @@
     }
    ],
    "birincil": "bugday",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -1.695,
+     "borc": 0.675,
+     "nakit": 2.37
+    },
+    "2024Q2": {
+     "nb": -1.339,
+     "borc": 0.467,
+     "nakit": 1.806
+    },
+    "2024Q3": {
+     "nb": -1.65,
+     "borc": 0.478,
+     "nakit": 2.128
+    },
+    "2024Q4": {
+     "nb": -2.123,
+     "borc": 0.489,
+     "nakit": 2.612
+    },
+    "2025Q1": {
+     "nb": -1.663,
+     "borc": 0.33,
+     "nakit": 1.993
+    },
+    "2025Q2": {
+     "nb": -2.972,
+     "borc": 0.35,
+     "nakit": 3.322
+    },
+    "2025Q3": {
+     "nb": -3.074,
+     "borc": 0.376,
+     "nakit": 3.45
+    },
+    "2025Q4": {
+     "nb": -3.721,
+     "borc": 0.028,
+     "nakit": 3.749
+    },
+    "2026Q1": {
+     "nb": -2.659,
+     "borc": 0.028,
+     "nakit": 2.687
+    },
+    "2026Q2": {
+     "nb": -3.804,
+     "borc": 0.026,
+     "nakit": 3.831
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -3.019,
+     "capex": -0.068,
+     "kira": 0,
+     "fcf": -3.087,
+     "favok": 0.139,
+     "donusum": -2217,
+     "capex_am": 0.98,
+     "ay": 3,
+     "fcf_ttm": -0.645,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -1.03,
+     "capex": -0.108,
+     "kira": 0,
+     "fcf": -1.137,
+     "favok": 0.323,
+     "donusum": -351.9,
+     "capex_am": 0.71,
+     "ay": 6,
+     "fcf_ttm": 1.216,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": -1.312,
+     "capex": -0.185,
+     "kira": 0,
+     "fcf": -1.494,
+     "favok": 0.382,
+     "donusum": -391.6,
+     "capex_am": 0.73,
+     "ay": 9,
+     "fcf_ttm": -1.962,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": -1.054,
+     "capex": -0.205,
+     "kira": 0,
+     "fcf": -1.202,
+     "favok": 1.421,
+     "donusum": -84.6,
+     "capex_am": 0.57,
+     "ay": 12,
+     "fcf_ttm": -1.202,
+     "favok_ttm": 1.421
+    },
+    "2025Q1": {
+     "cfo": -0.901,
+     "capex": -0.01,
+     "kira": 0,
+     "fcf": -0.911,
+     "favok": 0.323,
+     "donusum": -281.7,
+     "capex_am": 0.1,
+     "ay": 3,
+     "fcf_ttm": 2.363,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.296,
+     "capex": -0.224,
+     "kira": 0,
+     "fcf": 0.073,
+     "favok": 0.196,
+     "donusum": 37,
+     "capex_am": 1.02,
+     "ay": 6,
+     "fcf_ttm": 0.712,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 0,
+     "capex": -0.241,
+     "kira": 0,
+     "fcf": -0.241,
+     "favok": 0.411,
+     "donusum": -58.6,
+     "capex_am": 0.67,
+     "ay": 9,
+     "fcf_ttm": 0.911,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 0.749,
+     "capex": -0.541,
+     "kira": 0,
+     "fcf": 1.039,
+     "favok": 0.194,
+     "donusum": 537,
+     "capex_am": 1.07,
+     "ay": 12,
+     "fcf_ttm": 1.039,
+     "favok_ttm": 0.194
+    },
+    "2026Q1": {
+     "cfo": -0.939,
+     "capex": -0.191,
+     "kira": 0,
+     "fcf": -1.127,
+     "favok": 0.236,
+     "donusum": -477.6,
+     "capex_am": 1.62,
+     "ay": 3,
+     "fcf_ttm": 0.48,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.396,
+     "capex": -0.333,
+     "kira": 0,
+     "fcf": 0.069,
+     "favok": 0.543,
+     "donusum": 12.7,
+     "capex_am": 1.19,
+     "ay": 6,
+     "fcf_ttm": -0.215,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "PETKM",
@@ -4544,7 +8645,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 17.52,
+    "fiyat": 17.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4706,7 +8807,181 @@
      "rol": "kur"
     }
    ],
-   "birincil": "petkm_polimer_makas_usd"
+   "birincil": "petkm_polimer_makas_usd",
+   "netborc": {
+    "2024Q1": {
+     "nb": 30.387,
+     "borc": 34.959,
+     "nakit": 4.572
+    },
+    "2024Q2": {
+     "nb": 31.99,
+     "borc": 37.732,
+     "nakit": 5.743
+    },
+    "2024Q3": {
+     "nb": 35.967,
+     "borc": 39.742,
+     "nakit": 3.775
+    },
+    "2024Q4": {
+     "nb": 35.724,
+     "borc": 44.371,
+     "nakit": 8.648
+    },
+    "2025Q1": {
+     "nb": 46.983,
+     "borc": 51.112,
+     "nakit": 4.129
+    },
+    "2025Q2": {
+     "nb": 40.472,
+     "borc": 47.355,
+     "nakit": 6.883
+    },
+    "2025Q3": {
+     "nb": 41.429,
+     "borc": 51.435,
+     "nakit": 10.006
+    },
+    "2025Q4": {
+     "nb": 46.528,
+     "borc": 51.417,
+     "nakit": 4.889
+    },
+    "2026Q1": {
+     "nb": 47.111,
+     "borc": 52.094,
+     "nakit": 4.983
+    },
+    "2026Q2": {
+     "nb": 49.097,
+     "borc": 56.086,
+     "nakit": 6.989
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -1.203,
+     "capex": -0.667,
+     "kira": -0.048,
+     "fcf": -1.915,
+     "favok": 0.002,
+     "donusum": -104122.8,
+     "capex_am": 0.57,
+     "ay": 3,
+     "fcf_ttm": -0.126,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": -0.666,
+     "capex": -1.54,
+     "kira": -0.076,
+     "fcf": -2.282,
+     "favok": 0.578,
+     "donusum": -394.7,
+     "capex_am": 0.64,
+     "ay": 6,
+     "fcf_ttm": -2.278,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": -2.263,
+     "capex": -2.796,
+     "kira": -0.134,
+     "fcf": -5.193,
+     "favok": -0.215,
+     "donusum": null,
+     "capex_am": 0.72,
+     "ay": 9,
+     "fcf_ttm": 3.114,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 2.83,
+     "capex": -4.986,
+     "kira": -0.168,
+     "fcf": -2.197,
+     "favok": -1.083,
+     "donusum": null,
+     "capex_am": 0.96,
+     "ay": 12,
+     "fcf_ttm": -2.197,
+     "favok_ttm": -1.083
+    },
+    "2025Q1": {
+     "cfo": -7.478,
+     "capex": -0.976,
+     "kira": -0.049,
+     "fcf": -8.498,
+     "favok": -0.957,
+     "donusum": null,
+     "capex_am": 0.77,
+     "ay": 3,
+     "fcf_ttm": -8.051,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -3.611,
+     "capex": -2.332,
+     "kira": -0.069,
+     "fcf": -5.985,
+     "favok": -1.556,
+     "donusum": null,
+     "capex_am": 0.82,
+     "ay": 6,
+     "fcf_ttm": -5.101,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": -4.262,
+     "capex": -5.625,
+     "kira": -0.149,
+     "fcf": -9.909,
+     "favok": -1.735,
+     "donusum": null,
+     "capex_am": 1.24,
+     "ay": 9,
+     "fcf_ttm": -5.184,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": -6.552,
+     "capex": -5.183,
+     "kira": -0.21,
+     "fcf": -11.672,
+     "favok": -3.475,
+     "donusum": null,
+     "capex_am": 0.87,
+     "ay": 12,
+     "fcf_ttm": -11.672,
+     "favok_ttm": -3.475
+    },
+    "2026Q1": {
+     "cfo": 2.296,
+     "capex": 0,
+     "kira": -0.137,
+     "fcf": 2.861,
+     "favok": 0.163,
+     "donusum": 1750.7,
+     "capex_am": 0,
+     "ay": 3,
+     "fcf_ttm": -0.237,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 4.023,
+     "capex": -1.23,
+     "kira": -0.18,
+     "fcf": 2.624,
+     "favok": 3.552,
+     "donusum": 73.9,
+     "capex_am": 0.31,
+     "ay": 6,
+     "fcf_ttm": -1.141,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "TCKRC",
@@ -4773,7 +9048,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 115.2,
+    "fiyat": 113.7,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4893,7 +9168,177 @@
    "birincil": "cinko",
    "_duzeltme": "533a",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q2": {
+     "nb": 0.36,
+     "borc": 0.453,
+     "nakit": 0.093
+    },
+    "2024Q3": {
+     "nb": -0.545,
+     "borc": 0.428,
+     "nakit": 0.974
+    },
+    "2024Q4": {
+     "nb": -0.392,
+     "borc": 0.406,
+     "nakit": 0.798
+    },
+    "2025Q1": {
+     "nb": -0.152,
+     "borc": 0.443,
+     "nakit": 0.595
+    },
+    "2025Q2": {
+     "nb": 0.273,
+     "borc": 0.594,
+     "nakit": 0.321
+    },
+    "2025Q3": {
+     "nb": 0.241,
+     "borc": 1.141,
+     "nakit": 0.9
+    },
+    "2025Q4": {
+     "nb": 0.319,
+     "borc": 1.132,
+     "nakit": 0.813
+    },
+    "2026Q1": {
+     "nb": 0.668,
+     "borc": 1.101,
+     "nakit": 0.432
+    },
+    "2026Q2": {
+     "nb": 0.758,
+     "borc": 1.096,
+     "nakit": 0.338
+    },
+    "2026Q3": {
+     "nb": 0.862,
+     "borc": 1.266,
+     "nakit": 0.404
+    }
+   },
+   "nakit": {
+    "2024Q2": {
+     "cfo": -0.067,
+     "capex": -0.092,
+     "kira": -0.001,
+     "fcf": -0.16,
+     "favok": 0.299,
+     "donusum": -53.4,
+     "capex_am": 13.33,
+     "ay": 6
+    },
+    "2024Q3": {
+     "cfo": -0.039,
+     "capex": -0.211,
+     "kira": -0.001,
+     "fcf": -0.25,
+     "favok": 0.362,
+     "donusum": -69.1,
+     "capex_am": 20.99,
+     "ay": 9
+    },
+    "2024Q4": {
+     "cfo": -0.178,
+     "capex": -0.234,
+     "kira": -0.011,
+     "fcf": -0.419,
+     "favok": 0.574,
+     "donusum": -73,
+     "capex_am": 12.21,
+     "ay": 12,
+     "fcf_ttm": -0.419,
+     "favok_ttm": 0.574
+    },
+    "2025Q1": {
+     "cfo": -0.144,
+     "capex": -0.192,
+     "kira": 0,
+     "fcf": -0.337,
+     "favok": 0.21,
+     "donusum": -160.9,
+     "capex_am": 38.39,
+     "ay": 3,
+     "fcf_ttm": -0.711,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.11,
+     "capex": -0.483,
+     "kira": -0.001,
+     "fcf": -0.374,
+     "favok": 0.295,
+     "donusum": -126.9,
+     "capex_am": 45.79,
+     "ay": 6,
+     "fcf_ttm": -0.578,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 0.11,
+     "capex": -0.606,
+     "kira": -0.001,
+     "fcf": -0.497,
+     "favok": 0.394,
+     "donusum": -126.1,
+     "capex_am": 36.02,
+     "ay": 9,
+     "fcf_ttm": -0.583,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 0.73,
+     "capex": -1.286,
+     "kira": -0.001,
+     "fcf": -0.556,
+     "favok": 1.222,
+     "donusum": -45.5,
+     "capex_am": 54.3,
+     "ay": 12,
+     "fcf_ttm": -0.556,
+     "favok_ttm": 1.222
+    },
+    "2026Q1": {
+     "cfo": -0.025,
+     "capex": -0.1,
+     "kira": -0.026,
+     "fcf": -0.15,
+     "favok": 0.454,
+     "donusum": -33.1,
+     "capex_am": 2.25,
+     "ay": 3,
+     "fcf_ttm": -0.222,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.283,
+     "capex": -0.293,
+     "kira": 0,
+     "fcf": -0.01,
+     "favok": 1.282,
+     "donusum": -0.8,
+     "capex_am": 3.04,
+     "ay": 6,
+     "fcf_ttm": -0.073,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 0.23,
+     "capex": -0.427,
+     "kira": 0,
+     "fcf": -0.197,
+     "favok": 2.264,
+     "donusum": -8.7,
+     "capex_am": 2.81,
+     "ay": 9,
+     "fcf_ttm": -0.11,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "TKFEN",
@@ -4955,7 +9400,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 190.1,
+    "fiyat": 193,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -5085,7 +9530,181 @@
    ],
    "birincil": "ure",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": -0.861,
+     "borc": 10.053,
+     "nakit": 10.914
+    },
+    "2024Q2": {
+     "nb": 3.148,
+     "borc": 9.77,
+     "nakit": 6.622
+    },
+    "2024Q3": {
+     "nb": 1.747,
+     "borc": 10.863,
+     "nakit": 9.116
+    },
+    "2024Q4": {
+     "nb": 3.711,
+     "borc": 13.154,
+     "nakit": 9.443
+    },
+    "2025Q1": {
+     "nb": 6.082,
+     "borc": 14.373,
+     "nakit": 8.291
+    },
+    "2025Q2": {
+     "nb": 6.419,
+     "borc": 13.902,
+     "nakit": 7.483
+    },
+    "2025Q3": {
+     "nb": 7.279,
+     "borc": 13.015,
+     "nakit": 5.736
+    },
+    "2025Q4": {
+     "nb": 6.017,
+     "borc": 14.276,
+     "nakit": 8.258
+    },
+    "2026Q1": {
+     "nb": 6.21,
+     "borc": 15.17,
+     "nakit": 8.96
+    },
+    "2026Q2": {
+     "nb": 8.082,
+     "borc": 14.579,
+     "nakit": 6.498
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 4.755,
+     "capex": -0.337,
+     "kira": -0.035,
+     "fcf": 4.461,
+     "favok": 0.729,
+     "donusum": 611.9,
+     "capex_am": 0.82,
+     "ay": 3,
+     "fcf_ttm": 3.409,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 3.39,
+     "capex": -0.817,
+     "kira": -0.151,
+     "fcf": 2.538,
+     "favok": 1.571,
+     "donusum": 161.6,
+     "capex_am": 0.82,
+     "ay": 6,
+     "fcf_ttm": 6.548,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 5.277,
+     "capex": -1.449,
+     "kira": -0.239,
+     "fcf": 3.755,
+     "favok": 2.279,
+     "donusum": 164.7,
+     "capex_am": 0.93,
+     "ay": 9,
+     "fcf_ttm": 6.189,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 5.208,
+     "capex": -2.332,
+     "kira": -0.325,
+     "fcf": 2.828,
+     "favok": 2.724,
+     "donusum": 103.8,
+     "capex_am": 1.05,
+     "ay": 12,
+     "fcf_ttm": 2.828,
+     "favok_ttm": 2.724
+    },
+    "2025Q1": {
+     "cfo": -1.079,
+     "capex": -0.631,
+     "kira": -0.037,
+     "fcf": -1.721,
+     "favok": 0.368,
+     "donusum": -467.1,
+     "capex_am": 1.05,
+     "ay": 3,
+     "fcf_ttm": -5.054,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.565,
+     "capex": -1.48,
+     "kira": -0.083,
+     "fcf": -0.964,
+     "favok": -0.757,
+     "donusum": null,
+     "capex_am": 1.2,
+     "ay": 6,
+     "fcf_ttm": -1.564,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 1.797,
+     "capex": -2.457,
+     "kira": -0.116,
+     "fcf": -0.703,
+     "favok": -0.626,
+     "donusum": null,
+     "capex_am": 1.15,
+     "ay": 9,
+     "fcf_ttm": -2.881,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 4.589,
+     "capex": -2.831,
+     "kira": -0.218,
+     "fcf": 1.797,
+     "favok": -0.012,
+     "donusum": null,
+     "capex_am": 1.02,
+     "ay": 12,
+     "fcf_ttm": 1.797,
+     "favok_ttm": -0.012
+    },
+    "2026Q1": {
+     "cfo": 0.139,
+     "capex": -0.184,
+     "kira": -0.093,
+     "fcf": -0.104,
+     "favok": 0.35,
+     "donusum": -29.7,
+     "capex_am": 0.24,
+     "ay": 3,
+     "fcf_ttm": 3.978,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.659,
+     "capex": -0.378,
+     "kira": -0.077,
+     "fcf": -1.052,
+     "favok": 2.175,
+     "donusum": -48.4,
+     "capex_am": 0.23,
+     "ay": 6,
+     "fcf_ttm": 2.019,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "TUPRS",
@@ -5738,7 +10357,181 @@
      "rol": "kur"
     }
    ],
-   "birincil": "dizel_nwe"
+   "birincil": "dizel_nwe",
+   "netborc": {
+    "2024Q1": {
+     "nb": -51.647,
+     "borc": 38.94,
+     "nakit": 90.587
+    },
+    "2024Q2": {
+     "nb": -55.201,
+     "borc": 32.802,
+     "nakit": 88.003
+    },
+    "2024Q3": {
+     "nb": -57.655,
+     "borc": 45.384,
+     "nakit": 103.039
+    },
+    "2024Q4": {
+     "nb": -55.559,
+     "borc": 18.989,
+     "nakit": 74.548
+    },
+    "2025Q1": {
+     "nb": -25.596,
+     "borc": 21.075,
+     "nakit": 46.671
+    },
+    "2025Q2": {
+     "nb": -48.981,
+     "borc": 41.37,
+     "nakit": 90.352
+    },
+    "2025Q3": {
+     "nb": -74.431,
+     "borc": 42.66,
+     "nakit": 117.091
+    },
+    "2025Q4": {
+     "nb": -56.988,
+     "borc": 50.249,
+     "nakit": 107.237
+    },
+    "2026Q1": {
+     "nb": -74.706,
+     "borc": 55.194,
+     "nakit": 129.9
+    },
+    "2026Q2": {
+     "nb": -130.718,
+     "borc": 68.201,
+     "nakit": 198.919
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": -15.56,
+     "capex": -1.935,
+     "kira": -0.026,
+     "fcf": -17.491,
+     "favok": 9.462,
+     "donusum": -184.9,
+     "capex_am": 0.9,
+     "ay": 3,
+     "fcf_ttm": 47.096,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 5.4,
+     "capex": -5.493,
+     "kira": -0.051,
+     "fcf": -0.114,
+     "favok": 23.074,
+     "donusum": -0.5,
+     "capex_am": 1.2,
+     "ay": 6,
+     "fcf_ttm": 58.928,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 20.091,
+     "capex": -8.483,
+     "kira": -0.08,
+     "fcf": 11.568,
+     "favok": 40.136,
+     "donusum": 28.8,
+     "capex_am": 1.18,
+     "ay": 9,
+     "fcf_ttm": -11.915,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 35.271,
+     "capex": -13.811,
+     "kira": -0.111,
+     "fcf": 21.369,
+     "favok": 50.704,
+     "donusum": 42.1,
+     "capex_am": 1.44,
+     "ay": 12,
+     "fcf_ttm": 21.369,
+     "favok_ttm": 50.704
+    },
+    "2025Q1": {
+     "cfo": -20.221,
+     "capex": -2.941,
+     "kira": -0.103,
+     "fcf": -23.257,
+     "favok": 9.751,
+     "donusum": -238.5,
+     "capex_am": 0.98,
+     "ay": 3,
+     "fcf_ttm": 22.267,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 11.364,
+     "capex": -8.282,
+     "kira": -0.143,
+     "fcf": 2.978,
+     "favok": 24.226,
+     "donusum": 12.3,
+     "capex_am": 1.28,
+     "ay": 6,
+     "fcf_ttm": 24.501,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 49.155,
+     "capex": -12.266,
+     "kira": -0.168,
+     "fcf": 36.724,
+     "favok": 45.832,
+     "donusum": 80.1,
+     "capex_am": 1.17,
+     "ay": 9,
+     "fcf_ttm": 42.674,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 49.465,
+     "capex": -19.118,
+     "kira": -0.271,
+     "fcf": 30.117,
+     "favok": 62.073,
+     "donusum": 48.5,
+     "capex_am": 1.31,
+     "ay": 12,
+     "fcf_ttm": 30.117,
+     "favok_ttm": 62.073
+    },
+    "2026Q1": {
+     "cfo": 6.288,
+     "capex": -4.15,
+     "kira": -0.049,
+     "fcf": 2.1,
+     "favok": 15.796,
+     "donusum": 13.3,
+     "capex_am": 1,
+     "ay": 3,
+     "fcf_ttm": 62.662,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 132.366,
+     "capex": -11.858,
+     "kira": -0.148,
+     "fcf": 120.361,
+     "favok": 71.246,
+     "donusum": 168.9,
+     "capex_am": 1.34,
+     "ay": 6,
+     "fcf_ttm": 146.544,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "TUREX",
@@ -5800,7 +10593,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 5.15,
+    "fiyat": 5.12,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -5856,7 +10649,181 @@
     }
    ],
    "birincil": "brent_yh",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q1": {
+     "nb": 0.156,
+     "borc": 0.342,
+     "nakit": 0.186
+    },
+    "2024Q2": {
+     "nb": 0.072,
+     "borc": 0.346,
+     "nakit": 0.274
+    },
+    "2024Q3": {
+     "nb": 0.046,
+     "borc": 0.281,
+     "nakit": 0.235
+    },
+    "2024Q4": {
+     "nb": 0.389,
+     "borc": 0.686,
+     "nakit": 0.297
+    },
+    "2025Q1": {
+     "nb": 0.498,
+     "borc": 0.7,
+     "nakit": 0.202
+    },
+    "2025Q2": {
+     "nb": 0.46,
+     "borc": 0.669,
+     "nakit": 0.208
+    },
+    "2025Q3": {
+     "nb": 0.042,
+     "borc": 0.505,
+     "nakit": 0.463
+    },
+    "2025Q4": {
+     "nb": -0.035,
+     "borc": 0.524,
+     "nakit": 0.559
+    },
+    "2026Q1": {
+     "nb": 0.075,
+     "borc": 0.725,
+     "nakit": 0.65
+    },
+    "2026Q2": {
+     "nb": -0.454,
+     "borc": 0.625,
+     "nakit": 1.079
+    }
+   },
+   "nakit": {
+    "2024Q1": {
+     "cfo": 0.214,
+     "capex": -0.095,
+     "kira": 0,
+     "fcf": 0.155,
+     "favok": 0.236,
+     "donusum": 65.9,
+     "capex_am": 0.54,
+     "ay": 3,
+     "fcf_ttm": 0.195,
+     "yaklasik": true
+    },
+    "2024Q2": {
+     "cfo": 0.368,
+     "capex": -0.269,
+     "kira": -0.021,
+     "fcf": 0.265,
+     "favok": 0.404,
+     "donusum": 65.5,
+     "capex_am": 1.15,
+     "ay": 6,
+     "fcf_ttm": 0.181,
+     "yaklasik": true
+    },
+    "2024Q3": {
+     "cfo": 0.51,
+     "capex": -0.406,
+     "kira": 0,
+     "fcf": 0.393,
+     "favok": 0.751,
+     "donusum": 52.3,
+     "capex_am": 1.1,
+     "ay": 9,
+     "fcf_ttm": 0.135,
+     "yaklasik": true
+    },
+    "2024Q4": {
+     "cfo": 0.611,
+     "capex": -0.999,
+     "kira": -0.013,
+     "fcf": 0.058,
+     "favok": 1.043,
+     "donusum": 5.5,
+     "capex_am": 1.95,
+     "ay": 12,
+     "fcf_ttm": 0.058,
+     "favok_ttm": 1.043
+    },
+    "2025Q1": {
+     "cfo": 0.294,
+     "capex": -0.278,
+     "kira": 0,
+     "fcf": 0.056,
+     "favok": 0.273,
+     "donusum": 20.4,
+     "capex_am": 1.57,
+     "ay": 3,
+     "fcf_ttm": -0.101,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.532,
+     "capex": -0.477,
+     "kira": -0.025,
+     "fcf": 0.174,
+     "favok": 0.633,
+     "donusum": 27.6,
+     "capex_am": 1.26,
+     "ay": 6,
+     "fcf_ttm": -0.274,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 1.28,
+     "capex": -0.913,
+     "kira": -0.036,
+     "fcf": 0.67,
+     "favok": 1.206,
+     "donusum": 55.5,
+     "capex_am": 1.42,
+     "ay": 9,
+     "fcf_ttm": 0.089,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 1.686,
+     "capex": -1.474,
+     "kira": -0.081,
+     "fcf": 0.686,
+     "favok": 2.111,
+     "donusum": 32.5,
+     "capex_am": 1.82,
+     "ay": 12,
+     "fcf_ttm": 0.686,
+     "favok_ttm": 2.111
+    },
+    "2026Q1": {
+     "cfo": 0.378,
+     "capex": -0.544,
+     "kira": -0.023,
+     "fcf": -0.11,
+     "favok": 0.327,
+     "donusum": -33.5,
+     "capex_am": 3.03,
+     "ay": 3,
+     "fcf_ttm": 0.534,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.042,
+     "capex": -0.542,
+     "kira": -0.047,
+     "fcf": 0.643,
+     "favok": 0.867,
+     "donusum": 74.1,
+     "capex_am": 1.61,
+     "ay": 6,
+     "fcf_ttm": 1.289,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ARASE",
@@ -5964,7 +10931,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 72.2,
+    "fiyat": 72.55,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -5978,7 +10945,145 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q3": {
+     "nb": 2.32,
+     "borc": 3.298,
+     "nakit": 0.979
+    },
+    "2024Q4": {
+     "nb": 2.217,
+     "borc": 3.091,
+     "nakit": 0.875
+    },
+    "2025Q1": {
+     "nb": 1.97,
+     "borc": 2.992,
+     "nakit": 1.022
+    },
+    "2025Q2": {
+     "nb": 1.242,
+     "borc": 2.888,
+     "nakit": 1.645
+    },
+    "2025Q3": {
+     "nb": 1.826,
+     "borc": 3.244,
+     "nakit": 1.418
+    },
+    "2025Q4": {
+     "nb": 2.46,
+     "borc": 3.111,
+     "nakit": 0.651
+    },
+    "2026Q1": {
+     "nb": 1.002,
+     "borc": 2.957,
+     "nakit": 1.956
+    },
+    "2026Q2": {
+     "nb": 1.547,
+     "borc": 2.945,
+     "nakit": 1.398
+    }
+   },
+   "nakit": {
+    "2024Q3": {
+     "cfo": 0.833,
+     "capex": 0,
+     "kira": -0.171,
+     "fcf": 0.662,
+     "favok": 4.678,
+     "donusum": 14.1,
+     "capex_am": 0,
+     "ay": 9
+    },
+    "2024Q4": {
+     "cfo": 4.929,
+     "capex": -0.011,
+     "kira": -0.062,
+     "fcf": 4.856,
+     "favok": 6.021,
+     "donusum": 80.7,
+     "capex_am": 0.04,
+     "ay": 12,
+     "fcf_ttm": 4.856,
+     "favok_ttm": 6.021
+    },
+    "2025Q1": {
+     "cfo": 0.837,
+     "capex": 0,
+     "kira": -0.024,
+     "fcf": 0.816,
+     "favok": 1.868,
+     "donusum": 43.7,
+     "capex_am": 0,
+     "ay": 3,
+     "fcf_ttm": 5.005,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 2.989,
+     "capex": -0.004,
+     "kira": -0.053,
+     "fcf": 2.932,
+     "favok": 3.513,
+     "donusum": 83.5,
+     "capex_am": 0.03,
+     "ay": 6,
+     "fcf_ttm": 6.583,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 4.94,
+     "capex": -0.005,
+     "kira": -0.091,
+     "fcf": 4.844,
+     "favok": 5.884,
+     "donusum": 82.3,
+     "capex_am": 0.03,
+     "ay": 9,
+     "fcf_ttm": 4.368,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 5.958,
+     "capex": -0.018,
+     "kira": -0.112,
+     "fcf": 5.827,
+     "favok": 7.896,
+     "donusum": 73.8,
+     "capex_am": 0.05,
+     "ay": 12,
+     "fcf_ttm": 5.827,
+     "favok_ttm": 7.896
+    },
+    "2026Q1": {
+     "cfo": 1.886,
+     "capex": -0.007,
+     "kira": -0.028,
+     "fcf": 1.851,
+     "favok": 2.874,
+     "donusum": 64.4,
+     "capex_am": 0.1,
+     "ay": 3,
+     "fcf_ttm": 6.617,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 4.021,
+     "capex": -0.013,
+     "kira": -0.025,
+     "fcf": 3.982,
+     "favok": 5.876,
+     "donusum": 67.8,
+     "capex_am": 0.09,
+     "ay": 6,
+     "fcf_ttm": 5.931,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ATAKP",
@@ -6081,7 +11186,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 35.06,
+    "fiyat": 35.08,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6094,7 +11199,147 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "netborc": {
+    "2024Q4": {
+     "nb": -0.216,
+     "borc": 0.321,
+     "nakit": 0.538
+    },
+    "2025Q1": {
+     "nb": -0.091,
+     "borc": 0.28,
+     "nakit": 0.37
+    },
+    "2025Q2": {
+     "nb": -0.246,
+     "borc": 0.282,
+     "nakit": 0.528
+    },
+    "2025Q3": {
+     "nb": -0.419,
+     "borc": 0.278,
+     "nakit": 0.697
+    },
+    "2025Q4": {
+     "nb": -0.335,
+     "borc": 0.278,
+     "nakit": 0.613
+    },
+    "2026Q1": {
+     "nb": -0.37,
+     "borc": 0.234,
+     "nakit": 0.604
+    },
+    "2026Q2": {
+     "nb": -0.374,
+     "borc": 0.265,
+     "nakit": 0.639
+    },
+    "2026Q3": {
+     "nb": -0.338,
+     "borc": 0.256,
+     "nakit": 0.594
+    }
+   },
+   "nakit": {
+    "2024Q4": {
+     "cfo": 0.341,
+     "capex": -0.58,
+     "kira": -0.007,
+     "fcf": -0.245,
+     "favok": 0.593,
+     "donusum": -41.3,
+     "capex_am": 2.49,
+     "ay": 12,
+     "fcf_ttm": -0.245,
+     "favok_ttm": 0.593
+    },
+    "2025Q1": {
+     "cfo": -0.061,
+     "capex": -0.078,
+     "kira": -0.002,
+     "fcf": -0.141,
+     "favok": 0.103,
+     "donusum": -137.1,
+     "capex_am": 1.26,
+     "ay": 3,
+     "fcf_ttm": -0.266,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.144,
+     "capex": -0.111,
+     "kira": -0.008,
+     "fcf": 0.025,
+     "favok": 0.219,
+     "donusum": 11.6,
+     "capex_am": 0.88,
+     "ay": 6,
+     "fcf_ttm": -0.456,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 0.391,
+     "capex": -0.174,
+     "kira": -0.009,
+     "fcf": 0.207,
+     "favok": 0.358,
+     "donusum": 58,
+     "capex_am": 0.84,
+     "ay": 9,
+     "fcf_ttm": -0.346,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 0.414,
+     "capex": -0.277,
+     "kira": -0.014,
+     "fcf": 0.123,
+     "favok": 0.472,
+     "donusum": 26.1,
+     "capex_am": 1.04,
+     "ay": 12,
+     "fcf_ttm": 0.123,
+     "favok_ttm": 0.472
+    },
+    "2026Q1": {
+     "cfo": -0.008,
+     "capex": -0.07,
+     "kira": -0.005,
+     "fcf": -0.083,
+     "favok": 0.106,
+     "donusum": -78.5,
+     "capex_am": 0.87,
+     "ay": 3,
+     "fcf_ttm": 0.188,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.007,
+     "capex": -0.111,
+     "kira": -0.009,
+     "fcf": -0.113,
+     "favok": 0.209,
+     "donusum": -54.2,
+     "capex_am": 0.67,
+     "ay": 6,
+     "fcf_ttm": 0.026,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 0.053,
+     "capex": -0.195,
+     "kira": -0.013,
+     "fcf": -0.155,
+     "favok": 0.37,
+     "donusum": -41.9,
+     "capex_am": 0.74,
+     "ay": 9,
+     "fcf_ttm": -0.302,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "AVPGY",
@@ -6189,6 +11434,21 @@
      "tl": 0.537,
      "usd": 11.8,
      "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": 0.446,
+     "usd": 12.3,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 1.15,
+     "usd": 29.6,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 0.626,
+     "usd": 15.3,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -6206,7 +11466,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 47.22,
+    "fiyat": 47.64,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6220,7 +11480,107 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q1": {
+     "nb": -0.619,
+     "borc": 0,
+     "nakit": 0.619
+    },
+    "2025Q2": {
+     "nb": -0.451,
+     "borc": 0,
+     "nakit": 0.451
+    },
+    "2025Q3": {
+     "nb": -0.543,
+     "borc": 0,
+     "nakit": 0.543
+    },
+    "2025Q4": {
+     "nb": -0.775,
+     "borc": 0,
+     "nakit": 0.775
+    },
+    "2026Q1": {
+     "nb": -1.596,
+     "borc": 0,
+     "nakit": 1.596
+    },
+    "2026Q2": {
+     "nb": -0.525,
+     "borc": 0,
+     "nakit": 0.525
+    }
+   },
+   "nakit": {
+    "2025Q1": {
+     "cfo": 0.603,
+     "capex": -0.002,
+     "kira": 0,
+     "fcf": 0.602,
+     "favok": 0.446,
+     "donusum": 134.9,
+     "capex_am": 0.88,
+     "ay": 3
+    },
+    "2025Q2": {
+     "cfo": 1.428,
+     "capex": -0.001,
+     "kira": 0,
+     "fcf": 1.427,
+     "favok": 1.622,
+     "donusum": 88,
+     "capex_am": 0.88,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 2.47,
+     "capex": -0.003,
+     "kira": 0,
+     "fcf": 2.467,
+     "favok": 2.108,
+     "donusum": 117.1,
+     "capex_am": 0.76,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 4.304,
+     "capex": -0.006,
+     "kira": 0,
+     "fcf": 4.738,
+     "favok": 2.648,
+     "donusum": 178.9,
+     "capex_am": 1.08,
+     "ay": 12,
+     "fcf_ttm": 4.738,
+     "favok_ttm": 2.648
+    },
+    "2026Q1": {
+     "cfo": 0.622,
+     "capex": -0.003,
+     "kira": 0,
+     "fcf": 0.619,
+     "favok": 0.701,
+     "donusum": 88.3,
+     "capex_am": 2.75,
+     "ay": 3,
+     "fcf_ttm": 4.7,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.989,
+     "capex": -0.008,
+     "kira": 0,
+     "fcf": 1.98,
+     "favok": 1.287,
+     "donusum": 153.8,
+     "capex_am": 3.47,
+     "ay": 6,
+     "fcf_ttm": 4.812,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "AYDEM",
@@ -6320,7 +11680,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 21.48,
+    "fiyat": 21.76,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6334,7 +11694,77 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q3": {
+     "nb": 21.083,
+     "borc": 44.651,
+     "nakit": 23.568
+    },
+    "2025Q4": {
+     "nb": 21.889,
+     "borc": 23.254,
+     "nakit": 1.365
+    },
+    "2026Q1": {
+     "nb": 21.998,
+     "borc": 23.534,
+     "nakit": 1.537
+    },
+    "2026Q2": {
+     "nb": 23.014,
+     "borc": 25.384,
+     "nakit": 2.37
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": 9.638,
+     "capex": -0.208,
+     "kira": -0.054,
+     "fcf": 9.377,
+     "favok": 3.85,
+     "donusum": 243.6,
+     "capex_am": 0.1,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 6.97,
+     "capex": -0.285,
+     "kira": -0.073,
+     "fcf": 6.612,
+     "favok": 4.765,
+     "donusum": 138.8,
+     "capex_am": 0.1,
+     "ay": 12,
+     "fcf_ttm": 6.612,
+     "favok_ttm": 4.765
+    },
+    "2026Q1": {
+     "cfo": 2.666,
+     "capex": -0.084,
+     "kira": -0.011,
+     "fcf": 2.578,
+     "favok": 1.376,
+     "donusum": 187.4,
+     "capex_am": 0.1,
+     "ay": 3,
+     "fcf_ttm": 6.844,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 2.835,
+     "capex": -0.367,
+     "kira": -0.096,
+     "fcf": 2.38,
+     "favok": 2.793,
+     "donusum": 85.2,
+     "capex_am": 0.2,
+     "ay": 6,
+     "fcf_ttm": 5.406,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "BASGZ",
@@ -6430,7 +11860,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 32.78,
+    "fiyat": 32.44,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6444,7 +11874,147 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q4": {
+     "nb": -2.041,
+     "borc": 2.367,
+     "nakit": 4.408
+    },
+    "2025Q1": {
+     "nb": -2.39,
+     "borc": 2.867,
+     "nakit": 5.257
+    },
+    "2025Q2": {
+     "nb": -0.929,
+     "borc": 2.618,
+     "nakit": 3.547
+    },
+    "2025Q3": {
+     "nb": 1.248,
+     "borc": 2.837,
+     "nakit": 1.589
+    },
+    "2025Q4": {
+     "nb": -1.475,
+     "borc": 2.412,
+     "nakit": 3.888
+    },
+    "2026Q1": {
+     "nb": -4.763,
+     "borc": 1.63,
+     "nakit": 6.393
+    },
+    "2026Q2": {
+     "nb": -2.244,
+     "borc": 1.697,
+     "nakit": 3.94
+    },
+    "2026Q3": {
+     "nb": -1.181,
+     "borc": 2.237,
+     "nakit": 3.418
+    }
+   },
+   "nakit": {
+    "2024Q4": {
+     "cfo": 5.387,
+     "capex": -5.427,
+     "kira": -0.282,
+     "fcf": -0.322,
+     "favok": 4.441,
+     "donusum": -7.3,
+     "capex_am": 2.52,
+     "ay": 12,
+     "fcf_ttm": -0.322,
+     "favok_ttm": 4.441
+    },
+    "2025Q1": {
+     "cfo": 0.316,
+     "capex": -0.296,
+     "kira": -0.09,
+     "fcf": -0.07,
+     "favok": 2.7,
+     "donusum": -2.6,
+     "capex_am": 0.44,
+     "ay": 3,
+     "fcf_ttm": -1.23,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.251,
+     "capex": -2.018,
+     "kira": -0.198,
+     "fcf": -1.964,
+     "favok": 3.319,
+     "donusum": -59.2,
+     "capex_am": 1.42,
+     "ay": 6,
+     "fcf_ttm": -0.813,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 2.421,
+     "capex": -4.215,
+     "kira": -0.218,
+     "fcf": -2.013,
+     "favok": 3.4,
+     "donusum": -59.2,
+     "capex_am": 1.85,
+     "ay": 9,
+     "fcf_ttm": 0.722,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 6.191,
+     "capex": -5.807,
+     "kira": -0.332,
+     "fcf": 0.052,
+     "favok": 5.919,
+     "donusum": 0.9,
+     "capex_am": 1.84,
+     "ay": 12,
+     "fcf_ttm": 0.052,
+     "favok_ttm": 5.919
+    },
+    "2026Q1": {
+     "cfo": 3.384,
+     "capex": -0.441,
+     "kira": -0.051,
+     "fcf": 2.892,
+     "favok": 4.171,
+     "donusum": 69.3,
+     "capex_am": 0.5,
+     "ay": 3,
+     "fcf_ttm": 3.036,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 2.067,
+     "capex": -1.739,
+     "kira": -0.095,
+     "fcf": 0.233,
+     "favok": 4.911,
+     "donusum": 4.7,
+     "capex_am": 0.92,
+     "ay": 6,
+     "fcf_ttm": 2.88,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 4.908,
+     "capex": -3.531,
+     "kira": -0.261,
+     "fcf": 1.117,
+     "favok": 5.393,
+     "donusum": 20.7,
+     "capex_am": 1.18,
+     "ay": 9,
+     "fcf_ttm": 3.78,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "BETAE",
@@ -6499,7 +12069,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 44.76,
+    "fiyat": 44.8,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6510,7 +12080,26 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2026Q2": {
+     "nb": 2.51,
+     "borc": 4.854,
+     "nakit": 2.344
+    }
+   },
+   "nakit": {
+    "2026Q2": {
+     "cfo": -0.013,
+     "capex": -0.806,
+     "kira": 0,
+     "fcf": -0.812,
+     "favok": 0.458,
+     "donusum": -177.2,
+     "capex_am": 5.83,
+     "ay": 6
+    }
+   }
   },
   {
    "kod": "BUCIM",
@@ -6617,7 +12206,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 3.99,
+    "fiyat": 3.98,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6632,7 +12221,92 @@
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 2.659,
+     "borc": 4.442,
+     "nakit": 1.783
+    },
+    "2025Q3": {
+     "nb": 3.802,
+     "borc": 6.557,
+     "nakit": 2.755
+    },
+    "2025Q4": {
+     "nb": 3.805,
+     "borc": 6.676,
+     "nakit": 2.871
+    },
+    "2026Q1": {
+     "nb": 4.175,
+     "borc": 7.213,
+     "nakit": 3.038
+    },
+    "2026Q2": {
+     "nb": 4.912,
+     "borc": 7.104,
+     "nakit": 2.192
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": 0.69,
+     "capex": -1.835,
+     "kira": -0.007,
+     "fcf": -1.141,
+     "favok": 0.44,
+     "donusum": -259.4,
+     "capex_am": 5.01,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": -1.115,
+     "capex": -2.821,
+     "kira": 0,
+     "fcf": -3.916,
+     "favok": 0.606,
+     "donusum": -646.4,
+     "capex_am": 4.68,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 0.154,
+     "capex": -3.17,
+     "kira": -0.019,
+     "fcf": -2.98,
+     "favok": 1.272,
+     "donusum": -234.3,
+     "capex_am": 3.97,
+     "ay": 12,
+     "fcf_ttm": -2.98,
+     "favok_ttm": 1.272
+    },
+    "2026Q1": {
+     "cfo": 0.33,
+     "capex": -0.094,
+     "kira": 0,
+     "fcf": 0.237,
+     "favok": 0.053,
+     "donusum": 447,
+     "capex_am": 0.33,
+     "ay": 3,
+     "fcf_ttm": -1.951,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.156,
+     "capex": -0.471,
+     "kira": -0.008,
+     "fcf": -0.317,
+     "favok": 0.746,
+     "donusum": -42.5,
+     "capex_am": 0.81,
+     "ay": 6,
+     "fcf_ttm": -1.79,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "EGGUB",
@@ -6761,7 +12435,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 83.65,
+    "fiyat": 81.05,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6775,7 +12449,160 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2024Q2": {
+     "nb": -0.591,
+     "borc": 0.049,
+     "nakit": 0.64
+    },
+    "2024Q3": {
+     "nb": -0.309,
+     "borc": 0.911,
+     "nakit": 1.22
+    },
+    "2024Q4": {
+     "nb": -0.028,
+     "borc": 1.041,
+     "nakit": 1.069
+    },
+    "2025Q1": {
+     "nb": -0.014,
+     "borc": 1.095,
+     "nakit": 1.109
+    },
+    "2025Q2": {
+     "nb": 0.299,
+     "borc": 1.241,
+     "nakit": 0.942
+    },
+    "2025Q3": {
+     "nb": 0.176,
+     "borc": 1.279,
+     "nakit": 1.102
+    },
+    "2025Q4": {
+     "nb": 0.047,
+     "borc": 1.463,
+     "nakit": 1.416
+    },
+    "2026Q1": {
+     "nb": -0.053,
+     "borc": 1.319,
+     "nakit": 1.372
+    },
+    "2026Q2": {
+     "nb": -0.204,
+     "borc": 1.362,
+     "nakit": 1.566
+    }
+   },
+   "nakit": {
+    "2024Q2": {
+     "cfo": 0.258,
+     "capex": -0.056,
+     "kira": -0.008,
+     "fcf": 0.228,
+     "favok": 0.303,
+     "donusum": 75.1,
+     "capex_am": 0.43,
+     "ay": 6
+    },
+    "2024Q3": {
+     "cfo": 0.49,
+     "capex": -0.493,
+     "kira": -0.007,
+     "fcf": 0.033,
+     "favok": 0.626,
+     "donusum": 5.2,
+     "capex_am": 2.31,
+     "ay": 9
+    },
+    "2024Q4": {
+     "cfo": 0.55,
+     "capex": -0.895,
+     "kira": -0.019,
+     "fcf": -0.311,
+     "favok": 0.818,
+     "donusum": -38,
+     "capex_am": 2.89,
+     "ay": 12,
+     "fcf_ttm": -0.311,
+     "favok_ttm": 0.818
+    },
+    "2025Q1": {
+     "cfo": 0.516,
+     "capex": -0.26,
+     "kira": -0.006,
+     "fcf": 0.275,
+     "favok": 0.279,
+     "donusum": 98.5,
+     "capex_am": 3.27,
+     "ay": 3,
+     "fcf_ttm": -0.066,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 0.98,
+     "capex": -0.565,
+     "kira": -0.008,
+     "fcf": 0.482,
+     "favok": 0.575,
+     "donusum": 83.8,
+     "capex_am": 3.66,
+     "ay": 6,
+     "fcf_ttm": -0.136,
+     "yaklasik": true
+    },
+    "2025Q3": {
+     "cfo": 2.147,
+     "capex": -1.431,
+     "kira": -0.008,
+     "fcf": 0.791,
+     "favok": 0.843,
+     "donusum": 93.7,
+     "capex_am": 5.55,
+     "ay": 9,
+     "fcf_ttm": 0.436,
+     "yaklasik": true
+    },
+    "2025Q4": {
+     "cfo": 1.95,
+     "capex": -1.617,
+     "kira": -0.016,
+     "fcf": 0.404,
+     "favok": 1.555,
+     "donusum": 26,
+     "capex_am": 4.14,
+     "ay": 12,
+     "fcf_ttm": 0.404,
+     "favok_ttm": 1.555
+    },
+    "2026Q1": {
+     "cfo": 0.199,
+     "capex": -0.074,
+     "kira": -0.005,
+     "fcf": 0.139,
+     "favok": 0.442,
+     "donusum": 31.4,
+     "capex_am": 0.5,
+     "ay": 3,
+     "fcf_ttm": 0.215,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.137,
+     "capex": -0.514,
+     "kira": -0.013,
+     "fcf": 0.643,
+     "favok": 1.003,
+     "donusum": 64.1,
+     "capex_am": 1.65,
+     "ay": 6,
+     "fcf_ttm": 0.409,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "EGPRO",
@@ -6867,7 +12694,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 27.42,
+    "fiyat": 27.46,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6880,7 +12707,107 @@
    },
    "guidance": null,
    "_eklendi": "2026-10-25",
-   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez"
+   "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
+   "netborc": {
+    "2025Q1": {
+     "nb": -0.402,
+     "borc": 0.203,
+     "nakit": 0.605
+    },
+    "2025Q2": {
+     "nb": -0.428,
+     "borc": 0.411,
+     "nakit": 0.839
+    },
+    "2025Q3": {
+     "nb": -0.174,
+     "borc": 0.632,
+     "nakit": 0.806
+    },
+    "2025Q4": {
+     "nb": -0.386,
+     "borc": 0.361,
+     "nakit": 0.747
+    },
+    "2026Q1": {
+     "nb": -0.549,
+     "borc": 0.801,
+     "nakit": 1.35
+    },
+    "2026Q2": {
+     "nb": -0.431,
+     "borc": 0.937,
+     "nakit": 1.368
+    }
+   },
+   "nakit": {
+    "2025Q1": {
+     "cfo": 0.455,
+     "capex": -0.02,
+     "kira": -0.019,
+     "fcf": 0.425,
+     "favok": 0.555,
+     "donusum": 76.6,
+     "capex_am": 0.12,
+     "ay": 3
+    },
+    "2025Q2": {
+     "cfo": 0.733,
+     "capex": -0.086,
+     "kira": -0.041,
+     "fcf": 0.626,
+     "favok": 1.054,
+     "donusum": 59.4,
+     "capex_am": 0.33,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 0.655,
+     "capex": -0.186,
+     "kira": -0.085,
+     "fcf": 0.428,
+     "favok": 1.766,
+     "donusum": 24.2,
+     "capex_am": 0.43,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 1.213,
+     "capex": -0.351,
+     "kira": -0.087,
+     "fcf": 0.815,
+     "favok": 2.826,
+     "donusum": 28.9,
+     "capex_am": 0.54,
+     "ay": 12,
+     "fcf_ttm": 0.815,
+     "favok_ttm": 2.826
+    },
+    "2026Q1": {
+     "cfo": 0.415,
+     "capex": -0.03,
+     "kira": -0.018,
+     "fcf": 0.407,
+     "favok": 1.057,
+     "donusum": 38.5,
+     "capex_am": 0.16,
+     "ay": 3,
+     "fcf_ttm": 0.666,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.522,
+     "capex": -0.081,
+     "kira": -0.041,
+     "fcf": 0.423,
+     "favok": 1.818,
+     "donusum": 23.2,
+     "capex_am": 0.23,
+     "ay": 6,
+     "fcf_ttm": 0.411,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "ISDMR",
@@ -6986,7 +12913,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 52.95,
+    "fiyat": 52.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6997,7 +12924,79 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q4": {
+     "nb": -11.183,
+     "borc": 39.746,
+     "nakit": 50.929
+    },
+    "2026Q1": {
+     "nb": -14.161,
+     "borc": 37.669,
+     "nakit": 51.83
+    },
+    "2026Q2": {
+     "nb": -2.73,
+     "borc": 38.951,
+     "nakit": 41.681
+    },
+    "2026Q3": {
+     "nb": -1.091,
+     "borc": 37.536,
+     "nakit": 38.627
+    }
+   },
+   "nakit": {
+    "2025Q4": {
+     "cfo": 36.999,
+     "capex": -5.355,
+     "kira": -0.154,
+     "fcf": 31.507,
+     "favok": 12.434,
+     "donusum": 253.4,
+     "capex_am": 1.03,
+     "ay": 12,
+     "fcf_ttm": 31.507,
+     "favok_ttm": 12.434
+    },
+    "2026Q1": {
+     "cfo": 4.575,
+     "capex": -1.313,
+     "kira": -0.041,
+     "fcf": 3.229,
+     "favok": 3.152,
+     "donusum": 102.4,
+     "capex_am": 0.87,
+     "ay": 3,
+     "fcf_ttm": 28.842,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 7.45,
+     "capex": -2.592,
+     "kira": -0.146,
+     "fcf": 4.721,
+     "favok": 6.769,
+     "donusum": 69.7,
+     "capex_am": 0.83,
+     "ay": 6,
+     "fcf_ttm": 19.588,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 7.914,
+     "capex": -4.01,
+     "kira": -0.164,
+     "fcf": 3.75,
+     "favok": 11.707,
+     "donusum": 32,
+     "capex_am": 0.82,
+     "ay": 9,
+     "fcf_ttm": 9.912,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "KARSN",
@@ -7076,7 +13075,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 6.66,
+    "fiyat": 6.8,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7091,7 +13090,77 @@
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
    "_sur_ek": "546a",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "netborc": {
+    "2025Q3": {
+     "nb": 8.732,
+     "borc": 9.085,
+     "nakit": 0.352
+    },
+    "2025Q4": {
+     "nb": 7.235,
+     "borc": 8.761,
+     "nakit": 1.526
+    },
+    "2026Q1": {
+     "nb": 8.308,
+     "borc": 9.349,
+     "nakit": 1.041
+    },
+    "2026Q2": {
+     "nb": 8.947,
+     "borc": 9.446,
+     "nakit": 0.499
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": -0.575,
+     "capex": -0.61,
+     "kira": -0.1,
+     "fcf": -1.274,
+     "favok": 0.82,
+     "donusum": -155.4,
+     "capex_am": 1.09,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 1.687,
+     "capex": -1.029,
+     "kira": -0.187,
+     "fcf": 0.488,
+     "favok": 2.729,
+     "donusum": 17.9,
+     "capex_am": 1.34,
+     "ay": 12,
+     "fcf_ttm": 0.488,
+     "favok_ttm": 2.729
+    },
+    "2026Q1": {
+     "cfo": -0.084,
+     "capex": 0,
+     "kira": -0.028,
+     "fcf": 0.197,
+     "favok": 0.789,
+     "donusum": 24.9,
+     "capex_am": 0,
+     "ay": 3,
+     "fcf_ttm": 0.399,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.29,
+     "capex": -0.614,
+     "kira": -0.046,
+     "fcf": -0.3,
+     "favok": 1.166,
+     "donusum": -25.8,
+     "capex_am": 1.48,
+     "ay": 6,
+     "fcf_ttm": 1.333,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "KBORU",
@@ -7180,7 +13249,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 8.49,
+    "fiyat": 8.48,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7195,7 +13264,77 @@
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q3": {
+     "nb": 2.213,
+     "borc": 2.315,
+     "nakit": 0.103
+    },
+    "2025Q4": {
+     "nb": 3.215,
+     "borc": 3.569,
+     "nakit": 0.355
+    },
+    "2026Q1": {
+     "nb": 3.381,
+     "borc": 4.339,
+     "nakit": 0.957
+    },
+    "2026Q2": {
+     "nb": 4.696,
+     "borc": 5.077,
+     "nakit": 0.381
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": -1.218,
+     "capex": -0.402,
+     "kira": 0,
+     "fcf": -1.594,
+     "favok": 0.688,
+     "donusum": -231.8,
+     "capex_am": 2.75,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": -1.459,
+     "capex": -0.461,
+     "kira": -0.008,
+     "fcf": -1.913,
+     "favok": 0.816,
+     "donusum": -234.3,
+     "capex_am": 2.07,
+     "ay": 12,
+     "fcf_ttm": -1.913,
+     "favok_ttm": 0.816
+    },
+    "2026Q1": {
+     "cfo": 1.323,
+     "capex": -1.033,
+     "kira": -0.006,
+     "fcf": 0.289,
+     "favok": 0.229,
+     "donusum": 126.2,
+     "capex_am": 13.7,
+     "ay": 3,
+     "fcf_ttm": -1.062,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.111,
+     "capex": -0.512,
+     "kira": -0.017,
+     "fcf": -0.627,
+     "favok": 0.639,
+     "donusum": -98.1,
+     "capex_am": 3.01,
+     "ay": 6,
+     "fcf_ttm": -1.458,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "LMKDC",
@@ -7297,7 +13436,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 19.51,
+    "fiyat": 19.56,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7312,7 +13451,77 @@
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
    "kamu_duyarli": true,
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q3": {
+     "nb": -1.9,
+     "borc": 0.2,
+     "nakit": 2.1
+    },
+    "2025Q4": {
+     "nb": -2.292,
+     "borc": 0.168,
+     "nakit": 2.46
+    },
+    "2026Q1": {
+     "nb": -2.319,
+     "borc": 0.149,
+     "nakit": 2.468
+    },
+    "2026Q2": {
+     "nb": -0.751,
+     "borc": 0.095,
+     "nakit": 0.847
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": 2.18,
+     "capex": -0.816,
+     "kira": 0,
+     "fcf": 1.364,
+     "favok": 2.433,
+     "donusum": 56.1,
+     "capex_am": 3.12,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 2.52,
+     "capex": -0.97,
+     "kira": -0.048,
+     "fcf": 1.502,
+     "favok": 3.456,
+     "donusum": 43.4,
+     "capex_am": 2.44,
+     "ay": 12,
+     "fcf_ttm": 1.502,
+     "favok_ttm": 3.456
+    },
+    "2026Q1": {
+     "cfo": 0.063,
+     "capex": -0.085,
+     "kira": -0.034,
+     "fcf": -0.056,
+     "favok": 0.363,
+     "donusum": -15.4,
+     "capex_am": 0.75,
+     "ay": 3,
+     "fcf_ttm": 1.051,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.283,
+     "capex": -0.77,
+     "kira": -0.065,
+     "fcf": -0.552,
+     "favok": 1.128,
+     "donusum": -48.9,
+     "capex_am": 3.06,
+     "ay": 6,
+     "fcf_ttm": 0.334,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "MOPAS",
@@ -7399,7 +13608,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 14.38,
+    "fiyat": 14.13,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7413,7 +13622,77 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q3": {
+     "nb": -0.424,
+     "borc": 1.377,
+     "nakit": 1.801
+    },
+    "2025Q4": {
+     "nb": -0.37,
+     "borc": 1.572,
+     "nakit": 1.942
+    },
+    "2026Q1": {
+     "nb": -0.535,
+     "borc": 1.863,
+     "nakit": 2.398
+    },
+    "2026Q2": {
+     "nb": -0.612,
+     "borc": 1.685,
+     "nakit": 2.298
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": -0.525,
+     "capex": -0.297,
+     "kira": -0.416,
+     "fcf": -1.235,
+     "favok": 0.861,
+     "donusum": -143.3,
+     "capex_am": 0.59,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": -0.31,
+     "capex": -0.496,
+     "kira": -0.47,
+     "fcf": -1.271,
+     "favok": 1.688,
+     "donusum": -75.3,
+     "capex_am": 0.7,
+     "ay": 12,
+     "fcf_ttm": -1.271,
+     "favok_ttm": 1.688
+    },
+    "2026Q1": {
+     "cfo": 0.159,
+     "capex": -0.075,
+     "kira": -0.066,
+     "fcf": 0.019,
+     "favok": 0.533,
+     "donusum": 3.6,
+     "capex_am": 0.35,
+     "ay": 3,
+     "fcf_ttm": 0.373,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.438,
+     "capex": -0.175,
+     "kira": -0.425,
+     "fcf": -0.16,
+     "favok": 0.986,
+     "donusum": -16.2,
+     "capex_am": 0.38,
+     "ay": 6,
+     "fcf_ttm": 0.244,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "NETCD",
@@ -7465,7 +13744,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 82.25,
+    "fiyat": 81.7,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7476,7 +13755,62 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "kamu_duyarli": true
+   "kamu_duyarli": true,
+   "netborc": {
+    "2025Q4": {
+     "nb": -0.428,
+     "borc": 0.045,
+     "nakit": 0.473
+    },
+    "2026Q1": {
+     "nb": -1.023,
+     "borc": 0.045,
+     "nakit": 1.067
+    },
+    "2026Q2": {
+     "nb": -0.655,
+     "borc": 0.047,
+     "nakit": 0.703
+    }
+   },
+   "nakit": {
+    "2025Q4": {
+     "cfo": 0.998,
+     "capex": -0.473,
+     "kira": -0.035,
+     "fcf": 0.493,
+     "favok": 1.128,
+     "donusum": 43.7,
+     "capex_am": 2.09,
+     "ay": 12,
+     "fcf_ttm": 0.493,
+     "favok_ttm": 1.128
+    },
+    "2026Q1": {
+     "cfo": 0.207,
+     "capex": -0.132,
+     "kira": -0.01,
+     "fcf": 0.065,
+     "favok": 0.354,
+     "donusum": 18.4,
+     "capex_am": 1.6,
+     "ay": 3,
+     "fcf_ttm": 0.591,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.603,
+     "capex": -0.269,
+     "kira": -0.022,
+     "fcf": 0.313,
+     "favok": 0.687,
+     "donusum": 45.5,
+     "capex_am": 1.25,
+     "ay": 6,
+     "fcf_ttm": 0.676,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "NTGAZ",
@@ -7565,7 +13899,77 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q3": {
+     "nb": 0.056,
+     "borc": 0.372,
+     "nakit": 0.315
+    },
+    "2025Q4": {
+     "nb": 0.009,
+     "borc": 0.344,
+     "nakit": 0.335
+    },
+    "2026Q1": {
+     "nb": -0.506,
+     "borc": 0.578,
+     "nakit": 1.085
+    },
+    "2026Q2": {
+     "nb": -0.316,
+     "borc": 0.485,
+     "nakit": 0.801
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": 1.017,
+     "capex": -0.634,
+     "kira": -0.07,
+     "fcf": 0.317,
+     "favok": 1.144,
+     "donusum": 27.7,
+     "capex_am": 2.18,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 1.548,
+     "capex": -1.083,
+     "kira": -0.084,
+     "fcf": 0.395,
+     "favok": 1.702,
+     "donusum": 23.2,
+     "capex_am": 2.24,
+     "ay": 12,
+     "fcf_ttm": 0.395,
+     "favok_ttm": 1.702
+    },
+    "2026Q1": {
+     "cfo": 0.881,
+     "capex": -0.015,
+     "kira": -0.04,
+     "fcf": 0.84,
+     "favok": 0.994,
+     "donusum": 84.5,
+     "capex_am": 0.13,
+     "ay": 3,
+     "fcf_ttm": 0.779,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.198,
+     "capex": -0.068,
+     "kira": -0.067,
+     "fcf": 1.065,
+     "favok": 1.395,
+     "donusum": 76.4,
+     "capex_am": 0.27,
+     "ay": 6,
+     "fcf_ttm": 0.719,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "PARSN",
@@ -7648,7 +14052,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 49.14,
+    "fiyat": 48.9,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7662,7 +14066,77 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q3": {
+     "nb": 4.625,
+     "borc": 4.708,
+     "nakit": 0.082
+    },
+    "2025Q4": {
+     "nb": 4.559,
+     "borc": 4.635,
+     "nakit": 0.076
+    },
+    "2026Q1": {
+     "nb": 5.365,
+     "borc": 5.52,
+     "nakit": 0.155
+    },
+    "2026Q2": {
+     "nb": 5.617,
+     "borc": 5.675,
+     "nakit": 0.058
+    }
+   },
+   "nakit": {
+    "2025Q3": {
+     "cfo": 0.436,
+     "capex": -0.521,
+     "kira": -0.043,
+     "fcf": -0.12,
+     "favok": 0.136,
+     "donusum": -88.3,
+     "capex_am": 1.06,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 0.804,
+     "capex": -0.83,
+     "kira": -0.045,
+     "fcf": -0.019,
+     "favok": 0.169,
+     "donusum": -11.5,
+     "capex_am": 1.21,
+     "ay": 12,
+     "fcf_ttm": -0.019,
+     "favok_ttm": 0.169
+    },
+    "2026Q1": {
+     "cfo": -0.861,
+     "capex": -0.2,
+     "kira": -0.009,
+     "fcf": -1.063,
+     "favok": 0.058,
+     "donusum": -1847.9,
+     "capex_am": 1,
+     "ay": 3,
+     "fcf_ttm": -0.989,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": -0.678,
+     "capex": -0.394,
+     "kira": -0.018,
+     "fcf": -1.089,
+     "favok": 0.11,
+     "donusum": -988.1,
+     "capex_am": 0.96,
+     "ay": 6,
+     "fcf_ttm": -0.87,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "POLHO",
@@ -7754,7 +14228,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 13.31,
+    "fiyat": 13.3,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7768,7 +14242,92 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 1.823,
+     "borc": 1.885,
+     "nakit": 0.063
+    },
+    "2025Q3": {
+     "nb": 1.904,
+     "borc": 1.998,
+     "nakit": 0.094
+    },
+    "2025Q4": {
+     "nb": 1.808,
+     "borc": 2.09,
+     "nakit": 0.283
+    },
+    "2026Q1": {
+     "nb": 1.475,
+     "borc": 2.125,
+     "nakit": 0.65
+    },
+    "2026Q2": {
+     "nb": 2.045,
+     "borc": 2.322,
+     "nakit": 0.277
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": -0.095,
+     "capex": -0.376,
+     "kira": -0.026,
+     "fcf": -0.479,
+     "favok": 0.166,
+     "donusum": -289.3,
+     "capex_am": 1.37,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 0.174,
+     "capex": -0.571,
+     "kira": -0.076,
+     "fcf": -0.444,
+     "favok": 0.425,
+     "donusum": -104.5,
+     "capex_am": 1.23,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 0.354,
+     "capex": -0.786,
+     "kira": -0.12,
+     "fcf": -0.52,
+     "favok": 0.703,
+     "donusum": -74,
+     "capex_am": 1.16,
+     "ay": 12,
+     "fcf_ttm": -0.52,
+     "favok_ttm": 0.703
+    },
+    "2026Q1": {
+     "cfo": 0.489,
+     "capex": -0.128,
+     "kira": -0.005,
+     "fcf": 0.355,
+     "favok": 0.089,
+     "donusum": 397.7,
+     "capex_am": 0.62,
+     "ay": 3,
+     "fcf_ttm": 0.222,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 0.528,
+     "capex": -0.306,
+     "kira": -0.058,
+     "fcf": 0.187,
+     "favok": 0.399,
+     "donusum": 47,
+     "capex_am": 0.45,
+     "ay": 6,
+     "fcf_ttm": 0.323,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "SNGYO",
@@ -7885,7 +14444,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 2.26,
+    "fiyat": 2.27,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7899,7 +14458,92 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 5.228,
+     "borc": 5.236,
+     "nakit": 0.009
+    },
+    "2025Q3": {
+     "nb": 5.144,
+     "borc": 5.157,
+     "nakit": 0.013
+    },
+    "2025Q4": {
+     "nb": 5.607,
+     "borc": 5.747,
+     "nakit": 0.14
+    },
+    "2026Q1": {
+     "nb": 5.246,
+     "borc": 5.35,
+     "nakit": 0.104
+    },
+    "2026Q2": {
+     "nb": 4.99,
+     "borc": 5.013,
+     "nakit": 0.022
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": -0.319,
+     "capex": -0.001,
+     "kira": 0,
+     "fcf": -0.319,
+     "favok": 0.045,
+     "donusum": -704.9,
+     "capex_am": 0.07,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 0.095,
+     "capex": -0.005,
+     "kira": 0,
+     "fcf": 0.091,
+     "favok": 0.132,
+     "donusum": 68.5,
+     "capex_am": 0.28,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": -0.921,
+     "capex": -0.009,
+     "kira": 0,
+     "fcf": -0.93,
+     "favok": 1.578,
+     "donusum": -58.9,
+     "capex_am": 0.24,
+     "ay": 12,
+     "fcf_ttm": -0.93,
+     "favok_ttm": 1.578
+    },
+    "2026Q1": {
+     "cfo": 0.103,
+     "capex": 0,
+     "kira": 0,
+     "fcf": 0.107,
+     "favok": 0.767,
+     "donusum": 13.9,
+     "capex_am": 0.01,
+     "ay": 3,
+     "fcf_ttm": -1.309,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.34,
+     "capex": -0.004,
+     "kira": 0,
+     "fcf": 1.347,
+     "favok": 1.143,
+     "donusum": 117.9,
+     "capex_am": 0.19,
+     "ay": 6,
+     "fcf_ttm": 0.839,
+     "yaklasik": true
+    }
+   }
   },
   {
    "kod": "VAKKO",
@@ -7999,7 +14643,7 @@
    },
    "fiyat_son": {
     "tarih": "2026-10-28",
-    "fiyat": 46.72,
+    "fiyat": 46.56,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -8013,7 +14657,92 @@
    "guidance": null,
    "_eklendi": "2026-10-25",
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
-   "_sur_ek": "546a"
+   "_sur_ek": "546a",
+   "netborc": {
+    "2025Q2": {
+     "nb": 1.19,
+     "borc": 2.023,
+     "nakit": 0.832
+    },
+    "2025Q3": {
+     "nb": 1.535,
+     "borc": 1.935,
+     "nakit": 0.4
+    },
+    "2025Q4": {
+     "nb": 0.546,
+     "borc": 2.458,
+     "nakit": 1.912
+    },
+    "2026Q1": {
+     "nb": 1.281,
+     "borc": 2.774,
+     "nakit": 1.493
+    },
+    "2026Q2": {
+     "nb": 1.635,
+     "borc": 2.453,
+     "nakit": 0.818
+    }
+   },
+   "nakit": {
+    "2025Q2": {
+     "cfo": 0.75,
+     "capex": -0.225,
+     "kira": -0.451,
+     "fcf": 0.074,
+     "favok": 0.537,
+     "donusum": 13.8,
+     "capex_am": 0.27,
+     "ay": 6
+    },
+    "2025Q3": {
+     "cfo": 0.866,
+     "capex": -0.353,
+     "kira": -0.743,
+     "fcf": -0.23,
+     "favok": 1.292,
+     "donusum": -17.8,
+     "capex_am": 0.26,
+     "ay": 9
+    },
+    "2025Q4": {
+     "cfo": 4.04,
+     "capex": -0.604,
+     "kira": -1.001,
+     "fcf": 2.435,
+     "favok": 2.146,
+     "donusum": 113.5,
+     "capex_am": 0.32,
+     "ay": 12,
+     "fcf_ttm": 2.435,
+     "favok_ttm": 2.146
+    },
+    "2026Q1": {
+     "cfo": -0.32,
+     "capex": -0.11,
+     "kira": -0.292,
+     "fcf": -0.722,
+     "favok": 0.505,
+     "donusum": -143.1,
+     "capex_am": 0.21,
+     "ay": 3,
+     "fcf_ttm": 2.12,
+     "yaklasik": true
+    },
+    "2026Q2": {
+     "cfo": 1.212,
+     "capex": -0.443,
+     "kira": -0.647,
+     "fcf": 0.123,
+     "favok": 1.124,
+     "donusum": 10.9,
+     "capex_am": 0.39,
+     "ay": 6,
+     "fcf_ttm": 2.145,
+     "yaklasik": true
+    }
+   }
   }
  ],
  "_yol_haritasi": [
