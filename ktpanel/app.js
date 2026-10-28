@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261028a';
+const KTP_SURUM = '20261028b';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -14420,3 +14420,122 @@ function tezDisiplinRender(){
 try{ if(Array.isArray(POZ_GOREV)){ if(POZ_GOREV.indexOf('korMatrisRender')<0) POZ_GOREV.push('korMatrisRender'); if(POZ_GOREV.indexOf('tezDisiplinRender')<0) POZ_GOREV.push('tezDisiplinRender'); } }catch(e){}
 window.korMatrisRender=korMatrisRender; window.tezDisiplinRender=tezDisiplinRender; window.bugunRender=bugunRender;
 setTimeout(()=>{ try{ tezDisiplinRender(); }catch(e){} try{ korMatrisRender(); }catch(e){} }, 6000);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   §549 FON YÖNETİCİSİ MODÜLLERİ (28 Eki) — "hem seçimde hem varlık dağılımında yardımcı olsun"
+   İki soru, iki kart (Portföy sekmesinin üstü, Ebu dışı):
+   A) VARLIK DAĞILIMI — stratejik ağırlık (SAA, kullanıcı girer, buluta senkron) × §526/§548 kurallı taktik duruş →
+      taktik hedef (±pp eğim) → bant (±3 pp) → gerçek portföy (poz: hisse/fon/nakit; fonlar sınıflanır) → fark ve eylem (₺).
+      Durum pozisyon değil, "bant dışıysa ne kadar" söyler. Eğim büyüklükleri YÖNTEM notunda; SAA boşsa varsayılan katılım
+      çoklu-varlık profili (Hisse 35 · TL sabit getirili 45 · Altın 12 · Yabancı 8) ve bunu SÖYLER.
+   B) SEÇİM HUNİSİ — XKTUM evreninde (fm.json, 126 sıralanan) altı süzgeç tek puana iner; her bileşen evren içi yüzdelik
+      (0-100), puan = mevcut bileşenlerin ortalaması, kapsam yazılır: faktör kompozit (kullanıcının ağırlıkları) · PD/DD z
+      (degerleme.json) · FAVÖK $ y/y (karar-model) · analist potansiyeli (analist.json ÷ fiyat) · toparlanma sepeti (§530) ·
+      likidite (günlük hacim, multiple.json). Bayraklar: tasfiye satış baskısı (fon-portfoy tasfiye.baski) · dışlama listesi (§405)
+      · portföyde var · tezi var. Ekran bir TARAMA'dır: aday üretir, karar Muhakeme'de tezle verilir.
+   Veri: hepsi mevcut dosyalar; yeni kaynak yok. Fiyat: CANLI_FIYAT → multiple.json. Yeniden çizim: pozCiz görevleri + 60 sn.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const SAA_KEY='ktp_saa_v1', FONSINIF_KEY='ktp_fon_sinif_v1';
+const SAA_VARS={hisse:35, tlsg:45, altin:12, yabanci:8};
+const SINIF_AD={hisse:'Yerli hisse', tlsg:'TL sabit getirili', altin:'Altın', yabanci:'Yabancı hisse / döviz'};
+const SINIF_POZ={hisse:'poz1', yabanci:'poz2', altin:'poz3', tlsg:'poz4'};
+const EGIM={'AŞIRI ÜSTÜ':8,'ÜSTÜ':4,'NÖTR':0,'ALTI':-4,'AŞIRI ALTI':-8};
+try{ if(Array.isArray(CLOUD_KEYS)){ [SAA_KEY,FONSINIF_KEY].forEach(k=>{ if(CLOUD_KEYS.indexOf(k)<0) CLOUD_KEYS.push(k); }); } }catch(e){}
+const saaOku=()=>{ try{ const s=JSON.parse(localStorage.getItem(SAA_KEY)||'null'); if(s&&['hisse','tlsg','altin','yabanci'].every(k=>isFinite(s[k]))) return {...s,_kayit:true}; }catch(e){} return {...SAA_VARS,_kayit:false}; };
+const fonSinifOku=()=>{ try{ return JSON.parse(localStorage.getItem(FONSINIF_KEY)||'{}')||{}; }catch(e){ return {}; } };
+let ALOK_VERI=null;   /* {fonEvren:Set, katKat:{kod:kategori}} */
+async function alokVeriYukle(){
+  if(ALOK_VERI) return ALOK_VERI;
+  const J=async u=>{ try{ const r=await fetch(u,{cache:'no-store'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+  const [fp,kf]=await Promise.all([J('/fon-portfoy.json'),J('/katfon.json')]);
+  const fonEvren=new Set(Object.keys((fp&&fp.evren)||{})); const katKat={};
+  ((kf&&kf.kategoriler)||[]).forEach(K=>((K.fonlar)||[]).forEach(f=>{ katKat[f.k]=K.ad; }));
+  ALOK_VERI={fonEvren,katKat}; return ALOK_VERI;
+}
+/* fon → sınıf: kullanıcı ataması > fon-portfoy evreni (hisse) > katfon kategorisi (Döviz→yabancı, diğer→tlsg) > ad ipucu > tlsg (tahmin) */
+function fonSinifla(kod, V){
+  const el=fonSinifOku()[kod]; if(el) return {sinif:el, kaynak:'elle'};
+  if(V.fonEvren.has(kod)) return {sinif:'hisse', kaynak:'fon-portfoy evreni'};
+  const kat=V.katKat[kod]; if(kat){ if(/Döviz/i.test(kat)) return {sinif:'yabanci', kaynak:kat}; return {sinif:'tlsg', kaynak:kat}; }
+  if(/ALT|GLD|AU/.test(kod)) return {sinif:'altin', kaynak:'kod ipucu — doğrula'};
+  return {sinif:'tlsg', kaynak:'tahmin — ⚙ ile ata'};
+}
+async function alokRender(){
+  const el=$('alokBody'); if(!el) return;
+  const V=await alokVeriYukle();
+  const SAA=saaOku(); const tm=(typeof TAKTIK_MODEL!=='undefined'&&TAKTIK_MODEL)||null;
+  /* gerçek dağılım */
+  const ger={hisse:0,tlsg:0,altin:0,yabanci:0}; const fonSatir=[]; let toplam=0;
+  poz.forEach(p=>{ const deger=p.tip==='nakit'?(+p.adet||0):((+p.adet||0)*(+p.fiyat||+p.maliyet||0)); if(!(deger>0)) return; toplam+=deger;
+    if(p.tip==='hisse') ger.hisse+=deger; else if(p.tip==='nakit') ger.tlsg+=deger; else { const s=fonSinifla(String(p.kod||'').toUpperCase(),V); ger[s.sinif]+=deger; fonSatir.push({kod:String(p.kod).toUpperCase(),deger,...s}); } });
+  /* taktik hedef */
+  const hedefHam={}, durus={}; let topH=0;
+  Object.keys(SAA_VARS).forEach(k=>{ const d=tm&&tm[SINIF_POZ[k]]?tm[SINIF_POZ[k]].durus:null; durus[k]=d; const h=Math.max(0,(+SAA[k])+(d?EGIM[d]||0:0)); hedefHam[k]=h; topH+=h; });
+  const hedef={}; Object.keys(hedefHam).forEach(k=>hedef[k]=topH?hedefHam[k]/topH*100:+SAA[k]);
+  const BANT=3;
+  const F=(v,d=1)=>trN(v,d);
+  const rows=Object.keys(SAA_VARS).map(k=>{ const g=toplam?ger[k]/toplam*100:null; const fark=g==null?null:g-hedef[k]; const dis=fark!=null&&Math.abs(fark)>BANT;
+    const eylem=fark==null?'—':!dis?'<span class="sub">bant içinde</span>':'<span style="color:'+(fark>0?'var(--down)':'var(--up)')+';font-weight:600">'+(fark>0?'azalt':'artır')+' '+F(Math.abs(fark))+' pp ≈ '+F(Math.abs(fark)/100*toplam/1e3,0)+' bin ₺</span>';
+    const dC=durus[k]?(/ÜSTÜ/.test(durus[k])?'var(--up)':/ALTI/.test(durus[k])?'var(--down)':'var(--muted)'):'var(--muted)';
+    return '<tr><td><b>'+SINIF_AD[k]+'</b></td><td class="num">%'+F(+SAA[k],0)+'</td><td style="color:'+dC+';font-size:10px;white-space:nowrap">'+(durus[k]||'<span class="sub">model yok</span>')+' <span class="sub">('+(durus[k]?((EGIM[durus[k]]||0)>=0?'+':'')+(EGIM[durus[k]]||0)+' pp':'—')+')</span></td><td class="num" style="font-weight:600">%'+F(hedef[k])+'</td><td class="num" style="color:var(--muted)">%'+F(hedef[k]-BANT)+'–'+F(hedef[k]+BANT)+'</td><td class="num">'+(g==null?'—':'%'+F(g))+'</td><td class="num '+(fark==null?'':fark>0?'down':'up')+'">'+(fark==null?'—':(fark>=0?'+':'−')+F(Math.abs(fark))+' pp')+'</td><td>'+eylem+'</td></tr>'; });
+  const saaForm='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><span class="lbl" style="margin:0">STRATEJİK (SAA) %</span>'+
+    Object.keys(SAA_VARS).map(k=>'<label class="sub" style="display:flex;gap:4px;align-items:center">'+SINIF_AD[k].split(' ')[0]+' <input data-saa="'+k+'" type="number" min="0" max="100" value="'+(+SAA[k])+'" style="width:52px;padding:3px 5px;font-size:11px"></label>').join('')+
+    '<button class="btn mini2" id="saaKaydet">kaydet</button><span class="sub" style="font-size:9.5px">'+(SAA._kayit?'kayıtlı SAA (bulut senkron)':'<b>varsayılan profil</b> — kendi stratejik ağırlıklarını gir')+' · toplam '+F(Object.keys(SAA_VARS).reduce((a,k)=>a+(+SAA[k]),0),0)+'</span></div>';
+  const fonHtml=fonSatir.length?'<div class="sub" style="margin-top:6px">Fon sınıflaması: '+fonSatir.map(f=>'<b>'+esc(f.kod)+'</b> → '+SINIF_AD[f.sinif].split(' ')[0]+' <span class="thin">('+esc(f.kaynak)+')</span> <button class="btn mini2" data-fonsinif="'+esc(f.kod)+'" style="padding:0 4px;font-size:9px">⚙</button>').join(' · ')+'</div>':'';
+  el.innerHTML=saaForm+'<table><tr><th>Sınıf</th><th class="num">SAA</th><th>Taktik duruş</th><th class="num">Hedef</th><th class="num">Bant ±'+BANT+'</th><th class="num">Gerçek</th><th class="num">Fark</th><th>Eylem</th></tr>'+rows.join('')+'</table>'+
+    '<div class="sub" style="margin-top:5px">Portföy toplamı '+(toplam?F(toplam/1e3,0)+' bin ₺':'—')+' · '+poz.length+' kayıt'+(tm?' · taktik model '+(tm._ts?new Date(tm._ts).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):''):' · <b>taktik model hesaplanmadı — hedef = SAA</b>')+'</div>'+fonHtml+
+    '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">YÖNTEM — hedef nasıl türetilir (§549)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">Hedef = SAA + eğim; eğim kurallı taktik duruştan: AŞIRI ÜSTÜ +8 · ÜSTÜ +4 · NÖTR 0 · ALTI −4 · AŞIRI ALTI −8 puan; dört sınıf 100\'e ölçeklenir. Bant ±3 puan: içindeyken işlem yok (işlem maliyeti ve gürültü). Gerçek dağılım Portföy kayıtlarından: hisse → yerli hisse; nakit → TL sabit getirili; fon → fon-portfoy evreni (hisse) ya da TEFAS kategorisi (döviz → yabancı; para piyasası/kira sertifikası → TL SG); altın fonu kod ipucuyla tahmin edilir, ⚙ ile düzeltilir. Bu tablo pozisyon değil, <em>bant dışı sapmayı</em> söyler; sapmayı kapatıp kapatmamak tez ve likidite kararıdır.</div></details>';
+  el.querySelector('#saaKaydet')?.addEventListener('click',()=>{ const o={}; el.querySelectorAll('input[data-saa]').forEach(i=>o[i.dataset.saa]=+i.value||0); try{ localStorage.setItem(SAA_KEY,JSON.stringify(o)); }catch(e){} alokRender(); });
+  el.querySelectorAll('button[data-fonsinif]').forEach(b=>b.addEventListener('click',()=>{ const kod=b.dataset.fonsinif; const v=prompt(kod+' hangi sınıf? h = yerli hisse · t = TL sabit getirili · a = altın · y = yabancı/döviz',''); if(v==null) return; const m={h:'hisse',t:'tlsg',a:'altin',y:'yabanci'}[String(v).trim().toLowerCase()[0]]; if(!m) return; const o=fonSinifOku(); o[kod]=m; try{ localStorage.setItem(FONSINIF_KEY,JSON.stringify(o)); }catch(e){} alokRender(); }));
+}
+
+/* ── B) SEÇİM HUNİSİ ── */
+let SECIM_VERI=null;
+async function secimVeriYukle(){
+  if(SECIM_VERI) return SECIM_VERI;
+  const J=async u=>{ try{ const r=await fetch(u,{cache:'no-store'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+  const [fm,deg,km,an,mu,fp,top,xk]=await Promise.all([J('/fm.json'),J('/degerleme.json'),J('/karar-model.json'),J('/analist.json'),J('/multiple.json'),J('/fon-portfoy.json'),J('/toparlanma.json'),J('/xktum.json')]);
+  SECIM_VERI={fm,deg,km,an,mu,fp,top,xk}; return SECIM_VERI;
+}
+function secimFmw(){ let w={...FMW_DEF}; try{ const s=JSON.parse(localStorage.getItem(FMW_KEY)||'null'); if(s&&typeof s==='object'){ const t=FMF.reduce((a,k)=>a+(+s[k]||0),0); if(t>0) FMF.forEach(k=>w[k]=(+s[k]||0)/t); } }catch(e){} return w; }
+async function secimRender(){
+  const el=$('secimBody'); if(!el) return;
+  const V=await secimVeriYukle(); if(!V.fm||!Array.isArray(V.fm.data)){ el.innerHTML='<div class="sub">fm.json okunamadı — faktör evreni yok.</div>'; return; }
+  const minHacim=parseFloat(($('secimHacim')&&$('secimHacim').value)||'20'); const tasfiyeHaric=!!($('secimTasfiye')&&$('secimTasfiye').checked);
+  const w=secimFmw();
+  const fiyat=k=>(typeof CANLI_FIYAT!=='undefined'&&CANLI_FIYAT[k])||(typeof MFIYAT!=='undefined'&&MFIYAT[k])||null;
+  const MU={}; ((V.mu&&V.mu.hisseler)||[]).forEach(h=>MU[h.k]=h);
+  const DEG={}; ((V.deg&&V.deg.hisseler)||[]).forEach(h=>{ if(h&&h.canli&&isFinite(h.canli.z)) DEG[h.k]=h.canli.z; });
+  const KAZ={}; ((V.km&&V.km.modeller)||[]).forEach(m=>{ const F=m.favok||{}; const Q=Object.keys(F).filter(q=>F[q]&&isFinite(F[q].usd)).sort(); if(Q.length<5) return; const son=Q[Q.length-1]; const mm=son.match(/^(\d{4})Q([1-4])$/); if(!mm) return; const onc=(+mm[1]-1)+'Q'+mm[2]; if(F[onc]&&isFinite(F[onc].usd)&&F[onc].usd>0) KAZ[m.kod]={yy:(F[son].usd/F[onc].usd-1)*100, q:son}; });
+  const AN={}; ((V.an&&V.an.hisseler)||[]).forEach(h=>{ if(h.hedef>0) AN[h.k]={hedef:h.hedef,n:h.kurum}; });
+  const BASKI=new Set((((V.fp||{}).tasfiye||{}).baski||{}).liste?((V.fp.tasfiye.baski.liste)||[]).map(x=>x.kod):[]);
+  const SEPET=new Set(((V.top&&V.top.sepet)||[]).map(x=>x.k));
+  let DISLA=new Set(); try{ const d=JSON.parse(localStorage.getItem(FM_DISLA_KEY)||'[]'); DISLA=new Set(Array.isArray(d)?d:Object.keys(d||{})); }catch(e){}
+  const portKod=new Set(poz.filter(p=>p.tip==='hisse'&&p.kod).map(p=>String(p.kod).toUpperCase()));
+  const tezKod=new Set((typeof jrnl!=='undefined'?jrnl:[]).filter(j=>j.durum!=='kapali').map(j=>String(j.kod).toUpperCase()));
+  /* bileşen ham değerleri */
+  const H=V.fm.data.map(x=>{ const k=x.t; let fk=0, fw=0; FMF.forEach((f,i)=>{ if(x.k&&x.k[i]&&isFinite(x.f[i])){ fk+=w[f]*x.f[i]; fw+=w[f]; } }); const faktor=fw>0?fk/fw:null;
+    const p=fiyat(k); const an=AN[k]; const pot=(an&&an.n>=2&&p>0)?(an.hedef/p-1)*100:null;   /* tek kurumlu eski hedef puanı sürüklemesin: ≥2 kurum */ const hac=MU[k]?MU[k].hacim:null;
+    return {k, s:x.s, faktor, deg:DEG[k]!=null?-DEG[k]:null, kaz:KAZ[k]?KAZ[k].yy:null, kazQ:KAZ[k]?KAZ[k].q:null, pot, anN:an?an.n:0, hac, sepet:SEPET.has(k), baski:BASKI.has(k), disla:DISLA.has(k), port:portKod.has(k), tez:tezKod.has(k), p}; });
+  /* yüzdelik (0-100) evren içinde */
+  const pct=(arr,key)=>{ const v=arr.map(x=>x[key]).filter(x=>x!=null&&isFinite(x)).sort((a,b)=>a-b); const n=v.length; arr.forEach(x=>{ const val=x[key]; if(val==null||!isFinite(val)||n<5){ x['p_'+key]=null; return; } let lo=0,hi=n; while(lo<hi){ const m=(lo+hi)>>1; if(v[m]<val) lo=m+1; else hi=m; } x['p_'+key]=lo/(n-1)*100; }); };
+  ['faktor','deg','kaz','pot'].forEach(key=>pct(H,key));
+  H.forEach(x=>{ const P=[x.p_faktor,x.p_deg,x.p_kaz,x.p_pot].filter(v=>v!=null); x.cekirdek=P.length; if(x.sepet) P.push(75); x.kapsam=P.length; x.puan=P.length?P.reduce((a,b)=>a+b,0)/P.length:null;
+    x.flt=(x.hac==null||x.hac>=minHacim)&&!(tasfiyeHaric&&x.baski)&&!x.disla; });
+  const aday=H.filter(x=>x.puan!=null&&x.cekirdek>=3&&x.flt).sort((a,b)=>b.puan-a.puan);   /* dört çekirdek bileşenden en az üçü ölçülmüş olmalı */
+  const port=H.filter(x=>x.port).sort((a,b)=>(a.puan??-1)-(b.puan??-1));
+  const F=(v,d=1)=>v==null?'—':trN(v,d); const yz=(v,d=1)=>v==null?'—':((v>=0?'+':'−')+trN(Math.abs(v),d));
+  const sat=x=>'<tr'+(x.port?' style="background:var(--mmL)"':'')+'><td><b>'+esc(x.k)+'</b>'+(x.port?' <span class="thin" title="portföyde">◆</span>':'')+(x.tez?' <span class="thin" title="açık tez var">✎</span>':'')+'</td><td style="font-size:10px;color:var(--muted)">'+esc((typeof SEKTOR_TR!=='undefined'&&SEKTOR_TR[x.s])||x.s||'')+'</td>'+
+    '<td class="num" style="font-weight:700">'+F(x.puan,0)+'<span class="thin">/'+x.kapsam+'</span></td><td class="num">'+F(x.faktor,2)+'</td><td class="num">'+(x.deg==null?'—':trN(-x.deg,2))+'</td><td class="num">'+yz(x.kaz,0)+(x.kazQ?' <span class="thin">'+kararQAd(x.kazQ)+'</span>':'')+'</td><td class="num">'+yz(x.pot,0)+(x.anN?' <span class="thin">('+x.anN+')</span>':'')+'</td><td class="num">'+F(x.hac,0)+'</td>'+
+    '<td style="font-size:9.5px">'+[x.sepet?'<span class="up">toparlanma sepeti</span>':'',x.baski?'<span class="down">tasfiye baskısı</span>':'',x.disla?'<span class="down">dışlama listesi</span>':'',(x.hac!=null&&x.hac<minHacim)?'<span class="down">likidite</span>':''].filter(Boolean).join(' · ')+'</td></tr>';
+  const bas='<tr><th>Hisse</th><th>Sektör</th><th class="num">Puan</th><th class="num">Faktör z</th><th class="num">PD/DD z</th><th class="num">FAVÖK $ y/y</th><th class="num">Analist pot.</th><th class="num">Hacim mn₺</th><th>Bayrak</th></tr>';
+  el.innerHTML='<div class="lbl" style="margin-top:4px">ADAYLAR — EN YÜKSEK PUAN <span class="thin" style="font-weight:400">('+aday.length+' hisse süzgeçten geçti · evren '+H.length+')</span></div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+aday.slice(0,15).map(sat).join('')+'</table></div>'+
+    (port.length?'<div class="lbl" style="margin-top:10px">PORTFÖYDEKİLER — EN ZAYIFTAN GÜÇLÜYE <span class="thin" style="font-weight:400">(aynı ölçekle)</span></div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+port.map(sat).join('')+'</table></div>':'<div class="sub" style="margin-top:8px">Portföyde faktör evreninden hisse yok.</div>')+
+    '<div class="sub" style="margin-top:6px">Puan = mevcut bileşenlerin evren içi yüzdelik ortalaması (0-100; /n kapsam). Bileşenler: faktör kompozit (Faktör Model sekmesindeki ağırlıklarınla) · PD/DD z (ucuz = yüksek yüzdelik) · FAVÖK $ y/y · analist potansiyeli · toparlanma sepeti üyeliği (+75 sabit). Faktör z ve PD/DD z ham; FAVÖK ve potansiyel %. Hacim multiple.json günlük ortalama.</div>'+
+    '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">NASIL OKUNUR (§549)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">Bu bir tarama, karar değil: dört bağımsız kaynağın (faktör · değerleme · kazanç · sokak beklentisi) aynı kâğıtta buluşup buluşmadığını gösterir. Puanı yüksek ama kapsamı 2 olan hisse, puanı orta ama kapsamı 5 olandan daha az güvenilirdir. Portföy tablosunun en üstü (en zayıf) "neden hâlâ tutuyorum?" sorusunun adresidir — cevabı Muhakeme\'deki tezde yoksa pozisyon alışkanlıkla duruyordur. Aday tablosundan Muhakeme\'ye geçerken üç şey yazılır: tez, katalizör, ölçülebilir bozan. Bayraklar süzgeç değil uyarıdır; tasfiye baskısı altındaki kâğıt ucuzlamış olabilir (fırsat) ya da daha ucuzlayacak olabilir (bıçak) — ikisini ayıran şey toparlanma aşamasıdır (§530).</div></details>';
+}
+try{ if(Array.isArray(POZ_GOREV)){ ['alokRender','secimRender'].forEach(g=>{ if(POZ_GOREV.indexOf(g)<0) POZ_GOREV.push(g); }); } }catch(e){}
+window.alokRender=alokRender; window.secimRender=secimRender;
+(function(){ ['secimHacim','secimTasfiye'].forEach(id=>{ const e=$(id); if(e) e.addEventListener('change',()=>{ try{ secimRender(); }catch(x){} }); });
+  [5000,20000,60000].forEach(t=>setTimeout(()=>{ try{ alokRender(); }catch(e){ console.error('[KTPanel] alokRender',e&&e.message||e); } try{ secimRender(); }catch(e){ console.error('[KTPanel] secimRender',e&&e.message||e); } },t));
+  setInterval(()=>{ try{ alokRender(); }catch(e){} }, 5*60*1000); })();
