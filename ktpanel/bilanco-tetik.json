@@ -1,5 +1,5 @@
 {
- "tarih": "2026-10-27",
+ "tarih": "2026-10-28",
  "kodlar": [
   "AKCNS",
   "AKHAN",
@@ -68,6 +68,7 @@
   "KGYO",
   "KMPUR",
   "KNFRT",
+  "KONKA",
   "KPEKS",
   "KRGYO",
   "KRONT",
@@ -128,7 +129,7 @@
   "YEOTK",
   "ZEDUR"
  ],
- "sayi": 126,
+ "sayi": 127,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -466,7 +467,8 @@
   "POLTK": "2026-10-27",
   "SARAE": "2026-10-27",
   "TSGYO": "2026-10-27",
-  "UFUK": "2026-10-27"
+  "UFUK": "2026-10-27",
+  "KONKA": "2026-10-28"
  },
  "evren_disi": [
   "ADEL",
@@ -682,18 +684,12 @@
   "YYAPI"
  ],
  "evren_disi_sayi": 211,
- "pencere_sayi": 76,
+ "pencere_sayi": 57,
  "dusen_son": [
   "AKBNK",
   "ALCTL",
-  "ANHYT",
-  "ARCLK",
   "ASELS",
-  "BRISA",
-  "CIMSA",
-  "ESCOM",
-  "GENIL",
-  "TKNSA"
+  "ESCOM"
  ],
- "guncelleme": "2026-10-27 20:02 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-28 06:32 UTC — otomatik (KAP FR · kümülatif §299)"
 }

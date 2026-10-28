@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-27",
+ "surum": "2026-10-28",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -68,8 +68,8 @@
     "2026Q3": 43.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 45.64,
+    "tarih": "2026-10-26",
+    "fiyat": 44.9,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -172,6 +172,11 @@
     "2026Q2": {
      "usd": 7,
      "tl": 0.34
+    },
+    "2026Q3": {
+     "tl": 1.7,
+     "usd": 35.5,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -186,8 +191,8 @@
     "2026Q3": 205
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 181,
+    "tarih": "2026-10-26",
+    "fiyat": 177.2,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -244,6 +249,14 @@
      "ort_favok_tl": 0.36,
      "ort_net_tl": -0.33,
      "gercek_favok_tl": 0.34
+    },
+    {
+     "q": "2026Q3",
+     "n": 2,
+     "ort_favok_tl": 1.651,
+     "ort_net_tl": 0.678,
+     "gercek_favok_tl": 1.7,
+     "_kaynak": "Actions §463"
     }
    ],
    "hedef_fiyat": {
@@ -384,8 +397,8 @@
     "2026Q3": 3.47
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 3.52,
+    "tarih": "2026-10-26",
+    "fiyat": 3.65,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
@@ -521,8 +534,8 @@
     "2026Q3": 8.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 8.33,
+    "tarih": "2026-10-26",
+    "fiyat": 8.11,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -701,8 +714,8 @@
     "2026Q3": 12.84
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 10.13,
+    "tarih": "2026-10-26",
+    "fiyat": 10.44,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -812,8 +825,8 @@
     "2026Q3": 336.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 340.75,
+    "tarih": "2026-10-26",
+    "fiyat": 335,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -973,8 +986,8 @@
     "2026Q3": 11.55
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 9.7,
+    "tarih": "2026-10-26",
+    "fiyat": 9.85,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1080,8 +1093,8 @@
     "2026Q3": 418.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 363,
+    "tarih": "2026-10-26",
+    "fiyat": 374.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
@@ -1268,8 +1281,8 @@
     "2026Q3": 6.23
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 3.51,
+    "tarih": "2026-10-26",
+    "fiyat": 3.68,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1371,8 +1384,8 @@
     "2026Q3": 41.68
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 39.6,
+    "tarih": "2026-10-26",
+    "fiyat": 37.62,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1581,8 +1594,8 @@
     "2026Q3": 12.11
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 12.28,
+    "tarih": "2026-10-26",
+    "fiyat": 12.47,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": {
@@ -1699,8 +1712,8 @@
     "2026Q3": 18.15
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 14.32,
+    "tarih": "2026-10-26",
+    "fiyat": 15,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -1880,8 +1893,8 @@
     "2026Q3": 18.44
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 16.99,
+    "tarih": "2026-10-26",
+    "fiyat": 16.84,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2095,8 +2108,8 @@
     "2026Q3": 13.22
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 13.2,
+    "tarih": "2026-10-26",
+    "fiyat": 12.72,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2206,8 +2219,8 @@
     "2026Q3": 105.4
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 112.3,
+    "tarih": "2026-10-26",
+    "fiyat": 111.7,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2388,8 +2401,8 @@
     "2026Q3": 35.94
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 31.46,
+    "tarih": "2026-10-26",
+    "fiyat": 30.86,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2622,8 +2635,8 @@
     "2026Q3": 54.35
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 40.3,
+    "tarih": "2026-10-26",
+    "fiyat": 39.78,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -2810,8 +2823,8 @@
     "2026Q3": 42.6
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 32.72,
+    "tarih": "2026-10-26",
+    "fiyat": 33.12,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3003,8 +3016,8 @@
     "2026Q3": 132
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 106.1,
+    "tarih": "2026-10-26",
+    "fiyat": 108.6,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3144,8 +3157,8 @@
     "2026Q3": 277.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 245.5,
+    "tarih": "2026-10-26",
+    "fiyat": 248.7,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3303,8 +3316,8 @@
     "2026Q3": 411.25
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 278.75,
+    "tarih": "2026-10-26",
+    "fiyat": 274.25,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3473,8 +3486,8 @@
     "2026Q3": 1.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 1.07,
+    "tarih": "2026-10-26",
+    "fiyat": 1.08,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3574,8 +3587,8 @@
     "2026Q3": 10.75
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 8.98,
+    "tarih": "2026-10-26",
+    "fiyat": 8.95,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3762,8 +3775,8 @@
     "2026Q3": 43.98
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 37.6,
+    "tarih": "2026-10-26",
+    "fiyat": 36.06,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -3994,8 +4007,8 @@
     "2026Q3": 36.94
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 34,
+    "tarih": "2026-10-26",
+    "fiyat": 34.2,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4181,8 +4194,8 @@
     "2026Q3": 417.75
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 384.75,
+    "tarih": "2026-10-26",
+    "fiyat": 372.75,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4370,8 +4383,8 @@
     "2026Q3": 4.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 3.56,
+    "tarih": "2026-10-26",
+    "fiyat": 3.49,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4517,8 +4530,8 @@
     "2026Q3": 18.91
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 17.58,
+    "tarih": "2026-10-26",
+    "fiyat": 17.72,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4746,8 +4759,8 @@
     "2026Q3": 120.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 107,
+    "tarih": "2026-10-26",
+    "fiyat": 104.2,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -4928,8 +4941,8 @@
     "2026Q3": 231.4
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 191.3,
+    "tarih": "2026-10-26",
+    "fiyat": 178.7,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -5682,8 +5695,8 @@
     }
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 361.5,
+    "tarih": "2026-10-26",
+    "fiyat": 364.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -5773,8 +5786,8 @@
     "2026Q3": 5.6
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 5.2,
+    "tarih": "2026-10-26",
+    "fiyat": 5.3,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -5917,8 +5930,8 @@
     "2026Q3": 97.25
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 74.8,
+    "tarih": "2026-10-26",
+    "fiyat": 72,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6034,8 +6047,8 @@
     "2026Q3": 32.68
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 34.74,
+    "tarih": "2026-10-26",
+    "fiyat": 34.5,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6159,8 +6172,8 @@
     "2026Q3": 48.18
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 48.52,
+    "tarih": "2026-10-26",
+    "fiyat": 47.34,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6273,8 +6286,8 @@
     "2026Q3": 23.5
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 21.3,
+    "tarih": "2026-10-26",
+    "fiyat": 21.24,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6347,6 +6360,26 @@
      "tl": 0.511,
      "usd": 11.2,
      "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": 2.7,
+     "usd": 74.4,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 0.498,
+     "usd": 12.8,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": -0.062,
+     "usd": -1.5,
+     "_kaynak": "KAP"
+    },
+    "2026Q3": {
+     "tl": 0.313,
+     "usd": 6.5,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -6363,7 +6396,7 @@
     "2026Q3": 38.9
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
+    "tarih": "2026-10-26",
     "fiyat": 33.86,
     "kaynak": "Yahoo (Actions §531)"
    },
@@ -6432,8 +6465,8 @@
     "2026Q3": 55.25
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 44.86,
+    "tarih": "2026-10-26",
+    "fiyat": 48.3,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6550,8 +6583,8 @@
     "2026Q3": 4.85
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 3.99,
+    "tarih": "2026-10-26",
+    "fiyat": 4,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6694,8 +6727,8 @@
     "2026Q3": 95.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 79,
+    "tarih": "2026-10-26",
+    "fiyat": 76,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6800,8 +6833,8 @@
     "2026Q3": 33.66
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 27.08,
+    "tarih": "2026-10-26",
+    "fiyat": 27.2,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -6919,8 +6952,8 @@
     "2026Q3": 60.85
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 54.1,
+    "tarih": "2026-10-26",
+    "fiyat": 50.05,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7009,8 +7042,8 @@
     "2026Q3": 9.08
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 6.95,
+    "tarih": "2026-10-26",
+    "fiyat": 6.98,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7113,8 +7146,8 @@
     "2026Q3": 11.11
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 8.38,
+    "tarih": "2026-10-26",
+    "fiyat": 8.72,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7230,8 +7263,8 @@
     "2026Q3": 23.12
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 19.72,
+    "tarih": "2026-10-26",
+    "fiyat": 19.74,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7332,8 +7365,8 @@
     "2026Q3": 18.59
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 14.5,
+    "tarih": "2026-10-26",
+    "fiyat": 14.98,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7398,8 +7431,8 @@
     "2026Q3": 80
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 82.35,
+    "tarih": "2026-10-26",
+    "fiyat": 80.9,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7484,7 +7517,7 @@
     "2026Q3": 10.43
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
+    "tarih": "2026-10-26",
     "fiyat": 9.61,
     "kaynak": "Yahoo (Actions §531)"
    },
@@ -7581,8 +7614,8 @@
     "2026Q3": 58.2
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 48.9,
+    "tarih": "2026-10-26",
+    "fiyat": 49.74,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7687,8 +7720,8 @@
     "2026Q3": 17.72
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 13.29,
+    "tarih": "2026-10-26",
+    "fiyat": 12.92,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7818,8 +7851,8 @@
     "2026Q3": 2.7
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 2.31,
+    "tarih": "2026-10-26",
+    "fiyat": 2.38,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7932,8 +7965,8 @@
     "2026Q3": 58.3
    },
    "fiyat_son": {
-    "tarih": "2026-10-27",
-    "fiyat": 46.04,
+    "tarih": "2026-10-26",
+    "fiyat": 46.02,
     "kaynak": "Yahoo (Actions §531)"
    },
    "bolunme": null,
@@ -7979,7 +8012,7 @@
  "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili.",
  "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası.",
  "_531": {
-  "guncelleme": "2026-10-27",
+  "guncelleme": "2026-10-28",
   "xk050": 50,
   "katalog": 52,
   "eklenen_toplam": 20

@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-27 20:02 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-28 06:32 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -151,7 +151,7 @@
    "ulke": "USD",
    "olay": "Advance GDP Price Index q/q",
    "etki": "Medium",
-   "beklenti": "3.3%",
+   "beklenti": "3.2%",
    "onceki": "6.2%"
   },
   {

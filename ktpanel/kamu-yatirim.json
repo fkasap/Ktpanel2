@@ -88,7 +88,7 @@
  },
  "_not": "§533 kamu yatırım nabzı: merkezi yönetim sermaye giderleri (yıl içi kümülatif, milyon ₺) · kaynak HMB, SBB haftalık raporu üzerinden; bütçe çerçevesi 2027 Bütçe Gerekçesi.",
  "son": "2026-09",
- "guncelleme": "2026-10-27",
+ "guncelleme": "2026-10-28",
  "ima": {
   "yil": 2026,
   "kalan_ay": 3,
@@ -96,5 +96,5 @@
   "aylik_kalan": 299767.6666666667,
   "aylik_gerceklesen": 98113.22222222222
  },
- "kontrol": "2026-10-27"
+ "kontrol": "2026-10-28"
 }
