@@ -2534,6 +2534,65 @@ async function kararOrneklem() {
   } catch (e) { raporlar.push('### Karar modeli örneklemi (§462b) — ✗ ' + String(e && e.message || e).slice(0, 120)); }
 }
 
+/* ── §550 NET BORÇ + SERBEST NAKİT AKIŞI — karar-model.json'a (28 Eki, kullanıcı: "FCF de önemli · PD/FAVÖK mü EV/FAVÖK mü?") ──
+   Her model (banka hariç) için kap-arsiv/<KOD>.json'un HER çeyreğinden:
+   • netborc[q] = {nb, borc, nakit} mlr ₺ (dönem sonu stok): finansal borç = KV borçlanmalar (kap-fr_CurrentBorowings) + UV borçların KV
+     kısmı (kap-fr_CurrentPortionOfNoncurrentBorrowings) + UV borçlanmalar (ifrs-full_LongtermBorrowings) — TFRS 16 kira yükümlülüğü KAP
+     şablonunda bu satırların içinde; nakit = nakit ve benzerleri + KV finansal yatırımlar. Panel EV = PD + net borç kurar.
+   • nakit[q] = YTD (aynı raporun cari sütunu → tek satın alma gücü, TMS 29 karışmaz): cfo · capex (MDV+MODV alımı − satışı) · kira (kira
+     yükümlülüğü ödemeleri) · fcf = cfo − net capex − kira · favok (EFK − diğer faal. gelir/gider + amortisman, §462b tanımı) ·
+     donusum = fcf / favok · capex_am = brüt capex / amortisman (>2: büyüme yatırımı ağırlıklı).
+     TTM: 4Ç'de yıllık sütun; diğer çeyreklerde cari YTD + geçen yıl yıllık − geçen yıl aynı YTD (önceki dönem karşılaştırma sütunu) →
+     iki farklı satın alma gücü karışır, 'yaklasik' işaretlenir.
+   FCF = firmaya serbest nakit (faiz ödemeleri finansmanda kaldığı için düşülmez) → EV ile eşleşir: FCF verimi = TTM FCF / EV. */
+async function kararNakit() {
+  const dosya = 'karar-model.json';
+  if (!(await varMi(dosya))) return;
+  try {
+    const M = await oku(dosya); let n = 0, deg = 0; const ornek = [];
+    for (const mdl of (M.modeller || [])) {
+      if (!mdl.kod || mdl.tip === 'konsensus_banka') continue;
+      const kd = 'kap-arsiv/' + mdl.kod + '.json'; if (!(await varMi(kd))) continue;
+      const K = await oku(kd); const D = K.donemler || {};
+      const sat = (dn, x) => { for (const t of ((dn && dn.tablolar) || [])) { const r = (t.satirlar || []).find(s => s.xbrl === x); if (r) return r.degerler; } return null; };
+      const v0 = (dn, x, i) => { const r = sat(dn, x); return (r && r[i || 0] != null && isFinite(r[i || 0])) ? +r[i || 0] : null; };
+      const nb = {}, nk = {};
+      for (const key of Object.keys(D).filter(k => /^\d{4}\/[1-4]$/.test(k)).sort()) {
+        const [y, c] = key.split('/').map(Number); const q = y + 'Q' + c; if (q < '2024Q1') continue;
+        const dn = D[key]; const cr = ((dn.birim && dn.birim.carpan) || 1000) / 1e9;   /* → mlr ₺ */
+        const kv = v0(dn, 'kap-fr_CurrentBorowings') || 0, kvk = v0(dn, 'kap-fr_CurrentPortionOfNoncurrentBorrowings') || 0, uv = v0(dn, 'ifrs-full_LongtermBorrowings') || 0;
+        const cash = v0(dn, 'ifrs-full_CashAndCashEquivalents'), fy = v0(dn, 'kap-fr_CurrentFinancialInvestments') || 0;
+        if (cash != null) { const borc = (kv + kvk + uv) * cr, nakit = (cash + fy) * cr; nb[q] = { nb: +(borc - nakit).toFixed(3), borc: +borc.toFixed(3), nakit: +nakit.toFixed(3) }; }
+        const ytd = (i) => { const cfo = v0(dn, 'ifrs-full_CashFlowsFromUsedInOperatingActivities', i); if (cfo == null) return null;
+          const cx = v0(dn, 'kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities', i) ?? ((v0(dn, 'ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities', i) || 0) + (v0(dn, 'ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities', i) || 0));
+          const sx = v0(dn, 'kap-fr_ProceedsFromSalesOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities', i) || 0;
+          const ki = v0(dn, 'kap-fr_PaymentsOfLeaseLiabilitiesClassifiedAsFinancingActivities', i) || 0;
+          const efk = v0(dn, 'ifrs-full_ProfitLossFromOperatingActivities', i), dg = v0(dn, 'ifrs-full_OtherIncome', i) || 0, dy = v0(dn, 'ifrs-full_OtherExpenseByFunction', i) || 0, am = v0(dn, 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense', i);
+          const capexBrut = -Math.abs(cx || 0), kira = -Math.abs(ki);
+          const fcf = cfo + capexBrut + Math.abs(sx) + kira; const favok = (efk != null && am != null) ? (efk - dg - dy + Math.abs(am)) : null;
+          return { cfo: cfo * cr, capex: capexBrut * cr, satis: Math.abs(sx) * cr, kira: kira * cr, fcf: fcf * cr, favok: favok != null ? favok * cr : null, am: am != null ? Math.abs(am) * cr : null }; };
+        const a = ytd(0); if (!a) continue;
+        const r = { cfo: +a.cfo.toFixed(3), capex: +a.capex.toFixed(3), kira: +a.kira.toFixed(3), fcf: +a.fcf.toFixed(3), favok: a.favok != null ? +a.favok.toFixed(3) : null,
+          donusum: (a.favok && a.favok > 0) ? +(a.fcf / a.favok * 100).toFixed(1) : null, capex_am: (a.am && a.am > 0) ? +(Math.abs(a.capex) / a.am).toFixed(2) : null, ay: c * 3 };
+        if (c === 4) { r.fcf_ttm = r.fcf; r.favok_ttm = r.favok; }
+        else { const fyR = D[(y - 1) + '/4']; const b = ytd(1); const fyY = fyR ? (() => { const cr2 = ((fyR.birim && fyR.birim.carpan) || 1000) / 1e9; const cfo = v0(fyR, 'ifrs-full_CashFlowsFromUsedInOperatingActivities'); if (cfo == null) return null;
+              const cx = v0(fyR, 'kap-fr_PurchaseOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities') ?? ((v0(fyR, 'ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities') || 0) + (v0(fyR, 'ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities') || 0));
+              const sx = v0(fyR, 'kap-fr_ProceedsFromSalesOfPropertyPlantEquipmentAndIntangibleAssetsClassifiedAsInvestingActivities') || 0, ki = v0(fyR, 'kap-fr_PaymentsOfLeaseLiabilitiesClassifiedAsFinancingActivities') || 0;
+              return (cfo - Math.abs(cx || 0) + Math.abs(sx) - Math.abs(ki)) * cr2; })() : null;
+          if (b && fyY != null) { r.fcf_ttm = +(a.fcf + fyY - b.fcf).toFixed(3); r.yaklasik = true; } }
+        nk[q] = r;
+      }
+      const eskiJ = JSON.stringify([mdl.netborc || null, mdl.nakit || null]);
+      if (Object.keys(nb).length) mdl.netborc = nb; if (Object.keys(nk).length) mdl.nakit = nk;
+      if (JSON.stringify([mdl.netborc || null, mdl.nakit || null]) !== eskiJ) deg++;
+      n++; const ks = Object.keys(nk).sort(); const sq = ks[ks.length - 1];
+      if (sq && ornek.length < 6) ornek.push(mdl.kod + ' ' + sq + ': FCF YTD ' + nk[sq].fcf.toFixed(1) + ' · dönüşüm ' + (nk[sq].donusum != null ? '%' + nk[sq].donusum : '—') + ' · net borç ' + (nb[sq] ? nb[sq].nb.toFixed(1) : '—') + ' mlr ₺');
+    }
+    if (deg) { await yaz(dosya, M); degisenler.push('karar modeli nakit/net borç (' + deg + ')'); }
+    raporlar.push('### Karar modeli nakit akışı + net borç (§550) — ✓ ' + n + ' model · ' + deg + ' değişti' + (ornek.length ? '\n- ' + ornek.join('\n- ') : ''));
+  } catch (e) { raporlar.push('### Karar modeli nakit akışı + net borç (§550) — ✗ ' + String(e && e.message || e).slice(0, 140)); }
+}
+
 /* ── §464b XLSX OKUYUCU (bağımlılıksız) ──────────────────────────────────────
    .xlsx = zip (merkezi dizin + deflate-raw girdiler) + XML. Node'un zlib'i
    inflateRawSync verir; SheetJS kurmadan okunur. Yalnız gerekeni çözer:
@@ -7558,7 +7617,7 @@ async function bultenKesif() {
     await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* §531: XK050 üyeliği → katalog · fiyat/sermaye/bilanço tarihi · KAP arşiv önceliği (arşivden ÖNCE) */
     await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* §539: degerleme.json kendi verimizden (KAP özkaynak + Yahoo) — arşivden SONRA */
-    await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
+    await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); await olcKos('Karar modeli nakit akışı + net borç (§550)', ()=>kararNakit());
     await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());   /* §499: KAP arşivi çekirdek FAVÖK ÷ faaliyet raporu tonajı (EREGL/KRDMD) */   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
     await olcKos('GYO NAV (§364)', ()=>gyoNav());   /* SS364: TSPB resmi NAD */
     await olcKos('VAP fon akışı (§366)', ()=>vapFonAkis());   /* SS366: MKK resmi saklama verisi */
@@ -7570,10 +7629,10 @@ async function bultenKesif() {
   if (KSET.has('karar') || KSET.has('kamuyatirim')) await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* elle: --katman=kamuyatirim */
   if (KSET.has('karar') || KSET.has('kaparsiv')) await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* elle: --katman=karar (kaparsiv ile birlikte: önce öncelik, sonra arşiv) */
   if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
-  if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem());
+  if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); await olcKos('Karar modeli nakit akışı + net borç (§550)', ()=>kararNakit());
   if (KSET.has('kaparsiv') || KSET.has('degerleme')) await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* elle: --katman=degerleme */
   if (KSET.has('kaparsiv') || KSET.has('multiple')) await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());
-  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('EPİAŞ üretim (§546)', ()=>epiasUretim()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); }   /* elle: --katman=surucu */
+  if (KSET.has('surucu')) { await olcKos('Sektör sürücüleri (§462)', ()=>sektorSurucu()); await olcKos('Sürücü serileri (§464)', ()=>surucuSeriler()); await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('EPİAŞ üretim (§546)', ()=>epiasUretim()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); await olcKos('Karar modeli nakit akışı + net borç (§550)', ()=>kararNakit()); }   /* elle: --katman=surucu */
   if (KSET.has('kamu')) { await olcKos('EVDS serileri (§466)', ()=>evdsSeriler()); await olcKos('EPİAŞ PTF (§466)', ()=>epiasPtf()); await olcKos('EPİAŞ üretim (§546)', ()=>epiasUretim()); await olcKos('ASELSAN sözleşme akışı (§467)', ()=>aselsSiparis()); await olcKos('KAP Yeni İş İlişkisi (§469)', ()=>kapYeniIs()); await olcKos('Kardemir fiyatları (§472)', ()=>kardemirFiyat()); await olcKos('SUT endeksi (§474)', ()=>sutEndeks()); await olcKos('GES zinciri fiyatları (§483)', ()=>gesFiyat()); await olcKos('Elle çeyrek serileri (§484)', ()=>elleSeriler()); await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=kamu — TCMB EVDS + EPİAŞ + ASELSAN + KAP yeni iş + Kardemir + SUT (ilk koşu birkaç dk) */
   if (KSET.has('tuik')) { await olcKos('TÜİK İME (§486)', ()=>tuikIme()); await olcKos('TÜİK tablolar (§487)', ()=>tuikGenis()); await olcKos('PlasticPortal PE/PP (§488)', ()=>plasticPortal()); await olcKos('DCE polimer (§489)', ()=>dceFiyat()); }   /* elle: --katman=tuik — TÜİK İME + geniş tablolar + PlasticPortal (Playwright yalnız hepsi/fon koşusunda kurulu) */
   if (KSET.has('kredinotu') && !ister('fiyat')) await olcKos('Ülke kredi notu (§515)', ()=>krediNotu());   /* elle: --katman=kredinotu */
