@@ -7,9 +7,8 @@
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
  "tarih": "2026-10-28",
  "donem": "3Ç26",
- "adet": 191,
+ "adet": 187,
  "beklenen": {
-  "CEMTS": "2026-10-26",
   "NTGAZ": "2026-10-26",
   "SANKO": "2026-10-26",
   "TURGG": "2026-10-26",
@@ -31,7 +30,6 @@
   "DESPC": "2026-10-29",
   "DMSAS": "2026-10-29",
   "DNISI": "2026-10-29",
-  "DOFER": "2026-10-29",
   "EGEGY": "2026-10-29",
   "EGEPO": "2026-10-29",
   "ENJSA": "2026-10-29",
@@ -39,7 +37,6 @@
   "KBORU": "2026-10-29",
   "KIMMR": "2026-10-29",
   "KOCMT": "2026-10-29",
-  "KRPLS": "2026-10-29",
   "LINK": "2026-10-29",
   "LMKDC": "2026-10-29",
   "MAKIM": "2026-10-29",
@@ -47,7 +44,6 @@
   "PKART": "2026-10-29",
   "PNLSN": "2026-10-29",
   "RUBNS": "2026-10-29",
-  "SILVR": "2026-10-29",
   "SNICA": "2026-10-29",
   "SURGY": "2026-10-29",
   "TARKM": "2026-10-29",
@@ -240,7 +236,13 @@
   "ASELS": "2026-10-27",
   "INTEM": "2026-10-27",
   "BASGZ": "2026-10-27",
-  "KONKA": "2026-10-28"
+  "KONKA": "2026-10-28",
+  "TKNKA": "2026-10-28",
+  "KRPLS": "2026-10-28",
+  "SILVR": "2026-10-28",
+  "DOFER": "2026-10-28",
+  "CEMTS": "2026-10-28",
+  "NETCD": "2026-10-28"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -972,6 +974,30 @@
   "CVKMD": {
    "tarih": "2026-10-26",
    "id": "1687049"
+  },
+  "TKNKA": {
+   "tarih": "2026-10-28",
+   "id": "1689115"
+  },
+  "KRPLS": {
+   "tarih": "2026-10-28",
+   "id": "1689079"
+  },
+  "SILVR": {
+   "tarih": "2026-10-28",
+   "id": "1689039"
+  },
+  "DOFER": {
+   "tarih": "2026-10-28",
+   "id": "1689032"
+  },
+  "CEMTS": {
+   "tarih": "2026-10-28",
+   "id": "1689018"
+  },
+  "NETCD": {
+   "tarih": "2026-10-28",
+   "id": "1688949"
   }
  }
 }

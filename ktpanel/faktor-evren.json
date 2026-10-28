@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-28T10:04:32Z",
+ "guncelleme": "2026-10-28T20:14:53Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -393,7 +393,7 @@
    "kaynak": "arşiv"
   },
   "BINHO": {
-   "ts": "2026-10-28T10:04:21Z",
+   "ts": "2026-10-28T20:14:31Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5072,7 +5072,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-10-28T10:04:21Z",
+   "ts": "2026-10-28T20:14:31Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5496,7 +5496,7 @@
    "kaynak": "arşiv"
   },
   "ALBRK": {
-   "ts": "2026-10-28T10:04:21Z",
+   "ts": "2026-10-28T20:14:31Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -6888,8 +6888,49 @@
    "gecmisKar": -3359626542,
    "eksik": false,
    "kaynak": "arşiv"
+  },
+  "KRPLS": {
+   "ts": "2026-10-28T20:14:50Z",
+   "y": "496",
+   "donem": "2026/3",
+   "ceyrek": 5,
+   "ciro": 1944576835,
+   "brut": 939380128,
+   "favok": 456900270,
+   "favokCek": 470861242,
+   "netKar": 34248651,
+   "ozk": 1119438912,
+   "aktif": 1857282841,
+   "donen": 1254797198,
+   "kvY": 594420542,
+   "finBorc": 207125197,
+   "likit": 84671326,
+   "netBorc": 122453871,
+   "isletmeNA": 313429703,
+   "capex": -34768267,
+   "sna": 278661436,
+   "tahakkuk": -15.03,
+   "odFaiz": -41121935,
+   "odTemettu": null,
+   "stoklar": 290510930,
+   "ticariAlacak": 846282889,
+   "ticariBorc": 318901544,
+   "buyume": {
+    "ciro": 1.4,
+    "netKar": -132.7,
+    "brut": 28.7
+   },
+   "adet": 174600000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "faal": 297271230,
+   "amort": 159629040,
+   "vergiOncesi": 149310943,
+   "vergi": -115062292,
+   "gecmisKar": -403875669,
+   "eksik": false,
+   "kaynak": "KAP"
   }
  },
  "uye_sayisi": 238,
- "kapsam": 172
+ "kapsam": 173
 }
