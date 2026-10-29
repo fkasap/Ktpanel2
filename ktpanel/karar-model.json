@@ -1,5 +1,5 @@
 {
- "surum": "2026-10-28",
+ "surum": "2026-10-29",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -11663,6 +11663,26 @@
      "tl": 1.382,
      "usd": 30.3,
      "_kaynak": "KAP"
+    },
+    "2024Q4": {
+     "tl": 0.699,
+     "usd": 20.2,
+     "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": 0.961,
+     "usd": 26.5,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 1.402,
+     "usd": 36.1,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 1.378,
+     "usd": 33.8,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -11696,6 +11716,26 @@
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
    "_sur_ek": "546a",
    "netborc": {
+    "2024Q3": {
+     "nb": 19.946,
+     "borc": 23.024,
+     "nakit": 3.078
+    },
+    "2024Q4": {
+     "nb": 20.998,
+     "borc": 24.371,
+     "nakit": 3.373
+    },
+    "2025Q1": {
+     "nb": 21.68,
+     "borc": 23.036,
+     "nakit": 1.355
+    },
+    "2025Q2": {
+     "nb": 22.108,
+     "borc": 24.747,
+     "nakit": 2.64
+    },
     "2025Q3": {
      "nb": 21.083,
      "borc": 44.651,
@@ -11718,6 +11758,52 @@
     }
    },
    "nakit": {
+    "2024Q3": {
+     "cfo": 3.971,
+     "capex": -0.501,
+     "kira": -0.035,
+     "fcf": 3.54,
+     "favok": 3.272,
+     "donusum": 108.2,
+     "capex_am": 0.23,
+     "ay": 9
+    },
+    "2024Q4": {
+     "cfo": 3.633,
+     "capex": -0.69,
+     "kira": -0.052,
+     "fcf": 2.984,
+     "favok": 3.972,
+     "donusum": 75.1,
+     "capex_am": 0.23,
+     "ay": 12,
+     "fcf_ttm": 2.984,
+     "favok_ttm": 3.972
+    },
+    "2025Q1": {
+     "cfo": 1.85,
+     "capex": -0.041,
+     "kira": -0.016,
+     "fcf": 1.793,
+     "favok": 0.961,
+     "donusum": 186.6,
+     "capex_am": 0.07,
+     "ay": 3,
+     "fcf_ttm": 1.591,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": 2.968,
+     "capex": -0.123,
+     "kira": -0.035,
+     "fcf": 2.811,
+     "favok": 2.386,
+     "donusum": 117.8,
+     "capex_am": 0.1,
+     "ay": 6,
+     "fcf_ttm": 2.409,
+     "yaklasik": true
+    },
     "2025Q3": {
      "cfo": 9.638,
      "capex": -0.208,
@@ -11726,7 +11812,9 @@
      "favok": 3.85,
      "donusum": 243.6,
      "capex_am": 0.1,
-     "ay": 9
+     "ay": 9,
+     "fcf_ttm": 7.642,
+     "yaklasik": true
     },
     "2025Q4": {
      "cfo": 6.97,
@@ -14796,7 +14884,7 @@
  "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili.",
  "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası.",
  "_531": {
-  "guncelleme": "2026-10-28",
+  "guncelleme": "2026-10-29",
   "xk050": 50,
   "katalog": 52,
   "eklenen_toplam": 20

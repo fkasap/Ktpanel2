@@ -1,6 +1,6 @@
 {
- "surum": "degerleme-2026-10-28",
- "guncelleme": "2026-10-28",
+ "surum": "degerleme-2026-10-29",
+ "guncelleme": "2026-10-29",
  "yontem": "PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.",
  "neden_pddd": "Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.",
  "bant": {
@@ -599,6 +599,60 @@
     {
      "q": "2026Q2",
      "pddd": 0.482
+    }
+   ]
+  },
+  {
+   "k": "AYDEM",
+   "sektor": "Utilities",
+   "donem": "2026/2",
+   "ozk": 49222592068,
+   "srm": 705000000,
+   "n": 8,
+   "ort": 0.443,
+   "sapma": 0.081,
+   "dip": 0.36,
+   "zirve": 0.607,
+   "cv": 0.18,
+   "guven": "yüksek",
+   "canli": {
+    "tarih": "2026-10-28",
+    "fiyat": 21.76,
+    "pddd": 0.312,
+    "z": -1.62
+   },
+   "seri": [
+    {
+     "q": "2024Q3",
+     "pddd": 0.441
+    },
+    {
+     "q": "2024Q4",
+     "pddd": 0.607
+    },
+    {
+     "q": "2025Q1",
+     "pddd": 0.443
+    },
+    {
+     "q": "2025Q2",
+     "pddd": 0.369
+    },
+    {
+     "q": "2025Q3",
+     "pddd": 0.365
+    },
+    {
+     "q": "2025Q4",
+     "pddd": 0.432
+    },
+    {
+     "q": "2026Q1",
+     "pddd": 0.529
+    },
+    {
+     "q": "2026Q2",
+     "pddd": 0.36
     }
    ]
   },

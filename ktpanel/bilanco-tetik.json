@@ -1,5 +1,5 @@
 {
- "tarih": "2026-10-28",
+ "tarih": "2026-10-29",
  "kodlar": [
   "AKCNS",
   "AKHAN",
@@ -712,14 +712,10 @@
   "YYLGD"
  ],
  "evren_disi_sayi": 221,
- "pencere_sayi": 75,
+ "pencere_sayi": 19,
  "dusen_son": [
-  "AKBNK",
-  "ALCTL",
-  "ASELS",
   "CEMTS",
-  "ESCOM",
   "GARAN"
  ],
- "guncelleme": "2026-10-28 20:13 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-29 20:15 UTC — otomatik (KAP FR · kümülatif §299)"
 }
