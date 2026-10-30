@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-29 20:15 UTC — otomatik (§319)",
+ "guncelleme": "2026-10-30 19:55 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -195,23 +195,7 @@
    "onceki": "2.7%"
   },
   {
-   "t": "2026-10-30T02:30:00.000Z",
-   "ulke": "JPY",
-   "olay": "BOJ Policy Rate",
-   "etki": "High",
-   "beklenti": "<1.25%",
-   "onceki": "<1.25%"
-  },
-  {
-   "t": "2026-10-30T02:30:00.000Z",
-   "ulke": "JPY",
-   "olay": "Monetary Policy Statement",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-10-30T02:31:00.000Z",
+   "t": "2026-10-30T03:02:00.000Z",
    "ulke": "JPY",
    "olay": "BOJ Outlook Report",
    "etki": "High",
@@ -219,7 +203,23 @@
    "onceki": ""
   },
   {
-   "t": "2026-10-30T05:30:00.000Z",
+   "t": "2026-10-30T03:02:00.000Z",
+   "ulke": "JPY",
+   "olay": "BOJ Policy Rate",
+   "etki": "High",
+   "beklenti": "<1.25%",
+   "onceki": "<1.25%"
+  },
+  {
+   "t": "2026-10-30T03:02:00.000Z",
+   "ulke": "JPY",
+   "olay": "Monetary Policy Statement",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-10-30T06:30:00.000Z",
    "ulke": "JPY",
    "olay": "BOJ Press Conference",
    "etki": "High",

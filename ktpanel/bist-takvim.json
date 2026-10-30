@@ -5,52 +5,21 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-10-28",
+ "tarih": "2026-10-30",
  "donem": "3Ç26",
- "adet": 187,
+ "adet": 154,
  "beklenen": {
   "NTGAZ": "2026-10-26",
-  "SANKO": "2026-10-26",
-  "TURGG": "2026-10-26",
-  "BOSSA": "2026-10-27",
-  "GMTAS": "2026-10-27",
   "JANTS": "2026-10-27",
-  "ACSEL": "2026-10-29",
-  "ALKA": "2026-10-29",
-  "AVPGY": "2026-10-29",
-  "BAHKM": "2026-10-29",
-  "BANVT": "2026-10-29",
-  "BAYRK": "2026-10-29",
-  "BEGYO": "2026-10-29",
-  "BINBN": "2026-10-29",
-  "BINHO": "2026-10-29",
   "BURVA": "2026-10-29",
-  "CMBTN": "2026-10-29",
-  "DAPGM": "2026-10-29",
-  "DESPC": "2026-10-29",
-  "DMSAS": "2026-10-29",
-  "DNISI": "2026-10-29",
-  "EGEGY": "2026-10-29",
-  "EGEPO": "2026-10-29",
   "ENJSA": "2026-10-29",
   "FORMT": "2026-10-29",
-  "KBORU": "2026-10-29",
   "KIMMR": "2026-10-29",
-  "KOCMT": "2026-10-29",
-  "LINK": "2026-10-29",
   "LMKDC": "2026-10-29",
   "MAKIM": "2026-10-29",
-  "PARSN": "2026-10-29",
-  "PKART": "2026-10-29",
   "PNLSN": "2026-10-29",
-  "RUBNS": "2026-10-29",
-  "SNICA": "2026-10-29",
-  "SURGY": "2026-10-29",
   "TARKM": "2026-10-29",
-  "TUCLK": "2026-10-29",
   "VANGD": "2026-10-29",
-  "YIGIT": "2026-10-29",
-  "ANGEN": "2026-10-30",
   "CWENE": "2026-10-30",
   "TUPRS": "2026-10-30",
   "KARSN": "2026-11-02",
@@ -83,7 +52,6 @@
   "ALTNY": "2026-11-06",
   "ATATP": "2026-11-06",
   "BLUME": "2026-11-06",
-  "BMSTL": "2026-11-06",
   "BRKSN": "2026-11-06",
   "CELHA": "2026-11-06",
   "EKGYO": "2026-11-06",
@@ -121,7 +89,6 @@
   "BIMAS": "2026-11-09",
   "BRLSM": "2026-11-09",
   "BUCIM": "2026-11-09",
-  "BURCE": "2026-11-09",
   "BYDNR": "2026-11-09",
   "COSMO": "2026-11-09",
   "DARDL": "2026-11-09",
@@ -242,7 +209,44 @@
   "SILVR": "2026-10-28",
   "DOFER": "2026-10-28",
   "CEMTS": "2026-10-28",
-  "NETCD": "2026-10-28"
+  "NETCD": "2026-10-28",
+  "BINHO": "2026-10-30",
+  "ACSEL": "2026-10-30",
+  "NETGL": "2026-10-30",
+  "BINBN": "2026-10-30",
+  "PARSN": "2026-10-30",
+  "DMSAS": "2026-10-30",
+  "BANVT": "2026-10-30",
+  "EGEGY": "2026-10-30",
+  "KOCMT": "2026-10-30",
+  "DNISI": "2026-10-30",
+  "BETAE": "2026-10-30",
+  "LINK": "2026-10-30",
+  "SURGY": "2026-10-30",
+  "BAYRK": "2026-10-30",
+  "KBORU": "2026-10-30",
+  "ALKA": "2026-10-30",
+  "BEGYO": "2026-10-30",
+  "ALBTN": "2026-10-30",
+  "YIGIT": "2026-10-30",
+  "BOSSA": "2026-10-30",
+  "TUCLK": "2026-10-30",
+  "PKART": "2026-10-30",
+  "RUBNS": "2026-10-30",
+  "CMBTN": "2026-10-30",
+  "SNICA": "2026-10-30",
+  "BKRGY": "2026-10-30",
+  "BMSTL": "2026-10-30",
+  "AVPGY": "2026-10-30",
+  "BAHKM": "2026-10-30",
+  "TURGG": "2026-10-30",
+  "DAPGM": "2026-10-30",
+  "ANGEN": "2026-10-30",
+  "SANKO": "2026-10-30",
+  "DESPC": "2026-10-30",
+  "EGEPO": "2026-10-30",
+  "BURCE": "2026-10-30",
+  "GMTAS": "2026-10-30"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -998,6 +1002,154 @@
   "NETCD": {
    "tarih": "2026-10-28",
    "id": "1688949"
+  },
+  "BINHO": {
+   "tarih": "2026-10-30",
+   "id": "1690301"
+  },
+  "ACSEL": {
+   "tarih": "2026-10-30",
+   "id": "1690296"
+  },
+  "NETGL": {
+   "tarih": "2026-10-30",
+   "id": "1690290"
+  },
+  "BINBN": {
+   "tarih": "2026-10-30",
+   "id": "1690285"
+  },
+  "PARSN": {
+   "tarih": "2026-10-30",
+   "id": "1690280"
+  },
+  "DMSAS": {
+   "tarih": "2026-10-30",
+   "id": "1690277"
+  },
+  "BANVT": {
+   "tarih": "2026-10-30",
+   "id": "1690273"
+  },
+  "EGEGY": {
+   "tarih": "2026-10-30",
+   "id": "1690218"
+  },
+  "KOCMT": {
+   "tarih": "2026-10-30",
+   "id": "1690204"
+  },
+  "DNISI": {
+   "tarih": "2026-10-30",
+   "id": "1690198"
+  },
+  "BETAE": {
+   "tarih": "2026-10-30",
+   "id": "1690190"
+  },
+  "LINK": {
+   "tarih": "2026-10-30",
+   "id": "1690184"
+  },
+  "SURGY": {
+   "tarih": "2026-10-30",
+   "id": "1690178"
+  },
+  "BAYRK": {
+   "tarih": "2026-10-30",
+   "id": "1690173"
+  },
+  "KBORU": {
+   "tarih": "2026-10-30",
+   "id": "1690160"
+  },
+  "ALKA": {
+   "tarih": "2026-10-30",
+   "id": "1690141"
+  },
+  "BEGYO": {
+   "tarih": "2026-10-30",
+   "id": "1690128"
+  },
+  "ALBTN": {
+   "tarih": "2026-10-30",
+   "id": "1690115"
+  },
+  "YIGIT": {
+   "tarih": "2026-10-30",
+   "id": "1690107"
+  },
+  "BOSSA": {
+   "tarih": "2026-10-30",
+   "id": "1690091"
+  },
+  "TUCLK": {
+   "tarih": "2026-10-30",
+   "id": "1690073"
+  },
+  "PKART": {
+   "tarih": "2026-10-30",
+   "id": "1690071"
+  },
+  "RUBNS": {
+   "tarih": "2026-10-30",
+   "id": "1690064"
+  },
+  "CMBTN": {
+   "tarih": "2026-10-30",
+   "id": "1690039"
+  },
+  "SNICA": {
+   "tarih": "2026-10-30",
+   "id": "1690025"
+  },
+  "BKRGY": {
+   "tarih": "2026-10-30",
+   "id": "1690002"
+  },
+  "BMSTL": {
+   "tarih": "2026-10-30",
+   "id": "1689998"
+  },
+  "AVPGY": {
+   "tarih": "2026-10-30",
+   "id": "1689972"
+  },
+  "BAHKM": {
+   "tarih": "2026-10-30",
+   "id": "1689944"
+  },
+  "TURGG": {
+   "tarih": "2026-10-30",
+   "id": "1689931"
+  },
+  "DAPGM": {
+   "tarih": "2026-10-30",
+   "id": "1689929"
+  },
+  "ANGEN": {
+   "tarih": "2026-10-30",
+   "id": "1689923"
+  },
+  "SANKO": {
+   "tarih": "2026-10-30",
+   "id": "1689911"
+  },
+  "DESPC": {
+   "tarih": "2026-10-30",
+   "id": "1689909"
+  },
+  "EGEPO": {
+   "tarih": "2026-10-30",
+   "id": "1689908"
+  },
+  "BURCE": {
+   "tarih": "2026-10-30",
+   "id": "1689892"
+  },
+  "GMTAS": {
+   "tarih": "2026-10-30",
+   "id": "1689880"
   }
  }
 }

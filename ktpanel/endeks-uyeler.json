@@ -1,7 +1,7 @@
 {
- "guncelleme": "2026-10-29",
+ "guncelleme": "2026-10-30",
  "kaynak": "BIST resmî (hisse_endeks_katilim_ds.csv)",
- "bist_damga": "30/10/2026",
+ "bist_damga": "02/11/2026",
  "sayim": {
   "XK030EA": 30,
   "XKTUM": 238,
@@ -9,7 +9,7 @@
   "XK050": 50,
   "XK030": 30,
   "XSRDK": 27,
-  "XKTMT": 41
+  "XKTMT": 43
  },
  "uyeler": {
   "XK030EA": [
@@ -517,12 +517,14 @@
    "ENERY",
    "EREGL",
    "GENIL",
+   "GOKNR",
    "GOLTS",
    "GRSEL",
    "ISDMR",
    "KBORU",
    "KCAER",
    "KFEIN",
+   "KPEKS",
    "KTLEV",
    "LKMNH",
    "LOGO",
