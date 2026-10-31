@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-30",
+ "guncelleme": "2026-10-31",
  "fiyat_tarihi": "2026-10-30",
  "not": "Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:\"eski\" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.",
  "hisseler": [
@@ -34,12 +34,16 @@
   {
    "k": "ALKA",
    "fiyat": 4.46,
-   "adet": 735,
-   "ciro": 3056,
-   "ebitda": 152,
-   "netBorc": 199,
+   "adet": 300,
+   "ciro": 4975,
+   "ebitda": 235,
+   "netBorc": 89,
    "hacim": 23,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 259,
+   "donem": "2026/2",
+   "adet_not": "bilanço sermayesi (2026/2)"
   },
   {
    "k": "ALKIM",
@@ -101,11 +105,15 @@
    "k": "ANGEN",
    "fiyat": 5.51,
    "adet": 220,
-   "ciro": 814,
-   "ebitda": 85,
-   "netBorc": 361,
+   "ciro": 758,
+   "ebitda": 42,
+   "netBorc": 614,
    "hacim": 72,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 78,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "ARASE",
@@ -256,12 +264,16 @@
   {
    "k": "BMSTL",
    "fiyat": 30.96,
-   "adet": 150,
-   "ciro": 2552,
-   "ebitda": 229,
-   "netBorc": 526,
+   "adet": 300,
+   "ciro": 3080,
+   "ebitda": 221,
+   "netBorc": 418,
    "hacim": 190,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 208,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "BORSK",
@@ -1027,11 +1039,15 @@
    "k": "KOCMT",
    "fiyat": 2.21,
    "adet": 2500,
-   "ciro": 18647,
-   "ebitda": 234,
-   "netBorc": -288,
+   "ciro": 15935,
+   "ebitda": 368,
+   "netBorc": -1029,
    "hacim": 590,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 979,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "KONKA",
@@ -1239,15 +1255,15 @@
   },
   {
    "k": "MERCN",
-   "fiyat": 8.16,
-   "adet": 190.371,
+   "fiyat": 2.72,
+   "adet": 597.761,
    "ciro": 3720,
    "ebitda": 568,
    "netBorc": 1524,
    "hacim": 159,
    "donem": "2026/2",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi 190 mn × 2026-10-21 ×3.140 (fiyat boşluğu, yaklaşık)",
    "favok_tanim": "çekirdek",
    "ebitda_genis": 690
   },
@@ -1812,19 +1828,12 @@
   }
  ],
  "_kurumsal_islem": {
-  "tarih": "2026-09-21",
+  "tarih": "2026-10-31",
   "kayitlar": [
-   "BSOKE ×0.729",
-   "EDATA ×0.730",
-   "GENIL ×0.736",
-   "GRTHO ×0.730",
-   "HATSN ×0.729",
-   "IZFAS ×0.729",
-   "MAGEN ×0.729",
-   "ONCSM ×0.730"
+   "MERCN ×0.333"
   ],
   "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
  },
  "kaynak": "KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496",
- "bilanco_guncelleme": "2026-10-30"
+ "bilanco_guncelleme": "2026-10-31"
 }

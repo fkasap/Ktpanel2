@@ -1,5 +1,5 @@
 {
- "tarih": "2026-10-30",
+ "tarih": "2026-10-31",
  "kodlar": [
   "ACSEL",
   "AKCNS",
@@ -86,6 +86,7 @@
   "KBORU",
   "KFEIN",
   "KGYO",
+  "KIMMR",
   "KMPUR",
   "KNFRT",
   "KOCMT",
@@ -98,6 +99,7 @@
   "KUTPO",
   "LINK",
   "LKMNH",
+  "LMKDC",
   "LXGYO",
   "MAGEN",
   "MAKIM",
@@ -157,13 +159,14 @@
   "UCAYM",
   "ULUSE",
   "VAKKO",
+  "VANGD",
   "VBTYZ",
   "YATAS",
   "YEOTK",
   "YIGIT",
   "ZEDUR"
  ],
- "sayi": 161,
+ "sayi": 164,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -604,7 +607,14 @@
   "YESIL": "2026-10-30",
   "YIGIT": "2026-10-30",
   "ZERGY": "2026-10-30",
-  "ZGYO": "2026-10-30"
+  "ZGYO": "2026-10-30",
+  "ERSU": "2026-10-31",
+  "EUHOL": "2026-10-31",
+  "ICUGS": "2026-10-31",
+  "KIMMR": "2026-10-31",
+  "LMKDC": "2026-10-31",
+  "TUKAS": "2026-10-31",
+  "VANGD": "2026-10-31"
  },
  "evren_disi": [
   "AAGYO",
@@ -702,8 +712,10 @@
   "EPLAS",
   "ERCB",
   "ERGLI",
+  "ERSU",
   "ETILR",
   "ETYAT",
+  "EUHOL",
   "EUKYO",
   "EUYO",
   "FENER",
@@ -730,6 +742,7 @@
   "HEDEF",
   "HUNER",
   "HURGZ",
+  "ICUGS",
   "IDGYO",
   "IEYHO",
   "IHAAS",
@@ -861,6 +874,7 @@
   "TSGYO",
   "TSPOR",
   "TTRAK",
+  "TUKAS",
   "UFUK",
   "ULAS",
   "ULKER",
@@ -887,12 +901,13 @@
   "ZERGY",
   "ZGYO"
  ],
- "evren_disi_sayi": 279,
- "pencere_sayi": 99,
+ "evren_disi_sayi": 283,
+ "pencere_sayi": 108,
  "dusen_son": [
   "BMSTL",
   "DAPGM",
+  "EFOR",
   "EGEPO"
  ],
- "guncelleme": "2026-10-30 19:55 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-10-31 10:16 UTC — otomatik (KAP FR · kümülatif §299)"
 }
