@@ -1,5 +1,5 @@
 {
- "tarih": "2026-10-31",
+ "tarih": "2026-11-02",
  "kodlar": [
   "ACSEL",
   "AKCNS",
@@ -902,12 +902,7 @@
   "ZGYO"
  ],
  "evren_disi_sayi": 283,
- "pencere_sayi": 108,
- "dusen_son": [
-  "BMSTL",
-  "DAPGM",
-  "EFOR",
-  "EGEPO"
- ],
- "guncelleme": "2026-10-31 10:16 UTC — otomatik (KAP FR · kümülatif §299)"
+ "pencere_sayi": 0,
+ "dusen_son": [],
+ "guncelleme": "2026-11-02 14:07 UTC — otomatik (KAP FR · kümülatif §299)"
 }
