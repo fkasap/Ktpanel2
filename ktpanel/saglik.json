@@ -1,11 +1,11 @@
 {
- "guncelleme": "2026-10-31T11:02:29Z",
+ "guncelleme": "2026-11-02T17:09:16Z",
  "surum": "§547c",
- "sure_sn": 50,
+ "sure_sn": 61,
  "ozet": {
   "kritik": 0,
   "uyari": 2,
-  "bilgi": 7,
+  "bilgi": 6,
   "yeni": 0,
   "duzelen": 0
  },
@@ -15,15 +15,15 @@
    "not": "49 seri (app.js'ten keşfedildi)"
   },
   "dosyalar": {
-   "sure": 3,
+   "sure": 4,
    "not": "37 otomatik dosya izlendi · 12 elle güncellenen (otomasyon borcu)"
   },
   "kopruler": {
-   "sure": 36,
-   "not": "31 uç · 30 geçti"
+   "sure": 46,
+   "not": "31 uç · 31 geçti"
   },
   "tutarlilik": {
-   "sure": 3,
+   "sure": 4,
    "not": "2 kural"
   },
   "ekran": {
@@ -39,7 +39,7 @@
    "baslik": "Ekran katmanı: Playwright tarayıcısı kurulamadı — ekran taraması atlandı",
    "ayrinti": "browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-she · Actions \"Playwright\" adımına bak (saglik.yml §548d önbellek + iki deneme).",
    "ilk": "2026-10-28",
-   "gun": 3,
+   "gun": 5,
    "yeni": false
   },
   {
@@ -49,19 +49,9 @@
    "baslik": "Geçmiş tarihli \"sıradaki\" (t17 · FED & POLİTİKA): 1 gün önce",
    "ayrinti": "“Sıradaki FOMC27 Eki–28 Eki” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-28",
-   "gun": 3,
+   "gun": 5,
    "yeni": false,
    "tasindi": true
-  },
-  {
-   "id": "kopruler:tefas · AUM/pay (mod=gnl)",
-   "seviye": "bilgi",
-   "katman": "kopruler",
-   "baslik": "tefas · AUM/pay (mod=gnl) — uyari",
-   "ayrinti": "liste boş · ilk tur — bir sonraki turda da sürerse uyarı",
-   "ilk": "2026-10-31",
-   "gun": 0,
-   "yeni": true
   },
   {
    "id": "ekran:elle-sayi-envanter",
@@ -70,7 +60,7 @@
    "baslik": "Elle rakam envanteri: 3 eski etiketli kartta 9 rakamlı cümle",
    "ayrinti": "ECB & POLİTİKA (6, 42g) · BOK & PİYASA (2, 62g) · AVRUPA MEGA-CAP (1, 93g) — 60 günden eski ve ≥3 cümle olanlar uyarıya yükselir.",
    "ilk": "2026-10-26",
-   "gun": 5,
+   "gun": 7,
    "yeni": false,
    "tasindi": true
   },
@@ -81,7 +71,7 @@
    "baslik": "Elle kart 93 gündür güncellenmedi (t18 · AVRUPA MEGA-CAP) · 1 rakamlı cümle",
    "ayrinti": "“FİYAT NOT 27 TEM (ARŞİV)” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli. Örnek rakamlı cümle: “AVRUPA MEGA-CAP ASML €1.483 +0,9% · LVMH €388 +0,0% · SAP €212 -0,7% · Novo kr2”",
    "ilk": "2026-10-24",
-   "gun": 7,
+   "gun": 9,
    "yeni": false,
    "tasindi": true
   },
@@ -92,7 +82,7 @@
    "baslik": "Elle kart 62 gündür güncellenmedi (t16 · BOK & PİYASA) · 2 rakamlı cümle",
    "ayrinti": "“%3,00 · SON DEĞİŞİM 27 AĞU · BOK ✓” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli. Örnek rakamlı cümle: “BOK & PİYASA Politika faizi%3,00 — 27 Ağu +25bp (İKİNCİ artırım;”",
    "ilk": "2026-10-24",
-   "gun": 7,
+   "gun": 9,
    "yeni": false,
    "tasindi": true
   },
@@ -103,7 +93,7 @@
    "baslik": "Elle kart 42 gündür güncellenmedi (t18 · ECB & POLİTİKA) · 6 rakamlı cümle",
    "ayrinti": "“%2,50 · SON DEĞİŞİM 16 EYL · ECB ✓” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli. Örnek rakamlı cümle: “ECB & POLİTİKA Son hamle10 Eyl: %2,25 → %2,50 ARTIRIM (Berlin;”",
    "ilk": "2026-10-24",
-   "gun": 7,
+   "gun": 9,
    "yeni": false,
    "tasindi": true
   },
@@ -114,7 +104,7 @@
    "baslik": "Elle kart 65 gündür güncellenmedi (t2 · HAFTALIK ARAŞTIRMA NOTU)",
    "ayrinti": "“24–30 AĞU · REPO REJİMİ DÖNDÜ” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
    "ilk": "2026-10-24",
-   "gun": 7,
+   "gun": 9,
    "yeni": false,
    "tasindi": true
   },
@@ -125,7 +115,7 @@
    "baslik": "t17·ABD: FRED: veri alınamadı — env FRED_KEY deploy sonrası kontrol",
    "ayrinti": "İlk kez görüldü — bir sonraki turda da sürerse uyarıya yükselir.",
    "ilk": "2026-10-28",
-   "gun": 3,
+   "gun": 5,
    "yeni": false,
    "tasindi": true
   }
@@ -152,237 +142,6 @@
    "gun": 0,
    "yeni": true,
    "duzeldi": "2026-10-28"
-  },
-  {
-   "id": "bekci:ekran",
-   "seviye": "uyari",
-   "katman": "bekci",
-   "baslik": "Bekçi katmanı çöktü: ekran",
-   "ayrinti": "browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════",
-   "ilk": "2026-10-26",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-26"
-  },
-  {
-   "id": "kopruler:bddk · sahiplik",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "bddk · sahiplik — hata",
-   "ayrinti": "The operation was aborted due to timeout",
-   "ilk": "2026-10-26",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-26"
-  },
-  {
-   "id": "kopruler:bddk · panel",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "bddk · panel — hata",
-   "ayrinti": "The operation was aborted due to timeout",
-   "ilk": "2026-10-26",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-26"
-  },
-  {
-   "id": "kopruler:market · SEKTÖR serisi (RS tabanı)",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "market · SEKTÖR serisi (RS tabanı) — uyari",
-   "ayrinti": "13/15 sektörde 1A serisi YOK — RS damgalı tabandan (§114). BAR SAYILARI: XKMYA:1 XGIDA:1 XMANA:1 XUSIN:66 XHOLD:1 XELKT:1 XUHIZ:1 XILTM:1 XINSA:1 XUTEK:1 XSGRT:1 XTRZM:1 XGMYO:1 XUMAL:1 XBANK:66 | varyant: yok",
-   "ilk": "2026-10-24",
-   "gun": 2,
-   "yeni": false,
-   "duzeldi": "2026-10-26"
-  },
-  {
-   "id": "ekran:damga|politika faizi|Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) p",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (mk-yorum): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 1,
-   "yeni": false,
-   "duzeldi": "2026-10-26"
-  },
-  {
-   "id": "kopruler:usnews · AV haber akışı",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "usnews · AV haber akışı — uyari",
-   "ayrinti": "ok:false — Alpha Vantage kota/limit mesajı döndü — birkaç saat sonra normale döner",
-   "ilk": "2026-10-24",
-   "gun": 1,
-   "yeni": false,
-   "duzeldi": "2026-10-26"
-  },
-  {
-   "id": "ekran:damga|politika faizi|““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği sena",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kaya” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40)",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|““Mevduat politika faizinin (%37) belirgin üstündeyse fonlam",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|“Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senar",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "““Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|“Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) ",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "““Mekanizma: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|“Mevduat politika faizinin (%37) belirgin üstündeyse fonlama",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (?): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "““Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23.” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senary",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (mk-para): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“Bu, panelin aylardır \"rejim riski\" diye işaret ettiği senaryonun gerçekleşmesidir: fonlama gecelik pencereden (koridor tavanı %40) politika faizine (%37) kayar ” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:damga|politika faizi|Mevduat politika faizinin (%37) belirgin üstündeyse fonlama ",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Ekranda eski damga (mk-faiz): politika faizi %37 yazıyor, canlı %36",
-   "ayrinti": "“Mevduat politika faizinin (%37) belirgin üstündeyse fonlama pahalı demektir;” — kaynak TP.PY.P02.1H 2026-10-23. Elle yazılmış rakam canlıdan sapmış; satır canlı seriye bağlanmalı ya da metin güncellenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:elle|sıradaki|OKUMA & BAĞLAR",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "Geçmiş tarihli \"sıradaki\" (t16 · OKUMA & BAĞLAR): 2 gün önce",
-   "ayrinti": "“SıradakiBOK 22 Eki — TCMB il” — elle yazılmış kart; olay geçti ya da etiket eskidi. Kart canlıya bağlanmalı ya da metin yenilenmeli.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:t2·Makro Veriler › Bankacılık|BDDK verisi alınamadı — bülten yayımlanmamış ya da kaynak ya",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "t2·Makro Veriler › Bankacılık: BDDK verisi alınamadı — bülten yayımlanmamış ya da kaynak yanıt vermiyor olabilir.",
-   "ayrinti": "En az iki turdur ekranda.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:t2·Makro Veriler › Bankacılık|veri yok",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "t2·Makro Veriler › Bankacılık: veri yok",
-   "ayrinti": "En az iki turdur ekranda.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "ekran:t16·Asya-Pasifik|HKMA: HKMA HTTP 405",
-   "seviye": "uyari",
-   "katman": "ekran",
-   "baslik": "t16·Asya-Pasifik: HKMA: HKMA HTTP 405",
-   "ayrinti": "En az iki turdur ekranda.",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "kopruler:edgar · ABD bilanço (§398)",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "edgar · ABD bilanço (§398) — hata",
-   "ayrinti": "HTTP 400",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "kopruler:market · HKMA",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "market · HKMA — uyari",
-   "ayrinti": "ok:false — HKMA HTTP 502",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": true,
-   "duzeldi": "2026-10-24"
-  },
-  {
-   "id": "kopruler:cikti",
-   "seviye": "uyari",
-   "katman": "kopruler",
-   "baslik": "Köprü testi çıktı üretmedi",
-   "ayrinti": "test/kopru-testi.js KOPRU_JSON desteği yüklü mü?",
-   "ilk": "2026-10-24",
-   "gun": 0,
-   "yeni": false,
-   "duzeldi": "2026-10-24"
   }
  ],
  "seriler": {
@@ -392,16 +151,25 @@
    "siklik": "aylık",
    "son": 186695,
    "tarih": "2026-08-01",
-   "yas": 91,
+   "yas": 94,
    "limit": 98,
    "yy": 4.67
+  },
+  "TP.APIFON3": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": -348349.92,
+   "tarih": "2026-11-02",
+   "yas": 1,
+   "limit": 7
   },
   "TP.APIFON2.TOP": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 1038454.02,
-   "tarih": "2026-10-30",
+   "son": 1118349.92,
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
   },
@@ -409,26 +177,8 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 740000,
-   "tarih": "2026-10-30",
-   "yas": 1,
-   "limit": 7
-  },
-  "TP.APIFON3": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": -298454.02,
-   "tarih": "2026-10-30",
-   "yas": 1,
-   "limit": 7
-  },
-  "TP.APIFON4": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "günlük",
-   "son": 36,
-   "tarih": "2026-10-30",
+   "son": 770000,
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
   },
@@ -438,16 +188,16 @@
    "siklik": "aylık",
    "son": 37,
    "tarih": "2026-08-01",
-   "yas": 91,
+   "yas": 94,
    "limit": 98,
    "yy": -13.95
   },
-  "TP.BISTTLREF.ORAN": {
+  "TP.APIFON4": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 35.8646,
-   "tarih": "2026-10-30",
+   "son": 36,
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
   },
@@ -457,7 +207,7 @@
    "siklik": "aylık",
    "son": 43.75,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": -19.56
   },
@@ -467,9 +217,18 @@
    "siklik": "aylık",
    "son": 31.8,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": -12.4
+  },
+  "TP.BISTTLREF.ORAN": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "günlük",
+   "son": 35.8646,
+   "tarih": "2026-10-30",
+   "yas": 4,
+   "limit": 7
   },
   "TP.ENFBEK.PKA12ENF": {
    "rol": "birincil",
@@ -477,7 +236,7 @@
    "siklik": "aylık",
    "son": 23.89,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": 2.71
   },
@@ -485,8 +244,8 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "günlük",
-   "son": 49.6997,
-   "tarih": "2026-10-30",
+   "son": 49.7747,
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
   },
@@ -496,7 +255,7 @@
    "siklik": "aylık",
    "son": 3683.83,
    "tarih": "2026-01-01",
-   "yas": 303,
+   "yas": 306,
    "limit": 98,
    "yy": 30.65,
    "tarihsel": true
@@ -505,36 +264,36 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": -847.830702,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 222.805569,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.HPBITABLO5.11": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": -570.872,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": -133.401,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.HPBITABLO5.12": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 253.973702,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": -3291.547569,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.HPBITABLO5.6": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": -365.443,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": -662.3,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.IHRISICREV4.TT": {
@@ -543,7 +302,7 @@
    "siklik": "aylık",
    "son": 25966598.771,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 15.34
   },
@@ -553,7 +312,7 @@
    "siklik": "aylık",
    "son": 31129989.732,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 5.63
   },
@@ -561,63 +320,54 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 61.5,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 60.21,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.KTF11": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 43.63,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 44.2,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.KTF12": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 41.5,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 41.49,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.KTF17": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 48.44,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 52.16,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.KTF18": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 41.86,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 47.82,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.MKNETHAR.M7": {
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": -88.75,
-   "tarih": "2026-10-16",
-   "yas": 15,
-   "limit": 21
-  },
-  "TP.MKNETHAR.M8": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": -44.36,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": -99.98,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.PKAUO.S01.D.U": {
@@ -626,9 +376,18 @@
    "siklik": "aylık",
    "son": 29.63,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": -6.74
+  },
+  "TP.MKNETHAR.M8": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": -183.76,
+   "tarih": "2026-10-23",
+   "yas": 11,
+   "limit": 21
   },
   "TP.PKAUO.S01.F.U": {
    "rol": "birincil",
@@ -636,7 +395,7 @@
    "siklik": "aylık",
    "son": 17.94,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": 3.34
   },
@@ -646,19 +405,9 @@
    "siklik": "aylık",
    "son": 35,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": -7.06
-  },
-  "TP.PKAUO.S05.B.U": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 51.5471,
-   "tarih": "2026-10-01",
-   "yas": 30,
-   "limit": 98,
-   "yy": 18.33
   },
   "TP.PKAUO.S05.C.U": {
    "rol": "birincil",
@@ -666,9 +415,19 @@
    "siklik": "aylık",
    "son": 59.2596,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": 19.11
+  },
+  "TP.PKAUO.S05.B.U": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 51.5471,
+   "tarih": "2026-10-01",
+   "yas": 33,
+   "limit": 98,
+   "yy": 18.33
   },
   "TP.PKAUO.S06.A.U": {
    "rol": "birincil",
@@ -676,7 +435,7 @@
    "siklik": "aylık",
    "son": -48526.17,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98
   },
   "TP.PKAUO.S07.A.U": {
@@ -685,7 +444,7 @@
    "siklik": "aylık",
    "son": 2.92,
    "tarih": "2026-10-01",
-   "yas": 30,
+   "yas": 33,
    "limit": 98,
    "yy": -12.05
   },
@@ -693,9 +452,9 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 42.74,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 42.23,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.PY.P01.ON": {
@@ -703,7 +462,7 @@
    "durum": "ok",
    "siklik": "günlük",
    "son": 34.5,
-   "tarih": "2026-10-30",
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
   },
@@ -712,7 +471,7 @@
    "durum": "ok",
    "siklik": "günlük",
    "son": 36,
-   "tarih": "2026-10-30",
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
   },
@@ -721,18 +480,9 @@
    "durum": "ok",
    "siklik": "günlük",
    "son": 39,
-   "tarih": "2026-10-30",
+   "tarih": "2026-11-02",
    "yas": 1,
    "limit": 7
-  },
-  "TP.TRY.MT02": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "haftalık",
-   "son": 43.22,
-   "tarih": "2026-10-16",
-   "yas": 15,
-   "limit": 21
   },
   "TP.TUFE1YI.T1": {
    "rol": "birincil",
@@ -740,7 +490,7 @@
    "siklik": "aylık",
    "son": 5901.26,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 27.38
   },
@@ -748,9 +498,18 @@
    "rol": "birincil",
    "durum": "ok",
    "siklik": "haftalık",
-   "son": 42.53,
-   "tarih": "2026-10-16",
-   "yas": 15,
+   "son": 42.78,
+   "tarih": "2026-10-23",
+   "yas": 11,
+   "limit": 21
+  },
+  "TP.TRY.MT02": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "haftalık",
+   "son": 43.3,
+   "tarih": "2026-10-23",
+   "yas": 11,
    "limit": 21
   },
   "TP.TUFE1YI.T105": {
@@ -759,7 +518,7 @@
    "siklik": "aylık",
    "son": 3693.79,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 17.76
   },
@@ -769,7 +528,7 @@
    "siklik": "aylık",
    "son": 4064.83,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 8.67
   },
@@ -779,7 +538,7 @@
    "siklik": "aylık",
    "son": 4674.49,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 29.7
   },
@@ -789,7 +548,7 @@
    "siklik": "aylık",
    "son": 7050.02,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 24.89
   },
@@ -799,7 +558,7 @@
    "siklik": "aylık",
    "son": 17024.32,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 116.75
   },
@@ -809,7 +568,7 @@
    "siklik": "aylık",
    "son": 5693.37,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 34.83
   },
@@ -819,19 +578,9 @@
    "siklik": "aylık",
    "son": 8039.84,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 29.93
-  },
-  "TP.TUKFIY2025.04": {
-   "rol": "birincil",
-   "durum": "ok",
-   "siklik": "aylık",
-   "son": 152.1,
-   "tarih": "2026-09-01",
-   "yas": 60,
-   "limit": 98,
-   "yy": 39.99
   },
   "TP.TUKFIY2025.07": {
    "rol": "birincil",
@@ -839,9 +588,19 @@
    "siklik": "aylık",
    "son": 144.05,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 35.1
+  },
+  "TP.TUKFIY2025.04": {
+   "rol": "birincil",
+   "durum": "ok",
+   "siklik": "aylık",
+   "son": 152.1,
+   "tarih": "2026-09-01",
+   "yas": 63,
+   "limit": 98,
+   "yy": 39.99
   },
   "TP.TUKFIY2025.GENEL": {
    "rol": "birincil",
@@ -849,7 +608,7 @@
    "siklik": "aylık",
    "son": 137.23,
    "tarih": "2026-09-01",
-   "yas": 60,
+   "yas": 63,
    "limit": 98,
    "yy": 29.73
   }
@@ -857,7 +616,7 @@
  "dosyalar": [
   {
    "dosya": "bilanco-tetik.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
@@ -865,125 +624,125 @@
   {
    "dosya": "bist-takvim.json",
    "son": "2026-10-31",
-   "isGunu": 0,
+   "isGunu": 1,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "cds.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "degerleme.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "egri-dis.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "endeks-arsiv.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "endeks-uyeler.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "faktor-evren.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fm-arsiv.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fm-girdi.csv",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fm-karne.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fm-oto.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fm-sektor.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fm.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fon-akis.json",
-   "son": "2026-10-30",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fon-arsiv.json",
-   "son": "2026-10-30",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "fon-portfoy.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "gyo-nav.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "hazine-sonuc.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
@@ -991,125 +750,125 @@
   {
    "dosya": "hazine-takvim.json",
    "son": "2026-10-30",
-   "isGunu": 0,
+   "isGunu": 1,
    "ritim": 22,
    "limit": 66
   },
   {
    "dosya": "hkma.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "kamu-yatirim.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "karar-model.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "katfon.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "kredi-notu.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "makro-takvim.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "multiple.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "risk.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "sec-tickers.json",
-   "son": "2026-10-28",
-   "isGunu": 2,
-   "ritim": 1,
-   "limit": 3
+   "son": "2026-11-02",
+   "isGunu": 0,
+   "ritim": 1.5,
+   "limit": 5
   },
   {
    "dosya": "sektor-surucu.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "sektor.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "toparlanma.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "track.json",
-   "son": "2026-10-30",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "vap-fon-akis.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "xk100.json",
-   "son": "2026-10-30",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "xktmt.json",
-   "son": "2026-10-30",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
   },
   {
    "dosya": "xktum.json",
-   "son": "2026-10-31",
+   "son": "2026-11-02",
    "isGunu": 0,
    "ritim": 1,
    "limit": 3
@@ -1119,73 +878,73 @@
   {
    "dosya": "sukuk-ihrac.json",
    "son": "2026-07-30",
-   "gun": 93,
+   "gun": 95,
    "bot": 0
   },
   {
    "dosya": "yevren.json",
    "son": "2026-08-03",
-   "gun": 89,
+   "gun": 91,
    "bot": 0
   },
   {
    "dosya": "pyssektor.json",
    "son": "2026-08-25",
-   "gun": 67,
+   "gun": 69,
    "bot": 0
   },
   {
    "dosya": "inceleme-ai.json",
    "son": "2026-08-28",
-   "gun": 64,
+   "gun": 66,
    "bot": 0
   },
   {
    "dosya": "yabanci.json",
    "son": "2026-10-02",
-   "gun": 29,
+   "gun": 31,
    "bot": 0
   },
   {
    "dosya": "halkaarz.json",
    "son": "2026-10-05",
-   "gun": 26,
+   "gun": 28,
    "bot": 0
   },
   {
    "dosya": "sut-ek2b.json",
    "son": "2026-10-20",
-   "gun": 11,
+   "gun": 13,
    "bot": 1
   },
   {
    "dosya": "rezerv.json",
    "son": "2026-10-21",
-   "gun": 10,
+   "gun": 12,
    "bot": 0
   },
   {
    "dosya": "kap-arsiv-oncelik.json",
    "son": "2026-10-25",
-   "gun": 6,
+   "gun": 8,
    "bot": 1
   },
   {
    "dosya": "analist.json",
    "son": "2026-10-26",
-   "gun": 5,
+   "gun": 7,
    "bot": 0
   },
   {
    "dosya": "guidance.json",
    "son": "2026-10-26",
-   "gun": 5,
+   "gun": 7,
    "bot": 0
   },
   {
    "dosya": "guncelleme-plani.json",
    "son": "2026-10-26",
-   "gun": 5,
+   "gun": 7,
    "bot": 0
   }
  ],
@@ -1193,187 +952,187 @@
   {
    "ad": "market · küresel endeksler",
    "sonuc": "GECTI",
-   "ms": 1573,
+   "ms": 1708,
    "not": ""
   },
   {
    "ad": "market · toplu fiyat",
    "sonuc": "GECTI",
-   "ms": 246,
+   "ms": 343,
    "not": ""
   },
   {
    "ad": "market · SEKTÖR serisi (RS tabanı)",
    "sonuc": "GECTI",
-   "ms": 778,
+   "ms": 861,
    "not": ""
   },
   {
    "ad": "market · Avrupa mega-cap",
    "sonuc": "GECTI",
-   "ms": 761,
+   "ms": 821,
    "not": ""
   },
   {
    "ad": "market · FRED (ABD tahvil)",
    "sonuc": "GECTI",
-   "ms": 1024,
+   "ms": 849,
    "not": ""
   },
   {
    "ad": "market · ECB (sunucu bacagı)",
    "sonuc": "GECTI",
-   "ms": 406,
+   "ms": 552,
    "not": ""
   },
   {
    "ad": "market · BoJ",
    "sonuc": "GECTI",
-   "ms": 1335,
+   "ms": 2362,
    "not": ""
   },
   {
    "ad": "market · HKMA",
    "sonuc": "GECTI",
-   "ms": 1109,
+   "ms": 1187,
    "not": ""
   },
   {
    "ad": "evds2 · TÜFE endeksi",
    "sonuc": "GECTI",
-   "ms": 1278,
+   "ms": 995,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (DİBS)",
    "sonuc": "GECTI",
-   "ms": 3036,
+   "ms": 5865,
    "not": ""
   },
   {
    "ad": "evds2 · getiri eğrisi (sukuk)",
    "sonuc": "GECTI",
-   "ms": 3029,
+   "ms": 3053,
    "not": ""
   },
   {
    "ad": "evds2 · TLREF",
    "sonuc": "GECTI",
-   "ms": 405,
+   "ms": 435,
    "not": ""
   },
   {
    "ad": "evds2 · kart harcamaları",
    "sonuc": "GECTI",
-   "ms": 898,
+   "ms": 886,
    "not": ""
   },
   {
    "ad": "evds2 · rezerv",
    "sonuc": "GECTI",
-   "ms": 636,
+   "ms": 648,
    "not": ""
   },
   {
    "ad": "evds2 · yabancı akış",
    "sonuc": "GECTI",
-   "ms": 265,
+   "ms": 289,
    "not": ""
   },
   {
    "ad": "evds2 · ECB (HICP + GSYH)",
    "sonuc": "GECTI",
-   "ms": 567,
+   "ms": 2159,
    "not": ""
   },
   {
    "ad": "kap · bildirim akışı",
    "sonuc": "GECTI",
-   "ms": 1084,
+   "ms": 1338,
    "not": ""
   },
   {
    "ad": "kap · sukuk akışı",
    "sonuc": "GECTI",
-   "ms": 1954,
+   "ms": 2391,
    "not": ""
   },
   {
    "ad": "katfon · TEFAS",
    "sonuc": "GECTI",
-   "ms": 541,
+   "ms": 645,
    "not": ""
   },
   {
    "ad": "tefas · AUM/pay (mod=gnl)",
-   "sonuc": "UYARI",
-   "ms": 834,
-   "not": "liste boş"
+   "sonuc": "GECTI",
+   "ms": 1012,
+   "not": ""
   },
   {
    "ad": "edgar · ABD bilanço (§398)",
    "sonuc": "GECTI",
-   "ms": 1224,
+   "ms": 1948,
    "not": ""
   },
   {
    "ad": "tcmb · TR 5Y CDS",
    "sonuc": "GECTI",
-   "ms": 939,
+   "ms": 934,
    "not": ""
   },
   {
    "ad": "tcmb · kurlar",
    "sonuc": "GECTI",
-   "ms": 3305,
+   "ms": 3362,
    "not": ""
   },
   {
    "ad": "data · bulut depo (KV)",
    "sonuc": "GECTI",
-   "ms": 674,
+   "ms": 766,
    "not": ""
   },
   {
    "ad": "ajanktp · KV sağlık",
    "sonuc": "GECTI",
-   "ms": 669,
+   "ms": 888,
    "not": ""
   },
   {
    "ad": "usnews · AV haber akışı",
    "sonuc": "GECTI",
-   "ms": 987,
+   "ms": 1137,
    "not": ""
   },
   {
    "ad": "usnews · Finnhub kazanç",
    "sonuc": "GECTI",
-   "ms": 347,
+   "ms": 565,
    "not": ""
   },
   {
    "ad": "usnews · kripto",
    "sonuc": "GECTI",
-   "ms": 244,
+   "ms": 291,
    "not": ""
   },
   {
    "ad": "bddk · panel",
    "sonuc": "GECTI",
-   "ms": 2019,
+   "ms": 2452,
    "not": ""
   },
   {
    "ad": "bddk · sahiplik",
    "sonuc": "GECTI",
-   "ms": 3544,
+   "ms": 4304,
    "not": ""
   },
   {
    "ad": "dosya · fon-akis.json",
    "sonuc": "GECTI",
-   "ms": 209,
+   "ms": 203,
    "not": ""
   }
  ],
@@ -1510,7 +1269,12 @@
    "tarih": "2026-10-31",
    "kritik": 0,
    "uyari": 2
+  },
+  {
+   "tarih": "2026-11-02",
+   "kritik": 0,
+   "uyari": 2
   }
  ],
- "mail": "gönderildi"
+ "mail": "gerek yok"
 }
