@@ -34,16 +34,16 @@
   {
    "k": "ALKA",
    "fiyat": 4.5,
-   "adet": 300,
-   "ciro": 4975,
-   "ebitda": 235,
-   "netBorc": 89,
+   "adet": 735,
+   "ciro": 5008,
+   "ebitda": 373,
+   "netBorc": 782,
    "hacim": 23,
    "kaynak": "kap",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 259,
-   "donem": "2026/2",
-   "adet_not": "bilanço sermayesi (2026/2)"
+   "ebitda_genis": 316,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "ALKIM",
@@ -975,15 +975,15 @@
    "k": "KBORU",
    "fiyat": 8.77,
    "adet": 600,
-   "ciro": 6467,
-   "ebitda": 853,
-   "netBorc": 4696,
+   "ciro": 7879,
+   "ebitda": 1738,
+   "netBorc": 5276,
    "hacim": 241,
    "kaynak": "kap",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 712,
-   "donem": "2026/2",
-   "adet_not": "bilanço sermayesi (2026/2)"
+   "ebitda_genis": 1752,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "KCAER",
@@ -1593,11 +1593,15 @@
    "k": "SNICA",
    "fiyat": 1.79,
    "adet": 600,
-   "ciro": 3568,
-   "ebitda": 361,
-   "netBorc": 938,
+   "ciro": 2553,
+   "ebitda": 607,
+   "netBorc": 965,
    "hacim": 204,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 280,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "SOKE",

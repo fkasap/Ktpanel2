@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-02 14:07 UTC — otomatik (§319)",
+ "guncelleme": "2026-11-02 23:05 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -47,7 +47,7 @@
    "ulke": "USD",
    "olay": "JOLTS Job Openings",
    "etki": "Medium",
-   "beklenti": "7.11M",
+   "beklenti": "7.15M",
    "onceki": "7.08M"
   },
   {
@@ -95,7 +95,7 @@
    "ulke": "USD",
    "olay": "ISM Services PMI",
    "etki": "Medium",
-   "beklenti": "54.9",
+   "beklenti": "54.8",
    "onceki": "54.9"
   },
   {
@@ -159,7 +159,7 @@
    "ulke": "CAD",
    "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "14.5K",
+   "beklenti": "14.6K",
    "onceki": "-68.3K"
   },
   {
@@ -183,7 +183,7 @@
    "ulke": "USD",
    "olay": "Non-Farm Employment Change",
    "etki": "High",
-   "beklenti": "63K",
+   "beklenti": "65K",
    "onceki": "29K"
   },
   {
@@ -199,7 +199,7 @@
    "ulke": "USD",
    "olay": "Prelim UoM Consumer Sentiment",
    "etki": "Medium",
-   "beklenti": "47.8",
+   "beklenti": "48.1",
    "onceki": "46.3"
   },
   {
