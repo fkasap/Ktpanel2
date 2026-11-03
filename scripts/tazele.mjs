@@ -2551,6 +2551,7 @@ async function kararOrneklem() {
 async function kararNakit() {
   const dosya = 'karar-model.json';
   if (!(await varMi(dosya))) return;
+  if (kararNakit._kostu) return; kararNakit._kostu = true;   /* §552: 'hepsi' koşusunda iki yerden çağrılıyor (ana akış + sürücü bloğu) — ikinci tur gereksiz, rapor tekrarlıyordu */
   try {
     const M = await oku(dosya); let n = 0, deg = 0; const ornek = [];
     for (const mdl of (M.modeller || [])) {
