@@ -12,12 +12,12 @@ name: Sağlık Bekçisi
 
 on:
   schedule:
-    # Hafta içi 10:20 TSİ (07:20 UTC) — sabah fon koşusundan (09:10) sonra, gün içi kullanımdan önce
-    - cron: '20 7 * * 1-5'
-    # Hafta içi 19:00 TSİ (16:00 UTC) — akşam tazelemesinden (18:10) sonra: o koşunun kırdığını aynı akşam yakala
-    - cron: '0 16 * * 1-5'
-    # Cumartesi 08:30 TSİ (05:30 UTC) — haftalık tam tur (cumartesi tazelemesinden sonra) + haftalık özet maili
-    - cron: '30 5 * * 6'
+    # Hafta içi 10:37 TSİ (07:37 UTC) — sabah fon koşusundan (09:10) sonra, gün içi kullanımdan önce
+    - cron: '37 7 * * 1-5'   # §548f: :20 gibi yoğun dakikalar GitHub'da atlanıyor (27 Eki sabah turu koşmadı) — tek dakikaya kaydırıldı
+    # Hafta içi 19:17 TSİ (16:17 UTC) — akşam tazelemesinden (18:10) sonra: o koşunun kırdığını aynı akşam yakala
+    - cron: '17 16 * * 1-5'
+    # Cumartesi 08:47 TSİ (05:47 UTC) — haftalık tam tur (cumartesi tazelemesinden sonra) + haftalık özet maili
+    - cron: '47 5 * * 6'
   workflow_dispatch:
     inputs:
       ekran:
@@ -52,16 +52,19 @@ jobs:
           if [ -f package-lock.json ]; then npm ci || npm install --no-audit --no-fund; else npm install --no-audit --no-fund; fi
 
       # Ekran katmanı için; kurulamazsa bekçi ekranı atlar, diğer dört katman yine koşar.
+      # §548h (28 Eki): PLANLI KOŞULARDA EKRAN HİÇ ÇALIŞMAMIŞTI. Koşul `inputs.ekran != '0'` idi; schedule olayında inputs yok →
+      # null, GitHub ifadeleri null ile '0'ı SAYIYA çevirip eşit sayıyor → adım atlanıyordu. Yalnız elle tetiklemede tarayıcı
+      # kuruluyordu (26 Eki 23:58 ve 27 Eki iki planlı tur: "tarayıcı yok"). Koşul olay adına bağlandı.
       # §548d (27 Eki): 26 Eki 23:58 turunda tarayıcı indirilemedi ("Executable doesn't exist … chromium_headless_shell") →
       # ekran katmanı çöktü. Tarayıcı önbelleğe alınır (anahtar: playwright sürümü), kurulum iki denemeli, süre 9 dk.
       - name: Playwright önbellek
-        if: github.event.inputs.ekran != '0'
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.ekran != '0'
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json', 'package.json') }}
       - name: Playwright
-        if: github.event.inputs.ekran != '0'
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.ekran != '0'
         continue-on-error: true
         timeout-minutes: 9
         run: |
