@@ -7,9 +7,8 @@
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
  "tarih": "2026-11-03",
  "donem": "3Ç26",
- "adet": 148,
+ "adet": 143,
  "beklenen": {
-  "NTGAZ": "2026-10-26",
   "JANTS": "2026-10-27",
   "BURVA": "2026-10-29",
   "FORMT": "2026-10-29",
@@ -21,7 +20,6 @@
   "KARSN": "2026-11-02",
   "KCAER": "2026-11-03",
   "LOGO": "2026-11-03",
-  "PENTA": "2026-11-03",
   "SAYAS": "2026-11-03",
   "YEOTK": "2026-11-03",
   "MPARK": "2026-11-04",
@@ -42,7 +40,6 @@
   "MOPAS": "2026-11-05",
   "OZYSR": "2026-11-05",
   "PETKM": "2026-11-05",
-  "YUNSA": "2026-11-05",
   "AKFYE": "2026-11-06",
   "ALTNY": "2026-11-06",
   "ATATP": "2026-11-06",
@@ -91,7 +88,6 @@
   "DGATE": "2026-11-09",
   "DITAS": "2026-11-09",
   "DOFRB": "2026-11-09",
-  "DYOBY": "2026-11-09",
   "EDIP": "2026-11-09",
   "EGPRO": "2026-11-09",
   "EKOS": "2026-11-09",
@@ -121,7 +117,6 @@
   "IZINV": "2026-11-09",
   "KFEIN": "2026-11-09",
   "KGYO": "2026-11-09",
-  "KLSER": "2026-11-09",
   "KMPUR": "2026-11-09",
   "KNFRT": "2026-11-09",
   "KONYA": "2026-11-09",
@@ -246,7 +241,12 @@
   "LMKDC": "2026-10-30",
   "EFOR": "2026-10-30",
   "ENJSA": "2026-11-02",
-  "AKFIS": "2026-11-02"
+  "AKFIS": "2026-11-02",
+  "KLSER": "2026-11-03",
+  "YUNSA": "2026-11-03",
+  "DYOBY": "2026-11-03",
+  "PENTA": "2026-11-03",
+  "NTGAZ": "2026-11-03"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -1174,6 +1174,26 @@
   "AKFIS": {
    "tarih": "2026-11-02",
    "id": "1691123"
+  },
+  "KLSER": {
+   "tarih": "2026-11-03",
+   "id": "1691960"
+  },
+  "YUNSA": {
+   "tarih": "2026-11-03",
+   "id": "1691952"
+  },
+  "DYOBY": {
+   "tarih": "2026-11-03",
+   "id": "1691938"
+  },
+  "PENTA": {
+   "tarih": "2026-11-03",
+   "id": "1691928"
+  },
+  "NTGAZ": {
+   "tarih": "2026-11-03",
+   "id": "1691844"
   }
  }
 }

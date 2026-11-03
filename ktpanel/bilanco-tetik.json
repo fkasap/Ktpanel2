@@ -45,6 +45,7 @@
   "DMSAS",
   "DNISI",
   "DOFER",
+  "DYOBY",
   "EDATA",
   "EDIP",
   "EGEGY",
@@ -89,6 +90,7 @@
   "KFEIN",
   "KGYO",
   "KIMMR",
+  "KLSER",
   "KMPUR",
   "KNFRT",
   "KOCMT",
@@ -123,6 +125,7 @@
   "OZRDN",
   "PARSN",
   "PENGD",
+  "PENTA",
   "PKART",
   "PLTUR",
   "PNLSN",
@@ -166,9 +169,10 @@
   "YATAS",
   "YEOTK",
   "YIGIT",
+  "YUNSA",
   "ZEDUR"
  ],
- "sayi": 166,
+ "sayi": 170,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -618,7 +622,17 @@
   "TUKAS": "2026-10-31",
   "VANGD": "2026-10-31",
   "AKFIS": "2026-11-03",
-  "ENJSA": "2026-11-03"
+  "ENJSA": "2026-11-03",
+  "ALNTF": "2026-11-03",
+  "BRGAN": "2026-11-03",
+  "CCOLA": "2026-11-03",
+  "DYBNK": "2026-11-03",
+  "DYOBY": "2026-11-03",
+  "GWIND": "2026-11-03",
+  "KLSER": "2026-11-03",
+  "LIDFA": "2026-11-03",
+  "PENTA": "2026-11-03",
+  "YUNSA": "2026-11-03"
  },
  "evren_disi": [
   "AAGYO",
@@ -638,6 +652,7 @@
   "ALFAS",
   "ALGYO",
   "ALKLC",
+  "ALNTF",
   "ALVES",
   "ANELE",
   "ANSGR",
@@ -669,6 +684,7 @@
   "BJKAS",
   "BNTAS",
   "BORLS",
+  "BRGAN",
   "BRKO",
   "BRKVY",
   "BRMEN",
@@ -678,6 +694,7 @@
   "BVSAN",
   "CANTE",
   "CASA",
+  "CCOLA",
   "CEMAS",
   "CEMZY",
   "CGCAM",
@@ -700,6 +717,7 @@
   "DUNYH",
   "DURDO",
   "DURKN",
+  "DYBNK",
   "ECILC",
   "ECOGR",
   "ECZYT",
@@ -739,6 +757,7 @@
   "GSDDE",
   "GSDHO",
   "GSRAY",
+  "GWIND",
   "GZNMI",
   "HATEK",
   "HDFFL",
@@ -782,6 +801,7 @@
   "KUYAS",
   "KZGYO",
   "LIDER",
+  "LIDFA",
   "LILAK",
   "LRSHO",
   "LUKSK",
@@ -905,8 +925,10 @@
   "ZERGY",
   "ZGYO"
  ],
- "evren_disi_sayi": 283,
- "pencere_sayi": 2,
- "dusen_son": [],
- "guncelleme": "2026-11-03 06:19 UTC — otomatik (KAP FR · kümülatif §299)"
+ "evren_disi_sayi": 289,
+ "pencere_sayi": 14,
+ "dusen_son": [
+  "NTGAZ"
+ ],
+ "guncelleme": "2026-11-03 20:57 UTC — otomatik (KAP FR · kümülatif §299)"
 }
