@@ -279,13 +279,16 @@ async function uyelikGoc() {
     const fazla = Object.keys(pa).filter(k => !resmi.has(k)); const eksik = [...resmi].filter(k => !pa[k]);
     if (!fazla.length && !eksik.length) continue;
     const bulunan = {}, bulunamayan = [];
-    for (const k of eksik) { const f = await yahooFloat(k); if (f) bulunan[k] = f; else bulunamayan.push(k); await uyku(250); }
+    /* §551 (3 Kas, koşu 41542501341): XKTMT'ye giren GOKNR/KPEKS'i Yahoo vermedi (0/2 → denetim düştü, dosya yazılmadı) — oysa aynı pay
+       adedi XKTUM/XK100 dosyasında ZATEN vardı (serbest dolaşım pay sayısı endeksten bağımsızdır). Önce kardeş dosyalar, sonra Yahoo. */
+    const kardes = {}; for (const [kd, ke] of Object.entries(HARITA)) { if (kd === dosya || !(await varMi(kd))) continue; try { const kp = (await oku(kd)).pay_adedi || {}; Object.entries(kp).forEach(([k, v]) => { if (v > 0 && !kardes[k]) kardes[k] = { pay: v, kaynak: ke + ' dosyası (' + kd + ')' }; }); } catch (e) {} }
+    for (const k of eksik) { if (kardes[k]) { bulunan[k] = kardes[k]; continue; } const f = await yahooFloat(k); if (f) bulunan[k] = f; else bulunamayan.push(k); await uyku(250); }
     const oran = eksik.length ? Object.keys(bulunan).length / eksik.length : 1;
     if (oran < 0.8) { raporlar.push('### ' + endeks + ' üyelik göçü (§451) — ✗ girenlerin ' + Object.keys(bulunan).length + '/' + eksik.length + ' pay adedi bulundu (eşik %80) — dosya YAZILMADI · bulunamayan: ' + bulunamayan.slice(0, 12).join(',')); denetimDustu = true; continue; }
     d._cikan = d._cikan || {}; fazla.forEach(k => { d._cikan[k] = { pay: pa[k], tarih: bugun }; delete pa[k]; });
     Object.entries(bulunan).forEach(([k, f]) => { pa[k] = f.pay; });
     d.pay_adedi = pa; d.toplam_uye = resmi.size; d.donem = 'Ekim 2026 revizyonu (resmî üyelik ' + (eu.tarih || bugun) + ') — çeyreklik';
-    d._goc = { tarih: bugun, cikan: fazla, giren: Object.keys(bulunan), girenKaynak: 'Yahoo quoteSummary floatShares', bulunamayan };
+    d._goc = { tarih: bugun, cikan: fazla, giren: Object.keys(bulunan), girenKaynak: Object.fromEntries(Object.entries(bulunan).map(([k, f]) => [k, f.kaynak])), bulunamayan };
     await yaz(dosya, d);
     raporlar.push('### ' + endeks + ' üyelik göçü (§451) — ✓ çıkan ' + fazla.length + ' · giren ' + Object.keys(bulunan).length + '/' + eksik.length + (bulunamayan.length ? ' · pay adedi bulunamayan (eklenmedi): ' + bulunamayan.join(',') : '') + '\n- örnek: ' + Object.entries(bulunan).slice(0, 3).map(([k, f]) => k + ' ' + (f.pay / 1e6).toFixed(1) + ' mn' + (f.so ? ' (çıkarılmış ' + (f.so / 1e6).toFixed(0) + ' mn)' : '')).join(' · '));
     degisenler.push(endeks + ' üyelik');
