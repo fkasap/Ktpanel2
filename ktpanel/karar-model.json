@@ -4439,6 +4439,11 @@
     "2026Q2": {
      "usd": 301,
      "tl": 13.675
+    },
+    "2026Q3": {
+     "tl": 16.017,
+     "usd": 334.5,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -4511,6 +4516,14 @@
      "ort_favok_tl": 15.3,
      "ort_net_tl": 1.62,
      "gercek_favok_tl": 13.675
+    },
+    {
+     "q": "2026Q3",
+     "n": 2,
+     "ort_favok_tl": 18.077,
+     "ort_net_tl": 2.214,
+     "gercek_favok_tl": 16.017,
+     "_kaynak": "Actions §463"
     }
    ],
    "hedef_fiyat": {
@@ -4620,6 +4633,11 @@
      "nb": 80.967,
      "borc": 93.145,
      "nakit": 12.178
+    },
+    "2026Q3": {
+     "nb": 83.431,
+     "borc": 95.807,
+     "nakit": 12.376
     }
    },
    "nakit": {
@@ -4741,6 +4759,18 @@
      "capex_am": 0.47,
      "ay": 6,
      "fcf_ttm": 34.857,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 42.669,
+     "capex": -2.989,
+     "kira": -1.385,
+     "fcf": 38.296,
+     "favok": 44.513,
+     "donusum": 86,
+     "capex_am": 0.46,
+     "ay": 9,
+     "fcf_ttm": 36.147,
      "yaklasik": true
     }
    }
@@ -13264,6 +13294,21 @@
      "tl": 0.34,
      "usd": 7.5,
      "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": -0.098,
+     "usd": -2.7,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 0.692,
+     "usd": 17.8,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 0.22,
+     "usd": 5.4,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -13298,6 +13343,16 @@
    "_sur_ek": "546a",
    "kamu_duyarli": true,
    "netborc": {
+    "2025Q1": {
+     "nb": 5.798,
+     "borc": 6.219,
+     "nakit": 0.421
+    },
+    "2025Q2": {
+     "nb": 7.372,
+     "borc": 7.999,
+     "nakit": 0.627
+    },
     "2025Q3": {
      "nb": 8.732,
      "borc": 9.085,
@@ -13320,6 +13375,26 @@
     }
    },
    "nakit": {
+    "2025Q1": {
+     "cfo": 0.048,
+     "capex": 0,
+     "kira": -0.036,
+     "fcf": 0.236,
+     "favok": -0.098,
+     "donusum": null,
+     "capex_am": 0,
+     "ay": 3
+    },
+    "2025Q2": {
+     "cfo": -0.437,
+     "capex": -0.358,
+     "kira": -0.072,
+     "fcf": -0.858,
+     "favok": 0.58,
+     "donusum": -148.1,
+     "capex_am": 1.17,
+     "ay": 6
+    },
     "2025Q3": {
      "cfo": -0.575,
      "capex": -0.61,
