@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261028d';
+const KTP_SURUM = '20261103a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -10734,6 +10734,15 @@ const BOJ_TAKVIM=[['2026-10-29','2026-10-30'],['2026-12-17','2026-12-18'],['2027
 /* Sabit tarihli resmî tatiller (BIST/TCMB kapalı). Dinî bayramlar ay takvimine bağlı — doğrulanmadan YAZILMAZ (eklenecekse kaynakla). */
 const TR_TATIL={'2026-10-28':'Cumhuriyet Bayramı arifesi — BIST yarım gün','2026-10-29':'Cumhuriyet Bayramı — BIST/TCMB kapalı',
   '2027-01-01':'Yılbaşı','2027-04-23':'23 Nisan','2027-05-01':'1 Mayıs','2027-05-19':'19 Mayıs','2027-07-15':'15 Temmuz','2027-08-30':'30 Ağustos','2027-10-28':'Cumhuriyet Bayramı arifesi — BIST yarım gün','2027-10-29':'Cumhuriyet Bayramı — BIST/TCMB kapalı'};
+/* §552 (3 Kas, bekçi): BoJ ve ECB kartlarındaki "sıradaki toplantı" cümlesi elle yazılıydı; 29–30 Eki geçince eskidi (her toplantıda tekrar).
+   Fed kartındaki fomcSonraki deseniyle aynı: ECB_TAKVIM / BOJ_TAKVIM'den türer, karar günü geçince bir sonrakine döner. Anlatı metni kalır. */
+function sonrakiToplantiYaz(){
+  const AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']; const bug=new Date(); bug.setHours(0,0,0,0);
+  const et=t=>{ const d=new Date(t+'T12:00:00'); return d.getDate()+' '+AYK[d.getMonth()]+(d.getFullYear()!==bug.getFullYear()?' '+d.getFullYear():''); };
+  const e=$('ecbSonraki'); if(e){ const t=ECB_TAKVIM.find(x=>new Date(x+'T23:59:59')>=bug); e.textContent=t?et(t):'takvim bitti — ECB_TAKVIM güncellenmeli'; }
+  const b=$('bojSonraki'); if(b){ const x=BOJ_TAKVIM.find(x=>new Date(x[1]+'T23:59:59')>=bug); b.textContent=x?(et(x[0]).replace(/ .*/,'')+'–'+et(x[1])):'takvim bitti — BOJ_TAKVIM güncellenmeli'; }
+}
+setTimeout(()=>{ try{ sonrakiToplantiYaz(); }catch(e){} }, 1500);
 async function gundemCanli(){
   const el=$('gundemCanli'); if(!el) return;
   const AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'], GUN=['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
