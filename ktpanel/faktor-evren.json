@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-02T23:08:28Z",
+ "guncelleme": "2026-11-03T06:11:29Z",
  "evren": "XKTUM",
  "_yontem": "§361d TTM = son_yıllık + cari_kümülatif − geçen_yıl_aynı_kümülatif. (Önceki \"çeyrek sütunlarını topla\" yöntemi, o sütunu vermeyen şablonlarda KISMİ TOPLAM üretiyordu — ALKIM/AKHAN'da yakalandı, terk edildi.) Enflasyon: yıllık rapor kendi parasıyla, ara dönem bugünkü parayla — fark kalır, göreli sıralama için kabul edilebilir. Eksik bacak varsa değer NULL, kısmi toplam YOK. Stok kalemler son dönem sonu. Pay adedi ödenmiş sermayeden (nominal 1₺ varsayımı) — kesin değil. Banka/GYO şablonlarında kalemler boş kalabilir, o kayıtlar eksik:true.",
  "sirketler": {
@@ -393,7 +393,7 @@
    "kaynak": "arşiv"
   },
   "BINHO": {
-   "ts": "2026-11-02T23:08:28Z",
+   "ts": "2026-11-03T06:11:13Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5072,7 +5072,7 @@
    "kaynak": "arşiv"
   },
   "KTLEV": {
-   "ts": "2026-11-02T23:08:28Z",
+   "ts": "2026-11-03T06:11:13Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -5496,7 +5496,7 @@
    "kaynak": "arşiv"
   },
   "ALBRK": {
-   "ts": "2026-11-02T23:08:28Z",
+   "ts": "2026-11-03T06:11:13Z",
    "y": "496",
    "donem": "2026/2",
    "ceyrek": 5,
@@ -7710,7 +7710,7 @@
    "kaynak": "arşiv"
   },
   "SURGY": {
-   "ts": "2026-11-02T23:08:28Z",
+   "ts": "2026-11-03T06:11:13Z",
    "y": "496",
    "donem": "2026/3",
    "ceyrek": 4,
@@ -7790,8 +7790,49 @@
    "gecmisKar": 1716720171,
    "eksik": false,
    "kaynak": "arşiv"
+  },
+  "AKFIS": {
+   "ts": "2026-11-03T06:11:26Z",
+   "y": "496",
+   "donem": "2026/3",
+   "ceyrek": 5,
+   "ciro": 11043159000,
+   "brut": 1342625000,
+   "favok": 10829498000,
+   "favokCek": 976866000,
+   "netKar": 1607842000,
+   "ozk": 40159142000,
+   "aktif": 68566613000,
+   "donen": 10187003000,
+   "kvY": 6650925000,
+   "finBorc": 20891736000,
+   "likit": 770389000,
+   "netBorc": 20121347000,
+   "isletmeNA": 4416556000,
+   "capex": -14661000,
+   "sna": 4401895000,
+   "tahakkuk": -4.1,
+   "odFaiz": -1315530000,
+   "odTemettu": null,
+   "stoklar": 814775000,
+   "ticariAlacak": 2257180000,
+   "ticariBorc": 1709105000,
+   "buyume": {
+    "ciro": 15.3,
+    "netKar": -14.4,
+    "brut": 127.3
+   },
+   "adet": 3819504000,
+   "adet_kaynak": "sermaye(nominal 1₺ varsayımı)",
+   "faal": 10776473000,
+   "amort": 53025000,
+   "vergiOncesi": 603364000,
+   "vergi": 1005830000,
+   "gecmisKar": 20781887000,
+   "eksik": false,
+   "kaynak": "KAP"
   }
  },
  "uye_sayisi": 238,
- "kapsam": 194
+ "kapsam": 195
 }

@@ -1,6 +1,6 @@
 {
- "surum": "degerleme-2026-11-02",
- "guncelleme": "2026-11-02",
+ "surum": "degerleme-2026-11-03",
+ "guncelleme": "2026-11-03",
  "yontem": "PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.",
  "neden_pddd": "Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.",
  "bant": {
@@ -446,7 +446,7 @@
     },
     {
      "q": "2023Q2",
-     "pddd": 2.768
+     "pddd": 2.769
     },
     {
      "q": "2023Q3",
@@ -559,21 +559,21 @@
   {
    "k": "AVPGY",
    "sektor": "Real Estate",
-   "donem": "2026/2",
-   "ozk": 46495200447,
+   "donem": "2026/3",
+   "ozk": 49659016744,
    "srm": 400000000,
-   "n": 6,
-   "ort": 0.514,
-   "sapma": 0.064,
-   "dip": 0.411,
+   "n": 7,
+   "ort": 0.496,
+   "sapma": 0.074,
+   "dip": 0.388,
    "zirve": 0.605,
-   "cv": 0.12,
+   "cv": 0.15,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-10-30",
     "fiyat": 45.5,
-    "pddd": 0.391,
-    "z": -1.59
+    "pddd": 0.366,
+    "z": -1.74
    },
    "seri": [
     {
@@ -599,6 +599,10 @@
     {
      "q": "2026Q2",
      "pddd": 0.482
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 0.388
     }
    ]
   },
@@ -833,23 +837,35 @@
   {
    "k": "BINHO",
    "sektor": "Financials",
-   "donem": "2026/2",
-   "ozk": 14327909467,
+   "donem": "2026/3",
+   "ozk": 14160696196,
    "srm": 1290150000,
-   "n": 5,
-   "ort": 0.856,
-   "sapma": 0.111,
-   "dip": 0.661,
-   "zirve": 0.989,
-   "cv": 0.13,
-   "guven": "düşük",
+   "n": 9,
+   "ort": 0.938,
+   "sapma": 0.302,
+   "dip": 0.568,
+   "zirve": 1.609,
+   "cv": 0.32,
+   "guven": "yüksek",
    "canli": {
     "tarih": "2026-10-30",
     "fiyat": 3.34,
-    "pddd": 0.301,
-    "z": -4.33
+    "pddd": 0.304,
+    "z": -2.1
    },
    "seri": [
+    {
+     "q": "2024Q3",
+     "pddd": 1.25
+    },
+    {
+     "q": "2024Q4",
+     "pddd": 1.609
+    },
+    {
+     "q": "2025Q1",
+     "pddd": 0.735
+    },
     {
      "q": "2025Q2",
      "pddd": 0.661
@@ -869,6 +885,10 @@
     {
      "q": "2026Q2",
      "pddd": 0.989
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 0.568
     }
    ]
   },
@@ -2043,6 +2063,60 @@
    ]
   },
   {
+   "k": "LMKDC",
+   "sektor": "Materials",
+   "donem": "2026/3",
+   "ozk": 9404652000,
+   "srm": 516180000,
+   "n": 8,
+   "ort": 2.079,
+   "sapma": 0.583,
+   "dip": 1.269,
+   "zirve": 3.13,
+   "cv": 0.28,
+   "guven": "yüksek",
+   "canli": {
+    "tarih": "2026-10-30",
+    "fiyat": 19.31,
+    "pddd": 1.06,
+    "z": -1.75
+   },
+   "seri": [
+    {
+     "q": "2024Q4",
+     "pddd": 3.13
+    },
+    {
+     "q": "2025Q1",
+     "pddd": 2.807
+    },
+    {
+     "q": "2025Q2",
+     "pddd": 2.276
+    },
+    {
+     "q": "2025Q3",
+     "pddd": 1.935
+    },
+    {
+     "q": "2025Q4",
+     "pddd": 1.823
+    },
+    {
+     "q": "2026Q1",
+     "pddd": 1.788
+    },
+    {
+     "q": "2026Q2",
+     "pddd": 1.607
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 1.269
+    }
+   ]
+  },
+  {
    "k": "MAVI",
    "sektor": "Consumer Discretionary",
    "donem": "2026/2",
@@ -2241,6 +2315,60 @@
     {
      "q": "2026Q2",
      "pddd": 1.341
+    }
+   ]
+  },
+  {
+   "k": "PARSN",
+   "sektor": "Consumer Discretionary",
+   "donem": "2026/3",
+   "ozk": 16455042243,
+   "srm": 86788722,
+   "n": 8,
+   "ort": 0.587,
+   "sapma": 0.151,
+   "dip": 0.307,
+   "zirve": 0.819,
+   "cv": 0.26,
+   "guven": "yüksek",
+   "canli": {
+    "tarih": "2026-10-30",
+    "fiyat": 46.86,
+    "pddd": 0.247,
+    "z": -2.25
+   },
+   "seri": [
+    {
+     "q": "2024Q4",
+     "pddd": 0.819
+    },
+    {
+     "q": "2025Q1",
+     "pddd": 0.705
+    },
+    {
+     "q": "2025Q2",
+     "pddd": 0.657
+    },
+    {
+     "q": "2025Q3",
+     "pddd": 0.657
+    },
+    {
+     "q": "2025Q4",
+     "pddd": 0.606
+    },
+    {
+     "q": "2026Q1",
+     "pddd": 0.462
+    },
+    {
+     "q": "2026Q2",
+     "pddd": 0.484
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 0.307
     }
    ]
   },

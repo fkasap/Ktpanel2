@@ -1,8 +1,9 @@
 {
- "tarih": "2026-11-02",
+ "tarih": "2026-11-03",
  "kodlar": [
   "ACSEL",
   "AKCNS",
+  "AKFIS",
   "AKHAN",
   "AKYHO",
   "ALBTN",
@@ -52,6 +53,7 @@
   "EKOS",
   "EKSUN",
   "ELITE",
+  "ENJSA",
   "ESEN",
   "EUPWR",
   "EYGYO",
@@ -166,7 +168,7 @@
   "YIGIT",
   "ZEDUR"
  ],
- "sayi": 164,
+ "sayi": 166,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -614,7 +616,9 @@
   "KIMMR": "2026-10-31",
   "LMKDC": "2026-10-31",
   "TUKAS": "2026-10-31",
-  "VANGD": "2026-10-31"
+  "VANGD": "2026-10-31",
+  "AKFIS": "2026-11-03",
+  "ENJSA": "2026-11-03"
  },
  "evren_disi": [
   "AAGYO",
@@ -902,7 +906,7 @@
   "ZGYO"
  ],
  "evren_disi_sayi": 283,
- "pencere_sayi": 0,
+ "pencere_sayi": 2,
  "dusen_son": [],
- "guncelleme": "2026-11-02 14:07 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-03 06:08 UTC — otomatik (KAP FR · kümülatif §299)"
 }

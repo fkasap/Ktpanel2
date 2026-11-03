@@ -5,14 +5,13 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-10-31",
+ "tarih": "2026-11-03",
  "donem": "3Ç26",
- "adet": 150,
+ "adet": 148,
  "beklenen": {
   "NTGAZ": "2026-10-26",
   "JANTS": "2026-10-27",
   "BURVA": "2026-10-29",
-  "ENJSA": "2026-10-29",
   "FORMT": "2026-10-29",
   "MAKIM": "2026-10-29",
   "PNLSN": "2026-10-29",
@@ -44,7 +43,6 @@
   "OZYSR": "2026-11-05",
   "PETKM": "2026-11-05",
   "YUNSA": "2026-11-05",
-  "AKFIS": "2026-11-06",
   "AKFYE": "2026-11-06",
   "ALTNY": "2026-11-06",
   "ATATP": "2026-11-06",
@@ -246,7 +244,9 @@
   "KIMMR": "2026-10-31",
   "VANGD": "2026-10-30",
   "LMKDC": "2026-10-30",
-  "EFOR": "2026-10-30"
+  "EFOR": "2026-10-30",
+  "ENJSA": "2026-11-02",
+  "AKFIS": "2026-11-02"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -1166,6 +1166,14 @@
   "EFOR": {
    "tarih": "2026-10-30",
    "id": "1690325"
+  },
+  "ENJSA": {
+   "tarih": "2026-11-02",
+   "id": "1691179"
+  },
+  "AKFIS": {
+   "tarih": "2026-11-02",
+   "id": "1691123"
   }
  }
 }
