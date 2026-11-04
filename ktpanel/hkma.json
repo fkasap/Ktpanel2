@@ -1,29 +1,29 @@
 {
- "guncelleme": "2026-11-03",
- "alinma": "2026-11-03T20:56:47.680Z",
+ "guncelleme": "2026-11-04",
+ "alinma": "2026-11-04T21:16:00.504Z",
  "kaynak": "HKMA Monthly Statistical Bulletin (Actions yedeği · §516)",
  "veri": {
-  "ay": "2026-09",
+  "ay": "2026-10",
   "hkdUsd": {
-   "deger": 7.847,
-   "fark": 0.008,
-   "bandKonum": 97
+   "deger": 7.8455,
+   "fark": -0.002,
+   "bandKonum": 96
   },
   "aggrBalance": {
-   "deger": 54108,
-   "fark": -82
+   "deger": 53999,
+   "fark": -109
   },
   "hiborON": {
-   "deger": 4.0875,
-   "fark": -0.011
+   "deger": 2.77464,
+   "fark": -1.313
   },
   "hibor3M": {
-   "deger": 3.24167,
-   "fark": 0.222
+   "deger": 3.21256,
+   "fark": -0.029
   },
   "y10": {
-   "deger": 3.987,
-   "fark": 0.471
+   "deger": 3.838,
+   "fark": -0.149
   },
   "bazFaiz": {
    "deger": 4.25

@@ -5,9 +5,9 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-11-03",
+ "tarih": "2026-11-04",
  "donem": "3Ç26",
- "adet": 143,
+ "adet": 139,
  "beklenen": {
   "JANTS": "2026-10-27",
   "BURVA": "2026-10-29",
@@ -18,11 +18,9 @@
   "CWENE": "2026-10-30",
   "TUPRS": "2026-10-30",
   "KARSN": "2026-11-02",
-  "KCAER": "2026-11-03",
   "LOGO": "2026-11-03",
   "SAYAS": "2026-11-03",
   "YEOTK": "2026-11-03",
-  "MPARK": "2026-11-04",
   "ONCSM": "2026-11-04",
   "OZRDN": "2026-11-04",
   "ZEDUR": "2026-11-04",
@@ -31,11 +29,9 @@
   "EGGUB": "2026-11-05",
   "GEDZA": "2026-11-05",
   "KOTON": "2026-11-05",
-  "KRDMA": "2026-11-05",
   "KRDMB": "2026-11-05",
   "KRDMD": "2026-11-05",
   "KRONT": "2026-11-05",
-  "KRSTL": "2026-11-05",
   "MEDTR": "2026-11-05",
   "MOPAS": "2026-11-05",
   "OZYSR": "2026-11-05",
@@ -246,7 +242,12 @@
   "YUNSA": "2026-11-03",
   "DYOBY": "2026-11-03",
   "PENTA": "2026-11-03",
-  "NTGAZ": "2026-11-03"
+  "NTGAZ": "2026-11-03",
+  "KRDMA": "2026-11-04",
+  "SSAAT": "2026-11-04",
+  "KRSTL": "2026-11-04",
+  "KCAER": "2026-11-04",
+  "MPARK": "2026-11-04"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -1194,6 +1195,26 @@
   "NTGAZ": {
    "tarih": "2026-11-03",
    "id": "1691844"
+  },
+  "KRDMA": {
+   "tarih": "2026-11-04",
+   "id": "1692694"
+  },
+  "SSAAT": {
+   "tarih": "2026-11-04",
+   "id": "1692690"
+  },
+  "KRSTL": {
+   "tarih": "2026-11-04",
+   "id": "1692595"
+  },
+  "KCAER": {
+   "tarih": "2026-11-04",
+   "id": "1692587"
+  },
+  "MPARK": {
+   "tarih": "2026-11-04",
+   "id": "1692568"
   }
  }
 }
