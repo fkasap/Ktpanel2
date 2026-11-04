@@ -1,5 +1,5 @@
 {
- "tarih": "2026-11-03",
+ "tarih": "2026-11-04",
  "kodlar": [
   "ACSEL",
   "AKCNS",
@@ -926,9 +926,10 @@
   "ZGYO"
  ],
  "evren_disi_sayi": 289,
- "pencere_sayi": 14,
+ "pencere_sayi": 13,
  "dusen_son": [
-  "NTGAZ"
+  "NTGAZ",
+  "THYAO"
  ],
- "guncelleme": "2026-11-03 20:57 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-04 07:03 UTC — otomatik (KAP FR · kümülatif §299)"
 }

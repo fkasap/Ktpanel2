@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-03",
+ "guncelleme": "2026-11-04",
  "fiyat_tarihi": "2026-11-03",
  "not": "Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:\"eski\" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.",
  "hisseler": [
@@ -491,11 +491,15 @@
    "k": "DYOBY",
    "fiyat": 8,
    "adet": 300,
-   "ciro": 10124,
-   "ebitda": 1643,
-   "netBorc": 5761,
+   "ciro": 8669,
+   "ebitda": 1310,
+   "netBorc": 5975,
    "hacim": 39,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 823,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "EBEBK",
@@ -1341,15 +1345,15 @@
    "k": "NTGAZ",
    "fiyat": 9.43,
    "adet": 690,
-   "ciro": 8352,
-   "ebitda": 1945,
-   "netBorc": -316,
+   "ciro": 8333,
+   "ebitda": 1914,
+   "netBorc": -278,
    "hacim": 42,
    "kaynak": "kap",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 1945,
-   "donem": "2026/2",
-   "adet_not": "bilanço sermayesi (2026/2)"
+   "ebitda_genis": 1921,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "ONCSM",
@@ -1832,11 +1836,15 @@
    "k": "YUNSA",
    "fiyat": 5.35,
    "adet": 480,
-   "ciro": 3564,
-   "ebitda": 523,
-   "netBorc": -227,
+   "ciro": 3652,
+   "ebitda": 495,
+   "netBorc": -416,
    "hacim": 37,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 647,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   }
  ],
  "_kurumsal_islem": {
@@ -1847,5 +1855,5 @@
   "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
  },
  "kaynak": "KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496",
- "bilanco_guncelleme": "2026-11-03"
+ "bilanco_guncelleme": "2026-11-04"
 }

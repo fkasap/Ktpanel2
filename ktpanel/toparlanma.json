@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-03",
+ "guncelleme": "2026-11-04",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-02",
@@ -50,11 +50,11 @@
     },
     {
      "ad": "TR CDS 2 hafta değişim",
-     "deger": 8,
+     "deger": 7,
      "esik": "≤ 0 bp (daralma)",
      "tamam": false,
      "birim": "bp",
-     "not": "1 ay +4 bp"
+     "not": "1 ay +5 bp"
     }
    ]
   },
@@ -1190,7 +1190,7 @@
    "dipten": 6.4,
    "beta": 1.38,
    "kalite": 0.36,
-   "skor": 3.6,
+   "skor": 3.62,
    "baski": false
   },
   {
@@ -1202,7 +1202,7 @@
    "dipten": 0,
    "beta": 1.25,
    "kalite": 1.21,
-   "skor": 3.58,
+   "skor": 3.6,
    "baski": false
   },
   {
@@ -1226,7 +1226,7 @@
    "dipten": 0,
    "beta": 0.88,
    "kalite": -0.14,
-   "skor": 2.34,
+   "skor": 2.35,
    "baski": true
   },
   {
@@ -1237,7 +1237,7 @@
    "dd": -54.9,
    "dipten": 10,
    "beta": 1.34,
-   "kalite": 1.38,
+   "kalite": 1.4,
    "skor": 2.11,
    "baski": true
   },
@@ -1249,7 +1249,7 @@
    "dd": -63.1,
    "dipten": 7.8,
    "beta": 1.08,
-   "kalite": 0.46,
+   "kalite": 0.47,
    "skor": 2,
    "baski": false
   },
@@ -1268,12 +1268,12 @@
   {
    "k": "SELEC",
    "s": "Health Care",
-   "w": 0.33,
+   "w": 0.32,
    "r3": -70,
    "dd": -84.4,
    "dipten": 5.7,
    "beta": 0.93,
-   "kalite": 0.17,
+   "kalite": 0.18,
    "skor": 1.89,
    "baski": true
   },
@@ -1285,7 +1285,7 @@
    "dd": -69.1,
    "dipten": 0,
    "beta": 1.03,
-   "kalite": 1.67,
+   "kalite": 1.69,
    "skor": 1.82,
    "baski": false
   },
@@ -1297,7 +1297,7 @@
    "dd": -73,
    "dipten": 0,
    "beta": 0.97,
-   "kalite": 0.63,
+   "kalite": 0.64,
    "skor": 1.81,
    "baski": true
   },
@@ -1321,8 +1321,8 @@
    "dd": -59.4,
    "dipten": 0,
    "beta": 1.09,
-   "kalite": 1.13,
-   "skor": 1.63,
+   "kalite": 1.14,
+   "skor": 1.62,
    "baski": false
   }
  ],

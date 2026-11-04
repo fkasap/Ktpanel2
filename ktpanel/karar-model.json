@@ -1,5 +1,5 @@
 {
- "surum": "2026-11-03",
+ "surum": "2026-11-04",
  "_bolum": "§462 · §463",
  "_aciklama": "Çeyrek Karar Motoru kataloğu — XK050 (resmî üyelik endeks-uyeler.json; XK030 çekirdek + §531 genişleme, Actions sürdürür). Her hissede ortak iskelet: konsensüs · konsensüs sicili · fiyatlanma (göreli getiri · PD/FAVÖK bandı · hedef) · puan kartı · sinyal. Sürücü modeli yalnız tier A/B’de ve kalibre edildikçe (bugün: TUPRS). tip: regresyon (sürücü→FAVÖK EKK) · konsensus (sürücü modeli yok) · konsensus_banka (hedef metrik net kâr). evren: (boş)=XK030 · XK050 · izleme · cikti.",
  "_veri_kaynagi": "Fintables MCP 19 Eki 2026: hisse_finansal_tablolari_gelir_tablosu_kalemleri (satir 10005 FAVÖK; usd_ceyreklik/try_ceyreklik), hisse_senedi_araci_kurum_tahminleri (kurum ortalaması), mumlar_gunluk_gh çeyrek sonu kapanış (düzeltilmiş; bilinen bedelsizler bolunme ile düzeltildi), hisse_senetleri (sermaye). Konsensüs/fiyat ELLE tazelenir (bilanço haftası ritüeli); FAVÖK gerçekleri Actions kararOrneklem() (KAP) ile tamamlanır.",
@@ -13988,6 +13988,21 @@
      "tl": 0.43,
      "usd": 9.4,
      "_kaynak": "KAP"
+    },
+    "2025Q1": {
+     "tl": 0.517,
+     "usd": 14.2,
+     "_kaynak": "KAP"
+    },
+    "2025Q2": {
+     "tl": 0.067,
+     "usd": 1.7,
+     "_kaynak": "KAP"
+    },
+    "2025Q3": {
+     "tl": 0.234,
+     "usd": 5.7,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -14017,6 +14032,21 @@
    "_fiyat_notu": "çeyrek sonu fiyatlar Yahoo DÜZELTİLMİŞ kapanış (bölünme/bedelsiz işlenmiş) — bolunme düzeltmesi gerekmez",
    "_sur_ek": "546a",
    "netborc": {
+    "2024Q4": {
+     "nb": 0.589,
+     "borc": 1.283,
+     "nakit": 0.694
+    },
+    "2025Q1": {
+     "nb": -0.505,
+     "borc": 1.386,
+     "nakit": 1.89
+    },
+    "2025Q2": {
+     "nb": -0.434,
+     "borc": 1.35,
+     "nakit": 1.784
+    },
     "2025Q3": {
      "nb": -0.424,
      "borc": 1.377,
@@ -14039,6 +14069,42 @@
     }
    },
    "nakit": {
+    "2024Q4": {
+     "cfo": 0.48,
+     "capex": -0.218,
+     "kira": -0.353,
+     "fcf": -0.081,
+     "favok": 1.193,
+     "donusum": -6.7,
+     "capex_am": 0.46,
+     "ay": 12,
+     "fcf_ttm": -0.081,
+     "favok_ttm": 1.193
+    },
+    "2025Q1": {
+     "cfo": -1.062,
+     "capex": -0.045,
+     "kira": -0.134,
+     "fcf": -1.241,
+     "favok": 0.517,
+     "donusum": -240.3,
+     "capex_am": 0.31,
+     "ay": 3,
+     "fcf_ttm": -1.205,
+     "yaklasik": true
+    },
+    "2025Q2": {
+     "cfo": -1.112,
+     "capex": -0.155,
+     "kira": 0,
+     "fcf": -1.268,
+     "favok": 0.606,
+     "donusum": -209.1,
+     "capex_am": 0.49,
+     "ay": 6,
+     "fcf_ttm": -1.224,
+     "yaklasik": true
+    },
     "2025Q3": {
      "cfo": -0.525,
      "capex": -0.297,
@@ -14047,7 +14113,9 @@
      "favok": 0.861,
      "donusum": -143.3,
      "capex_am": 0.59,
-     "ay": 9
+     "ay": 9,
+     "fcf_ttm": -1.05,
+     "yaklasik": true
     },
     "2025Q4": {
      "cfo": -0.31,
@@ -15375,7 +15443,7 @@
  "_487": "TÜİK geniş tablolar (Actions §487, databrowser2 filtreli POST): Yİ-ÜFE 4 hane (plastik, çimento, makarna, demir-çelik, kumaş, gübre) · YD-ÜFE ihracat fiyatları · buğday çiftçi fiyatı · tarımsal girdi gübre · perakende satış hacmi gıda/giyim · inşaat üretim · kara taşımacılığı hizmet üretimi. Türetilmiş obams_makas, petkm_ufe_makas. §488 PlasticPortal (Plastech.pl, Orta Avrupa aylık €/kg, 2006→): PE/PP → pe_pp ($/t) — PETKM \"PE/PP bekliyor\" KAPANDI; petkm_polimer_makas_usd = pe_pp − 7,5×Brent PETKM birincili.",
  "_489": "PE/PP: PlasticPortal Cloudflare (Actions IP) → tohum (Chrome 21 Eki, 2006→, elle aylık) + DCE Sina vadelileri (L0/PP0/V0, otomatik, Asya ayağı) + Asya makası.",
  "_531": {
-  "guncelleme": "2026-11-03",
+  "guncelleme": "2026-11-04",
   "xk050": 50,
   "katalog": 52,
   "eklenen_toplam": 20
