@@ -1,14 +1,14 @@
 {
- "tarih": "2026-11-04",
+ "tarih": "2026-11-05",
  "guncelleme": "2026-11-05",
  "benchmark": {
   "k": "XU100",
   "ad": "BIST 100",
   "g": [
-   4.12,
-   2.8,
-   -7.76,
-   -16.24
+   -1.26,
+   1.5,
+   -8.41,
+   -17.75
   ]
  },
  "donemler": [
@@ -22,159 +22,159 @@
    "k": "XKMYA",
    "ad": "Kimya / Petrol",
    "g": [
-    2.81,
-    -0.91,
-    -13.81,
-    -8.32
+    -2.47,
+    -3.36,
+    -13.88,
+    -13.71
    ]
   },
   {
    "k": "XGIDA",
    "ad": "Gıda / İçecek",
    "g": [
-    1.37,
-    0.81,
-    -12.07,
-    -33.41
+    -0.28,
+    0.53,
+    -13.72,
+    -35.23
    ]
   },
   {
    "k": "XMANA",
    "ad": "Madencilik",
    "g": [
-    4.08,
-    4.53,
-    -15.26,
-    -24.06
+    -2.97,
+    1.43,
+    -16.56,
+    -23.34
    ]
   },
   {
    "k": "XUSIN",
    "ad": "Sınai",
    "g": [
-    3.71,
-    0.81,
-    -14.62,
-    -27.19
+    -1.76,
+    -0.97,
+    -15.09,
+    -29.17
    ]
   },
   {
    "k": "XHOLD",
    "ad": "Holding",
    "g": [
-    3.66,
-    3.27,
-    -13.41,
-    -37.32
+    0.48,
+    3.76,
+    -12.28,
+    -35.91
    ]
   },
   {
    "k": "XELKT",
    "ad": "Elektrik",
    "g": [
-    4.49,
-    3.23,
-    -10.42,
-    -30.02
+    0.37,
+    3.61,
+    -9.47,
+    -29.74
    ]
   },
   {
    "k": "XUHIZ",
    "ad": "Hizmetler",
    "g": [
-    4.65,
-    5.1,
-    -8.33,
-    -20.27
+    0.36,
+    5.47,
+    -7.1,
+    -20.06
    ]
   },
   {
    "k": "XILTM",
    "ad": "İletişim",
    "g": [
-    0.72,
-    3.14,
-    -7.03,
-    -10.28
+    -1.63,
+    1.46,
+    -8.48,
+    -12.1
    ]
   },
   {
    "k": "XINSA",
    "ad": "İnşaat",
    "g": [
-    3.21,
-    3.54,
-    -13.87,
-    -36.14
+    -0.13,
+    3.4,
+    -11.37,
+    -37.29
    ]
   },
   {
    "k": "XUTEK",
    "ad": "Teknoloji",
    "g": [
-    3.55,
-    -0.62,
-    -7.74,
-    -23.9
+    -5.82,
+    -6.41,
+    -13.96,
+    -29.38
    ]
   },
   {
    "k": "XSGRT",
    "ad": "Sigorta",
    "g": [
-    3.77,
-    7.63,
-    -19.37,
-    -30.42
+    0.57,
+    8.24,
+    -16.74,
+    -29.53
    ]
   },
   {
    "k": "XTRZM",
    "ad": "Turizm",
    "g": [
-    5.15,
-    1.83,
-    -12.85,
-    -29.45
+    1.68,
+    3.54,
+    -11.85,
+    -29.74
    ]
   },
   {
    "k": "XGMYO",
    "ad": "GYO",
    "g": [
-    3.15,
-    0.08,
-    -13.08,
-    -30.52
+    0.96,
+    1.03,
+    -11.95,
+    -29.53
    ]
   },
   {
    "k": "XUMAL",
    "ad": "Mali",
    "g": [
-    4.24,
-    3.45,
-    -11.02,
-    -30.24
+    1.13,
+    4.62,
+    -9.56,
+    -29.13
    ]
   },
   {
    "k": "XBANK",
    "ad": "Banka",
    "g": [
-    5.15,
-    4.91,
-    -1.7,
-    1.43
+    1.75,
+    6.75,
+    -0.63,
+    3.85
    ]
   }
  ],
  "capalar": {
-  "son": "2026-11-04",
-  "1G": "2026-11-03",
+  "son": "2026-11-05",
+  "1G": "2026-11-04",
   "1H": "2026-10-28",
-  "1A": "2026-10-05",
-  "3A": "2026-08-05"
+  "1A": "2026-10-06",
+  "3A": "2026-08-07"
  },
  "kaynak": "BIST resmi kapanislari (endeks-arsiv.json) — §333 otomatik",
  "not": "Yahoo 13 BIST sektor endeksine 1H/1A/3A serisi VERMIYOR (§115: 4 varyant denendi, hicbiri >=22 bar dondurmedi). 1G canli akar; 1H/1A/3A bu damgadan gelir. Rotasyon RS hesabi taban esleştirir (§114) — sektor damgaliysa benchmark da damgali kullanilir, karisik taban olmaz. §252t (10 Agu): capa tarihleri artik DOSYADA yazili (capalar alani) — hangi gune gore hesaplandigi sonradan sorgulanabilsin. 3A capasi 8 May HAFTA SONUNA denk geldi, en yakin islem gunu 11 May kullanildi."

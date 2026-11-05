@@ -7,7 +7,7 @@
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
  "tarih": "2026-11-05",
  "donem": "3Ç26",
- "adet": 138,
+ "adet": 127,
  "beklenen": {
   "JANTS": "2026-10-27",
   "BURVA": "2026-10-29",
@@ -20,22 +20,15 @@
   "KARSN": "2026-11-02",
   "LOGO": "2026-11-03",
   "SAYAS": "2026-11-03",
-  "YEOTK": "2026-11-03",
   "ONCSM": "2026-11-04",
   "OZRDN": "2026-11-04",
   "ZEDUR": "2026-11-04",
-  "ALBRK": "2026-11-05",
   "ARASE": "2026-11-05",
-  "EGGUB": "2026-11-05",
   "GEDZA": "2026-11-05",
-  "KOTON": "2026-11-05",
   "KRDMB": "2026-11-05",
   "KRDMD": "2026-11-05",
-  "KRONT": "2026-11-05",
-  "MEDTR": "2026-11-05",
   "MOPAS": "2026-11-05",
   "OZYSR": "2026-11-05",
-  "AKFYE": "2026-11-06",
   "ALTNY": "2026-11-06",
   "ATATP": "2026-11-06",
   "BLUME": "2026-11-06",
@@ -62,14 +55,12 @@
   "SNGYO": "2026-11-06",
   "THYAO": "2026-11-06",
   "TMPOL": "2026-11-06",
-  "VAKKO": "2026-11-06",
   "VBTYZ": "2026-11-06",
   "YATAS": "2026-11-06",
   "AHGAZ": "2026-11-09",
   "AKYHO": "2026-11-09",
   "ALKIM": "2026-11-09",
   "ARDYZ": "2026-11-09",
-  "AYDEM": "2026-11-09",
   "BAKAB": "2026-11-09",
   "BERA": "2026-11-09",
   "BIENY": "2026-11-09",
@@ -92,7 +83,6 @@
   "ESEN": "2026-11-09",
   "EUPWR": "2026-11-09",
   "EYGYO": "2026-11-09",
-  "FONET": "2026-11-09",
   "FORTE": "2026-11-09",
   "FRIGO": "2026-11-09",
   "GEREL": "2026-11-09",
@@ -139,7 +129,6 @@
   "SELVA": "2026-11-09",
   "SMART": "2026-11-09",
   "SOKE": "2026-11-09",
-  "SRVGY": "2026-11-09",
   "SUWEN": "2026-11-09",
   "TEZOL": "2026-11-09",
   "TGSAS": "2026-11-09",
@@ -247,7 +236,18 @@
   "KRSTL": "2026-11-04",
   "KCAER": "2026-11-04",
   "MPARK": "2026-11-04",
-  "PETKM": "2026-11-05"
+  "PETKM": "2026-11-05",
+  "YEOTK": "2026-11-05",
+  "MEDTR": "2026-11-05",
+  "KRONT": "2026-11-05",
+  "AYDEM": "2026-11-05",
+  "ALBRK": "2026-11-05",
+  "VAKKO": "2026-11-05",
+  "EGGUB": "2026-11-05",
+  "KOTON": "2026-11-05",
+  "FONET": "2026-11-05",
+  "SRVGY": "2026-11-05",
+  "AKFYE": "2026-11-05"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -1219,6 +1219,50 @@
   "PETKM": {
    "tarih": "2026-11-05",
    "id": "1692858"
+  },
+  "YEOTK": {
+   "tarih": "2026-11-05",
+   "id": "1693502"
+  },
+  "MEDTR": {
+   "tarih": "2026-11-05",
+   "id": "1693481"
+  },
+  "KRONT": {
+   "tarih": "2026-11-05",
+   "id": "1693473"
+  },
+  "AYDEM": {
+   "tarih": "2026-11-05",
+   "id": "1693443"
+  },
+  "ALBRK": {
+   "tarih": "2026-11-05",
+   "id": "1693434"
+  },
+  "VAKKO": {
+   "tarih": "2026-11-05",
+   "id": "1693425"
+  },
+  "EGGUB": {
+   "tarih": "2026-11-05",
+   "id": "1693320"
+  },
+  "KOTON": {
+   "tarih": "2026-11-05",
+   "id": "1693307"
+  },
+  "FONET": {
+   "tarih": "2026-11-05",
+   "id": "1693306"
+  },
+  "SRVGY": {
+   "tarih": "2026-11-05",
+   "id": "1693296"
+  },
+  "AKFYE": {
+   "tarih": "2026-11-05",
+   "id": "1693275"
   }
  }
 }
