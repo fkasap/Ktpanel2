@@ -527,7 +527,16 @@ async function ecbModu(req, res){
   res.setHeader('Cache-Control', 's-maxage=10800, stale-while-revalidate=21600');
   res.setHeader('Access-Control-Allow-Origin', '*');
   const TANI=[];
-  const cekCsv = async (flow, key, n)=>{
+  /* §553 (5 Kas, canlı tarama): ECB data-api tek tek serilerde rastgele düşüyor (8 sn zaman aşımı) — bilanço ve DFR bir çağrıda geldi,
+     bir sonrakinde gelmedi; ok:true döndüğü için EKSİK yanıt CDN'de 3 saat kaldı → kart "Bilanço verisi alınamadı". İki önlem:
+     (1) seri düşerse 600 ms sonra TEK tekrar; (2) çekirdek seriler (DFR, bilanço, manşet) eksikse önbellek 120 sn'ye iner. */
+  const cekCsv = async (flow, key, n, tekrar)=>{
+    const r0 = await cekCsv1(flow, key, n);
+    if(r0 || tekrar) return r0;
+    await new Promise(x=>setTimeout(x,600)); TANI.push({flow, key, asama:'tekrar'});
+    return cekCsv1(flow, key, n);
+  };
+  const cekCsv1 = async (flow, key, n)=>{
     try{
       const u='https://data-api.ecb.europa.eu/service/data/'+flow+'/'+key+'?lastNObservations='+n+'&format=csvdata';
       const bas={ 'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
@@ -588,6 +597,7 @@ async function ecbModu(req, res){
       cekCsv('IRS','M.FR.L.L40.CI.0000.EUR.N.Z',3)   // Fransa 10Y
     ]);
     if(req.query.debug) return res.status(200).json({ tani:TANI, ozet:{dfr:!!dfr, bilanco:!!bilanco, manset:!!manset, bund:!!bund, btp:!!btp, oat:!!oat} });
+    if(!dfr||!bilanco||!manset) res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=120');   /* §553: eksik yanıt 3 saat saklanmasın */
     const seriler={};
     if(dfr){ const s0=sonFark(dfr); if(s0) seriler.dfr=s0; } // değişim-tarihleri serisi: son=güncel faiz, fark=son adım
     if(bilanco){
