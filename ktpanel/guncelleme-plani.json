@@ -240,7 +240,8 @@
    "kaynak": "TCMB haftalık basın açıklaması (web) · swap hariç net = canlı net − swapStoku · SAHİP DOSYA (yabanci.json buna hizalanır) · son: 2 Eki haftasi (8 Eki yayini) §459",
    "limit_gun": 13,
    "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği.",
-   "borc": "a"
+   "borc": "c",
+   "_553": "5 Kas: EVDS bie_swaptektarf yalnız TCMB–bankalar (yurt içi) swapını verir (karneye canlı satır eklendi); yurt dışı ikili swap (Katar vb.) hiçbir makine-okunur kaynakta yok → sınıf a değil c (deklare el işi, haftalık Perşembe). 14 gün aşıldı: 16 ve 23 Eki haftaları işlenmedi."
   },
   {
    "ad": "Sukuk ihraç arşivi (yedek)",

@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261103a';
+const KTP_SURUM = '20261105a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -11595,6 +11595,8 @@ async function loadAOFM(){
   };
   await Promise.all([
     koy('aofmLive','TP.APIFON4',x=>{AOFM_SON=x;return '%'+trN(x,2);}),
+    /* §553: yurt içi swap stoku iki yönlü (alım = TCMB döviz alıp TL verir; satım = tersi), mlr $ */
+    (async()=>{ try{ const [a,sa]=await Promise.all([fetch('/api/evds2?series=TP.SWAPTEKTAR.TOTALSTOKALIMYONLU&gun=30').then(r=>r.json()), fetch('/api/evds2?series=TP.SWAPTEKTAR.TOTALSTOKSATIMYONLU&gun=30').then(r=>r.json())]); const va=(a.son||{})['TP.SWAPTEKTAR.TOTALSTOKALIMYONLU'], vs=(sa.son||{})['TP.SWAPTEKTAR.TOTALSTOKSATIMYONLU']; const el=$('karneYurticiSwap'); if(el&&(va||vs)){ el.innerHTML=(va&&isFinite(va.deger)?trN(va.deger/1000,1):'—')+' / '+(vs&&isFinite(vs.deger)?trN(vs.deger/1000,1):'—')+' <span class="thin" style="font-size:9px">· canlı</span>'; el.title='EVDS bie_swaptektarf · '+((va&&va.tarih)||(vs&&vs.tarih)||''); } }catch(e){} })(),
     /* §420 TLREF FONLAMA REJİMİ KARTINDA: kartın kendi notu aylardır
        "TLREF'in politika faizine yakınsaması (kartta canlı)" diye İZLENECEK
        gösteriyordu ama satır HİÇ EKLENMEMİŞTİ — söz verilen, gösterilmeyen

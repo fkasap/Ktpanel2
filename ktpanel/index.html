@@ -525,6 +525,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
     <div class="kv"><span class="k">Brüt rezervler <span class="thin" style="font-size:8px">haftalık</span></span><span id="karneBrut">—</span></div>
     <div class="kv"><span class="k">Net rezervler <span class="thin" style="font-size:8px">günlük</span></span><span id="karneNet">—</span></div>
     <div class="kv"><span class="k">Swap hariç net rezerv <span class="thin" style="font-size:8px">net − swap stoku</span></span><span style="font-weight:600" id="karneSwapHaric">—</span></div>
+    <!-- §553 EVDS canlı: TCMB–bankalar swap stoku (yurt içi). Yurt dışı ikili swap (Katar vb.) EVDS'de yok; o hâlâ rezerv.json'da elle. -->
+    <div class="kv"><span class="k">Yurt içi swap stoku <span class="thin" style="font-size:8px">TCMB–bankalar · alım / satım yönlü · EVDS günlük</span></span><span id="karneYurticiSwap">—</span></div>
     <div class="kv"><span class="k">Referans: Ocak zirvesi</span><span>brüt 215,5 / swap hariç 85,7</span></div>
     <div class="kv"><span class="k">Haziran dibi (26 Haz)</span><span class="down">brüt 149,2 / swap hariç 28</span></div>
     <div class="kv"><span class="k">Sıradaki haftalık veri</span><span id="tcmbHaftalik">—</span></div>
@@ -2032,7 +2034,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261103a"></script>
+<script src="/app.js?v=20261105a"></script>
 <script src="/ajan.js?v=20261027c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden
