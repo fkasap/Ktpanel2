@@ -1,6 +1,6 @@
 {
  "fiyat_tarihi": "2026-11-05",
- "guncelleme": "2026-11-05 — otomatik (GitHub Actions · vercel-köprüsü (1911 fon fiyat + 1071 getiri): fiyat+AUM+yatırımcı+akış)",
+ "guncelleme": "2026-11-05 — otomatik (GitHub Actions · vercel-köprüsü (1981 fon fiyat + 1072 getiri): fiyat+AUM+yatırımcı+akış)",
  "kaynak": "Fintables MCP (getiri · AUM · akış · yatırımcı) · TEFAS (ünvan/ücret)",
  "kategoriler": [
   {
@@ -130,16 +130,16 @@
      "k": "HPH",
      "u": "Hedef",
      "t": "K",
-     "yu": 0.607395,
+     "yu": 0.60788,
      "g": [
       -3.4486,
-      0,
-      0,
-      0,
-      0,
+      -75.2556,
+      -74.0008,
+      -67.6502,
+      -65.6705,
       null
      ],
-     "b": 1002561390,
+     "b": 1003362064,
      "ys": 6593,
      "a": 0
     },
@@ -494,18 +494,18 @@
      "k": "KTV",
      "u": "Kuveyt Türk",
      "t": "K",
-     "yu": 8.264348,
+     "yu": 8.26447,
      "g": [
       0.088,
-      2.946,
-      9.2022,
-      34.0818,
-      41.8352,
-      213.1146
+      2.9475,
+      9.2038,
+      34.0838,
+      41.8373,
+      213.1193
      ],
-     "b": 37090522954,
+     "b": 37091073264,
      "ys": 49419,
-     "a": 626732169
+     "a": 626741421
     },
     {
      "k": "OTF",
