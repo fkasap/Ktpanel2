@@ -1,13 +1,13 @@
 {
  "guncelleme": "2026-11-05",
  "kaynak": "TCMB haftalık basın açıklaması (web) — swap stoku bileşeni EVDS'de yok (yurt dışı ikili swap, ağırlıkla Katar)",
- "swapStoku": 12.1,
+ "swapStoku": 13.7,
  "webDogrulama": {
-  "tarih": "23-10-2026",
-  "brut": 162.2,
-  "net": 42.9,
-  "swapHaricNet": 30.8,
-  "not": "swapStoku = net − swapHaricNet = 42,9 − 30,8 = 12,1. Kaynak: TCMB haftalık rezerv verisi (30 Eki yayını), Bloomberg HT aktarımı; brüt 162,2 EVDS TP.AB.TOPLAM 2026-43 ile birebir (162.190,9 mn $). Üç haftalık düşüş: brüt 171,6 → 169,1 → 162,2; net 57,7 → 51,6 → 42,9; swap hariç 44,2 → 39,4 → 30,8 (iki haftada −13,5). 16 Eki haftası BHT'nin haftalık değişimlerinden türetildi (brüt 169,1 EVDS ile uyumlu). SIRADAKI: 30 Eki haftası verisi 5 Kas 14:30 (bu dosya yazılırken henüz EVDS'de yoktu)."
+  "tarih": "30-10-2026",
+  "brut": 158.1,
+  "net": 37.95,
+  "swapHaricNet": 24.2,
+  "not": "swapStoku = net − swapHaricNet = 37,95 − 24,2 = 13,7. Kaynak: TCMB haftalık verisi (5 Kas 14:30 yayını), CNBC-e aktarımı (net 42,8→37,95; swap hariç 30,7→24,2; brüt −%2,5 → 158,1, dört ayın en düşüğü). CNBC-e'nin 23 Eki değerleri (42,8/30,7) Bloomberg HT ile (42,9/30,8) birebir → aynı yöntem. Brüt 158,1 ayrıca Matriks analitik bilanço hesabıyla (Dünya, T24, Cumhuriyet) doğrulandı; EVDS TP.AB.TOPLAM 2026-44 bu dosya yazılırken henüz yayımlanmamıştı (son 2026-43 = 162.190,9 mn $). Kullanıcının andığı 'swap hariç 22,3' hiçbir kaynakta bulunamadı; 24,2 ile ~1,9 fark büyük olasılıkla farklı tanım (ör. yurt içi swap satım stoku 30 Eki 2,8 mlr $ da düşülürse ≈21,4). Teyit edilmeyen rakam yazılmadı."
  },
  "aciklama": "Swap stoku yavaş değişen bir kalemdir (yurt dışı MB ikili anlaşmaları, ağırlıkla Katar ~15 mlr limit). Haftalık net rezerv hareketi ağırlıkla kur+bilançodan gelir. Bu dosya 'rezervleri güncelle' komutuyla web'den tazelenir; ara zamanlarda swap hariç net = canlı net − swapStoku olarak hesaplanır (net EVDS'den canlı).",
  "seri": [
@@ -25,7 +25,15 @@
    "net": 42.9,
    "swapHaric": 30.8,
    "swap": 12.1
+  },
+  {
+   "h": "30 Eki",
+   "brut": 158.1,
+   "net": 37.95,
+   "swapHaric": 24.2,
+   "swap": 13.7,
+   "not": "CNBC-e 5 Kas; üç haftada swap hariç net 39,4 → 24,2 (−15,2 mlr $); swap stoku 12,1 → 13,7 (+1,6: yeni swap kullanımı)"
   }
  ],
- "_553": "5 Kas: iki hafta (16 ve 23 Eki) gecikmeyle işlendi. EVDS bie_swaptektarf yalnız yurt içi swapı (alım 0 · satım ~3,4 mlr $) verir; buradaki swapStoku yurt dışı ikili swap dahil toplam (net − swap hariç net), makine-okunur kaynağı yok → borç sınıfı c."
+ "_553": "5 Kas: iki hafta (16 ve 23 Eki) gecikmeyle işlendi. EVDS bie_swaptektarf yalnız yurt içi swapı (alım 0 · satım 30 Eki 2,8 → 4 Kas 3,4 mlr $) verir; buradaki swapStoku yurt dışı ikili swap dahil toplam (net − swap hariç net), makine-okunur kaynağı yok → borç sınıfı c."
 }
