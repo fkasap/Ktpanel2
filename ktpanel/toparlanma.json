@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-04",
+ "guncelleme": "2026-11-05",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-03",
@@ -50,11 +50,11 @@
     },
     {
      "ad": "TR CDS 2 hafta değişim",
-     "deger": 7,
+     "deger": 4,
      "esik": "≤ 0 bp (daralma)",
      "tamam": false,
      "birim": "bp",
-     "not": "1 ay +5 bp"
+     "not": "1 ay +2 bp"
     }
    ]
   },
@@ -1184,13 +1184,13 @@
   {
    "k": "CWENE",
    "s": "Industrials",
-   "w": 0.24,
+   "w": 0.26,
    "r3": -66.3,
    "dd": -68.2,
    "dipten": 9.1,
    "beta": 1.37,
    "kalite": 0.36,
-   "skor": 3.7,
+   "skor": 3.72,
    "baski": false
   },
   {
@@ -1202,7 +1202,7 @@
    "dipten": 2.1,
    "beta": 1.25,
    "kalite": 1.22,
-   "skor": 3.63,
+   "skor": 3.65,
    "baski": false
   },
   {
@@ -1214,19 +1214,19 @@
    "dipten": 14.9,
    "beta": 1.12,
    "kalite": 0.31,
-   "skor": 2.46,
+   "skor": 2.48,
    "baski": false
   },
   {
    "k": "PASEU",
    "s": "Industrials",
-   "w": 0.17,
+   "w": 0.18,
    "r3": -87.3,
    "dd": -91.4,
    "dipten": 0.8,
    "beta": 0.85,
    "kalite": -0.14,
-   "skor": 2.32,
+   "skor": 2.33,
    "baski": true
   },
   {
@@ -1238,43 +1238,43 @@
    "dipten": 9,
    "beta": 1.33,
    "kalite": 1.4,
-   "skor": 2.25,
+   "skor": 2.26,
    "baski": true
   },
   {
    "k": "EUPWR",
    "s": "Industrials",
-   "w": 0.53,
+   "w": 0.56,
    "r3": -56.7,
    "dd": -62.5,
    "dipten": 9.5,
    "beta": 1.09,
    "kalite": 0.47,
-   "skor": 2.07,
+   "skor": 2.08,
    "baski": false
   },
   {
    "k": "GESAN",
    "s": "Industrials",
-   "w": 0.3,
+   "w": 0.32,
    "r3": -60.3,
    "dd": -65.4,
    "dipten": 7.4,
    "beta": 1.04,
    "kalite": 0.13,
-   "skor": 2,
+   "skor": 2.01,
    "baski": true
   },
   {
    "k": "SELEC",
    "s": "Health Care",
-   "w": 0.32,
+   "w": 0.34,
    "r3": -69.1,
    "dd": -83.6,
    "dipten": 11.1,
    "beta": 0.95,
    "kalite": 0.18,
-   "skor": 1.97,
+   "skor": 1.98,
    "baski": true
   },
   {
@@ -1286,13 +1286,13 @@
    "dipten": 0.8,
    "beta": 1.02,
    "kalite": 1.69,
-   "skor": 1.83,
+   "skor": 1.84,
    "baski": false
   },
   {
    "k": "GENIL",
    "s": "Health Care",
-   "w": 0.21,
+   "w": 0.22,
    "r3": -62.2,
    "dd": -70.3,
    "dipten": 9.9,
@@ -1310,19 +1310,19 @@
    "dipten": 4.8,
    "beta": 1.14,
    "kalite": 3,
-   "skor": 1.65,
+   "skor": 1.66,
    "baski": false
   },
   {
    "k": "IZFAS",
    "s": "Consumer Staples",
-   "w": 0.1,
+   "w": 0.09,
    "r3": -78.4,
    "dd": -80.1,
    "dipten": 35.4,
    "beta": 0.77,
-   "kalite": 0.33,
-   "skor": 1.56,
+   "kalite": 0.32,
+   "skor": 1.57,
    "baski": true
   }
  ],

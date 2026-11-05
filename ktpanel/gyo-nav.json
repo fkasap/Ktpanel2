@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-04T21:21:25Z",
+ "guncelleme": "2026-11-05T06:45:43Z",
  "donem": "202606",
  "donem_etiket": "2026/06",
  "kaynak": "TSPB · tspbnad.matriksdata.com (resmî NAD tablosu)",
@@ -324,9 +324,9 @@
    "payNad": 68.40726609,
    "iskonto": -66.84562723181911,
    "borcluluk": 26.85,
-   "fiyat": 14.9,
-   "fiyat_tarih": "2026-11-03",
-   "guncelIskonto": -78.2
+   "fiyat": 15.74,
+   "fiyat_tarih": "2026-11-04",
+   "guncelIskonto": -77
   },
   "KRGYO": {
    "ad": "KÖRFEZ GAYRİMENKUL YATIRIM ORTAKLIĞI A.Ş.",

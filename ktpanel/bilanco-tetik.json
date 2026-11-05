@@ -1,5 +1,5 @@
 {
- "tarih": "2026-11-04",
+ "tarih": "2026-11-05",
  "kodlar": [
   "ACSEL",
   "AKCNS",
@@ -655,7 +655,8 @@
   "SEKFK": "2026-11-04",
   "SSAAT": "2026-11-04",
   "TTKOM": "2026-11-04",
-  "UMPAS": "2026-11-04"
+  "UMPAS": "2026-11-04",
+  "ZOREN": "2026-11-05"
  },
  "evren_disi": [
   "AAGYO",
@@ -963,17 +964,18 @@
   "YYAPI",
   "YYLGD",
   "ZERGY",
-  "ZGYO"
+  "ZGYO",
+  "ZOREN"
  ],
- "evren_disi_sayi": 306,
- "pencere_sayi": 38,
+ "evren_disi_sayi": 307,
+ "pencere_sayi": 29,
  "dusen_son": [
   "KCAER",
   "MPARK",
-  "NTGAZ",
   "OTKAR",
+  "PETKM",
   "THYAO",
   "TURSG"
  ],
- "guncelleme": "2026-11-04 21:16 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-05 06:40 UTC — otomatik (KAP FR · kümülatif §299)"
 }
