@@ -5,61 +5,42 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-11-05",
+ "tarih": "2026-11-06",
  "donem": "3Ç26",
- "adet": 127,
+ "adet": 100,
  "beklenen": {
   "JANTS": "2026-10-27",
   "BURVA": "2026-10-29",
   "FORMT": "2026-10-29",
   "MAKIM": "2026-10-29",
-  "PNLSN": "2026-10-29",
-  "TARKM": "2026-10-29",
   "CWENE": "2026-10-30",
-  "TUPRS": "2026-10-30",
-  "KARSN": "2026-11-02",
   "LOGO": "2026-11-03",
-  "SAYAS": "2026-11-03",
   "ONCSM": "2026-11-04",
   "OZRDN": "2026-11-04",
   "ZEDUR": "2026-11-04",
-  "ARASE": "2026-11-05",
   "GEDZA": "2026-11-05",
   "KRDMB": "2026-11-05",
   "KRDMD": "2026-11-05",
-  "MOPAS": "2026-11-05",
-  "OZYSR": "2026-11-05",
   "ALTNY": "2026-11-06",
   "ATATP": "2026-11-06",
-  "BLUME": "2026-11-06",
   "BRKSN": "2026-11-06",
   "CELHA": "2026-11-06",
   "EKGYO": "2026-11-06",
   "FADE": "2026-11-06",
-  "FZLGY": "2026-11-06",
   "GLRMK": "2026-11-06",
   "GUBRF": "2026-11-06",
   "HOROZ": "2026-11-06",
-  "INGRM": "2026-11-06",
   "KATMR": "2026-11-06",
   "KZBGY": "2026-11-06",
   "MAGEN": "2026-11-06",
-  "MEGMT": "2026-11-06",
   "MNDTR": "2026-11-06",
   "NETAS": "2026-11-06",
-  "OSTIM": "2026-11-06",
-  "PASEU": "2026-11-06",
-  "POLHO": "2026-11-06",
   "SAFKR": "2026-11-06",
   "SMRTG": "2026-11-06",
   "SNGYO": "2026-11-06",
   "THYAO": "2026-11-06",
-  "TMPOL": "2026-11-06",
   "VBTYZ": "2026-11-06",
-  "YATAS": "2026-11-06",
-  "AHGAZ": "2026-11-09",
   "AKYHO": "2026-11-09",
-  "ALKIM": "2026-11-09",
   "ARDYZ": "2026-11-09",
   "BAKAB": "2026-11-09",
   "BERA": "2026-11-09",
@@ -79,15 +60,12 @@
   "EKOS": "2026-11-09",
   "EKSUN": "2026-11-09",
   "ELITE": "2026-11-09",
-  "ENERY": "2026-11-09",
   "ESEN": "2026-11-09",
   "EUPWR": "2026-11-09",
   "EYGYO": "2026-11-09",
-  "FORTE": "2026-11-09",
   "FRIGO": "2026-11-09",
   "GEREL": "2026-11-09",
   "GESAN": "2026-11-09",
-  "GOKNR": "2026-11-09",
   "GOLTS": "2026-11-09",
   "GRSEL": "2026-11-09",
   "HKTM": "2026-11-09",
@@ -110,17 +88,12 @@
   "KUTPO": "2026-11-09",
   "MARBL": "2026-11-09",
   "MEKAG": "2026-11-09",
-  "MERCN": "2026-11-09",
-  "MOGAN": "2026-11-09",
   "NATEN": "2026-11-09",
   "OBAMS": "2026-11-09",
-  "OBASE": "2026-11-09",
   "ORGE": "2026-11-09",
-  "PAGYO": "2026-11-09",
   "PENGD": "2026-11-09",
   "PLTUR": "2026-11-09",
   "QUAGR": "2026-11-09",
-  "REEDR": "2026-11-09",
   "SARKY": "2026-11-09",
   "SDTTR": "2026-11-09",
   "SEGMN": "2026-11-09",
@@ -247,7 +220,37 @@
   "KOTON": "2026-11-05",
   "FONET": "2026-11-05",
   "SRVGY": "2026-11-05",
-  "AKFYE": "2026-11-05"
+  "AKFYE": "2026-11-05",
+  "MOGAN": "2026-11-06",
+  "REEDR": "2026-11-06",
+  "YATAS": "2026-11-06",
+  "OSTIM": "2026-11-06",
+  "POLHO": "2026-11-06",
+  "ARASE": "2026-11-06",
+  "OZYSR": "2026-11-06",
+  "EMPAE": "2026-11-06",
+  "FZLGY": "2026-11-06",
+  "OBASE": "2026-11-06",
+  "PASEU": "2026-11-06",
+  "AHGAZ": "2026-11-06",
+  "ENERY": "2026-11-06",
+  "PAGYO": "2026-11-06",
+  "SAYAS": "2026-11-06",
+  "MERCN": "2026-11-06",
+  "UCAYM": "2026-11-06",
+  "BLUME": "2026-11-06",
+  "TARKM": "2026-11-06",
+  "TUPRS": "2026-11-06",
+  "ALKIM": "2026-11-06",
+  "INGRM": "2026-11-06",
+  "FORTE": "2026-11-06",
+  "TMPOL": "2026-11-06",
+  "KARSN": "2026-11-06",
+  "GOKNR": "2026-11-06",
+  "MOPAS": "2026-11-06",
+  "PNLSN": "2026-11-06",
+  "AKHAN": "2026-11-06",
+  "MEGMT": "2026-11-06"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -1263,6 +1266,126 @@
   "AKFYE": {
    "tarih": "2026-11-05",
    "id": "1693275"
+  },
+  "MOGAN": {
+   "tarih": "2026-11-06",
+   "id": "1694488"
+  },
+  "REEDR": {
+   "tarih": "2026-11-06",
+   "id": "1694478"
+  },
+  "YATAS": {
+   "tarih": "2026-11-06",
+   "id": "1694452"
+  },
+  "OSTIM": {
+   "tarih": "2026-11-06",
+   "id": "1694442"
+  },
+  "POLHO": {
+   "tarih": "2026-11-06",
+   "id": "1694435"
+  },
+  "ARASE": {
+   "tarih": "2026-11-06",
+   "id": "1694433"
+  },
+  "OZYSR": {
+   "tarih": "2026-11-06",
+   "id": "1694420"
+  },
+  "EMPAE": {
+   "tarih": "2026-11-06",
+   "id": "1694415"
+  },
+  "FZLGY": {
+   "tarih": "2026-11-06",
+   "id": "1694373"
+  },
+  "OBASE": {
+   "tarih": "2026-11-06",
+   "id": "1694348"
+  },
+  "PASEU": {
+   "tarih": "2026-11-06",
+   "id": "1694301"
+  },
+  "AHGAZ": {
+   "tarih": "2026-11-06",
+   "id": "1694291"
+  },
+  "ENERY": {
+   "tarih": "2026-11-06",
+   "id": "1694281"
+  },
+  "PAGYO": {
+   "tarih": "2026-11-06",
+   "id": "1694279"
+  },
+  "SAYAS": {
+   "tarih": "2026-11-06",
+   "id": "1694257"
+  },
+  "MERCN": {
+   "tarih": "2026-11-06",
+   "id": "1694237"
+  },
+  "UCAYM": {
+   "tarih": "2026-11-06",
+   "id": "1694218"
+  },
+  "BLUME": {
+   "tarih": "2026-11-06",
+   "id": "1694210"
+  },
+  "TARKM": {
+   "tarih": "2026-11-06",
+   "id": "1694208"
+  },
+  "TUPRS": {
+   "tarih": "2026-11-06",
+   "id": "1694197"
+  },
+  "ALKIM": {
+   "tarih": "2026-11-06",
+   "id": "1694193"
+  },
+  "INGRM": {
+   "tarih": "2026-11-06",
+   "id": "1694191"
+  },
+  "FORTE": {
+   "tarih": "2026-11-06",
+   "id": "1694174"
+  },
+  "TMPOL": {
+   "tarih": "2026-11-06",
+   "id": "1694166"
+  },
+  "KARSN": {
+   "tarih": "2026-11-06",
+   "id": "1694156"
+  },
+  "GOKNR": {
+   "tarih": "2026-11-06",
+   "id": "1694149"
+  },
+  "MOPAS": {
+   "tarih": "2026-11-06",
+   "id": "1694107"
+  },
+  "PNLSN": {
+   "tarih": "2026-11-06",
+   "id": "1694037"
+  },
+  "AKHAN": {
+   "tarih": "2026-11-06",
+   "id": "1694026"
+  },
+  "MEGMT": {
+   "tarih": "2026-11-06",
+   "id": "1693509"
   }
  }
 }
