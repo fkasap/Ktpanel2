@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-06",
+ "guncelleme": "2026-11-07",
  "fiyat_tarihi": "2026-11-06",
  "not": "Bilanço kalemleri kendi KAP verimizden (TTM ciro/FAVÖK, dönem sonu net borç) · adet = ödenmiş sermaye × dönem sonrası bedelsiz/bölünme · tutarlar milyon TL · kaynak:\"eski\" olanlar faktör evreni dışında (katılım dışı), bilanço kalemleri güncellenmiyor.",
  "hisseler": [
@@ -683,11 +683,15 @@
    "k": "FORTE",
    "fiyat": 80.05,
    "adet": 67,
-   "ciro": 3352,
-   "ebitda": 911,
-   "netBorc": 1703,
+   "ciro": 5813,
+   "ebitda": 1794,
+   "netBorc": 1936,
    "hacim": 152,
-   "kaynak": "eski"
+   "kaynak": "kap",
+   "favok_tanim": "çekirdek",
+   "ebitda_genis": 1729,
+   "donem": "2026/3",
+   "adet_not": "bilanço sermayesi (2026/3)"
   },
   {
    "k": "GENIL",
@@ -759,15 +763,15 @@
    "k": "GOKNR",
    "fiyat": 13.85,
    "adet": 350,
-   "ciro": 14532,
-   "ebitda": 1813,
-   "netBorc": 1544,
+   "ciro": 14082,
+   "ebitda": 1792,
+   "netBorc": 1717,
    "hacim": 195,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 2227
+   "ebitda_genis": 2052
   },
   {
    "k": "GOLTS",
@@ -1863,5 +1867,5 @@
   "not": "Bolunme/bedelsiz tespit edildi; kurulus fiyati (p0) ayni oranla otomatik olceklendi — getiri serisi bozulmaz, elle mudahale gerekmez (SS328)."
  },
  "kaynak": "KAP finansal tabloları (faktor-evren.json §361d) + Yahoo kurumsal işlem — §496",
- "bilanco_guncelleme": "2026-11-06"
+ "bilanco_guncelleme": "2026-11-07"
 }

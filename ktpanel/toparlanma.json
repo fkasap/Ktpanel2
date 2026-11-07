@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-06",
+ "guncelleme": "2026-11-07",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-06",
@@ -50,11 +50,11 @@
     },
     {
      "ad": "TR CDS 2 hafta değişim",
-     "deger": 0,
+     "deger": -7,
      "esik": "≤ 0 bp (daralma)",
-     "tamam": false,
+     "tamam": true,
      "birim": "bp",
-     "not": "1 ay -4 bp"
+     "not": "1 ay 0 bp"
     }
    ]
   },
@@ -1189,8 +1189,8 @@
    "dd": -79.3,
    "dipten": 25.1,
    "beta": 1.23,
-   "kalite": 1.04,
-   "skor": 3.55,
+   "kalite": 1.07,
+   "skor": 3.46,
    "baski": false
   },
   {
@@ -1201,8 +1201,8 @@
    "dd": -61.2,
    "dipten": 33.3,
    "beta": 1.38,
-   "kalite": 0.38,
-   "skor": 3.39,
+   "kalite": 0.37,
+   "skor": 3.3,
    "baski": false
   },
   {
@@ -1214,7 +1214,7 @@
    "dipten": 35.2,
    "beta": 1.18,
    "kalite": 0.32,
-   "skor": 2.58,
+   "skor": 2.5,
    "baski": false
   },
   {
@@ -1226,7 +1226,7 @@
    "dipten": 22,
    "beta": 0.86,
    "kalite": -0.11,
-   "skor": 2.54,
+   "skor": 2.45,
    "baski": true
   },
   {
@@ -1237,8 +1237,8 @@
    "dd": -60.2,
    "dipten": 16.1,
    "beta": 1.15,
-   "kalite": 0.46,
-   "skor": 2.4,
+   "kalite": 0.45,
+   "skor": 2.32,
    "baski": false
   },
   {
@@ -1249,8 +1249,8 @@
    "dd": -81.6,
    "dipten": 24.6,
    "beta": 1.01,
-   "kalite": -0.19,
-   "skor": 2.36,
+   "kalite": -0.2,
+   "skor": 2.27,
    "baski": true
   },
   {
@@ -1262,7 +1262,7 @@
    "dipten": 19.9,
    "beta": 1.09,
    "kalite": 0.13,
-   "skor": 2.22,
+   "skor": 2.13,
    "baski": true
   },
   {
@@ -1274,7 +1274,7 @@
    "dipten": 15.6,
    "beta": 1.28,
    "kalite": 1.4,
-   "skor": 2.08,
+   "skor": 2.01,
    "baski": true
   },
   {
@@ -1286,7 +1286,7 @@
    "dipten": 29.1,
    "beta": 0.99,
    "kalite": 0.39,
-   "skor": 1.99,
+   "skor": 1.91,
    "baski": true
   },
   {
@@ -1297,8 +1297,8 @@
    "dd": -64.5,
    "dipten": 15,
    "beta": 1.02,
-   "kalite": 1.67,
-   "skor": 1.83,
+   "kalite": 1.7,
+   "skor": 1.75,
    "baski": false
   },
   {
@@ -1310,7 +1310,7 @@
    "dipten": 20.5,
    "beta": 1.22,
    "kalite": 1.16,
-   "skor": 1.82,
+   "skor": 1.74,
    "baski": false
   },
   {
@@ -1322,11 +1322,11 @@
    "dipten": 16.6,
    "beta": 1.2,
    "kalite": 0.41,
-   "skor": 1.67,
+   "skor": 1.59,
    "baski": true
   }
  ],
- "onceki_asama": 1,
+ "onceki_asama": 0,
  "asama_degisim": "2026-11-04 → 2026-11-06",
  "gecmis": [
   {
