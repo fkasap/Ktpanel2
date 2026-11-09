@@ -1189,8 +1189,8 @@
    "dd": -79.3,
    "dipten": 25.1,
    "beta": 1.23,
-   "kalite": 0.99,
-   "skor": 3.46,
+   "kalite": 0.94,
+   "skor": 3.44,
    "baski": false
   },
   {
@@ -1201,8 +1201,8 @@
    "dd": -61.2,
    "dipten": 33.3,
    "beta": 1.38,
-   "kalite": 0.37,
-   "skor": 3.31,
+   "kalite": 0.34,
+   "skor": 3.29,
    "baski": false
   },
   {
@@ -1213,8 +1213,8 @@
    "dd": -60.4,
    "dipten": 35.2,
    "beta": 1.18,
-   "kalite": 0.31,
-   "skor": 2.49,
+   "kalite": 0.28,
+   "skor": 2.47,
    "baski": false
   },
   {
@@ -1225,8 +1225,8 @@
    "dd": -89.6,
    "dipten": 22,
    "beta": 0.86,
-   "kalite": -0.12,
-   "skor": 2.42,
+   "kalite": -0.17,
+   "skor": 2.41,
    "baski": true
   },
   {
@@ -1237,8 +1237,8 @@
    "dd": -60.2,
    "dipten": 16.1,
    "beta": 1.15,
-   "kalite": 0.44,
-   "skor": 2.3,
+   "kalite": 0.41,
+   "skor": 2.29,
    "baski": false
   },
   {
@@ -1249,8 +1249,8 @@
    "dd": -81.6,
    "dipten": 24.6,
    "beta": 1.01,
-   "kalite": -0.2,
-   "skor": 2.25,
+   "kalite": -0.23,
+   "skor": 2.24,
    "baski": true
   },
   {
@@ -1261,8 +1261,8 @@
    "dd": -61.4,
    "dipten": 19.9,
    "beta": 1.09,
-   "kalite": 0.12,
-   "skor": 2.12,
+   "kalite": 0.1,
+   "skor": 2.1,
    "baski": true
   },
   {
@@ -1273,8 +1273,8 @@
    "dd": -50.8,
    "dipten": 15.6,
    "beta": 1.28,
-   "kalite": 1.4,
-   "skor": 2,
+   "kalite": 1.35,
+   "skor": 1.98,
    "baski": true
   },
   {
@@ -1285,21 +1285,9 @@
    "dd": -65.2,
    "dipten": 29.1,
    "beta": 0.99,
-   "kalite": 0.39,
-   "skor": 1.89,
+   "kalite": 0.35,
+   "skor": 1.87,
    "baski": true
-  },
-  {
-   "k": "YEOTK",
-   "s": "Industrials",
-   "w": 0.44,
-   "r3": -33.4,
-   "dd": -51,
-   "dipten": 20.5,
-   "beta": 1.22,
-   "kalite": 1.16,
-   "skor": 1.73,
-   "baski": false
   },
   {
    "k": "LINK",
@@ -1309,8 +1297,20 @@
    "dd": -64.5,
    "dipten": 15,
    "beta": 1.02,
-   "kalite": 1.65,
-   "skor": 1.73,
+   "kalite": 1.44,
+   "skor": 1.72,
+   "baski": false
+  },
+  {
+   "k": "YEOTK",
+   "s": "Industrials",
+   "w": 0.44,
+   "r3": -33.4,
+   "dd": -51,
+   "dipten": 20.5,
+   "beta": 1.22,
+   "kalite": 1.24,
+   "skor": 1.71,
    "baski": false
   },
   {
@@ -1321,8 +1321,8 @@
    "dd": -35,
    "dipten": 16.6,
    "beta": 1.2,
-   "kalite": 0.41,
-   "skor": 1.58,
+   "kalite": 0.37,
+   "skor": 1.56,
    "baski": true
   }
  ],
