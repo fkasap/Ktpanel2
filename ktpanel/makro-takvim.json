@@ -1,153 +1,65 @@
 {
- "guncelleme": "2026-11-07 10:58 UTC — otomatik (§319)",
+ "guncelleme": "2026-11-09 09:19 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
-   "t": "2026-11-02T15:00:00.000Z",
-   "ulke": "USD",
-   "olay": "ISM Manufacturing PMI",
+   "t": "2026-11-09T17:25:00.000Z",
+   "ulke": "GBP",
+   "olay": "BOE Gov Bailey Speaks",
    "etki": "Medium",
-   "beklenti": "54.5",
-   "onceki": "54.5"
-  },
-  {
-   "t": "2026-11-03T03:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "Cash Rate",
-   "etki": "High",
-   "beklenti": "4.85%",
-   "onceki": "4.60%"
-  },
-  {
-   "t": "2026-11-03T03:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "RBA Monetary Policy Statement",
-   "etki": "High",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-11-03T03:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "RBA Rate Statement",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-11-03T04:30:00.000Z",
-   "ulke": "AUD",
-   "olay": "RBA Press Conference",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-11-03T15:00:00.000Z",
+   "t": "2026-11-10T09:00:00.000Z",
    "ulke": "USD",
-   "olay": "JOLTS Job Openings",
+   "olay": "FOMC Member Waller Speaks",
    "etki": "Medium",
-   "beklenti": "7.15M",
-   "onceki": "7.08M"
-  },
-  {
-   "t": "2026-11-03T15:16:00.000Z",
-   "ulke": "USD",
-   "olay": "Congressional Elections",
-   "etki": "High",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-11-03T21:45:00.000Z",
-   "ulke": "NZD",
-   "olay": "Employment Change q/q",
+   "t": "2026-11-10T13:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Core CPI m/m",
    "etki": "High",
-   "beklenti": "0.4%",
+   "beklenti": "0.2%",
+   "onceki": "0.3%"
+  },
+  {
+   "t": "2026-11-10T13:30:00.000Z",
+   "ulke": "USD",
+   "olay": "CPI m/m",
+   "etki": "High",
+   "beklenti": "0.3%",
+   "onceki": "0.6%"
+  },
+  {
+   "t": "2026-11-12T07:00:00.000Z",
+   "ulke": "GBP",
+   "olay": "GDP m/m",
+   "etki": "High",
+   "beklenti": "0.0%",
+   "onceki": "0.1%"
+  },
+  {
+   "t": "2026-11-12T07:00:00.000Z",
+   "ulke": "GBP",
+   "olay": "Prelim GDP q/q",
+   "etki": "Medium",
+   "beklenti": "0.7%",
    "onceki": "0.5%"
   },
   {
-   "t": "2026-11-03T21:45:00.000Z",
-   "ulke": "NZD",
-   "olay": "Unemployment Rate",
-   "etki": "High",
-   "beklenti": "5.5%",
-   "onceki": "5.6%"
-  },
-  {
-   "t": "2026-11-04T10:00:00.000Z",
-   "ulke": "EUR",
-   "olay": "Core CPI Flash Estimate y/y",
-   "etki": "Medium",
-   "beklenti": "2.5%",
-   "onceki": "2.5%"
-  },
-  {
-   "t": "2026-11-04T10:00:00.000Z",
-   "ulke": "EUR",
-   "olay": "CPI Flash Estimate y/y",
-   "etki": "Medium",
-   "beklenti": "4.0%",
-   "onceki": "3.8%"
-  },
-  {
-   "t": "2026-11-04T15:00:00.000Z",
-   "ulke": "USD",
-   "olay": "ISM Services PMI",
-   "etki": "Medium",
-   "beklenti": "54.8",
-   "onceki": "54.9"
-  },
-  {
-   "t": "2026-11-05T12:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "BOE Monetary Policy Report",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-11-05T12:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "Monetary Policy Summary",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-11-05T12:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "MPC Official Bank Rate Votes",
-   "etki": "High",
-   "beklenti": "7-0-2",
-   "onceki": "3-0-6"
-  },
-  {
-   "t": "2026-11-05T12:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "Official Bank Rate",
-   "etki": "High",
-   "beklenti": "4.00%",
-   "onceki": "3.75%"
-  },
-  {
-   "t": "2026-11-05T12:30:00.000Z",
-   "ulke": "GBP",
-   "olay": "BOE Gov Bailey Speaks",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-11-05T13:30:00.000Z",
+   "t": "2026-11-12T13:30:00.000Z",
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "197K",
-   "onceki": "194K"
+   "beklenti": "194K",
+   "onceki": "189K"
   },
   {
-   "t": "2026-11-05T18:00:00.000Z",
+   "t": "2026-11-12T19:30:00.000Z",
    "ulke": "EUR",
    "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
@@ -155,76 +67,20 @@
    "onceki": ""
   },
   {
-   "t": "2026-11-06T13:30:00.000Z",
-   "ulke": "CAD",
-   "olay": "Employment Change",
-   "etki": "High",
-   "beklenti": "14.6K",
-   "onceki": "-68.3K"
-  },
-  {
-   "t": "2026-11-06T13:30:00.000Z",
-   "ulke": "CAD",
-   "olay": "Unemployment Rate",
-   "etki": "High",
-   "beklenti": "6.5%",
-   "onceki": "6.5%"
-  },
-  {
-   "t": "2026-11-06T13:30:00.000Z",
+   "t": "2026-11-13T13:30:00.000Z",
    "ulke": "USD",
-   "olay": "Average Hourly Earnings m/m",
+   "olay": "Core PPI m/m",
    "etki": "High",
    "beklenti": "0.3%",
-   "onceki": "0.1%"
+   "onceki": "0.7%"
   },
   {
-   "t": "2026-11-06T13:30:00.000Z",
+   "t": "2026-11-13T13:30:00.000Z",
    "ulke": "USD",
-   "olay": "Non-Farm Employment Change",
+   "olay": "PPI m/m",
    "etki": "High",
-   "beklenti": "65K",
-   "onceki": "29K"
-  },
-  {
-   "t": "2026-11-06T13:30:00.000Z",
-   "ulke": "USD",
-   "olay": "Unemployment Rate",
-   "etki": "High",
-   "beklenti": "4.2%",
-   "onceki": "4.2%"
-  },
-  {
-   "t": "2026-11-06T15:00:00.000Z",
-   "ulke": "USD",
-   "olay": "Prelim UoM Consumer Sentiment",
-   "etki": "Medium",
-   "beklenti": "48.1",
-   "onceki": "46.3"
-  },
-  {
-   "t": "2026-11-06T15:00:00.000Z",
-   "ulke": "USD",
-   "olay": "Prelim UoM Inflation Expectations",
-   "etki": "Medium",
-   "beklenti": "",
-   "onceki": "4.7%"
-  },
-  {
-   "t": "2026-11-06T16:00:00.000Z",
-   "ulke": "JPY",
-   "olay": "BOJ Gov Ueda Speaks",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
-  },
-  {
-   "t": "2026-11-06T21:45:00.000Z",
-   "ulke": "NZD",
-   "olay": "Parliamentary Elections",
-   "etki": "High",
-   "beklenti": "",
-   "onceki": ""
+   "beklenti": "0.4%",
+   "onceki": "1.3%"
   }
  ]
 }

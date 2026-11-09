@@ -5,9 +5,9 @@
  "_spk_siniri": "3C26 (9 aylik, sinirli denetim yok): konsolide olmayan 30 gun (30 Eki 2026, Cum) · konsolide 40 gun (9 Kas 2026, Pzt) · bankalar BDDK solo 45 gun (14 Kas → 16 Kas Pzt). Bu tarihi asan tahmin, sirketin MALI YILI TAKVIM YILIYLA UYUSMUYOR ya da gecen yil gecikmis demektir — ayri tutulur.",
  "_spk_kisa": "30 Eki (solo) · 9 Kas (konsolide)",
  "_kaynak": "KAP /tr/api/disclosure/members/byCriteria — 14 Eki–30 Kas 2025 penceresi, disclosureClass=FR, subject \"Finansal Rapor\", year=2025, period=3; sirket basina EN ERKEN yayin tarihi (569 sirket). 12 Eki 2026 tarayicidan (KAP oturumu) cekildi; Actions §459 katmani ayni sorguyu her sezon basinda kendi yapar.",
- "tarih": "2026-11-07",
+ "tarih": "2026-11-09",
  "donem": "3Ç26",
- "adet": 97,
+ "adet": 91,
  "beklenen": {
   "JANTS": "2026-10-27",
   "BURVA": "2026-10-29",
@@ -29,12 +29,10 @@
   "GUBRF": "2026-11-06",
   "HOROZ": "2026-11-06",
   "KATMR": "2026-11-06",
-  "KZBGY": "2026-11-06",
   "MAGEN": "2026-11-06",
   "MNDTR": "2026-11-06",
   "NETAS": "2026-11-06",
   "SAFKR": "2026-11-06",
-  "SNGYO": "2026-11-06",
   "THYAO": "2026-11-06",
   "VBTYZ": "2026-11-06",
   "AKYHO": "2026-11-09",
@@ -51,7 +49,6 @@
   "DCTTR": "2026-11-09",
   "DGATE": "2026-11-09",
   "DITAS": "2026-11-09",
-  "DOFRB": "2026-11-09",
   "EDIP": "2026-11-09",
   "EGPRO": "2026-11-09",
   "EKOS": "2026-11-09",
@@ -67,9 +64,7 @@
   "GRSEL": "2026-11-09",
   "HKTM": "2026-11-09",
   "HRKET": "2026-11-09",
-  "IHEVA": "2026-11-09",
   "IHLAS": "2026-11-09",
-  "IHLGM": "2026-11-09",
   "IHYAY": "2026-11-09",
   "IMASM": "2026-11-09",
   "ISSEN": "2026-11-09",
@@ -100,7 +95,6 @@
   "SMART": "2026-11-09",
   "SOKE": "2026-11-09",
   "SUWEN": "2026-11-09",
-  "TEZOL": "2026-11-09",
   "TGSAS": "2026-11-09",
   "TUREX": "2026-11-09",
   "YKSLN": "2026-11-09",
@@ -250,7 +244,14 @@
   "MEGMT": "2026-11-06",
   "SMRTG": "2026-11-07",
   "FADE": "2026-11-07",
-  "EKGYO": "2026-11-07"
+  "EKGYO": "2026-11-07",
+  "SNGYO": "2026-11-09",
+  "KZBGY": "2026-11-09",
+  "ULUSE": "2026-11-09",
+  "TEZOL": "2026-11-09",
+  "IHEVA": "2026-11-07",
+  "IHLGM": "2026-11-07",
+  "DOFRB": "2026-11-07"
  },
  "_gerceklesen_not": "3C26 icin KAP'ta henuz Finansal Rapor yok (12 Eki). Actions §459 her kosuda bu yilin penceresini (1 Eki–30 Kas 2026) tarar; aciklayan sirket GERCEK tarihiyle buraya tasinir ve beklenen listesinden duser.",
  "_gecenyil_tum": {
@@ -1398,6 +1399,34 @@
   "EKGYO": {
    "tarih": "2026-11-07",
    "id": "1694500"
+  },
+  "SNGYO": {
+   "tarih": "2026-11-09",
+   "id": "1694586"
+  },
+  "KZBGY": {
+   "tarih": "2026-11-09",
+   "id": "1694582"
+  },
+  "ULUSE": {
+   "tarih": "2026-11-09",
+   "id": "1694575"
+  },
+  "TEZOL": {
+   "tarih": "2026-11-09",
+   "id": "1694574"
+  },
+  "IHEVA": {
+   "tarih": "2026-11-07",
+   "id": "1694534"
+  },
+  "IHLGM": {
+   "tarih": "2026-11-07",
+   "id": "1694531"
+  },
+  "DOFRB": {
+   "tarih": "2026-11-07",
+   "id": "1694518"
   }
  }
 }

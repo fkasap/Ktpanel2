@@ -704,442 +704,6 @@
       "islendi": "2026-09-10"
      }
     },
-    "2026-04": {
-     "baslik": {
-      "kod": "KPU",
-      "ad": "KPU-IKINCI KATILIM HISSE SENEDI FONU",
-      "donem": "2026-04",
-      "fonToplamDegeri": 584950243.56,
-      "paySayisi": 152525939,
-      "payFiyati": 3.835087,
-      "aylikGetiri": 13.52,
-      "hisseOrtYuzde": 88.34,
-      "hisseDevirHizi": 0.58
-     },
-     "hisse": [
-      {
-       "kod": "BIMAS",
-       "agirlik": 8.01,
-       "deger": 46877630,
-       "nominal": 63220
-      },
-      {
-       "kod": "KTLEV",
-       "agirlik": 7.28,
-       "deger": 42576565,
-       "nominal": 370231
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 6.98,
-       "deger": 40845840,
-       "nominal": 91840
-      },
-      {
-       "kod": "LMKDC",
-       "agirlik": 5.13,
-       "deger": 30006731,
-       "nominal": 804470
-      },
-      {
-       "kod": "EUPWR",
-       "agirlik": 4.1,
-       "deger": 23978292.4,
-       "nominal": 457601
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 4.09,
-       "deger": 23923992,
-       "nominal": 56928
-      },
-      {
-       "kod": "KRDMD",
-       "agirlik": 3.87,
-       "deger": 22622603.4,
-       "nominal": 587295
-      },
-      {
-       "kod": "LOGO",
-       "agirlik": 3.75,
-       "deger": 21932171.6,
-       "nominal": 152731
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 3.74,
-       "deger": 21877559,
-       "nominal": 80729
-      },
-      {
-       "kod": "CIMSA",
-       "agirlik": 3.59,
-       "deger": 21028665.6,
-       "nominal": 365081
-      },
-      {
-       "kod": "MERCN",
-       "agirlik": 3.58,
-       "deger": 20944000,
-       "nominal": 880000
-      },
-      {
-       "kod": "GRSEL",
-       "agirlik": 3.41,
-       "deger": 19931041,
-       "nominal": 66659
-      },
-      {
-       "kod": "ENJSA",
-       "agirlik": 3.24,
-       "deger": 18955408,
-       "nominal": 154360
-      },
-      {
-       "kod": "EBEBK",
-       "agirlik": 2.94,
-       "deger": 17201844,
-       "nominal": 239580
-      },
-      {
-       "kod": "GUBRF",
-       "agirlik": 2.55,
-       "deger": 14907050,
-       "nominal": 28100
-      },
-      {
-       "kod": "TUREX",
-       "agirlik": 2.51,
-       "deger": 14709420,
-       "nominal": 1683000
-      },
-      {
-       "kod": "ALTNY",
-       "agirlik": 2.33,
-       "deger": 13645242.95,
-       "nominal": 852295
-      },
-      {
-       "kod": "EGGUB",
-       "agirlik": 2.24,
-       "deger": 13109344.8,
-       "nominal": 103386
-      },
-      {
-       "kod": "AVPGY",
-       "agirlik": 2.19,
-       "deger": 12838183.75,
-       "nominal": 214865
-      },
-      {
-       "kod": "ONCSM",
-       "agirlik": 1.92,
-       "deger": 11213500,
-       "nominal": 41000
-      },
-      {
-       "kod": "ARASE",
-       "agirlik": 1.82,
-       "deger": 10644579,
-       "nominal": 101862
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 1.68,
-       "deger": 9823183.86,
-       "nominal": 477317
-      },
-      {
-       "kod": "GLRMK",
-       "agirlik": 1.57,
-       "deger": 9186581,
-       "nominal": 48478
-      },
-      {
-       "kod": "RGYAS",
-       "agirlik": 1.28,
-       "deger": 7506814,
-       "nominal": 40468
-      },
-      {
-       "kod": "BASGZ",
-       "agirlik": 1.25,
-       "deger": 7297386.6,
-       "nominal": 142806
-      },
-      {
-       "kod": "MAKIM",
-       "agirlik": 1.22,
-       "deger": 7134301.35,
-       "nominal": 386683
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 1.19,
-       "deger": 6940730.4,
-       "nominal": 160220
-      },
-      {
-       "kod": "CWENE",
-       "agirlik": 0,
-       "deger": 14.66,
-       "nominal": 0.4
-      },
-      {
-       "kod": "KCAER",
-       "agirlik": 0,
-       "deger": 1.76,
-       "nominal": 0.15
-      },
-      {
-       "kod": "POLHO",
-       "agirlik": 0,
-       "deger": 12.64,
-       "nominal": 0.59
-      },
-      {
-       "kod": "TEZOL",
-       "agirlik": 0,
-       "deger": 12.03,
-       "nominal": 0.63
-      },
-      {
-       "kod": "TUKAS",
-       "agirlik": 0,
-       "deger": 1.79,
-       "nominal": 0.7
-      }
-     ],
-     "hisseToplam": {
-      "deger": 511658703.59,
-      "grup": 100,
-      "fpd": 87.36,
-      "ftd": 87.46,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {
-       "TUPRS": {
-        "deger": 14416948
-       },
-       "EKGYO": {
-        "deger": 2409213
-       },
-       "ASELS": {
-        "deger": 19637570
-       },
-       "GRSEL": {
-        "deger": 1636700
-       },
-       "BASGZ": {
-        "deger": 1160604
-       },
-       "RGYAS": {
-        "deger": 10492240
-       },
-       "GLRMK": {
-        "deger": 3175328
-       },
-       "GUBRF": {
-        "deger": 13937258
-       },
-       "TUREX": {
-        "deger": 1457730
-       },
-       "EREGL": {
-        "deger": 4833068
-       },
-       "POLHO": {
-        "deger": 3373194
-       },
-       "BERA": {
-        "deger": 4206052
-       },
-       "KBORU": {
-        "deger": 2350772
-       },
-       "ALTNY": {
-        "deger": 3950000
-       },
-       "ENJSA": {
-        "deger": 415485
-       },
-       "AVPGY": {
-        "deger": 215945
-       },
-       "LMKDC": {
-        "deger": 502760
-       },
-       "LOGO": {
-        "deger": 406812
-       },
-       "BIMAS": {
-        "deger": 12102519
-       },
-       "ALCTL": {
-        "deger": 53980
-       },
-       "FONET": {
-        "deger": 229326
-       },
-       "EGGUB": {
-        "deger": 1472903
-       },
-       "KRDMD": {
-        "deger": 3978521
-       },
-       "EBEBK": {
-        "deger": 1001375
-       },
-       "KTLEV": {
-        "deger": 4591936
-       },
-       "ARASE": {
-        "deger": 193313
-       },
-       "GESAN": {
-        "deger": 203127
-       },
-       "ALBRK": {
-        "deger": 175800
-       },
-       "CIMSA": {
-        "deger": 395046
-       },
-       "MPARK": {
-        "deger": 8802235
-       },
-       "EUPWR": {
-        "deger": 383491
-       },
-       "ONCSM": {
-        "deger": 11862000
-       },
-       "MAKIM": {
-        "deger": 7398302
-       },
-       "MERCN": {
-        "deger": 20671962
-       }
-      },
-      "satis": {
-       "FONET": {
-        "deger": 20410941
-       },
-       "ASELS": {
-        "deger": 30101500
-       },
-       "KTLEV": {
-        "deger": 8392000
-       },
-       "BIMAS": {
-        "deger": 7118500
-       },
-       "EGGUB": {
-        "deger": 1243281
-       },
-       "ALCTL": {
-        "deger": 5600868
-       },
-       "MPARK": {
-        "deger": 13632182
-       },
-       "CIMSA": {
-        "deger": 2318454
-       },
-       "GRSEL": {
-        "deger": 8015338
-       },
-       "MAVI": {
-        "deger": 1681000
-       },
-       "ALTNY": {
-        "deger": 936000
-       },
-       "TUPRS": {
-        "deger": 4595002
-       },
-       "GUBRF": {
-        "deger": 11189400
-       },
-       "ALBRK": {
-        "deger": 176200
-       },
-       "RGYAS": {
-        "deger": 5900061
-       },
-       "LMKDC": {
-        "deger": 1012200
-       },
-       "GLRMK": {
-        "deger": 2253933
-       },
-       "EREGL": {
-        "deger": 5080104
-       },
-       "KBORU": {
-        "deger": 2438336
-       },
-       "BERA": {
-        "deger": 4265769
-       },
-       "POLHO": {
-        "deger": 3459140
-       },
-       "MERCN": {
-        "deger": 3313754
-       },
-       "ENJSA": {
-        "deger": 2394000
-       },
-       "GESAN": {
-        "deger": 9844843
-       },
-       "MARMR": {
-        "deger": 2
-       },
-       "PGSUS": {
-        "deger": 162
-       }
-      }
-     },
-     "varlik": {
-      "hisse": 94.64,
-      "fon": 5.47,
-      "nakit": -0.12,
-      "_portfoyDegeriYuzde": 100.12,
-      "_hazirDeger": 0.01,
-      "_alacak": 1.96,
-      "_borc": -2.09
-     },
-     "diger": [
-      {
-       "kod": "PPC",
-       "kategori": "fon",
-       "agirlik": 2.22,
-       "deger": 12995677
-      },
-      {
-       "kod": "PCU",
-       "kategori": "fon",
-       "agirlik": 2.18,
-       "deger": 12763953
-      },
-      {
-       "kod": "KKG-TL",
-       "kategori": "fon",
-       "agirlik": 1.07,
-       "deger": 6259156
-      }
-     ],
-     "kaynak": {
-      "index": 1603235,
-      "objId": "4028328c9d7b22d2019e0747b4773b7f",
-      "yayin": "08.05.2026 14:58:25",
-      "pdfBoyut": 284089,
-      "islendi": "2026-09-10"
-     }
-    },
     "2026-05": {
      "baslik": {
       "kod": "KPU",
@@ -2411,6 +1975,360 @@
        "alisUz": 47246
       }
      }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "KPU",
+      "ad": "KPU-KUVEYT TÜRK PORTFÖY İKİNCİ KATILIM HİSSE SENEDİ (TL) FONU",
+      "donem": "2026-10",
+      "fonToplamDegeri": 300997331.08,
+      "paySayisi": 92953429,
+      "payFiyati": 3.238152,
+      "aylikGetiri": -11.2,
+      "hisseOrtYuzde": 84.66,
+      "hisseDevirHizi": 0.26
+     },
+     "hisse": [
+      {
+       "kod": "BIMAS",
+       "agirlik": 9.49,
+       "deger": 28569712.5,
+       "nominal": 82215
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 8.49,
+       "deger": 25540431,
+       "nominal": 67389
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 8.09,
+       "deger": 24365646,
+       "nominal": 70218
+      },
+      {
+       "kod": "EBEBK",
+       "agirlik": 5.14,
+       "deger": 15461777.6,
+       "nominal": 200672
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 4.86,
+       "deger": 14635848,
+       "nominal": 42608
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 4.71,
+       "deger": 14169180.39,
+       "nominal": 875181
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 4.39,
+       "deger": 13207868.56,
+       "nominal": 339011
+      },
+      {
+       "kod": "EUPWR",
+       "agirlik": 4.14,
+       "deger": 12469665.92,
+       "nominal": 316168
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 4.1,
+       "deger": 12334031.36,
+       "nominal": 341096
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 3.59,
+       "deger": 10806259.5,
+       "nominal": 102429
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 3.47,
+       "deger": 10432845.68,
+       "nominal": 351748
+      },
+      {
+       "kod": "EGGUB",
+       "agirlik": 3.43,
+       "deger": 10310634.4,
+       "nominal": 132869
+      },
+      {
+       "kod": "GRSEL",
+       "agirlik": 3.4,
+       "deger": 10223178,
+       "nominal": 42332
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 3.2,
+       "deger": 9623864.25,
+       "nominal": 38457
+      },
+      {
+       "kod": "FONET",
+       "agirlik": 2.82,
+       "deger": 8489521.56,
+       "nominal": 2446548
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 2.58,
+       "deger": 7770137.76,
+       "nominal": 991089
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 2.29,
+       "deger": 6888252.8,
+       "nominal": 60212
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 2.04,
+       "deger": 6150018.1,
+       "nominal": 59651
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 1.79,
+       "deger": 5394970,
+       "nominal": 77071
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 1.56,
+       "deger": 4705433.88,
+       "nominal": 494788
+      },
+      {
+       "kod": "GESAN",
+       "agirlik": 1.45,
+       "deger": 4356800,
+       "nominal": 140000
+      },
+      {
+       "kod": "AVPGY",
+       "agirlik": 0.25,
+       "deger": 761397,
+       "nominal": 16734
+      },
+      {
+       "kod": "CWENE",
+       "agirlik": 0,
+       "deger": 5.46,
+       "nominal": 0.4
+      },
+      {
+       "kod": "KCAER",
+       "agirlik": 0,
+       "deger": 1.26,
+       "nominal": 0.15
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 0,
+       "deger": 2.92,
+       "nominal": 0.79
+      },
+      {
+       "kod": "POLHO",
+       "agirlik": 0,
+       "deger": 7.94,
+       "nominal": 0.59
+      },
+      {
+       "kod": "TEZOL",
+       "agirlik": 0,
+       "deger": 3.97,
+       "nominal": 0.63
+      },
+      {
+       "kod": "TUKAS",
+       "agirlik": 0,
+       "deger": 1.24,
+       "nominal": 0.7
+      }
+     ],
+     "hisseToplam": {
+      "deger": 256667497.05,
+      "grup": 100,
+      "fpd": 83.89,
+      "ftd": 85.28,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {
+       "GUBRF": {
+        "deger": 1254000
+       },
+       "EKGYO": {
+        "deger": 594600
+       },
+       "ALBRK": {
+        "deger": 2578000
+       },
+       "LOGO": {
+        "deger": 2673000
+       },
+       "FONET": {
+        "deger": 1783730
+       },
+       "AHGAZ": {
+        "deger": 1431000
+       },
+       "GESAN": {
+        "deger": 7695695
+       },
+       "ENJSA": {
+        "deger": 2297727
+       },
+       "CIMSA": {
+        "deger": 1512000
+       },
+       "TUPRS": {
+        "deger": 1056000
+       },
+       "EUPWR": {
+        "deger": 4200000
+       },
+       "AVPGY": {
+        "deger": 238
+       }
+      },
+      "satis": {
+       "FONET": {
+        "deger": 2545296
+       },
+       "GUBRF": {
+        "deger": 3658272
+       },
+       "TUPRS": {
+        "deger": 5991794
+       },
+       "ASELS": {
+        "deger": 5926113
+       },
+       "GRSEL": {
+        "deger": 1850218
+       },
+       "EREGL": {
+        "deger": 1187760
+       },
+       "ALBRK": {
+        "deger": 3516612
+       },
+       "EBEBK": {
+        "deger": 1140879
+       },
+       "EUPWR": {
+        "deger": 1856363
+       },
+       "KRDMD": {
+        "deger": 1560048
+       },
+       "BIMAS": {
+        "deger": 3022988
+       },
+       "MAVI": {
+        "deger": 5586541
+       },
+       "ENJSA": {
+        "deger": 479064
+       },
+       "MPARK": {
+        "deger": 6890031
+       },
+       "GLRMK": {
+        "deger": 1338397
+       },
+       "LOGO": {
+        "deger": 364085
+       },
+       "EGGUB": {
+        "deger": 650714
+       },
+       "AVPGY": {
+        "deger": 6172472
+       },
+       "ARASE": {
+        "deger": 301191
+       },
+       "NTGAZ": {
+        "deger": 164987
+       },
+       "EKGYO": {
+        "deger": 2654543
+       },
+       "CIMSA": {
+        "deger": 624372
+       },
+       "AHGAZ": {
+        "deger": 1446600
+       },
+       "GESAN": {
+        "deger": 2669787
+       }
+      }
+     },
+     "varlik": {
+      "hisse": 85.28,
+      "fon": 11.91,
+      "nakit": -1.65,
+      "_portfoyDegeriYuzde": 101.65,
+      "_hazirDeger": 0.02,
+      "_alacak": 0,
+      "_borc": -1.67,
+      "_toplam": 95.54
+     },
+     "diger": [
+      {
+       "kod": "PPC",
+       "kategori": "fon",
+       "agirlik": 4.34,
+       "deger": 13048320
+      },
+      {
+       "kod": "PCU",
+       "kategori": "fon",
+       "agirlik": 4.22,
+       "deger": 12716048
+      },
+      {
+       "kod": "KKG-TL",
+       "kategori": "fon",
+       "agirlik": 2.36,
+       "deger": 7104893
+      },
+      {
+       "kod": "KSV",
+       "kategori": "fon",
+       "agirlik": 0.99,
+       "deger": 2981578
+      }
+     ],
+     "kaynak": {
+      "index": 1693022,
+      "objId": "4028328ca17e4f5e01a1a6c4b4324f64",
+      "yayin": "05.11.2026 11:51:35",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 222241,
+      "islemIz": {
+       "satisBolum": true,
+       "alisBolum": true,
+       "satisUz": 151529,
+       "alisUz": 41847
+      }
+     }
     }
    }
   },
@@ -2613,7 +2531,7 @@
       "index": 1629844,
       "objId": "4028328c9f0a0859019f41bffedc6a56",
       "yayin": "08.07.2026 18:31:43",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 13820,
       "islemIz": {
@@ -2656,7 +2574,7 @@
       "index": 1643424,
       "objId": "4028328d9f52dddc019fd118830e0cf2",
       "yayin": "05.08.2026 12:05:24",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 9185,
       "islemIz": {
@@ -2670,10 +2588,10 @@
     "2026-08": {
      "baslik": {
       "kod": "PKD",
-      "ad": "PKD-PUSULA PORTFÖY İKİNCİ KATILIM HİSSE SENEDİ SERBEST FON (HİSSE SENEDİ",
+      "ad": "PKD-PUSULA PORTFÖY İKİNCİ KATILIM HİSSE SENEDİ SERBEST FON (HİSSE SENEDİ YOĞUN",
       "donem": "2026-08",
-      "fonToplamDegeri": 20843658.9,
-      "paySayisi": 22181851,
+      "fonToplamDegeri": 26460198.14,
+      "paySayisi": 26953095,
       "payFiyati": null,
       "aylikGetiri": null,
       "hisseOrtYuzde": 100,
@@ -2682,100 +2600,100 @@
      "hisse": [
       {
        "kod": "BIMAS",
-       "agirlik": 4.98,
-       "deger": 1039375,
-       "nominal": 2500
+       "agirlik": 12.56,
+       "deger": 3324000,
+       "nominal": 8000
       },
       {
        "kod": "TUPRS",
-       "agirlik": 4.66,
-       "deger": 971250,
-       "nominal": 2500
-      },
-      {
-       "kod": "ATATP",
-       "agirlik": 1.86,
-       "deger": 388750,
-       "nominal": 1250
+       "agirlik": 11.97,
+       "deger": 3168000,
+       "nominal": 8000
       },
       {
        "kod": "FADE",
-       "agirlik": 1.83,
-       "deger": 380160,
-       "nominal": 24000
-      },
-      {
-       "kod": "ORGE",
-       "agirlik": 1.82,
-       "deger": 379780,
-       "nominal": 17000
-      },
-      {
-       "kod": "FONET",
-       "agirlik": 1.8,
-       "deger": 375200,
-       "nominal": 80000
+       "agirlik": 4.12,
+       "deger": 1091430,
+       "nominal": 67000
       },
       {
        "kod": "EGGUB",
-       "agirlik": 1.79,
-       "deger": 371700,
-       "nominal": 3500
+       "agirlik": 4.03,
+       "deger": 1064850,
+       "nominal": 9300
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 3.92,
+       "deger": 1035440,
+       "nominal": 43000
       },
       {
        "kod": "GRSEL",
-       "agirlik": 1.79,
-       "deger": 372500,
-       "nominal": 1250
-      },
-      {
-       "kod": "LMKDC",
-       "agirlik": 1.79,
-       "deger": 372980,
-       "nominal": 17000
-      },
-      {
-       "kod": "NTGAZ",
-       "agirlik": 1.79,
-       "deger": 372900,
-       "nominal": 33000
-      },
-      {
-       "kod": "TUREX",
-       "agirlik": 1.78,
-       "deger": 370760,
-       "nominal": 62000
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 1.77,
-       "deger": 368837.5,
-       "nominal": 950
+       "agirlik": 3.88,
+       "deger": 1025375,
+       "nominal": 3250
       },
       {
        "kod": "RGYAS",
-       "agirlik": 1.76,
-       "deger": 367200,
-       "nominal": 1800
+       "agirlik": 3.86,
+       "deger": 1020000,
+       "nominal": 4800
       },
       {
-       "kod": "ARASE",
-       "agirlik": 1.72,
-       "deger": 359100,
-       "nominal": 3000
+       "kod": "ASELS",
+       "agirlik": 3.82,
+       "deger": 1010000,
+       "nominal": 2500
       },
       {
        "kod": "NETCD",
-       "agirlik": 1.69,
-       "deger": 352200,
-       "nominal": 3000
+       "agirlik": 3.79,
+       "deger": 1003860,
+       "nominal": 7800
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 3.78,
+       "deger": 999075,
+       "nominal": 86500
+      },
+      {
+       "kod": "ATATP",
+       "agirlik": 3.75,
+       "deger": 993002.5,
+       "nominal": 3170
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 3.73,
+       "deger": 986580,
+       "nominal": 8100
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 3.73,
+       "deger": 987390,
+       "nominal": 40500
+      },
+      {
+       "kod": "TUREX",
+       "agirlik": 3.72,
+       "deger": 985500,
+       "nominal": 150000
+      },
+      {
+       "kod": "FONET",
+       "agirlik": 3.63,
+       "deger": 960890,
+       "nominal": 185500
       }
      ],
      "hisseToplam": {
-      "deger": 6842692.5,
+      "deger": 19655392.5,
       "grup": 100,
       "fpd": 100,
-      "ftd": 32.83,
+      "ftd": 74.29,
       "adet": 1
      },
      "islem": {
@@ -2783,22 +2701,22 @@
       "satis": {}
      },
      "varlik": {
-      "hisse": 32.83,
-      "nakit": 67.17,
-      "_portfoyDegeriYuzde": 32.83,
-      "_hazirDeger": 5.75,
-      "_alacak": 64.16,
-      "_borc": -2.73,
-      "_toplam": 100
+      "hisse": 74.29,
+      "nakit": 25.72,
+      "_portfoyDegeriYuzde": 74.28,
+      "_hazirDeger": 12.75,
+      "_alacak": 42.64,
+      "_borc": -29.67,
+      "_toplam": 100.01
      },
      "diger": [],
      "kaynak": {
-      "index": 1660368,
-      "objId": "4028328c9f52dc4001a0818bdcc54a45",
+      "index": 1660367,
+      "objId": "4028328c9f52dc4001a0818bdc064a3b",
       "yayin": "08.09.2026 18:04:28",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
-      "metinUz": 21654,
+      "metinUz": 21751,
       "islemIz": {
        "satisBolum": false,
        "alisBolum": false,
@@ -7670,7 +7588,7 @@
     },
     "2026-09": {
      "baslik": {
-      "kod": "KLH",
+      "kod": null,
       "ad": null,
       "donem": "2026-09",
       "fonToplamDegeri": null,
@@ -7682,52 +7600,82 @@
      },
      "hisse": [
       {
-       "kod": "YUNSA",
-       "agirlik": 32.51,
-       "deger": 35950361.6,
-       "nominal": 4884560
+       "kod": "EKSUN",
+       "agirlik": 28.19,
+       "deger": 30359887.5,
+       "nominal": 5470250
       },
       {
-       "kod": "EKSUN",
-       "agirlik": 30.32,
-       "deger": 33530074.92,
-       "nominal": 6008974
+       "kod": "YUNSA",
+       "agirlik": 27.44,
+       "deger": 29550251,
+       "nominal": 3898450
       },
       {
        "kod": "GUBRF",
-       "agirlik": 8.66,
-       "deger": 9575000,
-       "nominal": 20000
+       "agirlik": 5.6,
+       "deger": 6030000,
+       "nominal": 12000
       },
       {
        "kod": "MEGMT",
-       "agirlik": 4.18,
-       "deger": 4620000,
-       "nominal": 100000
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 2.89,
-       "deger": 3200625,
-       "nominal": 7500
+       "agirlik": 5.01,
+       "deger": 5391200,
+       "nominal": 115000
       },
       {
        "kod": "GLRMK",
-       "agirlik": 2.15,
-       "deger": 2374500,
-       "nominal": 15000
+       "agirlik": 4.11,
+       "deger": 4425000,
+       "nominal": 25000
       },
       {
-       "kod": "KVR",
-       "agirlik": 1.93,
-       "deger": 2131083.74,
-       "nominal": 1623135
+       "kod": "MPARK",
+       "agirlik": 4.11,
+       "deger": 4430000,
+       "nominal": 10000
+      },
+      {
+       "kod": "SARKY",
+       "agirlik": 3.38,
+       "deger": 3642000,
+       "nominal": 150000
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 3.14,
+       "deger": 3384000,
+       "nominal": 150000
       },
       {
        "kod": "CIMSA",
-       "agirlik": 1.58,
-       "deger": 1751200,
-       "nominal": 40000
+       "agirlik": 2.97,
+       "deger": 3196200,
+       "nominal": 70000
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 2.61,
+       "deger": 2812500,
+       "nominal": 75000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 2.55,
+       "deger": 2745000,
+       "nominal": 300000
+      },
+      {
+       "kod": "KVR",
+       "agirlik": 2.35,
+       "deger": 2525820.61,
+       "nominal": 1909300
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 1.83,
+       "deger": 1970000,
+       "nominal": 50000
       }
      ],
      "hisseToplam": null,
@@ -7738,12 +7686,12 @@
      "varlik": null,
      "diger": [],
      "kaynak": {
-      "index": 1661042,
-      "objId": "4028328c9f52dc3f01a0864fd57673a8",
-      "yayin": "09.09.2026 16:55:38",
-      "islendi": "2026-11-05",
+      "index": 1664217,
+      "objId": "4028328da09bf08e01a0aac5405101b3",
+      "yayin": "16.09.2026 18:17:35",
+      "islendi": "2026-11-09",
       "ek": 1,
-      "metinUz": 71731,
+      "metinUz": 70814,
       "islemIz": {
        "satisBolum": false,
        "alisBolum": false,
@@ -8204,7 +8152,7 @@
       "index": 1658600,
       "objId": "4028328d9f52dddd01a0679523c365c5",
       "yayin": "03.09.2026 18:18:10",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 23960,
       "islemIz": {
@@ -8986,237 +8934,6 @@
       }
      }
     },
-    "2026-04": {
-     "baslik": {
-      "kod": "KHC",
-      "ad": "KHC-PARDUS PYŞ KATILIM HİSSE SENEDİ (TL) FONU (HSYF)",
-      "donem": "2026-04",
-      "fonToplamDegeri": 118455581.96,
-      "paySayisi": 55344745,
-      "payFiyati": 2.140322,
-      "aylikGetiri": 9.87,
-      "hisseOrtYuzde": 84.39,
-      "hisseDevirHizi": 0.75
-     },
-     "hisse": [
-      {
-       "kod": "KRDMD",
-       "agirlik": 6.5,
-       "deger": 7704000,
-       "nominal": 200000
-      },
-      {
-       "kod": "ALBRK",
-       "agirlik": 6.39,
-       "deger": 7569000,
-       "nominal": 900000
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 6.03,
-       "deger": 7144250,
-       "nominal": 17000
-      },
-      {
-       "kod": "GLRMK",
-       "agirlik": 5.6,
-       "deger": 6632500,
-       "nominal": 35000
-      },
-      {
-       "kod": "KTLEV",
-       "agirlik": 4.85,
-       "deger": 5750000,
-       "nominal": 50000
-      },
-      {
-       "kod": "EREGL",
-       "agirlik": 4.45,
-       "deger": 5268000,
-       "nominal": 150000
-      },
-      {
-       "kod": "BIMAS",
-       "agirlik": 4.07,
-       "deger": 4819750,
-       "nominal": 6500
-      },
-      {
-       "kod": "KARSN",
-       "agirlik": 3.7,
-       "deger": 4381400,
-       "nominal": 380000
-      },
-      {
-       "kod": "ORGE",
-       "agirlik": 3.61,
-       "deger": 4275000,
-       "nominal": 50000
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 3.47,
-       "deger": 4116000,
-       "nominal": 200000
-      },
-      {
-       "kod": "ALKIM",
-       "agirlik": 3.39,
-       "deger": 4012000,
-       "nominal": 200000
-      },
-      {
-       "kod": "GENIL",
-       "agirlik": 3.13,
-       "deger": 3704000,
-       "nominal": 400000
-      },
-      {
-       "kod": "CWENE",
-       "agirlik": 3.09,
-       "deger": 3664000,
-       "nominal": 100000
-      },
-      {
-       "kod": "KATMR",
-       "agirlik": 3.03,
-       "deger": 3587500,
-       "nominal": 1250000
-      },
-      {
-       "kod": "CANTE",
-       "agirlik": 3.02,
-       "deger": 3580000,
-       "nominal": 2000000
-      },
-      {
-       "kod": "KCAER",
-       "agirlik": 2.97,
-       "deger": 3519006.57,
-       "nominal": 300000.56
-      },
-      {
-       "kod": "GOKNR",
-       "agirlik": 2.73,
-       "deger": 3237000,
-       "nominal": 150000
-      },
-      {
-       "kod": "TMSN",
-       "agirlik": 2.58,
-       "deger": 3057000,
-       "nominal": 30000
-      },
-      {
-       "kod": "BSOKE",
-       "agirlik": 1.94,
-       "deger": 2300400,
-       "nominal": 60000
-      },
-      {
-       "kod": "AKHAN",
-       "agirlik": 1.93,
-       "deger": 2289600,
-       "nominal": 80000
-      },
-      {
-       "kod": "PASEU",
-       "agirlik": 1.67,
-       "deger": 1980000,
-       "nominal": 15000
-      },
-      {
-       "kod": "BRLSM",
-       "agirlik": 1.64,
-       "deger": 1942200,
-       "nominal": 130000
-      },
-      {
-       "kod": "RUBNS",
-       "agirlik": 1.38,
-       "deger": 1636000,
-       "nominal": 50000
-      },
-      {
-       "kod": "GUBRF",
-       "agirlik": 1.34,
-       "deger": 1591500,
-       "nominal": 3000
-      },
-      {
-       "kod": "EUPWR",
-       "agirlik": 1.33,
-       "deger": 1572000,
-       "nominal": 30000
-      },
-      {
-       "kod": "CIMSA",
-       "agirlik": 1.22,
-       "deger": 1440000,
-       "nominal": 25000
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 1.1,
-       "deger": 1299600,
-       "nominal": 30000
-      },
-      {
-       "kod": "DAPGM",
-       "agirlik": 0,
-       "deger": 2,
-       "nominal": 0.19
-      },
-      {
-       "kod": "EKSUN",
-       "agirlik": 0,
-       "deger": 2.55,
-       "nominal": 0.43
-      },
-      {
-       "kod": "TNZTP",
-       "agirlik": 0,
-       "deger": 22.03,
-       "nominal": 0.88
-      }
-     ],
-     "hisseToplam": {
-      "deger": 102071733.15,
-      "grup": 100,
-      "fpd": 85.23,
-      "ftd": 86.16,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {},
-      "satis": {}
-     },
-     "varlik": {
-      "hisse": 86.16,
-      "nakit": -1.09,
-      "_portfoyDegeriYuzde": 101.09,
-      "_hazirDeger": 0.42,
-      "_alacak": 1.26,
-      "_borc": -2.77,
-      "_toplam": 85.07,
-      "_tutarsiz": true
-     },
-     "diger": [],
-     "kaynak": {
-      "index": 1604989,
-      "objId": "4028328c9d7b22d2019e174c5b7f59bc",
-      "yayin": "11.05.2026 18:11:50",
-      "islendi": "2026-10-08",
-      "ek": 1,
-      "metinUz": 26618,
-      "islemIz": {
-       "satisBolum": false,
-       "alisBolum": false,
-       "satisUz": 0,
-       "alisUz": 0
-      }
-     }
-    },
     "2026-09": {
      "baslik": {
       "kod": "KHC",
@@ -9415,6 +9132,212 @@
       "islendi": "2026-10-07",
       "ek": 1,
       "metinUz": 22112,
+      "islemIz": {
+       "satisBolum": false,
+       "alisBolum": false,
+       "satisUz": 0,
+       "alisUz": 0
+      }
+     }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "KHC",
+      "ad": "KHC-PARDUS PYŞ KATILIM HİSSE SENEDİ (TL) FONU (HSYF)",
+      "donem": "2026-10",
+      "fonToplamDegeri": 27906954.57,
+      "paySayisi": 19647143,
+      "payFiyati": 1.420408,
+      "aylikGetiri": -14.61,
+      "hisseOrtYuzde": 100,
+      "hisseDevirHizi": 1.18
+     },
+     "hisse": [
+      {
+       "kod": "BIMAS",
+       "agirlik": 7.47,
+       "deger": 2085000,
+       "nominal": 6000
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 7.46,
+       "deger": 2082000,
+       "nominal": 6000
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 6.18,
+       "deger": 1724235,
+       "nominal": 106500
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 6.15,
+       "deger": 1717500,
+       "nominal": 5000
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 5.29,
+       "deger": 1477000,
+       "nominal": 14000
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 3.77,
+       "deger": 1051920,
+       "nominal": 27000
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 3.72,
+       "deger": 1038100,
+       "nominal": 35000
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 3.69,
+       "deger": 1030560,
+       "nominal": 28500
+      },
+      {
+       "kod": "AYDEM",
+       "agirlik": 3.41,
+       "deger": 949440,
+       "nominal": 46000
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 3.4,
+       "deger": 947500,
+       "nominal": 2500
+      },
+      {
+       "kod": "ALKIM",
+       "agirlik": 3.25,
+       "deger": 906000,
+       "nominal": 100000
+      },
+      {
+       "kod": "CWENE",
+       "agirlik": 2.93,
+       "deger": 818400,
+       "nominal": 60000
+      },
+      {
+       "kod": "EBEBK",
+       "agirlik": 2.9,
+       "deger": 809025,
+       "nominal": 10500
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 2.69,
+       "deger": 750750,
+       "nominal": 3000
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 2.67,
+       "deger": 744000,
+       "nominal": 40000
+      },
+      {
+       "kod": "ALTNY",
+       "agirlik": 2.6,
+       "deger": 725040,
+       "nominal": 72000
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 2.49,
+       "deger": 695160,
+       "nominal": 36000
+      },
+      {
+       "kod": "KCAER",
+       "agirlik": 2.48,
+       "deger": 692179.7,
+       "nominal": 82500.56
+      },
+      {
+       "kod": "YEOTK",
+       "agirlik": 2.48,
+       "deger": 691600,
+       "nominal": 32500
+      },
+      {
+       "kod": "KMPUR",
+       "agirlik": 2.47,
+       "deger": 687960,
+       "nominal": 63000
+      },
+      {
+       "kod": "TKFEN",
+       "agirlik": 2.4,
+       "deger": 669900,
+       "nominal": 3500
+      },
+      {
+       "kod": "GENIL",
+       "agirlik": 2.31,
+       "deger": 645650,
+       "nominal": 185000
+      },
+      {
+       "kod": "RALYH",
+       "agirlik": 0.3,
+       "deger": 83520,
+       "nominal": 8000
+      },
+      {
+       "kod": "EKSUN",
+       "agirlik": 0,
+       "deger": 1.47,
+       "nominal": 0.43
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 0,
+       "deger": 2.85,
+       "nominal": 0.77
+      },
+      {
+       "kod": "TNZTP",
+       "agirlik": 0,
+       "deger": 18.67,
+       "nominal": 0.88
+      }
+     ],
+     "hisseToplam": {
+      "deger": 23022463.08,
+      "grup": 100,
+      "fpd": 100,
+      "ftd": 82.51,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "varlik": {
+      "hisse": 82.51,
+      "nakit": 17.5,
+      "_portfoyDegeriYuzde": 82.5,
+      "_hazirDeger": 18.75,
+      "_alacak": 1.84,
+      "_borc": -3.09,
+      "_toplam": 100.01
+     },
+     "diger": [],
+     "kaynak": {
+      "index": 1693259,
+      "objId": "4028328ca17e4f5f01a1ab1a81e31eea",
+      "yayin": "05.11.2026 18:08:43",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 30089,
       "islemIz": {
        "satisBolum": false,
        "alisBolum": false,
@@ -10913,7 +10836,7 @@
       "index": 1626282,
       "objId": "4028328c9f0a085a019f21c9b3ca1983",
       "yayin": "07.07.2026 15:26:07",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 23171,
       "islemIz": {
@@ -11110,7 +11033,7 @@
       "index": 1642193,
       "objId": "4028328c9f52dc40019fc7d8f0622685",
       "yayin": "03.08.2026 17:08:09",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 26469,
       "islemIz": {
@@ -11325,7 +11248,7 @@
       "index": 1658480,
       "objId": "4028328c9f52dc4001a0676b33054208",
       "yayin": "03.09.2026 18:00:09",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 23204,
       "islemIz": {
@@ -15055,7 +14978,7 @@
       "index": 1644461,
       "objId": "4028328d9f52dddd019fd76404495baf",
       "yayin": "06.08.2026 17:23:46",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 38297,
       "islemIz": {
@@ -15279,7 +15202,7 @@
       "index": 1657640,
       "objId": "4028328d9f52dddc01a062dc344b7e4b",
       "yayin": "02.09.2026 19:07:58",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 30072,
       "islemIz": {
@@ -15563,7 +15486,7 @@
       "index": 1672813,
       "objId": "4028328ca0b8418501a1102f99b1048a",
       "yayin": "06.10.2026 10:59:04",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 104773,
       "islemIz": {
@@ -15803,391 +15726,6 @@
   "KPC": {
    "ad": "KPC-KUVEYT TÜRK PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU",
    "donemler": {
-    "2026-04": {
-     "baslik": {
-      "kod": "KPC",
-      "ad": "KPC-KATILIM HİSSE SENEDİ(TL) FONU(HİSSE YOĞUN FON)",
-      "donem": "2026-04",
-      "fonToplamDegeri": 3645357638.55,
-      "paySayisi": 183075243,
-      "payFiyati": 19.9118,
-      "aylikGetiri": 12.27,
-      "hisseOrtYuzde": 85.22,
-      "hisseDevirHizi": 0.5
-     },
-     "hisse": [
-      {
-       "kod": "MPARK",
-       "agirlik": 9.76,
-       "deger": 355800000,
-       "nominal": 800000
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 8.92,
-       "deger": 325200000,
-       "nominal": 1200000
-      },
-      {
-       "kod": "BIMAS",
-       "agirlik": 7.32,
-       "deger": 266940000,
-       "nominal": 360000
-      },
-      {
-       "kod": "KTLEV",
-       "agirlik": 5.68,
-       "deger": 207000115,
-       "nominal": 1800001
-      },
-      {
-       "kod": "RGYAS",
-       "agirlik": 5.09,
-       "deger": 185500000,
-       "nominal": 1000000
-      },
-      {
-       "kod": "LMKDC",
-       "agirlik": 4.81,
-       "deger": 175310000,
-       "nominal": 4700000
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 3.95,
-       "deger": 144060000,
-       "nominal": 7000000
-      },
-      {
-       "kod": "GRSEL",
-       "agirlik": 3.77,
-       "deger": 137540000,
-       "nominal": 460000
-      },
-      {
-       "kod": "LOGO",
-       "agirlik": 3.74,
-       "deger": 136420000,
-       "nominal": 950000
-      },
-      {
-       "kod": "GUBRF",
-       "agirlik": 3.64,
-       "deger": 132625000,
-       "nominal": 250000
-      },
-      {
-       "kod": "GLRMK",
-       "agirlik": 3.12,
-       "deger": 113700000,
-       "nominal": 600000
-      },
-      {
-       "kod": "ALBRK",
-       "agirlik": 3,
-       "deger": 109330000,
-       "nominal": 13000000
-      },
-      {
-       "kod": "KRDMD",
-       "agirlik": 2.85,
-       "deger": 104004000,
-       "nominal": 2700000
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 2.85,
-       "deger": 103968000,
-       "nominal": 2400000
-      },
-      {
-       "kod": "AVPGY",
-       "agirlik": 2.79,
-       "deger": 101575000,
-       "nominal": 1700000
-      },
-      {
-       "kod": "ENJSA",
-       "agirlik": 2.7,
-       "deger": 98240000,
-       "nominal": 800000
-      },
-      {
-       "kod": "CIMSA",
-       "agirlik": 2.37,
-       "deger": 86400000,
-       "nominal": 1500000
-      },
-      {
-       "kod": "EUPWR",
-       "agirlik": 2.01,
-       "deger": 73360000,
-       "nominal": 1400000
-      },
-      {
-       "kod": "EREGL",
-       "agirlik": 1.93,
-       "deger": 70240000,
-       "nominal": 2000000
-      },
-      {
-       "kod": "SELEC",
-       "agirlik": 1.57,
-       "deger": 57200000,
-       "nominal": 550000
-      },
-      {
-       "kod": "EGGUB",
-       "agirlik": 1.39,
-       "deger": 50720000,
-       "nominal": 400000
-      },
-      {
-       "kod": "ARASE",
-       "agirlik": 1.29,
-       "deger": 47025000,
-       "nominal": 450000
-      },
-      {
-       "kod": "ALTNY",
-       "agirlik": 0.88,
-       "deger": 32020014.09,
-       "nominal": 2000000.88
-      },
-      {
-       "kod": "TUREX",
-       "agirlik": 0.84,
-       "deger": 30590000,
-       "nominal": 3500000
-      },
-      {
-       "kod": "FONET",
-       "agirlik": 0.81,
-       "deger": 29460000,
-       "nominal": 6000000
-      },
-      {
-       "kod": "HOROZ",
-       "agirlik": 0.8,
-       "deger": 29155000,
-       "nominal": 350000
-      },
-      {
-       "kod": "SNGYO",
-       "agirlik": 0.8,
-       "deger": 29280000,
-       "nominal": 8000000
-      },
-      {
-       "kod": "MERCN",
-       "agirlik": 0.65,
-       "deger": 23800000,
-       "nominal": 1000000
-      },
-      {
-       "kod": "TNZTP",
-       "agirlik": 0,
-       "deger": 19.42,
-       "nominal": 0.78
-      },
-      {
-       "kod": "TUKAS",
-       "agirlik": 0,
-       "deger": 2.18,
-       "nominal": 0.85
-      }
-     ],
-     "hisseToplam": {
-      "deger": 3256462150.69,
-      "grup": 100,
-      "fpd": 86.03,
-      "ftd": 89.33,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {
-       "TUPRS": {
-        "deger": 78012500
-       },
-       "MPARK": {
-        "deger": 103340804
-       },
-       "LMKDC": {
-        "deger": 12183918
-       },
-       "EGGUB": {
-        "deger": 7329480
-       },
-       "PLTUR": {
-        "deger": 7428296
-       },
-       "ALBRK": {
-        "deger": 66797738
-       },
-       "FONET": {
-        "deger": 4600000
-       },
-       "KTLEV": {
-        "deger": 33048861
-       },
-       "MERCN": {
-        "deger": 35533382
-       },
-       "EUPWR": {
-        "deger": 11904000
-       },
-       "GLRMK": {
-        "deger": 208639405
-       },
-       "EKGYO": {
-        "deger": 129248207
-       },
-       "BIMAS": {
-        "deger": 60535739
-       },
-       "TUREX": {
-        "deger": 3354336
-       },
-       "SELEC": {
-        "deger": 54011581
-       },
-       "ENJSA": {
-        "deger": 101816779
-       },
-       "GRSEL": {
-        "deger": 26239731
-       }
-      },
-      "satis": {
-       "KTLEV": {
-        "deger": 54190280
-       },
-       "ENJSA": {
-        "deger": 24344094
-       },
-       "BIMAS": {
-        "deger": 7065000
-       },
-       "EUPWR": {
-        "deger": 16520629
-       },
-       "HOROZ": {
-        "deger": 18746304
-       },
-       "ASELS": {
-        "deger": 144983823
-       },
-       "ALTNY": {
-        "deger": 11526340
-       },
-       "MPARK": {
-        "deger": 17935822
-       },
-       "GESAN": {
-        "deger": 46929898
-       },
-       "ALBRK": {
-        "deger": 4553727
-       },
-       "MERCN": {
-        "deger": 16251634
-       },
-       "GOKNR": {
-        "deger": 13288054
-       },
-       "RGYAS": {
-        "deger": 27855068
-       },
-       "FONET": {
-        "deger": 5090000
-       },
-       "TUPRS": {
-        "deger": 64980667
-       },
-       "KRDMD": {
-        "deger": 7274550
-       },
-       "EKGYO": {
-        "deger": 87940024
-       },
-       "GLRMK": {
-        "deger": 154717448
-       },
-       "LKMNH": {
-        "deger": 28808903
-       },
-       "PLTUR": {
-        "deger": 13137700
-       },
-       "OYAKC": {
-        "deger": 7
-       },
-       "PGSUS": {
-        "deger": 156
-       }
-      }
-     },
-     "varlik": {
-      "hisse": 98.26,
-      "fon": 11.2,
-      "nakit": -3.85,
-      "_portfoyDegeriYuzde": 103.85,
-      "_hazirDeger": 0,
-      "_alacak": 1.59,
-      "_borc": -5.44
-     },
-     "diger": [
-      {
-       "kod": "KKG-TL",
-       "kategori": "fon",
-       "agirlik": 2.15,
-       "deger": 78239422
-      },
-      {
-       "kod": "KSV",
-       "kategori": "fon",
-       "agirlik": 1.05,
-       "deger": 38271961
-      },
-      {
-       "kod": "PCU",
-       "kategori": "fon",
-       "agirlik": 1,
-       "deger": 36468437
-      },
-      {
-       "kod": "Z30KP",
-       "kategori": "fon",
-       "agirlik": 0.72,
-       "deger": 26390874
-      },
-      {
-       "kod": "KKT",
-       "kategori": "fon",
-       "agirlik": 0.58,
-       "deger": 21147771
-      },
-      {
-       "kod": "Z30KE",
-       "kategori": "fon",
-       "agirlik": 0.09,
-       "deger": 3505084
-      },
-      {
-       "kod": "KPR",
-       "kategori": "fon",
-       "agirlik": 0.01,
-       "deger": 355804
-      }
-     ],
-     "kaynak": {
-      "index": 1603234,
-      "objId": "4028328c9d7b22d2019e0747b3b03b75",
-      "yayin": "08.05.2026 14:58:25",
-      "pdfBoyut": 860866,
-      "islendi": "2026-09-10"
-     }
-    },
     "2026-05": {
      "baslik": {
       "kod": "KPC",
@@ -17988,314 +17526,342 @@
        "alisUz": 426494
       }
      }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "KPC",
+      "ad": "KPC-KUVEYT TÜRK PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU",
+      "donem": "2026-10",
+      "fonToplamDegeri": 3519174676.84,
+      "paySayisi": 198030340,
+      "payFiyati": 17.770886,
+      "aylikGetiri": -10.13,
+      "hisseOrtYuzde": 84.01,
+      "hisseDevirHizi": 0.11
+     },
+     "hisse": [
+      {
+       "kod": "ASELS",
+       "agirlik": 9.86,
+       "deger": 347000000,
+       "nominal": 1000000
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 9.69,
+       "deger": 341100000,
+       "nominal": 900000
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 9.27,
+       "deger": 326325000,
+       "nominal": 950000
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 8.39,
+       "deger": 295375000,
+       "nominal": 850000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 4.35,
+       "deger": 152880000,
+       "nominal": 19500000
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 4.14,
+       "deger": 145710000,
+       "nominal": 9000000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 3.56,
+       "deger": 125125000,
+       "nominal": 500000
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 3,
+       "deger": 105500000,
+       "nominal": 1000000
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 2.6,
+       "deger": 91520000,
+       "nominal": 800000
+      },
+      {
+       "kod": "AHGAZ",
+       "agirlik": 2.36,
+       "deger": 82908000,
+       "nominal": 1800000
+      },
+      {
+       "kod": "EBEBK",
+       "agirlik": 2.3,
+       "deger": 80902500,
+       "nominal": 1050000
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 2.11,
+       "deger": 74150000,
+       "nominal": 2500000
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 1.99,
+       "deger": 70128000,
+       "nominal": 1800000
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 1.9,
+       "deger": 66920000,
+       "nominal": 2000000
+      },
+      {
+       "kod": "GESAN",
+       "agirlik": 1.86,
+       "deger": 65352000,
+       "nominal": 2100000
+      },
+      {
+       "kod": "GRSEL",
+       "agirlik": 1.85,
+       "deger": 65205000,
+       "nominal": 270000
+      },
+      {
+       "kod": "AVPGY",
+       "agirlik": 1.81,
+       "deger": 63700000,
+       "nominal": 1400000
+      },
+      {
+       "kod": "SNGYO",
+       "agirlik": 1.75,
+       "deger": 61600000,
+       "nominal": 28000000
+      },
+      {
+       "kod": "EUPWR",
+       "agirlik": 1.68,
+       "deger": 59160000,
+       "nominal": 1500000
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 1.64,
+       "deger": 57856000,
+       "nominal": 1600000
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 1.43,
+       "deger": 50206000,
+       "nominal": 2600000
+      },
+      {
+       "kod": "EGGUB",
+       "agirlik": 1.21,
+       "deger": 42680000,
+       "nominal": 550000
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 1.17,
+       "deger": 41240000,
+       "nominal": 400000
+      },
+      {
+       "kod": "SARKY",
+       "agirlik": 1.07,
+       "deger": 37525000,
+       "nominal": 2500000
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 0.95,
+       "deger": 33285000,
+       "nominal": 3500000
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 0.9,
+       "deger": 31500000,
+       "nominal": 450000
+      },
+      {
+       "kod": "FONET",
+       "agirlik": 0.84,
+       "deger": 29495000,
+       "nominal": 8500000
+      },
+      {
+       "kod": "SELEC",
+       "agirlik": 0.45,
+       "deger": 15887500,
+       "nominal": 250000
+      },
+      {
+       "kod": "ALTNY",
+       "agirlik": 0,
+       "deger": 8.86,
+       "nominal": 0.88
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 0,
+       "deger": 1.41,
+       "nominal": 0.38
+      },
+      {
+       "kod": "TNZTP",
+       "agirlik": 0,
+       "deger": 16.46,
+       "nominal": 0.78
+      },
+      {
+       "kod": "TUKAS",
+       "agirlik": 0,
+       "deger": 1.5,
+       "nominal": 0.85
+      }
+     ],
+     "hisseToplam": {
+      "deger": 2960235028.23,
+      "grup": 100,
+      "fpd": 83.79,
+      "ftd": 84.13,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {
+       "MPARK": {
+        "deger": 83390653
+       },
+       "EBEBK": {
+        "deger": 4045564
+       },
+       "ASELS": {
+        "deger": 34075000
+       },
+       "BIMAS": {
+        "deger": 45612034
+       },
+       "TUPRS": {
+        "deger": 39449891
+       },
+       "GUBRF": {
+        "deger": 17575701
+       },
+       "SNGYO": {
+        "deger": 2300000
+       }
+      },
+      "satis": {
+       "EUPWR": {
+        "deger": 5286707
+       },
+       "EKGYO": {
+        "deger": 18935041
+       },
+       "SNGYO": {
+        "deger": 2750227
+       },
+       "ALBRK": {
+        "deger": 16736369
+       },
+       "MPARK": {
+        "deger": 44979814
+       },
+       "LMKDC": {
+        "deger": 28225914
+       },
+       "ARASE": {
+        "deger": 23234771
+       },
+       "AHGAZ": {
+        "deger": 18727150
+       },
+       "EBEBK": {
+        "deger": 19178831
+       },
+       "AVPGY": {
+        "deger": 4850000
+       },
+       "ASELS": {
+        "deger": 17439558
+       }
+      }
+     },
+     "varlik": {
+      "hisse": 84.13,
+      "fon": 14.72,
+      "nakit": -0.39,
+      "_portfoyDegeriYuzde": 100.39,
+      "_hazirDeger": 0,
+      "_alacak": 0.67,
+      "_borc": -1.05,
+      "_toplam": 98.46
+     },
+     "diger": [
+      {
+       "kod": "KKG-TL",
+       "kategori": "fon",
+       "agirlik": 2.52,
+       "deger": 88811130
+      },
+      {
+       "kod": "ZPMDK",
+       "kategori": "fon",
+       "agirlik": 1.97,
+       "deger": 69322800
+      },
+      {
+       "kod": "KSV",
+       "kategori": "fon",
+       "agirlik": 1.26,
+       "deger": 44402966
+      },
+      {
+       "kod": "PCU",
+       "kategori": "fon",
+       "agirlik": 1.03,
+       "deger": 36331566
+      },
+      {
+       "kod": "KKT",
+       "kategori": "fon",
+       "agirlik": 0.58,
+       "deger": 20436224
+      }
+     ],
+     "kaynak": {
+      "index": 1693021,
+      "objId": "4028328ca17e4f5e01a1a6c4b3d54f5a",
+      "yayin": "05.11.2026 11:51:34",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 388052,
+      "islemIz": {
+       "satisBolum": true,
+       "alisBolum": true,
+       "satisUz": 189587,
+       "alisUz": 124734
+      }
+     }
     }
    }
   },
   "KPA": {
    "ad": "KPA-Kuveyt Türk Portföy Kar Payı Ödeyen Katılım Hisse Senedi Fonu (Hisse",
    "donemler": {
-    "2026-04": {
-     "baslik": {
-      "kod": "KPA",
-      "ad": "KPA-Kuveyt Türk Portföy Kar Payı Ödeyen Katılım Hisse Senedi Fonu (Hisse",
-      "donem": "2026-04",
-      "fonToplamDegeri": 344589374.04,
-      "paySayisi": 223739780,
-      "payFiyati": 1.540135,
-      "aylikGetiri": 11.67,
-      "hisseOrtYuzde": 92.71,
-      "hisseDevirHizi": 0.22
-     },
-     "hisse": [
-      {
-       "kod": "BIMAS",
-       "agirlik": 9.01,
-       "deger": 31052537,
-       "nominal": 41878
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 8.79,
-       "deger": 30294141.5,
-       "nominal": 72086
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 7.69,
-       "deger": 26493502,
-       "nominal": 97762
-      },
-      {
-       "kod": "NTGAZ",
-       "agirlik": 6.46,
-       "deger": 22247050,
-       "nominal": 1779764
-      },
-      {
-       "kod": "GRSEL",
-       "agirlik": 5.29,
-       "deger": 18215080,
-       "nominal": 60920
-      },
-      {
-       "kod": "CIMSA",
-       "agirlik": 4.65,
-       "deger": 16024723.2,
-       "nominal": 278207
-      },
-      {
-       "kod": "EGGUB",
-       "agirlik": 4.52,
-       "deger": 15566728.8,
-       "nominal": 122766
-      },
-      {
-       "kod": "ARASE",
-       "agirlik": 4.44,
-       "deger": 15302771,
-       "nominal": 146438
-      },
-      {
-       "kod": "BASGZ",
-       "agirlik": 4.31,
-       "deger": 14865960.9,
-       "nominal": 290919
-      },
-      {
-       "kod": "KTLEV",
-       "agirlik": 4.27,
-       "deger": 14711546.81,
-       "nominal": 127926.49
-      },
-      {
-       "kod": "EREGL",
-       "agirlik": 4.08,
-       "deger": 14048000,
-       "nominal": 400000
-      },
-      {
-       "kod": "LOGO",
-       "agirlik": 4,
-       "deger": 13792923.6,
-       "nominal": 96051
-      },
-      {
-       "kod": "SELEC",
-       "agirlik": 3.69,
-       "deger": 12714728,
-       "nominal": 122257
-      },
-      {
-       "kod": "KCAER",
-       "agirlik": 3.54,
-       "deger": 12205088.46,
-       "nominal": 1040502
-      },
-      {
-       "kod": "ARDYZ",
-       "agirlik": 3.42,
-       "deger": 11773406,
-       "nominal": 234530
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 3.37,
-       "deger": 11605081.44,
-       "nominal": 267892
-      },
-      {
-       "kod": "BRISA",
-       "agirlik": 2.84,
-       "deger": 9782903,
-       "nominal": 115774
-      },
-      {
-       "kod": "GENIL",
-       "agirlik": 2.53,
-       "deger": 8702353.54,
-       "nominal": 939779
-      },
-      {
-       "kod": "EUPWR",
-       "agirlik": 2.28,
-       "deger": 7854812.4,
-       "nominal": 149901
-      },
-      {
-       "kod": "MERCN",
-       "agirlik": 2.07,
-       "deger": 7140000,
-       "nominal": 300000
-      },
-      {
-       "kod": "EGPRO",
-       "agirlik": 1.77,
-       "deger": 6107532,
-       "nominal": 137247.91
-      },
-      {
-       "kod": "PAGYO",
-       "agirlik": 1.38,
-       "deger": 4751772.4,
-       "nominal": 36524
-      },
-      {
-       "kod": "LKMNH",
-       "agirlik": 1.34,
-       "deger": 4630106.88,
-       "nominal": 306224
-      },
-      {
-       "kod": "POLHO",
-       "agirlik": 0,
-       "deger": 20.09,
-       "nominal": 0.94
-      }
-     ],
-     "hisseToplam": {
-      "deger": 329882769.02,
-      "grup": 100,
-      "fpd": 93.99,
-      "ftd": 95.74,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {
-       "ARDYZ": {
-        "deger": 4092654
-       },
-       "ASELS": {
-        "deger": 262044
-       },
-       "BRISA": {
-        "deger": 96493
-       },
-       "SELEC": {
-        "deger": 7333930
-       },
-       "GENIL": {
-        "deger": 132325
-       },
-       "LOGO": {
-        "deger": 129621
-       },
-       "ENJSA": {
-        "deger": 49976
-       },
-       "KCAER": {
-        "deger": 117546
-       },
-       "EUPWR": {
-        "deger": 84883
-       },
-       "CIMSA": {
-        "deger": 141693
-       },
-       "EGGUB": {
-        "deger": 147258
-       },
-       "EGPRO": {
-        "deger": 93504
-       },
-       "GRSEL": {
-        "deger": 191000
-       },
-       "BIMAS": {
-        "deger": 297045
-       },
-       "PAGYO": {
-        "deger": 687452
-       },
-       "LKMNH": {
-        "deger": 46526
-       },
-       "MPARK": {
-        "deger": 108809
-       },
-       "KTLEV": {
-        "deger": 103496
-       },
-       "NTGAZ": {
-        "deger": 209866
-       },
-       "BASGZ": {
-        "deger": 160477
-       },
-       "MAVI": {
-        "deger": 112975
-       },
-       "ARASE": {
-        "deger": 147508
-       },
-       "MERCN": {
-        "deger": 7130338
-       },
-       "EREGL": {
-        "deger": 13164000
-       },
-       "TUPRS": {
-        "deger": 4027500
-       }
-      },
-      "satis": {
-       "MPARK": {
-        "deger": 13739009
-       },
-       "BASGZ": {
-        "deger": 897108
-       },
-       "GENIL": {
-        "deger": 3166109
-       },
-       "ASELS": {
-        "deger": 1664000
-       },
-       "EGPRO": {
-        "deger": 7676993
-       },
-       "ENJSA": {
-        "deger": 4924356
-       },
-       "EUPWR": {
-        "deger": 2071000
-       },
-       "MARMR": {
-        "deger": 1
-       }
-      }
-     },
-     "varlik": {
-      "hisse": 95.74,
-      "fon": 0.74,
-      "nakit": -1.86,
-      "_portfoyDegeriYuzde": 101.86,
-      "_hazirDeger": 0.01,
-      "_alacak": 0,
-      "_borc": -1.87,
-      "_toplam": 94.62
-     },
-     "diger": [
-      {
-       "kod": "KPR",
-       "kategori": "fon",
-       "agirlik": 0.71,
-       "deger": 2437271
-      },
-      {
-       "kod": "KSV",
-       "kategori": "fon",
-       "agirlik": 0.03,
-       "deger": 104664
-      }
-     ],
-     "kaynak": {
-      "index": 1603233,
-      "objId": "4028328c9d7b22d2019e0747b2b53b6b",
-      "yayin": "08.05.2026 14:58:25",
-      "pdfBoyut": 172513,
-      "islendi": "2026-09-10"
-     }
-    },
     "2026-05": {
      "baslik": {
       "kod": "KPA",
@@ -18849,7 +18415,7 @@
       "index": 1628869,
       "objId": "4028328d9f0a0a59019f41d0cdf06fcc",
       "yayin": "08.07.2026 16:36:25",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 141259,
       "islemIz": {
@@ -19730,6 +19296,301 @@
        "alisUz": 72301
       }
      }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "KPA",
+      "ad": "KPA-Kuveyt Türk Portföy Kar Payı Ödeyen Katılım Hisse Senedi Fonu (Hisse",
+      "donem": "2026-10",
+      "fonToplamDegeri": 370088485.69,
+      "paySayisi": 268477652,
+      "payFiyati": 1.37847,
+      "aylikGetiri": -10.72,
+      "hisseOrtYuzde": 85.13,
+      "hisseDevirHizi": 0.16
+     },
+     "hisse": [
+      {
+       "kod": "ASELS",
+       "agirlik": 9.34,
+       "deger": 34559118,
+       "nominal": 99594
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 9.28,
+       "deger": 34360800,
+       "nominal": 98880
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 8.64,
+       "deger": 31990842,
+       "nominal": 93132
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 7.28,
+       "deger": 26943262.64,
+       "nominal": 908404
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 4.56,
+       "deger": 16866212.56,
+       "nominal": 432911
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 4.48,
+       "deger": 16559002.2,
+       "nominal": 1741220
+      },
+      {
+       "kod": "GRSEL",
+       "agirlik": 3.67,
+       "deger": 13581718.5,
+       "nominal": 56239
+      },
+      {
+       "kod": "EGGUB",
+       "agirlik": 3.63,
+       "deger": 13433956.8,
+       "nominal": 173118
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 3.49,
+       "deger": 12894023.61,
+       "nominal": 796419
+      },
+      {
+       "kod": "EBEBK",
+       "agirlik": 3.4,
+       "deger": 12577410.85,
+       "nominal": 163237
+      },
+      {
+       "kod": "SARKY",
+       "agirlik": 3.35,
+       "deger": 12394147.26,
+       "nominal": 825726
+      },
+      {
+       "kod": "BASGZ",
+       "agirlik": 2.86,
+       "deger": 10594901,
+       "nominal": 341771
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 2.7,
+       "deger": 10005604,
+       "nominal": 1276225
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 2.51,
+       "deger": 9273840.52,
+       "nominal": 277162
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 2.36,
+       "deger": 8740960.8,
+       "nominal": 76407
+      },
+      {
+       "kod": "ARDYZ",
+       "agirlik": 2.27,
+       "deger": 8415774.5,
+       "nominal": 166649
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 2.23,
+       "deger": 8259720,
+       "nominal": 117996
+      },
+      {
+       "kod": "EGPRO",
+       "agirlik": 2.03,
+       "deger": 7518975.12,
+       "nominal": 283734.91
+      },
+      {
+       "kod": "GENIL",
+       "agirlik": 1.87,
+       "deger": 6926760.05,
+       "nominal": 1984745
+      },
+      {
+       "kod": "AVPGY",
+       "agirlik": 1.51,
+       "deger": 5591677,
+       "nominal": 122894
+      },
+      {
+       "kod": "LKMNH",
+       "agirlik": 1.38,
+       "deger": 5115380.24,
+       "nominal": 510008
+      },
+      {
+       "kod": "PLTUR",
+       "agirlik": 0.89,
+       "deger": 3314760.3,
+       "nominal": 257958
+      },
+      {
+       "kod": "ELITE",
+       "agirlik": 0.66,
+       "deger": 2453210.12,
+       "nominal": 152468
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 0,
+       "deger": 2.72,
+       "nominal": 0.74
+      },
+      {
+       "kod": "MERCN",
+       "agirlik": 0,
+       "deger": 32.64,
+       "nominal": 4
+      },
+      {
+       "kod": "POLHO",
+       "agirlik": 0,
+       "deger": 12.62,
+       "nominal": 0.94
+      }
+     ],
+     "hisseToplam": {
+      "deger": 312372106.05,
+      "grup": 100,
+      "fpd": 85.36,
+      "ftd": 84.39,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {
+       "GENIL": {
+        "deger": 9516575
+       },
+       "EBEBK": {
+        "deger": 9436616
+       },
+       "LKMNH": {
+        "deger": 2220471
+       }
+      },
+      "satis": {
+       "GRSEL": {
+        "deger": 3987282
+       },
+       "EREGL": {
+        "deger": 8121524
+       },
+       "TUPRS": {
+        "deger": 4096101
+       },
+       "ARASE": {
+        "deger": 3064323
+       },
+       "NTGAZ": {
+        "deger": 1150114
+       },
+       "BIMAS": {
+        "deger": 3238930
+       },
+       "ELITE": {
+        "deger": 129349
+       },
+       "CIMSA": {
+        "deger": 1471263
+       },
+       "AVPGY": {
+        "deger": 4135588
+       },
+       "PLTUR": {
+        "deger": 320742
+       },
+       "EKGYO": {
+        "deger": 1108798
+       },
+       "ASELS": {
+        "deger": 2931122
+       },
+       "EGGUB": {
+        "deger": 1335757
+       },
+       "MAVI": {
+        "deger": 846789
+       },
+       "SARKY": {
+        "deger": 1271642
+       },
+       "LOGO": {
+        "deger": 3884655
+       },
+       "EGPRO": {
+        "deger": 745774
+       },
+       "ALBRK": {
+        "deger": 920245
+       },
+       "BASGZ": {
+        "deger": 559799
+       },
+       "LKMNH": {
+        "deger": 290009
+       },
+       "ARDYZ": {
+        "deger": 856712
+       },
+       "GENIL": {
+        "deger": 2510544
+       },
+       "EBEBK": {
+        "deger": 525023
+       }
+      }
+     },
+     "varlik": {
+      "hisse": 84.39,
+      "sukuk": 7.21,
+      "fon": 7.27,
+      "nakit": 1.12,
+      "_portfoyDegeriYuzde": 98.88,
+      "_hazirDeger": 0.01,
+      "_alacak": 1.67,
+      "_borc": -0.56,
+      "_toplam": 99.99
+     },
+     "diger": [
+      {
+       "kod": "KKT",
+       "kategori": "fon",
+       "agirlik": 7.27,
+       "deger": 26906163
+      }
+     ],
+     "kaynak": {
+      "index": 1693020,
+      "objId": "4028328ca17e4f5e01a1a6c4b37b4f50",
+      "yayin": "05.11.2026 11:51:34",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 235008,
+      "islemIz": {
+       "satisBolum": true,
+       "alisBolum": true,
+       "satisUz": 137680,
+       "alisUz": 60270
+      }
+     }
     }
    }
   },
@@ -20188,7 +20049,7 @@
       "index": 1628846,
       "objId": "4028328c9f0a085a019f41c3f0135637",
       "yayin": "08.07.2026 16:35:45",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 136383,
       "islemIz": {
@@ -20466,128 +20327,128 @@
       "kod": "KTS",
       "ad": "KTS-KUVEYT TÜRK PORTFÖY KATILIM HİSSE SENEDİ SERBEST FON",
       "donem": "2026-08",
-      "fonToplamDegeri": 129438611.82,
-      "paySayisi": 8396708,
-      "payFiyati": 15.4154,
-      "aylikGetiri": 8.43,
-      "hisseOrtYuzde": 87.43,
-      "hisseDevirHizi": 0.63
+      "fonToplamDegeri": 134995677.3,
+      "paySayisi": 8855994,
+      "payFiyati": null,
+      "aylikGetiri": null,
+      "hisseOrtYuzde": 82.9,
+      "hisseDevirHizi": null
      },
      "hisse": [
       {
        "kod": "BIMAS",
-       "agirlik": 13.68,
-       "deger": 17702913.5,
+       "agirlik": 13.45,
+       "deger": 18150397.75,
        "nominal": 43657
       },
       {
        "kod": "TUPRS",
-       "agirlik": 8.71,
-       "deger": 11271840.5,
+       "agirlik": 8.1,
+       "deger": 10940937,
        "nominal": 28162
       },
       {
        "kod": "ASELS",
-       "agirlik": 7.79,
-       "deger": 10090008.75,
+       "agirlik": 7.51,
+       "deger": 10142254.75,
        "nominal": 26123
       },
       {
        "kod": "ALBRK",
-       "agirlik": 7.38,
-       "deger": 9548000,
+       "agirlik": 7.08,
+       "deger": 9559000,
        "nominal": 1100000
       },
       {
        "kod": "RGYAS",
-       "agirlik": 7.24,
-       "deger": 9372269.4,
+       "agirlik": 6.58,
+       "deger": 8876244,
        "nominal": 43511
       },
       {
        "kod": "MPARK",
-       "agirlik": 6.69,
-       "deger": 8657444,
+       "agirlik": 6.5,
+       "deger": 8775687,
        "nominal": 20564
       },
       {
        "kod": "GUBRF",
-       "agirlik": 5.6,
-       "deger": 7253709.75,
+       "agirlik": 5.34,
+       "deger": 7208538.75,
        "nominal": 15057
       },
       {
-       "kod": "SNGYO",
-       "agirlik": 5.15,
-       "deger": 6661531.6,
-       "nominal": 1959274
-      },
-      {
        "kod": "GRSEL",
-       "agirlik": 5.05,
-       "deger": 6540600,
+       "agirlik": 4.81,
+       "deger": 6496996,
        "nominal": 21802
       },
       {
-       "kod": "EGGUB",
-       "agirlik": 4.48,
-       "deger": 5794768,
-       "nominal": 51739
+       "kod": "SNGYO",
+       "agirlik": 4.7,
+       "deger": 6348047.76,
+       "nominal": 1959274
       },
       {
        "kod": "EKGYO",
-       "agirlik": 4.46,
-       "deger": 5768980,
+       "agirlik": 4.15,
+       "deger": 5607448.56,
        "nominal": 288449
       },
       {
+       "kod": "EGGUB",
+       "agirlik": 4.07,
+       "deger": 5494681.8,
+       "nominal": 51739
+      },
+      {
        "kod": "KRDMD",
-       "agirlik": 3.31,
-       "deger": 4289311.4,
+       "agirlik": 2.92,
+       "deger": 3939865.6,
        "nominal": 90530
       },
       {
        "kod": "LOGO",
-       "agirlik": 2.11,
-       "deger": 2741004,
+       "agirlik": 2.02,
+       "deger": 2730784,
        "nominal": 20440
       },
       {
-       "kod": "FONET",
-       "agirlik": 1.68,
-       "deger": 2177905,
-       "nominal": 435581
+       "kod": "EBEBK",
+       "agirlik": 1.51,
+       "deger": 2043750,
+       "nominal": 25000
       },
       {
-       "kod": "EBEBK",
-       "agirlik": 1.64,
-       "deger": 2120000,
-       "nominal": 25000
+       "kod": "FONET",
+       "agirlik": 1.51,
+       "deger": 2042874.89,
+       "nominal": 435581
       },
       {
        "kod": "AHGAZ",
        "agirlik": 1.49,
-       "deger": 1929535.92,
+       "deger": 2016918.8,
        "nominal": 50804
       },
       {
        "kod": "KCAER",
        "agirlik": 0,
-       "deger": 7.63,
+       "deger": 6.67,
        "nominal": 0.48
       },
       {
        "kod": "KTLEV",
        "agirlik": 0,
-       "deger": 26.69,
+       "deger": 18.14,
        "nominal": 0.42
       }
      ],
      "hisseToplam": {
-      "deger": 111919856.14,
+      "deger": 110374451.47,
       "grup": 100,
-      "fpd": 85.1,
-      "ftd": 86.46,
+      "fpd": 81.64,
+      "ftd": 81.74,
       "adet": 1
      },
      "islem": {
@@ -20595,30 +20456,30 @@
       "satis": {}
      },
      "varlik": {
-      "hisse": 86.46,
-      "fon": 9.57,
-      "nakit": -1.6,
-      "_portfoyDegeriYuzde": 101.6,
+      "hisse": 81.74,
+      "fon": 9.14,
+      "nakit": -0.15,
+      "_portfoyDegeriYuzde": 100.15,
       "_hazirDeger": 0.04,
-      "_alacak": 1.06,
-      "_borc": -2.7,
-      "_toplam": 94.43
+      "_alacak": 0,
+      "_borc": -0.19,
+      "_toplam": 90.73
      },
      "diger": [
       {
        "kod": "KPR",
        "kategori": "fon",
-       "agirlik": 9.57,
-       "deger": 12383466
+       "agirlik": 9.14,
+       "deger": 12332095
       }
      ],
      "kaynak": {
-      "index": 1657564,
-      "objId": "4028328c9f52dc3f01a062a90d9a124b",
-      "yayin": "02.09.2026 18:24:00",
-      "islendi": "2026-11-05",
+      "index": 1660919,
+      "objId": "4028328c9f52dc4001a085e340085e20",
+      "yayin": "09.09.2026 15:12:46",
+      "islendi": "2026-11-09",
       "ek": 1,
-      "metinUz": 22088,
+      "metinUz": 21086,
       "islemIz": {
        "satisBolum": false,
        "alisBolum": false,
@@ -20808,7 +20669,7 @@
       "index": 1675073,
       "objId": "4028328ca0b8418601a110e420b92191",
       "yayin": "07.10.2026 17:34:32",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 33339,
       "islemIz": {
@@ -20824,247 +20685,251 @@
       "kod": "KTS",
       "ad": "KTS-KUVEYT TÜRK PORTFÖY KATILIM HİSSE SENEDİ SERBEST FON",
       "donem": "2026-10",
-      "fonToplamDegeri": 104603839.57,
-      "paySayisi": 8221111,
+      "fonToplamDegeri": 116035623.4,
+      "paySayisi": 8830524,
       "payFiyati": null,
       "aylikGetiri": null,
-      "hisseOrtYuzde": 84.83,
+      "hisseOrtYuzde": 84.66,
       "hisseDevirHizi": null
      },
      "hisse": [
       {
        "kod": "BIMAS",
-       "agirlik": 13.01,
-       "deger": 13611227.5,
-       "nominal": 39169
+       "agirlik": 13.4,
+       "deger": 15542164,
+       "nominal": 41668
       },
       {
        "kod": "MPARK",
-       "agirlik": 9.84,
-       "deger": 10294398,
-       "nominal": 27162
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 8.29,
-       "deger": 8673959,
-       "nominal": 24997
+       "agirlik": 10.3,
+       "deger": 11955978,
+       "nominal": 30894
       },
       {
        "kod": "EKGYO",
-       "agirlik": 7.94,
-       "deger": 8309420.36,
-       "nominal": 513244
+       "agirlik": 8.01,
+       "deger": 9292988.08,
+       "nominal": 546004
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 7.74,
+       "deger": 8987758,
+       "nominal": 26591
       },
       {
        "kod": "TUPRS",
-       "agirlik": 7.41,
-       "deger": 7749360,
-       "nominal": 22560
-      },
-      {
-       "kod": "ALBRK",
-       "agirlik": 4.03,
-       "deger": 4220185.76,
-       "nominal": 538289
+       "agirlik": 7.46,
+       "deger": 8657278.5,
+       "nominal": 23998
       },
       {
        "kod": "KRDMD",
-       "agirlik": 3.91,
-       "deger": 4092046.4,
-       "nominal": 113165
+       "agirlik": 4.01,
+       "deger": 4646938.2,
+       "nominal": 120387
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 3.97,
+       "deger": 4604073.84,
+       "nominal": 572646
       },
       {
        "kod": "GUBRF",
-       "agirlik": 3.52,
-       "deger": 3682178.5,
-       "nominal": 14714
+       "agirlik": 3.94,
+       "deger": 4575109.5,
+       "nominal": 15327
       },
       {
        "kod": "EGGUB",
-       "agirlik": 3.41,
-       "deger": 3565720,
-       "nominal": 45950
+       "agirlik": 3.17,
+       "deger": 3673562,
+       "nominal": 47864
       },
       {
        "kod": "GRSEL",
-       "agirlik": 3.1,
-       "deger": 3245760,
-       "nominal": 13440
-      },
-      {
-       "kod": "ARASE",
-       "agirlik": 3.09,
-       "deger": 3232740,
-       "nominal": 46182
+       "agirlik": 3.05,
+       "deger": 3531112,
+       "nominal": 14296
       },
       {
        "kod": "EREGL",
-       "agirlik": 2.94,
-       "deger": 3079330.86,
-       "nominal": 103821
-      },
-      {
-       "kod": "AHGAZ",
-       "agirlik": 2.83,
-       "deger": 2962210.72,
-       "nominal": 64312
+       "agirlik": 3.01,
+       "deger": 3490093.6,
+       "nominal": 110446
       },
       {
        "kod": "SNGYO",
-       "agirlik": 2.68,
-       "deger": 2797317.6,
-       "nominal": 1271508
-      },
-      {
-       "kod": "LOGO",
-       "agirlik": 2.04,
-       "deger": 2134246.4,
-       "nominal": 18656
-      },
-      {
-       "kod": "FONET",
-       "agirlik": 2.01,
-       "deger": 2102250.92,
-       "nominal": 605836
+       "agirlik": 2.69,
+       "deger": 3113896.8,
+       "nominal": 1297457
       },
       {
        "kod": "EBEBK",
+       "agirlik": 1.98,
+       "deger": 2294730,
+       "nominal": 28330
+      },
+      {
+       "kod": "LOGO",
        "agirlik": 1.96,
-       "deger": 2051918.55,
-       "nominal": 26631
+       "deger": 2272252.5,
+       "nominal": 19845
+      },
+      {
+       "kod": "FONET",
+       "agirlik": 1.88,
+       "deger": 2184875.34,
+       "nominal": 644506
+      },
+      {
+       "kod": "AHGAZ",
+       "agirlik": 1.83,
+       "deger": 2120620.8,
+       "nominal": 48416
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 1.75,
+       "deger": 2037573.55,
+       "nominal": 29129
       },
       {
        "kod": "EUPWR",
-       "agirlik": 1.37,
-       "deger": 1439086.72,
-       "nominal": 36488
+       "agirlik": 1.21,
+       "deger": 1404362.88,
+       "nominal": 38816
       },
       {
        "kod": "ENJSA",
-       "agirlik": 0.93,
-       "deger": 971866,
-       "nominal": 9212
+       "agirlik": 0.95,
+       "deger": 1106420,
+       "nominal": 9800
       },
       {
        "kod": "KCAER",
        "agirlik": 0,
-       "deger": 4.03,
+       "deger": 4.18,
        "nominal": 0.48
       },
       {
        "kod": "KTLEV",
        "agirlik": 0,
-       "deger": 1.57,
+       "deger": 1.73,
        "nominal": 0.42
       }
      ],
      "hisseToplam": {
-      "deger": 88215228.89,
+      "deger": 95491793.5,
       "grup": 100,
-      "fpd": 88.18,
-      "ftd": 84.31,
+      "fpd": 84.51,
+      "ftd": 82.31,
       "adet": 1
      },
      "islem": {
       "alis": {
-       "AHGAZ": {
-        "deger": 912200
+       "ENJSA": {
+        "deger": 1140000
        },
-       "ARASE": {
-        "deger": 1426000
+       "AHGAZ": {
+        "deger": 439400
        }
       },
       "satis": {
        "MPARK": {
-        "deger": 1392882
-       },
-       "FONET": {
-        "deger": 135732
-       },
-       "ASELS": {
-        "deger": 557502
-       },
-       "EKGYO": {
-        "deger": 543598
-       },
-       "EGGUB": {
-        "deger": 149866
+        "deger": 248322
        },
        "ARASE": {
-        "deger": 205553
-       },
-       "TUPRS": {
-        "deger": 503300
-       },
-       "EUPWR": {
-        "deger": 91196
-       },
-       "KRDMD": {
-        "deger": 266347
-       },
-       "EBEBK": {
-        "deger": 131927
-       },
-       "GUBRF": {
-        "deger": 156853
-       },
-       "BIMAS": {
-        "deger": 887770
-       },
-       "GRSEL": {
-        "deger": 207551
-       },
-       "EREGL": {
-        "deger": 201268
-       },
-       "ALBRK": {
-        "deger": 271306
-       },
-       "ENJSA": {
-        "deger": 64288
+        "deger": 42352
        },
        "AHGAZ": {
-        "deger": 190508
+        "deger": 33414
+       },
+       "GRSEL": {
+        "deger": 74546
        },
        "LOGO": {
-        "deger": 137686
+        "deger": 46737
+       },
+       "EBEBK": {
+        "deger": 43034
+       },
+       "ASELS": {
+        "deger": 182112
+       },
+       "EGGUB": {
+        "deger": 82282
+       },
+       "GUBRF": {
+        "deger": 106383
+       },
+       "ENJSA": {
+        "deger": 22980
+       },
+       "TUPRS": {
+        "deger": 174084
+       },
+       "EREGL": {
+        "deger": 80197
+       },
+       "BIMAS": {
+        "deger": 321088
+       },
+       "ALBRK": {
+        "deger": 902760
+       },
+       "KRDMD": {
+        "deger": 100401
        },
        "SNGYO": {
-        "deger": 57347
+        "deger": 64606
+       },
+       "EKGYO": {
+        "deger": 199553
+       },
+       "EUPWR": {
+        "deger": 29652
+       },
+       "ATATP": {
+        "deger": 959927
+       },
+       "FONET": {
+        "deger": 46299
        }
       }
      },
      "varlik": {
-      "hisse": 84.31,
-      "fon": 5.64,
-      "nakit": 4.37,
-      "_portfoyDegeriYuzde": 95.63,
-      "_hazirDeger": 0.03,
-      "_alacak": 5.18,
-      "_borc": -0.84,
-      "_toplam": 94.32
+      "hisse": 82.31,
+      "fon": 5.05,
+      "nakit": 2.62,
+      "_portfoyDegeriYuzde": 97.38,
+      "_hazirDeger": 0.05,
+      "_alacak": 3.24,
+      "_borc": -0.66,
+      "_toplam": 89.98,
+      "_tutarsiz": true
      },
      "diger": [
       {
        "kod": "KKT",
        "kategori": "fon",
-       "agirlik": 5.64,
-       "deger": 5904316
+       "agirlik": 5.05,
+       "deger": 5865234
       }
      ],
      "kaynak": {
-      "index": 1691710,
-      "objId": "4028328da17e515f01a1a08c1cd57cd3",
-      "yayin": "03.11.2026 16:52:57",
-      "islendi": "2026-11-05",
+      "index": 1688040,
+      "objId": "4028328ca16c7de501a17bc57c5c5748",
+      "yayin": "27.10.2026 15:21:12",
+      "islendi": "2026-11-09",
       "ek": 1,
-      "metinUz": 53625,
+      "metinUz": 48442,
       "islemIz": {
        "satisBolum": true,
        "alisBolum": true,
-       "satisUz": 18903,
-       "alisUz": 4451
+       "satisUz": 16386,
+       "alisUz": 1136
       }
      }
     }
@@ -21073,229 +20938,6 @@
   "KTM": {
    "ad": "KTM-KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM (TL) FONU",
    "donemler": {
-    "2026-04": {
-     "baslik": {
-      "kod": "KTM",
-      "ad": "KTM-BIRINCI KATILIM (TL) FONU",
-      "donem": "2026-04",
-      "fonToplamDegeri": 699633767.01,
-      "paySayisi": 34396024,
-      "payFiyati": 20.340542,
-      "aylikGetiri": 6.32,
-      "hisseOrtYuzde": 30.22,
-      "hisseDevirHizi": 0.01
-     },
-     "hisse": [
-      {
-       "kod": "EUPWR",
-       "agirlik": 3.37,
-       "deger": 23580000,
-       "nominal": 450000
-      },
-      {
-       "kod": "BIMAS",
-       "agirlik": 3.02,
-       "deger": 21132750,
-       "nominal": 28500
-      },
-      {
-       "kod": "GLRMK",
-       "agirlik": 2.71,
-       "deger": 18950000,
-       "nominal": 100000
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 2.32,
-       "deger": 16260000,
-       "nominal": 60000
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 2.22,
-       "deger": 15566250,
-       "nominal": 35000
-      },
-      {
-       "kod": "LMKDC",
-       "agirlik": 2.13,
-       "deger": 14920000,
-       "nominal": 400000
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 1.95,
-       "deger": 13658125,
-       "nominal": 32500
-      },
-      {
-       "kod": "KRDMD",
-       "agirlik": 1.51,
-       "deger": 10593000,
-       "nominal": 275000
-      },
-      {
-       "kod": "ALBRK",
-       "agirlik": 1.32,
-       "deger": 9251000,
-       "nominal": 1100000
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 1.32,
-       "deger": 9261000,
-       "nominal": 450000
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 1.3,
-       "deger": 9097200,
-       "nominal": 210000
-      },
-      {
-       "kod": "RGYAS",
-       "agirlik": 1.19,
-       "deger": 8347500,
-       "nominal": 45000
-      },
-      {
-       "kod": "EREGL",
-       "agirlik": 1.13,
-       "deger": 7902000,
-       "nominal": 225000
-      },
-      {
-       "kod": "ORGE",
-       "agirlik": 1.04,
-       "deger": 7267500,
-       "nominal": 85000
-      },
-      {
-       "kod": "BASGZ",
-       "agirlik": 0.98,
-       "deger": 6843107.6,
-       "nominal": 133916
-      },
-      {
-       "kod": "ENJSA",
-       "agirlik": 0.88,
-       "deger": 6140000,
-       "nominal": 50000
-      },
-      {
-       "kod": "GESAN",
-       "agirlik": 0.71,
-       "deger": 4980000,
-       "nominal": 100000
-      },
-      {
-       "kod": "GOKNR",
-       "agirlik": 0.62,
-       "deger": 4316000,
-       "nominal": 200000
-      },
-      {
-       "kod": "GRSEL",
-       "agirlik": 0.6,
-       "deger": 4186000,
-       "nominal": 14000
-      },
-      {
-       "kod": "ARASE",
-       "agirlik": 0.35,
-       "deger": 2453973.5,
-       "nominal": 23483
-      },
-      {
-       "kod": "AVPGY",
-       "agirlik": 0.17,
-       "deger": 1195000,
-       "nominal": 20000
-      },
-      {
-       "kod": "KTLEV",
-       "agirlik": 0,
-       "deger": 115,
-       "nominal": 1
-      }
-     ],
-     "hisseToplam": {
-      "deger": 215900521.1,
-      "grup": 100,
-      "fpd": 30.2,
-      "ftd": 30.84,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {},
-      "satis": {
-       "ASELS": {
-        "deger": 4150000
-       },
-       "PGSUS": {
-        "deger": 143
-       },
-       "OYAKC": {
-        "deger": 24
-       }
-      }
-     },
-     "varlik": {
-      "hisse": 30.84,
-      "sukuk": 97.4,
-      "fon": 16.52,
-      "nakit": -2.23,
-      "_portfoyDegeriYuzde": 102.23,
-      "_hazirDeger": 0,
-      "_alacak": 0,
-      "_borc": -2.24
-     },
-     "diger": [
-      {
-       "kod": "KPR",
-       "kategori": "fon",
-       "agirlik": 3.82,
-       "deger": 26702321
-      },
-      {
-       "kod": "KSV",
-       "kategori": "fon",
-       "agirlik": 2.04,
-       "deger": 14267854
-      },
-      {
-       "kod": "Z30KE",
-       "kategori": "fon",
-       "agirlik": 1.26,
-       "deger": 8812500
-      },
-      {
-       "kod": "Z30KP",
-       "kategori": "fon",
-       "agirlik": 1.09,
-       "deger": 7617000
-      },
-      {
-       "kod": "KLU",
-       "kategori": "fon",
-       "agirlik": 0.03,
-       "deger": 222434
-      },
-      {
-       "kod": "KTV",
-       "kategori": "fon",
-       "agirlik": 0.02,
-       "deger": 142946
-      }
-     ],
-     "kaynak": {
-      "index": 1603241,
-      "objId": "4028328d9d7b24c8019e075eeaab1d6d",
-      "yayin": "08.05.2026 14:59:33",
-      "pdfBoyut": 80152,
-      "islendi": "2026-09-10"
-     }
-    },
     "2026-05": {
      "baslik": {
       "kod": "KTM",
@@ -22564,6 +22206,232 @@
        "alisUz": 47146
       }
      }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "KTM",
+      "ad": "KTM-KUVEYT TÜRK PORTFÖY BİRİNCİ KATILIM (TL) FONU",
+      "donem": "2026-10",
+      "fonToplamDegeri": 554486364.65,
+      "paySayisi": 25913832,
+      "payFiyati": 21.397313,
+      "aylikGetiri": -2.26,
+      "hisseOrtYuzde": 28.57,
+      "hisseDevirHizi": 0.05
+     },
+     "hisse": [
+      {
+       "kod": "EUPWR",
+       "agirlik": 2.74,
+       "deger": 15184400,
+       "nominal": 385000
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 2.66,
+       "deger": 14747500,
+       "nominal": 42500
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 2.63,
+       "deger": 14598750,
+       "nominal": 42500
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 2.52,
+       "deger": 13999750,
+       "nominal": 725000
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 2.52,
+       "deger": 13950000,
+       "nominal": 750000
+      },
+      {
+       "kod": "ATATP",
+       "agirlik": 2.31,
+       "deger": 12804000,
+       "nominal": 60000
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 1.71,
+       "deger": 9495000,
+       "nominal": 90000
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 1.7,
+       "deger": 9450000,
+       "nominal": 135000
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 1.36,
+       "deger": 7528500,
+       "nominal": 225000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 1.35,
+       "deger": 7507500,
+       "nominal": 30000
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 1.25,
+       "deger": 6950000,
+       "nominal": 20000
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 1.2,
+       "deger": 6632500,
+       "nominal": 17500
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 1.17,
+       "deger": 6476000,
+       "nominal": 400000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 1.06,
+       "deger": 5880000,
+       "nominal": 750000
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 0.72,
+       "deger": 3977600,
+       "nominal": 110000
+      },
+      {
+       "kod": "BASGZ",
+       "agirlik": 0.56,
+       "deger": 3100000,
+       "nominal": 100000
+      },
+      {
+       "kod": "GRSEL",
+       "agirlik": 0.54,
+       "deger": 3018750,
+       "nominal": 12500
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 0.27,
+       "deger": 1483000,
+       "nominal": 50000
+      },
+      {
+       "kod": "AVPGY",
+       "agirlik": 0.16,
+       "deger": 910000,
+       "nominal": 20000
+      },
+      {
+       "kod": "GOKNR",
+       "agirlik": 0,
+       "deger": 1095.64,
+       "nominal": 91
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 0,
+       "deger": 1.41,
+       "nominal": 0.38
+      }
+     ],
+     "hisseToplam": {
+      "deger": 157694347.05,
+      "grup": 100,
+      "fpd": 28.36,
+      "ftd": 28.43,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {
+       "TUPRS": {
+        "deger": 2926875
+       },
+       "EUPWR": {
+        "deger": 3352150
+       },
+       "GUBRF": {
+        "deger": 2284375
+       },
+       "ASELS": {
+        "deger": 2623125
+       }
+      },
+      "satis": {
+       "TUPRS": {
+        "deger": 5527500
+       },
+       "ASELS": {
+        "deger": 5531250
+       },
+       "BIMAS": {
+        "deger": 823000
+       },
+       "SELEC": {
+        "deger": 4062651
+       },
+       "ATATP": {
+        "deger": 2593750
+       }
+      }
+     },
+     "varlik": {
+      "hisse": 28.43,
+      "sukuk": 62.96,
+      "fon": 8.86,
+      "nakit": -0.27,
+      "_portfoyDegeriYuzde": 100.27,
+      "_hazirDeger": 0.01,
+      "_alacak": 0.47,
+      "_borc": -0.75,
+      "_toplam": 99.98
+     },
+     "diger": [
+      {
+       "kod": "KKT",
+       "kategori": "fon",
+       "agirlik": 7.78,
+       "deger": 43112449
+      },
+      {
+       "kod": "KSV",
+       "kategori": "fon",
+       "agirlik": 1.05,
+       "deger": 5834290
+      },
+      {
+       "kod": "KTV",
+       "kategori": "fon",
+       "agirlik": 0.03,
+       "deger": 170682
+      }
+     ],
+     "kaynak": {
+      "index": 1692995,
+      "objId": "4028328ca17e4f5e01a1a6cda4b451cb",
+      "yayin": "05.11.2026 11:47:08",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 49854,
+      "islemIz": {
+       "satisBolum": true,
+       "alisBolum": true,
+       "satisUz": 16932,
+       "alisUz": 6332
+      }
+     }
     }
    }
   },
@@ -23535,197 +23403,6 @@
   "KTI": {
    "ad": "KTI-AZİMUT PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSS",
    "donemler": {
-    "2026-04": {
-     "baslik": {
-      "kod": "KTI",
-      "ad": "KTI-AZİMUT PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSS",
-      "donem": "2026-04",
-      "fonToplamDegeri": 238190315.97,
-      "paySayisi": 122055536,
-      "payFiyati": 1.951491,
-      "aylikGetiri": 11.97,
-      "hisseOrtYuzde": 88.9,
-      "hisseDevirHizi": 0.74
-     },
-     "hisse": [
-      {
-       "kod": "EREGL",
-       "agirlik": 9.58,
-       "deger": 22828000,
-       "nominal": 650000
-      },
-      {
-       "kod": "BIMAS",
-       "agirlik": 9.34,
-       "deger": 22245000,
-       "nominal": 30000
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 9.17,
-       "deger": 21853000,
-       "nominal": 52000
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 9.1,
-       "deger": 21680000,
-       "nominal": 80000
-      },
-      {
-       "kod": "SELEC",
-       "agirlik": 4.8,
-       "deger": 11440000,
-       "nominal": 110000
-      },
-      {
-       "kod": "CIMSA",
-       "agirlik": 4.47,
-       "deger": 10656000,
-       "nominal": 185000
-      },
-      {
-       "kod": "GUBRF",
-       "agirlik": 4.45,
-       "deger": 10610000,
-       "nominal": 20000
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 3.92,
-       "deger": 9339750,
-       "nominal": 21000
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 3.89,
-       "deger": 9261000,
-       "nominal": 450000
-      },
-      {
-       "kod": "AVPGY",
-       "agirlik": 3.26,
-       "deger": 7767500,
-       "nominal": 130000
-      },
-      {
-       "kod": "EBEBK",
-       "agirlik": 3.01,
-       "deger": 7180000,
-       "nominal": 100000
-      },
-      {
-       "kod": "KRDMA",
-       "agirlik": 2.97,
-       "deger": 7080000,
-       "nominal": 200000
-      },
-      {
-       "kod": "ALBRK",
-       "agirlik": 2.82,
-       "deger": 6728000,
-       "nominal": 800000
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 2.73,
-       "deger": 6498000,
-       "nominal": 150000
-      },
-      {
-       "kod": "ENJSA",
-       "agirlik": 2.32,
-       "deger": 5526000,
-       "nominal": 45000
-      },
-      {
-       "kod": "EUPWR",
-       "agirlik": 2.2,
-       "deger": 5240000,
-       "nominal": 100000
-      },
-      {
-       "kod": "LMKDC",
-       "agirlik": 2.19,
-       "deger": 5222000,
-       "nominal": 140000
-      },
-      {
-       "kod": "LKMNH",
-       "agirlik": 1.9,
-       "deger": 4536000,
-       "nominal": 300000
-      },
-      {
-       "kod": "KRDMD",
-       "agirlik": 1.53,
-       "deger": 3659400,
-       "nominal": 95000
-      },
-      {
-       "kod": "PETKM",
-       "agirlik": 1.51,
-       "deger": 3585000,
-       "nominal": 150000
-      },
-      {
-       "kod": "AAGYO",
-       "agirlik": 1.2,
-       "deger": 2851500,
-       "nominal": 150000
-      },
-      {
-       "kod": "GENIL",
-       "agirlik": 0.86,
-       "deger": 2037200,
-       "nominal": 220000
-      }
-     ],
-     "hisseToplam": {
-      "deger": 207823350,
-      "grup": 100,
-      "fpd": 84.12,
-      "ftd": 87.22,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {},
-      "satis": {}
-     },
-     "varlik": {
-      "hisse": 87.22,
-      "sukuk": 15.03,
-      "fon": 1.42,
-      "nakit": -3.71,
-      "_portfoyDegeriYuzde": 103.71,
-      "_hazirDeger": 0.01,
-      "_alacak": 0,
-      "_borc": -3.73,
-      "_toplam": 99.96
-     },
-     "diger": [
-      {
-       "kod": "KSK",
-       "kategori": "fon",
-       "agirlik": 1.42,
-       "deger": 3392145
-      }
-     ],
-     "kaynak": {
-      "index": 1603472,
-      "objId": "4028328d9d7b24c8019e01fb4afc45fa",
-      "yayin": "08.05.2026 18:09:53",
-      "islendi": "2026-09-10",
-      "ek": 1,
-      "metinUz": 27621,
-      "islemIz": {
-       "satisBolum": false,
-       "alisBolum": false,
-       "satisUz": 0,
-       "alisUz": 0
-      }
-     }
-    },
     "2026-05": {
      "baslik": {
       "kod": "KTI",
@@ -24414,7 +24091,7 @@
       "index": 1659715,
       "objId": "4028328d9f52dddd01a07c5ce8054dfb",
       "yayin": "07.09.2026 18:31:50",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 22916,
       "islemIz": {
@@ -24598,169 +24275,134 @@
        "alisUz": 0
       }
      }
-    }
-   }
-  },
-  "TIL": {
-   "ad": "TIL-İŞ PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ",
-   "donemler": {
-    "2026-04": {
+    },
+    "2026-10": {
      "baslik": {
-      "kod": "TIL",
-      "ad": "TIL-İŞ PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ",
-      "donem": "2026-04",
-      "fonToplamDegeri": 99915580.04,
-      "paySayisi": 72273138,
-      "payFiyati": 1.382472,
-      "aylikGetiri": 11.65,
-      "hisseOrtYuzde": 94.21,
-      "hisseDevirHizi": 0.27
+      "kod": "KTI",
+      "ad": "KTI-AZİMUT PORTFÖY KATILIM HİSSE SENEDİ FONU (HİSS",
+      "donem": "2026-10",
+      "fonToplamDegeri": 93099378.19,
+      "paySayisi": 57995467,
+      "payFiyati": 1.605287,
+      "aylikGetiri": -14.93,
+      "hisseOrtYuzde": 87.84,
+      "hisseDevirHizi": 0.37
      },
      "hisse": [
       {
-       "kod": "ENJSA",
-       "agirlik": 8.74,
-       "deger": 8735623.6,
-       "nominal": 71137
-      },
-      {
-       "kod": "ARASE",
-       "agirlik": 7.84,
-       "deger": 7837500,
-       "nominal": 75000
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 6.74,
-       "deger": 6731736,
-       "nominal": 15136
-      },
-      {
-       "kod": "EGPRO",
-       "agirlik": 5.69,
-       "deger": 5680914.5,
-       "nominal": 127661
-      },
-      {
-       "kod": "KRVGD",
-       "agirlik": 4.92,
-       "deger": 4912012.56,
-       "nominal": 1574363
-      },
-      {
-       "kod": "EKGYO",
-       "agirlik": 4.49,
-       "deger": 4486460.58,
-       "nominal": 218001
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 4.44,
-       "deger": 4432476,
-       "nominal": 16356
-      },
-      {
-       "kod": "KRDMD",
-       "agirlik": 4.36,
-       "deger": 4354686,
-       "nominal": 113050
-      },
-      {
-       "kod": "AVPGY",
-       "agirlik": 4.33,
-       "deger": 4330859.25,
-       "nominal": 72483
-      },
-      {
        "kod": "ASELS",
-       "agirlik": 4.21,
-       "deger": 4202500,
-       "nominal": 10000
-      },
-      {
-       "kod": "EREGL",
-       "agirlik": 4.19,
-       "deger": 4188551.68,
-       "nominal": 119264
+       "agirlik": 10.06,
+       "deger": 9369000,
+       "nominal": 27000
       },
       {
        "kod": "BIMAS",
-       "agirlik": 4.17,
-       "deger": 4169454.5,
-       "nominal": 5623
+       "agirlik": 9.52,
+       "deger": 8861250,
+       "nominal": 25500
       },
       {
-       "kod": "BRISA",
-       "agirlik": 4.15,
-       "deger": 4147429,
-       "nominal": 49082
+       "kod": "TCKRC",
+       "agirlik": 7.93,
+       "deger": 7385000,
+       "nominal": 70000
       },
       {
-       "kod": "GLRMK",
-       "agirlik": 4.06,
-       "deger": 4057384.5,
-       "nominal": 21411
+       "kod": "KBORU",
+       "agirlik": 5.57,
+       "deger": 5187000,
+       "nominal": 650000
       },
       {
        "kod": "ALBRK",
-       "agirlik": 4.03,
-       "deger": 4022629.15,
-       "nominal": 478315
+       "agirlik": 4.84,
+       "deger": 4508000,
+       "nominal": 575000
       },
       {
-       "kod": "MAVI",
-       "agirlik": 4.03,
-       "deger": 4022305.32,
-       "nominal": 92851
+       "kod": "MPARK",
+       "agirlik": 4.68,
+       "deger": 4358500,
+       "nominal": 11500
       },
       {
-       "kod": "LKMNH",
-       "agirlik": 3.94,
-       "deger": 3937232.88,
-       "nominal": 260399
+       "kod": "TUPRS",
+       "agirlik": 4.61,
+       "deger": 4293750,
+       "nominal": 12500
       },
       {
-       "kod": "BASGZ",
-       "agirlik": 2.8,
-       "deger": 2799769,
-       "nominal": 54790
+       "kod": "ENJSA",
+       "agirlik": 4.53,
+       "deger": 4220000,
+       "nominal": 40000
       },
       {
-       "kod": "LOGO",
-       "agirlik": 1.68,
-       "deger": 1674950.4,
-       "nominal": 11664
+       "kod": "EKGYO",
+       "agirlik": 4.35,
+       "deger": 4047500,
+       "nominal": 250000
       },
       {
-       "kod": "RGYAS",
-       "agirlik": 1.6,
-       "deger": 1596042,
-       "nominal": 8604
+       "kod": "KRDMD",
+       "agirlik": 4.27,
+       "deger": 3977600,
+       "nominal": 110000
       },
       {
-       "kod": "CEMTS",
-       "agirlik": 1.5,
-       "deger": 1500900.12,
-       "nominal": 136694
+       "kod": "MEGMT",
+       "agirlik": 4.2,
+       "deger": 3906000,
+       "nominal": 1400000
       },
       {
-       "kod": "NTGAZ",
-       "agirlik": 1.24,
-       "deger": 1238637.5,
-       "nominal": 99091
+       "kod": "EREGL",
+       "agirlik": 4.14,
+       "deger": 3855800,
+       "nominal": 130000
       },
       {
-       "kod": "AAGYO",
-       "agirlik": 0.1,
-       "deger": 95050,
-       "nominal": 5000
+       "kod": "BETAE",
+       "agirlik": 3.45,
+       "deger": 3212000,
+       "nominal": 73000
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 3.32,
+       "deger": 3093000,
+       "nominal": 30000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 3.23,
+       "deger": 3003000,
+       "nominal": 12000
+      },
+      {
+       "kod": "SMRTG",
+       "agirlik": 2.69,
+       "deger": 2506000,
+       "nominal": 700000
+      },
+      {
+       "kod": "GENIL",
+       "agirlik": 2.53,
+       "deger": 2355750,
+       "nominal": 675000
+      },
+      {
+       "kod": "KCAER",
+       "agirlik": 1.8,
+       "deger": 1678000,
+       "nominal": 200000
       }
      ],
      "hisseToplam": {
-      "deger": 93155104.54,
+      "deger": 79817150,
       "grup": 100,
-      "fpd": 95.78,
-      "ftd": 93.25,
+      "fpd": 86.11,
+      "ftd": 85.72,
       "adet": 1
      },
      "islem": {
@@ -24768,31 +24410,37 @@
       "satis": {}
      },
      "varlik": {
-      "hisse": 93.25,
-      "sukuk": 3.22,
-      "fon": 0.88,
-      "nakit": 2.66,
-      "_portfoyDegeriYuzde": 97.34,
-      "_hazirDeger": 3.14,
-      "_alacak": 0,
-      "_borc": -0.49,
-      "_toplam": 100.01
+      "hisse": 85.72,
+      "sukuk": 7.79,
+      "fon": 12.1,
+      "nakit": 0.44,
+      "_portfoyDegeriYuzde": 99.56,
+      "_hazirDeger": 0.02,
+      "_alacak": 0.73,
+      "_borc": -0.31,
+      "_toplam": 106.05
      },
      "diger": [
       {
-       "kod": "KPI",
+       "kod": "Z30KP",
        "kategori": "fon",
-       "agirlik": 0.88,
-       "deger": 884248
+       "agirlik": 3.56,
+       "deger": 3311550
+      },
+      {
+       "kod": "KSK",
+       "kategori": "fon",
+       "agirlik": 2.49,
+       "deger": 2314147
       }
      ],
      "kaynak": {
-      "index": 1603943,
-      "objId": "4028328c9d7b22d2019e078a5ece47eb",
-      "yayin": "10.05.2026 23:18:52",
-      "islendi": "2026-09-10",
+      "index": 1694007,
+      "objId": "4028328da17e515f01a1b1395de76341",
+      "yayin": "06.11.2026 18:06:11",
+      "islendi": "2026-11-09",
       "ek": 1,
-      "metinUz": 21740,
+      "metinUz": 23161,
       "islemIz": {
        "satisBolum": false,
        "alisBolum": false,
@@ -24800,7 +24448,12 @@
        "alisUz": 0
       }
      }
-    },
+    }
+   }
+  },
+  "TIL": {
+   "ad": "TIL-İŞ PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ",
+   "donemler": {
     "2026-05": {
      "baslik": {
       "kod": "TIL",
@@ -25859,6 +25512,215 @@
       "islendi": "2026-10-05",
       "ek": 1,
       "metinUz": 23394,
+      "islemIz": {
+       "satisBolum": false,
+       "alisBolum": false,
+       "satisUz": 0,
+       "alisUz": 0
+      }
+     }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "TIL",
+      "ad": "TIL-İŞ PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HİSSE SENEDİ",
+      "donem": "2026-10",
+      "fonToplamDegeri": 56623084.12,
+      "paySayisi": 51457654,
+      "payFiyati": 1.100382,
+      "aylikGetiri": -13.18,
+      "hisseOrtYuzde": 98.26,
+      "hisseDevirHizi": 0.16
+     },
+     "hisse": [
+      {
+       "kod": "LKMNH",
+       "agirlik": 8.48,
+       "deger": 4801260.7,
+       "nominal": 478690
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 7.45,
+       "deger": 4219250,
+       "nominal": 60275
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 6.23,
+       "deger": 3527745,
+       "nominal": 10270
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 6.08,
+       "deger": 3444529.28,
+       "nominal": 95258
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 4.97,
+       "deger": 2813129,
+       "nominal": 8107
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 4.86,
+       "deger": 2750144.32,
+       "nominal": 82192
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 4.7,
+       "deger": 2660580,
+       "nominal": 7020
+      },
+      {
+       "kod": "AVPGY",
+       "agirlik": 4.5,
+       "deger": 2548000,
+       "nominal": 56000
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 4.48,
+       "deger": 2539170,
+       "nominal": 267000
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 4.47,
+       "deger": 2532320,
+       "nominal": 323000
+      },
+      {
+       "kod": "BRISA",
+       "agirlik": 4.45,
+       "deger": 2517900,
+       "nominal": 38500
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 4.3,
+       "deger": 2432500,
+       "nominal": 7000
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 4.25,
+       "deger": 2407517.76,
+       "nominal": 148704
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 4.14,
+       "deger": 2342797.6,
+       "nominal": 20479
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 4,
+       "deger": 2264452,
+       "nominal": 21464
+      },
+      {
+       "kod": "BASGZ",
+       "agirlik": 3.63,
+       "deger": 2056726,
+       "nominal": 66346
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 3.41,
+       "deger": 1932180.25,
+       "nominal": 7721
+      },
+      {
+       "kod": "AKCNS",
+       "agirlik": 3.11,
+       "deger": 1761000,
+       "nominal": 10000
+      },
+      {
+       "kod": "SSAAT",
+       "agirlik": 2.12,
+       "deger": 1201226.6,
+       "nominal": 54305
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 2.1,
+       "deger": 1188298.24,
+       "nominal": 40064
+      },
+      {
+       "kod": "CEMTS",
+       "agirlik": 1.38,
+       "deger": 779246.19,
+       "nominal": 130527
+      },
+      {
+       "kod": "KRVGD",
+       "agirlik": 0.92,
+       "deger": 518402.96,
+       "nominal": 260504
+      },
+      {
+       "kod": "EGPRO",
+       "agirlik": 0.03,
+       "deger": 17251.5,
+       "nominal": 651
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 0.01,
+       "deger": 7423.2,
+       "nominal": 72
+      },
+      {
+       "kod": "SELEC",
+       "agirlik": 0,
+       "deger": 63.55,
+       "nominal": 1
+      }
+     ],
+     "hisseToplam": {
+      "deger": 53263114.15,
+      "grup": 100,
+      "fpd": 96.53,
+      "ftd": 94.07,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "varlik": {
+      "hisse": 94.07,
+      "sukuk": 1.5,
+      "fon": 1.88,
+      "nakit": 2.56,
+      "_portfoyDegeriYuzde": 97.44,
+      "_hazirDeger": 2.88,
+      "_alacak": 0,
+      "_borc": -0.33,
+      "_toplam": 100.01
+     },
+     "diger": [
+      {
+       "kod": "KPI",
+       "kategori": "fon",
+       "agirlik": 1.88,
+       "deger": 1066246
+      }
+     ],
+     "kaynak": {
+      "index": 1692990,
+      "objId": "4028328da17e515f01a1aa61be180366",
+      "yayin": "05.11.2026 11:40:19",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 23907,
       "islemIz": {
        "satisBolum": false,
        "alisBolum": false,
@@ -27732,7 +27594,7 @@
       "index": 1661077,
       "objId": "4028328d9f52dddc01a0865e4a6363d7",
       "yayin": "09.09.2026 17:12:21",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 22638,
       "islemIz": {
@@ -27910,7 +27772,7 @@
       "index": 1664245,
       "objId": "4028328ca09bee8f01a0a9e1dbd56fa3",
       "yayin": "16.09.2026 18:19:03",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 22309,
       "islemIz": {
@@ -32136,170 +31998,231 @@
       "kod": "II",
       "ad": "RKH - KATILIM HİSSE SENEDİ SERBEST (TL) FON",
       "donem": "2026-08",
-      "fonToplamDegeri": 8318670.25,
-      "paySayisi": 8018439,
+      "fonToplamDegeri": 9101010.06,
+      "paySayisi": 8273378,
       "payFiyati": null,
       "aylikGetiri": null,
-      "hisseOrtYuzde": 88.42,
+      "hisseOrtYuzde": 88.09,
       "hisseDevirHizi": null
      },
      "hisse": [
       {
        "kod": "TUPRS",
-       "agirlik": 10.9,
-       "deger": 906759,
+       "agirlik": 10.16,
+       "deger": 924264,
        "nominal": 2334
       },
       {
        "kod": "ASELS",
-       "agirlik": 10.4,
-       "deger": 865021,
+       "agirlik": 9.89,
+       "deger": 900112,
        "nominal": 2228
       },
       {
        "kod": "BIMAS",
-       "agirlik": 8,
-       "deger": 665200,
+       "agirlik": 7.3,
+       "deger": 664800,
        "nominal": 1600
       },
       {
-       "kod": "ENJSA",
-       "agirlik": 7.4,
-       "deger": 615912.9,
-       "nominal": 5417
-      },
-      {
        "kod": "EKGYO",
-       "agirlik": 7.23,
-       "deger": 601668,
+       "agirlik": 7.01,
+       "deger": 638189,
        "nominal": 30950
       },
       {
+       "kod": "ENJSA",
+       "agirlik": 7.01,
+       "deger": 638664.3,
+       "nominal": 5417
+      },
+      {
        "kod": "ALBRK",
-       "agirlik": 6.19,
-       "deger": 515317,
+       "agirlik": 5.94,
+       "deger": 540223,
        "nominal": 59300
       },
       {
+       "kod": "CWENE",
+       "agirlik": 5.36,
+       "deger": 487317.5,
+       "nominal": 12275
+      },
+      {
+       "kod": "ARDYZ",
+       "agirlik": 5.04,
+       "deger": 459000,
+       "nominal": 5100
+      },
+      {
+       "kod": "EUPWR",
+       "agirlik": 5.04,
+       "deger": 458925,
+       "nominal": 4350
+      },
+      {
        "kod": "GUBRF",
-       "agirlik": 5.13,
-       "deger": 426566.25,
+       "agirlik": 4.88,
+       "deger": 443495.25,
        "nominal": 891
       },
       {
        "kod": "GRSEL",
-       "agirlik": 5.02,
-       "deger": 417200,
+       "agirlik": 4.85,
+       "deger": 441700,
        "nominal": 1400
       },
       {
-       "kod": "ATATP",
-       "agirlik": 4.3,
-       "deger": 357650,
-       "nominal": 1150
-      },
-      {
        "kod": "RGYAS",
-       "agirlik": 4.17,
-       "deger": 346800,
+       "agirlik": 3.97,
+       "deger": 361250,
        "nominal": 1700
       },
       {
+       "kod": "ATATP",
+       "agirlik": 3.95,
+       "deger": 360237.5,
+       "nominal": 1150
+      },
+      {
        "kod": "ARASE",
-       "agirlik": 3.31,
-       "deger": 275310,
+       "agirlik": 3.08,
+       "deger": 280140,
        "nominal": 2300
       },
       {
        "kod": "NTGAZ",
-       "agirlik": 3.24,
-       "deger": 269651.9,
+       "agirlik": 3.03,
+       "deger": 275617.65,
        "nominal": 23863
       },
       {
        "kod": "FORTE",
-       "agirlik": 2.99,
-       "deger": 249075,
+       "agirlik": 2.97,
+       "deger": 270000,
        "nominal": 2250
-      },
-      {
-       "kod": "ARDYZ",
-       "agirlik": 2.68,
-       "deger": 222950,
-       "nominal": 2600
-      },
-      {
-       "kod": "CWENE",
-       "agirlik": 2.36,
-       "deger": 196031,
-       "nominal": 6275
       },
       {
        "kod": "MARMR",
        "agirlik": 0,
-       "deger": 1.02,
-       "nominal": 0.47
+       "deger": 2.14,
+       "nominal": 0.91
       },
       {
        "kod": "POLHO",
        "agirlik": 0,
-       "deger": 17.67,
-       "nominal": 0.79
+       "deger": 20.02,
+       "nominal": 0.9
+      },
+      {
+       "kod": "YEOTK",
+       "agirlik": 0,
+       "deger": 3.96,
+       "nominal": 0.11
       }
      ],
      "hisseToplam": {
-      "deger": 6931130.74,
+      "deger": 8143961.32,
       "grup": 100,
-      "fpd": 89.94,
-      "ftd": 83.32,
+      "fpd": 86.9,
+      "ftd": 89.48,
       "adet": 1
      },
      "islem": {
-      "alis": {},
-      "satis": {
-       "MARMR": {
-        "deger": 1
+      "alis": {
+       "EKGYO": {
+        "deger": 637665
        },
-       "POLHO": {
-        "deger": 3
+       "FORTE": {
+        "deger": 271800
        },
-       "YEOTK": {
-        "deger": 0
+       "ENJSA": {
+        "deger": 188640
        },
-       "ARDYZ": {
-        "deger": 208434
+       "RGYAS": {
+        "deger": 361250
        },
        "CWENE": {
-        "deger": 201240
+        "deger": 83370
+       },
+       "ARDYZ": {
+        "deger": 459000
+       },
+       "ALBRK": {
+        "deger": 540223
+       },
+       "ARASE": {
+        "deger": 280140
        },
        "EUPWR": {
-        "deger": 293190
+        "deger": 458925
+       },
+       "GUBRF": {
+        "deger": 154303
+       }
+      },
+      "satis": {
+       "FZLGY": {
+        "deger": 242160
+       },
+       "EFOR": {
+        "deger": 239305
+       },
+       "KBORU": {
+        "deger": 247406
+       },
+       "NTGAZ": {
+        "deger": 98175
+       },
+       "CIMSA": {
+        "deger": 96545
+       },
+       "YEOTK": {
+        "deger": 330500
+       },
+       "KRDMD": {
+        "deger": 623776
+       },
+       "VAKKO": {
+        "deger": 134600
+       },
+       "ASELS": {
+        "deger": 72720
+       },
+       "GESAN": {
+        "deger": 232375
+       },
+       "ATATP": {
+        "deger": 75180
+       },
+       "TUPRS": {
+        "deger": 542520
        }
       }
      },
      "varlik": {
-      "hisse": 83.32,
-      "fon": 9.32,
-      "nakit": 7.36,
-      "_portfoyDegeriYuzde": 92.64,
-      "_hazirDeger": 5.52,
-      "_alacak": 3.52,
-      "_borc": -1.69,
+      "hisse": 89.48,
+      "fon": 13.49,
+      "nakit": -2.97,
+      "_portfoyDegeriYuzde": 102.97,
+      "_hazirDeger": 4.09,
+      "_alacak": 32.25,
+      "_borc": -39.32,
       "_toplam": 100
      },
      "diger": [],
      "kaynak": {
-      "index": 1661310,
-      "objId": "4028328c9f52dc4001a085dbaac23394",
-      "yayin": "09.09.2026 18:51:32",
-      "islendi": "2026-11-05",
+      "index": 1661300,
+      "objId": "4028328c9f52dc4001a0856fa56c2f80",
+      "yayin": "09.09.2026 18:50:02",
+      "islendi": "2026-11-09",
       "ek": 1,
-      "metinUz": 22858,
+      "metinUz": 40894,
       "islemIz": {
        "satisBolum": true,
-       "alisBolum": false,
-       "satisUz": 2815,
-       "alisUz": 0
+       "alisBolum": true,
+       "satisUz": 10805,
+       "alisUz": 5380
       }
      }
     },
@@ -34427,7 +34350,7 @@
       "index": 1644295,
       "objId": "4028328c9f52dc3f019fd0d491595a50",
       "yayin": "06.08.2026 15:03:50",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 58578,
       "islemIz": {
@@ -36019,7 +35942,7 @@
       "index": 1646583,
       "objId": "4028328c9f52dc40019febc82d42743c",
       "yayin": "10.08.2026 17:01:05",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 24742,
       "islemIz": {
@@ -37922,332 +37845,6 @@
   "KCV": {
    "ad": "KCV-KUVEYT TÜRK PORTFÖY ÇOKLU VARLIK KATILIM FONU",
    "donemler": {
-    "2026-04": {
-     "baslik": {
-      "kod": "KCV",
-      "ad": "KCV-Çoklu Varlık Katılım Fonu",
-      "donem": "2026-04",
-      "fonToplamDegeri": 2238171837.49,
-      "paySayisi": 473177419,
-      "payFiyati": 4.73009,
-      "aylikGetiri": 7.41,
-      "hisseOrtYuzde": 32.23,
-      "hisseDevirHizi": 0.11
-     },
-     "hisse": [
-      {
-       "kod": "KTLEV",
-       "agirlik": 5.2,
-       "deger": 116296221.93,
-       "nominal": 1011271.5
-      },
-      {
-       "kod": "BIMAS",
-       "agirlik": 2.87,
-       "deger": 64227247,
-       "nominal": 86618
-      },
-      {
-       "kod": "ASELS",
-       "agirlik": 2.53,
-       "deger": 56636252,
-       "nominal": 134768
-      },
-      {
-       "kod": "GUBRF",
-       "agirlik": 1.78,
-       "deger": 39787500,
-       "nominal": 75000
-      },
-      {
-       "kod": "MPARK",
-       "agirlik": 1.71,
-       "deger": 38349903,
-       "nominal": 86228
-      },
-      {
-       "kod": "RGYAS",
-       "agirlik": 1.7,
-       "deger": 38027500,
-       "nominal": 205000
-      },
-      {
-       "kod": "MAVI",
-       "agirlik": 1.57,
-       "deger": 35184980.52,
-       "nominal": 812211
-      },
-      {
-       "kod": "ENJSA",
-       "agirlik": 1.4,
-       "deger": 31314000,
-       "nominal": 255000
-      },
-      {
-       "kod": "TUPRS",
-       "agirlik": 1.33,
-       "deger": 29708646,
-       "nominal": 109626
-      },
-      {
-       "kod": "GRSEL",
-       "agirlik": 1.09,
-       "deger": 24409164,
-       "nominal": 81636
-      },
-      {
-       "kod": "GLRMK",
-       "agirlik": 1.02,
-       "deger": 22740000,
-       "nominal": 120000
-      },
-      {
-       "kod": "LMKDC",
-       "agirlik": 0.67,
-       "deger": 14920000,
-       "nominal": 400000
-      },
-      {
-       "kod": "KRDMD",
-       "agirlik": 0.04,
-       "deger": 783612.36,
-       "nominal": 20343
-      },
-      {
-       "kod": "TUKAS",
-       "agirlik": 0,
-       "deger": 1.87,
-       "nominal": 0.73
-      }
-     ],
-     "hisseToplam": {
-      "deger": 512385028.68,
-      "grup": 61.73,
-      "fpd": 22.79,
-      "ftd": 22.91,
-      "adet": 1
-     },
-     "islem": {
-      "alis": {
-       "ASELS": {
-        "deger": 21922500
-       },
-       "BIMAS": {
-        "deger": 30124444
-       },
-       "ENJSA": {
-        "deger": 21801511
-       },
-       "GUBRF": {
-        "deger": 17486966
-       },
-       "MAVI": {
-        "deger": 19347792
-       },
-       "MPARK": {
-        "deger": 18989514
-       },
-       "RGYAS": {
-        "deger": 16505249
-       },
-       "GLRMK": {
-        "deger": 26502476
-       },
-       "ADI": {
-        "deger": 95923
-       },
-       "INC": {
-        "deger": 98496
-       },
-       "LLY": {
-        "deger": 94058
-       },
-       "GLW": {
-        "deger": 397849
-       },
-       "LRCX": {
-        "deger": 219091
-       },
-       "GEV": {
-        "deger": 269940
-       },
-       "MRK": {
-        "deger": 120354
-       },
-       "AVGO": {
-        "deger": 180668
-       },
-       "TSM": {
-        "deger": 136042
-       },
-       "KTLEV": {
-        "deger": 24279476
-       },
-       "GRSEL": {
-        "deger": 9510000
-       },
-       "TUPRS": {
-        "deger": 6578750
-       },
-       "LMKDC": {
-        "deger": 13291940
-       },
-       "KRDMD": {
-        "deger": 737637
-       },
-       "MSFT": {
-        "deger": 714523
-       },
-       "TER": {
-        "deger": 203505
-       },
-       "CIEN": {
-        "deger": 269328
-       },
-       "GNRC": {
-        "deger": 215144
-       },
-       "AAPL": {
-        "deger": 402984
-       }
-      },
-      "satis": {
-       "PGSUS": {
-        "deger": 67
-       },
-       "OYAKC": {
-        "deger": 24
-       }
-      }
-     },
-     "varlik": {
-      "hisse": 74.26,
-      "sukuk": 50.82,
-      "fon": 25.18,
-      "nakit": -0.46,
-      "_portfoyDegeriYuzde": 100.46,
-      "_hazirDeger": 0.03,
-      "_alacak": 0,
-      "_borc": -0.49
-     },
-     "diger": [
-      {
-       "kod": "KDV",
-       "kategori": "fon",
-       "agirlik": 2.41,
-       "deger": 53976951
-      },
-      {
-       "kod": "GMSTR",
-       "kategori": "fon",
-       "agirlik": 1.79,
-       "deger": 39975000
-      },
-      {
-       "kod": "KZL",
-       "kategori": "fon",
-       "agirlik": 1.38,
-       "deger": 30942073
-      },
-      {
-       "kod": "KPR",
-       "kategori": "fon",
-       "agirlik": 1.24,
-       "deger": 27796980
-      },
-      {
-       "kod": "Z30KE",
-       "kategori": "fon",
-       "agirlik": 1.04,
-       "deger": 23211596
-      },
-      {
-       "kod": "GLDTR",
-       "kategori": "fon",
-       "agirlik": 0.9,
-       "deger": 20232000
-      },
-      {
-       "kod": "Z30KP",
-       "kategori": "fon",
-       "agirlik": 0.74,
-       "deger": 16503500
-      },
-      {
-       "kod": "KSV",
-       "kategori": "fon",
-       "agirlik": 0.74,
-       "deger": 16535848
-      },
-      {
-       "kod": "KU3",
-       "kategori": "fon",
-       "agirlik": 0.68,
-       "deger": 15110693
-      },
-      {
-       "kod": "ISGLK",
-       "kategori": "fon",
-       "agirlik": 0.32,
-       "deger": 7100000
-      },
-      {
-       "kod": "ZGOLD",
-       "kategori": "fon",
-       "agirlik": 0.31,
-       "deger": 6927048
-      },
-      {
-       "kod": "KNJ",
-       "kategori": "fon",
-       "agirlik": 0.29,
-       "deger": 6467256
-      },
-      {
-       "kod": "KIK",
-       "kategori": "fon",
-       "agirlik": 0.25,
-       "deger": 5690340
-      },
-      {
-       "kod": "KUA",
-       "kategori": "fon",
-       "agirlik": 0.07,
-       "deger": 1458117
-      },
-      {
-       "kod": "KUD",
-       "kategori": "fon",
-       "agirlik": 0.07,
-       "deger": 1536078
-      },
-      {
-       "kod": "KDS",
-       "kategori": "fon",
-       "agirlik": 0.04,
-       "deger": 920512
-      },
-      {
-       "kod": "KDE",
-       "kategori": "fon",
-       "agirlik": 0.03,
-       "deger": 777404
-      },
-      {
-       "kod": "USD",
-       "kategori": "fon",
-       "agirlik": 0.02,
-       "deger": 552261
-      }
-     ],
-     "kaynak": {
-      "index": 1603224,
-      "objId": "4028328c9d7b22d2019e0747adc43b11",
-      "yayin": "08.05.2026 14:58:25",
-      "pdfBoyut": 175293,
-      "islendi": "2026-09-10"
-     }
-    },
     "2026-05": {
      "baslik": {
       "kod": "KCV",
@@ -39330,7 +38927,7 @@
       "index": 1657534,
       "objId": "4028328c9f52dc3f01a06296f3390a8b",
       "yayin": "02.09.2026 18:22:33",
-      "islendi": "2026-11-05",
+      "islendi": "2026-11-09",
       "ek": 1,
       "metinUz": 33655,
       "islemIz": {
@@ -39613,6 +39210,397 @@
        "alisBolum": true,
        "satisUz": 65543,
        "alisUz": 49106
+      }
+     }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "KCV",
+      "ad": "KCV-KUVEYT TÜRK PORTFÖY ÇOKLU VARLIK KATILIM FONU",
+      "donem": "2026-10",
+      "fonToplamDegeri": 2083116643.43,
+      "paySayisi": 405791341,
+      "payFiyati": 5.133467,
+      "aylikGetiri": -2.42,
+      "hisseOrtYuzde": 25.09,
+      "hisseDevirHizi": 0.05
+     },
+     "hisse": [
+      {
+       "kod": "MPARK",
+       "agirlik": 2.29,
+       "deger": 47663040,
+       "nominal": 125760
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 2.25,
+       "deger": 46894430,
+       "nominal": 134948
+      },
+      {
+       "kod": "ASELS",
+       "agirlik": 1.92,
+       "deger": 40054904,
+       "nominal": 115432
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 1.44,
+       "deger": 29918506.5,
+       "nominal": 87099
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 1.28,
+       "deger": 26615192.8,
+       "nominal": 3394795
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 1.28,
+       "deger": 26685592,
+       "nominal": 252944
+      },
+      {
+       "kod": "GRSEL",
+       "agirlik": 1.13,
+       "deger": 23477664,
+       "nominal": 97216
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 0.98,
+       "deger": 20486466,
+       "nominal": 81864
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 0.83,
+       "deger": 17210358.56,
+       "nominal": 1063024
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 0.78,
+       "deger": 16160251,
+       "nominal": 544850
+      },
+      {
+       "kod": "KRDMD",
+       "agirlik": 0.3,
+       "deger": 6351793.28,
+       "nominal": 175658
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 0.22,
+       "deger": 4670265.6,
+       "nominal": 40824
+      },
+      {
+       "kod": "AVPGY",
+       "agirlik": 0.2,
+       "deger": 4215256.5,
+       "nominal": 92643
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 0.14,
+       "deger": 2969375.36,
+       "nominal": 76216
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 0.14,
+       "deger": 2968437.36,
+       "nominal": 88716
+      },
+      {
+       "kod": "NTGAZ",
+       "agirlik": 0.09,
+       "deger": 1962084.18,
+       "nominal": 206318
+      },
+      {
+       "kod": "ARASE",
+       "agirlik": 0.08,
+       "deger": 1662080,
+       "nominal": 23744
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 0.08,
+       "deger": 1625268.4,
+       "nominal": 15764
+      },
+      {
+       "kod": "EUPWR",
+       "agirlik": 0.07,
+       "deger": 1405799.36,
+       "nominal": 35644
+      },
+      {
+       "kod": "EGGUB",
+       "agirlik": 0.06,
+       "deger": 1340617.6,
+       "nominal": 17276
+      },
+      {
+       "kod": "GESAN",
+       "agirlik": 0.06,
+       "deger": 1303554.56,
+       "nominal": 41888
+      },
+      {
+       "kod": "SNGYO",
+       "agirlik": 0.05,
+       "deger": 1039500,
+       "nominal": 472500
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 0.03,
+       "deger": 631209.6,
+       "nominal": 33936
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 0.02,
+       "deger": 338890.5,
+       "nominal": 17550
+      },
+      {
+       "kod": "ALTNY",
+       "agirlik": 0.01,
+       "deger": 191984.55,
+       "nominal": 19065
+      },
+      {
+       "kod": "ARDYZ",
+       "agirlik": 0,
+       "deger": 20957.5,
+       "nominal": 415
+      },
+      {
+       "kod": "KTLEV",
+       "agirlik": 0,
+       "deger": 47.17,
+       "nominal": 12.78
+      },
+      {
+       "kod": "TUKAS",
+       "agirlik": 0,
+       "deger": 1.29,
+       "nominal": 0.73
+      }
+     ],
+     "hisseToplam": {
+      "deger": 327863527.67,
+      "grup": 64.86,
+      "fpd": 15.62,
+      "ftd": 15.73,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {
+       "GRSEL": {
+        "deger": 4699135
+       },
+       "ARASE": {
+        "deger": 2268188
+       },
+       "AVPGY": {
+        "deger": 4717388
+       },
+       "GLRMK": {
+        "deger": 2175443
+       },
+       "ORGE": {
+        "deger": 769349
+       },
+       "SNGYO": {
+        "deger": 1292119
+       },
+       "TUPRS": {
+        "deger": 9996147
+       },
+       "KRDMD": {
+        "deger": 2428581
+       },
+       "LOGO": {
+        "deger": 5790884
+       },
+       "MPARK": {
+        "deger": 13126376
+       },
+       "NTGAZ": {
+        "deger": 2306783
+       },
+       "EUPWR": {
+        "deger": 1809163
+       },
+       "EKGYO": {
+        "deger": 11025737
+       },
+       "GESAN": {
+        "deger": 1713709
+       },
+       "GUBRF": {
+        "deger": 2991246
+       },
+       "EREGL": {
+        "deger": 1678404
+       },
+       "CIMSA": {
+        "deger": 3146551
+       },
+       "BIMAS": {
+        "deger": 13575201
+       },
+       "EGGUB": {
+        "deger": 1671484
+       },
+       "ALBRK": {
+        "deger": 12238843
+       },
+       "ASELS": {
+        "deger": 4868898
+       },
+       "ENJSA": {
+        "deger": 3156874
+       },
+       "LMKDC": {
+        "deger": 423797
+       },
+       "MAVI": {
+        "deger": 2122320
+       },
+       "ARDYZ": {
+        "deger": 28087
+       },
+       "ALTNY": {
+        "deger": 242354
+       }
+      },
+      "satis": {
+       "LRCX": {
+        "deger": 668555
+       },
+       "TSM": {
+        "deger": 454455
+       }
+      }
+     },
+     "varlik": {
+      "hisse": 15.73,
+      "sukuk": 65.79,
+      "fon": 21.44,
+      "nakit": -0.78,
+      "_portfoyDegeriYuzde": 100.78,
+      "_hazirDeger": 0,
+      "_alacak": 0,
+      "_borc": -0.78,
+      "_toplam": 102.18
+     },
+     "diger": [
+      {
+       "kod": "Z30KP",
+       "kategori": "fon",
+       "agirlik": 3.24,
+       "deger": 67524512
+      },
+      {
+       "kod": "KBN-TL",
+       "kategori": "fon",
+       "agirlik": 2.49,
+       "deger": 51968793
+      },
+      {
+       "kod": "GMSTR",
+       "kategori": "fon",
+       "agirlik": 1.67,
+       "deger": 34706000
+      },
+      {
+       "kod": "Z30KE",
+       "kategori": "fon",
+       "agirlik": 1.04,
+       "deger": 21703707
+      },
+      {
+       "kod": "KU3",
+       "kategori": "fon",
+       "agirlik": 0.74,
+       "deger": 15427257
+      },
+      {
+       "kod": "KNJ",
+       "kategori": "fon",
+       "agirlik": 0.34,
+       "deger": 7096776
+      },
+      {
+       "kod": "KIK",
+       "kategori": "fon",
+       "agirlik": 0.28,
+       "deger": 5846185
+      },
+      {
+       "kod": "ISGLK",
+       "kategori": "fon",
+       "agirlik": 0.25,
+       "deger": 5191668
+      },
+      {
+       "kod": "KSV",
+       "kategori": "fon",
+       "agirlik": 0.09,
+       "deger": 1854754
+      },
+      {
+       "kod": "KUD",
+       "kategori": "fon",
+       "agirlik": 0.09,
+       "deger": 1790494
+      },
+      {
+       "kod": "GLDTR",
+       "kategori": "fon",
+       "agirlik": 0.06,
+       "deger": 1194944
+      },
+      {
+       "kod": "KUA",
+       "kategori": "fon",
+       "agirlik": 0.06,
+       "deger": 1345844
+      },
+      {
+       "kod": "KDE",
+       "kategori": "fon",
+       "agirlik": 0.04,
+       "deger": 875249
+      },
+      {
+       "kod": "USD",
+       "kategori": "fon",
+       "agirlik": 0,
+       "deger": 66545
+      }
+     ],
+     "kaynak": {
+      "index": 1693012,
+      "objId": "4028328ca17e4f5e01a1a6c4b0744f00",
+      "yayin": "05.11.2026 11:51:34",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 393836,
+      "islemIz": {
+       "satisBolum": true,
+       "alisBolum": true,
+       "satisUz": 1249,
+       "alisUz": 340001
       }
      }
     }
@@ -40955,13 +40943,185 @@
        "alisUz": 0
       }
      }
+    },
+    "2026-10": {
+     "baslik": {
+      "kod": "VHK",
+      "ad": "VHK-V PORTFÖY KATILIM HİSSE SENEDİ (TL) FONU (HSYF)",
+      "donem": "2026-10",
+      "fonToplamDegeri": 12355673.55,
+      "paySayisi": 16210397,
+      "payFiyati": 0.762207,
+      "aylikGetiri": -11.6,
+      "hisseOrtYuzde": 84.17,
+      "hisseDevirHizi": 0.3
+     },
+     "hisse": [
+      {
+       "kod": "ASELS",
+       "agirlik": 9.27,
+       "deger": 1145100,
+       "nominal": 3300
+      },
+      {
+       "kod": "BIMAS",
+       "agirlik": 8.44,
+       "deger": 1042500,
+       "nominal": 3000
+      },
+      {
+       "kod": "EKGYO",
+       "agirlik": 8.19,
+       "deger": 1011875,
+       "nominal": 62500
+      },
+      {
+       "kod": "CIMSA",
+       "agirlik": 4.65,
+       "deger": 574660,
+       "nominal": 14750
+      },
+      {
+       "kod": "MPARK",
+       "agirlik": 4.6,
+       "deger": 568500,
+       "nominal": 1500
+      },
+      {
+       "kod": "MAVI",
+       "agirlik": 4.47,
+       "deger": 552090,
+       "nominal": 16500
+      },
+      {
+       "kod": "ALBRK",
+       "agirlik": 4.44,
+       "deger": 548800,
+       "nominal": 70000
+      },
+      {
+       "kod": "ENJSA",
+       "agirlik": 4.27,
+       "deger": 527500,
+       "nominal": 5000
+      },
+      {
+       "kod": "EGGUB",
+       "agirlik": 4.24,
+       "deger": 523800,
+       "nominal": 6750
+      },
+      {
+       "kod": "AYDEM",
+       "agirlik": 4.18,
+       "deger": 516000,
+       "nominal": 25000
+      },
+      {
+       "kod": "TUPRS",
+       "agirlik": 4.17,
+       "deger": 515250,
+       "nominal": 1500
+      },
+      {
+       "kod": "LOGO",
+       "agirlik": 4.16,
+       "deger": 514800,
+       "nominal": 4500
+      },
+      {
+       "kod": "LMKDC",
+       "agirlik": 3.91,
+       "deger": 482750,
+       "nominal": 25000
+      },
+      {
+       "kod": "SNGYO",
+       "agirlik": 3.38,
+       "deger": 418000,
+       "nominal": 190000
+      },
+      {
+       "kod": "EREGL",
+       "agirlik": 3.36,
+       "deger": 415240,
+       "nominal": 14000
+      },
+      {
+       "kod": "GLRMK",
+       "agirlik": 3.33,
+       "deger": 412400,
+       "nominal": 4000
+      },
+      {
+       "kod": "TUREX",
+       "agirlik": 3.1,
+       "deger": 382500,
+       "nominal": 75000
+      },
+      {
+       "kod": "PETKM",
+       "agirlik": 2.96,
+       "deger": 365400,
+       "nominal": 22500
+      },
+      {
+       "kod": "ORGE",
+       "agirlik": 2.26,
+       "deger": 279000,
+       "nominal": 15000
+      },
+      {
+       "kod": "GUBRF",
+       "agirlik": 2.23,
+       "deger": 275275,
+       "nominal": 1100
+      }
+     ],
+     "hisseToplam": {
+      "deger": 11071440,
+      "grup": 100,
+      "fpd": 85.98,
+      "ftd": 89.61,
+      "adet": 1
+     },
+     "islem": {
+      "alis": {},
+      "satis": {}
+     },
+     "varlik": {
+      "hisse": 89.61,
+      "fon": 29.24,
+      "nakit": -4.23,
+      "_portfoyDegeriYuzde": 104.23,
+      "_hazirDeger": 0.12,
+      "_alacak": 0.73,
+      "_borc": -5.07,
+      "_toplam": 114.62,
+      "_tutarsiz": true
+     },
+     "diger": [],
+     "kaynak": {
+      "index": 1694682,
+      "objId": "4028328ca17e4f5f01a1bf2b91c63759",
+      "yayin": "09.11.2026 10:21:04",
+      "islendi": "2026-11-09",
+      "ek": 1,
+      "metinUz": 23860,
+      "islemIz": {
+       "satisBolum": false,
+       "alisBolum": false,
+       "satisUz": 0,
+       "alisUz": 0
+      }
+     }
     }
    }
   }
  },
- "guncelleme": "2026-11-05",
+ "guncelleme": "2026-11-09",
  "_yontem": "KAP Portföy Dağılım Raporu (aylık PDF) → pdftotext -layout → fonportfoy-pdf.mjs. Ağırlık = FTD% (fon toplam değerine göre), kod bazında netlenmiş (T+2 negatif satırlar dahil). islem = ay içi alış/satış toplamları (₺, nominal). Denetimden geçmeyen rapor yazılmaz.",
- "yol": "tarama(47 fon, 12202 kayıt)",
+ "yol": "tarama(47 fon, 11013 kayıt)",
  "pencereGun": 150,
  "evren_pasif": {
   "AC1": {
@@ -41590,7 +41750,7 @@
     "bas": "2026-09-15",
     "dip": "2026-09-30"
    },
-   "guncelleme": "2026-11-07",
+   "guncelleme": "2026-11-09",
    "kaynak": "Yahoo adjclose (Actions §457)",
    "endeks": {
     "XKTUM": -17.1,
@@ -41603,6 +41763,26 @@
      "k30": -22.55,
      "dip": -22.55
     },
+    "ALBTN": {
+     "k30": -27.08,
+     "dip": -28.25
+    },
+    "AKFIS": {
+     "k30": 14.65,
+     "dip": -10.04
+    },
+    "ALBRK": {
+     "k30": -1.19,
+     "dip": -4.88
+    },
+    "ALCTL": {
+     "k30": -21.63,
+     "dip": -21.63
+    },
+    "AHGAZ": {
+     "k30": 5.35,
+     "dip": -5.11
+    },
     "AKHAN": {
      "k30": -22.46,
      "dip": -22.46
@@ -41611,73 +41791,53 @@
      "k30": -18.75,
      "dip": -25.48
     },
-    "AKCNS": {
-     "k30": -2.33,
-     "dip": -9.48
-    },
-    "ALBRK": {
-     "k30": -1.19,
-     "dip": -4.88
-    },
-    "AKFIS": {
-     "k30": 14.65,
-     "dip": -10.04
-    },
-    "AHGAZ": {
-     "k30": 5.35,
-     "dip": -5.11
-    },
     "AKFYE": {
      "k30": -9.48,
      "dip": -14.96
     },
-    "ALBTN": {
-     "k30": -27.08,
-     "dip": -28.25
-    },
-    "ALCTL": {
-     "k30": -21.63,
-     "dip": -21.63
+    "AKCNS": {
+     "k30": -2.33,
+     "dip": -9.48
     },
     "ALTNY": {
      "k30": -22.74,
      "dip": -29.72
     },
-    "ANGEN": {
-     "k30": -23.3,
-     "dip": -23.76
-    },
     "ALKA": {
      "k30": -24.87,
      "dip": -24.87
-    },
-    "ARDYZ": {
-     "k30": -24.46,
-     "dip": -24.46
-    },
-    "ARASE": {
-     "k30": -15.14,
-     "dip": -15.62
     },
     "ALKIM": {
      "k30": -21.94,
      "dip": -21.94
     },
-    "ARENA": {
-     "k30": -22.02,
-     "dip": -22.02
+    "ANGEN": {
+     "k30": -23.3,
+     "dip": -23.76
     },
     "ATAKP": {
      "k30": -14.23,
      "dip": -14.23
     },
+    "ARASE": {
+     "k30": -15.14,
+     "dip": -15.62
+    },
+    "ARDYZ": {
+     "k30": -24.46,
+     "dip": -24.46
+    },
+    "ARENA": {
+     "k30": -22.02,
+     "dip": -22.02
+    },
+    "ASELS": {
+     "k30": -10.74,
+     "dip": -10.74
+    },
     "ATATP": {
      "k30": -18.59,
      "dip": -18.78
-    },
-    "AYDEM": {
-     "k30": -7.48,
-     "dip": -9.69
     },
     "AVPGY": {
      "k30": -15.18,
@@ -41687,33 +41847,41 @@
      "k30": -8.47,
      "dip": -8.47
     },
-    "ASELS": {
-     "k30": -10.74,
-     "dip": -10.74
+    "AYDEM": {
+     "k30": -7.48,
+     "dip": -9.69
     },
     "BAKAB": {
      "k30": -15.34,
      "dip": -15.34
     },
-    "BAYRK": {
-     "k30": -32.24,
-     "dip": -32.24
-    },
     "BANVT": {
      "k30": -13.27,
      "dip": -13.33
-    },
-    "BERA": {
-     "k30": -12.5,
-     "dip": -18.03
     },
     "BETAE": {
      "k30": -29.03,
      "dip": -29.16
     },
+    "BAYRK": {
+     "k30": -32.24,
+     "dip": -32.24
+    },
     "BEGYO": {
      "k30": -20.13,
      "dip": -20.13
+    },
+    "BASGZ": {
+     "k30": -11.07,
+     "dip": -11.07
+    },
+    "BERA": {
+     "k30": -12.5,
+     "dip": -18.03
+    },
+    "BINBN": {
+     "k30": -65.59,
+     "dip": -65.59
     },
     "BIENY": {
      "k30": -27.38,
@@ -41723,61 +41891,49 @@
      "k30": 1.27,
      "dip": -1.88
     },
-    "BASGZ": {
-     "k30": -11.07,
-     "dip": -11.07
-    },
-    "BINBN": {
-     "k30": -65.59,
-     "dip": -65.59
-    },
     "BINHO": {
      "k30": -35.44,
      "dip": -41.24
-    },
-    "BMSTL": {
-     "k30": -26.8,
-     "dip": -26.8
     },
     "BLUME": {
      "k30": -9.11,
      "dip": -12.14
     },
-    "BORSK": {
-     "k30": -14.63,
-     "dip": -14.63
+    "BMSTL": {
+     "k30": -26.8,
+     "dip": -26.8
     },
     "BOSSA": {
      "k30": -11.98,
      "dip": -11.98
     },
-    "BRLSM": {
-     "k30": -32.78,
-     "dip": -32.78
-    },
     "BRKSN": {
      "k30": -24.47,
      "dip": -24.47
-    },
-    "BURVA": {
-     "k30": -38.92,
-     "dip": -38.92
-    },
-    "BRISA": {
-     "k30": -9.01,
-     "dip": -9.01
     },
     "BYDNR": {
      "k30": -34.85,
      "dip": -34.85
     },
+    "BORSK": {
+     "k30": -14.63,
+     "dip": -14.63
+    },
+    "BRISA": {
+     "k30": -9.01,
+     "dip": -9.01
+    },
+    "BRLSM": {
+     "k30": -32.78,
+     "dip": -32.78
+    },
+    "BURVA": {
+     "k30": -38.92,
+     "dip": -38.92
+    },
     "BUCIM": {
      "k30": -12.61,
      "dip": -12.61
-    },
-    "CATES": {
-     "k30": -52.51,
-     "dip": -52.51
     },
     "BURCE": {
      "k30": -21.77,
@@ -41787,49 +41943,57 @@
      "k30": -8.54,
      "dip": -17.29
     },
-    "CMBTN": {
-     "k30": -22.69,
-     "dip": -22.69
+    "CATES": {
+     "k30": -52.51,
+     "dip": -52.51
     },
     "CEMTS": {
      "k30": -11.05,
      "dip": -11.05
     },
+    "CWENE": {
+     "k30": -37.2,
+     "dip": -37.2
+    },
+    "CMBTN": {
+     "k30": -22.69,
+     "dip": -22.69
+    },
     "CIMSA": {
      "k30": -3.11,
      "dip": -5.67
-    },
-    "COSMO": {
-     "k30": -30.99,
-     "dip": -30.99
     },
     "CVKMD": {
      "k30": -14.72,
      "dip": -14.72
     },
-    "CWENE": {
-     "k30": -37.2,
-     "dip": -37.2
-    },
     "DAPGM": {
      "k30": -61.45,
      "dip": -61.45
+    },
+    "DESPC": {
+     "k30": -25.74,
+     "dip": -25.74
     },
     "DARDL": {
      "k30": -26.85,
      "dip": -26.85
     },
+    "COSMO": {
+     "k30": -30.99,
+     "dip": -30.99
+    },
     "DCTTR": {
      "k30": -45.14,
      "dip": -45.14
     },
-    "DITAS": {
-     "k30": -46.08,
-     "dip": -46.08
-    },
     "DGATE": {
      "k30": -28.91,
      "dip": -28.91
+    },
+    "DOFER": {
+     "k30": -21.26,
+     "dip": -21.86
     },
     "DMSAS": {
      "k30": -20.23,
@@ -41839,45 +42003,37 @@
      "k30": -21.05,
      "dip": -21.05
     },
+    "DITAS": {
+     "k30": -46.08,
+     "dip": -46.08
+    },
     "DOFRB": {
      "k30": -26.86,
      "dip": -26.86
-    },
-    "DOFER": {
-     "k30": -21.26,
-     "dip": -21.86
-    },
-    "DESPC": {
-     "k30": -25.74,
-     "dip": -25.74
-    },
-    "DYOBY": {
-     "k30": -20.75,
-     "dip": -20.75
-    },
-    "EDATA": {
-     "k30": -66.67,
-     "dip": -66.67
-    },
-    "EBEBK": {
-     "k30": -5.09,
-     "dip": -5.09
     },
     "EDIP": {
      "k30": -16.86,
      "dip": -18.53
     },
+    "DYOBY": {
+     "k30": -20.75,
+     "dip": -20.75
+    },
+    "EBEBK": {
+     "k30": -5.09,
+     "dip": -5.09
+    },
     "EFOR": {
      "k30": -31.97,
      "dip": -33.97
     },
-    "EGEPO": {
-     "k30": -27.9,
-     "dip": -27.9
-    },
     "EGEGY": {
      "k30": -32.16,
      "dip": -34.3
+    },
+    "EGEPO": {
+     "k30": -27.9,
+     "dip": -27.9
     },
     "EGPRO": {
      "k30": -9.22,
@@ -41887,77 +42043,85 @@
      "k30": -12.89,
      "dip": -12.89
     },
-    "EKGYO": {
-     "k30": -6.87,
-     "dip": -8.08
+    "EDATA": {
+     "k30": -66.67,
+     "dip": -66.67
     },
     "EKOS": {
      "k30": -28.82,
      "dip": -28.82
     },
-    "EKSUN": {
-     "k30": -16.2,
-     "dip": -18.83
-    },
-    "EMPAE": {
-     "k30": -27.37,
-     "dip": -27.37
-    },
-    "ELITE": {
-     "k30": -22.6,
-     "dip": -22.6
+    "EKGYO": {
+     "k30": -6.87,
+     "dip": -8.08
     },
     "ENERY": {
      "k30": 4.09,
      "dip": -6.77
     },
+    "EKSUN": {
+     "k30": -16.2,
+     "dip": -18.83
+    },
+    "ELITE": {
+     "k30": -22.6,
+     "dip": -22.6
+    },
+    "EMPAE": {
+     "k30": -27.37,
+     "dip": -27.37
+    },
     "ENJSA": {
      "k30": -6.56,
      "dip": -6.56
-    },
-    "ESCOM": {
-     "k30": -16.06,
-     "dip": -16.06
-    },
-    "EREGL": {
-     "k30": -6.06,
-     "dip": -9.1
-    },
-    "ESEN": {
-     "k30": -25.97,
-     "dip": -25.97
     },
     "EUPWR": {
      "k30": -28.33,
      "dip": -28.33
     },
+    "EREGL": {
+     "k30": -6.06,
+     "dip": -9.1
+    },
     "EYGYO": {
      "k30": -21.03,
      "dip": -22.62
     },
-    "FADE": {
-     "k30": -24.08,
-     "dip": -24.08
+    "ESCOM": {
+     "k30": -16.06,
+     "dip": -16.06
     },
-    "FONET": {
-     "k30": -4.46,
-     "dip": -5.16
-    },
-    "FORMT": {
-     "k30": -34.75,
-     "dip": -34.75
+    "ESEN": {
+     "k30": -25.97,
+     "dip": -25.97
     },
     "FORTE": {
      "k30": -18.39,
      "dip": -20.17
     },
-    "FRMPL": {
-     "k30": -24.57,
-     "dip": -24.57
+    "FADE": {
+     "k30": -24.08,
+     "dip": -24.08
+    },
+    "FORMT": {
+     "k30": -34.75,
+     "dip": -34.75
+    },
+    "FONET": {
+     "k30": -4.46,
+     "dip": -5.16
+    },
+    "GENIL": {
+     "k30": -47.3,
+     "dip": -47.3
     },
     "FRIGO": {
      "k30": -33.18,
      "dip": -36.32
+    },
+    "FRMPL": {
+     "k30": -24.57,
+     "dip": -24.57
     },
     "FZLGY": {
      "k30": -45.71,
@@ -41967,21 +42131,21 @@
      "k30": -16.99,
      "dip": -16.99
     },
-    "GENIL": {
-     "k30": -47.3,
-     "dip": -47.3
-    },
     "GEREL": {
      "k30": -35.19,
      "dip": -35.19
     },
-    "GESAN": {
-     "k30": -32.95,
-     "dip": -32.95
-    },
     "GLRMK": {
      "k30": -19.61,
      "dip": -19.61
+    },
+    "GMTAS": {
+     "k30": 1.23,
+     "dip": -14.23
+    },
+    "GESAN": {
+     "k30": -32.95,
+     "dip": -32.95
     },
     "GOLDA": {
      "k30": -33.78,
@@ -41990,10 +42154,6 @@
     "GOKNR": {
      "k30": -18.25,
      "dip": -18.25
-    },
-    "GMTAS": {
-     "k30": 1.23,
-     "dip": -14.23
     },
     "GRSEL": {
      "k30": -5.29,
@@ -42007,37 +42167,41 @@
      "k30": -12.03,
      "dip": -12.03
     },
-    "GUBRF": {
-     "k30": -10.79,
-     "dip": -10.79
+    "HKTM": {
+     "k30": -28.02,
+     "dip": -28.49
     },
     "HATSN": {
      "k30": -49.41,
      "dip": -49.41
     },
-    "HKTM": {
-     "k30": -28.02,
-     "dip": -28.49
-    },
     "HOROZ": {
      "k30": -24.39,
      "dip": -24.39
-    },
-    "HRKET": {
-     "k30": 41.75,
-     "dip": 0
     },
     "IHEVA": {
      "k30": -17.26,
      "dip": -20.3
     },
-    "IHLAS": {
-     "k30": -26.96,
-     "dip": -26.96
+    "GUBRF": {
+     "k30": -10.79,
+     "dip": -10.79
+    },
+    "HRKET": {
+     "k30": 41.75,
+     "dip": 0
+    },
+    "INTEM": {
+     "k30": -16.87,
+     "dip": -16.87
     },
     "IHLGM": {
      "k30": -28.3,
      "dip": -28.3
+    },
+    "IHLAS": {
+     "k30": -26.96,
+     "dip": -26.96
     },
     "IHYAY": {
      "k30": -23.26,
@@ -42047,10 +42211,6 @@
      "k30": -32.74,
      "dip": -32.74
     },
-    "INTEM": {
-     "k30": -16.87,
-     "dip": -16.87
-    },
     "INGRM": {
      "k30": -17.15,
      "dip": -17.15
@@ -42059,25 +42219,29 @@
      "k30": -0.25,
      "dip": -6.07
     },
-    "IZFAS": {
-     "k30": -68.55,
-     "dip": -68.55
-    },
     "ISSEN": {
      "k30": -24.38,
      "dip": -24.38
-    },
-    "IZINV": {
-     "k30": -37.13,
-     "dip": -37.13
     },
     "JANTS": {
      "k30": -18.2,
      "dip": -18.2
     },
+    "IZFAS": {
+     "k30": -68.55,
+     "dip": -68.55
+    },
+    "IZINV": {
+     "k30": -37.13,
+     "dip": -37.13
+    },
     "KATMR": {
      "k30": -17.13,
      "dip": -18.78
+    },
+    "KFEIN": {
+     "k30": -26.85,
+     "dip": -26.85
     },
     "KARSN": {
      "k30": -30.15,
@@ -42091,13 +42255,13 @@
      "k30": -15.62,
      "dip": -15.62
     },
+    "KNFRT": {
+     "k30": -17.03,
+     "dip": -22.46
+    },
     "KGYO": {
      "k30": -22.01,
      "dip": -34.65
-    },
-    "KFEIN": {
-     "k30": -26.85,
-     "dip": -26.85
     },
     "KIMMR": {
      "k30": -15.32,
@@ -42111,49 +42275,49 @@
      "k30": -23.78,
      "dip": -25.04
     },
-    "KNFRT": {
-     "k30": -17.03,
-     "dip": -22.46
-    },
     "KOCMT": {
      "k30": -42.65,
      "dip": -42.65
-    },
-    "KONYA": {
-     "k30": -15.1,
-     "dip": -15.1
-    },
-    "KRDMA": {
-     "k30": -16.02,
-     "dip": -16.02
-    },
-    "KRDMB": {
-     "k30": -37.63,
-     "dip": -37.63
-    },
-    "KRDMD": {
-     "k30": -0.05,
-     "dip": -5.55
-    },
-    "KRGYO": {
-     "k30": -23.37,
-     "dip": -23.37
-    },
-    "KOTON": {
-     "k30": -19,
-     "dip": -19
     },
     "KONKA": {
      "k30": -13.14,
      "dip": -20.95
     },
-    "KRONT": {
-     "k30": -12.98,
-     "dip": -12.98
+    "KOTON": {
+     "k30": -19,
+     "dip": -19
+    },
+    "KONYA": {
+     "k30": -15.1,
+     "dip": -15.1
+    },
+    "KRDMD": {
+     "k30": -0.05,
+     "dip": -5.55
+    },
+    "KRDMA": {
+     "k30": -16.02,
+     "dip": -16.02
     },
     "KRPLS": {
      "k30": -6.42,
      "dip": -6.42
+    },
+    "KRDMB": {
+     "k30": -37.63,
+     "dip": -37.63
+    },
+    "KRGYO": {
+     "k30": -23.37,
+     "dip": -23.37
+    },
+    "KRONT": {
+     "k30": -12.98,
+     "dip": -12.98
+    },
+    "KZBGY": {
+     "k30": -20.93,
+     "dip": -20.93
     },
     "KRSTL": {
      "k30": -7.48,
@@ -42163,29 +42327,29 @@
      "k30": -7.14,
      "dip": -9.37
     },
-    "KTLEV": {
-     "k30": -68.49,
-     "dip": -68.49
-    },
     "KUTPO": {
      "k30": -19.6,
      "dip": -19.6
-    },
-    "KZBGY": {
-     "k30": -20.93,
-     "dip": -20.93
     },
     "LINK": {
      "k30": -30.69,
      "dip": -30.69
     },
-    "LMKDC": {
-     "k30": 8.24,
-     "dip": -5.34
+    "KTLEV": {
+     "k30": -68.49,
+     "dip": -68.49
+    },
+    "LOGO": {
+     "k30": 1.12,
+     "dip": -5.21
     },
     "LKMNH": {
      "k30": -11.55,
      "dip": -11.79
+    },
+    "LMKDC": {
+     "k30": 8.24,
+     "dip": -5.34
     },
     "LXGYO": {
      "k30": -17.29,
@@ -42195,9 +42359,9 @@
      "k30": -64.97,
      "dip": -64.97
     },
-    "LOGO": {
-     "k30": 1.12,
-     "dip": -5.21
+    "MCARD": {
+     "k30": -45.85,
+     "dip": -45.85
     },
     "MAKIM": {
      "k30": -15.19,
@@ -42211,21 +42375,17 @@
      "k30": 2.78,
      "dip": -4.56
     },
-    "MCARD": {
-     "k30": -45.85,
-     "dip": -45.85
-    },
     "MEDTR": {
      "k30": -21.55,
      "dip": -21.55
     },
-    "MEGMT": {
-     "k30": -18.78,
-     "dip": -25.87
-    },
     "MEKAG": {
      "k30": -27.94,
      "dip": -27.94
+    },
+    "MEGMT": {
+     "k30": -18.78,
+     "dip": -25.87
     },
     "MEYSU": {
      "k30": -20.53,
@@ -42235,9 +42395,17 @@
      "k30": -37.75,
      "dip": -37.75
     },
+    "MNDTR": {
+     "k30": -19.47,
+     "dip": -19.47
+    },
     "MOGAN": {
      "k30": -29.18,
      "dip": -33.47
+    },
+    "NETCD": {
+     "k30": -28.44,
+     "dip": -28.44
     },
     "MOPAS": {
      "k30": -20.81,
@@ -42251,33 +42419,21 @@
      "k30": -24.75,
      "dip": -24.75
     },
-    "NETCD": {
-     "k30": -28.44,
-     "dip": -28.44
-    },
     "NETAS": {
      "k30": -26.15,
      "dip": -26.15
-    },
-    "MNDTR": {
-     "k30": -19.47,
-     "dip": -19.47
-    },
-    "NTGAZ": {
-     "k30": -5.95,
-     "dip": -9.2
     },
     "OBASE": {
      "k30": -25.37,
      "dip": -28.91
     },
-    "OBAMS": {
-     "k30": -17.15,
-     "dip": -18.11
-    },
     "ONCSM": {
      "k30": -49.87,
      "dip": -49.87
+    },
+    "OBAMS": {
+     "k30": -17.15,
+     "dip": -18.11
     },
     "OSTIM": {
      "k30": -26.42,
@@ -42291,37 +42447,21 @@
      "k30": -6.58,
      "dip": -6.58
     },
+    "NTGAZ": {
+     "k30": -5.95,
+     "dip": -9.2
+    },
     "OZRDN": {
      "k30": -49.67,
      "dip": -49.67
-    },
-    "PAGYO": {
-     "k30": -9.17,
-     "dip": -12.97
-    },
-    "PARSN": {
-     "k30": -16.68,
-     "dip": -16.68
-    },
-    "PASEU": {
-     "k30": -62.74,
-     "dip": -65
     },
     "PENTA": {
      "k30": -24.47,
      "dip": -24.47
     },
-    "PETKM": {
-     "k30": -16.62,
-     "dip": -16.62
-    },
-    "PLTUR": {
-     "k30": -25.82,
-     "dip": -25.82
-    },
-    "PKART": {
-     "k30": -18.94,
-     "dip": -18.94
+    "PARSN": {
+     "k30": -16.68,
+     "dip": -16.68
     },
     "PENGD": {
      "k30": -25.39,
@@ -42331,33 +42471,57 @@
      "k30": -17.44,
      "dip": -17.44
     },
+    "PETKM": {
+     "k30": -16.62,
+     "dip": -16.62
+    },
+    "PAGYO": {
+     "k30": -9.17,
+     "dip": -12.97
+    },
+    "PLTUR": {
+     "k30": -25.82,
+     "dip": -25.82
+    },
+    "PKART": {
+     "k30": -18.94,
+     "dip": -18.94
+    },
+    "PASEU": {
+     "k30": -62.74,
+     "dip": -65
+    },
     "PNSUT": {
      "k30": -11.95,
      "dip": -11.95
-    },
-    "POLHO": {
-     "k30": -17.96,
-     "dip": -18.19
     },
     "QUAGR": {
      "k30": -34.63,
      "dip": -34.63
     },
-    "RODRG": {
-     "k30": -26.83,
-     "dip": -26.83
-    },
     "REEDR": {
      "k30": -37.38,
      "dip": -37.38
+    },
+    "RODRG": {
+     "k30": -26.83,
+     "dip": -26.83
     },
     "RUBNS": {
      "k30": -44.32,
      "dip": -44.32
     },
+    "POLHO": {
+     "k30": -17.96,
+     "dip": -18.19
+    },
     "SAFKR": {
      "k30": -10.77,
      "dip": -16.77
+    },
+    "SARKY": {
+     "k30": -11.81,
+     "dip": -11.81
     },
     "SAMAT": {
      "k30": -27.17,
@@ -42367,45 +42531,41 @@
      "k30": -11.5,
      "dip": -11.5
     },
-    "SARKY": {
-     "k30": -11.81,
-     "dip": -11.81
+    "SELVA": {
+     "k30": -22.6,
+     "dip": -23.29
     },
     "SAYAS": {
      "k30": -19.6,
      "dip": -19.6
     },
-    "SEGMN": {
-     "k30": -50.28,
-     "dip": -50.28
+    "SEKUR": {
+     "k30": -60.05,
+     "dip": -63.68
     },
     "SDTTR": {
      "k30": -21.66,
      "dip": -21.66
     },
-    "SEKUR": {
-     "k30": -60.05,
-     "dip": -63.68
-    },
-    "SELEC": {
-     "k30": -68.5,
-     "dip": -68.5
-    },
-    "SELVA": {
-     "k30": -22.6,
-     "dip": -23.29
-    },
-    "SILVR": {
-     "k30": -27.31,
-     "dip": -27.31
+    "SEGMN": {
+     "k30": -50.28,
+     "dip": -50.28
     },
     "SMART": {
      "k30": -28.17,
      "dip": -28.17
     },
+    "SELEC": {
+     "k30": -68.5,
+     "dip": -68.5
+    },
     "SMRTG": {
      "k30": -42.79,
      "dip": -42.79
+    },
+    "SILVR": {
+     "k30": -27.31,
+     "dip": -27.31
     },
     "SNICA": {
      "k30": -28.1,
@@ -42419,13 +42579,17 @@
      "k30": -34.82,
      "dip": -34.82
     },
-    "SOKE": {
-     "k30": -38.52,
-     "dip": -38.52
-    },
     "SRVGY": {
      "k30": -11.81,
      "dip": -12.66
+    },
+    "SSAAT": {
+     "k30": -16.63,
+     "dip": -16.63
+    },
+    "SOKE": {
+     "k30": -38.52,
+     "dip": -38.52
     },
     "SURGY": {
      "k30": -30.79,
@@ -42439,6 +42603,10 @@
      "k30": -31.54,
      "dip": -31.54
     },
+    "TKNSA": {
+     "k30": -21.27,
+     "dip": -21.27
+    },
     "TCKRC": {
      "k30": -7.38,
      "dip": -13.37
@@ -42447,41 +42615,37 @@
      "k30": -14.47,
      "dip": -17.01
     },
-    "SSAAT": {
-     "k30": -16.63,
-     "dip": -16.63
-    },
-    "TGSAS": {
-     "k30": -51.84,
-     "dip": -56.21
-    },
     "TKFEN": {
      "k30": 0.61,
      "dip": 0
-    },
-    "TKNSA": {
-     "k30": -21.27,
-     "dip": -21.27
     },
     "TMPOL": {
      "k30": -68.52,
      "dip": -68.52
     },
+    "TUPRS": {
+     "k30": -7.15,
+     "dip": -7.15
+    },
     "TUCLK": {
      "k30": 9.31,
      "dip": -9.31
+    },
+    "TGSAS": {
+     "k30": -51.84,
+     "dip": -56.21
     },
     "TUREX": {
      "k30": -3.45,
      "dip": -14.66
     },
-    "TUPRS": {
-     "k30": -7.15,
-     "dip": -7.15
-    },
     "TURGG": {
      "k30": -18.31,
      "dip": -18.31
+    },
+    "VANGD": {
+     "k30": -40.06,
+     "dip": -44.41
     },
     "UCAYM": {
      "k30": -27.89,
@@ -42490,10 +42654,6 @@
     "ULUSE": {
      "k30": -39.79,
      "dip": -39.79
-    },
-    "VANGD": {
-     "k30": -40.06,
-     "dip": -44.41
     },
     "VAKKO": {
      "k30": -12.2,
@@ -42507,25 +42667,25 @@
      "k30": -13.19,
      "dip": -13.19
     },
-    "YEOTK": {
-     "k30": -16.76,
-     "dip": -16.76
+    "YKSLN": {
+     "k30": -59.06,
+     "dip": -59.06
     },
     "YIGIT": {
      "k30": -23.55,
      "dip": -23.55
     },
-    "YKSLN": {
-     "k30": -59.06,
-     "dip": -59.06
-    },
-    "ZEDUR": {
-     "k30": -26.31,
-     "dip": -26.31
+    "YEOTK": {
+     "k30": -16.76,
+     "dip": -16.76
     },
     "YUNSA": {
      "k30": -14.48,
      "dip": -14.48
+    },
+    "ZEDUR": {
+     "k30": -26.31,
+     "dip": -26.31
     }
    }
   }

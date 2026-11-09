@@ -1,5 +1,5 @@
 {
- "tarih": "2026-11-07",
+ "tarih": "2026-11-09",
  "kodlar": [
   "ACSEL",
   "AHGAZ",
@@ -115,6 +115,7 @@
   "KRSTL",
   "KRVGD",
   "KUTPO",
+  "KZBGY",
   "LINK",
   "LKMNH",
   "LMKDC",
@@ -194,7 +195,7 @@
   "YUNSA",
   "ZEDUR"
  ],
- "sayi": 192,
+ "sayi": 193,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -740,7 +741,10 @@
   "EKGYO": "2026-11-07",
   "ERBOS": "2026-11-07",
   "FADE": "2026-11-07",
-  "SMRTG": "2026-11-07"
+  "SMRTG": "2026-11-07",
+  "GLYHO": "2026-11-09",
+  "KZBGY": "2026-11-09",
+  "SANEL": "2026-11-09"
  },
  "evren_disi": [
   "AAGYO",
@@ -887,6 +891,7 @@
   "GIPTA",
   "GLCVY",
   "GLRYH",
+  "GLYHO",
   "GOZDE",
   "GRNYO",
   "GRTHO",
@@ -1023,6 +1028,7 @@
   "RYGYO",
   "RYSAS",
   "SAHOL",
+  "SANEL",
   "SARAE",
   "SARTN",
   "SASA",
@@ -1097,13 +1103,8 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 353,
- "pencere_sayi": 88,
- "dusen_son": [
-  "FORTE",
-  "PASEU",
-  "SAYAS",
-  "TUPRS"
- ],
- "guncelleme": "2026-11-07 10:58 UTC — otomatik (KAP FR · kümülatif §299)"
+ "evren_disi_sayi": 355,
+ "pencere_sayi": 8,
+ "dusen_son": [],
+ "guncelleme": "2026-11-09 09:19 UTC — otomatik (KAP FR · kümülatif §299)"
 }

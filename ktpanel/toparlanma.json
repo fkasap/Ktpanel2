@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-07",
+ "guncelleme": "2026-11-09",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-06",
@@ -54,7 +54,7 @@
      "esik": "≤ 0 bp (daralma)",
      "tamam": true,
      "birim": "bp",
-     "not": "1 ay 0 bp"
+     "not": "1 ay -1 bp"
     }
    ]
   },
@@ -1189,7 +1189,7 @@
    "dd": -79.3,
    "dipten": 25.1,
    "beta": 1.23,
-   "kalite": 1.07,
+   "kalite": 0.99,
    "skor": 3.46,
    "baski": false
   },
@@ -1202,7 +1202,7 @@
    "dipten": 33.3,
    "beta": 1.38,
    "kalite": 0.37,
-   "skor": 3.3,
+   "skor": 3.31,
    "baski": false
   },
   {
@@ -1213,32 +1213,32 @@
    "dd": -60.4,
    "dipten": 35.2,
    "beta": 1.18,
-   "kalite": 0.32,
-   "skor": 2.5,
+   "kalite": 0.31,
+   "skor": 2.49,
    "baski": false
   },
   {
    "k": "PASEU",
    "s": "Industrials",
-   "w": 0.2,
+   "w": 0.21,
    "r3": -84.1,
    "dd": -89.6,
    "dipten": 22,
    "beta": 0.86,
-   "kalite": -0.11,
-   "skor": 2.45,
+   "kalite": -0.12,
+   "skor": 2.42,
    "baski": true
   },
   {
    "k": "EUPWR",
    "s": "Industrials",
-   "w": 0.55,
+   "w": 0.57,
    "r3": -53.4,
    "dd": -60.2,
    "dipten": 16.1,
    "beta": 1.15,
-   "kalite": 0.45,
-   "skor": 2.32,
+   "kalite": 0.44,
+   "skor": 2.3,
    "baski": false
   },
   {
@@ -1250,79 +1250,79 @@
    "dipten": 24.6,
    "beta": 1.01,
    "kalite": -0.2,
-   "skor": 2.27,
+   "skor": 2.25,
    "baski": true
   },
   {
    "k": "GESAN",
    "s": "Industrials",
-   "w": 0.33,
+   "w": 0.35,
    "r3": -55,
    "dd": -61.4,
    "dipten": 19.9,
    "beta": 1.09,
-   "kalite": 0.13,
-   "skor": 2.13,
+   "kalite": 0.12,
+   "skor": 2.12,
    "baski": true
   },
   {
    "k": "GUBRF",
    "s": "Materials",
-   "w": 1.07,
+   "w": 1.09,
    "r3": -33.8,
    "dd": -50.8,
    "dipten": 15.6,
    "beta": 1.28,
    "kalite": 1.4,
-   "skor": 2.01,
+   "skor": 2,
    "baski": true
   },
   {
    "k": "GENIL",
    "s": "Health Care",
-   "w": 0.24,
+   "w": 0.25,
    "r3": -59.2,
    "dd": -65.2,
    "dipten": 29.1,
    "beta": 0.99,
    "kalite": 0.39,
-   "skor": 1.91,
+   "skor": 1.89,
    "baski": true
-  },
-  {
-   "k": "LINK",
-   "s": "Information Technology",
-   "w": 0.08,
-   "r3": -53,
-   "dd": -64.5,
-   "dipten": 15,
-   "beta": 1.02,
-   "kalite": 1.7,
-   "skor": 1.75,
-   "baski": false
   },
   {
    "k": "YEOTK",
    "s": "Industrials",
-   "w": 0.4,
+   "w": 0.44,
    "r3": -33.4,
    "dd": -51,
    "dipten": 20.5,
    "beta": 1.22,
    "kalite": 1.16,
-   "skor": 1.74,
+   "skor": 1.73,
+   "baski": false
+  },
+  {
+   "k": "LINK",
+   "s": "Information Technology",
+   "w": 0.09,
+   "r3": -53,
+   "dd": -64.5,
+   "dipten": 15,
+   "beta": 1.02,
+   "kalite": 1.65,
+   "skor": 1.73,
    "baski": false
   },
   {
    "k": "GLRMK",
    "s": "Industrials",
-   "w": 0.53,
+   "w": 0.55,
    "r3": -32.4,
    "dd": -35,
    "dipten": 16.6,
    "beta": 1.2,
    "kalite": 0.41,
-   "skor": 1.59,
+   "skor": 1.58,
    "baski": true
   }
  ],
