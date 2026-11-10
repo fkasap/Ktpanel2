@@ -359,15 +359,15 @@
    "k": "CELHA",
    "fiyat": 30.04,
    "adet": 385.5,
-   "ciro": 2014,
-   "ebitda": 116,
-   "netBorc": 404,
+   "ciro": 1966,
+   "ebitda": 196,
+   "netBorc": 368,
    "hacim": 175,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 28
+   "ebitda_genis": 132
   },
   {
    "k": "CEMTS",
@@ -467,15 +467,15 @@
    "k": "DARDL",
    "fiyat": 0.98,
    "adet": 2344.397,
-   "ciro": 13162,
-   "ebitda": 526,
-   "netBorc": 5856,
+   "ciro": 13274,
+   "ebitda": 666,
+   "netBorc": 6091,
    "hacim": 27,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 859
+   "ebitda_genis": 1058
   },
   {
    "k": "DCTTR",

@@ -801,7 +801,8 @@
   "VSNMD": "2026-11-09",
   "YKSLN": "2026-11-09",
   "BIGTK": "2026-11-10",
-  "MANAS": "2026-11-10"
+  "MANAS": "2026-11-10",
+  "HUBVC": "2026-11-10"
  },
  "evren_disi": [
   "AAGYO",
@@ -982,6 +983,7 @@
   "HEKTS",
   "HLGYO",
   "HTTBT",
+  "HUBVC",
   "HUNER",
   "HURGZ",
   "ICUGS",
@@ -1191,11 +1193,11 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 386,
- "pencere_sayi": 213,
+ "evren_disi_sayi": 387,
+ "pencere_sayi": 214,
  "dusen_son": [
   "CWENE",
   "LOGO"
  ],
- "guncelleme": "2026-11-10 07:49 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-10 21:17 UTC — otomatik (KAP FR · kümülatif §299)"
 }
