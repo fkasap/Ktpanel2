@@ -1,5 +1,5 @@
 {
- "tarih": "2026-11-09",
+ "tarih": "2026-11-10",
  "kodlar": [
   "ACSEL",
   "AHGAZ",
@@ -799,7 +799,9 @@
   "TRALT": "2026-11-09",
   "USAK": "2026-11-09",
   "VSNMD": "2026-11-09",
-  "YKSLN": "2026-11-09"
+  "YKSLN": "2026-11-09",
+  "BIGTK": "2026-11-10",
+  "MANAS": "2026-11-10"
  },
  "evren_disi": [
   "AAGYO",
@@ -864,6 +866,7 @@
   "BEYAZ",
   "BIGCH",
   "BIGEN",
+  "BIGTK",
   "BIOEN",
   "BIZIM",
   "BJKAS",
@@ -1035,6 +1038,7 @@
   "MAALT",
   "MACKO",
   "MAKTK",
+  "MANAS",
   "MARKA",
   "MARMR",
   "MASFN",
@@ -1187,11 +1191,11 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 384,
- "pencere_sayi": 212,
+ "evren_disi_sayi": 386,
+ "pencere_sayi": 213,
  "dusen_son": [
   "CWENE",
   "LOGO"
  ],
- "guncelleme": "2026-11-09 23:46 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-10 07:49 UTC — otomatik (KAP FR · kümülatif §299)"
 }
