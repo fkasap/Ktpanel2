@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-10",
+ "guncelleme": "2026-11-11",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-09",
@@ -50,11 +50,11 @@
     },
     {
      "ad": "TR CDS 2 hafta değişim",
-     "deger": -13,
+     "deger": -15,
      "esik": "≤ 0 bp (daralma)",
      "tamam": true,
      "birim": "bp",
-     "not": "1 ay 0 bp"
+     "not": "1 ay -5 bp"
     }
    ]
   },
@@ -1193,37 +1193,37 @@
   {
    "k": "CWENE",
    "s": "Industrials",
-   "w": 0.26,
+   "w": 0.25,
    "r3": -56.6,
    "dd": -61.8,
    "dipten": 31,
    "beta": 1.35,
    "kalite": 0.31,
-   "skor": 3.31,
+   "skor": 3.32,
    "baski": false
   },
   {
    "k": "PASEU",
    "s": "Industrials",
-   "w": 0.22,
+   "w": 0.21,
    "r3": -80.5,
    "dd": -88.6,
    "dipten": 34.2,
    "beta": 0.9,
-   "kalite": -0.16,
-   "skor": 2.38,
+   "kalite": -0.17,
+   "skor": 2.39,
    "baski": true
   },
   {
    "k": "KBORU",
    "s": "Industrials",
-   "w": 0.08,
+   "w": 0.07,
    "r3": -52.1,
    "dd": -60,
    "dipten": 36.6,
    "beta": 1.18,
-   "kalite": 0.25,
-   "skor": 2.36,
+   "kalite": 0.24,
+   "skor": 2.37,
    "baski": false
   },
   {
@@ -1253,7 +1253,7 @@
   {
    "k": "GENIL",
    "s": "Health Care",
-   "w": 0.24,
+   "w": 0.25,
    "r3": -58.5,
    "dd": -63.8,
    "dipten": 34.2,
@@ -1265,13 +1265,13 @@
   {
    "k": "GUBRF",
    "s": "Materials",
-   "w": 1.09,
+   "w": 1.05,
    "r3": -26.6,
    "dd": -45.7,
    "dipten": 22.7,
    "beta": 1.3,
    "kalite": 1.32,
-   "skor": 1.79,
+   "skor": 1.8,
    "baski": true
   },
   {
@@ -1295,18 +1295,18 @@
    "dipten": 22.3,
    "beta": 1.17,
    "kalite": 0.2,
-   "skor": 1.49,
+   "skor": 1.5,
    "baski": false
   },
   {
    "k": "GLRMK",
    "s": "Industrials",
-   "w": 0.51,
+   "w": 0.5,
    "r3": -27.7,
    "dd": -31.6,
    "dipten": 21.6,
    "beta": 1.2,
-   "kalite": 0.34,
+   "kalite": 0.33,
    "skor": 1.43,
    "baski": true
   },
@@ -1318,12 +1318,12 @@
    "dd": -58.4,
    "dipten": 12.2,
    "beta": 1.1,
-   "kalite": 2.39,
+   "kalite": 2.4,
    "skor": 1.42,
    "baski": false
   }
  ],
- "onceki_asama": 0,
+ "onceki_asama": 3,
  "asama_degisim": "2026-11-06 → 2026-11-09",
  "gecmis": [
   {

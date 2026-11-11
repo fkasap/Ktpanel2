@@ -1,5 +1,5 @@
 {
- "tarih": "2026-11-10",
+ "tarih": "2026-11-11",
  "kodlar": [
   "ACSEL",
   "AHGAZ",
@@ -1194,10 +1194,7 @@
   "ZRGYO"
  ],
  "evren_disi_sayi": 387,
- "pencere_sayi": 214,
- "dusen_son": [
-  "CWENE",
-  "LOGO"
- ],
- "guncelleme": "2026-11-10 21:17 UTC — otomatik (KAP FR · kümülatif §299)"
+ "pencere_sayi": 8,
+ "dusen_son": [],
+ "guncelleme": "2026-11-11 06:29 UTC — otomatik (KAP FR · kümülatif §299)"
 }

@@ -1,6 +1,6 @@
 {
- "surum": "degerleme-2026-11-10",
- "guncelleme": "2026-11-10",
+ "surum": "degerleme-2026-11-11",
+ "guncelleme": "2026-11-11",
  "yontem": "PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.",
  "neden_pddd": "Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.",
  "bant": {
@@ -1777,23 +1777,35 @@
   {
    "k": "GRSEL",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 13923460638,
+   "donem": "2026/3",
+   "ozk": 15195911789,
    "srm": 102000000,
-   "n": 5,
-   "ort": 3.138,
-   "sapma": 0.704,
-   "dip": 2.242,
+   "n": 9,
+   "ort": 2.944,
+   "sapma": 0.68,
+   "dip": 1.863,
    "zirve": 4.156,
-   "cv": 0.22,
-   "guven": "düşük",
+   "cv": 0.23,
+   "guven": "yüksek",
    "canli": {
     "tarih": "2026-11-09",
     "fiyat": 276.75,
-    "pddd": 2.027,
-    "z": -1.58
+    "pddd": 1.858,
+    "z": -1.6
    },
    "seri": [
+    {
+     "q": "2024Q3",
+     "pddd": 2.518
+    },
+    {
+     "q": "2024Q4",
+     "pddd": 3.256
+    },
+    {
+     "q": "2025Q1",
+     "pddd": 3.175
+    },
     {
      "q": "2025Q2",
      "pddd": 3.658
@@ -1813,6 +1825,10 @@
     {
      "q": "2026Q2",
      "pddd": 2.242
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 1.863
     }
    ]
   },
@@ -1943,21 +1959,21 @@
   {
    "k": "KATMR",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 10500128155,
+   "donem": "2026/3",
+   "ozk": 11035315083,
    "srm": 2153250000,
-   "n": 5,
-   "ort": 0.626,
-   "sapma": 0.096,
-   "dip": 0.525,
+   "n": 6,
+   "ort": 0.57,
+   "sapma": 0.152,
+   "dip": 0.293,
    "zirve": 0.78,
-   "cv": 0.15,
+   "cv": 0.27,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-11-09",
     "fiyat": 1.25,
-    "pddd": 0.256,
-    "z": -3.84
+    "pddd": 0.244,
+    "z": -2.15
    },
    "seri": [
     {
@@ -1979,6 +1995,10 @@
     {
      "q": "2026Q2",
      "pddd": 0.552
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 0.293
     }
    ]
   },
