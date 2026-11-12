@@ -1263,9 +1263,33 @@ async function fonTazele() {
      olarak yazılır. Bütün katmanın düşmesi (45 fonun fiyatı yazılmadı) bu tek fona bağlı kalmasın. */
   let _tasf = new Set(); try { _tasf = new Set(Object.keys((((await oku('fon-portfoy.json')) || {}).tasfiye || {}).kodlar || {})); } catch (e) {}
   const _tasfHareket = gunluk.filter(x => _tasf.has(x.kod) && Math.abs(x.d) > 2);
+  /* §554 (11 Kas, Veri Tazele #42972522286 KALDI): TEFAS WAF bir sayfayı "Request Rejected" ile kesti → köprü 1979 yerine
+     1738 fon verdi; eksik kalanlar arasında GOP, TPZ ve TASFİYEDEKİ HPH, PKL (+ her zaman eksik TLV, o da tasfiyede) vardı →
+     41/46 = %89 < %95 → katman yazılmadı, iş kırmızı. Tasfiyedeki fonların fiyatı zaten düzensiz/yok; aykırı kuralından
+     muaf tutuldukları gibi (§541b) KAPSAM PAYDASINDAN da çıkarılır. Böylece gerçek kapsam 40/42 = %95 olur ve iş yalnız
+     İŞLEYEN fonlar eksikse düşer. Rapora tasfiye-dışı sayım ve eksik kodlar ayrıca yazılır (bu koşuda kodlar görünmüyordu). */
+  const _kodIslek = kodlar.filter(k => !_tasf.has(k)), _kapsIslek = kapsanan.filter(k => !_tasf.has(k));
+  const _kapsEksik = _kodIslek.filter(k => !fiyat[k]);
+  raporlar.push('- §554 kapsam (tasfiye hariç): ' + _kapsIslek.length + '/' + _kodIslek.length +
+    (_kapsEksik.length ? ' · eksik: ' + _kapsEksik.join(', ') : '') +
+    ' · tasfiyede ' + kodlar.filter(k => _tasf.has(k)).length + ' fon paydadan çıkarıldı');
+  /* §555 (12 Kas, Veri Tazele #43172445460 KALDI): GOP (Golden Global para piyasası katılım) tek günde −%2,22
+     (1,321131 → 1,291861). Bu düşüş değil KÂR PAYI DAĞITIMI — para piyasası fonu günde ~%0,06 kazanır; −%2,2 ≈ 36 günlük
+     birikimin pay sahibine ödenmesi (§149'daki MPE −%3,57 ile aynı olgu). Eski kural "düzeltilmeden yazılmaz" diyordu ama
+     düzeltme ELLE yapılıyordu → her dağıtımda 45 fonun fiyatı bir gün yazılmıyor, iş kırmızı. Artık otomatik:
+     döviz dışı kategoride tek günde −%1 … −%8 arası düşüş = dağıtım sayılır → fona damga (f.dagitim), aykırı kuralından
+     muaf, katman YAZILIR. 1G ham bırakılır (fiyat gerçekten düştü) — panel damgayı görüp "dağıtım" diye işaretler.
+     TEFAS resmî dönem getirileri (§249g) dağıtımı kendi hesabında taşır; bizim 1A/3A'ya ek düzeltme gerekmez. */
+  const _dovizKod = new Set(((d.kategoriler || []).find(c => /döviz/i.test(c.ad || '')) || { fonlar: [] }).fonlar.map(f => f.k));
+  const _dagitim = gunluk.filter(x => !_tasf.has(x.kod) && !_dovizKod.has(x.kod) && x.d <= -1 && x.d >= -8);
+  const _dagitimSet = new Set(_dagitim.map(x => x.kod));
+  _dagitim.forEach(x => { const f = fonlar.find(y => y.k === x.kod); if (!f) return;
+    f.dagitim = { tarih: bugun, eski: f.yu, yeni: fiyat[x.kod], oran: +x.d.toFixed(2) };
+    f.not = bugun + ' kâr payı dağıtımı (otomatik §555): fiyat ' + f.yu + ' → ' + fiyat[x.kod] + ' (' + x.d.toFixed(2) + '%). 1G ham; TEFAS dönem getirileri dağıtım dahil.'; });
+  if (_dagitim.length) raporlar.push('- §555 kâr payı dağıtımı sayıldı (aykırı kuralından muaf, katman yazıldı): ' + _dagitim.map(x => x.kod + ' ' + x.d.toFixed(2) + '%').join(' · '));
   const kontrol = [
-    KURALLAR.kapsam(kapsanan.length, kodlar.length, 0.95),
-    KURALLAR.aykiri(gunluk.filter(x => !_tasf.has(x.kod)), 'd', 2),
+    KURALLAR.kapsam(_kapsIslek.length, _kodIslek.length, 0.95),
+    KURALLAR.aykiri(gunluk.filter(x => !_tasf.has(x.kod) && !_dagitimSet.has(x.kod)), 'd', 2),
     KURALLAR.donemArtan(fonlar.filter(f => !_tasf.has(f.k)), [1, 2, 3], 0.5)
   ];
   const s = denetle('Katılım fonları', kontrol);
