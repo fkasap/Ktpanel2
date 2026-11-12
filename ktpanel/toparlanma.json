@@ -1186,8 +1186,8 @@
    "dd": -65.6,
    "dipten": 18,
    "beta": 1.36,
-   "kalite": -0.08,
-   "skor": 3.3,
+   "kalite": -0.07,
+   "skor": 3.34,
    "baski": false
   },
   {
@@ -1199,19 +1199,7 @@
    "dipten": 23.1,
    "beta": 1.22,
    "kalite": 0.43,
-   "skor": 3.27,
-   "baski": false
-  },
-  {
-   "k": "ONCSM",
-   "s": "Health Care",
-   "w": 0.05,
-   "r3": -62.7,
-   "dd": -76.4,
-   "dipten": 10.5,
-   "beta": 1.17,
-   "kalite": 1.6,
-   "skor": 2.64,
+   "skor": 3.31,
    "baski": false
   },
   {
@@ -1222,20 +1210,20 @@
    "dd": -62,
    "dipten": 10.9,
    "beta": 1.21,
-   "kalite": 0,
-   "skor": 2.59,
+   "kalite": 0.01,
+   "skor": 2.62,
    "baski": false
   },
   {
    "k": "PASEU",
    "s": "Industrials",
-   "w": 0.23,
+   "w": 0.24,
    "r3": -78.9,
    "dd": -88.8,
    "dipten": 31.1,
    "beta": 0.92,
-   "kalite": -0.15,
-   "skor": 2.29,
+   "kalite": -0.14,
+   "skor": 2.32,
    "baski": true
   },
   {
@@ -1246,8 +1234,8 @@
    "dd": -63.5,
    "dipten": 13.3,
    "beta": 1.12,
-   "kalite": 0.08,
-   "skor": 2.26,
+   "kalite": 0.09,
+   "skor": 2.29,
    "baski": true
   },
   {
@@ -1258,8 +1246,8 @@
    "dd": -61.3,
    "dipten": 32,
    "beta": 1.2,
-   "kalite": 0.24,
-   "skor": 2.25,
+   "kalite": 0.26,
+   "skor": 2.29,
    "baski": false
   },
   {
@@ -1271,7 +1259,7 @@
    "dipten": 10.5,
    "beta": 1.38,
    "kalite": 1.36,
-   "skor": 2.05,
+   "skor": 2.08,
    "baski": false
   },
   {
@@ -1282,8 +1270,8 @@
    "dd": -64.3,
    "dipten": 32.4,
    "beta": 1.02,
-   "kalite": 0.31,
-   "skor": 1.95,
+   "kalite": 0.32,
+   "skor": 1.99,
    "baski": true
   },
   {
@@ -1295,31 +1283,43 @@
    "dipten": 35.1,
    "beta": 0.95,
    "kalite": -0.1,
-   "skor": 1.9,
+   "skor": 1.93,
    "baski": true
   },
   {
    "k": "GUBRF",
    "s": "Materials",
-   "w": 1.02,
+   "w": 1.01,
    "r3": -31.8,
    "dd": -49,
    "dipten": 15.1,
    "beta": 1.3,
    "kalite": 1.06,
-   "skor": 1.87,
+   "skor": 1.9,
    "baski": true
   },
   {
    "k": "GLRMK",
    "s": "Industrials",
-   "w": 0.44,
+   "w": 0.46,
    "r3": -36.2,
    "dd": -38.4,
    "dipten": 9.5,
    "beta": 1.22,
-   "kalite": -0.09,
-   "skor": 1.7,
+   "kalite": -0.08,
+   "skor": 1.72,
+   "baski": true
+  },
+  {
+   "k": "IZFAS",
+   "s": "Consumer Staples",
+   "w": 0.09,
+   "r3": -78.8,
+   "dd": -81.5,
+   "dipten": 1.3,
+   "beta": 0.75,
+   "kalite": 0.2,
+   "skor": 1.65,
    "baski": true
   }
  ],
