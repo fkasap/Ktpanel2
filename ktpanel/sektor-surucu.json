@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-11T21:53:11Z",
+ "guncelleme": "2026-11-12T06:50:11Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -208,7 +208,7 @@
    "n": 13,
    "ilk": "2024-10-03",
    "son": "2024-12-26",
-   "usdtry_ort": 34.762,
+   "usdtry_ort": 34.773,
    "usdtry_son": 35.3052,
    "tam": true
   },
@@ -320,8 +320,8 @@
    "n": 30,
    "ilk": "2026-10-01",
    "son": "2026-11-11",
-   "usdtry_ort": 49.652,
-   "usdtry_son": 50.2254,
+   "usdtry_ort": 49.671,
+   "usdtry_son": 50.2394,
    "tam": false
   }
  },
@@ -3204,7 +3204,7 @@
   "2026-08": 48.2675,
   "2026-09": 49.028,
   "2026-10": 49.9428,
-  "2026-11": 50.2254
+  "2026-11": 50.2394
  },
  "seriler": {
   "altin": {
@@ -5290,14 +5290,18 @@
     ],
     [
      "2026-11-11",
-     3992.8999
+     4000.5
+    ],
+    [
+     "2026-11-12",
+     3980.3999
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 3992.8999
+    "tarih": "2026-11-12",
+    "deger": 3980.3999
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "gumus": {
    "ad": "Gümüş (COMEX SI=F)",
@@ -7382,14 +7386,18 @@
     ],
     [
      "2026-11-11",
-     51.72
+     51.881
+    ],
+    [
+     "2026-11-12",
+     51.44
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 51.72
+    "tarih": "2026-11-12",
+    "deger": 51.44
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "bakir": {
    "ad": "Bakır (COMEX HG=F)",
@@ -9474,14 +9482,18 @@
     ],
     [
      "2026-11-11",
-     6.266
+     6.2745
+    ],
+    [
+     "2026-11-12",
+     6.2335
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 6.266
+    "tarih": "2026-11-12",
+    "deger": 6.2335
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "aluminyum": {
    "ad": "Alüminyum (CME ALI=F)",
@@ -11560,14 +11572,18 @@
     ],
     [
      "2026-11-11",
-     3175.75
+     3228
+    ],
+    [
+     "2026-11-12",
+     3182
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 3175.75
+    "tarih": "2026-11-12",
+    "deger": 3182
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "hrc_abd": {
    "ad": "ABD Midwest HRC (CME HRC=F) — TR HRC vekili",
@@ -13650,14 +13666,14 @@
     ],
     [
      "2026-11-11",
-     1428
+     1351
     ]
    ],
    "son": {
     "tarih": "2026-11-11",
-    "deger": 1428
+    "deger": 1351
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ttf": {
    "ad": "TTF doğalgaz (TTF=F)",
@@ -15745,14 +15761,14 @@
     ],
     [
      "2026-11-11",
-     87.22
+     86.652
     ]
    ],
    "son": {
     "tarih": "2026-11-11",
-    "deger": 87.22
+    "deger": 86.652
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "henryhub": {
    "ad": "Henry Hub doğalgaz (NG=F)",
@@ -17835,14 +17851,18 @@
     ],
     [
      "2026-11-11",
-     3.249
+     3.215
+    ],
+    [
+     "2026-11-12",
+     3.248
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 3.249
+    "tarih": "2026-11-12",
+    "deger": 3.248
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "bugday": {
    "ad": "Buğday CBOT (ZW=F)",
@@ -19923,14 +19943,18 @@
     ],
     [
      "2026-11-11",
-     600.75
+     599.5
+    ],
+    [
+     "2026-11-12",
+     601
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 600.75
+    "tarih": "2026-11-12",
+    "deger": 601
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "brent_yh": {
    "ad": "Brent (ICE BZ=F) — Neste çaprazı",
@@ -22015,14 +22039,18 @@
     ],
     [
      "2026-11-11",
-     92.65
+     92.76
+    ],
+    [
+     "2026-11-12",
+     92.49
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 92.65
+    "tarih": "2026-11-12",
+    "deger": 92.49
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "eurusd": {
    "ad": "EUR/USD",
@@ -24170,14 +24198,18 @@
     ],
     [
      "2026-11-11",
-     1.1093
+     1.1169
+    ],
+    [
+     "2026-11-12",
+     1.108
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 1.1093
+    "tarih": "2026-11-12",
+    "deger": 1.108
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "usdtry": {
    "ad": "USD/TRY",
@@ -26326,14 +26358,18 @@
     ],
     [
      "2026-11-11",
-     50.2249
+     50.2096
+    ],
+    [
+     "2026-11-12",
+     50.241
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 50.2249
+    "tarih": "2026-11-12",
+    "deger": 50.241
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ure": {
    "ad": "Üre, Karadeniz (WB)",
@@ -26554,7 +26590,7 @@
     "tarih": "2026-10",
     "deger": 420
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dap": {
    "ad": "DAP (WB)",
@@ -26775,7 +26811,7 @@
     "tarih": "2026-10",
     "deger": 803.1
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "demir_cevheri": {
    "ad": "Demir cevheri cfr (WB)",
@@ -26996,7 +27032,7 @@
     "tarih": "2026-10",
     "deger": 90.8
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "komur_termal": {
    "ad": "Kömür, Avustralya termal (WB)",
@@ -27218,7 +27254,7 @@
     "tarih": "2026-10",
     "deger": 152.3
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "gaz_avrupa": {
    "ad": "Doğalgaz Avrupa TTF (WB)",
@@ -27441,7 +27477,7 @@
     "tarih": "2026-10",
     "deger": 28.5
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "altin_wb": {
    "ad": "Altın (WB)",
@@ -27661,7 +27697,7 @@
     "tarih": "2026-10",
     "deger": 4105
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "gumus_wb": {
    "ad": "Gümüş (WB)",
@@ -27881,7 +27917,7 @@
     "tarih": "2026-10",
     "deger": 57
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "cinko": {
    "ad": "Çinko LME (WB)",
@@ -28101,7 +28137,7 @@
     "tarih": "2026-10",
     "deger": 3818
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kursun": {
    "ad": "Kurşun LME (WB)",
@@ -28321,7 +28357,7 @@
     "tarih": "2026-10",
     "deger": 1860
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "bakir_wb": {
    "ad": "Bakır LME (WB)",
@@ -28541,7 +28577,7 @@
     "tarih": "2026-10",
     "deger": 14508
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "aluminyum_wb": {
    "ad": "Alüminyum LME (WB)",
@@ -28759,7 +28795,7 @@
     "tarih": "2026-10",
     "deger": 3061
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "bugday_wb": {
    "ad": "Buğday ABD HRW (WB)",
@@ -28979,7 +29015,7 @@
     "tarih": "2026-10",
     "deger": 317
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kakao": {
    "ad": "Kakao (WB)",
@@ -29197,7 +29233,7 @@
     "tarih": "2026-10",
     "deger": 5.75
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "seker_dunya": {
    "ad": "Şeker dünya (WB)",
@@ -29415,7 +29451,7 @@
     "tarih": "2026-10",
     "deger": 0.43
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "brent_wb": {
    "ad": "Brent (WB)",
@@ -29635,7 +29671,7 @@
     "tarih": "2026-10",
     "deger": 125
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "tufe": {
    "ad": "TÜFE genel (2025=100; 2025 öncesi 2003 bazından zincirli)",
@@ -29862,7 +29898,7 @@
     "tarih": "2026-10",
     "deger": 140.77
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_zincir": "yeni baz TP.TUKFIY2025.GENEL 2021-12'den; öncesi TP.FG.J0 × 0.031415"
   },
   "tufe_gida": {
@@ -30084,7 +30120,7 @@
     "tarih": "2026-10",
     "deger": 138.73
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_zincir": "yeni baz TP.TUKFIY2025.01 2022-01'den; öncesi TP.FG.J01 × 0.022319"
   },
   "tufe_giyim": {
@@ -30306,7 +30342,7 @@
     "tarih": "2026-10",
     "deger": 126.16
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_zincir": "yeni baz TP.TUKFIY2025.03 2015-01'den; öncesi TP.FG.J03 × 0.137065"
   },
   "yiufe": {
@@ -30526,7 +30562,7 @@
     "tarih": "2026-10",
     "deger": 5998.51
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "cimento_ufe": {
    "ad": "Yİ-ÜFE 3.14.5 çimento, kireç ve alçı (2003=100)",
@@ -30748,7 +30784,7 @@
     "tarih": "2026-10",
     "deger": 6659.68
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "celik_ufe": {
    "ad": "Yİ-ÜFE 3.15.1 ana demir-çelik ve ferro alaşımlar (2003=100)",
@@ -30971,7 +31007,7 @@
     "tarih": "2026-10",
     "deger": 7068.77
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "elektrik_ufe": {
    "ad": "Yİ-ÜFE 4.1.1 elektrik üretim-iletim-dağıtım (2003=100)",
@@ -31195,7 +31231,7 @@
     "tarih": "2026-10",
     "deger": 3049.71
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "gubre_ufe": {
    "ad": "Yİ-ÜFE 3.11.1 temel kimyasallar, gübre ve azot bileşikleri (2003=100)",
@@ -31417,7 +31453,7 @@
     "tarih": "2026-10",
     "deger": 10236.82
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kfe": {
    "ad": "Konut Fiyat Endeksi — TCMB KFE (aylık)",
@@ -31599,7 +31635,7 @@
     "tarih": "2026-09",
     "deger": 239.38
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "aofm": {
    "ad": "TCMB ağırlıklı ortalama fonlama maliyeti (AOFM, %)",
@@ -35528,7 +35564,7 @@
     "tarih": "2026-11-11",
     "deger": 36
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "tlref": {
    "ad": "BIST TLREF gecelik referans faiz (%)",
@@ -39381,7 +39417,7 @@
     "tarih": "2026-11-10",
     "deger": 35.5294
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "epdk_tarife": {
    "ad": "EPDK doğal gaz dağıtım tarifesi endeksi — SKB aylık TÜFE(z−2) güncellemesi, 2022-01=100 (türetilmiş)",
@@ -39572,13 +39608,13 @@
     "tarih": "2026-12",
     "deger": 740.8635
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Dönem içi kural: bedel(z) = bedel(z−1) × (1 + TÜFE aylık(z−2)). Son iki ay ileri taşındı (TÜFE açıklandı, tarife belli). 2027-01 dördüncü dönem başında EPDK seviyeyi yeniden kurar — kırılma notu o zaman eklenir. Şirket/bölge/kademe TL/Sm3 düzeyi değil, değişim okunur."
   },
   "ptf": {
    "kaynak": "EPİAŞ Şeffaflık · GÖP PTF saatlik → günlük ortalama (TGT)",
    "siklik": "gunluk",
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Saatlik piyasa takas fiyatının gün ortalaması (≥20 saat). Gün Öncesi Piyasası yarının fiyatını ~14:00 TR açıklar; akşam koşusu yarını da alır.",
    "ad": "PTF — gün öncesi piyasa takas fiyatı, günlük ort.",
    "birim": "TL/MWh",
@@ -45246,7 +45282,7 @@
   "ptf_usd": {
    "kaynak": "EPİAŞ Şeffaflık · GÖP PTF saatlik → günlük ortalama (TGT)",
    "siklik": "gunluk",
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Saatlik piyasa takas fiyatının gün ortalaması (≥20 saat). Gün Öncesi Piyasası yarının fiyatını ~14:00 TR açıklar; akşam koşusu yarını da alır.",
    "ad": "PTF — günlük ort., ABD doları (TCMB alış kuruyla, EPİAŞ)",
    "birim": "$/MWh",
@@ -51139,7 +51175,7 @@
     "ay": "2026-11",
     "ay_toplam": 1100
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 214,
    "sozlesmeler": [
     {
@@ -51407,8 +51443,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    }
   },
   "asels_backlog": {
@@ -51537,7 +51573,7 @@
     "deger": 3.9,
     "ay": "2025-08"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 14,
    "sozlesmeler": [
     {
@@ -51695,8 +51731,8 @@
       "yy_toplam": -43.4
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    }
   },
   "kap_yeni_is_altny": {
@@ -51803,7 +51839,7 @@
     "deger": 3.7,
     "ay": "2026-11"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 29,
    "sozlesmeler": [
     {
@@ -51961,8 +51997,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    }
   },
   "kap_yeni_is_glrmk": {
@@ -52065,7 +52101,7 @@
     "deger": 440.5,
     "ay": "2026-03"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 19,
    "sozlesmeler": [
     {
@@ -52211,8 +52247,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    }
   },
   "kap_yeni_is_asels": {
@@ -52265,7 +52301,7 @@
     "tarih": "2026-11-03",
     "deger": 1100
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 42,
    "gizli": true
   },
@@ -52285,7 +52321,7 @@
     "tarih": "2026-07",
     "deger": 334
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 1,
    "_not": "Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar)."
   },
@@ -52388,14 +52424,19 @@
      "2026-11-11",
      612.5,
      "10 Nov 2026"
+    ],
+    [
+     "2026-11-12",
+     614,
+     "11 Nov 2026"
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 612.5,
-    "etiket": "10 Nov 2026"
+    "tarih": "2026-11-12",
+    "deger": 614,
+    "etiket": "11 Nov 2026"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
   },
   "hurda_lme": {
@@ -52498,14 +52539,19 @@
      "2026-11-11",
      400.5,
      "10 Nov 2026"
+    ],
+    [
+     "2026-11-12",
+     398,
+     "11 Nov 2026"
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 400.5,
-    "etiket": "10 Nov 2026"
+    "tarih": "2026-11-12",
+    "deger": 398,
+    "etiket": "11 Nov 2026"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Tarihçe LMElive üyeliği ister; seri bu koşularla birikir (ilk nokta 2026-10-20). Değer Month-2 kontrat kapanışı, spot Platts değil — seviye değil DEĞİŞİM okunur."
   },
   "metal_marji_tr": {
@@ -52589,13 +52635,17 @@
     [
      "2026-11-11",
      212
+    ],
+    [
+     "2026-11-12",
+     216
     ]
    ],
    "son": {
-    "tarih": "2026-11-11",
-    "deger": 212
+    "tarih": "2026-11-12",
+    "deger": 216
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "KRDMD/KCAER için birincil sürücü: kütük maliyeti hurda+enerji, satış inşaat demiri. Yassı (EREGL) için HRC=F − hurda/demir cevheri ayrı okunur."
   },
   "kardemir_kutuk_usd": {
@@ -52833,7 +52883,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_nervurlu_tl": {
    "ad": "Kardemir inşaat demiri liste fiyatı — Ø12-32 (TL/t, KDV hariç)",
@@ -52998,7 +53048,7 @@
     "2026-08": 27595.32,
     "2026-09": 29845,
     "2026-10": 30422.9,
-    "2026-11": 30528.18
+    "2026-11": 30543.33
    },
    "son": {
     "tarih": "2026-11-05",
@@ -53068,7 +53118,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_nervurlu_usd": {
    "ad": "Kardemir inşaat demiri liste fiyatı — Ø12-32 ($/t, günün kuruyla)",
@@ -53114,7 +53164,7 @@
     "2016-08": 388.71,
     "2016-09": 383.88,
     "2016-10": 388.38,
-    "2016-11": 415.74,
+    "2016-11": 413.75,
     "2016-12": 430.08,
     "2017-01": 424.49,
     "2017-02": 426.22,
@@ -53234,7 +53284,7 @@
     "2026-08": 576.49,
     "2026-09": 612.99,
     "2026-10": 614.77,
-    "2026-11": 609.48
+    "2026-11": 609.71
    },
    "son": {
     "tarih": "2026-11-05",
@@ -53304,7 +53354,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_profil_usd": {
    "ad": "Kardemir profil liste fiyatı — IPE/NPI/NPU 180-200 Std ($/t)",
@@ -53350,7 +53400,7 @@
     "2016-08": 422.48,
     "2016-09": 409.64,
     "2016-10": 401.21,
-    "2016-11": 427.17,
+    "2016-11": 426.23,
     "2016-12": 464.21,
     "2017-01": 462.16,
     "2017-02": 484.12,
@@ -53540,7 +53590,7 @@
     ]
    ],
    "ilk": "2014-01-07",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_filmasin_usd": {
    "ad": "Kardemir filmaşin liste fiyatı — Ø5.5 SAE1008 ($/t)",
@@ -53739,7 +53789,7 @@
     ]
    ],
    "ilk": "2016-11-14",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_hurda_tl": {
    "ad": "Kardemir hurda alım fiyatı — Özel Ekstra (TL/t)",
@@ -53974,7 +54024,7 @@
     ]
    ],
    "ilk": "2014-02-11",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_hurda_usd": {
    "ad": "Kardemir hurda alım fiyatı — Özel Ekstra ($/t, günün kuruyla)",
@@ -54019,7 +54069,7 @@
     "2016-08": 257.65,
     "2016-09": 235.01,
     "2016-10": 222.23,
-    "2016-11": 256.53,
+    "2016-11": 255.24,
     "2016-12": 254.63,
     "2017-01": 260.98,
     "2017-02": 267.54,
@@ -54139,7 +54189,7 @@
     "2026-08": 371.15,
     "2026-09": 392.76,
     "2026-10": 406.57,
-    "2026-11": 401.69
+    "2026-11": 401.65
    },
    "son": {
     "tarih": "2026-09-25",
@@ -54209,7 +54259,7 @@
     ]
    ],
    "ilk": "2014-02-11",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_marj_hurda_usd": {
    "ad": "Kardemir yurt içi metal marjı — kütük liste − hurda Özel Ekstra ($/t)",
@@ -54254,7 +54304,7 @@
     "2016-08": 86.87,
     "2016-09": 103.99,
     "2016-10": 114.96,
-    "2016-11": 116.14,
+    "2016-11": 117.43,
     "2016-12": 132.52,
     "2017-01": 123.24,
     "2017-02": 125.34,
@@ -54374,14 +54424,14 @@
     "2026-08": 156.11,
     "2026-09": 142.24,
     "2026-10": 146.82,
-    "2026-11": 163.31
+    "2026-11": 163.35
    },
    "son": {
     "tarih": "2026-10-13",
     "deger": 153.96,
     "bilesen": "565 − 411.04"
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kardemir_spread_cevher_usd": {
    "ad": "Kardemir kütük − demir cevheri (1,6 t) — kok hariç kısmi spread ($/t)",
@@ -54541,7 +54591,7 @@
     "deger": 419.72,
     "bilesen": "565 − 1.6×90.8"
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kcaer_hadde_spread_usd": {
    "ad": "Haddeleme spread'i — Kardemir profil − kütük ($/t)",
@@ -54587,7 +54637,7 @@
     "2016-08": 77.96,
     "2016-09": 70.64,
     "2016-10": 64.02,
-    "2016-11": 54.5,
+    "2016-11": 53.56,
     "2016-12": 77.06,
     "2017-01": 77.94,
     "2017-02": 91.24,
@@ -54714,7 +54764,7 @@
     "deger": 105,
     "bilesen": "670 − 565"
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "sut_endeks": {
    "ad": "SUT fiyat endeksi — SGK Sağlık Uygulama Tebliği genel fiyat artışları (2020-12=100)",
@@ -54841,7 +54891,7 @@
      "kaynak": "OTOMATİK: SGK İşlenmiş Güncel SUT 2025-12-10 — EK2B medyan +%19.98 · EK2C medyan +%30"
     }
    ],
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "SGK'nın özel hastanelere ödediği fiyat listesinin (EK-2/A muayene · EK-2/B hizmet başı · EK-2/C paket) GENEL artışlarından kurulan basamak endeksi; kalem bazlı SHFK düzeltmeleri alınmaz. Oran RG metninde yazmaz → 2026'dan itibaren SGK'nın yayımladığı EK-2B/EK-2C listeleri sürüm sürüm kıyaslanır (medyan değişim, §475); öncesi MLP Care'in açıkladığı etkin oran. İlave ücret tavanı SUT'un %200'ü → SUT artışı SGK ödemesini ve hastadan alınabilecek farkı birlikte yükseltir. Son artıştan (2026-01-01, +%25) bu yana TÜFE +%27.5 (2026-10) → SUT reel %-21.6.",
    "erozyon": {
     "ay": "2026-10",
@@ -54934,7 +54984,7 @@
     "tarih": "2026-10",
     "deger": 67.27
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "SGK hastasının özel hastane için reel fiyatı: 100'ün altı = SUT, 2020 sonuna göre enflasyonun gerisinde. Artış ayında sıçrar, aylar geçtikçe erir (testere dişi) — çeyrek ortalaması okunur. MLP'de SGK payı hasılatın küçük kısmı; asıl marj sürücüsü ödeme tipi miksi (özel sigortaya kayış)."
   },
   "ttb_endeks": {
@@ -55044,7 +55094,7 @@
      "kaynak": "TTB Ara 2025 kararı (MLP 2025 notu)"
     }
    ],
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Türk Tabipleri Birliği Özel Hekimlik Uygulamaları katsayısı: özel sağlık sigortası ve cepten ödemelerde hekim ücretinin çapası → MLP yurt içi özel fiyatlamasının vekili. TÜFE'nin üstünde arttı (2023–26). Son artıştan (2026-01-01) bu yana TÜFE +%27.5."
   },
   "ttb_reel": {
@@ -55108,7 +55158,7 @@
     "tarih": "2026-10",
     "deger": 138.11
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "_not": "Özel fiyatlamanın reel seyri; 100'ün üstü = TTB tarifesi enflasyonun önünde."
   },
   "ges_polisilikon_rmb": {
@@ -55598,7 +55648,7 @@
     "yillik_degisim": -23.1
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_polisilikon_usd": {
    "ad": "Polisilikon — Çin dışı menşe ($/kg)",
@@ -56062,7 +56112,7 @@
     "yillik_degisim": 2.8
    },
    "ilk": "2024-01-03",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_wafer_rmb": {
    "ad": "Wafer — n-tipi 182 mm (RMB/adet)",
@@ -56549,7 +56599,7 @@
     "yillik_degisim": -26.9
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_hucre_usd": {
    "ad": "Hücre — TOPCon 182 mm, Çin ihraç ($/W)",
@@ -57038,7 +57088,7 @@
     "yillik_degisim": 9.8
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_hucre_rmb": {
    "ad": "Hücre — TOPCon 182 mm, Çin iç piyasa (RMB/W)",
@@ -57525,7 +57575,7 @@
     "yillik_degisim": -3.3
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_modul_usd": {
    "ad": "Modül — TOPCon çift yüzlü, Çin dışı piyasalar ($/W)",
@@ -58012,7 +58062,7 @@
     "yillik_degisim": 29.5
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_modul_rmb": {
    "ad": "Modül — TOPCon çift yüzlü, Çin iç piyasa (RMB/W)",
@@ -58499,7 +58549,7 @@
     "yillik_degisim": 3.2
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_modul_avrupa_usd": {
    "ad": "Modül — TOPCon, Avrupa projeleri, Çin üretimi ($/W)",
@@ -58988,7 +59038,7 @@
     "yillik_degisim": 33.7
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_modul_abd_usd": {
    "ad": "Modül — TOPCon, ABD projeleri ($/W)",
@@ -59476,7 +59526,7 @@
     "yillik_degisim": 0
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_modul_cin_usd": {
    "ad": "Modül — TOPCon, Çin iç piyasa ($/W, RMB ÷ USD/CNY)",
@@ -59964,7 +60014,7 @@
     "yillik_degisim": 10
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_montaj_makasi_usd": {
    "ad": "GES montaj makası — modül − hücre ($/W)",
@@ -60451,7 +60501,7 @@
     "yillik_degisim": 46.8
    },
    "ilk": "2022-07-20",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_pvi_polisilikon_usd": {
    "ad": "Polisilikon PV grade 9N — PVinsights ($/kg)",
@@ -60802,7 +60852,7 @@
     "yillik_degisim": -23.5
    },
    "ilk": "2022-01-12",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_pvi_wafer_usd": {
    "ad": "Wafer N-mono 182,2×183,75 mm — PVinsights ($/adet)",
@@ -61155,7 +61205,7 @@
     "yillik_degisim": -11.4
    },
    "ilk": "2022-01-12",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_pvi_hucre_usd": {
    "ad": "Hücre N-mono 182 mm — PVinsights ($/W)",
@@ -61508,7 +61558,7 @@
     "yillik_degisim": 11.1
    },
    "ilk": "2022-01-12",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_pvi_modul_usd": {
    "ad": "Modül N-mono 182 mm 580/625Wp — PVinsights ($/W)",
@@ -61861,7 +61911,7 @@
     "yillik_degisim": 12.8
    },
    "ilk": "2022-01-12",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ges_pvi_montaj_makasi_usd": {
    "ad": "GES montaj makası — modül − hücre, PVinsights ($/W)",
@@ -62213,7 +62263,7 @@
     "yillik_degisim": 14.3
    },
    "ilk": "2022-01-12",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "tkfen_backlog": {
    "ad": "Tekfen taahhüt bakiye iş (backlog) — kalan işlerin parasal toplamı (mn $, çeyrek sonu; elle)",
@@ -64324,14 +64374,14 @@
     ],
     [
      "2026-11-11",
-     82.35
+     78.52
     ]
    ],
    "son": {
     "tarih": "2026-11-11",
-    "deger": 82.35
+    "deger": 78.52
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "plastik_uretim": {
    "ad": "Sanayi üretim endeksi — C20.16 birincil formda plastik hammadde (2021=100, takvim etkisinden arındırılmış) §485",
@@ -64551,7 +64601,7 @@
     "tarih": "2026-09",
     "deger": 102.2934
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "konut_ilk_el": {
    "ad": "Konut satışı — ilk el, Türkiye (TÜİK, adet/ay) §485",
@@ -64771,7 +64821,7 @@
     "tarih": "2026-09",
     "deger": 51519
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "konut_toplam": {
    "ad": "Konut satışı — toplam, Türkiye (TÜİK, adet/ay) §485",
@@ -64991,7 +65041,7 @@
     "tarih": "2026-09",
     "deger": 142390
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "konut_ipotekli": {
    "ad": "Konut satışı — ipotekli (krediyle), Türkiye (TÜİK, adet/ay) §485",
@@ -65211,7 +65261,7 @@
     "tarih": "2026-09",
     "deger": 23397
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "katilim_kar_payi": {
    "ad": "TL katılma hesapları kâr payı oranı — toplam, akım (%, haftalık Cuma) §485",
@@ -66448,7 +66498,7 @@
     "tarih": "2026-10-30",
     "deger": 41.79
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "asgari_ucret": {
    "ad": "Asgari ücret — brüt aylık (TL, yürürlükteki tutar; adım)",
@@ -66956,7 +67006,7 @@
     "tarih": "2026-09",
     "deger": 2480.75
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ime_konut_malzeme": {
    "ad": "İnşaat maliyet endeksi — ikamet amaçlı binalar, malzeme (2015=100)",
@@ -67176,7 +67226,7 @@
     "tarih": "2026-09",
     "deger": 2259.87
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ime_konut_iscilik": {
    "ad": "İnşaat maliyet endeksi — ikamet amaçlı binalar, işçilik (2015=100)",
@@ -67396,7 +67446,7 @@
     "tarih": "2026-09",
     "deger": 2975.39
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ime_insaat": {
    "ad": "İnşaat maliyet endeksi — inşaat toplam (bina + bina dışı, 2015=100)",
@@ -67618,7 +67668,7 @@
     "tarih": "2026-09",
     "deger": 2546.7
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ekgyo_kfe_ime": {
    "ad": "Konut fiyatı ÷ konut inşaat maliyeti (KFE ÷ İME ikamet, 2021-01=100)",
@@ -67736,7 +67786,7 @@
     "tarih": "2026-09",
     "deger": 151.2496
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ufe_plastik": {
    "ad": "Yİ-ÜFE 20.16 birincil formda plastik (TÜİK, 2003=100)",
@@ -68161,7 +68211,7 @@
     "tarih": "2026-10",
     "deger": 7261.98
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ufe_cimento": {
    "ad": "Yİ-ÜFE 23.51 çimento (TÜİK)",
@@ -68587,7 +68637,7 @@
     "tarih": "2026-10",
     "deger": 6712.28
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ufe_makarna": {
    "ad": "Yİ-ÜFE 10.73 makarna, şehriye, kuskus (TÜİK)",
@@ -69012,7 +69062,7 @@
     "tarih": "2026-10",
     "deger": 5411.59
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ufe_celik_2410": {
    "ad": "Yİ-ÜFE 24.10 ana demir-çelik ürünleri (TÜİK)",
@@ -69439,7 +69489,7 @@
     "tarih": "2026-10",
     "deger": 7068.77
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ufe_kumas": {
    "ad": "Yİ-ÜFE 13.20 dokuma kumaş (TÜİK)",
@@ -69864,7 +69914,7 @@
     "tarih": "2026-10",
     "deger": 3755.79
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ufe_gubre_2015": {
    "ad": "Yİ-ÜFE 20.15 kimyasal gübre ve azot bileşikleri (TÜİK)",
@@ -70290,7 +70340,7 @@
     "tarih": "2026-10",
     "deger": 10454.51
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ydufe_plastik": {
    "ad": "YD-ÜFE 20.16 plastik — ihracat fiyatı (TÜİK)",
@@ -70595,7 +70645,7 @@
     "tarih": "2026-09",
     "deger": 3531.22
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ydufe_cimento": {
    "ad": "YD-ÜFE 23.51 çimento — ihracat fiyatı (TÜİK)",
@@ -70901,7 +70951,7 @@
     "tarih": "2026-09",
     "deger": 3223.24
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ydufe_makarna": {
    "ad": "YD-ÜFE 10.73 makarna — ihracat fiyatı (TÜİK)",
@@ -71206,7 +71256,7 @@
     "tarih": "2026-09",
     "deger": 2770
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ydufe_celik": {
    "ad": "YD-ÜFE 24.10 demir-çelik — ihracat fiyatı (TÜİK)",
@@ -71513,7 +71563,7 @@
     "tarih": "2026-09",
     "deger": 5615.64
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "bugday_tl": {
    "ad": "Buğday — çiftçi satış fiyatı (TÜİK tarım ÜFE madde fiyatı, TL/kg)",
@@ -71580,7 +71630,7 @@
     "tarih": "2026-09",
     "deger": 15.82
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "gubre_girdi": {
    "ad": "Tarımsal girdi fiyat endeksi — gübre ve toprak geliştiriciler (TÜİK, 2020=100)",
@@ -71714,7 +71764,7 @@
     "tarih": "2026-08",
     "deger": 1340.19
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "perakende_gida_hacim": {
    "ad": "Perakende satış hacim endeksi — gıda, içecek, tütün (TÜİK, takvim arındırılmış)",
@@ -71798,7 +71848,7 @@
     "tarih": "2026-09",
     "deger": 170.7086
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "perakende_giyim_hacim": {
    "ad": "Perakende satış hacim endeksi — tekstil, giyim, ayakkabı (TÜİK, takvim arındırılmış)",
@@ -71882,7 +71932,7 @@
     "tarih": "2026-09",
     "deger": 162.873
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "insaat_uretim_bina": {
    "ad": "İnşaat üretim endeksi — binalar (TÜİK, takvim arındırılmış)",
@@ -71966,7 +72016,7 @@
     "tarih": "2026-08",
     "deger": 141.7328
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "insaat_uretim_toplam": {
    "ad": "İnşaat üretim endeksi — toplam (TÜİK)",
@@ -72049,7 +72099,7 @@
     "tarih": "2026-08",
     "deger": 126.6388
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "kara_tasima_hacim": {
    "ad": "Hizmet üretim endeksi — kara taşımacılığı H49 (TÜİK)",
@@ -72134,7 +72184,7 @@
     "tarih": "2026-09",
     "deger": 128.4518
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "obams_makas": {
    "ad": "Makarna fiyatı ÷ buğday fiyatı — Yİ-ÜFE 10.73 ÷ buğday TL/kg (2024-01=100)",
@@ -72201,7 +72251,7 @@
     "tarih": "2026-09",
     "deger": 91.7384
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "petkm_ufe_makas": {
    "ad": "Plastik yurt içi fiyatı ÷ Brent (TL) — Yİ-ÜFE 20.16 ÷ (Brent $ × USDTRY) (2021-09=100)",
@@ -72308,7 +72358,7 @@
     "tarih": "2026-10",
     "deger": 67.2483
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "pp_hdpe_film_eur": {
    "ad": "HDPE film — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -72659,7 +72709,7 @@
     "tarih": "2026-10",
     "deger": 1.43
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "pp_ldpe_film_eur": {
    "ad": "LDPE film — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -73010,7 +73060,7 @@
     "tarih": "2026-10",
     "deger": 1.63
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "pp_lldpe_eur": {
    "ad": "LLDPE standart — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -73361,7 +73411,7 @@
     "tarih": "2026-10",
     "deger": 1.48
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "pp_pp_homo_eur": {
    "ad": "PP homo — Orta Avrupa ortalama reçine fiyatı (€/kg, aylık)",
@@ -73712,7 +73762,7 @@
     "tarih": "2026-10",
     "deger": 1.61
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "pe_pp": {
    "ad": "PE/PP Avrupa reçine fiyatı — HDPE film, LDPE film, LLDPE, PP homo ortalaması ($/t)",
@@ -74064,7 +74114,7 @@
     "tarih": "2026-10",
     "deger": 1723.0902
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "petkm_polimer_makas_usd": {
    "ad": "Polimer − ham petrol makası — PE/PP Avrupa − 7,5 × Brent ($/t)",
@@ -74269,7 +74319,7 @@
     "tarih": "2026-10",
     "deger": 785.5902
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dce_lldpe_cny": {
    "ad": "DCE LLDPE sürekli vadeli — Çin iç piyasa (CNY/t, ay ort.)",
@@ -74620,7 +74670,7 @@
     "gun": "2026-11-11",
     "kapanis": 8394
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dce_lldpe_usd": {
    "ad": "DCE LLDPE sürekli vadeli — Çin iç piyasa ($/t, ay ort.)",
@@ -74864,7 +74914,7 @@
     "2026-08": 1161.4202,
     "2026-09": 1253.587,
     "2026-10": 1341.611,
-    "2026-11": 1339.0648
+    "2026-11": 1339.8987
    },
    "ceyreklik": {
     "2007Q3": 1672.0354,
@@ -74967,11 +75017,11 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 1339,
+    "deger": 1340,
     "gun": "2026-11-11",
     "kapanis": 8394
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dce_pp_cny": {
    "ad": "DCE PP sürekli vadeli — Çin iç piyasa (CNY/t, ay ort.)",
@@ -75209,7 +75259,7 @@
     "gun": "2026-11-11",
     "kapanis": 9220
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dce_pp_usd": {
    "ad": "DCE PP sürekli vadeli — Çin iç piyasa ($/t, ay ort.)",
@@ -75374,7 +75424,7 @@
     "2026-08": 1218.3031,
     "2026-09": 1301.4777,
     "2026-10": 1447.4156,
-    "2026-11": 1455.4058
+    "2026-11": 1456.3122
    },
    "ceyreklik": {
     "2014Q2": 1759.4096,
@@ -75443,11 +75493,11 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 1455,
+    "deger": 1456,
     "gun": "2026-11-11",
     "kapanis": 9220
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dce_pvc_cny": {
    "ad": "DCE PVC sürekli vadeli — Çin iç piyasa (CNY/t, ay ort.)",
@@ -75766,7 +75816,7 @@
     "gun": "2026-11-11",
     "kapanis": 4936
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "dce_pvc_usd": {
    "ad": "DCE PVC sürekli vadeli — Çin iç piyasa ($/t, ay ort.)",
@@ -75988,7 +76038,7 @@
     "2026-08": 681.7061,
     "2026-09": 736.619,
     "2026-10": 754.3118,
-    "2026-11": 753.5169
+    "2026-11": 753.9861
    },
    "ceyreklik": {
     "2009Q3": 1036.8848,
@@ -76085,7 +76135,7 @@
     "gun": "2026-11-11",
     "kapanis": 4936
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "petkm_asya_makas_usd": {
    "ad": "Asya polimer − ham petrol makası — DCE (LLDPE+PP)/2 KDV hariç − 7,5×Brent ($/t)",
@@ -76239,7 +76289,7 @@
     "2026-08": 371.2249,
     "2026-09": 254.5596,
     "2026-10": 296.5826,
-    "2026-11": 508.7008
+    "2026-11": 513.1698
    },
    "ceyreklik": {
     "2015Q1": 780.0415,
@@ -76305,9 +76355,9 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 509
+    "deger": 513
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "eregl_favok_ton_usd": {
    "ad": "EREGL FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı (yassı + uzun mamul satışı (pelet/cevher hariç))",
@@ -76336,7 +76386,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
    "_not": "Hacimden arındırılmış kârlılık: bu çeyrek iyi mi sorusunun ton başına cevabı. Tek çeyrek stok/hedge etkisiyle oynar — eğilime bak.",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "eregl_ciro_ton_usd": {
    "ad": "EREGL gerçekleşen ort. satış fiyatı ($/t) — ciro ÷ ton",
@@ -76365,7 +76415,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
    "_not": "Liste fiyatı değil GERÇEKLEŞEN: ürün karması + iskonto + ihracat payı dahil. Vekil fiyat serilerinden (HRC, kütük listesi) sapması karma/iskonto bilgisidir.",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "eregl_maliyet_ton_usd": {
    "ad": "EREGL ton başına maliyet+gider ($/t) — (ciro − FAVÖK) ÷ ton",
@@ -76394,7 +76444,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
    "_not": "Hammadde (cevher, kok, hurda) + enerji + işçilik + genel giderler (amortisman hariç). Sabit gider payı hacim artınca düşer.",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "eregl_satis_ton": {
    "ad": "EREGL satış tonajı (bin ton, çeyreklik) — yassı + uzun mamul satışı (pelet/cevher hariç)",
@@ -76423,7 +76473,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, çeyrek ort. kuru) ÷ EREGL faaliyet raporları (KAP) — \"Yassı/Uzun Mamul Satışları\" tablosu, kümülatif (§499)",
    "_not": "Faaliyet raporundaki kümülatif tonajın çeyrek farkı. ELLE: tazele.mjs TON_KUM (her bilanço haftası).",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "krdmd_favok_ton_usd": {
    "ad": "KRDMD FAVÖK / ton ($/t) — çekirdek FAVÖK ÷ satış tonajı (esas ürünler (ham çelik + haddelenmiş çelik))",
@@ -76451,7 +76501,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
    "_not": "Hacimden arındırılmış kârlılık: bu çeyrek iyi mi sorusunun ton başına cevabı. Tek çeyrek stok/hedge etkisiyle oynar — eğilime bak.",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "krdmd_ciro_ton_usd": {
    "ad": "KRDMD gerçekleşen ort. satış fiyatı ($/t) — ciro ÷ ton",
@@ -76479,7 +76529,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
    "_not": "Liste fiyatı değil GERÇEKLEŞEN: ürün karması + iskonto + ihracat payı dahil. Vekil fiyat serilerinden (HRC, kütük listesi) sapması karma/iskonto bilgisidir.",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "krdmd_maliyet_ton_usd": {
    "ad": "KRDMD ton başına maliyet+gider ($/t) — (ciro − FAVÖK) ÷ ton",
@@ -76507,7 +76557,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
    "_not": "Hammadde (cevher, kok, hurda) + enerji + işçilik + genel giderler (amortisman hariç). Sabit gider payı hacim artınca düşer.",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "krdmd_satis_ton": {
    "ad": "KRDMD satış tonajı (bin ton, çeyreklik) — esas ürünler (ham çelik + haddelenmiş çelik)",
@@ -76535,7 +76585,7 @@
    },
    "kaynak": "türetilmiş: KAP finansal tablo arşivi (çekirdek FAVÖK, TMS 29 · dönem sonu kuru) ÷ KRDMD faaliyet raporları (KAP) — \"Satış Miktar ve Tutarları · Esas Ürünler\", kümülatif (§499)",
    "_not": "Faaliyet raporundaki kümülatif tonajın çeyrek farkı. ELLE: tazele.mjs TON_KUM (her bilanço haftası).",
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "tuketici_guveni": {
    "ad": "Tüketici güven endeksi (TÜİK-TCMB, aylık) §545",
@@ -76759,7 +76809,7 @@
     "tarih": "2026-10",
     "deger": 84.8171
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "reel_kesim_guveni": {
    "ad": "Reel kesim güven endeksi (TCMB İYA, aylık) §545",
@@ -76982,7 +77032,7 @@
     "tarih": "2026-10",
     "deger": 99.8
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "ticari_kredi_faiz": {
    "ad": "Ticari kredi faizi — TL, akım, KMH ve kurumsal kart HARİÇ (%, haftalık) §545",
@@ -78219,7 +78269,7 @@
     "tarih": "2026-10-30",
     "deger": 44.91
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "mevduat_3ay": {
    "ad": "TL mevduat faizi — 3 aya kadar vadeli, akım (%, haftalık) §545",
@@ -79456,12 +79506,12 @@
     "tarih": "2026-10-30",
     "deger": 42.23
    },
-   "guncelleme": "2026-11-11"
+   "guncelleme": "2026-11-12"
   },
   "hidro_uretim_gwh": {
    "kaynak": "EPİAŞ Şeffaflık · gerçek zamanlı üretim, saatlik → günlük toplam (TGT) — §546",
    "siklik": "gunluk",
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "ad": "Hidroelektrik üretim — barajlı + akarsu, Türkiye günlük (GWh) §546",
    "birim": "GWh/gün",
    "hisse": [
@@ -82927,23 +82977,23 @@
     ],
     [
      "2026-11-10",
-     289.2
+     289.3
     ],
     [
      "2026-11-11",
-     259.7
+     271.9
     ]
    ],
    "son": {
     "tarih": "2026-11-11",
-    "deger": 259.7
+    "deger": 271.9
    },
    "_not": "Ülke toplamı; hidrolojik rejimin (kar erimesi, yağış, baraj doluluğu) vekili. Yıllık karşılaştırma: aynı takvim penceresi."
   },
   "ruzgar_uretim_gwh": {
    "kaynak": "EPİAŞ Şeffaflık · gerçek zamanlı üretim, saatlik → günlük toplam (TGT) — §546",
    "siklik": "gunluk",
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "ad": "Rüzgâr üretimi — Türkiye günlük (GWh) §546",
    "birim": "GWh/gün",
    "hisse": [
@@ -86413,18 +86463,18 @@
     ],
     [
      "2026-11-11",
-     135.1
+     144.8
     ]
    ],
    "son": {
     "tarih": "2026-11-11",
-    "deger": 135.1
+    "deger": 144.8
    }
   },
   "yenilenebilir_pay": {
    "kaynak": "EPİAŞ Şeffaflık · gerçek zamanlı üretim, saatlik → günlük toplam (TGT) — §546",
    "siklik": "gunluk",
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "ad": "Yenilenebilir payı — hidro+rüzgâr+güneş+jeotermal ÷ toplam üretim (%) §546",
    "birim": "%",
    "hisse": [
@@ -89891,7 +89941,7 @@
     ],
     [
      "2026-11-10",
-     38.9
+     38.8
     ],
     [
      "2026-11-11",
@@ -89992,7 +90042,7 @@
     "deger": 0,
     "ay": "2026-11"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 16,
    "sozlesmeler": [
     {
@@ -90149,8 +90199,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   },
@@ -90237,7 +90287,7 @@
     "deger": 3.2,
     "ay": "2026-10"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 40,
    "sozlesmeler": [
     {
@@ -90394,8 +90444,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   },
@@ -90487,7 +90537,7 @@
     "deger": 11.4,
     "ay": "2026-07"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 32,
    "sozlesmeler": [
     {
@@ -90605,8 +90655,8 @@
       "toplam": 15.2,
       "adet": 10,
       "tutarsiz": 4,
-      "ayni_tarih": 6.1,
-      "ayni_tarih_adet": 5,
+      "ayni_tarih": 9.2,
+      "ayni_tarih_adet": 6,
       "son": {
        "t": "2024-12-13",
        "usd_mn": 3,
@@ -90626,7 +90676,7 @@
        "usd_mn": 4.3,
        "ozet": "Şirketimiz ile REC Uluslararası İnşaat Yatırım Sanayi ve Ticaret A.Ş. arasında \"Kuzey Marmara Otoyolu (3. Boğaz Köprüsü "
       },
-      "yy_ayni_tarih": 400,
+      "yy_ayni_tarih": 231.5,
       "yy_toplam": 100.7
      },
      "2026": {
@@ -90644,8 +90694,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   },
@@ -90724,7 +90774,7 @@
     "deger": 7.8,
     "ay": "2026-11"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 17,
    "sozlesmeler": [
     {
@@ -90853,8 +90903,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   },
@@ -90874,7 +90924,7 @@
     "tarih": "2025-10",
     "deger": 150
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 1,
    "_not": "Şirketin açıklama metninde beyan ettiği bakiye sipariş; seyrek (yalnız bahsedilen aylar)."
   },
@@ -90958,7 +91008,7 @@
     "deger": 4.7,
     "ay": "2026-07"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 40,
    "sozlesmeler": [
     {
@@ -91076,8 +91126,8 @@
       "toplam": 371,
       "adet": 13,
       "tutarsiz": 1,
-      "ayni_tarih": 292.3,
-      "ayni_tarih_adet": 12,
+      "ayni_tarih": 371,
+      "ayni_tarih_adet": 13,
       "son": {
        "t": "2025-11-12",
        "usd_mn": 78.7,
@@ -91097,12 +91147,12 @@
        "usd_mn": 4.7,
        "ozet": "Şir ketimiz TOROSLAR EDAŞ tarafından gerçekleştirilen ‘‘RECLOSER ALIMI&#x27;&#x27; konulu ihaleye girmiş ve en avantajlı"
       },
-      "yy_ayni_tarih": 120.8,
+      "yy_ayni_tarih": 73.9,
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   },
@@ -91190,7 +91240,7 @@
     "deger": 48,
     "ay": "2026-08"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 40,
    "sozlesmeler": [
     {
@@ -91333,8 +91383,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   },
@@ -91414,7 +91464,7 @@
     "deger": 0,
     "ay": "2026-10"
    },
-   "guncelleme": "2026-11-11",
+   "guncelleme": "2026-11-12",
    "n": 1,
    "sozlesmeler": [
     {
@@ -91444,8 +91494,8 @@
       "yy_toplam": null
      }
     },
-    "bugun": "2026-11-11",
-    "mmdd": "11-11"
+    "bugun": "2026-11-12",
+    "mmdd": "11-12"
    },
    "_kapsam": "KAP ÖDA \"Yeni İş İlişkisi\" bildirimleri; tutarı açıklanmayan ya da teklif/iptal niteliğindeki bildirimler 0 sayılır (adet ayrı). Konsorsiyum toplamları şirket payı belirtilmemişse TAM sayılır ve işaretlenir. PLN/GBP kur yaklaşık. Metinde beyan edilen backlog ayrı seviye serisidir. Öncü gösterge; seviye değil yön/y/y okunur."
   }
@@ -91453,16 +91503,16 @@
  "wb": {
   "url": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
   "guncel": "Updated on November 03, 2026",
-  "guncelleme": "2026-11-11",
+  "guncelleme": "2026-11-12",
   "sutun": 15,
   "satir": 802,
   "ilk": "1960M01",
   "son": "2026M10",
   "_not": "Monthly Prices sayfası: satır 5 adlar, 6 birimler, 7+ aylık veri; eksik \"…\". 2015-01 sonrası saklanır; çeyreklik = 3 tam ayın ortalaması, yıllık = 12 ay."
  },
- "seriler_guncelleme": "2026-11-11",
+ "seriler_guncelleme": "2026-11-12",
  "evds": {
-  "guncelleme": "2026-11-11",
+  "guncelleme": "2026-11-12",
   "seriler": 21,
   "kaynak": "evds3.tcmb.gov.tr/igmevdsms-dis",
   "kodlar": {
@@ -91489,7 +91539,7 @@
   }
  },
  "epias": {
-  "guncelleme": "2026-11-11",
+  "guncelleme": "2026-11-12",
   "gun": 1412,
   "ilk": "2023-01-01",
   "son": "2026-11-12",
@@ -104070,7 +104120,7 @@
     "kaynak": "TTB Ara 2025 kararı (MLP 2025 notu)"
    }
   ],
-  "son_tarama": "2026-11-11"
+  "son_tarama": "2026-11-12"
  },
  "ges": {
   "surum": "483",
@@ -110569,7 +110619,7 @@
   }
  },
  "plastik": {
-  "son_deneme": "2026-11-11",
+  "son_deneme": "2026-11-12",
   "yollar": {
    "tohum": 4
   },

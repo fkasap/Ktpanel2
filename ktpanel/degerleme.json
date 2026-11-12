@@ -1,6 +1,6 @@
 {
- "surum": "degerleme-2026-11-11",
- "guncelleme": "2026-11-11",
+ "surum": "degerleme-2026-11-12",
+ "guncelleme": "2026-11-12",
  "yontem": "PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.",
  "neden_pddd": "Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.",
  "bant": {
@@ -331,21 +331,21 @@
   {
    "k": "ALTNY",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 5377358960,
+   "donem": "2026/3",
+   "ozk": 5886195831,
    "srm": 1000000000,
-   "n": 9,
-   "ort": 4.875,
-   "sapma": 1.672,
-   "dip": 2.843,
+   "n": 10,
+   "ort": 4.605,
+   "sapma": 1.78,
+   "dip": 2.181,
    "zirve": 7.59,
-   "cv": 0.34,
-   "guven": "yüksek",
+   "cv": 0.39,
+   "guven": "orta",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 11.09,
-    "pddd": 2.062,
-    "z": -1.68
+    "pddd": 1.884,
+    "z": -1.53
    },
    "seri": [
     {
@@ -383,6 +383,10 @@
     {
      "q": "2026Q2",
      "pddd": 3.106
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 2.181
     }
    ]
   },
@@ -470,7 +474,7 @@
     },
     {
      "q": "2023Q2",
-     "pddd": 2.768
+     "pddd": 2.769
     },
     {
      "q": "2023Q3",
@@ -787,21 +791,21 @@
   {
    "k": "BIMAS",
    "sektor": "Consumer Staples",
-   "donem": "2026/2",
-   "ozk": 201353398000,
+   "donem": "2026/3",
+   "ozk": 221686578000,
    "srm": 1200000000,
-   "n": 14,
-   "ort": 2.738,
-   "sapma": 0.865,
+   "n": 15,
+   "ort": 2.706,
+   "sapma": 0.844,
    "dip": 1.922,
    "zirve": 5.182,
-   "cv": 0.32,
+   "cv": 0.31,
    "guven": "yüksek",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 381.25,
-    "pddd": 2.272,
-    "z": -0.54
+    "pddd": 2.064,
+    "z": -0.76
    },
    "seri": [
     {
@@ -859,6 +863,10 @@
     {
      "q": "2026Q2",
      "pddd": 2.164
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 2.265
     }
    ]
   },
@@ -1117,21 +1125,21 @@
   {
    "k": "CWENE",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 17726875532,
+   "donem": "2026/3",
+   "ozk": 23524210557,
    "srm": 1078290009,
-   "n": 12,
-   "ort": 3.433,
-   "sapma": 2.581,
-   "dip": 1.313,
+   "n": 13,
+   "ort": 3.233,
+   "sapma": 2.575,
+   "dip": 0.832,
    "zirve": 10.884,
-   "cv": 0.75,
+   "cv": 0.8,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 16.09,
-    "pddd": 0.979,
-    "z": -0.95
+    "pddd": 0.738,
+    "z": -0.97
    },
    "seri": [
     {
@@ -1181,6 +1189,10 @@
     {
      "q": "2026Q2",
      "pddd": 2.311
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 0.832
     }
    ]
   },
@@ -1249,21 +1261,21 @@
   {
    "k": "EGPRO",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 10563720851,
+   "donem": "2026/3",
+   "ozk": 12071662318,
    "srm": 545000000,
-   "n": 6,
-   "ort": 1.652,
-   "sapma": 0.228,
+   "n": 7,
+   "ort": 1.633,
+   "sapma": 0.217,
    "dip": 1.332,
    "zirve": 1.977,
-   "cv": 0.14,
+   "cv": 0.13,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 34,
-    "pddd": 1.754,
-    "z": 0.41
+    "pddd": 1.535,
+    "z": -0.4
    },
    "seri": [
     {
@@ -1289,6 +1301,10 @@
     {
      "q": "2026Q2",
      "pddd": 1.977
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 1.52
     }
    ]
   },
@@ -1615,21 +1631,21 @@
   {
    "k": "EUPWR",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 13100437000,
+   "donem": "2026/3",
+   "ozk": 14054592000,
    "srm": 660000000,
-   "n": 13,
-   "ort": 4.359,
-   "sapma": 3.354,
+   "n": 14,
+   "ort": 4.216,
+   "sapma": 3.273,
    "dip": 1.824,
    "zirve": 14.454,
-   "cv": 0.77,
+   "cv": 0.78,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 40.14,
-    "pddd": 2.022,
-    "z": -0.7
+    "pddd": 1.885,
+    "z": -0.71
    },
    "seri": [
     {
@@ -1683,6 +1699,10 @@
     {
      "q": "2026Q2",
      "pddd": 4.224
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 2.353
     }
    ]
   },
@@ -1731,21 +1751,21 @@
   {
    "k": "GLRMK",
    "sektor": "Industrials",
-   "donem": "2026/2",
-   "ozk": 28367102190,
+   "donem": "2026/3",
+   "ozk": 29760680161,
    "srm": 322600000,
-   "n": 6,
-   "ort": 3.106,
-   "sapma": 0.598,
-   "dip": 1.951,
+   "n": 7,
+   "ort": 2.866,
+   "sapma": 0.807,
+   "dip": 1.431,
    "zirve": 3.937,
-   "cv": 0.19,
+   "cv": 0.28,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 112.9,
-    "pddd": 1.284,
-    "z": -3.04
+    "pddd": 1.224,
+    "z": -2.04
    },
    "seri": [
     {
@@ -1771,6 +1791,10 @@
     {
      "q": "2026Q2",
      "pddd": 1.951
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 1.431
     }
    ]
   },
@@ -1835,21 +1859,21 @@
   {
    "k": "GUBRF",
    "sektor": "Materials",
-   "donem": "2026/2",
-   "ozk": 39361378966,
+   "donem": "2026/3",
+   "ozk": 42387992564,
    "srm": 334000000,
-   "n": 13,
-   "ort": 5.767,
-   "sapma": 4.391,
+   "n": 14,
+   "ort": 5.584,
+   "sapma": 4.282,
    "dip": 3.182,
    "zirve": 16.825,
-   "cv": 0.76,
+   "cv": 0.77,
    "guven": "düşük",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 288,
-    "pddd": 2.444,
-    "z": -0.76
+    "pddd": 2.269,
+    "z": -0.77
    },
    "seri": [
     {
@@ -1903,6 +1927,10 @@
     {
      "q": "2026Q2",
      "pddd": 3.715
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 3.205
     }
    ]
   },
@@ -2505,21 +2533,21 @@
   {
    "k": "OBAMS",
    "sektor": "Consumer Staples",
-   "donem": "2026/2",
-   "ozk": 12909786060,
+   "donem": "2026/3",
+   "ozk": 12960510276,
    "srm": 2876530554,
-   "n": 10,
-   "ort": 2.08,
-   "sapma": 0.394,
-   "dip": 1.341,
+   "n": 11,
+   "ort": 1.977,
+   "sapma": 0.496,
+   "dip": 0.954,
    "zirve": 2.81,
-   "cv": 0.19,
+   "cv": 0.25,
    "guven": "yüksek",
    "canli": {
     "tarih": "2026-11-10",
     "fiyat": 3.65,
-    "pddd": 0.813,
-    "z": -3.22
+    "pddd": 0.81,
+    "z": -2.36
    },
    "seri": [
     {
@@ -2561,6 +2589,10 @@
     {
      "q": "2026Q2",
      "pddd": 1.341
+    },
+    {
+     "q": "2026Q3",
+     "pddd": 0.954
     }
    ]
   },

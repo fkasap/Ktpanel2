@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-11",
+ "guncelleme": "2026-11-12",
  "son": "2026-11-10",
  "kaynak": "fm-arsiv.json (nokta-zaman skor) · Yahoo adjclose · endeks-arsiv.json XKTUM · track.json · xktum.json",
  "_yontem": "§529 IC = Spearman sıra korelasyonu (skor ↔ sonraki getiri). Sektör-nötr IC: getiriden sektör ortalaması çıkarılır. |IC| > 2/√n ≈ %95 anlamlılık (tek kesit). Örtüşen pencereler bağımsız değildir. Ayrıştırma: eşit ağırlıklı evren kıyası; faktör katkısı = aktif maruziyet × EKK faktör getirisi, kalan = hisseye özgü.",
@@ -42,7 +42,7 @@
  ],
  "track_resmi": {
   "tarih": "2026-11-11",
-  "model": -24.055,
+  "model": -25.235,
   "endeks": -19.267,
   "inception": "2026-07-14"
  },
@@ -558,22 +558,22 @@
      },
      {
       "k": "BIMAS",
-      "w0": 13.3,
+      "w0": 13.2,
       "r": -0.2,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 11,
+      "w0": 11.1,
       "r": 24.5,
       "modelde": true,
       "model_w": 2.5
      }
     ],
     "ilk3_agirlik": 41.9,
-    "ilk3_katki": 2.08,
-    "kalan_getiri": -34.64
+    "ilk3_katki": 2.1,
+    "kalan_getiri": -34.69
    },
    "sektor": {
     "satirlar": [
@@ -692,7 +692,7 @@
     "secim": 8.9
    },
    "faktor": {
-    "r2": 0.193,
+    "r2": 0.194,
     "n": 147,
     "boyut": true,
     "satirlar": [
@@ -717,15 +717,15 @@
       "model": 0.86,
       "evren": 0.15,
       "aktif": 0.71,
-      "getiri_1s": -0.37,
-      "katki": -0.26
+      "getiri_1s": -0.38,
+      "katki": -0.27
      },
      {
       "f": "MOMENTUM",
       "model": 0.26,
       "evren": 0.01,
       "aktif": 0.25,
-      "getiri_1s": -0.32,
+      "getiri_1s": -0.34,
       "katki": -0.08
      },
      {
@@ -741,12 +741,12 @@
       "model": 0.56,
       "evren": 0,
       "aktif": 0.56,
-      "getiri_1s": 2.86,
-      "katki": 1.6
+      "getiri_1s": 2.9,
+      "katki": 1.62
      }
     ],
-    "toplam": 9.95,
-    "kalan": 1.56
+    "toplam": 9.96,
+    "kalan": 1.55
    },
    "en_iyi": [
     {
@@ -1164,7 +1164,7 @@
    "Rp": -24.13,
    "Rew": -33.14,
    "Rb": -23.76,
-   "Rcw": -20.67,
+   "Rcw": -20.72,
    "xk_kapsam": 232,
    "fark": -0.37,
    "agirlik_etkisi": -9.38,
@@ -1180,14 +1180,14 @@
      },
      {
       "k": "TUPRS",
-      "w0": 13.8,
+      "w0": 13.9,
       "r": -4,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "BIMAS",
-      "w0": 12.8,
+      "w0": 12.7,
       "r": -0.1,
       "modelde": true,
       "model_w": 2.5
@@ -1195,7 +1195,7 @@
     ],
     "ilk3_agirlik": 45.2,
     "ilk3_katki": -2.72,
-    "kalan_getiri": -32.78
+    "kalan_getiri": -32.87
    },
    "sektor": {
     "satirlar": [
@@ -1340,14 +1340,14 @@
       "evren": 0.15,
       "aktif": 0.71,
       "getiri_1s": -1.35,
-      "katki": -0.96
+      "katki": -0.97
      },
      {
       "f": "MOMENTUM",
       "model": 0.26,
       "evren": 0.01,
       "aktif": 0.25,
-      "getiri_1s": -2.16,
+      "getiri_1s": -2.17,
       "katki": -0.54
      },
      {
@@ -1363,8 +1363,8 @@
       "model": 0.57,
       "evren": 0,
       "aktif": 0.57,
-      "getiri_1s": 1.42,
-      "katki": 0.8
+      "getiri_1s": 1.44,
+      "katki": 0.81
      }
     ],
     "toplam": 8.07,
@@ -1457,29 +1457,29 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 19.4,
+      "w0": 19.5,
       "r": -4.1,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 17.4,
+      "w0": 17.6,
       "r": -14.2,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "BIMAS",
-      "w0": 15.3,
+      "w0": 15.2,
       "r": -5.3,
       "modelde": true,
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 52.2,
-    "ilk3_katki": -4.09,
-    "kalan_getiri": -12.14
+    "ilk3_agirlik": 52.3,
+    "ilk3_katki": -4.11,
+    "kalan_getiri": -12.12
    },
    "sektor": {
     "satirlar": [
@@ -1650,7 +1650,7 @@
       "model": 0.19,
       "evren": 0.02,
       "aktif": 0.17,
-      "getiri_1s": 2.06,
+      "getiri_1s": 2.05,
       "katki": 0.34
      },
      {
@@ -1662,8 +1662,8 @@
       "katki": 0.2
      }
     ],
-    "toplam": 1.03,
-    "kalan": -1.68
+    "toplam": 1.02,
+    "kalan": -1.67
    },
    "en_iyi": [
     {
