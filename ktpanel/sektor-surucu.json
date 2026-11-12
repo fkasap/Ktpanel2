@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-12T07:42:39Z",
+ "guncelleme": "2026-11-12T08:11:08Z",
  "_surum": "§462 Actions sektorSurucu() · USDTRY Yahoo günlük",
  "kaynak": {
   "crack": "Neste Oyj · Market data · Oil products → ProductMargins monitörü (ir-service.appspot.com) · LSEG · 5 günlük hareketli ortalama · Brent’e fark (USD/bbl)",
@@ -321,7 +321,7 @@
    "ilk": "2026-10-01",
    "son": "2026-11-11",
    "usdtry_ort": 49.672,
-   "usdtry_son": 50.2526,
+   "usdtry_son": 50.2527,
    "tam": false
   }
  },
@@ -3204,7 +3204,7 @@
   "2026-08": 48.2675,
   "2026-09": 49.028,
   "2026-10": 49.9428,
-  "2026-11": 50.2526
+  "2026-11": 50.2527
  },
  "seriler": {
   "altin": {
@@ -5294,12 +5294,12 @@
     ],
     [
      "2026-11-12",
-     3962.8
+     3967.2
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 3962.8
+    "deger": 3967.2
    },
    "guncelleme": "2026-11-12"
   },
@@ -7390,12 +7390,12 @@
     ],
     [
      "2026-11-12",
-     51.14
+     51.415
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 51.14
+    "deger": 51.415
    },
    "guncelleme": "2026-11-12"
   },
@@ -9486,12 +9486,12 @@
     ],
     [
      "2026-11-12",
-     6.2195
+     6.2375
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 6.2195
+    "deger": 6.2375
    },
    "guncelleme": "2026-11-12"
   },
@@ -17859,12 +17859,12 @@
     ],
     [
      "2026-11-12",
-     3.239
+     3.249
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 3.239
+    "deger": 3.249
    },
    "guncelleme": "2026-11-12"
   },
@@ -22047,12 +22047,12 @@
     ],
     [
      "2026-11-12",
-     93.22
+     93.27
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 93.22
+    "deger": 93.27
    },
    "guncelleme": "2026-11-12"
   },
@@ -24206,12 +24206,12 @@
     ],
     [
      "2026-11-12",
-     1.1085
+     1.1091
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 1.1085
+    "deger": 1.1091
    },
    "guncelleme": "2026-11-12"
   },
@@ -26366,12 +26366,12 @@
     ],
     [
      "2026-11-12",
-     50.2526
+     50.2567
     ]
    ],
    "son": {
     "tarih": "2026-11-12",
-    "deger": 50.2526
+    "deger": 50.2567
    },
    "guncelleme": "2026-11-12"
   },
@@ -53292,7 +53292,7 @@
     "2026-08": 576.49,
     "2026-09": 612.99,
     "2026-10": 614.77,
-    "2026-11": 609.65
+    "2026-11": 609.64
    },
    "son": {
     "tarih": "2026-11-05",
@@ -74922,7 +74922,7 @@
     "2026-08": 1161.4202,
     "2026-09": 1253.587,
     "2026-10": 1341.611,
-    "2026-11": 1339.758
+    "2026-11": 1338.8138
    },
    "ceyreklik": {
     "2007Q3": 1672.0354,
@@ -75025,7 +75025,7 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 1340,
+    "deger": 1339,
     "gun": "2026-11-11",
     "kapanis": 8394
    },
@@ -75432,7 +75432,7 @@
     "2026-08": 1218.3031,
     "2026-09": 1301.4777,
     "2026-10": 1447.4156,
-    "2026-11": 1456.1592
+    "2026-11": 1455.1329
    },
    "ceyreklik": {
     "2014Q2": 1759.4096,
@@ -75501,7 +75501,7 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 1456,
+    "deger": 1455,
     "gun": "2026-11-11",
     "kapanis": 9220
    },
@@ -75727,7 +75727,7 @@
     "2026-08": 4569.4762,
     "2026-09": 4906.619,
     "2026-10": 5024.4706,
-    "2026-11": 5024.375
+    "2026-11": 5014
    },
    "ceyreklik": {
     "2009Q3": 7069.8259,
@@ -75820,9 +75820,9 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 5024,
-    "gun": "2026-11-11",
-    "kapanis": 4936
+    "deger": 5014,
+    "gun": "2026-11-12",
+    "kapanis": 4931
    },
    "guncelleme": "2026-11-12"
   },
@@ -76046,7 +76046,7 @@
     "2026-08": 681.7061,
     "2026-09": 736.619,
     "2026-10": 754.3118,
-    "2026-11": 753.9069
+    "2026-11": 751.8199
    },
    "ceyreklik": {
     "2009Q3": 1036.8848,
@@ -76139,9 +76139,9 @@
    },
    "son": {
     "tarih": "2026-11",
-    "deger": 754,
-    "gun": "2026-11-11",
-    "kapanis": 4936
+    "deger": 752,
+    "gun": "2026-11-12",
+    "kapanis": 4931
    },
    "guncelleme": "2026-11-12"
   },
@@ -76297,7 +76297,7 @@
     "2026-08": 371.2249,
     "2026-09": 254.5596,
     "2026-10": 296.5826,
-    "2026-11": 512.4315
+    "2026-11": 511.5179
    },
    "ceyreklik": {
     "2015Q1": 780.0415,
@@ -90751,7 +90751,7 @@
     "2026-08": 33.7,
     "2026-09": 257.5,
     "2026-10": 38.5,
-    "2026-11": 10.3
+    "2026-11": 13.7
    },
    "ceyreklik": {
     "2024Q1": 0,
@@ -90765,26 +90765,35 @@
     "2026Q1": 0,
     "2026Q2": 0,
     "2026Q3": 297.4,
-    "2026Q4": 48.8
+    "2026Q4": 52.2
    },
    "yillik": {
     "2024": 0,
     "2025": 0,
-    "2026": 346.2
+    "2026": 349.6
    },
    "adet_ceyrek": {
     "2026Q3": 9,
-    "2026Q4": 8
+    "2026Q4": 9
    },
    "tutarsiz_ceyrek": {},
    "son": {
-    "tarih": "2026-11-09",
-    "deger": 7.8,
+    "tarih": "2026-11-12",
+    "deger": 3.4,
     "ay": "2026-11"
    },
    "guncelleme": "2026-11-12",
-   "n": 17,
+   "n": 18,
    "sozlesmeler": [
+    {
+     "t": "2026-11-12",
+     "tur": "yeni",
+     "usd_mn": 3.4,
+     "usd": 2.88,
+     "eur": 0,
+     "tl": 26.8,
+     "ozet": "Şirketimiz, 03.02.2026 tarihinde kamuya duyurulan ve EnerjiSA&#x27;ya bağlı dağıtım şirketleri Toroslar Elektrik Dağıtım A.Ş., İstanbul Anadolu Yakası Elektrik "
+    },
     {
      "t": "2026-11-09",
      "tur": "yeni",
@@ -90883,29 +90892,20 @@
      "eur": 26.87,
      "tl": 1516.9,
      "ozet": "Şirketimiz tarafından 8 Haziran 2026 tarihinde yapılan özel durum açıklamasında, Bosna-Hersek&#x27;te faaliyet gösteren devlet elektrik kurumu EPBiH tarafından "
-    },
-    {
-     "t": "2026-09-02",
-     "tur": "yeni",
-     "usd_mn": 37,
-     "usd": 37.02,
-     "eur": 0,
-     "tl": 0,
-     "ozet": "Şirketimiz ile uluslararası ticaret alanında küresel ölçekte faaliyet gösteren köklü bir Japon şirketi arasında, Ukrayna&#x27;nın farklı bölgelerinde kullanılma"
     }
    ],
    "yillik_kum": {
     "yillar": {
      "2026": {
-      "toplam": 346.2,
-      "adet": 17,
+      "toplam": 349.6,
+      "adet": 18,
       "tutarsiz": 0,
-      "ayni_tarih": 346.2,
-      "ayni_tarih_adet": 17,
+      "ayni_tarih": 349.6,
+      "ayni_tarih_adet": 18,
       "son": {
-       "t": "2026-11-09",
-       "usd_mn": 7.8,
-       "ozet": "Şirketimizin, TEİAŞ Genel Müdürlüğü tarafından gerçekleştirilen, ‘‘İTM-563 REF. 154KV ÇUKURCA TM (HAKKARİ) YAPIMI YAPIM "
+       "t": "2026-11-12",
+       "usd_mn": 3.4,
+       "ozet": "Şirketimiz, 03.02.2026 tarihinde kamuya duyurulan ve EnerjiSA&#x27;ya bağlı dağıtım şirketleri Toroslar Elektrik Dağıtım"
       },
       "yy_ayni_tarih": null,
       "yy_toplam": null
@@ -94595,6 +94595,16 @@
     "usd": 0,
     "eur": 0,
     "tl": 390.9
+   },
+   "1697502": {
+    "kod": "GESAN",
+    "t": "2026-11-12",
+    "ozet": "Şirketimiz, 03.02.2026 tarihinde kamuya duyurulan ve EnerjiSA&#x27;ya bağlı dağıtım şirketleri Toroslar Elektrik Dağıtım A.Ş., İstanbul Anadolu Yakası Elektrik ",
+    "baslik": "İlave Sipariş Alınması Hakkında",
+    "usd_mn": 3.4,
+    "usd": 2.88,
+    "eur": 0,
+    "tl": 26.8
    }
   },
   "cozulemeyen": {
