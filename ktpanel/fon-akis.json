@@ -209438,7 +209438,6 @@
   "RYF": "ROTA PORTFÖY YÖNETİMİ A.Ş.",
   "SAS": "AK PORTFÖY YÖNETİMİ A.Ş.",
   "SBH": "SPARTA PORTFÖY YÖNETİMİ A.Ş.",
-  "SBR": "STRATEJİ PORTFÖY YÖNETİMİ A.Ş.",
   "SD1": "SPARTA PORTFÖY YÖNETİMİ A.Ş.",
   "SFS": "AZİMUT PORTFÖY YÖNETİMİ A.Ş.",
   "SGK": "EMAA BLUE PORTFÖY YÖNETİMİ ANONİM ŞİRKETİ",
@@ -210473,6 +210472,7 @@
   "SAR": "İŞ PORTFÖY",
   "SAT": "AZİMUT PORTFÖY",
   "SBI": "STRATEJİ PORTFÖY",
+  "SBR": "STRATEJİ PORTFÖY",
   "SBS": "STRATEJİ PORTFÖY",
   "SCZ": "AK PORTFÖY",
   "SEH": "A1 CAPİTAL PORTFÖY",
@@ -210687,7 +210687,7 @@
   "gun": "2026-11-12",
   "onceki": "2026-11-11",
   "adet": 68,
-  "eslesmeyen": 11,
+  "eslesmeyen": 9,
   "liste": [
    {
     "ad": "DENİZ",
@@ -211026,8 +211026,8 @@
    },
    {
     "ad": "AK",
-    "net": -6698856710,
-    "fon": 120
+    "net": -6698858950,
+    "fon": 122
    }
   ]
  },
@@ -211054,8 +211054,8 @@
     },
     {
      "ad": "AK",
-     "net": 4769852583,
-     "fon": 120
+     "net": 4769845582,
+     "fon": 122
     },
     {
      "ad": "TEB",
@@ -211843,8 +211843,8 @@
     },
     {
      "ad": "AK",
-     "net": -9439854386,
-     "fon": 119
+     "net": -9440220153,
+     "fon": 121
     },
     {
      "ad": "NUROL",

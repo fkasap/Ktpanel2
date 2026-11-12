@@ -114,7 +114,6 @@
   "KMPUR",
   "KNFRT",
   "KOCMT",
-  "KONKA",
   "KONYA",
   "KOTON",
   "KPEKS",
@@ -208,7 +207,7 @@
   "YUNSA",
   "ZEDUR"
  ],
- "sayi": 206,
+ "sayi": 205,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -805,7 +804,8 @@
   "HUBVC": "2026-11-10",
   "KTKVK": "2026-11-11",
   "KTSVK": "2026-11-11",
-  "DOCO": "2026-11-12"
+  "DOCO": "2026-11-12",
+  "QYATB": "2026-11-12"
  },
  "evren_disi": [
   "AAGYO",
@@ -1024,6 +1024,7 @@
   "KLRHO",
   "KLYPV",
   "KOCFN",
+  "KONKA",
   "KONTR",
   "KOPOL",
   "KORDS",
@@ -1110,6 +1111,7 @@
   "PSGYO",
   "QNBFK",
   "QUICK",
+  "QYATB",
   "RALYH",
   "RAYSG",
   "RGYAS",
@@ -1199,8 +1201,8 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 390,
- "pencere_sayi": 7,
+ "evren_disi_sayi": 392,
+ "pencere_sayi": 9,
  "dusen_son": [],
- "guncelleme": "2026-11-12 08:11 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-12 17:06 UTC — otomatik (KAP FR · kümülatif §299)"
 }
