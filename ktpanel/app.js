@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261105a';
+const KTP_SURUM = '20261112a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -3456,7 +3456,7 @@ function katfonRender(){
       const top=i===0;
       const aumH=f.b!=null?('<td class="num" style="font-size:9px">'+ (f.b>=1e9?trN(f.b/1e9,1)+'mlr':trN(f.b/1e6,0)+'mn') + (f.a?(' <span class="'+(f.a>=0?'up':'down')+'">'+(f.a>=0?'▲':'▼')+(Math.abs(f.a)>=1e9?trN(Math.abs(f.a)/1e9,1)+'mlr':trN(Math.abs(f.a)/1e6,0)+'mn')+'</span>'):'')+'</td>'):'<td class="num" style="color:var(--line2)">\u2014</td>';
       const _tasf=TASF.has(f.k);   /* §460 */
-      html+='<tr'+(top&&!_tasf?' style="background:var(--mmL)"':(_tasf?' style="opacity:.62"':''))+'><td><b'+(top&&!_tasf?' style="color:var(--mm2)"':'')+'>'+f.k+'</b></td><td style="font-size:10px;color:var(--muted);font-family:var(--sans)">'+esc(f.u)+(_tasf?' <span class="tag" style="background:#E8933B;color:#fff;font-size:8px;padding:1px 5px">⚠ TASFİYE'+(f.yu===0?' · işlem kapalı':'')+'</span>':'')+'</td><td><span style="font-size:8px;font-weight:700;letter-spacing:.5px;color:'+(f.t==='K'?'var(--mm2)':'var(--blue)')+'">'+(f.t==='K'?'KATILIM':'SERBEST')+'</span></td><td class="num" style="color:var(--muted)">'+trN(f.yu,4)+'</td>'+aumH;
+      html+='<tr'+(top&&!_tasf?' style="background:var(--mmL)"':(_tasf?' style="opacity:.62"':''))+'><td><b'+(top&&!_tasf?' style="color:var(--mm2)"':'')+'>'+f.k+'</b></td><td style="font-size:10px;color:var(--muted);font-family:var(--sans)">'+esc(f.u)+(_tasf?' <span class="tag" style="background:#E8933B;color:#fff;font-size:8px;padding:1px 5px">⚠ TASFİYE'+(f.yu===0?' · işlem kapalı':'')+'</span>':'')+(f.dagitim&&f.dagitim.tarih?' <span class="tag" title="'+esc(f.not||'')+'" style="background:var(--mm2);color:#fff;font-size:8px;padding:1px 5px">KÂR PAYI DAĞITIMI '+esc(String(f.dagitim.tarih).slice(5))+' · '+trG(f.dagitim.oran)+'%</span>':'')+'</td><td><span style="font-size:8px;font-weight:700;letter-spacing:.5px;color:'+(f.t==='K'?'var(--mm2)':'var(--blue)')+'">'+(f.t==='K'?'KATILIM':'SERBEST')+'</span></td><td class="num" style="color:var(--muted)">'+trN(f.yu,4)+'</td>'+aumH;
       f.g.forEach((v,gi)=>{html+='<td class="num"'+(gi===sIdx?' style="font-weight:700"':'')+'>'+(v==null?'<span style="color:var(--line2)">\u2014</span>':'<span class="'+(v>=0?'up':'down')+'">'+(v>=0?'+':'')+trG(v)+'</span>')+'</td>';});
       /* §250e: alfa hücresi — YTD (g[3]) − TLREFK YTD */
       if(TLREFK_YTD!=null){
