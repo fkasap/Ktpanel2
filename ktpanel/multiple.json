@@ -1635,15 +1635,15 @@
    "k": "SOKE",
    "fiyat": 7.1,
    "adet": 1600,
-   "ciro": 5458,
-   "ebitda": 311,
-   "netBorc": 2764,
+   "ciro": 6021,
+   "ebitda": 706,
+   "netBorc": 2598,
    "hacim": 108,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 257
+   "ebitda_genis": 724
   },
   {
    "k": "SUNTK",
@@ -1831,15 +1831,15 @@
    "k": "YATAS",
    "fiyat": 21.38,
    "adet": 149.799,
-   "ciro": 23309,
-   "ebitda": 2489,
-   "netBorc": 8119,
+   "ciro": 23470,
+   "ebitda": 2473,
+   "netBorc": 8754,
    "hacim": 30,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 2939
+   "ebitda_genis": 2830
   },
   {
    "k": "YEOTK",
