@@ -1949,6 +1949,11 @@
     "2026Q2": {
      "usd": 6,
      "tl": 0.305
+    },
+    "2026Q3": {
+     "tl": 1.213,
+     "usd": 25.3,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -2035,6 +2040,11 @@
      "nb": -0.976,
      "borc": 1.176,
      "nakit": 2.152
+    },
+    "2026Q3": {
+     "nb": -1.383,
+     "borc": 0.935,
+     "nakit": 2.318
     }
    },
    "nakit": {
@@ -2092,6 +2102,18 @@
      "capex_am": 1.18,
      "ay": 6,
      "fcf_ttm": -0.73,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 0.955,
+     "capex": -0.019,
+     "kira": 0,
+     "fcf": 0.937,
+     "favok": 2.068,
+     "donusum": 45.3,
+     "capex_am": 0.05,
+     "ay": 9,
+     "fcf_ttm": 0.782,
      "yaklasik": true
     }
    }
@@ -9941,6 +9963,11 @@
     "2026Q2": {
      "usd": 38,
      "tl": 1.757
+    },
+    "2026Q3": {
+     "tl": -0.12,
+     "usd": -2.5,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -10137,6 +10164,11 @@
      "nb": 8.082,
      "borc": 14.579,
      "nakit": 6.498
+    },
+    "2026Q3": {
+     "nb": 10.083,
+     "borc": 17.565,
+     "nakit": 7.482
     }
    },
    "nakit": {
@@ -10258,6 +10290,18 @@
      "capex_am": 0.23,
      "ay": 6,
      "fcf_ttm": 2.019,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 0.034,
+     "capex": -1.09,
+     "kira": -0.098,
+     "fcf": -1.059,
+     "favok": 2.086,
+     "donusum": -50.8,
+     "capex_am": 0.44,
+     "ay": 9,
+     "fcf_ttm": 1.649,
      "yaklasik": true
     }
    }
@@ -11178,6 +11222,11 @@
     "2026Q2": {
      "usd": 11,
      "tl": 0.517
+    },
+    "2026Q3": {
+     "tl": 0.696,
+     "usd": 14.5,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -11300,6 +11349,11 @@
      "nb": -0.454,
      "borc": 0.625,
      "nakit": 1.079
+    },
+    "2026Q3": {
+     "nb": -0.184,
+     "borc": 0.564,
+     "nakit": 0.748
     }
    },
    "nakit": {
@@ -11421,6 +11475,18 @@
      "capex_am": 1.61,
      "ay": 6,
      "fcf_ttm": 1.289,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 1.113,
+     "capex": -1.045,
+     "kira": -0.097,
+     "fcf": 0.228,
+     "favok": 1.593,
+     "donusum": 14.3,
+     "capex_am": 1.72,
+     "ay": 9,
+     "fcf_ttm": 0.045,
      "yaklasik": true
     }
    }
@@ -12964,6 +13030,11 @@
      "tl": 0.71,
      "usd": 15.6,
      "_kaynak": "KAP"
+    },
+    "2026Q3": {
+     "tl": 0.5,
+     "usd": 10.4,
+     "_kaynak": "KAP"
     }
    },
    "fiyat_ceyrek_sonu": {
@@ -13022,6 +13093,11 @@
      "nb": 4.912,
      "borc": 7.104,
      "nakit": 2.192
+    },
+    "2026Q3": {
+     "nb": 6.064,
+     "borc": 7.382,
+     "nakit": 1.318
     }
    },
    "nakit": {
@@ -13079,6 +13155,18 @@
      "capex_am": 0.81,
      "ay": 6,
      "fcf_ttm": -1.79,
+     "yaklasik": true
+    },
+    "2026Q3": {
+     "cfo": 0.7,
+     "capex": -1.872,
+     "kira": 0,
+     "fcf": -1.162,
+     "favok": 1.255,
+     "donusum": -92.5,
+     "capex_am": 2,
+     "ay": 9,
+     "fcf_ttm": 0.938,
      "yaklasik": true
     }
    }

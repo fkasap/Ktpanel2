@@ -1186,7 +1186,7 @@
    "dd": -65.6,
    "dipten": 18,
    "beta": 1.36,
-   "kalite": 0.29,
+   "kalite": -0.08,
    "skor": 3.3,
    "baski": false
   },
@@ -1210,7 +1210,7 @@
    "dd": -76.4,
    "dipten": 10.5,
    "beta": 1.17,
-   "kalite": 1.59,
+   "kalite": 1.6,
    "skor": 2.64,
    "baski": false
   },
@@ -1222,7 +1222,7 @@
    "dd": -62,
    "dipten": 10.9,
    "beta": 1.21,
-   "kalite": 0.38,
+   "kalite": 0,
    "skor": 2.59,
    "baski": false
   },
@@ -1234,7 +1234,7 @@
    "dd": -88.8,
    "dipten": 31.1,
    "beta": 0.92,
-   "kalite": -0.16,
+   "kalite": -0.15,
    "skor": 2.29,
    "baski": true
   },
@@ -1246,7 +1246,7 @@
    "dd": -63.5,
    "dipten": 13.3,
    "beta": 1.12,
-   "kalite": 0.06,
+   "kalite": 0.08,
    "skor": 2.26,
    "baski": true
   },
@@ -1258,7 +1258,7 @@
    "dd": -61.3,
    "dipten": 32,
    "beta": 1.2,
-   "kalite": 0.23,
+   "kalite": 0.24,
    "skor": 2.25,
    "baski": false
   },
@@ -1270,7 +1270,7 @@
    "dd": -41.9,
    "dipten": 10.5,
    "beta": 1.38,
-   "kalite": 1.35,
+   "kalite": 1.36,
    "skor": 2.05,
    "baski": false
   },
@@ -1306,7 +1306,7 @@
    "dd": -49,
    "dipten": 15.1,
    "beta": 1.3,
-   "kalite": 1.3,
+   "kalite": 1.06,
    "skor": 1.87,
    "baski": true
   },
@@ -1318,7 +1318,7 @@
    "dd": -38.4,
    "dipten": 9.5,
    "beta": 1.22,
-   "kalite": 0.33,
+   "kalite": -0.09,
    "skor": 1.7,
    "baski": true
   }
