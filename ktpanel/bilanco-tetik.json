@@ -806,7 +806,8 @@
   "KTKVK": "2026-11-11",
   "KTSVK": "2026-11-11",
   "DOCO": "2026-11-12",
-  "QYATB": "2026-11-12"
+  "QYATB": "2026-11-12",
+  "DOGUB": "2026-11-13"
  },
  "evren_disi": [
   "AAGYO",
@@ -919,6 +920,7 @@
   "DMRGD",
   "DOAS",
   "DOCO",
+  "DOGUB",
   "DOGVY",
   "DOHOL",
   "DOKTA",
@@ -1201,8 +1203,8 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 391,
- "pencere_sayi": 3,
+ "evren_disi_sayi": 392,
+ "pencere_sayi": 4,
  "dusen_son": [],
- "guncelleme": "2026-11-13 06:46 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-13 21:24 UTC — otomatik (KAP FR · kümülatif §299)"
 }
