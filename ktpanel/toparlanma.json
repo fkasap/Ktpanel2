@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-12",
+ "guncelleme": "2026-11-13",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-11",
@@ -50,11 +50,11 @@
     },
     {
      "ad": "TR CDS 2 hafta değişim",
-     "deger": -21,
+     "deger": -18,
      "esik": "≤ 0 bp (daralma)",
      "tamam": true,
      "birim": "bp",
-     "not": "1 ay -7 bp"
+     "not": "1 ay -9 bp"
     }
    ]
   },
