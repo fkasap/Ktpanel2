@@ -16037,3 +16037,7 @@ app.js v=20260728zp. DEPLOY: app.js + index.html.
 - tazele.mjs: döviz dışı kategoride tek günde −%1…−%8 düşüş = dağıtım → `f.dagitim{tarih,eski,yeni,oran}` + `f.not`, aykırı kuralından muaf, katman yazılır. 1G ham kalır; TEFAS dönem getirileri dağıtımı zaten taşır.
 - app.js: fon satırında "KÂR PAYI DAĞITIMI 11-12 · −2,22%" damgası (f.dagitim varsa). Sürüm 20261112a.
 - Not: §554 (tasfiye paydası) bu koşuda henüz yüklü değildi (kapsam 45/46 eski formülle).
+
+## §556 — 15 Kas: Dönüş sepetinde "TASFİYE" rozeti yanıltıcıydı
+- PASEU, SELEC, GESAN, GUBRF hisse olarak tasfiyede değil; rozet `fon-portfoy.json tasfiye.baski.liste` (tasfiye sürecindeki fonların elindeki 23 hisse, §452) demekti.
+- app.js: rozet "FON SATIŞ BASKISI" oldu, rengi turuncu tasfiye rengiyle karışmasın diye hardal; ipucu metni ne olduğunu açıklıyor. Sürüm 20261115a.

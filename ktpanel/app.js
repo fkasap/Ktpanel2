@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261112a';
+const KTP_SURUM = '20261115a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -2176,7 +2176,7 @@ async function toparlanmaInit(){
     (M.yuksek?'Daniel & Moskowitz (2016) koşulu: ayı piyasası + yüksek oynaklık. Bu rejimde dönüş gelirse önden en çok dövülmüş, yüksek betalı hisseler koşar; faktör modelinin şimdiki savunmacı eğimi (değer + düşük risk) o dalgada geride kalabilir. Teyit (aşama 3) gelince eğimi gözden geçirmek için hazırlıklı ol.':'Koşul yok; faktör eğimi için özel bir dönüş riski görünmüyor.')+'</div>';
   const sep=(D.sepet||[]).length?'<div class="lbl" style="margin:10px 0 4px">DÖNÜŞ SEPETİ <span class="thin">(son 3 ayda en çok düşen + yüksek beta · kalite z ≥ −0,25 · XKTUM ağırlığı ≥ %0,05)</span></div>'+
     '<table aria-label="Dönüş sepeti"><thead><tr><th>Hisse</th><th>Sektör</th><th class="num">3 ay</th><th class="num">6a zirveden</th><th class="num">20g dipten</th><th class="num">Beta</th><th class="num">Kalite z</th></tr></thead><tbody>'+
-    D.sepet.map(x=>'<tr><td><b>'+esc(x.k)+'</b>'+(x.baski?' <span class="tag" style="background:#E8933B;color:#fff" title="§452 tasfiye fonlarının elindeydi — zorunlu satış baskısı">TASFİYE</span>':'')+'</td><td class="sub">'+esc(SEKTOR_TR[x.s]||x.s||'—')+'</td><td class="num down">'+fmkY(x.r3,1)+'%</td><td class="num">'+fmkY(x.dd,1)+'%</td><td class="num '+(x.dipten>0?'up':'')+'">'+fmkY(x.dipten,1)+'%</td><td class="num">'+trN(x.beta,2)+'</td><td class="num">'+fmkY(x.kalite,2)+'</td></tr>').join('')+'</tbody></table>'+
+    D.sepet.map(x=>'<tr><td><b>'+esc(x.k)+'</b>'+(x.baski?' <span class="tag" style="background:#7A6A3A;color:#fff" title="Hisse tasfiyede DEĞİL: tasfiye sürecindeki fonların portföyünde (§452, fon-portfoy.json tasfiye.baski) — zorunlu satış baskısı altında. Dönüşte bu baskı kalkınca sert toparlar.">FON SATIŞ BASKISI</span>':'')+'</td><td class="sub">'+esc(SEKTOR_TR[x.s]||x.s||'—')+'</td><td class="num down">'+fmkY(x.r3,1)+'%</td><td class="num">'+fmkY(x.dd,1)+'%</td><td class="num '+(x.dipten>0?'up':'')+'">'+fmkY(x.dipten,1)+'%</td><td class="num">'+trN(x.beta,2)+'</td><td class="num">'+fmkY(x.kalite,2)+'</td></tr>').join('')+'</tbody></table>'+
     '<div class="sub" style="font-size:9.5px;margin-top:3px">Bu bir alım listesi değil, <b>hazırlık listesi</b>dir: dönüş teyit edilirse ilk dalgayı genelde bu profil taşır. Teyitten önce bu hisseler düşmeye devam edebilir; kalite filtresi ilk dalgadan sonra geri düşen "çöp ralli" adaylarını ayıklamak içindir.</div>':'';
   const gec=(D.gecmis||[]).slice(-1)[0];
   el.innerHTML=serit+tablo+graf+mom+sep+(D.asama_degisim?'<div class="sub" style="font-size:9.5px;margin-top:6px">Son aşama değişimi: '+esc(D.asama_degisim)+'</div>':'');
