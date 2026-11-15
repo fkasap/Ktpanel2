@@ -823,6 +823,11 @@ async function abdSekme(){
         if($('usEnfBody')){
           const eSatir=(id,ad,vurgu)=>{
             const v=S[id]; if(!v)return '';
+            if(v.deger==null&&v.yillik_yok){   /* §558: BLS 12 aylık değişimi yayımlamadı (Eki25 verisi yok) — sebep + son resmî yıllık + a/a */
+              return '<div class="kv"><span class="k">'+ad+'</span><span'+(vurgu?' style="font-weight:600"':'')+' title="'+esc(v.yillik_yok)+'">12 ay: <span style="color:var(--muted)">yayımlanmadı</span>'+
+                (v.onceki?' · '+String(v.onceki.tarih||'').slice(0,7)+' %'+trN(v.onceki.deger,1):'')+(v.aylik!=null?' · a/a '+(v.aylik>=0?'+':'')+trN(v.aylik,2)+'%':'')+
+                ' <span style="color:var(--muted);font-size:9px">'+String(v.tarih||'').slice(0,7)+' · Eki25 verisi yok (BLS)</span></span></div>';
+            }
             const f=v.fark; // ivme: pozitif = hızlanıyor = kötü = kırmızı
             const cls=f==null?'':(f>0?'down':'up'); const sgn=f!=null&&f>0?'+':'';
             return '<div class="kv"><span class="k">'+ad+'</span><span'+(vurgu?' style="font-weight:600"':'')+'>%'+trN(v.deger,1)+
@@ -878,6 +883,9 @@ async function abdSekme(){
           try{
             const mn=S['CPIAUCNS'], ck=S['CPILFENS'];   /* §271 NSA — BLS manşetiyle aynı */
             if(mn && $('fedTufeVal')){
+              if(mn.deger==null&&mn.yillik_yok){ const o=mn.onceki, co=ck&&ck.onceki;   /* §558 */
+                $('fedTufeVal').innerHTML='Eki: 12 aylık yayımlanmadı (Eki25 verisi yok)'+(o?' · Eyl %'+trN(o.deger,1):'')+(co?' · çekirdek Eyl %'+trN(co.deger,1):''); }
+              else
               $('fedTufeVal').innerHTML='yıllık %'+trN(mn.deger,1)+(ck?' · çekirdek %'+trN(ck.deger,1):'');
               const AYK=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
               const p=String(mn.tarih||'').slice(0,7).split('-');
@@ -5356,7 +5364,7 @@ async function spkCek(){
     }catch(e){}
     ay--; if(ay===0){ay=12;yil--;}
   }
-  el.innerHTML='<div class="sub">SPK verisi alınamadı (üç ay denendi)</div>';
+  el.innerHTML='<div class="sub">SPK verisi alınamadı (üç ay denendi) — §558: 15 Kas ölçümü: ws.spk.gov.tr servisi HER dönem için boş dizi dönüyor, spk.gov.tr\'nin kendi sayfası da 0,00 gösteriyor → kaynak tarafı arızası, panel hatası değil</div>';
   if($('spkDamga'))$('spkDamga').textContent='ERİŞİLEMEDİ';
 }
 function spkBas(d, onceki){

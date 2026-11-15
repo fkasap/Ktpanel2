@@ -16045,3 +16045,12 @@ app.js v=20260728zp. DEPLOY: app.js + index.html.
 ## §557 — 15 Kas: Haftalık Not #43700378226 KALDI ("yazılmadı", günlük boş, 8 AI çağrısı)
 - Teşhis: not yazımı artık 4-6 AI çağrısı (m1, m2, §540 düzeltme, Ebu §547, taktik §423c) → 150 sn'lik bekleme yetmedi; bot ay kipini hafta bitmeden başlattı; `ts` en sonda yazıldığı için "yazılmadı" sayıldı (bulut yazımı 1 = aslında tamamlandı).
 - haftalik-not.mjs: bekleme 420 sn; ajan günlüğü DOM'dan (#ajanPano) okunur (window.AJAN IIFE içinde, hep boş geliyordu); kesin bitiş satırı görülünce erken çıkış. haftalik-not.yml: timeout 25 dk.
+
+## §558 — 15 Kas: Sağlık Bekçisi 6 uyarının kontrolü
+- **CPIAUCNS yok (ABD TÜFE kartı boş):** gerçek sebep BLS — Eki25 TÜFE 2025 kapanmasında toplanmadı, Eki26 yayınında (10 Kas) 12 aylık değişim resmen yayımlanmadı. Panel §272 tarih-eşleme kuralıyla doğru olarak null döndü. market.js artık sebebi, son resmî yıllığı (Eyl26) ve a/a'yı döndürür; kart "12 ay: yayımlanmadı · 2026-09 %x · a/a +%y" gösterir. Kas26 verisi (Ara ortası) gelince kendiliğinden normale döner.
+- **ECB timeout (köprü evds2):** 14 Kas 15:31'de >45 sn; 15 Kas 12,5 sn ile döndü → geçici, ECB tarafı.
+- **KKO datagroups (EVDS):** 15 Kas bie_kko2 Eki26 verisiyle döndü → geçici EVDS arızası.
+- **FRED_KEY (t17):** /api/market?mod=fred ok, 40+ seri canlı → ekran notu bayat kalmış (ekran katmanı tur atlayınca taşınan not).
+- **SPK PYŞ:** ws.spk.gov.tr servisi tüm dönemler için `[]`, spk.gov.tr sayfası da 0,00 → kaynak arızası. Kart mesajı açıklamayı taşır.
+- **TP.AB.B4 bayat:** bie_abreserv grubunun tamamı Ağu26'da duruyor (EVDS aylık rezerv tablosu gecikmeli). Yalnız yedek seri; kart haftalık TP.AB.TOPLAM'dan okuyor (6 Kas 161,1). Uyarı EVDS yayınlayınca kendiliğinden düşer.
+- rezerv.json: 6 Kas haftası (161,1 / 41,18 / 27,44 · swap 13,74).
