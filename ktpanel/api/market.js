@@ -256,7 +256,19 @@ async function fredModu(req, res){
           return +(((va/vb)-1)*100).toFixed(2);
         };
         const simdiki = yil(0,12), onceki = yil(1,12);
-        if(simdiki == null) return [id, null];
+        /* §558 (15 Kas): Eki26 için 12 aylık değişim YOK — BLS, Eki25 verisini 2025 kapanmasında TOPLAMADI ve Eki26
+           yayınında (10 Kas) 12 aylık değişimi resmen yayımlamadı (bls.gov/cpi/notices/2026/12m-changes-202610). Panel
+           tarih-eşleme kuralı (§272) sayesinde yanlış ay yerine null döndürdü — doğru; ama kart "boş" göründü ve bekçi uyardı.
+           Artık değer yoksa SEBEBİ ile birlikte döner: bir önceki ayın yıllığı (Eyl26, resmî) ve son aylık değişim (NSA a/a). */
+        if(simdiki == null){
+          const a = gozlemler[0], b12 = _bul(_ayGeri(a.date, 12));
+          if(!b12 && gozlemler.length >= 2){
+            const mm = (gozlemler[1] && isFinite(+gozlemler[1].value)) ? +(((+a.value / +gozlemler[1].value) - 1) * 100).toFixed(2) : null;
+            return [id, { deger:null, tarih:a.date, tip:'yillik', fark:null,
+                          yillik_yok:'12 ay önceki gözlem (' + _ayGeri(a.date, 12) + ') kaynakta yok — BLS 2025 kapanmasında Eki25 TÜFE toplamadı; 12 aylık değişim resmî olarak yayımlanmadı',
+                          onceki:(onceki==null?null:{ deger:onceki, tarih:gozlemler[1].date }), aylik:mm, aylik_tarih:gozlemler[1].date }];
+          }
+          return [id, null]; }
         return [id, { deger:simdiki, tarih:gozlemler[0].date,
                       fark: (onceki==null ? null : +(simdiki - onceki).toFixed(2)), tip:'yillik' }];
       }
