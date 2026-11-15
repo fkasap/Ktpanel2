@@ -57,12 +57,23 @@ async function main() {
          (#ajanHaftalikBtn / #ajanAylikBtn) aynı fonksiyonu çağırır; bot düğmeye basar. Bulut hafıza da panelin kendi açılış akışıyla
          (notlariGeriYukle, IIFE içi) zaten yerel depoya inmiş olur — üstteki kayıt sayısı onu doğrular. */
       const sonuc = await sayfa.evaluate((kip) => { const b = document.getElementById(kip === 'ay' ? 'ajanAylikBtn' : 'ajanHaftalikBtn'); if (!b) return 'düğme yok'; b.click(); return 'düğmeye basıldı'; }, kip);
-      /* ajan günlüğünde "yazılıyor" → bitiş: iki AI çağrısı (~6 sn × 2) + taktik türetimi; en çok 150 sn beklenir */
-      for (let i = 0; i < 30; i++) { await uyku(5000); const ts = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return (k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}).ts || 0; } catch (e) { return 0; } }, kip); if (ts > oncekiTs) break; }
+      /* §557 (15 Kas, #43700378226: iki kip de "yazılmadı · ajan günlüğü: (boş)", oysa 8 AI çağrısı + 1 bulut yazımı vardı):
+         (1) ts yalnız EN SONDA (notKaydet) yazılır — önce m1, m2, §540 düzeltme turu, Ebu karnesi (§547) ve taktik türetimi (§423c)
+             gelir: 4-6 AI çağrısı × 25 sn'ye kadar → 150 sn'lik bekleme YETMEDİ, bot "yazılmadı" deyip ikinci kipi başlattı, ikisi
+             üst üste bindi; yazım tarayıcı kapanırken tamamlandı. Bekleme 420 sn'ye çıkarıldı.
+         (2) window.AJAN bir IIFE içinde — günlük hep boş geliyordu, sebep görülemiyordu. Günlük artık DOM'dan (#ajanPano) okunur.
+         (3) Günlükte kesin bitiş satırı görülünce ("yeniden yazıldı" / "basılmadı" / "uygulanmadı" / "erişilemedi" / "kesildi")
+             bekleme erken biter; böylece ikinci kip birincisi bitmeden başlamaz. */
+      const panoOku = () => sayfa.evaluate(() => { const e = document.getElementById('ajanPano'); return e ? Array.from(e.children).map(x => x.textContent.trim()).slice(0, 6) : []; }).catch(() => []);
+      const BITTI = /yeniden yazıldı|basılmadı|uygulanmadı|erişilemedi|kesildi|yanıt kısa/i;
+      let sonPano = [];
+      for (let i = 0; i < 84; i++) { await uyku(5000);
+        const ts = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); return (k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}).ts || 0; } catch (e) { return 0; } }, kip);
+        if (ts > oncekiTs) break;
+        sonPano = await panoOku(); if (sonPano.length && BITTI.test(sonPano[0]) && !/yazılıyor/i.test(sonPano[0])) break; }
       await uyku(8000);   /* notKaydet → bulut yazımı tamamlansın */
-      const durum = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); const K = k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}; const log = (window.AJAN && AJAN.log || []).slice(0, 4); return { ts: K.ts || 0, etiket: K.etiket || '', uzunluk: (K.html || '').length, log }; } catch (e) { return { hata: String(e) }; } }, kip);
-      const yeni = durum.ts && durum.ts > oncekiTs;
-      ozet.push((kip === 'ay' ? 'AYLIK' : 'HAFTALIK') + ': ' + sonuc + ' · ' + (yeni ? 'YAZILDI "' + durum.etiket + '" (' + durum.uzunluk + ' kr)' : 'yazılmadı') + ' · ajan günlüğü: ' + (durum.log || []).join(' | ').slice(0, 300));
+      const durum = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); const K = k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}; return { ts: K.ts || 0, etiket: K.etiket || '', uzunluk: (K.html || '').length }; } catch (e) { return { hata: String(e) }; } }, kip);
+      durum.log = await panoOku();
       if (!yeni) { await fs.mkdir('rapor', { recursive: true }); await sayfa.screenshot({ path: 'rapor/haftalik-not-hata.png', fullPage: false }).catch(() => {}); }
     }
     ozet.push('bulut yazımı ' + yazildi.ajanktp + ' · AI çağrısı ' + yazildi.ai + (hata.length ? ' · JS hatası: ' + hata.slice(0, 2).join(' | ') : ''));
