@@ -16041,3 +16041,7 @@ app.js v=20260728zp. DEPLOY: app.js + index.html.
 ## §556 — 15 Kas: Dönüş sepetinde "TASFİYE" rozeti yanıltıcıydı
 - PASEU, SELEC, GESAN, GUBRF hisse olarak tasfiyede değil; rozet `fon-portfoy.json tasfiye.baski.liste` (tasfiye sürecindeki fonların elindeki 23 hisse, §452) demekti.
 - app.js: rozet "FON SATIŞ BASKISI" oldu, rengi turuncu tasfiye rengiyle karışmasın diye hardal; ipucu metni ne olduğunu açıklıyor. Sürüm 20261115a.
+
+## §557 — 15 Kas: Haftalık Not #43700378226 KALDI ("yazılmadı", günlük boş, 8 AI çağrısı)
+- Teşhis: not yazımı artık 4-6 AI çağrısı (m1, m2, §540 düzeltme, Ebu §547, taktik §423c) → 150 sn'lik bekleme yetmedi; bot ay kipini hafta bitmeden başlattı; `ts` en sonda yazıldığı için "yazılmadı" sayıldı (bulut yazımı 1 = aslında tamamlandı).
+- haftalik-not.mjs: bekleme 420 sn; ajan günlüğü DOM'dan (#ajanPano) okunur (window.AJAN IIFE içinde, hep boş geliyordu); kesin bitiş satırı görülünce erken çıkış. haftalik-not.yml: timeout 25 dk.
