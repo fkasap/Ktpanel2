@@ -39,6 +39,7 @@
   "BRLSM",
   "BUCIM",
   "BURCE",
+  "BURVA",
   "BYDNR",
   "CATES",
   "CELHA",
@@ -208,7 +209,7 @@
   "YUNSA",
   "ZEDUR"
  ],
- "sayi": 206,
+ "sayi": 207,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -807,7 +808,11 @@
   "KTSVK": "2026-11-11",
   "DOCO": "2026-11-12",
   "QYATB": "2026-11-12",
-  "DOGUB": "2026-11-13"
+  "DOGUB": "2026-11-13",
+  "BFREN": "2026-11-16",
+  "BPOZ": "2026-11-16",
+  "BURVA": "2026-11-16",
+  "HDFYB": "2026-11-16"
  },
  "evren_disi": [
   "AAGYO",
@@ -870,6 +875,7 @@
   "BESLR",
   "BESTE",
   "BEYAZ",
+  "BFREN",
   "BIGCH",
   "BIGEN",
   "BIGTK",
@@ -881,6 +887,7 @@
   "BNTAS",
   "BOBET",
   "BORLS",
+  "BPOZ",
   "BRGAN",
   "BRKO",
   "BRKVY",
@@ -986,6 +993,7 @@
   "HATEK",
   "HDFFL",
   "HDFGS",
+  "HDFYB",
   "HEDEF",
   "HEKTS",
   "HLGYO",
@@ -1203,8 +1211,8 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 392,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 395,
+ "pencere_sayi": 5,
  "dusen_son": [],
- "guncelleme": "2026-11-16 09:42 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-16 23:44 UTC — otomatik (KAP FR · kümülatif §299)"
 }

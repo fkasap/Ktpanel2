@@ -1198,7 +1198,7 @@
    "dd": -62.6,
    "dipten": 28.3,
    "beta": 1.38,
-   "kalite": -0.05,
+   "kalite": -0.06,
    "skor": 3.08,
    "baski": false
   },
@@ -1222,7 +1222,7 @@
    "dd": -67.1,
    "dipten": 24.7,
    "beta": 1.28,
-   "kalite": 1.82,
+   "kalite": 1.6,
    "skor": 2.87,
    "baski": false
   },
@@ -1246,20 +1246,8 @@
    "dd": -85.1,
    "dipten": 74.4,
    "beta": 1.04,
-   "kalite": -0.03,
+   "kalite": -0.04,
    "skor": 2.69,
-   "baski": true
-  },
-  {
-   "k": "SELEC",
-   "s": "Health Care",
-   "w": 0.51,
-   "r3": -60.9,
-   "dd": -74.6,
-   "dipten": 72.1,
-   "beta": 1.11,
-   "kalite": -0.13,
-   "skor": 2.34,
    "baski": true
   },
   {
@@ -1294,7 +1282,7 @@
    "dd": -49.7,
    "dipten": 13.7,
    "beta": 1.38,
-   "kalite": 1.06,
+   "kalite": 1.05,
    "skor": 2.25,
    "baski": true
   },
@@ -1306,7 +1294,7 @@
    "dd": -45.2,
    "dipten": 4.2,
    "beta": 1.28,
-   "kalite": 1.18,
+   "kalite": 1.17,
    "skor": 2.19,
    "baski": false
   },
@@ -1321,6 +1309,18 @@
    "kalite": 2.61,
    "skor": 1.98,
    "baski": false
+  },
+  {
+   "k": "GENIL",
+   "s": "Health Care",
+   "w": 0.27,
+   "r3": -54.7,
+   "dd": -59.2,
+   "dipten": 51.4,
+   "beta": 1.06,
+   "kalite": 0.15,
+   "skor": 1.86,
+   "baski": true
   }
  ],
  "onceki_asama": 3,

@@ -1195,15 +1195,15 @@
    "k": "LKMNH",
    "fiyat": 11.29,
    "adet": 216,
-   "ciro": 4507,
-   "ebitda": 1055,
-   "netBorc": 2548,
+   "ciro": 4591,
+   "ebitda": 1028,
+   "netBorc": 1701,
    "hacim": 18,
-   "donem": "2026/2",
+   "donem": "2026/3",
    "kaynak": "kap",
-   "adet_not": "bilanço sermayesi (2026/2)",
+   "adet_not": "bilanço sermayesi (2026/3)",
    "favok_tanim": "çekirdek",
-   "ebitda_genis": 1296
+   "ebitda_genis": 2059
   },
   {
    "k": "LMKDC",

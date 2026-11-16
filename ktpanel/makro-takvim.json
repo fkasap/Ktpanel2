@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-16 09:42 UTC — otomatik (§319)",
+ "guncelleme": "2026-11-16 23:44 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -71,7 +71,7 @@
    "ulke": "USD",
    "olay": "Retail Sales m/m",
    "etki": "High",
-   "beklenti": "0.2%",
+   "beklenti": "0.1%",
    "onceki": "0.8%"
   },
   {
@@ -127,7 +127,7 @@
    "ulke": "AUD",
    "olay": "Employment Change",
    "etki": "High",
-   "beklenti": "25.2K",
+   "beklenti": "25.5K",
    "onceki": "-39.3K"
   },
   {
