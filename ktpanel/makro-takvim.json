@@ -1,9 +1,89 @@
 {
- "guncelleme": "2026-11-14 11:18 UTC — otomatik (§319)",
+ "guncelleme": "2026-11-16 09:42 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
-   "t": "2026-11-09T17:25:00.000Z",
+   "t": "2026-11-16T13:30:00.000Z",
+   "ulke": "CAD",
+   "olay": "CPI m/m",
+   "etki": "High",
+   "beklenti": "0.3%",
+   "onceki": "0.1%"
+  },
+  {
+   "t": "2026-11-16T13:30:00.000Z",
+   "ulke": "CAD",
+   "olay": "Median CPI y/y",
+   "etki": "High",
+   "beklenti": "2.0%",
+   "onceki": "1.9%"
+  },
+  {
+   "t": "2026-11-16T13:30:00.000Z",
+   "ulke": "CAD",
+   "olay": "Trimmed CPI y/y",
+   "etki": "High",
+   "beklenti": "1.9%",
+   "onceki": "1.8%"
+  },
+  {
+   "t": "2026-11-16T17:00:00.000Z",
+   "ulke": "USD",
+   "olay": "Fed Chairman Warsh Speaks",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-11-16T22:50:00.000Z",
+   "ulke": "AUD",
+   "olay": "RBA Gov Bullock Speaks",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-11-17T02:00:00.000Z",
+   "ulke": "NZD",
+   "olay": "Inflation Expectations q/q",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": "2.34%"
+  },
+  {
+   "t": "2026-11-17T07:00:00.000Z",
+   "ulke": "GBP",
+   "olay": "Average Earnings Index 3m/y",
+   "etki": "Medium",
+   "beklenti": "3.5%",
+   "onceki": "3.7%"
+  },
+  {
+   "t": "2026-11-17T13:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Core Retail Sales m/m",
+   "etki": "High",
+   "beklenti": "0.4%",
+   "onceki": "0.9%"
+  },
+  {
+   "t": "2026-11-17T13:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Retail Sales m/m",
+   "etki": "High",
+   "beklenti": "0.2%",
+   "onceki": "0.8%"
+  },
+  {
+   "t": "2026-11-18T07:00:00.000Z",
+   "ulke": "GBP",
+   "olay": "CPI y/y",
+   "etki": "High",
+   "beklenti": "3.6%",
+   "onceki": "3.5%"
+  },
+  {
+   "t": "2026-11-18T07:30:00.000Z",
    "ulke": "GBP",
    "olay": "BOE Gov Bailey Speaks",
    "etki": "Medium",
@@ -11,31 +91,15 @@
    "onceki": ""
   },
   {
-   "t": "2026-11-10T09:00:00.000Z",
-   "ulke": "USD",
-   "olay": "FOMC Member Waller Speaks",
+   "t": "2026-11-18T09:00:00.000Z",
+   "ulke": "EUR",
+   "olay": "ECB Financial Stability Review",
    "etki": "Medium",
    "beklenti": "",
    "onceki": ""
   },
   {
-   "t": "2026-11-10T13:30:00.000Z",
-   "ulke": "USD",
-   "olay": "Core CPI m/m",
-   "etki": "High",
-   "beklenti": "0.2%",
-   "onceki": "0.3%"
-  },
-  {
-   "t": "2026-11-10T13:30:00.000Z",
-   "ulke": "USD",
-   "olay": "CPI m/m",
-   "etki": "High",
-   "beklenti": "0.3%",
-   "onceki": "0.6%"
-  },
-  {
-   "t": "2026-11-11T09:45:00.000Z",
+   "t": "2026-11-18T14:25:00.000Z",
    "ulke": "EUR",
    "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
@@ -43,31 +107,71 @@
    "onceki": ""
   },
   {
-   "t": "2026-11-12T07:00:00.000Z",
+   "t": "2026-11-18T15:00:00.000Z",
    "ulke": "GBP",
-   "olay": "GDP m/m",
+   "olay": "BOE Gov Bailey Speaks",
    "etki": "High",
-   "beklenti": "0.0%",
-   "onceki": "0.1%"
+   "beklenti": "",
+   "onceki": ""
   },
   {
-   "t": "2026-11-12T07:00:00.000Z",
-   "ulke": "GBP",
-   "olay": "Prelim GDP q/q",
+   "t": "2026-11-18T19:00:00.000Z",
+   "ulke": "USD",
+   "olay": "FOMC Meeting Minutes",
+   "etki": "High",
+   "beklenti": "",
+   "onceki": ""
+  },
+  {
+   "t": "2026-11-19T00:30:00.000Z",
+   "ulke": "AUD",
+   "olay": "Employment Change",
+   "etki": "High",
+   "beklenti": "25.2K",
+   "onceki": "-39.3K"
+  },
+  {
+   "t": "2026-11-19T00:30:00.000Z",
+   "ulke": "AUD",
+   "olay": "Unemployment Rate",
+   "etki": "High",
+   "beklenti": "4.7%",
+   "onceki": "4.7%"
+  },
+  {
+   "t": "2026-11-19T13:30:00.000Z",
+   "ulke": "EUR",
+   "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
-   "beklenti": "0.7%",
-   "onceki": "0.5%"
+   "beklenti": "",
+   "onceki": ""
   },
   {
-   "t": "2026-11-12T13:30:00.000Z",
+   "t": "2026-11-19T13:30:00.000Z",
+   "ulke": "USD",
+   "olay": "Philly Fed Manufacturing Index",
+   "etki": "Medium",
+   "beklenti": "19.2",
+   "onceki": "20.9"
+  },
+  {
+   "t": "2026-11-19T13:30:00.000Z",
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "194K",
-   "onceki": "189K"
+   "beklenti": "199K",
+   "onceki": "200K"
   },
   {
-   "t": "2026-11-12T19:30:00.000Z",
+   "t": "2026-11-20T07:00:00.000Z",
+   "ulke": "GBP",
+   "olay": "Retail Sales m/m",
+   "etki": "Medium",
+   "beklenti": "0.0%",
+   "onceki": "-0.4%"
+  },
+  {
+   "t": "2026-11-20T08:15:00.000Z",
    "ulke": "EUR",
    "olay": "ECB President Lagarde Speaks",
    "etki": "Medium",
@@ -75,20 +179,20 @@
    "onceki": ""
   },
   {
-   "t": "2026-11-13T13:30:00.000Z",
+   "t": "2026-11-20T15:00:00.000Z",
    "ulke": "USD",
-   "olay": "Core PPI m/m",
-   "etki": "High",
-   "beklenti": "0.3%",
-   "onceki": "0.7%"
+   "olay": "Revised UoM Consumer Sentiment",
+   "etki": "Medium",
+   "beklenti": "52.1",
+   "onceki": "51.0"
   },
   {
-   "t": "2026-11-13T13:30:00.000Z",
+   "t": "2026-11-20T15:00:00.000Z",
    "ulke": "USD",
-   "olay": "PPI m/m",
-   "etki": "High",
-   "beklenti": "0.4%",
-   "onceki": "1.3%"
+   "olay": "Revised UoM Inflation Expectations",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": "4.3%"
   }
  ]
 }
