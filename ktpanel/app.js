@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261117c';
+const KTP_SURUM = '20261117d';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -2668,6 +2668,11 @@ function kararPuan(M, H, F){
   let etiket;
   if(n<2) etiket={ad:'KAPSAM YOK', sinif:'', aciklama:'Puanlanabilir bileşen 2’den az — KAP arşivi bu hissede henüz kısa (TTM ve y/y için ≥5 çeyrek gerekir); arşiv doldukça kendiliğinden kapsama girer.'};
   else if(n===2) etiket={ad:'ZAYIF KAPSAM', sinif:'', aciklama:'Yalnız iki bileşen puanlanabildi ('+(toplam>=0?'+':'')+toplam+'/2): yön için konsensüs ya da sürücü modeli gerekli; fiyat mercekleri tek başına sinyal sayılmaz.'};
+  /* §564 (17 Kas tarama): SNGYO +4/4, BERA +3/4 gibi az bileşenli hisseler oranla OLUMLU alıp panonun tepesine çıkıyordu; puanları yalnız
+     fiyat merceklerinden geliyor (konsensüs/sicil yok). Uç etiketler (OLUMLU/OLUMSUZ) artık en az 5 puanlanan bileşen ister; 3-4 bileşende
+     aynı yön 'NÖTR-POZİTİF/NEGATİF' olarak kalır ve açıklamada sebebi yazar. */
+  else if(n<5&&oran>=0.5) etiket={ad:'NÖTR-POZİTİF', sinif:'up', aciklama:'Yön olumlu ('+(toplam>=0?'+':'')+toplam+'/'+n+') ama yalnız '+n+' bileşen puanlanabildi — OLUMLU için en az 5 bileşen gerekir (konsensüs sicili ya da sürücü modeli eksik).'};
+  else if(n<5&&oran<=-0.5) etiket={ad:'NÖTR-NEGATİF', sinif:'down', aciklama:'Yön olumsuz ('+toplam+'/'+n+') ama yalnız '+n+' bileşen puanlanabildi — OLUMSUZ için en az 5 bileşen gerekir.'};
   else if(oran>=0.5) etiket={ad:'OLUMLU', sinif:'up', aciklama:'Beklenti güçlü, fiyatlanma tam değil — pozisyon koru/artır adayı.'};
   else if(oran<=-0.5) etiket={ad:'OLUMSUZ', sinif:'down', aciklama:'Beklenti ile fiyat ayrışmış — azaltma adayı.'};
   else if(oran>0) etiket={ad:'NÖTR-POZİTİF', sinif:'up', aciklama:'Sürpriz olası ama kısmen fiyatta; ekleme için bilanço sonrası ivmeye bak.'};
@@ -2690,7 +2695,7 @@ function kararBozucular(M,H,F){
 /* ── Karar panosu (XK050 = XK030 çekirdek + §531 genişleme ⁵⁰ · §483 izleme ◇): tüm modeller tek tabloda, puana göre ── */
 function kararPanoSatirlar(){
   const L=(KARAR.model&&KARAR.model.modeller||[]).map(M=>{ try{ const H=kararHesap(M), F=kararFiyatlanma(M,H), P=kararPuan(M,H,F); return {M,H,F,P}; }catch(e){ console.warn('[KTPanel] §463 pano', M.kod, e&&e.message); return null; } }).filter(Boolean);
-  const sira=x=> x.P.n>=3? 2 : x.P.n===2? 1 : 0;   /* sinyalli → zayıf kapsam → kapsam yok */
+  const sira=x=> x.P.n>=5? 3 : x.P.n>=3? 2 : x.P.n===2? 1 : 0;   /* §564: tam kapsam (≥5 bileşen) → ince (3-4) → zayıf kapsam → kapsam yok */
   L.sort((a,b)=> (sira(b)-sira(a)) || (b.P.oran-a.P.oran) || (b.P.toplam-a.P.toplam) || a.M.kod.localeCompare(b.M.kod));
   return L;
 }
@@ -9441,7 +9446,7 @@ async function taktikModel(){
   const RB=(typeof __RB_EK!=='undefined'&&__RB_EK)||{};
   let FR=window.US_FRED||null; if(!FR){ const f=await J('/api/market?mod=fred'); FR=(f&&f.ok&&f.seriler)||null; }
   const medyan=a=>{ const b=a.filter(x=>isFinite(x)).sort((x,y)=>x-y); if(!b.length) return null; const m=b.length>>1; return b.length%2?b[m]:(b[m-1]+b[m])/2; };
-  const pdddZ=DEG&&Array.isArray(DEG.hisseler)? medyan(DEG.hisseler.map(h=>h&&h.canli&&h.canli.z)) : null;
+  const pdddZ=DEG&&Array.isArray(DEG.hisseler)? medyan(DEG.hisseler.filter(h=>h&&!h.genis).map(h=>h.canli&&h.canli.z)) : null;   /* §562: geniş (faktör evreni) satırlar sinyalin XK050 evrenini değiştirmesin */
   let kazanc=null; try{ const M=(KM&&KM.modeller)||[]; let p=0,n=0; M.forEach(m=>{ const F=m.favok||{}; const Q=Object.keys(F).filter(q=>F[q]&&isFinite(F[q].usd)).sort(); if(Q.length<5) return; const son=Q[Q.length-1]; const m2=son.match(/^(\d{4})Q([1-4])$/); if(!m2) return; const onc=(+m2[1]-1)+'Q'+m2[2]; if(!F[onc]||!isFinite(F[onc].usd)||F[onc].usd<=0) return; n++; if(F[son].usd>F[onc].usd) p++; }); if(n>=10) kazanc=p/n*100; }catch(e){}
   const yab4=isFinite(RB.yab4)?RB.yab4:null, fonAk=isFinite(RB.fonAk)?RB.fonAk:null;
   const topAs=(TOP&&isFinite(TOP.asama))?TOP.asama:null, momYuk=!!(TOP&&TOP.momentum_riski&&TOP.momentum_riski.yuksek);
@@ -14498,12 +14503,12 @@ setTimeout(()=>{ try{ tezDisiplinRender(); }catch(e){} try{ korMatrisRender(); }
    Veri: hepsi mevcut dosyalar; yeni kaynak yok. Fiyat: CANLI_FIYAT → multiple.json. Yeniden çizim: pozCiz görevleri + 60 sn.
    ═══════════════════════════════════════════════════════════════════════════ */
 const SAA_KEY='ktp_saa_v1', FONSINIF_KEY='ktp_fon_sinif_v1';
-const SAA_VARS={hisse:35, tlsg:45, altin:12, yabanci:8};
-const SINIF_AD={hisse:'Yerli hisse', tlsg:'TL sabit getirili', altin:'Altın', yabanci:'Yabancı hisse / döviz'};
+const SAA_VARS={hisse:35, tlsg:45, altin:12, yabanci:8, doviz:0};   /* §563: döviz sabit getirili ayrı sınıf (taktik sinyali yok) */
+const SINIF_AD={hisse:'Yerli hisse', tlsg:'TL sabit getirili', altin:'Altın', yabanci:'Yabancı hisse', doviz:'Döviz sabit getirili'};
 const SINIF_POZ={hisse:'poz1', yabanci:'poz2', altin:'poz3', tlsg:'poz4'};
 const EGIM={'AŞIRI ÜSTÜ':8,'ÜSTÜ':4,'NÖTR':0,'ALTI':-4,'AŞIRI ALTI':-8};
 try{ if(Array.isArray(CLOUD_KEYS)){ [SAA_KEY,FONSINIF_KEY].forEach(k=>{ if(CLOUD_KEYS.indexOf(k)<0) CLOUD_KEYS.push(k); }); } }catch(e){}
-const saaOku=()=>{ try{ const s=JSON.parse(localStorage.getItem(SAA_KEY)||'null'); if(s&&['hisse','tlsg','altin','yabanci'].every(k=>isFinite(s[k]))) return {...s,_kayit:true}; }catch(e){} return {...SAA_VARS,_kayit:false}; };
+const saaOku=()=>{ try{ const s=JSON.parse(localStorage.getItem(SAA_KEY)||'null'); if(s&&['hisse','tlsg','altin','yabanci'].every(k=>isFinite(s[k]))) return {doviz:0,...s,_kayit:true};   /* §563: eski kayıtta doviz yok → 0 */ }catch(e){} return {...SAA_VARS,_kayit:false}; };
 const fonSinifOku=()=>{ try{ return JSON.parse(localStorage.getItem(FONSINIF_KEY)||'{}')||{}; }catch(e){ return {}; } };
 let ALOK_VERI=null;   /* {fonEvren:Set, katKat:{kod:kategori}} */
 async function alokVeriYukle(){
@@ -14511,14 +14516,17 @@ async function alokVeriYukle(){
   const J=async u=>{ try{ const r=await fetch(u,{cache:'no-store'}); return r.ok?await r.json():null; }catch(e){ return null; } };
   const [fp,kf]=await Promise.all([J('/fon-portfoy.json'),J('/katfon.json')]);
   const fonEvren=new Set(Object.keys((fp&&fp.evren)||{})); const katKat={};
+  /* §563 İÇİNE BAKMA: hisse fonu %100 hisse değildir (KPU Eki raporu: hisse %85, kalanı para piyasası fonu + nakit). Fonun SON KAP portföy
+     dağılım raporundaki hisse payı kadarı yerli hisseye, kalanı TL sabit getiriliye yazılır. Rapor yoksa eski kural (tamamı hisse). */
+  const fonHisse={}; Object.entries((fp&&fp.fonlar)||{}).forEach(([k,f])=>{ const D=(f&&f.donemler)||{}; const son=Object.keys(D).sort().pop(); const v=son&&D[son]&&D[son].varlik; if(v&&isFinite(+v.hisse)) fonHisse[k]={h:Math.max(0,Math.min(100,+v.hisse)), donem:son}; });
   ((kf&&kf.kategoriler)||[]).forEach(K=>((K.fonlar)||[]).forEach(f=>{ katKat[f.k]=K.ad; }));
-  ALOK_VERI={fonEvren,katKat}; return ALOK_VERI;
+  ALOK_VERI={fonEvren,katKat,fonHisse}; return ALOK_VERI;
 }
 /* fon → sınıf: kullanıcı ataması > fon-portfoy evreni (hisse) > katfon kategorisi (Döviz→yabancı, diğer→tlsg) > ad ipucu > tlsg (tahmin) */
 function fonSinifla(kod, V){
   const el=fonSinifOku()[kod]; if(el) return {sinif:el, kaynak:'elle'};
-  if(V.fonEvren.has(kod)) return {sinif:'hisse', kaynak:'fon-portfoy evreni'};
-  const kat=V.katKat[kod]; if(kat){ if(/Döviz/i.test(kat)) return {sinif:'yabanci', kaynak:kat}; return {sinif:'tlsg', kaynak:kat}; }
+  if(V.fonEvren.has(kod)){ const fh=V.fonHisse&&V.fonHisse[kod]; return fh?{sinif:'hisse', hisseOran:fh.h, kaynak:fh.donem+' raporu: hisse %'+trN(fh.h,0)+', kalanı TL'}:{sinif:'hisse', kaynak:'fon-portfoy evreni (rapor yok → tamamı hisse)'}; }
+  const kat=V.katKat[kod]; if(kat){ if(/Döviz/i.test(kat)) return {sinif:'doviz', kaynak:kat}; return {sinif:'tlsg', kaynak:kat}; }
   if(/ALT|GLD|AU/.test(kod)) return {sinif:'altin', kaynak:'kod ipucu — doğrula'};
   return {sinif:'tlsg', kaynak:'tahmin — ⚙ ile ata'};
 }
@@ -14527,9 +14535,9 @@ async function alokRender(){
   const V=await alokVeriYukle();
   const SAA=saaOku(); const tm=(typeof TAKTIK_MODEL!=='undefined'&&TAKTIK_MODEL)||null;
   /* gerçek dağılım */
-  const ger={hisse:0,tlsg:0,altin:0,yabanci:0}; const fonSatir=[]; let toplam=0;
+  const ger={hisse:0,tlsg:0,altin:0,yabanci:0,doviz:0}; const fonSatir=[]; let toplam=0;
   poz.forEach(p=>{ const deger=p.tip==='nakit'?(+p.adet||0):((+p.adet||0)*(+p.fiyat||+p.maliyet||0)); if(!(deger>0)) return; toplam+=deger;
-    if(p.tip==='hisse') ger.hisse+=deger; else if(p.tip==='nakit') ger.tlsg+=deger; else { const s=fonSinifla(String(p.kod||'').toUpperCase(),V); ger[s.sinif]+=deger; fonSatir.push({kod:String(p.kod).toUpperCase(),deger,...s}); } });
+    if(p.tip==='hisse') ger.hisse+=deger; else if(p.tip==='nakit') ger.tlsg+=deger; else { const s=fonSinifla(String(p.kod||'').toUpperCase(),V); if(s.hisseOran!=null){ ger.hisse+=deger*s.hisseOran/100; ger.tlsg+=deger*(1-s.hisseOran/100); } else ger[s.sinif]+=deger; fonSatir.push({kod:String(p.kod).toUpperCase(),deger,...s}); } });
   /* taktik hedef */
   const hedefHam={}, durus={}; let topH=0;
   Object.keys(SAA_VARS).forEach(k=>{ const d=tm&&tm[SINIF_POZ[k]]?tm[SINIF_POZ[k]].durus:null; durus[k]=d; const h=Math.max(0,(+SAA[k])+(d?EGIM[d]||0:0)); hedefHam[k]=h; topH+=h; });
@@ -14539,16 +14547,16 @@ async function alokRender(){
   const rows=Object.keys(SAA_VARS).map(k=>{ const g=toplam?ger[k]/toplam*100:null; const fark=g==null?null:g-hedef[k]; const dis=fark!=null&&Math.abs(fark)>BANT;
     const eylem=fark==null?'—':!dis?'<span class="sub">bant içinde</span>':'<span style="color:'+(fark>0?'var(--down)':'var(--up)')+';font-weight:600">'+(fark>0?'azalt':'artır')+' '+F(Math.abs(fark))+' pp ≈ '+F(Math.abs(fark)/100*toplam/1e3,0)+' bin ₺</span>';
     const dC=durus[k]?(/ÜSTÜ/.test(durus[k])?'var(--up)':/ALTI/.test(durus[k])?'var(--down)':'var(--muted)'):'var(--muted)';
-    return '<tr><td><b>'+SINIF_AD[k]+'</b></td><td class="num">%'+F(+SAA[k],0)+'</td><td style="color:'+dC+';font-size:10px;white-space:nowrap">'+(durus[k]||'<span class="sub">model yok</span>')+' <span class="sub">('+(durus[k]?((EGIM[durus[k]]||0)>=0?'+':'')+(EGIM[durus[k]]||0)+' pp':'—')+')</span></td><td class="num" style="font-weight:600">%'+F(hedef[k])+'</td><td class="num" style="color:var(--muted)">%'+F(hedef[k]-BANT)+'–'+F(hedef[k]+BANT)+'</td><td class="num">'+(g==null?'—':'%'+F(g))+'</td><td class="num '+(fark==null?'':fark>0?'down':'up')+'">'+(fark==null?'—':(fark>=0?'+':'−')+F(Math.abs(fark))+' pp')+'</td><td>'+eylem+'</td></tr>'; });
+    return '<tr><td><b>'+SINIF_AD[k]+'</b></td><td class="num">%'+F(+SAA[k],0)+'</td><td style="color:'+dC+';font-size:10px;white-space:nowrap">'+(durus[k]||'<span class="sub">'+(SINIF_POZ[k]?'model yok':'sinyal yok')+'</span>')+' <span class="sub">('+(durus[k]?((EGIM[durus[k]]||0)>=0?'+':'')+(EGIM[durus[k]]||0)+' pp':'—')+')</span></td><td class="num" style="font-weight:600">%'+F(hedef[k])+'</td><td class="num" style="color:var(--muted)">%'+F(Math.max(0,hedef[k]-BANT))+'–'+F(hedef[k]+BANT)+'</td><td class="num">'+(g==null?'—':'%'+F(g))+'</td><td class="num '+(fark==null?'':fark>0?'down':'up')+'">'+(fark==null?'—':(fark>=0?'+':'−')+F(Math.abs(fark))+' pp')+'</td><td>'+eylem+'</td></tr>'; });
   const saaForm='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><span class="lbl" style="margin:0">STRATEJİK (SAA) %</span>'+
     Object.keys(SAA_VARS).map(k=>'<label class="sub" style="display:flex;gap:4px;align-items:center">'+SINIF_AD[k].split(' ')[0]+' <input data-saa="'+k+'" type="number" min="0" max="100" value="'+(+SAA[k])+'" style="width:52px;padding:3px 5px;font-size:11px"></label>').join('')+
     '<button class="btn mini2" id="saaKaydet">kaydet</button><span class="sub" style="font-size:9.5px">'+(SAA._kayit?'kayıtlı SAA (bulut senkron)':'<b>varsayılan profil</b> — kendi stratejik ağırlıklarını gir')+' · toplam '+F(Object.keys(SAA_VARS).reduce((a,k)=>a+(+SAA[k]),0),0)+'</span></div>';
   const fonHtml=fonSatir.length?'<div class="sub" style="margin-top:6px">Fon sınıflaması: '+fonSatir.map(f=>'<b>'+esc(f.kod)+'</b> → '+SINIF_AD[f.sinif].split(' ')[0]+' <span class="thin">('+esc(f.kaynak)+')</span> <button class="btn mini2" data-fonsinif="'+esc(f.kod)+'" style="padding:0 4px;font-size:9px">⚙</button>').join(' · ')+'</div>':'';
   el.innerHTML=saaForm+'<table><tr><th>Sınıf</th><th class="num">SAA</th><th>Taktik duruş</th><th class="num">Hedef</th><th class="num">Bant ±'+BANT+'</th><th class="num">Gerçek</th><th class="num">Fark</th><th>Eylem</th></tr>'+rows.join('')+'</table>'+
     '<div class="sub" style="margin-top:5px">Portföy toplamı '+(toplam?F(toplam/1e3,0)+' bin ₺':'—')+' · '+poz.length+' kayıt'+(tm?' · taktik model '+(tm._ts?new Date(tm._ts).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):''):' · <b>taktik model hesaplanmadı — hedef = SAA</b>')+'</div>'+fonHtml+
-    '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">YÖNTEM — hedef nasıl türetilir (§549)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">Hedef = SAA + eğim; eğim kurallı taktik duruştan: AŞIRI ÜSTÜ +8 · ÜSTÜ +4 · NÖTR 0 · ALTI −4 · AŞIRI ALTI −8 puan; dört sınıf 100\'e ölçeklenir. Bant ±3 puan: içindeyken işlem yok (işlem maliyeti ve gürültü). Gerçek dağılım Portföy kayıtlarından: hisse → yerli hisse; nakit → TL sabit getirili; fon → fon-portfoy evreni (hisse) ya da TEFAS kategorisi (döviz → yabancı; para piyasası/kira sertifikası → TL SG); altın fonu kod ipucuyla tahmin edilir, ⚙ ile düzeltilir. Bu tablo pozisyon değil, <em>bant dışı sapmayı</em> söyler; sapmayı kapatıp kapatmamak tez ve likidite kararıdır.</div></details>';
+    '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">YÖNTEM — hedef nasıl türetilir (§549)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">Hedef = SAA + eğim; eğim kurallı taktik duruştan: AŞIRI ÜSTÜ +8 · ÜSTÜ +4 · NÖTR 0 · ALTI −4 · AŞIRI ALTI −8 puan; sınıflar 100\'e ölçeklenir (döviz sabit getirilinin taktik sinyali yoktur, eğimi 0). Bant ±3 puan: içindeyken işlem yok (işlem maliyeti ve gürültü). Gerçek dağılım Portföy kayıtlarından: hisse → yerli hisse; nakit → TL sabit getirili; hisse fonu → son KAP portföy raporundaki hisse payı kadar yerli hisse, kalanı TL SG (rapor yoksa tamamı hisse); diğer fonlar TEFAS kategorisine göre (döviz → döviz sabit getirili, taktik sinyali yok; para piyasası/kira sertifikası → TL SG); altın fonu kod ipucuyla tahmin edilir, ⚙ ile düzeltilir. Bu tablo pozisyon değil, <em>bant dışı sapmayı</em> söyler; sapmayı kapatıp kapatmamak tez ve likidite kararıdır.</div></details>';
   el.querySelector('#saaKaydet')?.addEventListener('click',()=>{ const o={}; el.querySelectorAll('input[data-saa]').forEach(i=>o[i.dataset.saa]=+i.value||0); try{ localStorage.setItem(SAA_KEY,JSON.stringify(o)); }catch(e){} alokRender(); });
-  el.querySelectorAll('button[data-fonsinif]').forEach(b=>b.addEventListener('click',()=>{ const kod=b.dataset.fonsinif; const v=prompt(kod+' hangi sınıf? h = yerli hisse · t = TL sabit getirili · a = altın · y = yabancı/döviz',''); if(v==null) return; const m={h:'hisse',t:'tlsg',a:'altin',y:'yabanci'}[String(v).trim().toLowerCase()[0]]; if(!m) return; const o=fonSinifOku(); o[kod]=m; try{ localStorage.setItem(FONSINIF_KEY,JSON.stringify(o)); }catch(e){} alokRender(); }));
+  el.querySelectorAll('button[data-fonsinif]').forEach(b=>b.addEventListener('click',()=>{ const kod=b.dataset.fonsinif; const v=prompt(kod+' hangi sınıf? h = yerli hisse · t = TL sabit getirili · a = altın · y = yabancı hisse · d = döviz sabit getirili',''); if(v==null) return; const m={h:'hisse',t:'tlsg',a:'altin',y:'yabanci',d:'doviz'}[String(v).trim().toLowerCase()[0]]; if(!m) return; const o=fonSinifOku(); o[kod]=m; try{ localStorage.setItem(FONSINIF_KEY,JSON.stringify(o)); }catch(e){} alokRender(); }));
 }
 
 /* ── B) SEÇİM HUNİSİ ── */
@@ -14572,6 +14580,9 @@ async function secimRender(){
   /* §560 (17 Kas tarama): hedef fiyatın YAŞI — son güncelleme 90 günden eskiyse potansiyel puana girmez. Düşen piyasada bayat hedef
      sahte potansiyel üretir (KBORU: 11 Ağu hedefi, fiyat yarılanmış → +%332, yüzdelik 100). Yaş hücrede yazılır. */
   const AN={}; const _bugun=Date.now(); ((V.an&&V.an.hisseler)||[]).forEach(h=>{ if(h.hedef>0){ const t=h.son?Date.parse(h.son):NaN; AN[h.k]={hedef:h.hedef,n:h.kurum,yas:isFinite(t)?Math.round((_bugun-t)/864e5):null}; } });
+  /* §562: FAVÖK $ y/y artık tüm arşiv evreni için degerleme.json 'kaz' alanında (KAP arşivi, tek tanım: iki yıl da kendi raporundan,
+     kendi çeyrek ortalama kuruyla). Varsa o kullanılır — karar-model tohumları (Fintables tanımı) ile karışık ölçek olmasın. */
+  ((V.deg&&V.deg.hisseler)||[]).forEach(h=>{ if(h&&h.kaz&&isFinite(h.kaz.yy)) KAZ[h.k]={yy:h.kaz.yy, q:h.kaz.q}; });
   const AN_MAXYAS=90; const topAsama=(V.top&&isFinite(+V.top.asama))?+V.top.asama:null;
   /* §561: 'fon satış baskısı' TUTARLA ölçülür. Liste tasfiyedeki fonların son raporundaki pozisyonlardır (Ağu/Eyl); ASELS'te 126 mn ₺,
      günlük hacim 13,9 mlr ₺ → hacmin %20'siyle 0,05 günde biter: baskı değil gürültü. Bayrak yalnız ≥0,5 gün ise yanar. */
@@ -14596,7 +14607,7 @@ async function secimRender(){
     '<td class="num" style="font-weight:700">'+F(x.puan,0)+'<span class="thin">/'+x.kapsam+'</span></td><td class="num">'+F(x.faktor,2)+'</td><td class="num">'+(x.deg==null?'—':trN(-x.deg,2))+'</td><td class="num">'+(x.kaz!=null&&x.kaz<-100?'<span class="down" title="FAVÖK artıdan eksiye döndü (y/y '+trN(x.kaz,0)+'%)">eksiye döndü</span>':yz(x.kaz,0))+(x.kazQ?' <span class="thin">'+kararQAd(x.kazQ)+'</span>':'')+'</td><td class="num">'+yz(x.pot,0)+(x.anN?' <span class="thin">('+x.anN+')</span>':'')+'</td><td class="num">'+F(x.hac,0)+'</td>'+
     '<td style="font-size:9.5px">'+[x.sepet?'<span class="up">toparlanma sepeti</span>':'',x.baski?'<span class="down" title="hisse tasfiyede değil; tasfiye sürecindeki fonların son raporundaki (Ağu/Eyl) pozisyon ÷ (günlük hacim × %20)">fon satış baskısı'+(x.baskiGun!=null?' ~'+trN(x.baskiGun,1)+' gün':'')+'</span>':(x.baskiVar?'<span class="thin" title="tasfiyedeki fonların elinde var ama günlük hacme göre önemsiz">fon satışı önemsiz ('+(x.baskiGun<0.1?'<0,1':trN(x.baskiGun,1))+' g)</span>':''),x.disla?'<span class="down">dışlama listesi</span>':'',(x.hac!=null&&x.hac<minHacim)?'<span class="down">likidite</span>':'',x.hac==null?'<span style="color:#E8933B" title="multiple.json bu hisseyi kapsamıyor — likidite süzgeci uygulanamadı">hacim ölçülemedi</span>':'',x.anEski?'<span class="thin" title="analist hedefi '+x.anYas+' günlük — puana girmedi">hedef bayat</span>':'',(x.sepet&&topAsama!==3)?'<span class="thin">sepet primi yok (aşama '+(topAsama==null?'?':topAsama)+')</span>':''].filter(Boolean).join(' · ')+'</td></tr>';
   const bas='<tr><th>Hisse</th><th>Sektör</th><th class="num">Puan</th><th class="num">Faktör z</th><th class="num">PD/DD z</th><th class="num">FAVÖK $ y/y</th><th class="num">Analist pot.</th><th class="num">Hacim mn₺</th><th>Bayrak</th></tr>';
-  el.innerHTML='<div class="lbl" style="margin-top:4px">ADAYLAR — EN YÜKSEK PUAN <span class="thin" style="font-weight:400">('+aday.length+' hisse süzgeçten geçti · <b>ölçülebilen '+H.filter(x=>x.cekirdek>=3).length+'</b> / evren '+H.length+')</span></div><div class="sub" style="font-size:9.5px;margin:2px 0 4px">Kapsam: faktör '+H.filter(x=>x.p_faktor!=null).length+' · PD/DD z '+H.filter(x=>x.p_deg!=null).length+' · FAVÖK '+H.filter(x=>x.p_kaz!=null).length+' · analist (≥2 kurum, ≤'+AN_MAXYAS+' gün) '+H.filter(x=>x.p_pot!=null).length+'. <b>'+H.filter(x=>x.cekirdek<3).length+' hisse aday olamaz çünkü değerleme/kazanç verisi yok</b> — zayıf oldukları için değil; huni fiilen değerleme evreninde çalışır.</div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+aday.slice(0,15).map(sat).join('')+'</table></div>'+
+  el.innerHTML='<div class="lbl" style="margin-top:4px">ADAYLAR — EN YÜKSEK PUAN <span class="thin" style="font-weight:400">('+aday.length+' hisse süzgeçten geçti · <b>ölçülebilen '+H.filter(x=>x.cekirdek>=3).length+'</b> / evren '+H.length+')</span></div><div class="sub" style="font-size:9.5px;margin:2px 0 4px">Kapsam: faktör '+H.filter(x=>x.p_faktor!=null).length+' · PD/DD z '+H.filter(x=>x.p_deg!=null).length+' · FAVÖK '+H.filter(x=>x.p_kaz!=null).length+' · analist (≥2 kurum, ≤'+AN_MAXYAS+' gün) '+H.filter(x=>x.p_pot!=null).length+'. '+(H.filter(x=>x.cekirdek<3).length?'<b>'+H.filter(x=>x.cekirdek<3).length+' hisse aday olamaz çünkü değerleme/kazanç verisi yok</b> (KAP arşivinde beş çeyrekten az geçmiş ya da FAVÖK hesaplanamıyor) — zayıf oldukları için değil.':'')+'</div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+aday.slice(0,15).map(sat).join('')+'</table></div>'+
     (port.length?'<div class="lbl" style="margin-top:10px">PORTFÖYDEKİLER — EN ZAYIFTAN GÜÇLÜYE <span class="thin" style="font-weight:400">(aynı ölçekle)</span></div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+port.map(sat).join('')+'</table></div>':'<div class="sub" style="margin-top:8px">Portföyde faktör evreninden hisse yok.</div>')+
     (()=>{ const evK=new Set(H.map(x=>x.k)); const dis=[...portKod].filter(k=>!evK.has(k)); return dis.length?'<div class="sub" style="margin-top:4px;color:#E8933B">Evren dışı pozisyon: <b>'+esc(dis.join(', '))+'</b> — XKTUM faktör evreninde olmadığı için puanlanamadı (katılım endeksi dışı ya da evren eşiğinin altında).</div>':''; })()+
     '<div class="sub" style="margin-top:6px">Puan = mevcut bileşenlerin evren içi yüzdelik ortalaması (0-100; /n kapsam). Bileşenler: faktör kompozit (Faktör Model sekmesindeki ağırlıklarınla) · PD/DD z (ucuz = yüksek yüzdelik) · FAVÖK $ y/y · analist potansiyeli · toparlanma sepeti üyeliği (+75 sabit, yalnız dönüş teyitliyken — aşama 3). Faktör z ve PD/DD z ham; FAVÖK ve potansiyel %. Hacim multiple.json günlük ortalama.</div>'+
