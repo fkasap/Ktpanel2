@@ -4983,6 +4983,10 @@ function fmKarneCekirdek(G) {
 }
 
 /* Yahoo adjclose — fmHesapla'daki 'tek' ile aynı kural (seans bitmeden günün barı kullanılmaz) */
+/* §565 (17 Kas): gün içi (yarım) bar atılır — ama eşik 19:00'dı ve akşam koşusu 18:10-18:35'te çalışıyor → BUGÜNÜN kapanışı her akşam
+   atılıyordu (Toparlanma Monitörü ve faktör fiyatları hep bir gün geride). BIST kapanış seansı 18:10'da biter, Yahoo 15 dk gecikmeli →
+   18:30'dan sonra günün barı kesindir. Akşam cron'u da 18:40'a alındı (tazele.yml). */
+function gunIciTR() { const p = new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit', hour12: false }).split(':'); return (+p[0]) * 60 + (+p[1]) < 18 * 60 + 30; }
 async function fmkFiyatCek(kodlar) {
   const PX = {}; let i = 0;
   const bugunTR = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }); const saatTR = +new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', hour12: false });
@@ -4991,7 +4995,7 @@ async function fmkFiyatCek(kodlar) {
     if (!r.ok) return; const d = (await r.json())?.chart?.result?.[0]; if (!d) return;
     const adj = d.indicators?.adjclose?.[0]?.adjclose, ham = d.indicators?.quote?.[0]?.close, vol = d.indicators?.quote?.[0]?.volume, ts = d.timestamp || [];
     const cc = (Array.isArray(adj) && adj.some(x => typeof x === 'number')) ? adj : (ham || []);
-    let sonIdx = ts.length - 1; while (sonIdx >= 0 && new Date(ts[sonIdx] * 1000).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }) === bugunTR && saatTR < 19) sonIdx--;
+    let sonIdx = ts.length - 1; while (sonIdx >= 0 && new Date(ts[sonIdx] * 1000).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }) === bugunTR && gunIciTR()) sonIdx--;
     const o = { t: [], c: [], v: [] }; for (let j = 0; j <= sonIdx; j++) if (typeof cc[j] === 'number' && cc[j] > 0) { o.t.push(new Date(ts[j] * 1000).toISOString().slice(0, 10)); o.c.push(cc[j]); o.v.push(typeof (vol || [])[j] === 'number' ? vol[j] : 0); }
     if (o.c.length >= 20) PX[kod] = o;
   } catch (e) {} };
@@ -5194,6 +5198,12 @@ async function toparlanmaUret(PXgelen) {
   if (!PX || Object.keys(PX).length < 100) { let uy = []; try { uy = ((await oku('endeks-uyeler.json')).uyeler || {}).XKTUM || []; } catch (e) {}
     PX = Object.assign({}, PX || {}, await fmkFiyatCek(uy.filter(k => !(PX && PX[k])))); }
   const kodL = Object.keys(PX); let son = null;
+  /* §565: takvim yalnız endeks-arsiv.json günlerinden kuruluyordu; resmî bülten o günü koşunun SONUNDA (bülten keşfi) ekler → monitör
+     arşivin bir önceki gününde kalıyordu (17 Kas sabahı: fiyatlar 16 Kas'ı taşıyor, SON 13 Kas). Arşivin son gününden sonraki işlem
+     günleri fiyat serilerinden eklenir (serilerin ≥%70'inde bar olan gün). O günlerde endeks değeri yoktur; endeks yalnız beta
+     regresyonunda kullanılır ve eksik günü atlar. */
+  { const sonAr = takvim.length ? takvim[takvim.length - 1] : ''; const say = {}; kodL.forEach(k => { const t = PX[k].t; for (let jj = t.length - 1; jj >= 0 && t[jj] > sonAr; jj--) say[t[jj]] = (say[t[jj]] || 0) + 1; });
+    const ekG = Object.keys(say).filter(d => say[d] >= kodL.length * 0.7).sort(); if (ekG.length) takvim = takvim.concat(ekG); }
   for (let i = takvim.length - 1; i >= Math.max(0, takvim.length - 6); i--) { const d = takvim[i]; if (kodL.filter(k => PX[k].t[PX[k].t.length - 1] >= d).length >= kodL.length * 0.7) { son = d; break; } }
   if (!son) { raporlar.push('### Toparlanma monitörü (§530) — ✗ fiyat kapsamı yetersiz (' + kodL.length + ' seri)'); return; }
   takvim = takvim.filter(d => d <= son);
@@ -5566,9 +5576,33 @@ async function degerlemeKendi() {
   const kapanis = (o, d) => { let a = -1; for (let j = 0; j < o.t.length; j++) { if (o.t[j] <= d) a = j; else break; } if (a < 0 || (Date.parse(d) - Date.parse(o.t[a])) / 864e5 > 10) return null; return o.adj[a]; };
   const qSon = (y, n) => new Date(Date.UTC(y, n * 3, 0)).toISOString().slice(0, 10);
   const H = []; let eksikKap = 0, eksikPx = 0, kisa = 0;
-  for (const kod of evren) {
-    let K = null; try { K = await oku('kap-arsiv/' + kod + '.json'); } catch (e) { eksikKap++; continue; }
-    const o = PX[kod]; if (!o) { eksikPx++; continue; }
+  /* §562 (17 Kas): SEÇİM HUNİSİ KAPSAMI. Huni dört bileşenden üçünü ister; PD/DD z 47, FAVÖK y/y 44 hissede vardı → faktör evreninin
+     (200) 156'sı veri yokluğundan aday olamıyordu. KAP arşivi zaten 247 şirketi taşıyor; eksik olan hesaptı. Bu fonksiyon artık
+     (a) çekirdek evreni (karar ∪ XK050) eskisi gibi hesaplar, (b) ardından faktör evreninin kalanını 'genis:true' damgasıyla ekler,
+     (c) her hisseye KAP arşivinden çeyreklik FAVÖK $ y/y (kaz) yazar. Taktik modelin "PD/DD z medyanı (XK050)" sinyali genis
+     satırları SAYMAZ (panel süzer) — evreni sessizce değişmesin. Geniş tur süre bütçesine bağlıdır: 7. dakikadan sonra başlamaz,
+     o koşuda önceki dosyanın genis satırları aynen taşınır. */
+  let CQ = {}; try { CQ = (await oku('sektor-surucu.json')).ceyrek || {}; } catch (e) {}
+  const favokQ = (K, y, n) => {   /* §462b tanımıyla çeyreklik çekirdek FAVÖK (TL): EFK − diğer faaliyet gelir/gider + amortisman */
+    const dn = K.donemler && K.donemler[y + '/' + n]; if (!dn) return null;
+    const bul = (D, x) => { if (!D) return null; for (const t of (D.tablolar || [])) { const r = (t.satirlar || []).find(z => z.xbrl === x); if (r) return r.degerler; } return null; };
+    const carpan = (dn.birim && dn.birim.carpan) || 1000;
+    const E = 'ifrs-full_ProfitLossFromOperatingActivities', G = 'ifrs-full_OtherIncome', Y = 'ifrs-full_OtherExpenseByFunction', A = 'ifrs-full_AdjustmentsForDepreciationAndAmortisationExpense';
+    const e = bul(dn, E), a = bul(dn, A); if (!e || !a) return null; const g = bul(dn, G) || [], d = bul(dn, Y) || [];
+    const duz = (i, ee, gg, dd) => ee[i] - (gg[i] || 0) - (dd[i] || 0);
+    const once = n > 1 ? K.donemler[y + '/' + (n - 1)] : null; let efk, am;
+    if (n === 1) { efk = duz(0, e, g, d); am = a[0]; }
+    else if (e.length >= 4 && n !== 4) { const aO = bul(once, A); if (!aO) return null; efk = duz(2, e, g, d); am = a[0] - aO[0]; }
+    else { const eO = bul(once, E), aO = bul(once, A); if (!eO || !aO) return null; efk = duz(0, e, g, d) - duz(0, eO, bul(once, G) || [], bul(once, Y) || []); am = a[0] - aO[0]; }
+    const v = (efk + am) * carpan; return (typeof v === 'number' && isFinite(v)) ? v : null; };
+  const kazHesap = (K) => { const ks = Object.keys(K.donemler || {}).filter(k => /^\d{4}\/[1-4]$/.test(k)).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (b1 - a1) || (b2 - a2); });
+    if (!ks.length) return null; const [y, n] = ks[0].split('/').map(Number); const q = y + 'Q' + n, qo = (y - 1) + 'Q' + n;
+    const f1 = favokQ(K, y, n), f0 = favokQ(K, y - 1, n); const x1 = CQ[q] && (CQ[q].usdtry_ort || CQ[q].usdtry_son), x0 = CQ[qo] && (CQ[qo].usdtry_ort || CQ[qo].usdtry_son);
+    if (f1 == null || f0 == null || !(f0 > 0) || !x1 || !x0) return null;
+    return { q, yy: +(((f1 / x1) / (f0 / x0) - 1) * 100).toFixed(1), usd: +(f1 / x1 / 1e6).toFixed(1) }; };
+  const hesapla = async (kod, o, genis) => {
+    let K = null; try { K = await oku('kap-arsiv/' + kod + '.json'); } catch (e) { eksikKap++; return; }
+    if (!o) { eksikPx++; return; }
     let adet = FE[kod] && FE[kod].adet > 0 ? FE[kod].adet : null; let ozkSon = null, donemSon = null;
     const seri = [];
     for (const dk of Object.keys(K.donemler || {}).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (a1 - b1) || (a2 - b2); })) {
@@ -5585,28 +5619,41 @@ async function degerlemeKendi() {
       const px = kapanis(o, qSon(y, n)); if (!(px > 0)) continue;
       seri.push({ q: y + 'Q' + n, pddd: null, px, ozk }); ozkSon = ozk; donemSon = y + '/' + n;
     }
-    if (!adet) continue;
+    if (!adet) return;
     seri.forEach(s => { s.pddd = s.px * adet / s.ozk; });
-    if (seri.length < 5) { kisa++; continue; }   /* ≥5 çeyrek (BINHO 2025/2'den beri 5 dönem) */
+    if (seri.length < 5) { kisa++; return; }   /* ≥5 çeyrek (BINHO 2025/2'den beri 5 dönem) */
     const v = seri.map(s => s.pddd); const ort = v.reduce((a, b) => a + b, 0) / v.length; const sd = Math.sqrt(v.reduce((a, b) => a + (b - ort) ** 2, 0) / v.length);
     /* §540b (25 Eki, Veri Tazele #403): BERA z −5,32 · BINHO −4,84 — 5 çeyreklik bantta sapma çok küçük (BERA σ 0,034, ort 0,374) ve
        z şişiyor; fiyat düşüşü gerçek (PD/DD 0,19) ama "5 sigma" istatistik değil kısa örneklem. σ tabanı ortalamanın %15'i; n<8 → güven düşük. */
     const cv = ort > 0 ? sd / ort : null; const guven = (cv == null || v.length < 8) ? 'düşük' : cv <= 0.35 ? 'yüksek' : cv <= 0.6 ? 'orta' : 'düşük';
     const sdEff = Math.max(sd, 0.15 * Math.abs(ort));
     const sonPx = o.adj[o.adj.length - 1]; const canli = sonPx * adet / ozkSon; const z = sdEff > 0 ? (canli - ort) / sdEff : null;
-    H.push({ k: kod, sektor: SEK[kod] || '', donem: donemSon, ozk: Math.round(ozkSon), srm: Math.round(adet), n: v.length, ort: +ort.toFixed(3), sapma: +sd.toFixed(3), dip: +Math.min(...v).toFixed(3), zirve: +Math.max(...v).toFixed(3), cv: cv == null ? null : +cv.toFixed(2), guven,
+    let kaz = null; try { kaz = kazHesap(K); } catch (e) {}
+    H.push({ k: kod, ...(genis ? { genis: true } : {}), ...(kaz ? { kaz } : {}), sektor: SEK[kod] || '', donem: donemSon, ozk: Math.round(ozkSon), srm: Math.round(adet), n: v.length, ort: +ort.toFixed(3), sapma: +sd.toFixed(3), dip: +Math.min(...v).toFixed(3), zirve: +Math.max(...v).toFixed(3), cv: cv == null ? null : +cv.toFixed(2), guven,
       canli: { tarih: o.t[o.t.length - 1], fiyat: +sonPx.toFixed(4), pddd: +canli.toFixed(3), z: z == null ? null : +z.toFixed(2) }, seri: seri.map(s => ({ q: s.q, pddd: +s.pddd.toFixed(3) })) });
-  }
-  if (H.length < 20) { raporlar.push('### PD/DD bandı (§539) — ✗ yalnız ' + H.length + ' hisse (KAP eksik ' + eksikKap + ' · fiyat eksik ' + eksikPx + ' · kısa ' + kisa + ') — dosya yazılmadı'); return; }
+  };
+  for (const kod of evren) await hesapla(kod, PX[kod], false);
+  const cekirdekN = H.length;
+  /* geniş tur: faktör evreninin (fm.json) çekirdekte olmayan hisseleri */
+  let genisNot = '';
+  { let fmK = []; try { fmK = ((await oku('fm.json')).data || []).map(x => x.t); } catch (e) {}
+    const varK = new Set(evren); const ek = [...new Set(fmK)].filter(k => k && !varK.has(k));
+    let onceki = []; try { onceki = ((await oku('degerleme.json')).hisseler || []).filter(h => h.genis); } catch (e) {}
+    if (!ek.length) genisNot = ' · geniş: faktör evreni okunamadı';
+    else if (Date.now() - SURE_BASLA > 7 * 60 * 1000) { const ekS = new Set(ek); const tasinan = onceki.filter(h => ekS.has(h.k)); tasinan.forEach(h => H.push(h)); genisNot = ' · geniş: süre bütçesi — önceki ' + tasinan.length + ' satır taşındı'; }
+    else { const e0 = eksikKap, p0 = eksikPx, k0 = kisa; const PX2 = await kararYahoo(ek, '5y'); for (const kod of ek) await hesapla(kod, PX2[kod], true);
+      genisNot = ' · geniş (§562): +' + (H.length - cekirdekN) + '/' + ek.length + ' (KAP eksik ' + (eksikKap - e0) + ' · fiyat eksik ' + (eksikPx - p0) + ' · kısa ' + (kisa - k0) + ')'; } }
+  const kazN = H.filter(h => h.kaz).length;
+  if (cekirdekN < 20) { raporlar.push('### PD/DD bandı (§539) — ✗ yalnız ' + cekirdekN + ' hisse (KAP eksik ' + eksikKap + ' · fiyat eksik ' + eksikPx + ' · kısa ' + kisa + ') — dosya yazılmadı'); return; }
   H.sort((a, b) => a.k.localeCompare(b.k));
   const out = { surum: 'degerleme-' + bugun, guncelleme: bugun,
     yontem: 'PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD\'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.',
     neden_pddd: 'Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.',
     bant: { cok_ucuz: -1.5, ucuz: -0.5, adil_ust: 0.5, pahali_ust: 1.5 }, guven_esik: { yuksek: 0.35, orta: 0.6 },
-    kaynak: 'KAP arşivi (Actions §381) · Yahoo adjclose · faktor-evren.json — §539', evren: 'karar kataloğu ∪ XK050', hisseler: H };
+    kaynak: 'KAP arşivi (Actions §381) · Yahoo adjclose · faktor-evren.json — §539', evren: 'karar kataloğu ∪ XK050 (çekirdek) + faktör evreninin kalanı (genis:true, §562)', _562: 'kaz = KAP arşivinden çeyreklik çekirdek FAVÖK $ y/y (son arşiv çeyreği ÷ geçen yılın aynı çeyreği). genis satırlar taktik modelin PD/DD medyanına girmez.', hisseler: H };
   await yaz('degerleme.json', out); degisenler.push('degerleme (' + H.length + ')');
-  const ucuz = H.filter(h => h.canli.z != null && h.canli.z <= -1).map(h => h.k + ' ' + h.canli.z), pahali = H.filter(h => h.canli.z != null && h.canli.z >= 1).map(h => h.k + ' ' + h.canli.z);
-  raporlar.push('### PD/DD bandı (§539) — ✓ ' + H.length + '/' + evren.length + ' hisse (KAP eksik ' + eksikKap + ' · kısa ' + kisa + ')' + (ucuz.length ? ' · z≤−1: ' + ucuz.slice(0, 8).join(', ') : '') + (pahali.length ? ' · z≥+1: ' + pahali.slice(0, 6).join(', ') : ''));
+  const ucuz = H.filter(h => !h.genis && h.canli.z != null && h.canli.z <= -1).map(h => h.k + ' ' + h.canli.z), pahali = H.filter(h => !h.genis && h.canli.z != null && h.canli.z >= 1).map(h => h.k + ' ' + h.canli.z);
+  raporlar.push('### PD/DD bandı (§539) — ✓ çekirdek ' + cekirdekN + '/' + evren.length + ' · toplam ' + H.length + ' hisse · FAVÖK y/y ' + kazN + genisNot + (ucuz.length ? ' · z≤−1: ' + ucuz.slice(0, 8).join(', ') : '') + (pahali.length ? ' · z≥+1: ' + pahali.slice(0, 6).join(', ') : ''));
 }
 
 /* ── §546 EPİAŞ GERÇEK ZAMANLI ÜRETİM — HİDRO / RÜZGÂR HACMİ (26 Eki) ─────────────────────────────────────────────
@@ -6959,7 +7006,7 @@ async function fmHesapla() {
     /* §458: seans sürerken (TR saati < 19) günün barı KISMİDİR — Rel. Volume medyanı 0,11 çıktı (hacim yarım),
        RSI/SMA/EMA da yarım fiyatla hesaplanıyordu. Bugünün barı seans bitmeden kullanılmaz; son TAMAMLANMIŞ seans. */
     const bugunTR = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }); const saatTR = +new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', hour12: false });
-    let sonIdx = ts.length - 1; while (sonIdx >= 0 && new Date(ts[sonIdx] * 1000).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }) === bugunTR && saatTR < 19) sonIdx--;
+    let sonIdx = ts.length - 1; while (sonIdx >= 0 && new Date(ts[sonIdx] * 1000).toLocaleDateString('sv-SE', { timeZone: 'Europe/Istanbul' }) === bugunTR && gunIciTR()) sonIdx--;
     for (let i = 0; i <= sonIdx; i++) if (typeof cc[i] === 'number' && cc[i] > 0) { o.t.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); o.c.push(cc[i]); o.v.push(typeof (vol || [])[i] === 'number' ? vol[i] : 0); }
     for (let i = Math.min(sonIdx, (ham || []).length - 1); i >= 0; i--) if (typeof ham[i] === 'number' && ham[i] > 0) { o.sonHam = ham[i]; break; }
     if (o.c.length >= 60) PX[kod] = o;
