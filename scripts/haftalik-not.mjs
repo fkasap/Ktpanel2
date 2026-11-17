@@ -74,6 +74,8 @@ async function main() {
       await uyku(8000);   /* notKaydet → bulut yazımı tamamlansın */
       const durum = await sayfa.evaluate((kip) => { try { const k = JSON.parse(localStorage.getItem('ajan_notlar') || '{}'); const K = k[kip === 'ay' ? '__AYLIK__' : '__HAFTALIK__'] || {}; return { ts: K.ts || 0, etiket: K.etiket || '', uzunluk: (K.html || '').length }; } catch (e) { return { hata: String(e) }; } }, kip);
       durum.log = await panoOku();
+      const yeni = durum.ts && durum.ts > oncekiTs;   /* §557b: §557 yamasında bu iki satır düşmüştü → "yeni is not defined" (16 Kas #43871652814) */
+      ozet.push((kip === 'ay' ? 'AYLIK' : 'HAFTALIK') + ': ' + sonuc + ' · ' + (yeni ? 'YAZILDI "' + durum.etiket + '" (' + durum.uzunluk + ' kr)' : 'yazılmadı') + ' · ajan günlüğü: ' + (durum.log || []).join(' | ').slice(0, 300));
       if (!yeni) { await fs.mkdir('rapor', { recursive: true }); await sayfa.screenshot({ path: 'rapor/haftalik-not-hata.png', fullPage: false }).catch(() => {}); }
     }
     ozet.push('bulut yazımı ' + yazildi.ajanktp + ' · AI çağrısı ' + yazildi.ai + (hata.length ? ' · JS hatası: ' + hata.slice(0, 2).join(' | ') : ''));
