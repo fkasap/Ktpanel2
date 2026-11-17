@@ -16062,3 +16062,9 @@ app.js v=20260728zp. DEPLOY: app.js + index.html.
 - Sekme Rehberi panelin gerçek yapısından (render edilmiş DOM: ana sekme › alt sekme › kart başlıkları) baştan yazıldı: 10 ana sekme, EQUITY altı 11 alt sekme, Makro 7, Sektörel 4, Fix Income 3, Finansal Tablolar 3 alt sekme.
 - Sözlüğe "Alokasyon · Seçim · Nakit" kartı (SAA/taktik/bant, ex-ante reel, bozan kural, EV/FAVÖK, nakde dönüşüm, toparlanma aşaması, Zweig, RV20, fon satış baskısı, kâr payı dağıtımı). Sözlükteki yasak kelime kaldırıldı.
 - "Veri nereden gelir": Veri Tazele / Sağlık Bekçisi / Haftalık Not satırları ve elle kalanlar (otomasyon borcu). Sürüm 20261117a.
+
+## §560 — 17 Kas: Panel taraması (kart kart) · Seçim Hunisi düzeltmeleri
+- Tarama yöntemi: canlı siteye tarayıcıdan ulaşılamadı (bağlantı sıfırlandı); bekçinin bugünkü ekran turu (38 sekme/alt sekme, 0 kritik, JS hatası 0) + repo veri dosyalarıyla yerel render (örnek portföy) kullanıldı.
+- Seçim Hunisi bulguları (repo verisiyle yeniden hesap): evren 200; PD/DD z 47, FAVÖK 44, analist 20 hissede var → 156 hisse veri yokluğundan aday olamıyor, kart bunu söylemiyordu. Bayat analist hedefi sahte potansiyel üretiyordu (KBORU 11 Ağu hedefi → +%332, yüzdelik 100). Hacmi ölçülemeyen hisse likidite süzgecinden sessizce geçiyordu. Sepet primi aşamadan bağımsızdı.
+- app.js: (a) hedef > 90 gün ise potansiyel puana girmez, "hedef bayat" bayrağı; (b) başlıkta "ölçülebilen N / evren" + bileşen kapsamları; (c) "hacim ölçülemedi" bayrağı; (d) sepet primi yalnız aşama 3'te; (e) "tasfiye baskısı" → "fon satış baskısı" (kart + onay kutusu). Sürüm 20261117b.
+- Açık kalan (yapılmadı, öneri): değerleme/karar-model evrenini 49'dan genişletmek; alokasyonda fonların içine bakmak (fon-portfoy varlık dağılımı); döviz katılım fonunu "yabancı hisse" sınıfından ayırmak; toparlanma hesabını akşam koşusuna da eklemek (bugün SON 13 Kas).
