@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-17 06:40 UTC — otomatik (§319)",
+ "guncelleme": "2026-11-17 22:55 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -151,7 +151,7 @@
    "ulke": "USD",
    "olay": "Philly Fed Manufacturing Index",
    "etki": "Medium",
-   "beklenti": "19.2",
+   "beklenti": "20.6",
    "onceki": "20.9"
   },
   {
@@ -159,7 +159,7 @@
    "ulke": "USD",
    "olay": "Unemployment Claims",
    "etki": "Medium",
-   "beklenti": "199K",
+   "beklenti": "198K",
    "onceki": "200K"
   },
   {
@@ -183,7 +183,7 @@
    "ulke": "USD",
    "olay": "Revised UoM Consumer Sentiment",
    "etki": "Medium",
-   "beklenti": "52.1",
+   "beklenti": "51.7",
    "onceki": "51.0"
   },
   {
