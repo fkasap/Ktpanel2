@@ -16054,3 +16054,11 @@ app.js v=20260728zp. DEPLOY: app.js + index.html.
 - **SPK PYŞ:** ws.spk.gov.tr servisi tüm dönemler için `[]`, spk.gov.tr sayfası da 0,00 → kaynak arızası. Kart mesajı açıklamayı taşır.
 - **TP.AB.B4 bayat:** bie_abreserv grubunun tamamı Ağu26'da duruyor (EVDS aylık rezerv tablosu gecikmeli). Yalnız yedek seri; kart haftalık TP.AB.TOPLAM'dan okuyor (6 Kas 161,1). Uyarı EVDS yayınlayınca kendiliğinden düşer.
 - rezerv.json: 6 Kas haftası (161,1 / 41,18 / 27,44 · swap 13,74).
+
+## §557b — 17 Kas: Haftalık Not #43871652814 KALDI ("yeni is not defined")
+- §557 yamasında `const yeni` ve özet satırı yanlışlıkla silinmişti; geri kondu. Sözdizimi denetimi tanımsız değişkeni yakalamaz; üç Actions betiği (haftalik-not, tazele, saglik) bu kez tanımsız değişken taramasından (eslint no-undef) geçirildi, temiz.
+
+## §559 — 17 Kas: Yardım (Kullanım Kılavuzu) güncellendi
+- Sekme Rehberi panelin gerçek yapısından (render edilmiş DOM: ana sekme › alt sekme › kart başlıkları) baştan yazıldı: 10 ana sekme, EQUITY altı 11 alt sekme, Makro 7, Sektörel 4, Fix Income 3, Finansal Tablolar 3 alt sekme.
+- Sözlüğe "Alokasyon · Seçim · Nakit" kartı (SAA/taktik/bant, ex-ante reel, bozan kural, EV/FAVÖK, nakde dönüşüm, toparlanma aşaması, Zweig, RV20, fon satış baskısı, kâr payı dağıtımı). Sözlükteki yasak kelime kaldırıldı.
+- "Veri nereden gelir": Veri Tazele / Sağlık Bekçisi / Haftalık Not satırları ve elle kalanlar (otomasyon borcu). Sürüm 20261117a.
