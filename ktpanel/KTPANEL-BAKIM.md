@@ -16068,3 +16068,15 @@ app.js v=20260728zp. DEPLOY: app.js + index.html.
 - Seçim Hunisi bulguları (repo verisiyle yeniden hesap): evren 200; PD/DD z 47, FAVÖK 44, analist 20 hissede var → 156 hisse veri yokluğundan aday olamıyor, kart bunu söylemiyordu. Bayat analist hedefi sahte potansiyel üretiyordu (KBORU 11 Ağu hedefi → +%332, yüzdelik 100). Hacmi ölçülemeyen hisse likidite süzgecinden sessizce geçiyordu. Sepet primi aşamadan bağımsızdı.
 - app.js: (a) hedef > 90 gün ise potansiyel puana girmez, "hedef bayat" bayrağı; (b) başlıkta "ölçülebilen N / evren" + bileşen kapsamları; (c) "hacim ölçülemedi" bayrağı; (d) sepet primi yalnız aşama 3'te; (e) "tasfiye baskısı" → "fon satış baskısı" (kart + onay kutusu). Sürüm 20261117b.
 - Açık kalan (yapılmadı, öneri): değerleme/karar-model evrenini 49'dan genişletmek; alokasyonda fonların içine bakmak (fon-portfoy varlık dağılımı); döviz katılım fonunu "yabancı hisse" sınıfından ayırmak; toparlanma hesabını akşam koşusuna da eklemek (bugün SON 13 Kas).
+
+## §561 — 17 Kas: EQUITY sekmeleri canlı tarama (panelin kendi tarayıcısı, kullanıcının portföyüyle)
+Taranan: Yönetim, Portföy, Değerleme, Teknik, Muhakeme, Faktör Model, Guidance, Earnings AI, Halka Arzlar, Finansal Tablolar, GYO NAV.
+- **Karar motoru çarpanı (gerçek hata):** hedef çeyrek açıklandıktan sonra TTM onu dışarıda bırakıyor, "ileri" hâlâ konsensüsü kullanıyordu. ASELS: TTM 25,4x → 22,9x; ileri 23,6x → 22,9x (bant yüzdeliği %63 → %50). Düzeltme canlı sayfada denendi (ASELS/BIMAS/TUPRS/EREGL; açıklamamış KRDMD değişmedi).
+- **Reel getiri özeti (gerçek hata):** özet kutuları ortak pencereyle (yılbaşı, TÜFE %21,6) deflate ediyordu, satırlar kendi alım tarihiyle (%3,9) → özet −%10,0, doğrusu +%5,4. Canlıda denendi.
+- **Seçim hunisi:** "fon satış baskısı" tutarla ölçülür (pozisyon ÷ günlük hacim × %20); <0,5 gün ise bayrak yanmaz (ASELS 0,05 g, BIMAS 0,2 g). Evren dışı pozisyon (THYAO) artık yazılıyor. FAVÖK artıdan eksiye döndüyse "−141%" yerine "eksiye döndü".
+- **Likidite:** sütun başlığı "Pozisyon mn₺" idi, değer ₺; dipnot "adet × maliyet" diyordu, hesap güncel fiyatla. Hesap doğruydu, etiketler düzeltildi.
+- **Getiri atfı:** "Ağırlık" sütunu maliyet ağırlığıydı (Command Center'daki güncel değer ağırlığından farklı) → "Maliyet ağ.".
+- **Risk metrikleri notu** eski yöntemi (basit ağırlıklı vol, Sharpe) anlatıyordu → tek-faktör.
+- **Halka arzlar dipnotu** "2026 ort. +%80" diyordu, kutu canlı −%9 → sabit rakamlar kaldırıldı.
+- Karar notlarında "PD/FAVÖK" kalan yerler EV/FAVÖK; nottaki yasak kelime kaldırıldı. Sürüm 20261117c.
+- Gözlem (dokunulmadı): karar panosunda az bileşenli hisseler (+4/4) üst sıraya çıkıyor; faktör karnesinde son iki fotoğrafın IC'si eksi (2 Kas → bugüne −0,36): dönüş rallisinde model geride; GYO NAV dönemi 2026/06; Earnings AI'da 53 kart bekliyor; lens kartlarında ondalık nokta.
