@@ -16100,3 +16100,7 @@ Düzeltilenler:
 - **Seçim hunisi hacmi:** degerleme.json'a faktör evreni için 20 günlük ortalama işlem hacmi haritası (tazele.mjs); panel multiple.json kapsamıyorsa onu kullanır. Bir sonraki fiyat koşusundan sonra "hacim ölçülemedi" azalır.
 - Likidite notundaki sabit "PPK · FOMC · 3Ç26 bilançoları" kaldırıldı; lens kartlarında ondalık virgül; "Efektif hisse (modeldekiler)" etiketi. Sürüm 20261118a.
 Gözlem (dokunulmadı): huninin tepesi artık küçük, ucuz, tek çeyrek baz etkisiyle FAVÖK'ü sıçramış hisseler (/3, analist yok); taktik duruş tek sinyalle eşik atlıyor (histerezis yok); günlük ayrışma kaydı gün içi açılışta seans içi getiriyi yazar.
+
+## §568 — 18 Kas: bekçinin iki uyarısı
+- **"Elle kart 63 gündür güncellenmedi — ECB & Politika":** oran zaten canlı teyitliydi; çevresindeki elle cümleler eskimişti (HICP %3,3 → canlı %4,0; "EUR/USD 1,13-1,14 bandı" → 1,10; "TCMB 22 Eki'de…" geçmiş; Eylül projeksiyonu). Kart yeniden kuruldu: oran + son değişim günü (ECB DFR), sıradaki toplantı (takvim), HICP manşet/çekirdek (ECB veri portalı) — hepsi canlı; elle rakam taşıyan satırlar (Koro, EUR/USD bandı, projeksiyon, "Fed %82") kaldırıldı. mbKartCanli: kartta elle metin yoksa "önceki not" ve ⚠ yazılmaz.
+- **"TP.AB.B4 bayat (109 gün)":** EVDS'nin aylık rezerv tablosu Ağustos'ta duruyor (18 Kas'ta da). Seri yalnız rezerv kutusunun yedeğiydi; yedek kaldırıldı (devreye girse üç aylık bayat rakam yazardı). Kod artık panelde tırnak içinde geçmediği için bekçi izlemez. Sürüm 20261118b.

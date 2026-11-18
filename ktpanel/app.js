@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261118a';
+const KTP_SURUM = '20261118b';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -4158,7 +4158,7 @@ async function makroKartlar(){
   /* §540 (25 Eki veri denetimi): kutu "Ağu 230,5 mlr $ · TCMB brüt rezerv" diyordu — Rezerv Karnesi aynı ekranda 169,1 (16 Eki).
      Arama bie_abreserv grubunun İLK eşleşen serisini seçiyordu: TP.AB.B6 "Toplam Rezervler" = resmi rezerv (B4) + BANKALARIN muhabir
      mevcudu ve efektif kasası (B3, ~44 mlr $). TCMB brüt rezervi B4'tür (Haz 147,4 ≈ haftalık dip 149,2). Önce haftalık brüt
-     (Rezerv Karnesi'yle TEK kaynak, mod=rezerv), o yoksa aylık TP.AB.B4. */
+     (Rezerv Karnesi'yle TEK kaynak, mod=rezerv), aylık B4 yedeği §568'de kaldırıldı. */
   try{
     const rz=await (await fetch('/api/evds2?mod=rezerv')).json().catch(()=>null);
     const b=rz&&rz.brut;
@@ -4169,13 +4169,8 @@ async function makroKartlar(){
       if($('rezervTag')&&m)$('rezervTag').textContent=(+m[1])+' '+AY[+m[2]-1];
       throw 'tamam';
     }
-    const s=await mkSeriKod('TP.AB.B4',400);
-    if(s&&s.items.length){
-      const son=s.items[s.items.length-1], d=mkDonem(son.t);
-      if($('rezervVal'))$('rezervVal').textContent=trN(mkMlr(son.v),1)+' mlr $';
-      if($('rezervSub'))$('rezervSub').innerHTML='TCMB brüt rezerv'+mkCanli;
-      if($('rezervTag')&&d.etiket)$('rezervTag').textContent=d.etiket;
-    }
+    /* §568: aylık TP.AB.B4 yedeği kaldırıldı — EVDS'nin aylık rezerv tablosu (bie_abreserv) Ağustos'ta duruyor (109 gün); yedek devreye
+       girse kutuya üç aylık bayat rakam yazardı. Haftalık kaynak (aynı EVDS) gelmezse kutu boş kalır ve damgası bunu söyler. */
   }catch(e){}
 }
 
@@ -10680,12 +10675,16 @@ async function mbKartCanli(){
     if(uyum){ el.insertAdjacentHTML('beforeend',' <span class="thin" style="font-size:9px;color:var(--up)" title="'+esc(kaynak)+'">· canlı ✓</span>');
       const tg=$(tagId); if(tg) tg.textContent=canliEtiket+' ✓'; return; }
     const bp=Number.isFinite(onceki)?Math.round((oran-onceki)*100):null;
-    el.innerHTML=yuzde(oran)+(gt?' — '+gt:'')+(bp!=null?' ('+yuzde(onceki)+' → '+yuzde(oran)+', '+(bp>0?'+':'')+bp+'bp)':'')+' <span class="thin" style="font-size:9px">· canlı · '+esc(kaynak)+'</span>'+
-      '<div class="sub" style="font-size:9.5px;font-weight:400;margin-top:2px">önceki not (elle): '+eskiMetin+'</div>';
-    const tg=$(tagId); if(tg) tg.textContent=canliEtiket+' · ⚠ METİN ESKİ';
+    const bosDamga=/^[\s—-]*$/.test(duz);   /* §568: kartta elle metin yoksa (yalnız '—') satır tümüyle canlıdan kurulur; 'önceki not' ve ⚠ yazılmaz */
+    el.innerHTML=yuzde(oran)+(gt?' — son değişim '+gt:'')+(bp!=null&&bp!==0?' ('+yuzde(onceki)+' → '+yuzde(oran)+', '+(bp>0?'+':'')+bp+' bp)':'')+' <span class="thin" style="font-size:9px">· canlı · '+esc(kaynak)+'</span>'+
+      (bosDamga?'':'<div class="sub" style="font-size:9.5px;font-weight:400;margin-top:2px">önceki not (elle): '+eskiMetin+'</div>');
+    const tg=$(tagId); if(tg) tg.textContent=canliEtiket+(bosDamga?' ✓':' · ⚠ METİN ESKİ');
   };
   try{ const j=await (await fetch('/api/market?mod=ecb')).json(); const d=j&&j.seriler&&j.seriler.dfr;
     if(d&&Number.isFinite(d.deger)) uygula('ecbSonHamle','ecbTag',d.deger,Number.isFinite(d.fark)?+(d.deger-d.fark).toFixed(2):null,d.tarih,'ECB SDW DFR (yürürlük tarihi)'); }catch(e){}
+  /* §568: HICP satırı canlı (ECB veri portalı, evds2 mod=ecb) */
+  try{ const e=$('ecbHicpCanli'); if(e){ const j=await (await fetch('/api/evds2?mod=ecb')).json(); const h=j&&j.veri&&j.veri.hicp, c=j&&j.veri&&j.veri.hicpCekirdek;
+    if(h&&Number.isFinite(h.deger)) e.innerHTML='manşet %'+trN(h.deger,1)+(Number.isFinite(h.fark)&&h.fark!==0?' ('+(h.fark>0?'+':'')+trN(h.fark,1)+' p)':'')+(c&&Number.isFinite(c.deger)?' · çekirdek %'+trN(c.deger,1):'')+' <span class="thin" style="font-size:9px">'+esc(String(h.tarih||''))+' · canlı · ECB</span>'; } }catch(e){}
   try{ const j=await (await fetch('/api/market?mod=ecos')).json(); const f=j&&j.seriler&&j.seriler.faiz;
     if(f&&Number.isFinite(f.deger)) uygula('bokPolitika','bokTag',f.deger,Number.isFinite(f.oncekiSeviye)?f.oncekiSeviye:null,f.sonDegisimTarihi,'BOK ECOS'); }catch(e){}
 }
