@@ -5070,7 +5070,7 @@ async function fmKarneUret(PXgelen) {
    Kullanıcı: "Türk piyasası momentumdan çıktı ve sert düştü; toparlanmayı yakalamak istiyorum." Panelde düşüşü ölçen çok şey vardı
    (risk barometresi, taktik model, sektör ısısı) ama "dönüş BAŞLADI MI" sorusunu soran bir şey yoktu. Dibi günü gününe yakalamak
    güvenilir değildir; yakalanabilen, dönüşün KANIT biriktirdiği andır. Üç aşama + bir sepet:
-     1 BASKI TÜKENİYOR MU — kapitülasyon günü (hisselerin ≥%90'ı düşer, eşit ağırlıklı gün ≤ −%3, ciro ≥ 1,5× 20g ort.) ya da
+     1 BASKI TÜKENİYOR MU — kapitülasyon günü (hisselerin ≥%90'ı düşer, eşit ağırlıklı gün ≤ −%3, evrenin toplam işlem hacmi ≥ 1,5× 20g ort. — §566: kartta 'ciro' yerine 'işlem hacmi') ya da
        "dip daralması" (6 aylık dip yapan hisse oranının 5g ortalaması, son 30g tepesinin yarısının altına iner); fon tasfiye
        listesindeki hisseler (§452 baskı) son 10 günde evrenin gerisinde kalmayı bırakır.
      2 OYNAKLIK SAKİNLEŞİYOR MU — eşit ağırlıklı evrenin RV20'si son 60g tepesinin %75'inin altına iner · TR CDS 10g'de daralır.
@@ -5172,7 +5172,7 @@ function toparlanmaCekirdek(G) {
     son: S.d, evren: kodlar.length, asama,
     asamalar: [
       { no: 1, ad: 'Baskı tükeniyor mu', tamam: a1, sinyaller: [
-        { ad: 'Kapitülasyon günü (son 20 gün)', deger: kapit.length ? kapit.map(g => g.d).join(', ') : 'yok', esik: 'düşen ≥%90 · gün ≤ −%3 · ciro ≥1,5×', tamam: kapit.length > 0 },
+        { ad: 'Kapitülasyon günü (son 20 gün)', deger: kapit.length ? kapit.map(g => g.d).join(', ') : 'yok', esik: 'düşen ≥%90 · eşit ağ. gün ≤ −%3 · işlem hacmi ≥1,5× (20g ort.)', tamam: kapit.length > 0 },
         { ad: '6 aylık dip yapan hisse oranı (5g ort.)', deger: P(S.dip5), tepe: P(dipTepe30), esik: 'son 30g tepesinin yarısı altı (tepe ≥%10)', tamam: daralma, birim: '%' },
         { ad: 'Tasfiye baskısı listesi − evren (10g)', deger: tasfiye ? P(tasfiye.goreli) : null, esik: '≥ 0 (zorunlu satış yoruldu)', tamam: tasfiye ? tasfiye.goreli >= 0 : null, birim: 'puan', not: tasfiye ? tasfiye.n + ' hisse · liste ' + tr(P(tasfiye.r10)) + '% / evren ' + tr(P(tasfiye.ew10)) + '%' : 'liste yok' } ] },
       { no: 2, ad: 'Oynaklık sakinleşiyor mu', tamam: a2, sinyaller: [
