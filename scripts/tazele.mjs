@@ -5644,16 +5644,22 @@ async function degerlemeKendi() {
     else { const e0 = eksikKap, p0 = eksikPx, k0 = kisa; const PX2 = await kararYahoo(ek, '5y'); for (const kod of ek) await hesapla(kod, PX2[kod], true);
       genisNot = ' · geniş (§562): +' + (H.length - cekirdekN) + '/' + ek.length + ' (KAP eksik ' + (eksikKap - e0) + ' · fiyat eksik ' + (eksikPx - p0) + ' · kısa ' + (kisa - k0) + ')'; } }
   const kazN = H.filter(h => h.kaz).length;
+  /* §567 (18 Kas): seçim hunisinde ilk 15 adayın 6'sı "hacim ölçülemedi" idi — multiple.json 141 hisse taşıyor, faktör evreni 200.
+     Faktör koşusunun zaten çektiği fiyat/işlem adedi serisinden (FM_PX_SON) 20 günlük ortalama günlük işlem hacmi (mn ₺) yazılır.
+     Adet × düzeltilmiş kapanış yaklaşık değerdir; likidite süzgeci için yeterli. Fiyat katmanı koşmadıysa önceki harita taşınır. */
+  let hacim = {}; try { hacim = (await oku('degerleme.json')).hacim || {}; } catch (e) {}
+  if (FM_PX_SON) { const yeni = {}; for (const k of Object.keys(FM_PX_SON)) { const o = FM_PX_SON[k]; const n = o.c.length; if (n < 20 || !o.v) continue; let t = 0, m = 0; for (let i = n - 20; i < n; i++) { if (o.v[i] > 0) { t += o.v[i] * o.c[i]; m++; } } if (m >= 10) yeni[k] = +(t / m / 1e6).toFixed(1); }
+    if (Object.keys(yeni).length >= 50) hacim = yeni; }
   if (cekirdekN < 20) { raporlar.push('### PD/DD bandı (§539) — ✗ yalnız ' + cekirdekN + ' hisse (KAP eksik ' + eksikKap + ' · fiyat eksik ' + eksikPx + ' · kısa ' + kisa + ') — dosya yazılmadı'); return; }
   H.sort((a, b) => a.k.localeCompare(b.k));
   const out = { surum: 'degerleme-' + bugun, guncelleme: bugun,
     yontem: 'PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD\'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.',
     neden_pddd: 'Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.',
     bant: { cok_ucuz: -1.5, ucuz: -0.5, adil_ust: 0.5, pahali_ust: 1.5 }, guven_esik: { yuksek: 0.35, orta: 0.6 },
-    kaynak: 'KAP arşivi (Actions §381) · Yahoo adjclose · faktor-evren.json — §539', evren: 'karar kataloğu ∪ XK050 (çekirdek) + faktör evreninin kalanı (genis:true, §562)', _562: 'kaz = KAP arşivinden çeyreklik çekirdek FAVÖK $ y/y (son arşiv çeyreği ÷ geçen yılın aynı çeyreği). genis satırlar taktik modelin PD/DD medyanına girmez.', hisseler: H };
+    kaynak: 'KAP arşivi (Actions §381) · Yahoo adjclose · faktor-evren.json — §539', evren: 'karar kataloğu ∪ XK050 (çekirdek) + faktör evreninin kalanı (genis:true, §562)', hacim, _567: 'hacim = 20 günlük ortalama günlük işlem hacmi, mn ₺ (Yahoo işlem adedi × kapanış; faktör evreni).', _562: 'kaz = KAP arşivinden çeyreklik çekirdek FAVÖK $ y/y (son arşiv çeyreği ÷ geçen yılın aynı çeyreği). genis satırlar taktik modelin PD/DD medyanına girmez.', hisseler: H };
   await yaz('degerleme.json', out); degisenler.push('degerleme (' + H.length + ')');
   const ucuz = H.filter(h => !h.genis && h.canli.z != null && h.canli.z <= -1).map(h => h.k + ' ' + h.canli.z), pahali = H.filter(h => !h.genis && h.canli.z != null && h.canli.z >= 1).map(h => h.k + ' ' + h.canli.z);
-  raporlar.push('### PD/DD bandı (§539) — ✓ çekirdek ' + cekirdekN + '/' + evren.length + ' · toplam ' + H.length + ' hisse · FAVÖK y/y ' + kazN + genisNot + (ucuz.length ? ' · z≤−1: ' + ucuz.slice(0, 8).join(', ') : '') + (pahali.length ? ' · z≥+1: ' + pahali.slice(0, 6).join(', ') : ''));
+  raporlar.push('### PD/DD bandı (§539) — ✓ çekirdek ' + cekirdekN + '/' + evren.length + ' · toplam ' + H.length + ' hisse · FAVÖK y/y ' + kazN + ' · hacim ' + Object.keys(hacim).length + genisNot + (ucuz.length ? ' · z≤−1: ' + ucuz.slice(0, 8).join(', ') : '') + (pahali.length ? ' · z≥+1: ' + pahali.slice(0, 6).join(', ') : ''));
 }
 
 /* ── §546 EPİAŞ GERÇEK ZAMANLI ÜRETİM — HİDRO / RÜZGÂR HACMİ (26 Eki) ─────────────────────────────────────────────
