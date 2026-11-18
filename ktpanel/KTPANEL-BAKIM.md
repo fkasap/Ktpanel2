@@ -16091,3 +16091,12 @@ Taranan: Yönetim, Portföy, Değerleme, Teknik, Muhakeme, Faktör Model, Guidan
 ## §566 — 18 Kas: Toparlanma kartında "ciro" → "işlem hacmi"
 - tazele.mjs: kapitülasyon eşik metni "düşen ≥%90 · eşit ağ. gün ≤ −%3 · işlem hacmi ≥1,5× (20g ort.)". Metin toparlanma.json içinde taşındığı için bir sonraki fiyat koşusunda görünür.
 - §562/§565 gerçek veriyle doğrulandı (18 Kas 14:45 koşusu): degerleme.json 156 hisse (107 geniş), FAVÖK y/y 117; toparlanma son = 17 Kas.
+
+## §567 — 18 Kas: Yönetim + Portföy sekmeleri canlı kontrol (kullanıcının 8 pozisyonu)
+Doğrulanan hesaplar (elle sağlama): getiri atfı toplamı (+8,64 = katkılar toplamı), reel getiri (1,0864/1,039−1 = +4,6), efektif hisse 5,1, portföy betası 0,84 (ağırlıklı), VaR (vol %25,9 → günlük 4.189 ₺ → aylık ×√21), risk katkıları toplamı = portföy volü, alokasyon hedefleri toplamı 100. Taktik duruş değişimi (Yerli ÜSTÜ→NÖTR, Yabancı NÖTR→ALTI) gerçek: yerli skor 3/13 (eşik 0,25'in hemen altı), PD/DD medyanı evreni değişmedi (−1,19).
+Düzeltilenler:
+- **Sektör yoğunlaşması (iki kart):** paylar yalnız faktör evrenindeki hisselere bölünüyordu; THYAO (%20,9) dışarıda kalınca Sanayi %37, HHI 0,32 (uyarı). Toplam portföye göre Sanayi %29,5, HHI 0,24; evren dışı "Sınıflanmamış" kovası.
+- **Günlük ayrışma kaydı:** açılışta veri inmeden çalışıp boş dönüyordu → 3 ayda 64 iş gününün 23'ü kayıtlı, 17-18 Kas yazılmamış. 5/20/60 sn sonra yeniden dener. Kümülatif kart eksik günleri açıkça yazar.
+- **Seçim hunisi hacmi:** degerleme.json'a faktör evreni için 20 günlük ortalama işlem hacmi haritası (tazele.mjs); panel multiple.json kapsamıyorsa onu kullanır. Bir sonraki fiyat koşusundan sonra "hacim ölçülemedi" azalır.
+- Likidite notundaki sabit "PPK · FOMC · 3Ç26 bilançoları" kaldırıldı; lens kartlarında ondalık virgül; "Efektif hisse (modeldekiler)" etiketi. Sürüm 20261118a.
+Gözlem (dokunulmadı): huninin tepesi artık küçük, ucuz, tek çeyrek baz etkisiyle FAVÖK'ü sıçramış hisseler (/3, analist yok); taktik duruş tek sinyalle eşik atlıyor (histerezis yok); günlük ayrışma kaydı gün içi açılışta seans içi getiriyi yazar.

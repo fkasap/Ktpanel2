@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261117d';
+const KTP_SURUM = '20261118a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -2228,27 +2228,32 @@ function pozHisse(){
   poz.filter(p=>p.tip!=='nakit').forEach(p=>{const d=FM?FM.data.find(x=>x.t===p.kod):null;const deg=p.adet*p.fiyat;if(d&&SEKTOR_BETA[d.s])kapsanan.push({kod:p.kod,deger:deg,s:d.s,f:d.f});else disi.push(p.kod);});
   const kapT=kapsanan.reduce((s,x)=>s+x.deger,0);
   kapsanan.forEach(x=>x.w=kapT?x.deger/kapT:0);
-  return {kapsanan,disi,kapT};
+  /* §567 (18 Kas tarama): sektör payları yalnız faktör evrenindeki hisselere bölünüyordu → THYAO (%20,9) dışarıda kalınca Sanayi %37 ve
+     HHI 0,32 (uyarı) görünüyordu; portföyün tamamına göre Sanayi %29, HHI 0,24. sekW = TÜM hisse/fon değerine göre pay; evren dışı
+     pozisyonlar 'Sınıflanmamış' kovasında tek sektör gibi sayılır (temkinli). Faktör kimliği ve stres testi x.w ile kapsananı kullanmaya devam eder. */
+  const tumT=poz.filter(p=>p.tip!=='nakit').reduce((s,p)=>s+p.adet*p.fiyat,0); const sekW={};
+  kapsanan.forEach(x=>{ sekW[x.s]=(sekW[x.s]||0)+(tumT?x.deger/tumT:0); }); const disiW=tumT?Math.max(0,1-kapT/tumT):0; if(disiW>0.0005) sekW['_disi']=disiW;
+  return {kapsanan,disi,kapT,sekW,disiW};
 }
 async function riskStresGuncelle(){
   if(!FM){try{FM=await (await fetch('/fm.json',{cache:'no-store'})).json();}catch(e){return;}}
   riskLens();korLens();stresTest();
 }
 function riskLens(){
-  const {kapsanan,disi}=pozHisse();
+  const {kapsanan,disi,sekW:_sekT}=pozHisse();
   const sEl=$('rlSektor'),fEl=$('rlFaktor');
   if(!kapsanan.length){sEl.innerHTML='<div class="sub">Faktör modeli evreninde hisse pozisyonu yok.</div>';fEl.innerHTML='<div class="sub">—</div>';$('rlHHI').textContent='—';$('rlSektorNote').textContent='';$('rlFaktorNote').textContent='';return;}
-  const sekW={};kapsanan.forEach(x=>sekW[x.s]=(sekW[x.s]||0)+x.w);
+  const sekW=_sekT;
   const sekArr=Object.entries(sekW).sort((a,b)=>b[1]-a[1]);
   const hhi=sekArr.reduce((s,a)=>s+a[1]*a[1],0);
   const top3=sekArr.slice(0,3).reduce((s,a)=>s+a[1],0);
-  sEl.innerHTML=sekArr.map(a=>'<div class="bar"><span class="bn">'+(SEKTOR_TR[a[0]]||a[0])+'</span><span class="bt"><span class="bf" style="width:'+(a[1]*100).toFixed(0)+'%"></span></span><span class="bv">%'+(a[1]*100).toFixed(1)+'</span><span class="bk"></span></div>').join('');
-  $('rlHHI').textContent='HHI '+(hhi*100).toFixed(0);
+  sEl.innerHTML=sekArr.map(a=>'<div class="bar"><span class="bn">'+(a[0]==='_disi'?'Sınıflanmamış':(SEKTOR_TR[a[0]]||a[0]))+'</span><span class="bt"><span class="bf" style="width:'+(a[1]*100).toFixed(0)+'%"></span></span><span class="bv">%'+trN(a[1]*100,1)+'</span><span class="bk"></span></div>').join('');
+  $('rlHHI').textContent='HHI '+trN(hhi*100,0);
   const hhiYorum=hhi>0.30?'çok yoğun':hhi>0.18?'yoğun':'dengeli';
-  $('rlSektorNote').innerHTML='En büyük 3 sektör portföyün <em>%'+(top3*100).toFixed(0)+'</em>&#39;i. Yoğunlaşma (HHI) <em>'+hhiYorum+'</em>: '+(hhi>0.25?'tek bir makro temaya fazla bağlısın — çeşitlendirme faydalı olabilir.':'sektör dağılımı makul.')+(disi.length?' Kapsam dışı: '+disi.join(', ')+'.':'');
+  $('rlSektorNote').innerHTML='En büyük 3 sektör portföyün <em>%'+trN(top3*100,0)+'</em>&#39;i. Yoğunlaşma (HHI) <em>'+hhiYorum+'</em>: '+(hhi>0.30?'tek bir makro temaya fazla bağlısın — çeşitlendirme faydalı olabilir.':hhi>0.18?'uyarı eşiğinin (0,30) altında ama izlemeye değer.':'sektör dağılımı makul.')+(disi.length?' Sınıflanmamış (faktör evreni dışı, tek kova sayıldı): '+disi.join(', ')+'.':'');
   const fAvg=[0,0,0,0,0];kapsanan.forEach(x=>x.f.forEach((v,i)=>{if(v!=null)fAvg[i]+=x.w*v;}));
   const flbl=['Değer','Büyüme','Kalite','Momentum','Düşük Risk'];
-  fEl.innerHTML=fAvg.map((v,i)=>'<div class="kv"><span class="k">'+flbl[i]+'</span><span class="'+(v>=0?'up':'down')+'" style="font-family:var(--mono);font-weight:600">'+(v>=0?'+':'')+v.toFixed(2)+'σ</span></div>').join('');
+  fEl.innerHTML=fAvg.map((v,i)=>'<div class="kv"><span class="k">'+flbl[i]+'</span><span class="'+(v>=0?'up':'down')+'" style="font-family:var(--mono);font-weight:600">'+(v>=0?'+':'')+trN(v,2)+'σ</span></div>').join('');
   let mI=0;fAvg.forEach((v,i)=>{if(Math.abs(v)>Math.abs(fAvg[mI]))mI=i;});
   $('rlFaktorNote').innerHTML='En belirgin eğilim <em>'+flbl[mI]+'</em> ('+(fAvg[mI]>=0?'+':'')+fAvg[mI].toFixed(2)+'σ). Bu, seçimlerinin ortak DNA&#39;sı — pozitif değer o faktörde evren ortalamasının üstünde demek. Faktör kimliği "neden hep birlikte hareket ediyorlar" sorusunu yanıtlar.';
 }
@@ -2267,12 +2272,12 @@ function korLens(){
   $('korOzet').innerHTML=
     '<div class="kv"><span class="k">Gerçek pozisyon</span><span><b>'+(typeof pozHisseSay==='function'?pozHisseSay():n)+' hisse</b>'+
       ((typeof pozHisseSay==='function'&&pozHisseSay()>n)?'<span class="sub" style="font-size:9px"> · '+n+'\'i modelde</span>':'')+'</span></div>'+
-    '<div class="kv"><span class="k">Efektif hisse (1/Σw²)</span><span><b>'+eff.toFixed(1)+'</b></span></div>'+
-    '<div class="kv"><span class="k">Ağırlık dağılımı</span><span class="'+(cesit>=60?'up':'down')+'" style="font-weight:600">%'+cesit.toFixed(0)+' · '+effYorum+'</span></div>'+
-    '<div class="kv"><span class="k">Ort. faktör benzerliği</span><span class="'+(ortKor<=0.3?'up':ortKor<=0.5?'':'down')+'" style="font-family:var(--mono);font-weight:600">'+ortKor.toFixed(2)+'</span></div>';
-  $('korCift').innerHTML=cift.slice(0,4).map(c=>'<div class="kv"><span class="k">'+c.a+' ↔ '+c.b+'</span><span class="'+(c.c>=0.6?'down':c.c>=0.3?'':'up')+'" style="font-family:var(--mono);font-weight:600">'+c.c.toFixed(2)+'</span></div>').join('');
+    '<div class="kv"><span class="k" title="yalnız faktör evrenindeki hisseler; tüm portföy için Yönetim › Risk Metrikleri">Efektif hisse (modeldekiler)</span><span><b>'+trN(eff,1)+'</b></span></div>'+
+    '<div class="kv"><span class="k">Ağırlık dağılımı</span><span class="'+(cesit>=60?'up':'down')+'" style="font-weight:600">%'+trN(cesit,0)+' · '+effYorum+'</span></div>'+
+    '<div class="kv"><span class="k">Ort. faktör benzerliği</span><span class="'+(ortKor<=0.3?'up':ortKor<=0.5?'':'down')+'" style="font-family:var(--mono);font-weight:600">'+trN(ortKor,2)+'</span></div>';
+  $('korCift').innerHTML=cift.slice(0,4).map(c=>'<div class="kv"><span class="k">'+c.a+' ↔ '+c.b+'</span><span class="'+(c.c>=0.6?'down':c.c>=0.3?'':'up')+'" style="font-family:var(--mono);font-weight:600">'+trN(c.c,2)+'</span></div>').join('');
   const eb=cift[0];
-  $('korNote').innerHTML='<b>Efektif hisse ('+eff.toFixed(1)+' / '+n+' modeldeki hisse)</b>: ağırlık ne kadar dengeli dağılmış — gerçek sayıya yakınsa iyi. <b>Faktör benzerliği</b>: 1\u0027e yakın çiftler farklı hisseler olsa da <em>aynı DNA</em>yı taşır ('+eb.a+' ↔ '+eb.b+': '+eb.c.toFixed(2)+'). Kâğıtta çeşitli görünüp kriz anında birlikte düşen pozisyonları yakalar — gerçek çeşitlendirme, <em>düşük</em> faktör-benzerliğidir.';
+  $('korNote').innerHTML='<b>Efektif hisse ('+trN(eff,1)+' / '+n+' modeldeki hisse)</b>: ağırlık ne kadar dengeli dağılmış — gerçek sayıya yakınsa iyi. <b>Faktör benzerliği</b>: 1\u0027e yakın çiftler farklı hisseler olsa da <em>aynı DNA</em>yı taşır ('+eb.a+' ↔ '+eb.b+': '+trN(eb.c,2)+'). Kâğıtta çeşitli görünüp kriz anında birlikte düşen pozisyonları yakalar — gerçek çeşitlendirme, <em>düşük</em> faktör-benzerliğidir.';
 }
 /* §456 FONZİ (Vaka-ı Tezmen) — fon krizi stres katmanı (6 Eki 2026, kullanıcı adlandırması).
    Makro kaydırıcıların ÜSTÜNE idiyosenkratik şok: SPK 17 Eyl tasfiyesindeki 9 evren fonunun son
@@ -2357,7 +2362,7 @@ function renderPoz(){
   const w=$('ccWarn');
   if(!poz.length){w.className='note';w.innerHTML='Pozisyon ekleyerek başla. Fon seçersen fiyat TEFAS\u0027tan otomatik çekilir; hisse fiyatı girişte yazdığın değerle başlar, sonrasında panel açılışlarında Yahoo\u0027dan otomatik tazelenir. Getiriler maliyete göredir.';}
   else if(topW>35){w.className='note warn';w.innerHTML='<em>Konsantrasyon uyarısı:</em> '+esc(top.kod)+' portföyün %'+trN(topW,1)+'\u0027i. Tek pozisyonun %35\u0027i aşması, portföy getirisini tek hikayeye bağlar — Journal\u0027daki tezinin bu ağırlığı hak edip etmediğini sorgula.'}
-  else if(toplam>0&&nakit/toplam<0.02){w.className='note warn';w.innerHTML='<em>Likidite notu:</em> nakit %2\u0027nin altında. Önümüzdeki olay penceresinde (PPK · FOMC · 3Ç26 bilançoları) fırsat alımı için kuru barut kalmamış.';   /* §459d: "17–29 Temmuz" gömülüydü */}
+  else if(toplam>0&&nakit/toplam<0.02){w.className='note warn';w.innerHTML='<em>Likidite notu:</em> nakit %2\u0027nin altında. Yaklaşan olaylarda (takvim: BUGÜN şeridi) fırsat alımı için kuru barut kalmamış.';   /* §459d: "17–29 Temmuz" gömülüydü */}
   else{w.className='note';w.innerHTML='Dağılım dengeli görünüyor. Hisse fiyatları panel her açılışında ve bu sekmeye her girişte Yahoo\u0027dan otomatik tazelenir'+(POZ_FIYAT_SAAT?' (son: '+POZ_FIYAT_SAAT+')':'')+'; fonlarda ↻ TEFAS\u0027tan çeker.';}
   riskStresGuncelle();
 }
@@ -4990,7 +4995,10 @@ function canliEnjekte(){
     /* §151: kullanicinin KENDI portfoyunun gunluk ayrismasi da biriktirilir.
        canliEnjekte icinde cunku burasi market verisinin geldigi TEK nokta —
        sekme acik olmasa bile kayit dusuyor. "Her gun otomatik" sarti bu. */
-    try{ if(typeof ayrGunKaydet==='function'){ ayrGunKaydet('XK100'); ayrGunKaydet('XKTUM'); } }catch(e){}
+    /* §567: bu çağrı açılışta endeks ağırlıkları/pozisyonlar henüz inmeden çalışıp sessizce boş dönüyordu → 3 ayda yalnız 23 gün kayıt
+       (17-18 Kas'ta panel açıkken bile yazılmadı; elle çağrınca yazdı). Kayıt düşene kadar 5 · 20 · 60 sn sonra yeniden denenir. */
+    try{ if(typeof ayrGunKaydet==='function'){ const _dene=()=>{ let ok=false; try{ ok=!!ayrGunKaydet('XK100'); ok=!!ayrGunKaydet('XKTUM')&&ok; }catch(e){} return ok; };
+      if(!_dene()&&!window.__AYR_TEKRAR){ window.__AYR_TEKRAR=1; [5000,20000,60000].forEach(ms=>setTimeout(()=>{ if(window.__AYR_TEKRAR===2) return; if(_dene()){ window.__AYR_TEKRAR=2; try{ if(typeof ayrGrafik==='function') ayrGrafik(($('ayrEndeks')||{}).value||'XKTUM'); }catch(e){} } },ms)); } } }catch(e){}
     /* §193: canlı veri işlendi — bekleme durumu kalkar, damgalar normale döner.
        Buraya konuldu çünkü canliEnjekte market verisinin işlendiği TEK nokta.
        Daha erkene konsa "geldi" demeden kalkardı; daha geçe konsa bir hata
@@ -8773,6 +8781,8 @@ function ayrGrafik(endeksKod){
   g+='<text x="'+(L+150)+'" y="'+(T+9)+'" font-size="9" font-family="var(--mono)" fill="#8896A5">'+esc(endeksKod)+' '+
      (son.kb>=0?'+':'')+trN(son.kb,2)+'%</text>';
   el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+g+'</svg>'+
+    (()=>{ let is=0; for(let t=Date.parse(K[0].d+'T12:00:00Z'); t<=Date.parse(son.d+'T12:00:00Z'); t+=864e5){ const g=new Date(t).getUTCDay(); if(g!==0&&g!==6) is++; } const eksik=is-K.length;   /* §567 */
+      return eksik>2?'<div class="note warn" style="font-size:10.5px;margin-top:4px">Bu aralıkta ~'+is+' iş günü var, <b>'+K.length+'</b> gün kayıtlı. Eksik '+eksik+' günün getirisi hesapta yok; aşağıdaki rakam dönemin tamamının ayrışması değil, yalnız kayıtlı günlerin bileşiğidir.</div>':''; })()+
     '<div class="sub" style="font-size:10.5px;margin-top:4px">'+K.length+' işlem günü · '+K[0].d+' → '+son.d+
     ' · kümülatif ayrışma <b class="'+(son.fark>=0?'up':'down')+'">'+(son.fark>=0?'+':'')+trN(son.fark,2)+' puan</b>'+
     ' <span class="thin">· günlük getiriler bileşiklenir (toplanmaz)</span></div>';
@@ -10923,7 +10933,7 @@ function riskMetRender(){
   const {kapsanan,disi}=pozHisse();
   const hisseToplam=hisseler.reduce((s,p)=>s+p.adet*p.fiyat,0), toplamVarlik=hisseToplam+nakit;
   const ws=hisseler.map(p=>p.adet*p.fiyat/hisseToplam), hhi=ws.reduce((s,w)=>s+w*w,0), eff=1/hhi, enBuyuk=Math.max.apply(null,ws)*100;
-  const sekAg={};kapsanan.forEach(x=>{sekAg[x.s]=(sekAg[x.s]||0)+x.w;});
+  const sekAg=(typeof pozHisse==='function'&&pozHisse().sekW)||{};   /* §567: toplam portföye göre, evren dışı ayrı kova */
   const sekHHI=Object.values(sekAg).reduce((s,w)=>s+w*w,0);
   const sekSort=Object.entries(sekAg).sort((a,b)=>b[1]-a[1]), enBuyukSek=sekSort[0];
   const nakitOran=toplamVarlik?nakit/toplamVarlik*100:0;
@@ -10963,7 +10973,7 @@ function riskMetRender(){
     '<div class="kv"><span class="k">Nakit oranı</span><span>%'+trN(nakitOran,1)+'</span></div></div>'+
     '<div class="card"><div class="lbl">SEKTÖR RİSKİ</div>'+
     '<div class="kv"><span class="k">Sektör HHI</span><span class="'+(sekHHI>0.3?'down':'')+'">'+trN(sekHHI,2)+'</span></div>'+
-    (enBuyukSek?'<div class="kv"><span class="k">En yoğun sektör</span><span>'+(SEKTOR_TR[enBuyukSek[0]]||enBuyukSek[0])+' %'+trN(enBuyukSek[1]*100,0)+'</span></div>':'')+
+    (enBuyukSek?'<div class="kv"><span class="k">En yoğun sektör</span><span>'+(enBuyukSek[0]==='_disi'?'Sınıflanmamış':(SEKTOR_TR[enBuyukSek[0]]||enBuyukSek[0]))+' %'+trN(enBuyukSek[1]*100,0)+'</span></div>':'')+
     '<div class="kv"><span class="k">Faktör evreni dışı</span><span>'+disi.length+' hisse</span></div></div>'+
     '</div>'+piyasaBolum+
     '<div class="note">Konsantrasyon: efektif hisse gerçek sayıya yakınsa dengeli; sektör HHI >0,30 veya en büyük pozisyon >%25 uyarı. <b>Beta</b> portföyün XKTUM\'a duyarlılığı (>1 agresif, <1 defansif); <b>volatilite</b> yıllık oynaklık; <b>VaR %95</b> normal bir gün/ayda %95 ihtimalle aşılmayan kayıp (mutlak ₺). Portföy volü tek-faktör modeliyle kurulur (aşağıdaki Risk Bütçesi motoru); "çeşitlendirme kazancı" ağırlıklı ortalama vol ile bu değer arasındaki farktır. Beta/vol 2026 yılbaşından bugüne günlük getirilerden.</div>';
@@ -14593,7 +14603,7 @@ async function secimRender(){
   const tezKod=new Set((typeof jrnl!=='undefined'?jrnl:[]).filter(j=>j.durum!=='kapali').map(j=>String(j.kod).toUpperCase()));
   /* bileşen ham değerleri */
   const H=V.fm.data.map(x=>{ const k=x.t; let fk=0, fw=0; FMF.forEach((f,i)=>{ if(x.k&&x.k[i]&&isFinite(x.f[i])){ fk+=w[f]*x.f[i]; fw+=w[f]; } }); const faktor=fw>0?fk/fw:null;
-    const p=fiyat(k); const an=AN[k]; const anEski=!!(an&&an.yas!=null&&an.yas>AN_MAXYAS); const pot=(an&&an.n>=2&&p>0&&!anEski)?(an.hedef/p-1)*100:null;   /* tek kurumlu eski hedef puanı sürüklemesin: ≥2 kurum */ const hac=MU[k]?MU[k].hacim:null;
+    const p=fiyat(k); const an=AN[k]; const anEski=!!(an&&an.yas!=null&&an.yas>AN_MAXYAS); const pot=(an&&an.n>=2&&p>0&&!anEski)?(an.hedef/p-1)*100:null;   /* tek kurumlu eski hedef puanı sürüklemesin: ≥2 kurum */ const hac=(MU[k]&&MU[k].hacim!=null)?MU[k].hacim:((V.deg&&V.deg.hacim&&V.deg.hacim[k]!=null)?V.deg.hacim[k]:null);   /* §567: multiple.json kapsamıyorsa degerleme.json hacim haritası */
     return {k, s:x.s, faktor, deg:DEG[k]!=null?-DEG[k]:null, kaz:KAZ[k]?KAZ[k].yy:null, kazQ:KAZ[k]?KAZ[k].q:null, pot, anN:an?an.n:0, anYas:an?an.yas:null, anEski, hac, sepet:SEPET.has(k), baskiGun:(BASKI_D[k]!=null&&hac>0)?BASKI_D[k]/1e6/(hac*0.2):null, baskiVar:BASKI_D[k]!=null, baski:(BASKI_D[k]!=null)&&!(hac>0&&BASKI_D[k]/1e6/(hac*0.2)<0.5), disla:DISLA.has(k), port:portKod.has(k), tez:tezKod.has(k), p}; });
   /* yüzdelik (0-100) evren içinde */
   const pct=(arr,key)=>{ const v=arr.map(x=>x[key]).filter(x=>x!=null&&isFinite(x)).sort((a,b)=>a-b); const n=v.length; arr.forEach(x=>{ const val=x[key]; if(val==null||!isFinite(val)||n<5){ x['p_'+key]=null; return; } let lo=0,hi=n; while(lo<hi){ const m=(lo+hi)>>1; if(v[m]<val) lo=m+1; else hi=m; } x['p_'+key]=lo/(n-1)*100; }); };
@@ -14610,7 +14620,7 @@ async function secimRender(){
   el.innerHTML='<div class="lbl" style="margin-top:4px">ADAYLAR — EN YÜKSEK PUAN <span class="thin" style="font-weight:400">('+aday.length+' hisse süzgeçten geçti · <b>ölçülebilen '+H.filter(x=>x.cekirdek>=3).length+'</b> / evren '+H.length+')</span></div><div class="sub" style="font-size:9.5px;margin:2px 0 4px">Kapsam: faktör '+H.filter(x=>x.p_faktor!=null).length+' · PD/DD z '+H.filter(x=>x.p_deg!=null).length+' · FAVÖK '+H.filter(x=>x.p_kaz!=null).length+' · analist (≥2 kurum, ≤'+AN_MAXYAS+' gün) '+H.filter(x=>x.p_pot!=null).length+'. '+(H.filter(x=>x.cekirdek<3).length?'<b>'+H.filter(x=>x.cekirdek<3).length+' hisse aday olamaz çünkü değerleme/kazanç verisi yok</b> (KAP arşivinde beş çeyrekten az geçmiş ya da FAVÖK hesaplanamıyor) — zayıf oldukları için değil.':'')+'</div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+aday.slice(0,15).map(sat).join('')+'</table></div>'+
     (port.length?'<div class="lbl" style="margin-top:10px">PORTFÖYDEKİLER — EN ZAYIFTAN GÜÇLÜYE <span class="thin" style="font-weight:400">(aynı ölçekle)</span></div><div style="overflow-x:auto"><table style="font-size:11px">'+bas+port.map(sat).join('')+'</table></div>':'<div class="sub" style="margin-top:8px">Portföyde faktör evreninden hisse yok.</div>')+
     (()=>{ const evK=new Set(H.map(x=>x.k)); const dis=[...portKod].filter(k=>!evK.has(k)); return dis.length?'<div class="sub" style="margin-top:4px;color:#E8933B">Evren dışı pozisyon: <b>'+esc(dis.join(', '))+'</b> — XKTUM faktör evreninde olmadığı için puanlanamadı (katılım endeksi dışı ya da evren eşiğinin altında).</div>':''; })()+
-    '<div class="sub" style="margin-top:6px">Puan = mevcut bileşenlerin evren içi yüzdelik ortalaması (0-100; /n kapsam). Bileşenler: faktör kompozit (Faktör Model sekmesindeki ağırlıklarınla) · PD/DD z (ucuz = yüksek yüzdelik) · FAVÖK $ y/y · analist potansiyeli · toparlanma sepeti üyeliği (+75 sabit, yalnız dönüş teyitliyken — aşama 3). Faktör z ve PD/DD z ham; FAVÖK ve potansiyel %. Hacim multiple.json günlük ortalama.</div>'+
+    '<div class="sub" style="margin-top:6px">Puan = mevcut bileşenlerin evren içi yüzdelik ortalaması (0-100; /n kapsam). Bileşenler: faktör kompozit (Faktör Model sekmesindeki ağırlıklarınla) · PD/DD z (ucuz = yüksek yüzdelik) · FAVÖK $ y/y · analist potansiyeli · toparlanma sepeti üyeliği (+75 sabit, yalnız dönüş teyitliyken — aşama 3). Faktör z ve PD/DD z ham; FAVÖK ve potansiyel %. Hacim: günlük ortalama işlem hacmi, mn ₺ (multiple.json; kapsamadığı hisselerde 20 günlük Yahoo ortalaması).</div>'+
     '<details style="margin-top:6px"><summary style="cursor:pointer;font-size:9px;font-family:var(--mono);color:var(--mm2)">NASIL OKUNUR (§549)</summary><div class="sub" style="font-size:9.5px;line-height:1.6;margin-top:4px">Bu bir tarama, karar değil: dört bağımsız kaynağın (faktör · değerleme · kazanç · sokak beklentisi) aynı kâğıtta buluşup buluşmadığını gösterir. Puanı yüksek ama kapsamı 2 olan hisse, puanı orta ama kapsamı 5 olandan daha az güvenilirdir. Portföy tablosunun en üstü (en zayıf) "neden hâlâ tutuyorum?" sorusunun adresidir — cevabı Muhakeme\'deki tezde yoksa pozisyon alışkanlıkla duruyordur. Aday tablosundan Muhakeme\'ye geçerken üç şey yazılır: tez, katalizör, ölçülebilir bozan. Bayraklar süzgeç değil uyarıdır; fon satış baskısı altındaki kâğıt ucuzlamış olabilir (fırsat) ya da daha ucuzlayacak olabilir (bıçak) — ikisini ayıran şey toparlanma aşamasıdır (§530).</div></details>';
 }
 try{ if(Array.isArray(POZ_GOREV)){ ['alokRender','secimRender'].forEach(g=>{ if(POZ_GOREV.indexOf(g)<0) POZ_GOREV.push(g); }); } }catch(e){}
