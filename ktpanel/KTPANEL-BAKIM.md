@@ -16104,3 +16104,11 @@ Gözlem (dokunulmadı): huninin tepesi artık küçük, ucuz, tek çeyrek baz et
 ## §568 — 18 Kas: bekçinin iki uyarısı
 - **"Elle kart 63 gündür güncellenmedi — ECB & Politika":** oran zaten canlı teyitliydi; çevresindeki elle cümleler eskimişti (HICP %3,3 → canlı %4,0; "EUR/USD 1,13-1,14 bandı" → 1,10; "TCMB 22 Eki'de…" geçmiş; Eylül projeksiyonu). Kart yeniden kuruldu: oran + son değişim günü (ECB DFR), sıradaki toplantı (takvim), HICP manşet/çekirdek (ECB veri portalı) — hepsi canlı; elle rakam taşıyan satırlar (Koro, EUR/USD bandı, projeksiyon, "Fed %82") kaldırıldı. mbKartCanli: kartta elle metin yoksa "önceki not" ve ⚠ yazılmaz.
 - **"TP.AB.B4 bayat (109 gün)":** EVDS'nin aylık rezerv tablosu Ağustos'ta duruyor (18 Kas'ta da). Seri yalnız rezerv kutusunun yedeğiydi; yedek kaldırıldı (devreye girse üç aylık bayat rakam yazardı). Kod artık panelde tırnak içinde geçmediği için bekçi izlemez. Sürüm 20261118b.
+
+## §569 — 18 Kas: Değerleme + Muhakeme sekmeleri canlı kontrol
+Sağlaması tutanlar: DCF (yıl-yıl PV, terminal değer, köprü → 72,62 ₺), EV/EBITDA çarpan (ASELS PD 1.582,3 = fiyat × pay; net borç 55,2; çekirdek 71,6 → 22,9x = karar motorundaki 22,9x), FEK kapasite/yük toplamları (87.731 / 1.457 → 60,2x), karar panosu sıralaması (§564 canlıda).
+Düzeltilenler (app.js):
+- **Mevsimsel sürücü puanı:** PTF 2Ç26 ort. 914 TL/MWh (bahar hidrolojisi; EPİAŞ verisi aylık olarak doğrulandı) → 3Ç26 2.784: çeyrek/çeyrek +%205 ve +1 puan. Geçen yılın aynı çeyreğine göre −%3. ptf, ptf_usd, ttf, gaz_avrupa, henryhub artık y/y ölçülür ve puanlanır. Canlıda: AKFYE ve AYDEM 4/5 → 3/5; panonun tepesi BIMAS · ENJSA · MPARK.
+- Konsensüsü olmayan hissede OLUMLU açıklaması "Beklenti güçlü…" diyordu → "kurum beklentisi yok, beklenti tarafı ölçülmedi".
+- FEK veto değerlerinde ondalık virgül. Sürüm 20261118c.
+Gözlem (dokunulmadı, karar kullanıcıda): (1) FEK'te V2 likidite vetosu ile metin çelişiyor — ASELS 2/5 "veto tavanı" alırken aynı kart "borç servisi risk unsuru değil" diyor; tam kesinti senaryosunda bile kapasite yükü 1,28x karşılıyor. (2) Karar panosunda çarpanın kendi bandındaki yeri hisselerin çoğunda %0 → piyasa geneli ucuzlama, ayırt edici değil. (3) AKFYE "Net dönem kârı hesaplanamadı".

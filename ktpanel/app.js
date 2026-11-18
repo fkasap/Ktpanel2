@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261118b';
+const KTP_SURUM = '20261118c';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -2648,7 +2648,7 @@ function kararPuan(M, H, F){
   if(!(H.kosu&&H.kosu.degisim!=null)){ const bo=kararBirincilOzet(M,H);
     if(bo&&!bo.bekliyor&&bo.dQ!=null&&isFinite(bo.dQ)){ const yon=bo.dQ*(bo.isaret||0);
       if(bo.yy||bo.ytd||!bo.isaret||bo.ytdSifir) ekle('Sürücü yönü ('+bo.ad+')', kararIsaret(bo.dQ,0,'%')+(bo.yy?' y/y':''), 0, bo.yy?'Fiyat endeksi yıllık değişimi enflasyonla birlikte okunur — puanlanmaz':bo.ytd?'Akış serisi (yıl içi kümülatif) topaklıdır — bilgi':'Kur/nötr rollü sürücü — bilgi', true);
-      else ekle('Sürücü yönü ('+bo.ad+' · '+kararQAd(H.hedefQ)+' ort. vs önceki çeyrek)', kararIsaret(bo.dQ,0,'%'), yon>10?1:yon<-10?-1:0, yon>10?'Birincil sürücü hissenin lehine döndü ('+(bo.rol||'')+')':yon<-10?'Birincil sürücü hissenin aleyhine ('+(bo.rol||'')+')':'Sürücü değişimi ±%10 içinde'); } }
+      else ekle('Sürücü yönü ('+bo.ad+' · '+kararQAd(H.hedefQ)+' ort. vs '+(bo.mevsim?'geçen yılın aynı çeyreği · mevsimsel seri':'önceki çeyrek')+')', kararIsaret(bo.dQ,0,'%')+(bo.mevsim?' y/y':''), yon>10?1:yon<-10?-1:0, yon>10?'Birincil sürücü hissenin lehine döndü ('+(bo.rol||'')+')':yon<-10?'Birincil sürücü hissenin aleyhine ('+(bo.rol||'')+')':'Sürücü değişimi ±%10 içinde'); } }
   /* §533 YÖNETİM HEDEFİ İZİ: şirketin açıkladığı yıllık FAVÖK aralığı (guidance.favok_tl_mlr) ↔ KAP gerçekleşen. Yıl içi toplam + son
      çeyrek koşu hızı, hedefe kalan çeyrek başına gereken FAVÖK ile karşılaştırılır (alt uç / orta nokta). */
   { const G=M.guidance; if(G&&Array.isArray(G.favok_tl_mlr)&&G.yil){ const FV=M.favok||{}; const yq=[1,2,3,4].map(n=>G.yil+'Q'+n); const ger=yq.filter(q=>FV[q]&&FV[q].tl!=null);
@@ -2678,7 +2678,7 @@ function kararPuan(M, H, F){
      aynı yön 'NÖTR-POZİTİF/NEGATİF' olarak kalır ve açıklamada sebebi yazar. */
   else if(n<5&&oran>=0.5) etiket={ad:'NÖTR-POZİTİF', sinif:'up', aciklama:'Yön olumlu ('+(toplam>=0?'+':'')+toplam+'/'+n+') ama yalnız '+n+' bileşen puanlanabildi — OLUMLU için en az 5 bileşen gerekir (konsensüs sicili ya da sürücü modeli eksik).'};
   else if(n<5&&oran<=-0.5) etiket={ad:'NÖTR-NEGATİF', sinif:'down', aciklama:'Yön olumsuz ('+toplam+'/'+n+') ama yalnız '+n+' bileşen puanlanabildi — OLUMSUZ için en az 5 bileşen gerekir.'};
-  else if(oran>=0.5) etiket={ad:'OLUMLU', sinif:'up', aciklama:'Beklenti güçlü, fiyatlanma tam değil — pozisyon koru/artır adayı.'};
+  else if(oran>=0.5) etiket={ad:'OLUMLU', sinif:'up', aciklama:(H.hedef&&H.hedef.usd!=null)?'Beklenti güçlü, fiyatlanma tam değil — pozisyon koru/artır adayı.':'Puanlanan mercekler (değerleme · nakit · gerçekleşen kazanç · sürücü) olumlu; bu çeyrek için kurum beklentisi yok — beklenti tarafı ölçülmedi.'};   /* §569 */
   else if(oran<=-0.5) etiket={ad:'OLUMSUZ', sinif:'down', aciklama:'Beklenti ile fiyat ayrışmış — azaltma adayı.'};
   else if(oran>0) etiket={ad:'NÖTR-POZİTİF', sinif:'up', aciklama:'Sürpriz olası ama kısmen fiyatta; ekleme için bilanço sonrası ivmeye bak.'};
   else if(oran<0) etiket={ad:'NÖTR-NEGATİF', sinif:'down', aciklama:'Beklenti iyi görünse de fiyat/ivme destek vermiyor; koru, ekleme yapma.'};
@@ -2714,7 +2714,7 @@ function kararPanoHtml(){
     const yoy = hd.kaynak==='model'? (hd.yoyUsd!=null? kararIsaret(hd.yoyUsd,0,'% $'):'—') : (hd.yoyTl!=null? kararIsaret(hd.yoyTl,0,'%'):'—');
     const bo=kararBirincilOzet(M,H);
     /* §473: akış serisinde bu yıl hiç açıklama yoksa "−100% y/y" yanıltır → "yıl içi 0 · geçen yıl aynı tarih X" (KATMR 2026, GLRMK 2026) */
-    const sur = !bo? '—' : bo.bekliyor? '<span class="sub">'+esc(bo.ad)+' · bekliyor</span>' : bo.ytdSifir? '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="down">0</span> <span class="sub">yıl içi açıklama yok'+(bo.ytdGecen!=null?' · geçen yıl aynı tarih '+trN(bo.ytdGecen,0):'')+'</span>' : '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="'+(bo.dQ==null||bo.isaret===0?'':(bo.dQ*bo.isaret>=0?'up':'down'))+'">'+kararIsaret(bo.dQ,bo.fark?1:0,bo.fark?' p':'%')+(bo.ytd?' <span class="sub">yıl içi y/y</span>':bo.yy?' <span class="sub">y/y</span>':'')+'</span>';
+    const sur = !bo? '—' : bo.bekliyor? '<span class="sub">'+esc(bo.ad)+' · bekliyor</span>' : bo.ytdSifir? '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="down">0</span> <span class="sub">yıl içi açıklama yok'+(bo.ytdGecen!=null?' · geçen yıl aynı tarih '+trN(bo.ytdGecen,0):'')+'</span>' : '<span style="font-family:var(--sans);color:var(--muted)">'+esc(bo.ad)+'</span> <span class="'+(bo.dQ==null||bo.isaret===0?'':(bo.dQ*bo.isaret>=0?'up':'down'))+'">'+kararIsaret(bo.dQ,bo.fark?1:0,bo.fark?' p':'%')+(bo.ytd?' <span class="sub">yıl içi y/y</span>':(bo.yy||bo.mevsim)?' <span class="sub">y/y</span>':'')+'</span>';
     const sic = (H.konsSicil.ort!=null&&!H.konsSicil.ince)? kararIsaret(H.konsSicil.ort,0,'%')+(H.konsSicil.ayniYon?' ●':'') : (H.konsSicil.tum&&H.konsSicil.tum.length? '<span class="sub">ince</span>' : '—');
     const gor = F.ceyrek&&F.ceyrek.goreli!=null? kararIsaret(F.ceyrek.goreli,0,'%')+(F.supheli?' ⚠':'') : '—';
     const pdf = F.fwd!=null? trN(F.fwd,1)+'x'+(F.fwdYuzdelik!=null?' <span class="sub">%'+trN(F.fwdYuzdelik,0)+'</span>':'')+(F.carpanAd==='PD/FAVÖK'?' <span class="sub" title="net borç bandı yok — PD/FAVÖK">pd</span>':'') : '—';
@@ -3118,7 +3118,11 @@ function kararBirincilOzet(M,H){
   const endeks = st.ser.birim==='endeks' || !!st.ser.akis;   /* §467: akış serileri (sözleşme toplamı) de y/y okunur — çeyrekler topaklı */
   /* §471: akışta pano değeri yıl içi kümülatif y/y (geçen yılın aynı tarihi) — çeyrek y/y'den daha az topaklı */
   const ytdYY = st.ytd && st.ytd.yy!=null ? st.ytd.yy : null;
-  return {ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ: ytdYY!=null? ytdYY : (endeks? st.dY : st.dQ), dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son, fark:st.fark, yy:endeks, ytd: ytdYY!=null, ytdSifir: !!(st.ytd && !(st.ytd.toplam>0)), ytdGecen: st.ytd? st.ytd.gecen : null};
+  /* §569 (18 Kas tarama): elektrik ve doğalgaz spot fiyatları MEVSİMSELDİR. PTF 2Ç26 ort. 914 TL/MWh (bahar hidrolojisi), 3Ç26 2.784 →
+     çeyrek/çeyrek +%205 ve +1 puan; oysa geçen yılın aynı çeyreğine göre −%3. AKFYE ve AYDEM bu yüzden panonun tepesindeydi.
+     Mevsimsel sürücüde değişim geçen yılın aynı çeyreğine göre ölçülür ve puan da ondan verilir. */
+  const mevsim = /^(ptf|ptf_usd|ttf|gaz_avrupa|henryhub)$/.test(k) && st.dY!=null && isFinite(st.dY);
+  return {mevsim, ad:(d.ad||st.ser.ad||k).split(' — ')[0].replace(/\s*\(.*?\)\s*$/,'').trim(), dQ: ytdYY!=null? ytdYY : ((endeks||mevsim)? st.dY : st.dQ), dY:st.dY, rol:d.rol, isaret:rol.isaret, son:st.son, fark:st.fark, yy:endeks, ytd: ytdYY!=null, ytdSifir: !!(st.ytd && !(st.ytd.toplam>0)), ytdGecen: st.ytd? st.ytd.gecen : null};
 }
 
 /* ── Grafik: son 12 ay crack (dizel/benzin) ve Brent — iki panel, ortak x. Doğrudan etiket; eksen başına tek ölçek. ── */
@@ -12845,11 +12849,11 @@ function fekCiz(){
   const vetolar=[];
   if(Number.isFinite(coreFavok)&&Number.isFinite(netFaiz)&&netFaiz>0){
     const kars = coreFavok/netFaiz;
-    if(kars<1.0){ vetolar.push({k:'V1', ad:'Çekirdek FAVÖK / faiz < 1,0x', deger:kars.toFixed(2)+'x', etki:'tavan 2'}); }
+    if(kars<1.0){ vetolar.push({k:'V1', ad:'Çekirdek FAVÖK / faiz < 1,0x', deger:trN(kars,2)+'x', etki:'tavan 2'}); }
   }
   if(Number.isFinite(t.likit)&&Number.isFinite(t.kvY)&&t.kvY>0&&Number.isFinite(kvBorc)&&Number.isFinite(t.finBorc)&&t.finBorc>0){
     const nakitOran=t.likit/t.kvY, kvPay=kvBorc/t.finBorc;
-    if(nakitOran<0.20 && kvPay>0.70) vetolar.push({k:'V2', ad:'Nakit oran <0,20 VE KV borç payı >%70', deger:nakitOran.toFixed(2)+' · %'+(kvPay*100).toFixed(0), etki:'tavan 2'});
+    if(nakitOran<0.20 && kvPay>0.70) vetolar.push({k:'V2', ad:'Nakit oran <0,20 VE KV borç payı >%70', deger:trN(nakitOran,2)+' · %'+trN(kvPay*100,0), etki:'tavan 2'});
   }
   if(vetolar.length && sev && sev.not>2) sev=FEK_NOT.find(x=>x.not===2);
   /* §373c NOT BASTIRMA (BIMAS'ta yakalandı): kart hem "faiz kalemi şüpheli,
