@@ -16087,3 +16087,7 @@ Taranan: Yönetim, Portföy, Değerleme, Teknik, Muhakeme, Faktör Model, Guidan
 - **§564 Karar panosu (app.js):** OLUMLU/OLUMSUZ en az 5 puanlanan bileşen ister; 3-4 bileşende NÖTR-POZİTİF/NEGATİF kalır, sebep açıklamada. Sıralama: ≥5 bileşenliler önce.
 - **§565 Toparlanma gecikmesi — kök sebep iki taneydi (tazele.mjs + tazele.yml):** (1) fiyat çekici "bugünün barı"nı saat 19:00'dan önce atıyordu; akşam koşusu 18:10-18:35'te çalıştığı için günün kapanışı HER akşam atılıyordu. Eşik 18:30; akşam cron'u 18:10 → 18:40. (2) Takvim yalnız endeks-arsiv günlerinden kuruluyordu, resmî bülten o günü koşunun sonunda ekliyor → sabah koşusu da bir gün geride kalıyordu. Arşivden sonraki işlem günleri fiyat serilerinden eklenir. "Akşam koşusuna ekleme" gerekmedi; toparlanma zaten fiyat katmanında koşuyordu.
 - Sürüm 20261117d.
+
+## §566 — 18 Kas: Toparlanma kartında "ciro" → "işlem hacmi"
+- tazele.mjs: kapitülasyon eşik metni "düşen ≥%90 · eşit ağ. gün ≤ −%3 · işlem hacmi ≥1,5× (20g ort.)". Metin toparlanma.json içinde taşındığı için bir sonraki fiyat koşusunda görünür.
+- §562/§565 gerçek veriyle doğrulandı (18 Kas 14:45 koşusu): degerleme.json 156 hisse (107 geniş), FAVÖK y/y 117; toparlanma son = 17 Kas.
