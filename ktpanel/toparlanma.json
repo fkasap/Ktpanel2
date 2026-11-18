@@ -14,7 +14,7 @@
     {
      "ad": "Kapitülasyon günü (son 20 gün)",
      "deger": "yok",
-     "esik": "düşen ≥%90 · gün ≤ −%3 · ciro ≥1,5×",
+     "esik": "düşen ≥%90 · eşit ağ. gün ≤ −%3 · işlem hacmi ≥1,5× (20g ort.)",
      "tamam": false
     },
     {
