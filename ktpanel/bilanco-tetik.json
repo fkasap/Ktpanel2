@@ -169,6 +169,7 @@
   "RODRG",
   "RUBNS",
   "SAFKR",
+  "SAMAT",
   "SANKO",
   "SARKY",
   "SDTTR",
@@ -209,7 +210,7 @@
   "YUNSA",
   "ZEDUR"
  ],
- "sayi": 207,
+ "sayi": 208,
  "ilk_gorulme": {
   "AKHAN": "2026-08-18",
   "AKYHO": "2026-08-18",
@@ -812,7 +813,10 @@
   "BFREN": "2026-11-16",
   "BPOZ": "2026-11-16",
   "BURVA": "2026-11-16",
-  "HDFYB": "2026-11-16"
+  "HDFYB": "2026-11-16",
+  "MARTI": "2026-11-19",
+  "SAMAT": "2026-11-19",
+  "USHOL": "2026-11-19"
  },
  "evren_disi": [
   "AAGYO",
@@ -1060,6 +1064,7 @@
   "MANAS",
   "MARKA",
   "MARMR",
+  "MARTI",
   "MASFN",
   "MDASM",
   "MDIAZ",
@@ -1187,6 +1192,7 @@
   "UNLU",
   "UNLUS",
   "USAK",
+  "USHOL",
   "VAKFA",
   "VAKFN",
   "VAKVK",
@@ -1211,10 +1217,10 @@
   "ZOREN",
   "ZRGYO"
  ],
- "evren_disi_sayi": 395,
- "pencere_sayi": 1,
+ "evren_disi_sayi": 397,
+ "pencere_sayi": 4,
  "dusen_son": [
   "ARENA"
  ],
- "guncelleme": "2026-11-19 09:28 UTC — otomatik (KAP FR · kümülatif §299)"
+ "guncelleme": "2026-11-19 22:39 UTC — otomatik (KAP FR · kümülatif §299)"
 }
