@@ -1,6 +1,6 @@
 {
- "surum": "degerleme-2026-11-18",
- "guncelleme": "2026-11-18",
+ "surum": "degerleme-2026-11-19",
+ "guncelleme": "2026-11-19",
  "yontem": "PD/DD z-skoru. Tarihsel bant 2023Ç1 sonrası çeyreklik kapanışlardan (TMS-29 dönemi). Bedelsiz düzeltmesi: tüm dönemlerde GÜNCEL pay adedi kullanılır — fiyat serisi geriye doğru düzeltilmiş olduğu için eski sermayeyle çarpmak PD'yi bozardı. §539: KAP arşivi (ana ortak özkaynağı) + Yahoo düzeltilmiş kapanış + faktor-evren pay adedi; Actions her fiyat koşusunda yeniden üretir.",
  "neden_pddd": "Enflasyon muhasebesinde F/K yanıltır — nominal kâr şişer, çarpan yapay ucuz görünür. Özkaynak da TMS-29 düzeltmesi gördüğü için PD/DD en az sapan çarpandır.",
  "bant": {
@@ -16,241 +16,241 @@
  "kaynak": "KAP arşivi (Actions §381) · Yahoo adjclose · faktor-evren.json — §539",
  "evren": "karar kataloğu ∪ XK050 (çekirdek) + faktör evreninin kalanı (genis:true, §562)",
  "hacim": {
-  "ACSEL": 22,
-  "AKHAN": 40,
+  "ACSEL": 22.5,
+  "AKHAN": 39.6,
   "AKYHO": 2.2,
-  "AKFIS": 169.5,
-  "AKFYE": 119.5,
-  "AKCNS": 62.7,
-  "ALBRK": 87.8,
+  "ALBRK": 84.7,
+  "AKCNS": 59.3,
+  "AKFYE": 114.2,
+  "AKFIS": 166.7,
   "AHGAZ": 161.5,
-  "ALBTN": 81.8,
-  "ALCTL": 17.7,
-  "ALTNY": 110.7,
-  "ARASE": 43.5,
-  "ANGEN": 15.1,
-  "ALKA": 7.2,
-  "ARDYZ": 383.3,
-  "ATAKP": 13.5,
-  "AYDEM": 96.1,
-  "ATATP": 143.6,
-  "ARENA": 4.5,
-  "AVPGY": 25.3,
-  "ASELS": 13240.9,
-  "BAHKM": 108.3,
-  "BAKAB": 10.6,
+  "ALBTN": 81.9,
+  "ANGEN": 15,
+  "ARASE": 43.6,
+  "ALKA": 7.3,
+  "ARDYZ": 365.7,
+  "ALTNY": 108.4,
+  "ALKIM": 9.9,
+  "ALCTL": 16.9,
+  "ARENA": 4.4,
+  "ATAKP": 12.8,
+  "ATATP": 151,
+  "AYDEM": 99.2,
+  "AVPGY": 26,
+  "ASELS": 12944.7,
+  "BAHKM": 114.7,
+  "BAKAB": 11.8,
+  "BEGYO": 26.5,
   "BANVT": 5.7,
-  "BAYRK": 18,
-  "BERA": 53.3,
-  "BEGYO": 31.6,
-  "BASGZ": 19,
-  "BETAE": 373.9,
-  "ALKIM": 9.7,
-  "BIENY": 16.9,
-  "BINHO": 80.9,
-  "BINBN": 58.1,
-  "BLUME": 104.7,
-  "BIMAS": 4102.4,
-  "BORSK": 12.3,
-  "BRLSM": 24.2,
-  "BRKSN": 1.7,
+  "BASGZ": 18.4,
+  "BAYRK": 17.8,
+  "BERA": 53.6,
+  "BETAE": 374.6,
+  "BIENY": 16.8,
+  "BINBN": 66.7,
+  "BIMAS": 4054.2,
+  "BINHO": 83.2,
+  "BLUME": 114.4,
+  "BMSTL": 70.5,
+  "BORSK": 12,
   "BOSSA": 1.5,
-  "BURCE": 41.8,
-  "BRISA": 10.9,
-  "BMSTL": 68.8,
-  "BUCIM": 21.2,
-  "BYDNR": 7.5,
-  "CATES": 34,
+  "BRKSN": 1.7,
+  "BRLSM": 23.7,
   "BURVA": 16.8,
-  "CITAS": 591.9,
-  "CELHA": 80.5,
-  "CMBTN": 13.8,
-  "CIMSA": 208.4,
-  "CEMTS": 11.6,
-  "COSMO": 2.7,
-  "CWENE": 472.6,
-  "DAPGM": 129.3,
+  "BURCE": 42.4,
+  "BRISA": 9.8,
+  "BYDNR": 7.7,
+  "BUCIM": 21.4,
+  "CATES": 35.1,
+  "CITAS": 613.5,
+  "CELHA": 83,
+  "CEMTS": 11.5,
+  "CMBTN": 14,
+  "CVKMD": 470.4,
+  "COSMO": 2.8,
+  "CIMSA": 204.2,
+  "CWENE": 485.6,
+  "DAPGM": 133.4,
   "DARDL": 10.8,
-  "CVKMD": 477,
-  "DCTTR": 48.7,
-  "DESPC": 4.5,
-  "DITAS": 16.8,
-  "DGATE": 24.1,
-  "DNISI": 5.4,
-  "DMSAS": 8.3,
-  "DOFER": 6.2,
-  "EBEBK": 32.1,
-  "DYOBY": 7.7,
-  "DOFRB": 113.9,
-  "EDATA": 65.2,
-  "EFOR": 503.7,
-  "EDIP": 11.7,
-  "EGEPO": 19.5,
-  "EGEGY": 42.5,
-  "EKOS": 18.4,
-  "EGGUB": 41.1,
-  "EKGYO": 1650.9,
-  "EGPRO": 21.2,
-  "EMPAE": 159.5,
-  "ELITE": 12.3,
-  "ENERY": 541.4,
-  "ENJSA": 430.4,
-  "ESEN": 30.7,
-  "EUPWR": 828.5,
-  "ESCOM": 51.1,
-  "EREGL": 4013.5,
-  "EYGYO": 9.4,
-  "FADE": 8.3,
-  "FONET": 56.1,
-  "FORTE": 63.4,
-  "FRIGO": 47.7,
-  "FRMPL": 22.9,
-  "EKSUN": 11.5,
-  "FORMT": 11.6,
-  "FZLGY": 87.9,
+  "DCTTR": 46.1,
+  "DESPC": 4.4,
+  "DITAS": 16.6,
+  "DGATE": 24.6,
+  "DMSAS": 7.9,
+  "DNISI": 5.3,
+  "DOFER": 6.6,
+  "DOFRB": 115.4,
+  "DYOBY": 7.6,
+  "EBEBK": 32.2,
+  "EDIP": 11.3,
+  "EFOR": 543.2,
+  "EGEGY": 43.9,
+  "EGEPO": 22.7,
+  "EDATA": 58.6,
+  "EGGUB": 54,
+  "EGPRO": 22.1,
+  "EKSUN": 11.2,
+  "EKOS": 18.9,
+  "EKGYO": 1604,
+  "ELITE": 12.5,
+  "ENERY": 527.2,
+  "ENJSA": 427.2,
+  "ESEN": 31.3,
+  "ESCOM": 50.3,
+  "EUPWR": 802,
+  "EREGL": 4111.3,
+  "EYGYO": 8.6,
+  "EMPAE": 163,
+  "FADE": 8.7,
+  "FONET": 57.7,
+  "FRIGO": 47.9,
+  "FORTE": 62.5,
+  "FRMPL": 23,
+  "FORMT": 11.5,
+  "FZLGY": 100.3,
   "GEDZA": 3.9,
-  "GENIL": 243,
-  "GESAN": 310.9,
-  "GLRMK": 659.9,
-  "GMTAS": 137.5,
-  "GOLDA": 35.9,
-  "GOKNR": 35.4,
-  "GEREL": 204.2,
-  "GOLTS": 28.5,
-  "GOODY": 13.1,
-  "GRSEL": 45.8,
-  "HATSN": 62.4,
-  "GUBRF": 1138.4,
-  "HKTM": 27.7,
-  "HOROZ": 33.4,
-  "HRKET": 265.1,
-  "IHEVA": 1.7,
-  "IHLAS": 58.2,
-  "IHLGM": 18,
-  "IMASM": 13.5,
-  "IHYAY": 1.8,
-  "INGRM": 7,
+  "GENIL": 231.7,
+  "GEREL": 202.3,
+  "GESAN": 307.2,
+  "GLRMK": 674.1,
+  "GMTAS": 136.7,
+  "GOKNR": 34.9,
+  "GOLDA": 35.5,
+  "GOLTS": 28.7,
+  "GOODY": 13,
+  "GRSEL": 45.4,
+  "HATSN": 63.5,
+  "HKTM": 27.3,
+  "HOROZ": 32.7,
+  "GUBRF": 1137.1,
+  "HRKET": 253.9,
+  "IHEVA": 1.6,
+  "IHLAS": 58.1,
+  "IHLGM": 18.6,
+  "IHYAY": 1.7,
+  "IMASM": 12.4,
   "INTEM": 11.6,
+  "INGRM": 7.4,
+  "ISDMR": 79.3,
   "ISSEN": 2,
-  "ISDMR": 81.1,
-  "IZINV": 6.6,
-  "IZFAS": 136.1,
-  "KARSN": 79.8,
-  "JANTS": 26.3,
-  "KATMR": 68.6,
-  "KCAER": 119.1,
-  "KBORU": 84.5,
-  "KGYO": 71.8,
+  "IZFAS": 131.7,
+  "IZINV": 7.5,
+  "KARSN": 77.5,
+  "JANTS": 26.6,
+  "KBORU": 88.7,
+  "KCAER": 115.7,
   "KFEIN": 10.5,
-  "KIMMR": 14.9,
-  "KMPUR": 15.4,
-  "KLSER": 13.8,
-  "KNFRT": 11.7,
-  "KOCMT": 85.9,
-  "KPEKS": 109.7,
-  "KOTON": 9.8,
-  "KONYA": 26.9,
-  "KRDMB": 416.2,
-  "KRDMD": 1428.1,
-  "KRDMA": 117.2,
-  "KRGYO": 61.5,
-  "KRONT": 10.5,
-  "KRPLS": 21.4,
-  "KONKA": 6.3,
-  "KZBGY": 34.3,
-  "KRSTL": 50.1,
-  "KUTPO": 13.8,
-  "KRVGD": 16,
-  "KTLEV": 2129.8,
-  "LINK": 32.8,
-  "LKMNH": 16.9,
-  "LMKDC": 51.1,
-  "LXGYO": 17.8,
-  "LOGO": 43,
-  "MAKIM": 15.8,
-  "MARBL": 7.4,
-  "MAGEN": 193.5,
-  "MAVI": 200.8,
-  "MCARD": 282.7,
-  "MEDTR": 4.5,
-  "MEGMT": 105.6,
-  "MEKAG": 13.4,
-  "MEYSU": 51.1,
-  "MERCN": 32.7,
+  "KGYO": 71.5,
+  "KIMMR": 15.9,
+  "KLSER": 13.9,
+  "KMPUR": 16.3,
+  "KATMR": 66.6,
+  "KNFRT": 13.3,
+  "KOCMT": 81.3,
+  "KONKA": 6.2,
+  "KOTON": 9.6,
+  "KPEKS": 111.7,
+  "KONYA": 27,
+  "KRDMA": 114.8,
+  "KRDMB": 419.5,
+  "KRDMD": 1427,
+  "KRGYO": 66.1,
+  "KRONT": 10.4,
+  "KRPLS": 23.7,
+  "KRSTL": 50.8,
+  "KRVGD": 16.1,
+  "KTLEV": 2096.3,
+  "KUTPO": 12.8,
+  "KZBGY": 32.5,
+  "LINK": 33.2,
+  "LKMNH": 15.7,
+  "LMKDC": 49,
+  "LXGYO": 17.9,
+  "LOGO": 40.2,
+  "MAGEN": 192.5,
+  "MAKIM": 13.9,
+  "MARBL": 7.5,
+  "MCARD": 278.9,
+  "MAVI": 199.2,
+  "MEDTR": 4.4,
+  "MEGMT": 107.1,
+  "MEKAG": 13.1,
+  "MEYSU": 51.3,
+  "MERCN": 30.1,
   "MNDTR": 2.9,
-  "MOPAS": 23.2,
-  "MOGAN": 78.1,
-  "NATEN": 22.6,
-  "MPARK": 242.2,
-  "NETCD": 309.1,
-  "NETAS": 54.4,
-  "NTGAZ": 59.9,
-  "OBAMS": 78,
-  "OBASE": 5.5,
-  "ONCSM": 91.5,
+  "MOGAN": 77.3,
+  "MOPAS": 23.7,
+  "MPARK": 245.3,
+  "NATEN": 22.3,
+  "NETCD": 308.4,
+  "NETAS": 58.2,
+  "NTGAZ": 60.5,
+  "OBAMS": 76.7,
+  "OBASE": 5.4,
+  "ONCSM": 92.9,
+  "ORGE": 132.5,
   "OSTIM": 12.8,
-  "OZYSR": 30.2,
-  "ORGE": 133.4,
-  "OZRDN": 4.3,
-  "PARSN": 7,
-  "PASEU": 446.8,
-  "PENGD": 10.6,
-  "PENTA": 10.9,
-  "PAGYO": 5.6,
-  "PETKM": 1035.7,
-  "PKART": 28.7,
-  "PLTUR": 15.5,
-  "PNLSN": 13.9,
-  "PNSUT": 12.6,
-  "QUAGR": 62,
-  "REEDR": 44.5,
-  "POLHO": 16.3,
-  "RODRG": 2.7,
-  "SAMAT": 1.6,
+  "OZYSR": 30,
+  "OZRDN": 4.5,
+  "PARSN": 7.2,
+  "PAGYO": 5.7,
+  "PASEU": 503.9,
+  "PENGD": 10.5,
+  "PENTA": 11.2,
+  "PETKM": 1032.7,
+  "PKART": 29.5,
+  "PLTUR": 14.1,
+  "PNLSN": 14.1,
+  "QUAGR": 62.8,
+  "POLHO": 15.1,
+  "REEDR": 43.4,
+  "RODRG": 2.5,
   "RUBNS": 28.2,
-  "SAFKR": 35.4,
-  "SANKO": 10.5,
-  "SAYAS": 38.5,
-  "SEGMN": 46.6,
-  "SDTTR": 41.7,
-  "SARKY": 49.8,
-  "SELVA": 11.6,
-  "SELEC": 474,
-  "SILVR": 1.3,
-  "SMART": 26.7,
-  "SMRTG": 74.1,
-  "SOHOE": 23.2,
-  "SOKE": 13.7,
-  "SEKUR": 10,
-  "SSAAT": 29.5,
-  "SNGYO": 51.1,
-  "SRVGY": 12.5,
-  "SURGY": 24.7,
-  "SUWEN": 17.7,
-  "TARKM": 24.9,
-  "TEZOL": 14.1,
-  "SNICA": 9.4,
-  "TGSAS": 128.2,
-  "TCKRC": 393.9,
+  "SAFKR": 35.3,
+  "PNSUT": 12.7,
+  "SAMAT": 1.6,
+  "SANKO": 10,
+  "SAYAS": 39.5,
+  "SARKY": 49.9,
+  "SDTTR": 41.5,
+  "SEGMN": 52.6,
+  "SEKUR": 10.1,
+  "SELEC": 497.8,
+  "SELVA": 11.1,
+  "SILVR": 1.2,
+  "SMART": 29.7,
+  "SMRTG": 77.9,
+  "SNICA": 9.2,
+  "SOHOE": 26.8,
+  "SNGYO": 46.4,
+  "SOKE": 13.3,
+  "SRVGY": 12.7,
+  "SSAAT": 28,
+  "SURGY": 25.9,
+  "SUWEN": 17.6,
+  "TARKM": 24.8,
+  "TCKRC": 367.2,
+  "TGSAS": 126.4,
+  "TKFEN": 743.1,
+  "TKNKA": 195.4,
   "TKNSA": 14.5,
-  "TKNKA": 160.6,
-  "TKFEN": 759,
-  "TMPOL": 159.1,
-  "TUCLK": 23.7,
-  "TUREX": 31.4,
-  "TUPRS": 7294.4,
-  "UCAYM": 27,
-  "TURGG": 5.8,
-  "VANGD": 6.6,
-  "VBTYZ": 23.2,
+  "TMPOL": 168.1,
+  "TUCLK": 23.2,
+  "TUPRS": 7151.1,
+  "TUREX": 31.6,
+  "TURGG": 5.5,
+  "UCAYM": 26.7,
   "ULUSE": 22.6,
+  "VANGD": 6.5,
   "VAKKO": 9,
-  "YATAS": 31.2,
+  "TEZOL": 14.2,
+  "VBTYZ": 22.7,
+  "YATAS": 29.1,
   "YIGIT": 20.4,
-  "YEOTK": 336,
-  "ZEDUR": 5,
-  "YUNSA": 24.5,
-  "YKSLN": 30.7
+  "YEOTK": 337.4,
+  "YKSLN": 28.1,
+  "ZEDUR": 5.1,
+  "YUNSA": 24.3
  },
  "_567": "hacim = 20 günlük ortalama günlük işlem hacmi, mn ₺ (Yahoo işlem adedi × kapanış; faktör evreni).",
  "_562": "kaz = KAP arşivinden çeyreklik çekirdek FAVÖK $ y/y (son arşiv çeyreği ÷ geçen yılın aynı çeyreği). genis satırlar taktik modelin PD/DD medyanına girmez.",
@@ -274,10 +274,10 @@
    "cv": 0.23,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 46.66,
-    "pddd": 1.923,
-    "z": 0.38
+    "tarih": "2026-11-19",
+    "fiyat": 45.3,
+    "pddd": 1.867,
+    "z": 0.24
    },
    "seri": [
     {
@@ -361,10 +361,10 @@
    "cv": 0.41,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 186.3,
-    "pddd": 1.177,
-    "z": -0.85
+    "tarih": "2026-11-19",
+    "fiyat": 181.7,
+    "pddd": 1.148,
+    "z": -0.89
    },
    "seri": [
     {
@@ -444,10 +444,10 @@
    "cv": 0.5,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 14,
-    "pddd": 1.333,
-    "z": 0.94
+    "tarih": "2026-11-19",
+    "fiyat": 15.14,
+    "pddd": 1.442,
+    "z": 1.18
    },
    "seri": [
     {
@@ -491,10 +491,10 @@
    "cv": 1.2,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.97,
-    "pddd": 0.291,
-    "z": -0.57
+    "tarih": "2026-11-19",
+    "fiyat": 2.86,
+    "pddd": 0.28,
+    "z": -0.58
    },
    "seri": [
     {
@@ -571,10 +571,10 @@
    "cv": 0.25,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.63,
-    "pddd": 0.569,
-    "z": -1.82
+    "tarih": "2026-11-19",
+    "fiyat": 1.52,
+    "pddd": 0.531,
+    "z": -1.97
    },
    "seri": [
     {
@@ -617,10 +617,10 @@
    "cv": 0.11,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 8.4,
-    "pddd": 0.725,
-    "z": -0.19
+    "tarih": "2026-11-19",
+    "fiyat": 8.3,
+    "pddd": 0.717,
+    "z": -0.27
    },
    "seri": [
     {
@@ -692,10 +692,10 @@
    "cv": 0.17,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 5.13,
-    "pddd": 1.47,
-    "z": -1.08
+    "tarih": "2026-11-19",
+    "fiyat": 4.92,
+    "pddd": 1.41,
+    "z": -1.29
    },
    "seri": [
     {
@@ -740,10 +740,10 @@
    "cv": 0.21,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 11.32,
-    "pddd": 0.656,
-    "z": -2.01
+    "tarih": "2026-11-19",
+    "fiyat": 10.79,
+    "pddd": 0.625,
+    "z": -2.14
    },
    "seri": [
     {
@@ -791,10 +791,10 @@
    "cv": 0.39,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 11.34,
-    "pddd": 1.927,
-    "z": -1.5
+    "tarih": "2026-11-19",
+    "fiyat": 10.88,
+    "pddd": 1.848,
+    "z": -1.55
    },
    "seri": [
     {
@@ -858,10 +858,10 @@
    "cv": 0.2,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 60.9,
-    "pddd": 0.585,
-    "z": -1.69
+    "tarih": "2026-11-19",
+    "fiyat": 56.8,
+    "pddd": 0.545,
+    "z": -1.92
    },
    "seri": [
     {
@@ -917,10 +917,10 @@
    "cv": 0.11,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 50.85,
-    "pddd": 2.159,
-    "z": -0.54
+    "tarih": "2026-11-19",
+    "fiyat": 49.2,
+    "pddd": 2.089,
+    "z": -0.74
    },
    "seri": [
     {
@@ -964,10 +964,10 @@
    "cv": 0.31,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 341.5,
-    "pddd": 4.649,
-    "z": 1.01
+    "tarih": "2026-11-19",
+    "fiyat": 340.25,
+    "pddd": 4.632,
+    "z": 0.99
    },
    "seri": [
     {
@@ -976,7 +976,7 @@
     },
     {
      "q": "2023Q2",
-     "pddd": 2.769
+     "pddd": 2.768
     },
     {
      "q": "2023Q3",
@@ -1051,10 +1051,10 @@
    "cv": 0.2,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 39.4,
-    "pddd": 0.738,
-    "z": -1.53
+    "tarih": "2026-11-19",
+    "fiyat": 38.76,
+    "pddd": 0.726,
+    "z": -1.59
    },
    "seri": [
     {
@@ -1106,10 +1106,10 @@
    "cv": 0.17,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 181.6,
-    "pddd": 2.288,
-    "z": -1.44
+    "tarih": "2026-11-19",
+    "fiyat": 182.2,
+    "pddd": 2.295,
+    "z": -1.43
    },
    "seri": [
     {
@@ -1153,10 +1153,10 @@
    "cv": 0.15,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 46.7,
+    "tarih": "2026-11-19",
+    "fiyat": 46.64,
     "pddd": 0.376,
-    "z": -1.61
+    "z": -1.62
    },
    "seri": [
     {
@@ -1208,10 +1208,10 @@
    "cv": 0.2,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 20.36,
-    "pddd": 0.274,
-    "z": -1.79
+    "tarih": "2026-11-19",
+    "fiyat": 18.85,
+    "pddd": 0.254,
+    "z": -2.03
    },
    "seri": [
     {
@@ -1267,10 +1267,10 @@
    "cv": 0.34,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 177.8,
-    "pddd": 6.668,
-    "z": 1.75
+    "tarih": "2026-11-19",
+    "fiyat": 188.7,
+    "pddd": 7.077,
+    "z": 2.03
    },
    "seri": [
     {
@@ -1315,10 +1315,10 @@
    "cv": 0.97,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 26.54,
-    "pddd": 0.534,
-    "z": -0.78
+    "tarih": "2026-11-19",
+    "fiyat": 28.16,
+    "pddd": 0.567,
+    "z": -0.77
    },
    "seri": [
     {
@@ -1390,10 +1390,10 @@
    "cv": 0.23,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 108.3,
-    "pddd": 0.846,
-    "z": -1.94
+    "tarih": "2026-11-19",
+    "fiyat": 105.7,
+    "pddd": 0.826,
+    "z": -2
    },
    "seri": [
     {
@@ -1440,10 +1440,10 @@
    "cv": 0.13,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 37.24,
-    "pddd": 0.703,
-    "z": -1.46
+    "tarih": "2026-11-19",
+    "fiyat": 36.6,
+    "pddd": 0.691,
+    "z": -1.55
    },
    "seri": [
     {
@@ -1499,10 +1499,10 @@
    "cv": 0.2,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 10.46,
-    "pddd": 0.193,
-    "z": -2.28
+    "tarih": "2026-11-19",
+    "fiyat": 10.09,
+    "pddd": 0.186,
+    "z": -2.38
    },
    "seri": [
     {
@@ -1551,10 +1551,10 @@
    "cv": 0.46,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 12.63,
-    "pddd": 0.306,
-    "z": -1.33
+    "tarih": "2026-11-19",
+    "fiyat": 12.03,
+    "pddd": 0.291,
+    "z": -1.37
    },
    "seri": [
     {
@@ -1602,10 +1602,10 @@
    "cv": 0.31,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 393.25,
-    "pddd": 2.129,
-    "z": -0.68
+    "tarih": "2026-11-19",
+    "fiyat": 383.5,
+    "pddd": 2.076,
+    "z": -0.75
    },
    "seri": [
     {
@@ -1684,10 +1684,10 @@
    "cv": 0.32,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.61,
-    "pddd": 0.42,
-    "z": -1.72
+    "tarih": "2026-11-19",
+    "fiyat": 3.99,
+    "pddd": 0.364,
+    "z": -1.9
    },
    "seri": [
     {
@@ -1743,10 +1743,10 @@
    "cv": 0.28,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 32.48,
-    "pddd": 9.107,
-    "z": -1.15
+    "tarih": "2026-11-19",
+    "fiyat": 31.76,
+    "pddd": 8.905,
+    "z": -1.2
    },
    "seri": [
     {
@@ -1791,10 +1791,10 @@
    "cv": 0.51,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 6.03,
-    "pddd": 0.586,
-    "z": -1.11
+    "tarih": "2026-11-19",
+    "fiyat": 5.68,
+    "pddd": 0.552,
+    "z": -1.16
    },
    "seri": [
     {
@@ -1863,10 +1863,10 @@
    "cv": 0.18,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 9.04,
-    "pddd": 1.239,
-    "z": -2.08
+    "tarih": "2026-11-19",
+    "fiyat": 8.5,
+    "pddd": 1.165,
+    "z": -2.28
    },
    "seri": [
     {
@@ -1914,10 +1914,10 @@
    "cv": 0.24,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.1,
-    "pddd": 0.304,
-    "z": -1.93
+    "tarih": "2026-11-19",
+    "fiyat": 3.98,
+    "pddd": 0.295,
+    "z": -1.99
    },
    "seri": [
     {
@@ -1966,10 +1966,10 @@
    "cv": 0.49,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 20.44,
-    "pddd": 1.063,
-    "z": -1.01
+    "tarih": "2026-11-19",
+    "fiyat": 18.86,
+    "pddd": 0.981,
+    "z": -1.09
    },
    "seri": [
     {
@@ -2030,10 +2030,10 @@
    "cv": 0.22,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 16.5,
-    "pddd": 0.771,
-    "z": -2.14
+    "tarih": "2026-11-19",
+    "fiyat": 15.4,
+    "pddd": 0.719,
+    "z": -2.29
    },
    "seri": [
     {
@@ -2089,7 +2089,7 @@
    "cv": 1.04,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
+    "tarih": "2026-11-19",
     "fiyat": 32.74,
     "pddd": 2.729,
     "z": 0.01
@@ -2152,10 +2152,10 @@
    "cv": 0.52,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 41.16,
-    "pddd": 0.955,
-    "z": -0.79
+    "tarih": "2026-11-19",
+    "fiyat": 40,
+    "pddd": 0.928,
+    "z": -0.82
    },
    "seri": [
     {
@@ -2232,10 +2232,10 @@
    "cv": 0.41,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 84.4,
-    "pddd": 5.436,
-    "z": -1.18
+    "tarih": "2026-11-19",
+    "fiyat": 75.35,
+    "pddd": 4.853,
+    "z": -1.31
    },
    "seri": [
     {
@@ -2283,10 +2283,10 @@
    "cv": 0.57,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 12.88,
-    "pddd": 3.241,
-    "z": -1.18
+    "tarih": "2026-11-19",
+    "fiyat": 12.46,
+    "pddd": 3.135,
+    "z": -1.2
    },
    "seri": [
     {
@@ -2366,9 +2366,9 @@
    "cv": 0.8,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 17.42,
-    "pddd": 0.798,
+    "tarih": "2026-11-19",
+    "fiyat": 16.91,
+    "pddd": 0.775,
     "z": -0.95
    },
    "seri": [
@@ -2446,10 +2446,10 @@
    "cv": 0.73,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.09,
-    "pddd": 0.446,
-    "z": -1.09
+    "tarih": "2026-11-19",
+    "fiyat": 2.88,
+    "pddd": 0.416,
+    "z": -1.11
    },
    "seri": [
     {
@@ -2526,10 +2526,10 @@
    "cv": 0.25,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 0.96,
-    "pddd": 0.334,
-    "z": -1.94
+    "tarih": "2026-11-19",
+    "fiyat": 0.92,
+    "pddd": 0.32,
+    "z": -2.03
    },
    "seri": [
     {
@@ -2573,10 +2573,10 @@
    "cv": 0.29,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.93,
-    "pddd": 1.282,
-    "z": -2.36
+    "tarih": "2026-11-19",
+    "fiyat": 3.64,
+    "pddd": 1.187,
+    "z": -2.44
    },
    "seri": [
     {
@@ -2637,9 +2637,9 @@
    "cv": 2.75,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 7.48,
-    "pddd": 1.039,
+    "tarih": "2026-11-19",
+    "fiyat": 6.79,
+    "pddd": 0.943,
     "z": -0.36
    },
    "seri": [
@@ -2701,10 +2701,10 @@
    "cv": 0.16,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 23.8,
-    "pddd": 0.178,
-    "z": -2.42
+    "tarih": "2026-11-19",
+    "fiyat": 22.72,
+    "pddd": 0.17,
+    "z": -2.59
    },
    "seri": [
     {
@@ -2757,10 +2757,10 @@
    "cv": 0.43,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 9.1,
-    "pddd": 3.504,
-    "z": -1.17
+    "tarih": "2026-11-19",
+    "fiyat": 10.01,
+    "pddd": 3.855,
+    "z": -1.05
    },
    "seri": [
     {
@@ -2820,10 +2820,10 @@
    "cv": 0.19,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 89.55,
-    "pddd": 0.843,
-    "z": -1.1
+    "tarih": "2026-11-19",
+    "fiyat": 91.8,
+    "pddd": 0.864,
+    "z": -0.99
    },
    "seri": [
     {
@@ -2887,10 +2887,10 @@
    "cv": 0.13,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 32.6,
-    "pddd": 1.472,
-    "z": -0.66
+    "tarih": "2026-11-19",
+    "fiyat": 32.5,
+    "pddd": 1.467,
+    "z": -0.68
    },
    "seri": [
     {
@@ -2942,10 +2942,10 @@
    "cv": 0.48,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 18.35,
-    "pddd": 0.431,
-    "z": -0.73
+    "tarih": "2026-11-19",
+    "fiyat": 17.89,
+    "pddd": 0.421,
+    "z": -0.76
    },
    "seri": [
     {
@@ -3025,10 +3025,10 @@
    "cv": 0.23,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.7,
-    "pddd": 0.839,
-    "z": -2.51
+    "tarih": "2026-11-19",
+    "fiyat": 2.47,
+    "pddd": 0.768,
+    "z": -2.66
    },
    "seri": [
     {
@@ -3089,10 +3089,10 @@
    "cv": 0.21,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.12,
-    "pddd": 0.887,
-    "z": -1.99
+    "tarih": "2026-11-19",
+    "fiyat": 4.07,
+    "pddd": 0.876,
+    "z": -2.02
    },
    "seri": [
     {
@@ -3153,10 +3153,10 @@
    "cv": 0.28,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 18.16,
-    "pddd": 0.798,
-    "z": -1.87
+    "tarih": "2026-11-19",
+    "fiyat": 17.25,
+    "pddd": 0.758,
+    "z": -1.96
    },
    "seri": [
     {
@@ -3204,10 +3204,10 @@
    "cv": 0.2,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 14.86,
-    "pddd": 1.919,
-    "z": 1.67
+    "tarih": "2026-11-19",
+    "fiyat": 14.7,
+    "pddd": 1.898,
+    "z": 1.6
    },
    "seri": [
     {
@@ -3283,10 +3283,10 @@
    "cv": 0.25,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 118,
-    "pddd": 1.168,
-    "z": 0.25
+    "tarih": "2026-11-19",
+    "fiyat": 113.9,
+    "pddd": 1.127,
+    "z": 0.1
    },
    "seri": [
     {
@@ -3370,10 +3370,10 @@
    "cv": 0.15,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 31.86,
-    "pddd": 0.662,
-    "z": -0.86
+    "tarih": "2026-11-19",
+    "fiyat": 31.22,
+    "pddd": 0.649,
+    "z": -0.97
    },
    "seri": [
     {
@@ -3458,10 +3458,10 @@
    "cv": 0.72,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.17,
-    "pddd": 0.272,
-    "z": -1.02
+    "tarih": "2026-11-19",
+    "fiyat": 2.04,
+    "pddd": 0.256,
+    "z": -1.04
    },
    "seri": [
     {
@@ -3509,10 +3509,10 @@
    "cv": 0.78,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 37.58,
-    "pddd": 1.765,
-    "z": -0.75
+    "tarih": "2026-11-19",
+    "fiyat": 35.82,
+    "pddd": 1.682,
+    "z": -0.77
    },
    "seri": [
     {
@@ -3588,10 +3588,10 @@
    "cv": 0.3,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.76,
-    "pddd": 0.702,
-    "z": -1.19
+    "tarih": "2026-11-19",
+    "fiyat": 1.78,
+    "pddd": 0.71,
+    "z": -1.17
    },
    "seri": [
     {
@@ -3640,10 +3640,10 @@
    "cv": 0.22,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.34,
-    "pddd": 1.762,
-    "z": -0.21
+    "tarih": "2026-11-19",
+    "fiyat": 4.15,
+    "pddd": 1.684,
+    "z": -0.4
    },
    "seri": [
     {
@@ -3691,10 +3691,10 @@
    "cv": 0.45,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 0.99,
-    "pddd": 0.401,
-    "z": -1.6
+    "tarih": "2026-11-19",
+    "fiyat": 0.96,
+    "pddd": 0.389,
+    "z": -1.62
    },
    "seri": [
     {
@@ -3738,10 +3738,10 @@
    "cv": 0.31,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.2,
-    "pddd": 1.312,
-    "z": -0.15
+    "tarih": "2026-11-19",
+    "fiyat": 2.24,
+    "pddd": 1.336,
+    "z": -0.09
    },
    "seri": [
     {
@@ -3785,10 +3785,10 @@
    "cv": 0.29,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 8.44,
-    "pddd": 2.285,
-    "z": -1.15
+    "tarih": "2026-11-19",
+    "fiyat": 7.47,
+    "pddd": 2.022,
+    "z": -1.41
    },
    "seri": [
     {
@@ -3837,10 +3837,10 @@
    "cv": 0.21,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 19.44,
-    "pddd": 0.654,
-    "z": -2.14
+    "tarih": "2026-11-19",
+    "fiyat": 18.62,
+    "pddd": 0.626,
+    "z": -2.25
    },
    "seri": [
     {
@@ -3901,10 +3901,10 @@
    "cv": 0.27,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.71,
-    "pddd": 1.535,
-    "z": -2.43
+    "tarih": "2026-11-19",
+    "fiyat": 4.45,
+    "pddd": 1.45,
+    "z": -2.51
    },
    "seri": [
     {
@@ -3989,10 +3989,10 @@
    "cv": 0.48,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 21.5,
-    "pddd": 1.855,
-    "z": -1.05
+    "tarih": "2026-11-19",
+    "fiyat": 20.24,
+    "pddd": 1.746,
+    "z": -1.11
    },
    "seri": [
     {
@@ -4052,10 +4052,10 @@
    "cv": 0.21,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 34.3,
-    "pddd": 0.87,
-    "z": -2.33
+    "tarih": "2026-11-19",
+    "fiyat": 32.64,
+    "pddd": 0.827,
+    "z": -2.45
    },
    "seri": [
     {
@@ -4115,10 +4115,10 @@
    "cv": 0.28,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 121.8,
-    "pddd": 1.32,
-    "z": -1.92
+    "tarih": "2026-11-19",
+    "fiyat": 119,
+    "pddd": 1.29,
+    "z": -1.95
    },
    "seri": [
     {
@@ -4166,10 +4166,10 @@
    "cv": 0.3,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 46.2,
-    "pddd": 2.864,
-    "z": 0.99
+    "tarih": "2026-11-19",
+    "fiyat": 45.28,
+    "pddd": 2.807,
+    "z": 0.9
    },
    "seri": [
     {
@@ -4214,10 +4214,10 @@
    "cv": 0.31,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 12.19,
-    "pddd": 0.36,
-    "z": -1.81
+    "tarih": "2026-11-19",
+    "fiyat": 11.72,
+    "pddd": 0.346,
+    "z": -1.86
    },
    "seri": [
     {
@@ -4278,10 +4278,10 @@
    "cv": 0.24,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 232,
-    "pddd": 0.35,
-    "z": -1.76
+    "tarih": "2026-11-19",
+    "fiyat": 226.3,
+    "pddd": 0.341,
+    "z": -1.82
    },
    "seri": [
     {
@@ -4329,10 +4329,10 @@
    "cv": 0.23,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.91,
-    "pddd": 2.466,
-    "z": 0.62
+    "tarih": "2026-11-19",
+    "fiyat": 1.86,
+    "pddd": 2.402,
+    "z": 0.5
    },
    "seri": [
     {
@@ -4376,10 +4376,10 @@
    "cv": 0.23,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 254,
-    "pddd": 1.705,
-    "z": -1.82
+    "tarih": "2026-11-19",
+    "fiyat": 243.8,
+    "pddd": 1.636,
+    "z": -1.92
    },
    "seri": [
     {
@@ -4439,10 +4439,10 @@
    "cv": 0.77,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 282.75,
-    "pddd": 2.228,
-    "z": -0.78
+    "tarih": "2026-11-19",
+    "fiyat": 277,
+    "pddd": 2.183,
+    "z": -0.79
    },
    "seri": [
     {
@@ -4518,10 +4518,10 @@
    "cv": 0.21,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 25.62,
-    "pddd": 0.858,
-    "z": -2.02
+    "tarih": "2026-11-19",
+    "fiyat": 23.38,
+    "pddd": 0.783,
+    "z": -2.27
    },
    "seri": [
     {
@@ -4566,10 +4566,10 @@
    "cv": 0.17,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 5.92,
-    "pddd": 1.097,
-    "z": -0.64
+    "tarih": "2026-11-19",
+    "fiyat": 6.18,
+    "pddd": 1.146,
+    "z": -0.41
    },
    "seri": [
     {
@@ -4630,10 +4630,10 @@
    "cv": 0.29,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.45,
-    "pddd": 0.216,
-    "z": -1.73
+    "tarih": "2026-11-19",
+    "fiyat": 1.49,
+    "pddd": 0.222,
+    "z": -1.69
    },
    "seri": [
     {
@@ -4689,7 +4689,7 @@
    "cv": 0.4,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
+    "tarih": "2026-11-19",
     "fiyat": 0.82,
     "pddd": 0.81,
     "z": -1.22
@@ -4748,10 +4748,10 @@
    "cv": 0.53,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.21,
-    "pddd": 0.454,
-    "z": -1.23
+    "tarih": "2026-11-19",
+    "fiyat": 1.46,
+    "pddd": 0.547,
+    "z": -1.1
    },
    "seri": [
     {
@@ -4804,10 +4804,10 @@
    "cv": 0.24,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 0.82,
-    "pddd": 0.845,
-    "z": -1.6
+    "tarih": "2026-11-19",
+    "fiyat": 0.87,
+    "pddd": 0.897,
+    "z": -1.45
    },
    "seri": [
     {
@@ -4856,10 +4856,10 @@
    "cv": 0.34,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.37,
-    "pddd": 0.363,
-    "z": -1.96
+    "tarih": "2026-11-19",
+    "fiyat": 1.31,
+    "pddd": 0.347,
+    "z": -2
    },
    "seri": [
     {
@@ -4915,9 +4915,9 @@
    "cv": 0.48,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 14.04,
-    "pddd": 5.524,
+    "tarih": "2026-11-19",
+    "fiyat": 13.96,
+    "pddd": 5.493,
     "z": -1.58
    },
    "seri": [
@@ -4979,10 +4979,10 @@
    "cv": 0.26,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 28.66,
-    "pddd": 1.313,
-    "z": -2
+    "tarih": "2026-11-19",
+    "fiyat": 26.94,
+    "pddd": 1.234,
+    "z": -2.1
    },
    "seri": [
     {
@@ -5031,10 +5031,10 @@
    "cv": 0.29,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 11.22,
-    "pddd": 0.873,
-    "z": -1.78
+    "tarih": "2026-11-19",
+    "fiyat": 10.8,
+    "pddd": 0.841,
+    "z": -1.84
    },
    "seri": [
     {
@@ -5082,10 +5082,10 @@
    "cv": 0.2,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 7.7,
-    "pddd": 0.83,
-    "z": -1.9
+    "tarih": "2026-11-19",
+    "fiyat": 7.44,
+    "pddd": 0.802,
+    "z": -2.01
    },
    "seri": [
     {
@@ -5137,10 +5137,10 @@
    "cv": 0.27,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.18,
-    "pddd": 0.23,
-    "z": -2.24
+    "tarih": "2026-11-19",
+    "fiyat": 1.12,
+    "pddd": 0.219,
+    "z": -2.31
    },
    "seri": [
     {
@@ -5183,10 +5183,10 @@
    "cv": 0.28,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 11.02,
-    "pddd": 1.059,
-    "z": -1.69
+    "tarih": "2026-11-19",
+    "fiyat": 11,
+    "pddd": 1.057,
+    "z": -1.7
    },
    "seri": [
     {
@@ -5230,10 +5230,10 @@
    "cv": 0.45,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 10.28,
-    "pddd": 1.275,
-    "z": -1.22
+    "tarih": "2026-11-19",
+    "fiyat": 9.92,
+    "pddd": 1.23,
+    "z": -1.26
    },
    "seri": [
     {
@@ -5310,10 +5310,10 @@
    "cv": 0.27,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 5.37,
-    "pddd": 0.722,
-    "z": -1.9
+    "tarih": "2026-11-19",
+    "fiyat": 5.1,
+    "pddd": 0.686,
+    "z": -1.99
    },
    "seri": [
     {
@@ -5370,10 +5370,10 @@
    "cv": 1.95,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 7,
-    "pddd": 5.114,
-    "z": 1.39
+    "tarih": "2026-11-19",
+    "fiyat": 6.97,
+    "pddd": 5.092,
+    "z": 1.38
    },
    "seri": [
     {
@@ -5413,10 +5413,10 @@
    "cv": 0.14,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 15.84,
-    "pddd": 1.275,
-    "z": -2.44
+    "tarih": "2026-11-19",
+    "fiyat": 14.83,
+    "pddd": 1.194,
+    "z": -2.71
    },
    "seri": [
     {
@@ -5461,10 +5461,10 @@
    "cv": 0.24,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 12.45,
-    "pddd": 1.335,
-    "z": -1.79
+    "tarih": "2026-11-19",
+    "fiyat": 12.32,
+    "pddd": 1.321,
+    "z": -1.81
    },
    "seri": [
     {
@@ -5513,7 +5513,7 @@
    "cv": 0.31,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
+    "tarih": "2026-11-19",
     "fiyat": 7.15,
     "pddd": 1.109,
     "z": -1.65
@@ -5572,10 +5572,10 @@
    "cv": 0.16,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.5,
-    "pddd": 0.457,
-    "z": -1.04
+    "tarih": "2026-11-19",
+    "fiyat": 2.4,
+    "pddd": 0.439,
+    "z": -1.24
    },
    "seri": [
     {
@@ -5615,10 +5615,10 @@
    "cv": 0.2,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 33.88,
-    "pddd": 0.337,
-    "z": -0.92
+    "tarih": "2026-11-19",
+    "fiyat": 33,
+    "pddd": 0.328,
+    "z": -1.03
    },
    "seri": [
     {
@@ -5662,10 +5662,10 @@
    "cv": 0.87,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 38.52,
-    "pddd": 0.405,
-    "z": -0.52
+    "tarih": "2026-11-19",
+    "fiyat": 37.86,
+    "pddd": 0.398,
+    "z": -0.54
    },
    "seri": [
     {
@@ -5733,10 +5733,10 @@
    "cv": 0.14,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.93,
-    "pddd": 1.338,
-    "z": 1.54
+    "tarih": "2026-11-19",
+    "fiyat": 3.6,
+    "pddd": 1.226,
+    "z": 0.85
    },
    "seri": [
     {
@@ -5781,10 +5781,10 @@
    "cv": 0.24,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 16.85,
-    "pddd": 2.892,
-    "z": -1.14
+    "tarih": "2026-11-19",
+    "fiyat": 16.46,
+    "pddd": 2.825,
+    "z": -1.21
    },
    "seri": [
     {
@@ -5840,9 +5840,9 @@
    "cv": 0.06,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 10.8,
-    "pddd": 1.684,
+    "tarih": "2026-11-19",
+    "fiyat": 10.79,
+    "pddd": 1.683,
     "z": 0.23
    },
    "seri": [
@@ -5888,10 +5888,10 @@
    "cv": 0.15,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.89,
-    "pddd": 0.486,
-    "z": -2.52
+    "tarih": "2026-11-19",
+    "fiyat": 1.81,
+    "pddd": 0.465,
+    "z": -2.69
    },
    "seri": [
     {
@@ -5952,10 +5952,10 @@
    "cv": 0.25,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 56.8,
-    "pddd": 0.416,
-    "z": -1.93
+    "tarih": "2026-11-19",
+    "fiyat": 54.35,
+    "pddd": 0.399,
+    "z": -2.02
    },
    "seri": [
     {
@@ -6003,10 +6003,10 @@
    "cv": 0.45,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.23,
-    "pddd": 0.169,
-    "z": -1.48
+    "tarih": "2026-11-19",
+    "fiyat": 1.18,
+    "pddd": 0.162,
+    "z": -1.51
    },
    "seri": [
     {
@@ -6046,10 +6046,10 @@
    "cv": 0.43,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.98,
-    "pddd": 1.239,
-    "z": -1.38
+    "tarih": "2026-11-19",
+    "fiyat": 2.7,
+    "pddd": 1.123,
+    "z": -1.47
    },
    "seri": [
     {
@@ -6094,10 +6094,10 @@
    "cv": 0.26,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 10.87,
-    "pddd": 0.646,
-    "z": -2.16
+    "tarih": "2026-11-19",
+    "fiyat": 10.36,
+    "pddd": 0.616,
+    "z": -2.23
    },
    "seri": [
     {
@@ -6157,10 +6157,10 @@
    "cv": 0.28,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 21.84,
-    "pddd": 1.199,
-    "z": -1.51
+    "tarih": "2026-11-19",
+    "fiyat": 21.52,
+    "pddd": 1.181,
+    "z": -1.54
    },
    "seri": [
     {
@@ -6217,10 +6217,10 @@
    "cv": 0.5,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 6.31,
-    "pddd": 1.349,
-    "z": -1.54
+    "tarih": "2026-11-19",
+    "fiyat": 5.58,
+    "pddd": 1.193,
+    "z": -1.6
    },
    "seri": [
     {
@@ -6269,10 +6269,10 @@
    "cv": 0.35,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 12.63,
-    "pddd": 0.998,
-    "z": -1.45
+    "tarih": "2026-11-19",
+    "fiyat": 12.11,
+    "pddd": 0.957,
+    "z": -1.51
    },
    "seri": [
     {
@@ -6333,10 +6333,10 @@
    "cv": 0.2,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 8.79,
-    "pddd": 0.706,
-    "z": -2.12
+    "tarih": "2026-11-19",
+    "fiyat": 8.35,
+    "pddd": 0.67,
+    "z": -2.26
    },
    "seri": [
     {
@@ -6396,10 +6396,10 @@
    "cv": 0.32,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 35.96,
-    "pddd": 1.874,
-    "z": -1.23
+    "tarih": "2026-11-19",
+    "fiyat": 35.06,
+    "pddd": 1.827,
+    "z": -1.28
    },
    "seri": [
     {
@@ -6480,10 +6480,10 @@
    "cv": 0.39,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.82,
-    "pddd": 1.777,
-    "z": -1.02
+    "tarih": "2026-11-19",
+    "fiyat": 3.65,
+    "pddd": 1.698,
+    "z": -1.08
    },
    "seri": [
     {
@@ -6527,10 +6527,10 @@
    "cv": 0.39,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.61,
-    "pddd": 0.781,
-    "z": -1.68
+    "tarih": "2026-11-19",
+    "fiyat": 1.56,
+    "pddd": 0.756,
+    "z": -1.7
    },
    "seri": [
     {
@@ -6579,10 +6579,10 @@
    "cv": 0.48,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.48,
-    "pddd": 0.218,
-    "z": -1.27
+    "tarih": "2026-11-19",
+    "fiyat": 3.4,
+    "pddd": 0.213,
+    "z": -1.29
    },
    "seri": [
     {
@@ -6631,10 +6631,10 @@
    "cv": 0.2,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.24,
-    "pddd": 0.418,
-    "z": -2.37
+    "tarih": "2026-11-19",
+    "fiyat": 3.12,
+    "pddd": 0.403,
+    "z": -2.47
    },
    "seri": [
     {
@@ -6682,10 +6682,10 @@
    "cv": 0.27,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 16.56,
-    "pddd": 0.741,
-    "z": -2.22
+    "tarih": "2026-11-19",
+    "fiyat": 15.7,
+    "pddd": 0.702,
+    "z": -2.3
    },
    "seri": [
     {
@@ -6737,10 +6737,10 @@
    "cv": 0.72,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 458.75,
-    "pddd": 1.988,
-    "z": -0.56
+    "tarih": "2026-11-19",
+    "fiyat": 440.75,
+    "pddd": 1.91,
+    "z": -0.59
    },
    "seri": [
     {
@@ -6821,10 +6821,10 @@
    "cv": 0.36,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.18,
-    "pddd": 0.309,
-    "z": -1.75
+    "tarih": "2026-11-19",
+    "fiyat": 3.04,
+    "pddd": 0.296,
+    "z": -1.8
    },
    "seri": [
     {
@@ -6872,10 +6872,10 @@
    "cv": 0.1,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 8.51,
-    "pddd": 0.94,
-    "z": -1.54
+    "tarih": "2026-11-19",
+    "fiyat": 8.34,
+    "pddd": 0.921,
+    "z": -1.65
    },
    "seri": [
     {
@@ -6931,10 +6931,10 @@
    "cv": 0.25,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.66,
-    "pddd": 0.812,
-    "z": -2.35
+    "tarih": "2026-11-19",
+    "fiyat": 3.48,
+    "pddd": 0.772,
+    "z": -2.43
    },
    "seri": [
     {
@@ -7003,10 +7003,10 @@
    "cv": 0.18,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 18.97,
-    "pddd": 1.016,
-    "z": -3.06
+    "tarih": "2026-11-19",
+    "fiyat": 18.23,
+    "pddd": 0.977,
+    "z": -3.16
    },
    "seri": [
     {
@@ -7067,10 +7067,10 @@
    "cv": 0.39,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 105.4,
-    "pddd": 4.491,
-    "z": -1.36
+    "tarih": "2026-11-19",
+    "fiyat": 98.2,
+    "pddd": 4.184,
+    "z": -1.45
    },
    "seri": [
     {
@@ -7126,10 +7126,10 @@
    "cv": 0.32,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.05,
-    "pddd": 0.264,
-    "z": -1.95
+    "tarih": "2026-11-19",
+    "fiyat": 1.02,
+    "pddd": 0.256,
+    "z": -1.98
    },
    "seri": [
     {
@@ -7185,10 +7185,10 @@
    "cv": 0.48,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 14,
-    "pddd": 4.085,
-    "z": -0.02
+    "tarih": "2026-11-19",
+    "fiyat": 14.65,
+    "pddd": 4.274,
+    "z": 0.08
    },
    "seri": [
     {
@@ -7232,10 +7232,10 @@
    "cv": 0.16,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 107.8,
-    "pddd": 0.493,
-    "z": -0.87
+    "tarih": "2026-11-19",
+    "fiyat": 106.8,
+    "pddd": 0.489,
+    "z": -0.92
    },
    "seri": [
     {
@@ -7279,10 +7279,10 @@
    "cv": 0.26,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 50.4,
-    "pddd": 0.266,
-    "z": -2.13
+    "tarih": "2026-11-19",
+    "fiyat": 49.56,
+    "pddd": 0.261,
+    "z": -2.16
    },
    "seri": [
     {
@@ -7339,10 +7339,10 @@
    "cv": 0.56,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 48.22,
-    "pddd": 7.309,
-    "z": -0.97
+    "tarih": "2026-11-19",
+    "fiyat": 40.96,
+    "pddd": 6.209,
+    "z": -1.09
    },
    "seri": [
     {
@@ -7411,10 +7411,10 @@
    "cv": 0.15,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 6.51,
-    "pddd": 0.218,
-    "z": -2.5
+    "tarih": "2026-11-19",
+    "fiyat": 6.24,
+    "pddd": 0.208,
+    "z": -2.67
    },
    "seri": [
     {
@@ -7470,10 +7470,10 @@
    "cv": 0.21,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 8.64,
-    "pddd": 0.678,
-    "z": -1.93
+    "tarih": "2026-11-19",
+    "fiyat": 8.38,
+    "pddd": 0.658,
+    "z": -2.01
    },
    "seri": [
     {
@@ -7517,10 +7517,10 @@
    "cv": 0.52,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 16.18,
-    "pddd": 0.525,
-    "z": -0.93
+    "tarih": "2026-11-19",
+    "fiyat": 15.36,
+    "pddd": 0.499,
+    "z": -0.99
    },
    "seri": [
     {
@@ -7605,10 +7605,10 @@
    "cv": 0.31,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 15.14,
-    "pddd": 0.354,
-    "z": -1.63
+    "tarih": "2026-11-19",
+    "fiyat": 14.39,
+    "pddd": 0.336,
+    "z": -1.71
    },
    "seri": [
     {
@@ -7669,10 +7669,10 @@
    "cv": 0.32,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 33.8,
-    "pddd": 0.667,
-    "z": -1.38
+    "tarih": "2026-11-19",
+    "fiyat": 31.94,
+    "pddd": 0.63,
+    "z": -1.48
    },
    "seri": [
     {
@@ -7728,10 +7728,10 @@
    "cv": 0.14,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 9.09,
-    "pddd": 0.224,
-    "z": -1.83
+    "tarih": "2026-11-19",
+    "fiyat": 8.67,
+    "pddd": 0.213,
+    "z": -2.05
    },
    "seri": [
     {
@@ -7775,10 +7775,10 @@
    "cv": 0.53,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 13.91,
-    "pddd": 0.705,
-    "z": -0.2
+    "tarih": "2026-11-19",
+    "fiyat": 13.66,
+    "pddd": 0.692,
+    "z": -0.23
    },
    "seri": [
     {
@@ -7831,10 +7831,10 @@
    "cv": 0.72,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.58,
-    "pddd": 0.382,
-    "z": -1.08
+    "tarih": "2026-11-19",
+    "fiyat": 1.52,
+    "pddd": 0.368,
+    "z": -1.09
    },
    "seri": [
     {
@@ -7915,10 +7915,10 @@
    "cv": 0.32,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.6,
-    "pddd": 0.32,
-    "z": -1.98
+    "tarih": "2026-11-19",
+    "fiyat": 2.51,
+    "pddd": 0.309,
+    "z": -2.01
    },
    "seri": [
     {
@@ -7967,10 +7967,10 @@
    "cv": 0.35,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 13.59,
-    "pddd": 0.185,
-    "z": -1.66
+    "tarih": "2026-11-19",
+    "fiyat": 12.81,
+    "pddd": 0.174,
+    "z": -1.73
    },
    "seri": [
     {
@@ -8019,10 +8019,10 @@
    "cv": 0.27,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 12.65,
-    "pddd": 1.689,
-    "z": -1.81
+    "tarih": "2026-11-19",
+    "fiyat": 11.88,
+    "pddd": 1.586,
+    "z": -1.93
    },
    "seri": [
     {
@@ -8083,10 +8083,10 @@
    "cv": 0.23,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 15.7,
-    "pddd": 1.63,
-    "z": -1.16
+    "tarih": "2026-11-19",
+    "fiyat": 15.2,
+    "pddd": 1.578,
+    "z": -1.27
    },
    "seri": [
     {
@@ -8147,10 +8147,10 @@
    "cv": 0.13,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 11.54,
-    "pddd": 2.706,
-    "z": -2.77
+    "tarih": "2026-11-19",
+    "fiyat": 10.85,
+    "pddd": 2.544,
+    "z": -3
    },
    "seri": [
     {
@@ -8199,10 +8199,10 @@
    "cv": 0.3,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 18.35,
-    "pddd": 0.534,
-    "z": -1.74
+    "tarih": "2026-11-19",
+    "fiyat": 16.97,
+    "pddd": 0.494,
+    "z": -1.86
    },
    "seri": [
     {
@@ -8263,10 +8263,10 @@
    "cv": 0.37,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 3.39,
-    "pddd": 1.803,
-    "z": -0.03
+    "tarih": "2026-11-19",
+    "fiyat": 3.21,
+    "pddd": 1.708,
+    "z": -0.17
    },
    "seri": [
     {
@@ -8319,10 +8319,10 @@
    "cv": 0.3,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 106.6,
-    "pddd": 1.676,
-    "z": -0.48
+    "tarih": "2026-11-19",
+    "fiyat": 101.3,
+    "pddd": 1.593,
+    "z": -0.62
    },
    "seri": [
     {
@@ -8383,10 +8383,10 @@
    "cv": 0.35,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1,
-    "pddd": 0.41,
-    "z": -1.73
+    "tarih": "2026-11-19",
+    "fiyat": 0.97,
+    "pddd": 0.397,
+    "z": -1.76
    },
    "seri": [
     {
@@ -8447,10 +8447,10 @@
    "cv": 0.77,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 17.51,
-    "pddd": 0.895,
-    "z": 2.71
+    "tarih": "2026-11-19",
+    "fiyat": 16.92,
+    "pddd": 0.865,
+    "z": 2.58
    },
    "seri": [
     {
@@ -8494,10 +8494,10 @@
    "cv": 0.4,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.55,
-    "pddd": 1.067,
-    "z": -1.59
+    "tarih": "2026-11-19",
+    "fiyat": 4.31,
+    "pddd": 1.01,
+    "z": -1.63
    },
    "seri": [
     {
@@ -8541,10 +8541,10 @@
    "cv": 0.27,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 2.62,
-    "pddd": 0.176,
-    "z": -1.66
+    "tarih": "2026-11-19",
+    "fiyat": 2.53,
+    "pddd": 0.17,
+    "z": -1.73
    },
    "seri": [
     {
@@ -8593,10 +8593,10 @@
    "cv": 0.24,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 7.19,
-    "pddd": 0.838,
-    "z": -1.8
+    "tarih": "2026-11-19",
+    "fiyat": 6.91,
+    "pddd": 0.805,
+    "z": -1.89
    },
    "seri": [
     {
@@ -8649,10 +8649,10 @@
    "cv": 0.26,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 1.79,
-    "pddd": 0.248,
-    "z": -1.57
+    "tarih": "2026-11-19",
+    "fiyat": 1.76,
+    "pddd": 0.244,
+    "z": -1.61
    },
    "seri": [
     {
@@ -8701,10 +8701,10 @@
    "cv": 0.33,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 5.54,
-    "pddd": 1.959,
-    "z": -1.15
+    "tarih": "2026-11-19",
+    "fiyat": 5.12,
+    "pddd": 1.811,
+    "z": -1.29
    },
    "seri": [
     {
@@ -8752,10 +8752,10 @@
    "cv": 0.32,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 125.6,
-    "pddd": 2.551,
-    "z": 0.61
+    "tarih": "2026-11-19",
+    "fiyat": 123.7,
+    "pddd": 2.513,
+    "z": 0.55
    },
    "seri": [
     {
@@ -8816,10 +8816,10 @@
    "cv": 0.33,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 7.54,
-    "pddd": 0.541,
-    "z": -1.71
+    "tarih": "2026-11-19",
+    "fiyat": 7.13,
+    "pddd": 0.511,
+    "z": -1.78
    },
    "seri": [
     {
@@ -8872,10 +8872,10 @@
    "cv": 0.32,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 113.6,
-    "pddd": 3.946,
-    "z": -1.27
+    "tarih": "2026-11-19",
+    "fiyat": 111.7,
+    "pddd": 3.88,
+    "z": -1.3
    },
    "seri": [
     {
@@ -8923,10 +8923,10 @@
    "cv": 0.4,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 192.1,
-    "pddd": 1.804,
-    "z": 1.56
+    "tarih": "2026-11-19",
+    "fiyat": 189.8,
+    "pddd": 1.783,
+    "z": 1.51
    },
    "seri": [
     {
@@ -9011,10 +9011,10 @@
    "cv": 0.79,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 91.15,
-    "pddd": 1.308,
-    "z": -0.79
+    "tarih": "2026-11-19",
+    "fiyat": 80.9,
+    "pddd": 1.161,
+    "z": -0.84
    },
    "seri": [
     {
@@ -9074,10 +9074,10 @@
    "cv": 0.5,
    "guven": "orta",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 345.25,
-    "pddd": 1.272,
-    "z": 0.12
+    "tarih": "2026-11-19",
+    "fiyat": 337.5,
+    "pddd": 1.244,
+    "z": 0.07
    },
    "seri": [
     {
@@ -9153,10 +9153,10 @@
    "cv": 0.65,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 5.1,
-    "pddd": 0.584,
-    "z": -1.16
+    "tarih": "2026-11-19",
+    "fiyat": 4.87,
+    "pddd": 0.558,
+    "z": -1.18
    },
    "seri": [
     {
@@ -9241,10 +9241,10 @@
    "cv": 0.72,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 139,
-    "pddd": 7.2,
-    "z": -1.19
+    "tarih": "2026-11-19",
+    "fiyat": 135.8,
+    "pddd": 7.034,
+    "z": -1.2
    },
    "seri": [
     {
@@ -9304,10 +9304,10 @@
    "cv": 0.31,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 49.06,
-    "pddd": 0.717,
-    "z": -1.29
+    "tarih": "2026-11-19",
+    "fiyat": 48.28,
+    "pddd": 0.706,
+    "z": -1.32
    },
    "seri": [
     {
@@ -9363,10 +9363,10 @@
    "cv": 0.33,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 51.5,
-    "pddd": 2.261,
-    "z": -1.06
+    "tarih": "2026-11-19",
+    "fiyat": 50.75,
+    "pddd": 2.228,
+    "z": -1.09
    },
    "seri": [
     {
@@ -9411,10 +9411,10 @@
    "cv": 0.12,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 19.89,
-    "pddd": 1.918,
-    "z": -1.31
+    "tarih": "2026-11-19",
+    "fiyat": 19.71,
+    "pddd": 1.901,
+    "z": -1.36
    },
    "seri": [
     {
@@ -9463,10 +9463,10 @@
    "cv": 0.19,
    "guven": "yüksek",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 21.5,
-    "pddd": 0.238,
-    "z": -2.67
+    "tarih": "2026-11-19",
+    "fiyat": 20.32,
+    "pddd": 0.225,
+    "z": -2.81
    },
    "seri": [
     {
@@ -9527,10 +9527,10 @@
    "cv": 0.76,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 27.38,
-    "pddd": 3.503,
-    "z": -0.83
+    "tarih": "2026-11-19",
+    "fiyat": 26.6,
+    "pddd": 3.404,
+    "z": -0.85
    },
    "seri": [
     {
@@ -9615,10 +9615,10 @@
    "cv": 0.2,
    "guven": "düşük",
    "canli": {
-    "tarih": "2026-11-17",
-    "fiyat": 4.48,
-    "pddd": 0.287,
-    "z": -2.62
+    "tarih": "2026-11-19",
+    "fiyat": 4.22,
+    "pddd": 0.271,
+    "z": -2.77
    },
    "seri": [
     {

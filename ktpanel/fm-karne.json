@@ -1,6 +1,6 @@
 {
- "guncelleme": "2026-11-18",
- "son": "2026-11-17",
+ "guncelleme": "2026-11-19",
+ "son": "2026-11-18",
  "kaynak": "fm-arsiv.json (nokta-zaman skor) · Yahoo adjclose · endeks-arsiv.json XKTUM · track.json · xktum.json",
  "_yontem": "§529 IC = Spearman sıra korelasyonu (skor ↔ sonraki getiri). Sektör-nötr IC: getiriden sektör ortalaması çıkarılır. |IC| > 2/√n ≈ %95 anlamlılık (tek kesit). Örtüşen pencereler bağımsız değildir. Ayrıştırma: eşit ağırlıklı evren kıyası; faktör katkısı = aktif maruziyet × EKK faktör getirisi, kalan = hisseye özgü.",
  "fotograflar": [
@@ -148,47 +148,47 @@
    "tarih": "2026-07-14",
    "kaynak": "Koyfin CSV (elle, 14 Tem)",
    "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 88,
+   "bitis": "2026-11-18",
+   "isgunu": 89,
    "n": 147,
    "evren": 147,
    "ic": {
-    "VALUE": 0.36,
-    "GROWTH": -0.013,
+    "VALUE": 0.37,
+    "GROWTH": 0.005,
     "QUALITY": 0.225,
-    "MOMENTUM": -0.037,
-    "LOW_RISK": 0.345,
-    "KOMPOZIT": 0.334
+    "MOMENTUM": -0.025,
+    "LOW_RISK": 0.346,
+    "KOMPOZIT": 0.343
    },
    "ic_sn": {
-    "VALUE": 0.362,
-    "GROWTH": 0.008,
+    "VALUE": 0.376,
+    "GROWTH": 0.024,
     "QUALITY": 0.211,
-    "MOMENTUM": -0.053,
-    "LOW_RISK": 0.278,
-    "KOMPOZIT": 0.312
+    "MOMENTUM": -0.04,
+    "LOW_RISK": 0.277,
+    "KOMPOZIT": 0.322
    },
    "t": {
-    "VALUE": 4.62,
-    "GROWTH": -0.15,
-    "QUALITY": 2.77,
-    "MOMENTUM": -0.44,
-    "LOW_RISK": 4.43,
-    "KOMPOZIT": 4.26
+    "VALUE": 4.76,
+    "GROWTH": 0.06,
+    "QUALITY": 2.78,
+    "MOMENTUM": -0.3,
+    "LOW_RISK": 4.44,
+    "KOMPOZIT": 4.4
    },
    "anlam_esik": 0.165,
    "kuintil": [
-    -23.26,
-    -30.74,
-    -31.59,
-    -42.94,
-    -44.67
+    -25.09,
+    -32.41,
+    -33.08,
+    -45.3,
+    -46.62
    ],
-   "makas": 21.41,
-   "ilk10": -25.1,
-   "son10": -45.63,
-   "makas10": 20.54,
-   "evren_ort": -34.69
+   "makas": 21.53,
+   "ilk10": -27.18,
+   "son10": -48.51,
+   "makas10": 21.33,
+   "evren_ort": -36.55
   },
   {
    "tarih": "2026-08-24",
@@ -240,47 +240,47 @@
    "tarih": "2026-08-24",
    "kaynak": "Koyfin CSV (elle, 24 Ağu)",
    "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 60,
+   "bitis": "2026-11-18",
+   "isgunu": 61,
    "n": 215,
    "evren": 215,
    "ic": {
-    "VALUE": 0.34,
-    "GROWTH": 0.051,
-    "QUALITY": 0.173,
-    "MOMENTUM": 0.01,
-    "LOW_RISK": 0.355,
-    "KOMPOZIT": 0.265
+    "VALUE": 0.339,
+    "GROWTH": 0.065,
+    "QUALITY": 0.163,
+    "MOMENTUM": 0.011,
+    "LOW_RISK": 0.335,
+    "KOMPOZIT": 0.257
    },
    "ic_sn": {
-    "VALUE": 0.335,
-    "GROWTH": 0.059,
-    "QUALITY": 0.16,
-    "MOMENTUM": 0.028,
-    "LOW_RISK": 0.277,
-    "KOMPOZIT": 0.268
+    "VALUE": 0.334,
+    "GROWTH": 0.08,
+    "QUALITY": 0.147,
+    "MOMENTUM": 0.03,
+    "LOW_RISK": 0.26,
+    "KOMPOZIT": 0.26
    },
    "t": {
-    "VALUE": 5.27,
-    "GROWTH": 0.74,
-    "QUALITY": 2.55,
-    "MOMENTUM": 0.15,
-    "LOW_RISK": 5.54,
-    "KOMPOZIT": 4.02
+    "VALUE": 5.24,
+    "GROWTH": 0.95,
+    "QUALITY": 2.41,
+    "MOMENTUM": 0.16,
+    "LOW_RISK": 5.2,
+    "KOMPOZIT": 3.88
    },
    "anlam_esik": 0.136,
    "kuintil": [
-    -30.99,
-    -27.73,
-    -33.61,
-    -35.1,
-    -45.01
+    -33.05,
+    -29.59,
+    -35.94,
+    -36.47,
+    -46.78
    ],
-   "makas": 14.02,
-   "ilk10": -27.63,
-   "son10": -50.77,
-   "makas10": 23.14,
-   "evren_ort": -34.49
+   "makas": 13.73,
+   "ilk10": -29.01,
+   "son10": -53.15,
+   "makas10": 24.13,
+   "evren_ort": -36.37
   },
   {
    "tarih": "2026-10-12",
@@ -332,263 +332,263 @@
    "tarih": "2026-10-12",
    "kaynak": "§455 KAP+Yahoo",
    "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 25,
+   "bitis": "2026-11-18",
+   "isgunu": 26,
    "n": 113,
    "evren": 113,
    "ic": {
-    "VALUE": -0.018,
-    "GROWTH": 0.058,
-    "QUALITY": 0.09,
-    "MOMENTUM": -0.09,
-    "LOW_RISK": 0.015,
-    "KOMPOZIT": -0.002
+    "VALUE": 0.008,
+    "GROWTH": 0.068,
+    "QUALITY": 0.101,
+    "MOMENTUM": -0.048,
+    "LOW_RISK": 0.046,
+    "KOMPOZIT": 0.041
    },
    "ic_sn": {
-    "VALUE": -0.01,
-    "GROWTH": 0.03,
-    "QUALITY": 0.06,
-    "MOMENTUM": -0.108,
-    "LOW_RISK": 0.005,
-    "KOMPOZIT": -0.025
+    "VALUE": 0.008,
+    "GROWTH": 0.052,
+    "QUALITY": 0.067,
+    "MOMENTUM": -0.067,
+    "LOW_RISK": 0.041,
+    "KOMPOZIT": 0.016
    },
    "t": {
-    "VALUE": -0.19,
-    "GROWTH": 0.61,
-    "QUALITY": 0.96,
-    "MOMENTUM": -0.95,
-    "LOW_RISK": 0.16,
-    "KOMPOZIT": -0.02
+    "VALUE": 0.08,
+    "GROWTH": 0.72,
+    "QUALITY": 1.07,
+    "MOMENTUM": -0.51,
+    "LOW_RISK": 0.48,
+    "KOMPOZIT": 0.43
    },
    "anlam_esik": 0.188,
    "kuintil": [
-    -8.97,
-    -9.43,
-    -12.07,
-    -9.03,
-    -2.88
+    -10.45,
+    -12.59,
+    -14.66,
+    -11.59,
+    -8.12
    ],
-   "makas": -6.09,
-   "ilk10": -8.54,
-   "son10": 4.01,
-   "makas10": -12.54,
-   "evren_ort": -8.44
+   "makas": -2.33,
+   "ilk10": -10.48,
+   "son10": -2.25,
+   "makas10": -8.24,
+   "evren_ort": -11.46
   },
   {
    "tarih": "2026-10-19",
    "kaynak": "§455 KAP+Yahoo",
-   "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 20,
+   "ufuk": "1A",
+   "bitis": "2026-11-18",
+   "isgunu": 21,
    "n": 115,
    "evren": 115,
    "ic": {
-    "VALUE": -0.029,
-    "GROWTH": 0.087,
-    "QUALITY": 0.037,
-    "MOMENTUM": -0.26,
-    "LOW_RISK": -0.138,
-    "KOMPOZIT": -0.116
+    "VALUE": -0.007,
+    "GROWTH": 0.132,
+    "QUALITY": 0.068,
+    "MOMENTUM": -0.211,
+    "LOW_RISK": -0.117,
+    "KOMPOZIT": -0.06
    },
    "ic_sn": {
-    "VALUE": -0.031,
-    "GROWTH": 0.04,
-    "QUALITY": -0.023,
-    "MOMENTUM": -0.315,
-    "LOW_RISK": -0.128,
-    "KOMPOZIT": -0.17
+    "VALUE": 0.002,
+    "GROWTH": 0.093,
+    "QUALITY": 0.007,
+    "MOMENTUM": -0.26,
+    "LOW_RISK": -0.106,
+    "KOMPOZIT": -0.104
    },
    "t": {
-    "VALUE": -0.3,
-    "GROWTH": 0.92,
-    "QUALITY": 0.4,
-    "MOMENTUM": -2.86,
-    "LOW_RISK": -1.48,
-    "KOMPOZIT": -1.24
+    "VALUE": -0.07,
+    "GROWTH": 1.41,
+    "QUALITY": 0.73,
+    "MOMENTUM": -2.3,
+    "LOW_RISK": -1.25,
+    "KOMPOZIT": -0.64
    },
    "anlam_esik": 0.187,
    "kuintil": [
-    -1.54,
-    0.4,
-    -0.47,
-    0.35,
-    12.11
+    -3.29,
+    -2.71,
+    -3.24,
+    -3.26,
+    6.33
    ],
-   "makas": -13.65,
-   "ilk10": 3.14,
-   "son10": 18.59,
-   "makas10": -15.44,
-   "evren_ort": 2.17
+   "makas": -9.62,
+   "ilk10": 0.59,
+   "son10": 11.36,
+   "makas10": -10.77,
+   "evren_ort": -1.23
   },
   {
    "tarih": "2026-10-26",
    "kaynak": "§455 KAP+Yahoo",
    "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 15,
+   "bitis": "2026-11-18",
+   "isgunu": 16,
    "n": 134,
    "evren": 134,
    "ic": {
-    "VALUE": -0.185,
-    "GROWTH": 0.015,
-    "QUALITY": -0.044,
-    "MOMENTUM": -0.415,
-    "LOW_RISK": -0.26,
-    "KOMPOZIT": -0.26
+    "VALUE": -0.17,
+    "GROWTH": 0.029,
+    "QUALITY": -0.016,
+    "MOMENTUM": -0.331,
+    "LOW_RISK": -0.232,
+    "KOMPOZIT": -0.206
    },
    "ic_sn": {
-    "VALUE": -0.18,
-    "GROWTH": -0.024,
-    "QUALITY": -0.119,
-    "MOMENTUM": -0.426,
-    "LOW_RISK": -0.213,
-    "KOMPOZIT": -0.301
+    "VALUE": -0.158,
+    "GROWTH": -0.002,
+    "QUALITY": -0.089,
+    "MOMENTUM": -0.343,
+    "LOW_RISK": -0.175,
+    "KOMPOZIT": -0.241
    },
    "t": {
-    "VALUE": -2.16,
-    "GROWTH": 0.17,
-    "QUALITY": -0.5,
-    "MOMENTUM": -5.24,
-    "LOW_RISK": -3.1,
-    "KOMPOZIT": -3.09
+    "VALUE": -1.98,
+    "GROWTH": 0.33,
+    "QUALITY": -0.18,
+    "MOMENTUM": -4.03,
+    "LOW_RISK": -2.74,
+    "KOMPOZIT": -2.42
    },
    "anlam_esik": 0.173,
    "kuintil": [
-    3.63,
-    5.55,
-    10.93,
-    8.68,
-    20.53
+    0.82,
+    2.42,
+    7.2,
+    6.34,
+    14.18
    ],
-   "makas": -16.9,
-   "ilk10": 1.12,
-   "son10": 36.34,
-   "makas10": -35.22,
-   "evren_ort": 9.91
+   "makas": -13.36,
+   "ilk10": -1.94,
+   "son10": 27.59,
+   "makas10": -29.53,
+   "evren_ort": 6.23
   },
   {
    "tarih": "2026-11-02",
    "kaynak": "§455 KAP+Yahoo",
    "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 11,
+   "bitis": "2026-11-18",
+   "isgunu": 12,
    "n": 170,
    "evren": 170,
    "ic": {
-    "VALUE": -0.115,
-    "GROWTH": 0.047,
-    "QUALITY": -0.194,
-    "MOMENTUM": -0.56,
-    "LOW_RISK": -0.367,
-    "KOMPOZIT": -0.393
+    "VALUE": -0.116,
+    "GROWTH": 0.075,
+    "QUALITY": -0.19,
+    "MOMENTUM": -0.52,
+    "LOW_RISK": -0.339,
+    "KOMPOZIT": -0.368
    },
    "ic_sn": {
-    "VALUE": -0.099,
-    "GROWTH": 0.039,
-    "QUALITY": -0.236,
-    "MOMENTUM": -0.574,
-    "LOW_RISK": -0.318,
-    "KOMPOZIT": -0.419
+    "VALUE": -0.1,
+    "GROWTH": 0.061,
+    "QUALITY": -0.231,
+    "MOMENTUM": -0.524,
+    "LOW_RISK": -0.282,
+    "KOMPOZIT": -0.385
    },
    "t": {
-    "VALUE": -1.49,
-    "GROWTH": 0.61,
-    "QUALITY": -2.57,
-    "MOMENTUM": -8.76,
-    "LOW_RISK": -5.11,
-    "KOMPOZIT": -5.53
+    "VALUE": -1.51,
+    "GROWTH": 0.97,
+    "QUALITY": -2.5,
+    "MOMENTUM": -7.89,
+    "LOW_RISK": -4.67,
+    "KOMPOZIT": -5.13
    },
    "anlam_esik": 0.153,
    "kuintil": [
-    6.55,
-    11.51,
-    13.83,
-    15.56,
-    31.05
+    3.54,
+    7.52,
+    10.33,
+    12.83,
+    24.15
    ],
-   "makas": -24.5,
-   "ilk10": 0.43,
-   "son10": 40.67,
-   "makas10": -40.24,
-   "evren_ort": 15.7
+   "makas": -20.61,
+   "ilk10": -2.42,
+   "son10": 32.43,
+   "makas10": -34.85,
+   "evren_ort": 11.67
   },
   {
    "tarih": "2026-11-09",
    "kaynak": "§455 KAP+Yahoo",
    "ufuk": "bugune",
-   "bitis": "2026-11-17",
-   "isgunu": 6,
+   "bitis": "2026-11-18",
+   "isgunu": 7,
    "n": 191,
    "evren": 191,
    "ic": {
-    "VALUE": -0.105,
-    "GROWTH": -0.03,
-    "QUALITY": -0.13,
-    "MOMENTUM": -0.309,
-    "LOW_RISK": -0.181,
-    "KOMPOZIT": -0.267
+    "VALUE": -0.08,
+    "GROWTH": 0.014,
+    "QUALITY": -0.086,
+    "MOMENTUM": -0.184,
+    "LOW_RISK": -0.103,
+    "KOMPOZIT": -0.164
    },
    "ic_sn": {
-    "VALUE": -0.151,
-    "GROWTH": -0.045,
-    "QUALITY": -0.155,
-    "MOMENTUM": -0.344,
-    "LOW_RISK": -0.235,
-    "KOMPOZIT": -0.33
+    "VALUE": -0.126,
+    "GROWTH": 0,
+    "QUALITY": -0.113,
+    "MOMENTUM": -0.238,
+    "LOW_RISK": -0.175,
+    "KOMPOZIT": -0.238
    },
    "t": {
-    "VALUE": -1.44,
-    "GROWTH": -0.41,
-    "QUALITY": -1.8,
-    "MOMENTUM": -4.47,
-    "LOW_RISK": -2.53,
-    "KOMPOZIT": -3.81
+    "VALUE": -1.1,
+    "GROWTH": 0.19,
+    "QUALITY": -1.19,
+    "MOMENTUM": -2.58,
+    "LOW_RISK": -1.42,
+    "KOMPOZIT": -2.29
    },
    "anlam_esik": 0.145,
    "kuintil": [
-    -1.73,
-    -2.72,
-    -0.8,
-    0.89,
-    9.53
+    -4.15,
+    -6.11,
+    -4.25,
+    -2.28,
+    4.41
    ],
-   "makas": -11.26,
-   "ilk10": -2.12,
-   "son10": 14.42,
-   "makas10": -16.54,
-   "evren_ort": 1.08
+   "makas": -8.56,
+   "ilk10": -4.1,
+   "son10": 6.96,
+   "makas10": -11.07,
+   "evren_ort": -2.44
   }
  ],
  "kanit": {
   "1A": {
    "VALUE": {
-    "ort": 0.137,
-    "n": 3,
+    "ort": 0.101,
+    "n": 4,
     "pozitif": 3
    },
    "GROWTH": {
-    "ort": 0.079,
-    "n": 3,
-    "pozitif": 3
+    "ort": 0.092,
+    "n": 4,
+    "pozitif": 4
    },
    "QUALITY": {
-    "ort": 0.21,
-    "n": 3,
-    "pozitif": 3
+    "ort": 0.175,
+    "n": 4,
+    "pozitif": 4
    },
    "MOMENTUM": {
-    "ort": 0.113,
-    "n": 3,
+    "ort": 0.032,
+    "n": 4,
     "pozitif": 3
    },
    "LOW_RISK": {
-    "ort": 0.135,
-    "n": 3,
+    "ort": 0.072,
+    "n": 4,
     "pozitif": 2
    },
    "KOMPOZIT": {
-    "ort": 0.223,
-    "n": 3,
+    "ort": 0.152,
+    "n": 4,
     "pozitif": 3
    }
   },
@@ -629,48 +629,48 @@
   {
    "pencere": "kurulus",
    "bas": "2026-07-14",
-   "bitis": "2026-11-17",
+   "bitis": "2026-11-18",
    "anlik": "2026-07-14",
    "anlik_kaynak": "Koyfin CSV (elle, 14 Tem)",
    "anlik_yas_isgunu": 0,
    "n_sepet": 40,
    "n_sepet_toplam": 40,
    "n_evren": 147,
-   "Rp": -22.97,
-   "Rew": -34.69,
-   "Rb": -18.06,
-   "Rcw": -16.92,
+   "Rp": -24.82,
+   "Rew": -36.55,
+   "Rb": -19.17,
+   "Rcw": -18.46,
    "xk_kapsam": 230,
-   "fark": -4.91,
-   "agirlik_etkisi": -16.63,
+   "fark": -5.65,
+   "agirlik_etkisi": -17.38,
    "secim_etkisi": 11.72,
    "konsantrasyon": {
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 17.8,
-      "r": -2,
+      "w0": 17.3,
+      "r": -1.4,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "BIMAS",
-      "w0": 13.5,
-      "r": 2.9,
+      "w0": 13.3,
+      "r": 2,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 10.6,
-      "r": 29.8,
+      "w0": 10.4,
+      "r": 30,
       "modelde": true,
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 41.8,
-    "ilk3_katki": 3.18,
-    "kalan_getiri": -34.56
+    "ilk3_agirlik": 41,
+    "ilk3_katki": 3.15,
+    "kalan_getiri": -36.63
    },
    "sektor": {
     "satirlar": [
@@ -680,10 +680,10 @@
       "n_model": 10,
       "wp": 25,
       "wu": 22.4,
-      "rp": -15.8,
-      "ru": -29.4,
+      "rp": -17,
+      "ru": -30.9,
       "dagilim": 0.14,
-      "secim": 3.38
+      "secim": 3.46
      },
      {
       "s": "Industrials",
@@ -691,10 +691,10 @@
       "n_model": 7,
       "wp": 17.5,
       "wu": 27.2,
-      "rp": -24.2,
-      "ru": -40.6,
-      "dagilim": 0.58,
-      "secim": 2.88
+      "rp": -26.2,
+      "ru": -42.6,
+      "dagilim": 0.59,
+      "secim": 2.87
      },
      {
       "s": "Health Care",
@@ -702,10 +702,10 @@
       "n_model": 2,
       "wp": 5,
       "wu": 6.1,
-      "rp": -0.7,
-      "ru": -36.7,
-      "dagilim": 0.02,
-      "secim": 1.8
+      "rp": -4.7,
+      "ru": -39.2,
+      "dagilim": 0.03,
+      "secim": 1.73
      },
      {
       "s": "Energy",
@@ -713,9 +713,9 @@
       "n_model": 2,
       "wp": 5,
       "wu": 1.4,
-      "rp": 2.6,
-      "ru": 2.6,
-      "dagilim": 1.36,
+      "rp": 2,
+      "ru": 2,
+      "dagilim": 1.4,
       "secim": 0
      },
      {
@@ -724,8 +724,8 @@
       "n_model": 1,
       "wp": 2.5,
       "wu": 1.4,
-      "rp": -84.5,
-      "ru": -39.4,
+      "rp": -85.8,
+      "ru": -40.6,
       "dagilim": -0.05,
       "secim": -1.13
      },
@@ -735,9 +735,9 @@
       "n_model": 3,
       "wp": 7.5,
       "wu": 4.1,
-      "rp": -17.3,
-      "ru": -30.6,
-      "dagilim": 0.14,
+      "rp": -19.7,
+      "ru": -33,
+      "dagilim": 0.12,
       "secim": 1
      },
      {
@@ -746,10 +746,10 @@
       "n_model": 4,
       "wp": 10,
       "wu": 14.3,
-      "rp": -37.9,
-      "ru": -43.4,
-      "dagilim": 0.37,
-      "secim": 0.55
+      "rp": -40.1,
+      "ru": -44.7,
+      "dagilim": 0.35,
+      "secim": 0.46
      },
      {
       "s": "Information Technology",
@@ -757,10 +757,10 @@
       "n_model": 2,
       "wp": 5,
       "wu": 6.1,
-      "rp": -26.2,
-      "ru": -34.8,
+      "rp": -28.8,
+      "ru": -36.9,
       "dagilim": 0,
-      "secim": 0.43
+      "secim": 0.41
      },
      {
       "s": "Consumer Discretionary",
@@ -768,10 +768,10 @@
       "n_model": 6,
       "wp": 15,
       "wu": 12.2,
-      "rp": -27.3,
-      "ru": -26.4,
-      "dagilim": 0.23,
-      "secim": -0.13
+      "rp": -29.5,
+      "ru": -28.6,
+      "dagilim": 0.22,
+      "secim": -0.14
      },
      {
       "s": "Real Estate",
@@ -779,17 +779,17 @@
       "n_model": 3,
       "wp": 7.5,
       "wu": 4.8,
-      "rp": -30.3,
-      "ru": -31.3,
-      "dagilim": 0.09,
-      "secim": 0.07
+      "rp": -31.3,
+      "ru": -33.6,
+      "dagilim": 0.08,
+      "secim": 0.17
      }
     ],
-    "dagilim": 2.87,
-    "secim": 8.85
+    "dagilim": 2.89,
+    "secim": 8.83
    },
    "faktor": {
-    "r2": 0.198,
+    "r2": 0.194,
     "n": 147,
     "boyut": true,
     "satirlar": [
@@ -798,114 +798,114 @@
       "model": 0.32,
       "evren": -0.15,
       "aktif": 0.47,
-      "getiri_1s": 10.84,
-      "katki": 5.13
+      "getiri_1s": 11.34,
+      "katki": 5.37
      },
      {
       "f": "GROWTH",
       "model": 0.22,
       "evren": -0.01,
       "aktif": 0.23,
-      "getiri_1s": -1.97,
-      "katki": -0.44
+      "getiri_1s": -1.56,
+      "katki": -0.35
      },
      {
       "f": "QUALITY",
       "model": 0.86,
       "evren": 0.15,
       "aktif": 0.71,
-      "getiri_1s": -0.61,
-      "katki": -0.43
+      "getiri_1s": -0.96,
+      "katki": -0.69
      },
      {
       "f": "MOMENTUM",
       "model": 0.26,
       "evren": 0.01,
       "aktif": 0.25,
-      "getiri_1s": -0.18,
-      "katki": -0.05
+      "getiri_1s": 0.59,
+      "katki": 0.15
      },
      {
       "f": "LOW_RISK",
       "model": 0.44,
       "evren": 0.01,
       "aktif": 0.43,
-      "getiri_1s": 7.49,
-      "katki": 3.25
+      "getiri_1s": 7.15,
+      "katki": 3.1
      },
      {
       "f": "BUYUKLUK",
-      "model": 0.57,
+      "model": 0.56,
       "evren": 0,
-      "aktif": 0.57,
-      "getiri_1s": 3.78,
-      "katki": 2.14
+      "aktif": 0.56,
+      "getiri_1s": 3.58,
+      "katki": 2.02
      }
     ],
-    "toplam": 9.59,
+    "toplam": 9.6,
     "kalan": 2.13
    },
    "en_iyi": [
     {
      "k": "BAHKM",
      "s": "Materials",
-     "r": 53.9,
-     "katki": 2.22
+     "r": 61.8,
+     "katki": 2.46
     },
     {
      "k": "TUPRS",
      "s": "Energy",
-     "r": 29.8,
-     "katki": 1.61
+     "r": 30,
+     "katki": 1.66
     },
     {
      "k": "ENJSA",
      "s": "Utilities",
-     "r": 18.6,
-     "katki": 1.33
+     "r": 15.5,
+     "katki": 1.3
     },
     {
      "k": "MPARK",
      "s": "Health Care",
-     "r": 11.1,
-     "katki": 1.14
+     "r": 7,
+     "katki": 1.09
     },
     {
      "k": "BIMAS",
      "s": "Consumer Staples",
-     "r": 2.9,
-     "katki": 0.94
+     "r": 2,
+     "katki": 0.96
     }
    ],
    "en_kotu": [
     {
      "k": "KTLEV",
      "s": "Financials",
-     "r": -84.5,
-     "katki": -1.25
+     "r": -85.8,
+     "katki": -1.23
     },
     {
      "k": "SEKUR",
      "s": "Materials",
-     "r": -71.7,
-     "katki": -0.93
-    },
-    {
-     "k": "DAPGM",
-     "s": "Real Estate",
-     "r": -66,
-     "katki": -0.78
+     "r": -72.8,
+     "katki": -0.91
     },
     {
      "k": "GRTHO",
      "s": "Consumer Staples",
-     "r": -65.4,
-     "katki": -0.77
+     "r": -68.9,
+     "katki": -0.81
+    },
+    {
+     "k": "DAPGM",
+     "s": "Real Estate",
+     "r": -68.5,
+     "katki": -0.8
     },
     {
      "k": "EUPWR",
      "s": "Industrials",
-     "r": -58.5,
+     "r": -60.7,
      "katki": -0.6
     }
    ],
@@ -1265,54 +1265,58 @@
     {
      "d": "2026-11-17",
      "ew": -34.69
+    },
+    {
+     "d": "2026-11-18",
+     "ew": -36.55
     }
    ]
   },
   {
    "pencere": "3A",
-   "bas": "2026-08-19",
-   "bitis": "2026-11-17",
+   "bas": "2026-08-20",
+   "bitis": "2026-11-18",
    "anlik": "2026-07-14",
    "anlik_kaynak": "Koyfin CSV (elle, 14 Tem)",
-   "anlik_yas_isgunu": 25,
+   "anlik_yas_isgunu": 26,
    "n_sepet": 40,
    "n_sepet_toplam": 40,
    "n_evren": 147,
-   "Rp": -25.52,
-   "Rew": -33.92,
-   "Rb": -26.2,
-   "Rcw": -24.25,
-   "xk_kapsam": 233,
-   "fark": 0.69,
-   "agirlik_etkisi": -7.71,
-   "secim_etkisi": 8.4,
+   "Rp": -27.25,
+   "Rew": -36.03,
+   "Rb": -27.38,
+   "Rcw": -25.52,
+   "xk_kapsam": 234,
+   "fark": 0.12,
+   "agirlik_etkisi": -8.66,
+   "secim_etkisi": 8.78,
    "konsantrasyon": {
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 18.7,
-      "r": -15.3,
+      "w0": 18.2,
+      "r": -14.5,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 14,
-      "r": -11.1,
+      "w0": 13.8,
+      "r": -11,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "BIMAS",
-      "w0": 13.3,
-      "r": -5,
+      "w0": 12.9,
+      "r": -4.6,
       "modelde": true,
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 46,
-    "ilk3_katki": -5.08,
-    "kalan_getiri": -35.5
+    "ilk3_agirlik": 45,
+    "ilk3_katki": -4.76,
+    "kalan_getiri": -37.71
    },
    "sektor": {
     "satirlar": [
@@ -1322,10 +1326,10 @@
       "n_model": 7,
       "wp": 17.5,
       "wu": 27.2,
-      "rp": -26.3,
-      "ru": -40.1,
-      "dagilim": 0.6,
-      "secim": 2.42
+      "rp": -28.5,
+      "ru": -42.4,
+      "dagilim": 0.62,
+      "secim": 2.43
      },
      {
       "s": "Materials",
@@ -1333,10 +1337,10 @@
       "n_model": 10,
       "wp": 25,
       "wu": 22.4,
-      "rp": -18.3,
-      "ru": -28.2,
-      "dagilim": 0.15,
-      "secim": 2.48
+      "rp": -19.6,
+      "ru": -29.9,
+      "dagilim": 0.16,
+      "secim": 2.58
      },
      {
       "s": "Health Care",
@@ -1344,10 +1348,10 @@
       "n_model": 2,
       "wp": 5,
       "wu": 6.1,
-      "rp": -8.2,
-      "ru": -38.1,
-      "dagilim": 0.05,
-      "secim": 1.49
+      "rp": -13,
+      "ru": -41.9,
+      "dagilim": 0.07,
+      "secim": 1.45
      },
      {
       "s": "Financials",
@@ -1355,10 +1359,10 @@
       "n_model": 1,
       "wp": 2.5,
       "wu": 1.4,
-      "rp": -84.8,
-      "ru": -43.9,
-      "dagilim": -0.11,
-      "secim": -1.02
+      "rp": -86.7,
+      "ru": -44.9,
+      "dagilim": -0.1,
+      "secim": -1.05
      },
      {
       "s": "Utilities",
@@ -1366,10 +1370,10 @@
       "n_model": 3,
       "wp": 7.5,
       "wu": 4.1,
-      "rp": -19.8,
-      "ru": -30.6,
-      "dagilim": 0.11,
-      "secim": 0.81
+      "rp": -21.5,
+      "ru": -32.4,
+      "dagilim": 0.12,
+      "secim": 0.82
      },
      {
       "s": "Consumer Staples",
@@ -1377,21 +1381,10 @@
       "n_model": 4,
       "wp": 10,
       "wu": 14.3,
-      "rp": -35.5,
-      "ru": -40.3,
-      "dagilim": 0.28,
-      "secim": 0.48
-     },
-     {
-      "s": "Real Estate",
-      "n_evren": 7,
-      "n_model": 3,
-      "wp": 7.5,
-      "wu": 4.8,
-      "rp": -29.6,
-      "ru": -24.2,
-      "dagilim": 0.27,
-      "secim": -0.4
+      "rp": -36.4,
+      "ru": -41.7,
+      "dagilim": 0.24,
+      "secim": 0.54
      },
      {
       "s": "Energy",
@@ -1399,10 +1392,21 @@
       "n_model": 2,
       "wp": 5,
       "wu": 1.4,
-      "rp": -16.2,
-      "ru": -16.2,
-      "dagilim": 0.64,
+      "rp": -17,
+      "ru": -17,
+      "dagilim": 0.69,
       "secim": 0
+     },
+     {
+      "s": "Real Estate",
+      "n_evren": 7,
+      "n_model": 3,
+      "wp": 7.5,
+      "wu": 4.8,
+      "rp": -30.3,
+      "ru": -26.4,
+      "dagilim": 0.26,
+      "secim": -0.29
      },
      {
       "s": "Consumer Discretionary",
@@ -1410,10 +1414,10 @@
       "n_model": 6,
       "wp": 15,
       "wu": 12.2,
-      "rp": -25,
-      "ru": -23.9,
+      "rp": -26.9,
+      "ru": -25.8,
       "dagilim": 0.28,
-      "secim": -0.18
+      "secim": -0.15
      },
      {
       "s": "Information Technology",
@@ -1421,17 +1425,17 @@
       "n_model": 2,
       "wp": 5,
       "wu": 6.1,
-      "rp": -39.9,
-      "ru": -39.8,
-      "dagilim": 0.07,
-      "secim": -0.01
+      "rp": -43,
+      "ru": -43.4,
+      "dagilim": 0.08,
+      "secim": 0.02
      }
     ],
-    "dagilim": 2.32,
-    "secim": 6.08
+    "dagilim": 2.43,
+    "secim": 6.35
    },
    "faktor": {
-    "r2": 0.208,
+    "r2": 0.212,
     "n": 147,
     "boyut": true,
     "satirlar": [
@@ -1440,187 +1444,187 @@
       "model": 0.32,
       "evren": -0.15,
       "aktif": 0.47,
-      "getiri_1s": 9.83,
-      "katki": 4.65
+      "getiri_1s": 10.8,
+      "katki": 5.11
      },
      {
       "f": "GROWTH",
       "model": 0.22,
       "evren": -0.01,
       "aktif": 0.23,
-      "getiri_1s": -2.54,
-      "katki": -0.57
+      "getiri_1s": -2.04,
+      "katki": -0.46
      },
      {
       "f": "QUALITY",
       "model": 0.86,
       "evren": 0.15,
       "aktif": 0.71,
-      "getiri_1s": -1.03,
-      "katki": -0.74
+      "getiri_1s": -1.48,
+      "katki": -1.06
      },
      {
       "f": "MOMENTUM",
       "model": 0.26,
       "evren": 0.01,
       "aktif": 0.25,
-      "getiri_1s": -2.58,
-      "katki": -0.65
+      "getiri_1s": -2.15,
+      "katki": -0.54
      },
      {
       "f": "LOW_RISK",
       "model": 0.44,
       "evren": 0.01,
       "aktif": 0.43,
-      "getiri_1s": 8.36,
-      "katki": 3.63
+      "getiri_1s": 8,
+      "katki": 3.47
      },
      {
       "f": "BUYUKLUK",
-      "model": 0.58,
+      "model": 0.57,
       "evren": 0,
-      "aktif": 0.58,
-      "getiri_1s": 1.55,
-      "katki": 0.89
+      "aktif": 0.57,
+      "getiri_1s": 1.43,
+      "katki": 0.81
      }
     ],
-    "toplam": 7.21,
-    "kalan": 1.19
+    "toplam": 7.34,
+    "kalan": 1.44
    },
    "en_iyi": [
     {
      "k": "BAHKM",
      "s": "Materials",
-     "r": 43,
-     "katki": 1.92
+     "r": 48.9,
+     "katki": 2.12
     },
     {
      "k": "ENJSA",
      "s": "Utilities",
-     "r": 6.3,
-     "katki": 1.01
+     "r": 5.3,
+     "katki": 1.03
     },
     {
      "k": "MPARK",
      "s": "Health Care",
-     "r": 3.6,
-     "katki": 0.94
-    },
-    {
-     "k": "EBEBK",
-     "s": "Consumer Discretionary",
-     "r": -4.1,
-     "katki": 0.75
+     "r": -0.5,
+     "katki": 0.89
     },
     {
      "k": "BIMAS",
      "s": "Consumer Staples",
-     "r": -5,
-     "katki": 0.72
+     "r": -4.6,
+     "katki": 0.79
+    },
+    {
+     "k": "ISDMR",
+     "s": "Materials",
+     "r": -6.2,
+     "katki": 0.75
     }
    ],
    "en_kotu": [
     {
      "k": "KTLEV",
      "s": "Financials",
-     "r": -84.8,
+     "r": -86.7,
      "katki": -1.27
     },
     {
      "k": "SEKUR",
      "s": "Materials",
-     "r": -67.1,
-     "katki": -0.83
+     "r": -68.7,
+     "katki": -0.82
     },
     {
      "k": "DAPGM",
      "s": "Real Estate",
-     "r": -63.9,
-     "katki": -0.75
-    },
-    {
-     "k": "SUNTK",
-     "s": "Consumer Discretionary",
-     "r": -61.1,
-     "katki": -0.68
+     "r": -66.5,
+     "katki": -0.76
     },
     {
      "k": "GRTHO",
      "s": "Consumer Staples",
-     "r": -60.9,
-     "katki": -0.67
+     "r": -65.5,
+     "katki": -0.74
+    },
+    {
+     "k": "EUPWR",
+     "s": "Industrials",
+     "r": -61.9,
+     "katki": -0.65
     }
    ]
   },
   {
    "pencere": "1A",
-   "bas": "2026-10-16",
-   "bitis": "2026-11-17",
-   "anlik": "2026-10-12",
+   "bas": "2026-10-19",
+   "bitis": "2026-11-18",
+   "anlik": "2026-10-19",
    "anlik_kaynak": "§455 KAP+Yahoo",
-   "anlik_yas_isgunu": 4,
+   "anlik_yas_isgunu": 0,
    "n_sepet": 40,
    "n_sepet_toplam": 40,
-   "n_evren": 134,
-   "Rp": -2.64,
-   "Rew": -2.18,
-   "Rb": -2.63,
-   "Rcw": -2.62,
+   "n_evren": 136,
+   "Rp": -1.75,
+   "Rew": -1.25,
+   "Rb": 0.07,
+   "Rcw": -0.21,
    "xk_kapsam": 238,
-   "fark": 0,
-   "agirlik_etkisi": 0.46,
-   "secim_etkisi": -0.46,
+   "fark": -1.82,
+   "agirlik_etkisi": -1.31,
+   "secim_etkisi": -0.51,
    "konsantrasyon": {
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 20.3,
-      "r": 0.4,
+      "w0": 19.5,
+      "r": 6.7,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 17.4,
-      "r": -8.1,
+      "w0": 17,
+      "r": -3.1,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "BIMAS",
-      "w0": 15.6,
-      "r": 3.2,
+      "w0": 15.7,
+      "r": 5.1,
       "modelde": true,
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 53.3,
-    "ilk3_katki": -0.82,
-    "kalan_getiri": -3.84
+    "ilk3_agirlik": 52.2,
+    "ilk3_katki": 1.57,
+    "kalan_getiri": -3.72
    },
    "sektor": {
     "satirlar": [
-     {
-      "s": "Consumer Staples",
-      "n_evren": 16,
-      "n_model": 4,
-      "wp": 10,
-      "wu": 11.9,
-      "rp": 3.4,
-      "ru": -7.6,
-      "dagilim": 0.1,
-      "secim": 1.09
-     },
      {
       "s": "Materials",
       "n_evren": 23,
       "n_model": 10,
       "wp": 25,
-      "wu": 17.2,
-      "rp": -5.5,
-      "ru": -1.7,
-      "dagilim": 0.04,
-      "secim": -0.97
+      "wu": 16.9,
+      "rp": -4.4,
+      "ru": 0.7,
+      "dagilim": 0.15,
+      "secim": -1.27
+     },
+     {
+      "s": "Consumer Staples",
+      "n_evren": 17,
+      "n_model": 4,
+      "wp": 10,
+      "wu": 12.5,
+      "rp": 3.9,
+      "ru": -7,
+      "dagilim": 0.14,
+      "secim": 1.09
      },
      {
       "s": "Financials",
@@ -1628,9 +1632,20 @@
       "n_model": 1,
       "wp": 2.5,
       "wu": 0.7,
-      "rp": 54.5,
-      "ru": 54.5,
-      "dagilim": 0.99,
+      "rp": 45.8,
+      "ru": 45.8,
+      "dagilim": 0.83,
+      "secim": 0
+     },
+     {
+      "s": "Bilinmiyor",
+      "n_evren": 19,
+      "n_model": 0,
+      "wp": 0,
+      "wu": 14,
+      "rp": null,
+      "ru": -6.8,
+      "dagilim": 0.77,
       "secim": 0
      },
      {
@@ -1638,33 +1653,11 @@
       "n_evren": 9,
       "n_model": 3,
       "wp": 7.5,
-      "wu": 6.7,
-      "rp": -2.6,
-      "ru": 6.3,
+      "wu": 6.6,
+      "rp": -0.5,
+      "ru": 6.6,
       "dagilim": 0.07,
-      "secim": -0.66
-     },
-     {
-      "s": "Bilinmiyor",
-      "n_evren": 18,
-      "n_model": 0,
-      "wp": 0,
-      "wu": 13.4,
-      "rp": null,
-      "ru": -6.6,
-      "dagilim": 0.59,
-      "secim": 0
-     },
-     {
-      "s": "Information Technology",
-      "n_evren": 6,
-      "n_model": 2,
-      "wp": 5,
-      "wu": 4.5,
-      "rp": -10.1,
-      "ru": -0.9,
-      "dagilim": 0.01,
-      "secim": -0.46
+      "secim": -0.53
      },
      {
       "s": "Utilities",
@@ -1672,10 +1665,43 @@
       "n_model": 3,
       "wp": 7.5,
       "wu": 2.2,
-      "rp": -10.6,
-      "ru": -10.6,
-      "dagilim": -0.45,
+      "rp": -11.4,
+      "ru": -11.4,
+      "dagilim": -0.54,
       "secim": 0
+     },
+     {
+      "s": "Industrials",
+      "n_evren": 33,
+      "n_model": 7,
+      "wp": 17.5,
+      "wu": 24.3,
+      "rp": -3.9,
+      "ru": -1.6,
+      "dagilim": 0.02,
+      "secim": -0.4
+     },
+     {
+      "s": "Information Technology",
+      "n_evren": 6,
+      "n_model": 2,
+      "wp": 5,
+      "wu": 4.4,
+      "rp": -7.4,
+      "ru": 0.6,
+      "dagilim": 0.01,
+      "secim": -0.4
+     },
+     {
+      "s": "Consumer Discretionary",
+      "n_evren": 15,
+      "n_model": 6,
+      "wp": 15,
+      "wu": 11,
+      "rp": -3.1,
+      "ru": -0.8,
+      "dagilim": 0.02,
+      "secim": -0.35
      },
      {
       "s": "Energy",
@@ -1683,43 +1709,21 @@
       "n_model": 2,
       "wp": 5,
       "wu": 2.2,
-      "rp": -11.7,
-      "ru": -8,
+      "rp": -8.7,
+      "ru": -7,
       "dagilim": -0.16,
-      "secim": -0.19
-     },
-     {
-      "s": "Consumer Discretionary",
-      "n_evren": 15,
-      "n_model": 6,
-      "wp": 15,
-      "wu": 11.2,
-      "rp": -4.7,
-      "ru": -2.8,
-      "dagilim": -0.02,
-      "secim": -0.28
-     },
-     {
-      "s": "Industrials",
-      "n_evren": 33,
-      "n_model": 7,
-      "wp": 17.5,
-      "wu": 24.6,
-      "rp": -3.9,
-      "ru": -2.5,
-      "dagilim": 0.02,
-      "secim": -0.26
+      "secim": -0.08
      },
      {
       "s": "Health Care",
       "n_evren": 6,
       "n_model": 2,
       "wp": 5,
-      "wu": 4.5,
-      "rp": 10.5,
-      "ru": 12.4,
-      "dagilim": 0.08,
-      "secim": -0.1
+      "wu": 4.4,
+      "rp": 13.3,
+      "ru": 14.7,
+      "dagilim": 0.09,
+      "secim": -0.07
      },
      {
       "s": "Communication Services",
@@ -1728,133 +1732,133 @@
       "wp": 0,
       "wu": 0.7,
       "rp": null,
-      "ru": -15.5,
+      "ru": -14.9,
       "dagilim": 0.1,
       "secim": 0
      }
     ],
-    "dagilim": 1.37,
-    "secim": -1.83
+    "dagilim": 1.52,
+    "secim": -2.02
    },
    "faktor": {
-    "r2": 0.046,
-    "n": 134,
+    "r2": 0.122,
+    "n": 136,
     "boyut": true,
     "satirlar": [
      {
       "f": "VALUE",
       "model": 0.08,
-      "evren": -0.1,
-      "aktif": 0.18,
-      "getiri_1s": -1.46,
-      "katki": -0.26
+      "evren": -0.08,
+      "aktif": 0.16,
+      "getiri_1s": -1.49,
+      "katki": -0.24
      },
      {
       "f": "GROWTH",
       "model": 0.08,
-      "evren": 0.01,
-      "aktif": 0.07,
-      "getiri_1s": 0.03,
-      "katki": 0
+      "evren": -0.01,
+      "aktif": 0.09,
+      "getiri_1s": 0.64,
+      "katki": 0.06
      },
      {
       "f": "QUALITY",
-      "model": 0.36,
-      "evren": -0.01,
-      "aktif": 0.37,
-      "getiri_1s": -0.31,
-      "katki": -0.12
+      "model": 0.38,
+      "evren": 0.02,
+      "aktif": 0.36,
+      "getiri_1s": -0.61,
+      "katki": -0.22
      },
      {
       "f": "MOMENTUM",
-      "model": 0.01,
-      "evren": -0.06,
-      "aktif": 0.07,
-      "getiri_1s": -3.93,
-      "katki": -0.26
+      "model": 0.05,
+      "evren": -0.05,
+      "aktif": 0.1,
+      "getiri_1s": -10.02,
+      "katki": -1.04
      },
      {
       "f": "LOW_RISK",
       "model": 0.02,
-      "evren": -0.05,
+      "evren": -0.04,
       "aktif": 0.07,
-      "getiri_1s": -2.15,
-      "katki": -0.15
+      "getiri_1s": 0.71,
+      "katki": 0.05
      },
      {
       "f": "BUYUKLUK",
-      "model": 0.57,
+      "model": 0.59,
       "evren": 0,
-      "aktif": 0.57,
-      "getiri_1s": -0.06,
-      "katki": -0.04
+      "aktif": 0.59,
+      "getiri_1s": 2.05,
+      "katki": 1.2
      }
     ],
-    "toplam": -0.81,
-    "kalan": 0.35
+    "toplam": -0.2,
+    "kalan": -0.31
    },
    "en_iyi": [
     {
      "k": "KTLEV",
      "s": "Financials",
-     "r": 54.5,
-     "katki": 1.42
+     "r": 45.8,
+     "katki": 1.18
     },
     {
      "k": "BAHKM",
      "s": "Materials",
-     "r": 18.1,
-     "katki": 0.51
+     "r": 31.6,
+     "katki": 0.82
     },
     {
      "k": "GRTHO",
      "s": "Consumer Staples",
-     "r": 17.5,
-     "katki": 0.49
+     "r": 17.6,
+     "katki": 0.47
     },
     {
      "k": "FONET",
      "s": "Health Care",
-     "r": 10.7,
-     "katki": 0.32
+     "r": 16.6,
+     "katki": 0.45
     },
     {
-     "k": "MPARK",
-     "s": "Health Care",
-     "r": 10.3,
-     "katki": 0.31
+     "k": "YUNSA",
+     "s": "Consumer Discretionary",
+     "r": 12.9,
+     "katki": 0.35
     }
    ],
    "en_kotu": [
     {
      "k": "ARASE",
      "s": "Utilities",
-     "r": -33.2,
+     "r": -32.3,
      "katki": -0.78
     },
     {
      "k": "SUNTK",
      "s": "Consumer Discretionary",
-     "r": -24.3,
-     "katki": -0.55
+     "r": -22.6,
+     "katki": -0.53
     },
     {
      "k": "GUBRF",
      "s": "Materials",
-     "r": -24.1,
-     "katki": -0.55
+     "r": -22.5,
+     "katki": -0.53
     },
     {
      "k": "EUPWR",
      "s": "Industrials",
-     "r": -18.3,
-     "katki": -0.4
+     "r": -15.9,
+     "katki": -0.37
     },
     {
-     "k": "ARDYZ",
-     "s": "Information Technology",
-     "r": -15.9,
-     "katki": -0.34
+     "k": "NTGAZ",
+     "s": "Energy",
+     "r": -14.3,
+     "katki": -0.33
     }
    ]
   }
