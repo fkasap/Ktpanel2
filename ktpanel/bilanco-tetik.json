@@ -1,5 +1,5 @@
 {
- "tarih": "2026-11-19",
+ "tarih": "2026-11-20",
  "kodlar": [
   "ACSEL",
   "AHGAZ",
@@ -1218,9 +1218,7 @@
   "ZRGYO"
  ],
  "evren_disi_sayi": 397,
- "pencere_sayi": 4,
- "dusen_son": [
-  "ARENA"
- ],
- "guncelleme": "2026-11-19 22:39 UTC — otomatik (KAP FR · kümülatif §299)"
+ "pencere_sayi": 3,
+ "dusen_son": [],
+ "guncelleme": "2026-11-20 08:30 UTC — otomatik (KAP FR · kümülatif §299)"
 }
