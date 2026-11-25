@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-25 06:12 UTC — otomatik (§319)",
+ "guncelleme": "2026-11-25 23:35 UTC — otomatik (§319)",
  "kaynak": "ForexFactory/FairEconomy haftalık takvim JSON",
  "olaylar": [
   {
@@ -121,6 +121,14 @@
    "etki": "Medium",
    "beklenti": "2.3%",
    "onceki": "2.3%"
+  },
+  {
+   "t": "2026-11-25T14:15:00.000Z",
+   "ulke": "GBP",
+   "olay": "Monetary Policy Report Hearings",
+   "etki": "Medium",
+   "beklenti": "",
+   "onceki": ""
   },
   {
    "t": "2026-11-26T23:30:00.000Z",
