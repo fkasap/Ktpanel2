@@ -209,6 +209,42 @@ module.exports = async (req, res) => {
     (satirlar&&satirlar.length?satirlar.reduce((a,b)=>((b.toplam||0)>(a.toplam||0)?b:a),satirlar[0]):null);
 
   const q = req.query||{};
+  /* §577 (26 Kas) HAFTALIK BÜLTEN — resmî manşet takip oranı. §576 EVDS'den hesaplıyordu (%3,35); BDDK manşeti %3,37.
+     Fark: TCMB'nin haftalık tablosu ile BDDK bülteninin KREDİ TABANI aynı değil (20 Kas: 29.479 / 29.284 mlr ₺).
+     Bültenin kendi ucu ölçüldü (bddk.org.tr/BultenHaftalik, 26 Kas): POST /BultenHaftalik/tr/Home/KiyaslamaJsonGetir
+     {dil, tarih: gg.aa.yyyy (bugün olabilir), id, parabirimi:'TRY', sutun:3 (toplam), tarafKodu:'10001', gun} → {XEkseni, YEkseni},
+     tarihten geriye 13 hafta. id '1.0.1' = Toplam Krediler · '2.0.1' = Takipteki Alacaklar (mn ₺).
+     Doğrulama: 1.022.299 / (29.284.323 + 1.022.299) = %3,373 = bülten manşeti %3,37. */
+  if(q.haftalik==='1'){
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=21600');
+    const gg = d => String(d.getUTCDate()).padStart(2,'0')+'.'+String(d.getUTCMonth()+1).padStart(2,'0')+'.'+d.getUTCFullYear();
+    const iso = x => { const p=String(x).split('.'); return p.length===3 ? p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0') : null; };
+    const al = async (id, tarih) => {
+      const govde = new URLSearchParams({ dil:'tr', tarih, id, parabirimi:'TRY', sutun:'3', tarafKodu:'10001', gun:'90' }).toString();
+      const y = await bddkIstek('/BultenHaftalik/tr/Home/KiyaslamaJsonGetir', govde, {
+        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8', 'Accept':'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With':'XMLHttpRequest', 'Referer':'https://www.bddk.org.tr/BultenHaftalik', 'Origin':'https://www.bddk.org.tr' });
+      if(y.durum!==200) throw new Error('BDDK haftalık HTTP '+y.durum);
+      const j = JSON.parse(y.metin); const m = new Map();
+      (j.XEkseni||[]).forEach((x,i)=>{ const d=iso(x), v=parseFloat((j.YEkseni||[])[i]); if(d&&isFinite(v)) m.set(d,v); });
+      return m;
+    };
+    try{
+      const simdi = new Date(Date.now()+3*3600e3);
+      const [k1,t1] = await Promise.all([al('1.0.1',gg(simdi)), al('2.0.1',gg(simdi))]);
+      let gunler=[...t1.keys()].filter(d=>k1.has(d)).sort();
+      if(!gunler.length) return res.status(200).json({ ok:false, err:'BDDK haftalık bülten boş döndü' });
+      /* ikinci pencere: ilk tarihten geriye 13 hafta daha → Δ13 hafta bültenin kendi tanımıyla */
+      try{ const p=gunler[0].split('-'); const once=new Date(Date.UTC(+p[0],+p[1]-1,+p[2])-7*864e5);
+        const [k0,t0]=await Promise.all([al('1.0.1',gg(once)), al('2.0.1',gg(once))]);
+        t0.forEach((v,d)=>{ if(!t1.has(d)) t1.set(d,v); }); k0.forEach((v,d)=>{ if(!k1.has(d)) k1.set(d,v); });
+        gunler=[...t1.keys()].filter(d=>k1.has(d)).sort(); }catch(e){}
+      const seri=gunler.map(d=>({ d, kredi:+(k1.get(d)/1000).toFixed(1), takip:+(t1.get(d)/1000).toFixed(2), oran:+(t1.get(d)/(k1.get(d)+t1.get(d))*100).toFixed(3) }));
+      const son=seri[seri.length-1], geri=n=>seri.length>n?seri[seri.length-1-n]:null, bp=n=>geri(n)?Math.round((son.oran-geri(n).oran)*100):null;
+      return res.status(200).json({ ok:true, kaynak:'BDDK Haftalık Bülten (sektör · TP+YP toplam)', tarih:son.d, oran:son.oran, takip:son.takip, kredi:son.kredi,
+        d1:bp(1), d4:bp(4), d13:bp(13), haftalikArtis: geri(1)?+(son.takip-geri(1).takip).toFixed(1):null, seri });
+    }catch(e){ return res.status(200).json({ ok:false, err:'BDDK haftalık: '+String(e.message||e).slice(0,140), teshis:SON_TESHIS }); }
+  }
   // Panel modu: Bankacılık sekmesinin ihtiyacı olan her şey tek çağrıda
   if(q.panel==='1'){
     const KODLAR=['10001','10002','10003','10004'];
