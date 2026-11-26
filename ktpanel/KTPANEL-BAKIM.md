@@ -16143,3 +16143,8 @@ Kaynaklar: merkez bankası bildirileri, TCMB duyuru 2026-49, SPK 76/1903 + 7596 
 - **Enflasyon Patikası (EP_VARSAYILAN)**: BİLİNÇLİ dokunulmadı — model 22 Eki toplantısına çapalı; yarım ilerletme patikayı kaydırır. 10 Ara devri kullanıcının senaryolarını bekliyor; hazır EVDS verisi koddaki notta.
 - **Ebu notları**: Anthropic API bakiyesi hâlâ bitik (26 Kas 09:55 günlüğü) — yorum katmanı donuk.
 - Doğrulanamayan/dokunulmayan: ülke kredi notu (16 Eki S&P sonrası yeni karar bulunamadı), BOK sonraki toplantı tarihi.
+
+## §574 — Toparlanma monitörü denetimi (26 Kas 2026)
+- **Sahte "3 · Dönüş teyitli"**: 9 Kas Zweig itkisi 20 gün koşulsuz geçerli sayılıyordu. Sonrasında eşit ağ. evren 63,0 → 58,0 (−%8), ÜHO10 0,334, 6a dip yapanlar %23, %>50g %8,9; aşama 2 hiç tamamlanmadı. Seçim hunisi (§561) aşama 3'te sepete prim verdiği için seçimi de yanlış yönlendiriyordu. Düzeltme (tazele.mjs toparlanmaCekirdek): itki, (a) ÜHO10 yeniden <0,40 ya da (b) eşit ağ. evren itki öncesi 10g dibinin altında kapanırsa İPTAL; `itki_iptal{itki,gun,neden}` yazılır, aşama tamamlanan en yüksek basamağa iner, yeni kurulum sayacı çalışır. Sentetik testte doğrulandı (ralli sürerse 3, çökerse iptal).
+- **Monitör 24 Kas'ta takılı**: kod değil kaynak — Yahoo 25 Kas günlük barını hiçbir BIST hissesi için vermiyor (24 → 26; panelin mod=seri ucuyla 6 hissede doğrulandı), resmî endeks arşivinde 25 Kas var. Artık `geride_gun` / `eksik_gun` dosyaya ve karta yazılıyor, Actions raporunda ⚠. BORÇ: ikinci fiyat kaynağı yok; Yahoo boşluğu doldurmazsa 25 Kas getirisi 26 Kas'a biner.
+- Dokunulmadı: aşama 3'ün aşama 2'yi beklememesi (itki klasik olarak tek başına teyit sayılır; iptal kuralı bunu dengeler).
