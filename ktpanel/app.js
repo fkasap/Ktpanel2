@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261126b';
+const KTP_SURUM = '20261126c';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -6231,6 +6231,21 @@ $('btnYenile').addEventListener('click',async()=>{
 
 /* ---- Halka Arzlar ---- */
 let HALKAARZ=null;
+/* §575 (26 Kas) SWAP HARİÇ NET — TANIM KÖPRÜSÜ. §498'den beri "EVDS analitik net − rezerv.json swap stoku" yazılıyordu; ama swap stoku
+   BÜLTEN tanımıyla türetilir (bülten net − bülten swap hariç). EVDS analitik neti bültenin sistematik ~4,8 mlr $ ALTINDA
+   (6 Kas: 36,42 / 41,18 · 13 Kas: 36,40 / 41,26) → sonuç o kadar düşük çıkıyordu: 24 Kas'ta kart "2,0" yazdı, tutarlı okuma ≈7,7.
+   Doğrusu: son bültenin swap hariç neti + o günden bugüne analitik netteki DEĞİŞİM. Seviye bültenden, hareket günlük veriden gelir;
+   iki tanımın sabit farkı birbirini götürür. Bülten günü seride yoksa eski hesap (köprüsüz) döner. */
+function rezervSwapHaricKopru(net, rj){
+  const eski={ v:+((net.degerUSD)-(rj.swapStoku||0)).toFixed(1), kopru:false };
+  try{ const wd=rj.webDogrulama||{}; const S=net.seri||[]; if(!(wd.swapHaricNet>0)||!wd.tarih||!S.length) return eski;
+    const iso=t=>{ const p=String(t).split('-'); return p[0].length===4?t:(p[2]+'-'+p[1]+'-'+p[0]); };
+    const hedef=iso(wd.tarih); let baz=null; S.forEach(x=>{ if(iso(x.t)<=hedef) baz=x; });
+    if(!baz||(Date.parse(hedef)-Date.parse(iso(baz.t)))/864e5>4) return eski;
+    const son=S[S.length-1]; const delta=+(son.v-baz.v).toFixed(1);
+    return { v:+(wd.swapHaricNet+delta).toFixed(1), kopru:true, baz:wd.swapHaricNet, bazTarih:wd.tarih, delta, sonTarih:son.t };
+  }catch(e){ return eski; }
+}
 async function halkaarzInit(){try{HALKAARZ=await (await fetch('/halkaarz.json',{cache:'no-store'})).json();}catch(e){return;}halkaarzRender();halkaarzCanli();}
 /* §459c HALKA ARZ GETİRİSİ CANLI (12 Eki, taramada yakalandı): kart "arz→bugün"
    diyordu ama "bugün" dosyanın fiyat_tarihi'ydi — 25 Ağu. 48 gün bayat getiri,
@@ -11835,7 +11850,7 @@ async function loadYabanciCanli(){
         fetch('/rezerv.json',{cache:'no-store'}).then(r=>r.json())
       ]);
       if(rr&&rr.ok&&rr.net&&rr.net.degerUSD!=null&&rj&&rj.swapStoku!=null){
-        const shNet=+(rr.net.degerUSD-rj.swapStoku).toFixed(1);
+        const shNet=rezervSwapHaricKopru(rr.net,rj).v;
         const trend=shNet>=40?'güçlü':shNet>=35?'toparlanıyor':'zayıf';
         /* §245k: "· canlı" damgası yarım doğruydu — net canlı ama swap stoku
            elle. Stok 10 günü aştıysa yaş damgada görünür (karne ile aynı kural). */
@@ -11890,7 +11905,7 @@ async function karneRezervCanli(){
       try{
         const rj=await (await fetch('/rezerv.json',{cache:'no-store'})).json();
         const swapStoku=rj.swapStoku||0;
-        const shNet=+(j.net.degerUSD - swapStoku).toFixed(1);
+        const KP=rezervSwapHaricKopru(j.net,rj); const shNet=KP.v;
         const gun=rj.guncelleme||'';
         /* §245k SWAP STOKU YAŞI HÜCREDE. Bu hesabın tek elle girdisi swapStoku
            (EVDS'de yok — yurt dışı ikili swap, TCMB haftalık basın açıklaması).
@@ -11914,10 +11929,10 @@ async function karneRezervCanli(){
           if($('karneNet')) $('karneNet').innerHTML=trN(wd.net,1)+' <span class="thin" style="font-size:8px">· TCMB haftalık bülten · '+wd.tarih+' · EVDS aylık '+trN(j.net.degerUSD,1)+'</span>';
           $('karneSwapHaric').innerHTML=trN(wd.swapHaricNet,1)+' <span class="thin" style="font-size:8px">· TCMB bülteni ('+wd.tarih+') · swap stoku '+trN(swapStoku,1)+'</span>';
         } else {
-          $('karneSwapHaric').innerHTML=trN(shNet,1)+' <span class="thin" style="font-size:8px">· net − swap stoku '+trN(swapStoku,1)+' ('+gun+')</span>'+
+          $('karneSwapHaric').innerHTML=(KP.kopru?'≈ ':'')+trN(shNet,1)+' <span class="thin" style="font-size:8px">· '+(KP.kopru?('bülten '+esc(KP.bazTarih)+' '+trN(KP.baz,1)+' '+(KP.delta>=0?'+':'−')+' analitik net değişimi '+trN(Math.abs(KP.delta),1)+' ('+esc(KP.sonTarih)+')'):('net − swap stoku '+trN(swapStoku,1)+' ('+gun+')'))+'</span>'+
             (bayat?' <span style="color:#E8933B;font-size:9px;font-weight:600">\u26a0 stok '+stokYas+' günlük — "rezervleri güncelle"</span>':'');
         }
-        $('karneSwapHaric').className='up';
+        $('karneSwapHaric').className=(KP.kopru&&KP.delta<0)?'down':'up';
       }catch(e){
         /* §245k: rezerv.json okunamazsa swap hariç hesaplanamaz — ama net
            elimizde. Boş bırakmak yerine NEDENİ hücreye yaz. */

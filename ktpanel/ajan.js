@@ -146,7 +146,7 @@ async function yorumTuru(zorla){
   if(!key){
     el.innerHTML='<div style="font-size:12px;line-height:1.55">'+kuralYorum(b)+'</div>'+
       '<div class="sub" style="font-size:9px;margin-top:4px">kural-tabanlı özet · '+saat()+' · '+
-      (window.AJAN_SUNUCU_HATA?('sunucu AI hatası: '+String(window.AJAN_SUNUCU_HATA).slice(0,90)):'AI yorumu için Vercel\u0027e ANTHROPIC_API_KEY ekle ya da aşağıya yerel anahtar gir')+'</div>';
+      (window.AJAN_SUNUCU_HATA?('sunucu AI hatası: '+String((window.AJAN_SUNUCU_HATA&&window.AJAN_SUNUCU_HATA.m)||window.AJAN_SUNUCU_HATA).slice(0,90)):'AI yorumu için Vercel\u0027e ANTHROPIC_API_KEY ekle ya da aşağıya yerel anahtar gir')+'</div>';
     kayit('Kural-tabanlı yorum üretildi (anahtar yok)');
     return;
   }
@@ -822,7 +822,7 @@ function notNobetci(){
 function notYasEtiketi(nt, kayit){
   try{
     if(!nt||!kayit||!kayit.ts) return;
-    const eski=nt.querySelector('.ebu-yas'); if(eski) eski.remove();
+    nt.querySelectorAll('.ebu-yas').forEach(e=>e.remove());
     const saat=(Date.now()-kayit.ts)/3600000;
     if(saat<72) return;
     const gun=Math.floor(saat/24);
@@ -833,6 +833,13 @@ function notYasEtiketi(nt, kayit){
     const H=window.AJAN_SUNUCU_HATA;
     if(H && !(typeof H==='object' && H.g)){ sp.style.color='var(--down)'; sp.textContent+=' ⚠'; }   /* §254b yalnız KALICI hatada */
     nt.appendChild(sp);
+    /* §575 (26 Kas): 7 günü aşan not SONDAKİ küçük etiketle yetinmez — BAŞINA uyarı alır. Ölçüm: AI bakiyesi bittiği için 133 notun
+       hepsi ≥13 günlüktü; Rezerv Karnesi notu "net rezerv 42,7, güçleniyor" derken canlı satır 15,7 (5 günde −19,7) gösteriyordu.
+       Okuyucu önce yorumu okur; yorum eskiyse bunu yorumdan ÖNCE görmeli. */
+    if(gun>=7){ const u=document.createElement('div'); u.className='ebu-yas';
+      u.style.cssText='font-size:9.5px;font-weight:600;color:#E8933B;margin-bottom:3px';
+      u.textContent='⚠ ESKİ YORUM — '+gun+' gün önce yazıldı; içindeki rakam ve yön o günündür. Kartın canlı satırları esas alınır.';
+      nt.insertBefore(u, nt.firstChild); }
   }catch(e){}
 }
 function notKaydet(kayitli){
@@ -971,7 +978,7 @@ async function notlariGeriYukle(){
       const kayd=k['__GOREV_'+G.ad+'__'];
       if(!kayd||!kayd.html) return;
       const hk=kartByLbl(G.hedefLbl); const nt=hk?hk.querySelector('.note'):null;
-      if(nt){ nt.innerHTML=kayd.html; n++; }
+      if(nt){ nt.innerHTML=kayd.html; notYasEtiketi(nt,kayd); n++; }   /* §575: GÖRÜŞ notu yaş etiketi almıyordu — 26 Kas'ta 13 Eki tarihli metin etiketsiz duruyordu */
     });
     if(n) kayit(n+' not geri yüklendi — Ebu hatırlıyor');
   }catch(e){}
@@ -1014,8 +1021,10 @@ function ajanDurumSeridi(){
     let eski=el.querySelector('.ebu-uyari'); if(eski) eski.remove();
     if(!h) return;
     let k={}; try{ k=JSON.parse(localStorage.getItem('ajan_notlar')||'{}'); }catch(e){}
-    const tsler=Object.values(k).map(v=>v&&v.ts).filter(Boolean);
-    const enYeni=tsler.length?Math.max(...tsler):0;
+    /* §575: "en yeni kayıt" kural-tabanlı özet ve gündem gibi AI DIŞI kayıtları da sayıyordu → motor 2 haftadır dururken şerit
+       "notlar bugün yazıldı" diyordu. Ölçü artık yalnız KART NOTLARININ ortanca yaşı. */
+    const tsler=Object.keys(k).filter(a=>!a.startsWith('__')&&k[a]&&k[a].html&&k[a].ts).map(a=>k[a].ts).sort((a,b)=>a-b);
+    const enYeni=tsler.length?tsler[Math.floor(tsler.length/2)]:0;
     const gun=enYeni?Math.floor((Date.now()-enYeni)/86400000):null;
     /* §254b GEÇİCİ / KALICI AYRIMI. h artık {m,g} — g:true ise motor çalışmaya
        devam ediyor, "duraklatıldı" demek yanıltır. */
@@ -1025,7 +1034,7 @@ function ajanDurumSeridi(){
     d.className='ebu-uyari';
     d.style.cssText='margin-top:4px;font-size:10px;line-height:1.5;color:'+(gecici?'var(--muted)':'var(--down)');
     d.innerHTML=(gecici?'ℹ son tur atlandı — ':'⚠ Ebu duraklatıldı — ')+String(mesaj).slice(0,70)+
-      (!gecici&&gun!=null?('<br><span class="thin">notlar '+(gun===0?'bugün yazıldı':gun+' gündür güncellenmiyor')+'</span>'):'');
+      (!gecici&&gun!=null?('<br><span class="thin">notlar '+(gun===0?'bugün yazıldı':'ortanca '+gun+' gündür güncellenmiyor')+'</span>'):'');
     el.appendChild(d);
   }catch(e){}
 }
