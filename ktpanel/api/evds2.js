@@ -647,7 +647,8 @@ function nplHesap(items){
       toplam: oran(tk2 + tk8, kr6 + kr8), yurtici: oran(tk2, kr6),
       kart: oran(tK, kK), ihtiyac: oran(n(it, '6.53'), n(it, '6.11')), konut: oran(n(it, '6.51'), n(it, '6.3')), tasit: oran(n(it, '6.52'), n(it, '6.7')),
       tuketici: (tT != null && tK != null && kT != null && kK != null) ? oran(tT - tK, kT - kK) : null,
-      ticari: (tTic != null && fd != null) ? oran(tTic, fd + fk) : null });
+      ticari: (tTic != null && fd != null) ? oran(tTic, fd + fk) : null,
+      st: { toplam: kr6, tuketici: (kT != null && kK != null) ? kT - kK : null, ihtiyac: n(it, '6.11'), konut: n(it, '6.3'), tasit: n(it, '6.7'), kart: kK, kobi: n(it, '6.25'), ticari: fd } });
   }
   H.sort((a, b) => a.d < b.d ? -1 : 1);
   if (!H.length) return null;
@@ -657,11 +658,19 @@ function nplHesap(items){
     ['tuketici', 'Tüketici kredileri (kart hariç)'], ['tasit', 'Taşıt'], ['konut', 'Konut'], ['ticari', 'Ticari ve diğer']]
     .map(([k, ad]) => ({ k, ad, oran: son[k], d1: bp(son, geri(1), k), d4: bp(son, geri(4), k), d13: bp(son, geri(13), k), d52: bp(son, geri(52), k) }));
   const g1 = geri(1), g13 = geri(13);
+  /* §579 KREDİ İVMESİ: stok büyümesi. b8 = 8 haftalık % (TCMB makroihtiyati sınırının ölçüsü) · b13y = 13 hafta yıllıklandırılmış · yy = 52 hafta.
+     Sınırlar (TCMB 2026-49, 11 Kas 2026; 8 haftalık): ihtiyaç 3,5 · taşıt 3,5 · KOBİ TL 5,5. Değişirse yalnız bu satır güncellenir. */
+  const SINIR = { ihtiyac: 3.5, tasit: 3.5, kobi: 5.5 };
+  const buy = (f, k) => { const a = geri(k); return (a && a.st && a.st[f] > 0 && son.st[f] > 0) ? (son.st[f] / a.st[f] - 1) * 100 : null; };
+  const krediler = [['toplam', 'Toplam kredi'], ['tuketici', 'Tüketici (kart hariç)'], ['ihtiyac', 'İhtiyaç'], ['konut', 'Konut'], ['tasit', 'Taşıt'], ['kart', 'Bireysel kredi kartı'], ['kobi', 'KOBİ (TL · TCMB tanımı)'], ['ticari', 'Finansal kesim dışı ticari']]
+    .filter(([k]) => son.st[k] > 0).map(([k, ad]) => { const b8 = buy(k, 8), b13 = buy(k, 13), yy = buy(k, 52);
+      return { k, ad, stok: +(son.st[k] / 1e6).toFixed(0), b8: b8 == null ? null : +b8.toFixed(2), sinir: SINIR[k] || null,
+        b13y: b13 == null ? null : +((Math.pow(1 + b13 / 100, 4) - 1) * 100).toFixed(1), yy: yy == null ? null : +yy.toFixed(1) }; });
   return { tarih: son.d, takip: son.takip, kredi: son.kredi, haftalikArtis: g1 ? +(son.takip - g1.takip).toFixed(1) : null,
     artis13Ort: g13 ? +((son.takip - g13.takip) / 13).toFixed(1) : null,
     buyume13Yillik: (g13 && g13.takip > 0) ? +((Math.pow(son.takip / g13.takip, 4) - 1) * 100).toFixed(1) : null,
     krediBuyume13Yillik: (g13 && g13.kredi > 0) ? +((Math.pow(son.kredi / g13.kredi, 4) - 1) * 100).toFixed(1) : null,
-    kalemler, seri: H.slice(-60).map(x => ({ d: x.d, toplam: x.toplam, kart: x.kart, ihtiyac: x.ihtiyac, ticari: x.ticari, takip: x.takip })) };
+    krediler, kalemler, seri: H.slice(-60).map(x => ({ d: x.d, toplam: x.toplam, kart: x.kart, ihtiyac: x.ihtiyac, ticari: x.ticari, takip: x.takip })) };
 }
 async function nplModu(req, res){
   res.setHeader('Access-Control-Allow-Origin','*');
@@ -683,7 +692,7 @@ async function nplModu(req, res){
     const K = k => 'TP.HPBITABLO' + k;
     const [a, c] = await Promise.all([
       cek(['2.38','8.32','8.18','6.1','6.2','6.16','6.50','6.54'].map(K)),
-      cek(['6.3','6.7','6.11','6.51','6.52','6.53','6.19','6.36','6.55'].map(K)) ]);
+      cek(['6.3','6.7','6.11','6.51','6.52','6.53','6.19','6.36','6.55','6.25'].map(K)) ]);
     if (!a || !a.length) return res.status(200).json({ ok:false, err:'EVDS haftalık bankacılık serileri gelmedi' });
     const m = new Map(); for (const it of a) m.set(it.Tarih, Object.assign({}, it));
     for (const it of (c || [])) m.set(it.Tarih, Object.assign(m.get(it.Tarih) || {}, it));
