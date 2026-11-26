@@ -5131,9 +5131,18 @@ function toparlanmaCekirdek(G) {
     const v10 = geri(14), v30 = geri(30); if (sayi(v10)) cds10 = sonC[1] - v10; if (sayi(v30)) cds30 = sonC[1] - v30; }
   const a2 = rvSakin && (cds10 == null || cds10 <= 0);
   /* 3 — KATILIM */
-  let itki = null;
+  let itki = null, itkiIdx = -1;
   for (let i = Math.max(10, L - 20); i < L; i++) { const g = gun[i]; if (!(sayi(g.zweig) && g.zweig > 0.615)) continue;
-    const once = gun.slice(i - 10, i).map(x => x.zweig).filter(sayi); if (once.length && Math.min(...once) < 0.40) { itki = g.d; break; } }
+    const once = gun.slice(i - 10, i).map(x => x.zweig).filter(sayi); if (once.length && Math.min(...once) < 0.40) { itki = g.d; itkiIdx = i; break; } }
+  /* §574 (26 Kas) İTKİ İPTALİ. İtki 20 gün boyunca KOŞULSUZ geçerli sayılıyordu: 9 Kas itkisinden sonra eşit ağırlıklı evren %8 düştü,
+     ÜHO10 0,33'e geri indi, 6 aylık dip yapanlar %23'e çıktı — kart hâlâ "3 · Dönüş teyitli" diyordu ve seçim hunisi sepete prim veriyordu.
+     Genişlik itkisi bir TAAHHÜT değil hipotezdir; iki olaydan biri onu çürütür: (a) ÜHO10 yeniden 0,40 altına iner (alıcı katılımı
+     tamamen geri verildi) ya da (b) eşit ağırlıklı evren itki öncesi 10 günün dibinin altında kapanır (itkinin çıktığı taban kırıldı). */
+  let itkiIptal = null;
+  if (itki && itkiIdx >= 0) { const taban = Math.min(...gun.slice(Math.max(0, itkiIdx - 10), itkiIdx + 1).map(x => x.ew));
+    for (let q = itkiIdx + 1; q < L; q++) { if (sayi(gun[q].zweig) && gun[q].zweig < 0.40) { itkiIptal = { itki, gun: gun[q].d, neden: 'ÜHO10 yeniden 0,40 altına indi' }; break; }
+      if (gun[q].ew < taban) { itkiIptal = { itki, gun: gun[q].d, neden: 'eşit ağırlıklı evren itki öncesi dibin altında kapandı' }; break; } }
+    if (itkiIptal) itki = null; }
   /* itki KURULUMU: Zweig'in ilk yarısı (ÜHO10 < 0,40) son 10 günde görüldüyse, sonraki 10 iş günü içinde 0,615 üstü itki sayılır */
   const kurIdx = (() => { for (let i = L - 1; i >= Math.max(0, L - 10); i--) if (sayi(gun[i].zweig) && gun[i].zweig < 0.40) return i; return -1; })();
   const kurulum = !itki && kurIdx >= 0 ? { gun: gun[kurIdx].d, kalan: 10 - (L - 1 - kurIdx) } : null;
@@ -5179,10 +5188,10 @@ function toparlanmaCekirdek(G) {
         { ad: 'RV20 (eşit ağırlıklı evren, yıllık)', deger: P(S.rv20), tepe: P(rvTepe60), esik: 'son 60g tepesinin %75\'i altı', tamam: rvSakin, birim: '%' },
         { ad: 'TR CDS 2 hafta değişim', deger: yv(cds10, 0), esik: '≤ 0 bp (daralma)', tamam: cds10 == null ? null : cds10 <= 0, birim: 'bp', not: cds30 != null ? '1 ay ' + (cds30 > 0 ? '+' : '') + yv(cds30, 0) + ' bp' : '' } ] },
       { no: 3, ad: 'Katılım geldi mi (teyit)', tamam: a3, sinyaller: [
-        { ad: 'Genişlik itkisi (Zweig ÜHO10)', deger: yv(S.zweig, 3), esik: '10 iş günü içinde <0,40 → >0,615', tamam: !!itki, not: itki ? 'itki günü ' + itki : (kurulum ? 'KURULUM HAZIR: ' + kurulum.gun + ' <0,40 görüldü · ' + kurulum.kalan + ' iş günü içinde >0,615 itkidir' : 'son 20 günde yok') },
+        { ad: 'Genişlik itkisi (Zweig ÜHO10)', deger: yv(S.zweig, 3), esik: '10 iş günü içinde <0,40 → >0,615', tamam: !!itki, not: itki ? 'itki günü ' + itki : (itkiIptal ? 'itki ' + itkiIptal.itki + ' İPTAL (' + itkiIptal.gun + ': ' + itkiIptal.neden + ')' + (kurulum ? ' · yeni kurulum: ' + kurulum.kalan + ' iş günü içinde >0,615' : '') : kurulum ? 'KURULUM HAZIR: ' + kurulum.gun + ' <0,40 görüldü · ' + kurulum.kalan + ' iş günü içinde >0,615 itkidir' : 'son 20 günde yok') },
         { ad: '50g ortalaması üstündeki hisseler', deger: P(S.ab50), tepe: P(ab50Dip30), esik: 'son 30g dibi ≤%20 iken ≥%50', tamam: genislikDonus, birim: '%' },
         { ad: '200g ortalaması üstündeki hisseler', deger: P(S.ab200), esik: 'bağlam (eşik yok)', tamam: null, birim: '%' } ] } ],
-    itki_kurulum: kurulum,
+    itki_kurulum: kurulum, itki_iptal: itkiIptal,
     momentum_riski: { yuksek: momRisk, ew6a: P(ew6), rv20: P(S.rv20), rv_medyan: P(rvMed) },
     seri: gun.slice(-120).map(g => ({ d: g.d, ew: yv(g.ew, 2), ab50: P(g.ab50), dip: P(g.dip), zw: yv(g.zweig, 3), rv: P(g.rv20), dus: P(g.dusenPay) })),
     sepet
@@ -5219,13 +5228,18 @@ async function toparlanmaUret(PXgelen) {
   const sG = C.asamalar[2].sinyaller; gecmis.push({ d: C.son, asama: C.asama, ab50: sG[1].deger, dip: C.asamalar[0].sinyaller[1].deger, zw: sG[0].deger, rv: C.asamalar[1].sinyaller[0].deger });
   gecmis.sort((x, y) => x.d < y.d ? -1 : 1);
   const degisti = eski && eski.asama !== C.asama;
+  /* §574: resmî takvimde (endeks-arsiv) olup fiyat serisinde OLMAYAN günler. 26 Kas: Yahoo 25 Kas barını hiçbir BIST hissesi için vermedi
+     (24 → 26) — monitör sessizce 24 Kas'ta kaldı. Boşluk artık dosyada ve kartta yazılır. */
+  const seriG = new Set(C.seri.map(x => x.d)); const arG = Object.keys(ar).filter(g => ar[g] && ar[g].XKTUM > 0).sort();
+  const eksikGun = arG.slice(-15).filter(g => g < C.son && g >= C.seri[0].d && !seriG.has(g)); const gerideGun = arG.filter(g => g > C.son);
   const out = { guncelleme: bugun, kaynak: 'Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık',
     _yontem: '§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.',
-    ...C, onceki_asama: eski ? eski.asama : null, asama_degisim: degisti ? (eski.son + ' → ' + C.son) : (eski && eski.asama_degisim) || null, gecmis: gecmis.slice(-260) };
+    ...C, eksik_gun: eksikGun, geride_gun: gerideGun, onceki_asama: eski ? eski.asama : null, asama_degisim: degisti ? (eski.son + ' → ' + C.son) : (eski && eski.asama_degisim) || null, gecmis: gecmis.slice(-260) };
   await yaz(dosya, out); degisenler.push('toparlanma' + (degisti ? ' (AŞAMA ' + eski.asama + '→' + C.asama + ')' : ''));
   const ad = ['düşüş sürüyor', 'baskı tükeniyor', 'oynaklık sakinleşiyor', 'dönüş teyitli'];
   raporlar.push('### Toparlanma monitörü (§530) — ✓ aşama ' + C.asama + ' (' + ad[C.asama] + ')' + (degisti ? ' · ⚑ DEĞİŞTİ (' + eski.asama + '→' + C.asama + ')' : '') + ' · son ' + C.son + ' · evren ' + C.evren +
-    ' · %>50g ' + sG[1].deger + ' · 6a dip ' + C.asamalar[0].sinyaller[1].deger + '% · RV20 ' + C.asamalar[1].sinyaller[0].deger + '% · Zweig ' + sG[0].deger + ' · momentum riski ' + (C.momentum_riski.yuksek ? 'YÜKSEK' : 'normal') + ' · sepet ' + C.sepet.length);
+    ' · %>50g ' + sG[1].deger + ' · 6a dip ' + C.asamalar[0].sinyaller[1].deger + '% · RV20 ' + C.asamalar[1].sinyaller[0].deger + '% · Zweig ' + sG[0].deger + ' · momentum riski ' + (C.momentum_riski.yuksek ? 'YÜKSEK' : 'normal') + ' · sepet ' + C.sepet.length +
+    (C.itki_iptal ? ' · ⚠ itki ' + C.itki_iptal.itki + ' İPTAL (' + C.itki_iptal.gun + ')' : '') + (gerideGun.length ? ' · ⚠ fiyat serisi resmî takvimin ' + gerideGun.length + ' gün gerisinde (' + gerideGun.join(', ') + ')' : '') + (eksikGun.length ? ' · ⚠ fiyatı olmayan gün: ' + eksikGun.join(', ') : ''));
 }
 
 /* ── §531 ÇEYREK KARAR MOTORU XK050'YE GENİŞLEDİ (25 Eki) ───────────────────────────────────────────────────────────────
