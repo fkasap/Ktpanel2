@@ -16157,3 +16157,10 @@ Kaynaklar: merkez bankası bildirileri, TCMB duyuru 2026-49, SPK 76/1903 + 7596 
 - **Ebu şeridi:** "notlar bugün yazıldı" yanlışı (AI dışı kayıtlar sayılıyordu) → kart notlarının ortanca yaşı; "sunucu AI hatası: [object Object]" → okunur mesaj.
 - **Takvim dipnotu:** Ekim başı rezerv rakamları ve "BOK iki kez" → güncellendi.
 - Dokunulmayan bulgular: API bakiyesi (133 not ≥13g, 4 taslak + 9 "kart bekliyor" bilanço) · Enflasyon Patikası 13 Eki · Yahoo 25 Kas barı yok (monitör ve karne 24 Kas) · SPK PYŞ büyüklük servisi boş · Alpha Vantage kotası dolu (haber yön skoru yok) · EIA stok satırları · Avrupa şirket notları 27 Tem arşivi · GYO NAV 2026/06 · kredi notu takvimi boş · bekçinin bist-takvim uyarısı (sezon bitti, dosya değişmiyor — yanlış alarm).
+
+## §576 — Haftalık takip oranı kartı (26 Kas 2026)
+- Kullanıcı: "bugün BDDK NPL %3,37 geldi" — panel aylık bültenden Eylül %3,09 gösteriyordu (BDDK aylık servisi Ekim için hâlâ "veri bulunamadı").
+- Makine-okunur kaynak bulundu: EVDS `bie_hpbitablo2` / `6` / `8` (TCMB Haftalık Para ve Banka İstatistikleri; BDDK kaynaklı; Cuma değeri, Perşembe yayımı; 28 Haz 2024'ten beri).
+- `api/evds2.js?mod=npl` (nplHesap + nplModu): oran = takip/(kredi+takip); toplam, kart, ihtiyaç, tüketici (kart hariç), taşıt, konut, ticari; Δ1/4/13/52 hafta (bp); tutar, haftalık artış, 13h yıllıklandırılmış takip ve kredi büyümesi; 60 haftalık seri.
+- Doğrulama (20 Kas, gerçek EVDS değerleriyle birim test): kart %5,98 = BDDK ✓ · tüketici kart hariç %5,18 (BDDK 5,17) ✓ · toplam %3,35 (BDDK 3,37 — kredi tabanı kapsam farkı, kartta yazılı) · haftalık artış +16,0 mlr ₺ ✓.
+- Kart: Makro › Bankacılık en üstte (app.js nplInit, bnkInit içinden). Canlı EVDS çağrısı yerelde denenemedi (anahtar sunucuda) — yükleme sonrası canlıda doğrulanacak.

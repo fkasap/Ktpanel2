@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261126c';
+const KTP_SURUM = '20261126d';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -4440,7 +4440,37 @@ async function kartInit(){
 }
 kartInit();
 
+/* §576 (26 Kas) HAFTALIK TAKİP ORANI KARTI — /api/evds2?mod=npl. Aylık BDDK tablosu (aşağıda) seviye ve sektör kırılımını verir ama ~2 ay
+   gecikir; bu kart yönü haftalık verir. Renk kuralı takipte TERS: artış kırmızı. */
+async function nplInit(){
+  const el=$('nplBody'); if(!el) return;
+  let J=null; try{ J=await (await fetch('/api/evds2?mod=npl',{signal:AbortSignal.timeout(45000)})).json(); }catch(e){}
+  if(!J||!J.ok){ el.innerHTML='<span class="thin">Haftalık takip verisi alınamadı'+(J&&J.err?' — '+esc(J.err):'')+'. Aylık BDDK tablosu aşağıda.</span>'; if($('nplDamga')) $('nplDamga').textContent='veri yok'; return; }
+  if($('nplDamga')) $('nplDamga').textContent=fmkTar(J.tarih)+' haftası · EVDS';
+  const bp=v=>v==null?'<span class="thin">—</span>':'<span class="'+(v>0?'down':v<0?'up':'thin')+'">'+(v>0?'+':v<0?'−':'')+Math.abs(v)+'</span>';
+  const T=J.kalemler.find(x=>x.k==='toplam')||{};
+  const kutu=(b,v,alt)=>'<div style="flex:1;min-width:150px;border:1px solid var(--line);border-radius:6px;padding:7px 9px"><div class="thin" style="font-size:9px;letter-spacing:.04em">'+b+'</div><div style="font-size:17px;font-weight:600;margin:2px 0">'+v+'</div><div class="thin" style="font-size:9.5px">'+alt+'</div></div>';
+  let h='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'+
+    kutu('TAKİP ORANI','%'+trN(T.oran,2),'1 hafta '+bp(T.d1)+' · 4 hafta '+bp(T.d4)+' · 13 hafta '+bp(T.d13)+' bp')+
+    kutu('TAKİPTEKİ TUTAR',trN(J.takip,0)+' mlr ₺','hafta '+(J.haftalikArtis>=0?'+':'−')+trN(Math.abs(J.haftalikArtis),1)+' mlr ₺'+(J.artis13Ort!=null?' · 13h ort. '+trN(J.artis13Ort,1):''))+
+    kutu('13 HAFTALIK BÜYÜME (YILLIKLANDIRILMIŞ)',(J.buyume13Yillik!=null?'%'+trN(J.buyume13Yillik,0):'—')+' <span class="thin" style="font-size:10px">takip</span>','kredi '+(J.krediBuyume13Yillik!=null?'%'+trN(J.krediBuyume13Yillik,0):'—')+' — takip krediden hızlı büyüyorsa oran payda etkisiyle değil gerçek bozulmayla yükselir')+'</div>';
+  /* mini grafik: toplam + kart */
+  const S=J.seri||[]; if(S.length>8){ const W=640,Hh=70,pad=4; const ciz=(f,renk)=>{ const v=S.map(x=>x[f]).filter(x=>x!=null); if(v.length<2) return ''; const mn=Math.min(...v),mx=Math.max(...v),ar=(mx-mn)||1;
+      const pts=S.map((x,i)=>x[f]==null?null:(pad+i*(W-2*pad)/(S.length-1)).toFixed(1)+','+(Hh-pad-(x[f]-mn)/ar*(Hh-2*pad)).toFixed(1)).filter(Boolean).join(' ');
+      return '<polyline fill="none" stroke="'+renk+'" stroke-width="1.6" points="'+pts+'"/>'; };
+    h+='<div style="margin:2px 0 8px"><svg viewBox="0 0 '+W+' '+Hh+'" style="width:100%;height:70px" preserveAspectRatio="none" role="img" aria-label="Takip oranı son '+S.length+' hafta">'+ciz('toplam','var(--down)')+ciz('kart','#E8933B')+'</svg>'+
+      '<div class="thin" style="font-size:9px;display:flex;justify-content:space-between"><span>'+fmkTar(S[0].d)+' · toplam %'+trN(S[0].toplam,2)+'</span><span><span style="color:var(--down)">■</span> toplam · <span style="color:#E8933B">■</span> bireysel kart (her çizgi kendi ölçeğinde)</span><span>'+fmkTar(S[S.length-1].d)+' · toplam %'+trN(S[S.length-1].toplam,2)+'</span></div></div>'; }
+  h+='<div style="overflow-x:auto"><table aria-label="Takip oranı kırılımı"><thead><tr><th>Defter</th><th class="num">Takip %</th><th class="num">Δ 1 hafta</th><th class="num">Δ 4 hafta</th><th class="num">Δ 13 hafta</th><th class="num">Δ 52 hafta</th></tr></thead><tbody>'+
+    J.kalemler.filter(x=>x.oran!=null).map(x=>'<tr'+(x.k==='toplam'?' style="font-weight:600"':'')+'><td>'+esc(x.ad)+'</td><td class="num">'+trN(x.oran,2)+'</td><td class="num">'+bp(x.d1)+'</td><td class="num">'+bp(x.d4)+'</td><td class="num">'+bp(x.d13)+'</td><td class="num">'+bp(x.d52)+'</td></tr>').join('')+'</tbody></table></div>';
+  const enK=J.kalemler.filter(x=>x.k!=='toplam'&&x.d13!=null).sort((a,b)=>b.d13-a.d13)[0];
+  h+='<div class="note" style="margin-top:8px;font-size:10.5px"><b>Okuma:</b> Δ sütunları baz puandır; takipte artış kötü olduğu için kırmızıdır. Oran = takip / (canlı kredi + takip).'+
+    (enK&&enK.d13>0?' Son 13 haftada en çok bozulan defter <b>'+esc(enK.ad)+'</b> (+'+enK.d13+' bp).':'')+
+    ' Sıra genelde aynıdır: önce kart ve ihtiyaç (teminatsız, kısa vadeli), sonra KOBİ/ticari; konut en son ve en az. Bir kredi 90 gün gecikince takibe geçer — yani bugünkü oran üç ay önceki koşulların, bugünkü fonlama maliyeti ise üç ay sonraki oranın habercisidir. Banka hissesi için çeviri: takip girişi → karşılık gideri → kâr; oran aynı kalsa bile tutarın krediden hızlı büyümesi kredi maliyetinin yükseldiğini söyler.'+
+    '<br><span class="thin">Kapsam: yurt içi + yurt dışı şubeler; kırılım satırları yurt içi şubeler. BDDK\'nın haftalık bülten manşeti kredi tabanını biraz farklı aldığı için toplam oran birkaç baz puan sapabilir (20 Kas: BDDK %3,37 · bu hesap %3,35; kart %5,98 birebir). Yayın: Cuma değeri, ertesi Perşembe.</span></div>';
+  el.classList.remove('thin'); el.innerHTML=h;
+}
 async function bnkInit(){
+  nplInit();
   if(!$('bnkOzet'))return;
   /* §541d (26 Eki 21:37, kullanıcı ekranı: "BANKACILIK SEKTÖRÜ · VERİ YOK" — sahiplik ve sektör kartları dolu). panel=1 ucu BDDK'dan
      14 ardışık istek yapıyor; ölçüm 15,4 sn — BDDK yavaşken tek deneme düşüyor, kart AYLIK veri için boş kalıyordu. Çare: her uç
