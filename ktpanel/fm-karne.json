@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-25",
+ "guncelleme": "2026-11-26",
  "son": "2026-11-24",
  "kaynak": "fm-arsiv.json (nokta-zaman skor) · Yahoo adjclose · endeks-arsiv.json XKTUM · track.json · xktum.json",
  "_yontem": "§529 IC = Spearman sıra korelasyonu (skor ↔ sonraki getiri). Sektör-nötr IC: getiriden sektör ortalaması çıkarılır. |IC| > 2/√n ≈ %95 anlamlılık (tek kesit). Örtüşen pencereler bağımsız değildir. Ayrıştırma: eşit ağırlıklı evren kıyası; faktör katkısı = aktif maruziyet × EKK faktör getirisi, kalan = hisseye özgü.",
@@ -51,9 +51,9 @@
   }
  ],
  "track_resmi": {
-  "tarih": "2026-11-24",
-  "model": -28.953,
-  "endeks": -23.836,
+  "tarih": "2026-11-25",
+  "model": -30.72,
+  "endeks": -25.47,
   "inception": "2026-07-14"
  },
  "karne": [
@@ -782,7 +782,7 @@
    "Rp": -28.62,
    "Rew": -39.88,
    "Rb": -23.84,
-   "Rcw": -23.08,
+   "Rcw": -23.19,
    "xk_kapsam": 230,
    "fark": -4.79,
    "agirlik_etkisi": -16.04,
@@ -791,7 +791,7 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 17.4,
+      "w0": 17.3,
       "r": -7.3,
       "modelde": true,
       "model_w": 2.5
@@ -805,15 +805,15 @@
      },
      {
       "k": "TUPRS",
-      "w0": 10.6,
+      "w0": 10.7,
       "r": 20.3,
       "modelde": true,
       "model_w": 2.5
      }
     ],
     "ilk3_agirlik": 41.4,
-    "ilk3_katki": 0.38,
-    "kalan_getiri": -40.02
+    "ilk3_katki": 0.42,
+    "kalan_getiri": -40.31
    },
    "sektor": {
     "satirlar": [
@@ -941,7 +941,7 @@
       "model": 0.32,
       "evren": -0.15,
       "aktif": 0.47,
-      "getiri_1s": 11.68,
+      "getiri_1s": 11.67,
       "katki": 5.52
      },
      {
@@ -957,16 +957,16 @@
       "model": 0.86,
       "evren": 0.15,
       "aktif": 0.71,
-      "getiri_1s": -0.7,
-      "katki": -0.5
+      "getiri_1s": -0.71,
+      "katki": -0.51
      },
      {
       "f": "MOMENTUM",
       "model": 0.26,
       "evren": 0.01,
       "aktif": 0.25,
-      "getiri_1s": 0.26,
-      "katki": 0.07
+      "getiri_1s": 0.25,
+      "katki": 0.06
      },
      {
       "f": "LOW_RISK",
@@ -981,11 +981,11 @@
       "model": 0.56,
       "evren": 0,
       "aktif": 0.56,
-      "getiri_1s": 3.09,
-      "katki": 1.74
+      "getiri_1s": 3.1,
+      "katki": 1.75
      }
     ],
-    "toplam": 9.5,
+    "toplam": 9.49,
     "kalan": 1.76
    },
    "en_iyi": [
@@ -1444,7 +1444,7 @@
    "Rp": -31.81,
    "Rew": -39.31,
    "Rb": -31.87,
-   "Rcw": -30.51,
+   "Rcw": -30.67,
    "xk_kapsam": 235,
    "fark": 0.06,
    "agirlik_etkisi": -7.43,
@@ -1453,14 +1453,14 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 17.9,
+      "w0": 17.8,
       "r": -18.9,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 13.4,
+      "w0": 13.6,
       "r": -14.3,
       "modelde": true,
       "model_w": 2.5
@@ -1475,7 +1475,7 @@
     ],
     "ilk3_agirlik": 44.4,
     "ilk3_katki": -6.8,
-    "kalan_getiri": -42.63
+    "kalan_getiri": -42.95
    },
    "sektor": {
     "satirlar": [
@@ -1631,7 +1631,7 @@
       "evren": 0,
       "aktif": 0.57,
       "getiri_1s": -0.41,
-      "katki": -0.23
+      "katki": -0.24
      },
      {
       "f": "MOMENTUM",
@@ -1739,7 +1739,7 @@
    "Rp": -1.86,
    "Rew": 0.04,
    "Rb": -3.91,
-   "Rcw": -3.84,
+   "Rcw": -3.88,
    "xk_kapsam": 238,
    "fark": 2.05,
    "agirlik_etkisi": 3.95,
@@ -1748,14 +1748,14 @@
     "ilk3": [
      {
       "k": "ASELS",
-      "w0": 21,
+      "w0": 20.9,
       "r": -4.5,
       "modelde": true,
       "model_w": 2.5
      },
      {
       "k": "TUPRS",
-      "w0": 17.8,
+      "w0": 18.1,
       "r": -11.3,
       "modelde": true,
       "model_w": 2.5
@@ -1768,9 +1768,9 @@
       "model_w": 2.5
      }
     ],
-    "ilk3_agirlik": 55.1,
-    "ilk3_katki": -3.17,
-    "kalan_getiri": -1.48
+    "ilk3_agirlik": 55.3,
+    "ilk3_katki": -3.2,
+    "kalan_getiri": -1.53
    },
    "sektor": {
     "satirlar": [
@@ -1920,7 +1920,7 @@
       "model": 0.08,
       "evren": -0.08,
       "aktif": 0.16,
-      "getiri_1s": -0.34,
+      "getiri_1s": -0.35,
       "katki": -0.06
      },
      {
@@ -1928,7 +1928,7 @@
       "model": 0.08,
       "evren": -0.01,
       "aktif": 0.09,
-      "getiri_1s": 2.59,
+      "getiri_1s": 2.6,
       "katki": 0.24
      },
      {
@@ -1936,15 +1936,15 @@
       "model": 0.38,
       "evren": 0.02,
       "aktif": 0.36,
-      "getiri_1s": -2.52,
-      "katki": -0.92
+      "getiri_1s": -2.51,
+      "katki": -0.91
      },
      {
       "f": "MOMENTUM",
       "model": 0.05,
       "evren": -0.05,
       "aktif": 0.1,
-      "getiri_1s": -7.81,
+      "getiri_1s": -7.76,
       "katki": -0.81
      },
      {
@@ -1952,7 +1952,7 @@
       "model": 0.02,
       "evren": -0.04,
       "aktif": 0.07,
-      "getiri_1s": 0.77,
+      "getiri_1s": 0.75,
       "katki": 0.05
      },
      {
@@ -1960,12 +1960,12 @@
       "model": 0.58,
       "evren": 0,
       "aktif": 0.58,
-      "getiri_1s": 0.54,
-      "katki": 0.31
+      "getiri_1s": 0.48,
+      "katki": 0.28
      }
     ],
-    "toplam": -1.18,
-    "kalan": -0.72
+    "toplam": -1.21,
+    "kalan": -0.69
    },
    "en_iyi": [
     {
