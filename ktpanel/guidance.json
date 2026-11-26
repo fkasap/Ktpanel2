@@ -1,21 +1,21 @@
 {
- "guncelleme": "2026-10-26",
+ "guncelleme": "2026-11-18",
  "yil": 2026,
  "sirketler": [
   {
    "k": "AEFES",
    "ad": "Anadolu Efes",
-   "g": "| Beklenti Konusu | 2026 Beklenti |\n| --- | --- |\n| Konsolide Satış Hacmi | Orta-tek haneli büyüme |\n| Bira Grubu Satış Hacmi | Düşük-tek haneli daralma (Önceki: Düşük tek haneli büyüme) |\n| Türkiye Bira Operasyonları | Düşük-tek haneli daralma (Önceki: Düşük tek haneli büyüme) |\n| Uluslararası Bira Operasyonları | Yatay |\n| Meşrubat Grubu Satış Hacmi | Orta tek haneli büyüme |\n| Türkiye Meşrubat Grubu Operasyonları | Düşük-orta tek haneli büyüme |\n| Uluslararası Meşrubat Grubu Operasyonları | Yüksek tek haneli büyüme |\n| Konsolide Net Satış Gelirleri/hl | Düşük tek haneli büyüme |\n| Bira Grubu Net Satış Gelirleri/hl | Düşük-orta tek haneli büyüme |\n| Meşrubat Grubu Net Satış Gelirleri/hl | Yatay-orta tek haneli büyüme |\n| Konsolide FAVÖK Marjı | Hafif daralma (Önceki: Yatay) |\n| Bira Grubu FAVÖK Marjı | 150 bp daralma (Önceki: Yatay) |\n| Meşrubat FAVÖK Marjı | Yatay |\n| Yatırım Harcaması/Satış Geliri | Yüksek tek haneli seviyeler |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Konsolide Satış Hacmi | — | %7,0 büyüme | Orta tek haneli büyüme |\n| Bira Grubu Satış Hacmi | — | Yatay | Orta tek haneli daralma (Önceki: Düşük tek haneli daralma) |\n| Meşrubat Grubu Satış Hacmi | Orta tek haneli büyüme | %8,0 büyüme | Yüksek tek haneli büyüme (Önceki: Orta tek haneli büyüme) |\n| Konsolide Net Satış Geliri/hl | — | ~%4,2 daralma | Düşük tek haneli daralma (Önceki: Düşük tek haneli büyüme) |\n| Bira Grubu Net Satış Geliri/hl | — | ~%2,4 daralma | Düşük-orta tek haneli büyüme |\n| Meşrubat Grubu Net Satış Geliri/ünite kasa | Orta tek haneli büyüme | ~%3,8 daralma | Düşük tek haneli daralma (Önceki: Yatay-orta tek haneli büyüme) |\n| Konsolide FAVÖK Marjı | — | %16,6 (86 bp daralma) | Hafif daralma |\n| Bira Grubu FAVÖK Marjı | — | %13,4 (209 bp daralma) | 250 bp daralma (Önceki: 150 bp daralma) |\n| Meşrubat Grubu FVÖK Marjı | Yatay | %13,4 (28 bp daralma) | Yatay |\n| Yatırım Harcamaları/Satışlar | — | %7,5 (net yatırım harcaması üzerinden) | Yüksek tek haneli oran |"
   },
   {
    "k": "AKBNK",
    "ad": "Akbank",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| TL Kredi Büyümesi | > %30 | %41,8 | > %30 |\n| YP Kredi Büyümesi (USD) | Yüksek %10'lu seviyeler | %10,1 | Yüksek tek haneli (Önceki: > %10) |\n| Net Faiz Marjı (swap düzl.) | %5 | %2,5 | %3,2-3,5 (Önceki: ~%4) |\n| Net Ücret ve Komisyon Artışı | ~%40 | %64,1 | > %30 |\n| Operasyonel Giderler Artışı | ~Orta %40'lı seviyeler | %33,1 | Düşük %30'lu seviye |\n| Operasyonel Giderler / Gelirler | Düşük %40'lı seviye | %50,6 | Düşük %40'lı seviye |\n| Takipteki Krediler Oranı | ~%3,5 | %3,4 | ~%3,5 |\n| Net Kredi Maliyeti (kur hariç) | 150-200 bp | 214 bp | ~200 bp |\n| Özsermaye Karlılığı | > %30 | %21,5 | %23-25 (Önceki: Yüksek %20'li) |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| TL Kredi Büyümesi | > %30 | %41,8 | > %30 |\n| YP Kredi Büyümesi (USD) | Yüksek %10'lu seviyeler | %10,1 | Yüksek tek haneli (Önceki: > %10) |\n| Net Faiz Marjı (swap düzl.) | %5 | %2,5 | %3,2-3,5 (Önceki: ~%4) |\n| Net Ücret ve Komisyon Artışı | ~%40 | %64,1 | > %30 |\n| Operasyonel Giderler Artışı | ~Orta %40'lı seviyeler | %33,1 | Düşük %30'lu seviye |\n| Operasyonel Giderler / Gelirler | Düşük %40'lı seviye | %50,6 | Yüksek %40'lı seviye (Önceki: Düşük %40'lı seviye) |\n| Takipteki Krediler Oranı | ~%3,5 | %3,4 | ~%3,5 |\n| Net Kredi Maliyeti (kur hariç) | 150-200 bp | 214 bp | ~200 bp |\n| Özsermaye Karlılığı | > %30 | %21,5 | %23-25 (Önceki: Yüksek %20'li) |"
   },
   {
    "k": "ARCLK",
    "ad": "Arçelik",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Ciro Büyümesi (Türkiye-TL) | Yatay | -%6,6 | Tek haneli düşüş (Önceki: Yatay) |\n| Ciro Büyümesi (Uluslararası-YP) | %15 | -%0,1 | Tek haneli düşüş (Önceki: Yatay) |\n| Düzeltilmiş FAVÖK Marjı | %6,5 | %5,9 | %6,25-6,50 |\n| Net İşletme Sermayesi / Satışlar | <%20 | %21,8 | %22 |\n| Yatırım Harcamaları | ~300 mn EUR | 205 mn EUR | 250 mn EUR |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Ciro Büyümesi (Türkiye-TL) | Yatay | -%6,6 | Tek haneli düşüş (Önceki: Yatay) |\n| Ciro Büyümesi (Uluslararası-YP) | %15 | -%0,1 | Düşük çift haneli düşüş (Önceki: Tek haneli düşüş) |\n| Düzeltilmiş FAVÖK Marjı | %6,5 | %5,9 | %5,75-6,00 (Önceki: %6,25-6,50) |\n| Net İşletme Sermayesi / Satışlar | <%20 | %21,8 | %22 |\n| Yatırım Harcamaları | ~300 mn EUR | 205 mn EUR | 200-225 mn EUR (Önceki: 250 mn EUR) |"
   },
   {
    "k": "ASELS",
@@ -35,7 +35,7 @@
   {
    "k": "CCOLA",
    "ad": "Coca-Cola İçecek",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Satış Hacmi | Orta-tek haneli büyüme | %8 | Orta-tek haneli büyüme |\n| FVÖK Marjı | Yatay | -3 bp | Yatay |\n| Türkiye Satış Hacmi | Düşük-orta tek haneli büyüme | -%1 | Düşük-orta tek haneli büyüme |\n| Uluslararası Satış Hacmi | Orta-yüksek tek haneli büyüme | %13,5 | Yüksek-tek haneli büyüme |\n| NSG/ünite kasa | Orta-tek haneli büyüme | -%3,9 | Orta tek haneli büyüme |\n| Yatırım Harcaması/NSG | — | — | Yüksek tek haneli büyüme |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Konsolide Satış Hacmi Büyümesi | Orta tek haneli büyüme | %8 büyüme | Yüksek tek haneli büyüme (Önceki: Orta tek haneli büyüme) |\n| Türkiye Satış Hacmi Büyümesi | Düşük-orta tek haneli büyüme | %1 daralma | Yatay (Önceki: Düşük-orta tek haneli büyüme) |\n| Uluslararası Satış Hacmi Büyümesi | Orta-yüksek tek haneli büyüme | %13,5 büyüme | Düşük çift haneli büyüme (Önceki: Yüksek tek haneli büyüme) |\n| NSG/ünite kasa büyümesi — TMS 29 dahil | Orta tek haneli büyüme | %3,9 daralma | Düşük tek haneli daralma (Önceki: Yatay-orta tek haneli büyüme) |\n| NSG/ünite kasa büyümesi — TMS 29 hariç, kur etkisinden arındırılmış | Düşük yirmili yüzdelerde büyüme | — | Düşük-orta onlu yüzdelerde büyüme |\n| FVÖK Marjı — TMS 29 dahil | Yatay | %13,4 (28 bp daralma) | Yatay |\n| FVÖK Marjı — TMS 29 hariç | Hafif baskı | %15,7 (54 bp daralma) | Yatay |\n| Yatırım Harcamaları / NSG — TMS 29 dahil | — | %7,4 | Yüksek tek haneli yüzde |"
   },
   {
    "k": "DOAS",
@@ -45,7 +45,7 @@
   {
    "k": "FROTO",
    "ad": "Ford Otosan",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Toplam Otomotiv Pazarı | 950-1.050 bin | 1.408 bin | 1.200-1.300 bin (Önceki: 1.300-1.400 bin) |\n| Ford Otosan Perakende Satış | 90-100 bin | 117 bin | 75-85 bin (Önceki: 90-100 bin) |\n| Toplam Yurt Dışı Satış | 610-660 bin | 603 bin | 580-630 bin |\n| Türkiye İhracat | 410-440 bin | 400 bin | 390-420 bin |\n| Romanya İhracat | 200-220 bin | 203 bin | 190-210 bin |\n| Toplam Satış Adedi | 700-760 bin | 725 bin | 655-715 bin (Önceki: 670-730 bin) |\n| Toplam Üretim | 700-750 bin | 700 bin | 690-740 bin |\n| Yatırım Harcaması | 750-850 mn € | 410 mn € | 300-400 mn € |\n| Satış Gelirleri Büyümesi | Yüksek tek haneli | %7 | Orta-yüksek tek haneli DARALMA (Önceki: Yatay) |\n| Düzeltilmiş FAVÖK Marjı | %7-8 | %8 | %6-7 (Önceki: %7-8) |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Toplam Otomotiv Pazarı | 950-1.050 bin | 1.408 bin | 1.100-1.200 bin (Önceki: 1.200-1.300 bin) |\n| Ford Otosan Perakende Satış | 90-100 bin | 117 bin | 65-75 bin (Önceki: 75-85 bin) |\n| Toplam Yurt Dışı Satış | 610-660 bin | 603 bin | 580-630 bin |\n| Türkiye İhracat | 410-440 bin | 400 bin | 390-420 bin |\n| Romanya İhracat | 200-220 bin | 203 bin | 190-210 bin |\n| Toplam Satış Adedi | 700-760 bin | 725 bin | 645-705 bin (Önceki: 655-715 bin) |\n| Toplam Üretim | 700-750 bin | 700 bin | 690-740 bin |\n| Türkiye Üretim | 460-490 bin | 452 bin | 460-490 bin |\n| Romanya Üretim | 240-260 bin | 248 bin | 230-250 bin |\n| Yatırım Harcaması | 750-850 mn € | 410 mn € | 300-400 mn € |\n| Satış Gelirleri Büyümesi | Yüksek tek haneli | %7 | Orta-yüksek tek haneli daralma |\n| Düzeltilmiş FAVÖK Marjı | %7-8 | %8 | %6-7 |"
   },
   {
    "k": "GARAN",
@@ -90,12 +90,12 @@
   {
    "k": "TUPRS",
    "ad": "Tüpraş",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Net Rafineri Marjı | 6-6,5 $/v (Önceki: 5-6) | 7,0 $/v | 13-15 $/v (Önceki: 6-7 $/v) |\n| Kapasite Kullanım Oranı | %90-95 | %93,6 | %95-100 |\n| Toplam Üretim | ~26 mn ton | 26,8 mn ton | ~29 mn ton |\n| Toplam Satış | ~30 mn ton | 29,5 mn ton | ~30 mn ton |\n| Toplam Yatırımlar | ~480 mn $ (Önceki: ~600) | 476 mn $ | ~700 mn $ |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Net Rafineri Marjı | 6-6,5 $/v (Önceki: 5-6) | 7,0 $/v | 20-22 $/v (Önceki: 13-15 $/v) |\n| Kapasite Kullanım Oranı | %90-95 | %93,6 | %95-100 |\n| Toplam Üretim | ~26 mn ton | 26,8 mn ton | ~29 mn ton |\n| Toplam Satış | ~30 mn ton | 29,5 mn ton | ~30 mn ton |\n| Toplam Yatırımlar | ~480 mn $ (Önceki: ~600) | 476 mn $ | ~700 mn $ |"
   },
   {
    "k": "ULKER",
    "ad": "Ülker",
-   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Ciro Büyümesi | %3 (±%1) | %1,7 | Düşük tek haneli DARALMA (Önceki: Yatay) |\n| FAVÖK Marjı | %17,5 (±%0,5) | %16,5 | %13,5 (±%1,5) |"
+   "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| Ciro Büyümesi | %3 (±%1) | %1,7 | Tek haneli daralma (Önceki: Düşük tek haneli daralma) |\n| FAVÖK Marjı | %17,5 (±%0,5) | %16,5 | %9-11 (Önceki: %13,5 ±%1,5) |"
   },
   {
    "k": "YKBNK",
@@ -103,5 +103,5 @@
    "g": "| Beklenti Konusu | 2025 Beklenti | 2025 Gerçekleşen | 2026 Beklenti |\n| --- | --- | --- | --- |\n| TL Kredi Büyümesi | < Ortalama Enflasyon | %43 | +%30 |\n| YP Kredi Büyümesi | Orta-onlu seviyeler | %23 | Düşük tek haneli |\n| Net Faiz Marjı | 200-225 bp iyileşme | +151 bp | ≥100 bp iyileşme |\n| Komisyon Büyümesi | ≥%40 | %50 | ~Enflasyon |\n| Gider Artışı | <%50 | %53 | ≤%35 |\n| Toplam Kredi Riski Maliyeti | 150-175 bp | 167 bp | 150-175 bp |\n| Özsermaye Karlılığı | Orta %20'li | %21,4 | Yüksek-orta %20'li |"
   }
  ],
- "_not": "2026-10-26: 20/20 şirket Fintables guidance (yil=2026) ile satır satır karşılaştırıldı — 3Ç26 sezonu başında (6 şirket açıkladı, TAVHL dahil) HİÇBİR şirket 25 Ağu'dan beri 2026 beklentisini değiştirmedi; TAVHL ciro üst bandı yazım hatası düzeltildi (1.880-1.890 → 1.880-1.980 mn €). Önceki: 2026-08-25: 20/20 sirket tazelendi (onceki 17 Tem, 39 gun). 2C sezonu sonrasi revizyonlar islendi; tablolar artik '2025 Gerceklesen' sutunu ve '(Onceki: ...)' revizyon izlerini tasiyor — sirketin hedefini NE YONDE degistirdigi okunabiliyor. Kaynak: Fintables guidance view (yil=2026)."
+ "_not": "2026-11-18: 20/20 şirket Fintables guidance (yil=2026) ile satır satır karşılaştırıldı — 3Ç26 sezonu SONRASI. 7 şirket revize etti: AEFES (bira hacmi ve bira marjı aşağı, meşrubat hacmi yukarı, birim gelir aşağı), AKBNK (gider/gelir oranı kötüleşti), ARCLK (uluslararası ciro, FAVÖK marjı, yatırım aşağı), CCOLA (hacim yukarı, birim gelir aşağı), FROTO (pazar ve perakende satış aşağı), TUPRS (net rafineri marjı 13-15 → 20-22 $/v), ULKER (ciro ve FAVÖK marjı aşağı: %13,5 → %9-11). 13 şirket değişmedi. Önceki: 2026-10-26: 20/20 şirket Fintables guidance (yil=2026) ile satır satır karşılaştırıldı — 3Ç26 sezonu başında (6 şirket açıkladı, TAVHL dahil) HİÇBİR şirket 25 Ağu'dan beri 2026 beklentisini değiştirmedi; TAVHL ciro üst bandı yazım hatası düzeltildi (1.880-1.890 → 1.880-1.980 mn €). Önceki: 2026-08-25: 20/20 sirket tazelendi (onceki 17 Tem, 39 gun). 2C sezonu sonrasi revizyonlar islendi; tablolar artik '2025 Gerceklesen' sutunu ve '(Onceki: ...)' revizyon izlerini tasiyor — sirketin hedefini NE YONDE degistirdigi okunabiliyor. Kaynak: Fintables guidance view (yil=2026)."
 }

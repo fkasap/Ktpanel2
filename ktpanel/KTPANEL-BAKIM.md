@@ -16112,3 +16112,21 @@ Düzeltilenler (app.js):
 - Konsensüsü olmayan hissede OLUMLU açıklaması "Beklenti güçlü…" diyordu → "kurum beklentisi yok, beklenti tarafı ölçülmedi".
 - FEK veto değerlerinde ondalık virgül. Sürüm 20261118c.
 Gözlem (dokunulmadı, karar kullanıcıda): (1) FEK'te V2 likidite vetosu ile metin çelişiyor — ASELS 2/5 "veto tavanı" alırken aynı kart "borç servisi risk unsuru değil" diyor; tam kesinti senaryosunda bile kapasite yükü 1,28x karşılıyor. (2) Karar panosunda çarpanın kendi bandındaki yeri hisselerin çoğunda %0 → piyasa geneli ucuzlama, ayırt edici değil. (3) AKFYE "Net dönem kârı hesaplanamadı".
+
+## §570 — 18 Kas: Faktör Model + Guidance kontrolü
+- **Guidance (guidance.json):** 20/20 şirket Fintables guidance (yil=2026) ile 3Ç26 sezonu sonrası satır satır karşılaştırıldı. 7 revizyon işlendi: AEFES, AKBNK (gider/gelir Yüksek %40'lı), ARCLK (uluslararası ciro düşük çift haneli düşüş; FAVÖK marjı %5,75-6,00; yatırım 200-225 mn €), CCOLA, FROTO (pazar 1.100-1.200 bin; perakende 65-75 bin; toplam satış 645-705 bin), TUPRS (net rafineri marjı 20-22 $/v), ULKER (ciro tek haneli daralma; FAVÖK marjı %9-11). 13 şirket değişmedi. Fintables'ta 2026 guidance'ı olan 76 şirket var; panelde 20.
+- **Faktör Model:** rakamlar tutarlı (Brinson dağılım +2,87 + seçim +8,85 = faktör ayrıştırma toplamı +11,72). Görsel düzeltme: hisse tablosu ve sektör ağırlıklarında Türkçe sektör adı ve ondalık virgül. Sürüm 20261118d.
+- Gözlem: kullanıcının elle ağırlıkları etkin (Değer %50 · Büyüme %20 · Kalite %20 · Momentum %0 · Düşük risk %10) — hisse tablosu ve Portföy › Seçim Hunisi'nin faktör bileşeni bu ağırlıklarla; karne/sicil varsayılan ağırlıklarla. Karne: 12 Eki'den sonraki dört fotoğrafın bugüne IC'si eksi (−0,12 … −0,39).
+
+## §571 — 19 Kas: "Momentum güncel, diğer faktörler bir önceki bilançodan mı?"
+- Ölçüm: faktor-evren.json'da 221 şirketin 203'ü 2026/3 (3Ç26, son 12 ay); sıralanan 200 hissenin 198'i 3Ç26. KAP arşivi de 198/200 3Ç26. Yani temeller güncel; değer çarpanları her koşuda güncel fiyat × bu dönemin son 12 ayıyla hesaplanıyor. Eksik olan, ekranın dönemi söylememesiydi.
+- Geride kalan iki hisse: MAVI (özel hesap dönemi; son raporu Tem sonu, sıradaki Aralık'ta — doğru) ve **KRDMD (gerçek hata)**: Kardemir 3Ç26'yı 4 Kas'ta yayımladı ama KAP raporu yalnız KRDMA kodu altında; KRDMD arşivi 2Ç26'da kalmıştı (15 gün). Karar panosunda da "açıklanmadı" görünüyordu.
+- tazele.mjs: `kardesArsivEsitle()` — aynı şirketin kodları (KRDMA/KRDMB/KRDMD) arasında eksik dönemler kopyalanır; kapArsiv'den hemen sonra koşar (repo verisiyle denendi: KRDMD +1 dönem, ikinci koşuda değişiklik yok). `fm.json meta.temel_donem` yazılır.
+- app.js: Faktör Model başlığında "temeller 3Ç26 son 12 ay (198/200; geride: …)". Sürüm 20261119a.
+
+## §572 — ABD sekmesi taraması (25 Kas 2026)
+- **Kök bulgu: Ebu notları 7+ gündür yazılmıyor** — 133 notun tamamı ≥7 günlük (91'i 14g+). Sebep kod değil: sunucu AI yanıtı "credit balance is too low" (Anthropic API bakiyesi bitti). Bakiye yüklenince not motoru kendiliğinden devam eder; Pazartesi haftalık not botu da aynı sebepten yazamaz.
+- **Fed kartı**: "Son karar 16 Eyl" eskiydi — 28 Eki toplantısı (sabit %3,75–4,00, 10-2; Cook ve Hammack +25bp istedi) işlendi (kaynak: federalreserve.gov monetary20261028a). Başlık damgası "2 EKİ" → "28 EKİ KARARI".
+- **"121g önce" hatası**: yaş etiketi sabit '2026-07-27' tabanından sayılıyordu. Artık metnin `data-tarih` damgasından; damgadan sonra FOMC kararı geçtiyse (FOMC_2026) kırmızı "metin ESKİ" uyarısı — 9 Ara kararından sonra kendiliğinden yanar.
+- **EIA satırları**: WCESTUS1 / WPULEUS3 (ve WGTSTUS1) FRED'den hep null; satır sessizce atlanıyordu → "veri yok" satırı görünür. BORÇ: EIA API (ücretsiz anahtar, env EIA_KEY) bağlanırsa canlıya geçer.
+- Doğrulandı/dokunulmadı: FRED serileri 23–24 Kas tarihli; WTI spot 17 Kas (FRED gecikmesi); TÜFE 12 ay "yayımlanmadı" (§558, BLS).

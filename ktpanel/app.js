@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261118c';
+const KTP_SURUM = '20261125a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -775,8 +775,11 @@ async function abdSekme(){
              — ölçüldü). Gerçekleşen için FRED doğru kaynak. */
           rh+=rSatir('JTSJOL','JOLTS açık pozisyon — işgücü talebi','mnK',true,false);
           rh+=rSatir('JTSQUR','İstifa oranı — işçi güveni','%',true,false);
-          rh+=rSatir('WCESTUS1','Ham petrol stoku (EIA, haftalık · varil)','mnK',true,false);
-          rh+=rSatir('WPULEUS3','Rafineri kapasite kullanımı','%',true,false);
+          /* §572: bu iki seri canlıda HİÇ gelmedi (FRED yanıtı null — EIA kodları FRED'de seri değil) ve rSatir boş satırı
+             SESSİZCE atladığı için eksik görünmüyordu. Boşluk artık yazılır; kaynak borcu (EIA API anahtarı gerekir). */
+          const rEksik=(id,ad)=>S[id]?'':'<div class="kv"><span class="k">'+ad+'</span><span class="thin" style="color:var(--muted)">veri yok — FRED bu seriyi vermiyor (EIA kaynağı bağlı değil)</span></div>';
+          rh+=rSatir('WCESTUS1','Ham petrol stoku (EIA, haftalık · varil)','mnK',true,false)||rEksik('WCESTUS1','Ham petrol stoku (EIA, haftalık)');
+          rh+=rSatir('WPULEUS3','Rafineri kapasite kullanımı','%',true,false)||rEksik('WPULEUS3','Rafineri kapasite kullanımı');
           rh+=rSatir('DCOILWTICO','WTI spot','puan1',true,false);
           $('usRiskBody').innerHTML = rh||'<div class="sub">Risk serileri boş.</div>';
         }
@@ -899,13 +902,18 @@ async function abdSekme(){
              fiyatlanıyor" diye KESİN konuşuyordu — oysa aynı satır fiyatlamanın
              OYNAK olduğunu yazıyordu. */
           try{
-            const _g=Math.floor((Date.now()-new Date('2026-07-27').getTime())/86400000);
+            /* §572 (25 Kas): taban tarih '2026-07-27' SABİTTİ; metin 16 Eyl kararına güncellenince etiket "121g önce" diye YANLIŞ yaş
+               gösterdi (16 Eyl→25 Kas = 70 gün). Yaş artık metnin kendi damgasından (data-tarih) okunur; kırmızı olma kuralı da
+               gün sayısı değil OLAY: damgadan SONRA bir FOMC kararı açıklandıysa metin eskimiştir. */
+            const _fe=$('fedOlasilikYas'); const _ft=(_fe&&_fe.dataset.tarih)||'2026-10-28';
+            const _g=Math.floor((Date.now()-new Date(_ft).getTime())/86400000);
+            let _kacan=0; try{ _kacan=FOMC_2026.filter(x=>x[1]>_ft && new Date(x[1]+'T23:59:59')<new Date()).length; }catch(e){}
             /* §270c aynı ölçüm İKİ kartta geçiyor (Fed & Politika + ECB Koro) —
                ikisine de yaş etiketi. Tek yerde işaretlemek diğerini yalancı bırakır. */
             for(const _id of ['fedOlasilikYas','ecbFedYas']){
               const _fo=$(_id); if(!_fo) continue;
-              _fo.textContent='('+_g+'g önce)';
-              _fo.style.color=_g>10?'var(--down)':'var(--muted)';
+              _fo.textContent=_kacan?'('+_g+'g önce · ⚠ sonrasında '+_kacan+' FOMC kararı var, metin ESKİ)':'('+_g+'g önce)';
+              _fo.style.color=_kacan?'var(--down)':'var(--muted)';
             }
             /* §284d AYNI ÖLÇÜM DÖRT KARTTA GEÇİYOR. İkisinde yaş etiketi vardı,
                ikisinde yoktu — tek yerde işaretlemek diğerlerini YALANCI bırakır.
@@ -1656,6 +1664,9 @@ async function fmInit(){
      "veri: Universe CSV" diyordu. Kaynak meta._kaynak'tan okunur; yoksa eski etiket durur. */
   try{ const kk=String((FM.meta&&FM.meta._kaynak)||''); const kendi=kk.indexOf('§455')>=0;
     const fk=$('fmKaynak'); if(fk) fk.textContent= kendi ? ('KAP TTM + Yahoo (kendi hesap · ağırlık kapsamı %'+(FM.meta.agirlik_kapsami!=null?FM.meta.agirlik_kapsami:'—')+')') : 'Universe CSV';
+    /* §571: temellerin bilanço dönemi — momentum günlük, değer çarpanı güncel fiyat × bu dönemin son 12 ayı, kalite/büyüme bu dönemin son 12 ayı */
+    try{ const td=FM.meta.temel_donem; if(fk&&kendi&&td&&td.en_yeni){ const pr=String(td.en_yeni).split('/'); const ad=pr[1]+'Ç'+String(pr[0]).slice(2);
+      fk.textContent+=' · temeller '+ad+' son 12 ay ('+td.n+'/'+td.toplam+(td.geride&&td.geride.length?'; geride: '+td.geride.slice(0,6).map(x=>{ const m=String(x).match(/^(\S+) (\d{4})\/(\d)$/); return m? m[1]+' '+m[3]+'Ç'+m[2].slice(2) : x; }).join(', ')+(td.geride.length>6?' …':''):'')+')'; fk.title='Momentum ve düşük risk günlük fiyattan. Değer: güncel fiyat × bu bilanço döneminin son 12 ay kârı/FAVÖK\'ü. Kalite ve büyüme: bu dönemin son 12 ayı. Yeni bilanço KAP\'a düşünce bir sonraki veri koşusunda girer.'; } }catch(e){}
     document.querySelectorAll('.fmKaynakKisa').forEach(e=>{ e.textContent= kendi ? 'KAP+Yahoo kendi hesap' : 'CSV'; }); }catch(e){}
   fmwGeriYukle();   // kayıtlı ağırlıklar — ilk çizimden ÖNCE (§108)
   FMF.forEach(k=>$('fmw'+k).addEventListener('input',()=>{fmwYaz();fmRender();}));
@@ -1855,9 +1866,9 @@ function fmRender(){
   const sel=yedek? sel0 : sel0.filter(r=>!disla.has(r.t));
   const cikanSay=sel0.length-sel.length;
   const wts=sel.length? fmWeightsCalc(sel.map(r=>r.score),sel.map(r=>r.s),capa) : [];
-  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+kap.toFixed(1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':'')+(cikanSay?' · çıkarılan '+cikanSay+' → ağırlığı dağıtıldı ('+sel.length+' hisse)':(yedek&&disla.size?' · çıkarılanların yerine yedek girdi':'')); }
-  const zf=(v,k)=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'"'+(k!=null&&k<0.6?' style="opacity:.55;font-style:italic" title="ince veri: bu faktörün metriklerinin yalnız %'+Math.round(k*100)+'\'i var — skor sıfıra doğru büzüldü"':'')+'>'+(v>=0?'+':'')+v.toFixed(2)+(k!=null&&k<0.6?'<sup>i</sup>':'')+'</td>';
-  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+r.s+'</td>'+zf(r.f[0],r.k&&r.k[0])+zf(r.f[1],r.k&&r.k[1])+zf(r.f[2],r.k&&r.k[2])+zf(r.f[3],r.k&&r.k[3])+zf(r.f[4],r.k&&r.k[4])+'<td class="num" style="font-weight:600">'+r.score.toFixed(3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+(wts[i]*100).toFixed(1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek girer, ağırlıklar yeniden hesaplanır (ÇIKARILAN: ağırlığı dağıt seçilebilir)" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
+  { const kap=sel.reduce((s,r)=>s+(r.xw||0),0); const ef=$('fmEff'); if(ef&&FMX) ef.textContent+=' · seçimin XKTUM kapsamı %'+trN(kap,1)+(taban>0?' · taban dışı '+tabanDisi+' · Ekim endeksi dışı '+endeksDisi:'')+(buz?' · büzme açık':'')+(cikanSay?' · çıkarılan '+cikanSay+' → ağırlığı dağıtıldı ('+sel.length+' hisse)':(yedek&&disla.size?' · çıkarılanların yerine yedek girdi':'')); }
+  const zf=(v,k)=>v==null?'<td class="num" style="color:var(--muted)">—</td>':'<td class="num '+(v>=0?'up':'down')+'"'+(k!=null&&k<0.6?' style="opacity:.55;font-style:italic" title="ince veri: bu faktörün metriklerinin yalnız %'+Math.round(k*100)+'\'i var — skor sıfıra doğru büzüldü"':'')+'>'+(v>=0?'+':'')+trN(v,2)+(k!=null&&k<0.6?'<sup>i</sup>':'')+'</td>';
+  $('fmBody').innerHTML=sel.map((r,i)=>'<tr data-t="'+r.t+'" style="cursor:pointer"><td class="num" style="color:var(--muted)">'+(i+1)+'</td><td><b>'+r.t+'</b></td><td style="font-family:var(--sans);font-size:10px;color:var(--muted)">'+((typeof SEKTOR_TR!=='undefined'&&SEKTOR_TR[r.s])||r.s)+'</td>'+zf(r.f[0],r.k&&r.k[0])+zf(r.f[1],r.k&&r.k[1])+zf(r.f[2],r.k&&r.k[2])+zf(r.f[3],r.k&&r.k[3])+zf(r.f[4],r.k&&r.k[4])+'<td class="num" style="font-weight:600">'+trN(r.score,3)+'</td><td class="num" style="color:var(--mm2);font-weight:600">%'+trN(wts[i]*100,1)+'</td><td class="num"><button class="fmCikar" data-t="'+r.t+'" title="modelden çıkar — yedek girer, ağırlıklar yeniden hesaplanır (ÇIKARILAN: ağırlığı dağıt seçilebilir)" style="background:none;border:1px solid var(--line2);border-radius:4px;color:var(--down);cursor:pointer;font-size:11px;line-height:1;padding:1px 6px">×</button></td></tr>').join('');
   document.querySelectorAll('#fmBody tr[data-t]').forEach(tr=>tr.addEventListener('click',()=>fmShowDetail(tr.dataset.t)));
   /* §405: × satır tıklamasını YUTAR — yoksa çıkarırken detay kartı açılır */
   document.querySelectorAll('#fmBody .fmCikar').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();fmDislaEkle(b.dataset.t);}));
@@ -1875,7 +1886,7 @@ function fmRender(){
   $('fmBuffer').textContent='Tampon bölge / izleme listesi ('+(FM.meta.topn+1)+'–'+(FM.meta.topn+15)+' bandı — EXIT_RANK disiplini damgalı güncellemelerde uygulanır): '+buf.join(', ');
   const sw={};sel.forEach((r,i)=>sw[r.s]=(sw[r.s]||0)+wts[i]);
   const mx=Math.max.apply(null,Object.values(sw));
-  $('fmSec').innerHTML=Object.entries(sw).sort((a,b)=>b[1]-a[1]).map(([s,v])=>'<div class="bar" style="grid-template-columns:150px 1fr 56px"><span class="bn">'+s+'</span><span class="bt"><span class="bf" style="width:'+(v/mx*100).toFixed(0)+'%"></span></span><span class="bv">%'+(v*100).toFixed(1)+'</span></div>').join('');
+  $('fmSec').innerHTML=Object.entries(sw).sort((a,b)=>b[1]-a[1]).map(([s,v])=>'<div class="bar" style="grid-template-columns:150px 1fr 56px"><span class="bn">'+((typeof SEKTOR_TR!=='undefined'&&SEKTOR_TR[s])||s)+'</span><span class="bt"><span class="bf" style="width:'+(v/mx*100).toFixed(0)+'%"></span></span><span class="bv">%'+trN(v*100,1)+'</span></div>').join('');
 }
 function fmShowDetail(t){
   const r=FM.data.find(x=>x.t===t);
