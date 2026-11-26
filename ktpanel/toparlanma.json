@@ -4,7 +4,7 @@
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-24",
  "evren": 236,
- "asama": 3,
+ "asama": 1,
  "asamalar": [
   {
    "no": 1,
@@ -61,14 +61,14 @@
   {
    "no": 3,
    "ad": "Katılım geldi mi (teyit)",
-   "tamam": true,
+   "tamam": false,
    "sinyaller": [
     {
      "ad": "Genişlik itkisi (Zweig ÜHO10)",
      "deger": 0.334,
      "esik": "10 iş günü içinde <0,40 → >0,615",
-     "tamam": true,
-     "not": "itki günü 2026-11-09"
+     "tamam": false,
+     "not": "itki 2026-11-09 İPTAL (2026-11-20: ÜHO10 yeniden 0,40 altına indi) · yeni kurulum: 10 iş günü içinde >0,615"
     },
     {
      "ad": "50g ortalaması üstündeki hisseler",
@@ -88,7 +88,15 @@
    ]
   }
  ],
- "itki_kurulum": null,
+ "itki_kurulum": {
+  "gun": "2026-11-24",
+  "kalan": 10
+ },
+ "itki_iptal": {
+  "itki": "2026-11-09",
+  "gun": "2026-11-20",
+  "neden": "ÜHO10 yeniden 0,40 altına indi"
+ },
  "momentum_riski": {
   "yuksek": true,
   "ew6a": -42.1,
@@ -1187,7 +1195,7 @@
    "dipten": 31.4,
    "beta": 1.19,
    "kalite": -0.17,
-   "skor": 3.55,
+   "skor": 3.54,
    "baski": true
   },
   {
@@ -1199,7 +1207,7 @@
    "dipten": 25.1,
    "beta": 1.38,
    "kalite": 0.44,
-   "skor": 3.54,
+   "skor": 3.52,
    "baski": false
   },
   {
@@ -1211,19 +1219,19 @@
    "dipten": 0,
    "beta": 1.35,
    "kalite": 0.02,
-   "skor": 3.28,
+   "skor": 3.27,
    "baski": false
   },
   {
    "k": "MAGEN",
    "s": "Utilities",
-   "w": 0.08,
+   "w": 0.07,
    "r3": -86.2,
    "dd": -90,
    "dipten": 10.4,
    "beta": 1.07,
    "kalite": -0.06,
-   "skor": 3.03,
+   "skor": 3.02,
    "baski": false
   },
   {
@@ -1235,7 +1243,7 @@
    "dipten": 14.2,
    "beta": 1.29,
    "kalite": 1.59,
-   "skor": 2.91,
+   "skor": 2.9,
    "baski": false
   },
   {
@@ -1247,7 +1255,7 @@
    "dipten": 60.7,
    "beta": 1.21,
    "kalite": -0.25,
-   "skor": 2.65,
+   "skor": 2.64,
    "baski": true
   },
   {
@@ -1259,7 +1267,7 @@
    "dipten": 0.2,
    "beta": 1.27,
    "kalite": 2.64,
-   "skor": 2.57,
+   "skor": 2.56,
    "baski": false
   },
   {
@@ -1271,13 +1279,13 @@
    "dipten": 0,
    "beta": 1.16,
    "kalite": -0.17,
-   "skor": 2.5,
+   "skor": 2.49,
    "baski": true
   },
   {
    "k": "GENIL",
    "s": "Health Care",
-   "w": 0.28,
+   "w": 0.27,
    "r3": -65.4,
    "dd": -65.8,
    "dipten": 26.7,
@@ -1289,13 +1297,13 @@
   {
    "k": "CWENE",
    "s": "Industrials",
-   "w": 0.3,
+   "w": 0.31,
    "r3": -50.5,
    "dd": -61.9,
    "dipten": 30.6,
    "beta": 1.3,
    "kalite": -0.03,
-   "skor": 2.29,
+   "skor": 2.28,
    "baski": false
   },
   {
@@ -1307,7 +1315,7 @@
    "dipten": 8.7,
    "beta": 1.38,
    "kalite": 1.06,
-   "skor": 2.25,
+   "skor": 2.24,
    "baski": true
   },
   {
@@ -1319,12 +1327,16 @@
    "dipten": 0,
    "beta": 1.29,
    "kalite": 1.17,
-   "skor": 2.24,
+   "skor": 2.23,
    "baski": false
   }
  ],
+ "eksik_gun": [],
+ "geride_gun": [
+  "2026-11-25"
+ ],
  "onceki_asama": 3,
- "asama_degisim": "2026-11-06 → 2026-11-09",
+ "asama_degisim": "2026-11-24 → 2026-11-24",
  "gecmis": [
   {
    "d": "2026-10-23",
@@ -1488,7 +1500,7 @@
   },
   {
    "d": "2026-11-24",
-   "asama": 3,
+   "asama": 1,
    "ab50": 8.9,
    "dip": 14,
    "zw": 0.334,
