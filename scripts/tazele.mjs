@@ -6751,6 +6751,22 @@ function kapHamAyristir(htmlHam) {
   return { ok: tablolar.length > 0, birim: birim2, tabloSayisi: tablolar.length, tablolar };
 }
 
+/* §571 (19 Kas) KARDEŞ PAY SINIFLARI: Kardemir tek şirket, üç kod (KRDMA/KRDMB/KRDMD). KAP finansal raporu yalnız BİR kod altında
+   yayımlar (4 Kas: KRDMA) → KRDMD arşivi 2Ç26'da kaldı; faktör modeli ve karar motoru KRDMD'yi 15 gündür bir önceki bilançoyla
+   okuyordu (karar panosunda "açıklanmadı" görünüyordu). Aynı şirketin kodları arasında, birinde olup diğerinde olmayan dönemler
+   kopyalanır (finansal tablolar aynıdır; pay adedi/fiyat her kodun kendi kaydından gelmeye devam eder). */
+const KARDES_KODLAR = [['KRDMA', 'KRDMB', 'KRDMD']];
+async function kardesArsivEsitle() {
+  let n = 0; const not = [];
+  for (const grup of KARDES_KODLAR) {
+    const A = {}; for (const k of grup) { try { A[k] = JSON.parse(await fs.readFile(path.join(KOK, 'kap-arsiv', k + '.json'), 'utf8')); } catch (e) {} }
+    const var_ = Object.keys(A); if (var_.length < 2) continue;
+    const tum = {}; var_.forEach(k => Object.keys(A[k].donemler || {}).forEach(d => { if (!tum[d]) tum[d] = k; }));
+    for (const k of var_) { let ek = 0; for (const d of Object.keys(tum)) { if (!(A[k].donemler || {})[d]) { A[k].donemler = A[k].donemler || {}; A[k].donemler[d] = { ...A[tum[d]].donemler[d], _kardes: tum[d] }; ek++; } }
+      if (ek) { A[k].guncelleme = new Date().toISOString().replace(/\.\d+Z$/, 'Z'); await fs.writeFile(path.join(KOK, 'kap-arsiv', k + '.json'), JSON.stringify(A[k]), 'utf8'); n += ek; not.push(k + ' +' + ek); } }
+  }
+  if (n) { raporlar.push('- §571 kardeş pay sınıfı arşivi eşitlendi: ' + not.join(' · ')); degisenler.push('KAP arşivi kardeş kod (+' + n + ')'); }
+}
 async function kapArsiv() {
   const KLASOR = 'kap-arsiv';
   /* §383b PARTİ 2 + UZUN BEKLEME: faktör evreni (§361) aynı koşuda KAP'ı
@@ -7068,6 +7084,14 @@ async function fmHesapla() {
   const rankedW = uyeler.filter(k => rankedKod.has(k)).reduce((a, k) => a + (XWm[k] || 0), 0);
   const agirlikPay = topW > 0 ? rankedW / topW : 0;
   const esikAdet = 100, esikAgirlik = 0.70;
+  /* §571 (19 Kas, kullanıcı: "momentum güncel ama diğer faktörler bir önceki bilançodan mı?"): temeller güncel (sıralanan 200'ün 198'i
+     3Ç26 TTM) ama ekran bunu SÖYLEMİYORDU. Sıralanan hisselerin temel verisinin hangi bilanço döneminden geldiği meta'ya yazılır;
+     panel başlıkta gösterir, geride kalanları adıyla sayar. Değer çarpanları her koşuda güncel fiyat × bu dönemin TTM'i ile hesaplanır. */
+  { const say = {}; const geri = []; const sirali = (oto.data || []).map(x => x.t);
+    sirali.forEach(k => { const d = FE[k] && FE[k].donem; if (d) say[d] = (say[d] || 0) + 1; });
+    const enYeni = Object.keys(say).sort((a, b) => { const [a1, a2] = a.split('/').map(Number), [b1, b2] = b.split('/').map(Number); return (b1 - a1) || (b2 - a2); })[0] || null;
+    sirali.forEach(k => { const d = FE[k] && FE[k].donem; if (enYeni && d !== enYeni) geri.push(k + (d ? ' ' + d : ' —')); });
+    oto.meta.temel_donem = { en_yeni: enYeni, n: enYeni ? say[enYeni] : 0, toplam: sirali.length, dagilim: say, geride: geri.slice(0, 40) }; }
   oto.meta._kaynak = '§455 kendi verimiz: KAP TTM (faktor-evren.json) + Yahoo fiyat/hacim + XKTUM arşivi · evren resmî XKTUM ' + uyeler.length;
   oto.meta.agirlik_kapsami = +(agirlikPay * 100).toFixed(1);
   let terfi = false;
@@ -7696,7 +7720,8 @@ async function bultenKesif() {
     await olcKos('Dış getiri eğrileri (§536)', ()=>egriDisUlke());   /* §536: MOF JGB + ECB AAA spot → egri-dis.json */
     await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* §533: HMB bütçe gerçekleşmesi (SBB haftalık) + 2027 bütçe çerçevesi */
     await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* §531: XK050 üyeliği → katalog · fiyat/sermaye/bilanço tarihi · KAP arşiv önceliği (arşivden ÖNCE) */
-    await olcKos('KAP arşivi (§381)', ()=>kapArsiv());   /* SS381: 15 ceyrek ham arsiv */
+    await olcKos('KAP arşivi (§381)', ()=>kapArsiv());
+    try { await kardesArsivEsitle(); } catch (e) { raporlar.push('- §571 kardeş arşiv ✗ ' + String(e.message || e).slice(0, 80)); }   /* SS381: 15 ceyrek ham arsiv */
     await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* §539: degerleme.json kendi verimizden (KAP özkaynak + Yahoo) — arşivden SONRA */
     await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); await olcKos('Karar modeli nakit akışı + net borç (§550)', ()=>kararNakit());
     await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());   /* §499: KAP arşivi çekirdek FAVÖK ÷ faaliyet raporu tonajı (EREGL/KRDMD) */   /* KAP arşivinden SONRA — bilanço düşünce gerçek FAVÖK kataloğa girer (SS310 sıra kuralı) */
@@ -7709,7 +7734,7 @@ async function bultenKesif() {
   if (KSET.has('egri')) await olcKos('Dış getiri eğrileri (§536)', ()=>egriDisUlke());   /* elle: --katman=egri */
   if (KSET.has('karar') || KSET.has('kamuyatirim')) await olcKos('Kamu yatırım nabzı (§533)', ()=>kamuYatirim());   /* elle: --katman=kamuyatirim */
   if (KSET.has('karar') || KSET.has('kaparsiv')) await olcKos('Karar evreni XK050 (§531)', ()=>kararEvren());   /* elle: --katman=karar (kaparsiv ile birlikte: önce öncelik, sonra arşiv) */
-  if (KSET.has('kaparsiv')) await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv());
+  if (KSET.has('kaparsiv')) { await olcKos('KAP arşivi (§381 · hızlı §437)', ()=>kapArsiv()); try { await kardesArsivEsitle(); } catch (e) {} }
   if (KSET.has('kaparsiv')) await olcKos('Karar modeli gerçekleri (§462b/§463)', ()=>kararOrneklem()); await olcKos('Karar modeli nakit akışı + net borç (§550)', ()=>kararNakit());
   if (KSET.has('kaparsiv') || KSET.has('degerleme')) await olcKos('PD/DD bandı (§539)', ()=>degerlemeKendi());   /* elle: --katman=degerleme */
   if (KSET.has('kaparsiv') || KSET.has('multiple')) await olcKos('Ton başına FAVÖK (§499)', ()=>tonBasina());
