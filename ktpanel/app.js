@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261126d';
+const KTP_SURUM = '20261126e';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -4444,9 +4444,15 @@ kartInit();
    gecikir; bu kart yönü haftalık verir. Renk kuralı takipte TERS: artış kırmızı. */
 async function nplInit(){
   const el=$('nplBody'); if(!el) return;
-  let J=null; try{ J=await (await fetch('/api/evds2?mod=npl',{signal:AbortSignal.timeout(45000)})).json(); }catch(e){}
+  let J=null, B=null;
+  /* §577: manşet (toplam) oran BDDK haftalık bülteninin KENDİ rakamıdır (/api/bddk?haftalik=1); kırılım ve uzun geçmiş EVDS'den.
+     İki kaynağın kredi tabanı birkaç bp farklı olduğu için §576 %3,35 gösteriyordu, bülten %3,37. BDDK gelmezse EVDS hesabı kalır ve bu yazılır. */
+  try{ [J,B]=await Promise.all([ fetch('/api/evds2?mod=npl',{signal:AbortSignal.timeout(45000)}).then(r=>r.json()).catch(()=>null),
+        fetch('/api/bddk?haftalik=1',{signal:AbortSignal.timeout(40000)}).then(r=>r.json()).catch(()=>null) ]); }catch(e){}
+  const resmi=!!(B&&B.ok&&J&&J.ok&&B.tarih===J.tarih);
   if(!J||!J.ok){ el.innerHTML='<span class="thin">Haftalık takip verisi alınamadı'+(J&&J.err?' — '+esc(J.err):'')+'. Aylık BDDK tablosu aşağıda.</span>'; if($('nplDamga')) $('nplDamga').textContent='veri yok'; return; }
-  if($('nplDamga')) $('nplDamga').textContent=fmkTar(J.tarih)+' haftası · EVDS';
+  if($('nplDamga')) $('nplDamga').textContent=fmkTar(J.tarih)+' haftası · '+(resmi?'BDDK bülteni + EVDS':'EVDS (BDDK bülteni '+(B&&B.ok?'farklı haftada: '+fmkTar(B.tarih):'alınamadı')+')');
+  if(resmi){ const t=J.kalemler.find(x=>x.k==='toplam'); if(t){ t.evds=t.oran; t.oran=B.oran; t.d1=B.d1; t.d4=B.d4; if(B.d13!=null) t.d13=B.d13; t.ad='Toplam — BDDK bülteni (resmî)'; } J.takip=B.takip; if(B.haftalikArtis!=null) J.haftalikArtis=B.haftalikArtis; }
   const bp=v=>v==null?'<span class="thin">—</span>':'<span class="'+(v>0?'down':v<0?'up':'thin')+'">'+(v>0?'+':v<0?'−':'')+Math.abs(v)+'</span>';
   const T=J.kalemler.find(x=>x.k==='toplam')||{};
   const kutu=(b,v,alt)=>'<div style="flex:1;min-width:150px;border:1px solid var(--line);border-radius:6px;padding:7px 9px"><div class="thin" style="font-size:9px;letter-spacing:.04em">'+b+'</div><div style="font-size:17px;font-weight:600;margin:2px 0">'+v+'</div><div class="thin" style="font-size:9.5px">'+alt+'</div></div>';
@@ -4459,14 +4465,14 @@ async function nplInit(){
       const pts=S.map((x,i)=>x[f]==null?null:(pad+i*(W-2*pad)/(S.length-1)).toFixed(1)+','+(Hh-pad-(x[f]-mn)/ar*(Hh-2*pad)).toFixed(1)).filter(Boolean).join(' ');
       return '<polyline fill="none" stroke="'+renk+'" stroke-width="1.6" points="'+pts+'"/>'; };
     h+='<div style="margin:2px 0 8px"><svg viewBox="0 0 '+W+' '+Hh+'" style="width:100%;height:70px" preserveAspectRatio="none" role="img" aria-label="Takip oranı son '+S.length+' hafta">'+ciz('toplam','var(--down)')+ciz('kart','#E8933B')+'</svg>'+
-      '<div class="thin" style="font-size:9px;display:flex;justify-content:space-between"><span>'+fmkTar(S[0].d)+' · toplam %'+trN(S[0].toplam,2)+'</span><span><span style="color:var(--down)">■</span> toplam · <span style="color:#E8933B">■</span> bireysel kart (her çizgi kendi ölçeğinde)</span><span>'+fmkTar(S[S.length-1].d)+' · toplam %'+trN(S[S.length-1].toplam,2)+'</span></div></div>'; }
+      '<div class="thin" style="font-size:9px;display:flex;justify-content:space-between"><span>'+fmkTar(S[0].d)+' '+String(S[0].d).slice(0,4)+' · toplam %'+trN(S[0].toplam,2)+'</span><span><span style="color:var(--down)">■</span> toplam · <span style="color:#E8933B">■</span> bireysel kart (her çizgi kendi ölçeğinde)</span><span>'+fmkTar(S[S.length-1].d)+' '+String(S[S.length-1].d).slice(0,4)+' · %'+trN(S[S.length-1].toplam,2)+' (EVDS kapsamı)</span></div></div>'; }
   h+='<div style="overflow-x:auto"><table aria-label="Takip oranı kırılımı"><thead><tr><th>Defter</th><th class="num">Takip %</th><th class="num">Δ 1 hafta</th><th class="num">Δ 4 hafta</th><th class="num">Δ 13 hafta</th><th class="num">Δ 52 hafta</th></tr></thead><tbody>'+
     J.kalemler.filter(x=>x.oran!=null).map(x=>'<tr'+(x.k==='toplam'?' style="font-weight:600"':'')+'><td>'+esc(x.ad)+'</td><td class="num">'+trN(x.oran,2)+'</td><td class="num">'+bp(x.d1)+'</td><td class="num">'+bp(x.d4)+'</td><td class="num">'+bp(x.d13)+'</td><td class="num">'+bp(x.d52)+'</td></tr>').join('')+'</tbody></table></div>';
   const enK=J.kalemler.filter(x=>x.k!=='toplam'&&x.d13!=null).sort((a,b)=>b.d13-a.d13)[0];
   h+='<div class="note" style="margin-top:8px;font-size:10.5px"><b>Okuma:</b> Δ sütunları baz puandır; takipte artış kötü olduğu için kırmızıdır. Oran = takip / (canlı kredi + takip).'+
     (enK&&enK.d13>0?' Son 13 haftada en çok bozulan defter <b>'+esc(enK.ad)+'</b> (+'+enK.d13+' bp).':'')+
     ' Sıra genelde aynıdır: önce kart ve ihtiyaç (teminatsız, kısa vadeli), sonra KOBİ/ticari; konut en son ve en az. Bir kredi 90 gün gecikince takibe geçer — yani bugünkü oran üç ay önceki koşulların, bugünkü fonlama maliyeti ise üç ay sonraki oranın habercisidir. Banka hissesi için çeviri: takip girişi → karşılık gideri → kâr; oran aynı kalsa bile tutarın krediden hızlı büyümesi kredi maliyetinin yükseldiğini söyler.'+
-    '<br><span class="thin">Kapsam: yurt içi + yurt dışı şubeler; kırılım satırları yurt içi şubeler. BDDK\'nın haftalık bülten manşeti kredi tabanını biraz farklı aldığı için toplam oran birkaç baz puan sapabilir (20 Kas: BDDK %3,37 · bu hesap %3,35; kart %5,98 birebir). Yayın: Cuma değeri, ertesi Perşembe.</span></div>';
+    '<br><span class="thin">'+(resmi?('Toplam satırı BDDK haftalık bülteninin kendi rakamıdır (takip / (toplam kredi + takip)); Δ 52 hafta ve kırılım satırları TCMB haftalık tablosundan (EVDS) hesaplanır — o kapsamla toplam %'+trN((J.kalemler.find(x=>x.k==='toplam')||{}).evds,2)+' çıkar, fark kredi tabanı tanımından.'):'Toplam, TCMB haftalık tablosundan (EVDS) hesaplandı; BDDK bülten manşeti kredi tabanını farklı aldığı için birkaç baz puan sapabilir.')+' Kırılım yurt içi şubelerdir. Yayın: Cuma değeri, ertesi Perşembe.</span></div>';
   el.classList.remove('thin'); el.innerHTML=h;
 }
 async function bnkInit(){

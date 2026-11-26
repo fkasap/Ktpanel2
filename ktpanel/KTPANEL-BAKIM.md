@@ -16164,3 +16164,9 @@ Kaynaklar: merkez bankası bildirileri, TCMB duyuru 2026-49, SPK 76/1903 + 7596 
 - `api/evds2.js?mod=npl` (nplHesap + nplModu): oran = takip/(kredi+takip); toplam, kart, ihtiyaç, tüketici (kart hariç), taşıt, konut, ticari; Δ1/4/13/52 hafta (bp); tutar, haftalık artış, 13h yıllıklandırılmış takip ve kredi büyümesi; 60 haftalık seri.
 - Doğrulama (20 Kas, gerçek EVDS değerleriyle birim test): kart %5,98 = BDDK ✓ · tüketici kart hariç %5,18 (BDDK 5,17) ✓ · toplam %3,35 (BDDK 3,37 — kredi tabanı kapsam farkı, kartta yazılı) · haftalık artış +16,0 mlr ₺ ✓.
 - Kart: Makro › Bankacılık en üstte (app.js nplInit, bnkInit içinden). Canlı EVDS çağrısı yerelde denenemedi (anahtar sunucuda) — yükleme sonrası canlıda doğrulanacak.
+
+## §577 — Haftalık takip: manşet oran BDDK bülteninin kendi rakamı (26 Kas 2026)
+- Kullanıcı: "toplam NPL 3,35 mi?" — bülten %3,37. Sebep ölçüldü: BDDK haftalık bülteni toplam kredi 29.284.323 mn ₺, TCMB haftalık tablosu (EVDS 6.1 + 8.18) 29.479.289 mn ₺; ~195 mlr ₺ taban farkı, hangi kalemden geldiği EVDS serileriyle mutabık kılınamadı (8.26 = 62,0 · 8.29 = 263,5 hiçbiri tutmuyor).
+- Çözüm: bültenin kendi ucu (`POST /BultenHaftalik/tr/Home/KiyaslamaJsonGetir`, id 1.0.1 kredi · 2.0.1 takip, sutun 3, taraf 10001; tarih=bugün → geriye 13 hafta). Tarayıcıda bddk.org.tr üzerinden canlı ölçüldü: 1.022.299 / (29.284.323 + 1.022.299) = %3,373.
+- `api/bddk.js?haftalik=1`: iki pencere (26 hafta), oran + Δ1/4/13 + haftalık artış. Sahte istekle birim test: 3,373 ✓. Vercel üzerinden canlı çağrı yükleme sonrası doğrulanacak (aylık uçla aynı TLS/pin yolu).
+- Kart: toplam satırı "BDDK bülteni (resmî)"; kırılım ve Δ52 EVDS'den; BDDK gelmezse EVDS hesabı + damgada "alınamadı". Grafik uç etiketlerine yıl eklendi.
