@@ -319,6 +319,11 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
   <div id="rotNot" style="margin-top:5px"></div></div>
   </div>
 </details>
+<!-- §578: Türkiye stres termometresi — beş sekmeye dağılmış yedi göstergeyi tek kartta, her biri kendi eşiği ve kendi geçmişine göre -->
+<div class="card" style="margin-top:10px" id="stresKart">
+  <div class="lbl">TÜRKİYE STRES TERMOMETRESİ <span class="thin">(rezerv · likidite · risk primi · hisse · fon akışı · kredi kalitesi)</span> <span class="tag" id="stresTag">—</span></div>
+  <div id="stresBody" class="thin" style="font-size:11px;margin-top:6px">yükleniyor…</div>
+</div>
 <div class="card" style="margin-top:10px">
   <div class="lbl">RİSK İŞTAHI BAROMETRESİ <span class="tag snap">CANLI</span></div>
   <div id="riskBaroSkor" style="margin:6px 0 10px">—</div>
@@ -761,6 +766,8 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 <!-- §576: haftalık takip oranı — aylık bülten ~2 ay gecikmeli; stres dönemlerinde öncü olan haftalık seridir -->
 <h2 style="margin-top:0">Takipteki Alacaklar — Haftalık <span class="thin">(TCMB haftalık para-banka · BDDK kaynaklı · EVDS · otomatik)</span> <span class="tag" id="nplDamga" style="font-weight:400">yükleniyor…</span></h2>
 <div class="card" id="nplKart" style="padding:10px 12px;margin-bottom:14px"><div class="lbl">TAKİP ORANI (HAFTALIK)</div><div id="nplBody" class="thin" style="font-size:11px">yükleniyor…</div></div>
+<h2>Kredi İvmesi — Haftalık <span class="thin">(kredi stoku büyümesi · TCMB büyüme sınırlarına göre · EVDS · otomatik)</span></h2>
+<div class="card" style="padding:10px 12px;margin-bottom:14px"><div class="lbl">KREDİ BÜYÜMESİ VE MAKROİHTİYATİ SINIRLAR</div><div id="nplKredi" class="thin" style="font-size:11px">yükleniyor…</div></div>
 <h2>Bankacılık Sektörü <span class="thin">(BDDK Aylık Bülten · otomatik)</span> <span class="tag" id="bnkDamga" style="font-weight:400">yükleniyor…</span></h2>
 <div id="bnkOzet" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px"></div>
 <h2>GRUP KARŞILAŞTIRMASI</h2>
@@ -2064,7 +2071,7 @@ footer{font-size:9.5px;color:var(--muted);line-height:1.8;border-top:1px solid v
 </div>
 </div><footer>Canlı: Yahoo (endeks·sektör·sicil), KAP (haber akışı), TEFAS (katılım fonları), TCMB EVDS (makro·getiri eğrisi·TLREF), BDDK (bankacılık), Alpha Vantage (ABD haberleri), open.er-api.com, CoinGecko, frankfurter.app. Damgalı yedek (canlı kaynak yanıt vermezse): BIST endeksleri, fon getirileri, bilanço takvimi, para politikası, faktör modeli (Faktor_Basit v3.4 · kullanıcı verisi · /fm.json · <span class="fmDamgaKisa">14 Tem</span>), TÜİK, TCMB verileri. Pozisyonlar ve journal yalnızca kendi tarayıcında saklanır. Bilgilendirme amaçlıdır; yatırım danışmanlığı değildir.</footer>
 </div>
-<script src="/app.js?v=20261126e"></script>
+<script src="/app.js?v=20261126f"></script>
 <script src="/ajan.js?v=20261027c"></script>
 
 <!-- §385 SOHBET — sağ altta yüzen düğme + kayan panel. Sekme değiştirmeden

@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261126e';
+const KTP_SURUM = '20261126f';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -2163,6 +2163,64 @@ function fmkEwSeri(){
    Risk barometresi "ne kadar korkuluyor" der; bu kart "dönüş BAŞLADI MI" diye sorar. Hesap Actions'ta (tazele §530, toparlanma.json):
    üç aşama (baskı → oynaklık → katılım) + dönüş sepeti. Dibi günü gününe yakalamaz — dönüşün kanıt biriktirdiği anı görünür kılar.
    Kart üretmez, okur; eşikler dosyanın içinde ve kartın altında yazılı. */
+/* ═══ §578 (26 Kas 2026) TÜRKİYE STRES TERMOMETRESİ ═══
+   NEDEN: 18–25 Kas haftasında net rezerv −20 mlr $, TLREF politika +130 bp, CDS 262, XKTUM −%7,8, fon çıkışı ve takip artışı AYNI ANDA oldu;
+   panel hepsini gösteriyordu ama beş ayrı sekmede. Bu kart yeni veri üretmez — var olan yedi göstergeyi yan yana koyar.
+   YÖNTEM: her göstergenin (a) açık bir eşiği ve o eşiğin gerekçesi, (b) geçmişi yeterliyse kendi geçmişindeki sırası vardır.
+   Durum eşikten gelir (0 normal · 1 gergin · 2 stres); sıra yalnız bağlamdır. Bileşik: ≥3 stres → STRES · ≥2 stres ya da ≥4 gergin/stres → GERGİN.
+   Ağırlık yok, skor yok: yedi bağımsız termometre; kaçının aynı anda yandığı bilginin kendisidir (eşzamanlılık = sistemik). */
+async function stresInit(){
+  const el=$('stresBody'); if(!el) return;
+  const al=async(u,ms)=>{ try{ return await fetch(u,{signal:AbortSignal.timeout(ms||30000)}).then(r=>r.json()); }catch(e){ return null; } };
+  const hamSeri=(j,kod)=>{ const k=kod.replace(/\./g,'_'); return ((j&&j.ham)||[]).map(x=>{ const p=String(x.Tarih).split('-'); return [p[2]+'-'+p[1]+'-'+p[0], parseFloat(x[k])]; }).filter(x=>isFinite(x[1])); };
+  const [rz,tl,pl,cds,top,fa,nb,ne]=await Promise.all([ al('/api/evds2?mod=rezerv'), al('/api/evds2?series=TP.BISTTLREF.ORAN&gun=40&full=1'), al('/api/evds2?series=TP.PY.P02.1H&gun=40&full=1'),
+    al('/cds.json'), al('/toparlanma.json'), al('/fon-akis.json',45000), al('/api/bddk?haftalik=1',40000), al('/api/evds2?mod=npl',45000) ]);
+  try{ if(ENDARS===null && typeof endArsivYukle==='function') await endArsivYukle(); }catch(e){}
+  /* sıra: değer, geçmişin yüzde kaçından DAHA KÖTÜ (kotuBuyuk: büyük değer kötü mü) */
+  const sira=(v,gecmis,kotuBuyuk)=>{ const g=gecmis.filter(x=>x!=null&&isFinite(x)); if(g.length<15||v==null) return null; const n=g.filter(x=>kotuBuyuk?x<v:x>v).length; return { p:Math.round(n/g.length*100), n:g.length }; };
+  const G=[];
+  /* 1 · REZERV — 5 iş günü net değişim. Eşik: −3 / −8 mlr $. Gerekçe: swap hariç net ~28 mlr $ düzeyinde haftada 8 mlr, cephanenin dörtte birinden fazlası. */
+  try{ const S=(rz&&rz.net&&rz.net.seri)||[]; if(S.length>6){ const v=S.map(x=>x.v); const d5=v.map((x,i)=>i>=5?+(x-v[i-5]).toFixed(1):null); const son=d5[d5.length-1];
+      let ek=''; try{ if(typeof rezervSwapHaricKopru==='function'){ const rj=await al('/rezerv.json'); const K=rezervSwapHaricKopru(rz.net,rj); if(K&&K.kopru) ek=' · swap hariç net ≈ '+trN(K.v,1)+' mlr $'; } }catch(e){}
+      G.push({ad:'Rezerv', olcu:'Net rezerv, 5 iş günü değişim', deger:(son>=0?'+':'−')+trN(Math.abs(son),1)+' mlr $', durum:son<=-8?2:son<=-3?1:0, esik:'gergin ≤ −3 · stres ≤ −8 mlr $', sira:sira(son,d5.slice(0,-1),false), tarih:S[S.length-1].t, not:'TCMB analitik bilanço'+ek, sekme:'Makro › Para Politikası'}); } }catch(e){}
+  /* 2 · LİKİDİTE — TLREF − politika faizi. Eşik: +50 / +100 bp. Gerekçe: koridor üst bandı politika +300 bp; makasın üçte birini aşması TCMB'nin faiz artırmadan likiditeyle sıkılaştırdığını gösterir. */
+  try{ const T=hamSeri(tl,'TP.BISTTLREF.ORAN'), P=hamSeri(pl,'TP.PY.P02.1H'); if(T.length&&P.length){ const pm=new Map(P); let sonP=P[P.length-1][1];
+      const mk=T.map(([d,v])=>{ const p=pm.has(d)?pm.get(d):sonP; return Math.round((v-p)*100); }); const son=mk[mk.length-1];
+      G.push({ad:'Likidite', olcu:'TLREF − politika faizi', deger:(son>=0?'+':'−')+Math.abs(son)+' bp', durum:son>=100?2:son>=50?1:0, esik:'gergin ≥ +50 · stres ≥ +100 bp', sira:sira(son,mk.slice(0,-1),true), tarih:T[T.length-1][0], not:'TLREF %'+trN(T[T.length-1][1],2)+' · politika %'+trN(sonP,2), sekme:'Makro › Para Politikası'}); } }catch(e){}
+  /* 3 · RİSK PRİMİ — CDS 10 iş günü değişim. Eşik: +15 / +30 bp (taktik modelin 1 aylık +20 bp eşiğiyle aynı aile, §526). */
+  try{ const S=(cds&&cds.seri)||[]; if(S.length>12){ const v=S.map(x=>+x[1]); const d10=v.map((x,i)=>i>=10?Math.round(x-v[i-10]):null); const son=d10[d10.length-1];
+      G.push({ad:'Risk primi', olcu:'TR 5Y CDS, 10 iş günü değişim', deger:(son>=0?'+':'−')+Math.abs(son)+' bp', durum:son>=30?2:son>=15?1:0, esik:'gergin ≥ +15 · stres ≥ +30 bp', sira:sira(son,d10.slice(0,-1),true), tarih:S[S.length-1][0], not:'seviye '+trN(v[v.length-1],0)+' bp', sekme:'Piyasa'}); } }catch(e){}
+  /* 4 · HİSSE — XKTUM 5 iş günü getiri. Eşik: −%3 / −%6. */
+  try{ const gn=(ENDARS&&ENDARS.gunler)||{}; const gl=Object.keys(gn).filter(g=>gn[g]&&gn[g].XKTUM>0).sort(); const son260=gl.slice(-265);
+      /* yalnız GÜNLÜK kısım: ardışık günler arası ≤5 gün olan son blok */
+      let bas=son260.length-1; while(bas>0 && (Date.parse(son260[bas])-Date.parse(son260[bas-1]))/864e5<=5) bas--; const gunluk=son260.slice(bas);
+      if(gunluk.length>8){ const v=gunluk.map(g=>+gn[g].XKTUM); const r5=v.map((x,i)=>i>=5?+((x/v[i-5]-1)*100).toFixed(1):null); const son=r5[r5.length-1];
+        G.push({ad:'Hisse', olcu:'BIST Katılım Tüm, 5 iş günü', deger:(son>=0?'+':'−')+'%'+trN(Math.abs(son),1), durum:son<=-6?2:son<=-3?1:0, esik:'gergin ≤ −%3 · stres ≤ −%6', sira:sira(son,r5.slice(0,-1),false), tarih:gunluk[gunluk.length-1], not:'resmî endeks arşivi', sekme:'Piyasa'}); } }catch(e){}
+  /* 5 · GENİŞLİK — 6 aylık dip yapan hisse oranı (5g ort.). Eşik: %10 / %20: endeks düşmeden önce tabanın çöktüğünü gösterir. */
+  try{ const S=(top&&top.seri)||[]; if(S.length>10){ const d=S.map(x=>x.dip); const o5=d.map((x,i)=>i>=4?+(d.slice(i-4,i+1).reduce((a,b)=>a+b,0)/5).toFixed(1):null); const son=o5[o5.length-1];
+      G.push({ad:'Genişlik', olcu:'6 aylık dip yapan hisse oranı (5g ort.)', deger:'%'+trN(son,1), durum:son>=20?2:son>=10?1:0, esik:'gergin ≥ %10 · stres ≥ %20', sira:sira(son,o5.slice(0,-1),true), tarih:top.son, not:(top.evren||'')+' hisse'+((top.geride_gun||[]).length?' · fiyat serisi '+top.geride_gun.length+' gün geride':''), sekme:'Piyasa › Toparlanma'}); } }catch(e){}
+  /* 6 · FON AKIŞI — günlük net akış, tüm TEFAS fonları. Eşik geçmişe göre: son ~25 günün en kötü %10'u stres, %30'u gergin (ve akış negatif). Mutlak eşik yok: para piyasası fonlarının kurumsal nakit hareketi düzeyi oynatır. */
+  try{ const gn=(fa&&fa.gunler)||{}; const gl=Object.keys(gn).sort(); if(gl.length>8){ const net=[]; for(let i=1;i<gl.length;i++){ const a=gn[gl[i-1]], b=gn[gl[i]]; let t=0; for(const k in b){ if(a[k]&&b[k]&&isFinite(b[k][0])&&isFinite(a[k][0])) t+=(b[k][0]-a[k][0])*b[k][1]; } net.push(+(t/1e9).toFixed(1)); }
+      const son=net[net.length-1]; const sr=sira(son,net.slice(0,-1),false); const kotu=sr?sr.p:null;
+      G.push({ad:'Fon akışı', olcu:'TEFAS günlük net akış (tüm fonlar)', deger:(son>=0?'+':'−')+trN(Math.abs(son),1)+' mlr ₺', durum:(son<0&&kotu!=null)?(kotu>=90?2:kotu>=70?1:0):0, esik:'negatif ve son '+(net.length-1)+' günün en kötü %10\'u stres · %30\'u gergin', sira:sr, tarih:gl[gl.length-1], not:'pay adedi × fiyat', sekme:'Sektörel › Katılım Fonları'}); } }catch(e){}
+  /* 7 · KREDİ KALİTESİ — takip oranı 4 haftalık değişim (BDDK bülteni; yoksa EVDS). Eşik: +10 / +20 bp. Gerekçe: yılda ~+90 bp'lik seyir ayda ~+7 bp eder; +10 hızlanma, +20 iki katı. */
+  try{ const resmi=nb&&nb.ok; const d4=resmi?nb.d4:((ne&&ne.ok&&(ne.kalemler.find(x=>x.k==='toplam')||{}).d4)); const oran=resmi?nb.oran:(ne&&ne.ok&&(ne.kalemler.find(x=>x.k==='toplam')||{}).oran);
+      if(d4!=null){ const S=(ne&&ne.ok&&ne.seri)||[]; const g4=S.map((x,i)=>i>=4&&x.toplam!=null&&S[i-4].toplam!=null?Math.round((x.toplam-S[i-4].toplam)*100):null);
+        G.push({ad:'Kredi kalitesi', olcu:'Takip oranı, 4 haftalık değişim', deger:(d4>=0?'+':'−')+Math.abs(d4)+' bp', durum:d4>=20?2:d4>=10?1:0, esik:'gergin ≥ +10 · stres ≥ +20 bp', sira:sira(d4,g4.slice(0,-1),true), tarih:resmi?nb.tarih:ne.tarih, not:'oran %'+trN(oran,2)+' · '+(resmi?'BDDK haftalık bülten':'EVDS'), sekme:'Makro › Bankacılık'}); } }catch(e){}
+  if(!G.length){ el.innerHTML='<span class="thin">Göstergeler alınamadı.</span>'; if($('stresTag')) $('stresTag').textContent='veri yok'; return; }
+  const nS=G.filter(x=>x.durum===2).length, nG=G.filter(x=>x.durum===1).length;
+  const duzey=nS>=3?2:(nS>=2||nS+nG>=4)?1:0; const AD=['NORMAL','GERGİN','STRES'], RK=['var(--up)','#E8933B','var(--down)'];
+  if($('stresTag')){ $('stresTag').textContent=AD[duzey]+' · '+nS+' stres · '+nG+' gergin · '+G.length+' gösterge'; $('stresTag').style.cssText='color:'+RK[duzey]+';background:transparent;border:1px solid '+RK[duzey]; }
+  const cip=d=>'<span style="display:inline-block;min-width:54px;text-align:center;padding:1px 6px;border-radius:9px;font-size:9px;font-weight:600;letter-spacing:.04em;color:'+RK[d]+';border:1px solid '+RK[d]+'">'+AD[d]+'</span>';
+  let h='<div style="display:flex;gap:4px;margin-bottom:8px">'+G.map(x=>'<div title="'+esc(x.ad)+'" style="flex:1;height:8px;border-radius:4px;background:'+RK[x.durum]+';opacity:'+(x.durum?1:.45)+'"></div>').join('')+'</div>';
+  h+='<div style="overflow-x:auto"><table aria-label="Stres göstergeleri"><thead><tr><th>Gösterge</th><th>Ölçü</th><th class="num">Şu an</th><th>Durum</th><th>Eşik</th><th class="num">Kendi geçmişinde</th><th>Veri</th></tr></thead><tbody>'+
+    G.map(x=>'<tr><td style="font-weight:600">'+esc(x.ad)+'</td><td>'+esc(x.olcu)+'<div class="thin" style="font-size:9px">'+esc(x.not||'')+' · '+esc(x.sekme)+'</div></td><td class="num" style="font-weight:600;white-space:nowrap;color:'+RK[x.durum]+'">'+x.deger+'</td><td>'+cip(x.durum)+'</td><td class="thin" style="font-size:9.5px">'+esc(x.esik)+'</td><td class="num thin" style="font-size:9.5px">'+(x.sira?('%'+x.sira.p+'\'inden kötü<br>('+x.sira.n+' gözlem)'):'geçmiş kısa')+'</td><td class="thin" style="font-size:9.5px;white-space:nowrap">'+esc(fmkTar(/^\d{2}-\d{2}-\d{4}$/.test(String(x.tarih))?String(x.tarih).split('-').reverse().join('-'):x.tarih))+'</td></tr>').join('')+'</tbody></table></div>';
+  const yanan=G.filter(x=>x.durum===2).map(x=>x.ad);
+  h+='<div class="note" style="margin-top:8px;font-size:10.5px"><b>Okuma:</b> '+(duzey===2?('<b>'+yanan.join(', ')+'</b> aynı anda stres bölgesinde. Tek gösterge gürültü olabilir; üç ve üstünün eşzamanlı yanması sistemik stresin tanımıdır.'):duzey===1?'Birden fazla gösterge gerginleşti; henüz eşzamanlı stres yok.':'Göstergeler eşiklerinin altında.')+
+    ' Zincir genelde şu sırayla işler: <b>rezerv</b> (döviz talebi karşılanır) → <b>likidite</b> (TCMB TL\'yi kısar, TLREF yükselir) → <b>risk primi</b> ve <b>hisse</b> (yabancı ve yerli fiyatlar) → <b>fon akışı</b> (yerli yatırımcı çıkar) → <b>kredi kalitesi</b> (aylar sonra takip). İlk ikisi yanıyorsa sorun kaynakta, son ikisi yanıyorsa etki reel tarafa ulaşmıştır.'+
+    '<br><span class="thin">Durum eşikten gelir; "kendi geçmişinde" sütunu yalnız bağlamdır ve göstergeye göre 25 gün ile 1 yıl arasında değişen kısa pencerelere bakar. Ağırlıklı skor yoktur. Her satırın ayrıntısı altında yazan sekmededir.</span></div>';
+  el.classList.remove('thin'); el.innerHTML=h;
+}
 async function toparlanmaInit(){
   const el=$('tpBody'); if(!el) return;
   let D=null; try{ const r=await fetch('/toparlanma.json',{cache:'no-store'}); D=r.ok?await r.json():null; }catch(e){}
@@ -4474,6 +4532,14 @@ async function nplInit(){
     ' Sıra genelde aynıdır: önce kart ve ihtiyaç (teminatsız, kısa vadeli), sonra KOBİ/ticari; konut en son ve en az. Bir kredi 90 gün gecikince takibe geçer — yani bugünkü oran üç ay önceki koşulların, bugünkü fonlama maliyeti ise üç ay sonraki oranın habercisidir. Banka hissesi için çeviri: takip girişi → karşılık gideri → kâr; oran aynı kalsa bile tutarın krediden hızlı büyümesi kredi maliyetinin yükseldiğini söyler.'+
     '<br><span class="thin">'+(resmi?('Toplam satırı BDDK haftalık bülteninin kendi rakamıdır (takip / (toplam kredi + takip)); Δ 52 hafta ve kırılım satırları TCMB haftalık tablosundan (EVDS) hesaplanır — o kapsamla toplam %'+trN((J.kalemler.find(x=>x.k==='toplam')||{}).evds,2)+' çıkar, fark kredi tabanı tanımından.'):'Toplam, TCMB haftalık tablosundan (EVDS) hesaplandı; BDDK bülten manşeti kredi tabanını farklı aldığı için birkaç baz puan sapabilir.')+' Kırılım yurt içi şubelerdir. Yayın: Cuma değeri, ertesi Perşembe.</span></div>';
   el.classList.remove('thin'); el.innerHTML=h;
+  /* §579 KREDİ İVMESİ — aynı haftalık tablodan kredi STOKU. 8 haftalık büyüme TCMB'nin makroihtiyati sınırlarının kendi ölçüsüdür
+     (sınır banka bazında uygulanır; burada SEKTÖR toplamı gösterilir — sınıra yakınlık, kuralın ne kadar bağlayıcı olduğunun ölçüsüdür). */
+  const ke=$('nplKredi'); if(ke&&J.krediler&&J.krediler.length){
+    const yz=(v,d)=>v==null?'<span class="thin">—</span>':'<span class="'+(v>0?'up':v<0?'down':'thin')+'">'+(v>0?'+':v<0?'−':'')+'%'+trN(Math.abs(v),d==null?1:d)+'</span>';
+    ke.innerHTML='<div style="overflow-x:auto"><table aria-label="Kredi ivmesi"><thead><tr><th>Defter</th><th class="num">Stok (mlr ₺)</th><th class="num">8 hafta</th><th class="num">TCMB sınırı (8h)</th><th class="num">Sınırın kullanımı</th><th class="num">13 hafta yıllıkl.</th><th class="num">Yıllık</th></tr></thead><tbody>'+
+      J.krediler.map(x=>{ const kul=(x.sinir&&x.b8!=null)?Math.round(x.b8/x.sinir*100):null; return '<tr'+(x.k==='toplam'?' style="font-weight:600"':'')+'><td>'+esc(x.ad)+'</td><td class="num">'+trN(x.stok,0)+'</td><td class="num">'+yz(x.b8)+'</td><td class="num thin">'+(x.sinir?'%'+trN(x.sinir,1):'—')+'</td><td class="num">'+(kul==null?'<span class="thin">—</span>':'<span style="color:'+(kul>=90?'var(--down)':kul>=60?'#E8933B':'var(--muted)')+'">%'+kul+'</span>')+'</td><td class="num">'+yz(x.b13y,0)+'</td><td class="num">'+yz(x.yy,0)+'</td></tr>'; }).join('')+'</tbody></table></div>'+
+      '<div class="note" style="margin-top:8px;font-size:10.5px"><b>Okuma:</b> Kredi stokundaki büyüme hızı, iç talebin ve banka kârının öncü göstergesidir; yıllık enflasyonun altında büyüyen defter reel olarak küçülüyor demektir. <b>8 hafta</b> sütunu TCMB\'nin büyüme sınırlarının ölçüsüdür (11 Kas 2026: ihtiyaç ve taşıt %3,5 · KOBİ TL %5,5). Sınır banka bazındadır; sektör toplamı sınırın %90\'ını aşıyorsa kural bağlayıcıdır ve bir sonraki gevşeme doğrudan hacme dönüşür, %60\'ın altındaysa kredi talebi zaten zayıftır — gevşeme etkisiz kalır. '+
+      '<span class="thin">Toplam ve ticari satırları YP krediyi TL karşılığıyla içerir; kur artışı bu satırları şişirir. Tüketici satırları TL\'dir, kur etkisi yoktur. Yurt içi şubeler.</span></div>'; }
 }
 async function bnkInit(){
   nplInit();
@@ -9138,6 +9204,7 @@ async function boot(){
     ['Gündem özeti (otomatik)', ()=>setTimeout(gundemCanli,3000)],
     ['Risk barometresi ek veriler', ()=>setTimeout(riskBaroEkYukle,2000)],
     ['Toparlanma monitörü', ()=>setTimeout(toparlanmaInit,2600)],   /* §530 */
+    ['Stres termometresi', ()=>setTimeout(stresInit,5200)],   /* §578 */
     ['Taktik duruş modeli (kurallı)', ()=>setTimeout(taktikModel,4500)],
     /* §353 YARIŞ DURUMU (20 Ağu, canlı): boot PARALEL koşuyor (§310) ve
        takvimSatirlari (§245) elle satırları YENİDEN YAZIYOR. makroTakvimRender
