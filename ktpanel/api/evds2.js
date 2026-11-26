@@ -328,6 +328,7 @@ module.exports = async (req, res) => {
   if (mod === 'egri')  return _egri(req, res);
   if (mod === 'kart')  return _kart(req, res);
   if (mod === 'rezerv') return rezervModu(req, res);
+  if (mod === 'npl') return nplModu(req, res);   /* §576: haftalık takipteki alacaklar (TCMB haftalık para-banka · BDDK kaynaklı) */
   if (mod === 'seri')  return seriModu(req, res);   /* §444: hesap zinciri için TÜFE endeksi + kur geçmişi (beyaz liste) */
   if (mod === 'dvz') return dvzModu(req, res, { key: process.env.EVDS_KEY || req.query.key });
   if (mod === 'ecb') return ecbModu(req, res);   /* §275 — EVDS anahtarı GEREKMEZ */
@@ -622,4 +623,72 @@ async function rezervModu(req, res){
   } catch(e) {
     return res.status(200).json({ ok:false, err:'rezerv modu: '+String(e.message||e).slice(0,120) });
   }
+}
+
+
+/* ═══ §576 (26 Kas 2026) HAFTALIK TAKİPTEKİ ALACAKLAR ═══
+   NEDEN: paneldeki takip oranı BDDK AYLIK bülteninden geliyordu (~2 ay gecikme; 26 Kas'ta hâlâ Eylül %3,09) — aynı gün haftalık bülten
+   20 Kas için %3,37 açıkladı. Haftalık veri TCMB "Para ve Banka İstatistikleri (Haftalık)" içinde EVDS'de var (kaynak BDDK, Cuma değeri,
+   ertesi Perşembe yayımlanır): bie_hpbitablo2 (yurt içi şubeler özet) · bie_hpbitablo6 (kredi kırılımı) · bie_hpbitablo8 (yurt dışı şubeler).
+   ORAN = takip / (canlı kredi + takip). 20 Kas doğrulaması (BDDK bülteni aktarımıyla): kart %5,98 ✓ · tüketici (kart hariç) %5,17 (bizde 5,18) ✓
+   · toplam %3,37 (bizde 3,35 — BDDK'nın kredi tabanı birkaç bp farklı kapsam; fark kartta yazılır). */
+function nplHesap(items){
+  const S = k => 'TP_HPBITABLO' + k.replace('.', '_');
+  const iso = t => { const p = String(t).split('-'); return p.length === 3 ? p[2] + '-' + p[1] + '-' + p[0] : t; };
+  const n = (it, k) => { const v = parseFloat(it[S(k)]); return isFinite(v) ? v : null; };
+  const oran = (t, k) => (t != null && k != null && (t + k) > 0) ? +(t / (t + k) * 100).toFixed(3) : null;
+  const H = [];
+  for (const it of (items || [])) {
+    const tk2 = n(it, '2.38'), kr6 = n(it, '6.1'); if (tk2 == null || kr6 == null) continue;
+    const tk8 = n(it, '8.32') || 0, kr8 = n(it, '8.18') || 0;
+    const tT = n(it, '6.50'), tK = n(it, '6.54'), kT = n(it, '6.2'), kK = n(it, '6.16');
+    const fd = n(it, '6.19'), fk = n(it, '6.36') || 0, tTic = n(it, '6.55');
+    H.push({ d: iso(it.Tarih), takip: +((tk2 + tk8) / 1e6).toFixed(2), kredi: +((kr6 + kr8) / 1e6).toFixed(1),
+      toplam: oran(tk2 + tk8, kr6 + kr8), yurtici: oran(tk2, kr6),
+      kart: oran(tK, kK), ihtiyac: oran(n(it, '6.53'), n(it, '6.11')), konut: oran(n(it, '6.51'), n(it, '6.3')), tasit: oran(n(it, '6.52'), n(it, '6.7')),
+      tuketici: (tT != null && tK != null && kT != null && kK != null) ? oran(tT - tK, kT - kK) : null,
+      ticari: (tTic != null && fd != null) ? oran(tTic, fd + fk) : null });
+  }
+  H.sort((a, b) => a.d < b.d ? -1 : 1);
+  if (!H.length) return null;
+  const son = H[H.length - 1], geri = k => H.length > k ? H[H.length - 1 - k] : null;
+  const bp = (a, b, f) => (a && b && a[f] != null && b[f] != null) ? Math.round((a[f] - b[f]) * 100) : null;
+  const kalemler = [['toplam', 'Toplam (yurt içi + yurt dışı şubeler)'], ['kart', 'Bireysel kredi kartı'], ['ihtiyac', 'İhtiyaç kredisi'],
+    ['tuketici', 'Tüketici kredileri (kart hariç)'], ['tasit', 'Taşıt'], ['konut', 'Konut'], ['ticari', 'Ticari ve diğer']]
+    .map(([k, ad]) => ({ k, ad, oran: son[k], d1: bp(son, geri(1), k), d4: bp(son, geri(4), k), d13: bp(son, geri(13), k), d52: bp(son, geri(52), k) }));
+  const g1 = geri(1), g13 = geri(13);
+  return { tarih: son.d, takip: son.takip, kredi: son.kredi, haftalikArtis: g1 ? +(son.takip - g1.takip).toFixed(1) : null,
+    artis13Ort: g13 ? +((son.takip - g13.takip) / 13).toFixed(1) : null,
+    buyume13Yillik: (g13 && g13.takip > 0) ? +((Math.pow(son.takip / g13.takip, 4) - 1) * 100).toFixed(1) : null,
+    krediBuyume13Yillik: (g13 && g13.kredi > 0) ? +((Math.pow(son.kredi / g13.kredi, 4) - 1) * 100).toFixed(1) : null,
+    kalemler, seri: H.slice(-60).map(x => ({ d: x.d, toplam: x.toplam, kart: x.kart, ihtiyac: x.ihtiyac, ticari: x.ticari, takip: x.takip })) };
+}
+async function nplModu(req, res){
+  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=21600');   /* haftalık veri · Perşembe yayımlanır */
+  const key = process.env.EVDS_KEY || req.query.key;
+  if (!key) return res.status(400).json({ ok:false, err:'EVDS_KEY yok' });
+  const H = { 'key': key, 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' };
+  const b = new Date(), bas = new Date(b.getTime() - 72 * 7 * 864e5);
+  const tr = d => String(d.getDate()).padStart(2,'0') + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + d.getFullYear();
+  const cek = async (seriler) => {
+    const url = 'https://evds3.tcmb.gov.tr/igmevdsms-dis/series=' + seriler.join('-') + '&startDate=' + tr(bas) + '&endDate=' + tr(b) + '&type=json';
+    for (const ms of [12000, 22000]) {
+      try { const r = await fetch(url, { headers: H, signal: AbortSignal.timeout(ms) }); const t = await r.text();
+        if (t.trim().startsWith('{') || t.trim().startsWith('[')) { const j = JSON.parse(t); return j.items || []; } } catch(e){}
+    }
+    return null;
+  };
+  try {
+    const K = k => 'TP.HPBITABLO' + k;
+    const [a, c] = await Promise.all([
+      cek(['2.38','8.32','8.18','6.1','6.2','6.16','6.50','6.54'].map(K)),
+      cek(['6.3','6.7','6.11','6.51','6.52','6.53','6.19','6.36','6.55'].map(K)) ]);
+    if (!a || !a.length) return res.status(200).json({ ok:false, err:'EVDS haftalık bankacılık serileri gelmedi' });
+    const m = new Map(); for (const it of a) m.set(it.Tarih, Object.assign({}, it));
+    for (const it of (c || [])) m.set(it.Tarih, Object.assign(m.get(it.Tarih) || {}, it));
+    const o = nplHesap([...m.values()]);
+    if (!o) return res.status(200).json({ ok:false, err:'takip serisi boş' });
+    return res.status(200).json(Object.assign({ ok:true, kaynak:'TCMB Haftalık Para ve Banka İstatistikleri (BDDK) · EVDS bie_hpbitablo2/6/8', kirilimEksik: !(c && c.length) }, o));
+  } catch(e) { return res.status(200).json({ ok:false, err:'npl modu: ' + String(e.message||e).slice(0,120) }); }
 }
