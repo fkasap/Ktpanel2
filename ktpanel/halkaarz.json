@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-10-05",
+ "guncelleme": "2026-11-26",
  "fiyat_tarihi": "2026-08-25",
  "not": "Getiri = düzeltilmiş arz fiyatından bugüne (bedelsiz yapan 4 hissede düzeltilmiş kullanıldı). Listeye YALNIZCA SPK onayı almış arzlar girer; başvuru/taslak aşamasındakiler girmez. Kaynak: SPK haftalık bülteni + halkarz.com + KAP (/api/kap). 25 Ağu: 7 arz eklendi/güncellendi (önceki 7 Ağu). AKTİF: INTET talep 26-27 Ağu, BKRGY talep 24-25-26 Ağu (bugün açık). Güncel fiyatlar ve getiriler 25 Ağu kapanışına göre yeniden hesaplandı. Kaynak: Fintables halka_arzlar view + hisse_senetleri.son_fiyat.",
  "arzlar": [
@@ -498,5 +498,6 @@
    "duzeltildi": true
   }
  ],
- "_ekim_turu": "5 Eki: Fintables halka_arzlar — 20 Ağu sonrası 3 arz (BKRGY 24-26 Ağu · INTET 26-27 Ağu, aracı BULLS Yatırım → kurucusu tasfiye listesinde · NETGL 9-11 Eyl, 652 bin katılımcı). Üçü katılım endeksine uygun; üçü de XKTUM Ekim revizyonuyla endekse girdi. Eylül sonu arz yok (fon krizi penceresi). Alan adları önceki kayıtlarla aynı olmayabilir — panel okuyucusu esnek değilse uyar."
+ "_ekim_turu": "5 Eki: Fintables halka_arzlar — 20 Ağu sonrası 3 arz (BKRGY 24-26 Ağu · INTET 26-27 Ağu, aracı BULLS Yatırım → kurucusu tasfiye listesinde · NETGL 9-11 Eyl, 652 bin katılımcı). Üçü katılım endeksine uygun; üçü de XKTUM Ekim revizyonuyla endekse girdi. Eylül sonu arz yok (fon krizi penceresi). Alan adları önceki kayıtlarla aynı olmayabilir — panel okuyucusu esnek değilse uyar.",
+ "_kasim_turu": "26 Kas: Fintables halka_arzlar tarandı — NETGL'den (talep 9-11 Eyl, ilk işlem 17 Eyl) sonra talep toplayan YENİ ARZ YOK (fon krizi sonrası pencere kapalı; 2,5 aydır). Bekleyen iki kayıt tarihsiz: DNYVA (Dünya Varlık Yönetim, 38,44 ₺) ve BEWEN (48,10 ₺) — durum kodu 'd', talep tarihi açıklanmadı. Kayıt eklenmedi; güncel fiyatlar kartta canlı."
 }

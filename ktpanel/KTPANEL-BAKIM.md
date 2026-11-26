@@ -16130,3 +16130,16 @@ Gözlem (dokunulmadı, karar kullanıcıda): (1) FEK'te V2 likidite vetosu ile m
 - **"121g önce" hatası**: yaş etiketi sabit '2026-07-27' tabanından sayılıyordu. Artık metnin `data-tarih` damgasından; damgadan sonra FOMC kararı geçtiyse (FOMC_2026) kırmızı "metin ESKİ" uyarısı — 9 Ara kararından sonra kendiliğinden yanar.
 - **EIA satırları**: WCESTUS1 / WPULEUS3 (ve WGTSTUS1) FRED'den hep null; satır sessizce atlanıyordu → "veri yok" satırı görünür. BORÇ: EIA API (ücretsiz anahtar, env EIA_KEY) bağlanırsa canlıya geçer.
 - Doğrulandı/dokunulmadı: FRED serileri 23–24 Kas tarihli; WTI spot 17 Kas (FRED gecikmesi); TÜFE 12 ay "yayımlanmadı" (§558, BLS).
+
+## §573 — Damgalı kart taraması (26 Kas 2026; kullanıcı Veri Durumu çekmecesini gönderdi)
+Kaynaklar: merkez bankası bildirileri, TCMB duyuru 2026-49, SPK 76/1903 + 7596 s. Kanun, EVDS, Fintables MCP.
+- **BoJ**: 30 Eki sabit %1,25 (8-1, Takata şahin muhalif); Görünüm Raporu rakamları. **BOK**: 26 Kas +25bp → %3,25 (5-2), yılın 3. artırımı; tahminler ve nokta dağılımı. **ECB**: 29 Eki sabit %2,50 (kart zaten canlı; koro satırı güncellendi). **HKMA**: baz faiz %4,25 değişmedi. **Kore koro/okuma**: Ekim sonu turu + rezerv/ödemeler dengesi rakamları.
+- **TCMB Fonlama**: Kasım PKA (yıl sonu politika %35,0; 12a TÜFE %24,04'e yükseldi). **Makroihtiyati**: 11 Kas ikinci gevşeme (ihtiyaç/taşıt %3→3,5 · KOBİ %5→5,5 · KOBİ dışı %2→2,5 · uzun vadeli yükümlülük ZK'sına TL faiz).
+- **Fon krizi**: 7596 s. Kanun (olağanüstü tasfiye: Tera/Pusula/Atlas), 27 Eki usul-esas, 30 Eki ara ödeme başlangıcı, 4 Kas itibarıyla 117,6 mlr ₺ ödeme. Evren: TLV/PKL/KVR olağanüstü, HPH olağan grupta.
+- **Global Risk fabrika notu**: Temmuz'dan kalma rakamlı metin (Brent 102$, CDS 206) → rakamsız okuma kılavuzu.
+- **yabanci.json aylık**: Oca–Eyl EVDS bie_odana6'dan (portföy net = Q17 − Q16). Eski Oca/Şub/Mar/Tem TAHMİNDİ; resmî 8,69 / 1,46 / −14,70 / 5,84. Eyl −7,73 mlr $.
+- **analist.json**: 44 hisse (Kasım XK100), 18'inde hedef/kurum değişti; GOKNR, SNGYO düştü; 5 bayat.
+- **halkaarz.json**: NETGL'den sonra yeni arz yok; yalnız damga + not.
+- **Enflasyon Patikası (EP_VARSAYILAN)**: BİLİNÇLİ dokunulmadı — model 22 Eki toplantısına çapalı; yarım ilerletme patikayı kaydırır. 10 Ara devri kullanıcının senaryolarını bekliyor; hazır EVDS verisi koddaki notta.
+- **Ebu notları**: Anthropic API bakiyesi hâlâ bitik (26 Kas 09:55 günlüğü) — yorum katmanı donuk.
+- Doğrulanamayan/dokunulmayan: ülke kredi notu (16 Eki S&P sonrası yeni karar bulunamadı), BOK sonraki toplantı tarihi.

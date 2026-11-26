@@ -1,25 +1,25 @@
 {
- "guncelleme": "2026-10-02",
+ "guncelleme": "2026-11-26",
  "kaynak": "TCMB Ödemeler Dengesi (aylık portföy) + Haftalık Menkul Kıymet İst. + swap hariç net rezerv",
  "aylik": [
   {
    "ay": "Oca",
-   "portfoy": 1.4,
-   "kesin": false
+   "portfoy": 8.69,
+   "kesin": true
   },
   {
    "ay": "Şub",
-   "portfoy": 0.9,
-   "kesin": false
+   "portfoy": 1.46,
+   "kesin": true
   },
   {
    "ay": "Mar",
-   "portfoy": -4.2,
-   "kesin": false
+   "portfoy": -14.7,
+   "kesin": true
   },
   {
    "ay": "Nis",
-   "portfoy": 4.05,
+   "portfoy": 3.97,
    "kesin": true
   },
   {
@@ -30,15 +30,23 @@
   {
    "ay": "Haz",
    "portfoy": 2.54,
-   "kesin": true,
-   "_not": "TCMB Odemeler Dengesi Haz 2026 (12 Agu yayini): portfoy net giris 2.537 mn$ — hisse+fon 2.920 · DIBS 1.185 · yurt disi tahvil: banka +462, diger +375, Genel Hukumet −896. Cari acik 4.194 (bekl. 4.918), yillik 38,9 mlr. Onceki tahmin 1,5 idi."
+   "kesin": true
   },
   {
    "ay": "Tem",
-   "portfoy": 1.2,
-   "kesin": false,
-   "kismi": true,
-   "_not": "KISMI — Temmuz odemeler dengesi ~11 Eyl yayinlanir; o zaman kesinlesir."
+   "portfoy": 5.84,
+   "kesin": true
+  },
+  {
+   "ay": "Ağu",
+   "portfoy": -1.03,
+   "kesin": true
+  },
+  {
+   "ay": "Eyl",
+   "portfoy": -7.73,
+   "kesin": true,
+   "_not": "TCMB Ödemeler Dengesi Eyl 2026 (EVDS bie_odana6, 26 Kas okuması): portföy net = yükümlülük oluşumu (TP.ODANA6.Q17) − varlık edinimi (Q16) = −5.761 − 1.972 = −7.733 mn $. Fon krizi ayı."
   }
  ],
  "hafta_son": {
@@ -94,5 +102,6 @@
   "sahip": "app.js — §127 window.EXANTE (ex-ante) ve §128 canli Fisher (ex-post). Bu dosya SAHIP DEGIL."
  },
  "_haftalik_not": "§261 (11 Ağu): hafta_son + hafta_seri blokları CANLI UÇTAN geliyor (/api/evds2?mod=yab · EVDS bie_mknethar M7/M8/M12). app.js yabHaftaCanliYaz() ile basar ve yeniden çizimden sonra geri koyar. Buradaki değerler yalnız İLK ÇİZİM yedeğidir ve elle tazelenmesi GEREKMEZ. Elle kalan tek blok: aylik (ödemeler dengesi, ayda bir).",
- "_aylik_not": "§425 (28 Agu): Haz KESIN 2,54 (odemeler dengesi). SIRADAKI: Tem verisi 11 Eyl Per. Bu blok ELLE; hafta_son/hafta_seri canli uctan (§259/261)."
+ "_aylik_not": "§425 (28 Agu): Haz KESIN 2,54 (odemeler dengesi). SIRADAKI: Tem verisi 11 Eyl Per. Bu blok ELLE; hafta_son/hafta_seri canli uctan (§259/261).",
+ "_aylik_yontem": "26 Kas 2026: Oca–Eyl tamamı EVDS bie_odana6 serilerinden yeniden kuruldu (portföy net = Q17 − Q16, mlr $). Önceki Oca/Şub/Mar (1,4 / 0,9 / −4,2) ve Tem (1,2) TAHMİNDİ (kesin:false); resmî değerler 8,69 / 1,46 / −14,70 ve 5,84. Nis 4,05 → 3,97 revizyon. Haz 2,54 ve May −3,07 birebir tuttu (yöntem doğrulaması)."
 }

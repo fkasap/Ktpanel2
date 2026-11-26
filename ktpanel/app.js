@@ -38,7 +38,7 @@ let CDS_CANLI=null;   /* §253b canlı CDS · {deger,tarih,degisim}
    ayristiktan sonra kosuyor. Ama TESADUFI bir guvenlik: biri o cagriyi
    senkron bir yere tasirsa TDZ hatasi verir ve TUM barometre coker.
    Tanim en uste alindi, risk tamamen kalkti. (§247c ve §252m ayni sinif.) */
-const KTP_SURUM = '20261125a';
+const KTP_SURUM = '20261126a';
 /* ---- §542 TEMA DÜĞMESİ (açık/koyu) ---- */
 (function(){
   function temaUygula(t){ if(t==='koyu') document.documentElement.setAttribute('data-tema','koyu'); else document.documentElement.removeAttribute('data-tema');
@@ -3522,6 +3522,11 @@ function katfonRender(){
    KİMLİK vs VARSAYIM: y/y hesabı, reel faiz, 2Y ima oranı ARİTMETİKTİR; aylık
    TÜFE patikaları, r_hedef, beklenti formülü (0,85 ileri + 0,15 geriye) ve
    olasılıklar VARSAYIMDIR — hepsi girdi kartında açık ve değiştirilebilir. */
+/* §573 (26 Kas) DİKKAT — BU BLOK BİLİNÇLİ OLARAK 13 EKİ'DE BIRAKILDI. Model 22 Eki toplantısına çapalı: senaryo TÜFE patikaları Eki26'dan başlar,
+   'ekim' alanı ve anket/model_olas 22 Eki kararına aittir, toplantilar[0]='2026-10'. Yalnız veri satırlarını (Eki TÜFE 2,58 · Kas PKA · %36) ilerletmek
+   patikayı bir ay kaydırır ve geçmiş toplantıya indirim uygular — yarım güncelleme TUTARSIZ sonuç verir. 10 Ara toplantısına devir kullanıcının
+   model.py senaryolarıyla birlikte yapılır. Hazır veri (EVDS): TÜFE Eki a/a 2,58 (beklenti 2,11) · y/y 29,77 · çekirdek B a/a 2,00, y/y 28,46 ·
+   PKA 2026-10 [2.11,1.18,0.97,29.63,23.89,17.94] · 2026-11 [1.09,0.84,3.58,30.04,24.04,18.02] · pf12 28,90 · pf24 21,92 · politika 36 · koridor 34,5–39. */
 const EP_VARSAYILAN = {
   surum: '13 Eki 2026 · model.py/veri.py',
   tufe_2025: [5.03, 2.27, 2.46, 3.00, 1.53, 1.37, 2.06, 2.04, 3.23, 2.55, 0.87, 0.89],

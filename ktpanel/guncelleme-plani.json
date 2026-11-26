@@ -74,13 +74,14 @@
    "ad": "Yabancı akışı — AYLIK ödemeler dengesi",
    "dosya": "yabanci.json",
    "siklik": "aylik",
-   "son": "2026-08-11",
+   "son": "2026-11-26",
    "kaynak": "TCMB ödemeler dengesi (aylık, elle) — haftalık kısım CANLI",
    "_245": "DAMGA §B: Perşembe ritüeli, ELLE (hafta_seri'ye ekleme). siklik=\"canli\" idi → muaftı.",
    "_245k": "KISMEN canlı: stok + SON hafta EVDS CANLI (yabCanli → mod=yab, damgalıyı ezer). hafta_seri GEÇMİŞİ ve aylık ödemeler dengesi ELLE — dosya damgası onları izler. Yani bu katman damgalı KALIR ama bayatlama riski yalnız seri geçmişinde.",
    "_245p": "§245p: TCMB Perşembe yayınlar, veri bir önceki CUMA'ya ait → bu katman doğası gereği 6–12 gün salınır. Genel 7 günlük limit haftanın çoğunda boşuna turuncu yakıyordu. 13 gün = \"bir yayın kaçtı\" eşiği.",
    "_261": "11 Agu: HAFTALIK KISIM CANLIYA GECTI (§259). /api/evds2?mod=yab alti haftalik seriyi ve stoku EVDS bie_mknethar M7/M8/M12 den veriyor; app.js yabHaftaCanliYaz() ile basiyor ve yeniden cizimden sonra geri koyuyor. Dosyadaki hafta_son/hafta_seri bloklari ARTIK OKUNMUYOR — panel onlara dusmez. GERIYE ELLE KALAN: aylik `aylik` blogu (odemeler dengesi, ayda bir yayin) ve `rezerv` blogu (o da OLU — app.js canli hesapliyor, bkz asagi). BU YUZDEN siklik haftalik -> AYLIK. limit_gun:13 KALDIRILDI: o esik TCMB nin Persembe haftalik yayin ritmi icindi (§245p), aylik veride anlamsiz.",
-   "borc": "a"
+   "borc": "a",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Net rezerv (Rezerv Karnesi)",
@@ -118,9 +119,10 @@
    "ad": "Halka arzlar",
    "dosya": "halkaarz.json",
    "siklik": "olay",
-   "son": "2026-10-05",
+   "son": "2026-11-26",
    "kaynak": "Fintables halka_arzlar",
-   "borc": "a"
+   "borc": "a",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Guidance",
@@ -227,10 +229,11 @@
    "ad": "Analist konsensüsü (hedef fiyat)",
    "dosya": "analist.json",
    "siklik": "aylik",
-   "son": "2026-10-26",
+   "son": "2026-11-26",
    "kaynak": "analist.json — Fintables hisse_senedi_araci_kurum_hedef_fiyatlari. Son 6 ayin hedef fiyat ORTALAMASI (yayin_tarihi >= bugun-180g). Sorgu: GROUP BY hisse, COUNT(DISTINCT araci_kurum_kodu) + AVG(hedef_fiyat). Son 6 ayda raporu olmayan hisse \"bayat\":true isaretlenir — hedefi eskidir, guncel fiyatla kiyaslanmamalidir.",
    "sezon": true,
-   "borc": "c"
+   "borc": "c",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Swap stoku (rezerv bileşeni)",
@@ -313,47 +316,52 @@
    "ad": "BoJ Politika kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-05",
+   "son": "2026-11-26",
    "limit_gun": 30,
-   "kaynak": "BoJ toplantı takvimi (~6 haftada bir) — canlı satırlar /api/market?mod=boj; bu kart POLİTİKA anlatısı",
+   "kaynak": "BoJ toplantı takvimi (~6 haftada bir) — canlı satırlar /api/market?mod=boj; bu kart POLİTİKA anlatısı · 30 Eki: SABİT %1,25, 8-1 (§573) → 17-18 Ara",
    "_433": "§433: Asya damgalı kartları nöbete alındı — eskime artık otomatik görünür. Sıradaki basamak: koro satırının canlı hesaplanması.",
-   "borc": "metin"
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "HKMA Okuma & Bölge Bağı kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-05",
+   "son": "2026-11-26",
    "limit_gun": 45,
    "kaynak": "Rejim anlatısı (currency board) — yavaş eskir; HIBOR/AB canlı",
-   "borc": "metin"
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Kore BOK & Piyasa kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-26",
+   "son": "2026-11-26",
    "limit_gun": 30,
-   "kaynak": "BOK toplantı takvimi + KOSPI olayları — faiz satırı/etiket CANLI (§520/§535, ECOS); anlatı satırları elle. 22 Eki: %3,00 sabit (§544)",
-   "borc": "metin"
+   "kaynak": "BOK toplantı takvimi + KOSPI olayları — faiz satırı/etiket CANLI (§520/§535, ECOS); anlatı satırları elle. 22 Eki: %3,00 sabit (§544) · 26 Kas: +25bp %3,25, 5-2 (§573)",
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Kore Okuma & Bağlar kartı (koro dahil, damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-05",
+   "son": "2026-11-26",
    "limit_gun": 30,
    "kaynak": "Küresel koro + Kore rolü anlatısı — §433 basamak 2'de koro satırı canlıya taşınacak",
-   "borc": "metin"
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "TCMB Fonlama Rejimi kartı (damgalı satırlar)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-12",
+   "son": "2026-11-26",
    "limit_gun": 21,
-   "kaynak": "PPK takvimi: 10 Eyl SABİT %37 (§436b) → 22 Eki → Aralık. Karar sonrası satırlar/etiket tazelenir",
-   "borc": "metin"
+   "kaynak": "PPK takvimi: 22 Eki −100bp %36 → 10 Aralık. Karar sonrası satırlar/etiket tazelenir",
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Haberler Gündem Özeti kartı (damgalı)",
@@ -368,47 +376,52 @@
    "ad": "Piyasa Global Risk Barometresi (damgalı bağlam)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-02",
+   "son": "2026-11-26",
    "limit_gun": 30,
    "kaynak": "Satırlar canlı (§421); yalnız etiket/okuma metni damgalı",
-   "borc": "metin"
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "ECB & Politika kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-26",
+   "son": "2026-11-26",
    "limit_gun": 30,
-   "kaynak": "ECB takvimi: 10 Eyl +25bp %2,50 → 29 Eki. DFR satırı/etiket CANLI (§520/§535); koro metni 26 Eki düzeltildi (§540). 29 Eki sonrası anlatı tazelenir",
-   "borc": "metin"
+   "kaynak": "ECB takvimi: 10 Eyl +25bp %2,50 → 29 Eki. DFR satırı/etiket CANLI (§520/§535); koro metni 26 Eki düzeltildi (§540). 29 Eki sonrası anlatı tazelenir · 29 Eki: SABİT %2,50 (§573) → 17 Ara",
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Fed & Politika kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-02",
+   "son": "2026-11-25",
    "limit_gun": 30,
-   "kaynak": "FOMC 16 Eyl +25bp -> 27-28 Eki (§449)",
-   "borc": "metin"
+   "kaynak": "FOMC 28 Eki SABİT %3,75–4,00 (10-2) → 8-9 Ara (§572)",
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Makroihtiyati & Kredi Koşulları kartı (damgalı)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-12",
+   "son": "2026-11-26",
    "limit_gun": 45,
    "kaynak": "TCMB makroihtiyati basın duyuruları + Kredi Eğilim Anketi (3Ç26 Ekim başı). Yeni adım/anket çıkınca tazelenir (§440)",
-   "borc": "metin"
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Fon krizi kartı (damgalı, SPK tasfiye)",
    "dosya": "index.html",
    "siklik": "olay",
-   "son": "2026-10-12",
+   "son": "2026-11-26",
    "limit_gun": 14,
    "kaynak": "SPK bültenleri + tasfiye bankası duyuruları; ödeme turları, yeni tedbir, evren fonlarının akıbeti (§452)",
    "_460": "12 Eki: 5 Eki tasfiye baslangici (A1/Bulls/Pardus 17 fon), 8 Eki ilk odemeler, Tera/Pusula/Hedef/Atlas tarih yok; panel izleri (CDS 247,8 · 9-12 Eki akis −7,1) islendi. Sonraki: ara odeme tarihi aciklaninca.",
-   "borc": "metin"
+   "borc": "metin",
+   "_573": "26 Kas taraması (§573)"
   },
   {
    "ad": "Enflasyon Patikası modeli — girdiler (PKA · TÜFE · DİBS)",
@@ -417,7 +430,8 @@
    "son": "2026-10-13",
    "kaynak": "Kullanıcının model.py/veri.py (13 Eki) → app.js EP_VARSAYILAN; kullanıcı girdileri tarayıcıda (ktp_ep_v1). Aylık: TÜİK TÜFE (ayın ~3ü) dizinin sonuna eklenir, PKA (ayın ~16sı) E12/pf12/pf24 güncellenir; PPK sonrası politika faizi. \"canlıdan doldur\" düğmesi TÜFE y/y, PKA 12a, politika ve 2Y DİBSi üst kartlardan alır.",
    "_461": "13 Eki: §461 kuruldu. Varsayılanlar py ile birebir doğrulandı (225 hücre, fark 0).",
-   "borc": "a"
+   "borc": "a",
+   "_573": "26 Kas: BİLİNÇLİ güncellenmedi — model 22 Eki toplantısına çapalı; 10 Ara devri kullanıcının model.py senaryolarını bekliyor. Hazır veriler app.js EP_VARSAYILAN üstündeki notta."
   },
   {
    "ad": "Sektör sürücüleri — Neste crack · Brent · USDTRY + sürücü serileri kaydı (Yahoo emtia/kur · LME hurda · Dünya Bankası Pink Sheet) + TCMB EVDS endeks/faiz + EPİAŞ PTF (§466) + Kardemir açık API (§472)",
