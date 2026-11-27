@@ -1,5 +1,5 @@
 {
- "guncelleme": "2026-11-26",
+ "guncelleme": "2026-11-27",
  "kaynak": "Yahoo adjclose + hacim (XKTUM üyeleri) · endeks-arsiv.json XKTUM · cds.json · fon-portfoy.json tasfiye · fm.json kalite · xktum.json ağırlık",
  "_yontem": "§530 aşamalar: 1 baskı (kapitülasyon | dip daralması, tasfiye listesi göreli ≥0) · 2 oynaklık (RV20 ≤ 60g tepe ×0,75, CDS 2h ≤0) · 3 katılım (Zweig itkisi | %>50g ≤%20 → ≥%50). Sepet: likidite ≥%0,05 XKTUM, z(−3A)+z(beta), kalite z ≥ −0,25.",
  "son": "2026-11-25",
@@ -50,11 +50,11 @@
     },
     {
      "ad": "TR CDS 2 hafta değişim",
-     "deger": 25,
+     "deger": 47,
      "esik": "≤ 0 bp (daralma)",
      "tamam": false,
      "birim": "bp",
-     "not": "1 ay +2 bp"
+     "not": "1 ay +23 bp"
     }
    ]
   },
@@ -1189,7 +1189,7 @@
   {
    "k": "PASEU",
    "s": "Industrials",
-   "w": 0.21,
+   "w": 0.19,
    "r3": -89.1,
    "dd": -89.5,
    "dipten": 23.4,
@@ -1201,7 +1201,7 @@
   {
    "k": "EUPWR",
    "s": "Industrials",
-   "w": 0.42,
+   "w": 0.43,
    "r3": -71.2,
    "dd": -71.8,
    "dipten": 0,
@@ -1225,7 +1225,7 @@
   {
    "k": "MAGEN",
    "s": "Utilities",
-   "w": 0.07,
+   "w": 0.06,
    "r3": -87.7,
    "dd": -90,
    "dipten": 0,
@@ -1237,7 +1237,7 @@
   {
    "k": "SELEC",
    "s": "Health Care",
-   "w": 0.48,
+   "w": 0.46,
    "r3": -71.3,
    "dd": -76.8,
    "dipten": 49,
@@ -1285,7 +1285,7 @@
   {
    "k": "ARDYZ",
    "s": "Information Technology",
-   "w": 0.31,
+   "w": 0.32,
    "r3": -51.9,
    "dd": -54.3,
    "dipten": 0,
@@ -1309,7 +1309,7 @@
   {
    "k": "GUBRF",
    "s": "Materials",
-   "w": 1.06,
+   "w": 1.09,
    "r3": -44.7,
    "dd": -48.7,
    "dipten": 6.7,

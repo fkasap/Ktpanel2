@@ -1,22 +1,22 @@
 {
  "jp": {
-  "tarih": "2026-11-25",
+  "tarih": "2026-11-26",
   "vadeler": {
-   "1Y": 1.594,
-   "2Y": 1.731,
-   "3Y": 1.811,
-   "4Y": 1.959,
-   "5Y": 2.07,
+   "1Y": 1.606,
+   "2Y": 1.747,
+   "3Y": 1.826,
+   "4Y": 1.968,
+   "5Y": 2.073,
    "6Y": 2.159,
-   "7Y": 2.27,
-   "8Y": 2.421,
-   "9Y": 2.569,
-   "10Y": 2.713,
-   "15Y": 3.312,
-   "20Y": 3.635,
-   "25Y": 3.984,
-   "30Y": 3.998,
-   "40Y": 4.095
+   "7Y": 2.271,
+   "8Y": 2.413,
+   "9Y": 2.561,
+   "10Y": 2.704,
+   "15Y": 3.294,
+   "20Y": 3.615,
+   "25Y": 3.947,
+   "30Y": 3.956,
+   "40Y": 4.049
   },
   "kaynak": "MOF Japan — jgbcme.csv (günlük JGB getirileri)"
  },
@@ -35,6 +35,6 @@
   },
   "kaynak": "ECB Veri Portalı — avro bölgesi AAA devlet tahvili spot eğrisi (YC.B.U2.EUR.4F.G_N_A.SV_C_YM)"
  },
- "guncelleme": "2026-11-26",
+ "guncelleme": "2026-11-27",
  "_not": "§536 dış ülke getiri eğrileri — günlük, birincil kaynak; panel Getiri Eğrisi Görseli çizer."
 }
