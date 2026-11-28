@@ -53,7 +53,7 @@
     "artis": 35.7,
     "oran": 82.9
    },
-   "kaynak": "SBB haftalık (HMB) Turkiye-Ekonomisinde-Haftalik-Gelismeler-ve-Genel-Gorunum-Raporu_20-Kasim-2026.pdf",
+   "kaynak": "SBB haftalık (HMB) Turkiye-Ekonomisinde-Haftalik-Gelismeler-ve-Genel-Gorunum-Raporu_27-Kasim-2026.pdf",
    "tufe_yy": 29.8
   }
  },
@@ -116,7 +116,7 @@
  },
  "_not": "§533 kamu yatırım nabzı: merkezi yönetim sermaye giderleri (yıl içi kümülatif, milyon ₺) · kaynak HMB, SBB haftalık raporu üzerinden; bütçe çerçevesi 2027 Bütçe Gerekçesi.",
  "son": "2026-10",
- "guncelleme": "2026-11-27",
+ "guncelleme": "2026-11-28",
  "ima": {
   "yil": 2026,
   "kalan_ay": 2,
@@ -124,5 +124,5 @@
   "aylik_kalan": 372321.5,
   "aylik_gerceklesen": 103767.9
  },
- "kontrol": "2026-11-27"
+ "kontrol": "2026-11-28"
 }
